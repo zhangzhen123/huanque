@@ -1,0 +1,643 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- DiscreteScrollView -->
+    <string name="dsv_ex_msg_dont_set_lm">You should not set LayoutManager on DiscreteScrollView.class instance. Library uses a special one. Just don\'t call the method.</string>
+    <string name="dsv_ex_msg_adapter_wrong_recycler">InfiniteScrollAdapter is supposed to work only with DiscreteScrollView</string>
+
+    <string name="txt_radio_btn_user">个人中心</string>
+    <string name="txt_radio_living">直播</string>
+    <string name="txt_radio_follow">关注</string>
+
+    <string name="live_quality_fps_and_bitrate">;&#160;帧率:<xliff:g id="fps">%1$.2f</xliff:g>;&#160;比特率:<xliff:g id="bitrate">%2$.2f</xliff:g>Kb/s</string>
+    <string name="live_quality">当前质量:&#160;<xliff:g id="value">%1$s</xliff:g></string>
+    <string name="loading_text">正在加载中...</string>
+    <string name="tab_follow_title">关注</string>
+    <string name="tab_person_title">个人中心</string>
+    <string name="login">登录</string>
+    <string name="watch_history_title">历史记录</string>
+    <string name="is_playing">正在直播</string>
+    <string name="not_playing">未开播</string>
+    <string name="anchor_not_playing">主播暂未开播</string>
+    <string name="theme_room_not_playing">主题房暂未开播</string>
+    <string name="live_end">直播结束</string>
+    <string name="recommend_more_anchor">为您推荐更多精彩直播</string>
+    <string name="change_recommend">换一换</string>
+    <string name="user_count">%d人</string>
+    <string name="live_room_id">ID:</string>
+    <string name="live_room_pretty_id">靓号：</string>
+    <string name="follow_is_null">还没有关注主播哦\n快去热门看看</string>
+    <string name="guard_is_null">还没有守护主播哦\n快去热门看看</string>
+    <string name="manager_is_null">没有主播给你管理哦\n快去热门看看</string>
+    <string name="watch_is_null">还没有看过主播哦\n快去热门看看</string>
+    <string name="badge_is_null">您还没有勋章哦\n多多参加官方的活动吧</string>
+    <string name="store_is_null">暂无靓号!</string>
+    <string name="store_meng_is_null">暂无商品!</string>
+    <string name="watch_history_is_null">您还没有历史观看记录喔~</string>
+    <string name="good_number_is_null">您还没有靓号哦，去商城看看吧</string>
+    <string name="videos_is_null">您还没有上传过视频哦，赶快去试试吧~!</string>
+    <string name="dynamic_is_null">您还没有上传过动态哦，赶快去试试吧~!</string>
+    <string name="square_dynamic_is_null">暂无动态~!</string>
+    <string name="message_list_is_null">暂无系统通知</string>
+    <string name="act_list_is_null">暂无活动</string>
+    <string name="help_is_null">暂无热门问题</string>
+    <string name="proclamation_is_null">暂无公告通知</string>
+    <string name="today_fans_is_null">无人上榜</string>
+    <string name="wish_card_is_null">还没有人上榜</string>
+    <string name="default_msg">暂无内容~!</string>
+    <string name="data_is_null">暂无数据</string>
+    <string name="network_exception">网络加载失败，点击重试</string>
+    <string name="data_exception">数据异常，请稍后重试~!</string>
+
+
+    <string name="not_install_wx">您还未安装微信客户端!</string>
+    <string name="not_open_wx_share">无法打开微信分享!</string>
+    <string name="copy_complete">复制完成</string>
+    <string name="account_info">%1$s(%2$s)</string>
+    <string name="mengdou_count">%d 萌豆</string>
+    <string name="loading_message">正在加载中</string>
+    <string name="remain_time">剩余时间</string>
+    <string name="poll">票数:</string>
+    <string name="ranking">排名：</string>
+    <string name="integral">积分:</string>
+
+    <string name="txt_payinfo_under_confirm">支付结果确认中</string>
+    <string name="please_wait">请稍后...</string>
+    <string name="query_order_info">正在获取订单信息</string>
+    <string name="recharge_center">充值中心</string>
+    <string name="plz_choose_recharge_count">请选择充值面额</string>
+    <string name="net_is_down">网络已断开</string>
+    <string name="not_login">您还未登录</string>
+    <string name="pay_success">充值成功</string>
+    <string name="pay_fail">支付失败</string>
+    <string name="pay_repetition">重复请求</string>
+    <string name="sure">确定</string>
+    <string name="save_text">保存</string>
+    <string name="cancel">取消</string>
+    <string name="close">关闭</string>
+    <string name="introduce_hint">无个性 不签名</string>
+    <string name="personal_info">个人资料</string>
+    <string name="tips">提示</string>
+    <string name="pay_cancel">您已取消支付</string>
+    <string name="user_id_name">%1$d-%2$s</string>
+    <string name="weixin_version_is_low">微信版本过低，请先升级</string>
+    <string name="weixin_isnot_installed">您未安装微信，请先下载微信</string>
+    <string name="online_user_count">在线%1$d人(%2$d游客)</string>
+    <string name="subscribe">关注</string>
+    <string name="unsubscribe">已关注</string>
+    <string name="unsubscribe_notice">取消关注将不再收到主播的开播通知</string>
+    <string name="subscribe_success">关注成功</string>
+    <string name="unsubscribe_success">取消关注成功</string>
+    <string name="is_highest_level">您已升到顶级</string>
+<!--    <string name="see_detail">查看详情</string>-->
+<!--    <string name="newcomer_big_content">爷，你有3000萌豆待领取</string>-->
+<!--    <string name="newcomer_big_small">首次登录客户端，即可获得最高3000萌豆奖励</string>-->
+<!--    <string name="newcomer_award_attention">萌豆奖励已发放到账户中，赶紧赠送礼物给喜爱的主播吧</string>-->
+<!--    <string name="look_around">逛一逛</string>-->
+<!--    <string name="give_a_reward">去打赏</string>-->
+<!--    <string name="award_login">恭喜已完成“新人礼包”所有任务</string>-->
+<!--    <string name="award_top_up">恭喜已完成“首次客户端充值”</string>-->
+<!--    <string name="first_login">首次登录注册</string>-->
+<!--    <string name="first_login_award">最高可获得1000萌豆</string>-->
+<!--    <string name="first_login_app">首次登录APP客户端</string>-->
+<!--    <string name="first_login_app_award">最高可获得6000萌豆</string>-->
+<!--    <string name="first_top_up_app">首次客户端充值</string>-->
+<!--    <string name="first_top_up_app_award">最高充值金额等值萌豆，首充10元，最高赠送1万萌豆</string>-->
+<!--    <string name="go_to_top_up">去充值</string>-->
+<!--    <string name="first_top_up_app_title">首次充值,最高等值萌豆奖励</string>-->
+<!--    <string name="first_top_up_app_msg">首次充值10元,最高赠送10000萌豆奖励</string>-->
+<!--    <string name="first_top_up_app_confirm">朕知道了</string>-->
+<!--    <string name="go_to_get">去领取</string>-->
+    <string name="gettable">可领取</string>
+    <string name="get_all_git">恭喜已完成今日“看直播 领选票”，明天继续加油喔~</string>
+    <string name="month_pk_login_attention">启禀圣上</string>
+    <string name="month_pk_login_cancel">朕不要</string>
+    <string name="month_pk_attention">选票已发放，可以在活动比赛中赠送给自己喜欢的主播，登录后即可领取喔</string>
+    <string name="login_just">立即登录</string>
+    <string name="attention_first_get_free_gift">启禀圣上，选票已发放，可以在礼物面板赏给恩宠的爱妃喔</string>
+    <string name="tickets_not_enouch">选票数量不足，观看直播就可以获得选票喔</string>
+    <string name="month_pk_stop">当前暂无赛事，选票功能自动关闭，赛事开启后，将自动开放！</string>
+    <string name="answer_login_attention">答题将在2分钟后开始，登录才能参与答题喔，快去登录吧</string>
+    <string name="answer_login_just">马上登录</string>
+    <string name="no_recommend_attention">主播正在赶来的路上…</string>
+    <string name="system_error">系统出现了异常</string>
+    <string name="join_chat_room_fail">未能进入直播间,\n您可以稍后重试</string>
+    <string name="connect_pk_fail">发起PK失败，稍后再试</string>
+    <string name="connect_pk_cancel">PK已取消</string>
+    <string name="connect_pk_timeout">创建PK超时</string>
+
+    <!-- PullToRefresh start -->
+    <string name="pull_to_refresh_pull_label">下拉可以刷新</string>
+    <string name="pull_to_refresh_release_label">松开立即刷新</string>
+    <string name="pull_to_refresh_refreshing_label">正在刷新数据中</string>
+
+    <string name="pull_to_refresh_from_bottom_pull_label">上拉可以加载</string>
+    <string name="pull_to_refresh_from_bottom_refreshing_label">松开立即加载</string>
+    <string name="pull_to_refresh_from_bottom_release_label">正在加载数据中</string>
+    <string name="leak_canary_display_activity_label">Leaks</string>
+    <!-- PullToRefresh end -->
+
+    <string name="exchange_success">兑换成功</string>
+    <string name="dayly_vote">每日选票任务</string>
+    <string name="take_vote_bt_watch">看直播 领选票</string>
+    <string name="vote_rule">每观看直播10分钟即可获得选票（系统自动发放），贵族等级越高可获得选票越多喔，</string>
+    <string name="qq_login">QQ登录</string>
+    <string name="phone_login">手机快捷登录</string>
+
+    <string name="code_error">验证码错误或已失效</string>
+    <string name="phone_error">请输入正确的手机号</string>
+    <string name="send_code_success">验证码已发送</string>
+
+    <string name="register_and">和</string>
+
+    <string name="register_phone_hint">请输入手机号</string>
+    <string name="register_code_hint">请输入验证码</string>
+    <string name="register_get_code">获取验证码</string>
+
+    <string name="register_account_hint">请输入主播账号</string>
+    <string name="register_psd">请输入密码</string>
+    <string name="no_user">暂无普通观众显示，请下拉刷新</string>
+    <string name="no_roommgr">暂无房管</string>
+    <string name="no_room_important">暂无贵宾</string>
+    <string-array name="filter_type">
+        <item>无滤镜</item>
+        <item>粉嫩</item>
+        <item>怀旧</item>
+        <item>蓝调</item>
+        <item>浪漫</item>
+        <item>美白</item>
+        <item>清凉</item>
+        <item>清新</item>
+        <item>日系</item>
+        <item>唯美</item>
+    </string-array>
+
+    <string name="online_end_text">只显示当前在线前100名玩家</string>
+    <string name="share">分享</string>
+    <string name="clear_screen">清屏</string>
+    <string name="share_liveroom">分享直播间到</string>
+    <string name="full_screen">全屏播放</string>
+    <string name="exit_full_screen">退出全屏</string>
+    <string name="start_publish">开始直播</string>
+    <string name="stop">结束</string>
+    <string name="load_music">载入音乐</string>
+    <string name="accompany">伴奏</string>
+    <string name="full">横屏</string>
+    <string name="stand">竖屏</string>
+    <string name="voice">人声</string>
+    <string name="beauty">美颜</string>
+    <string name="white">美白</string>
+    <string name="rotation">反转</string>
+    <string name="flashlight_on">闪光灯开</string>
+    <string name="flashlight_off">闪光灯关</string>
+    <string name="mirror_on">镜像开</string>
+    <string name="mirror_off">镜像关</string>
+    <string name="microphone_on">麦克风开</string>
+    <string name="microphone_off">麦克风关</string>
+    <string name="standardDefinition">标清</string>
+    <string name="highlyDefinition">高清</string>
+    <string name="contact_each_other">连麦</string>
+    <string name="close_room">关闭直播间</string>
+    <string name="definition">清晰度:</string>
+    <string name="frame_ratio">帧率:</string>
+    <string name="byte_ratio">码率:</string>
+    <!--直播推流-->
+    <string name="live_over">本次直播已结束</string>
+    <string name="publish_disconnect">推流中断，请重新推流</string>
+    <string name="publish_fail">推流失败，请重新推流</string>
+    <string name="network_error_login_room_fail">网络异常，进入直播间失败</string>
+    <string name="publish_pattern">开播模式</string>
+    <!--创建pk-->
+    <string name="pk_create_tab">发起PK</string>
+    <string name="pk_my_record">我的战绩</string>
+    <string name="pk_invite">PK邀请</string>
+
+    <string name="pk_create">创建PK,并邀请PK</string>
+
+    <string name="pk_refuse">残忍拒绝</string>
+    <string name="pk_agree">同意</string>
+    <string name="no_pk_data">暂无PK数据哦~</string>
+    <string name="pk_title">羚萌PK</string>
+    <string name="hang_pk">结束PK</string>
+    <string name="pk_progress">正在PK</string>
+    <string name="setting_pk_time">设置时长</string>
+    <string name="at_least_one_pk">至少邀请一名主播PK</string>
+    <string name="lack_pk_duration">缺少PK时间</string>
+    <string name="connect_pk_success">发起PK成功，即将开始</string>
+    <string name="finish_pk_attention">PK结果公布后才能结束PK</string>
+    <!--申请直播-->
+    <string name="apply_anchor_account">请输入直播账号</string>
+    <string name="apply_anchor_password">请输入密码</string>
+    <string name="apply_anchor">提交申请</string>
+    <string name="not_enable_send_message_to_yourself">不能给自己发消息</string>
+    <string name="join_chatroom_failed">加入聊天服务器失败,请稍后再试</string>
+    <string name="manager_user_attention">管理用户</string>
+    <string name="mute">禁言</string>
+    <string name="gag">踢出</string>
+    <string name="black_house">7日小黑屋</string>
+    <string name="manager_house">升为房管</string>
+    <string name="repeal_manager_house">撤销房管</string>
+    <string name="private_chat">与%s 聊天中...</string>
+    <string name="pk_canceled">%s已取消PK</string>
+    <string name="pk_accepted">%s已接受了PK邀请</string>
+    <string name="pk_rejected">%s已拒绝PK邀请</string>
+    <string name="pk_timeout">%s发起的PK已超时</string>
+    <string name="you">你</string>
+    <string name="pk_inviting">%s邀请你参加PK</string>
+    <string name="reject">拒绝</string>
+    <string name="reminder">提示</string>
+
+    <!--茶叶活动相关-->
+    <string name="resurgence_card">复活卡</string>
+    <string name="total_time">累积答题时间</string>
+    <string name="set_question">开始出题</string>
+    <string name="question_end">出题结束</string>
+    <string name="set_answer">公布答案</string>
+    <string name="question_start_failed">出题失败，请勿再次点击出题按钮，请联系程序猿加紧抢修！</string>
+    <string name="question_start_success">出题成功！</string>
+    <string name="question_message">确认准备出题？确认后，将会在120秒倒计时后可点击开始出题</string>
+    <string name="ready_question">准备出题</string>
+    <string name="question_next_failed">出题失败，请稍后再试！</string>
+
+    <string name="answer_resurgence">本题目回答错误\n已自动为您复活</string>
+    <string name="jump_ad">%1$d 跳过</string>
+    <string name="question_endl">答题已结束，快去查看获奖名单吧！</string>
+    <string name="question_pass">恭喜你已完成全部答题，快去查看获奖名单吧！</string>
+    <string name="watch_award_list">查看获奖名单</string>
+    <string name="param_error">答题状态错误</string>
+    <string name="pool_time">超级福弹\n剩余时间</string>
+    <string name="network_unenable">网络连接错误\n试试看刷新页面或检查网络连接</string>
+    <string name="load_error">加载失败，请重试</string>
+    <string name="empty_data">一大波宝宝躺在数据库里\n我正在唤醒他们</string>
+    <string name="reload">重新加载</string>
+    <string name="network_not_available">当前网络不可用，请检查你的网络设置</string>
+
+    <!--必须要登录的渠道号-->
+    <string-array name="channel_list_login">
+        <item>XLFY01</item>
+        <item>XLFY02</item>
+        <item>XLFY03</item>
+    </string-array>
+
+
+    <string name="deep_sea_exchange_description">注：萌豆奖励已发放到您的账户中，请注意查收，如有疑问，请联系官方客服。</string>
+    <!--自动更新模块-->
+    <string name="find_new_version">发现新版本</string>
+    <string name="update_now">立即更新</string>
+    <!--个人中心-->
+    <string name="md">萌豆</string>
+    <string name="royal_privilege">贵族特权</string>
+    <string name="more_royal_privilege">更多玩法在这里</string>
+    <string name="user_level">我的等级</string>
+    <string name="user_royal">我的贵族</string>
+    <string name="user_royal_month_card">贵族月卡</string>
+    <string name="user_welfare_center">福利中心</string>
+    <string name="user_royal_hot">贵族热度卡</string>
+    <string name="user_wallet">我的钱包</string>
+    <string name="user_dynamic">我的视频/动态</string>
+    <string name="user_helper_center">帮助中心</string>
+    <string name="user_about_us">关于我们</string>
+    <string name="im_center">消息中心</string>
+    <string name="user_cards">我的卡券</string>
+    <string name="user_discount">礼物折扣券</string>
+    <string name="im_notice">你有未读消息</string>
+    <string name="user_badge">我的背包</string>
+    <string name="user_history">观看记录</string>
+    <string name="user_vehicle">我的座驾</string>
+    <string name="apply_author">开通手机直播</string>
+    <string name="my_earnings">我的收益</string>
+    <string name="on_leave">请假</string>
+    <string name="private_message">私信设置</string>
+    <string name="live_preview">直播预告设置</string>
+    <string name="friends_share">发送朋友圈</string>
+    <string name="help_affiche">帮助与公告</string>
+    <string name="user_prerogative">我的特权</string>
+    <string name="ta_prerogative">Ta的特权</string>
+    <string name="prerogative_center">特权中心</string>
+
+    <!--设置-->
+    <string name="set_binding_phone">绑定手机</string>
+    <string name="connect_service">联系客服</string>
+    <string name="cache_cleaner">清理缓存</string>
+    <string name="check_version">检查更新</string>
+    <string name="make_ticket">开票申请</string>
+    <string name="prise_us">评价我们</string>
+    <string name="about_us">关于我们</string>
+
+    <string name="up_log">上传日志</string>
+    <string name="app_set">设置</string>
+    <string name="juveniles_protect">未成年保护</string>
+    <string name="real_name">实名认证</string>
+    <string name="privacy_set">隐私设置</string>
+    <string name="push_setting">消息通知设置</string>
+    <string name="destroy_account">账号注销</string>
+    <string name="setted">已设置</string>
+    <string name="no_setted">未设置</string>
+    <!--关于我们-->
+
+    <string name="user_register_rule">用户注册协议</string>
+    <string name="user_privacy_rule">用户隐私协议</string>
+    <string name="user_manager_standard">用户管理规范</string>
+    <string name="anchor_manager_standard">主播管理规范</string>
+    <string name="become_anchor">成为合作公会/主播</string>
+    <string name="become_anchor_link">QQ:800171722(点击复制)</string>
+    <string name="business_cooperation">商务合作</string>
+    <string name="business_cooperation_link">QQ:800171722(点击复制)</string>
+    <string name="phone_live">手机直播</string>
+
+    <!--我的等级-->
+    <string name="level_privilege">等级特权</string>
+    <string name="level_notice_001">注：开通守护或者贵族，公聊字数可增加至40个字符</string>
+    <string name="how_upgrade">如何升级</string>
+    <string name="level_notice_002">注：消费如送礼，开通守护</string>
+    <string name="level_notice_003">玩家每消费100萌豆，即可获得100升级经验</string>
+
+    <!--WorldCup-->
+    <string name="world_cup_guess">世界杯竞猜</string>
+    <string name="according_opening">距封盘</string>
+    <string name="other">其他</string>
+    <string name="not_enough_coin">竞猜币余额不足\n是否赠送足球获取竞猜币？</string>
+    <string name="send_gift">去赠送</string>
+    <string name="odds_changed">赔率发生变化，请重新下注哦</string>
+
+    <!--直播间-->
+    <string name="live_anchor_stop_msg">当前主播账号已禁用</string>
+    <string name="live_anchor_liveing_msg">当前账号已开播</string>
+    <string name="live_user_liveing_msg">非主播用户不能开播</string>
+    <string name="live_anchor_liveing_permission_msg">对当前主播无该平台开播权限</string>
+    <string name="live_no_program_msg">当前节目未开播</string>
+    <string name="not_support_game">当前软件不支持该游戏，请下载最新版本软件</string>
+    <string name="text_lengh_out_permit">字数超过限制，请开通贵族或守护</string>
+    <string name="danmu_text_lengh_out_permit">弹幕字数超过限制，请重新输入</string>
+
+    <!-- 直播封禁 -->
+    <string name="remind_title">您的直播内容包含疑似低俗擦边，请尽快改正，若再次发现相同直播内容，将会作违规处理！</string>
+    <string name="warning_title">智能机器人检测到该直播间直播行为异常，系统已经截取相关视频提交人工审核，如违反主播管理规范行为，将受到相应处罚！如直播无异常请忽略此消息！</string>
+
+    <!--连麦相关-->
+    <string name="video_loading">加载中</string>
+    <string name="rule">规则</string>
+    <string name="invite_anchor">邀请主播</string>
+    <string name="remove">移除</string>
+    <string name="create_connect_micro">发起连麦</string>
+    <string name="create_connect_micro_fail">发起失败</string>
+    <string name="notarize_connect_micro">确认连麦</string>
+    <string name="notarize_pk">确认PK</string>
+    <string name="give_up">放弃</string>
+    <string name="certain">确认</string>
+    <string name="certained">已确认</string>
+    <string name="i_know">知道了</string>
+    <string name="at_least_one">至少邀请一个主播连麦</string>
+    <string name="wait_for_other_confirm">等待他人确认</string>
+    <string name="connect_micro_progress">正在连麦</string>
+    <string name="hang_micro">挂断连麦</string>
+    <string name="hang_micro_attention">挂断将结束连麦，是否挂断</string>
+    <string name="hang_pk_attention">结束PK将挂断连麦，是否结束？</string>
+    <string name="connect_micro_fail">连麦失败，稍后再试</string>
+    <string name="connect_micro_timeout">连麦超时</string>
+    <string name="search_result">搜索结果</string>
+    <string name="recent_anchor">最近主播</string>
+    <string name="search_result_kong">空空如也</string>
+    <string name="connnect_micro_inpk">PK结束后才能发起连麦哦</string>
+    <string name="create_pk_inmicro">连麦结束后才能发起PK哦</string>
+    <string name="anchor_search_attention">输入主播名称或房间号</string>
+    <string name="connect_micro_success">连麦成功，即将开始</string>
+    <string name="switch_micro_fail">切换连麦环境失败，请重试</string>
+    <string name="switch_micro_env">切换连麦环境，请稍后</string>
+    <string name="login_please">您还未登录，请先登录</string>
+
+    <string name="runway_change_attention">跑道金额发生变化，无法击败当前跑道，确定继续送礼吗？</string>
+    <string name="continue_send">继续赠送</string>
+
+    <!--Car-->
+    <string name="car_current">当前车辆</string>
+    <string name="car_auto_attention">选择自动升级至的豪车等级</string>
+    <string name="car_no_target">请选择目标等级</string>
+    <string name="car_confirm_exit">是否确认退出豪车工厂？</string>
+    <string name="car_open_soong">豪车大亨暂未开放，敬请期待</string>
+
+    <!--萌币相关-->
+    <string name="meng_bi_active">今日活跃值</string>
+    <string name="active_week">周活跃值</string>
+    <string name="enable_get">可领取</string>
+    <string name="enable_choice">可抽取</string>
+    <string name="task_get">领取</string>
+    <string name="task_go">去完成</string>
+    <string name="task_not_done">未完成</string>
+    <string name="task_done">已完成</string>
+    <string name="task_got">已领取</string>
+    <string name="guard">守护</string>
+    <string name="header_info">头条</string>
+    <string name="living">直播中</string>
+    <!--发布相关-->
+    <string name="upload_no_network">当前未连接网络，请联网后再发布！</string>
+    <string name="is_upload_tips">当前有正在发布的任务，请稍后重试</string>
+    <string name="upload_retry_error">已无法重试，请尝试重新发布</string>
+    <string name="upload_video_fail">上传视频失败，请重新上传!</string>
+    <string name="publish_video_fail">发布视频失败，请重新发布!</string>
+    <string name="upload_fail">上传失败</string>
+    <string name="publish_state_fail">发布失败</string>
+    <string name="publish_success">发布成功</string>
+    <string name="video_size_is_out">视频的大小超出30M</string>
+    <string name="state_out_of_range">超出字数限制，动态最多输入100个字~</string>
+    <string name="video_out_of_range">超出字数限制，视频最多输入32个字~</string>
+    <string name="report_out_of_range">超出字数限制，举报最多输入200个字~</string>
+    <string name="network_not_strong">网络不给力</string>
+    <string name="pic_size_is_out">上传图片大小大于3M</string>
+    <string name="video_not_wifi">正在使用非Wi-Fi网络，播放将产生流量费用</string>
+    <string name="check_phone_number_attention">完成手机号验证后才能领取周活跃礼包哦</string>
+    <string name="go_to_check">立即验证</string>
+    <string name="check_mobile_numble">手机验证</string>
+    <string name="guess_you_like">猜你喜欢</string>
+    <string name="give_notice">打个招呼</string>
+
+    <string name="user_tip">玩家攻略</string>
+    <string name="anchor_tip">主播攻略</string>
+    <string name="extra_tips">破纪录追加奖励</string>
+
+    <string name="delete_conversation_or_not">是否删除该条聊天</string>
+    <string name="notification_system">系统通知</string>
+    <string name="notification_interaction">互动消息</string>
+    <string name="friends_request">好友请求</string>
+    <string name="do_prise">点赞</string>
+    <string name="do_speak">评论</string>
+    <string name="message">消息</string>
+    <string name="friends">好友</string>
+    <string name="chat_room">聊天室</string>
+    <string name="editor">编辑</string>
+    <string name="no_friends">暂无好友</string>
+    <string name="no_chat_room">暂无聊天室</string>
+    <string name="no_data">暂无数据</string>
+    <string name="no_friends_request">暂无好友申请</string>
+    <string name="no_prise">还没有人点赞哦</string>
+    <string name="no_comment_message">暂无评论哦</string>
+    <string name="prised_you">赞了你</string>
+    <string name="friend_request">好友申请</string>
+    <string name="friend_request_accept">接受</string>
+    <string name="sure_reject">确定要拒绝吗</string>
+    <string name="sure_clear">确定要一键清空吗</string>
+    <string name="sure_read">确定要设为已读吗</string>
+    <string name="sure_del_friends">确定要删除以下好友吗</string>
+    <string name="prise_clear">清空</string>
+    <string name="clear_success">清除成功</string>
+    <string name="sing_read">标记已读</string>
+    <string name="all_sel">全选</string>
+    <string name="friend_del">删除</string>
+    <string name="no_friend_sel">还没有选择好友</string>
+    <string name="private_title">私信</string>
+    <string name="make_friends">%1$s成为你的好友</string>
+    <string name="pk_guess_sealed">已封盘</string>
+    <string name="chat_private">私聊</string>
+
+
+    <string name="important_user">贵宾席位</string>
+
+    <string name="add_chat">加好友</string>
+
+    <string name="no_video">暂无喜欢的视频</string>
+    <string name="no_video_anchor">暂未发布视频</string>
+
+    <string name="no_post">暂无喜欢的动态</string>
+    <string name="no_post_anchor">暂未发布动态</string>
+
+    <string name="no_comment">暂无评论，快来评论吧</string>
+
+    <string name="praise_count_comment">条评论</string>
+    <string name="hint_input">请输入消息…</string>
+    <string name="reply_comment">回复 </string>
+    <string name="more_comment">查看更多评论 ></string>
+    <string name="comment_details">评论详情</string>
+    <string name="dynamic_details">动态详情</string>
+    <string name="comment_all">全部评论</string>
+    <string name="error_network">网络出现了问题~</string>
+
+    <string name="protect_password_not_set">家长密码未设置</string>
+    <string name="protect_password_setted">家长密码已设置</string>
+    <string name="confirm_protect_password">确认密码</string>
+    <string name="set_protect_password">设置密码</string>
+    <string name="cancel_protect_password">取消密码</string>
+    <string name="check_protect_password">验证家长密码</string>
+    <string name="reject_younger">杜绝青少年使用%1$s\n请输入密码进行验证</string>
+    <string name="set_password_attention">请输入4位数字密码</string>
+    <string name="next_step">下一步</string>
+    <string name="please_input_psd_confirm">请输入密码确认</string>
+    <string name="please_input_psd_again">请再次输入密码</string>
+    <string name="psd_not_the_same">与第一次输入密码不一致</string>
+    <string name="set_success">设置成功</string>
+    <string name="cancel_success">取消成功</string>
+    <string name="check_success">验证通过</string>
+    <string name="please_input_right_password">请输入正确的密码</string>
+    <string name="canot_see_squares">开播状态中，无法查看视频和动态</string>
+
+    <string name="recharge_success">恭喜充值成功，快去宠幸心爱的TA吧～</string>
+    <string name="agreement_not_agree">不同意</string>
+    <string name="agreement_agree">同意</string>
+    <string name="agreement_title">用户协议和隐私政策</string>
+    <string name="agreement_content">亲爱的%1$s用户：\n
+        感谢您使用“%2$s”。我们非常重视您的个人信息和隐私保护。为了更好得保障您的个人权益，在您使用我们的产品前，请您认真阅读《用户注册协议》和《用户隐私政策》的全部内容，同意并接受全部条款后开始使用我们的产品和服务。我们会严格按照政策内容使用和保护您的个人信息，感谢您的信任。\n【特别提示】本政策于2019年11月14日公布，将于2019年11月21日生效。
+    </string>
+    <string name="agreement_conent_clickable">《用户隐私政策》</string>
+    <string name="agreement_register_conent_clickable">《用户注册协议》</string>
+    <string name="show_location">是否开启地理位置显示</string>
+    <string name="submit">提交</string>
+
+    <!--月卡-->
+    <string name="cumulative_receive">累计领取</string>
+    <string name="verification">完成手机号验证才能购买贵族月卡哦</string>
+    <string name="verification_two">余额不足，请先充值</string>
+    <string name="verification_three">成为贵族才能购买贵族月卡哦</string>
+    <string name="verification_four">您验证的手机号已购买贵族月卡，换个手机号验证吧</string>
+    <string name="go_verification">去验证</string>
+    <string name="go_recharge">去充值</string>
+    <string name="become_royal">成为贵族</string>
+    <string name="determine">购买贵族月卡即刻领取，确定购买吗？</string>
+    <string name="remind">萌豆等你领</string>
+    <string name="month_text">已领取%1$d天，缺领%2$d次</string>
+
+    <!--翻牌-->
+    <string name="more_welfare">更多福利></string>
+    <string name="look_cards">看底牌</string>
+    <string name="flip_text">奖励与苹果公司无关，苹果公司不是该活动的赞助商</string>
+    <string name="explain">福利翻牌说明</string>
+
+
+    <string name="register_rule_pravicy">《用户隐私》</string>
+    <string name="agreement">协议</string>
+    <string name="juveniles_protect_attention">为维护良好互联网环境，呵护未成年人健康成长。%1$s禁止未成年人登录使用，如果您是监护人，请设置家长密码。
+\n\n
+设置家长密码后，每次打开app需要验证密码。</string>
+    <string name="register_rule_02">《用户注册》</string>
+
+    <!-- 羚萌公约 -->
+    <string name="html_spec">rules/mgrSpec.html</string>
+    <!-- 用户注册协议 -->
+    <string name="html_user_reg">rules/protocolUserReg.html</string>
+    <!-- 主播管理规范 -->
+    <string name="html_anchor_spec">rules/anchorMgrSpec.html</string>
+    <!-- 用户管理规范 -->
+    <string name="html_user_spec">rules/userMgrSpec.html</string>
+    <string name="propose_address">/rules/officialProposal.html</string>
+    <!--豪车工厂说明页-->
+    <string name="luxury_car">/cargc</string>
+    <!--PK道具说明-->
+    <string name="pk_prop_address">/rules/pkyhPropRules.html</string>
+
+    <string name="egg_type">砸蛋模式</string>
+    <string name="egg_high">高爆模式</string>
+    <string name="egg_lucky">幸运模式</string>
+
+    <string name="lucky_pan_normal">普通模式</string>
+    <string name="lucky_pan_high">高级模式</string>
+
+    <string name="record_prize">中奖记录</string>
+    <string name="mount_compound">座驾合成</string>
+    <string name="double_prize">双倍奖励</string>
+    <string name="in_use">使用中</string>
+    <string name="mount_compounded">可合成</string>
+    <string name="discounts">优惠</string>
+    <string name="lucky_pan_congratulation">恭喜</string>
+    <string name="lucky_pan_getted">抽到了</string>
+    <string name="lucky_result_congratulation">恭喜获得</string>
+    <string name="lucky_moment_attention_left">幸运时刻\n座驾概率\n2倍</string>
+    <string name="double_probability_attention_right">双倍奖励\n剩余次数\n%1$d次</string>
+
+    <string name="rights_double_possibility">使用权益：</string>
+    <string name="can_not_repetition_use">不能重复使用</string>
+    <string name="no_double_card_attention">您还没有双倍奖励卡，可通过周活跃奖励获得哦～</string>
+    <string name="coming_soon">敬请期待</string>
+    <string name="first_private_attention">当前仅限守护或9级以上，才可私信主播，领取首充大礼包，即可获得私信体验福利。</string>
+    <string name="first_private_title">私信体验福利</string>
+    <string name="one_yuan_balance_not_enough_attention">您还有待领取的首充超值大礼包，快去领取吧~</string>
+    <string name="one_yuan_balance_not_enough_title">当前余额不足</string>
+<!--    <string name="one_yuan_get">快去领取吧~</string>-->
+    <string name="one_yuan_give_up">放弃领取</string>
+    <string name="first_private_give_up">放弃福利</string>
+    <string name="only_support_landscape">该功能仅支持竖屏下使用</string>
+    <string name="title_recharge">充值</string>
+    <string name="ali_pay">支付宝</string>
+    <string name="pay_immediately">立即支付</string>
+    <string name="weixin">微信</string>
+    <string name="online_service">在线客服</string>
+    <string name="phone_number_fast_login">手机快捷登录</string>
+    <string name="last_login">上次登录</string>
+    <string name="owner_phone_number_fast_login">本机号码一键登录</string>
+    <string name="others_phone_login">其他手机号码登录 >></string>
+
+    <string name="anchor_badge_cuount">荣耀勋章\n获得%1$d枚</string>
+    <string name="anchor_invite_speak">主播邀请你陪Ta聊天</string>
+    <string name="receive_one_yuan_private">领取首充礼包，即可私信主播</string>
+    <string name="receive_immediately">立即领取</string>
+    <string name="rule_award">奖励规则</string>
+    <string name="title_header_info">羚萌头条榜</string>
+    <string name="stream_template">rtmp://%1$s-rtmp.51lm.tv%2$s</string>
+    <string name="address_header_info">/newheadline</string>
+    <string name="address_header_info_rule">/newheadline/rule</string>
+    <string name="chat_mode_attention">开启聊天模式，畅快聊天无顾虑</string>
+    <string name="exit_chat_mode">退出聊天模式</string>
+    <string name="exit_chat_mode_attention">是否退出聊天模式？</string>
+    <string name="package_owner">背包</string>
+    <string name="discount_content">折扣券</string>
+    <string name="handbook">图鉴</string>
+    <string name="handbook_huanque">羚萌图鉴</string>
+    <string name="empty_bag">暂无背包礼物</string>
+    <string name="recommend">推荐</string>
+    <string name="star_lucky">幸运星球</string>
+</resources>

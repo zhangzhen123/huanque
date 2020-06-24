@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
+    </declare-styleable>
+    <declare-styleable name="HomeRadionButton">
+        <attr name="homeRadionButton_width" format="dimension" />
+        <attr name="homeRadionButton_height" format="dimension" />
+    </declare-styleable>
+
+    <!--送礼面板，标题使用-->
+    <declare-styleable name="GiftTitleView">
+        <attr name="text" format="string" />
+        <attr name="dot" format="boolean" />
+        <attr name="showLine" format="boolean"/>
+    </declare-styleable>
+
+
+    <!--礼物视图-->
+    <declare-styleable name="MagicTextView">
+        <attr name="innerShadowColor" format="color" />
+        <attr name="innerShadowRadius" format="float" />
+        <attr name="innerShadowDx" format="float" />
+        <attr name="innerShadowDy" format="float" />
+
+        <attr name="outerShadowColor" format="color" />
+        <attr name="outerShadowRadius" format="float" />
+        <attr name="outerShadowDx" format="float" />
+        <attr name="outerShadowDy" format="float" />
+
+        <attr name="typeface" format="string" />
+
+        <attr name="foreground" format="reference|color" />
+
+        <!--<attr name="strokeWidth" format="float" />-->
+        <attr name="strokeMiter" format="float" />
+        <attr name="strokeColor" format="color" />
+        <attr name="strokeJoinStyle">
+            <enum name="miter" value="0" />
+            <enum name="bevel" value="1" />
+            <enum name="round" value="2" />
+        </attr>
+    </declare-styleable>
+    <!--ChatInputView配置的属性-->
+    <declare-styleable name="ChatInputView">
+        <attr name="type">
+            <enum name="Chatroom" value="0" />
+            <enum name="Comment" value="1" />
+            <enum name="InputDialog" value="2" />
+            <enum name="Comment_Dynamic" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="PullToRefresh">
+
+        <!-- A drawable to use as the background of the Refreshable View -->
+        <attr name="ptrRefreshableViewBackground" format="reference|color" />
+
+        <!-- A drawable to use as the background of the Header and Footer Loading Views -->
+        <attr name="ptrHeaderBackground" format="reference|color" />
+
+        <!-- Text Color of the Header and Footer Loading Views -->
+        <attr name="ptrHeaderTextColor" format="reference|color" />
+
+        <!-- Text Color of the Header and Footer Loading Views Sub Header -->
+        <attr name="ptrHeaderSubTextColor" format="reference|color" />
+
+        <!-- Mode of Pull-to-Refresh that should be used -->
+        <attr name="ptrMode">
+            <flag name="disabled" value="0x0" />
+            <flag name="pullFromStart" value="0x1" />
+            <flag name="pullFromEnd" value="0x2" />
+            <flag name="both" value="0x3" />
+            <flag name="manualOnly" value="0x4" />
+
+            <!-- These last two are depreacted -->
+            <flag name="pullDownFromTop" value="0x1" />
+            <flag name="pullUpFromBottom" value="0x2" />
+        </attr>
+
+        <!-- Whether the Indicator overlay(s) should be used -->
+        <attr name="ptrShowIndicator" format="reference|boolean" />
+
+        <!-- Drawable to use as Loading Indicator. Changes both Header and Footer. -->
+        <attr name="ptrDrawable" format="reference" />
+
+        <!-- Drawable to use as Loading Indicator in the Header View. Overrides value set in ptrDrawable. -->
+        <attr name="ptrDrawableStart" format="reference" />
+
+        <!-- Drawable to use as Loading Indicator in the Footer View. Overrides value set in ptrDrawable. -->
+        <attr name="ptrDrawableEnd" format="reference" />
+
+        <!-- Whether Android's built-in Over Scroll should be utilised for Pull-to-Refresh. -->
+        <attr name="ptrOverScroll" format="reference|boolean" />
+
+        <!-- Base text color, typeface, size, and style for Header and Footer Loading Views -->
+        <attr name="ptrHeaderTextAppearance" format="reference" />
+
+        <!-- Base text color, typeface, size, and style for Header and Footer Loading Views Sub Header -->
+        <attr name="ptrSubHeaderTextAppearance" format="reference" />
+
+        <!-- Style of Animation should be used displayed when pulling. -->
+        <attr name="ptrAnimationStyle">
+            <flag name="rotate" value="0x0" />
+            <flag name="flip" value="0x1" />
+        </attr>
+
+        <!-- Whether the user can scroll while the View is Refreshing -->
+        <attr name="ptrScrollingWhileRefreshingEnabled" format="reference|boolean" />
+
+        <!--
+        	Whether PullToRefreshListView has it's extras enabled. This allows the user to be
+        	able to scroll while refreshing, and behaves better. It acheives this by adding
+        	Header and/or Footer Views to the ListView.
+        -->
+        <attr name="ptrListViewExtrasEnabled" format="reference|boolean" />
+
+        <!--
+        	Whether the Drawable should be continually rotated as you pull. This only
+        	takes effect when using the 'Rotate' Animation Style.
+        -->
+        <attr name="ptrRotateDrawableWhilePulling" format="reference|boolean" />
+
+        <!-- BELOW HERE ARE DEPRECEATED. DO NOT USE. -->
+        <attr name="ptrAdapterViewBackground" format="reference|color" />
+        <attr name="ptrDrawableTop" format="reference" />
+        <attr name="ptrDrawableBottom" format="reference" />
+    </declare-styleable>
+    <!--键盘切换-->
+    <declare-styleable name="KPSwitchPanelLayout">
+        <attr name="ignore_recommend_height" format="boolean" />
+    </declare-styleable>
+    <!--发送弹幕的小组件-->
+    <declare-styleable name="AnIncredibleSimpleSwitchView">
+        <attr name="textOn" format="string" />
+        <attr name="textOff" format="string" />
+        <attr name="bgcolorOff" format="color" />
+        <attr name="bgcolorOn" format="color" />
+        <attr name="textColorOff" format="color" />
+        <attr name="textColorOn" format="color" />
+        <attr name="borderColor" format="color" />
+        <!--文案背景色-->
+        <attr name="tvbgColorOn" format="color" />
+        <attr name="tvbgColorOff" format="color" />
+    </declare-styleable>
+    <!--气泡弹窗-->
+    <declare-styleable name="BubbleLayout">
+        <attr name="lookAt">
+            <enum name="left" value="1" />
+            <enum name="top" value="2" />
+            <enum name="right" value="3" />
+            <enum name="bottom" value="4" />
+        </attr>
+
+        <attr name="lookPosition" format="dimension" />
+        <attr name="lookWidth" format="dimension" />
+        <attr name="lookLength" format="dimension" />
+        <attr name="bubbleColor" format="color" />
+        <attr name="bubbleRadius" format="dimension" />
+        <attr name="bubblePadding" format="dimension" />
+        <attr name="shadowRadius" format="dimension" />
+        <attr name="shadowX" format="dimension" />
+        <attr name="shadowY" format="dimension" />
+        <attr name="shadowColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="SwitchButton" tools:ignore="ResourceName">
+        <attr name="kswThumbDrawable" format="reference" />
+        <attr name="kswThumbColor" format="color|reference" />
+        <attr name="kswThumbMargin" format="dimension|reference" />
+        <attr name="kswThumbMarginTop" format="dimension|reference" />
+        <attr name="kswThumbMarginBottom" format="dimension|reference" />
+        <attr name="kswThumbMarginLeft" format="dimension|reference" />
+        <attr name="kswThumbMarginRight" format="dimension|reference" />
+        <attr name="kswThumbWidth" format="dimension|reference" />
+        <attr name="kswThumbHeight" format="dimension|reference" />
+        <attr name="kswThumbRadius" format="dimension|reference" />
+        <attr name="kswBackRadius" format="dimension|reference" />
+        <attr name="kswBackDrawable" format="reference" />
+        <attr name="kswBackColor" format="color|reference" />
+        <attr name="kswFadeBack" format="boolean" />
+        <attr name="kswThumbRangeRatio" format="float" />
+        <attr name="kswAnimationDuration" format="integer" />
+        <attr name="kswTintColor" format="color|reference" />
+        <attr name="kswTextOn" format="string" />
+        <attr name="kswTextOff" format="string" />
+        <attr name="kswTextThumbInset" format="dimension" />
+        <attr name="kswTextExtra" format="dimension" />
+        <attr name="kswTextAdjust" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="BaseWebView">
+        <!--是否需要显示进度条-->
+        <attr name="need_process_bar" format="boolean" />
+    </declare-styleable>
+
+    <!-- 环形进度条 -->
+    <declare-styleable name="CircleProgressView">
+        <!-- 进度宽度 -->
+        <attr name="progress_width" format="dimension" />
+        <!-- 进度颜色 -->
+        <attr name="progress_color" format="color" />
+        <!-- 进度背景颜色 -->
+        <attr name="progress_bg_color" format="color" />
+        <!-- 加载进度起始位置 -->
+        <attr name="location_start" format="enum">
+            <enum name="left" value="1" />
+            <enum name="top" value="2" />
+            <enum name="right" value="3" />
+            <enum name="bottom" value="4" />
+        </attr>
+    </declare-styleable>
+
+    <!-- 方形进度条 -->
+    <declare-styleable name="SquareProgress">
+        <attr name="sp_progress_color" format="color" />
+        <attr name="show_dot" format="boolean" />
+        <attr name="dot_color" format="color" />
+        <attr name="dot_diameter" format="dimension" />
+        <attr name="sp_max_color" format="color" />
+        <attr name="sp_progress" format="integer" />
+        <attr name="sp_max_progress" format="integer" />
+        <attr name="sp_progress_width" format="dimension" />
+        <attr name="x_padding" format="dimension" />
+        <attr name="y_padding" format="dimension" />
+        <attr name="sp_reverse" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="CircularCornerTextView">
+        <!--自适应圆角   为控件高度的一半-->
+        <attr name="wrapradius" format="boolean" />
+        <!--圆角大小-->
+        <attr name="radius" format="dimension" />
+        <!--起始颜色-->
+        <attr name="startcolor" format="color" />
+        <!--结束颜色-->
+        <attr name="endcolor" format="color" />
+        <!--圆角位置-->
+        <attr name="lefttop" format="boolean" />
+        <attr name="righttop" format="boolean" />
+        <attr name="leftbottom" format="boolean" />
+        <attr name="rightbottom" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomRadiusBlurView">
+        <!--圆角大小-->
+    <attr name="blur_radius" format="dimension" />
+    </declare-styleable>
+</resources>

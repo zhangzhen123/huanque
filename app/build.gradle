@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+        arg('eventBusIndex', 'com.julun.huanque.core.CommonEventBusIndex')
+    }
+}
+android {
+    compileSdkVersion hq.compileSdkVersion
+    buildToolsVersion hq.buildToolsVersion
+
+
+    defaultConfig {
+        applicationId "com.julun.huanque"
+        minSdkVersion hq.minSdkVersion
+        targetSdkVersion hq.targetSdkVersion
+        versionCode 4300
+        versionName "4.30.0"
+
+        multiDexEnabled true
+
+        //正式地址 http
+        buildConfigField "String", "SERVICE_BASE_URL_PRODUCT", "\"${api.BASE_URL_PRODUCT}\""
+        //测试地址
+        buildConfigField "String", "SERVICE_BASE_URL_DEV", "\"${api.BASE_URL_DEV}\""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation project(':core')
+    kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
+
+}

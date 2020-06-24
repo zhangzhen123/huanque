@@ -1,0 +1,99 @@
+ext {
+    hq = [
+            buildToolsVersion: "29.0.3",
+            compileSdkVersion: 29,
+            minSdkVersion    : 16,
+            targetSdkVersion : 29
+    ]
+
+//    hversion = [
+//            //羚萌直播版本号信息
+//            huanqueversionMajor: 4,
+//            huanqueversionMinor: 30,
+//            huanqueversionPatch: 0,
+//            //马甲包版本号
+//            lgmgVersionMajor   : 2,
+//            lgmgVersionMinor   : 3,
+//            lgmgVersionPatch   : 0,
+//    ]
+
+    dependencies = [
+            AROUTER_API     : 'com.alibaba:arouter-api:1.4.0',
+            AROUTER_COMPILER: 'com.alibaba:arouter-compiler:1.2.0',
+    ]
+
+    api = [
+            BASE_URL_PRODUCT: "https://api.51lm.tv/",
+            BASE_URL_DEV: "http://192.168.96.251:8888/"
+    ]
+    sdk = [
+            //三方对应相关的key or scheme
+            //QQ
+            //羚萌直播
+            QQ_KEY_LM        : "1105752551",
+            //番茄直播
+            QQ_KEY_FQ        : "101582374",
+            //黄瓜直播
+            QQ_KEY_CK        : "101580983",
+            //樱桃直播
+            QQ_KEY_CE        : "101814741",
+            //OPPO联运
+            QQ_KEY_OPPO      : "101831510",
+
+            //WX
+            //羚萌直播
+            WX_KEY_LM        : "wx9b372bb68c24a0e0",
+            //番茄直播
+            WX_KEY_FQ        : "wxdfc5770627e731a4",
+            //黄瓜直播
+            WX_KEY_CK        : "wx4ad58056a4a10510",
+            //樱桃直播
+            WX_KEY_CE        : "wx056e3a00cf93a19d",
+            WX_KEY_OPPO      : "wx3f055bbd02228139",
+
+            //JPUSH
+            //羚萌直播
+//            JPUSH_KEY_TEST_LM : "e6d0c9c6594fbca155aeb30c",
+            JPUSH_KEY_TEST_LM: "20ff9b40a677458b7f51b855",
+            JPUSH_KEY_LM     : "3e3057e7291ce1d80ed7bf15",
+            //番茄直播
+            JPUSH_KEY_TEST_FQ: "bac774f6bdd2d6858eeba962",
+            JPUSH_KEY_FQ     : "8a799752325e5c354acef04f",
+
+            //OpenInstall
+            //羚萌直播
+            OIL_KEY_LM       : "rqorrx",
+            OIL_SCHEME_LM    : "opnnhsp8",
+            //番茄直播
+            OIL_KEY_FQ       : "mn9xou",
+            OIL_SCHEME_FQ    : "mn9xou",
+
+            //Bugly
+            //羚萌直播
+            BUGLY_KEY_TEST_LM: "b22253194f",
+            BUGLY_KEY_LM     : "72d593787c",
+            //番茄直播
+            BUGLY_KEY_TEST_FQ: "c65e764909",
+            BUGLY_KEY_FQ     : "31bfb648f4",
+            //黄瓜直播
+            BUGLY_KEY_TEST_CK: "60a7da7055",
+            BUGLY_KEY_CK     : "d992eeb69d",
+
+//            //GrowingIO
+//            //羚萌直播
+//            GIO_KEY_TEST_LM   : "839eaa91a8b81d91",
+//            GIO_SCHEME_TEST_LM: "growing.b1a4c32675761aa4",
+//            GIO_KEY_LM        : "8c8cf599cdd779fa",
+//            GIO_SCHEME_LM     : "growing.602729295e06b485",
+//            //番茄直播
+//            GIO_KEY_TEST_FQ   : "839eaa91a8b81d91",
+//            GIO_SCHEME_TEST_FQ: "growing.66e1a265f3948ef3",
+//            GIO_KEY_FQ        : "8c8cf599cdd779fa",
+//            GIO_SCHEME_FQ     : "growing.ceb16e1221054bf2",
+
+            //rongyun
+            GY_KEY           : "pkfcgjstffu48",
+            GY_KEY_PRODECT   : "c9kqb3rdkkn8j",
+            GY_KEY_TEST      : "pkfcgjstffu48"
+    ]
+}

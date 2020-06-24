@@ -1,0 +1,5 @@
+include ':launchstarter'
+include ':app'
+include ':common'
+include ':core'
+rootProject.name = "HuanQue"
