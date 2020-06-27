@@ -6,7 +6,6 @@ import android.view.Gravity
 import android.view.WindowManager
 import androidx.annotation.NonNull
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginTop
 import com.julun.huanque.common.R
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.helper.AppHelper
@@ -14,7 +13,7 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
-import com.julun.huanque.common.utils.DensityUtils
+import com.julun.huanque.common.helper.DensityHelper
 
 import com.julun.huanque.common.widgets.WebViewAdapter
 import kotlinx.android.synthetic.main.dialog_web.*
@@ -101,16 +100,16 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
         var height = WindowManager.LayoutParams.WRAP_CONTENT
         var gravity = Gravity.BOTTOM
         if (mWidth != 0f) {
-            width = DensityUtils.dp2px(mWidth)
+            width = mWidth.toInt()
         }
         if (mHeight != 0f) {
-            height = DensityUtils.dp2px(mHeight)
+            height = mHeight.toInt()
         }
         gravity = mGravity
         val params = dialog?.window?.attributes
         params?.dimAmount = 0.1f
         dialog?.window?.attributes = params
-        setDialogParams(width = width, height = height, gravity = gravity)
+        setDialogSize(width = width, height = height, gravity = gravity)
     }
 
     override fun getLayoutId(): Int = R.layout.dialog_web
@@ -154,12 +153,12 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
         }
         val params = webView.layoutParams as? ConstraintLayout.LayoutParams
         if(mTopAndBottomMargin > 0){
-            params?.topToBottom =  DensityUtils.dp2px(mTopAndBottomMargin).toInt()
-            params?.bottomMargin =  DensityUtils.dp2px(mTopAndBottomMargin).toInt()
+            params?.topToBottom =  DensityHelper.dp2px(mTopAndBottomMargin).toInt()
+            params?.bottomMargin =  DensityHelper.dp2px(mTopAndBottomMargin).toInt()
         }
         if(mLeftAndRightMargin > 0){
-            params?.leftMargin = DensityUtils.dp2px(mLeftAndRightMargin).toInt()
-            params?.rightMargin = DensityUtils.dp2px(mLeftAndRightMargin).toInt()
+            params?.leftMargin = DensityHelper.dp2px(mLeftAndRightMargin).toInt()
+            params?.rightMargin = DensityHelper.dp2px(mLeftAndRightMargin).toInt()
         }
 
         webView.loadUrl(AppHelper.getDomainName(mUrl))

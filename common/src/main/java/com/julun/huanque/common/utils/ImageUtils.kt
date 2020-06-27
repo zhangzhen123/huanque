@@ -27,6 +27,7 @@ import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.julun.huanque.common.R
+import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.WebpAnimatorListener
@@ -177,7 +178,7 @@ object ImageUtils {
      * @param url 路径
      */
     fun loadImage(imgView: SimpleDraweeView, url: String, width: Float = 50f, height: Float = 50f) {
-        loadImageInPx(imgView, url, DensityUtils.dp2px(width), DensityUtils.dp2px(height))
+        loadImageInPx(imgView, url, DensityHelper.dp2px(width), DensityHelper.dp2px(height))
     }
 
     /**
@@ -195,7 +196,7 @@ object ImageUtils {
         val uri = Uri.parse("file://$filePath")
         val request = ImageRequestBuilder.newBuilderWithSource(uri)
             .setResizeOptions(
-                ResizeOptions(DensityUtils.dp2px(width), DensityUtils.dp2px(height))
+                ResizeOptions(DensityHelper.dp2px(width), DensityHelper.dp2px(height))
             ).build()
         val controller = Fresco.newDraweeControllerBuilder()
             .setImageRequest(request)

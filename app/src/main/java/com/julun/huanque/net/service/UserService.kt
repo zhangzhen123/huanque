@@ -1,11 +1,10 @@
 package com.julun.huanque.net.service
 
-import com.julun.huanque.common.bean.Root
+import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.bean.forms.SessionForm
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
 import io.reactivex.rxjava3.core.Observable
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -28,7 +27,7 @@ interface UserService {
      * 查询用户基本信息
      */
     @POST("user/acct/info/basic")
-    suspend fun queryUserDetailInfo(@Body form: SessionForm):Root<UserDetailInfo>
+    suspend fun queryUserDetailInfo(@Body form: SessionForm): Root<UserDetailInfo>
 
     /**
      * 查询用户等级信息

@@ -17,6 +17,7 @@ import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.R
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.net.interceptors.HeaderInfoHelper
@@ -108,7 +109,7 @@ class BaseWebView : WebView {
             if (needProcessBar) {
                 progressBar = ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal)
                 progressBar!!.layoutParams =
-                    LayoutParams(LayoutParams.MATCH_PARENT, DensityUtils.dp2px(2f), 0, 0)
+                    LayoutParams(LayoutParams.MATCH_PARENT, DensityHelper.dp2px(2f), 0, 0)
                 progressBar!!.progressDrawable = resources.getDrawable(R.drawable.progress_bar_web)
                 addView(progressBar)
 

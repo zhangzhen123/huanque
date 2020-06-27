@@ -1,7 +1,7 @@
 package com.julun.huanque.common.net.converter
 
 
-import com.julun.huanque.common.bean.Root
+import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.ToastUtils
@@ -23,11 +23,11 @@ internal class FastJsonResponseBodyConverter<T>(private val type: Type) : Conver
         try {
             val jsonString: String = value.string()
 //            println("解析数据  类型: $type , 字符串为:  $jsonString")
-            var obj = JsonUtil.deserializeAsObject<T>(jsonString, type)
-            if(obj != null && obj is Root<*>){
-                if(type is ParameterizedType){
+            val obj = JsonUtil.deserializeAsObject<T>(jsonString, type)
+            if (obj != null && obj is Root<*>) {
+                if (type is ParameterizedType) {
                     val rawType: Type = type.actualTypeArguments[0]
-                    obj.setTypeParameter(rawType)
+                    obj.typeParameter = rawType
                 }
             }
 //            println("转换：${JsonUtil.seriazileAsString(obj)}")

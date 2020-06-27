@@ -6,17 +6,6 @@ ext {
             targetSdkVersion : 29
     ]
 
-//    hversion = [
-//            //羚萌直播版本号信息
-//            huanqueversionMajor: 4,
-//            huanqueversionMinor: 30,
-//            huanqueversionPatch: 0,
-//            //马甲包版本号
-//            lgmgVersionMajor   : 2,
-//            lgmgVersionMinor   : 3,
-//            lgmgVersionPatch   : 0,
-//    ]
-
     dependencies = [
             AROUTER_API     : 'com.alibaba:arouter-api:1.4.0',
             AROUTER_COMPILER: 'com.alibaba:arouter-compiler:1.2.0',

@@ -1,14 +1,12 @@
 package com.julun.huanque.common.widgets.gallery;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.julun.huanque.common.utils.DensityUtils;
-import com.julun.huanque.common.utils.ULog;
+import com.julun.huanque.common.helper.DensityHelper;
 
 
 /**
@@ -70,7 +68,7 @@ public class CardScaleHelper {
             @Override
             public void run() {
                 mCardGalleryWidth = mRecyclerView.getWidth();
-                mCardWidth = (int) (mCardGalleryWidth - DensityUtils.dp2px(2 * (mPagePadding + mShowLeftCardWidth))) - 1;
+                mCardWidth = (int) (mCardGalleryWidth - DensityHelper.dp2px(2 * (mPagePadding + mShowLeftCardWidth))) - 1;
                 mOnePageWidth = mCardWidth;
                 mRecyclerView.smoothScrollToPosition(mCurrentItemPos);
                 onScrolledChangedCallback();

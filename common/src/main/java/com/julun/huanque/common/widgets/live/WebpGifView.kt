@@ -13,7 +13,7 @@ import com.facebook.fresco.animation.drawable.AnimatedDrawable2
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.request.ImageRequestBuilder
-import com.julun.huanque.common.utils.DensityUtils
+import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.fresco.LoopCountModifyingBackend
 
@@ -183,7 +183,7 @@ open class WebpGifView(context: Context?, attrs: AttributeSet?) : SimpleDraweeVi
             callBack?.onEnd()
         }
         val request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri))
-                .setResizeOptions(ResizeOptions(DensityUtils.dp2px(width), DensityUtils.dp2px(height))
+                .setResizeOptions(ResizeOptions(DensityHelper.dp2px(width), DensityHelper.dp2px(height))
                 ).build()
         val draweeController = Fresco.newDraweeControllerBuilder()
                 .setControllerListener(object : BaseControllerListener<ImageInfo>() {

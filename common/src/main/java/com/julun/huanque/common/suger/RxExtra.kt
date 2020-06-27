@@ -1,9 +1,9 @@
 package com.julun.huanque.common.suger
 
 import com.julun.huanque.common.BuildConfig
-import com.julun.huanque.common.VoidResult
-import com.julun.huanque.common.bean.ResponseError
-import com.julun.huanque.common.bean.Root
+import com.julun.huanque.common.basic.VoidResult
+import com.julun.huanque.common.basic.ResponseError
+import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.helper.DefaultRxTransformer
 import com.julun.huanque.common.helper.RunOnMainSchedulerTransformer
@@ -58,18 +58,18 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
         ErrorCodes.SUCCESS -> {
             val data: T? = it.data
             if (data == null) {
-                val _typeParameter_: Type? = it.getTypeParameter()
-                val classInfo: ClassInfo = if (_typeParameter_ is Class<*>) {
-                    ReflectUtil.getClassInfo(_typeParameter_)
-                } else if (_typeParameter_ is ParameterizedType) {
-                    val rawType = _typeParameter_.rawType
+                val typeParameter: Type? = it.typeParameter
+                val classInfo: ClassInfo = if (typeParameter is Class<*>) {
+                    ReflectUtil.getClassInfo(typeParameter)
+                } else if (typeParameter is ParameterizedType) {
+                    val rawType = typeParameter.rawType
                     if (rawType is Class<*>) {
                         ReflectUtil.getClassInfo(rawType)
                     } else {
                         throw ResponseError(REQUEST_RETURN_TYPE_DEF_ERROR, MSG_DATA_FAILURE)
                     }
-                } else if (_typeParameter_ is GenericArrayType) {//数组,提前处理了
-                    val rawClazz: Class<*> = _typeParameter_.genericComponentType as Class<*>
+                } else if (typeParameter is GenericArrayType) {//数组,提前处理了
+                    val rawClazz: Class<*> = typeParameter.genericComponentType as Class<*>
                     return Array.newInstance(rawClazz, 0) as T
                 } else {//其他情况不处理
                     throw ResponseError(REQUEST_RETURN_TYPE_DEF_ERROR, MSG_DATA_FAILURE)
@@ -207,8 +207,8 @@ fun <T> Flowable<Root<T>>.handleResponseByDefault(observableSubscriber: Cancelab
 
 // 必须自己定义错误处理函数
 fun <T> Observable<Root<T>>.handleWithRawResponse(
-    successHandler: Function1<Root<T>, Unit>,
-    errorHandler: Function1<Throwable, Unit> = {}
+        successHandler: Function1<Root<T>, Unit>,
+        errorHandler: Function1<Throwable, Unit> = {}
 ) {
 
 //    val afterRequest: Observable<T> = this.afterRequest().compose(RunOnMainSchedulerTransformer<T>())

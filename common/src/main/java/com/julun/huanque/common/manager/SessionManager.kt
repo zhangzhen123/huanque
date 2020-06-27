@@ -1,14 +1,6 @@
 package com.julun.huanque.common.manager
 
-import com.julun.huanque.common.bean.ResponseError
 import com.julun.huanque.common.bean.beans.Session
-import com.julun.huanque.common.bean.forms.SessionForm
-import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.utils.*
-import io.rong.imlib.RongIMClient
-import org.greenrobot.eventbus.EventBus
-import java.net.SocketTimeoutException
 
 /**
  * Created by djp on 2016/12/9.

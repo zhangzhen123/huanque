@@ -15,13 +15,11 @@ import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.message_dispatch.EventMessageType
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.message_dispatch.MessageReceptor
-import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.removeScope
 import com.julun.huanque.common.utils.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.core.Single.just
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.rong.imlib.IRongCallback
 import io.rong.imlib.RongIMClient
@@ -31,7 +29,6 @@ import io.rong.imlib.model.Message
 import io.rong.imlib.model.MessageContent
 import io.rong.message.CommandMessage
 import io.rong.message.TextMessage
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -374,8 +371,8 @@ object RongCloudManager {
 //    }
 
     // 停止消费数据
-    fun destoryMessageConsumer() {
-        MessageReceptor.destoryBufferedTimer()
+    fun destroyMessageConsumer() {
+        MessageReceptor.destroyBufferedTimer()
         currentUserObj = null
     }
 
@@ -471,7 +468,7 @@ object RongCloudManager {
                             MessageProcessor.parseTextMessage(jsonString, it.msgId)
                         }
                         MessageProcessor.MessageType.Event.name -> {
-                            val eventCode = jsonObject.getString(MessageProcessor.EVENTCODE)
+                            val eventCode = jsonObject.getString(MessageProcessor.EVENT_CODE)
                             if (!TextUtils.isEmpty(eventCode) && eventCode == EventMessageType.MsgCenterNewMsg.name) {
                                 if (message.receivedStatus.isRetrieved) {
                                     //如果这条消息被被其他登录的多端收取过，那么直接丢弃

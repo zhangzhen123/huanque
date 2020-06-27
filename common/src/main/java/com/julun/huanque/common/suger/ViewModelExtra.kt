@@ -1,11 +1,9 @@
 package com.julun.huanque.common.suger
 
 import androidx.lifecycle.MutableLiveData
-import com.julun.huanque.common.bean.ResponseError
-import com.julun.huanque.common.bean.Root
-import com.julun.huanque.common.bean.NetState
-import com.julun.huanque.common.bean.NetStateType
-import com.julun.huanque.common.bean.beans.UserLevelInfo
+import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.NetState
+import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.net.NError
@@ -54,11 +52,11 @@ suspend fun BaseViewModel.request(
  * rxJava请求的统一封装
  */
 fun <T> BaseViewModel.requestRx(
-    request: () -> Observable<Root<T>>,
-    onSuccess: NSuccess<T>,
-    error: NError? = null,
-    final: NAction = {},
-    loadState: MutableLiveData<NetState>? = null
+        request: () -> Observable<Root<T>>,
+        onSuccess: NSuccess<T>,
+        error: NError? = null,
+        final: NAction = {},
+        loadState: MutableLiveData<NetState>? = null
 ) {
     loadState?.postValue(NetState(state = NetStateType.LOADING))
     request().handleResponse(makeSubscriber<T> {

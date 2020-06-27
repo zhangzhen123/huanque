@@ -17,26 +17,14 @@ interface BaseContainer {
     }
 
     fun unregisterSelfAsEventHandler() {
-//        EventDispatcherCenter.unRegisterEventHandler(this)
         if (isRegisterEventBus())
             EventBus.getDefault().unregister(this)
     }
 
     fun registerSelfAsEventHandler() {
-//        EventDispatcherCenter.registerEventHandler(this)
         if (isRegisterEventBus())
             EventBus.getDefault().register(this)
     }
-
-//    override fun getRequestCallerId(): String {
-//        if (this is BaseActivity){
-//            return this.UUID
-//        }else if (this is BaseFragment) {
-//            return this.UUID
-//        }else{
-//            throw NotImplementedError("BaseContainer 的实例,在既不是 BaseActivity 又不是 BaseFragment 的时候,需要自己实现 getRequestCallerId() 方法 ")
-//        }
-//    }
 
     /**
      * 返回容器需要的layout文件

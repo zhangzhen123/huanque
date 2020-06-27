@@ -1,10 +1,8 @@
 package com.julun.huanque.common.commonviewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.julun.huanque.common.bean.NetState
+import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.net.RequestCaller
 

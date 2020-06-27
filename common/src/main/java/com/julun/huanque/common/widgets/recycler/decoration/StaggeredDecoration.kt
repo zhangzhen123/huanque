@@ -3,11 +3,11 @@ package com.julun.huanque.common.widgets.recycler.decoration
 import android.graphics.Rect
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import com.julun.huanque.common.utils.DensityUtils
+import com.julun.huanque.common.helper.DensityHelper
 
 
 class StaggeredDecoration : androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
-    val space = DensityUtils.dp2px(11)
+    val space = DensityHelper.dp2px(11)
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         if (outRect == null || view == null || parent == null) {
             return

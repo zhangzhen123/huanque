@@ -1,4 +1,4 @@
-package com.julun.huanque.common
+package com.julun.huanque.common.constant
 
 /**
  *
@@ -75,6 +75,4 @@ enum class IntentParamKey {
     PAGE_TYPE //页面类型
     ,
     OPEN_OPERATE //打开操作
-    ,
-    IS_THEME_ROOM
 }

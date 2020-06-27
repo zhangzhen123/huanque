@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.julun.huanque.common.utils.DensityUtils;
+import com.julun.huanque.common.helper.DensityHelper;
 
 
 /**
@@ -18,15 +18,15 @@ public class CardAdapterHelper {
 
     public void onCreateViewHolder(ViewGroup parent, View itemView) {
         RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) itemView.getLayoutParams();
-        lp.width = (int) (parent.getWidth() - DensityUtils.dp2px(2 * (mPagePadding + mShowLeftCardWidth)));
+        lp.width = (int) (parent.getWidth() - DensityHelper.dp2px(2 * (mPagePadding + mShowLeftCardWidth)));
         itemView.setLayoutParams(lp);
     }
 
     public void onBindViewHolder(View itemView, final int position, int itemCount) {
-        int padding = (int) DensityUtils.dp2px(mPagePadding);
+        int padding = (int) DensityHelper.dp2px(mPagePadding);
         itemView.setPadding(padding, 0, padding, 0);
-        int leftMarin = position == 0 ? (int) (padding + DensityUtils.dp2px(mShowLeftCardWidth)) : 0;
-        int rightMarin = position == itemCount - 1 ? (int) (padding + DensityUtils.dp2px(mShowLeftCardWidth)) : 0;
+        int leftMarin = position == 0 ? (int) (padding + DensityHelper.dp2px(mShowLeftCardWidth)) : 0;
+        int rightMarin = position == itemCount - 1 ? (int) (padding + DensityHelper.dp2px(mShowLeftCardWidth)) : 0;
         setViewMargin(itemView, leftMarin, 0, rightMarin, 0);
     }
 

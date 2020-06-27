@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentManager
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.R
 import com.julun.huanque.common.helper.reportCrash
-import com.julun.huanque.common.utils.DensityUtils
+import com.julun.huanque.common.helper.DensityHelper
 
 /**
  * 底部弹出框
@@ -34,7 +34,7 @@ abstract class BottomDialog : AppCompatDialogFragment() {
         val window = dialog?.window ?: return
         val lp = window.attributes
         val display = window.windowManager.defaultDisplay
-        lp.width = display.width * 1 - DensityUtils.px2dp(20f)
+        lp.width = display.width * 1 - DensityHelper.px2dp(20f)
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT
         window.attributes = lp
         window.setGravity(Gravity.BOTTOM)

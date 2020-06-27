@@ -17,6 +17,7 @@ import java.net.SocketException
 /**
  * Created by my on 2018/07/09 0009.
  */
+@SuppressLint("MissingPermission")
 object NetUtils {
     val NETWORK_NONE = 0 // 没有网络连接
     val NETWORK_WIFI = 1 // wifi连接
@@ -94,7 +95,7 @@ object NetUtils {
      */
     fun isNetConnected(): Boolean {
         val context = CommonInit.getInstance().getApp()
-        val connectivity = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivity = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
         if (connectivity != null) {
             val info = connectivity.activeNetworkInfo
             if (info != null && info.isConnected) {

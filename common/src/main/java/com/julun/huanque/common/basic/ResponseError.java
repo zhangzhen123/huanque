@@ -1,4 +1,4 @@
-package com.julun.huanque.common.bean;
+package com.julun.huanque.common.basic;
 
 /**
  * Created by nirack on 16-11-7.

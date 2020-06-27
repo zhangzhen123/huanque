@@ -3,13 +3,13 @@ package com.julun.huanque.common.base.dialog
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
-import com.julun.huanque.common.IntentParamKey
+import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.R
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
-import com.julun.huanque.common.utils.DensityUtils
+import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import kotlinx.android.synthetic.main.dialog_image.*
@@ -35,14 +35,14 @@ class ImageDialogFragment : BaseDialogFragment() {
         params?.dimAmount = 0.2f
         params.gravity = Gravity.CENTER
         val width = if (mWidth != 0f) {
-            DensityUtils.dp2px(mWidth)
+            DensityHelper.dp2px(mWidth)
         } else {
-            DensityUtils.dp2px(275f)
+            DensityHelper.dp2px(275f)
         }
         val height = if (mHeight != 0f) {
-            DensityUtils.dp2px(mHeight)
+            DensityHelper.dp2px(mHeight)
         } else {
-            DensityUtils.dp2px(264f)
+            DensityHelper.dp2px(264f)
         }
         params.width = width.coerceAtMost(ScreenUtils.getScreenWidth())
         params.height = height.coerceAtMost(ScreenUtils.getScreenHeight())
@@ -72,7 +72,7 @@ class ImageDialogFragment : BaseDialogFragment() {
 //            params.height = DensityUtils.dp2px(mHeight)
 //            sdvPicture.layoutParams = params
 //            ImageUtils.loadImage(sdvPicture, pic, mWidth,mHeight)
-            ImageUtils.loadImageWithWidth(sdvPicture, pic, DensityUtils.dp2px(mWidth))
+            ImageUtils.loadImageWithWidth(sdvPicture, pic, DensityHelper.dp2px(mWidth))
         }
         if (TextUtils.isEmpty(title)) {
             tvTitle.hide()

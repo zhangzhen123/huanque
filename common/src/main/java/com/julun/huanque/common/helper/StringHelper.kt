@@ -20,9 +20,6 @@ import kotlin.collections.ArrayList
  * Created by nirack on 16-10-27.
  */
 
-/**
- * Created by nirack on 16-10-22.
- */
 object StringHelper {
 
     private val p = Pattern.compile("\\{\\d+\\}")

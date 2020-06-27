@@ -3,7 +3,7 @@ package com.julun.huanque.common.message_dispatch
 import android.text.TextUtils
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
-import com.julun.huanque.common.VoidResult
+import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
@@ -15,7 +15,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 
 import io.rong.imlib.model.Message
-import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by djp on 2016/12/20.
@@ -24,13 +23,13 @@ import org.greenrobot.eventbus.EventBus
 object MessageProcessor {
 
     private val logger = ULog.getLogger("MessageProcess")
-    const val EVENTCODE = "eventCode"
-    const val EVENTCONTEXT = "context"
+    const val EVENT_CODE = "eventCode"
+    const val EVENT_CONTEXT = "context"
     private val textProcessors: MutableList<MessageReceiver> = mutableListOf()
     private val eventProcessors: MutableList<EventMessageProcessor<*>> = mutableListOf()
 
     //专门放置全局事件 不会被清除
-    private val globalEventProcessors: MutableList<EventMessageProcessor<*>> = mutableListOf()
+//    private val globalEventProcessors: MutableList<EventMessageProcessor<*>> = mutableListOf()
 
     //私聊会话使用
     var privateTextProcessor: PrivateMessageReceiver? = null
@@ -38,45 +37,33 @@ object MessageProcessor {
     //上神聊天室使用
     var publicTextProcessor: PublicMessageReceiver? = null
 
+    /**
+     * 清空全部订阅消息 [total]是否清空全部 true代表把包括全局的事件处理订阅一起清理掉
+     */
 
-    //清空直播间的注册消息
-    fun clearLiveProcessors() {
-        //全局监听事件不会被清空
-//        val globalEvents = eventProcessors.filter {
-//            it.getEventType() == EventMessageType.MsgCenterNewMsg
-//                    || it.getEventType() == EventMessageType.RoyalUpLevel
-//                    || it.getEventType() == EventMessageType.RechargeActiveRoyalCard
-//        }
-        //后续可能会有textProcessors的全局监听
-        textProcessors.clear()
-        eventProcessors.clear()
+    fun clearProcessors(total: Boolean) {
+        if (total) {
+            textProcessors.clear()
+            eventProcessors.clear()
+        } else {
+            textProcessors.removeAll(textProcessors.filter { !it.isGlobal() })
+            eventProcessors.removeAll(eventProcessors.filter { !it.isGlobal() })
+        }
 
-//        eventProcessors.addAll(globalEvents)
-    }
-
-    //清空全部消息
-    fun clearProcessors() {
-        textProcessors.clear()
-        eventProcessors.clear()
-        globalEventProcessors.clear()
     }
 
     fun registerTxtProcessor(processor: MessageReceiver): Unit {
         textProcessors.add(processor)
     }
 
-    /**
-     * 新增 注册全局事件 不可被清空
-     */
-    fun registerGlobalEventProcessor(processor: EventMessageProcessor<*>): Unit {
-        globalEventProcessors.add(processor)
-    }
-
     fun processTextMessage(beanList: List<TplBean>, messageType: TextMessageType) {
         try {
 
-            textProcessors.filter { it.getMessageType() == messageType }.forEach {
-                it.processMessage(beanList)
+            textProcessors.forEach {
+                if (it.getMessageType() == messageType) {
+                    it.processMessage(beanList)
+                }
+
             }
         } catch (e: Exception) {
             reportCrash(e)
@@ -146,25 +133,9 @@ object MessageProcessor {
             DisplayType.Public.name -> {
                 MessageReceptor.putTextMessageWithData(bean)
             }
-
-//            DisplayType.FactoryCar.name -> {
-//                //豪车大亨消息
-//                processTextMessageOnMain(arrayListOf(bean), TextMessageType.FactoryCar)
-//            }
-//            DisplayType.WeekStar.name -> {//周星通知
-//                processTextMessageOnMain(arrayListOf(bean), TextMessageType.WeekStar)
-//            }
-//            DisplayType.NewRedPacket.name -> {
-//                //红包通知
-//                processTextMessageOnMain(arrayListOf(bean), TextMessageType.NewRedPacket)
-//            }
-//            DisplayType.GiftBoxRunway.name -> {
-//                //礼盒跑道
-//                processTextMessageOnMain(arrayListOf(bean), TextMessageType.GiftBoxRunway)
-//            }
             else -> {
                 processTextMessageOnMain(
-                    arrayListOf(bean), TextMessageType.parse(displayType)
+                        arrayListOf(bean), TextMessageType.parse(displayType)
                         ?: return
                 )
             }
@@ -177,29 +148,27 @@ object MessageProcessor {
      */
     fun parseEventMessage(dataObj: JSONObject) {
         // 中奖动画、用户主播升级动画、开通守护动画 缓存到消息队列
-        val eventCode = dataObj.getString(EVENTCODE)
-        when (eventCode) {
+        when (val eventCode = dataObj.getString(EVENT_CODE)) {
             //这几种动画排队执行
             EventMessageType.LuckGift.name,
             EventMessageType.UserUpLevel.name,
             EventMessageType.AnchorUpLevel.name,
             EventMessageType.SUPER_LUCK_GIFT.name,
             EventMessageType.OpenGuard.name ->/* MessageReceptor.putEventMessage(eventCode, (dataObj["context"] as JSONObject).toJSONString())*/
-                MessageReceptor.putEventMessage(eventCode, dataObj.getJSONObject(EVENTCONTEXT))
+                MessageReceptor.putEventMessage(eventCode, dataObj.getJSONObject(EVENT_CONTEXT))
             else -> // 其他事件直接通知UI`
             {
-                var data: Any? = null
-                try {
+                val data: Any?
+                data = try {
                     val clazz = EventMessageType.valueOf(eventCode).klass
-                    data = JSON.toJavaObject(dataObj.getJSONObject(EVENTCONTEXT), clazz)
+                    JSON.toJavaObject(dataObj.getJSONObject(EVENT_CONTEXT), clazz)
                 } catch (e: IllegalArgumentException) {
                     logger.info("解析事件消息报错了类型：$eventCode")
                     e.printStackTrace()
                     //banner消息解析异常特殊处理 这里也就banner消息会出问题其打破了消息规范
-                    data = dataObj.toJSONString()
+                    dataObj.toJSONString()
                 }
                 processEventMessageOnMain(data, eventCode)
-//                processEventMessageOnMain(dataObj.toJSONString(), eventCode)
             }
 
         }
@@ -254,48 +223,31 @@ object MessageProcessor {
     fun processEventMessage(data: Any?, eventCode: String) {
         try {
             if (data is String && !TextUtils.isEmpty(data)) {
-                eventProcessors.filter {
-                    it.getEventType().name == eventCode
-                }.forEach {
-                    if (it.getEventType().name == "BannerMessage") {
-                        //直播间banner消息，直接传递
-                        it.proceeBridge(data)
-                        return
+                eventProcessors.forEach {
+//                    if (it.getEventType().name == "BannerMessage") {
+//                        //直播间banner消息，直接传递
+//                        it.processBridge(data)
+//                        return
+//                    }
+                    if (it.getEventType().name == eventCode) {
+                        val raw: Any? = wrapEvent(data, EventMessageType.valueOf(eventCode))
+                        if (raw != null) {
+                            it.processBridge(raw)
+                        } else {
+                            it.processBridge()
+                        }
                     }
-                    val raw: Any? = wrapEvent(data, EventMessageType.valueOf(eventCode))
-                    if (raw != null) {
-                        it.proceeBridge(raw)
-                    } else {
-                        it.proceeBridge()
-                    }
+
                 }
 
-                globalEventProcessors.filter {
-                    it.getEventType().name == eventCode
-                }.forEach {
-                    val raw: Any? = wrapEvent(data, EventMessageType.valueOf(eventCode))
-                    if (raw != null) {
-                        it.proceeBridge(raw)
-                    } else {
-                        it.proceeBridge()
-                    }
-                }
             } else {
                 eventProcessors.filter { it.getEventType().name == eventCode }.forEach {
                     if (data != null) {
-                        it.proceeBridge(data)
+                        it.processBridge(data)
                     } else {
-                        it.proceeBridge()
+                        it.processBridge()
                     }
                 }
-                globalEventProcessors.filter { it.getEventType().name == eventCode }.forEach {
-                    if (data != null) {
-                        it.proceeBridge(data)
-                    } else {
-                        it.proceeBridge()
-                    }
-                }
-
             }
         } catch (e: Exception) {
             //因为切换线程了 会有潜在的崩溃
@@ -310,7 +262,7 @@ object MessageProcessor {
             return JsonUtil.deserializeAsObject(data, eventCode.klass)
         }
         val deserializeAsObject: EventMessageContent<T> =
-            JsonUtil.deserializeAsObject(data, ReflectUtil.type(EventMessageContent::class.java, eventCode.klass))
+                JsonUtil.deserializeAsObject(data, ReflectUtil.type(EventMessageContent::class.java, eventCode.klass))
         val context: T? = deserializeAsObject.context
         return context
     }
@@ -356,6 +308,7 @@ object MessageProcessor {
     interface MessageReceiver {
         fun getMessageType(): TextMessageType
         fun processMessage(messageList: List<TplBean>)
+        fun isGlobal(): Boolean = false
     }
 
     //私聊消息使用
@@ -440,7 +393,10 @@ object MessageProcessor {
         fun process(data: T)
 
         // 停播，开播事件，"context"没有值
-        fun proceeBridge(raw: Any? = VoidResult()) = process(raw as T)
+        fun processBridge(raw: Any? = VoidResult()) = process(raw as T)
+
+        //标记是不是全局订阅
+        fun isGlobal(): Boolean = false
     }
 
     /**
@@ -1183,7 +1139,7 @@ object MessageProcessor {
      * 主题房宝箱可领取
      */
     interface ThemeOnlineTreasureEnableInfoProcessor :
-        EventMessageProcessor<ThemeOnlineTreasureEnableInfo> {
+            EventMessageProcessor<ThemeOnlineTreasureEnableInfo> {
         override fun getEventType() = EventMessageType.UserThemeOnlineTreasure
     }
 }

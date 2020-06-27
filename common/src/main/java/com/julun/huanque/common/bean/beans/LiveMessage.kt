@@ -6,10 +6,9 @@ import com.alibaba.fastjson.annotation.JSONField
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.constant.BoxType
 import com.julun.huanque.common.constant.RedPackageType
-import com.julun.huanque.common.enums.AnimationTypes
+import com.julun.huanque.common.constant.AnimationTypes
 import java.io.Serializable
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 

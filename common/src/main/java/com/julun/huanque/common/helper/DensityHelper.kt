@@ -1,4 +1,4 @@
-package com.julun.huanque.common.utils
+package com.julun.huanque.common.helper
 
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -7,7 +7,7 @@ import com.julun.huanque.common.init.CommonInit
 /**
  * 常用单位转换的辅助类
  */
-class DensityUtils private constructor() {
+class DensityHelper private constructor() {
     companion object {
         private val RESOURCESDisplayMetrics: DisplayMetrics =
             CommonInit.getInstance().getApp().resources.displayMetrics
@@ -18,14 +18,26 @@ class DensityUtils private constructor() {
          * @param dpVal
          * @return
          */
-        fun dp2px(dpVal: Int): Float {
+        fun dp2px(dpVal: Int): Int {
             return TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 dpVal.toFloat(),
                 RESOURCESDisplayMetrics
+            ).toInt()
+        }
+        /**
+         * dp转px
+         *
+         * @param dpVal
+         * @return
+         */
+        fun dp2pxf(dpVal: Int): Float {
+            return TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    dpVal.toFloat(),
+                    RESOURCESDisplayMetrics
             )
         }
-
         /**
          * dp转px
          *

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.graphics.drawable.LevelListDrawable
 import android.os.Bundle
 import com.alibaba.fastjson.annotation.JSONField
-import com.julun.huanque.common.bean.RootListLiveData
+import com.julun.huanque.common.basic.RootListLiveData
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.constant.CardEnterType
 import java.io.Serializable

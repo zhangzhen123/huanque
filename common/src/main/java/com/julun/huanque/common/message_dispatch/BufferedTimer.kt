@@ -1,11 +1,8 @@
 package com.julun.huanque.common.message_dispatch
 
 import android.os.Handler
-import com.julun.huanque.common.bean.events.AnimatorEvent
 import com.julun.huanque.common.utils.ULog
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 缓存定时器
@@ -27,7 +24,7 @@ class BufferedTimer {
 
     /** 暂时有最普通的list，后面看换成队列什么的 **/
     private var queue = mutableListOf<Any>()
-    private var callback: ((bufferedSelf: BufferedTimer) -> Float)? = null
+    private var callback: ((bufferedSelf: BufferedTimer) -> Long)? = null
 
     private var handler: Handler? = null
 
@@ -38,7 +35,7 @@ class BufferedTimer {
     }
 
     // 初始化带返回值的匿名方法块
-    fun initWithRefreshViewBlock(callback: (bufferedSelf: BufferedTimer) -> Float) {
+    fun initWithRefreshViewBlock(callback: (bufferedSelf: BufferedTimer) -> Long) {
         this.callback = callback
         timerState = TIMER_STATE_READY
     }
@@ -79,12 +76,12 @@ class BufferedTimer {
     }
 
     // 没有启动，则启动计时器
-    fun startIfTimerNotRunning(): Boolean {
-        if (timerState == TIMER_STATE_RUNNING) {
-            return false
+    private fun startIfTimerNotRunning(): Boolean {
+        return if (timerState == TIMER_STATE_RUNNING) {
+            false
         } else {
             callRefreshViewWhenNotPauseState()
-            return true
+            true
         }
     }
 
@@ -143,25 +140,25 @@ class BufferedTimer {
                 // 执行下一个周期任务
                 buildTaskBlock({
                     callRefreshViewWhenNotPauseState()
-                }, (nextTaskDelaySeconds * 1000).toLong())
+                }, nextTaskDelaySeconds.toLong())
             } else if (nextTaskDelaySeconds == MessageReceptor.EVENT_CLEAR) {
                 // 暂停定时器了
                 timerState = TIMER_STATE_PAUSE
-            } else if (nextTaskDelaySeconds == MessageReceptor.EVENT_WAIT_MESSAGE) {
+            }/* else if (nextTaskDelaySeconds == MessageReceptor.EVENT_WAIT_MESSAGE) {
                 needWaitMessage = true
-            }
+            }*/
         }, 0)
 
     }
 
-    var needWaitMessage = false
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    fun startNewAnimator(event: AnimatorEvent) {
-        if (needWaitMessage) {
-            logger.info("收到动画播放完成后的回调")
-            callRefreshViewWhenNotPauseState()
-        }
-    }
+//    var needWaitMessage = false
+//    @Subscribe(threadMode = ThreadMode.POSTING)
+//    fun startNewAnimator(event: AnimatorEvent) {
+//        if (needWaitMessage) {
+//            logger.info("收到动画播放完成后的回调")
+//            callRefreshViewWhenNotPauseState()
+//        }
+//    }
 
     fun destory() {
         timerState = TIMER_STATE_DESTORY

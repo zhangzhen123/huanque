@@ -1,6 +1,4 @@
-package com.julun.huanque.common.bean
-
-import androidx.annotation.StringRes
+package com.julun.huanque.common.basic
 
 /**
  *

@@ -2,14 +2,13 @@ package com.julun.huanque.common.net
 
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonParseException
-import com.julun.huanque.common.bean.ResponseError
-import com.julun.huanque.common.bean.NetState
-import com.julun.huanque.common.bean.NetStateType
+import com.julun.huanque.common.basic.ResponseError
+import com.julun.huanque.common.basic.NetState
+import com.julun.huanque.common.basic.NetStateType
 import org.apache.http.conn.ConnectTimeoutException
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.UnknownHostException
-import kotlin.Exception
 
 /**
  *

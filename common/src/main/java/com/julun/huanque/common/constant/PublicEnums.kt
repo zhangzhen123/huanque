@@ -1,4 +1,4 @@
-package com.julun.huanque.common.enums
+package com.julun.huanque.common.constant
 
 /**
  * Created by nirack on 16-11-24.

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.julun.huanque.common.R;
+import com.julun.huanque.common.helper.DensityHelper;
 
 
 /**
@@ -133,7 +134,7 @@ public class ToastUtils {
                 this.customImage.setVisibility(View.GONE);
                 this.tvContent.setText(text);
                 this.toast.setDuration(duration);
-                this.toast.setGravity(gravity, 0, DensityUtils.dp2px(60f));
+                this.toast.setGravity(gravity, 0, DensityHelper.dp2px(60f));
                 this.toast.show();
             }
         }

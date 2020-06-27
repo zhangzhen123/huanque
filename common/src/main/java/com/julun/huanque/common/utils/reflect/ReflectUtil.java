@@ -2,7 +2,7 @@ package com.julun.huanque.common.utils.reflect;
 
 
 
-import com.julun.huanque.common.bean.Root;
+import com.julun.huanque.common.basic.Root;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.ParameterizedType;

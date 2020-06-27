@@ -13,7 +13,7 @@ import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.R
 import com.julun.huanque.common.commonviewmodel.OrderViewModel
 import com.julun.huanque.common.helper.reportCrash
-import com.julun.huanque.common.utils.DensityUtils
+import com.julun.huanque.common.helper.DensityHelper
 import com.trello.rxlifecycle4.components.support.RxAppCompatDialogFragment
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.configuration
@@ -80,7 +80,7 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
             EventBus.getDefault().register(this)
     }
 
-    protected var rootContainer: View? = null
+    private var rootContainer: View? = null
     open fun getRootView(inflater: LayoutInflater?, container: ViewGroup?, layoutId: Int): View {
 
         if (rootContainer == null) {
@@ -105,9 +105,9 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         val layoutId = getLayoutId()
         if (layoutId <= 0) {
@@ -148,13 +148,6 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
         //只有符合排队的窗口才会初始化mOrderViewModel
         if (order() > 0 && (!positiveShow) && act is BaseActivity) {
             mOrderViewModel = ViewModelProvider(act).get(OrderViewModel::class.java)
-//            lifecycle.addObserver(GenericLifecycleObserver { _, event ->
-//                if (event == Lifecycle.Event.ON_DESTROY) {
-//                    //弹出下一个数据
-//                    logger.info("我开始关闭 并且发送数据通知$this")
-//                    mOrderViewModel?.popState?.value = true
-//                }
-//            })
         }
         val orientation = activity?.configuration?.orientation
         logger.info("当前横竖屏情况：$orientation")
@@ -170,74 +163,28 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
     }
 
     /**
-     * 默认显示在底部，充满屏幕宽度
-     */
-    protected fun customDialogSize() {
-        val window = dialog?.window ?: return
-        val params = window.attributes
-        params.gravity = Gravity.BOTTOM
-        params.width = window.windowManager.defaultDisplay.width
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT
-        window.attributes = params
-    }
-
-    /**
      * 宽度显示比例
      */
-    protected fun customDialogSize(
-        gravity: Int = Gravity.BOTTOM,
-        marginWidth: Int,
-        height: Int = ViewGroup.LayoutParams.WRAP_CONTENT
+    protected fun setDialogSize(
+            gravity: Int = Gravity.BOTTOM,
+            width: Int = 0,
+            height: Int = 0,
+            padding: Int = 0
     ) {
         val window = dialog?.window ?: return
         val params = window.attributes
-        params.gravity = gravity
-        params.width =
-            window.windowManager.defaultDisplay.width - DensityUtils.dp2px(marginWidth.toFloat()) * 2
-        if (height > 0) {
-            params.height = DensityUtils.dp2px(height.toFloat())
-        } else if (ViewGroup.LayoutParams.WRAP_CONTENT == height || ViewGroup.LayoutParams.MATCH_PARENT == height) {
-            params.height = height
-        }
-        window.attributes = params
-    }
-
-    /**
-     * 宽度显示比例
-     */
-    protected fun setDialogSize(gravity: Int = Gravity.BOTTOM, width: Int = 0, height: Int = 0) {
-        val window = dialog?.window ?: return
-        val params = window.attributes
+        window.decorView.padding = DensityHelper.dp2px(padding)
         params.gravity = gravity
         if (width > 0) {
-            params.width = DensityUtils.dp2px(width.toFloat())
+            params.width = DensityHelper.dp2px(width)
         } else if (ViewGroup.LayoutParams.WRAP_CONTENT == width || ViewGroup.LayoutParams.MATCH_PARENT == width) {
             params.width = width
         }
         if (height > 0) {
-            params.height = DensityUtils.dp2px(height.toFloat())
+            params.height = DensityHelper.dp2px(height)
         } else if (ViewGroup.LayoutParams.WRAP_CONTENT == height || ViewGroup.LayoutParams.MATCH_PARENT == height) {
             params.height = height
         }
-        window.attributes = params
-    }
-
-    /**
-     * 设置dialog的边距和位置，默认无边距和居中
-     */
-    protected fun setDialogParams(
-        padding: Int = 0,
-        gravity: Int = Gravity.CENTER,
-        width: Int = WindowManager.LayoutParams.WRAP_CONTENT
-        ,
-        height: Int = WindowManager.LayoutParams.WRAP_CONTENT
-    ) {
-        val window = dialog?.window ?: return
-        val params = window.attributes
-        window.decorView.padding = padding
-        params.gravity = gravity
-        params.width = width
-        params.height = height
         window.attributes = params
     }
 
@@ -288,16 +235,6 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
     override fun onDetach() {
         super.onDetach()
         currentLife = "onDetach"
-//        try {
-//            val childFragmentManager = Fragment::class.java!!.getDeclaredField("mChildFragmentManager")
-//            childFragmentManager.isAccessible = true
-//            childFragmentManager.set(this, null)
-//        } catch (e: NoSuchFieldException) {//如果出现了这个错误,说明版本过低,这个错误可以忽略
-//            e.printStackTrace()
-//            reportCrash("可以忽略的问题,仅作统计,系统版本过低导致 没有 mChildFragmentManager 这个属性", e)
-//        } catch (e: IllegalAccessException) {
-//            e.printStackTrace()
-//        }
     }
 
     override fun show(manager: FragmentManager, tag: String?) {
@@ -310,7 +247,6 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
                 if (!manager.isStateSaved) {
                     isShowing = true
                     super.show(manager, tag)
-                    this.listener?.onShowFragment()
                 }
             }
         } catch (e: Exception) {
@@ -334,31 +270,6 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
         show(manager, tag)
     }
 
-    /*
-        override fun show(manager: FragmentManager?, tag: String?) {
-            try {
-    //            val ft = manager!!.beginTransaction()
-    //            val prev = manager.findFragmentByTag(tag)
-    //            if (prev != null) {
-    //                ft.remove(prev)
-    //                logger.info("当前的已经存在的移除掉")
-    //            }
-    //            ft.addToBackStack(null)
-    //            ft.commit()
-                //每次先判断是否已经被添加
-                if (isAdded) {
-                    logger.info("当前的已经添加 不再处理")
-    //                dismiss()
-                } else {
-                    super.show(manager, tag)
-                    this.listener?.onShowFragment()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                reportCrash("显示所有的dialogFragment的时候报错 ", e)
-            }
-        }
-    */
     override fun dismiss() {
         //Can not perform this action after onSaveInstanceState
         // com.julun.huanque.common.base.BaseDialogFragment.dismiss(BaseDialogFragment.kt:248)
@@ -369,43 +280,18 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
         }
         super.dismissAllowingStateLoss()
         isShowing = false
-        this.listener?.onDismissFragment()
     }
 
     override fun dismissAllowingStateLoss() {
         super.dismissAllowingStateLoss()
         isShowing = false
-        this.listener?.onDismissFragment()
     }
 
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        this.listener?.onCancelFragment()
-    }
 
-    private var listener: ShowAndDismissListener? = null
-    fun setShowAndDismissListener(listener: ShowAndDismissListener?) {
-        this.listener = listener
-    }
-
-    interface ShowAndDismissListener {
-        fun onShowFragment()
-        fun onCancelFragment()
-        fun onDismissFragment()
-    }
 
     /***
      * 注意 刷新操作由各自具体处理 因为分复用不复用弹窗  如果统一去刷新 对于不复用又不在显示的弹窗是一种浪费操作
      */
     open fun refreshDialog() {}
 
-    override fun setArguments(args: Bundle?) {
-        try {
-            super.setArguments(args)
-        } catch (e: IllegalStateException) {
-            reportCrash(e)
-            logger.info("${e.printStackTrace()}")
-        }
-
-    }
 }

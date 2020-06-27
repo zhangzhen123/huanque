@@ -19,10 +19,11 @@ import com.julun.huanque.common.bean.beans.BaseTextBean
 import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.StyleParam
 import com.julun.huanque.common.bean.TplBean
-import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.MessageDisplayType
+import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.utils.*
 import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.dip
@@ -109,7 +110,7 @@ class DraweeSpanTextView @JvmOverloads constructor(
                                     styleParam.radius = MessageUtil.MESSAGE_BG_RADIUS
                                 }
                                 val gDrawable = GradientDrawable()
-                                gDrawable.cornerRadius = DensityUtils.dp2px(styleParam.radius)
+                                gDrawable.cornerRadius = dp2pxf(styleParam.radius)
                                 gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
                                 val colorInt: Int = Color.parseColor(styleParam.bgColor)
                                 gDrawable.setColor(colorInt)
