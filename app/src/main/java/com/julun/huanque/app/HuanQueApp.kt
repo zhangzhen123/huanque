@@ -2,9 +2,8 @@ package com.julun.huanque.app
 
 import android.app.Application
 import com.julun.huanque.BuildConfig
-import com.julun.huanque.common.BuildConfig.SERVICE_BASE_URL_PRODUCT
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.core.net.init.HuanQueInit
+import com.julun.huanque.core.init.HuanQueInit
 
 open class HuanQueApp : Application() {
     override fun onCreate() {

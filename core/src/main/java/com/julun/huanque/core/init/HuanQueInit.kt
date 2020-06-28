@@ -1,4 +1,4 @@
-package com.julun.huanque.core.net.init
+package com.julun.huanque.core.init
 
 import android.app.Activity
 import android.app.Application
