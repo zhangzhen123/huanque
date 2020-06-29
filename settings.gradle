@@ -2,4 +2,5 @@ include ':launchstarter'
 include ':app'
 include ':common'
 include ':core'
+include ':cockroach'
 rootProject.name = "HuanQue"

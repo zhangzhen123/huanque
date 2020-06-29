@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HuanQue</string>
+    <string name="attention_restart" translatable="false">程序出现异常，正在重启，请稍后</string>
 </resources>

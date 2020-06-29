@@ -52,6 +52,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation project(':core')
+    implementation project(path: ':cockroach')
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
     implementation rootProject.ext.dependencies["BUGLY_CRASHREPORT"]
     implementation rootProject.ext.dependencies["BUGLY_NATIVECRASHREPORT"]

@@ -46,6 +46,7 @@ class MainFragment : BaseFragment() {
 
         message.onClickNew {
 //            CrashReport.testJavaCrash();
+//            "kjhd".toInt()
         }
         viewModel.getInfo()
     }
