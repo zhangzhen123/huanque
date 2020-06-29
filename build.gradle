@@ -30,6 +30,16 @@ allprojects {
         }
         maven { url 'https://dl.bintray.com/umsdk/release' }
         maven { url 'http://developer.huawei.com/repo/' }
+
+        //集成rn依赖
+        maven {
+            // All of React Native (JS, Android binaries) is installed from npm
+            url "$rootDir/rnlib/node_modules/react-native/android"
+        }
+        maven {
+            // Android JSC is installed from npm
+            url("$rootDir/rnlib/node_modules/jsc-android/dist")
+        }
     }
 }
 
