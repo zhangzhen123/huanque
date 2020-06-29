@@ -3,15 +3,21 @@ package com.julun.huanque
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.julun.huanque.common.manager.ActivitiesManager
+import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.ui.main.LeYuanFragment
-import com.julun.huanque.ui.main.MainFragment
-import com.julun.huanque.ui.main.MessageFragment
-import com.julun.huanque.ui.main.MineFragment
+import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.ui.main.*
+import com.julun.huanque.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.main_activity.*
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private val mMainFragment = MainFragment.newInstance()
+    private val mMakeFriendsFragment = MakeFriendsFragment.newInstance()
     private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
 
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
@@ -22,12 +28,103 @@ class MainActivity : AppCompatActivity() {
     private val MESSAGE_FRAGMENT_INDEX = 2
     private val MINE_FRAGMENT_INDEX = 3
 
+    private var mMainViewModel: MainViewModel? = null
+
+    private var firstTime = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SessionUtils.setSessionId("37d24f40f29b4330af383c336dee8eee")//test
         setContentView(R.layout.main_activity)
-        showFragmentNew(0)
+        initViewModel()
+        initListener()
+        mMainViewModel?.indexData?.value = 0
     }
+
+    private fun initViewModel() {
+        mMainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        mMainViewModel?.indexData?.observe(this, Observer {
+            if (it != null) {
+                goToTab(it)
+            }
+        })
+    }
+
+
+    private fun initListener() {
+        view_make_friends.onClickNew {
+            //交友
+            if (getCurrentFragment() != mMakeFriendsFragment) {
+                tabIconAnimation(MAIN_FRAGMENT_INDEX)
+            }
+            showFragmentNew(MAIN_FRAGMENT_INDEX)
+        }
+        view_leyuan.onClickNew {
+            //乐园
+            if (getCurrentFragment() != mLeYuanFragment) {
+                tabIconAnimation(LEYUAN_FRAGMENT_INDEX)
+            }
+            showFragmentNew(LEYUAN_FRAGMENT_INDEX)
+        }
+        view_message.onClickNew {
+            //消息
+            if (getCurrentFragment() != mMessageFragment) {
+                tabIconAnimation(MESSAGE_FRAGMENT_INDEX)
+            }
+            showFragmentNew(MESSAGE_FRAGMENT_INDEX)
+        }
+        view_mine.onClickNew {
+            //我的
+            if (getCurrentFragment() != mMineFragment) {
+                tabIconAnimation(MINE_FRAGMENT_INDEX)
+            }
+            showFragmentNew(MINE_FRAGMENT_INDEX)
+        }
+    }
+
+    /**
+     * 切换到指定[index]tab页
+     */
+    private fun goToTab(index: Int) {
+        when (index) {
+            MAIN_FRAGMENT_INDEX -> {
+                view_make_friends.performClick()
+            }
+            LEYUAN_FRAGMENT_INDEX -> {
+                view_leyuan.performClick()
+            }
+            MESSAGE_FRAGMENT_INDEX -> {
+                view_message.performClick()
+            }
+            MINE_FRAGMENT_INDEX -> {
+                view_mine.performClick()
+            }
+        }
+    }
+
+    /**
+     * tab上面的imageview添加动画
+     */
+    private fun tabIconAnimation(index: Int) {
+        lifecycleScope.launch {
+            val list = arrayOf(lottie_make_friends, lottie_leyuan, lottie_message, lottie_mine)
+            val textList = arrayOf(item_make_friends, item_leyuan, item_message, item_mine)
+            list.forEachIndexed { position, lottieAnimationView ->
+                if (index == position) {
+                    if (!lottieAnimationView.isAnimating) {
+                        lottieAnimationView.setSpeed(1f)
+                        lottieAnimationView.playAnimation()
+                    }
+                    textList[position].isSelected = true
+                } else {
+                    lottieAnimationView.cancelAnimation()
+                    lottieAnimationView.progress = 0f
+                    textList[position].isSelected = false
+                }
+            }
+        }
+    }
+
 
     /**
      * 切换fragment
@@ -55,7 +152,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun getFragmentByIndex(index: Int): Fragment? {
         return when (index) {
-            MAIN_FRAGMENT_INDEX -> mMainFragment
+            MAIN_FRAGMENT_INDEX -> mMakeFriendsFragment
             LEYUAN_FRAGMENT_INDEX -> mLeYuanFragment
             MESSAGE_FRAGMENT_INDEX -> mMessageFragment
             MINE_FRAGMENT_INDEX -> mMineFragment
@@ -69,8 +166,8 @@ class MainActivity : AppCompatActivity() {
      * 获取当前的fragment
      */
     private fun getCurrentFragment(): Fragment? {
-        if (mMainFragment.isVisible) {
-            return mMainFragment
+        if (mMakeFriendsFragment.isVisible) {
+            return mMakeFriendsFragment
         }
         if (mLeYuanFragment.isVisible) {
             return mLeYuanFragment
@@ -82,5 +179,28 @@ class MainActivity : AppCompatActivity() {
             return mMineFragment
         }
         return null
+    }
+
+    override fun onBackPressed() {
+        exit()
+    }
+
+    /**
+     * 退出应用
+     */
+    private fun exit() {
+        if (!mMakeFriendsFragment.isVisible) {
+            mMainViewModel?.indexData?.value = 0
+            return
+        }
+        val secondTime = System.currentTimeMillis()
+        if (secondTime - firstTime < 2000) {
+            //两秒之内点击了两次返回键  退出程序
+            finish()
+            ActivitiesManager.finishApp()
+        } else {
+            ToastUtils.show("再按一次退出程序")
+            firstTime = secondTime
+        }
     }
 }

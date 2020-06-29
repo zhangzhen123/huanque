@@ -1,25 +1,23 @@
 package com.julun.huanque.ui.main
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.viewmodel.MainViewModel
 
 import com.julun.rnlib.RNPageActivity
 import com.tencent.bugly.crashreport.CrashReport
 
 import kotlinx.android.synthetic.main.main_fragment.*
 
-class MainFragment : BaseFragment() {
+class MakeFriendsFragment : BaseFragment() {
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance() = MakeFriendsFragment()
     }
 
     override fun getLayoutId(): Int {
@@ -50,13 +48,12 @@ class MainFragment : BaseFragment() {
         test_rn.onClickNew {
             logger.info("测试rn跳转")
             RNPageActivity.start(activity, "HomePage");
+            viewModel.getInfo()
+        }
 
-
-            message.onClickNew {
+        message.onClickNew {
             CrashReport.testJavaCrash();
 //            "kjhd".toInt()
-            }
-            viewModel.getInfo()
         }
 
 
