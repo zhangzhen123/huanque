@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.rnlib.RNPageActivity
 import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : BaseFragment() {
@@ -41,6 +42,10 @@ class MainFragment : BaseFragment() {
 //            viewModel.getUserLevelByRx()
             viewModel.getUserLevelByRx2()
 
+        }
+        test_rn.onClickNew {
+            logger.info("测试rn跳转")
+            RNPageActivity.start(activity, "HomePage");
         }
         viewModel.getInfo()
     }

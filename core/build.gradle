@@ -43,5 +43,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     api project(':common')
+    api project(":rnlib")
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
 }
