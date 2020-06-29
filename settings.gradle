@@ -3,8 +3,11 @@ include ':launchstarter'
 include ':app'
 include ':common'
 include ':core'
-rootProject.name = "HuanQue"
+include ':cockroach'
+
 
 
 include ':react-native-linear-gradient'
 project(':react-native-linear-gradient').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-linear-gradient/android')
+
+rootProject.name = "HuanQue"

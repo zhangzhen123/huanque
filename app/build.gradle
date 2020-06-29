@@ -18,8 +18,8 @@ android {
         applicationId "com.julun.huanque"
         minSdkVersion hq.minSdkVersion
         targetSdkVersion hq.targetSdkVersion
-        versionCode 4300
-        versionName "4.30.0"
+        versionCode 1000
+        versionName "1.0.0"
 
         multiDexEnabled true
 
@@ -27,6 +27,10 @@ android {
         buildConfigField "String", "SERVICE_BASE_URL_PRODUCT", "\"${api.BASE_URL_PRODUCT}\""
         //测试地址
         buildConfigField "String", "SERVICE_BASE_URL_DEV", "\"${api.BASE_URL_DEV}\""
+
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
     }
 
     buildTypes {
@@ -48,6 +52,9 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation project(':core')
+    implementation project(path: ':cockroach')
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
+    implementation rootProject.ext.dependencies["BUGLY_CRASHREPORT"]
+    implementation rootProject.ext.dependencies["BUGLY_NATIVECRASHREPORT"]
 
 }

@@ -9,6 +9,8 @@ ext {
     dependencies = [
             AROUTER_API     : 'com.alibaba:arouter-api:1.4.0',
             AROUTER_COMPILER: 'com.alibaba:arouter-compiler:1.2.0',
+            BUGLY_CRASHREPORT            : 'com.tencent.bugly:crashreport:3.0.0',
+            BUGLY_NATIVECRASHREPORT      : 'com.tencent.bugly:nativecrashreport:3.7.1',
     ]
 
     api = [
