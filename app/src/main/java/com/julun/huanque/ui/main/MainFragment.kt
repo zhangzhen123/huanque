@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.suger.onClickNew
+import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : BaseFragment() {
@@ -41,6 +42,10 @@ class MainFragment : BaseFragment() {
 //            viewModel.getUserLevelByRx()
             viewModel.getUserLevelByRx2()
 
+        }
+
+        message.onClickNew {
+//            CrashReport.testJavaCrash();
         }
         viewModel.getInfo()
     }
