@@ -15,10 +15,14 @@ import com.facebook.react.shell.MainReactPackage;
 import com.julun.rnlib.reactpackage.OpenActivityReactPackage;
 import com.julun.rnlib.reactpackage.RequestInfoReactPackage;
 import com.julun.rnlib.reactpackage.ToastReactPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.KeyEvent;
+
+import org.reactnative.maskedview.RNCMaskedViewPackage;
 
 // Android打开RN页面
 public class RNPageActivity extends AppCompatActivity implements DefaultHardwareBackBtnHandler {
@@ -49,6 +53,9 @@ public class RNPageActivity extends AppCompatActivity implements DefaultHardware
                 .addPackage(new RequestInfoReactPackage())
                 .addPackage(new ToastReactPackage())
                 .addPackage(new OpenActivityReactPackage())
+                .addPackage(new RNGestureHandlerPackage())
+                .addPackage(new SafeAreaContextPackage())
+                .addPackage(new RNCMaskedViewPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)
                 .build();
