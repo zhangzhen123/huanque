@@ -187,7 +187,13 @@ object MessageType {
 
 }
 
-
+/***
+ * 消息相关
+ */
+object MsgTag {
+    const val PREFIX = "adbQy!0ClKMyWho"
+    const val TAG = "lmlive"
+}
 object MessageDisplayType {
     //炫彩发言
     const val COLORFUL = "Colorful"
