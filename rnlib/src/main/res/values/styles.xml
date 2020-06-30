@@ -1,0 +1,10 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="RnAppTheme" parent="Theme.ReactNative.AppCompat.Light.NoActionBar.FullScreen">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary_rn</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_rn</item>
+        <item name="colorAccent">@color/colorAccent_rn</item>
+    </style>
+
+</resources>

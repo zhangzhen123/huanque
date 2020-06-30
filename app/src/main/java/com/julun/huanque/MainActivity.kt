@@ -12,6 +12,7 @@ import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.ui.main.*
 import com.julun.huanque.viewmodel.MainViewModel
+import com.julun.rnlib.RNPageFragment
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.coroutines.launch
 
@@ -21,8 +22,8 @@ class MainActivity : AppCompatActivity() {
     private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
 
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
-    private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
-
+//    private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
+    private val mMineFragment: Fragment by lazy { RNPageFragment.start("HomePage") }
     private val MAIN_FRAGMENT_INDEX = 0
     private val LEYUAN_FRAGMENT_INDEX = 1
     private val MESSAGE_FRAGMENT_INDEX = 2
