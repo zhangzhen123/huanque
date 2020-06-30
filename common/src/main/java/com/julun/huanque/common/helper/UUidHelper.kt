@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.FileUtils
-import com.julun.huanque.common.utils.ParamConstant
+import com.julun.huanque.common.constant.ParamConstant
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter

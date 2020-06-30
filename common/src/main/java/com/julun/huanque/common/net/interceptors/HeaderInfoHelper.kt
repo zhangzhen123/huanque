@@ -15,7 +15,7 @@ import com.julun.huanque.common.utils.device.DeviceUtils
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.utils.NetUtils
-import com.julun.huanque.common.utils.ParamConstant
+import com.julun.huanque.common.constant.ParamConstant
 import java.net.URLEncoder
 import java.util.*
 import kotlin.collections.ArrayList

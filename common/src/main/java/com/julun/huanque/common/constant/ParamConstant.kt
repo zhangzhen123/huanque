@@ -1,4 +1,4 @@
-package com.julun.huanque.common.utils
+package com.julun.huanque.common.constant
 
 /**
  *@创建者   dong

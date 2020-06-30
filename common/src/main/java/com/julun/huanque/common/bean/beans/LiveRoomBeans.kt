@@ -6,7 +6,6 @@ import android.os.Bundle
 import com.alibaba.fastjson.annotation.JSONField
 import com.julun.huanque.common.basic.RootListLiveData
 import com.julun.huanque.common.bean.TplBean
-import com.julun.huanque.common.constant.CardEnterType
 import java.io.Serializable
 
 class UserLevelMap : Serializable {
@@ -303,8 +302,6 @@ class UserEnterRoomRespDto : Serializable {
     //年度盛典红包
     var redPackets: ArrayList<YearRedPackageResult> = ArrayList()
 
-    //宝箱队列
-    var treasureBoxes: ArrayList<PlayerBoxBean> = ArrayList()
     var showGame: Boolean? = null
 
     //显示任务是否可以领取弹窗
@@ -432,13 +429,6 @@ data class DrawInfo(
         var ttl: Long = 0L//这个倒计时根据状态代表抽奖中的倒计时/结束后的显示倒计时
 )
 
-class ExtData {
-    //年度盛典活动banner数据
-    var nzsd2018: YearBannerResult? = null
-
-    //双旦活动banner数据
-    var p2018Shuangd: NewYearBannerResult? = null
-}
 
 /**
  * 开始直播接口获取的信息实例
@@ -1198,22 +1188,6 @@ data class UserInfoBean(var userId: Int, var isAnchor: Boolean = false, var roya
 
 //页面跳转的Bean
 data class GoToUrl(var needLogin: Boolean = false, var url: String = "")
-
-/**
- * 展示名片信息前需要传递过来的参数(节目id或聊天室id任意一个必传)
- * @param programId 节目id
- * @param userId 需要查询的用户id(必传)
- * @param isAnchor 被查询的是否是主播(默认不是,区分用户和主播弹窗)
- * @param royalLevel 贵族等级(不传的话将从接口获取)(尽可能的传过来，可以直接适配窗体)
- * @param userPortrait 用户头像(传不传都通过接口获取新的加载)
- * version4.15增加参数
- * @param cardEnterType 卡片入口类型(是直播间卡片还是im卡片，根据类型解析数据，默认直播间类型卡片)
- * @param chatRoomId 聊天室id
- * @param programName 直播间名称
- */
-data class UserCardInfo(var programId: Int = -1, var chatRoomId: Long = -1, var userId: Int, var royalLevel: Int = -1, var userPortrait: String = ""
-                        , var isAnchor: Boolean = false, var displayType: List<String>? = null, var cardEnterType: Int = CardEnterType.CARD_TYPE_LIVE,
-                        var programName: String = "") : BaseDialogBean()
 
 /**
  * 管理类型(踢人、举报)

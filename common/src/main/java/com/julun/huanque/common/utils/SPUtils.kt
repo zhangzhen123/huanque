@@ -1,7 +1,9 @@
 package com.julun.huanque.common.utils
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.julun.huanque.common.constant.SPType
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import java.lang.reflect.Type
@@ -23,7 +25,10 @@ object SPUtils {
             if (preferences == null) {
                 synchronized(SharedPreferences::class.java) {
                     if (preferences == null) {
-                        preferences = PreferenceManager.getDefaultSharedPreferences(CommonInit.getInstance().getContext())
+                        preferences = CommonInit.getInstance().getContext().getSharedPreferences(
+                            SPType.COMMON_SP,
+                            Context.MODE_PRIVATE
+                        )
                     }
                 }
             }
@@ -34,7 +39,7 @@ object SPUtils {
         get() = sharePreferences.edit()
 
     fun getString(key: String, value: String): String {
-        return sharePreferences.getString(key, value)?:value
+        return sharePreferences.getString(key, value) ?: value
     }
 
     fun getBoolean(key: String, value: Boolean): Boolean {
@@ -92,23 +97,24 @@ object SPUtils {
     }
 
     private fun commit(editor: SharedPreferences.Editor) {
-            editor.apply()
+        editor.apply()
     }
 
 
-
-    fun commitObject(key: String, source:Any) {
+    fun commitObject(key: String, source: Any) {
         val editor = editor.putString(key, JsonUtil.seriazileAsString(source))
         commit(editor)
     }
 
-    fun <T> getObject(key: String,klass:Type):T? {
+    fun <T> getObject(key: String, klass: Type): T? {
         val string: String = getString(key, "")
-        if(StringHelper.isEmpty(string)) return null
-        return if(StringHelper.isEmpty(string)){null}else {
-            JsonUtil.deserializeAsObject(string,klass)}
+        if (StringHelper.isEmpty(string)) return null
+        return if (StringHelper.isEmpty(string)) {
+            null
+        } else {
+            JsonUtil.deserializeAsObject(string, klass)
+        }
     }
-
 
 
 }
