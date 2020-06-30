@@ -470,4 +470,7 @@
     <color name="green_planet">#24FFF7</color>
     <!--主题房相关-->
     <color name="next_theme_live">#FF6E8A</color>
+    <color name="bg_private_chat">#F7F7F7</color>
+    <color name="send_private_chat">#FFCC00</color>
+    <color name="send_free">#FF3F3F</color>
 </resources>

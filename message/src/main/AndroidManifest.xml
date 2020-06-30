@@ -6,6 +6,9 @@
         <activity
             android:name=".message.activity.MessageSettingActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".message.activity.PrivateChatActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 </manifest>

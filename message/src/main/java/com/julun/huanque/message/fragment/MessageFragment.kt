@@ -3,10 +3,13 @@ package com.julun.huanque.message.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.message.activity.MessageSettingActivity
+import com.julun.huanque.message.activity.PrivateChatActivity
+import com.julun.huanque.message.viewmodel.MessageViewModel
 import kotlinx.android.synthetic.main.fragment_message.*
 
 /**
@@ -15,6 +18,8 @@ import kotlinx.android.synthetic.main.fragment_message.*
  *@描述  消息
  */
 class MessageFragment : BaseFragment() {
+
+    private val mMessageViewModel: MessageViewModel by activityViewModels<MessageViewModel>()
 
     companion object {
         fun newInstance() = MessageFragment()
@@ -34,6 +39,14 @@ class MessageFragment : BaseFragment() {
         }
         tv_contacts.onClickNew {
             //联系人
+        }
+
+        tv_message.onClickNew {
+            activity?.let { act ->
+                val intent = Intent(act, PrivateChatActivity::class.java)
+                act.startActivity(intent)
+            }
+
         }
 
     }
