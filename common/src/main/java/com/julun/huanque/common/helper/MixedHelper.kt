@@ -27,7 +27,6 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.layout_empty_data.view.*
-import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.dip
 
 

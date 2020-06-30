@@ -20,7 +20,6 @@ import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.StyleParam
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.constant.MessageDisplayType
-import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.dp2pxf

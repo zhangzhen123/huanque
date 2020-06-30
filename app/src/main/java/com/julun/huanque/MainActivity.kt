@@ -2,21 +2,24 @@ package com.julun.huanque
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.ui.main.*
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.rnlib.RNPageFragment
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private val mMakeFriendsFragment = MakeFriendsFragment.newInstance()
     private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
@@ -33,12 +36,12 @@ class MainActivity : AppCompatActivity() {
 
     private var firstTime = 0L
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun getLayoutId() = R.layout.main_activity
+
+    override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         SessionUtils.setSessionId("37d24f40f29b4330af383c336dee8eee")//test
         setContentView(R.layout.main_activity)
         initViewModel()
-        initListener()
         mMainViewModel?.indexData?.value = 0
     }
 
@@ -51,8 +54,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
-    private fun initListener() {
+    override fun initEvents(rootView: View) {
         view_make_friends.onClickNew {
             //交友
             if (getCurrentFragment() != mMakeFriendsFragment) {
