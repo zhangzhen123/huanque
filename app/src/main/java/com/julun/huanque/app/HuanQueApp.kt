@@ -5,7 +5,6 @@ import android.app.Application
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import com.ishumei.smantifraud.SmAntiFraud
@@ -17,7 +16,6 @@ import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.utils.ForceUtils
-import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.init.HuanQueInit
 import com.julun.huanque.ui.cockroach.DebugSafeModeTipActivity
@@ -27,7 +25,6 @@ import com.wanjian.cockroach.CrashLog
 import com.wanjian.cockroach.ExceptionHandler
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.TimeUnit
 
 open class HuanQueApp : Application() {
@@ -180,7 +177,7 @@ open class HuanQueApp : Application() {
 //        option.channel = channelId
         option.serverIdCallback = object : SmAntiFraud.IServerSmidCallback {
             override fun onSuccess(serverId: String?) {
-                ULog.i("DXC  serverId = $serverId")
+//                ULog.i("DXC  serverId = $serverId")
                 //分发成功
                 if (serverId?.isNotEmpty() == true && serverId != mDeviceId) {
                     //获取到新的serverId,更新给服务端

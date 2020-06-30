@@ -1,6 +1,5 @@
 package com.julun.huanque.common.commonviewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.julun.huanque.common.base.BaseDialogFragment

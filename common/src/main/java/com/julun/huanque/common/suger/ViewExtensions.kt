@@ -1,6 +1,5 @@
 package com.julun.huanque.common.suger
 
-import android.animation.Animator
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView

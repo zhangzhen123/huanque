@@ -1,7 +1,6 @@
 package com.julun.huanque.common.base.dialog
 
 import android.app.Activity
-import android.content.DialogInterface
 import android.text.SpannableString
 import android.view.View
 import android.widget.TextView

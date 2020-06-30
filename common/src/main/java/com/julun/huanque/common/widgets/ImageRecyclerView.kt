@@ -2,7 +2,6 @@ package com.julun.huanque.common.widgets
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.backends.pipeline.Fresco
 import kotlin.math.abs
