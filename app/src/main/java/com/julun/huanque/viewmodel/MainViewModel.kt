@@ -1,7 +1,6 @@
-package com.julun.huanque.ui.main
+package com.julun.huanque.viewmodel
 
 import androidx.lifecycle.*
-import androidx.lifecycle.Transformations.switchMap
 import com.julun.huanque.common.bean.forms.SessionForm
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.net.service.UserService
@@ -15,6 +14,9 @@ class MainViewModel : BaseViewModel() {
 //        val user = queryUserDetailInfo()
 //        emit(user)
 //    }
+    //当前的fragment下标
+    val indexData : MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
+
     private val userService: UserService by lazy {
         Requests.create(UserService::class.java)
     }
