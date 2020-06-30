@@ -47,7 +47,7 @@ class MakeFriendsFragment : BaseFragment() {
 
         test_rn.onClickNew {
             logger.info("测试rn跳转")
-            RNPageActivity.start(activity, "HomePage");
+            RNPageActivity.start(requireActivity(), "HomePage");
             viewModel.getInfo()
         }
 

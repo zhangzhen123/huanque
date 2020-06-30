@@ -805,13 +805,6 @@ object MessageProcessor {
         override fun getEventType() = EventMessageType.ChatRoomUsersChange
     }
 
-    /*
-      * 宝箱数据变化消息
-    */
-    interface ChestChangeMessageProcessor : EventMessageProcessor<PlayerBoxBean> {
-        override fun getEventType() = EventMessageType.TreasureBox
-    }
-
     /**
      * 异步红包数据变化消息
      */
@@ -847,12 +840,6 @@ object MessageProcessor {
         override fun getEventType() = EventMessageType.BlockChatRoom
     }
 
-    /**
-     * 加入粉丝团消息
-     */
-    interface FansJoinMessageProcessor : EventMessageProcessor<FansMessage> {
-        override fun getEventType() = EventMessageType.JoinFansGroup
-    }
 
     /**
      * 玩家当前奖池赠送鲤鱼数量变化消息
@@ -1298,8 +1285,6 @@ enum class EventMessageType(val klass: Class<*>) {
      */
     PublicCustomMsg(PublicCustomMsgBean::class.java),
 
-    //宝箱消息
-    TreasureBox(PlayerBoxBean::class.java),
 
     //特权变化消息
     UserFansLevelChange(VoidResult::class.java),
@@ -1318,8 +1303,6 @@ enum class EventMessageType(val klass: Class<*>) {
     //上神跑道消息
     UpGodRunWay(TplBean::class.java),
 
-    //加入粉丝团消息
-    JoinFansGroup(FansMessage::class.java),
 
     //关闭直播间消息
     CloseChatRoom(CloseChatRoomBean::class.java),

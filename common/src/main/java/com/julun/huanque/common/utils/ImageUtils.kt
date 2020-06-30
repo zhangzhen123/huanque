@@ -93,6 +93,8 @@ object ImageUtils {
             imagePipeline.fetchDecodedImage(imageRequest, null)
 
         dataSource.subscribe(object : BaseBitmapDataSubscriber() {
+
+
             /**
              * @param bitmap 关于这个 bitmap对象,将会在方法调用完毕之后被销毁,由框架负责这个事情.如下面api说明:
              * The framework will free the bitmap's memory after this method has completed.
@@ -113,7 +115,7 @@ object ImageUtils {
                 }
             }
 
-            override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
+            override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>) {
                 if (drawableResId > 0) {
                     callback(
                         BitmapFactory.decodeResource(

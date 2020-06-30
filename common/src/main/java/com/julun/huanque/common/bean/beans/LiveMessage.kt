@@ -4,7 +4,6 @@ import android.graphics.Typeface
 import androidx.annotation.ColorInt
 import com.alibaba.fastjson.annotation.JSONField
 import com.julun.huanque.common.bean.TplBean
-import com.julun.huanque.common.constant.BoxType
 import com.julun.huanque.common.constant.RedPackageType
 import com.julun.huanque.common.constant.AnimationTypes
 import java.io.Serializable
@@ -856,86 +855,6 @@ class ChatRoomUsersChangeBean(
         var chatRoomTotalCount: Int? = null,
         var chatRoomMonthRank: String = ""
 ) : Serializable
-
-/**
- * 宝箱bean
- */
-class PlayerBoxBean : BaseDialogBean() {
-    //通过融云消息接收到的所有宝箱相关信息
-    var boxInfo: String = ""
-    // 宝箱ID
-    var boxId: Int = 0
-    // 距开始领取剩余秒数
-    var seconds: Long = 0L
-    // 宝箱持续时长(未领取完，剩余展示时长)
-    var existSeconds: Long = 0L
-    // 宝箱标题
-    var title: String = ""
-    var nickname: String = ""
-    // 宝箱头像
-    var logoPic: String = ""
-    // 商品信息
-    var prodName: String = ""
-    // 商品图片
-    var prodPic: String = ""
-    var tips: String = ""
-    // 错误类型 Success(抢到宝箱)、NotFollow(需关注主播)、TooLate(手慢了，宝箱奖励已被领完)、NotStart(未开始)
-    var errType: String = ""
-    var errMsg: String = ""
-
-    //自定义字段
-    //宝箱当前状态
-    var boxStatus: Int = BoxType.WILL
-    //宝箱Error信息
-    var boxMsg: String = ""
-
-    override fun toString(): String {
-        return "PlayerBoxBean(boxId = $boxId，seconds = $seconds，existSeconds = $existSeconds，" +
-                "title = $title，logoPic = $logoPic，prodName = $prodName，prodPic = $prodPic，" +
-                "errType = $errType，errMsg = $errMsg，boxStatus = $boxStatus，boxMsg = $boxMsg)"
-    }
-
-    override fun hashCode(): Int {
-        return boxId.hashCode()
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (other is PlayerBoxBean) {
-            return other.boxId == this.boxId
-        }
-        return false
-    }
-
-    fun copy(bean: PlayerBoxBean) {
-        bean ?: return
-        this.boxId = bean.boxId
-        this.seconds = bean.seconds
-        this.existSeconds = bean.existSeconds
-//        this.title = bean.title
-//        this.logoPic = bean.logoPic
-//        this.prodName = bean.prodName
-//        this.prodPic = bean.prodPic
-//        this.errType = bean.errType
-//        this.errMsg = bean.errMsg
-//        this.boxStatus = bean.boxStatus
-//        this.boxMsg = bean.boxMsg
-    }
-}
-
-/**
- * 粉丝团加入消息
- */
-class FansMessage {
-    var userLevel: Int = 0
-    var programName: String = ""
-    var nickname: String = ""
-    var royalLevel: Int = 0
-    var userType: String = ""
-    var anchorId: Long = 0
-    var userId: Long = 0
-    var headPic: String = ""
-    var programId: Long = 0
-}
 
 /**
  * 关闭直播间消息
