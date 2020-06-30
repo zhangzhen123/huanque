@@ -6,8 +6,15 @@ include ':core'
 include ':cockroach'
 
 
-
+//rn需要依赖的第三方
 include ':react-native-linear-gradient'
 project(':react-native-linear-gradient').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-linear-gradient/android')
+include ':react-native-gesture-handler'
+project(':react-native-gesture-handler').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-gesture-handler/android')
+include ':react-native-safe-area-context'
+project(':react-native-safe-area-context').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-safe-area-context/android')
+include ':@react-native-community_masked-view'
+project(':@react-native-community_masked-view').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/@react-native-community/masked-view/android')
 
+//apply from: file("rnlib/node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 rootProject.name = "HuanQue"
