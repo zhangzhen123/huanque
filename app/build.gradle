@@ -33,6 +33,11 @@ android {
         }
     }
 
+    sourceSets{
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -57,5 +62,7 @@ dependencies {
     implementation rootProject.ext.dependencies["BUGLY_CRASHREPORT"]
     implementation rootProject.ext.dependencies["BUGLY_NATIVECRASHREPORT"]
     implementation rootProject.ext.dependencies["LOTTIE"]
+    implementation files('libs/smantifraud.aar')
+    implementation 'com.jakewharton:process-phoenix:2.0.0'
 
 }

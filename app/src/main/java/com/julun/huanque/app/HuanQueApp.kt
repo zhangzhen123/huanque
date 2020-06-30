@@ -8,22 +8,33 @@ import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
+import com.ishumei.smantifraud.SmAntiFraud
+import com.jakewharton.processphoenix.ProcessPhoenix
 import com.julun.huanque.BuildConfig
+import com.julun.huanque.MainActivity
 import com.julun.huanque.R
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SPUtils
+import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.init.HuanQueInit
 import com.julun.huanque.ui.cockroach.DebugSafeModeTipActivity
 import com.tencent.bugly.crashreport.CrashReport
 import com.wanjian.cockroach.Cockroach
 import com.wanjian.cockroach.CrashLog
 import com.wanjian.cockroach.ExceptionHandler
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.TimeUnit
 
 open class HuanQueApp : Application() {
+
+    //数美分发的deviceId，用于过滤。（设置一次监听会触发两次onSuccess）
+    private var mDeviceId = ""
+
     override fun onCreate() {
         install()
         val baseUrl = if (BuildConfig.DEBUG) {
@@ -35,6 +46,11 @@ open class HuanQueApp : Application() {
         if (AppHelper.isMainProcess(this)) {
             //bugly初始化(bugly的初始化放在所有初始化的第一个，以免一些日志错过收集)
             initBugly(this)
+            try {
+                initShumei(this)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
         HuanQueInit.getInstance().init(this)
         super.onCreate()
@@ -138,15 +154,45 @@ open class HuanQueApp : Application() {
                     toast.show()
                 }
 //                ToastUtils.show(R.string.attention_restart)
-                //todo 重启重启 延迟是为了commit执行完
-//                Observable.timer(200, TimeUnit.MILLISECONDS)
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe {
-//                        val nextIntent = Intent(this@LingMengApp, MainActivity::class.java)
-//                        ProcessPhoenix.triggerRebirth(this@LingMengApp, nextIntent)
-//                    }
+                //重启重启 延迟是为了commit执行完
+                Observable.timer(200, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        val nextIntent = Intent(this@HuanQueApp, MainActivity::class.java)
+                        ProcessPhoenix.triggerRebirth(this@HuanQueApp, nextIntent)
+                    }
             }
 
         })
+    }
+
+    /**
+     * 初始化数美
+     */
+    private fun initShumei(application: Application) {
+        val option = SmAntiFraud.SmOption()
+        // 数美提供的公司唯一标识码
+        val org = "HvjKuOJMi7FlcXA8DbFx"
+        option.organization = org
+        option.appId = "default"
+        //渠道代码 //如果是首次启动 App，设置为 true，否则设置为 false 或不设置。
+//        val channelId = OpenInstallManager.getChannelId()
+//        option.channel = channelId
+        option.serverIdCallback = object : SmAntiFraud.IServerSmidCallback {
+            override fun onSuccess(serverId: String?) {
+                ULog.i("DXC  serverId = $serverId")
+                //分发成功
+                if (serverId?.isNotEmpty() == true && serverId != mDeviceId) {
+                    //获取到新的serverId,更新给服务端
+                    mDeviceId = serverId
+//                    EventBus.getDefault().postSticky(DeviceEvent())
+                }
+            }
+
+            override fun onError(errorCode: Int) {
+
+            }
+        }
+        SmAntiFraud.create(application, option)
     }
 }
