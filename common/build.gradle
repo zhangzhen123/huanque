@@ -127,18 +127,19 @@ dependencies {
     api 'com.trello.rxlifecycle4:rxlifecycle-kotlin:4.0.0'
     api 'com.trello.rxlifecycle4:rxlifecycle-android-lifecycle-kotlin:4.0.0'
     /**FRESCO相关*/
-    implementation "com.facebook.fresco:fresco:$frescoVersion"
-    implementation "com.facebook.fresco:animated-base:$frescoVersion"
-    implementation "com.facebook.fresco:animated-gif:$frescoVersion"
-    implementation "com.facebook.fresco:webpsupport:$frescoVersion"
-    implementation "com.facebook.fresco:animated-webp:$frescoVersion"
-    implementation "com.facebook.fresco:drawee-span:$frescoVersion"
-    implementation "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
+    api "com.facebook.fresco:fresco:$frescoVersion"
+    api "com.facebook.fresco:animated-base:$frescoVersion"
+    api "com.facebook.fresco:animated-gif:$frescoVersion"
+    api "com.facebook.fresco:webpsupport:$frescoVersion"
+    api "com.facebook.fresco:animated-webp:$frescoVersion"
+    api "com.facebook.fresco:drawee-span:$frescoVersion"
+    api "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
     /**EVENT_BUS*/
     api "org.greenrobot:eventbus:3.1.1"
     kapt "org.greenrobot:eventbus-annotation-processor:3.1.1"
     /*路由*/
     api rootProject.ext.dependencies["AROUTER_API"]
+    api rootProject.ext.dependencies["BASERECYCLERVIEWADAPTERHELPER"]
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
     /*启动优化器*/
     api project(':launchstarter')

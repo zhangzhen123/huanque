@@ -473,4 +473,5 @@
     <color name="bg_private_chat">#F7F7F7</color>
     <color name="send_private_chat">#FFCC00</color>
     <color name="send_free">#FF3F3F</color>
+    <color name="bg_chat_time">#D9DBDE</color>
 </resources>

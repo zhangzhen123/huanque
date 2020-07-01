@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="#7F7F7F7F">
+    android:background="#7F7F7F7F"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/view_top"
         layout="@layout/layout_pager_header"
-        android:layout_width="0px"
+        android:layout_width="match_parent"
         android:layout_height="45dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -17,12 +18,10 @@
 
     <com.effective.android.panel.view.PanelSwitchLayout
         android:id="@+id/panel_switch_layout"
-        android:layout_width="0px"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:animationSpeed="standard"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:animationSpeed="standard">
 
         <!-- 内容区域 -->
         <!-- linear_edit_view 指定一个 EditText 用于输入 ，必须项-->
@@ -37,7 +36,7 @@
             tools:layout_height="500dp">
 
             <com.julun.huanque.common.widgets.HookActionUpRecyclerView
-                android:id="@+id/recycler_view"
+                android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
@@ -209,15 +208,15 @@
                 app:panel_trigger="@id/iv_emoji" />
 
             <!-- 除了使用框架提供的 PanelView，也可以使用自定义 Panel -->
-<!--            <com.effective.android.panel.view.panel.PanelView-->
-<!--                android:id="@+id/panel_addition"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:panel_layout="@layout/panel_add_layout"-->
-<!--                app:panel_trigger="@id/add_btn" />-->
+            <!--            <com.effective.android.panel.view.panel.PanelView-->
+            <!--                android:id="@+id/panel_addition"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                app:panel_layout="@layout/panel_add_layout"-->
+            <!--                app:panel_trigger="@id/add_btn" />-->
 
         </com.effective.android.panel.view.panel.PanelContainer>
     </com.effective.android.panel.view.PanelSwitchLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

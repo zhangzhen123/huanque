@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.net.RequestCaller
+import com.julun.huanque.common.utils.ULog
 
 /**
  *
@@ -17,6 +18,7 @@ import com.julun.huanque.common.net.RequestCaller
  */
 
 open class BaseViewModel : RequestCaller, ViewModel() {
+    protected open var logger = ULog.getLogger(this.javaClass.name)!!
     val loadState by lazy {
         MutableLiveData<NetState>()
     }
