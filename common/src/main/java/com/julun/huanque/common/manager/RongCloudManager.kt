@@ -96,10 +96,10 @@ object RongCloudManager {
         //        var imToken = SessionUtils.getRongImToken()
         //        var imToken = SessionUtils.getRongImToken()
         //用户ID：49的token
-        var imToken =
-            "Nn1NRLchjgEMdXKZx2SJo7uBzmvX172nZ6rFtOhZ+uW6W7fa7ei7Ngzm8FROvvZeaVl/mReES/xNYwDGgPrwBg=="
+//        var imToken =
+//            "Nn1NRLchjgEMdXKZx2SJo7uBzmvX172nZ6rFtOhZ+uW6W7fa7ei7Ngzm8FROvvZeaVl/mReES/xNYwDGgPrwBg=="
         //        //用户ID：48的token
-        //        var imToken = "Jhv71btXrQcJguf0BPcDH78fgExuBBZSwgXOEseACHsx85x9+GVWvR4bAn9m2QinjrPGoBrj94tIiHwzyXJRCQ=="
+                var imToken = "Jhv71btXrQcJguf0BPcDH78fgExuBBZSwgXOEseACHsx85x9+GVWvR4bAn9m2QinjrPGoBrj94tIiHwzyXJRCQ=="
         logger.info("链接融云使用token $imToken ")
         if (TextUtils.isEmpty(imToken)) {
             ToastUtils.show("缺少聊天Token，无法连接聊天服务器")

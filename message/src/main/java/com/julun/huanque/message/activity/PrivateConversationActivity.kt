@@ -78,14 +78,14 @@ class PrivateConversationActivity : BaseActivity() {
      */
     private fun initViewModel() {
         mPrivateConversationViewModel =
-            ViewModelProvider(this).get(PrivateConversationViewModel::class.java)
+                ViewModelProvider(this).get(PrivateConversationViewModel::class.java)
 
         mPrivateConversationViewModel?.targetIdData?.observe(this, Observer {
             if (it != null) {
                 mPrivateConversationViewModel?.messageListData?.value?.clear()
                 mPrivateConversationViewModel?.getMessageList(first = true)
                 RongIMClient.getInstance()
-                    .clearMessagesUnreadStatus(Conversation.ConversationType.PRIVATE, it)
+                        .clearMessagesUnreadStatus(Conversation.ConversationType.PRIVATE, it)
                 EventBus.getDefault().post(EventMessageBean(it))
             }
         })
@@ -123,6 +123,8 @@ class PrivateConversationActivity : BaseActivity() {
         }
         findViewById<ImageView>(R.id.ivOperation).onClickNew {
             //打开会话设置
+            val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: return@onClickNew
+            PrivateConversationSettingActivity.newInstance(this, targetId)
         }
 
         bottom_action.onTouch { v, event ->
@@ -199,11 +201,11 @@ class PrivateConversationActivity : BaseActivity() {
                                 val pagerView = findViewById<EmotionPagerView>(R.id.view_pager)
                                 val viewPagerSize: Int = height - DensityUtils.dpToPx(30)
                                 pagerView.buildEmotionViews(
-                                    findViewById<PageIndicatorView>(R.id.pageIndicatorView),
-                                    edit_text,
-                                    Emotions.getEmotions(),
-                                    width,
-                                    viewPagerSize
+                                        findViewById<PageIndicatorView>(R.id.pageIndicatorView),
+                                        edit_text,
+                                        Emotions.getEmotions(),
+                                        width,
+                                        viewPagerSize
                                 )
                             }
                         }
@@ -211,8 +213,8 @@ class PrivateConversationActivity : BaseActivity() {
 
                 }
             }.contentCanScrollOutside(false)    //可选模式，默认true，当面板实现时内容区域是否往上滑动
-                .logTrack(true)                 //可选，默认false，是否开启log信息输出
-                .build(false)                      //可选，默认false，是否默认打开输入法
+                    .logTrack(true)                 //可选，默认false，是否开启log信息输出
+                    .build(false)                      //可选，默认false，是否默认打开输入法
         }
     }
 
@@ -239,7 +241,7 @@ class PrivateConversationActivity : BaseActivity() {
                 R.id.iv_send_fail -> {
                     //重新发送消息
                     val targerId = mPrivateConversationViewModel?.targetIdData?.value
-                        ?: return@setOnItemChildClickListener
+                            ?: return@setOnItemChildClickListener
                     tempData.sentStatus = Message.SentStatus.SENDING
                     adapter.getViewByPosition(recyclerview, position, R.id.iv_send_fail)?.hide()
                     adapter.getViewByPosition(recyclerview, position, R.id.send_progress)?.show()
@@ -250,9 +252,9 @@ class PrivateConversationActivity : BaseActivity() {
                         } else {
                             tempData.sentStatus = Message.SentStatus.FAILED
                             adapter.getViewByPosition(recyclerview, position, R.id.iv_send_fail)
-                                ?.show()
+                                    ?.show()
                             adapter.getViewByPosition(recyclerview, position, R.id.send_progress)
-                                ?.hide()
+                                    ?.hide()
                         }
                     }
                 }
@@ -264,7 +266,7 @@ class PrivateConversationActivity : BaseActivity() {
         mAdapter.setUpFetchListener {
             val currLast = mAdapter.getItem(0)
             mPrivateConversationViewModel?.getMessageList(
-                currLast?.messageId ?: return@setUpFetchListener
+                    currLast?.messageId ?: return@setUpFetchListener
             )
             mAdapter.isUpFetching = true
         }

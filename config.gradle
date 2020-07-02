@@ -15,6 +15,8 @@ ext {
             BUGLY_NATIVECRASHREPORT: 'com.tencent.bugly:nativecrashreport:3.7.1',
             //Lottit动画库
             LOTTIE                 : 'com.airbnb.android:lottie:3.3.0',
+            //声网SDK
+            AGORA                        : 'io.agora.rtc:full-sdk:2.9.2',
             //recyclerview adapter
             BASERECYCLERVIEWADAPTERHELPER: 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
     ]
