@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.View
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseFragment
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.rnlib.RNPageActivity
+import kotlinx.android.synthetic.main.fragment_mine.*
 
 /**
  *@创建者   dong
@@ -20,5 +23,11 @@ class MineFragment : BaseFragment() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
 
+    }
+
+    override fun initEvents(rootView: View) {
+        test_rn.onClickNew {
+            RNPageActivity.start(requireActivity(), "PH");
+        }
     }
 }

@@ -20,7 +20,7 @@ ext {
 
     api = [
             BASE_URL_PRODUCT: "https://api.51lm.tv/",
-            BASE_URL_DEV    : "http://192.168.96.251:8888/"
+            BASE_URL_DEV    : "http://192.168.96.249:7777/"
     ]
     sdk = [
             //三方对应相关的key or scheme

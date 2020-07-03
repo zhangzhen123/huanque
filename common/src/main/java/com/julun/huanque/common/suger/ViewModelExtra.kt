@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.net.NError
@@ -20,6 +21,8 @@ import io.reactivex.rxjava3.core.Observable
  *@Description: RootExtra
  *
  */
+typealias SNError = suspend (t: Throwable) -> Unit
+typealias SNAction = suspend () -> Unit
 
 fun <T> Root<T>.dataConvert(): T {
     return mapper(this)
@@ -27,36 +30,58 @@ fun <T> Root<T>.dataConvert(): T {
 
 /**
  * 协程请求的统一封装
+ * [block]要执行的block
+ * [error]错误返回
+ * [final]最终返回
+ *[needLoadState]是否需要初始化加载状态回调
+ *
  */
 suspend fun BaseViewModel.request(
-    block: suspend () -> Unit,
-    error: NError? = null,
-    final: NAction? = null,
-    loadState: MutableLiveData<NetState>? = null
+    block: SNAction,
+    error: SNError? = null,
+    final: SNAction? = null,
+    needLoadState: Boolean = false
 ) {
-    loadState?.postValue(NetState(state = NetStateType.LOADING))
-    runCatching {
+    if (needLoadState) {
+        loadState.postValue(NetState(state = NetStateType.LOADING))
+    }
+    try {
         block()
-    }.onSuccess {
-        loadState?.postValue(NetState(state = NetStateType.SUCCESS))
-        final?.invoke()
-    }.onFailure {
-        NetExceptionHandle.handleException(it, loadState)
-        it.printStackTrace()
-        error?.invoke(it)
+        if (needLoadState) {
+            loadState.postValue(NetState(state = NetStateType.SUCCESS))
+        }
+    } catch (e: Throwable) {
+        if (needLoadState) {
+            NetExceptionHandle.handleException(e, loadState)
+        }
+
+        error?.invoke(e)
+        e.printStackTrace()
+    } finally {
         final?.invoke()
     }
+//    runCatching {
+//        block()
+//    }.onSuccess {
+//        loadState?.postValue(NetState(state = NetStateType.SUCCESS))
+//        final?.invoke()
+//    }.onFailure {
+//        NetExceptionHandle.handleException(it, loadState)
+//        it.printStackTrace()
+//        error?.invoke(it)
+//        final?.invoke()
+//    }
 }
 
 /**
  * rxJava请求的统一封装
  */
 fun <T> BaseViewModel.requestRx(
-        request: () -> Observable<Root<T>>,
-        onSuccess: NSuccess<T>,
-        error: NError? = null,
-        final: NAction = {},
-        loadState: MutableLiveData<NetState>? = null
+    request: () -> Observable<Root<T>>,
+    onSuccess: NSuccess<T>,
+    error: NError? = null,
+    final: NAction = {},
+    loadState: MutableLiveData<NetState>? = null
 ) {
     loadState?.postValue(NetState(state = NetStateType.LOADING))
     request().handleResponse(makeSubscriber<T> {
@@ -68,5 +93,13 @@ fun <T> BaseViewModel.requestRx(
         it.printStackTrace()
     }.withFinalCall(final)
     )
+}
+
+fun Throwable.errorMsg(): String {
+    return if (this is ResponseError) {
+        this.busiMessage
+    } else {
+        "网络错误了"
+    }
 }
 

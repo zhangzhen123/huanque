@@ -11,6 +11,7 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListLiveData
 import com.julun.huanque.common.bean.beans.HomeItemBean
+import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.fragment_make_friend.*
 
@@ -40,7 +41,13 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
         mAdapter.setOnItemClickListener { _, _, position ->
-            logger.info("点击了第几个")
+            logger.info("点击了第几个index=$position")
+        }
+        mAdapter.mOnItemAdapterListener=object :MakeFriendsAdapter.OnItemAdapterListener{
+            override fun onListClick(index: Int, position: Int, item: PhotoBean) {
+                logger.info("index=$index position=$position item=$item")
+            }
+
         }
     }
 
@@ -51,7 +58,12 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
     private fun initViewModel() {
         mViewModel.stateList.observe(viewLifecycleOwner, Observer {
             //
-            loadData(it)
+            mRefreshView.isRefreshing=false
+            if(it.state==NetStateType.SUCCESS){
+                loadData(it.getT())
+            }else if(it.state==NetStateType.ERROR){
+                //dodo
+            }
         })
 
 

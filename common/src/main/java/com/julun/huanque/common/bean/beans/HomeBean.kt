@@ -25,7 +25,11 @@ class PhotoBean(
     var url: String = "",
     var res: Int = 0
 
-)
+) {
+    override fun toString(): String {
+        return "PhotoBean(url='$url', res=$res)"
+    }
+}
 
 class HeaderNavigateBean(
     var type: Int = -1,
@@ -41,3 +45,32 @@ class HeaderNavigateBean(
         const val DAY_TOP = 4
     }
 }
+
+data class HeadNavigateInfo(
+    var moduleList: List<HeadModule> = listOf(),
+    var myCash: Int = 0
+)
+
+data class HeadModule(
+    var baseInfo: HeadBaseInfo = HeadBaseInfo(),
+    var bgPic: String = "",
+    var moduleName: String = "",
+    var moduleType: String = ""
+) {
+    companion object {
+        const val MaskQueen = "MaskQueen"
+        const val AnonymousVoice = "AnonymousVoice"
+        const val MagpieParadise = "MagpieParadise"
+        const val HotLive = "HotLive"
+        const val PlumFlower = "PlumFlower"
+    }
+}
+
+data class HeadBaseInfo(
+    var headPic: String = "",
+    var hotValue: Int = 0,
+    var joinNum: Int = 0,
+    var nickname: String = "",
+    var programList: List<Any> = listOf(),
+    var remainTimes: Int = 0
+)

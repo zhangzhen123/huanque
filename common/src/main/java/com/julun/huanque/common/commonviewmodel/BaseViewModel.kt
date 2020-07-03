@@ -25,7 +25,11 @@ open class BaseViewModel : RequestCaller, ViewModel() {
     val loadState by lazy {
         MutableLiveData<NetState>()
     }
-    val queryState = MutableLiveData<QueryType>()
+
+    /**
+     * 普通请求的开关标志
+     */
+    protected val queryState = MutableLiveData<QueryType>()
 
     fun queryInfo(queryType: QueryType = QueryType.INIT) {
         queryState.value = queryType

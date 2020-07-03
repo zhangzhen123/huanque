@@ -24,7 +24,7 @@ class PhotosAdapter : BaseQuickAdapter<PhotoBean, BaseViewHolder>(R.layout.item_
 
 
     }
-    var last=0
+    private var last=0
     fun testPosition(position:Int){
         logger("当前的使用位置=$position 上一次：$last" )
         last=position

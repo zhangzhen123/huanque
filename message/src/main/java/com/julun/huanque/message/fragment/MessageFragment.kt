@@ -3,9 +3,9 @@ package com.julun.huanque.message.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.MessageSettingActivity
 import kotlinx.android.synthetic.main.fragment_message.*
 

@@ -25,8 +25,8 @@ class MainActivity : BaseActivity() {
     private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
 
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
-//    private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
-    private val mMineFragment: Fragment by lazy { RNPageFragment.start("PH") }
+    private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
+//    private val mMineFragment: Fragment by lazy { RNPageFragment.start("PH") }
     private val MAIN_FRAGMENT_INDEX = 0
     private val LEYUAN_FRAGMENT_INDEX = 1
     private val MESSAGE_FRAGMENT_INDEX = 2

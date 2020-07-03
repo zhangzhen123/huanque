@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
-import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.NotificationUtils
+import com.julun.huanque.message.R
 import kotlinx.android.synthetic.main.act_message_setting.*
 
 /**

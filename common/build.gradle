@@ -47,8 +47,8 @@ android {
             ]
         }
     }
-    sourceSets{
-        main{
+    sourceSets {
+        main {
             jniLibs.srcDirs = ['libs']
         }
 
@@ -112,7 +112,8 @@ dependencies {
 
     api "com.squareup.okhttp3:okhttp:3.14.9"
     api 'com.squareup.okhttp3:logging-interceptor:3.6.0'
-    api "com.alibaba:fastjson:1.1.71.android"
+    /* 这里注意高版本解析kotlin会报错不能随便升级*/
+    api "com.alibaba:fastjson:1.1.57.android"
 
     api "com.facebook.stetho:stetho-okhttp3:1.5.0"
 

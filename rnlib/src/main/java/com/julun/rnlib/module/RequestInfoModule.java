@@ -44,11 +44,12 @@ public class RequestInfoModule extends ReactContextBaseJavaModule {
             WritableMap map = Arguments.createMap();
             map.putMap("headerInfo", headerMap);
             map.putString("baseURL", "https://api.51lm.tv/");
-
+            map.putString("encryptionKey", "encryptionKey");
             promise.resolve(map);
         } catch (IllegalViewOperationException e) {
             e.printStackTrace();
             promise.reject(E_LAYOUT_ERROR, e);
         }
     }
+
 }

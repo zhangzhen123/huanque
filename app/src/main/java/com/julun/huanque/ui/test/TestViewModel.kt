@@ -33,7 +33,7 @@ class TestViewModel : BaseViewModel() {
                     logger("报错了：$e")
                 }, final = {
                     logger("最终返回")
-                }, loadState = loadState)
+                }, needLoadState = true)
             } else {
                 logger("getInfo=false 这里根本不会执行")
             }

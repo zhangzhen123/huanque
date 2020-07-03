@@ -13,16 +13,21 @@ data class NetState(var state: NetStateType, var message: String = "")
 
 /**
  * 应用状态
+ * [IDLE]闲置
+ * [LOADING]加载中
+ * [SUCCESS] 加载成功
+ * [ERROR] 加载失败
+ * [NETWORK_ERROR] 网络错误
+ *
  */
 enum class NetStateType {
+    IDLE,
     LOADING,
     SUCCESS,
     ERROR,
 
     //    EMPTY,
     NETWORK_ERROR,
-
-//    TIP,
 }
 
 /**

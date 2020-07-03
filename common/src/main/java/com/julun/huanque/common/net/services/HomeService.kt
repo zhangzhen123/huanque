@@ -1,9 +1,13 @@
 package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.RootListLiveData
+import com.julun.huanque.common.basic.VoidForm
+import com.julun.huanque.common.bean.beans.HeadNavigateInfo
 import com.julun.huanque.common.bean.forms.SessionForm
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
+import com.julun.huanque.common.bean.forms.RecomListForm
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -23,17 +27,16 @@ interface HomeService {
     /************************************** 个人中心 **********************************************/
 
     /**
-     * 查询用户基本信息
+     * 查询主页主要信息
      */
-    @POST("user/acct/info/basic")
-    suspend fun queryUserDetailInfo(@Body form: SessionForm): Root<UserDetailInfo>
+    @POST("social/friend/home/info")
+    suspend fun homeInfo(@Body form: VoidForm = VoidForm()): Root<HeadNavigateInfo>
 
     /**
-     * 查询用户等级信息
+     * 获取列表信息
      */
-    @POST("user/acct/info/levelInfo")
-    fun queryUserLevelInfoBasic(@Body form: SessionForm): Observable<Root<UserLevelInfo>>
-
+    @POST("social/friend/home/recomList")
+    suspend fun homeRecomList(@Body form: RecomListForm): Root<RootListLiveData<UserLevelInfo>>
 
 
 }
