@@ -3,6 +3,7 @@ package com.julun.huanque.common.commonviewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.julun.huanque.common.basic.NetState
+import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.net.RequestCaller
 
@@ -17,8 +18,17 @@ import com.julun.huanque.common.net.RequestCaller
  */
 
 open class BaseViewModel : RequestCaller, ViewModel() {
+    /**
+     * 这个loadState只供页面加载的请求使用 通过它可以直接反馈请求的状态去更新页面 加载中 成功 失败 网络异常
+     * 其他请求不需要带
+     */
     val loadState by lazy {
         MutableLiveData<NetState>()
+    }
+    val queryState = MutableLiveData<QueryType>()
+
+    fun queryInfo(queryType: QueryType = QueryType.INIT) {
+        queryState.value = queryType
     }
 
     override fun getRequestCallerId(): String {

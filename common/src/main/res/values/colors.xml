@@ -226,7 +226,7 @@
     <color name="gray_border">#e6e6e6</color>
 
     <!-- 默认系统背景色 -->
-    <color name="default_bg">#F3F5F9</color>
+    <color name="default_bg">#FFFFFF</color>
     <color name="bg_trible_db">#dbdbdb</color>
     <!-- 直播间背景颜色 -->
     <color name="liveroom_bg">#46415e</color>

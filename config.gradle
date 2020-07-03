@@ -14,7 +14,8 @@ ext {
             BUGLY_CRASHREPORT      : 'com.tencent.bugly:crashreport:3.0.0',
             BUGLY_NATIVECRASHREPORT: 'com.tencent.bugly:nativecrashreport:3.7.1',
             //Lottit动画库
-            LOTTIE                 : 'com.airbnb.android:lottie:3.3.0'
+            LOTTIE                 : 'com.airbnb.android:lottie:3.3.0',
+            MAGICINDICATOR               : 'com.github.hackware1993:MagicIndicator:1.6.0',
     ]
 
     api = [

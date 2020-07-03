@@ -28,5 +28,7 @@ object ARouterConstant {
 
     const val MAIN_ACTIVITY = "/$COMMON$SERVICE/MAIN_ACTIVITY"
 
+    const val TEST_ACTIVITY = "/$COMMON$SERVICE/TEST_ACTIVITY"
+
     const val APP_COMMON_SERVICE = "/$APP$SERVICE/AppCommonService"
 }

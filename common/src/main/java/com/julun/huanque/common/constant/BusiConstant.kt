@@ -13,9 +13,9 @@ package com.julun.huanque.common.constant
 object BusiConstant {
     //用户创建聊天室的前缀
     const val USER_CHAT_ROOM_PREFIX = "U"
-    val API_KEY = "2FsdGVkX19"
+    const val API_KEY = "2FbdGVkX29"
     const val WEIXIN_FLAG = "weixin://wap/pay?"
-
+    const val REQUEST_HEADER_FLAG ="hqInfo"
     //系统通知栏回调
     var NOTIFICATION_REQUEST_CODE = 300
 }

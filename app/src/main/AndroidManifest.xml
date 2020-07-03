@@ -36,6 +36,7 @@
         <activity android:name=".ui.cockroach.SecondAct" />
         <activity android:name=".ui.cockroach.LifecycleExceptionActivity" />
         <activity android:name=".ui.cockroach.DebugSafeModeTipActivity" />
+        <activity android:name="com.julun.huanque.core.ui.main.test.TestActivity" />
     </application>
 
 </manifest>

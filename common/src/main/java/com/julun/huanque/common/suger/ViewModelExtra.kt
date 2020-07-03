@@ -63,7 +63,9 @@ fun <T> BaseViewModel.requestRx(
         onSuccess(it)
         loadState?.postValue(NetState(state = NetStateType.SUCCESS))
     }.ifError {
+        NetExceptionHandle.handleException(it, loadState)
         error?.invoke(it)
+        it.printStackTrace()
     }.withFinalCall(final)
     )
 }
