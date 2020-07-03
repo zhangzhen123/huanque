@@ -18,12 +18,14 @@ ext {
             //声网SDK
             AGORA                        : 'io.agora.rtc:full-sdk:2.9.2',
             //recyclerview adapter
-            BASERECYCLERVIEWADAPTERHELPER: 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
+            BASERECYCLERVIEWADAPTERHELPER: 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46',
+            MAGICINDICATOR               : 'com.github.hackware1993:MagicIndicator:1.6.0',
     ]
 
     api = [
             BASE_URL_PRODUCT: "https://api.51lm.tv/",
-            BASE_URL_DEV    : "http://192.168.97.6:6630/"
+            BASE_URL_DEV    : "http://192.168.96.249:7777/"
+//            BASE_URL_DEV    : "http://192.168.97.6:6630/"
     ]
     sdk = [
             //三方对应相关的key or scheme

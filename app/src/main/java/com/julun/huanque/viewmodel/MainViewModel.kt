@@ -15,7 +15,7 @@ class MainViewModel : BaseViewModel() {
 //        emit(user)
 //    }
     //当前的fragment下标
-    val indexData : MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
+    val indexData: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     private val userService: UserService by lazy {
         Requests.create(UserService::class.java)
@@ -33,7 +33,7 @@ class MainViewModel : BaseViewModel() {
                     logger("报错了：$e")
                 }, final = {
                     logger("最终返回")
-                }, loadState = loadState)
+                }, needLoadState = true)
             } else {
                 logger("getInfo=false 这里根本不会执行")
             }
@@ -77,7 +77,7 @@ class MainViewModel : BaseViewModel() {
             logger("请求报错了$it")
         }.withFinalCall {
             logger("最终返回的")
-        }.withSpecifiedCodes(1,2,3))
+        }.withSpecifiedCodes(1, 2, 3))
     }
 
 

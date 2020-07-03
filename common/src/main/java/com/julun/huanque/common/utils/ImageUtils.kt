@@ -138,42 +138,6 @@ object ImageUtils {
         requestImageForBitmap(url, callback, drawableResId, 0, 0)
     }
 
-//    /**
-//     * 超大图片的就接口
-//     *
-//     * @param context   上下玩
-//     * @param imageView 图片加载控件
-//     * @param imageUri  图片地址
-//     * @param defaultId 默认失败图片
-//     */
-//    fun loadBigImageWithFresco(context: Context, imageView: SubsamplingScaleImageView, imageUri: String, defaultId: Int) {
-//        val uri = Uri.parse(when {
-//            imageUri.startsWith("http") -> imageUri
-//            imageUri.startsWith("file://") -> imageUri
-//            else -> "file://" + imageUri
-//        })
-//        if (imageUri.startsWith("http")) {
-//
-//            val imageRequest = ImageRequestBuilder.newBuilderWithSource(uri)
-//                    .setProgressiveRenderingEnabled(false)
-//                    .build()
-//            val imagePipeline = Fresco.getImagePipeline()
-//            val dataSource = imagePipeline.fetchDecodedImage(imageRequest, context)
-//            dataSource.subscribe(object : BaseBitmapDataSubscriber() {
-//                override fun onNewResultImpl(bitmap: Bitmap?) {
-//                    //图片不能是GIF
-//                }
-//
-//                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>) {
-//                    imageView.setImage(ImageSource.resource(defaultId))
-//                }
-//            }, CallerThreadExecutor.getInstance())
-//
-//        } else {
-//            imageView.setImage(ImageSource.uri(imageUri.replace("file://", "")))
-//        }
-//    }
-
     /**
      * 给imageView设置网络图片
      * @param imgView

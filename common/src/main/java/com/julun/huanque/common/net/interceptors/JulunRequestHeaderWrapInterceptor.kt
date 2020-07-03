@@ -52,7 +52,7 @@ class JulunRequestHeaderWrapInterceptor : Interceptor {
         val value = "$lmInfoParams#$strBody#${BusiConstant.API_KEY}"
         val info = MD5Util.EncodePassword(value)
         request = request.newBuilder()
-                .addHeader("hqInfo", "G=$info&$lmInfoParams")
+                .addHeader(BusiConstant.REQUEST_HEADER_FLAG, "G=$info&$lmInfoParams")
 //                .addHeader("JVer", huanqueApp.APP_VERSION)
 //                .addHeader("JCTYPE", "ANDROID")
 //                .addHeader("JSID", SessionUtils.getSessionId())

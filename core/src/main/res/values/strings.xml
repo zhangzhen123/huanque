@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="lingqian">零钱</string>
+    <string name="go_make_money">去赚钱</string>
+    <string name="add_your_tag">添加你的标签</string>
+    <string name="add_your_tag_des">系统将为你推荐更适合的人</string>
+    <string name="little_magpie">小喜鹊</string>
+    <string name="your_appeal_is_low">你当前的吸引力偏低哦！</string>
+    <string name="lift_now">立即提升</string>
+    <string name="complete_your_info">完善你的资料</string>
+    <string name="complete_info">完善资料</string>
+    <string name="complete_your_info_des">主页资料越完善越容易被人搭讪</string>
+    <string name="upload_photo">上传照片</string>
+</resources>

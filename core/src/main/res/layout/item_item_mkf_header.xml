@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/header_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/black_333"
+    android:orientation="vertical">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_nav_bg"
+        android:layout_width="@dimen/dimen_90"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:actualImageScaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:roundedCornerRadius="@dimen/dimen_6"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_user_head"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="@dimen/dimen_7"
+        android:layout_marginLeft="@dimen/dimen_7"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:visibility="invisible"
+        app:actualImageResource="@mipmap/icon_upload_photo"
+        app:actualImageScaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundAsCircle="true"
+        app:roundingBorderColor="#FFC5CA"
+        app:roundingBorderWidth="@dimen/dimen_1" />
+
+    <TextView
+        android:id="@+id/tv_title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_7"
+        android:layout_marginLeft="@dimen/dimen_7"
+        android:layout_marginTop="@dimen/dimen_2"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_11"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sdv_user_head"
+        tools:text="蒙面女王" />
+
+    <TextView
+        android:id="@+id/tv_title2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_7"
+        android:layout_marginLeft="@dimen/dimen_7"
+        android:layout_marginTop="@dimen/dimen_1"
+        android:textColor="#99FFFFFF"
+        android:textSize="8sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title1"
+        android:layout_marginBottom="@dimen/dimen_5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="今日剩余3次" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+

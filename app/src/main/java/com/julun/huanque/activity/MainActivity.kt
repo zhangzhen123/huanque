@@ -12,6 +12,7 @@ import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.ui.main.*
 import com.julun.huanque.viewmodel.MainViewModel
@@ -21,12 +22,12 @@ import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
 
-    private val mMakeFriendsFragment = MakeFriendsFragment.newInstance()
+    private val mHomeFragment = HomeFragment.newInstance()
     private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
 
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
-//    private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
-    private val mMineFragment: Fragment by lazy { RNPageFragment.start("PH") }
+    private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
+//    private val mMineFragment: Fragment by lazy { RNPageFragment.start("PH") }
     private val MAIN_FRAGMENT_INDEX = 0
     private val LEYUAN_FRAGMENT_INDEX = 1
     private val MESSAGE_FRAGMENT_INDEX = 2
@@ -57,7 +58,7 @@ class MainActivity : BaseActivity() {
     override fun initEvents(rootView: View) {
         view_make_friends.onClickNew {
             //交友
-            if (getCurrentFragment() != mMakeFriendsFragment) {
+            if (getCurrentFragment() != mHomeFragment) {
                 tabIconAnimation(MAIN_FRAGMENT_INDEX)
             }
             showFragmentNew(MAIN_FRAGMENT_INDEX)
@@ -155,7 +156,7 @@ class MainActivity : BaseActivity() {
      */
     private fun getFragmentByIndex(index: Int): Fragment? {
         return when (index) {
-            MAIN_FRAGMENT_INDEX -> mMakeFriendsFragment
+            MAIN_FRAGMENT_INDEX -> mHomeFragment
             LEYUAN_FRAGMENT_INDEX -> mLeYuanFragment
             MESSAGE_FRAGMENT_INDEX -> mMessageFragment
             MINE_FRAGMENT_INDEX -> mMineFragment
@@ -169,8 +170,8 @@ class MainActivity : BaseActivity() {
      * 获取当前的fragment
      */
     private fun getCurrentFragment(): Fragment? {
-        if (mMakeFriendsFragment.isVisible) {
-            return mMakeFriendsFragment
+        if (mHomeFragment.isVisible) {
+            return mHomeFragment
         }
         if (mLeYuanFragment.isVisible) {
             return mLeYuanFragment
@@ -192,7 +193,7 @@ class MainActivity : BaseActivity() {
      * 退出应用
      */
     private fun exit() {
-        if (!mMakeFriendsFragment.isVisible) {
+        if (!mHomeFragment.isVisible) {
             mMainViewModel?.indexData?.value = 0
             return
         }
