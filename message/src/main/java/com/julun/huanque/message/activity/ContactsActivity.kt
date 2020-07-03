@@ -3,9 +3,9 @@ package com.julun.huanque.message.activity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.message.R
 
 /**
  *@创建者   dong

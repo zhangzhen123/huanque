@@ -5,12 +5,12 @@ import android.view.View
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.julun.huanque.R
 import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.TimeUtils
+import com.julun.huanque.message.R
 import io.rong.imlib.model.Conversation
 import io.rong.message.TextMessage
 import org.jetbrains.anko.backgroundColor

@@ -8,12 +8,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
-import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.MessageSettingActivity
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.adapter.ConversationListAdapter

@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
-import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.manager.RongCloudManager
@@ -24,6 +23,7 @@ import com.julun.huanque.common.utils.ChatUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.emotion.EmotionPagerView
 import com.julun.huanque.common.widgets.emotion.Emotions
+import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import com.rd.PageIndicatorView

@@ -8,13 +8,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.chad.library.adapter.base.util.MultiTypeDelegate
-import com.julun.huanque.R
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
+import com.julun.huanque.message.R
 import io.rong.imlib.model.Message
 import io.rong.message.TextMessage
 import org.jetbrains.anko.bottomPadding

@@ -7,9 +7,9 @@ import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.message.R
 import com.julun.huanque.message.viewmodel.PrivateConversationSettingViewModel
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.act_private_conversation_setting.*
