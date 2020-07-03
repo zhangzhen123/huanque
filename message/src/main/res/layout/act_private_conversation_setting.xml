@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_private_chat">
+
+    <include
+        android:id="@+id/view_top"
+        layout="@layout/layout_pager_header"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/view_blacklist"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_info" />
+
+    <View
+        android:id="@+id/view_info"
+        android:layout_width="0px"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_top" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_header"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="15dp"
+        android:background="@color/primary_color"
+        app:failureImageScaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="@id/view_info"
+        app:layout_constraintLeft_toLeftOf="@id/view_info"
+        app:layout_constraintTop_toTopOf="@id/view_info"
+        app:placeholderImageScaleType="centerInside"
+        app:roundAsCircle="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_arrow_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_info"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_info" />
+
+    <TextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toTopOf="@id/tv_introduce"
+        app:layout_constraintLeft_toRightOf="@id/sdv_header"
+        app:layout_constraintTop_toTopOf="@id/view_info"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="看了觉得" />
+
+    <TextView
+        android:id="@+id/tv_introduce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:textColor="@color/black_999"
+        app:layout_constraintBottom_toBottomOf="@id/view_info"
+        app:layout_constraintLeft_toLeftOf="@id/tv_nickname"
+        app:layout_constraintTop_toBottomOf="@id/tv_nickname"
+        tools:text="了，圣诞节" />
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="1dp"
+        android:layout_marginLeft="15dp"
+        android:background="@color/lines"
+        app:layout_constraintBottom_toBottomOf="@id/view_info"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <View
+        android:id="@+id/view_no_disturbing"
+        android:layout_width="0px"
+        android:layout_height="54dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_info" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="消息免打扰"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_no_disturbing"
+        app:layout_constraintLeft_toLeftOf="@id/view_no_disturbing"
+        app:layout_constraintTop_toTopOf="@id/view_no_disturbing" />
+
+    <ImageView
+        android:id="@+id/iv_no_disturbing"
+        android:layout_width="wrap_content"
+        android:layout_height="0px"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/sel_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_no_disturbing"
+        app:layout_constraintRight_toRightOf="@id/view_no_disturbing"
+        app:layout_constraintTop_toTopOf="@id/view_no_disturbing" />
+
+    <View
+        android:id="@+id/view_set_bg"
+        android:layout_width="0px"
+        android:layout_height="54dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_no_disturbing" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="设置聊天背景 "
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_set_bg"
+        app:layout_constraintLeft_toLeftOf="@id/view_set_bg"
+        app:layout_constraintTop_toTopOf="@id/view_set_bg" />
+
+    <TextView
+        android:id="@+id/tv_notification_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="35dp"
+        android:text="亲密度等级Lv5解锁 "
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_set_bg"
+        app:layout_constraintRight_toRightOf="@id/view_set_bg"
+        app:layout_constraintTop_toTopOf="@id/view_set_bg" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_arrow_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_set_bg"
+        app:layout_constraintRight_toRightOf="@id/view_set_bg"
+        app:layout_constraintTop_toTopOf="@id/view_set_bg" />
+
+    <View
+        android:id="@+id/view_report"
+        android:layout_width="0px"
+        android:layout_height="54dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_set_bg" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="举报"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_report"
+        app:layout_constraintLeft_toLeftOf="@id/view_report"
+        app:layout_constraintTop_toTopOf="@id/view_report" />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_arrow_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_report"
+        app:layout_constraintRight_toRightOf="@id/view_report"
+        app:layout_constraintTop_toTopOf="@id/view_report" />
+
+    <View
+        android:id="@+id/view_blacklist"
+        android:layout_width="0px"
+        android:layout_height="54dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_report" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="拉黑 "
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_blacklist"
+        app:layout_constraintLeft_toLeftOf="@id/view_blacklist"
+        app:layout_constraintTop_toTopOf="@id/view_blacklist" />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_arrow_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_blacklist"
+        app:layout_constraintRight_toRightOf="@id/view_blacklist"
+        app:layout_constraintTop_toTopOf="@id/view_blacklist" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

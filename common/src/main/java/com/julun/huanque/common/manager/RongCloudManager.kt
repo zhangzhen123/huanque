@@ -81,26 +81,32 @@ object RongCloudManager {
             RongIMClient.setConnectionStatusListener(connectionStatusListener)
             RongIMClient.setOnReceiveMessageListener(messageListener)
             RongIMClient.setChatRoomActionListener(chatRoomActionListener)
-//            imState = RCIM_STATE_INITED
+            //            imState = RCIM_STATE_INITED
             extraWork()
+            //初始化成功，直接连接融云
+            connectRongCloudServerWithComplete(isFirstConnect = true)
         }
     }
 
     var maxConnectCount = 0
     fun connectRongCloudServerWithComplete(
-        callback: (Boolean) -> Unit = {},
-        isFirstConnect: Boolean = false
+        callback: (Boolean) -> Unit = {}, isFirstConnect: Boolean = false
     ) {
         //connect方法需要在主线程调用
-//        var imToken = SessionUtils.getRongImToken()
-        var imToken = SessionUtils.getRongImToken()
+        //        var imToken = SessionUtils.getRongImToken()
+        //        var imToken = SessionUtils.getRongImToken()
+        //用户ID：49的token
+//        var imToken =
+//            "Nn1NRLchjgEMdXKZx2SJo7uBzmvX172nZ6rFtOhZ+uW6W7fa7ei7Ngzm8FROvvZeaVl/mReES/xNYwDGgPrwBg=="
+        //        //用户ID：48的token
+                var imToken = "Jhv71btXrQcJguf0BPcDH78fgExuBBZSwgXOEseACHsx85x9+GVWvR4bAn9m2QinjrPGoBrj94tIiHwzyXJRCQ=="
         logger.info("链接融云使用token $imToken ")
         if (TextUtils.isEmpty(imToken)) {
             ToastUtils.show("缺少聊天Token，无法连接聊天服务器")
             callback(false)
             return
         }
-//        imState = RCIM_STATE_CONNECTED
+        //        imState = RCIM_STATE_CONNECTED
         if (RongCloudUtils.RongCloudIsConnected()) {
             //融云已经处于连接状态
             callback(true)
@@ -111,13 +117,13 @@ object RongCloudManager {
             RongIMClient.connect(imToken, object : RongIMClient.ConnectCallback() {
                 override fun onSuccess(p0: String?) {
                     callback(true)
-//                    EventBus.getDefault().post(EventMessageBean())
+                    //                    EventBus.getDefault().post(EventMessageBean())
                 }
 
                 override fun onError(errorCode: RongIMClient.ErrorCode?) {
                     callback(false)
                     logger.info("连接融云失败！！！错误代码${errorCode!!.value}")
-//                ToastUtils.show("连接至聊天服务器失败，错误代码${errorCode!!.value}")
+                    //                ToastUtils.show("连接至聊天服务器失败，错误代码${errorCode!!.value}")
                     reportCrash("连接融云失败！！！错误代码${errorCode!!.value}")
                 }
 
@@ -130,57 +136,57 @@ object RongCloudManager {
                     //如果设置了token有效期并且token过期，请重新请求您的服务器获取新的token
                     //如果没有设置token有效期却提示token错误，请检查您客户端和服务器的appkey是否匹配，还有检查您获取token的流程。
                     logger.info("token错误，正在重新刷新中")
-//                    imState = RCIM_STATE_INITED
+                    //                    imState = RCIM_STATE_INITED
                     if (tokenIncorrectCount <= reTryCount) {
                         //token失效，最多重试3次
                         //todo
-//                        Requests.create(LiveRoomService::class.java).updateToken(SessionForm()).success {
-//                            // 刷新后台Token，重连融云
-//                            SessionUtils.setRongImToken(it.imToken)
-//                            connectRongCloudServerWithComplete(callback, true)
-//                        }
+                        //                        Requests.create(LiveRoomService::class.java).updateToken(SessionForm()).success {
+                        //                            // 刷新后台Token，重连融云
+                        //                            SessionUtils.setRongImToken(it.imToken)
+                        //                            connectRongCloudServerWithComplete(callback, true)
+                        //                        }
                     }
                 }
             })
         }
     }
 
-//    /**
-//     * 进入聊天室
-//     */
-//    fun joinChatRoom(programId: String, callback: (Boolean) -> Unit = {}): Unit {
-//        roomId = programId
-//        quitAllChatRoom(false)
-//        // -1: 不拉取任何消息
-//        RongIMClient.getInstance().joinChatRoom(programId, -1, object : RongIMClient.OperationCallback() {
-//            override fun onSuccess() {
-//                logger.info("DXC 进入聊天室成功$programId")
-////                imState = RCIM_STATE_CHATROOMED
-//                MessageReceptor.destoryBufferedTimer()
-//                MessageReceptor.createBufferedTimer()
-//                callback(true)
-//            }
-//
-//            override fun onError(errorCode: RongIMClient.ErrorCode?) {
-//                roomId = null
-//                handleErrorCode(errorCode, "joinChatRoom")
-//                callback(false)
-//            }
-//        })
-//
-//    }
+    //    /**
+    //     * 进入聊天室
+    //     */
+    //    fun joinChatRoom(programId: String, callback: (Boolean) -> Unit = {}): Unit {
+    //        roomId = programId
+    //        quitAllChatRoom(false)
+    //        // -1: 不拉取任何消息
+    //        RongIMClient.getInstance().joinChatRoom(programId, -1, object : RongIMClient.OperationCallback() {
+    //            override fun onSuccess() {
+    //                logger.info("DXC 进入聊天室成功$programId")
+    ////                imState = RCIM_STATE_CHATROOMED
+    //                MessageReceptor.destoryBufferedTimer()
+    //                MessageReceptor.createBufferedTimer()
+    //                callback(true)
+    //            }
+    //
+    //            override fun onError(errorCode: RongIMClient.ErrorCode?) {
+    //                roomId = null
+    //                handleErrorCode(errorCode, "joinChatRoom")
+    //                callback(false)
+    //            }
+    //        })
+    //
+    //    }
 
     /**
      * 退出聊天室
      */
     private fun quitChatRoom(programId: String, callback: (Boolean) -> Unit = {}) {
         logger.info("退出聊天室")
-//        roomId = null
+        //        roomId = null
         RongIMClient.getInstance()
             .quitChatRoom(programId, object : RongIMClient.OperationCallback() {
                 override fun onSuccess() {
                     logger.info("退出聊天室成功")
-//                imState = RCIM_STATE_CONNECTED
+                    //                imState = RCIM_STATE_CONNECTED
                     callback(true)
                 }
 
@@ -216,9 +222,9 @@ object RongCloudManager {
         logger.info("融云错误代码 $from error = ${errorCode?.value}  描述 ${errorCode?.message}")
         when (errorCode) {
             ErrorCode.KICKED_FROM_CHATROOM -> {
-//                ToastUtils.show("您已被踢出该直播间，请稍后再试~")
+                //                ToastUtils.show("您已被踢出该直播间，请稍后再试~")
             }
-//            ErrorCode.KICKED_FROM_CHATROOM -> ToastUtils.show("您已被踢出该直播间，请稍后再试~")
+            //            ErrorCode.KICKED_FROM_CHATROOM -> ToastUtils.show("您已被踢出该直播间，请稍后再试~")
             ErrorCode.RC_CHATROOM_NOT_EXIST -> ToastUtils.show("直播间不存在，请联系管理员~")
             ErrorCode.RC_CHATROOM_IS_FULL -> ToastUtils.show("直播间过于火爆，请稍后重试~")
             ErrorCode.RC_NET_UNAVAILABLE -> ToastUtils.show("当前连接不可用，请检查网络设置~")
@@ -228,7 +234,7 @@ object RongCloudManager {
             else -> {
                 logger.info("聊天错误代码：${errorCode!!.value}")
                 if (errorCode != RongIMClient.ErrorCode.RC_NET_CHANNEL_INVALID) {
-//                    ToastUtils.show("聊天错误代码：${errorCode!!.value}")
+                    //                    ToastUtils.show("聊天错误代码：${errorCode!!.value}")
                 }
             }
         }
@@ -236,72 +242,67 @@ object RongCloudManager {
     }
 
     /**
-     * 在聊天室发送聊天消息
-     * @param chatRoom 是否是上神聊天室消息
+     * 发送聊天消息
      */
     fun send(
-        chatRoom: Boolean = false,
         message: String,
         toUserId: String? = null,
         targetUserObj: TargetUserObj? = null,
-        displayT: List<String>? = null,
         callback: (Boolean) -> Unit = {}
-    ): Unit {
+    ) {
         val chatMessage: TextMessage = TextMessage.obtain(message)
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
-        currentUserObj?.displayType = displayT
         chatMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
 
         var conversationType = Conversation.ConversationType.CHATROOM
-        var targetId: String? =
-            if (chatRoom) "${BusiConstant.USER_CHAT_ROOM_PREFIX}$roomId" else roomId
+        var targetId: String? = ""
         if (!TextUtils.isEmpty(toUserId)) {
             targetId = toUserId!!
             conversationType = Conversation.ConversationType.PRIVATE
-//            EventBus.getDefault().post(EventMessageBean(targetId))
+            //            EventBus.getDefault().post(EventMessageBean(targetId))
         }
-        RongIMClient.getInstance()
-            .sendMessage(
-                conversationType,
-                targetId,
-                chatMessage,
-                null,
-                null,
-                object : IRongCallback.ISendMessageCallback {
-                    override fun onAttached(message: Message?) {
-                    }
+        RongIMClient.getInstance().sendMessage(conversationType,
+                                               targetId,
+                                               chatMessage,
+                                               null,
+                                               null,
+                                               object : IRongCallback.ISendMessageCallback {
+                                                   override fun onAttached(message: Message?) {
+                                                   }
 
-                    override fun onSuccess(message: Message?) {
-                        logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
-                        if (message != null) {
-//                            try {
-//                                onReceived(message)
-//                            } catch (e: Exception) {
-//                                e.printStackTrace()
-//                            }
-                            switchThread(message)
-                            callback(true)
-                        } else {
-                            callback(false)
-                        }
-                    }
+                                                   override fun onSuccess(message: Message?) {
+                                                       logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
+                                                       if (message != null) {
+                                                           //                            try {
+                                                           //                                onReceived(message)
+                                                           //                            } catch (e: Exception) {
+                                                           //                                e.printStackTrace()
+                                                           //                            }
+                                                           switchThread(message)
+                                                           callback(true)
+                                                       } else {
+                                                           callback(false)
+                                                       }
+                                                   }
 
-                    override fun onError(message: Message?, errorCode: ErrorCode?) {
-                        if (message != null) {
-                            switchThread(message)
-                        }
-                        logger.info(
-                            "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
-                                message
-                            )}"
-                        )
-                        handleErrorCode(errorCode, "sendMessage")
-                        callback(false)
-                    }
+                                                   override fun onError(
+                                                       message: Message?, errorCode: ErrorCode?
+                                                   ) {
+                                                       if (message != null) {
+                                                           switchThread(message)
+                                                       }
+                                                       logger.info(
+                                                           "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
+                                                               message
+                                                           )}"
+                                                       )
+                                                       handleErrorCode(errorCode, "sendMessage")
+                                                       callback(false)
+                                                   }
 
-                })
-//        setChatInfo(conversationType == Conversation.ConversationType.PRIVATE)
+                                               })
+        //        setChatInfo(conversationType == Conversation.ConversationType.PRIVATE)
 
     }
 
@@ -310,46 +311,46 @@ object RongCloudManager {
      * 私聊重发消息使用
      */
     fun send(oMessage: Message, targetId: String, callback: (Boolean) -> Unit = {}): Unit {
-//        EventBus.getDefault().post(EventMessageBean(targetId))
-        RongIMClient.getInstance()
-            .sendMessage(
-                Conversation.ConversationType.PRIVATE,
-                targetId,
-                oMessage.content,
-                null,
-                null,
-                object : IRongCallback.ISendMessageCallback {
-                    override fun onAttached(message: Message?) {
-                    }
+        //        EventBus.getDefault().post(EventMessageBean(targetId))
+        RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE,
+                                               targetId,
+                                               oMessage.content,
+                                               null,
+                                               null,
+                                               object : IRongCallback.ISendMessageCallback {
+                                                   override fun onAttached(message: Message?) {
+                                                   }
 
-                    override fun onSuccess(message: Message?) {
-                        logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
-                        callback(true)
-                        if (message != null) {
-//                            try {
-//                                onReceived(message)
-//                            } catch (e: Exception) {
-//                                e.printStackTrace()
-//                            }
-                            switchThread(message)
-                        } else {
-                        }
-                    }
+                                                   override fun onSuccess(message: Message?) {
+                                                       logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
+                                                       callback(true)
+                                                       if (message != null) {
+                                                           //                            try {
+                                                           //                                onReceived(message)
+                                                           //                            } catch (e: Exception) {
+                                                           //                                e.printStackTrace()
+                                                           //                            }
+                                                           switchThread(message)
+                                                       } else {
+                                                       }
+                                                   }
 
-                    override fun onError(message: Message?, errorCode: ErrorCode?) {
-                        callback(false)
-                        if (message != null) {
-//                            ChatUtils.deleteSingleMessage(message.messageId)
-                        }
-                        logger.info(
-                            "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
-                                message
-                            )}"
-                        )
-                        handleErrorCode(errorCode, "sendMessage")
-                    }
+                                                   override fun onError(
+                                                       message: Message?, errorCode: ErrorCode?
+                                                   ) {
+                                                       callback(false)
+                                                       if (message != null) {
+                                                           //                            ChatUtils.deleteSingleMessage(message.messageId)
+                                                       }
+                                                       logger.info(
+                                                           "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
+                                                               message
+                                                           )}"
+                                                       )
+                                                       handleErrorCode(errorCode, "sendMessage")
+                                                   }
 
-                })
+                                               })
 
     }
 
@@ -366,9 +367,9 @@ object RongCloudManager {
         currentUserObj = userObj
     }
 
-//    fun rongCloudIsInited(): Boolean {
-//        return imState == RCIM_STATE_INITED
-//    }
+    //    fun rongCloudIsInited(): Boolean {
+    //        return imState == RCIM_STATE_INITED
+    //    }
 
     // 停止消费数据
     fun destroyMessageConsumer() {
@@ -385,7 +386,7 @@ object RongCloudManager {
             try {
                 onReceived(message)
             } catch (e: Exception) {
-//                reportCrash(e)
+                //                reportCrash(e)
                 e.printStackTrace()
             }
         }
@@ -397,8 +398,8 @@ object RongCloudManager {
      * @param left 剩余未拉取消息数目
      */
     private fun onReceived(message: Message, left: Int = 0) {
-//        logger.info("当前线程：${Thread.currentThread()}")
-//        if (TextUtils.isEmpty(roomId)) return
+        //        logger.info("当前线程：${Thread.currentThread()}")
+        //        if (TextUtils.isEmpty(roomId)) return
 
         val content: MessageContent? = message.content
         val isRetrieved = message.receivedStatus.isRetrieved
@@ -406,6 +407,7 @@ object RongCloudManager {
             is TextMessage -> {
                 //TextUtils.isEmpty(roomId) ||  首页里面没有roomId
                 if (isRetrieved) return
+
 
                 //文本消息还是需要透过融云的id去重判断
                 val rRoomId = if (mRoomType == MessageProcessor.RoomType.ChatRoom.name) {
@@ -421,12 +423,17 @@ object RongCloudManager {
                 logger.info("收到文本消息 ${JsonUtil.seriazileAsString(content)}")
                 val bean = TplBean(textTpl = content.content)
 
+                if (message.conversationType == Conversation.ConversationType.PRIVATE) {
+                    //私聊消息  前期模拟数据  直接return
+                    bean.privateMessage = true
+                    MessageProcessor.processPrivateTextMessageOnMain(message)
+                    return
+                }
                 val user: RoomUserChatExtra? =
                     JsonUtil.deserializeAsObject(content.extra, RoomUserChatExtra::class.java)
                 //神秘人功能  发言人ID和userId会出现不一致的情况，删除此条限制
                 if (message.senderUserId != "${user?.userId}" && user?.userAbcd != AppHelper.getMD5(
-                        "${user?.userId
-                            ?: ""}"
+                        "${user?.userId ?: ""}"
                     )
                 ) {
                     logger.info("senderId与userId不一致 senderUserId:${message.senderUserId} userId ${user?.userId}")
@@ -474,10 +481,10 @@ object RongCloudManager {
                                     //如果这条消息被被其他登录的多端收取过，那么直接丢弃
                                     return@forEach
                                 }
-//                                MessageProcessor.parseEventMessage(jsonObject)
-//                                return@forEach
+                                //                                MessageProcessor.parseEventMessage(jsonObject)
+                                //                                return@forEach
                             }
-//                            if (TextUtils.isEmpty(roomId)) return
+                            //                            if (TextUtils.isEmpty(roomId)) return
                             MessageProcessor.parseEventMessage(jsonObject)
                         }
                         MessageProcessor.MessageType.Animation.name -> {
@@ -505,8 +512,7 @@ object RongCloudManager {
      */
     private fun checkMessage(message: BaseData, isRetrieved: Boolean): Boolean {
         //如果没有msgId的直接过滤
-        if (message.msgId.isEmpty())
-            return false
+        if (message.msgId.isEmpty()) return false
 
         when (message.targetType) {
             MessageProcessor.TargetType.Broadcast.name -> {
@@ -551,17 +557,17 @@ object RongCloudManager {
             return false
         }
 
-//        if (cacheList.size >= 5500) {
-//            for (i in 0..500)
-//                cacheList.removeAt(0)
-//        }
+        //        if (cacheList.size >= 5500) {
+        //            for (i in 0..500)
+        //                cacheList.removeAt(0)
+        //        }
         if (cacheList.size >= 10000) {
             cacheList.removeScope(1000)
         }
-//        logger.info("缓存的大小：" + cacheList.size)
+        //        logger.info("缓存的大小：" + cacheList.size)
         cacheList.add(message.msgId)
 
-//        logger.info("当前缓存的消息Ids:$cacheList")
+        //        logger.info("当前缓存的消息Ids:$cacheList")
         return true
     }
 
@@ -571,29 +577,29 @@ object RongCloudManager {
     var stratLoginOut = 0L
     fun logout(callback: () -> Unit = {}) {
         logoutCallback = callback
-        stratLoginOut = System.currentTimeMillis()//开始登出
+        stratLoginOut = System.currentTimeMillis() //开始登出
         //退出登录的时候，重置该字段
-//        SessionUtils.setNeedGuideToSpeak(true)
+        //        SessionUtils.setNeedGuideToSpeak(true)
         if (RongCloudUtils.RongCloudIsConnected()) {
             //融云处于连接状态 则断开连接
             RongIMClient.getInstance().logout()
         } else {
             logoutCallback()
         }
-//        imState = RCIM_STATE_INITED
+        //        imState = RCIM_STATE_INITED
     }
 
     // 消息接收监听器
     val messageListener: RongIMClient.OnReceiveMessageListener by lazy {
         RongIMClient.OnReceiveMessageListener { message, left ->
             //            try {
-//                logger.info("接收消息成功当前的线程：${Thread.currentThread()}")
-//                //由于使用很多json解析 以及枚举转化 很容易出现crash 这里增加catch 提高健壮性 另外try catch并不会影响性能
-//                onReceived(message, left)
-//            } catch (e: Exception) {
-//                reportCrash(e)
-//                e.printStackTrace()
-//            }
+            //                logger.info("接收消息成功当前的线程：${Thread.currentThread()}")
+            //                //由于使用很多json解析 以及枚举转化 很容易出现crash 这里增加catch 提高健壮性 另外try catch并不会影响性能
+            //                onReceived(message, left)
+            //            } catch (e: Exception) {
+            //                reportCrash(e)
+            //                e.printStackTrace()
+            //            }
             switchThread(message)
             return@OnReceiveMessageListener false
         }
@@ -606,8 +612,7 @@ object RongCloudManager {
 
         override fun onJoined(chatRoomId: String?) {
             chatRoomId?.let {
-                Flowable.just(it)
-                    .observeOn(AndroidSchedulers.mainThread())
+                Flowable.just(it).observeOn(AndroidSchedulers.mainThread())
                     .subscribe { roomIdList.add(it) }
             }
 
@@ -615,8 +620,7 @@ object RongCloudManager {
 
         override fun onQuited(chatRoomId: String?) {
             chatRoomId?.let {
-                Flowable.just(it)
-                    .observeOn(AndroidSchedulers.mainThread())
+                Flowable.just(it).observeOn(AndroidSchedulers.mainThread())
                     .subscribe { roomIdList.remove(it) }
             }
         }
@@ -636,13 +640,13 @@ object RongCloudManager {
                      * 发送广播不能放在connect回调中，防止网络变化的情况下，直播页面收不到消息。用户停留在加载页面
                      * 不用粘性事件 如果用户重复登录账号 就会连接两次融云 从而发送两个粘性事件 再进入直播间就会收到连续两个连续触发
                      */
-//                    EventBus.getDefault().post(RongConnectEvent(RONG_CONNECTED))
+                    //                    EventBus.getDefault().post(RongConnectEvent(RONG_CONNECTED))
                 }
                 RongIMClient.ConnectionStatusListener.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT -> {
                     ToastUtils.showErrorMessage("您已在其它客户端登陆，当前客户端已下线~")
                     //抢登事件
-//                    EventBus.getDefault().post(RongForcedReturn())
-//                    SessionUtils.deleteSession()
+                    //                    EventBus.getDefault().post(RongForcedReturn())
+                    //                    SessionUtils.deleteSession()
                 }
                 RongIMClient.ConnectionStatusListener.ConnectionStatus.DISCONNECTED -> {
                     val loginOutSuccess = System.currentTimeMillis()

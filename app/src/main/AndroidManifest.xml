@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.julun.huanque">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Optional 一键登录权限-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".app.HuanQueApp"
@@ -18,7 +25,7 @@
         android:theme="@style/CustomToolBarTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".activity.WelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeL">
             <intent-filter>
@@ -29,8 +36,17 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.FillInformationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PhoneNumLoginActivity"
             android:screenOrientation="portrait" />
 
         <activity android:name=".ui.cockroach.SecondAct" />
@@ -38,6 +54,15 @@
         <activity android:name=".ui.cockroach.DebugSafeModeTipActivity" />
         <activity android:name=".ui.test.TestActivity" />
 
+
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default"
+            tools:replace="android:value" />
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="893663"
+            tools:replace="android:value" /> <!-- </>值来自开发者平台取得的AppKey -->
     </application>
 
 </manifest>

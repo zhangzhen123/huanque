@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.julun.huanque.common">
 
+    <!-- 融云 Permissions Required -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application>
         <!-- imlib config begin -->
         <!-- 融云相关    SDK核心功能  必选 -->

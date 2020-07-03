@@ -12,10 +12,15 @@ object ARouterConstant {
     /*--GROUP相关开始--*/
     //core使用
     const val CORE = "core"
+
     //app使用
     private const val APP = "app"
+
     //common
     private const val COMMON = "common"
+
+    //声网播放器使用
+    const val AGORA = "AGORA"
 
     /*--GROUP相关结束--*/
 
@@ -31,4 +36,7 @@ object ARouterConstant {
     const val TEST_ACTIVITY = "/$COMMON$SERVICE/TEST_ACTIVITY"
 
     const val APP_COMMON_SERVICE = "/$APP$SERVICE/AppCommonService"
+
+    //语音页面
+    const val VOICE_CHAT_ACTIVITY = "/$AGORA$PREFIX_ACTIVITY/VoiceChatActivity"
 }

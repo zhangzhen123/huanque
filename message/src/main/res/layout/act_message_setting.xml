@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <include
         android:id="@+id/view_top"
@@ -15,7 +17,7 @@
     <View
         android:id="@+id/view_notification"
         android:layout_width="0px"
-        android:layout_height="50dp"
+        android:layout_height="54dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_top" />
@@ -23,7 +25,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
         android:text="接受推送消息"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toBottomOf="@id/view_notification"
         app:layout_constraintLeft_toLeftOf="@id/view_notification"
         app:layout_constraintTop_toTopOf="@id/view_notification" />
@@ -32,8 +37,241 @@
         android:id="@+id/tv_notification_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="35dp"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_notification"
+        app:layout_constraintRight_toRightOf="@id/view_notification"
+        app:layout_constraintTop_toTopOf="@id/view_notification"
+        tools:text="看来大家" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_arrow_msg_setting"
         app:layout_constraintBottom_toBottomOf="@id/view_notification"
         app:layout_constraintRight_toRightOf="@id/view_notification"
         app:layout_constraintTop_toTopOf="@id/view_notification" />
+
+    <TextView
+        android:id="@+id/tv_title_make_friends"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_marginLeft="15dp"
+        android:gravity="center"
+        android:text="交友相关"
+        android:textColor="@color/light_gray"
+        android:textSize="@dimen/dimen_12"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_notification" />
+
+    <View
+        android:id="@+id/view_charge"
+        android:layout_width="0px"
+        android:layout_height="54dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_make_friends" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="非好友私信费用"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_charge"
+        app:layout_constraintLeft_toLeftOf="@id/view_charge"
+        app:layout_constraintTop_toTopOf="@id/view_charge" />
+
+    <TextView
+        android:id="@+id/tv_charge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="35dp"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_charge"
+        app:layout_constraintRight_toRightOf="@id/view_charge"
+        app:layout_constraintTop_toTopOf="@id/view_charge"
+        tools:text="20雀币/条" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_arrow_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_charge"
+        app:layout_constraintRight_toRightOf="@id/view_charge"
+        app:layout_constraintTop_toTopOf="@id/view_charge" />
+
+    <View
+        android:id="@+id/view_fold_stranger_msg"
+        android:layout_width="0px"
+        android:layout_height="54dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_charge" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="折叠陌生人的消息"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_fold_stranger_msg"
+        app:layout_constraintLeft_toLeftOf="@id/view_fold_stranger_msg"
+        app:layout_constraintTop_toTopOf="@id/view_fold_stranger_msg" />
+
+    <ImageView
+        android:id="@+id/iv_fold_stranger_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="0px"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/sel_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_fold_stranger_msg"
+        app:layout_constraintRight_toRightOf="@id/view_fold_stranger_msg"
+        app:layout_constraintTop_toTopOf="@id/view_fold_stranger_msg" />
+
+
+    <View
+    android:id="@+id/view_voice_communication"
+    android:layout_width="0px"
+    android:layout_height="54dp"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/view_fold_stranger_msg" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="接受语音通话"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_voice_communication"
+        app:layout_constraintLeft_toLeftOf="@id/view_voice_communication"
+        app:layout_constraintTop_toTopOf="@id/view_voice_communication" />
+
+    <ImageView
+        android:id="@+id/iv_voice_communication"
+        android:layout_width="wrap_content"
+        android:layout_height="0px"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/sel_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_voice_communication"
+        app:layout_constraintRight_toRightOf="@id/view_voice_communication"
+        app:layout_constraintTop_toTopOf="@id/view_voice_communication" />
+
+    <View
+        android:id="@+id/view_private_msg"
+        android:layout_width="0px"
+        android:layout_height="54dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_voice_communication" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="私信提醒"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_private_msg"
+        app:layout_constraintLeft_toLeftOf="@id/view_private_msg"
+        app:layout_constraintTop_toTopOf="@id/view_private_msg" />
+
+    <ImageView
+        android:id="@+id/iv_private_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="0px"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/sel_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_private_msg"
+        app:layout_constraintRight_toRightOf="@id/view_private_msg"
+        app:layout_constraintTop_toTopOf="@id/view_private_msg" />
+
+    <View
+        android:id="@+id/view_attention"
+        android:layout_width="0px"
+        android:layout_height="54dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_private_msg" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="关注提醒"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_attention"
+        app:layout_constraintLeft_toLeftOf="@id/view_attention"
+        app:layout_constraintTop_toTopOf="@id/view_attention" />
+
+    <ImageView
+        android:id="@+id/iv_attention"
+        android:layout_width="wrap_content"
+        android:layout_height="0px"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/sel_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_attention"
+        app:layout_constraintRight_toRightOf="@id/view_attention"
+        app:layout_constraintTop_toTopOf="@id/view_attention" />
+
+    <TextView
+        android:id="@+id/tv_title_live"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_marginLeft="15dp"
+        android:gravity="center"
+        android:text="直播相关"
+        android:textColor="@color/light_gray"
+        android:textSize="@dimen/dimen_12"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_attention" />
+
+    <View
+        android:id="@+id/view_start_live"
+        android:layout_width="0px"
+        android:layout_height="54dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_live" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="开播提醒"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_start_live"
+        app:layout_constraintLeft_toLeftOf="@id/view_start_live"
+        app:layout_constraintTop_toTopOf="@id/view_start_live" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="35dp"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_start_live"
+        app:layout_constraintRight_toRightOf="@id/view_start_live"
+        app:layout_constraintTop_toTopOf="@id/view_start_live"
+        tools:text="看来大家" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_arrow_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_start_live"
+        app:layout_constraintRight_toRightOf="@id/view_start_live"
+        app:layout_constraintTop_toTopOf="@id/view_start_live" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

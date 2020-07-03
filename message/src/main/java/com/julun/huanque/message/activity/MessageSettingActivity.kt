@@ -37,6 +37,7 @@ class MessageSettingActivity : BaseActivity() {
     }
 
     override fun initEvents(rootView: View) {
+        findViewById<View>(R.id.ivback).onClickNew { finish() }
         view_notification.onClickNew {
             val intent = NotificationUtils.gotoNotificationSetting(this)
             if (!TextUtils.isEmpty(intent.action) && ForceUtils.activityMatch(intent)) {
@@ -47,6 +48,32 @@ class MessageSettingActivity : BaseActivity() {
                     reportCrash("跳转通知页失败", e)
                 }
             }
+        }
+
+        view_charge.onClickNew {
+            //设置费用
+        }
+
+        iv_fold_stranger_msg.onClickNew {
+            //折叠陌生人消息
+            iv_fold_stranger_msg.isSelected = !iv_fold_stranger_msg.isSelected
+        }
+        iv_voice_communication.onClickNew {
+            //接收语音通话
+            iv_voice_communication.isSelected = !iv_voice_communication.isSelected
+        }
+
+        iv_private_msg.onClickNew {
+            //私信提醒
+            iv_private_msg.isSelected = !iv_private_msg.isSelected
+        }
+        iv_attention.onClickNew {
+            //关注提醒
+            iv_attention.isSelected = !iv_attention.isSelected
+        }
+
+        view_start_live.onClickNew {
+            //开播提醒
         }
     }
 }

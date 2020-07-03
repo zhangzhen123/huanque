@@ -31,7 +31,7 @@ import java.util.*
 
 
 fun Any.logger(message: String) {
-    ULog.i(this.javaClass.name, message)
+    ULog.i(this.javaClass.simpleName, message)
 }
 
 /**
