@@ -68,4 +68,5 @@ dependencies {
     implementation 'com.jakewharton:process-phoenix:2.0.0'
     implementation 'cn.jiguang.sdk:jverification:2.6.4'
     implementation 'cn.jiguang.sdk:jcore:2.3.4'
+    implementation 'com.contrarywind:Android-PickerView:4.1.9'
 }

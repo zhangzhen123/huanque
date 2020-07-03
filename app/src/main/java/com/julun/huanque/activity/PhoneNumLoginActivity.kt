@@ -50,6 +50,9 @@ class PhoneNumLoginActivity : BaseActivity() {
     }
 
     override fun initEvents(rootView: View) {
+        ivback.onClickNew {
+            finish()
+        }
         login_root.onClickNew {
             closeKeyBoard()
         }
@@ -104,6 +107,7 @@ class PhoneNumLoginActivity : BaseActivity() {
 //
 //            mViewModel?.login(phoneNum, code)
             //直接跳转填写资料页面
+            FillInformationActivity.newInstance(this)
         }
 
         //验证码编辑框焦点
@@ -166,17 +170,17 @@ class PhoneNumLoginActivity : BaseActivity() {
         mIsCountting = true
         ToastUtils.show(R.string.send_code_success)
         disposable = Observable.intervalRange(1, MAXCOUNT + 1, 0, 1, TimeUnit.SECONDS)
-                .bindUntilEvent(this, ActivityEvent.DESTROY)
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { MAXCOUNT + 1 - it }
-                .subscribe({
-                    get_code.text = "${it}s"
-                }, {}, {
-                    logger.info("倒计时完成了----")
-                    get_code.isEnabled = true
-                    get_code.text = "重新发送"
-                    mIsCountting = false
-                })
+            .bindUntilEvent(this, ActivityEvent.DESTROY)
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { MAXCOUNT + 1 - it }
+            .subscribe({
+                get_code.text = "${it}s"
+            }, {}, {
+                logger.info("倒计时完成了----")
+                get_code.isEnabled = true
+                get_code.text = "重新发送"
+                mIsCountting = false
+            })
     }
 
     fun stopTick() {
