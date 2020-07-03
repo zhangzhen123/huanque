@@ -105,9 +105,9 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         val layoutId = getLayoutId()
         if (layoutId <= 0) {
@@ -166,10 +166,10 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
      * 宽度显示比例
      */
     protected fun setDialogSize(
-            gravity: Int = Gravity.BOTTOM,
-            width: Int = 0,
-            height: Int = 0,
-            padding: Int = 0
+        gravity: Int = Gravity.BOTTOM,
+        width: Int = 0,
+        height: Int = 0,
+        padding: Int = 0
     ) {
         val window = dialog?.window ?: return
         val params = window.attributes
@@ -182,6 +182,22 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
         }
         if (height > 0) {
             params.height = DensityHelper.dp2px(height)
+        } else if (ViewGroup.LayoutParams.WRAP_CONTENT == height || ViewGroup.LayoutParams.MATCH_PARENT == height) {
+            params.height = height
+        }
+        window.attributes = params
+    }
+
+    /**
+     * 宽度显示比例
+     */
+    protected fun setDialogSize(gravity: Int = Gravity.BOTTOM, marginWidth: Int, height: Int = ViewGroup.LayoutParams.WRAP_CONTENT) {
+        val window = dialog?.window ?: return
+        val params = window.attributes
+        params.gravity = gravity
+        params.width = window.windowManager.defaultDisplay.width - DensityHelper.dp2px(marginWidth.toFloat()) * 2
+        if (height > 0) {
+            params.height = DensityHelper.dp2px(height.toFloat())
         } else if (ViewGroup.LayoutParams.WRAP_CONTENT == height || ViewGroup.LayoutParams.MATCH_PARENT == height) {
             params.height = height
         }
@@ -286,7 +302,6 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
         super.dismissAllowingStateLoss()
         isShowing = false
     }
-
 
 
     /***

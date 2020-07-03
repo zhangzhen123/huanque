@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/view_weixin"
+        android:layout_width="0px"
+        android:layout_height="40dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="205dp"
+        android:background="@drawable/shape_round_green_60"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_wx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@mipmap/login_weichat"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:text="微信登录"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/view_weixin"
+        app:layout_constraintLeft_toLeftOf="@id/tv_phone"
+        app:layout_constraintTop_toTopOf="@id/view_weixin" />
+
+
+    <View
+        android:id="@+id/view_phone_number_fast_login"
+        android:layout_width="0px"
+        android:layout_height="40dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/bg_phone_number_fast_login"
+        app:layout_constraintBottom_toTopOf="@id/view_weixin"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@mipmap/login_phone"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:text="@string/phone_number_fast_login"
+        android:textColor="@color/black_333"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/view_phone_number_fast_login"
+        app:layout_constraintLeft_toLeftOf="@id/view_phone_number_fast_login"
+        app:layout_constraintRight_toRightOf="@id/view_phone_number_fast_login"
+        app:layout_constraintTop_toTopOf="@id/view_phone_number_fast_login" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_rule_01_fragment"
+        android:textColor="@color/black_333"
+        android:textSize="10sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/register_rule"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/register_rule" />
+
+    <TextView
+        android:id="@+id/register_rule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="38dp"
+        android:text="@string/register_rule_02"
+        android:textColor="@color/textColor_alert_button_cancel"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/textView5"
+        app:layout_constraintRight_toLeftOf="@+id/tv_and"
+        app:layout_goneMarginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/tv_and"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_and"
+        android:textColor="@color/black_333"
+        android:textSize="10sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/register_rule"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toRightOf="@id/register_rule"
+        app:layout_constraintRight_toLeftOf="@+id/tv_register_privacy" />
+
+    <TextView
+        android:id="@+id/tv_register_privacy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_rule_pravicy"
+        android:textColor="@color/textColor_alert_button_cancel"
+        android:textSize="10sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/register_rule"
+        app:layout_constraintLeft_toRightOf="@+id/tv_and"
+        app:layout_constraintRight_toLeftOf="@+id/tv_agreement" />
+
+    <TextView
+        android:id="@+id/tv_agreement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/agreement"
+        android:textColor="@color/black_333"
+        android:textSize="10sp"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/register_rule"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toRightOf="@id/tv_register_privacy"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

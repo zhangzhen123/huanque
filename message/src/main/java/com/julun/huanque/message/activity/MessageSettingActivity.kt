@@ -37,6 +37,7 @@ class MessageSettingActivity : BaseActivity() {
     }
 
     override fun initEvents(rootView: View) {
+        findViewById<View>(R.id.ivback).onClickNew { finish() }
         view_notification.onClickNew {
             val intent = NotificationUtils.gotoNotificationSetting(this)
             if (!TextUtils.isEmpty(intent.action) && ForceUtils.activityMatch(intent)) {

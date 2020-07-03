@@ -1,9 +1,11 @@
 package com.julun.huanque.net.service
 
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.forms.SessionForm
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
+import com.julun.huanque.common.bean.forms.MobileLoginForm
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -36,5 +38,7 @@ interface UserService {
     fun queryUserLevelInfoBasic(@Body form: SessionForm): Observable<Root<UserLevelInfo>>
 
 
+    @POST("user/acct/login/mobile")
+    suspend fun mobileLogin(@Body form: MobileLoginForm) : Root<UserDetailInfo>
 
 }

@@ -1,19 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.julun.huanque">
+    package="com.julun.huanque.message">
 
     <application>
 
         <activity
-            android:name=".message.activity.MessageSettingActivity"
+            android:name=".activity.MessageSettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".message.activity.ContactsActivity"
+            android:name=".activity.ContactsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".message.activity.PrivateConversationSettingActivity"
+            android:name=".activity.PrivateConversationSettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".message.activity.PrivateConversationActivity"
+            android:name=".activity.PrivateConversationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 

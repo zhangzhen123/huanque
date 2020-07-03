@@ -7,17 +7,17 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import cn.jiguang.verifysdk.api.JVerificationInterface
 import com.ishumei.smantifraud.SmAntiFraud
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.julun.huanque.BuildConfig
-import com.julun.huanque.MainActivity
+import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.R
 import com.julun.huanque.agora.AgoraManager
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.utils.ForceUtils
-import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.init.HuanQueInit
 import com.julun.huanque.ui.cockroach.DebugSafeModeTipActivity
 import com.tencent.bugly.crashreport.CrashReport
@@ -46,6 +46,9 @@ open class HuanQueApp : Application() {
             initBugly(this)
             //初始化声网
             AgoraManager.initAgora(this)
+            /*一键登录相关*/
+            JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
+            JVerificationInterface.init(this)
             try {
                 initShumei(this)
             } catch (e: Exception) {

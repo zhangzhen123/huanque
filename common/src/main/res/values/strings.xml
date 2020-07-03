@@ -87,25 +87,25 @@
     <string name="subscribe_success">关注成功</string>
     <string name="unsubscribe_success">取消关注成功</string>
     <string name="is_highest_level">您已升到顶级</string>
-<!--    <string name="see_detail">查看详情</string>-->
-<!--    <string name="newcomer_big_content">爷，你有3000萌豆待领取</string>-->
-<!--    <string name="newcomer_big_small">首次登录客户端，即可获得最高3000萌豆奖励</string>-->
-<!--    <string name="newcomer_award_attention">萌豆奖励已发放到账户中，赶紧赠送礼物给喜爱的主播吧</string>-->
-<!--    <string name="look_around">逛一逛</string>-->
-<!--    <string name="give_a_reward">去打赏</string>-->
-<!--    <string name="award_login">恭喜已完成“新人礼包”所有任务</string>-->
-<!--    <string name="award_top_up">恭喜已完成“首次客户端充值”</string>-->
-<!--    <string name="first_login">首次登录注册</string>-->
-<!--    <string name="first_login_award">最高可获得1000萌豆</string>-->
-<!--    <string name="first_login_app">首次登录APP客户端</string>-->
-<!--    <string name="first_login_app_award">最高可获得6000萌豆</string>-->
-<!--    <string name="first_top_up_app">首次客户端充值</string>-->
-<!--    <string name="first_top_up_app_award">最高充值金额等值萌豆，首充10元，最高赠送1万萌豆</string>-->
-<!--    <string name="go_to_top_up">去充值</string>-->
-<!--    <string name="first_top_up_app_title">首次充值,最高等值萌豆奖励</string>-->
-<!--    <string name="first_top_up_app_msg">首次充值10元,最高赠送10000萌豆奖励</string>-->
-<!--    <string name="first_top_up_app_confirm">朕知道了</string>-->
-<!--    <string name="go_to_get">去领取</string>-->
+    <!--    <string name="see_detail">查看详情</string>-->
+    <!--    <string name="newcomer_big_content">爷，你有3000萌豆待领取</string>-->
+    <!--    <string name="newcomer_big_small">首次登录客户端，即可获得最高3000萌豆奖励</string>-->
+    <!--    <string name="newcomer_award_attention">萌豆奖励已发放到账户中，赶紧赠送礼物给喜爱的主播吧</string>-->
+    <!--    <string name="look_around">逛一逛</string>-->
+    <!--    <string name="give_a_reward">去打赏</string>-->
+    <!--    <string name="award_login">恭喜已完成“新人礼包”所有任务</string>-->
+    <!--    <string name="award_top_up">恭喜已完成“首次客户端充值”</string>-->
+    <!--    <string name="first_login">首次登录注册</string>-->
+    <!--    <string name="first_login_award">最高可获得1000萌豆</string>-->
+    <!--    <string name="first_login_app">首次登录APP客户端</string>-->
+    <!--    <string name="first_login_app_award">最高可获得6000萌豆</string>-->
+    <!--    <string name="first_top_up_app">首次客户端充值</string>-->
+    <!--    <string name="first_top_up_app_award">最高充值金额等值萌豆，首充10元，最高赠送1万萌豆</string>-->
+    <!--    <string name="go_to_top_up">去充值</string>-->
+    <!--    <string name="first_top_up_app_title">首次充值,最高等值萌豆奖励</string>-->
+    <!--    <string name="first_top_up_app_msg">首次充值10元,最高赠送10000萌豆奖励</string>-->
+    <!--    <string name="first_top_up_app_confirm">朕知道了</string>-->
+    <!--    <string name="go_to_get">去领取</string>-->
     <string name="gettable">可领取</string>
     <string name="get_all_git">恭喜已完成今日“看直播 领选票”，明天继续加油喔~</string>
     <string name="month_pk_login_attention">启禀圣上</string>
@@ -531,11 +531,10 @@
     <string name="agreement_not_agree">不同意</string>
     <string name="agreement_agree">同意</string>
     <string name="agreement_title">用户协议和隐私政策</string>
-    <string name="agreement_content">亲爱的%1$s用户：\n
-        感谢您使用“%2$s”。我们非常重视您的个人信息和隐私保护。为了更好得保障您的个人权益，在您使用我们的产品前，请您认真阅读《用户注册协议》和《用户隐私政策》的全部内容，同意并接受全部条款后开始使用我们的产品和服务。我们会严格按照政策内容使用和保护您的个人信息，感谢您的信任。\n【特别提示】本政策于2019年11月14日公布，将于2019年11月21日生效。
+    <string name="agreement_content">亲爱的用户：\n感谢您的使用“欢鹊”我们非常重视您的个人信息隐私保护。为了更好的地保障您的个人权益，在使用我们的产品前，请认证阅读《服务协议》和《隐私政策》的全部内容。
     </string>
-    <string name="agreement_conent_clickable">《用户隐私政策》</string>
-    <string name="agreement_register_conent_clickable">《用户注册协议》</string>
+    <string name="agreement_conent_clickable">《服务协议》</string>
+    <string name="agreement_register_conent_clickable">《隐私政策》</string>
     <string name="show_location">是否开启地理位置显示</string>
     <string name="submit">提交</string>
 
@@ -559,12 +558,13 @@
     <string name="explain">福利翻牌说明</string>
 
 
-    <string name="register_rule_pravicy">《用户隐私》</string>
+    <string name="register_rule_pravicy">《隐私政策》</string>
     <string name="agreement">协议</string>
     <string name="juveniles_protect_attention">为维护良好互联网环境，呵护未成年人健康成长。%1$s禁止未成年人登录使用，如果您是监护人，请设置家长密码。
 \n\n
 设置家长密码后，每次打开app需要验证密码。</string>
-    <string name="register_rule_02">《用户注册》</string>
+    <string name="register_rule_02">《服务协议》</string>
+    <string name="register_rule_01_fragment">登录即视为同意</string>
 
     <!-- 羚萌公约 -->
     <string name="html_spec">rules/mgrSpec.html</string>
@@ -607,7 +607,7 @@
     <string name="first_private_title">私信体验福利</string>
     <string name="one_yuan_balance_not_enough_attention">您还有待领取的首充超值大礼包，快去领取吧~</string>
     <string name="one_yuan_balance_not_enough_title">当前余额不足</string>
-<!--    <string name="one_yuan_get">快去领取吧~</string>-->
+    <!--    <string name="one_yuan_get">快去领取吧~</string>-->
     <string name="one_yuan_give_up">放弃领取</string>
     <string name="first_private_give_up">放弃福利</string>
     <string name="only_support_landscape">该功能仅支持竖屏下使用</string>
@@ -640,4 +640,5 @@
     <string name="empty_bag">暂无背包礼物</string>
     <string name="recommend">推荐</string>
     <string name="star_lucky">幸运星球</string>
+    <string name="personal_information_protection_title">个人信息保护指引</string>
 </resources>

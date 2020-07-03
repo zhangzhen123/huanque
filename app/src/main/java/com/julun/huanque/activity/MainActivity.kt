@@ -1,12 +1,12 @@
-package com.julun.huanque
+package com.julun.huanque.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.suger.onClickNew

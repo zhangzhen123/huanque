@@ -1,8 +1,9 @@
-package com.julun.huanque
+package com.julun.huanque.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 
 /**
@@ -14,7 +15,7 @@ class WelcomeActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_welcome
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }

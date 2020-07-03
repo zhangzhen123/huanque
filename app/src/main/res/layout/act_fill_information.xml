@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/view_top"
+        layout="@layout/layout_pager_header" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/con_first"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="真实信息提高交友匹配度"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="62dp"
+            android:text="注册性别后不可更改"
+            android:textColor="@color/black_999"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_male"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_marginTop="122dp"
+            android:src="@drawable/sel_male"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/iv_female"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_female"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_marginTop="122dp"
+            android:src="@drawable/sel_female"
+            app:layout_constraintLeft_toRightOf="@id/iv_male"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="男"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintLeft_toLeftOf="@id/iv_male"
+            app:layout_constraintRight_toRightOf="@id/iv_male"
+            app:layout_constraintTop_toBottomOf="@id/iv_male" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="女"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintLeft_toLeftOf="@id/iv_female"
+            app:layout_constraintRight_toRightOf="@id/iv_female"
+            app:layout_constraintTop_toBottomOf="@id/iv_female" />
+
+
+        <EditText
+            android:id="@+id/et_nickname"
+            android:layout_width="0px"
+            android:layout_height="54dp"
+            android:layout_marginTop="258dp"
+            android:background="@null"
+            android:hint="填写昵称（最多10个字）"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:textColor="@color/black_333"
+            android:textColorHint="@color/black_999"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="1dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:background="@color/enabled"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_nickname" />
+
+        <TextView
+            android:id="@+id/tv_bir"
+            android:layout_width="0px"
+            android:layout_height="54dp"
+            android:drawableRight="@mipmap/icon_arrow_msg_setting"
+            android:gravity="center_vertical"
+            android:hint="选择生日"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:textColor="@color/black_333"
+            android:textColorHint="@color/black_999"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_nickname" />
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="1dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:background="@color/enabled"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_bir" />
+
+        <EditText
+            android:id="@+id/et_invitation_code"
+            android:layout_width="0px"
+            android:layout_height="54dp"
+            android:background="@null"
+            android:hint="请输入邀请码（选填）"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:textColor="@color/black_333"
+            android:textColorHint="@color/black_999"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_bir" />
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="1dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:background="@color/enabled"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_invitation_code" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/con_second"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_top">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
