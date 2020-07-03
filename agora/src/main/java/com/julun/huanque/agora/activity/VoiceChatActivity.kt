@@ -20,6 +20,7 @@ import com.julun.huanque.common.suger.onClick
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ToastUtils
+import io.agora.rtc.Constants
 import io.agora.rtc.IRtcEngineEventHandler
 import kotlinx.android.synthetic.main.act_voice_chat.*
 import java.util.*
@@ -123,13 +124,16 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     // Tutorial Step 2
     private fun joinChannel() {
         //用户ID=49的token
-//        var accessToken =
-//                "00678fb9516fe5b4e759c51a5d880e1fd1bIAC3NfAb/qngU67zD269hcBInLyrBqiVsoExPhnOPdxCVQBp9qUAAAAAEADXzqF+G+j+XgEAAQAa6P5e"
+        var accessToken =
+                "00678fb9516fe5b4e759c51a5d880e1fd1bIAC3NfAb/qngU67zD269hcBInLyrBqiVsoExPhnOPdxCVQBp9qUAAAAAEADXzqF+G+j+XgEAAQAa6P5e"
         //用户ID=48的token
-        var accessToken = "00678fb9516fe5b4e759c51a5d880e1fd1bIAB9QjBCK/oVIycggr/fz7ykMCywT8qmfuSo+CEMSJyqiwBp9qUAAAAAEADXzqF+dCv/XgEAAQBzK/9e"
+//        var accessToken = "00678fb9516fe5b4e759c51a5d880e1fd1bIAB9QjBCK/oVIycggr/fz7ykMCywT8qmfuSo+CEMSJyqiwBp9qUAAAAAEADXzqF+dCv/XgEAAQBzK/9e"
         if (accessToken.isEmpty()) {
             return
         }
+        //设置为主播身份
+        AgoraManager.mRtcEngine?.setClientRole(Constants.CLIENT_ROLE_BROADCASTER)
+        AgoraManager.mRtcEngine?.enableAudio()
         // Allows a user to join a channel.
         val result = AgoraManager.mRtcEngine?.joinChannel(accessToken, "49", "Extra Optional Data", 0) // if you do not specify the uid, we will generate the uid for you
         logger.info("$TAG joinResult = $result")
