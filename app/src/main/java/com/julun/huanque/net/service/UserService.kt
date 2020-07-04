@@ -1,11 +1,15 @@
 package com.julun.huanque.net.service
 
+import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidResult
+import com.julun.huanque.common.bean.beans.Session
 import com.julun.huanque.common.bean.forms.SessionForm
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
+import com.julun.huanque.common.bean.forms.GetValidCode
 import com.julun.huanque.common.bean.forms.MobileLoginForm
+import com.julun.huanque.common.bean.forms.UpdateInformationForm
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -38,7 +42,22 @@ interface UserService {
     fun queryUserLevelInfoBasic(@Body form: SessionForm): Observable<Root<UserLevelInfo>>
 
 
+    /**
+     * 手机号登录
+     */
     @POST("user/acct/login/mobile")
-    suspend fun mobileLogin(@Body form: MobileLoginForm) : Root<UserDetailInfo>
+    suspend fun mobileLogin(@Body form: MobileLoginForm) : Root<Session>
+
+    /**
+     * 更新用户数据
+     */
+    @POST("user/acct/info/update")
+    suspend fun updateInformation(@Body form : UpdateInformationForm): Root<VoidResult>
+
+    /**
+     * 开始获取验证码
+     */
+    @POST("user/acct/login/getSmsCode")
+    suspend fun startGetValidCode(@Body form: GetValidCode): Root<JSONObject>
 
 }

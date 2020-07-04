@@ -24,7 +24,8 @@ ext {
 
     api = [
             BASE_URL_PRODUCT: "https://api.51lm.tv/",
-            BASE_URL_DEV    : "http://192.168.96.249:7777/"
+//            BASE_URL_DEV    : "http://192.168.96.249:7777/"
+            BASE_URL_DEV    : "http://192.168.97.254:7777/"
 //            BASE_URL_DEV    : "http://192.168.97.6:6630/"
     ]
     sdk = [

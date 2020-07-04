@@ -35,7 +35,8 @@ class LoginActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initFastLogin()
-        mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
+        //隐私协议弹窗
+//        mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
     }
 
     override fun initEvents(rootView: View) {

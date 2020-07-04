@@ -2,14 +2,14 @@ package com.julun.huanque.activity
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.LoadingDialog
+import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.common.utils.VerificationUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.viewmodel.PhoneNumLoginViewModel
 import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit
  *@描述 验证码登录页面
  */
 class PhoneNumLoginActivity : BaseActivity() {
+    val loadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
 
     companion object {
         val MAXCOUNT = 10L
@@ -47,6 +48,30 @@ class PhoneNumLoginActivity : BaseActivity() {
     private fun initViewModel() {
         mViewModel = ViewModelProvider(this).get(PhoneNumLoginViewModel::class.java)
 
+        mViewModel?.loadState?.observe(this, Observer {
+            if (it != null) {
+                if (it.state == NetStateType.LOADING) {
+                    loadingDialog.showDialog()
+                } else {
+                    loadingDialog.hide()
+                }
+            }
+        })
+
+        //倒计时的观察
+        mViewModel?.tickState?.observe(this, Observer {
+            if (it != null && it) {
+                //极验通过  开始倒计时
+                startTick()
+            }
+        })
+
+        mViewModel?.loginData?.observe(this, Observer {
+            if(it != null){
+                SessionUtils.setSession(it)
+                FillInformationActivity.newInstance(this)
+            }
+        })
     }
 
     override fun initEvents(rootView: View) {
@@ -94,20 +119,20 @@ class PhoneNumLoginActivity : BaseActivity() {
 
         login_btn.onClickNew {
             //登录
-//            val phoneNum = phone_num.text.toString()
-//            if (!checkPhone(phoneNum)) {
-//                ToastUtils.show("请输入正确手机号")
-//                return@onClickNew
-//            }
-//            val code = code_num.text.toString()
-//            if (code.length != 4) {
-//                ToastUtils.show("请输入4位验证码")
-//                return@onClickNew
-//            }
-//
-//            mViewModel?.login(phoneNum, code)
+            val phoneNum = phone_num.text.toString()
+            if (!checkPhone(phoneNum)) {
+                ToastUtils.show("请输入正确手机号")
+                return@onClickNew
+            }
+            val code = code_num.text.toString()
+            if (code.length != 4) {
+                ToastUtils.show("请输入4位验证码")
+                return@onClickNew
+            }
+
+            mViewModel?.login(phoneNum, code)
             //直接跳转填写资料页面
-            FillInformationActivity.newInstance(this)
+//            FillInformationActivity.newInstance(this)
         }
 
         //验证码编辑框焦点
@@ -127,8 +152,7 @@ class PhoneNumLoginActivity : BaseActivity() {
             //发送验证码
             val phone = phone_num.text.toString()
             if (checkPhone(phone)) {
-//                viewModel.startGetValidCode(phone)
-                startTick()
+                mViewModel?.startGetValidCode(phone)
             }
         }
 

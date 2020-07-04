@@ -32,7 +32,7 @@ data class ChatUser(
     //拼音
     var pinyin: String = "",
     //登录用户ID，用于切换账号时使用
-    var mineUserId: Int = SessionUtils.getUserId(),
+    var mineUserId: Long = SessionUtils.getUserId(),
     //贵族等级，远程图片
     var royalPic: String = "",
     //贵族等级，远程图片  圆角小图标
