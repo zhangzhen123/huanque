@@ -35,9 +35,6 @@ object SessionUtils {
     private var REG_USER = "REG_USER"
 
     fun setSession(session: Session) {
-        if (session == null) {
-            return
-        }
         SessionManager.isCheckSession = true
         setSessionId(session.sessionId)
         setUserId(session.userId)
@@ -51,18 +48,19 @@ object SessionUtils {
         setIsRegUser(session.regUser)
     }
 
-//    //与deleteSession合并 不再单独调用
-//    private fun clearSession() {
-//        ULog.i("Planet 设置sessionId 2")
-//        setSessionId("")
-//        setUserId(0)
-//        setRongImToken("")
-//        setIsRegUser(false)
-//        setNickName("")
-//        setUserType("")
-//        setPushPermis("")
-//        newSession = null
-//    }
+    //与deleteSession合并 不再单独调用
+    fun clearSession() {
+        setSessionId("")
+        setUserId(0)
+        setNickName("")
+        setHeaderPic("")
+        setUserType("")
+        setAgoraToken("")
+        setNewUser(false)
+        setRegComplete(false)
+        setRongImToken("")
+        setIsRegUser(false)
+    }
 
 
     /**

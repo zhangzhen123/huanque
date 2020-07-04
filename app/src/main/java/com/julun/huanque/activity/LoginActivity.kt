@@ -86,6 +86,8 @@ class LoginActivity : BaseActivity() {
             //注册成功，跳转首页
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+        } else {
+            SessionUtils.clearSession()
         }
         finish()
     }
