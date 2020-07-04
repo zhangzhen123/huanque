@@ -5,7 +5,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.HeadModule
-import com.julun.huanque.common.bean.beans.HeaderNavigateBean
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.inVisiable
 import com.julun.huanque.common.suger.loadImage

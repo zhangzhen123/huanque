@@ -34,6 +34,7 @@ open class HuanQueApp : Application() {
     private var mDeviceId = ""
 
     override fun onCreate() {
+        super.onCreate()
         install()
         val baseUrl = if (BuildConfig.DEBUG) {
             BuildConfig.SERVICE_BASE_URL_DEV
@@ -55,8 +56,15 @@ open class HuanQueApp : Application() {
                 e.printStackTrace()
             }
         }
-        HuanQueInit.getInstance().init(this)
-        super.onCreate()
+        if(AppHelper.isMainProcess(this)){
+            CommonInit.getInstance().inSDK=false
+            HuanQueInit.getInstance().init(this)
+
+            CommonInit.getInstance().taskDispatcher?.start()
+            CommonInit.getInstance().taskDispatcher?.await()
+            CommonInit.getInstance().taskDispatcher = null
+        }
+
     }
 
     private fun initBugly(app: Application) {

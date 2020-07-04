@@ -23,7 +23,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/CustomToolBarTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:icon, android:theme,android:allowBackup,android:supportsRtl">
         <activity
             android:name=".activity.WelcomeActivity"
             android:screenOrientation="portrait"

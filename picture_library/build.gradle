@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion hq.compileSdkVersion
+    buildToolsVersion hq.buildToolsVersion
+    defaultConfig {
+        minSdkVersion hq.minSdkVersion
+        targetSdkVersion hq.targetSdkVersion
+        versionCode 1
+        versionName '1.0'
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main{
+            res.srcDirs = [
+                    'src/main/res'
+            ]
+        }
+    }
+}
+//apply from: rootProject.file("upload-aar.gradle")
+def frescoVersion = '2.2.0'
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //    compile project(':ucrop')
+    //    compile "com.github.LuckSiege.PictureSelector:ucrop:v2.2.3"
+    //    implementation ('com.github.LuckSiege.PictureSelector:ucrop:v2.2.3',{
+    //        exclude group:'com.android.support'
+    //    })
+    implementation rootProject.ext.dependencies["ANDROIDX_APPCOMPAT"]
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation rootProject.ext.dependencies["EXIFINTERFACE"]
+
+    implementation rootProject.ext.dependencies["RXJAVA"]
+    implementation rootProject.ext.dependencies["RXANDROID"]
+    //fresco 的支持 FRESCO
+    api "com.facebook.fresco:fresco:$frescoVersion"
+    api "com.facebook.fresco:animated-base:$frescoVersion"
+    api "com.facebook.fresco:animated-gif:$frescoVersion"
+    api "com.facebook.fresco:webpsupport:$frescoVersion"
+    api "com.facebook.fresco:animated-webp:$frescoVersion"
+    implementation rootProject.ext.dependencies["NINEOLDANDROIDS"]
+    //    implementation ("com.github.bumptech.glide:glide:4.5.0",{
+    //        exclude group:'com.android.support'
+    //    })
+}

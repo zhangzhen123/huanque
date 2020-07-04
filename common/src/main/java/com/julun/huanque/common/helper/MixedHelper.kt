@@ -14,17 +14,18 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.julun.huanque.common.R
-import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.base.dialog.MyAlertDialog
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.ToastUtils
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.layout_empty_data.view.*
 import org.jetbrains.anko.dip
@@ -35,7 +36,7 @@ import org.jetbrains.anko.dip
  *@Date 2019/7/22 22:53
  *@Description 综合工具类
  *
-**/
+ **/
 
 object MixedHelper {
 
@@ -53,13 +54,14 @@ object MixedHelper {
 //    }
 
 
-
     fun showAlertMessage(message: String) {
         Observable.just(message).compose(DefaultRxTransformer<String>()).subscribe {
             try {
                 //不依附于主页界面
-                MyAlertDialog(CommonInit.getInstance().getCurrentActivity()
-                        ?: return@subscribe).showAlertMessage(it)
+                MyAlertDialog(
+                    CommonInit.getInstance().getCurrentActivity()
+                        ?: return@subscribe
+                ).showAlertMessage(it)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -68,8 +70,10 @@ object MixedHelper {
 
     // 通用下拉刷新headerLayoutLabel
     fun getCommonHeaderLayout(context: Context): String {
-        return DateUtils.formatDateTime(context, System.currentTimeMillis(),
-                DateUtils.FORMAT_SHOW_TIME or DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_ALL)
+        return DateUtils.formatDateTime(
+            context, System.currentTimeMillis(),
+            DateUtils.FORMAT_SHOW_TIME or DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_ALL
+        )
     }
 
     fun copyToSharePlate(contxt: Context, text: String) {
@@ -80,6 +84,32 @@ object MixedHelper {
             Toast.LENGTH_SHORT,
             Gravity.CENTER_VERTICAL or Gravity.BOTTOM
         )
+    }
+
+    /**
+     * 新增Adapter展示加载中
+     */
+    fun getLoadingView(context: Context): View {
+        return LayoutInflater.from(context).inflate(R.layout.layout_loading2, null)
+    }
+
+    /**
+     * 获取网络错误页
+     */
+    fun getErrorView(ctx: Context, msg: String = "", onClick: View.OnClickListener = View.OnClickListener { }): View {
+
+        val mErrorView: View = LayoutInflater.from(ctx).inflate(R.layout.layout_network_unable, null)
+        mErrorView.setBackgroundResource(R.color.transparent)
+        val text: TextView = mErrorView.findViewById(R.id.emptyText) as TextView
+        if (!TextUtils.isEmpty(msg)) {
+            text.text = msg
+        } else {
+            text.text = ctx.resources.getString(R.string.load_error)
+        }
+
+        val reload: TextView = mErrorView.findViewById(R.id.tv_reload) as TextView
+        reload.setOnClickListener(onClick)
+        return mErrorView
     }
 
     fun setEmptyView(context: Context, msg: String): View {
@@ -139,7 +169,11 @@ object MixedHelper {
      */
     fun setSwipeRefreshStytle(swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout, context: Context) {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary_lib, android.R.color.holo_green_light)
-        swipeRefreshLayout.setProgressViewOffset(true, -context.dip(20), context.resources.getDimensionPixelOffset(R.dimen.progress_view_end))
+        swipeRefreshLayout.setProgressViewOffset(
+            true,
+            -context.dip(20),
+            context.resources.getDimensionPixelOffset(R.dimen.progress_view_end)
+        )
     }
 
 
@@ -213,9 +247,9 @@ object MixedHelper {
         if (str1s.size > 1) {
             try {
                 val pairList: List<Pair<String, Float>> = str1s[1].split('&')//此时应该是 key->value 对
-                        .filter { StringHelper.isNotEmpty(it) }    //过滤掉空字符串
-                        .map { it.split("=") }.filter { it.size == 2 }//直接拆分成数组，并且过滤掉有空值的属性
-                        .map { it[0] to it[1].toFloat() }
+                    .filter { StringHelper.isNotEmpty(it) }    //过滤掉空字符串
+                    .map { it.split("=") }.filter { it.size == 2 }//直接拆分成数组，并且过滤掉有空值的属性
+                    .map { it[0] to it[1].toFloat() }
                 map.putAll(pairList)
             } catch (e: NumberFormatException) {
                 e.printStackTrace()
@@ -255,7 +289,7 @@ object MixedHelper {
      */
     @ColorInt
     fun formatColor(colorStr: String, @ColorRes errorColor: Int): Int {
-        if(colorStr.isEmpty()){
+        if (colorStr.isEmpty()) {
             return getColor(errorColor)
         }
         return try {

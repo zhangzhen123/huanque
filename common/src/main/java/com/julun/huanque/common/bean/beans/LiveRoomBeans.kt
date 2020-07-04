@@ -4,7 +4,7 @@ import android.app.Activity
 import android.graphics.drawable.LevelListDrawable
 import android.os.Bundle
 import com.alibaba.fastjson.annotation.JSONField
-import com.julun.huanque.common.basic.RootListLiveData
+import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.TplBean
 import java.io.Serializable
 
@@ -147,7 +147,7 @@ data class RoomUserInfo(
     }
 }
 
-class OnlineLiveData<T>(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) : RootListLiveData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
+class OnlineData<T>(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) : RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
     var royalUserList: List<T> = arrayListOf()
     var royalLevelUrl: String = ""
     var onlineUserNum: Int = 0
@@ -2674,7 +2674,7 @@ data class OnlineUserInfo(
  * 在线用户信息
  * @author WanZhiYuan
  */
-class NewOnlineLiveData<T>(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) : RootListLiveData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
+class NewOnlineData<T>(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) : RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
     var royalHonorList: List<T>? = null
 
     //贵族说明

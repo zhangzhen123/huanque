@@ -1,6 +1,7 @@
 package com.julun.huanque.common.bean.beans
 
 import com.chad.library.adapter.base.entity.MultiItemEntity
+import com.julun.huanque.common.basic.RootListData
 
 class HomeItemBean(var showType: Int, var content: Any) : MultiItemEntity {
     companion object {
@@ -31,21 +32,6 @@ class PhotoBean(
     }
 }
 
-class HeaderNavigateBean(
-    var type: Int = -1,
-    var url: String = "",
-    var title1: String = "",
-    var title2: String = ""
-
-) {
-    companion object {
-        const val MASK_QUEEN = 1
-        const val ANONYMOUS_VOICE = 2
-        const val LIVING = 3
-        const val DAY_TOP = 4
-    }
-}
-
 data class HeadNavigateInfo(
     var moduleList: List<HeadModule> = listOf(),
     var myCash: Int = 0
@@ -73,4 +59,28 @@ data class HeadBaseInfo(
     var nickname: String = "",
     var programList: List<Any> = listOf(),
     var remainTimes: Int = 0
+)
+
+//class HomeListData(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) :
+//    RootListData<HomeRecomItem>(isPull, arrayListOf(), hasMore, extDataJson) {
+//    var moduleList: List<HeadModule> = arrayListOf()
+//}
+class HomeListData<T> : RootListData<T>() {
+    var moduleList: List<HeadModule> = arrayListOf()
+}
+
+data class HomeRecomItem(
+    var age: Int = 0,
+    var city: String = "",
+    var coverPicList: List<String> = listOf(),
+    var headPic: String = "",
+    var introduceVoice: String = "",
+    var introduceVoiceLength: Int = 0,
+    var anchor: String = "",
+    var living: String = "",
+    var mySign: String = "",
+    var nickname: String = "",
+    var sex: String = "",
+    var tagList: List<String> = listOf(),
+    var userId: Int = 0
 )

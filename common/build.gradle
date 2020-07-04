@@ -22,6 +22,7 @@ android {
         consumerProguardFiles "consumer-rules.pro"
 
         buildConfigField "Integer", "BUILD_NUMBER", "${getBuildNumber()}"
+        buildConfigField "String","IMAGE_SERVER_URL","\"${api.IMAGE_SERVER_URL}\""
         //正式地址 http
         buildConfigField "String", "SERVICE_BASE_URL_PRODUCT", "\"${api.BASE_URL_PRODUCT}\""
         //测试环境
@@ -120,8 +121,8 @@ dependencies {
     debugImplementation "com.facebook.stetho:stetho:1.5.0"
 
     /**线程切换*/
-    api "io.reactivex.rxjava3:rxjava:3.0.4"
-    api 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    api rootProject.ext.dependencies["RXJAVA"]
+    api rootProject.ext.dependencies["RXANDROID"]
     /*生命周期解绑*/
     api 'com.trello.rxlifecycle4:rxlifecycle-components:4.0.0'
     api 'com.trello.rxlifecycle4:rxlifecycle-components-preference:4.0.0'

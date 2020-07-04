@@ -206,7 +206,7 @@ class CommonInit {
 //
 //    fun getSdkType() = mSdkType
 
-    private var taskDispatcher: TaskDispatcher? = null
+    var taskDispatcher: TaskDispatcher? = null
     fun initTask(application: Application) {
         ToastUtils.init(application)//初始化自定义土司
         SharedPreferencesUtils.init(application)
