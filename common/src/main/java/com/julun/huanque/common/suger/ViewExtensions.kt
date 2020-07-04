@@ -1,9 +1,13 @@
 package com.julun.huanque.common.suger
 
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.utils.ImageUtils
 import java.util.*
 
@@ -138,3 +142,4 @@ abstract class NoDoubleClickListener : View.OnClickListener {
         const val MIN_CLICK_DELAY_TIME = 500
     }
 }
+

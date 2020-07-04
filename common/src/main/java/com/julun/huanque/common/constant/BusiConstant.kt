@@ -15,7 +15,8 @@ object BusiConstant {
     const val USER_CHAT_ROOM_PREFIX = "U"
     const val API_KEY = "2FbdGVkX29"
     const val WEIXIN_FLAG = "weixin://wap/pay?"
-    const val REQUEST_HEADER_FLAG ="hqInfo"
+    const val REQUEST_HEADER_FLAG = "hqInfo"
+
     //系统通知栏回调
     var NOTIFICATION_REQUEST_CODE = 300
 }
@@ -85,32 +86,27 @@ enum class PlatformType {
     ANDROID
 }
 
-enum class Sex private constructor(private val text: String, private val value: String) {
-    MALE("男", "Male"),
-    FEMALE("女", "Female"),
-    UNKOWN("未知", "Unknow");
+object Sex {
+    const val MALE = "Male"
+    const val FEMALE = "Female"
+    const val UNKOWN = "Unknow"
 
-
-    companion object {
-
-        fun getSexText(str: String): String {
-            for (sex in Sex.values()) {
-                if (sex.value == str) {
-                    return sex.text
-                }
+    fun getSexText(str: String): String {
+        return when (str) {
+            MALE -> {
+                "男"
             }
-            return ""
+            FEMALE -> {
+                "女"
+            }
+            UNKOWN -> {
+                "未知"
+            }
+            else -> ""
         }
 
-        fun getSexValue(str: String): String {
-            for (sex in Sex.values()) {
-                if (sex.text == str) {
-                    return sex.value
-                }
-            }
-            return ""
-        }
     }
+
 }
 
 
@@ -194,6 +190,7 @@ object MsgTag {
     const val PREFIX = "adbQy!0ClKMyWho"
     const val TAG = "lmlive"
 }
+
 object MessageDisplayType {
     //炫彩发言
     const val COLORFUL = "Colorful"

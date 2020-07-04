@@ -3,9 +3,12 @@ package com.julun.huanque.core.ui.main.makefriend
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
-import com.julun.huanque.common.basic.*
+import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.QueryType
+import com.julun.huanque.common.basic.ReactiveData
+import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.bean.beans.HeadNavigateInfo
 import com.julun.huanque.common.bean.beans.HomeItemBean
-import com.julun.huanque.common.bean.beans.UserLevelInfo
 import com.julun.huanque.common.bean.forms.RecomListForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -14,7 +17,6 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.errorMsg
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
-import kotlinx.coroutines.delay
 
 /**
  *
@@ -31,28 +33,52 @@ class MakeFriendsViewModel : BaseViewModel() {
         Requests.create(HomeService::class.java)
     }
     var offset = 0
-    val stateList: LiveData<ReactiveData<RootListLiveData<HomeItemBean>>> = queryState.switchMap { type ->
+    val stateList: LiveData<ReactiveData<RootListData<HomeItemBean>>> = queryState.switchMap { type ->
         liveData {
-            if (type == QueryType.REFRESH) {
+            if (type != QueryType.LOAD_MORE) {
                 offset = 0
             }
-            request({
-                val user = service.homeInfo().dataConvert()
 
-                val recList = runCatching<RootListLiveData<UserLevelInfo>> {
-                    service.homeRecomList(RecomListForm(offset)).dataConvert()
-                }.getOrNull()
+            request({
+                val homeListData = service.homeRecom(RecomListForm(offset)).dataConvert()
                 //todo test
+//                val hasMore = offset <= 20
+//                val list = arrayListOf<HomeItemBean>()
+//                val rList = RootListData(type != QueryType.LOAD_MORE, list, hasMore)
+//                if (offset == 0) {
+//
+//                    list.add(HomeItemBean(HomeItemBean.HEADER, user))
+//                    list.add(HomeItemBean(HomeItemBean.GUIDE_TO_ADD_TAG, Any()))
+//                    list.add(HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, Any()))
+//                    repeat(10) {
+//                        list.add(HomeItemBean(HomeItemBean.NORMAL, Any()))
+//                    }
+//
+//
+//                } else {
+//                    repeat(10) {
+//                        list.add(HomeItemBean(HomeItemBean.NORMAL, Any()))
+//                    }
+//                }
                 val list = arrayListOf<HomeItemBean>()
-                list.add(HomeItemBean(HomeItemBean.HEADER, user))
-                repeat(10) {
-                    list.add(HomeItemBean(HomeItemBean.NORMAL, Any()))
+                if (offset == 0) {
+                    val headNavigateInfo= HeadNavigateInfo().apply {
+                        moduleList= homeListData.moduleList
+                    }
+                    list.add(HomeItemBean(HomeItemBean.HEADER,headNavigateInfo))
+
+                    homeListData.list.forEach{
+                        list.add(HomeItemBean(HomeItemBean.NORMAL, it))
+                    }
+                    list.add(HomeItemBean(HomeItemBean.GUIDE_TO_ADD_TAG, Any()))
+                    list.add(HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, Any()))
+
+                } else {
+                    homeListData.list.forEach{
+                        list.add(HomeItemBean(HomeItemBean.NORMAL, it))
+                    }
                 }
-                list.add(HomeItemBean(HomeItemBean.GUIDE_TO_ADD_TAG, Any()))
-                list.add(HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, Any()))
-                //todo test
-                val hasMore = offset <= 20
-                val rList = RootListLiveData(type != QueryType.LOAD_MORE, list, hasMore)
+                val rList = RootListData(isPull = type != QueryType.LOAD_MORE,list =list,hasMore = homeListData.hasMore )
                 offset += list.size
                 emit(ReactiveData(NetStateType.SUCCESS, rList))
             }, error = { e ->
@@ -61,6 +87,7 @@ class MakeFriendsViewModel : BaseViewModel() {
             }, final = {
                 logger("最终返回")
             }, needLoadState = type == QueryType.INIT)
+
         }
 
     }

@@ -1,3 +1,4 @@
+include ':picture_library'
 include ':agora'
 include ':message'
 include ':rnlib'

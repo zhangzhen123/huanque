@@ -42,6 +42,9 @@ object NetExceptionHandle {
                 is JsonParseException -> {
                     loadNetState.postValue(NetState(NetStateType.NETWORK_ERROR))
                 }
+                else->{
+                    loadNetState.postValue(NetState(NetStateType.ERROR,"异常错误"))
+                }
             }
         }
     }

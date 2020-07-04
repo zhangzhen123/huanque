@@ -70,26 +70,6 @@
         app:layout_constraintStart_toEndOf="@+id/header_pic"
         app:layout_constraintTop_toTopOf="@+id/header_pic"
         tools:text="你的名字" />
-
-    <TextView
-        android:id="@+id/tv_location"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/dimen_16"
-        android:layout_marginStart="@dimen/dimen_6"
-        android:layout_marginLeft="@dimen/dimen_6"
-        android:background="@drawable/bg_shape_mkf_location"
-        android:drawableLeft="@mipmap/icon_mkf_location"
-        android:paddingLeft="@dimen/dimen_6"
-        android:paddingTop="@dimen/dimen_1"
-        android:paddingRight="@dimen/dimen_6"
-        android:paddingBottom="@dimen/dimen_1"
-        android:textColor="#82ABD1"
-        android:textSize="@dimen/sp_10"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_mkf_name"
-        app:layout_constraintStart_toEndOf="@+id/tv_mkf_name"
-        app:layout_constraintTop_toTopOf="@+id/tv_mkf_name"
-        tools:text="地址" />
-
     <TextView
         android:id="@+id/tv_sex"
         android:layout_width="wrap_content"
@@ -105,9 +85,29 @@
         android:textColor="#FF9BC5"
         android:textSize="@dimen/sp_10"
         app:layout_constraintBottom_toBottomOf="@+id/tv_mkf_name"
-        app:layout_constraintStart_toEndOf="@+id/tv_location"
+        app:layout_constraintStart_toEndOf="@+id/tv_mkf_name"
         app:layout_constraintTop_toTopOf="@+id/tv_mkf_name"
         tools:text="男" />
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_16"
+        android:layout_marginStart="@dimen/dimen_6"
+        android:layout_marginLeft="@dimen/dimen_6"
+        android:background="@drawable/bg_shape_mkf_location"
+        android:drawableLeft="@mipmap/icon_mkf_location"
+        android:paddingLeft="@dimen/dimen_6"
+        android:paddingTop="@dimen/dimen_1"
+        android:paddingRight="@dimen/dimen_6"
+        android:paddingBottom="@dimen/dimen_1"
+        android:textColor="#82ABD1"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_mkf_name"
+        app:layout_constraintStart_toEndOf="@+id/tv_sex"
+        app:layout_constraintTop_toTopOf="@+id/tv_mkf_name"
+        tools:text="地址" />
+
+
 
     <TextView
         android:id="@+id/tv_mkf_sign"
@@ -160,6 +160,7 @@
         app:layout_constraintTop_toBottomOf="@+id/header_pic">
 
         <ImageView
+            android:id="@+id/iv_audio_play"
             android:layout_width="@dimen/dimen_22"
             android:layout_height="@dimen/dimen_22"
             android:layout_marginStart="@dimen/dimen_4"

@@ -1,19 +1,22 @@
 package com.julun.huanque.core.ui.main.makefriend
 
+import android.graphics.Color
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.julun.huanque.common.bean.beans.HeadNavigateInfo
-import com.julun.huanque.common.bean.beans.HeaderNavigateBean
-import com.julun.huanque.common.bean.beans.HomeItemBean
-import com.julun.huanque.common.bean.beans.PhotoBean
+import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
+import org.jetbrains.anko.textColor
 
 class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolder>(null) {
 
@@ -35,11 +38,39 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
             HomeItemBean.NORMAL -> {
 
                 //todo
-                val list = arrayListOf<PhotoBean>()
-                repeat(holder.layoutPosition % 4) {
-                    list.add(PhotoBean("http://cdn.51lm.tv/lm/program/cover/053039203c24442ea99a852f7f60f69c.jpg"))
+//                val list = arrayListOf<PhotoBean>()
+//                repeat(holder.layoutPosition % 4) {
+//                    list.add(PhotoBean("http://cdn.51lm.tv/lm/program/cover/053039203c24442ea99a852f7f60f69c.jpg"))
+//                }
+                val bean = item.content as HomeRecomItem
+                val list = bean.coverPicList.map { PhotoBean(url = it) }
+                val headPic = holder.getView<SimpleDraweeView>(R.id.header_pic)
+                headPic.loadImage(bean.headPic, 46f, 46f)
+                holder.setText(R.id.tv_mkf_name, bean.nickname).setText(R.id.tv_mkf_sign, bean.mySign)
+                    .setText(R.id.tv_location, bean.city)
+
+                val sex = holder.getView<TextView>(R.id.tv_sex)
+                sex.text = "${bean.age}"
+                when (bean.sex) {//Male、Female、Unknow
+
+                    Sex.FEMALE -> {
+                        val drawable = ContextCompat.getDrawable(mContext, R.mipmap.icon_mkf_female)
+                        if (drawable != null) {
+                            drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                            sex.setCompoundDrawables(drawable, null, null, null)
+                        }
+                        sex.textColor = Color.parseColor("#FF9BC5")
+                    }
+                    else -> {
+                        val drawable = ContextCompat.getDrawable(mContext, R.mipmap.icon_mkf_male)
+                        if (drawable != null) {
+                            drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                            sex.setCompoundDrawables(drawable, null, null, null)
+                        }
+                        sex.textColor = Color.parseColor("#9BE2FF")
+                    }
                 }
-                if (list == null || list.isEmpty()) {
+                if (list.isEmpty()) {
                     holder.setGone(R.id.ll_audio, true).setGone(R.id.rv_photos, false)
                 } else {
                     val rv = holder.getView<RecyclerView>(R.id.rv_photos)
@@ -60,9 +91,11 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                     mPhotosAdapter.replaceData(list)
                     mPhotosAdapter.setOnItemClickListener { _, _, position ->
                         val childItem = mPhotosAdapter.getItem(position) ?: return@setOnItemClickListener
-                        mOnItemAdapterListener?.onListClick(holder.layoutPosition, position, childItem)
+                        mOnItemAdapterListener?.onPhotoClick(holder.layoutPosition, position, childItem)
                     }
 
+                    holder.addOnClickListener(R.id.btn_action)
+                    holder.addOnClickListener(R.id.iv_audio_play)
                 }
 
             }
@@ -108,8 +141,14 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 }
 
                 mHeaderNavAdapter.replaceData(headerInfo.moduleList)
+                mHeaderNavAdapter.setOnItemClickListener { _, _, position ->
+                    mOnItemAdapterListener?.onHeadClick(mHeaderNavAdapter.getItem(position))
+                }
+                holder.addOnClickListener(R.id.tv_go_make_money)
             }
             HomeItemBean.GUIDE_TO_ADD_TAG -> {
+                holder.addOnClickListener(R.id.tv_btn_lift)
+                holder.addOnClickListener(R.id.iv_guide_tag_close)
             }
             HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION -> {
 
@@ -126,17 +165,19 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val mPhotosAdapter: PhotosAdapter
                 if (rv.adapter != null) {
                     mPhotosAdapter = rv.adapter as PhotosAdapter
-                    mPhotosAdapter.testPosition(holder.adapterPosition+1000)
+                    mPhotosAdapter.testPosition(holder.adapterPosition + 1000)
                 } else {
                     mPhotosAdapter = PhotosAdapter()
                     rv.adapter = mPhotosAdapter
                 }
                 mPhotosAdapter.replaceData(list)
+                holder.addOnClickListener(R.id.iv_guide_info_close)
             }
         }
     }
 
     interface OnItemAdapterListener {
-        fun onListClick(index: Int, position: Int, item: PhotoBean)
+        fun onPhotoClick(index: Int, position: Int, item: PhotoBean)
+        fun onHeadClick( item: HeadModule?)
     }
 }

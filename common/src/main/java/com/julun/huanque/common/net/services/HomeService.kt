@@ -1,14 +1,12 @@
 package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
-import com.julun.huanque.common.basic.RootListLiveData
-import com.julun.huanque.common.basic.VoidForm
+import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.HeadNavigateInfo
-import com.julun.huanque.common.bean.forms.SessionForm
-import com.julun.huanque.common.bean.beans.UserDetailInfo
-import com.julun.huanque.common.bean.beans.UserLevelInfo
+import com.julun.huanque.common.bean.beans.HomeItemBean
+import com.julun.huanque.common.bean.beans.HomeListData
+import com.julun.huanque.common.bean.beans.HomeRecomItem
 import com.julun.huanque.common.bean.forms.RecomListForm
-import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -27,16 +25,16 @@ interface HomeService {
     /************************************** 个人中心 **********************************************/
 
     /**
-     * 查询主页主要信息
+     * 查询主页主要信息 offset为了0时会附带主页其他信息 否则只返回列表信息
      */
-    @POST("social/friend/home/info")
-    suspend fun homeInfo(@Body form: VoidForm = VoidForm()): Root<HeadNavigateInfo>
+    @POST("social/friend/home/recom")
+    suspend fun homeRecom(@Body form: RecomListForm ): Root<HomeListData<HomeRecomItem>>
 
     /**
      * 获取列表信息
      */
     @POST("social/friend/home/recomList")
-    suspend fun homeRecomList(@Body form: RecomListForm): Root<RootListLiveData<UserLevelInfo>>
+    suspend fun homeRecomList(@Body form: RecomListForm): Root<RootListData<HomeItemBean>>
 
 
 }

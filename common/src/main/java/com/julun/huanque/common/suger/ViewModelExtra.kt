@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.core.Observable
  *@Description: RootExtra
  *
  */
+typealias SBlock<T> = suspend () -> T
 typealias SNError = suspend (t: Throwable) -> Unit
 typealias SNAction = suspend () -> Unit
 
@@ -60,17 +61,41 @@ suspend fun BaseViewModel.request(
     } finally {
         final?.invoke()
     }
-//    runCatching {
-//        block()
-//    }.onSuccess {
-//        loadState?.postValue(NetState(state = NetStateType.SUCCESS))
-//        final?.invoke()
-//    }.onFailure {
-//        NetExceptionHandle.handleException(it, loadState)
-//        it.printStackTrace()
-//        error?.invoke(it)
-//        final?.invoke()
-//    }
+}
+
+/**
+ * 协程请求的统一封装
+ * [block]要执行的block
+ * [error]错误返回
+ * [final]最终返回
+ *[needLoadState]是否需要初始化加载状态回调
+ *
+ */
+suspend fun <T> BaseViewModel.requestBack(
+    block: SBlock<Root<T>>,
+    error: suspend (t: Throwable) -> T,
+    final: SNAction? = null,
+    needLoadState: Boolean = false
+): T {
+    if (needLoadState) {
+        loadState.postValue(NetState(state = NetStateType.LOADING))
+    }
+    try {
+        val result = block().dataConvert()
+        if (needLoadState) {
+            loadState.postValue(NetState(state = NetStateType.SUCCESS))
+        }
+        return result
+    } catch (e: Throwable) {
+        if (needLoadState) {
+            NetExceptionHandle.handleException(e, loadState)
+        }
+        e.printStackTrace()
+        return error.invoke(e)
+
+    } finally {
+        final?.invoke()
+    }
 }
 
 /**

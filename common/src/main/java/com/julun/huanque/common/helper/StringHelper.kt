@@ -4,6 +4,7 @@ package com.julun.huanque.common.helper
 
 import android.text.TextUtils
 import com.alibaba.fastjson.JSONObject
+import com.julun.huanque.common.BuildConfig
 import java.io.Serializable
 import java.io.UnsupportedEncodingException
 import java.math.RoundingMode
@@ -276,10 +277,9 @@ object StringHelper {
     fun isNotHttpUrl(url: String?): Boolean {
         return !isHttpUrl(url)
     }
-//todo
     fun getOssImgUrl(url: String): String {
         if (isNotHttpUrl(url)) {
-            return/* BuildConfig.IMAGE_SERVER_URL + */url
+            return BuildConfig.IMAGE_SERVER_URL + url
         }
         return url
     }

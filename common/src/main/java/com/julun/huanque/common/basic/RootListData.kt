@@ -7,7 +7,7 @@ package com.julun.huanque.common.basic
  * 封装一个容器基类 统一传入数据 [isPull]是否下拉刷新 [hasMore]还有没有更多数据
  * 专门处理列表
  **/
-open class RootListLiveData<T>(
+open class RootListData<T>(
     var isPull: Boolean = false,
     var list: List<T> = arrayListOf(),
     var hasMore: Boolean = false,
