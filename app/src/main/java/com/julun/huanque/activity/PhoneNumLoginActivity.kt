@@ -8,6 +8,7 @@ import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.bean.events.ImformationCompleteBean
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.viewmodel.PhoneNumLoginViewModel
@@ -17,6 +18,8 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.act_phone_num.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import org.jetbrains.anko.textColor
 import java.util.concurrent.TimeUnit
@@ -31,13 +34,16 @@ class PhoneNumLoginActivity : BaseActivity() {
     val loadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
 
     companion object {
-        val MAXCOUNT = 10L
+        val MAXCOUNT = 60L
     }
 
     private var mViewModel: PhoneNumLoginViewModel? = null
 
     //是否正在倒计时
     private var mIsCountting: Boolean = false
+
+    override fun isRegisterEventBus() = true
+
     override fun getLayoutId() = R.layout.act_phone_num
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -217,6 +223,12 @@ class PhoneNumLoginActivity : BaseActivity() {
 
     fun closeKeyBoard() {
         ScreenUtils.hideSoftInput(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun loginSuccess(event : ImformationCompleteBean){
+        //登录成功
+        finish()
     }
 
 }

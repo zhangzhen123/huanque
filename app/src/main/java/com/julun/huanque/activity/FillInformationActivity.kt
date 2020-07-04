@@ -28,6 +28,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.fragment.PersonalInformationProtectionFragment
 import com.julun.huanque.viewmodel.FillInformationViewModel
 import kotlinx.android.synthetic.main.act_fill_information.*
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
@@ -50,6 +51,7 @@ class FillInformationActivity : BaseActivity() {
     }
 
     val loadingDialog: CommonLoadingDialog by lazy { CommonLoadingDialog.newInstance("") }
+    private val mPersonalInformationProtectionFragment = PersonalInformationProtectionFragment()
 
     private var mViewModel: FillInformationViewModel? = null
 
@@ -62,6 +64,8 @@ class FillInformationActivity : BaseActivity() {
         findViewById<TextView>(R.id.tvTitle).text = "消息设置"
         initTimePicker()
         mViewModel?.currentStatus?.value = FillInformationViewModel.FIRST
+        //隐私协议弹窗
+        mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
     }
 
     /**
@@ -139,6 +143,8 @@ class FillInformationActivity : BaseActivity() {
         }
         iv_default_header.onClickNew {
             //点击头像，模拟上传成功
+            mViewModel?.headerSuccess()
+            finish()
         }
     }
 
@@ -241,4 +247,6 @@ class FillInformationActivity : BaseActivity() {
         val format = SimpleDateFormat("yyyy-MM-dd")
         return format.format(date)
     }
+
+
 }

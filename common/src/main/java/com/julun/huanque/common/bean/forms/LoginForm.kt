@@ -36,3 +36,9 @@ class GetValidCode {
         this.mobile = phone
     }
 }
+
+/**
+ * 同意协议的form
+ * @param agreementCode 协议代码
+ */
+class AgreementResultForm(var result: String = "True", var agreementCode: String = "")

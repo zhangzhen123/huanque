@@ -4,12 +4,9 @@ import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.Session
-import com.julun.huanque.common.bean.forms.SessionForm
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
-import com.julun.huanque.common.bean.forms.GetValidCode
-import com.julun.huanque.common.bean.forms.MobileLoginForm
-import com.julun.huanque.common.bean.forms.UpdateInformationForm
+import com.julun.huanque.common.bean.forms.*
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -59,5 +56,11 @@ interface UserService {
      */
     @POST("user/acct/login/getSmsCode")
     suspend fun startGetValidCode(@Body form: GetValidCode): Root<JSONObject>
+
+    /**
+     * 同意协议
+     */
+    @POST("user/acct/info/agreement")
+    suspend fun agreement(@Body form : AgreementResultForm) : Root<Void>
 
 }
