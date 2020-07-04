@@ -8,7 +8,6 @@ import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.bean.events.ImformationCompleteBean
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.viewmodel.PhoneNumLoginViewModel
@@ -41,8 +40,6 @@ class PhoneNumLoginActivity : BaseActivity() {
 
     //是否正在倒计时
     private var mIsCountting: Boolean = false
-
-    override fun isRegisterEventBus() = true
 
     override fun getLayoutId() = R.layout.act_phone_num
 
@@ -225,10 +222,5 @@ class PhoneNumLoginActivity : BaseActivity() {
         ScreenUtils.hideSoftInput(this)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun loginSuccess(event : ImformationCompleteBean){
-        //登录成功
-        finish()
-    }
 
 }

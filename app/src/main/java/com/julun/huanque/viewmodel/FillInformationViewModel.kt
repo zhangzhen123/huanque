@@ -35,7 +35,7 @@ class FillInformationViewModel : BaseViewModel() {
 
     val currentStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
-    var completeBean = ImformationCompleteBean()
+//    var completeBean = ImformationCompleteBean()
 
     /**
      * 上传昵称之类的 状态
@@ -77,8 +77,9 @@ class FillInformationViewModel : BaseViewModel() {
     fun headerSuccess() {
 //        completeBean.headerPic = "user/head/220229a56ec7841b71d8c226d1e17206.jpg"
         SessionUtils.setHeaderPic("user/head/220229a56ec7841b71d8c226d1e17206.jpg")
+        SessionUtils.setRegComplete(true)
         //上传成功
-        EventBus.getDefault().post(completeBean)
+//        EventBus.getDefault().post(completeBean)
     }
 
 }

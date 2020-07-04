@@ -48,6 +48,7 @@ object SessionUtils {
         setNewUser(session.newUser)
         setRegComplete(session.regComplete)
         setRongImToken(session.imToken)
+        setIsRegUser(session.regUser)
     }
 
 //    //与deleteSession合并 不再单独调用

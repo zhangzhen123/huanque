@@ -9,13 +9,10 @@ import androidx.core.content.ContextCompat
 import cn.jiguang.verifysdk.api.JVerificationInterface
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
-import com.julun.huanque.common.bean.events.ImformationCompleteBean
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.fragment.PersonalInformationProtectionFragment
 import kotlinx.android.synthetic.main.act_login.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  *@创建者   dong
@@ -34,8 +31,6 @@ class LoginActivity : BaseActivity() {
 
 
     override fun getLayoutId() = R.layout.act_login
-
-    override fun isRegisterEventBus() = true
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initFastLogin()
@@ -84,14 +79,14 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun loginSuccess(event: ImformationCompleteBean) {
-        //登录成功
-        finish()
-    }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
+            //注册成功，跳转首页
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
         finish()
     }
 
