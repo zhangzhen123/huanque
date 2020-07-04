@@ -81,13 +81,7 @@ class CommonLoadingDialog : AppCompatDialogFragment() {
     override fun onStart() {
         super.onStart()
         setWindowConfig()
-        val text = arguments?.getString(TYPE)
-        if (text?.isNotEmpty() == true) {
-            tv_loading_text.show()
-            tv_loading_text.text = text
-        } else {
-            tv_loading_text.hide()
-        }
+
         dialog?.setOnKeyListener(DialogInterface.OnKeyListener { dialog, keyCode, event ->
             if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                 dismiss()

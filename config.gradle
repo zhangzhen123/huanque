@@ -34,6 +34,9 @@ ext {
 //            BASE_URL_DEV    : "http://192.168.97.6:6630/",
 
             IMAGE_SERVER_URL:"https://huanque.oss-cn-hangzhou.aliyuncs.com"
+//            BASE_URL_DEV    : "http://192.168.96.249:7777/"
+//            BASE_URL_DEV    : "http://192.168.97.254:7777/"
+//            BASE_URL_DEV    : "http://192.168.97.6:6630/"
     ]
     sdk = [
             //三方对应相关的key or scheme

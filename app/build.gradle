@@ -56,6 +56,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation files('libs/geetest_sensebot_android_v4.1.0_20190429.aar')
     implementation project(':core')
     implementation project(path: ':cockroach')
     implementation project(path: ':message')

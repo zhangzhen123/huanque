@@ -19,6 +19,10 @@ import com.bigkoo.pickerview.listener.OnTimeSelectListener
 import com.bigkoo.pickerview.view.TimePickerView
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.CommonLoadingDialog
+import com.julun.huanque.common.base.dialog.LoadingDialog
+import com.julun.huanque.common.basic.NetState
+import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -45,6 +49,8 @@ class FillInformationActivity : BaseActivity() {
         }
     }
 
+    val loadingDialog: CommonLoadingDialog by lazy { CommonLoadingDialog.newInstance("") }
+
     private var mViewModel: FillInformationViewModel? = null
 
     private var pvTime: TimePickerView? = null
@@ -63,6 +69,18 @@ class FillInformationActivity : BaseActivity() {
      */
     private fun initViewModel() {
         mViewModel = ViewModelProvider(this).get(FillInformationViewModel::class.java)
+
+        mViewModel?.updateInformationState?.observe(this, Observer {
+            if (it != null) {
+                if (it) {
+                    //加载中，加载完成
+                    loadingDialog.show(supportFragmentManager, "CommonLoadingDialog")
+                } else {
+                    loadingDialog.dismiss()
+                }
+            }
+        })
+
         mViewModel?.currentStatus?.observe(this, Observer {
             if (it != null) {
                 when (it) {
@@ -91,7 +109,19 @@ class FillInformationActivity : BaseActivity() {
         }
 
         tv_next.onClickNew {
-            mViewModel?.currentStatus?.value = FillInformationViewModel.SECOND
+            var sexType = ""
+            if (iv_male.isSelected) {
+                sexType = "Male"
+            } else if (iv_female.isSelected) {
+                sexType = "Female"
+            }
+            val nickname = et_nickname.text.toString()
+            val birthday = getTime(mViewModel?.birthdayData ?: return@onClickNew) ?: return@onClickNew
+            if (sexType.isEmpty() || nickname.isEmpty() || birthday.isEmpty()) {
+                return@onClickNew
+            }
+
+            mViewModel?.updateInformation(sexType, birthday, nickname, et_invitation_code.text.toString())
         }
         con_root.onClickNew {
             closeKeyBoard()
@@ -106,6 +136,9 @@ class FillInformationActivity : BaseActivity() {
         }
         tv_bir.onClickNew {
             pvTime?.show(tv_bir)
+        }
+        iv_default_header.onClickNew {
+            //点击头像，模拟上传成功
         }
     }
 

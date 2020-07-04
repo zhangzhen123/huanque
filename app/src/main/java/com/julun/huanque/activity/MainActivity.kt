@@ -40,7 +40,6 @@ class MainActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.main_activity
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        SessionUtils.setSessionId("1180965cd1554750bff744a64e6a99af")//test
         setContentView(R.layout.main_activity)
         initViewModel()
         mMainViewModel?.indexData?.value = 0

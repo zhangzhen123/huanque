@@ -1,42 +1,54 @@
 package com.julun.huanque.common.utils
 
-object SessionUtils {
+import com.julun.huanque.common.bean.beans.Session
+import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.manager.SessionManager
 
+object SessionUtils {
     private val SESSION_ID: String = "SESSION_ID"
-    //直播权限
-    private val PUSH_PERMIS: String = "push_permis"
+
     //登录用户id
     private val USER_ID: String = "USER_ID"
+
+    //用户昵称
     private val NICK_NAME: String = "NICK_NAME"
+
+    //头像
+    private val HEAD_PIC: String = ""
+
+    //用户类型
+    private val USER_TYPE = "USER_TYPE"
+
+    //声网token
+    private val VOICE_TOKEN = "VOICE_TOKEN"
+
+    //是否是新用户
+    private val NEW_USER = "NEW_USER"
+
+    //数据是否完整
+    private val REG_COMPLETE = "REG_COMPLETE"
+
     //融云聊天token
     private var RONG_IM_TOKEN: String = "RONG_IM_TOKEN"
+
     //是否注册用户
-    private var IS_REG_USER: String = "IS_REG_USER"
-//todo
-//    var newSession: NewSession? = null
-//
-//    private fun setSession(session: NewSession) {
-//        if (session == null) {
-//            return
-//        }
-//        SessionManager.isCheckSession = true
-//        ULog.i("Planet 设置sessionId 1")
-//        setSessionId(session.sessionId)
-//        setUserId(session.userId)
-//        setRongImToken(session.imToken)
-//        if (session.userType != null) {
-//            setIsRegUser(!session.userType.equals(BusiConstant.UserType.Visitor))
-//        } else {
-//            setIsRegUser(false)
-//        }
-//        val agree = if (session.agreeUp) 1 else 0
-//        setAgreeUp(agree)
-//        setNickName(session.nickname)
-//        setUserType(session.userType)
-//        setPicId(session.headPic)
-//        setPushPermis(session.hasPushPermis)
-//        newSession = session
-//    }
+    private var REG_USER = "REG_USER"
+
+    fun setSession(session: Session) {
+        if (session == null) {
+            return
+        }
+        SessionManager.isCheckSession = true
+        setSessionId(session.sessionId)
+        setUserId(session.userId)
+        setNickName(session.nickname)
+        setHeaderPic(session.headPic)
+        setUserType(session.userType)
+        setAgoraToken(session.voiceToken)
+        setNewUser(session.newUser)
+        setRegComplete(session.regComplete)
+        setRongImToken(session.imToken)
+    }
 
 //    //与deleteSession合并 不再单独调用
 //    private fun clearSession() {
@@ -51,13 +63,51 @@ object SessionUtils {
 //        newSession = null
 //    }
 
-    fun getPushPermis(): String {
-        return SharedPreferencesUtils.getString(PUSH_PERMIS, "")
+
+    /**
+     * 保存头像
+     */
+    fun setHeaderPic(headerPic : String){
+        SharedPreferencesUtils.commitString(HEAD_PIC,headerPic)
     }
 
-    fun setPushPermis(pushPermis: String) {
-        SharedPreferencesUtils.commitString(PUSH_PERMIS, pushPermis)
+    fun getHeaderPic() = SharedPreferencesUtils.getString(HEAD_PIC,"")
+
+    /**
+     * 保存用户类型
+     */
+    fun setUserType(userType : String){
+        SharedPreferencesUtils.commitString(USER_TYPE,userType)
     }
+
+    fun getUserType() = SharedPreferencesUtils.getString(USER_TYPE,"")
+
+    /**
+     * 设置声网token
+     */
+    fun setAgoraToken(agoraToken : String){
+        SharedPreferencesUtils.commitString(VOICE_TOKEN,agoraToken)
+    }
+
+    fun getAgoraToken() = SharedPreferencesUtils.getString(VOICE_TOKEN,"")
+
+    /**
+     * 设置是否是新用户
+     */
+    fun setNewUser(newUser : Boolean){
+        SharedPreferencesUtils.commitBoolean(NEW_USER,newUser)
+    }
+
+    fun getNewUser() = SharedPreferencesUtils.getBoolean(NEW_USER,false)
+
+    /**
+     * 设置数据是否完整
+     */
+    fun setRegComplete(complete : Boolean){
+        SharedPreferencesUtils.commitBoolean(REG_COMPLETE,complete)
+    }
+
+    fun getRegComplete() = SharedPreferencesUtils.getBoolean(REG_COMPLETE,false)
 
 
     fun getSessionId(): String {
@@ -69,12 +119,12 @@ object SessionUtils {
         SharedPreferencesUtils.commitString(SESSION_ID, sessionId)
     }
 
-    fun getUserId(): Int {
-        return SharedPreferencesUtils.getInt(USER_ID, 0)
+    fun getUserId(): Long {
+        return SharedPreferencesUtils.getLong(USER_ID, 0)
     }
 
-    fun setUserId(userId: Int) {
-        SharedPreferencesUtils.commitInt(USER_ID, userId)
+    fun setUserId(userId: Long) {
+        SharedPreferencesUtils.commitLong(USER_ID, userId)
     }
 
     fun getNickName(): String {
@@ -95,16 +145,13 @@ object SessionUtils {
 
     fun getIsRegUser(): Boolean {
         //注册用户  同时  同意了隐私协议   才算可以正常使用用户
-        return SharedPreferencesUtils.getBoolean(IS_REG_USER, false) /*&& getAgreeUp() == 1*/
+        return SharedPreferencesUtils.getBoolean(REG_USER, false) /*&& getAgreeUp() == 1*/
     }
 
     fun setIsRegUser(isRegUser: Boolean) {
-        SharedPreferencesUtils.commitBoolean(IS_REG_USER, isRegUser)
+        SharedPreferencesUtils.commitBoolean(REG_USER, isRegUser)
     }
 
-    fun getIsRegUserNotCheckAgreeUp(): Boolean {
-        return SharedPreferencesUtils.getBoolean(IS_REG_USER, false)
-    }
 //
 //
 //    //保存Session

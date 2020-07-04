@@ -9,4 +9,30 @@ package com.julun.huanque.common.bean.forms
 /**
  * 手机号登录的form
  */
-class MobileLoginForm(var mobile: String = "", var code: String = "", var programId: Int? = null, var deviceId: String? = null)
+class MobileLoginForm(var mobile: String = "", var code: String = "", var programId: Int? = null, var shuMeiDeviceId: String? = null)
+
+/**
+ * 更新基础数据的form
+ */
+class UpdateInformationForm(
+    var nickname: String? = null,
+    var birthday: String? = null,
+    var sexType: String? = null,
+    var mySign: String? = null,
+    var height: Int? = null,
+    var weight: Int? = null,
+    var jobId: Int? = null,
+    //邀请码
+    var invitationCode: String? = null
+)
+
+/**
+ * 获取验证码form
+ */
+class GetValidCode {
+    var mobile: String = ""
+
+    constructor(phone: String) {
+        this.mobile = phone
+    }
+}

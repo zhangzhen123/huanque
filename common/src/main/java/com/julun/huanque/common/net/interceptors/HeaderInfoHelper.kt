@@ -100,9 +100,11 @@ object HeaderInfoHelper {
         if (iei.isNotEmpty()) {
             map["x"] = iei
         }
-        if (DeviceUtils.getUdid().isNotEmpty()) {
-            map["i"] = SharedPreferencesUtils.getString(ParamConstant.UUID, "").toUpperCase()
-        }
+        //todo
+//        if (DeviceUtils.getUdid().isNotEmpty()) {
+////            map["i"] = SharedPreferencesUtils.getString(ParamConstant.UUID, "").toUpperCase()
+//        }
+        map["i"] = "kdiqngiuhzmanigngudengui1836".toUpperCase()
         val operatorId = NetUtils.getOperatorId()
         val isi = when {
             operatorId.startsWith("46000") || operatorId.startsWith("46002") || operatorId.startsWith(

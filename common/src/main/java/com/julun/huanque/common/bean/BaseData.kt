@@ -6,7 +6,7 @@ open class BaseData {
     var msgId: String = ""
     var targetType: String? = null// Room、Broadcast、User
     var msgType: String = ""
-    var userIds: ArrayList<Int>? = null
+    var userIds: ArrayList<Long>? = null
     //房间类型
     var roomTypes: MutableList<String> = mutableListOf()
     var data: Any? = null
