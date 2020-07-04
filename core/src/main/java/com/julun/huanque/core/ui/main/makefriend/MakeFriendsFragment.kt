@@ -44,6 +44,11 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
         }
         mAdapter.setOnItemClickListener { _, _, position ->
             logger.info("点击了第几个index=$position")
+            val item=mAdapter.getItem(position)?:return@setOnItemClickListener
+            if(item.showType==HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION){
+                logger.info("跳转编辑资料页")
+            }
+
         }
         mAdapter.mOnItemAdapterListener = object : MakeFriendsAdapter.OnItemAdapterListener {
             override fun onPhotoClick(index: Int, position: Int, item: PhotoBean) {

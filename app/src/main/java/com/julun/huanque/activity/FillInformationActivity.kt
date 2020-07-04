@@ -1,5 +1,6 @@
 package com.julun.huanque.activity
 
+import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -29,7 +30,12 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.fragment.PersonalInformationProtectionFragment
+import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.viewmodel.FillInformationViewModel
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.config.PictureConfig
+import com.luck.picture.lib.config.PictureMimeType
 import kotlinx.android.synthetic.main.act_fill_information.*
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import java.text.SimpleDateFormat
@@ -66,6 +72,7 @@ class FillInformationActivity : BaseActivity() {
         mViewModel?.currentStatus?.value = FillInformationViewModel.FIRST
         //隐私协议弹窗
         mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
+        mViewModel?.currentStatus?.value = FillInformationViewModel.SECOND
     }
 
     /**
@@ -142,12 +149,102 @@ class FillInformationActivity : BaseActivity() {
             pvTime?.show(tv_bir)
         }
         iv_default_header.onClickNew {
-            //点击头像，模拟上传成功
-            mViewModel?.headerSuccess()
-            finish()
+            checkPermissions()
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        try {
+            if (requestCode == PictureConfig.CHOOSE_REQUEST) {
+                logger.info("收到图片")
+                val selectList = PictureSelector.obtainMultipleResult(data)
+                for (media in selectList) {
+                    Log.i("图片-----》", media.path)
+                }
+                if (selectList.size > 0) {
+                    val media = selectList[0]
+                    val path: String?
+                    path = if (media.isCut && !media.isCompressed) {
+                        // 裁剪过
+                        media.cutPath
+                    } else if (media.isCompressed || media.isCut && media.isCompressed) {
+                        // 压缩过,或者裁剪同时压缩过,以最终压缩过图片为准
+                        media.compressPath
+                    } else {
+                        media.path
+                    }
+                    logger.info("收到图片:" + path)
+                    //todo
+    //                uploadPhoto(path ?: return)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            logger.info("图片返回出错了")
+        }
+    }
+    private fun checkPermissions() {
+        val rxPermissions = RxPermissions(this)
+        rxPermissions
+            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .subscribe { permission ->
+                when {
+                    permission.granted -> {
+                        logger.info("获取权限成功")
+                        goToPictureSelectPager()
+                    }
+                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+                        ToastUtils.show("权限无法获取")
+                    else -> {
+                        logger.info("获取权限被永久拒绝")
+                        val message = "无法获取到相机/存储权限，请手动到设置中开启"
+                        ToastUtils.show(message)
+                    }
+                }
+
+            }
+    }
+
+    /**
+     * isCamera 是否是拍摄
+     */
+    private fun goToPictureSelectPager() {
+            PictureSelector.create(this)
+                .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+//                .theme(R.style.picture_me_style)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+                .minSelectNum(1)// 最小选择数量
+                .imageSpanCount(4)// 每行显示个数
+                .selectionMode(PictureConfig.SINGLE)
+                .previewImage(true)// 是否可预览图片
+                .isCamera(true)// 是否显示拍照按钮
+                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+                .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
+                //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
+                .enableCrop(true)// 是否裁剪
+                .compress(true)// 是否压缩
+                .synOrAsy(true)//同步true或异步false 压缩 默认同步
+                //.compressSavePath(getPath())//压缩图片保存地址
+                .glideOverride(120, 120)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+                .isGif(false)// 是否显示gif图片
+//                    .selectionMedia(selectList)// 是否传入已选图片
+                .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+                //.cropCompressQuality(90)// 裁剪压缩质量 默认100
+                .minimumCompressSize(100)// 小于100kb的图片不压缩
+                .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
+                .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
+                .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+                .isDragFrame(false)
+                .circleDimmedLayer(true)// 是否圆形裁剪
+                .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+                .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+                .rotateEnabled(false) // 裁剪是否可旋转图片
+                .scaleEnabled(true)// 裁剪是否可放大缩小图片
+                .forResult(PictureConfig.CHOOSE_REQUEST)
+
+        //结果回调onActivityResult code
+    }
     /**
      * 选中性别
      */

@@ -6,12 +6,14 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.R
+import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.rnlib.RNPageActivity
 import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.android.synthetic.main.activity_test.*
+import org.jetbrains.anko.startActivity
 
 /**
  *
@@ -57,6 +59,10 @@ class TestActivity : BaseActivity() {
         crash.onClickNew {
             CrashReport.testJavaCrash();
 //            "kjhd".toInt()
+        }
+        login.onClickNew {
+            startActivity<LoginActivity>()
+            finish()
         }
 
 

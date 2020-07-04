@@ -73,10 +73,10 @@ suspend fun BaseViewModel.request(
  */
 suspend fun <T> BaseViewModel.requestBack(
     block: SBlock<Root<T>>,
-    error: suspend (t: Throwable) -> T,
+    error: SNError? = null,
     final: SNAction? = null,
     needLoadState: Boolean = false
-): T {
+): T? {
     if (needLoadState) {
         loadState.postValue(NetState(state = NetStateType.LOADING))
     }
@@ -91,11 +91,12 @@ suspend fun <T> BaseViewModel.requestBack(
             NetExceptionHandle.handleException(e, loadState)
         }
         e.printStackTrace()
-        return error.invoke(e)
+        error?.invoke(e)
 
     } finally {
         final?.invoke()
     }
+    return null
 }
 
 /**
