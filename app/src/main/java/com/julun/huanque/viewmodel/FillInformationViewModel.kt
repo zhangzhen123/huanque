@@ -2,6 +2,7 @@ package com.julun.huanque.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import java.util.*
 
 /**
  *@创建者   dong
@@ -19,5 +20,7 @@ class FillInformationViewModel : BaseViewModel() {
     }
 
     val currentStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
+    var birthdayData : Date? = null
 
 }

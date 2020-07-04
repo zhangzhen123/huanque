@@ -115,13 +115,18 @@ class FillInformationActivity : BaseActivity() {
     private fun showSex(male: Boolean) {
         iv_male.isSelected = male
         iv_female.isSelected = !male
+        judgeNextEnable()
     }
 
     /**
      * 判断下一步是否可用
      */
     private fun judgeNextEnable() {
+        val sexEnable = iv_male.isSelected || iv_female.isSelected
+        val nicknameEnable = et_nickname.text.toString().isNotEmpty()
+        val birEnable = mViewModel?.birthdayData != null
 
+        tv_next.isEnabled = sexEnable && nicknameEnable && birEnable
     }
 
     fun closeKeyBoard() {
@@ -161,8 +166,9 @@ class FillInformationActivity : BaseActivity() {
 //        endDate.set(2027, 2, 28)
 
         pvTime = TimePickerBuilder(this, OnTimeSelectListener { date, v ->
-            Toast.makeText(this, getTime(date), Toast.LENGTH_SHORT).show()
-            Log.i("pvTime", "onTimeSelect")
+            mViewModel?.birthdayData = date
+            tv_bir.text = getTime(date)
+            judgeNextEnable()
         })
             .setDate(selectedDate)
             .setRangDate(startDate, endDate)
