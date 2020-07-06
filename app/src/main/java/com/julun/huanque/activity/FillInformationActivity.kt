@@ -38,6 +38,7 @@ import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import kotlinx.android.synthetic.main.act_fill_information.*
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
+import org.jetbrains.anko.startActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -69,7 +70,7 @@ class FillInformationActivity : BaseActivity() {
         initViewModel()
         findViewById<TextView>(R.id.tvTitle).text = "消息设置"
         initTimePicker()
-        mViewModel?.currentStatus?.value = FillInformationViewModel.FIRST
+        mViewModel?.currentStatus?.value = FillInformationViewModel.SECOND
         //隐私协议弹窗
         mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
     }
@@ -108,6 +109,13 @@ class FillInformationActivity : BaseActivity() {
 
                     }
                 }
+            }
+        })
+
+        mViewModel?.uploadHeadState?.observe(this, Observer {
+            if (it != null) {
+                //todo  头像修改完成
+                startActivity<MainActivity>()
             }
         })
     }
@@ -149,9 +157,9 @@ class FillInformationActivity : BaseActivity() {
         }
         iv_default_header.onClickNew {
             //点击头像，模拟上传成功
-            mViewModel?.headerSuccess()
-            startActivity(Intent(this, LoginActivity::class.java))
-//            checkPermissions()
+//            mViewModel?.headerSuccess()
+//            startActivity(Intent(this, LoginActivity::class.java))
+            checkPermissions()
         }
     }
 
@@ -176,9 +184,8 @@ class FillInformationActivity : BaseActivity() {
                     } else {
                         media.path
                     }
-                    logger.info("收到图片:" + path)
-                    //todo
-                    //                uploadPhoto(path ?: return)
+                    logger.info("收到图片:$path")
+                    mViewModel?.uploadHead(path)
                 }
             }
         } catch (e: Exception) {
@@ -215,7 +222,7 @@ class FillInformationActivity : BaseActivity() {
     private fun goToPictureSelectPager() {
         PictureSelector.create(this)
             .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
-//                .theme(R.style.picture_me_style)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+            .theme(R.style.picture_me_style_single)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
             .minSelectNum(1)// 最小选择数量
             .imageSpanCount(4)// 每行显示个数
             .selectionMode(PictureConfig.SINGLE)

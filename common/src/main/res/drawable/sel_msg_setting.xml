@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@mipmap/status_msg_open" android:state_selected="true" />
-    <item android:drawable="@mipmap/status_msg_close" />
+    <item android:drawable="@mipmap/icon_switch_open_01" android:state_selected="true" />
+    <item android:drawable="@mipmap/icon_switch_close_01" />
 </selector>

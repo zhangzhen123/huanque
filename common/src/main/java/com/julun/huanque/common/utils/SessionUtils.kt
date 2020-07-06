@@ -1,9 +1,11 @@
 package com.julun.huanque.common.utils
 
 import com.julun.huanque.common.bean.beans.Session
-import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.manager.SessionManager
 
+/**
+ * 重要的信息和启动配参放在这里 不重要的参数放在[com.julun.huanque.common.helper.StorageHelper]中 以提高初始化效率
+ */
 object SessionUtils {
     private val SESSION_ID: String = "SESSION_ID"
 

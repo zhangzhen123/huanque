@@ -30,11 +30,11 @@ object PublishManager : RequestCaller {
 
     val service: PublishService by lazy { Requests.create(PublishService::class.java) }
 
-    val PUBLISH_SUCCESS = 2//发布成功
-    val PUBLISH_FAIL = -1//发布失败
-    val UPLOAD_FAIL = -2//上传文件失败
-    val PUBLISH_NONE = 0//初始状态
-    val PUBLISH_ING = 1//进行中
+    const val PUBLISH_SUCCESS = 2//发布成功
+    const val PUBLISH_FAIL = -1//发布失败
+    const val UPLOAD_FAIL = -2//上传文件失败
+    const val PUBLISH_NONE = 0//初始状态
+    const val PUBLISH_ING = 1//进行中
     var publish_state = PUBLISH_NONE //记录当前的发布状态
 
     val total = 100

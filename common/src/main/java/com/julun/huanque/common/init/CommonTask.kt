@@ -10,6 +10,7 @@ import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFact
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.svga.SVGAHelper
@@ -116,8 +117,8 @@ class FrescoTask : Task() {
     }
 }
 
-class SharedPreferencesTask : Task() {
+class OssTask : Task() {
     override fun run() {
-        SharedPreferencesUtils.init(mContext as Application)
+        OssUpLoadManager.initOss(mContext)
     }
 }

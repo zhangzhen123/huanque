@@ -43,6 +43,7 @@ class CommonInit {
     }
 
     private var urlTest = "http://office.katule.cn:9205/"
+
     //保存的全局application
     private lateinit var mContext: Application
     var inSDK = true
@@ -56,6 +57,7 @@ class CommonInit {
 //    fun getCommonListener() = libraryListener
     //当前处于活动状态的Activity
     private var mActivityReference: WeakReference<Activity>? = null
+
     //判断app是否在前台
     var isAppOnForeground: Boolean = false
 
@@ -252,12 +254,12 @@ class CommonInit {
         }
         TaskDispatcher.init(application)
         taskDispatcher = TaskDispatcher.createInstance()
-        taskDispatcher
-                ?.addTask(ARouterTask())
-                ?.addTask(FrescoTask())
-                ?.addTask(RongTask())
-//                ?.addTask(SharedPreferencesTask())
-                ?.addTask(SVGATask())
+        taskDispatcher?.addTask(ARouterTask())
+            ?.addTask(FrescoTask())
+            ?.addTask(RongTask())
+            ?.addTask(SVGATask())
+            ?.addTask(OssTask())
+
         if (inSDK) {
             taskDispatcher?.start()
             taskDispatcher?.await()

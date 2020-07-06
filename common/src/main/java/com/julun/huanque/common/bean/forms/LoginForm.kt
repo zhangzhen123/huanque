@@ -47,3 +47,5 @@ class GetValidCode {
  * @param agreementCode 协议代码
  */
 class AgreementResultForm(var result: String = "True", var agreementCode: String = "")
+
+class UpdateHeadForm(var headPic: String )

@@ -4,10 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.events.ImformationCompleteBean
+import com.julun.huanque.common.bean.forms.UpdateHeadForm
 import com.julun.huanque.common.bean.forms.UpdateInformationForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -45,6 +48,11 @@ class FillInformationViewModel : BaseViewModel() {
     var birthdayData: Date? = null
 
     /**
+     * 上传头像回调  为Null代表失败
+     */
+    val uploadHeadState: MutableLiveData<String?> by lazy { MutableLiveData<String?>() }
+
+    /**
      * @param sex 性别
      * @param bir 生日
      * @param nickname 昵称
@@ -54,7 +62,14 @@ class FillInformationViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 updateInformationState.value = true
-                userService.updateInformation(UpdateInformationForm(sexType = sex, birthday = bir, nickname = nickname, invitationCode = code))
+                userService.updateInformation(
+                    UpdateInformationForm(
+                        sexType = sex,
+                        birthday = bir,
+                        nickname = nickname,
+                        invitationCode = code
+                    )
+                )
                     .dataConvert()
                 updateInformationState.value = false
                 SessionUtils.setNickName(nickname)
@@ -80,6 +95,32 @@ class FillInformationViewModel : BaseViewModel() {
         SessionUtils.setRegComplete(true)
         //上传成功
 //        EventBus.getDefault().post(completeBean)
+    }
+
+    /**
+     * 上传头像
+     */
+    fun uploadHead(path: String) {
+        OssUpLoadManager.uploadImages(arrayListOf(path), OssUpLoadManager.HEAD_POSITION) { code, list ->
+            if (code == OssUpLoadManager.CODE_SUCCESS) {
+                logger("头像上传oss成功：${list}")
+                val headPic = list?.firstOrNull()
+                if (headPic != null) {
+                    viewModelScope.launch {
+                        request({
+                            userService.updateHeadPic(UpdateHeadForm(headPic))
+                            logger("头像修改通知后台成功：${list}")
+                            uploadHeadState.value = headPic
+                        }, error = {
+                            uploadHeadState.value = null
+                        })
+                    }
+                }
+
+            } else {
+                uploadHeadState.value = null
+            }
+        }
     }
 
 }
