@@ -15,6 +15,7 @@ import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.Session
 import com.julun.huanque.common.bean.forms.GetValidCode
 import com.julun.huanque.common.bean.forms.MobileLoginForm
+import com.julun.huanque.common.bean.forms.MobileQuickForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.MsgTag.TAG
 import com.julun.huanque.common.init.CommonInit
@@ -258,8 +259,12 @@ class PhoneNumLoginViewModel : BaseViewModel() {
 //            request({ val result = userService.mobileLogin(MobileLoginForm(phoneNum, code)).dataConvert() })
             request({
                 val result = userService.mobileLogin(MobileLoginForm(phoneNum, code, shuMeiDeviceId = SmAntiFraud.getDeviceId() ?: "")).dataConvert()
-                SessionUtils.getIsRegUser()
+                SessionUtils.setSession(result)
                 loginData.postValue(result)
+            }, {
+                if (it is ResponseError) {
+                    ToastUtils.show(it.busiMessage)
+                }
             })
         }
     }

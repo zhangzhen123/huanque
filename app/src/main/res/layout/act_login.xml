@@ -37,9 +37,9 @@
         android:layout_height="40dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="275dp"
         android:background="@drawable/bg_phone_number_fast_login"
-        app:layout_constraintBottom_toTopOf="@id/view_weixin"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 

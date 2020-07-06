@@ -46,6 +46,12 @@ interface UserService {
     suspend fun mobileLogin(@Body form: MobileLoginForm) : Root<Session>
 
     /**
+     * 手机号一键登录
+     */
+    @POST("user/acct/login/mobileQuick")
+    suspend fun mobileQuick(@Body form: MobileQuickForm) : Root<Session>
+
+    /**
      * 更新用户数据
      */
     @POST("user/acct/info/update")
@@ -62,5 +68,6 @@ interface UserService {
      */
     @POST("user/acct/info/agreement")
     suspend fun agreement(@Body form : AgreementResultForm) : Root<Void>
+
 
 }
