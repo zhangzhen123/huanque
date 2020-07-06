@@ -1,5 +1,6 @@
 package com.julun.huanque.fragment
 
+import android.content.Intent
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
@@ -7,12 +8,18 @@ import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.View
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.julun.huanque.R
+import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.constant.XYCode
+import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.suger.onClick
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.viewmodel.PersonalInformationProtectionViewModel
 import kotlinx.android.synthetic.main.fragment_personal_information_protection.*
 
 /**
@@ -21,6 +28,7 @@ import kotlinx.android.synthetic.main.fragment_personal_information_protection.*
  *@描述 个人信息保护指引弹窗
  */
 class PersonalInformationProtectionFragment : BaseDialogFragment() {
+    private val mViewModel: PersonalInformationProtectionViewModel by activityViewModels()
     override fun getLayoutId() = R.layout.fragment_personal_information_protection
 
     override fun initViews() {
@@ -38,15 +46,31 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
         tv_content.movementMethod = LinkMovementMethod.getInstance()
         tv_content.highlightColor = GlobalUtils.getColor(android.R.color.transparent)
         tv_content.text = style
+        initViewModel()
     }
 
     private fun initListener() {
         tv_agree.onClickNew {
+            mViewModel.agree(XYCode.YHYSXY)
+        }
+        tv_exit.onClickNew {
+            activity?.let { act ->
+                act.startActivity(Intent(act, LoginActivity::class.java))
+            }
             dismiss()
         }
-        tv_exit.onClickNew { dismiss() }
     }
 
+
+    private fun initViewModel() {
+        mViewModel.agreeState.observe(this, Observer {
+            if (it == true) {
+                //已经同意协议
+                mViewModel.agreeState.value = null
+                dismiss()
+            }
+        })
+    }
 
     override fun onStart() {
         super.onStart()

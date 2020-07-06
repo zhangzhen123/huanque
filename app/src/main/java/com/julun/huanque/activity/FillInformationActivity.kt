@@ -29,6 +29,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.fragment.PersonalInformationProtectionFragment
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.viewmodel.FillInformationViewModel
@@ -56,6 +57,7 @@ class FillInformationActivity : BaseActivity() {
     }
 
     val loadingDialog: CommonLoadingDialog by lazy { CommonLoadingDialog.newInstance("") }
+    private val mPersonalInformationProtectionFragment = PersonalInformationProtectionFragment()
 
     private var mViewModel: FillInformationViewModel? = null
 
@@ -67,7 +69,9 @@ class FillInformationActivity : BaseActivity() {
         initViewModel()
         findViewById<TextView>(R.id.tvTitle).text = "消息设置"
         initTimePicker()
-        mViewModel?.currentStatus?.value = FillInformationViewModel.SECOND
+        mViewModel?.currentStatus?.value = FillInformationViewModel.FIRST
+        //隐私协议弹窗
+        mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
     }
 
     /**
@@ -145,7 +149,9 @@ class FillInformationActivity : BaseActivity() {
         }
         iv_default_header.onClickNew {
             //点击头像，模拟上传成功
-            checkPermissions()
+            mViewModel?.headerSuccess()
+            startActivity(Intent(this, LoginActivity::class.java))
+//            checkPermissions()
         }
     }
 
@@ -172,7 +178,7 @@ class FillInformationActivity : BaseActivity() {
                     }
                     logger.info("收到图片:" + path)
                     //todo
-    //                uploadPhoto(path ?: return)
+                    //                uploadPhoto(path ?: return)
                 }
             }
         } catch (e: Exception) {
@@ -180,6 +186,7 @@ class FillInformationActivity : BaseActivity() {
             logger.info("图片返回出错了")
         }
     }
+
     private fun checkPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions
@@ -206,41 +213,42 @@ class FillInformationActivity : BaseActivity() {
      *
      */
     private fun goToPictureSelectPager() {
-            PictureSelector.create(this)
-                .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+        PictureSelector.create(this)
+            .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
 //                .theme(R.style.picture_me_style)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
-                .minSelectNum(1)// 最小选择数量
-                .imageSpanCount(4)// 每行显示个数
-                .selectionMode(PictureConfig.SINGLE)
-                .previewImage(true)// 是否可预览图片
-                .isCamera(true)// 是否显示拍照按钮
-                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
-                .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
-                //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
-                .enableCrop(true)// 是否裁剪
-                .compress(true)// 是否压缩
-                .synOrAsy(true)//同步true或异步false 压缩 默认同步
-                //.compressSavePath(getPath())//压缩图片保存地址
-                .glideOverride(120, 120)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
-                .isGif(false)// 是否显示gif图片
+            .minSelectNum(1)// 最小选择数量
+            .imageSpanCount(4)// 每行显示个数
+            .selectionMode(PictureConfig.SINGLE)
+            .previewImage(true)// 是否可预览图片
+            .isCamera(true)// 是否显示拍照按钮
+            .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+            .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
+            //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
+            .enableCrop(true)// 是否裁剪
+            .compress(true)// 是否压缩
+            .synOrAsy(true)//同步true或异步false 压缩 默认同步
+            //.compressSavePath(getPath())//压缩图片保存地址
+            .glideOverride(120, 120)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+            .isGif(false)// 是否显示gif图片
 //                    .selectionMedia(selectList)// 是否传入已选图片
-                .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
-                //.cropCompressQuality(90)// 裁剪压缩质量 默认100
-                .minimumCompressSize(100)// 小于100kb的图片不压缩
-                .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
-                .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
-                .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
-                .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
-                .isDragFrame(false)
-                .circleDimmedLayer(true)// 是否圆形裁剪
-                .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
-                .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
-                .rotateEnabled(false) // 裁剪是否可旋转图片
-                .scaleEnabled(true)// 裁剪是否可放大缩小图片
-                .forResult(PictureConfig.CHOOSE_REQUEST)
+            .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+            //.cropCompressQuality(90)// 裁剪压缩质量 默认100
+            .minimumCompressSize(100)// 小于100kb的图片不压缩
+            .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
+            .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+            .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
+            .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+            .isDragFrame(false)
+            .circleDimmedLayer(true)// 是否圆形裁剪
+            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+            .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+            .rotateEnabled(false) // 裁剪是否可旋转图片
+            .scaleEnabled(true)// 裁剪是否可放大缩小图片
+            .forResult(PictureConfig.CHOOSE_REQUEST)
 
         //结果回调onActivityResult code
     }
+
     /**
      * 选中性别
      */
@@ -340,4 +348,6 @@ class FillInformationActivity : BaseActivity() {
         val format = SimpleDateFormat("yyyy-MM-dd")
         return format.format(date)
     }
+
+
 }

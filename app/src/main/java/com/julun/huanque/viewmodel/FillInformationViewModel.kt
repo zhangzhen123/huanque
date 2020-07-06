@@ -9,9 +9,11 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.net.service.UserService
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -33,7 +35,7 @@ class FillInformationViewModel : BaseViewModel() {
 
     val currentStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
-    var completeBean = ImformationCompleteBean()
+//    var completeBean = ImformationCompleteBean()
 
     /**
      * 上传昵称之类的 状态
@@ -55,17 +57,29 @@ class FillInformationViewModel : BaseViewModel() {
                 userService.updateInformation(UpdateInformationForm(sexType = sex, birthday = bir, nickname = nickname, invitationCode = code))
                     .dataConvert()
                 updateInformationState.value = false
-                completeBean.sextype = sex
-                completeBean.birthday = bir
-                completeBean.nickname = nickname
+                SessionUtils.setNickName(nickname)
+//                completeBean.sextype = sex
+//                completeBean.birthday = bir
+//                completeBean.nickname = nickname
                 currentStatus.value = SECOND
             }, {
                 updateInformationState.value = false
-                if(it is ResponseError){
+                if (it is ResponseError) {
                     ToastUtils.show(it.busiMessage)
                 }
             }, {})
         }
+    }
+
+    /**
+     * 模拟图片上传成功
+     */
+    fun headerSuccess() {
+//        completeBean.headerPic = "user/head/220229a56ec7841b71d8c226d1e17206.jpg"
+        SessionUtils.setHeaderPic("user/head/220229a56ec7841b71d8c226d1e17206.jpg")
+        SessionUtils.setRegComplete(true)
+        //上传成功
+//        EventBus.getDefault().post(completeBean)
     }
 
 }

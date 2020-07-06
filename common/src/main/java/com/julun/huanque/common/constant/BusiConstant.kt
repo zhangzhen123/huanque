@@ -259,4 +259,12 @@ object RealNameType {
     const val TYPE_FAIL = "fail"
 }
 
+/**
+ * 协议相关的code
+ */
+object XYCode {
+    //用户隐私协议
+    const val YHYSXY = "YHYSXY"
+}
+
 

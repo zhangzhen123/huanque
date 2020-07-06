@@ -10,8 +10,8 @@ import cn.jiguang.verifysdk.api.JVerificationInterface
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.fragment.PersonalInformationProtectionFragment
 import kotlinx.android.synthetic.main.act_login.*
 
 /**
@@ -29,14 +29,11 @@ class LoginActivity : BaseActivity() {
     //预取号成功标识
     private var mPreviewSuccess = false
 
-    private val mPersonalInformationProtectionFragment = PersonalInformationProtectionFragment()
 
     override fun getLayoutId() = R.layout.act_login
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initFastLogin()
-        //隐私协议弹窗
-//        mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
     }
 
     override fun initEvents(rootView: View) {
@@ -82,5 +79,17 @@ class LoginActivity : BaseActivity() {
         }
     }
 
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
+            //注册成功，跳转首页
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        } else {
+            SessionUtils.clearSession()
+        }
+        finish()
+    }
 
 }
