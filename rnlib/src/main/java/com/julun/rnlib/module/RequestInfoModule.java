@@ -7,18 +7,11 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.julun.huanque.common.constant.BusiConstant;
-import com.julun.huanque.common.helper.StringHelper;
 import com.julun.huanque.common.init.CommonInit;
-import com.julun.huanque.common.net.interceptors.HeaderInfoHelper;
 import com.julun.rnlib.RnManager;
-
-import java.util.Date;
-import java.util.Map;
-import java.util.function.BiConsumer;
 
 public class RequestInfoModule extends ReactContextBaseJavaModule {
     private static final String E_LAYOUT_ERROR = "E_LAYOUT_ERROR";
@@ -59,7 +52,12 @@ public class RequestInfoModule extends ReactContextBaseJavaModule {
             promise.reject(E_LAYOUT_ERROR, e);
         }
     }
+    @ReactMethod
+    public void uploadPhotos(int max,Promise promise){
+        RnManager.INSTANCE.uploadPhotos(max);
+        RnManager.promiseMap.put(RnManager.uploadPhotos,promise);
 
+    }
     @ReactMethod
     public void  sessionPast() {
         RnManager.INSTANCE.closeRnPager();

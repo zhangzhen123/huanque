@@ -1,10 +1,10 @@
 package com.julun.rnlib
 
 import android.app.Application
-import androidx.lifecycle.Lifecycle
 import com.BV.LinearGradient.LinearGradientPackage
 import com.facebook.react.ReactInstanceManager
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.LifecycleState
 import com.facebook.react.shell.MainReactPackage
@@ -18,10 +18,14 @@ import com.zmxv.RNSound.RNSoundPackage
 import org.reactnative.maskedview.RNCMaskedViewPackage
 
 object RnManager {
-
+    //上传方法的标识
+    const val uploadPhotos="uploadPhotos"
     private var mReactInstanceManager: ReactInstanceManager? = null
 
-    var curActivity:RNPageActivity?=null
+    var curActivity: RNPageActivity? = null
+
+    var promiseMap: MutableMap<String, Promise> = mutableMapOf()
+
     /**
      * 创建ReactInstanceManager 全局复用唯一
      */
@@ -49,16 +53,23 @@ object RnManager {
 
     }
 
-    fun getHeaderInfo():WritableMap{
+    fun getHeaderInfo(): WritableMap {
         val writableMap = Arguments.createMap()
-        val mapInfo=HeaderInfoHelper.getMobileDeviceInfo()
+        val mapInfo = HeaderInfoHelper.getMobileDeviceInfo()
         mapInfo.iterator().forEach { value ->
-            writableMap.putString(value.key,value.value)
+            writableMap.putString(value.key, value.value)
         }
         return writableMap
     }
 
-    fun closeRnPager(){
+    fun closeRnPager() {
         curActivity?.finish()
+    }
+
+    /**
+     * 打开上传图片功能
+     */
+    fun uploadPhotos(max: Int) {
+        curActivity?.openPhotoSelect(max)
     }
 }
