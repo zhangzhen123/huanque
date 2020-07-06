@@ -203,7 +203,7 @@ class FillInformationActivity : BaseActivity() {
     }
 
     /**
-     * isCamera 是否是拍摄
+     *
      */
     private fun goToPictureSelectPager() {
             PictureSelector.create(this)
