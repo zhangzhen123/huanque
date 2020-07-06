@@ -43,4 +43,5 @@ web
 !/node_modules/react-native-safe-area-context
 
 !/node_modules/@react-native-community
+!/node_modules/react-native-sound/android
 
