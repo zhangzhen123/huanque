@@ -68,7 +68,22 @@ class MakeFriendsViewModel : BaseViewModel() {
                     list.add(HomeItemBean(HomeItemBean.HEADER,headNavigateInfo))
 
                     homeListData.list.forEach{
+                        //todo test 图片测试
+                        val test1=it.copy()
+                        test1.coverPicList= arrayListOf()
+                        test1.introduceVoice=""
+                        list.add(HomeItemBean(HomeItemBean.NORMAL, test1))
+                        val test2=it.copy()
+                        test2.coverPicList= arrayListOf()
+                        list.add(HomeItemBean(HomeItemBean.NORMAL, test2))
+                        val listPic= arrayListOf<String>()
+                        repeat(4){
+                            listPic.add("user/head/20000008/bf058b70-22e7-41db-a72b-a42701a3ddf8.jpg")
+                        }
+                        it.coverPicList=listPic
+                        //todo 上面都是测试代码
                         list.add(HomeItemBean(HomeItemBean.NORMAL, it))
+
                     }
                     list.add(HomeItemBean(HomeItemBean.GUIDE_TO_ADD_TAG, Any()))
                     list.add(HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, Any()))

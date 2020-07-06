@@ -1,12 +1,15 @@
 package com.julun.rnlib
 
 import android.app.Application
-import android.content.Context
+import androidx.lifecycle.Lifecycle
 import com.BV.LinearGradient.LinearGradientPackage
 import com.facebook.react.ReactInstanceManager
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.LifecycleState
 import com.facebook.react.shell.MainReactPackage
-import com.julun.rnlib.reactpackage.OpenActivityReactPackage
+import com.julun.huanque.common.net.interceptors.HeaderInfoHelper
+import com.julun.rnlib.reactpackage.OpenPageReactPackage
 import com.julun.rnlib.reactpackage.RequestInfoReactPackage
 import com.julun.rnlib.reactpackage.ToastReactPackage
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage
@@ -18,6 +21,7 @@ object RnManager {
 
     private var mReactInstanceManager: ReactInstanceManager? = null
 
+    var curActivity:RNPageActivity?=null
     /**
      * 创建ReactInstanceManager 全局复用唯一
      */
@@ -31,7 +35,7 @@ object RnManager {
                 .addPackage(LinearGradientPackage()) // 请求头数据：需放到application中
                 .addPackage(RequestInfoReactPackage())
                 .addPackage(ToastReactPackage())
-                .addPackage(OpenActivityReactPackage())
+                .addPackage(OpenPageReactPackage())
                 .addPackage(RNGestureHandlerPackage())
                 .addPackage(SafeAreaContextPackage())
                 .addPackage(RNCMaskedViewPackage())
@@ -43,5 +47,18 @@ object RnManager {
         }
         return mReactInstanceManager!!
 
+    }
+
+    fun getHeaderInfo():WritableMap{
+        val writableMap = Arguments.createMap()
+        val mapInfo=HeaderInfoHelper.getMobileDeviceInfo()
+        mapInfo.iterator().forEach { value ->
+            writableMap.putString(value.key,value.value)
+        }
+        return writableMap
+    }
+
+    fun closeRnPager(){
+        curActivity?.finish()
     }
 }

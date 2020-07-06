@@ -4,18 +4,18 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.julun.rnlib.module.OpenActivityModule;
+import com.julun.rnlib.module.OpenPageModule;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class OpenActivityReactPackage implements ReactPackage {
+public class OpenPageReactPackage implements ReactPackage {
 
     @Override
     public List<NativeModule> createNativeModules(
             ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(new OpenActivityModule(reactContext));
+        return Arrays.<NativeModule>asList(new OpenPageModule(reactContext));
     }
 
     @Override

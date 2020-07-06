@@ -12,7 +12,6 @@ import com.alibaba.sdk.android.oss.model.PutObjectResult
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.utils.FileUtils
-import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.VideoUtils
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -33,13 +32,9 @@ object OssUpLoadManager {
     //OSS的上传下载
     private lateinit var mService: OssService
     private lateinit var mVideoService: OssService //视频上传位置
-    const val POST_POSITION = "lm/user/post"//动态上传的位置
     private const val VIDEO_THUMBNAIL_POSITION = "lm/user/video"//视频缩略图上传的位置
     private const val VIDEO_POSITION = "lm"//视频上传的位置
-//    头像路径：user/head
-//    封面路径：user/cover
-//    举报路径：user/report
-//    语音文件：user/voice
+
     const val REPORT_USER_POSITION = "user/report"// 举报用户的位置
     const val COVER_POSITION = "user/cover"// 封面路径
     const val VOICE_POSITION = "user/voice"// 语音文件
@@ -79,9 +74,9 @@ object OssUpLoadManager {
         val map = mutableMapOf<String, String>()
         observable.flatMap { file ->
             logger.info("开始任务队列：${Thread.currentThread()}")
-            Observable.just(file).observeOn(Schedulers.computation()).map { f->
+            Observable.just(file).observeOn(Schedulers.computation()).map { f ->
                 logger.info("当前的文件：" + f + "当前的线程：${Thread.currentThread()}")
-                val name = "$position/${SessionUtils.getUserId()}/${StringHelper.uuid()}.${FileUtils.getFilextension(f)}"
+                val name = "$position/${StringHelper.uuid()}.${FileUtils.getFilextension(f)}"
                 var curresult = ""
                 val success = mService.syncPutImage(name, f, null)
                 if (success) {
@@ -148,7 +143,7 @@ object OssUpLoadManager {
                 Observable.just(file).observeOn(Schedulers.io()).map { f ->
                     logger.info("当前的文件：$f")
                     val name =
-                        "$VIDEO_THUMBNAIL_POSITION/${SessionUtils.getUserId()}/${StringHelper.uuid()}.${FileUtils.getFilextension(
+                        "$VIDEO_THUMBNAIL_POSITION/${StringHelper.uuid()}.${FileUtils.getFilextension(
                             file
                         )}"
                     var curResult = ""
@@ -163,8 +158,7 @@ object OssUpLoadManager {
                 Observable.just(file).observeOn(Schedulers.io()).map { f ->
                     logger.info("当前的文件：$f")
 //                    val name = "$VIDEO_POSITION/${SessionUtils.getUserId()}/${StringHelper.uuid()}.${FileUtils.getFilextension(file)}"
-                    val name =
-                        "$VIDEO_POSITION/${SessionUtils.getUserId()}/${StringHelper.uuid()}.${FileUtils.getFilextension(file)}"
+                    val name = "$VIDEO_POSITION/${StringHelper.uuid()}.${FileUtils.getFilextension(file)}"
                     var curResult = ""
                     val success = mVideoService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
                         override fun onProgress(request: PutObjectRequest?, currentSize: Long, totalSize: Long) {

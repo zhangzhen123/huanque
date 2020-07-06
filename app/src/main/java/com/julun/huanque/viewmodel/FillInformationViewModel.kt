@@ -110,6 +110,7 @@ class FillInformationViewModel : BaseViewModel() {
                         request({
                             userService.updateHeadPic(UpdateHeadForm(headPic))
                             logger("头像修改通知后台成功：${list}")
+                            headerSuccess()
                             uploadHeadState.value = headPic
                         }, error = {
                             uploadHeadState.value = null

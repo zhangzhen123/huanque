@@ -39,6 +39,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         super.onCreate(savedInstanceState)
         mReactRootView = ReactRootView(this)
         mReactInstanceManager = RnManager.createReactInstanceManager(application)
+        RnManager.curActivity=this
         val intent = intent
         val moduleName = intent.getStringExtra(RnConstant.MODULE_NAME)
         val initialProperties = intent.getBundleExtra(RnConstant.INITIAL_PROPERTIES)
@@ -98,6 +99,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         super.onDestroy()
         mReactInstanceManager?.onHostDestroy(this)
         mReactRootView.unmountReactApplication()
+        RnManager.curActivity=null
     }
 
 

@@ -3,17 +3,20 @@ package com.julun.huanque.core.ui.main.makefriend
 import android.graphics.Color
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
 import org.jetbrains.anko.textColor
@@ -70,33 +73,52 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         sex.textColor = Color.parseColor("#9BE2FF")
                     }
                 }
-                if (list.isEmpty()) {
-                    holder.setGone(R.id.ll_audio, true).setGone(R.id.rv_photos, false)
-                } else {
-                    val rv = holder.getView<RecyclerView>(R.id.rv_photos)
-                    rv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-                    holder.setGone(R.id.ll_audio, false)
-                    rv.show()
-                    if (rv.itemDecorationCount <= 0) {
-                        rv.addItemDecoration(HorizontalItemDecoration(dp2px(5)))
-                    }
-                    val mPhotosAdapter: PhotosAdapter
-                    if (rv.adapter != null) {
-                        mPhotosAdapter = rv.adapter as PhotosAdapter
-                        mPhotosAdapter.testPosition(holder.adapterPosition)
-                    } else {
-                        mPhotosAdapter = PhotosAdapter()
-                        rv.adapter = mPhotosAdapter
-                    }
-                    mPhotosAdapter.replaceData(list)
-                    mPhotosAdapter.setOnItemClickListener { _, _, position ->
-                        val childItem = mPhotosAdapter.getItem(position) ?: return@setOnItemClickListener
-                        mOnItemAdapterListener?.onPhotoClick(holder.layoutPosition, position, childItem)
-                    }
+                when {
+                    list.isNotEmpty() -> {
+                        val rv = holder.getView<RecyclerView>(R.id.rv_photos)
+                        rv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+                        holder.setGone(R.id.ll_audio, false).setGone(R.id.rv_tags, false)
+                        rv.show()
+                        if (rv.itemDecorationCount <= 0) {
+                            rv.addItemDecoration(HorizontalItemDecoration(dp2px(5)))
+                        }
+                        val mPhotosAdapter: PhotosAdapter
+                        if (rv.adapter != null) {
+                            mPhotosAdapter = rv.adapter as PhotosAdapter
+                            mPhotosAdapter.testPosition(holder.adapterPosition)
+                        } else {
+                            mPhotosAdapter = PhotosAdapter()
+                            rv.adapter = mPhotosAdapter
+                        }
+                        mPhotosAdapter.replaceData(list)
+                        mPhotosAdapter.setOnItemClickListener { _, _, position ->
+                            val childItem = mPhotosAdapter.getItem(position) ?: return@setOnItemClickListener
+                            mOnItemAdapterListener?.onPhotoClick(holder.layoutPosition, position, childItem)
+                        }
 
-                    holder.addOnClickListener(R.id.btn_action)
-                    holder.addOnClickListener(R.id.iv_audio_play)
+
+                    }
+                    bean.introduceVoice.isNotEmpty() -> {
+                        holder.setGone(R.id.ll_audio, true).setGone(R.id.rv_photos, false).setGone(R.id.rv_tags, false)
+                        holder.setText(R.id.tv_audio_time, "${bean.introduceVoiceLength}s")
+                        holder.addOnClickListener(R.id.iv_audio_play)
+                    }
+                    bean.tagList.isNotEmpty() -> {
+                        holder.setGone(R.id.ll_audio, false).setGone(R.id.rv_photos, false).setGone(R.id.rv_tags, true)
+                        val tagRv = holder.getView<RecyclerView>(R.id.rv_tags)
+                        tagRv.layoutManager = FlexboxLayoutManager(mContext)
+                        val mTagAdapter: TagAdapter
+                        if (tagRv.adapter != null) {
+                            mTagAdapter = tagRv.adapter as TagAdapter
+                        } else {
+                            mTagAdapter = TagAdapter()
+                            tagRv.adapter = mTagAdapter
+                        }
+                        mTagAdapter.replaceData(bean.tagList)
+
+                    }
                 }
+                holder.addOnClickListener(R.id.btn_action)
 
             }
             HomeItemBean.HEADER -> {
@@ -178,6 +200,6 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
     interface OnItemAdapterListener {
         fun onPhotoClick(index: Int, position: Int, item: PhotoBean)
-        fun onHeadClick( item: HeadModule?)
+        fun onHeadClick(item: HeadModule?)
     }
 }
