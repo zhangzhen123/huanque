@@ -23,7 +23,7 @@
         android:layout_centerVertical="true"
         android:padding="10dp"
         android:scaleType="fitStart"
-        android:src="@mipmap/icon_back"
+        android:src="@mipmap/icon_back_black_01"
         app:layout_constraintBottom_toBottomOf="@id/view_top"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@id/view_top" />

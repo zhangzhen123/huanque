@@ -15,7 +15,7 @@
         android:layout_centerVertical="true"
         android:padding="10dp"
         android:scaleType="fitStart"
-        android:src="@mipmap/icon_back" />
+        android:src="@mipmap/icon_back_black_01" />
 
     <TextView
         android:id="@+id/leftText"

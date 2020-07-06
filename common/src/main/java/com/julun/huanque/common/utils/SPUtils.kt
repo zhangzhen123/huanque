@@ -2,7 +2,6 @@ package com.julun.huanque.common.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import com.julun.huanque.common.constant.SPType
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit

@@ -63,4 +63,9 @@ interface UserService {
     @POST("user/acct/info/agreement")
     suspend fun agreement(@Body form : AgreementResultForm) : Root<Void>
 
+    /**
+     * 修改头像
+     */
+    @POST("user/acct/info/updateHeadPic")
+    suspend fun updateHeadPic(@Body form : UpdateHeadForm) : Root<Void>
 }

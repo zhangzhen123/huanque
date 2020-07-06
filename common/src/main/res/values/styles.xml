@@ -26,23 +26,6 @@
         <item name="android:windowBackground">@null</item>
     </style>
 
-    <style name="InfoLine">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:background">@color/white</item>
-    </style>
-
-    <style name="InfoLine.paddingTBL" parent="InfoLine">
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingRight">15dp</item>
-    </style>
-
-    <style name="InfoLine.padding" parent="InfoLine.paddingTBL">
-        <item name="android:paddingRight">10dp</item>
-    </style>
-
-
     <style name="RadiobuttonStyle">
         <item name="android:gravity">center</item>
         <item name="android:textSize">16sp</item>
@@ -262,34 +245,6 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="MainTitleFgx">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1px</item>
-        <item name="android:background">@color/divide_color</item>
-    </style>
-
-    <style name="GiftSwitch" parent="Theme.AppCompat.Light">
-        <!-- switch 打开时的按钮的颜色 轨迹颜色默认为30%（看效果就明白30%是怎么回事了）这个颜色 -->
-        <item name="colorControlActivated">@color/colorPrimary_lib</item>
-        <!--  switch关闭时的按钮的颜色 -->
-        <item name="colorSwitchThumbNormal">@color/default_bg</item>
-        <!-- switch关闭时的轨迹的颜色 30%这个颜色 -->
-        <item name="android:colorForeground">@color/default_bg</item>
-    </style>
-    <!--<style name="SwitchButtonStyleMD" parent="SwitchButtonMD">
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
-    </style>-->
-    <!--    <style name="ProgressBar_Horizontal_anchor" parent="@android:style/Widget.ProgressBar.Horizontal">-->
-    <!--        <item name="android:indeterminateOnly">false</item>-->
-    <!--        <item name="android:indeterminateDrawable">-->
-    <!--            @android:drawable/progress_indeterminate_horizontal-->
-    <!--        </item>-->
-    <!--        <item name="android:progressDrawable">@drawable/progress_drawable_anchor</item>-->
-    <!--    </style>-->
-
 
     <style name="center_divider">
         <item name="android:layout_width">match_parent</item>
@@ -330,84 +285,6 @@
         <item name="colorControlActivated">@color/colorPrimary_lib</item>
     </style>
 
-    <style name="undeadActivityStyle" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <!-- 背景设置为透明 -->
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <!-- 是否有边框 -->
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <!-- 是否浮动在界面上 -->
-        <item name="android:windowIsFloating">true</item>
-        <!-- 是否透明 -->
-        <item name="android:windowIsTranslucent">true</item>
-        <!-- 窗体上面是否有遮盖 -->
-        <item name="android:windowContentOverlay">@null</item>
-        <!-- 背景是否变暗 -->
-        <item name="android:backgroundDimEnabled">false</item>
-        <!-- 为窗体的Enter和Exit设置动画 -->
-        <item name="android:windowAnimationStyle">@null</item>
-        <!-- 是否禁止窗体显示前显示的View -->
-        <item name="android:windowDisablePreview">true</item>
-
-        <item name="android:windowNoDisplay">false</item>
-    </style>
-
-    <!--    &lt;!&ndash;新版本样式&ndash;&gt;-->
-    <!--    <style name="btn_bg_solid">-->
-    <!--        <item name="android:background">@drawable/bg_btn_solid</item>-->
-    <!--        <item name="android:textSize">@dimen/text_size_big</item>-->
-    <!--        <item name="android:textColor">@color/btn_text_color</item>-->
-    <!--        <item name="android:gravity">center</item>-->
-    <!--    </style>-->
-
-    <!--    <style name="btn_bg_solid_two">-->
-    <!--        <item name="android:background">@drawable/bg_btn_solid_two</item>-->
-    <!--        <item name="android:textSize">@dimen/text_size_big</item>-->
-    <!--        <item name="android:textColor">@color/black_333</item>-->
-    <!--        <item name="android:gravity">center</item>-->
-    <!--    </style>-->
-
-    <!--    <style name="btn_bg_solid_three">-->
-    <!--        <item name="android:background">@drawable/bg_btn_solid_three</item>-->
-    <!--        <item name="android:textSize">@dimen/textSize_alert_button</item>-->
-    <!--        <item name="android:textColor">@color/black_333</item>-->
-    <!--        <item name="android:gravity">center</item>-->
-    <!--    </style>-->
-
-    <!--    <style name="btn_bg_solid_four">-->
-    <!--        <item name="android:background">@drawable/bg_btn_solid_four</item>-->
-    <!--        <item name="android:textSize">@dimen/text_size_big</item>-->
-    <!--        <item name="android:textColor">@color/black_333</item>-->
-    <!--        <item name="android:gravity">center</item>-->
-    <!--        <item name="android:textStyle">bold</item>-->
-    <!--    </style>-->
-
-    <!--    <style name="btn_bg_solid_five">-->
-    <!--        <item name="android:background">@drawable/bg_btn_solid_five</item>-->
-    <!--        <item name="android:textColor">@color/black_333</item>-->
-    <!--    </style>-->
-
-    <!--    <style name="btn_bg_solid_six">-->
-    <!--        <item name="android:background">@drawable/bg_btn_solid_six</item>-->
-    <!--        <item name="android:textColor">@color/black_333</item>-->
-    <!--    </style>-->
-
-    <!--    <style name="btn_bg_solid_seven">-->
-    <!--        <item name="android:background">@drawable/bg_btn_solid_seven</item>-->
-    <!--        <item name="android:textColor">@color/black_333</item>-->
-    <!--    </style>-->
-
-    <!--    <style name="btn_bg_solid_eight">-->
-    <!--        <item name="android:background">@drawable/bg_btn_solid_eight</item>-->
-    <!--        <item name="android:textColor">@color/black_333</item>-->
-    <!--    </style>-->
-
-    <!--    <style name="btn_bg_stroke">-->
-    <!--        <item name="android:background">@drawable/bg_btn_stroke</item>-->
-    <!--        <item name="android:textSize">@dimen/text_size_big</item>-->
-    <!--        <item name="android:textColor">@color/btn_text_color</item>-->
-    <!--        <item name="android:gravity">center</item>-->
-    <!--    </style>-->
     <!--气泡弹窗-->
     <style name="bubble_dialog" parent="android:Theme.Dialog">
         <item name="android:windowIsFloating">false</item>
@@ -424,5 +301,61 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <!--单选样式-->
+    <style name="picture.me.style_single" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <!--标题栏背景色-->
+        <item name="colorPrimary">@color/white</item>
+        <!--状态栏背景色-->
+        <item name="colorPrimaryDark">@color/white</item>
+        <!--是否改变图片列表界面状态栏字体颜色为黑色-->
+        <item name="picture.statusFontColor">true</item>
+        <!--返回键图标-->
+        <item name="picture.leftBack.icon">@mipmap/icon_back_black_01</item>
+        <!--标题下拉箭头-->
+        <item name="picture.arrow_down.icon">@mipmap/icon_arrow_down</item>
+        <!--标题上拉箭头-->
+        <item name="picture.arrow_up.icon">@mipmap/icon_arrow_up</item>
+        <!--标题文字颜色-->
+        <item name="picture.title.textColor">@color/black_333</item>
+        <!--标题栏右边文字-->
+        <item name="picture.right.textColor">@color/white</item>
+        <!--图片列表勾选样式-->
+        <item name="picture.checked.style">@drawable/selector_pic_checkbox_single</item>
 
+
+        <!--图片列表底部背景色-->
+        <item name="picture.bottom.bg">@color/white</item>
+        <!--图片列表预览文字颜色-->
+        <item name="picture.preview.textColor">@color/black_333</item>
+        <!--图片列表已完成文字颜色-->
+        <item name="picture.complete.textColor">@color/black_333</item>
+        <!--图片已选数量圆点背景色-->
+        <item name="picture.num.style">@drawable/num_oval</item>
+        <!--预览界面标题文字颜色-->
+        <item name="picture.ac_preview.title.textColor">@color/white</item>
+        <!--预览界面已完成文字颜色-->
+        <item name="picture.ac_preview.complete.textColor">@color/black_333</item>
+        <!--预览界面标题栏背景色-->
+        <item name="picture.ac_preview.title.bg">@color/percent40translucentBlack</item>
+        <!--预览界面底部背景色-->
+        <item name="picture.ac_preview.bottom.bg">@color/percent40translucentBlack</item>
+        <!--预览界面返回箭头-->
+        <item name="picture.preview.leftBack.icon">@mipmap/icon_back_black_01</item>
+        <!--裁剪页面标题背景色-->
+        <item name="picture.crop.toolbar.bg">@color/bar_grey</item>
+        <!--裁剪页面状态栏颜色-->
+        <item name="picture.crop.status.color">@color/bar_grey</item>
+        <!--裁剪页面标题文字颜色-->
+        <item name="picture.crop.title.color">@color/white</item>
+        <!--相册文件夹列表选中图标-->
+        <item name="picture.folder_checked_dot">@drawable/orange_oval</item>
+    </style>
+    <style name="picture.me.style_multi" parent="picture.me.style_single">
+        <item name="picture.checked.style">@drawable/selector_pic_checkbox_num</item>
+        <!--开启图片列表勾选数字模式,开启的话勾选样式要换-->
+        <item name="picture.style.checkNumMode">true</item>
+        <!--选择图片样式0/9-->
+        <item name="picture.style.numComplete">false</item>
+    </style>
 </resources>
