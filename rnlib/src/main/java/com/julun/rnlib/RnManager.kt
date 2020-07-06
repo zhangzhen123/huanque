@@ -11,6 +11,7 @@ import com.julun.rnlib.reactpackage.RequestInfoReactPackage
 import com.julun.rnlib.reactpackage.ToastReactPackage
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage
+import com.zmxv.RNSound.RNSoundPackage
 import org.reactnative.maskedview.RNCMaskedViewPackage
 
 object RnManager {
@@ -34,6 +35,7 @@ object RnManager {
                 .addPackage(RNGestureHandlerPackage())
                 .addPackage(SafeAreaContextPackage())
                 .addPackage(RNCMaskedViewPackage())
+                .addPackage(RNSoundPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)
                 .build()

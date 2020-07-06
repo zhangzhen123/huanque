@@ -154,5 +154,9 @@ dependencies {
     //表情切换
     api 'com.effective.android:panelSwitchHelper-androidx:1.3.2.1'
     api 'com.romandanylyk:pageindicatorview:1.0.1'
+    /*阿里云oss*/
+    api 'com.aliyun.dpa:oss-android-sdk:2.9.2'
+   /* 相册选择 因为很多地方可能会用到 放在common中方便调用*/
+    api project(':picture_library')
 
 }

@@ -44,6 +44,5 @@ dependencies {
 
     api project(':common')
     api project(":rnlib")
-    api project(':picture_library')
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
 }
