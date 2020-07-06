@@ -10,11 +10,15 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.TextView
 import com.julun.huanque.common.BuildConfig
+import com.julun.huanque.common.R
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import org.jay.launchstarter.TaskDispatcher
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.dip
 import java.lang.ref.WeakReference
 
 /**
@@ -44,7 +48,7 @@ class CommonInit {
     private lateinit var mContext: Application
     var inSDK = true
 
-    //    private var libraryListener: CommonListener? = null
+//    private var libraryListener: CommonListener? = null
 //
 //    fun setCommonListener(listener: CommonListener) {
 //        this.libraryListener = listener
@@ -87,6 +91,33 @@ class CommonInit {
             override fun onActivityResumed(activity: Activity) {
                 setCurrentActivity(activity)
                 isAppOnForeground = true
+
+                if (activity != null && (activity.localClassName == "com.cmic.sso.sdk.activity.LoginAuthActivity" || activity.localClassName == "cn.jiguang.verifysdk.CtLoginActivity")) {
+                    val contentView = activity.window?.peekDecorView()?.findViewById<View>(android.R.id.content)
+                        ?: return
+                    //获取号码栏
+                    val phoneView = getMatchTextView(contentView, "****") ?: return
+                    val viewContent = phoneView.text.toString().trim()
+                    if (viewContent.contains("本机号码")) {
+                        return
+                    }
+                    val realContent = "本机号码：$viewContent"
+                    phoneView.text = realContent
+                    phoneView.backgroundResource = R.drawable.bg_owner_phone_number
+                    //设置宽高
+                    val params = phoneView.layoutParams
+                    params.height = activity.dip(40)
+                    val phoneNumWidthPx = ScreenUtils.getScreenWidth() - activity.dip(40) * 2
+                    params.width = phoneNumWidthPx
+                    phoneView.layoutParams = params
+                    //获取隐私栏
+//                    val privacyView = getMatchTextView(contentView, "登录即为同意羚萌") ?: return
+//                    val privacyText = privacyView.text
+//                    if(privacyText is SpannableString){
+//                        privacyText.getSpans()
+//                    }
+                }
+
             }
 
             override fun onActivityStarted(activity: Activity) {
@@ -116,6 +147,8 @@ class CommonInit {
 //        PartyLibraryInit.getInstance().initComponent(application)
         initTask(application)
     }
+
+
 
 
     /**

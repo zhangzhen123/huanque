@@ -71,7 +71,6 @@ class PhoneNumLoginActivity : BaseActivity() {
 
         mViewModel?.loginData?.observe(this, Observer {
             if(it != null){
-                SessionUtils.setSession(it)
                 FillInformationActivity.newInstance(this)
             }
         })

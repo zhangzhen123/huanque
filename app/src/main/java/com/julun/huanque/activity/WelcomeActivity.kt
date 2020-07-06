@@ -6,6 +6,7 @@ import android.view.View
 import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.utils.SessionUtils
 
 /**
  *@创建者   dong
@@ -16,8 +17,16 @@ class WelcomeActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_welcome
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-//        val intent = Intent(this, MainActivity::class.java)
-        val intent = Intent(this, LoginActivity::class.java)
+        val registerUser = SessionUtils.getIsRegUser()
+        val intent = if (registerUser && SessionUtils.getRegComplete()) {
+            //登录成功并且数据已经填写完成
+            Intent(this, MainActivity::class.java)
+        } else {
+            if (registerUser) {
+                SessionUtils.clearSession()
+            }
+            Intent(this, LoginActivity::class.java)
+        }
         startActivity(intent)
         finish()
     }

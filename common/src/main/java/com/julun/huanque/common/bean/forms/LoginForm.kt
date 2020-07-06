@@ -12,6 +12,11 @@ package com.julun.huanque.common.bean.forms
 class MobileLoginForm(var mobile: String = "", var code: String = "", var programId: Int? = null, var shuMeiDeviceId: String? = null)
 
 /**
+ * 手机号一键登录form
+ */
+class MobileQuickForm(var loginToken: String = "", var shuMeiDeviceId: String = "")
+
+/**
  * 更新基础数据的form
  */
 class UpdateInformationForm(
