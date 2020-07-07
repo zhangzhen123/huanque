@@ -76,15 +76,6 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
-    <style name="StoreToolBarTheme" parent="BaseAppTheme">
-        <item name="colorPrimaryDark">@color/titlebar</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-    </style>
-
-    <style name="MonthCardToolBarTheme" parent="BaseAppTheme">
-        <item name="colorPrimaryDark">@color/mc_titlebar</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-    </style>
 
     <style name="AppThemeL" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->

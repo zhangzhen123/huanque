@@ -1,6 +1,8 @@
 package com.julun.huanque.core.ui.main.makefriend
 
 import android.graphics.Color
+import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,10 +13,8 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.Sex
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.loadImage
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
 import org.jetbrains.anko.textColor
@@ -53,6 +53,13 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                     "${bean.nickname.substring(0,5)}…"
                 }else{
                     bean.nickname
+                }
+                val authTag = holder.getView<SimpleDraweeView>(R.id.sd_auth_tag)
+                if(bean.authMark.isNotEmpty()){
+                    authTag.show()
+                    ImageUtils.loadImageWithHeight_2(authTag,bean.authMark,dp2px(13))
+                }else{
+                    authTag.hide()
                 }
                 holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_mkf_sign, bean.mySign)
                     .setText(R.id.tv_location, bean.city)
@@ -105,8 +112,10 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                     }
                     bean.introduceVoice.isNotEmpty() -> {
                         holder.setGone(R.id.ll_audio, true).setGone(R.id.rv_photos, false).setGone(R.id.rv_tags, false)
-                        holder.setText(R.id.tv_audio_time, "${bean.introduceVoiceLength}s")
+                        holder.setText(R.id.tv_audio_time, "${bean.currentPlayProcess}s")
                         holder.addOnClickListener(R.id.iv_audio_play)
+                        val play=holder.getView<ImageView>(R.id.iv_audio_play)
+                        play.isActivated = bean.isPlay
                     }
                     bean.tagList.isNotEmpty() -> {
                         holder.setGone(R.id.ll_audio, false).setGone(R.id.rv_photos, false).setGone(R.id.rv_tags, true)

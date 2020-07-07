@@ -77,10 +77,16 @@ data class HomeRecomItem(
     var introduceVoice: String = "",
     var introduceVoiceLength: Int = 0,
     var anchor: Boolean = false,
+    var authMark:String="",
     var living: Boolean = false,
     var mySign: String = "",
     var nickname: String = "",
     var sex: String = "",
     var tagList: List<String> = listOf(),
     var userId: Int = 0
-)
+) {
+    //本地字段 保留音频播放状态
+    var isPlay: Boolean = false
+    //本地字段 保存当前的播放进度
+    var currentPlayProcess: Int = introduceVoiceLength
+}

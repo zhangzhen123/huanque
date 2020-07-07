@@ -190,8 +190,7 @@ class DraweeSpanTextView @JvmOverloads constructor(
         if (styleParam.el.toLowerCase().indexOf("nickname") > -1) {
             logger.info("nickname render")
             val color = if (styleParam == null || StringHelper.isEmpty(styleParam.color)) {
-//                resources.getColor(R.color.text_highlight)
-                ContextCompat.getColor(context, R.color.text_highlight)
+                ContextCompat.getColor(context, R.color.app_main)
             } else {
                 Color.parseColor(styleParam.color)
             }

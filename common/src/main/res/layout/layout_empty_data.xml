@@ -19,7 +19,7 @@
         android:layout_marginBottom="17dp"
         android:gravity="center"
         android:text="@string/empty_data"
-        android:textColor="@color/text_title"
+        android:textColor="@color/text_03"
         android:textSize="@dimen/small1_size" />
 
     <TextView

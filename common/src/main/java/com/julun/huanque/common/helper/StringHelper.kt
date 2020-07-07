@@ -47,14 +47,17 @@ object StringHelper {
     val RMB_YUAN_FORMAT = DecimalFormat("####0.00")
     val STRING_ZERO = "0"
     val NORMAL_FORMAT = DecimalFormat("#,###")
+
     /**
      * 一分钟几秒
      */
     val SECONDS_IN_MINUTE = 60
+
     /**
      * 一小时几秒
      */
     val SECONDS_IN_HOUR = SECONDS_IN_MINUTE * 60
+
     /**
      * 一天几秒
      */
@@ -135,7 +138,8 @@ object StringHelper {
      * *
      * @return
      */
-    fun join(sep: String = DEFAULT_SPLIT_SEPARATOR, vararg args: Any): String = if (args == null || args.size == 0) "" else args.joinToString(sep)
+    fun join(sep: String = DEFAULT_SPLIT_SEPARATOR, vararg args: Any): String =
+        if (args == null || args.size == 0) "" else args.joinToString(sep)
 
 
     /**
@@ -212,7 +216,8 @@ object StringHelper {
             var p = "''"
             if (params[i] != null) {
                 if (params[i] is String || params[i] is Date
-                        || params[i] is Char)
+                    || params[i] is Char
+                )
                     p = split + params[i++].toString() + split
                 else
                     p = params[i++].toString()
@@ -277,7 +282,18 @@ object StringHelper {
     fun isNotHttpUrl(url: String?): Boolean {
         return !isHttpUrl(url)
     }
+
     fun getOssImgUrl(url: String): String {
+        if (isNotHttpUrl(url)) {
+            return BuildConfig.IMAGE_SERVER_URL + url
+        }
+        return url
+    }
+
+    /**
+     * 获取音频地址 与图片一样
+     */
+    fun getOssAudioUrl(url: String): String {
         if (isNotHttpUrl(url)) {
             return BuildConfig.IMAGE_SERVER_URL + url
         }
@@ -289,7 +305,7 @@ object StringHelper {
      */
     fun getOssVideoUrl(url: String): String {
         if (isNotHttpUrl(url)) {
-            return /*BuildConfig.VIDEO_SERVEL_URL +*/ url
+            return BuildConfig.IMAGE_SERVER_URL + url
         }
         return url
     }

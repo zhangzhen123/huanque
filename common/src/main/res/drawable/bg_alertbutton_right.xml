@@ -2,11 +2,17 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!--点击效果-->
     <item android:state_pressed="true">
-        <shape  android:shape="rectangle">
+        <shape android:shape="rectangle">
             <!-- android:radius 弧形的半径 -->
-            <solid android:color="@color/bgColor_alert_button_press"/>
-            <corners android:bottomRightRadius="@dimen/radius_alertview" />
+            <solid android:color="@color/app_main" />
+            <corners android:radius="@dimen/radius_alert_btn" />
         </shape>
     </item>
-    <item android:drawable="@android:color/transparent" />
+    <item>
+        <shape android:shape="rectangle">
+            <!-- android:radius 弧形的半径 -->
+            <solid android:color="@color/app_main" />
+            <corners android:radius="@dimen/radius_alert_btn" />
+        </shape>
+    </item>
 </selector>

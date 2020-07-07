@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
         android:text="@string/network_unenable"
-        android:textColor="@color/text_title"
+        android:textColor="@color/text_03"
         android:textSize="@dimen/small1_size"
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/tv_reload"

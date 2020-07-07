@@ -48,10 +48,9 @@
         app:layout_constraintStart_toStartOf="@+id/header_pic" />
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sd_tag"
+        android:id="@+id/sd_auth_tag"
         android:layout_width="@dimen/dimen_40"
         android:layout_height="@dimen/dimen_13"
-        app:actualImageResource="@mipmap/icon_real_man"
         app:layout_constraintBottom_toBottomOf="@+id/header_pic"
         app:layout_constraintEnd_toEndOf="@+id/header_pic"
         app:layout_constraintStart_toStartOf="@+id/header_pic" />
