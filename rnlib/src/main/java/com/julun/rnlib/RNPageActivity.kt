@@ -110,7 +110,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         mReactInstanceManager?.onHostDestroy(this)
         mReactRootView.unmountReactApplication()
         RnManager.curActivity = null
-        RnManager.promiseMap.clear()
+        RnManager.clearPromiseMap()
     }
     private val mLoadingDialog:LoadingDialog by lazy { LoadingDialog(this) }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -151,12 +151,17 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                                 writeArrayList.pushString(it)
                             }
                             RnManager.promiseMap[RnManager.uploadPhotos]?.resolve(writeArrayList)
+                            if(mLoadingDialog.isShowing){
+                                mLoadingDialog.dismiss()
+                            }
+                            finish()
                         } else {
                             ToastUtils.show("上传失败，请稍后重试")
+                            if(mLoadingDialog.isShowing){
+                                mLoadingDialog.dismiss()
+                            }
                         }
-                        if(mLoadingDialog.isShowing){
-                            mLoadingDialog.dismiss()
-                        }
+
                     }
 
                 }

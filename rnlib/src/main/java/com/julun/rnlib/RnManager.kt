@@ -22,7 +22,7 @@ import org.reactnative.maskedview.RNCMaskedViewPackage
 
 object RnManager {
     //上传方法的标识
-    const val uploadPhotos="uploadPhotos"
+    const val uploadPhotos = "uploadPhotos"
     private var mReactInstanceManager: ReactInstanceManager? = null
 
     var curActivity: RNPageActivity? = null
@@ -77,5 +77,19 @@ object RnManager {
      */
     fun uploadPhotos(max: Int) {
         curActivity?.openPhotoSelect(max)
+    }
+
+    fun clearPromiseMap() {
+        promiseMap.forEach { it ->
+            when (it.key) {
+                uploadPhotos -> {
+                    it.value.reject("-1", "图片上传功能 页面关闭了 通知rn回调")
+                }
+                else->{
+                    it.value.reject("-1", "其他功能 通知rn回调")
+                }
+            }
+
+        }
     }
 }
