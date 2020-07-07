@@ -55,54 +55,35 @@
         android:id="@+id/sdv_header"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@color/primary_color"
         android:layout_marginLeft="15dp"
         app:failureImageScaleType="centerInside"
+        android:background="@color/primary_color"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier"
         app:placeholderImageScaleType="centerInside"
         app:roundAsCircle="true" />
-
-<!--    <FrameLayout-->
-<!--        android:id="@+id/fl_living"-->
-<!--        android:layout_width="17dp"-->
-<!--        android:layout_height="12dp"-->
-<!--        android:background="@drawable/lm_common_shape_bg_rectangle_red_05"-->
-<!--        android:visibility="gone"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/sdv_header"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/sdv_header"-->
-<!--        tools:visibility="visible">-->
-
-<!--        <com.facebook.drawee.view.SimpleDraweeView-->
-<!--            android:id="@+id/sdv_living"-->
-<!--            android:layout_width="8dp"-->
-<!--            android:layout_height="8dp"-->
-<!--            android:layout_gravity="center"-->
-<!--            app:actualImageScaleType="fitCenter" />-->
-<!--    </FrameLayout>-->
 
 
     <RelativeLayout
         android:id="@+id/rl_content"
         android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="65dp"
+        android:layout_marginRight="60dp"
         app:layout_constraintLeft_toRightOf="@id/sdv_header"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/sdv_header"
-        tools:visibility="invisible">
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/bg_other"
+            android:background="@drawable/bg_chat_other"
+            android:minHeight="40dp"
             android:padding="12dp"
             android:textColor="@color/black_333"
             android:textSize="@dimen/text_size_big"
-            android:visibility="gone"
             tools:text="考虑i偶记得发可累计跌幅上看到了的风景二手房价送到附近送到附近" />
 
 
@@ -118,7 +99,7 @@
         android:visibility="gone"
         app:layout_constraintLeft_toRightOf="@id/sdv_header"
         app:layout_constraintTop_toTopOf="@id/sdv_header"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv_pic"
@@ -174,7 +155,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier_bottom"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
             android:id="@+id/draweeSpanTextView"

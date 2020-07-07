@@ -8,6 +8,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.chad.library.adapter.base.util.MultiTypeDelegate
+import com.julun.huanque.common.bean.ChatUser
+import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.hide
@@ -26,6 +28,8 @@ import org.jetbrains.anko.bottomPadding
  */
 class MessageAdapter : BaseQuickAdapter<Message, BaseViewHolder>(null) {
 
+    //私聊的情况下，保存对方的用户信息
+    var otherUserInfo: ChatUserBean? = null
 
     companion object {
         //其它人的消息
@@ -53,18 +57,6 @@ class MessageAdapter : BaseQuickAdapter<Message, BaseViewHolder>(null) {
     init {
         multiTypeDelegate = object : MultiTypeDelegate<Message>() {
             override fun getItemType(t: Message?): Int {
-//                val content = t?.content
-//                if (content is TextMessage) {
-//                    //文本消息
-//                    content.extra?.let { extra ->
-//                        val user: RoomUserChatExtra? =
-//                            JsonUtil.deserializeAsObject(extra ?: "", RoomUserChatExtra::class.java)
-//                        if (user?.msgType == 1) {
-//                            return SYSTEM
-//                        }
-//                    }
-//                }
-
                 return if (t?.senderUserId == "${SessionUtils.getUserId()}") {
                     MINE
                 } else {
@@ -81,40 +73,14 @@ class MessageAdapter : BaseQuickAdapter<Message, BaseViewHolder>(null) {
         if (helper == null || item == null) {
             return
         }
-        val content = item.content
-        if (helper.itemViewType == SYSTEM) {
-            //系统消息
-            if (content is TextMessage) {
-                //文本消息
-                content.extra?.let { extra ->
-                    val user: RoomUserChatExtra? =
-                        JsonUtil.deserializeAsObject(extra, RoomUserChatExtra::class.java)
-                    if (user?.msgType == 1) {
-                        val tv_content = helper.getView<TextView>(R.id.tv_content)
-                        tv_content.text = content.content
-                    }
-                }
-            }
-            return
-        }
 
+        val content = item.content
         //其它的普通聊天消息
         if (helper.itemViewType == OTHER) {
             //头像和直播状态
-            //            ImageUtils.loadImage(helper.getView(R.id.sdv_header), otherUserInfo?.headPic
-            //                    ?: "", 40f, 40f)
-            //            val flLiving = helper.getView<View>(R.id.fl_living)
-            //            //直播中状态
-            //            if (showLiving) {
-            //                flLiving.show()
-            //                ImageUtils.loadGifImageLocal(helper.getView(R.id.sdv_living), R.mipmap.lm_common_gif_isliving)
-            //            } else {
-            //                flLiving.hide()
-            //            }
-
+            ImageUtils.loadImage(helper.getView(R.id.sdv_header), otherUserInfo?.headPic ?: "", 40f, 40f)
             //点击事件
             helper.addOnClickListener(R.id.sdv_header)
-
         } else {
             if (helper.itemViewType == MINE) {
                 helper.addOnClickListener(R.id.sdv_header)
@@ -139,12 +105,11 @@ class MessageAdapter : BaseQuickAdapter<Message, BaseViewHolder>(null) {
                 }
             }
             //显示本人头像
-//            ImageUtils.loadImage(helper.getView(R.id.sdv_header), SessionUtils.getPicId(), 40f, 40f)
+            ImageUtils.loadImage(helper.getView(R.id.sdv_header), SessionUtils.getHeaderPic(), 40f, 40f)
         }
 
         //通用内容处理
         val tvContent = helper.getView<TextView>(R.id.tv_content)
-        DensityHelper
         tvContent.maxWidth = ScreenUtils.getScreenWidth() - DensityHelper.dp2px(65f) * 2
         if (content is TextMessage) {
             showMessageView(helper, TEXT_MESSAGE)
