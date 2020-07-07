@@ -38,4 +38,9 @@
         android:layout_height="wrap_content"
         android:text="跳转登录" />
 
+    <Button
+        android:id="@+id/goto_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="跳转图片选择" />
 </LinearLayout>

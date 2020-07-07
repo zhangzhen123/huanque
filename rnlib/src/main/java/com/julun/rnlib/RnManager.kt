@@ -80,16 +80,17 @@ object RnManager {
     }
 
     fun clearPromiseMap() {
-        promiseMap.forEach { it ->
-            when (it.key) {
-                uploadPhotos -> {
-                    it.value.reject("-1", "图片上传功能 页面关闭了 通知rn回调")
-                }
-                else->{
-                    it.value.reject("-1", "其他功能 通知rn回调")
-                }
-            }
-
-        }
+//        promiseMap.forEach { it ->
+//            when (it.key) {
+//                uploadPhotos -> {
+//                    it.value.reject("-1", "图片上传功能 页面关闭了 通知rn回调")
+//                }
+//                else->{
+//                    it.value.reject("-1", "其他功能 通知rn回调")
+//                }
+//            }
+//
+//        }
+        promiseMap.clear()
     }
 }

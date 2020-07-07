@@ -112,7 +112,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         RnManager.curActivity = null
         RnManager.clearPromiseMap()
     }
-    private val mLoadingDialog:LoadingDialog by lazy { LoadingDialog(this) }
+
+    private val mLoadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         try {
@@ -140,34 +141,37 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                             }
                         }
                     }
-                    if(!mLoadingDialog.isShowing){
+                    if (!mLoadingDialog.isShowing) {
                         mLoadingDialog.showDialog()
                     }
                     OssUpLoadManager.uploadImages(pathList, OssUpLoadManager.COVER_POSITION) { code, list ->
                         if (code == OssUpLoadManager.CODE_SUCCESS) {
                             logger("上传oss成功结果的：$list")
-                            val writeArrayList= Arguments.createArray()
+                            val writeArrayList = Arguments.createArray()
                             list?.forEach {
                                 writeArrayList.pushString(it)
                             }
                             RnManager.promiseMap[RnManager.uploadPhotos]?.resolve(writeArrayList)
-                            if(mLoadingDialog.isShowing){
+                            if (mLoadingDialog.isShowing) {
                                 mLoadingDialog.dismiss()
                             }
-                            finish()
                         } else {
                             ToastUtils.show("上传失败，请稍后重试")
-                            if(mLoadingDialog.isShowing){
+                            RnManager.promiseMap[RnManager.uploadPhotos]?.reject("-1", "图片上传功能 上传失败，请稍后重试 通知rn回调")
+                            if (mLoadingDialog.isShowing) {
                                 mLoadingDialog.dismiss()
                             }
                         }
 
                     }
 
+                } else {
+                    RnManager.promiseMap[RnManager.uploadPhotos]?.reject("-1", "图片上传功能 没有选择 通知rn回调")
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            RnManager.promiseMap[RnManager.uploadPhotos]?.reject("-1", "图片上传功能 图片返回出错了 通知rn回调")
             logger("图片返回出错了")
         }
     }
