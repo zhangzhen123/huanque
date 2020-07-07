@@ -31,8 +31,6 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-//    implementation rootProject.ext.dependencies["ANDROIDX_KTX"]
-//    implementation rootProject.ext.dependencies["ANDROIDX_APPCOMPAT"]
 
     // Android低版本兼容：低版本不支持facebook hermes，这里直接关掉了
     if (enableHermes) {

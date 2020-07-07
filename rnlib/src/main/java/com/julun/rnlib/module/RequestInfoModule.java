@@ -55,7 +55,7 @@ public class RequestInfoModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void uploadPhotos(int max,Promise promise){
         RnManager.INSTANCE.uploadPhotos(max);
-        RnManager.promiseMap.put(RnManager.uploadPhotos,promise);
+        RnManager.INSTANCE.getPromiseMap().put(RnManager.uploadPhotos,promise);
 
     }
     @ReactMethod

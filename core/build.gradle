@@ -6,7 +6,7 @@ apply plugin: 'kotlin-kapt'
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
-        arg('eventBusIndex', 'com.julun.huanque.core.CommonEventBusIndex')
+        arg('eventBusIndex', 'com.julun.huanque.core.CoreEventBusIndex')
     }
 }
 android {
