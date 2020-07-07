@@ -38,8 +38,6 @@ class FillInformationViewModel : BaseViewModel() {
 
     val currentStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
-//    var completeBean = ImformationCompleteBean()
-
     /**
      * 上传昵称之类的 状态
      */
@@ -51,6 +49,7 @@ class FillInformationViewModel : BaseViewModel() {
      * 上传头像回调  为Null代表失败
      */
     val uploadHeadState: MutableLiveData<String?> by lazy { MutableLiveData<String?>() }
+
 
     /**
      * @param sex 性别
@@ -89,12 +88,9 @@ class FillInformationViewModel : BaseViewModel() {
     /**
      * 模拟图片上传成功
      */
-    fun headerSuccess() {
-//        completeBean.headerPic = "user/head/220229a56ec7841b71d8c226d1e17206.jpg"
-        SessionUtils.setHeaderPic("user/head/220229a56ec7841b71d8c226d1e17206.jpg")
+    fun headerSuccess(headerPic : String) {
+        SessionUtils.setHeaderPic(headerPic)
         SessionUtils.setRegComplete(true)
-        //上传成功
-//        EventBus.getDefault().post(completeBean)
     }
 
     /**
@@ -110,6 +106,7 @@ class FillInformationViewModel : BaseViewModel() {
                         request({
                             userService.updateHeadPic(UpdateHeadForm(headPic))
                             logger("头像修改通知后台成功：${list}")
+                            headerSuccess(headPic)
                             uploadHeadState.value = headPic
                         }, error = {
                             uploadHeadState.value = null

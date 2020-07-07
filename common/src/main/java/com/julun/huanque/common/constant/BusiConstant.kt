@@ -267,4 +267,48 @@ object XYCode {
     const val YHYSXY = "YHYSXY"
 }
 
+/**
+ * 欢遇状态
+ */
+object MeetStatus {
+    //待欢遇
+    const val Wait = "Wait"
 
+    //欢遇中
+    const val Meet = "Meet"
+
+    //不可欢遇
+    const val Not = "Not"
+}
+
+/**
+ * 关注状态
+ */
+object FollowStatus {
+    //已关注
+    const val True = "True"
+
+    //未关注
+    const val False = "False"
+
+    //互相关注
+    const val Mutual = "Mutual"
+}
+
+
+object ContactsTabType {
+    //关注
+    const val Follow = "Follow"
+
+    //粉丝
+    const val Fan = "Fan"
+
+    //密友
+    const val Intimate = "Intimate"
+
+    //谁看过我
+    const val Visit = "Visit"
+
+    //好友
+    const val Friend = "Friend"
+}

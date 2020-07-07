@@ -36,6 +36,7 @@ object ARouterConstant {
     const val TEST_ACTIVITY = "/$COMMON$SERVICE/TEST_ACTIVITY"
 
     const val APP_COMMON_SERVICE = "/$APP$SERVICE/AppCommonService"
+    const val LOGIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/LoginActivity"
 
     //语音页面
     const val VOICE_CHAT_ACTIVITY = "/$AGORA$PREFIX_ACTIVITY/VoiceChatActivity"

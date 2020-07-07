@@ -20,8 +20,10 @@ import cn.jiguang.verifysdk.api.AuthPageEventListener
 import cn.jiguang.verifysdk.api.JVerificationInterface
 import cn.jiguang.verifysdk.api.JVerifyUIConfig
 import cn.jiguang.verifysdk.api.LoginSettings
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
@@ -38,6 +40,7 @@ import org.jetbrains.anko.textColor
  *@创建时间 2020/7/3 10:04
  *@描述 登录页面
  */
+@Route(path = ARouterConstant.LOGIN_ACTIVITY)
 class LoginActivity : BaseActivity() {
     //一键登录是否可用
     private var verifyEnable: Boolean = false

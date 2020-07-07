@@ -1,13 +1,34 @@
 package com.julun.huanque.message.activity
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.beans.UserDataTab
+import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
 import com.julun.huanque.message.R
+import com.julun.huanque.message.adapter.ProgramFragmentAdapter
+import com.julun.huanque.message.viewmodel.ContactsViewModel
+import kotlinx.android.synthetic.main.act_contacts.*
+import net.lucode.hackware.magicindicator.ViewPagerHelper
+import net.lucode.hackware.magicindicator.buildins.UIUtil
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
+import org.jetbrains.anko.textSizeDimen
 
 /**
  *@创建者   dong
@@ -16,20 +37,134 @@ import com.julun.huanque.message.R
  */
 class ContactsActivity : BaseActivity() {
     companion object {
-        fun newInstance(activity: Activity) {
-            activity.startActivity(Intent(activity, ContactsActivity::class.java))
+        const val DEFAULT_TYPE = "DEFAULT_TYPE"
+        fun newInstance(activity: Activity, defaultType: String) {
+            val intent = Intent(activity, ContactsActivity::class.java)
+            intent.putExtra(DEFAULT_TYPE, defaultType)
+            activity.startActivity(intent)
         }
     }
+
+    private lateinit var mCommonNavigator: CommonNavigator
+    private var mViewModel: ContactsViewModel? = null
+    private var mPagerAdapter: ProgramFragmentAdapter? = null
+
+    //默认选中的tab标识
+    private var mDefaultType = ""
 
     override fun getLayoutId() = R.layout.act_contacts
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        mDefaultType = intent?.getStringExtra(DEFAULT_TYPE) ?: ""
         findViewById<TextView>(R.id.tvTitle).text = "联系人"
+        initViewModel()
+        mViewModel?.getContacts()
+        mPagerAdapter = ProgramFragmentAdapter(supportFragmentManager, this)
+        pager.adapter = mPagerAdapter
+        initMagicIndicator()
+    }
+
+    /**
+     * 初始化ViewModel
+     */
+    private fun initViewModel() {
+        mViewModel = ViewModelProvider(this).get(ContactsViewModel::class.java)
+        mViewModel?.tabListData?.observe(this, Observer {
+            if (it != null) {
+                refreshTabList(it)
+            }
+        })
     }
 
     override fun initEvents(rootView: View) {
         findViewById<View>(R.id.ivback).onClickNew {
             finish()
         }
+    }
+
+
+    /**
+     * 初始化指示器
+     */
+    private fun initMagicIndicator() {
+        magic_indicator.setBackgroundColor(Color.parseColor("#fafafa"))
+        mCommonNavigator = CommonNavigator(this)
+        mCommonNavigator.isEnablePivotScroll
+        mCommonNavigator.scrollPivotX = 0.65f
+        mCommonNavigator.isAdjustMode = true
+        mCommonNavigator.isSkimOver = true
+        mPagerAdapter?.let {
+            mCommonNavigator.adapter = object : CommonNavigatorAdapter() {
+                override fun getCount(): Int {
+                    return it.count
+                }
+
+                override fun getTitleView(context: Context, index: Int): IPagerTitleView {
+                    val simplePagerTitleView = ColorFlipPagerTitleView(context)
+                    simplePagerTitleView.textSizeDimen = R.dimen.text_size_big
+                    val userTab = it.getTypeList()[index]
+                    simplePagerTitleView.text = "${userTab.userTabName}${userTab.count}"
+                    simplePagerTitleView.normalColor = GlobalUtils.getColor(R.color.normal_gray)
+                    simplePagerTitleView.selectedColor = GlobalUtils.getColor(R.color.normal_black)
+                    simplePagerTitleView.setOnClickListener { pager.currentItem = index }
+                    if (mCommonNavigator.isAdjustMode) {
+                        //固定模式，不设置padding
+                        simplePagerTitleView.setPadding(0, 0, 0, 0)
+                    } else {
+                        //自适应模式设置padding
+                        val padding = UIUtil.dip2px(this@ContactsActivity, 10.0)
+                        simplePagerTitleView.setPadding(padding, 0, padding, 0)
+                    }
+                    return simplePagerTitleView
+                }
+
+                override fun getIndicator(context: Context): IPagerIndicator {
+                    val indicator = LinePagerIndicator(context)
+                    indicator.mode = LinePagerIndicator.MODE_EXACTLY
+                    indicator.lineHeight = UIUtil.dip2px(context, 3.0).toFloat()
+                    indicator.lineWidth = UIUtil.dip2px(context, 29.0).toFloat()
+                    indicator.roundRadius = UIUtil.dip2px(context, 3.0).toFloat()
+                    indicator.startInterpolator = AccelerateInterpolator()
+                    indicator.endInterpolator = DecelerateInterpolator(2.0f)
+                    indicator.yOffset = DensityHelper.dp2px(4f).toFloat()
+                    indicator.setColors(GlobalUtils.getColor(R.color.primary_color))
+                    return indicator
+                }
+            }
+        }
+        magic_indicator.navigator = mCommonNavigator
+        ViewPagerHelper.bind(magic_indicator, pager)
+    }
+
+    /**
+     * 刷新tab
+     */
+    private fun refreshTabList(tabList: MutableList<UserDataTab>) {
+        if (tabList.size > 5) {
+            mCommonNavigator.isAdjustMode = false
+        }
+        pager.offscreenPageLimit = tabList.size
+        mPagerAdapter?.setTypeList(tabList)
+        //必须先执行刷新
+        mCommonNavigator.notifyDataSetChanged()
+        mPagerAdapter?.notifyDataSetChanged()
+
+        if (mDefaultType.isNotEmpty()) {
+            tabList.forEachIndexed { index, newProgramTab ->
+                if (mDefaultType == newProgramTab.userDataTabType) {
+                    switchToTab(index)
+                    return@forEachIndexed
+                }
+            }
+        }
+    }
+
+    /**
+     *  手动切换到指定tab位置
+     */
+    private fun switchToTab(position: Int) {
+        val count = mPagerAdapter?.count ?: return
+        if (count >= position)
+            pager.currentItem = position
     }
 }
