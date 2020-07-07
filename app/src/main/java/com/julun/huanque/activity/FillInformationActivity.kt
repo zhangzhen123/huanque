@@ -115,6 +115,9 @@ class FillInformationActivity : BaseActivity() {
         mViewModel?.uploadHeadState?.observe(this, Observer {
             if (it != null) {
                 startActivity(Intent(this, LoginActivity::class.java))
+                if(mLoadingDialog.isShowing){
+                    mLoadingDialog.dismiss()
+                }
             }
         })
     }
@@ -184,6 +187,9 @@ class FillInformationActivity : BaseActivity() {
                         media.path
                     }
                     logger.info("收到图片:$path")
+                    if(!mLoadingDialog.isShowing){
+                        mLoadingDialog.showDialog()
+                    }
                     mViewModel?.uploadHead(path)
                 }
             }
@@ -192,7 +198,7 @@ class FillInformationActivity : BaseActivity() {
             logger.info("图片返回出错了")
         }
     }
-
+    private val mLoadingDialog:LoadingDialog by lazy { LoadingDialog(this) }
     private fun checkPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions

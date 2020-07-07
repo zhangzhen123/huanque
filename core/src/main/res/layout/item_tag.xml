@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_tag"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/dimen_24"
+    android:layout_marginEnd="@dimen/dimen_6"
+    android:layout_marginRight="@dimen/dimen_6"
+    android:background="@drawable/bg_shape_tag1"
+    android:gravity="center"
+    android:paddingLeft="@dimen/dimen_10"
+    android:paddingRight="@dimen/dimen_10"
+    android:textColor="@color/black_333"
+    android:textSize="@dimen/sp_10"
+    tools:text="测试" />

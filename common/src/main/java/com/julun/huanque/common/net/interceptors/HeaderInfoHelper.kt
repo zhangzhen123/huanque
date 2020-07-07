@@ -56,11 +56,10 @@ object HeaderInfoHelper {
     }
 
     /**
-     * 请求头iminfo转成json
-     * @author WanZhiYuan
-     * @date 2020/04/20
+     * 获取设备信息 组成请求头信息
+     *
      */
-    fun getMobileDeviceInfoToJson(isToJson: Boolean = true): String {
+    fun getMobileDeviceInfo(): Map<String, String> {
         val map = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             mutableMapOf<String, String>()
         } else {
@@ -145,6 +144,16 @@ object HeaderInfoHelper {
 //        if (!TextUtils.isEmpty(oaid)) {
 //            map["w"] = oaid ?: ""
 //        }
+        return map
+    }
+
+    /**
+     * 请求头iminfo转成json
+     * @author WanZhiYuan
+     * @date 2020/04/20
+     */
+    fun getMobileDeviceInfoToJson(isToJson: Boolean = true): String {
+        val map = getMobileDeviceInfo()
         return if (isToJson) {
             JSONObject.toJSONString(map)
         } else {
@@ -158,5 +167,6 @@ object HeaderInfoHelper {
                 }
             }.toString()
         }
+
     }
 }

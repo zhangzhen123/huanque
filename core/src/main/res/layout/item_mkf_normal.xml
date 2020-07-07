@@ -67,9 +67,11 @@
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_14"
         android:textStyle="bold"
+        android:maxLines="1"
         app:layout_constraintStart_toEndOf="@+id/header_pic"
         app:layout_constraintTop_toTopOf="@+id/header_pic"
-        tools:text="你的名字" />
+        tools:text="你的名字很长" />
+
     <TextView
         android:id="@+id/tv_sex"
         android:layout_width="wrap_content"
@@ -88,6 +90,7 @@
         app:layout_constraintStart_toEndOf="@+id/tv_mkf_name"
         app:layout_constraintTop_toTopOf="@+id/tv_mkf_name"
         tools:text="男" />
+
     <TextView
         android:id="@+id/tv_location"
         android:layout_width="wrap_content"
@@ -106,7 +109,6 @@
         app:layout_constraintStart_toEndOf="@+id/tv_sex"
         app:layout_constraintTop_toTopOf="@+id/tv_mkf_name"
         tools:text="地址" />
-
 
 
     <TextView
@@ -145,6 +147,16 @@
         android:id="@+id/rv_photos"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_mkf_name"
+        app:layout_constraintTop_toBottomOf="@+id/header_pic" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_tags"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_mkf_name"
         app:layout_constraintTop_toBottomOf="@+id/header_pic" />
@@ -167,7 +179,8 @@
             android:layout_marginLeft="@dimen/dimen_4"
             android:src="@drawable/sel_mkf_play" />
 
-        <View
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_audio_state"
             android:layout_width="38dp"
             android:layout_height="@dimen/dimen_16"
             android:layout_marginStart="10dp"
@@ -179,6 +192,7 @@
             android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/tv_audio_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_15"
@@ -193,7 +207,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="ll_audio,rv_photos" />
+        app:constraint_referenced_ids="ll_audio,rv_photos,rv_tags" />
 
     <View
         android:layout_width="0dp"

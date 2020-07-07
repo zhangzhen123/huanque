@@ -1,5 +1,6 @@
 package com.julun.huanque.common.base.dialog;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,7 +15,7 @@ import com.julun.huanque.common.R;
  * Created by djp on 2016/11/18.
  */
 
-public class LoadingDialog extends ProgressDialog {
+public class LoadingDialog extends AlertDialog {
     private LayoutInflater layoutInflater;
     private View rootView;
     private TextView dialogMsg;
@@ -25,7 +26,6 @@ public class LoadingDialog extends ProgressDialog {
 
     public LoadingDialog(Context context, int theme) {
         super(context, theme);
-        setProgressStyle(ProgressDialog.STYLE_SPINNER);
         initView(context);
         setCanceledOnTouchOutside(false);
     }
@@ -42,7 +42,6 @@ public class LoadingDialog extends ProgressDialog {
 
     public void showDialog(String text) {
         dialogMsg.setText(text);
-        setIndeterminate(true);
         setCancelable(true);
         show();
         setContentView(rootView);
@@ -50,7 +49,6 @@ public class LoadingDialog extends ProgressDialog {
 
     public void showDialog(String text, boolean bool) {
         dialogMsg.setText(text);
-        setIndeterminate(true);
         setCancelable(bool);
         show();
         setContentView(rootView);
