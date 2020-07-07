@@ -3,8 +3,10 @@ package com.julun.huanque.message.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
+import com.julun.huanque.common.bean.beans.FollowResultBean
 import com.julun.huanque.common.bean.beans.SocialListBean
 import com.julun.huanque.common.bean.beans.UserDataTab
+import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
@@ -20,6 +22,9 @@ import kotlinx.coroutines.launch
  */
 class ContactsViewModel : BaseViewModel() {
     private val service: SocialService by lazy { Requests.create(SocialService::class.java) }
+
+    //关注状态
+    val followStatusData: MutableLiveData<FollowResultBean> by lazy { MutableLiveData<FollowResultBean>() }
 
     //顶部tab数据
     val tabListData: MutableLiveData<MutableList<UserDataTab>> by lazy { MutableLiveData<MutableList<UserDataTab>>() }
@@ -42,5 +47,34 @@ class ContactsViewModel : BaseViewModel() {
             })
         }
     }
+
+    /**
+     * 关注
+     */
+    fun follow(type: String, userId: Long) {
+        viewModelScope.launch {
+            request({
+                service.follow(FriendIdForm(userId))
+                val followBean = FollowResultBean(type, userId, true)
+                followStatusData.value = followBean
+            }, {
+            })
+        }
+    }
+
+    /**
+     * 取消关注
+     */
+    fun unFollow(type: String, userId: Long){
+        viewModelScope.launch {
+            request({
+                service.unFollow(FriendIdForm(userId))
+                val followBean = FollowResultBean(type, userId, false)
+                followStatusData.value = followBean
+            }, {
+            })
+        }
+    }
+
 
 }

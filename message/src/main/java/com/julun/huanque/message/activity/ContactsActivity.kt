@@ -74,6 +74,11 @@ class ContactsActivity : BaseActivity() {
                 refreshTabList(it)
             }
         })
+        mViewModel?.followStatusData?.observe(this, Observer {
+            if (it != null) {
+
+            }
+        })
     }
 
     override fun initEvents(rootView: View) {

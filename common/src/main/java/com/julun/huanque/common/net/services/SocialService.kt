@@ -1,8 +1,10 @@
 package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.SocialListBean
 import com.julun.huanque.common.bean.forms.EmptyForm
+import com.julun.huanque.common.bean.forms.FriendIdForm
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -13,6 +15,21 @@ import retrofit2.http.POST
  */
 interface SocialService {
 
-    @POST("social/message/link/info")
+    /**
+     * 获取联系人
+     */
+    @POST("social/friend/relation/linkInfo")
     suspend fun socialList(@Body form : EmptyForm = EmptyForm()) : Root<SocialListBean>
+
+    /**
+     * 关注好友
+     */
+    @POST("social/friend/relation/follow")
+    suspend fun follow(@Body form : FriendIdForm) : Root<VoidResult>
+
+    /**
+     * 取消关注好友
+     */
+    @POST("social/friend/relation/unFollow")
+    suspend fun unFollow(@Body form : FriendIdForm) : Root<VoidResult>
 }

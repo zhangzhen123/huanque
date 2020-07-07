@@ -83,8 +83,6 @@ object RongCloudManager {
             RongIMClient.setChatRoomActionListener(chatRoomActionListener)
             //            imState = RCIM_STATE_INITED
             extraWork()
-            //初始化成功，直接连接融云
-            connectRongCloudServerWithComplete(isFirstConnect = true)
         }
     }
 
@@ -93,13 +91,8 @@ object RongCloudManager {
         callback: (Boolean) -> Unit = {}, isFirstConnect: Boolean = false
     ) {
         //connect方法需要在主线程调用
+        var imToken = SessionUtils.getRongImToken()
         //        var imToken = SessionUtils.getRongImToken()
-        //        var imToken = SessionUtils.getRongImToken()
-        //用户ID：49的token
-//        var imToken =
-//            "Nn1NRLchjgEMdXKZx2SJo7uBzmvX172nZ6rFtOhZ+uW6W7fa7ei7Ngzm8FROvvZeaVl/mReES/xNYwDGgPrwBg=="
-        //        //用户ID：48的token
-                var imToken = "Jhv71btXrQcJguf0BPcDH78fgExuBBZSwgXOEseACHsx85x9+GVWvR4bAn9m2QinjrPGoBrj94tIiHwzyXJRCQ=="
         logger.info("链接融云使用token $imToken ")
         if (TextUtils.isEmpty(imToken)) {
             ToastUtils.show("缺少聊天Token，无法连接聊天服务器")
@@ -263,45 +256,45 @@ object RongCloudManager {
             //            EventBus.getDefault().post(EventMessageBean(targetId))
         }
         RongIMClient.getInstance().sendMessage(conversationType,
-                                               targetId,
-                                               chatMessage,
-                                               null,
-                                               null,
-                                               object : IRongCallback.ISendMessageCallback {
-                                                   override fun onAttached(message: Message?) {
-                                                   }
+            targetId,
+            chatMessage,
+            null,
+            null,
+            object : IRongCallback.ISendMessageCallback {
+                override fun onAttached(message: Message?) {
+                }
 
-                                                   override fun onSuccess(message: Message?) {
-                                                       logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
-                                                       if (message != null) {
-                                                           //                            try {
-                                                           //                                onReceived(message)
-                                                           //                            } catch (e: Exception) {
-                                                           //                                e.printStackTrace()
-                                                           //                            }
-                                                           switchThread(message)
-                                                           callback(true)
-                                                       } else {
-                                                           callback(false)
-                                                       }
-                                                   }
+                override fun onSuccess(message: Message?) {
+                    logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
+                    if (message != null) {
+                        //                            try {
+                        //                                onReceived(message)
+                        //                            } catch (e: Exception) {
+                        //                                e.printStackTrace()
+                        //                            }
+                        switchThread(message)
+                        callback(true)
+                    } else {
+                        callback(false)
+                    }
+                }
 
-                                                   override fun onError(
-                                                       message: Message?, errorCode: ErrorCode?
-                                                   ) {
-                                                       if (message != null) {
-                                                           switchThread(message)
-                                                       }
-                                                       logger.info(
-                                                           "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
-                                                               message
-                                                           )}"
-                                                       )
-                                                       handleErrorCode(errorCode, "sendMessage")
-                                                       callback(false)
-                                                   }
+                override fun onError(
+                    message: Message?, errorCode: ErrorCode?
+                ) {
+                    if (message != null) {
+                        switchThread(message)
+                    }
+                    logger.info(
+                        "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
+                            message
+                        )}"
+                    )
+                    handleErrorCode(errorCode, "sendMessage")
+                    callback(false)
+                }
 
-                                               })
+            })
         //        setChatInfo(conversationType == Conversation.ConversationType.PRIVATE)
 
     }
@@ -313,44 +306,44 @@ object RongCloudManager {
     fun send(oMessage: Message, targetId: String, callback: (Boolean) -> Unit = {}): Unit {
         //        EventBus.getDefault().post(EventMessageBean(targetId))
         RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE,
-                                               targetId,
-                                               oMessage.content,
-                                               null,
-                                               null,
-                                               object : IRongCallback.ISendMessageCallback {
-                                                   override fun onAttached(message: Message?) {
-                                                   }
+            targetId,
+            oMessage.content,
+            null,
+            null,
+            object : IRongCallback.ISendMessageCallback {
+                override fun onAttached(message: Message?) {
+                }
 
-                                                   override fun onSuccess(message: Message?) {
-                                                       logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
-                                                       callback(true)
-                                                       if (message != null) {
-                                                           //                            try {
-                                                           //                                onReceived(message)
-                                                           //                            } catch (e: Exception) {
-                                                           //                                e.printStackTrace()
-                                                           //                            }
-                                                           switchThread(message)
-                                                       } else {
-                                                       }
-                                                   }
+                override fun onSuccess(message: Message?) {
+                    logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
+                    callback(true)
+                    if (message != null) {
+                        //                            try {
+                        //                                onReceived(message)
+                        //                            } catch (e: Exception) {
+                        //                                e.printStackTrace()
+                        //                            }
+                        switchThread(message)
+                    } else {
+                    }
+                }
 
-                                                   override fun onError(
-                                                       message: Message?, errorCode: ErrorCode?
-                                                   ) {
-                                                       callback(false)
-                                                       if (message != null) {
-                                                           //                            ChatUtils.deleteSingleMessage(message.messageId)
-                                                       }
-                                                       logger.info(
-                                                           "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
-                                                               message
-                                                           )}"
-                                                       )
-                                                       handleErrorCode(errorCode, "sendMessage")
-                                                   }
+                override fun onError(
+                    message: Message?, errorCode: ErrorCode?
+                ) {
+                    callback(false)
+                    if (message != null) {
+                        //                            ChatUtils.deleteSingleMessage(message.messageId)
+                    }
+                    logger.info(
+                        "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
+                            message
+                        )}"
+                    )
+                    handleErrorCode(errorCode, "sendMessage")
+                }
 
-                                               })
+            })
 
     }
 

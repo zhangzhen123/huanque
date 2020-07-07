@@ -71,7 +71,12 @@ class LoginActivity : BaseActivity() {
         mViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         mViewModel?.loginData?.observe(this, Observer {
             if (it != null) {
-                FillInformationActivity.newInstance(this)
+                if (it.regComplete) {
+                    //跳转首页
+                    startActivity(Intent(this, MainActivity::class.java))
+                } else {
+                    FillInformationActivity.newInstance(this)
+                }
             }
         })
     }

@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.manager.ActivitiesManager
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -27,7 +28,8 @@ class MainActivity : BaseActivity() {
 
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
     private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
-//    private val mMineFragment: Fragment by lazy { RNPageFragment.start("PH") }
+
+    //    private val mMineFragment: Fragment by lazy { RNPageFragment.start("PH") }
     private val MAIN_FRAGMENT_INDEX = 0
     private val LEYUAN_FRAGMENT_INDEX = 1
     private val MESSAGE_FRAGMENT_INDEX = 2
@@ -40,6 +42,8 @@ class MainActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.main_activity
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        //连接融云
+        RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
         setContentView(R.layout.main_activity)
         initViewModel()
         mMainViewModel?.indexData?.value = 0

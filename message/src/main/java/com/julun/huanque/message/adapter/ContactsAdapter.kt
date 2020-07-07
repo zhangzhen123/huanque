@@ -80,7 +80,7 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
                 //关注，粉丝  显示关注样式
                 tvAction.text = "私信"
                 tvAction.backgroundResource = R.drawable.bg_icon_attention
-                tvAction.textColor = GlobalUtils.getColor(R.color.enabled)
+                tvAction.textColor = GlobalUtils.getColor(R.color.black_999)
                 var actionResource = 0
                 var actionText = ""
                 when (item.follow) {

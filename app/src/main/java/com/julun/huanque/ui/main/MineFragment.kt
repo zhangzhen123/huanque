@@ -5,6 +5,7 @@ import android.view.View
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.rnlib.RNPageActivity
 import kotlinx.android.synthetic.main.fragment_mine.*
 
@@ -28,6 +29,9 @@ class MineFragment : BaseFragment() {
     override fun initEvents(rootView: View) {
         test_rn.onClickNew {
             RNPageActivity.start(requireActivity(), "PH");
+        }
+        tv_clear_session.onClickNew {
+            SessionUtils.clearSession()
         }
     }
 }
