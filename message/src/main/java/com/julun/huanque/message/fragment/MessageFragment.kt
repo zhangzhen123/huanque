@@ -22,6 +22,7 @@ import com.julun.huanque.message.adapter.ConversationListAdapter
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_message.*
+import java.lang.Exception
 
 /**
  *@创建者   dong
@@ -59,7 +60,12 @@ class MessageFragment : BaseFragment() {
             mAdapter.getItem(position)?.let { lmc ->
                 //首页IM
                 activity?.let { act ->
-                    PrivateConversationActivity.newInstance(act, lmc.conversation.targetId)
+                    try {
+                        PrivateConversationActivity.newInstance(act, lmc.conversation.targetId.toLong())
+                    }catch (e : Exception){
+                        e.printStackTrace()
+                    }
+
                 }
             }
 

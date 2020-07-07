@@ -32,4 +32,10 @@ interface SocialService {
      */
     @POST("social/friend/relation/unFollow")
     suspend fun unFollow(@Body form : FriendIdForm) : Root<VoidResult>
+
+    /**
+     * 获取私聊数据
+     */
+    @POST("social/friend/chat/basic")
+    suspend fun chatBasic(@Body form : FriendIdForm) : Root<VoidResult>
 }

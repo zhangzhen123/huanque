@@ -109,8 +109,8 @@ class ContactsActivity : BaseActivity() {
                     simplePagerTitleView.textSizeDimen = R.dimen.text_size_big
                     val userTab = it.getTypeList()[index]
                     simplePagerTitleView.text = "${userTab.userTabName}${userTab.count}"
-                    simplePagerTitleView.normalColor = GlobalUtils.getColor(R.color.normal_gray)
-                    simplePagerTitleView.selectedColor = GlobalUtils.getColor(R.color.normal_black)
+                    simplePagerTitleView.normalColor = GlobalUtils.getColor(R.color.black_999)
+                    simplePagerTitleView.selectedColor = GlobalUtils.getColor(R.color.black_333)
                     simplePagerTitleView.setOnClickListener { pager.currentItem = index }
                     if (mCommonNavigator.isAdjustMode) {
                         //固定模式，不设置padding
