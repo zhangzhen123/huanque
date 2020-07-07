@@ -15,6 +15,9 @@ import com.julun.rnlib.reactpackage.ToastReactPackage
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage
 import com.zmxv.RNSound.RNSoundPackage
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import org.reactnative.maskedview.RNCMaskedViewPackage
 
 object RnManager {
@@ -63,7 +66,10 @@ object RnManager {
     }
 
     fun closeRnPager() {
-        curActivity?.finish()
+        Observable.empty<Any>().observeOn(AndroidSchedulers.mainThread()).subscribe {
+            curActivity?.finish()
+        }
+
     }
 
     /**

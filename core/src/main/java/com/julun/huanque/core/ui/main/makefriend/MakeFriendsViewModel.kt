@@ -69,6 +69,7 @@ class MakeFriendsViewModel : BaseViewModel() {
 
                     homeListData.list.forEach{
                         //todo test 图片测试
+                        it.headPic="user/head/7c927139-bd25-48ab-837a-603a1ff3e78e.jpg"
                         val test1=it.copy()
                         test1.coverPicList= arrayListOf()
                         test1.introduceVoice=""

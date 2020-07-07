@@ -215,7 +215,9 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     }
 
     fun openPhotoSelect(max: Int) {
-        checkPermissions(max)
+        runOnUiThread {
+            checkPermissions(max)
+        }
     }
 
 

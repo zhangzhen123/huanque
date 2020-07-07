@@ -3,7 +3,6 @@ package com.julun.huanque.core.ui.main.makefriend
 import android.graphics.Color
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
@@ -16,7 +15,6 @@ import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.show
-import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
 import org.jetbrains.anko.textColor
@@ -48,8 +46,15 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val bean = item.content as HomeRecomItem
                 val list = bean.coverPicList.map { PhotoBean(url = it) }
                 val headPic = holder.getView<SimpleDraweeView>(R.id.header_pic)
+                holder.setGone(R.id.living_fg,bean.living).setGone(R.id.living_tag,bean.living)
+
                 headPic.loadImage(bean.headPic, 46f, 46f)
-                holder.setText(R.id.tv_mkf_name, bean.nickname).setText(R.id.tv_mkf_sign, bean.mySign)
+                val name=if(bean.nickname.length>5){
+                    "${bean.nickname.substring(0,5)}…"
+                }else{
+                    bean.nickname
+                }
+                holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_mkf_sign, bean.mySign)
                     .setText(R.id.tv_location, bean.city)
 
                 val sex = holder.getView<TextView>(R.id.tv_sex)

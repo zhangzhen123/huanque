@@ -5,14 +5,12 @@
     android:id="@+id/header_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/black_333"
     android:orientation="vertical">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_nav_bg"
         android:layout_width="@dimen/dimen_90"
         android:layout_height="0dp"
-        android:visibility="invisible"
         app:actualImageScaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
