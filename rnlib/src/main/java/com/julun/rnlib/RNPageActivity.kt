@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.facebook.infer.annotation.Assertions
 import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactRootView
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
 import com.julun.huanque.common.base.dialog.LoadingDialog
@@ -145,7 +146,11 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     OssUpLoadManager.uploadImages(pathList, OssUpLoadManager.COVER_POSITION) { code, list ->
                         if (code == OssUpLoadManager.CODE_SUCCESS) {
                             logger("上传oss成功结果的：$list")
-                            RnManager.promiseMap[RnManager.uploadPhotos]?.resolve(list)
+                            val writeArrayList= Arguments.createArray()
+                            list?.forEach {
+                                writeArrayList.pushString(it)
+                            }
+                            RnManager.promiseMap[RnManager.uploadPhotos]?.resolve(writeArrayList)
                         } else {
                             ToastUtils.show("上传失败，请稍后重试")
                         }
