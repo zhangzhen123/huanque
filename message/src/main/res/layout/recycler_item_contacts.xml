@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_header"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginLeft="15dp"
+        android:background="@color/primary_color"
+        app:failureImageScaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImageScaleType="centerCrop"
+        app:roundAsCircle="true" />
+
+    <TextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLength="5"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toTopOf="@id/tv_intimate_number"
+        app:layout_constraintLeft_toRightOf="@id/sdv_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="口点击23344" />
+
+
+    <TextView
+        android:id="@+id/tv_intimate_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/sdv_header"
+        app:layout_constraintTop_toBottomOf="@id/tv_nickname"
+        tools:text="kdihghh" />
+
+    <TextView
+        android:id="@+id/tv_change_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:drawablePadding="1dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/send_private_chat"
+        app:layout_constraintBottom_toBottomOf="@id/tv_intimate_number"
+        app:layout_constraintLeft_toRightOf="@id/tv_intimate_number"
+        app:layout_constraintTop_toTopOf="@id/tv_intimate_number"
+        tools:drawableLeft="@mipmap/icon_intimate_up"
+        tools:text="kdjej" />
+
+
+    <TextView
+        android:id="@+id/tv_action"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/bg_icon_private_chat"
+        android:gravity="center"
+        android:minWidth="68dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="私信" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

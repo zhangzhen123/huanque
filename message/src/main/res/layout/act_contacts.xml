@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:ignore="MissingDefaultResource">
 
     <include
@@ -14,5 +15,35 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+    <net.lucode.hackware.magicindicator.MagicIndicator
+        android:id="@+id/magic_indicator"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:backgroundTint="@color/white"
+        app:layout_constraintLeft_toLeftOf="@id/view_top"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_top" />
+
+    <TextView
+        android:id="@+id/tv_friends_attention"
+        android:layout_width="0px"
+        android:layout_height="30dp"
+        android:background="@color/bg_private_chat"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="亲密等级1级及以上，即可成为密友"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/magic_indicator" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_friends_attention" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -70,7 +70,7 @@ class FillInformationActivity : BaseActivity() {
         initViewModel()
         findViewById<TextView>(R.id.tvTitle).text = "消息设置"
         initTimePicker()
-        mViewModel?.currentStatus?.value = FillInformationViewModel.SECOND
+        mViewModel?.currentStatus?.value = FillInformationViewModel.FIRST
         //隐私协议弹窗
         mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
     }
@@ -114,11 +114,10 @@ class FillInformationActivity : BaseActivity() {
 
         mViewModel?.uploadHeadState?.observe(this, Observer {
             if (it != null) {
-                //todo  头像修改完成
+                startActivity(Intent(this, LoginActivity::class.java))
                 if(mLoadingDialog.isShowing){
                     mLoadingDialog.dismiss()
                 }
-                startActivity<MainActivity>()
             }
         })
     }

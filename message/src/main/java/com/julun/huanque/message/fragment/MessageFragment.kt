@@ -11,9 +11,11 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.message.R
+import com.julun.huanque.message.activity.ContactsActivity
 import com.julun.huanque.message.activity.MessageSettingActivity
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.adapter.ConversationListAdapter
@@ -71,15 +73,15 @@ class MessageFragment : BaseFragment() {
                     return@setOnItemLongClickListener true
                 }
                 MyAlertDialog(
-                        activity ?: return@setOnItemLongClickListener true
+                    activity ?: return@setOnItemLongClickListener true
                 ).showAlertWithOKAndCancel(
-                        resources.getString(R.string.delete_conversation_or_not),
-                        MyAlertDialog.MyDialogCallback(onRight = {
-                            //确定删除
-                            mMessageViewModel?.removeConversation(
-                                    tId, Conversation.ConversationType.PRIVATE
-                            )
-                        })
+                    resources.getString(R.string.delete_conversation_or_not),
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        //确定删除
+                        mMessageViewModel?.removeConversation(
+                            tId, Conversation.ConversationType.PRIVATE
+                        )
+                    })
                 )
 
             }
@@ -109,6 +111,9 @@ class MessageFragment : BaseFragment() {
         }
         iv_contacts.onClickNew {
             //联系人
+            activity?.let { act ->
+                ContactsActivity.newInstance(act, ContactsTabType.Intimate)
+            }
         }
 
         tv_message_unread.onClickNew {

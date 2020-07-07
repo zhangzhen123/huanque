@@ -1,15 +1,18 @@
 package com.julun.huanque.common.suger
 
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.helper.DefaultRxTransformer
 import com.julun.huanque.common.helper.RunOnMainSchedulerTransformer
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.CancelableObservableSubscriber
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.reflect.ClassInfo
 import com.julun.huanque.common.utils.reflect.ReflectUtil
@@ -105,12 +108,15 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
 
         // session失效
         ErrorCodes.SESSION_PAST -> {
-            //todo
-//            SessionUtils.deleteSession()
-            if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED)
+            //清空session
+            SessionUtils.clearSession()
+            //登出融云
+            if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
                 RongCloudManager.logout()
-            //todo
-//            showLoginDialogFragment()
+            }
+            //todo 登出声网
+            //跳转登录页面
+            ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         }
 
         // 系统异常
@@ -207,8 +213,8 @@ fun <T> Flowable<Root<T>>.handleResponseByDefault(observableSubscriber: Cancelab
 
 // 必须自己定义错误处理函数
 fun <T> Observable<Root<T>>.handleWithRawResponse(
-        successHandler: Function1<Root<T>, Unit>,
-        errorHandler: Function1<Throwable, Unit> = {}
+    successHandler: Function1<Root<T>, Unit>,
+    errorHandler: Function1<Throwable, Unit> = {}
 ) {
 
 //    val afterRequest: Observable<T> = this.afterRequest().compose(RunOnMainSchedulerTransformer<T>())
