@@ -14,6 +14,22 @@ android {
     buildToolsVersion hq.buildToolsVersion
 
 
+    //签名配置
+    signingConfigs {
+        release {
+            storeFile file("keystore/lingmeng.jks")
+            storePassword "lingmeng@julun"
+            keyAlias "lingmeng"
+            keyPassword "lingmeng@julun"
+
+        }
+        debug {
+            //下面将配置的跟release一致
+
+        }
+
+    }
+
     defaultConfig {
         applicationId "com.julun.huanque"
         minSdkVersion hq.minSdkVersion

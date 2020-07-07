@@ -1,5 +1,6 @@
 package com.julun.huanque.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -70,8 +71,12 @@ class PhoneNumLoginActivity : BaseActivity() {
         })
 
         mViewModel?.loginData?.observe(this, Observer {
-            if(it != null){
-                FillInformationActivity.newInstance(this)
+            if (it != null) {
+                if (it.regComplete) {
+                    startActivity(Intent(this, LoginActivity::class.java))
+                } else {
+                    FillInformationActivity.newInstance(this)
+                }
             }
         })
     }

@@ -51,3 +51,8 @@ class SocialListBean(
     //列表数据
     var linkList: MutableList<SocialUserInfo> = mutableListOf()
 )
+
+/**
+ * 关注结果使用的Bean
+ */
+class FollowResultBean(var type: String, var userId: Long, var follow: Boolean)

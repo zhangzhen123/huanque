@@ -8,3 +8,5 @@ package com.julun.huanque.common.bean.forms
 
 //空的form
 class EmptyForm()
+
+class FriendIdForm(var friendId : Long)
