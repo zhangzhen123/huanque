@@ -1,6 +1,7 @@
 package com.julun.huanque.common.manager
 
 import android.app.Application
+import android.net.Uri
 import android.text.TextUtils
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.BuildConfig
@@ -8,7 +9,6 @@ import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
-import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
@@ -30,9 +30,7 @@ import io.rong.imlib.model.Message
 import io.rong.imlib.model.MessageContent
 import io.rong.message.CommandMessage
 import io.rong.message.ImageMessage
-import io.rong.message.MediaMessageContent
 import io.rong.message.TextMessage
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -257,31 +255,38 @@ object RongCloudManager {
      * @param callback    发送消息的回调，回调中携带 {@link IRongCallback.MediaMessageUploader} 对象，用户调用该对象中的方法更新状态。
      * @group 消息操作
      */
-    fun setMediaMessage(){
-//        val  imageMessage = ImageMessage.obtain(null, localUri);
-//        val msg = Message.obtain()
-//        RongIMClient.getInstance().sendMediaMessage(imageMessage,null,null,object : IRongCallback.ISendMediaMessageCallbackWithUploader{
-//            override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
-//
-//            }
-//
-//            override fun onSuccess(message: Message?) {
-//
-//            }
-//
-//            override fun onProgress(p0: Message?, p1: Int) {
-//
-//            }
-//
-//            override fun onCanceled(p0: Message?) {
-//
-//            }
-//
-//            override fun onError(p0: Message?, p1: ErrorCode?) {
-//
-//            }
-//
-//        })
+    fun setMediaMessage(targetId: String, targetUserObj: TargetUserObj? = null, type: Conversation.ConversationType, localUri: Uri) {
+
+        val imageMessage = ImageMessage.obtain(null, localUri)
+        currentUserObj?.targetUserObj = targetUserObj
+        currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
+        imageMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
+
+        val message = Message.obtain(targetId, type, imageMessage)
+        RongIMClient.getInstance().sendMediaMessage(message, null, null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
+            override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
+                if (message != null) {
+                    switchThread(message)
+                }
+            }
+
+            override fun onSuccess(message: Message?) {
+
+            }
+
+            override fun onProgress(p0: Message?, p1: Int) {
+
+            }
+
+            override fun onCanceled(p0: Message?) {
+
+            }
+
+            override fun onError(p0: Message?, p1: ErrorCode?) {
+
+            }
+
+        })
     }
 
 

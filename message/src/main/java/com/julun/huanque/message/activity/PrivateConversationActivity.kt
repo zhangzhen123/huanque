@@ -1,9 +1,11 @@
 package com.julun.huanque.message.activity
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.Observer
@@ -23,11 +25,15 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ChatUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.emotion.EmotionPagerView
 import com.julun.huanque.common.widgets.emotion.Emotions
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.config.PictureConfig
+import com.luck.picture.lib.config.PictureMimeType
 import com.rd.PageIndicatorView
 import com.rd.utils.DensityUtils
 import io.rong.imlib.RongIMClient
@@ -77,7 +83,7 @@ class PrivateConversationActivity : BaseActivity() {
         //获取对方数据
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
         //获取本人数据
-        mPrivateConversationViewModel?.chatBasic(SessionUtils.getUserId(),true)
+        mPrivateConversationViewModel?.chatBasic(SessionUtils.getUserId(), true)
     }
 
     /**
@@ -148,6 +154,7 @@ class PrivateConversationActivity : BaseActivity() {
             sendChatMessage(message)
             edit_text.setText("")
         }
+        iv_pic.onClickNew { checkPermissions() }
     }
 
     /**
@@ -308,7 +315,7 @@ class PrivateConversationActivity : BaseActivity() {
     /**
      * 发送消息
      */
-    private fun sendChatMessage(message: String) {
+    private fun sendChatMessage(message: String,pic : String = "") {
         if (TextUtils.isEmpty(message) || message.isBlank()) {
             ToastUtils.show("输入不能为空")
             return
@@ -325,6 +332,102 @@ class PrivateConversationActivity : BaseActivity() {
         RongCloudManager.send(message, "${targetChatInfo.friendId}", targetUserObj = targetUser) {}
     }
 
+    private fun checkPermissions() {
+        val rxPermissions = RxPermissions(this)
+        rxPermissions
+            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .subscribe { permission ->
+                when {
+                    permission.granted -> {
+                        logger.info("获取权限成功")
+                        goToPictureSelectPager()
+                    }
+                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+                        ToastUtils.show("权限无法获取")
+                    else -> {
+                        logger.info("获取权限被永久拒绝")
+                        val message = "无法获取到相机/存储权限，请手动到设置中开启"
+                        ToastUtils.show(message)
+                    }
+                }
+
+            }
+    }
+
+    /**
+     *
+     */
+    private fun goToPictureSelectPager() {
+        PictureSelector.create(this)
+            .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+            .theme(R.style.picture_me_style_single)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+            .minSelectNum(1)// 最小选择数量
+            .imageSpanCount(4)// 每行显示个数
+            .selectionMode(PictureConfig.SINGLE)
+            .previewImage(true)// 是否可预览图片
+            .isCamera(true)// 是否显示拍照按钮
+            .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+            .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
+            //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
+            .enableCrop(false)// 是否裁剪
+            .compress(true)// 是否压缩
+            .synOrAsy(true)//同步true或异步false 压缩 默认同步
+            //.compressSavePath(getPath())//压缩图片保存地址
+            .glideOverride(120, 120)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+            .isGif(false)// 是否显示gif图片
+//                    .selectionMedia(selectList)// 是否传入已选图片
+            .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+            //.cropCompressQuality(90)// 裁剪压缩质量 默认100
+            .minimumCompressSize(100)// 小于100kb的图片不压缩
+//            .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
+//            .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+            .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
+//            .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+            .isDragFrame(false)
+//            .circleDimmedLayer(true)// 是否圆形裁剪
+//            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+//            .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+//            .rotateEnabled(false) // 裁剪是否可旋转图片
+//            .scaleEnabled(true)// 裁剪是否可放大缩小图片
+            .forResult(PictureConfig.CHOOSE_REQUEST)
+
+        //结果回调onActivityResult code
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        try {
+            if (requestCode == PictureConfig.CHOOSE_REQUEST) {
+                logger.info("收到图片")
+                val selectList = PictureSelector.obtainMultipleResult(data)
+                for (media in selectList) {
+                    Log.i("图片-----》", media.path)
+                }
+                if (selectList.size > 0) {
+                    val media = selectList[0]
+                    val path: String?
+                    path = if (media.isCut && !media.isCompressed) {
+                        // 裁剪过
+                        media.cutPath
+                    } else if (media.isCompressed || media.isCut && media.isCompressed) {
+                        // 压缩过,或者裁剪同时压缩过,以最终压缩过图片为准
+                        media.compressPath
+                    } else {
+                        media.path
+                    }
+                    logger.info("收到图片:$path")
+//                    if(!mLoadingDialog.isShowing){
+//                        mLoadingDialog.showDialog()
+//                    }
+//                    mViewModel?.uploadHead(path)
+//                    RongCloudManager.setMediaMessage()
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            logger.info("图片返回出错了")
+        }
+    }
 
     override fun onBackPressed() {
         //用户按下返回键的时候，如果显示面板，则需要隐藏
