@@ -1,7 +1,7 @@
 package com.julun.huanque.core.ui.main.makefriend
 
 import android.graphics.Color
-import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -12,6 +12,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
@@ -22,12 +23,28 @@ import org.jetbrains.anko.textColor
 class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolder>(null) {
 
     var mOnItemAdapterListener: OnItemAdapterListener? = null
+    //对于图片子列表设置一个公共的缓存池 提高效率
+    private val mPhotoViewPool: RecyclerView.RecycledViewPool by lazy {
+        RecyclerView.RecycledViewPool()
+    }
 
     init {
         addItemType(HomeItemBean.HEADER, R.layout.item_mkf_header)
         addItemType(HomeItemBean.NORMAL, R.layout.item_mkf_normal)
         addItemType(HomeItemBean.GUIDE_TO_ADD_TAG, R.layout.item_mkf_guide_to_add_tag)
         addItemType(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, R.layout.item_mkf_guide_to_complete_info)
+        mPhotoViewPool.setMaxRecycledViews(0, 10)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        logger("onCreateViewHolder itemViewType:$viewType")
+        val holder = super.onCreateViewHolder(parent, viewType)
+        if (viewType == HomeItemBean.HEADER) {
+            holder.getView<TextView>(R.id.tv_balance).setTFDinCdc2()
+        } else if (viewType == HomeItemBean.NORMAL) {
+            holder.getView<TextView>(R.id.tv_audio_time).setTFDinAltB()
+        }
+        return holder
     }
 
     override fun convert(holder: BaseViewHolder?, item: HomeItemBean?) {
@@ -38,27 +55,22 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
         when (holder.itemViewType) {
             HomeItemBean.NORMAL -> {
 
-                //todo
-//                val list = arrayListOf<PhotoBean>()
-//                repeat(holder.layoutPosition % 4) {
-//                    list.add(PhotoBean("http://cdn.51lm.tv/lm/program/cover/053039203c24442ea99a852f7f60f69c.jpg"))
-//                }
                 val bean = item.content as HomeRecomItem
                 val list = bean.coverPicList.map { PhotoBean(url = it) }
                 val headPic = holder.getView<SimpleDraweeView>(R.id.header_pic)
-                holder.setGone(R.id.living_fg,bean.living).setGone(R.id.living_tag,bean.living)
+                holder.setGone(R.id.living_fg, bean.living).setGone(R.id.living_tag, bean.living)
 
                 headPic.loadImage(bean.headPic, 46f, 46f)
-                val name=if(bean.nickname.length>5){
-                    "${bean.nickname.substring(0,5)}…"
-                }else{
+                val name = if (bean.nickname.length > 5) {
+                    "${bean.nickname.substring(0, 5)}…"
+                } else {
                     bean.nickname
                 }
                 val authTag = holder.getView<SimpleDraweeView>(R.id.sd_auth_tag)
-                if(bean.authMark.isNotEmpty()){
+                if (bean.authMark.isNotEmpty()) {
                     authTag.show()
-                    ImageUtils.loadImageWithHeight_2(authTag,bean.authMark,dp2px(13))
-                }else{
+                    ImageUtils.loadImageWithHeight_2(authTag, bean.authMark, dp2px(13))
+                } else {
                     authTag.hide()
                 }
                 holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_mkf_sign, bean.mySign)
@@ -88,6 +100,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 when {
                     list.isNotEmpty() -> {
                         val rv = holder.getView<RecyclerView>(R.id.rv_photos)
+                        rv.setRecycledViewPool(mPhotoViewPool)
                         rv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
                         holder.setGone(R.id.ll_audio, false).setGone(R.id.rv_tags, false)
                         rv.show()
@@ -104,8 +117,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         }
                         mPhotosAdapter.replaceData(list)
                         mPhotosAdapter.setOnItemClickListener { _, _, position ->
-                            val childItem = mPhotosAdapter.getItem(position) ?: return@setOnItemClickListener
-                            mOnItemAdapterListener?.onPhotoClick(holder.layoutPosition, position, childItem)
+                            mOnItemAdapterListener?.onPhotoClick(holder.layoutPosition, position, mPhotosAdapter.data)
                         }
 
 
@@ -114,8 +126,13 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         holder.setGone(R.id.ll_audio, true).setGone(R.id.rv_photos, false).setGone(R.id.rv_tags, false)
                         holder.setText(R.id.tv_audio_time, "${bean.currentPlayProcess}s")
                         holder.addOnClickListener(R.id.iv_audio_play)
-                        val play=holder.getView<ImageView>(R.id.iv_audio_play)
+                        val play = holder.getView<ImageView>(R.id.iv_audio_play)
                         play.isActivated = bean.isPlay
+                        if (bean.isPlay) {
+                            holder.itemView.setTag(R.id.play_tag_key, ParamConstant.IS_AUDIO_PLAY)
+                        } else {
+                            holder.itemView.setTag(R.id.play_tag_key, null)
+                        }
                     }
                     bean.tagList.isNotEmpty() -> {
                         holder.setGone(R.id.ll_audio, false).setGone(R.id.rv_photos, false).setGone(R.id.rv_tags, true)
@@ -145,29 +162,6 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 if (rv.itemDecorationCount <= 0) {
                     rv.addItemDecoration(HorizontalItemDecoration(dp2px(10)))
                 }
-//                val list = arrayListOf<HeaderNavigateBean>()
-//
-//                list.add(HeaderNavigateBean().apply {
-//                    this.title1 = "蒙面女王"
-//                    this.title2 = "今日剩余${3}次"
-//                    this.type = HeaderNavigateBean.MASK_QUEEN
-//                })
-//                list.add(HeaderNavigateBean().apply {
-//                    this.title1 = "匿名语音"
-//                    this.title2 = "${11112}人参与"
-//                    this.type = HeaderNavigateBean.ANONYMOUS_VOICE
-//                })
-//                list.add(HeaderNavigateBean().apply {
-//                    this.title1 = "热门直播"
-//                    this.title2 = "&#128293"
-//                    this.type = HeaderNavigateBean.LIVING
-//                })
-//                list.add(HeaderNavigateBean().apply {
-//                    this.title1 = "今日花魁"
-//                    this.title2 = "昵称"
-//                    this.type = HeaderNavigateBean.DAY_TOP
-//                    this.url = "http://cdn.51lm.tv/lm/program/cover/053039203c24442ea99a852f7f60f69c.jpg"
-//                })
                 val mHeaderNavAdapter: HeaderNavAdapter
                 if (rv.adapter != null) {
                     mHeaderNavAdapter = rv.adapter as HeaderNavAdapter
@@ -189,8 +183,9 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
             HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION -> {
 
                 val rv = holder.getView<RecyclerView>(R.id.rv_add_photos)
+                rv.setRecycledViewPool(mPhotoViewPool)
                 rv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-                //todo
+
                 val list = arrayListOf<PhotoBean>()
                 repeat(4) {
                     list.add(PhotoBean(res = R.mipmap.icon_upload_photo))
@@ -213,7 +208,12 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
     }
 
     interface OnItemAdapterListener {
-        fun onPhotoClick(index: Int, position: Int, item: PhotoBean)
+        fun onPhotoClick(
+            index: Int,
+            position: Int,
+            list: MutableList<PhotoBean>
+        )
+
         fun onHeadClick(item: HeadModule?)
     }
 }

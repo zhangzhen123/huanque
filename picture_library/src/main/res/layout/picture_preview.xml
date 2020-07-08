@@ -7,11 +7,11 @@
     android:orientation="vertical">
 
 
-
     <com.luck.picture.lib.widget.PreviewViewPager
         android:id="@+id/preview_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
     <RelativeLayout
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
@@ -61,7 +61,7 @@
     <RelativeLayout
         android:id="@+id/select_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:background="?attr/picture.ac_preview.bottom.bg"
         android:gravity="center_vertical">
@@ -70,6 +70,7 @@
             android:id="@+id/id_ll_ok"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
@@ -90,15 +91,16 @@
             <TextView
                 android:id="@+id/tv_ok"
                 android:layout_width="wrap_content"
-                android:layout_height="28dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/selector_publish_bg"
-                android:gravity="center|left"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="下一步"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="发送"
                 android:textColor="@color/sel_text_login"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
     </RelativeLayout>

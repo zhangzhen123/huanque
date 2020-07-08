@@ -1,6 +1,7 @@
 package com.julun.huanque.common.suger
 
 import android.content.Context
+import android.graphics.Typeface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -8,6 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.helper.MixedHelper
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.utils.ImageUtils
 import java.util.*
 
@@ -143,3 +145,20 @@ abstract class NoDoubleClickListener : View.OnClickListener {
     }
 }
 
+
+val tfDinCdc2: Typeface by lazy {
+    Typeface.createFromAsset(CommonInit.getInstance().getContext().assets, "fonts/DINCondensedC-2.ttf")
+}
+
+val tfDinAltB: Typeface by lazy {
+    Typeface.createFromAsset(CommonInit.getInstance().getContext().assets, "fonts/DIN Alternate Bold.ttf")
+}
+
+//给文本设置自定义字体
+fun TextView.setTFDinCdc2() {
+    this.typeface = tfDinCdc2
+}
+
+fun TextView.setTFDinAltB() {
+    this.typeface = tfDinAltB
+}

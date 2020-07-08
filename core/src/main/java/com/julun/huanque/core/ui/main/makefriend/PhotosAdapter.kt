@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.main.makefriend
 
+import android.view.ViewGroup
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
@@ -22,6 +23,12 @@ class PhotosAdapter : BaseQuickAdapter<PhotoBean, BaseViewHolder>(R.layout.item_
             imgView.loadImageLocal(item.res)
         }
 
+
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        logger("PhotosAdapter onCreateViewHolder viewType=$viewType")
+        return super.onCreateViewHolder(parent, viewType)
 
     }
     private var last=0

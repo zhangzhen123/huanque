@@ -67,14 +67,12 @@ suspend fun BaseViewModel.request(
  * 协程请求的统一封装
  * [block]要执行的block
  * [error]错误返回
- * [final]最终返回
  *[needLoadState]是否需要初始化加载状态回调
  *
  */
-suspend fun <T> BaseViewModel.requestBack(
+suspend fun <T> BaseViewModel.requestResult(
     block: SBlock<Root<T>>,
     error: SNError? = null,
-    final: SNAction? = null,
     needLoadState: Boolean = false
 ): T? {
     if (needLoadState) {
@@ -93,8 +91,6 @@ suspend fun <T> BaseViewModel.requestBack(
         e.printStackTrace()
         error?.invoke(e)
 
-    } finally {
-        final?.invoke()
     }
     return null
 }

@@ -60,7 +60,9 @@
                 <action android:name="io.rong.push.intent.THIRD_PARTY_PUSH_STATE" />
             </intent-filter>
         </receiver>
-
+        <activity
+            android:name=".ui.image.ImageActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

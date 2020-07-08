@@ -1,7 +1,9 @@
 package com.luck.picture.lib.adapter;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import com.luck.picture.lib.R;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.entity.LocalMediaFolder;
+import com.luck.picture.lib.tools.AttrsUtils;
 import com.luck.picture.lib.tools.FrescoImageUtils;
 
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
     private Context mContext;
     private List<LocalMediaFolder> folders = new ArrayList<>();
     private int mimeType;
+    private Boolean showImage;
 
     public PictureAlbumDirectoryAdapter(Context mContext) {
         super();
@@ -53,6 +57,8 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(mContext).inflate(R.layout.picture_album_folder_item, parent, false);
+        showImage = AttrsUtils.getTypeValueBoolean(mContext,
+                R.attr.picture_style_album_showImage);
         return new ViewHolder(itemView);
     }
 
@@ -68,10 +74,10 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
         holder.itemView.setSelected(isChecked);
         if (mimeType == PictureMimeType.ofAudio()) {
 //            holder.first_image.setImageResource(R.drawable.audio_placeholder);
-            FrescoImageUtils.loadImageLocal(holder.first_image,R.drawable.audio_placeholder,mContext);
+            FrescoImageUtils.loadImageLocal(holder.first_image, R.drawable.audio_placeholder, mContext);
 //            ImageUtils.INSTANCE.loadImageLocal(holder.first_image,R.drawable.audio_placeholder);
         } else {
-            FrescoImageUtils.loadNativeFilePath(holder.first_image,imagePath,50f,50f,mContext);
+            FrescoImageUtils.loadNativeFilePath(holder.first_image, imagePath, 50f, 50f, mContext);
 //            ImageUtils.INSTANCE.loadNativeFilePath(holder.first_image,imagePath,50f,50f);
 //            RequestOptions options = new RequestOptions()
 //                    .placeholder(R.drawable.ic_placeholder)
@@ -109,6 +115,12 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
                 }
             }
         });
+
+        if (showImage) {
+            holder.rl_first_image.setVisibility(View.VISIBLE);
+        } else {
+            holder.rl_first_image.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -119,6 +131,7 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
     class ViewHolder extends RecyclerView.ViewHolder {
         SimpleDraweeView first_image;
         TextView tv_folder_name, image_num, tv_sign;
+        View rl_first_image;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -126,6 +139,7 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
             tv_folder_name = (TextView) itemView.findViewById(R.id.tv_folder_name);
             image_num = (TextView) itemView.findViewById(R.id.image_num);
             tv_sign = (TextView) itemView.findViewById(R.id.tv_sign);
+            rl_first_image = itemView.findViewById(R.id.rl_first_image);
         }
     }
 
