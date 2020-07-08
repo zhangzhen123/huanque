@@ -42,7 +42,7 @@ public class RequestInfoModule extends ReactContextBaseJavaModule {
 //
 //            Map<String, String> headerInfo = HeaderInfoHelper.INSTANCE.getMobileDeviceInfo();
             WritableMap map = Arguments.createMap();
-            map.putMap("headerInfo", RnManager.INSTANCE.getHeaderInfo());
+            map.putMap("requestInfo", RnManager.INSTANCE.getHeaderInfo());
             map.putString("baseURL", CommonInit.Companion.getInstance().getBaseUrl());
             map.putString("encryptionKey", BusiConstant.API_KEY);
             promise.resolve(map);

@@ -11,10 +11,11 @@
         android:id="@+id/preview_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
     <RelativeLayout
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="44dp"
         android:background="?attr/picture.ac_preview.title.bg">
 
         <ImageButton
@@ -36,15 +37,19 @@
             android:maxEms="11"
             android:textColor="?attr/picture.ac_preview.title.textColor"
             android:textSize="18sp" />
-        <ImageView
+
+        <TextView
             android:id="@+id/right_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:padding="13dp"
-            android:visibility="gone"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" />
+            android:textSize="16sp"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

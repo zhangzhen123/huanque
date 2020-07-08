@@ -12,13 +12,23 @@
         android:background="?colorPrimary"
         android:gravity="center_vertical">
 
-        <ImageView
+<!--        <ImageView-->
+<!--            android:id="@+id/picture_left_back"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:padding="15dp"-->
+<!--            android:src="?attr/picture.leftBack.icon" />-->
+        <TextView
             android:id="@+id/picture_left_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:padding="15dp"
-            android:src="?attr/picture.leftBack.icon" />
+            android:text="取消"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:textSize="15sp"
+            android:padding="15dp" />
 
         <TextView
             android:id="@+id/picture_title"
@@ -32,8 +42,9 @@
             android:maxEms="11"
             android:padding="6dp"
             android:text="@string/picture_camera_roll"
+            android:textStyle="bold"
             android:textColor="?picture.title.textColor"
-            android:textSize="17sp" />
+            android:textSize="16sp" />
 
         <!--<TextView-->
         <!--android:id="@+id/picture_right"-->
@@ -47,31 +58,6 @@
         <!--android:textColor="?picture.right.textColor"-->
         <!--android:textSize="14sp" />-->
 
-        <LinearLayout
-            android:id="@+id/id_ll_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:enabled="false"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/picture_tv_ok"
-                android:layout_width="wrap_content"
-                android:layout_height="28dp"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:text="下一步"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/selector_publish_bg"
-                android:textColor="@color/sel_text_login"
-                android:textSize="14sp" />
-
-        </LinearLayout>
     </RelativeLayout>
 
     <TextView

@@ -324,13 +324,13 @@
         <!--图片已选数量圆点背景色-->
         <item name="picture.num.style">@drawable/num_oval</item>
         <!--预览界面标题文字颜色-->
-        <item name="picture.ac_preview.title.textColor">@color/white</item>
+        <item name="picture.ac_preview.title.textColor">@color/black_333</item>
         <!--预览界面已完成文字颜色-->
         <item name="picture.ac_preview.complete.textColor">@color/black_333</item>
         <!--预览界面标题栏背景色-->
-        <item name="picture.ac_preview.title.bg">@color/percent40translucentBlack</item>
+        <item name="picture.ac_preview.title.bg">@color/white</item>
         <!--预览界面底部背景色-->
-        <item name="picture.ac_preview.bottom.bg">@color/percent40translucentBlack</item>
+        <item name="picture.ac_preview.bottom.bg">@color/white</item>
         <!--预览界面返回箭头-->
         <item name="picture.preview.leftBack.icon">@mipmap/icon_back_black_01</item>
         <!--裁剪页面标题背景色-->
@@ -341,6 +341,9 @@
         <item name="picture.crop.title.color">@color/white</item>
         <!--相册文件夹列表选中图标-->
         <item name="picture.folder_checked_dot">@drawable/orange_oval</item>
+
+        <item name="picture.style.album.showImage">false</item>
+
     </style>
     <style name="picture.me.style_multi" parent="picture.me.style_single">
         <item name="picture.checked.style">@drawable/selector_pic_checkbox_num</item>

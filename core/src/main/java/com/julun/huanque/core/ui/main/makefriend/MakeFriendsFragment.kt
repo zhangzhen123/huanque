@@ -16,11 +16,13 @@ import com.julun.huanque.common.bean.beans.HeadModule
 import com.julun.huanque.common.bean.beans.HomeItemBean
 import com.julun.huanque.common.bean.beans.HomeRecomItem
 import com.julun.huanque.common.bean.beans.PhotoBean
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
+import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.fragment_make_friend.*
 
@@ -51,8 +53,8 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
             }
 
             override fun start() {
-                logger.info("start 总长=${audioPlayerManager.getDuration()/1000}")
-                currentPlayHomeRecomItem?.introduceVoiceLength=audioPlayerManager.getDuration()/1000
+                logger.info("start 总长=${audioPlayerManager.getDuration() / 1000}")
+                currentPlayHomeRecomItem?.introduceVoiceLength = audioPlayerManager.getDuration() / 1000
             }
 
             override fun pause() {
@@ -85,9 +87,9 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
             }
 
             override fun onSeekBarProgress(progress: Int) {
-                logger.info("onSeekBarProgress progress=${progress/1000}")
+                logger.info("onSeekBarProgress progress=${progress / 1000}")
                 currentPlayHomeRecomItem?.let {
-                    it.currentPlayProcess=it.introduceVoiceLength-progress/1000
+                    it.currentPlayProcess = it.introduceVoiceLength - progress / 1000
                     mAdapter.notifyItemChanged(currentIndex)
                 }
             }
@@ -114,8 +116,13 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
 
         }
         mAdapter.mOnItemAdapterListener = object : MakeFriendsAdapter.OnItemAdapterListener {
-            override fun onPhotoClick(index: Int, position: Int, item: PhotoBean) {
-                logger.info("index=$index position=$position item=$item")
+            override fun onPhotoClick(
+                index: Int,
+                position: Int,
+                list: MutableList<PhotoBean>
+            ) {
+                logger.info("index=$index position=$position ")
+                ImageActivity.start(requireActivity(), position, list.map { StringHelper.getOssImgUrl(it.url) })
             }
 
             override fun onHeadClick(item: HeadModule?) {
@@ -141,6 +148,23 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
                 }
             }
         }
+        mRecyclerView.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
+            override fun onChildViewDetachedFromWindow(view: View) {
+                if (view.getTag(R.id.play_tag_key) == ParamConstant.IS_AUDIO_PLAY) {
+                        //todo
+                    logger.info("播放的item被移除了 ")
+                }
+            }
+
+            override fun onChildViewAttachedToWindow(view: View) {
+                if (view.getTag(R.id.play_tag_key) == ParamConstant.IS_AUDIO_PLAY) {
+                    //todo
+                    logger.info("播放的item再次添加 ")
+                }
+            }
+
+        })
+
     }
 
     var currentPlayHomeRecomItem: HomeRecomItem? = null
@@ -212,6 +236,7 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
         super.onDestroy()
         audioPlayerManager.destroy()
     }
+
     override fun showLoadState(state: NetState) {
         when (state.state) {
             NetStateType.SUCCESS -> {//showSuccess()

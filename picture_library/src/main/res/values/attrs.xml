@@ -37,6 +37,8 @@
     <attr name="picture.crop.status.color" format="reference|color" />
     <attr name="picture.crop.title.color" format="reference|color" />
     <attr name="picture.folder_checked_dot" format="reference" />
+    <!--    新增是否显示目录列表的缩略图-->
+    <attr name="picture.style.album.showImage" format="boolean" />
 
     <declare-styleable name="BigImageView">
         <attr format="enum" name="initScaleType">

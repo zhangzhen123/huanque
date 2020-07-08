@@ -72,7 +72,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
     private final static String TAG = PictureSelectorActivity.class.getSimpleName();
     private static final int SHOW_DIALOG = 0;
     private static final int DISMISS_DIALOG = 1;
-    private ImageView picture_left_back;
+    private TextView picture_left_back;
     private TextView picture_title, /*picture_right,*/ picture_tv_ok, tv_empty,
             /*picture_tv_img_num,*/ picture_id_preview, tv_PlayPause, tv_Stop, tv_Quit,
             tv_musicStatus, tv_musicTotal, tv_musicTime;
@@ -192,7 +192,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
     private void initView(Bundle savedInstanceState) {
 
         rl_picture_title = (RelativeLayout) findViewById(R.id.rl_picture_title);
-        picture_left_back = (ImageView) findViewById(R.id.picture_left_back);
+        picture_left_back = (TextView) findViewById(R.id.picture_left_back);
         picture_title = (TextView) findViewById(R.id.picture_title);
 //        picture_right = (TextView) findViewById(R.id.picture_right);
         picture_tv_ok = (TextView) findViewById(R.id.picture_tv_ok);
@@ -863,7 +863,8 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
 //                }
 //                picture_tv_img_num.setVisibility(View.VISIBLE);
 //                picture_tv_img_num.setText(String.valueOf(selectImages.size()));
-                picture_tv_ok.setText("下一步("+selectImages.size()+")");
+//                picture_tv_ok.setText("下一步("+selectImages.size()+")");
+                picture_tv_ok.setText("发送");
                 anim = false;
             }
         } else {
@@ -876,7 +877,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
                         config.selectionMode == PictureConfig.SINGLE ? 1 : config.maxSelectNum));
             } else {
 //                picture_tv_img_num.setVisibility(View.INVISIBLE);
-                picture_tv_ok.setText("下一步");
+                picture_tv_ok.setText("发送");
             }
         }
     }

@@ -17,7 +17,7 @@
     <RelativeLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:background="?attr/picture.bottom.bg"
         android:gravity="center_vertical">
@@ -33,6 +33,31 @@
             android:text="@string/picture_preview"
             android:textColor="?attr/picture.preview.textColor"
             android:textSize="14sp" />
+        <LinearLayout
+            android:id="@+id/id_ll_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:enabled="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/picture_tv_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="发送"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/selector_publish_bg"
+                android:textColor="@color/sel_text_login"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
 
     </RelativeLayout>
