@@ -5,13 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chad.library.adapter.base.BaseViewHolder
 import com.julun.huanque.common.bean.beans.ChatUserBean
+import com.julun.huanque.common.bean.beans.RoomUserChatExtra
+import com.julun.huanque.common.bean.beans.Session
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.SessionUtils
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
@@ -113,12 +117,33 @@ class PrivateConversationViewModel : BaseViewModel() {
     /**
      * 获取私聊基础信息
      */
-    fun chatBasic(targetId: Long) {
+    fun chatBasic(targetId: Long, owner: Boolean = false) {
         viewModelScope.launch {
             request({
                 val result = socialService.chatBasic(FriendIdForm(targetId)).dataConvert()
-                chatInfoData.value = result
-            }, {})
+                if (owner) {
+                    //设置本人数据
+                    val user = RoomUserChatExtra().apply {
+                        headPic = result.headPic
+                        senderId = result.friendId
+                        nickname = result.nickname
+                    }
+                    RongCloudManager.resetUserInfoData(user)
+                } else {
+                    chatInfoData.value = result
+                }
+            }, {
+                if (owner) {
+                    //设置本人数据
+                    //设置本人数据
+                    val user = RoomUserChatExtra().apply {
+                        headPic = SessionUtils.getHeaderPic()
+                        senderId = SessionUtils.getUserId()
+                        nickname = SessionUtils.getNickName()
+                    }
+                    RongCloudManager.resetUserInfoData(user)
+                }
+            })
         }
 
     }

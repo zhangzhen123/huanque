@@ -8,6 +8,7 @@ import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
+import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
@@ -29,6 +30,7 @@ import io.rong.imlib.model.Message
 import io.rong.imlib.model.MessageContent
 import io.rong.message.CommandMessage
 import io.rong.message.TextMessage
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -248,7 +250,7 @@ object RongCloudManager {
         if (!TextUtils.isEmpty(toUserId)) {
             targetId = toUserId!!
             conversationType = Conversation.ConversationType.PRIVATE
-            //            EventBus.getDefault().post(EventMessageBean(targetId))
+//            EventBus.getDefault().post(EventMessageBean(targetId))
         }
         RongIMClient.getInstance().sendMessage(conversationType,
             targetId,
@@ -428,7 +430,11 @@ object RongCloudManager {
                     return
                 }
                 bean.userInfo = user
-                bean.userInfo?.senderId = message.senderUserId
+                try {
+                    bean.userInfo?.senderId = message.senderUserId.toLong()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 if (message.conversationType == Conversation.ConversationType.CHATROOM) {
                     if (MessageProcessor.publicTextProcessor == null) {
                         //直播间聊天室的消息

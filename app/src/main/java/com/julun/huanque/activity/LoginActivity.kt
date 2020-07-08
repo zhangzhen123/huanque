@@ -291,4 +291,16 @@ class LoginActivity : BaseActivity() {
         finish()
     }
 
+    override fun finish() {
+        if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
+
+        } else {
+            SessionUtils.clearSession()
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+        super.finish()
+
+    }
+
 }

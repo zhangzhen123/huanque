@@ -116,7 +116,7 @@ open class TplBean(
             //1.首先设置全局颜色
             styleParamMap[MessageUtil.KEY_ALL] = StyleParam(styleType = MessageUtil.KEY_BASIC, color = "#FFFFFF")
             //2.主播的发言处理
-            if (anchorLevel > 0 && it.targetUserObj?.nickname !== null && it.senderId == "${SessionUtils.getUserId()}") {
+            if (anchorLevel > 0 && it.targetUserObj?.nickname !== null && "${it.senderId}" == "${SessionUtils.getUserId()}") {
 
                 textTpl = "$nicknameKey $prepositionKey $toNicknameKey $textTpl"
                 textParams.put(prepositionKey, "对")

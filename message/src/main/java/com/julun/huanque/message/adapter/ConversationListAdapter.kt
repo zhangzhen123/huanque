@@ -1,104 +1,48 @@
 package com.julun.huanque.message.adapter
 
-import android.graphics.Color
-import android.view.View
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.TimeUtils
 import com.julun.huanque.message.R
-import io.rong.imlib.model.Conversation
 import io.rong.message.TextMessage
-import org.jetbrains.anko.backgroundColor
 
 /**
  *@创建者   dong
  *@创建时间 2019/5/17 14:22
- *@描述
+ *@描述 会话使用
  */
-class ConversationListAdapter :
-    BaseQuickAdapter<LocalConversation, BaseViewHolder>(R.layout.recycler_item_conversion) {
-    var curAnchorId = ""
-
-    //直播间以外的消息列表不显示勋章
-    var isLive: Boolean = false
+class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHolder>(R.layout.recycler_item_conversion) {
 
     override fun convert(helper: BaseViewHolder?, item: LocalConversation?) {
         if (helper == null || item == null) {
             return
         }
-        val targetId = item.conversation.targetId
-        val con = helper.getView<View>(R.id.con)
-        try {
-            con.backgroundColor = if (curAnchorId == targetId) {
-                //con.back
-                Color.parseColor("#fcfbf9")
-            } else {
-                Color.WHITE
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
         val msg = item.conversation.latestMessage
-        //        if (item.showUserInfo != null) {
-        //            //存在用户信息
-        //            ImageUtils.loadImage(helper.getView<SimpleDraweeView>(R.id.sdv_header), item.showUserInfo?.headPic
-        //                    ?: "", 50f, 50f)
-        //            helper.setText(R.id.tv_nickname, item.showUserInfo?.nickname ?: "")
-        //            val ivRoyalLevel = helper.getView<ImageView>(R.id.iv_royal_level)
-        //            val ivUserLevel = helper.getView<ImageView>(R.id.iv_user_level)
-        //            if (item.showUserInfo?.userType == BusiConstant.ChatUserType.Anchor) {
-        //                //主播身份
-        //                ivRoyalLevel.hide()
-        //                if (!isLive) {
-        //                    ivUserLevel.hide()
-        //                } else {
-        //                    val anchorLevel = item.showUserInfo?.anchorLevel ?: 0
-        //                    if (anchorLevel > 0) {
-        //                        ivUserLevel.show()
-        //                        ivUserLevel.setImageResource(ImageUtils.getAnchorLevelResId(anchorLevel))
-        //                    } else {
-        //                        ivUserLevel.hide()
-        //                    }
-        //                }
-        //            } else {
-        //                //用户身份
-        //                if (!isLive) {
-        //                    ivRoyalLevel.hide()
-        //                    ivUserLevel.hide()
-        //                } else {
-        //                    ivRoyalLevel.show()
-        //                    val userLevel = item.showUserInfo?.userLevel ?: 0
-        //                    if (userLevel > 0) {
-        //                        ivUserLevel.show()
-        //                        ivUserLevel.setImageResource(ImageUtils.getUserLevelImg(userLevel))
-        //                    } else {
-        //                        ivUserLevel.hide()
-        //                    }
-        //                    val royalLevel = item.showUserInfo?.royalLevel ?: 0
-        //                    if (royalLevel > 0) {
-        //                        ivRoyalLevel.setImageResource(ImageUtils.getRoyalLevelImgRound(royalLevel))
-        //                    }
-        //                }
-        //            }
-        //        } else {
-        //不存在用户信息
-        if (msg is TextMessage) {
-            //文本消息
-            //                msg.extra?.let {
-            //                    val user: RoomUserChatExtra? = JsonUtil.deserializeAsObject(it, RoomUserChatExtra::class.java)
-            //                    if (user?.userId != SessionUtils.getUserId()) {
-            //                        helper.setText(R.id.tv_nickname, user?.nickname ?: "")
-            //                    } else {
-            helper.setText(R.id.tv_nickname, item.conversation.targetId)
-            //                    }
-            //                }
+        if (item.showUserInfo != null) {
+            //存在用户信息
+            ImageUtils.loadImage(helper.getView<SimpleDraweeView>(R.id.sdv_header), item.showUserInfo?.headPic ?: "", 50f, 50f)
+            helper.setText(R.id.tv_nickname, item.showUserInfo?.nickname ?: "")
+
         }
+        //不存在用户信息
+//            if (msg is TextMessage) {
+//                //文本消息
+//                msg.extra?.let {
+//                    val user: RoomUserChatExtra? = JsonUtil.deserializeAsObject(it, RoomUserChatExtra::class.java)
+//                    if (user?.userId != SessionUtils.getUserId()) {
+//                        helper.setText(R.id.tv_nickname, user?.nickname ?: "")
+//                    } else {
+//                        helper.setText(R.id.tv_nickname, item.conversation.targetId)
+//                    }
+//                }
+//            }
         //        }
 
 

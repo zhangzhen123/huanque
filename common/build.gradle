@@ -22,7 +22,7 @@ android {
         consumerProguardFiles "consumer-rules.pro"
 
         buildConfigField "Integer", "BUILD_NUMBER", "${getBuildNumber()}"
-        buildConfigField "String","IMAGE_SERVER_URL","\"${api.IMAGE_SERVER_URL}\""
+        buildConfigField "String", "IMAGE_SERVER_URL", "\"${api.IMAGE_SERVER_URL}\""
         //正式地址 http
         buildConfigField "String", "SERVICE_BASE_URL_PRODUCT", "\"${api.BASE_URL_PRODUCT}\""
         //测试环境
@@ -100,8 +100,8 @@ dependencies {
 //    implementation "androidx.webkit:webkit:1.2.0"
     api "androidx.preference:preference-ktx:1.1.1"
     api 'com.google.android.material:material:1.1.0'
-    implementation 'androidx.room:room-runtime:2.2.5'
-    annotationProcessor 'androidx.room:room-compiler:2.2.5'
+    api 'androidx.room:room-runtime:2.2.5'
+    kapt 'androidx.room:room-compiler:2.2.5'
 
     /* anko jetbrains kotlin扩展库*/
     api "org.jetbrains.anko:anko-sdk23:$ankoVersion"
@@ -157,7 +157,7 @@ dependencies {
     api 'com.romandanylyk:pageindicatorview:1.0.1'
     /*阿里云oss*/
     api 'com.aliyun.dpa:oss-android-sdk:2.9.2'
-   /* 相册选择 因为很多地方可能会用到 放在common中方便调用*/
+    /* 相册选择 因为很多地方可能会用到 放在common中方便调用*/
     api project(':picture_library')
 
 }

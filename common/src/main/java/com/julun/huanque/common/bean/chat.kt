@@ -1,11 +1,11 @@
 package com.julun.huanque.common.bean
 
-import android.os.Parcel
-import android.os.Parcelable
+import androidx.room.Entity
 import com.julun.huanque.common.utils.SessionUtils
 import io.rong.imlib.model.Conversation
 import java.io.Serializable
 
+@Entity(primaryKeys = ["userId", "mineUserId"])
 data class ChatUser(
     //头像
     var headPic: String = "",
@@ -19,6 +19,10 @@ data class ChatUser(
     var status: String = "",
     //主播等级
     var anchorLevel: Int = 0,
+    //亲密等级
+    var intimateLevel : Int = 0,
+    //欢遇标识
+    var meetStatus : String = "",
     //用户类型  主播还是用户
     var userType: String = "",
     //直播间ID
@@ -129,7 +133,6 @@ data class LocalConversation(
 )
 
 
-
 /**
  * 分页对象
  */
@@ -233,3 +236,13 @@ data class CreateChatInfo(
 data class OpenChatRoomBean(var closeMillSeconds: Long = 0L) : Serializable
 
 data class MsgCountBean(var newCount: Int = 0) : Serializable
+
+data class MessageHeaderBean(
+    //头像
+    var headRes:Int=0,
+    var headPic: String = "",
+    var title: String = "",
+    var content: String = "",
+    var messageCount: Int = 0,
+    var time: Long = 0L
+)
