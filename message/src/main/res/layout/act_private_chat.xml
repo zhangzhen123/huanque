@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#7F7F7F7F"
+    android:background="@color/bg_private_chat"
     android:orientation="vertical">
 
     <include
@@ -45,7 +45,6 @@
                 android:id="@+id/bottom_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/bg_private_chat"
                 android:gravity="bottom"
                 android:minHeight="104dp">
 

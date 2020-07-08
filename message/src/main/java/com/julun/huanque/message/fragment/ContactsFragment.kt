@@ -76,7 +76,7 @@ class ContactsFragment : BaseFragment() {
                     ContactsTabType.Intimate, ContactsTabType.Friend -> {
                         //点击私信
                         activity?.let { act ->
-                            PrivateConversationActivity.newInstance(act, 20000035)
+                            PrivateConversationActivity.newInstance(act, 20000036)
                         }
                     }
                     ContactsTabType.Follow, ContactsTabType.Fan -> {
