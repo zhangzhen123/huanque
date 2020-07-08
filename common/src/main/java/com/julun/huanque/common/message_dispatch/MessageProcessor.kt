@@ -7,6 +7,7 @@ import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.ULog
@@ -15,6 +16,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 
 import io.rong.imlib.model.Message
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by djp on 2016/12/20.
@@ -76,6 +78,9 @@ object MessageProcessor {
      */
     private fun processPrivateMessage(msg: Message) {
         try {
+            if (privateTextProcessor == null) {
+                EventBus.getDefault().post(EventMessageBean(msg.targetId ?: ""))
+            }
             privateTextProcessor?.processMessage(msg)
         } catch (e: Exception) {
             reportCrash(e)
@@ -135,7 +140,7 @@ object MessageProcessor {
             }
             else -> {
                 processTextMessageOnMain(
-                        arrayListOf(bean), TextMessageType.parse(displayType)
+                    arrayListOf(bean), TextMessageType.parse(displayType)
                         ?: return
                 )
             }
@@ -262,7 +267,7 @@ object MessageProcessor {
             return JsonUtil.deserializeAsObject(data, eventCode.klass)
         }
         val deserializeAsObject: EventMessageContent<T> =
-                JsonUtil.deserializeAsObject(data, ReflectUtil.type(EventMessageContent::class.java, eventCode.klass))
+            JsonUtil.deserializeAsObject(data, ReflectUtil.type(EventMessageContent::class.java, eventCode.klass))
         val context: T? = deserializeAsObject.context
         return context
     }
@@ -1126,7 +1131,7 @@ object MessageProcessor {
      * 主题房宝箱可领取
      */
     interface ThemeOnlineTreasureEnableInfoProcessor :
-            EventMessageProcessor<ThemeOnlineTreasureEnableInfo> {
+        EventMessageProcessor<ThemeOnlineTreasureEnableInfo> {
         override fun getEventType() = EventMessageType.UserThemeOnlineTreasure
     }
 }

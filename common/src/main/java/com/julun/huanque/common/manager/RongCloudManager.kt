@@ -8,6 +8,7 @@ import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
+import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
@@ -28,7 +29,10 @@ import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
 import io.rong.imlib.model.MessageContent
 import io.rong.message.CommandMessage
+import io.rong.message.ImageMessage
+import io.rong.message.MediaMessageContent
 import io.rong.message.TextMessage
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -235,6 +239,53 @@ object RongCloudManager {
     }
 
     /**
+     * 发送多媒体消息，可以使用该方法将多媒体文件上传到自己的服务器。
+     * <p>
+     * 上传多媒体文件时，会回调 {@link io.rong.imlib.IRongCallback.ISendMediaMessageCallbackWithUploader#onAttached(Message, IRongCallback.MediaMessageUploader)}
+     * 此回调中携带 {@link IRongCallback.MediaMessageUploader} 对象，使用者只需要调用此对象中的 <br>
+     * {@link IRongCallback.MediaMessageUploader#update(int)} 更新进度 <br>
+     * {@link IRongCallback.MediaMessageUploader#success(Uri)} 更新成功状态，并告知上传成功后的文件地址 <br>
+     * {@link IRongCallback.MediaMessageUploader#error()} 更新失败状态 <br>
+     * {@link IRongCallback.MediaMessageUploader#cancel()} ()} 更新取消状态 <br>
+     * </p>
+     *
+     * @param message     发送消息的实体。
+     * @param pushContent 当下发远程推送消息时，在通知栏里会显示这个字段。
+     *                    如果发送的是自定义消息，该字段必须填写，否则无法收到远程推送消息。
+     *                    如果发送 SDK 中默认的消息类型，例如: RC:TxtMsg, RC:VcMsg, RC:ImgMsg, RC:FileMsg，则不需要填写，默认已经指定。
+     * @param pushData    远程推送附加信息。如果设置该字段，用户在收到远程推送消息时，能通过 {@link io.rong.push.notification.PushNotificationMessage#getPushData()} 方法获取。
+     * @param callback    发送消息的回调，回调中携带 {@link IRongCallback.MediaMessageUploader} 对象，用户调用该对象中的方法更新状态。
+     * @group 消息操作
+     */
+    fun setMediaMessage(){
+//        val  imageMessage = ImageMessage.obtain(null, localUri);
+//        val msg = Message.obtain()
+//        RongIMClient.getInstance().sendMediaMessage(imageMessage,null,null,object : IRongCallback.ISendMediaMessageCallbackWithUploader{
+//            override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
+//
+//            }
+//
+//            override fun onSuccess(message: Message?) {
+//
+//            }
+//
+//            override fun onProgress(p0: Message?, p1: Int) {
+//
+//            }
+//
+//            override fun onCanceled(p0: Message?) {
+//
+//            }
+//
+//            override fun onError(p0: Message?, p1: ErrorCode?) {
+//
+//            }
+//
+//        })
+    }
+
+
+    /**
      * 发送聊天消息
      */
     fun send(message: String, toUserId: String? = null, targetUserObj: TargetUserObj? = null, callback: (Boolean) -> Unit = {}) {
@@ -248,7 +299,7 @@ object RongCloudManager {
         if (!TextUtils.isEmpty(toUserId)) {
             targetId = toUserId!!
             conversationType = Conversation.ConversationType.PRIVATE
-            //            EventBus.getDefault().post(EventMessageBean(targetId))
+//            EventBus.getDefault().post(EventMessageBean(targetId))
         }
         RongIMClient.getInstance().sendMessage(conversationType,
             targetId,
@@ -342,6 +393,7 @@ object RongCloudManager {
 
     }
 
+
     // 消息消费定时器
     fun startMessageConsumerWithCurrentUserObj(userObj: RoomUserChatExtra) {
         // 开始消费数据
@@ -428,7 +480,11 @@ object RongCloudManager {
                     return
                 }
                 bean.userInfo = user
-                bean.userInfo?.senderId = message.senderUserId
+                try {
+                    bean.userInfo?.senderId = message.senderUserId.toLong()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 if (message.conversationType == Conversation.ConversationType.CHATROOM) {
                     if (MessageProcessor.publicTextProcessor == null) {
                         //直播间聊天室的消息

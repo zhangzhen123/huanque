@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
@@ -20,6 +21,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.onTouch
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ChatUtils
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.emotion.EmotionPagerView
 import com.julun.huanque.common.widgets.emotion.Emotions
@@ -72,7 +74,10 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.targetIdData?.value = targetID
         registerMessageEventProcessor()
         //        mPrivateConversationViewModel?.getMessageList(first = true)
+        //获取对方数据
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
+        //获取本人数据
+        mPrivateConversationViewModel?.chatBasic(SessionUtils.getUserId(),true)
     }
 
     /**
@@ -308,8 +313,16 @@ class PrivateConversationActivity : BaseActivity() {
             ToastUtils.show("输入不能为空")
             return
         }
-        val targetID = mPrivateConversationViewModel?.targetIdData?.value ?: return
-        RongCloudManager.send(message, "$targetID") {}
+        val targetChatInfo = mPrivateConversationViewModel?.chatInfoData?.value ?: return
+        val targetUser = TargetUserObj().apply {
+            headPic = targetChatInfo.headPic
+            nickname = targetChatInfo.nickname
+            intimateLevel = targetChatInfo.intimate.intimateLevel
+            meetStatus = targetChatInfo.meetStatus
+            userId = targetChatInfo.friendId
+        }
+
+        RongCloudManager.send(message, "${targetChatInfo.friendId}", targetUserObj = targetUser) {}
     }
 
 

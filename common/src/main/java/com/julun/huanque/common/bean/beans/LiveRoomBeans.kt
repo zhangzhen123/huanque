@@ -54,9 +54,9 @@ class RoomUserChatExtra(
     , var badgesPic: List<String?> = ArrayList()//添加勋章列表
     , var nickcolor: String = ""
     , var textColor: String = ""
-    , var senderId: String = "" //发送者的ID
+    , var senderId: Long = 0 //发送者的ID
     //发送者的头像
-    , var headerUrl: String = ""
+    , var headPic: String = ""
     , var targetUserObj: TargetUserObj? = null
     //贵族图片，远程图片
     , var royalPic: String = ""
@@ -68,10 +68,20 @@ class RoomUserChatExtra(
     var displayType: List<String>? = null
 )
 
+/**
+ * 消息体内部 携带的用户数据
+ */
 class TargetUserObj(
-    var anchorLevel: Int = 0,
+    //头像
+    var headPic: String = "",
+    //昵称
     var nickname: String = "",
-    var userId: String? = null
+    //亲密等级
+    var intimateLevel: Int = 0,
+    //欢遇标识
+    var meetStatus: String = "",
+    //用户ID
+    var userId: Long = 0L
 )
 
 /**
