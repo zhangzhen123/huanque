@@ -237,12 +237,7 @@ object RongCloudManager {
     /**
      * 发送聊天消息
      */
-    fun send(
-        message: String,
-        toUserId: String? = null,
-        targetUserObj: TargetUserObj? = null,
-        callback: (Boolean) -> Unit = {}
-    ) {
+    fun send(message: String, toUserId: String? = null, targetUserObj: TargetUserObj? = null, callback: (Boolean) -> Unit = {}) {
         val chatMessage: TextMessage = TextMessage.obtain(message)
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")

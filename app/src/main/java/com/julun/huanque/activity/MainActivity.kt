@@ -44,6 +44,7 @@ class MainActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         //连接融云
         RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
+        logger.info("DXC  userID = ${SessionUtils.getUserId()}，header = ${SessionUtils.getHeaderPic()}")
         setContentView(R.layout.main_activity)
         initViewModel()
         mMainViewModel?.indexData?.value = 0

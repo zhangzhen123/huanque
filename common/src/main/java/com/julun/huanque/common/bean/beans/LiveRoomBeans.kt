@@ -28,46 +28,50 @@ class UserLevelMap : Serializable {
  * @param currentLifeUsed 当前轮是否使用过该数据
  * @param time 时间
  */
-class DanmuEvent(var factoryCarPrizeCount: Int = 0, var useing: Boolean = false, var currentLifeUsed: Boolean = false, var time: Long = 0) : Serializable, TplBean()
+class DanmuEvent(var factoryCarPrizeCount: Int = 0, var useing: Boolean = false, var currentLifeUsed: Boolean = false, var time: Long = 0) :
+    Serializable, TplBean()
 
 /**
  * 攻击模式轮播使用
  */
 class SlideEvent(var used: Boolean = false, val tplBean: TplBean) : Serializable
 
-class RunwayCache(var cacheIt: Boolean = false,
-                  var seconds: Long = 0,
-                  var cacheValue: Long = 0) : Serializable
+class RunwayCache(
+    var cacheIt: Boolean = false,
+    var seconds: Long = 0,
+    var cacheValue: Long = 0
+) : Serializable
 
 /**
  * userId, nickname, userLevel, royalLevel, roomGuardPic, roomManagerPic, officalManagerPic, badgesPic, nickcolor,textColor
  */
 class RoomUserChatExtra(
-        var userId: Int = -1
-        , var userAbcd: String = ""
-        , var nickname: String = "", var royalLevel: Int = 0
-        , var userLevel: Int = 0
-        , var anchorLevel: Int = -1
-        , var badgesPic: List<String?> = ArrayList()//添加勋章列表
-        , var nickcolor: String = ""
-        , var textColor: String = ""
-        , var senderId: String = "" //发送者的ID
-        //发送者的头像
-        , var headerUrl: String = ""
-        , var targetUserObj: TargetUserObj? = null
-        //贵族图片，远程图片
-        , var royalPic: String = ""
-        //贵族图片，远程图片(圆角小图片)
-        , var royalSmallPic: String = ""
-        //msgType= 1 表示为系统消息
-        , var msgType: Int = 0,
+    var userId: Int = -1
+    , var userAbcd: String = ""
+    , var nickname: String = "", var royalLevel: Int = 0
+    , var userLevel: Int = 0
+    , var anchorLevel: Int = -1
+    , var badgesPic: List<String?> = ArrayList()//添加勋章列表
+    , var nickcolor: String = ""
+    , var textColor: String = ""
+    , var senderId: String = "" //发送者的ID
+    //发送者的头像
+    , var headerUrl: String = ""
+    , var targetUserObj: TargetUserObj? = null
+    //贵族图片，远程图片
+    , var royalPic: String = ""
+    //贵族图片，远程图片(圆角小图片)
+    , var royalSmallPic: String = ""
+    //msgType= 1 表示为系统消息
+    , var msgType: Int = 0,
 //显示类别 炫彩发言使用
-        var displayType: List<String>? = null)
+    var displayType: List<String>? = null
+)
 
-class TargetUserObj(var anchorLevel: Int = 0,
-                    var nickname: String = "",
-                    var userId: String? = null
-
+class TargetUserObj(
+    var anchorLevel: Int = 0,
+    var nickname: String = "",
+    var userId: String? = null
 )
 
 /**
@@ -75,29 +79,29 @@ class TargetUserObj(var anchorLevel: Int = 0,
  * Created by nirack on 16-11-7.
  */
 data class UserInfoForLmRoom(
-        var userId: Int = -1
-        , var headPic: String = ""//头像
-        , var nickname: String = ""//昵称
-        , var score: Double = 0.toDouble()
-        , var smallPic: String = ""
-        , var royalLevel: Int = 0
-        , var type: String? = null
-        ,
-        //下面为原有字段  删除
-        var nickName: String = ""
-        , var picId: String = ""
-        , var identityId: Int = -1
-        , var programId: Int? = null
+    var userId: Int = -1
+    , var headPic: String = ""//头像
+    , var nickname: String = ""//昵称
+    , var score: Double = 0.toDouble()
+    , var smallPic: String = ""
+    , var royalLevel: Int = 0
+    , var type: String? = null
+    ,
+    //下面为原有字段  删除
+    var nickName: String = ""
+    , var picId: String = ""
+    , var identityId: Int = -1
+    , var programId: Int? = null
 //                             , var score: Double = 0.toDouble()
-        , var introduce: String? = null
-        , var guard: String? = null
-        , var levelMap: UserLevelMap = UserLevelMap()
-        , var goodsList: List<String?> = ArrayList()
-        // 发言字数
-        , var speakCount: Int = 0
-        , var nickColor: String = ""// 周星的用户昵称颜色不一样
-        , var online: Boolean = true //是否在线
-        , var sex: String = ""
+    , var introduce: String? = null
+    , var guard: String? = null
+    , var levelMap: UserLevelMap = UserLevelMap()
+    , var goodsList: List<String?> = ArrayList()
+    // 发言字数
+    , var speakCount: Int = 0
+    , var nickColor: String = ""// 周星的用户昵称颜色不一样
+    , var online: Boolean = true //是否在线
+    , var sex: String = ""
 
 ) : Serializable {
     companion object {
@@ -106,7 +110,12 @@ data class UserInfoForLmRoom(
     }
 }
 
-class FreeGiftInfo(var numForEachTime: ArrayList<Int>? = null, var timesForToday: Int? = null, var totalCountForNow: Int? = null, var detailUrl: String = "")
+class FreeGiftInfo(
+    var numForEachTime: ArrayList<Int>? = null,
+    var timesForToday: Int? = null,
+    var totalCountForNow: Int? = null,
+    var detailUrl: String = ""
+)
 
 class ObtainFreeGiftDto(var total: Int = 0, var timesForToday: Int = 0)
 
@@ -121,19 +130,19 @@ data class GuardInfo(
 )
 
 data class RoomUserInfo(
-        var userId: Int = -1,
-        var headPic: String = "",//头像
-        var userLevel: Int = -1,
-        var royalLevel: Int = -1,
-        var roomGuardPic: String = "",
-        var roomManagerPic: String = "",
-        var royalSmallPic: String = "",
-        var badgesPic: ArrayList<String> = arrayListOf(),
-        var nickname: String = ""//昵称
-        , var score: Double = 0.toDouble(),
-        //4.15新增字段
-        //贵族勋章地址
-        var royalPic: String = ""
+    var userId: Int = -1,
+    var headPic: String = "",//头像
+    var userLevel: Int = -1,
+    var royalLevel: Int = -1,
+    var roomGuardPic: String = "",
+    var roomManagerPic: String = "",
+    var royalSmallPic: String = "",
+    var badgesPic: ArrayList<String> = arrayListOf(),
+    var nickname: String = ""//昵称
+    , var score: Double = 0.toDouble(),
+    //4.15新增字段
+    //贵族勋章地址
+    var royalPic: String = ""
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is RoomUserInfo) {
@@ -147,7 +156,8 @@ data class RoomUserInfo(
     }
 }
 
-class OnlineData<T>(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) : RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
+class OnlineData<T>(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) :
+    RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
     var royalUserList: List<T> = arrayListOf()
     var royalLevelUrl: String = ""
     var onlineUserNum: Int = 0
@@ -221,7 +231,7 @@ class UserEnterRoomRespBase : Serializable {
 
     var themeRoomNextShowText: String = ""    //主题房下次开播信息
 
-    var themeSessionId:Int = 0   //主题场次id
+    var themeSessionId: Int = 0   //主题场次id
 
     //播放地址
     var playUrl: String = ""
@@ -233,7 +243,8 @@ class UserEnterRoomRespBase : Serializable {
     var userId: Long = 0
     var lastShowTimeDiffText: String = ""
     var anchorLevel: Int = 0
-//    var visitorSession: NewSession? = null
+
+    //    var visitorSession: NewSession? = null
     var micing: Boolean = false//是否有连麦
     var roomMicInfo: MicInfo? = null
 
@@ -365,68 +376,71 @@ class UserEnterRoomRespDto : Serializable {
  * 播间底部气泡提示相关信息
  */
 data class BottomPuppo(
-        var adCode: String = "",
-        var adTitle: String = "",
-        var extJsonCfg: String? = null,
-        //自定义字段
-        //4.23.0
-        /** 保存实例化的配置信息 **/
-        var config: Any? = null
+    var adCode: String = "",
+    var adTitle: String = "",
+    var extJsonCfg: String? = null,
+    //自定义字段
+    //4.23.0
+    /** 保存实例化的配置信息 **/
+    var config: Any? = null
 )
 
 /**
  * 进入直播间 次要信息
  */
 data class EnterExt(
-        //私聊相关配置信息
+    //私聊相关配置信息
     var experienceSms: ExperienceSms? = null,
-        //发言模板
+    //发言模板
     var words: List<SingleWord> = listOf(),
-        //一元首充数据
+    //一元首充数据
     var firstRecharge: OneYuanInfo? = null,
-        //主播头条数据
+    //主播头条数据
     var headlineInfo: HeaderInfo? = null,
-        //体验守护
+    //体验守护
     var experienceGuard: ExperienceGuard? = null,
-        //新增主题房相关数据返回
+    //新增主题房相关数据返回
     var themeRoomVO: ThemeRoomVO? = null
 ) : Serializable
 
-data class ThemeRoomVO(var showGuides: Boolean = false,
-                        //当前上场的主播id
-                       var programId: Int = 0,
-                       var programName: String = "",
-                       var headPic: String = "" )
+data class ThemeRoomVO(
+    var showGuides: Boolean = false,
+    //当前上场的主播id
+    var programId: Int = 0,
+    var programName: String = "",
+    var headPic: String = ""
+)
 
 /**
  * 私聊体验卡相关内容
  */
 data class ExperienceSms(
-        //剩余次数
-        var leftCnt: Int = 0,
-        //倒计时
-        var countDown: Long = 0L
+    //剩余次数
+    var leftCnt: Int = 0,
+    //倒计时
+    var countDown: Long = 0L
 ) : Serializable
 
 /**
  * 单个私聊信息
  */
 data class SingleWord(
-        var id: Int = 0,
-        var type: String = "",
-        var word: String = "") : Serializable
+    var id: Int = 0,
+    var type: String = "",
+    var word: String = ""
+) : Serializable
 
 /**
  * 抽奖信息
  */
 data class DrawInfo(
-        var draw: String = "",
-        var drawStatus: String = "",
-        //正在抽奖的数量
-        var drawingNum: Int = 0,
-        //抽奖ID
-        var logId: Long = 0,
-        var ttl: Long = 0L//这个倒计时根据状态代表抽奖中的倒计时/结束后的显示倒计时
+    var draw: String = "",
+    var drawStatus: String = "",
+    //正在抽奖的数量
+    var drawingNum: Int = 0,
+    //抽奖ID
+    var logId: Long = 0,
+    var ttl: Long = 0L//这个倒计时根据状态代表抽奖中的倒计时/结束后的显示倒计时
 )
 
 
@@ -497,14 +511,15 @@ class UserInfo {
  * 开播数据
  */
 class GuardAgainst(
-        var programId: Int? = 0,
-        var streamId: String? = "",
-        var prePic: String = "",
-        //推流地址,当sdkProvider为Agora时有值
-        var pushUrl: String = "",
-        //SDK模式
-        var sdkProvider: String = "",
-        var sdkParams: SdkParam? = null) : Serializable {
+    var programId: Int? = 0,
+    var streamId: String? = "",
+    var prePic: String = "",
+    //推流地址,当sdkProvider为Agora时有值
+    var pushUrl: String = "",
+    //SDK模式
+    var sdkProvider: String = "",
+    var sdkParams: SdkParam? = null
+) : Serializable {
     companion object {
         //单流
         const val Single = "Single"
@@ -522,12 +537,14 @@ class GuardAgainst(
  * SDK配置数据
  */
 class SdkParam(
-        var streamId: String = "",
-        var authToken: String = ""
+    var streamId: String = "",
+    var authToken: String = ""
 ) : Serializable
 
-class YueSaiDto(var label1: String? = "", var label2: String? = "", var url: String? = null, var top: String? = null,
-                var type: String? = null, var icon: String? = "")
+class YueSaiDto(
+    var label1: String? = "", var label2: String? = "", var url: String? = null, var top: String? = null,
+    var type: String? = null, var icon: String? = ""
+)
 
 class RunWayMessage : Serializable {
     var message: String = ""
@@ -721,15 +738,17 @@ class BoxResult : Serializable {
 /**
  * pk用户
  */
-class PKUser(var creator: Boolean = false,
-             var nickname: String = "",
-             var headPic: String = "",
-             var status: String = "",
-             var anchorLevel: Int = 0,
-             var playInfo: PlayInfo? = null,
-             var pushUrl: String = "",
-             var sdkParams: SdkParam? = null,
-             var sdkProvider: String = "") : ProgramAnchor() {
+class PKUser(
+    var creator: Boolean = false,
+    var nickname: String = "",
+    var headPic: String = "",
+    var status: String = "",
+    var anchorLevel: Int = 0,
+    var playInfo: PlayInfo? = null,
+    var pushUrl: String = "",
+    var sdkParams: SdkParam? = null,
+    var sdkProvider: String = ""
+) : ProgramAnchor() {
     var giftPic: String? = null
     var score: Long? = null
     var propScore: Long? = null
@@ -782,10 +801,10 @@ class PKInfoBean : Serializable {
 }
 
 data class PkStage(
-        var continueWinCnt: Int = 0,
-        var icon: String = "",
-        var programId: Int = 0,
-        var stagePkLevel: Int = 0
+    var continueWinCnt: Int = 0,
+    var icon: String = "",
+    var programId: Int = 0,
+    var stagePkLevel: Int = 0
 )
 
 /***
@@ -820,34 +839,34 @@ mvpHeadPic mvp头像
 closeTtl 结果展示倒计时
  */
 data class PkStageDetail(
-        var programId: Int = 0,
-        var result: String = "",
-        var stagePkLevel: Int = 0,
-        var stageName: String = "",
-        var icon: String = "",
-        var bigIcon: String = "",
-        var stageChange: Int = 0,
-        var stagePkScore: Long = 0,
-        var stageMinScore: Long? = null,
-        var nextStageScore: Long? = null,
-        var continueWinCnt: Int = 0,
-        var mvpNickName: String = "",
-        var mvpHeadPic: String = "",
-        var closeTtl: Long = 0L,
-        var resultAnimBgUrl: String? = null,
-        var resultAnimForeUrl: String? = null
+    var programId: Int = 0,
+    var result: String = "",
+    var stagePkLevel: Int = 0,
+    var stageName: String = "",
+    var icon: String = "",
+    var bigIcon: String = "",
+    var stageChange: Int = 0,
+    var stagePkScore: Long = 0,
+    var stageMinScore: Long? = null,
+    var nextStageScore: Long? = null,
+    var continueWinCnt: Int = 0,
+    var mvpNickName: String = "",
+    var mvpHeadPic: String = "",
+    var closeTtl: Long = 0L,
+    var resultAnimBgUrl: String? = null,
+    var resultAnimForeUrl: String? = null
 )
 
 data class PkPropInfo(
-        var nickname: String = "",
-        var programId: Int = 0,
-        var propName: String = "",
-        var propPic: String = "",
-        var propType: String = "",
-        var status: String = "",
-        var ttl: Long = 0,
-        var maxTtl: Long = 0,
-        var userId: Int = 0
+    var nickname: String = "",
+    var programId: Int = 0,
+    var propName: String = "",
+    var propPic: String = "",
+    var propType: String = "",
+    var status: String = "",
+    var ttl: Long = 0,
+    var maxTtl: Long = 0,
+    var userId: Int = 0
 ) {
     override fun toString(): String {
         return "PkPropInfo(nickname='$nickname', programId=$programId, propName='$propName', propPic='$propPic', propType='$propType', status='$status', ttl=$ttl, userId=$userId)"
@@ -855,17 +874,17 @@ data class PkPropInfo(
 }
 
 data class PkGiftTaskInfo(
-        var awardScore: Long = 0,
-        var giftBeans: Long = 0,
-        var giftId: Int = 0,
-        var giftName: String = "",
-        var giftPic: String = "",
-        var needCnt: Int = 0,
-        var receiveCnt: Int = 0,
-        var status: String = "",
-        var ttl: Long = 0,
-        var maxTtl: Long = 0,
-        var multiple: Float = 0f
+    var awardScore: Long = 0,
+    var giftBeans: Long = 0,
+    var giftId: Int = 0,
+    var giftName: String = "",
+    var giftPic: String = "",
+    var needCnt: Int = 0,
+    var receiveCnt: Int = 0,
+    var status: String = "",
+    var ttl: Long = 0,
+    var maxTtl: Long = 0,
+    var multiple: Float = 0f
 ) {
     override fun toString(): String {
         return "PkGiftTaskInfo(awardScore=$awardScore, giftBeans=$giftBeans, giftId=$giftId, giftName='$giftName', needCnt=$needCnt, receiveCnt=$receiveCnt, status='$status', ttl=$ttl)"
@@ -874,13 +893,13 @@ data class PkGiftTaskInfo(
 
 //pk积分任务
 data class PkScoreTaskInfo(
-        var awardScore: Long = 0,
-        var needScore: Long = 0,
-        var nowScore: Long = 0,
-        var status: String = "",
-        var ttl: Long = 0,
-        var maxTtl: Long = 0,
-        var multiple: Float = 0f
+    var awardScore: Long = 0,
+    var needScore: Long = 0,
+    var nowScore: Long = 0,
+    var status: String = "",
+    var ttl: Long = 0,
+    var maxTtl: Long = 0,
+    var multiple: Float = 0f
 )
 
 /**
@@ -902,8 +921,8 @@ class CreatePKInfoBean {
 }
 
 data class OptionGift(
-        var giftId: Int = 0,
-        var giftName: String = ""
+    var giftId: Int = 0,
+    var giftName: String = ""
 )
 
 /**
@@ -930,13 +949,15 @@ class MyPk {
 }
 
 //发起PK者
-class Participator(var anchorId: Int = 0,
-                   var nickname: String = "",
-                   var headPic: String = "",
-                   var giftPic: String? = null,
-                   var status: String = "",
-                   var programId: Int = 0,
-                   var score: Int = 0) {
+class Participator(
+    var anchorId: Int = 0,
+    var nickname: String = "",
+    var headPic: String = "",
+    var giftPic: String? = null,
+    var status: String = "",
+    var programId: Int = 0,
+    var score: Int = 0
+) {
     //目的是去重 以anchorId为准
     override fun hashCode(): Int {
         return programId.hashCode()
@@ -950,8 +971,9 @@ class Participator(var anchorId: Int = 0,
 //PK战绩
 class PKHistory(var hasMore: Boolean = false, var list: ArrayList<PKHistoryBean> = arrayListOf())
 
-class PKHistoryBean(var startTime: String = "",
-                    var participators: ArrayList<Participator> = ArrayList()
+class PKHistoryBean(
+    var startTime: String = "",
+    var participators: ArrayList<Participator> = ArrayList()
 )
 
 /**
@@ -967,156 +989,157 @@ data class TopDialogBean(var content: String = "", var drawable: Int)
 data class NotEnoughBalanceBean(var content: String = "", var count: Int? = null, var beans: Long = 0) : BaseDialogBean()
 
 //赠送礼物的结果bean
-data class SendGiftResult(var beans: Long = 0,
-                          var bagCntMap: HashMap<String, Int>? = null,
-                          var bagCount: Int = 0,
+data class SendGiftResult(
+    var beans: Long = 0,
+    var bagCntMap: HashMap<String, Int>? = null,
+    var bagCount: Int = 0,
 //                          var form: NewSendGiftForm? = null,
-                          var level: Int = 0, var ttl: Int = 0,
+    var level: Int = 0, var ttl: Int = 0,
 
-                          var processInfo: ProcessInfo? = null,
-                          var giftChange: GiftChange? = null,
-                          var needFlushGift: Boolean = false,
-        // 当前礼物气泡消息，值不为空需替换当前气泡消息
-                          var popMsg: String = "",
-        // 提示消息，值不为空，需显示
-                          var alertMsg: String = "",
-        // 道具类型 ，值为SpeakCard时，需将发言入口炫彩按钮解锁
-                          var propsType: String = "",
-        // 道具使用剩余秒数，只有propsType不为空时，该属性才有值
-                          var propsTtl: Long = 0,
-        // 道具扩展参数，如果为经验加倍卡，该值为经验倍数，只有propsType不为空时，该属性才有值
-                          var propsValue: String = "",
-        //礼盒奖励礼物列表
-                          var feedbackList: ArrayList<BoxGainGift>? = null,
-        //背包变动标识
-                          var bagChange: Boolean = false,
-        //4.17新增字段
-                          /** 折后价格  since 4.17.0  */
-                          var discountBean: Int? = null,
-                          /** 折扣券图片  */
-                          var discountPic: String? = null,
-                          /** 折扣 */
-                          var discount: Int? = null,
-                          /** 折扣券数量 */
-                          var discountCount: Int? = null,
-        //4.21新增 author WanZhiYuan
-                          /** 本次刮奖获得萌豆 */
-                          var awardBean: Long? = null,
-                          /** 最大可获得萌豆 */
-                          var maxBean: Long? = null,
-                          /** 是否是刮刮卡 */
-                          var scratchCard: Boolean? = null
+    var processInfo: ProcessInfo? = null,
+    var giftChange: GiftChange? = null,
+    var needFlushGift: Boolean = false,
+    // 当前礼物气泡消息，值不为空需替换当前气泡消息
+    var popMsg: String = "",
+    // 提示消息，值不为空，需显示
+    var alertMsg: String = "",
+    // 道具类型 ，值为SpeakCard时，需将发言入口炫彩按钮解锁
+    var propsType: String = "",
+    // 道具使用剩余秒数，只有propsType不为空时，该属性才有值
+    var propsTtl: Long = 0,
+    // 道具扩展参数，如果为经验加倍卡，该值为经验倍数，只有propsType不为空时，该属性才有值
+    var propsValue: String = "",
+    //礼盒奖励礼物列表
+    var feedbackList: ArrayList<BoxGainGift>? = null,
+    //背包变动标识
+    var bagChange: Boolean = false,
+    //4.17新增字段
+    /** 折后价格  since 4.17.0  */
+    var discountBean: Int? = null,
+    /** 折扣券图片  */
+    var discountPic: String? = null,
+    /** 折扣 */
+    var discount: Int? = null,
+    /** 折扣券数量 */
+    var discountCount: Int? = null,
+    //4.21新增 author WanZhiYuan
+    /** 本次刮奖获得萌豆 */
+    var awardBean: Long? = null,
+    /** 最大可获得萌豆 */
+    var maxBean: Long? = null,
+    /** 是否是刮刮卡 */
+    var scratchCard: Boolean? = null
 ) : EggHitSumResult()
 
 //礼盒奖励礼物
 data class BoxGainGift(
-        var fromUserName: String = "",
-        var goodsCnt: Int = 0,
-        var goodsName: String = "",
-        var goodsPic: String = ""
+    var fromUserName: String = "",
+    var goodsCnt: Int = 0,
+    var goodsName: String = "",
+    var goodsPic: String = ""
 ) : Serializable
 
 //回归收到的奖励礼物
 data class ReturnAwardGiftBean(
-        var name: String = "",
-        var count: Int = 0,
-        var pic: String = "",
-        var useInfo: String = "",
-        //本地使用
-        var boxType: String = ""
+    var name: String = "",
+    var count: Int = 0,
+    var pic: String = "",
+    var useInfo: String = "",
+    //本地使用
+    var boxType: String = ""
 ) : Serializable
 
 //回归奖励礼物
 data class ReturnGiftBean(
-        //需要取消
-        var skipType: String = "",
-        var nameAndNum: String = "",
-        var pic: String = "",
-        var expireDate: String = "",
-        var skipValue: String = ""
+    //需要取消
+    var skipType: String = "",
+    var nameAndNum: String = "",
+    var pic: String = "",
+    var expireDate: String = "",
+    var skipValue: String = ""
 ) : Serializable
 
 //直播间查询的回顾礼包数据
 data class ReturnBeanInPlayer(
-        //剩余时间
+    //剩余时间
     var ttl: Long = 0,
-        //礼物列表
+    //礼物列表
     var packDetailList: ArrayList<ReturnGiftBean> = ArrayList(),
-        //是否有可领取福利
+    //是否有可领取福利
     var canReceive: Boolean = false,
-        //是否当天首次请求
+    //是否当天首次请求
     var firstLogin: Boolean = false
 ) : Serializable
 
 //回归礼包使用的bean(第一重礼包礼物)
 data class FirstGiftBean(
-        //奖励数量
-        var awardCnt: Int = 0,
-        //奖励名称
-        var awardName: String = "",
-        //栏目标题
-        var tabName: String = "",
-        //领取状态
-        var awardStatus: String = "",
-        //对应的CODE
-        var code: String = "",
-        //图片
-        var pic: String = "",
-        //使用说明
-        var useInfo: String = ""
+    //奖励数量
+    var awardCnt: Int = 0,
+    //奖励名称
+    var awardName: String = "",
+    //栏目标题
+    var tabName: String = "",
+    //领取状态
+    var awardStatus: String = "",
+    //对应的CODE
+    var code: String = "",
+    //图片
+    var pic: String = "",
+    //使用说明
+    var useInfo: String = ""
 ) : Serializable
 
 //第二重礼包礼物数据
 data class SecondGiftBean(
-        var awardCode: String = "",
-        //数量
-        var count: Int = 0,
-        //奖励名称
-        var name: String = "",
-        var pic: String = "",
-        //使用说明
-        var useInfo: String = ""
+    var awardCode: String = "",
+    //数量
+    var count: Int = 0,
+    //奖励名称
+    var name: String = "",
+    var pic: String = "",
+    //使用说明
+    var useInfo: String = ""
 ) : Serializable
 
 //第二重礼包数据
 data class SecondActivityBean(
-        //奖励列表
+    //奖励列表
     var awards: MutableList<SecondGiftBean> = mutableListOf(),
-        //是否抽取了折扣券
+    //是否抽取了折扣券
     var drawDiscount: Boolean = false,
-        //是否购买
+    //是否购买
     var hasBuy: Boolean = false,
-        //原价
+    //原价
     var money: Int = 0,
-        //实际价格
+    //实际价格
     var realMoney: Int = 0,
-        //充值模板
+    //充值模板
     var tplId: Int = 0
 ) : Serializable
 
 //回归礼包使用的bean(第三重礼包礼物)
 data class ThirdBoxBean(
-        //宝箱名称
-        var boxName: String = "",
-        var boxId: String = "",
-        //需要观看时长
-        var min: Int = 0,
-        //奖励状态
-        var awardStatus: String = ""
+    //宝箱名称
+    var boxName: String = "",
+    var boxId: String = "",
+    //需要观看时长
+    var min: Int = 0,
+    //奖励状态
+    var awardStatus: String = ""
 ) : Serializable
 
 
 //回归礼包接口返回的总对象
 data class ReturnBean(
-        //当前观看时间
+    //当前观看时间
     var nowMin: Int = 0,
-        //第一重礼包是否处于可领取状态
+    //第一重礼包是否处于可领取状态
     var oneWaitReceive: Boolean = false,
-        //第一重礼包
+    //第一重礼包
     var oneList: MutableList<FirstGiftBean> = mutableListOf(),
-        //第二重礼包
+    //第二重礼包
     var welfareTwoVO: SecondActivityBean? = null,
-        //第三重礼包
+    //第三重礼包
     var threeList: MutableList<ThirdBoxBean> = mutableListOf()
 ) : Serializable
 
@@ -1124,13 +1147,13 @@ data class ReturnBean(
  * 图鉴数据
  */
 data class Handbook(
-        var bookId: Int = 0,
-        var detailPic: String = "",
-        var name: String = "",
-        var orderNo: Int = 0,
-        //图鉴图标
-        var pic: String = "",
-        var accessList: MutableList<Access> = mutableListOf()
+    var bookId: Int = 0,
+    var detailPic: String = "",
+    var name: String = "",
+    var orderNo: Int = 0,
+    //图鉴图标
+    var pic: String = "",
+    var accessList: MutableList<Access> = mutableListOf()
 ) : Serializable
 
 /**
@@ -1143,38 +1166,38 @@ data class LastShowGiftStateBean(var giftId: Int = 0, var showed: Boolean = fals
  * 图鉴入口
  */
 data class Access(
-        //入口code
-        var accessCode: String = "",
-        //入口名称
-        var accessName: String = "",
-        //URL
-        var url: String = "",
-        //礼物ID
-        var giftId: Int = 0
+    //入口code
+    var accessCode: String = "",
+    //入口名称
+    var accessName: String = "",
+    //URL
+    var url: String = "",
+    //礼物ID
+    var giftId: Int = 0
 ) : Serializable
 
 //贵族体验卡消息
 data class RoyalCardBean(
-        var clientType: String = "",
-        var money: Int = 0,
-        var royalCardExpDate: String = "",
-        var royalCardGoodId: Int = 0,
-        var royalCardName: String = "",
-        var royalCardValidDate: Int = 0,
-        var subTitle: String = "",
-        var title: String = "",
-        var royalCardBgPic: String = "",
-        var userId: Int = 0
+    var clientType: String = "",
+    var money: Int = 0,
+    var royalCardExpDate: String = "",
+    var royalCardGoodId: Int = 0,
+    var royalCardName: String = "",
+    var royalCardValidDate: Int = 0,
+    var subTitle: String = "",
+    var title: String = "",
+    var royalCardBgPic: String = "",
+    var userId: Int = 0
 ) : Serializable
 
 data class GiftChange(
-        var giftId: Int = 0,
-        var vo: LiveGiftDto? = null
+    var giftId: Int = 0,
+    var vo: LiveGiftDto? = null
 )
 
 data class CountItem(
-        var countName: String = "",
-        var countValue: Int = 0
+    var countName: String = "",
+    var countValue: Int = 0
 )
 
 //显示私聊的bean
@@ -1184,7 +1207,14 @@ data class PrivateMessageBean(var userId: Int = -1, var nickName: String = "") :
 data class JumpActivityBean(var next: Class<out Activity>, var intentFlag: Int = 0, var extra: Bundle? = null)
 
 //显示用户信息弹窗的Bean
-data class UserInfoBean(var userId: Int, var isAnchor: Boolean = false, var royalLevel: Int = -1, var userPortrait: String = "", var displayType: List<String>? = null, var programName: String = "")
+data class UserInfoBean(
+    var userId: Int,
+    var isAnchor: Boolean = false,
+    var royalLevel: Int = -1,
+    var userPortrait: String = "",
+    var displayType: List<String>? = null,
+    var programName: String = ""
+)
 
 //页面跳转的Bean
 data class GoToUrl(var needLogin: Boolean = false, var url: String = "")
@@ -1219,14 +1249,14 @@ data class MicroSettingInfo(var micRuleUrl: String = "")
 data class PublishUrl(var pushUrl: String = "")
 
 open class EggHitSumResult(
-        var prizeBeans: Long = 0,
-        var prizeList: List<ArrayList<AwardGood?>> = listOf()
+    var prizeBeans: Long = 0,
+    var prizeList: List<ArrayList<AwardGood?>> = listOf()
 )
 
 //新增序列化EggHitSumResult实体类
 open class EggHitSumResultSerial(
-        var prizeBeans: Long = 0,
-        var prizeList: List<ArrayList<AwardGood?>> = listOf()
+    var prizeBeans: Long = 0,
+    var prizeList: List<ArrayList<AwardGood?>> = listOf()
 ) : Serializable
 
 /**
@@ -1279,7 +1309,8 @@ class LiveBean : Serializable {
     var anchorPicId: String = ""
     var programId: Int = 0
     var isAppShow: Boolean = false//是不是手机直播
-//    var anchorName: String = ""
+
+    //    var anchorName: String = ""
     var playinfo: PlayInfo? = null
 }
 
@@ -1287,49 +1318,53 @@ class LiveBean : Serializable {
  * pk竞猜数据
  */
 data class GuessInfoResult(
-        //下注结果
-        var guessResult: String = "",
-        //账户萌币余额
-        var moeCoins: Long = 0,
-        //主播昵称
-        var nickname: String = "",
-        //PK是否结束
-        var pkFinished: Boolean = false,
-        //封盘剩余时间
-        var sealedTtl: Int = 0,
-        //下注数据
-        var pkInfo: ArrayList<DoublePkGuessInfo> = arrayListOf()) : Serializable
+    //下注结果
+    var guessResult: String = "",
+    //账户萌币余额
+    var moeCoins: Long = 0,
+    //主播昵称
+    var nickname: String = "",
+    //PK是否结束
+    var pkFinished: Boolean = false,
+    //封盘剩余时间
+    var sealedTtl: Int = 0,
+    //下注数据
+    var pkInfo: ArrayList<DoublePkGuessInfo> = arrayListOf()
+) : Serializable
 
 /**
  * 每对投注信息
  */
-data class DoublePkGuessInfo(var miniList: ArrayList<SinglePkGuessInfo> = arrayListOf(),
-                             var validity: Boolean = false,
-                             var resultText: String = "") : Serializable
+data class DoublePkGuessInfo(
+    var miniList: ArrayList<SinglePkGuessInfo> = arrayListOf(),
+    var validity: Boolean = false,
+    var resultText: String = ""
+) : Serializable
 
 /**
  * 单个下注信息
  */
 data class SinglePkGuessInfo(
-        //赔率
-        var odds: String = "",
-        //竞猜类型
-        var pkGuessType: String = "",
-        //下注总金额
-        var totalMocoins: Long = 0,
-        //自己下注金额
-        var selfMocoins: Long = 0) : Serializable
+    //赔率
+    var odds: String = "",
+    //竞猜类型
+    var pkGuessType: String = "",
+    //下注总金额
+    var totalMocoins: Long = 0,
+    //自己下注金额
+    var selfMocoins: Long = 0
+) : Serializable
 
 /**
  * 萌新礼包信息
  */
 data class NewUserGiftInfo(
-        //奖励数量
-        var count: Int? = null,
-        //奖励图片
-        var pic: String? = null,
-        //奖励名称
-        var awardName: String? = null
+    //奖励数量
+    var count: Int? = null,
+    //奖励图片
+    var pic: String? = null,
+    //奖励名称
+    var awardName: String? = null
 ) : Serializable
 
 /**
@@ -1347,18 +1382,18 @@ Confirmed;
  */
 data class OneYuanInfo(
     var status: String = "",
-        //礼物面板提示文案
+    //礼物面板提示文案
     var giftRemind: String = "",
-        //是否自动弹窗
+    //是否自动弹窗
     var autoPopup: Boolean = false,
     var coupon: Coupon? = null,
-        //奖励列表
+    //奖励列表
     var packs: MutableList<SinglePack> = mutableListOf(),
-        //获奖用户
+    //获奖用户
     var users: MutableList<SingleOneYuanUser> = mutableListOf(),
-        //奖励内容
+    //奖励内容
     var awards: MutableList<GiftIcon> = mutableListOf(),
-        //本地字段是否是自动弹出的
+    //本地字段是否是自动弹出的
     var isAuto: Boolean = false
 ) : BaseDialogBean() {
     companion object {
@@ -1376,12 +1411,12 @@ data class OneYuanInfo(
  * 主播头条数据
  */
 data class HeaderInfo(
-        //剩余总时间
-        var ttl: Int = 0,
-        //上一轮结果
-        var result: String = "",
-        //辅助数据
-        var extData: HeaderInfoExt = HeaderInfoExt()
+    //剩余总时间
+    var ttl: Int = 0,
+    //上一轮结果
+    var result: String = "",
+    //辅助数据
+    var extData: HeaderInfoExt = HeaderInfoExt()
 ) : Serializable
 
 /**
@@ -1394,13 +1429,13 @@ data class HeaderInfoExt(var RoomData: HashMap<String, String> = hashMapOf()) : 
  * 单个礼包相关数据
  */
 data class SinglePack(
-        //单个礼包内容
+    //单个礼包内容
     var icons: MutableList<GiftIcon> = mutableListOf(),
-        //是否选中
+    //是否选中
     var selected: Boolean = false,
-        //Tag相关
+    //Tag相关
     var tag: String = "",
-        //标题
+    //标题
     var title: String = ""
 ) : Serializable {
     companion object {
@@ -1417,22 +1452,23 @@ data class SinglePack(
  * 一元首充，单个中奖用户
  */
 data class SingleOneYuanUser(
-        var headPic: String = "",
-        var nickname: String = "") : Serializable
+    var headPic: String = "",
+    var nickname: String = ""
+) : Serializable
 
 /**
  * 奖励礼物
  */
 data class GiftIcon(
-        var pic: String = "",
-        var name: String = "",
-        //描述
-        var desc: String = ""
+    var pic: String = "",
+    var name: String = "",
+    //描述
+    var desc: String = ""
 ) : Serializable
 
 data class Coupon(
-        var hasCoupon: String = "",
-        var hasCouponIcon: String = ""
+    var hasCoupon: String = "",
+    var hasCouponIcon: String = ""
 ) : Serializable
 
 /**
@@ -1447,61 +1483,61 @@ data class Coupon(
  */
 class FansRankInfo(
     /** 是否已经打卡 **/
-        var clockIn: Boolean = false,
+    var clockIn: Boolean = false,
     /** 粉丝团展示 头部信息 **/
-        var fansGroupInfoVO: FansRankHeadInfo? = null,
+    var fansGroupInfoVO: FansRankHeadInfo? = null,
     /** 粉丝团列表 **/
-        var fansInfos: ArrayList<FansListInfo>? = null,
+    var fansInfos: ArrayList<FansListInfo>? = null,
     /** 粉丝团名称 **/
-        var groupName: String = "",
+    var groupName: String = "",
     /** 本人粉丝信息 **/
-        var self: UserFansInfo? = null,
+    var self: UserFansInfo? = null,
     /** 粉丝牌子是否激活 **/
-        var signActive: Boolean = false,
+    var signActive: Boolean = false,
     /** 是否登录 **/
-        var login: Boolean = false,
+    var login: Boolean = false,
     /** 成员人数 **/
-        var groupSize: Int = 0,
+    var groupSize: Int = 0,
     /** 粉丝勋章地址 **/
-        var fansPic: String = "",
+    var fansPic: String = "",
     /** 加入粉丝团花费 **/
-        var price: Long = 0,
+    var price: Long = 0,
     /**免费倒计时**/
-        var deadline: Long = 0,
-        //4.19新增参数
+    var deadline: Long = 0,
+    //4.19新增参数
     /**亲密度获取情况**/
-        var intimateList: ArrayList<Intimate>? = null,
+    var intimateList: ArrayList<Intimate>? = null,
     /**特权信息**/
-        var privilegeList: ArrayList<Privilege>? = null,
+    var privilegeList: ArrayList<Privilege>? = null,
     /**是否粉丝团成员**/
-        var groupMember: Boolean = false,
+    var groupMember: Boolean = false,
     /**用户昵称**/
-        var nickname: String = "",
+    var nickname: String = "",
     /**用户头像**/
-        var headPic: String = "",
+    var headPic: String = "",
     /**亲密度**/
-        var intimate: String = "",
+    var intimate: String = "",
     /**粉丝等级**/
-        var fansLevel: Int = 0,
+    var fansLevel: Int = 0,
     /**下个粉丝等级**/
-        var nextFansLevel: Int = 0,
+    var nextFansLevel: Int = 0,
     /**当前等级增加亲密度**/
-        var nowLevelAddIntimate: Long = 0,
+    var nowLevelAddIntimate: Long = 0,
     /**升级亲密度差值**/
-        var diffIntimate: Long = 0,
-        //4.20新增字段
+    var diffIntimate: Long = 0,
+    //4.20新增字段
     /**当前是否获取了新特权**/
-        var gainNewPrivilege: Boolean? = null,
-        //4.21新增字段
+    var gainNewPrivilege: Boolean? = null,
+    //4.21新增字段
     /**是否还有更多数据**/
-        var hasMore: Boolean = false,
+    var hasMore: Boolean = false,
 
-        //自定义参数
+    //自定义参数
     /**
-         * @see BusiConstant.FansTabName
-         * 页面类型常量类型
-         */
-        var tabType: String = ""
+     * @see BusiConstant.FansTabName
+     * 页面类型常量类型
+     */
+    var tabType: String = ""
 ) : Serializable
 
 /**
@@ -1511,19 +1547,19 @@ class FansRankInfo(
  * @iterativeVersion 4.19
  */
 class FansRankHeadInfo(
-        /** 头像 **/
-        var headPic: String = "",
-        /** 昵称 **/
-        var nickname: String = "",
-        /** 粉丝勋章地址 **/
-        var fansPic: String = "",
-        /** 显示小主回馈图标 **/
-        var showStock: Boolean? = null,
-        //4.19 新增参数
-        /** 周榜排名 **/
-        var weekRank: Long = -1,
-        /** 粉丝团类型 Common 普通团、Thirty 30人团 and Fifty 50人团**/
-        var fansGroupType: String = ""
+    /** 头像 **/
+    var headPic: String = "",
+    /** 昵称 **/
+    var nickname: String = "",
+    /** 粉丝勋章地址 **/
+    var fansPic: String = "",
+    /** 显示小主回馈图标 **/
+    var showStock: Boolean? = null,
+    //4.19 新增参数
+    /** 周榜排名 **/
+    var weekRank: Long = -1,
+    /** 粉丝团类型 Common 普通团、Thirty 30人团 and Fifty 50人团**/
+    var fansGroupType: String = ""
 ) : Serializable
 
 /**
@@ -1533,37 +1569,37 @@ class FansRankHeadInfo(
  * @detail 新增字段
  */
 class FansListInfo(
-        /** 粉丝牌子是否激活 **/
-        var signActive: Boolean = false,
-        /** 粉丝团名称 **/
-        var groupName: String = "",
-        /** 亲密度 **/
-        var intimate: String = "",
-        /** 头像 **/
-        var headPic: String = "",
-        /** 昵称 **/
-        var nickname: String = "",
-        /** 粉丝等级 **/
-        var fansLevel: Int = 0,
-        /** 排名 **/
-        var rank: String = "",
-        /** 粉丝勋章地址 **/
-        var fansPic: String = "",
-        /** 亲密度色值 **/
-        var color: String = "",
+    /** 粉丝牌子是否激活 **/
+    var signActive: Boolean = false,
+    /** 粉丝团名称 **/
+    var groupName: String = "",
+    /** 亲密度 **/
+    var intimate: String = "",
+    /** 头像 **/
+    var headPic: String = "",
+    /** 昵称 **/
+    var nickname: String = "",
+    /** 粉丝等级 **/
+    var fansLevel: Int = 0,
+    /** 排名 **/
+    var rank: String = "",
+    /** 粉丝勋章地址 **/
+    var fansPic: String = "",
+    /** 亲密度色值 **/
+    var color: String = "",
 
-        //4.17新增字段
-        /** 显示对应浮动箭头 **/
-        var increase: Boolean? = null,
-        //4.21新增字段
-        /** 节目id **/
-        var programId: Int = 0,
-        /** 用户id **/
-        var userId: Int = 0,
+    //4.17新增字段
+    /** 显示对应浮动箭头 **/
+    var increase: Boolean? = null,
+    //4.21新增字段
+    /** 节目id **/
+    var programId: Int = 0,
+    /** 用户id **/
+    var userId: Int = 0,
 
-        //自定义字段
-        /** 成员人数 **/
-        var fansMember: String = ""
+    //自定义字段
+    /** 成员人数 **/
+    var fansMember: String = ""
 ) : Serializable {
 
     override fun hashCode(): Int {
@@ -1593,30 +1629,30 @@ class FansListInfo(
  * 当前粉丝信息
  */
 class UserFansInfo(
-        /** 是否是该粉丝团成员 **/
-        var groupMember: Boolean = false,
-        /** 头像 **/
-        var headPic: String = "",
-        /** 亲密度 **/
-        var intimate: String = "",
-        /** 昵称 **/
-        var nickname: String = "",
-        /** 排名 **/
-        var rank: String = "",
-        /** 粉丝等级 **/
-        var fansLevel: Int = 0,
-        /** 粉丝牌是否点亮 **/
-        var signActive: Boolean = false,
-        /** 粉丝牌名称 **/
-        var groupName: String = "",
-        /** 粉丝勋章地址 **/
-        var fansPic: String = "",
-        /** 亲密度色值 **/
-        var color: String = "",
+    /** 是否是该粉丝团成员 **/
+    var groupMember: Boolean = false,
+    /** 头像 **/
+    var headPic: String = "",
+    /** 亲密度 **/
+    var intimate: String = "",
+    /** 昵称 **/
+    var nickname: String = "",
+    /** 排名 **/
+    var rank: String = "",
+    /** 粉丝等级 **/
+    var fansLevel: Int = 0,
+    /** 粉丝牌是否点亮 **/
+    var signActive: Boolean = false,
+    /** 粉丝牌名称 **/
+    var groupName: String = "",
+    /** 粉丝勋章地址 **/
+    var fansPic: String = "",
+    /** 亲密度色值 **/
+    var color: String = "",
 
-        //4.17新增字段
-        /** 显示对应浮动箭头 **/
-        var increase: Boolean? = null
+    //4.17新增字段
+    /** 显示对应浮动箭头 **/
+    var increase: Boolean? = null
 ) : Serializable
 
 /**
@@ -1708,43 +1744,43 @@ class Remarks : Serializable {
  * @detail 增加 miniUserName -> 小程序id
  */
 data class MenuActionItem(
-        var itemCode: String = "",
-        var itemName: String = "",
-        var itemPic: String = "",
-        var extJsonCfg: String = "",
-        var itemUrl: String = "",
-        var tag: String? = null,
-        //小程序id
-        var miniUserName: String? = null
+    var itemCode: String = "",
+    var itemName: String = "",
+    var itemPic: String = "",
+    var extJsonCfg: String = "",
+    var itemUrl: String = "",
+    var tag: String? = null,
+    //小程序id
+    var miniUserName: String? = null
 )
 
 /**
  * 粉丝特权相关实体类
  */
 data class FansPrerogative(
-        //升级亲密度差值
+    //升级亲密度差值
     var diffIntimate: Int = 0,
-        //粉丝团名称
+    //粉丝团名称
     var fansGroupName: String = "",
-        //当前粉丝等级
+    //当前粉丝等级
     var fansLevel: Int = 0,
-        //下一粉丝等级
+    //下一粉丝等级
     var nextFansLevel: Int = 0,
-        //用户头像
+    //用户头像
     var headPic: String = "",
-        //亲密度
+    //亲密度
     var intimate: String = "",
-        //今日亲密度获取情况
+    //今日亲密度获取情况
     var intimateList: MutableList<Intimate> = mutableListOf(),
-        //用户昵称
+    //用户昵称
     var nickname: String = "",
-        //当前等级增加亲密度
+    //当前等级增加亲密度
     var nowLevelAddIntimate: Int = 0,
-        //特权信息
+    //特权信息
     var privilegeList: MutableList<Privilege> = mutableListOf(),
-        //粉丝牌子图片
+    //粉丝牌子图片
     var fansSignPic: String = "",
-        //粉丝牌子是否佩戴
+    //粉丝牌子是否佩戴
     var active: Boolean = false
 ) : Serializable
 
@@ -1756,14 +1792,14 @@ data class FansPrerogative(
  * @updateDetail 继承特权实例
  */
 data class Intimate(
-        //是否已完成
-        var achieved: Boolean = false,
-        //完成情况
-        var achievedInfo: String = "",
-        //颜色是否高亮
-        var fontColor: Boolean = false,
-        //4.19新增字段
-        var intimateType: String = ""
+    //是否已完成
+    var achieved: Boolean = false,
+    //完成情况
+    var achievedInfo: String = "",
+    //颜色是否高亮
+    var fontColor: Boolean = false,
+    //4.19新增字段
+    var intimateType: String = ""
 ) : Privilege()
 
 /**
@@ -1774,10 +1810,10 @@ data class Intimate(
  * @updateDetail 特权实例作为亲密度的父类使用
  */
 open class Privilege(
-        //描述
-        var description: String = "",
-        //图片
-        var pic: String = ""
+    //描述
+    var description: String = "",
+    //图片
+    var pic: String = ""
 ) : Serializable
 
 /**
@@ -1791,67 +1827,83 @@ data class BannerStatusBean(var showPopup: Boolean = false, var adCode: String =
 data class SingleBannerCheckResult(var adCode: String = "", var showPopup: Boolean = false) : Serializable
 
 //豪车工厂初始化数据
-data class LuxuryCarFactoryBasic(var beans: Long = 0,
-                                 var items: java.util.ArrayList<SingleCarBean>? = null,
-                                 var myCarBgPic: String = "",
-                                 var myCarLevel: Int = 0,
-                                 var myCarLevelUpText: String = "",
-                                 var smallTips: java.util.ArrayList<String>? = null,
-                                 var isTopLevel: Boolean = false,
-                                 var exchangeRecord: java.util.ArrayList<String>? = null,
-                                 var bigManUrl: String = "",
-                                 var tipUrl: String = "",
-                                 var showAuto: Boolean = false) : Serializable
+data class LuxuryCarFactoryBasic(
+    var beans: Long = 0,
+    var items: java.util.ArrayList<SingleCarBean>? = null,
+    var myCarBgPic: String = "",
+    var myCarLevel: Int = 0,
+    var myCarLevelUpText: String = "",
+    var smallTips: java.util.ArrayList<String>? = null,
+    var isTopLevel: Boolean = false,
+    var exchangeRecord: java.util.ArrayList<String>? = null,
+    var bigManUrl: String = "",
+    var tipUrl: String = "",
+    var showAuto: Boolean = false
+) : Serializable
 
 //豪车工厂顶部 单辆车的数据
-data class SingleCarBean(var beans: Long = 0,
-                         var carName: String = "",
-                         var carPic: String = "",
-                         var level: Int = 0) : Serializable
+data class SingleCarBean(
+    var beans: Long = 0,
+    var carName: String = "",
+    var carPic: String = "",
+    var level: Int = 0
+) : Serializable
 
 //车升级的结果
-data class CarLevelUpResult(var beans: Long = 0,
-                            var isTopLevel: Boolean = false,
-                            var myCarBgPic: String = "",
-                            var myCarLevel: Int = 0,
-                            var myCarLevelUpText: String = "",
-                            var result: String = "",
-                            var webpAnimatUrl: String = "",
-                            var myLevelUpCard: CarCard? = null) : Serializable
+data class CarLevelUpResult(
+    var beans: Long = 0,
+    var isTopLevel: Boolean = false,
+    var myCarBgPic: String = "",
+    var myCarLevel: Int = 0,
+    var myCarLevelUpText: String = "",
+    var result: String = "",
+    var webpAnimatUrl: String = "",
+    var myLevelUpCard: CarCard? = null
+) : Serializable
 
 //升级卡
-data class CarCard(var cardName: String = "",
-                   var cardPic: String = "",
-                   var count: Int = 0) : Serializable
+data class CarCard(
+    var cardName: String = "",
+    var cardPic: String = "",
+    var count: Int = 0
+) : Serializable
 
 //车兑换的结果
-data class CarExchangeResult(var aboutBeans: Long = 0,
-                             var exchangeRecord: java.util.ArrayList<String>? = null,
-                             var myCarBgPic: String = "",
-                             var exchangeCarName: String = "",
-                             var myCarLevel: Int = 0,
-                             var myCarLevelUpText: String = "",
-                             var prods: java.util.ArrayList<CarExchangeGood>? = null) : Serializable
+data class CarExchangeResult(
+    var aboutBeans: Long = 0,
+    var exchangeRecord: java.util.ArrayList<String>? = null,
+    var myCarBgPic: String = "",
+    var exchangeCarName: String = "",
+    var myCarLevel: Int = 0,
+    var myCarLevelUpText: String = "",
+    var prods: java.util.ArrayList<CarExchangeGood>? = null
+) : Serializable
 
 //车兑换的单个物品
-data class CarExchangeGood(var awardCount: Int = 0,
-                           var beans: Long = 0,
-                           var prodId: Int = 0,
-                           var prodName: String = "",
-                           var prodPic: String = "",
-                           var prodType: String = "") : Serializable
+data class CarExchangeGood(
+    var awardCount: Int = 0,
+    var beans: Long = 0,
+    var prodId: Int = 0,
+    var prodName: String = "",
+    var prodPic: String = "",
+    var prodType: String = ""
+) : Serializable
 
 //自动升级的单个车数据
-data class CarAutoSingleChoose(var carName: String = "",
-                               var carPic: String = "",
-                               var level: Int = 0,
-                               var status: String = "",
-                               var sel: Boolean = false,
-                               var reason: String = "") : Serializable
+data class CarAutoSingleChoose(
+    var carName: String = "",
+    var carPic: String = "",
+    var level: Int = 0,
+    var status: String = "",
+    var sel: Boolean = false,
+    var reason: String = ""
+) : Serializable
 
-data class CarSingleCard(var cardName: String = "",
-                         var count: Int = 0,
-                         var cardPic: String = "") : Serializable
+data class CarSingleCard(
+    var cardName: String = "",
+    var count: Int = 0,
+    var cardPic: String = ""
+) : Serializable
 
 /**
  * 锦鲤许愿池相关信息
@@ -1861,21 +1913,21 @@ data class CarSingleCard(var cardName: String = "",
  */
 data class WishKoiResult(
     /** 萌豆中奖信息 **/
-        var awardList: ArrayList<WishKoiInfo>? = null,
+    var awardList: ArrayList<WishKoiInfo>? = null,
     /** 底部信息栏 礼物、萌豆 **/
-        var bottomInfo: WishKoiInfo? = null,
+    var bottomInfo: WishKoiInfo? = null,
     /** 上一轮锦鲤玩家 **/
-        var koiInfo: WishKoiInfo? = null,
+    var koiInfo: WishKoiInfo? = null,
     /** 当前许愿池信息 **/
-        var wishingInfo: WishKoiInfo? = null,
+    var wishingInfo: WishKoiInfo? = null,
     /** 消息 变化后的鲤鱼数量文本文案  例如：本轮您已送出鲤鱼#XYCS#*9999，送出越多中奖几率越高 **/
-        var wishingPoolUserCarpCount: String? = null,
+    var wishingPoolUserCarpCount: String? = null,
     /** 消息  直播间许愿池入口变化消息 H 隐藏许愿池入口、S 显示许愿池入口、 F  刷新活动页面版信息 **/
-        var wishingPoolShow: String? = null,
+    var wishingPoolShow: String? = null,
     /** 当前许愿池Id 如果前后ID不同 取最新ID的数量信息  **/
-        var wishingPoolId: Int = 0,
+    var wishingPoolId: Int = 0,
     /**  当前许愿池投入的数量  许愿池ID 相同 本参数相比上一次的参数较小，直接舍去 **/
-        var wishingPoolMyCount: Int = 0
+    var wishingPoolMyCount: Int = 0
 ) : Serializable
 
 /**
@@ -1890,72 +1942,72 @@ data class WishKoiResult(
  */
 data class WishKoiInfo(
     /** 获奖萌豆 **/
-        var awardBeans: String = "",
+    var awardBeans: String = "",
     /** 送礼文案描述 **/
-        var awardText: String = "",
+    var awardText: String = "",
     /** 中奖的数量模板 **/
-        var count: Long = 0,
+    var count: Long = 0,
     /** 礼物图片 **/
-        var giftPic: String = "",
+    var giftPic: String = "",
     /** 昵称 **/
-        var nickname: String = "",
+    var nickname: String = "",
     /** 用户可用萌豆数 **/
-        var beans: Long = 0,
+    var beans: Long = 0,
     /** 礼物模板 **/
-        var countTpl: ArrayList<WishKoiInfo>? = null,
+    var countTpl: ArrayList<WishKoiInfo>? = null,
     /** 礼物数量名称 **/
-        var countName: String = "",
+    var countName: String = "",
     /** 礼物数量 **/
-        var countValue: Int = 0,
+    var countValue: Int = 0,
     /** 礼物价格 **/
-        var giftBeans: Long = 0,
+    var giftBeans: Long = 0,
     /** 礼物id **/
-        var giftId: Int = 0,
+    var giftId: Int = 0,
     /** 礼物名称 **/
-        var giftName: String = "",
+    var giftName: String = "",
     /** 礼物图片 **/
-        var pic: String = "",
+    var pic: String = "",
     /** 当前跑道的最大礼物萌豆数 **/
-        var runwayMaxBeans: Long = 0,
+    var runwayMaxBeans: Long = 0,
     /** 上跑道需要的最少萌豆数 **/
-        var runwayMinBean: Long = 0,
+    var runwayMinBean: Long = 0,
     /** 跑道表白需要的最少萌豆数 **/
-        var runwayMinLoveBean: Long = 0,
+    var runwayMinLoveBean: Long = 0,
     /** 头像 **/
-        var headPic: String = "",
+    var headPic: String = "",
     /** 用户id **/
-        var userId: Long = 0,
+    var userId: Long = 0,
     /** 奖池当前萌豆 **/
-        var currenPoolBeans: Long = 0,
+    var currenPoolBeans: Long = 0,
     /** 奖池最大萌豆 **/
-        var maxPoolBeans: Long = 0,
+    var maxPoolBeans: Long = 0,
     /** 奖池 玩家提示文案 **/
-        var userTakeText: String = "",
+    var userTakeText: String = "",
     /** w奖池 玩家累积数量 **/
-        var userTakeNum: Int = 0,
+    var userTakeNum: Int = 0,
     /** 奖池ID **/
-        var wishId: Int = 0,
+    var wishId: Int = 0,
     /** 奖池 提示文案 **/
-        var wishText: String = "",
+    var wishText: String = "",
     /** 奖池状态 **/
-        var wishType: String = "",
+    var wishType: String = "",
     /** 实际上跑道的价格 **/
-        var realRunwayBeans: Long = 0,
+    var realRunwayBeans: Long = 0,
     /** webp图片 **/
-        var fallsPic: String = "",
-        //4.18新增字段
+    var fallsPic: String = "",
+    //4.18新增字段
     /** 幸运直播间奖励 **/
-        var awardName: String = "",
+    var awardName: String = "",
     /** 直播间ID **/
-        var programId: Int = 0,
+    var programId: Int = 0,
     /** 直播间名称 **/
-        var programName: String = "",
+    var programName: String = "",
     /** 直播状态 **/
-        var isLiving: Boolean? = null,
+    var isLiving: Boolean? = null,
     /** 主播头像 **/
-        var anchorHeadPic: String = "",
+    var anchorHeadPic: String = "",
     /** 主播Id **/
-        var anchorId: Int = 0
+    var anchorId: Int = 0
 ) : Serializable
 
 /**
@@ -1969,27 +2021,27 @@ data class WishKoiInfo(
  * @iterativeDetail 锦鲤许愿池列表item + 幸运锦鲤列表item
  */
 data class WishKoiUserInfo(
-        /** 中奖玩家送出的锦鲤数量 **/
-        var count: Long = 0,
-        var userId: Long = 0,
-        /** 玩家昵称 **/
-        var nickname: String = "",
-        /** 玩家头像 **/
-        var headPic: String = "",
-        /** 中奖萌豆 **/
-        var awardBeans: String = "",
-        var createTime: String = "",
-        var countTpl: Long = 0,
-        /** 礼物图片 **/
-        var giftPic: String = "",
-        var awardSource: String = "",
-        //4.18新增字段
-        /** 幸运直播间奖励（可能没有奖励）**/
-        var awardName: String = "",
-        /** 直播间ID **/
-        var programId: Int = 0,
-        /** 直播间名称 **/
-        var programName: String = ""
+    /** 中奖玩家送出的锦鲤数量 **/
+    var count: Long = 0,
+    var userId: Long = 0,
+    /** 玩家昵称 **/
+    var nickname: String = "",
+    /** 玩家头像 **/
+    var headPic: String = "",
+    /** 中奖萌豆 **/
+    var awardBeans: String = "",
+    var createTime: String = "",
+    var countTpl: Long = 0,
+    /** 礼物图片 **/
+    var giftPic: String = "",
+    var awardSource: String = "",
+    //4.18新增字段
+    /** 幸运直播间奖励（可能没有奖励）**/
+    var awardName: String = "",
+    /** 直播间ID **/
+    var programId: Int = 0,
+    /** 直播间名称 **/
+    var programName: String = ""
 ) : Serializable
 
 /**
@@ -2000,9 +2052,9 @@ data class WishKoiUserInfo(
  */
 data class WishKoiLuckAnchorInfo(
     /** 上周幸运主播第一名 **/
-        var lastLuckyProgram: WishKoiLuckAnchorItemBean? = null,
+    var lastLuckyProgram: WishKoiLuckAnchorItemBean? = null,
     /** 本周幸运主播榜单列表 **/
-        var rankList: ArrayList<WishKoiLuckAnchorItemBean>? = null
+    var rankList: ArrayList<WishKoiLuckAnchorItemBean>? = null
 ) : Serializable
 
 /**
@@ -2012,105 +2064,107 @@ data class WishKoiLuckAnchorInfo(
  * @iterativeVersion 4.18
  */
 data class WishKoiLuckAnchorItemBean(
-        /** 主播头像 **/
-        var headPic: String = "",
-        /** 主播昵称 **/
-        var nickname: String = "",
-        /** 节目ID **/
-        var programId: Int = 0,
-        /** 榜单积分 **/
-        var score: Int = 0,
-        /** 主播的羚萌ID **/
-        var userId: Int = 0,
-        /** 是否开播：True、False **/
-        var isLiving: Boolean? = null
+    /** 主播头像 **/
+    var headPic: String = "",
+    /** 主播昵称 **/
+    var nickname: String = "",
+    /** 节目ID **/
+    var programId: Int = 0,
+    /** 榜单积分 **/
+    var score: Int = 0,
+    /** 主播的羚萌ID **/
+    var userId: Int = 0,
+    /** 是否开播：True、False **/
+    var isLiving: Boolean? = null
 ) : Serializable
 
 /**
  * 主页的Bean
  */
 data class HomePageBean(
-        /** 是否可以私聊 */
-        var canPrivateChat: Boolean = false,
-        /** 是否可以举报拉黑 */
-        var canReport: Boolean = false,
-        /** 用户昵称 */
-        var nickname: String = "",
-        /** 昵称颜色 */
-        var nickcolor: String = "",
-        /** 用户头像 */
-        var headPic: String = "",
-        /** 性别：男(M)、女(F) */
-        var sex: String = "",
-        /** 个性签名 */
-        var mySign: String = "",
-        /** 房间号 */
-        var programId: Int = 0,
-        /**主题房*/
-        var themeRoom: Boolean = false,
-        /** 主播等级 */
-        var anchorLevel: Int = 0,
-        /** 是否已被关注 */
-        @JSONField(name = "isFollowed")
-        var isFollowed: Boolean = false,
-        /** 勋章图标列表(不含房管勋章),已排序 */
-        var badgesPic: MutableList<String> = mutableListOf(),
-        /** 是否显示私聊 */
-        var showPrivateChat: Boolean = false,
-        /** 背景图（照片墙） */
-        var bgImgs: MutableList<String> = mutableListOf(),
-        /** 粉丝数 */
-        var fansCount: String = "",
-        /** 视频数 */
-        var videoCount: Long = 0,
-        /** 动态数 */
-        var postCount: Long = 0,
-        //成就数目
-        var achievementCount: Int = 0,
-        /** 用户等级 */
-        var userLevel: Int = 0,
-        /** 是否直播中 */
-        var isLiving: Boolean = false,
-        /** 贵族等级 */
-        var royalLevel: Int = 0,
-        /**主播靓号**/
-        var prettyId: Long? = null,
-        /** 靓号 */
-        var prettyNum: String = "",
-        /** 靓号等级  1、小主号(红色靓号)  2、绿色靓号   3、蓝色靓号  4、紫色靓号' */
-        var prettyNumLevel: Int = 0,
-        /** 是否展示加好友 */
-        var showAddFriend: Boolean = false,
-        /** 是否神秘人 */
-        var mystery: Boolean = false,
-        /** 用户类型 */
-        var userType: String = "",
-        /**位置*/
-        var city: String = "",
-        /**贵族等级地址*/
-        var royalPic: String = "",
-        //主播勋章
-        var anchorBadges: List<SingleBadge> = listOf()
+    /** 是否可以私聊 */
+    var canPrivateChat: Boolean = false,
+    /** 是否可以举报拉黑 */
+    var canReport: Boolean = false,
+    /** 用户昵称 */
+    var nickname: String = "",
+    /** 昵称颜色 */
+    var nickcolor: String = "",
+    /** 用户头像 */
+    var headPic: String = "",
+    /** 性别：男(M)、女(F) */
+    var sex: String = "",
+    /** 个性签名 */
+    var mySign: String = "",
+    /** 房间号 */
+    var programId: Int = 0,
+    /**主题房*/
+    var themeRoom: Boolean = false,
+    /** 主播等级 */
+    var anchorLevel: Int = 0,
+    /** 是否已被关注 */
+    @JSONField(name = "isFollowed")
+    var isFollowed: Boolean = false,
+    /** 勋章图标列表(不含房管勋章),已排序 */
+    var badgesPic: MutableList<String> = mutableListOf(),
+    /** 是否显示私聊 */
+    var showPrivateChat: Boolean = false,
+    /** 背景图（照片墙） */
+    var bgImgs: MutableList<String> = mutableListOf(),
+    /** 粉丝数 */
+    var fansCount: String = "",
+    /** 视频数 */
+    var videoCount: Long = 0,
+    /** 动态数 */
+    var postCount: Long = 0,
+    //成就数目
+    var achievementCount: Int = 0,
+    /** 用户等级 */
+    var userLevel: Int = 0,
+    /** 是否直播中 */
+    var isLiving: Boolean = false,
+    /** 贵族等级 */
+    var royalLevel: Int = 0,
+    /**主播靓号**/
+    var prettyId: Long? = null,
+    /** 靓号 */
+    var prettyNum: String = "",
+    /** 靓号等级  1、小主号(红色靓号)  2、绿色靓号   3、蓝色靓号  4、紫色靓号' */
+    var prettyNumLevel: Int = 0,
+    /** 是否展示加好友 */
+    var showAddFriend: Boolean = false,
+    /** 是否神秘人 */
+    var mystery: Boolean = false,
+    /** 用户类型 */
+    var userType: String = "",
+    /**位置*/
+    var city: String = "",
+    /**贵族等级地址*/
+    var royalPic: String = "",
+    //主播勋章
+    var anchorBadges: List<SingleBadge> = listOf()
 ) : Serializable
 
 //直播间关注列表
-data class LiveFollowListData(var dataType: Int = -1,
-                              var isPull: Boolean = false,
-                              var list: List<LiveFollowBean> = arrayListOf(),
-                              var hasMore: Boolean = false)
+data class LiveFollowListData(
+    var dataType: Int = -1,
+    var isPull: Boolean = false,
+    var list: List<LiveFollowBean> = arrayListOf(),
+    var hasMore: Boolean = false
+)
 
 //直播间关注列表bean
 data class LiveFollowBean(
-        var coverPic: String = "",
-        var onlineUserNum: Int = 0,
-        var programId: Int = 0,
-        var programName: String = ""
+    var coverPic: String = "",
+    var onlineUserNum: Int = 0,
+    var programId: Int = 0,
+    var programName: String = ""
 )
 
 //上下切换列表bean
 data class SwitchBean(
-        var coverPic: String = "",
-        var programId: Int = 0
+    var coverPic: String = "",
+    var programId: Int = 0
 ) {
     override fun hashCode(): Int {
         return programId.hashCode()
@@ -2128,31 +2182,31 @@ data class SwitchBean(
  * 猜字谜气泡消息信息
  */
 data class BubbleResult(
-        var riddleIndex: Int = 0,
-        var riddleInfo: String = "",
-        var bubbleMsg: String = ""
+    var riddleIndex: Int = 0,
+    var riddleInfo: String = "",
+    var bubbleMsg: String = ""
 ) : Serializable
 
 /**
  * 猜字谜第一名中奖消息
  */
 data class WordPuzzleAward(
-        //奖励图片
-        var riddleAwardPic: String = "",
-        //奖励数量
-        var riddleAwardCount: Int = 0,
-        //奖励说明
-        var riddleAwardWord: String = "",
-        //礼物名称
-        var riddleAwardName: String = ""
+    //奖励图片
+    var riddleAwardPic: String = "",
+    //奖励数量
+    var riddleAwardCount: Int = 0,
+    //奖励说明
+    var riddleAwardWord: String = "",
+    //礼物名称
+    var riddleAwardName: String = ""
 ) : Serializable
 
 /**
  * 横竖屏切换实体类
  */
 data class SwitchScreen(
-        var programId: Int = 0,
-        var cutoverScreenType: String = ""
+    var programId: Int = 0,
+    var cutoverScreenType: String = ""
 ) : Serializable
 
 /**
@@ -2162,7 +2216,7 @@ data class SwitchScreen(
  * @iterativeVersion 4.16
  */
 data class FlipCardResult(
-        var turnCarOpen: Boolean? = null
+    var turnCarOpen: Boolean? = null
 ) : Serializable
 
 /**
@@ -2194,9 +2248,9 @@ data class FlipCardExplainResult(
  * @iterativeVersion 4.16
  */
 data class FlipCardPic(
-        var backPic: String = "",
-        var frontPic: String = "",
-        var lockPic: String = ""
+    var backPic: String = "",
+    var frontPic: String = "",
+    var lockPic: String = ""
 ) : Serializable
 
 /**
@@ -2210,10 +2264,10 @@ data class FlipCardPic(
  * @iterativeDetail 重写equals和hashCode方法
  */
 data class FlipCardExplainItemInfo(
-        var awardContent: String = "",
-        var rate: Long = 0,
-        var beans: Long = 0,
-        var configId: Int = 0
+    var awardContent: String = "",
+    var rate: Long = 0,
+    var beans: Long = 0,
+    var configId: Int = 0
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is FlipCardExplainItemInfo) {
@@ -2234,11 +2288,11 @@ data class FlipCardExplainItemInfo(
  * @iterativeVersion 4.16
  */
 data class FlipCardMoreItemInfo(
-        var headPic: String = "",
-        var nickname: String = "",
-        var programId: Int = 0,
-        var turnTime: Int = 0,
-        var living: Boolean = false
+    var headPic: String = "",
+    var nickname: String = "",
+    var programId: Int = 0,
+    var turnTime: Int = 0,
+    var living: Boolean = false
 ) : Serializable
 
 /**
@@ -2248,20 +2302,20 @@ data class FlipCardMoreItemInfo(
  * @iterativeVersion 4.16
  */
 data class FlipCardHistoryItemInfo(
-        /** 奖励内容 **/
-        var awardContent: String = "",
-        /** 主播是否发奖 **/
-        var hasSend: Boolean = false,
-        var anchorName: String = "",
-        var nickname: String = "",
-        var programId: Int = 0,
-        /** 翻牌奖励记录id **/
-        var recordId: Int = 0,
-        var userId: Long = 0,
-        /** 创建时间 **/
-        var createTime: String = "",
-        /** 评价类型 满意：Satisfied 不满意：Bad  未评价为空 **/
-        var commentType: String = ""
+    /** 奖励内容 **/
+    var awardContent: String = "",
+    /** 主播是否发奖 **/
+    var hasSend: Boolean = false,
+    var anchorName: String = "",
+    var nickname: String = "",
+    var programId: Int = 0,
+    /** 翻牌奖励记录id **/
+    var recordId: Int = 0,
+    var userId: Long = 0,
+    /** 创建时间 **/
+    var createTime: String = "",
+    /** 评价类型 满意：Satisfied 不满意：Bad  未评价为空 **/
+    var commentType: String = ""
 ) : Serializable
 
 /**
@@ -2271,20 +2325,20 @@ data class FlipCardHistoryItemInfo(
  * @iterativeVersion 4.17
  */
 data class FansFeedbackItemInfo(
-        /** 库存数量 **/
-        var count: Int = 0,
-        /** 库存名称 **/
-        var name: String = "",
-        /** 库存图标 **/
-        var pic: String = "",
-        /** 回馈数量 **/
-        var awardCount: Int = 0,
-        /** 回馈礼物名称 **/
-        var awardName: String = "",
-        /** 回馈时间 **/
-        var createTime: String = "",
-        /** 回馈玩家昵称 **/
-        var userInfo: String = ""
+    /** 库存数量 **/
+    var count: Int = 0,
+    /** 库存名称 **/
+    var name: String = "",
+    /** 库存图标 **/
+    var pic: String = "",
+    /** 回馈数量 **/
+    var awardCount: Int = 0,
+    /** 回馈礼物名称 **/
+    var awardName: String = "",
+    /** 回馈时间 **/
+    var createTime: String = "",
+    /** 回馈玩家昵称 **/
+    var userInfo: String = ""
 ) : Serializable
 
 /**
@@ -2293,11 +2347,11 @@ data class FansFeedbackItemInfo(
  * @param actionValue 操作的值。可以不传
  */
 data class BottomActionBean(
-        //操作类型(用于打开视图)
-        var type: String = "",
-        var actionValue: Any? = null,
-        //操作分类（在视图内进行区分）
-        var innerActionType: String = ""
+    //操作类型(用于打开视图)
+    var type: String = "",
+    var actionValue: Any? = null,
+    //操作分类（在视图内进行区分）
+    var innerActionType: String = ""
 ) : Serializable
 
 
@@ -2308,20 +2362,20 @@ data class BottomActionBean(
  * @iterativeVersion 4.17
  */
 data class DiscountItemInfo(
-        /** 剩余数量 **/
-        var count: Int = 0,
-        /** 折扣比例 **/
-        var discount: Int = 0,
-        /** 过期时间 **/
-        var expTime: String = "",
-        /** 适用商品类型 **/
-        var prodGoodType: String = "",
-        /** 折扣券适用商品id **/
-        var prodId: Int = 0,
-        /** 商品名称 **/
-        var prodName: String = "",
-        /** 商品图片 **/
-        var prodPic: String = ""
+    /** 剩余数量 **/
+    var count: Int = 0,
+    /** 折扣比例 **/
+    var discount: Int = 0,
+    /** 过期时间 **/
+    var expTime: String = "",
+    /** 适用商品类型 **/
+    var prodGoodType: String = "",
+    /** 折扣券适用商品id **/
+    var prodId: Int = 0,
+    /** 商品名称 **/
+    var prodName: String = "",
+    /** 商品图片 **/
+    var prodPic: String = ""
 ) : Serializable
 
 /**
@@ -2340,30 +2394,30 @@ data class DiscountItemInfo(
  */
 //拯救周星动画消息
 data class PkMicSalvationInfo(
-        var startProgramId: Int = 0,
-        var programName: String = "",
-        var remindSeconds: Int = 0,
-        var programPic: String = "",
-        var remindEndMills: Long = 0L,
-        var giftPopSeconds: Long = 0,
-        var salvationId: Int = 0
+    var startProgramId: Int = 0,
+    var programName: String = "",
+    var remindSeconds: Int = 0,
+    var programPic: String = "",
+    var remindEndMills: Long = 0L,
+    var giftPopSeconds: Long = 0,
+    var salvationId: Int = 0
 )
 
 //PK拯救开始
 data class PkMicSalvationStartInfo(
-        var participatedNums: Int = 0,
-        var giftPopSeconds: Long = 0,
-        var maxParticipateNums: Int = 0,
-        var programId: Int = 0,
-        var programName: String = "",
-        var progressPassedSeconds: Int = 0,
-        var progressSeconds: Int = 0
+    var participatedNums: Int = 0,
+    var giftPopSeconds: Long = 0,
+    var maxParticipateNums: Int = 0,
+    var programId: Int = 0,
+    var programName: String = "",
+    var progressPassedSeconds: Int = 0,
+    var progressSeconds: Int = 0
 )
 
 //PK拯救消息变化
 data class PkMicSalvationChangeInfo(
-        var participatedNums: Int = 0,
-        var maxParticipateNums: Int = 0
+    var participatedNums: Int = 0,
+    var maxParticipateNums: Int = 0
 )
 
 /**
@@ -2378,23 +2432,23 @@ data class HotTrackInfo(var hotPositionChangeText: String = "")
  */
 data class PkRankAnchorInfo(
     /** 赛季名称 **/
-        var seasonName: String = "",
+    var seasonName: String = "",
     /** 上赛季冠军主播信息 **/
-        var lastTop1: PkRankLastChampionInfo? = null,
+    var lastTop1: PkRankLastChampionInfo? = null,
     /** 主播信息 **/
-        var anchorInfo: PkAnchorInfo? = null,
+    var anchorInfo: PkAnchorInfo? = null,
     /** 段位信息（如果没有该字段，表示还没有参与） **/
-        var stageInfo: PkRankInfo? = null,
+    var stageInfo: PkRankInfo? = null,
     /** 本赛季PK场数 **/
-        var pkCnt: Int = 0,
+    var pkCnt: Int = 0,
     /** 本赛季胜率 **/
-        var winRatio: String = "",
+    var winRatio: String = "",
     /** 今日连胜数 **/
-        var todayWinCnt: Int = 0,
+    var todayWinCnt: Int = 0,
     /** 本赛季累计PK分 **/
-        var totalPkScore: Long = 0,
+    var totalPkScore: Long = 0,
     /** 主播当前赛季段位排名 **/
-        var ranking: String = ""
+    var ranking: String = ""
 )
 
 /**
@@ -2403,20 +2457,20 @@ data class PkRankAnchorInfo(
  * @since 4.23
  */
 data class PkRankLastChampionInfo(
-        /** 头像 **/
-        var headPic: String = "",
-        /** 第一名图标 **/
-        var icon: String = "",
-        /** 是否开播 **/
-        var isLiving: Boolean = false,
-        /** 昵称 **/
-        var nickname: String = "",
-        /** 直播间ID 没有该字段表示虚位以待 **/
-        var programId: Int? = null,
-        /** 赛季名称 **/
-        var seasonName: String = "",
-        /**  用户ID **/
-        var userId: Int = 0
+    /** 头像 **/
+    var headPic: String = "",
+    /** 第一名图标 **/
+    var icon: String = "",
+    /** 是否开播 **/
+    var isLiving: Boolean = false,
+    /** 昵称 **/
+    var nickname: String = "",
+    /** 直播间ID 没有该字段表示虚位以待 **/
+    var programId: Int? = null,
+    /** 赛季名称 **/
+    var seasonName: String = "",
+    /**  用户ID **/
+    var userId: Int = 0
 )
 
 /**
@@ -2425,10 +2479,10 @@ data class PkRankLastChampionInfo(
  * @since 4.23
  */
 data class PkAnchorInfo(
-        /** 昵称 **/
-        var nickname: String = "",
-        /** 头像 **/
-        var headPic: String = ""
+    /** 昵称 **/
+    var nickname: String = "",
+    /** 头像 **/
+    var headPic: String = ""
 )
 
 /**
@@ -2437,28 +2491,28 @@ data class PkAnchorInfo(
  * @since 4.23
  */
 data class PkRankInfo(
-        /** 当前段位等级 **/
-        var currStageLevel: Int = 0,
-        /** 当前段位图标 **/
-        var currStageIcon: String = "",
-        /** 当前段位名称 **/
-        var currStageName: String = "",
-        /** 当前最低段位分 **/
-        var currStageScore: Long = 0,
-        /** 当前段位分 **/
-        var nowScore: Long = 0,
-        /** 距离下一个段位的分 **/
-        var diffScore: Long = 0,
-        /** 下一个段位图标 **/
-        var nextStageIcon: String = "",
-        /** 下一个段位等级(如果没有该字段，表示已达到最高等级) **/
-        var nextStageLevel: Int? = null,
-        /** 下一个段位名称 **/
-        var nextStageName: String = "",
-        /** 下一个段位分 **/
-        var nextStageScore: Long = 0,
-        /** 下一个段位的描述 **/
-        var remark: String = ""
+    /** 当前段位等级 **/
+    var currStageLevel: Int = 0,
+    /** 当前段位图标 **/
+    var currStageIcon: String = "",
+    /** 当前段位名称 **/
+    var currStageName: String = "",
+    /** 当前最低段位分 **/
+    var currStageScore: Long = 0,
+    /** 当前段位分 **/
+    var nowScore: Long = 0,
+    /** 距离下一个段位的分 **/
+    var diffScore: Long = 0,
+    /** 下一个段位图标 **/
+    var nextStageIcon: String = "",
+    /** 下一个段位等级(如果没有该字段，表示已达到最高等级) **/
+    var nextStageLevel: Int? = null,
+    /** 下一个段位名称 **/
+    var nextStageName: String = "",
+    /** 下一个段位分 **/
+    var nextStageScore: Long = 0,
+    /** 下一个段位的描述 **/
+    var remark: String = ""
 )
 
 /**
@@ -2468,17 +2522,17 @@ data class PkRankInfo(
  */
 data class PkRankRecordListInfo(
     /** 赛季名称 **/
-        var seasonName: String = "",
+    var seasonName: String = "",
     /** 赛季时间 **/
-        var seasonTime: String = "",
+    var seasonTime: String = "",
     /** PK记录 **/
-        var pkList: ArrayList<PkRankRecordInfo> = arrayListOf(),
+    var pkList: ArrayList<PkRankRecordInfo> = arrayListOf(),
 
-        //自定义字段
+    //自定义字段
     /** 是否还有更多 **/
-        var hasMore: Boolean = false,
+    var hasMore: Boolean = false,
     /** 是否是下拉 **/
-        var isPull: Boolean = true
+    var isPull: Boolean = true
 )
 
 /**
@@ -2487,24 +2541,24 @@ data class PkRankRecordListInfo(
  * @since 4.23
  */
 data class PkRankRecordInfo(
-        /** 对手的直播间ID **/
-        var programId: Int = 0,
-        /** 对手是否开播 **/
-        var isLiving: Boolean = false,
-        /** 对手昵称 **/
-        var nickname: String = "",
-        /** 对手头像 **/
-        var headPic: String = "",
-        /** 我本场获得的Pk分 **/
-        var pkScore: Long = 0,
-        /** 我本场获得的段位分 **/
-        var stageScore: String = "",
-        /** pk时间 **/
-        var pkDate: String = "",
-        /** pk结果 Win -> 胜利，Lose -> 战败，Draw -> 战平 **/
-        var result: String = "",
-        /** 主播ID,用户跳转首页 **/
-        var anchorId: Int = 0
+    /** 对手的直播间ID **/
+    var programId: Int = 0,
+    /** 对手是否开播 **/
+    var isLiving: Boolean = false,
+    /** 对手昵称 **/
+    var nickname: String = "",
+    /** 对手头像 **/
+    var headPic: String = "",
+    /** 我本场获得的Pk分 **/
+    var pkScore: Long = 0,
+    /** 我本场获得的段位分 **/
+    var stageScore: String = "",
+    /** pk时间 **/
+    var pkDate: String = "",
+    /** pk结果 Win -> 胜利，Lose -> 战败，Draw -> 战平 **/
+    var result: String = "",
+    /** 主播ID,用户跳转首页 **/
+    var anchorId: Int = 0
 )
 
 /**
@@ -2514,15 +2568,15 @@ data class PkRankRecordInfo(
  */
 data class PkRankUserRankInfo(
     /** 赛季名称 **/
-        var seasonName: String = "",
+    var seasonName: String = "",
     /** 赛季时间 **/
-        var seasonTime: String = "",
+    var seasonTime: String = "",
     /** 我的排位信息 **/
-        var rankInfo: PkRankUserInfo? = null,
+    var rankInfo: PkRankUserInfo? = null,
     /** 列表数据 **/
-        var rankPage: PkRankUserListInfo? = null,
+    var rankPage: PkRankUserListInfo? = null,
 
-        //本地字段
+    //本地字段
     var isPull: Boolean = true
 )
 
@@ -2532,10 +2586,10 @@ data class PkRankUserRankInfo(
  * @since 4.23
  */
 data class PkRankUserListInfo(
-        /** 是否还有更多 **/
-        var hasMore: Boolean = false,
-        /** 玩家贡献列表 **/
-        var list: ArrayList<PkRankUserInfo> = arrayListOf()
+    /** 是否还有更多 **/
+    var hasMore: Boolean = false,
+    /** 玩家贡献列表 **/
+    var list: ArrayList<PkRankUserInfo> = arrayListOf()
 )
 
 /**
@@ -2544,20 +2598,20 @@ data class PkRankUserListInfo(
  * @since 4.23
  */
 data class PkRankUserInfo(
-        /** 排名 **/
-        var ranking: String = "",
-        /** 当前用户贵族等级 **/
-        var royalLevel: Int = 0,
-        /** 当前用户等级 **/
-        var userLevel: Int = 0,
-        /** 头像 **/
-        var headPic: String = "",
-        /** 用户昵称 **/
-        var nickname: String = "",
-        /** 贡献值 **/
-        var score: Long = 0,
-        /** 用户ID **/
-        var userId: Int = 0
+    /** 排名 **/
+    var ranking: String = "",
+    /** 当前用户贵族等级 **/
+    var royalLevel: Int = 0,
+    /** 当前用户等级 **/
+    var userLevel: Int = 0,
+    /** 头像 **/
+    var headPic: String = "",
+    /** 用户昵称 **/
+    var nickname: String = "",
+    /** 贡献值 **/
+    var score: Long = 0,
+    /** 用户ID **/
+    var userId: Int = 0
 )
 
 /**
@@ -2567,21 +2621,21 @@ data class PkRankUserInfo(
  */
 data class PkRankUserMvpListInfo(
     /** 用户ID **/
-        var userId: Int = 0,
+    var userId: Int = 0,
     /** 用户昵称 **/
-        var nickname: String = "",
+    var nickname: String = "",
     /** 下一个勋章已有的Mvp次数 **/
-        var nextBadgeMvpCnt: Int = 0,
+    var nextBadgeMvpCnt: Int = 0,
     /** 兑换一个勋章所需的mvp次数 **/
-        var badgeNeedCnt: Int = 0,
+    var badgeNeedCnt: Int = 0,
     /** 头像 **/
-        var headPic: String = "",
+    var headPic: String = "",
     /** mvp总次数 **/
-        var mvpCnt: Int = 0,
+    var mvpCnt: Int = 0,
     /** 玩家赛季MVP次数列表 **/
-        var mvpList: ArrayList<PkRankUserMvpInfo> = arrayListOf(),
+    var mvpList: ArrayList<PkRankUserMvpInfo> = arrayListOf(),
     /** 文案 **/
-        var remark: String = ""
+    var remark: String = ""
 )
 
 /**
@@ -2590,12 +2644,12 @@ data class PkRankUserMvpListInfo(
  * @since 4.23
  */
 data class PkRankUserMvpInfo(
-        /** mvp次数 **/
-        var mvpCnt: Int = 0,
-        /** 赛季名称 **/
-        var seasonName: String = "",
-        /** 赛季时间 **/
-        var seasonTime: String = ""
+    /** mvp次数 **/
+    var mvpCnt: Int = 0,
+    /** 赛季名称 **/
+    var seasonName: String = "",
+    /** 赛季时间 **/
+    var seasonTime: String = ""
 )
 
 /**
@@ -2604,10 +2658,10 @@ data class PkRankUserMvpInfo(
  * @since 4.23
  */
 data class PkRankAnchorRankListInfo(
-        /** 赛季名称 **/
-        var seasonName: String = "",
-        /** 榜单 **/
-        var rankList: ArrayList<PkRankAnchorRankInfo> = arrayListOf()
+    /** 赛季名称 **/
+    var seasonName: String = "",
+    /** 榜单 **/
+    var rankList: ArrayList<PkRankAnchorRankInfo> = arrayListOf()
 )
 
 /**
@@ -2616,24 +2670,24 @@ data class PkRankAnchorRankListInfo(
  * @since 4.23
  */
 data class PkRankAnchorRankInfo(
-        /** 主播头像 **/
-        var headPic: String = "",
-        /** 是否开播 **/
-        var isLiving: Boolean = false,
-        /** 昵称 **/
-        var nickname: String = "",
-        /** 直播间ID **/
-        var programId: Int = 0,
-        /** 段位分 **/
-        var score: Long = 0,
-        /** 段位Icon **/
-        var stageIcon: String = "",
-        /** 段位等级 **/
-        var stageLevel: Int = 0,
-        /** 段位名称 **/
-        var stageName: String = "",
-        /** 用户ID **/
-        var userId: Int = 0
+    /** 主播头像 **/
+    var headPic: String = "",
+    /** 是否开播 **/
+    var isLiving: Boolean = false,
+    /** 昵称 **/
+    var nickname: String = "",
+    /** 直播间ID **/
+    var programId: Int = 0,
+    /** 段位分 **/
+    var score: Long = 0,
+    /** 段位Icon **/
+    var stageIcon: String = "",
+    /** 段位等级 **/
+    var stageLevel: Int = 0,
+    /** 段位名称 **/
+    var stageName: String = "",
+    /** 用户ID **/
+    var userId: Int = 0
 )
 
 /**
@@ -2642,21 +2696,21 @@ data class PkRankAnchorRankInfo(
  * @since 4.24
  */
 data class OnlineUserInfo(
-        var userId: Int = -1,
-        //头像
-        var headPic: String = "",
-        var userLevel: Int = -1,
-        var royalLevel: Int = -1,
-        var roomGuardPic: String = "",
-        var roomManagerPic: String = "",
-        var royalSmallPic: String = "",
-        var badgesPic: ArrayList<String> = arrayListOf(),
-        //昵称
-        var nickname: String = "",
-        var score: Double = 0.toDouble(),
-        //4.15新增字段
-        //贵族勋章地址
-        var royalPic: String = ""
+    var userId: Int = -1,
+    //头像
+    var headPic: String = "",
+    var userLevel: Int = -1,
+    var royalLevel: Int = -1,
+    var roomGuardPic: String = "",
+    var roomManagerPic: String = "",
+    var royalSmallPic: String = "",
+    var badgesPic: ArrayList<String> = arrayListOf(),
+    //昵称
+    var nickname: String = "",
+    var score: Double = 0.toDouble(),
+    //4.15新增字段
+    //贵族勋章地址
+    var royalPic: String = ""
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is RoomUserInfo) {
@@ -2674,7 +2728,8 @@ data class OnlineUserInfo(
  * 在线用户信息
  * @author WanZhiYuan
  */
-class NewOnlineData<T>(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) : RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
+class NewOnlineData<T>(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) :
+    RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
     var royalHonorList: List<T>? = null
 
     //贵族说明
@@ -2718,17 +2773,17 @@ class NewOnlineData<T>(isPull: Boolean = false, hasMore: Boolean = false, extDat
  * 消息使用的播放对象
  */
 data class PlayInfoBean(
-        var programId: Int = 0,
-        //当前主题房场次
-        var themeSessionId: Int = 0,
-        //当前上场的主播id
-        var themeShowingProgramId: Int = 0,
-        var programName: String = "",
-        var headPic: String = "",
-        @JSONField(name = "isPcLive")
-        var isPcLive:Boolean=true,
-        var prePic: String ="",
-        var playInfo: PlayInfo? = null
+    var programId: Int = 0,
+    //当前主题房场次
+    var themeSessionId: Int = 0,
+    //当前上场的主播id
+    var themeShowingProgramId: Int = 0,
+    var programName: String = "",
+    var headPic: String = "",
+    @JSONField(name = "isPcLive")
+    var isPcLive: Boolean = true,
+    var prePic: String = "",
+    var playInfo: PlayInfo? = null
 ) : Serializable
 
 /**
@@ -2737,18 +2792,18 @@ data class PlayInfoBean(
  * @since 4.24
  */
 data class ExperienceGuard(
-        /** 体验守护资格状态 None(没有)|Unclaimed(待领取)|UnUsed(已领取)|Used(已使用)|Expired(已失效) **/
-        var status: String = "",
-        /** 是否自动弹窗 **/
-        var autoPopup: Boolean = false,
-        /** 体验守护资格倒计时 **/
-        var experienceCountDown: Long = 0,
-        /** 提示文案 **/
-        var tips: String = "",
-        /** 图片 **/
-        var descUrl: String = "",
-        /** 图片title **/
-        var descTitle: String = ""
+    /** 体验守护资格状态 None(没有)|Unclaimed(待领取)|UnUsed(已领取)|Used(已使用)|Expired(已失效) **/
+    var status: String = "",
+    /** 是否自动弹窗 **/
+    var autoPopup: Boolean = false,
+    /** 体验守护资格倒计时 **/
+    var experienceCountDown: Long = 0,
+    /** 提示文案 **/
+    var tips: String = "",
+    /** 图片 **/
+    var descUrl: String = "",
+    /** 图片title **/
+    var descTitle: String = ""
 ) : Serializable
 
 /**
@@ -2757,8 +2812,8 @@ data class ExperienceGuard(
  * @since 4.25
  */
 data class RoyalMessageBean(
-        var royalCount: Int? = null,
-        var guardCount: Int? = null
+    var royalCount: Int? = null,
+    var guardCount: Int? = null
 ) : Serializable
 
 /**
@@ -2780,31 +2835,31 @@ data class RoyalMessageBean(
  * @since 4.26
  */
 data class CouponItemInfo(
-        /** 充值折扣券类型(可选项：MJ -> 满减、DJ -> 定减、ZK -> 折扣) **/
-        var couponType: String = "",
-        /** 折扣金额 **/
-        var typeValue: Int = 0,
-        /** 使用阈值 **/
-        var useValue: Int = 0,
-        /** 过期时间 **/
-        var expDate: String = "",
-        /** 折扣券名称 **/
-        var couponName: String = "",
-        /** 折扣券记录id **/
-        var couponRecordId: Long = 0,
-        /** 使用客户端 **/
-        var useClients: String = "",
-        /** 能否使用 **/
-        var canUse: Boolean = false,
+    /** 充值折扣券类型(可选项：MJ -> 满减、DJ -> 定减、ZK -> 折扣) **/
+    var couponType: String = "",
+    /** 折扣金额 **/
+    var typeValue: Int = 0,
+    /** 使用阈值 **/
+    var useValue: Int = 0,
+    /** 过期时间 **/
+    var expDate: String = "",
+    /** 折扣券名称 **/
+    var couponName: String = "",
+    /** 折扣券记录id **/
+    var couponRecordId: Long = 0,
+    /** 使用客户端 **/
+    var useClients: String = "",
+    /** 能否使用 **/
+    var canUse: Boolean = false,
 
 
-        //本地字段
-        /** 是否选中 **/
-        var isSelector: Boolean = false,
-        /** 可用数量 **/
-        var useCount: Int = 0,
-        /** 优惠券总数 **/
-        var total: Int = 0
+    //本地字段
+    /** 是否选中 **/
+    var isSelector: Boolean = false,
+    /** 可用数量 **/
+    var useCount: Int = 0,
+    /** 优惠券总数 **/
+    var total: Int = 0
 ) : Serializable
 
 
@@ -2812,25 +2867,26 @@ data class CouponItemInfo(
  * 星球霸主CP对象
  */
 data class CpInfo(
-        var nickname: String = "",
-        var headPic: String = "",
-        var userNickname: String = "",
-        var userHeadPic: String = "") : Serializable
+    var nickname: String = "",
+    var headPic: String = "",
+    var userNickname: String = "",
+    var userHeadPic: String = ""
+) : Serializable
 
 /**
  * 星球霸主基础信息
  */
 data class PlanetHomeBean(
-        //萌豆余额
+    //萌豆余额
     var beans: Long = 0L,
-        //推荐模式
+    //推荐模式
     var recommend: String = "",
-        //是否幸运星球模式
+    //是否幸运星球模式
     var isLuckyMode: Boolean = false,
     var cpInfo: CpInfo? = null,
-        //榜单数据
+    //榜单数据
     var rankUrl: String = "",
-        //规则地址
+    //规则地址
     var ruleUrl: String = ""
 
 ) : Serializable {
@@ -2852,67 +2908,67 @@ data class PlanetHomeBean(
  * 休闲模式当前最高数据玩家
  */
 data class TopUserInfo(
-        var headPic: String = "",
-        var nickname: String = "",
-        //分数
-        var score: Long = 0L,
-        var userId: Long = 0L,
-        //攻击模式使用
-        var anchorScore: Long = 0L
+    var headPic: String = "",
+    var nickname: String = "",
+    //分数
+    var score: Long = 0L,
+    var userId: Long = 0L,
+    //攻击模式使用
+    var anchorScore: Long = 0L
 ) : Serializable
 
 /**
  * 休闲模式  基础数据查询
  */
 data class PlanetCasualBean(
-        //萌豆数量
-        var beans: Long = 0L,
-        //光线抢卡数量
-        var lightGunCardNum: Int = 0,
-        //奖励模式
-        var preAwardDesc: String = "",
-        //奖励图片
-        var preAwardPic: String = "",
-        var topUser: TopUserInfo? = null
+    //萌豆数量
+    var beans: Long = 0L,
+    //光线抢卡数量
+    var lightGunCardNum: Int = 0,
+    //奖励模式
+    var preAwardDesc: String = "",
+    //奖励图片
+    var preAwardPic: String = "",
+    var topUser: TopUserInfo? = null
 ) : Serializable
 
 data class Weapon(
-        //价格
-        var beans: Long = 0L,
-        //商品ID
-        var goodsId: Int = 0,
-        var pic: String = "",
-        //枪名称
-        var weaponName: String = "",
-        //枪对应的Type
-        var weaponType: String = "",
-        //武器卡数量
-        var bagCnt: Int = 0,
-        //最大可中奖金额
-        var maxAwardBeans: Long = 0
+    //价格
+    var beans: Long = 0L,
+    //商品ID
+    var goodsId: Int = 0,
+    var pic: String = "",
+    //枪名称
+    var weaponName: String = "",
+    //枪对应的Type
+    var weaponType: String = "",
+    //武器卡数量
+    var bagCnt: Int = 0,
+    //最大可中奖金额
+    var maxAwardBeans: Long = 0
 ) : Serializable
 
 /**
  * 攻击模式  基础数据查询
  */
 data class PlanetAttackBean(
-        //萌豆数量
+    //萌豆数量
     var beans: Long = 0L,
-        //主播今日积分
+    //主播今日积分
     var anchorScore: Long = 0L,
-        //模式
+    //模式
     var mode: String = "",
-        //幸运模式倒计时
+    //幸运模式倒计时
     var ttl: Long = 0,
-        //top用户数据
+    //top用户数据
     var currTopUser: TopUserInfo? = null,
-        //当前血量（幸运星球）
+    //当前血量（幸运星球）
     var blood: Long = 0L,
-        //枪杆数据
+    //枪杆数据
     var weaponList: MutableList<Weapon> = mutableListOf(),
-        //榜单
+    //榜单
     var rankUrl: String = "",
-        //缓存的中奖消息
+    //缓存的中奖消息
     var msgList: MutableList<String> = mutableListOf()
 
 ) : Serializable {
@@ -2929,16 +2985,16 @@ data class PlanetAttackBean(
  * 休闲模式 击打过程 返回的数据
  */
 data class HitPlanetBean(
-        //获取爆能枪卡标识位
-        var gotEnergyCard: Boolean = false,
-        //增加的分数
-        var addScore: Int = 0,
-        //是否获得萌币
-        var gotMoeCoins: Boolean = false,
-        //总分数
-        var totalScore: Long = 0,
-        //本地使用字段
-        var type: String = ""
+    //获取爆能枪卡标识位
+    var gotEnergyCard: Boolean = false,
+    //增加的分数
+    var addScore: Int = 0,
+    //是否获得萌币
+    var gotMoeCoins: Boolean = false,
+    //总分数
+    var totalScore: Long = 0,
+    //本地使用字段
+    var type: String = ""
 ) : Serializable
 
 /**
@@ -2950,25 +3006,25 @@ data class OpenOperateBean(var operate: String, var params: HashMap<String, Any>
  * 星球  奖励
  */
 data class PlanetAward(
-        //奖励描述
-        var desc: String = "",
-        //中奖数量
-        var count: Int = 0,
-        //奖励名称
-        var name: String = "",
-        //奖励图片
-        var pic: String = ""
+    //奖励描述
+    var desc: String = "",
+    //中奖数量
+    var count: Int = 0,
+    //奖励名称
+    var name: String = "",
+    //奖励图片
+    var pic: String = ""
 ) : Serializable
 
 /**
  * 休闲模式 结果数据
  */
 data class RelaxationResultBean(
-        //奖励列表
+    //奖励列表
     var awardList: MutableList<PlanetAward> = mutableListOf(),
-        //击败比例
+    //击败比例
     var beatRate: String = "",
-        //本场精准值
+    //本场精准值
     var score: Int = 0
 ) : Serializable
 
@@ -2976,9 +3032,9 @@ data class RelaxationResultBean(
  * 攻击模式下的奖励
  */
 data class PlanetAttackAward(
-        var count: Int = 0,
-        var pic: String = "",
-        var prizeName: String = ""
+    var count: Int = 0,
+    var pic: String = "",
+    var prizeName: String = ""
 ) : Serializable
 
 /**
@@ -2986,17 +3042,17 @@ data class PlanetAttackAward(
  */
 data class UseWeaponResult(
     var beans: Long = 0,
-        //中奖萌豆余额
+    //中奖萌豆余额
     var awardBeans: Long = 0,
     var awardList: MutableList<PlanetAttackAward> = mutableListOf(),
     var showType: String = "",
-        //剩余的武器卡数量
+    //剩余的武器卡数量
     var bagCnt: Int = 0,
-        //显示类型
+    //显示类型
     var popupType: String = "",
-        //武器名称
+    //武器名称
     var weaponName: String = "",
-        //发射子弹的时间
+    //发射子弹的时间
     var shootTime: Long = 0L
 ) : Serializable {
     companion object {
@@ -3020,42 +3076,42 @@ data class UseWeaponResult(
  * 武器卡数量 类
  */
 data class WeaponCountBean(
-        //武器类型
-        var type: String = "",
-        //武器卡数量
-        var count: Int = 0,
-        //是否需要刷新
-        var refresh: Boolean = false
+    //武器类型
+    var type: String = "",
+    //武器卡数量
+    var count: Int = 0,
+    //是否需要刷新
+    var refresh: Boolean = false
 ) : Serializable
 
 /**
  * 星球星球消失消息  返回的数据
  */
 data class LuckyPlanetDisappearBean(
-        var luckyPlanetTimeOut: String = "",
-        //用户ID
-        var userId: Long = 0L,
-        //奖励数据   所有用户的都在一起
-        var luckyPlanetUserInfo: HashMap<String, LuckyPlanetDisappearSingleAward> = hashMapOf()
+    var luckyPlanetTimeOut: String = "",
+    //用户ID
+    var userId: Long = 0L,
+    //奖励数据   所有用户的都在一起
+    var luckyPlanetUserInfo: HashMap<String, LuckyPlanetDisappearSingleAward> = hashMapOf()
 ) : Serializable
 
 /**
  * 幸运星球  消息  当个用户的奖励数据
  */
 data class LuckyPlanetDisappearSingleAward(
-        //霸道值
-        var score: Long = 0L,
-        //直播间ID
-        var programId: Long = 0L,
-        //奖励列表
-        var awardValue: MutableList<PlanetAward> = mutableListOf()
+    //霸道值
+    var score: Long = 0L,
+    //直播间ID
+    var programId: Long = 0L,
+    //奖励列表
+    var awardValue: MutableList<PlanetAward> = mutableListOf()
 ) : Serializable
 
 /**
  * 霸主信息变更消息
  */
 data class PlanetScoreChangeBean(
-        var planetScoreInfo: TopUserInfo? = null
+    var planetScoreInfo: TopUserInfo? = null
 ) : Serializable
 
 /**
@@ -3063,85 +3119,86 @@ data class PlanetScoreChangeBean(
  */
 data class RoomBannerChangeBean(
     var bannerInfo: RoomBanner? = null,
-    var remove: Boolean = false) : Serializable
+    var remove: Boolean = false
+) : Serializable
 
 /**
  * 直播间数据变化
  */
 data class PlayerDataChanged(
-        //弹幕卡数量
-        var danmuCardNum: Int = 0
+    //弹幕卡数量
+    var danmuCardNum: Int = 0
 ) : Serializable
 
 /**
  * 幸运星球开始的BEAN
  */
 data class LuckyStartBean(
-        //血量
-        var luckyPlanetBlood: Long = 0,
-        //倒计时时间
-        var luckyPlanetTime: Long = 0,
-        //本直播间显示文案
-        var releaseLuckyPlanetRoomText: String = "",
-        //星球开启 弹窗文案
-        var releaseLuckyPlanetUserText: String = ""
+    //血量
+    var luckyPlanetBlood: Long = 0,
+    //倒计时时间
+    var luckyPlanetTime: Long = 0,
+    //本直播间显示文案
+    var releaseLuckyPlanetRoomText: String = "",
+    //星球开启 弹窗文案
+    var releaseLuckyPlanetUserText: String = ""
 ) : Serializable
 
 /**
  * 休闲模式中奖记录
  */
 data class RelaxationAwardBean(
-        //日期
-        var dateStr: String = "",
-        //萌币数量
-        var moeCoins: Int = 0,
-        //中奖分数
-        var score: Long = 0,
-        //爆能枪卡次数
-        var energyCardTimes: Int = 0
+    //日期
+    var dateStr: String = "",
+    //萌币数量
+    var moeCoins: Int = 0,
+    //中奖分数
+    var score: Long = 0,
+    //爆能枪卡次数
+    var energyCardTimes: Int = 0
 ) : Serializable
 
 /**
  * 星球霸主使用的主播信息对象
  */
 data class PlanetAnchorInfo(
-        var anchorId: Int = 0,
-        var headPic: String = "",
-        var isLiving: Boolean = false,
-        var nickname: String = "",
-        var programName: String = "",
-        //直播间ID
-        var programId: Int = 0
+    var anchorId: Int = 0,
+    var headPic: String = "",
+    var isLiving: Boolean = false,
+    var nickname: String = "",
+    var programName: String = "",
+    //直播间ID
+    var programId: Int = 0
 ) : Serializable
 
 /**
  * 攻击模式 中奖记录
  */
 data class AttackAwardRecord(
-        var awardCount: Int = 0,
-        var prodId: Int = 0,
-        var prodName: String = "",
-        var prodPic: String = "",
-        var prodType: String = ""
+    var awardCount: Int = 0,
+    var prodId: Int = 0,
+    var prodName: String = "",
+    var prodPic: String = "",
+    var prodType: String = ""
 ) : Serializable
 
 /**
  * 攻击模式中奖记录
  */
 data class AttackAwardBean(
-        //幸运模式 还是 攻击模式
+    //幸运模式 还是 攻击模式
     var mode: String = "",
-        //中奖萌豆（霸道值）
+    //中奖萌豆（霸道值）
     var anchorInfo: PlanetAnchorInfo? = null,
     var awardBeans: Long = 0L,
-        //消费的武器名称
+    //消费的武器名称
     var goodsName: String = "",
-        //武器图片
+    //武器图片
     var goodsPic: String = "",
     var date: String = "",
-        //奖励列表
+    //奖励列表
     var awardList: MutableList<AttackAwardRecord> = mutableListOf(),
-        //本地地段
+    //本地地段
     var style: String = NORMAL
 ) : Serializable {
     companion object {
@@ -3157,35 +3214,35 @@ data class AttackAwardBean(
  * 显示星球资源使用的Bean
  */
 data class ShowStarBean(
-        //使用的资源
-        var drawableResource: LevelListDrawable,
-        //位置数据
-        var tyle: String,
-        //帧数
-        var frameCount: Int,
-        //动画时间
-        var animaDuration: Long
+    //使用的资源
+    var drawableResource: LevelListDrawable,
+    //位置数据
+    var tyle: String,
+    //帧数
+    var frameCount: Int,
+    //动画时间
+    var animaDuration: Long
 ) : Serializable
 
 //单个中奖助手
 data class SingleAwardAssistant(
-        //奖励范围
-        var awardBeans: String = "",
-        //奖励数量
-        var awardCnt: Int = 0,
-        //最近奖励时间
-        var lastAwardTime: String = ""
+    //奖励范围
+    var awardBeans: String = "",
+    //奖励数量
+    var awardCnt: Int = 0,
+    //最近奖励时间
+    var lastAwardTime: String = ""
 ) : Serializable
 
 /**
  * 中奖助手数据
  */
 data class AwardAssistantBean(
-        //中奖助手记录
+    //中奖助手记录
     var awardList: MutableList<SingleAwardAssistant> = mutableListOf(),
-        //武器类型
+    //武器类型
     var currWeaponType: String = "",
-        //武器列表
+    //武器列表
     var weaponList: MutableList<Weapon> = mutableListOf()
 ) : Serializable
 
@@ -3196,10 +3253,10 @@ data class AwardAssistantBean(
  * @date 2020/05/08
  */
 data class GuestInfo(
-        var programName: String = "",
-        var programId: Int = 0,
-        var headPic: String = "",
-        var host: Boolean = false
+    var programName: String = "",
+    var programId: Int = 0,
+    var headPic: String = "",
+    var host: Boolean = false
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is GuestInfo) {
@@ -3214,18 +3271,18 @@ data class GuestInfo(
 }
 
 data class ThemeSessionFinishBean(
-        var programId: Int = 0,//这里指的是主题房id
-        var themeSessionId: Int = 0
+    var programId: Int = 0,//这里指的是主题房id
+    var themeSessionId: Int = 0
 )
 
 //通用的只含programId字段的类
 data class ProgramRoomBean(
-        var programId: Int = 0//
+    var programId: Int = 0//
 )
 
 //宝箱可领取消息
 data class ThemeOnlineTreasureEnableInfo(
-        var treasureCode: String = ""
+    var treasureCode: String = ""
 )
 
 data class ThemeProgramBean(
@@ -3241,17 +3298,17 @@ data class ThemeSessionList(
 )
 
 data class ThemeProgram(
-        var anchorId: Int = 0,
-        var headPic: String = "",
-        @JSONField(name = "isFollowed")
-        var isFollowed: Boolean = false,
-        @JSONField(name = "isLiving")
-        var isLiving: Boolean = false,
-        var nickname: String = "",
-        var programId: Int = 0,
-        var showTime: String = "",
-        var showTimeTtl: Long = 0,
-        var showType: String = ""
+    var anchorId: Int = 0,
+    var headPic: String = "",
+    @JSONField(name = "isFollowed")
+    var isFollowed: Boolean = false,
+    @JSONField(name = "isLiving")
+    var isLiving: Boolean = false,
+    var nickname: String = "",
+    var programId: Int = 0,
+    var showTime: String = "",
+    var showTimeTtl: Long = 0,
+    var showType: String = ""
 )
 
 

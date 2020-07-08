@@ -4,11 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chad.library.adapter.base.BaseViewHolder
+import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
+import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
@@ -39,6 +41,11 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //对方ID
     val targetIdData: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+
+    /**
+     * 对方数据
+     */
+    val chatInfoData: MutableLiveData<ChatUserBean> by lazy { MutableLiveData<ChatUserBean>() }
 
     /**
      * 获取消息列表
@@ -109,7 +116,8 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun chatBasic(targetId: Long) {
         viewModelScope.launch {
             request({
-                val resut = socialService.chatBasic(FriendIdForm(targetId))
+                val result = socialService.chatBasic(FriendIdForm(targetId)).dataConvert()
+                chatInfoData.value = result
             }, {})
         }
 

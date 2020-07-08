@@ -115,6 +115,12 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.firstSuccessState?.value = null
             }
         })
+        mPrivateConversationViewModel?.chatInfoData?.observe(this, Observer {
+            if (it != null) {
+                mAdapter.otherUserInfo = it
+                mAdapter.notifyDataSetChanged()
+            }
+        })
     }
 
     override fun initEvents(rootView: View) {

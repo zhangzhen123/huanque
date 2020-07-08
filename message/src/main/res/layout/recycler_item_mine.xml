@@ -56,7 +56,6 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginRight="15dp"
-        android:background="@color/primary_color"
         app:failureImageScaleType="centerInside"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier"
@@ -71,11 +70,15 @@
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/bg_mine"
+        android:background="@drawable/bg_chat_mine"
+        android:minHeight="40dp"
         android:maxWidth="250dp"
-        android:padding="12dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="13dp"
+        android:paddingBottom="13dp"
         android:textColor="@color/black_333"
-        android:textSize="@dimen/text_size_big"
+        android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintRight_toLeftOf="@id/sdv_header"
@@ -119,7 +122,7 @@
         android:background="@drawable/bg_mine_white"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible"
+        tools:visibility="gone"
         app:layout_constraintRight_toLeftOf="@id/sdv_header"
         app:layout_constraintTop_toTopOf="@id/sdv_header">
 
@@ -176,7 +179,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier_bottom"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
             android:id="@+id/draweeSpanTextView"

@@ -56,3 +56,29 @@ class SocialListBean(
  * 关注结果使用的Bean
  */
 class FollowResultBean(var type: String, var userId: Long, var follow: Boolean)
+
+/**
+ * 亲密数据
+ */
+class IntimateBean(
+    //亲密度等级
+    var intimateLevel: Int = 0,
+    //亲密度值
+    var intimateNum: Int = 0,
+    //下一个等级所需亲密度值
+    var nextIntimateNum: Int = 0
+)
+
+/**
+ * 会话的对象数据
+ */
+class ChatUserBean(
+    var activeList: MutableList<String> = mutableListOf(),
+    var friendId: Long = 0L,
+    var headPic: String = "",
+    var intimate : IntimateBean = IntimateBean(),
+    var meetStatus: String = "",
+    var msgFee: Int = 0,
+    var nickname: String = ""
+
+)
