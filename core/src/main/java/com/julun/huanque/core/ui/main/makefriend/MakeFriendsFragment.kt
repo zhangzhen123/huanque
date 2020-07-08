@@ -101,9 +101,13 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
         mRecyclerView.adapter = mAdapter
         //去除item刷新的默认动画
         (mRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        mAdapter.setOnLoadMoreListener({
+//        mAdapter.setOnLoadMoreListener({
+//            mViewModel.queryInfo(QueryType.LOAD_MORE)
+//        }, mRecyclerView)
+        mAdapter.loadMoreModule.setOnLoadMoreListener {
+            logger.info("loadMoreModule 加载更多")
             mViewModel.queryInfo(QueryType.LOAD_MORE)
-        }, mRecyclerView)
+        }
         mRefreshView.setOnRefreshListener {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
@@ -151,7 +155,7 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
         mRecyclerView.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewDetachedFromWindow(view: View) {
                 if (view.getTag(R.id.play_tag_key) == ParamConstant.IS_AUDIO_PLAY) {
-                        //todo
+                    //todo
                     logger.info("播放的item被移除了 ")
                 }
             }
@@ -217,18 +221,23 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
     private fun loadData(stateList: RootListData<HomeItemBean>) {
 
         if (stateList.isPull) {
-            mAdapter.replaceData(stateList.list)
+            mAdapter.setList(stateList.list)
         } else {
             mAdapter.addData(stateList.list)
         }
 
         if (stateList.hasMore) {
-            mAdapter.loadMoreComplete()
+//            mAdapter.loadMoreComplete()
+            mAdapter.loadMoreModule.loadMoreComplete()
         } else {
-            if (stateList.isPull)
-                mAdapter.loadMoreEnd(true)
-            else
-                mAdapter.loadMoreEnd()
+            if (stateList.isPull) {
+//                mAdapter.loadMoreEnd(true)
+                mAdapter.loadMoreModule.loadMoreEnd(true)
+            } else {
+//                mAdapter.loadMoreEnd()
+                mAdapter.loadMoreModule.loadMoreEnd()
+            }
+
         }
     }
 
@@ -242,19 +251,29 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
             NetStateType.SUCCESS -> {//showSuccess()
             }
             NetStateType.LOADING -> {//showLoading()
-                mAdapter.emptyView = MixedHelper.getLoadingView(requireContext())
+                mAdapter.setEmptyView(MixedHelper.getLoadingView(requireContext()))
             }
             NetStateType.ERROR -> {
-                mAdapter.emptyView =
-                    MixedHelper.getErrorView(ctx = requireContext(), msg = state.message, onClick = View.OnClickListener {
-                        mViewModel.queryInfo(QueryType.REFRESH)
-                    })
+                mAdapter.setEmptyView(
+                    MixedHelper.getErrorView(
+                        ctx = requireContext(),
+                        msg = state.message,
+                        onClick = View.OnClickListener {
+                            mViewModel.queryInfo(QueryType.REFRESH)
+                        })
+                )
+
             }
             NetStateType.NETWORK_ERROR -> {
-                mAdapter.emptyView =
-                    MixedHelper.getErrorView(ctx = requireContext(), msg = "网络错误", onClick = View.OnClickListener {
-                        mViewModel.queryInfo(QueryType.REFRESH)
-                    })
+                mAdapter.setEmptyView(
+                    MixedHelper.getErrorView(
+                        ctx = requireContext(),
+                        msg = "网络错误",
+                        onClick = View.OnClickListener {
+                            mViewModel.queryInfo(QueryType.REFRESH)
+                        })
+                )
+
             }
         }
     }

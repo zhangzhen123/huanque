@@ -3,7 +3,7 @@ package com.julun.huanque.message.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.forms.FriendIdForm

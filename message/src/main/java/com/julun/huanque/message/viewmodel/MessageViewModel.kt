@@ -14,7 +14,7 @@ import io.rong.imlib.model.Conversation
 class MessageViewModel : BaseViewModel() {
 
     //会话列表
-    val conversationListData: MutableLiveData<List<LocalConversation>> by lazy { MutableLiveData<List<LocalConversation>>() }
+    val conversationListData: MutableLiveData<MutableList<LocalConversation>> by lazy { MutableLiveData<MutableList<LocalConversation>>() }
 
     /**
      * 删除会话

@@ -19,7 +19,7 @@ ext {
             //声网SDK
             AGORA                        : 'io.agora.rtc:full-sdk:2.9.2',
             //recyclerview adapter
-            BASERECYCLERVIEWADAPTERHELPER: 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46',
+            BASERECYCLERVIEWADAPTERHELPER: 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4',
             MAGICINDICATOR               : 'com.github.hackware1993:MagicIndicator:1.6.0',
 
             NINEOLDANDROIDS              : 'com.nineoldandroids:library:2.4.0',

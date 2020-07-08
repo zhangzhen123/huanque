@@ -1,23 +1,18 @@
 package com.julun.huanque.core.ui.main.makefriend
 
-import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.HeadModule
-import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.inVisiable
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.core.R
-import org.jetbrains.anko.backgroundResource
 
 class HeaderNavAdapter : BaseQuickAdapter<HeadModule, BaseViewHolder>(R.layout.item_item_mkf_header) {
 
-    override fun convert(holder: BaseViewHolder?, item: HeadModule?) {
-        if (holder == null || item == null) {
-            return
-        }
+    override fun convert(holder: BaseViewHolder, item: HeadModule) {
+
         val container = holder.getView<SimpleDraweeView>(R.id.sdv_nav_bg)
         container.loadImage(item.bgPic, 90f, 70f)
         val imgView = holder.getView<SimpleDraweeView>(R.id.sdv_user_head)
@@ -52,4 +47,5 @@ class HeaderNavAdapter : BaseQuickAdapter<HeadModule, BaseViewHolder>(R.layout.i
         holder.setText(R.id.tv_title2, info)
 
     }
+
 }

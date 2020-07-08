@@ -2,7 +2,7 @@ package com.julun.huanque.core.ui.main.makefriend
 
 import android.view.ViewGroup
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.common.suger.loadImage
@@ -12,10 +12,7 @@ import com.julun.huanque.core.R
 
 class PhotosAdapter : BaseQuickAdapter<PhotoBean, BaseViewHolder>(R.layout.item_photo) {
 
-    override fun convert(holder: BaseViewHolder?, item: PhotoBean?) {
-        if (holder == null || item == null) {
-            return
-        }
+    override fun convert(holder: BaseViewHolder, item: PhotoBean) {
         val imgView=holder.getView<SimpleDraweeView>(R.id.sdv_photo)
         if(item.url.isNotEmpty()){
             imgView.loadImage(item.url,60f,60f)

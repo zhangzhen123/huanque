@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
@@ -27,7 +27,7 @@ class ConversationListAdapter :
     //直播间以外的消息列表不显示勋章
     var isLive: Boolean = false
 
-    override fun convert(helper: BaseViewHolder?, item: LocalConversation?) {
+    override fun convert(helper: BaseViewHolder, item: LocalConversation) {
         if (helper == null || item == null) {
             return
         }

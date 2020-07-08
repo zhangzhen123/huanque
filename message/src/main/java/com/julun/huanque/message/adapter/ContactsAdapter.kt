@@ -2,7 +2,7 @@ package com.julun.huanque.message.adapter
 
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.beans.SocialUserInfo
 import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.FollowStatus
@@ -20,9 +20,12 @@ import org.jetbrains.anko.textColor
  *@描述 联系人使用的Adapter
  */
 class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layout.recycler_item_contacts) {
+    init {
+        addChildClickViewIds(R.id.tv_action)
+    }
     //当前的联系人类型
     var type = ""
-    override fun convert(helper: BaseViewHolder?, item: SocialUserInfo?) {
+    override fun convert(helper: BaseViewHolder, item: SocialUserInfo) {
         if (helper == null || item == null) {
             return
         }
@@ -104,7 +107,7 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
             }
         }
 
-        helper.addOnClickListener(R.id.tv_action)
+//        helper.addOnClickListener(R.id.tv_action)
 
     }
 }
