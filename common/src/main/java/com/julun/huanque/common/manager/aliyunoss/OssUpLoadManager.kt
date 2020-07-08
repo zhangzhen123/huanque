@@ -65,10 +65,10 @@ object OssUpLoadManager {
     }
 
     /**
-     * [imgList] 图片地址 [position]图片存储位置 [callback]上传反馈
+     * [imgList] 文件本地地址 [position]图片存储位置 [callback]上传反馈
      *
      */
-    fun uploadImages(imgList: MutableList<String>, position: String, callback: (code: Int, list: MutableList<String>?) -> Unit) {
+    fun uploadFiles(imgList: MutableList<String>, position: String, callback: (code: Int, list: MutableList<String>?) -> Unit) {
 //        isUploading = true
         val observable = Observable.fromIterable(imgList)
         val map = mutableMapOf<String, String>()

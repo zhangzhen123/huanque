@@ -144,7 +144,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     if (!mLoadingDialog.isShowing) {
                         mLoadingDialog.showDialog()
                     }
-                    OssUpLoadManager.uploadImages(pathList, OssUpLoadManager.COVER_POSITION) { code, list ->
+                    OssUpLoadManager.uploadFiles(pathList, OssUpLoadManager.COVER_POSITION) { code, list ->
                         if (code == OssUpLoadManager.CODE_SUCCESS) {
                             logger("上传oss成功结果的：$list")
                             val writeArrayList = Arguments.createArray()

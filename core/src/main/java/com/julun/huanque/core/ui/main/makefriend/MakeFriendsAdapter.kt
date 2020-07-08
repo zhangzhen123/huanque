@@ -60,17 +60,22 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
         logger("itemViewType:" + holder.itemViewType)
         when (holder.itemViewType) {
             HomeItemBean.NORMAL -> {
-
                 val bean = item.content as HomeRecomItem
+                logger("NORMAL bean:$bean")
                 val list = bean.coverPicList.map { PhotoBean(url = it) }
                 val headPic = holder.getView<SimpleDraweeView>(R.id.header_pic)
 
-                holder.setGone(R.id.living_fg, bean.living)
+                holder.setGone(R.id.living_fg, !bean.living)
 
+                val livingTag = holder.getView<SimpleDraweeView>(R.id.living_tag)
                 val authTag = holder.getView<SimpleDraweeView>(R.id.sd_auth_tag)
+
                 if (bean.living) {
-                    holder.setGone(R.id.living_tag, !bean.living)
+                    livingTag.show()
+                    authTag.hide()
+
                 } else {
+                    livingTag.hide()
                     if (bean.authMark.isNotEmpty()) {
                         authTag.show()
                         ImageUtils.loadImageWithHeight_2(authTag, bean.authMark, dp2px(13))
