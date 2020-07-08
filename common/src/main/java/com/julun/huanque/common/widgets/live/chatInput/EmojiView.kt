@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 
 import com.julun.huanque.common.R
 import com.julun.huanque.common.widgets.kpswitch.widget.KPSwitchPanelLinearLayout
@@ -201,15 +201,12 @@ class EmojiView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         }
     }
 
-    private inner class EmojiAdapter(datas: List<Emoji>) : BaseQuickAdapter<Emoji, BaseViewHolder>(R.layout.item_face) {
+    private inner class EmojiAdapter(datas: MutableList<Emoji>) : BaseQuickAdapter<Emoji, BaseViewHolder>(R.layout.item_face) {
         init {
-            setNewData(datas)
+            setNewInstance(datas)
         }
 
-        override fun convert(helper: BaseViewHolder?, item: Emoji?) {
-            if (helper == null || item == null) {
-                return
-            }
+        override fun convert(helper: BaseViewHolder, item: Emoji) {
             helper.setImageResource(R.id.face_image, item.imageUri)
         }
     }

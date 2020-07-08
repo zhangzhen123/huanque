@@ -95,7 +95,7 @@ class MessageFragment : BaseFragment() {
 //                activity?.startActivity<InteractionNewActivity>()
             }
         }
-        mAdapter.addHeaderView(headerView)
+        mAdapter.addHeaderView(headerView?:return)
     }
 
     /**
@@ -151,7 +151,8 @@ class MessageFragment : BaseFragment() {
     private fun initViewModel() {
         mMessageViewModel.conversationListData.observe(this, Observer {
             if (it != null) {
-                mAdapter.setNewData(it)
+//                mAdapter.setNewData(it)
+                mAdapter.setNewInstance(it)
             }
         })
 
@@ -162,7 +163,8 @@ class MessageFragment : BaseFragment() {
                     mAdapter.notifyDataSetChanged()
                 } else {
                     //单个变动
-                    mAdapter.refreshNotifyItemChanged(it)
+//                    mAdapter.refreshNotifyItemChanged(it)
+                    mAdapter.notifyItemChanged(it+mAdapter.headerLayoutCount)
                 }
                 mMessageViewModel.changePosition.value = null
             }

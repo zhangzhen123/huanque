@@ -5,12 +5,11 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
-import com.chad.library.adapter.base.util.MultiTypeDelegate
-import com.julun.huanque.common.bean.ChatUser
+import com.chad.library.adapter.base.BaseDelegateMultiAdapter
+import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate
+import com.chad.library.adapter.base.module.UpFetchModule
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.beans.ChatUserBean
-import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
@@ -26,7 +25,7 @@ import org.jetbrains.anko.bottomPadding
  *@创建时间 2019/5/21 9:25
  *@描述
  */
-class MessageAdapter : BaseQuickAdapter<Message, BaseViewHolder>(null) {
+class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFetchModule {
 
     //私聊的情况下，保存对方的用户信息
     var otherUserInfo: ChatUserBean? = null
@@ -55,21 +54,38 @@ class MessageAdapter : BaseQuickAdapter<Message, BaseViewHolder>(null) {
     }
 
     init {
-        multiTypeDelegate = object : MultiTypeDelegate<Message>() {
-            override fun getItemType(t: Message?): Int {
+//        multiTypeDelegate = object : MultiTypeDelegate<Message>() {
+//            override fun getItemType(t: Message?): Int {
+//                return if (t?.senderUserId == "${SessionUtils.getUserId()}") {
+//                    MINE
+//                } else {
+//                    OTHER
+//                }
+//            }
+//        }
+//        multiTypeDelegate.registerItemType(OTHER, R.layout.recycler_item_other)
+//            .registerItemType(MINE, R.layout.recycler_item_mine)
+//            .registerItemType(SYSTEM, R.layout.recycler_item_message_system)
+        setMultiTypeDelegate(object : BaseMultiTypeDelegate<Message>() {
+
+            override fun getItemType(data: List<Message>, position: Int): Int {
+                val t = data.getOrNull(position)
                 return if (t?.senderUserId == "${SessionUtils.getUserId()}") {
                     MINE
                 } else {
                     OTHER
                 }
             }
-        }
-        multiTypeDelegate.registerItemType(OTHER, R.layout.recycler_item_other)
-            .registerItemType(MINE, R.layout.recycler_item_mine)
-            .registerItemType(SYSTEM, R.layout.recycler_item_message_system)
+        })
+        // 第二部，绑定 item 类型
+        getMultiTypeDelegate()?.addItemType(OTHER, R.layout.recycler_item_other)
+            ?.addItemType(MINE, R.layout.recycler_item_mine)
+            ?.addItemType(SYSTEM, R.layout.recycler_item_message_system)
+
+        addChildClickViewIds(R.id.sdv_header,R.id.iv_send_fail)
     }
 
-    override fun convert(helper: BaseViewHolder?, item: Message?) {
+    override fun convert(helper: BaseViewHolder, item: Message) {
         if (helper == null || item == null) {
             return
         }
@@ -80,10 +96,10 @@ class MessageAdapter : BaseQuickAdapter<Message, BaseViewHolder>(null) {
             //头像和直播状态
             ImageUtils.loadImage(helper.getView(R.id.sdv_header), otherUserInfo?.headPic ?: "", 40f, 40f)
             //点击事件
-            helper.addOnClickListener(R.id.sdv_header)
+//            helper.addOnClickListener(R.id.sdv_header)
         } else {
             if (helper.itemViewType == MINE) {
-                helper.addOnClickListener(R.id.sdv_header)
+//                helper.addOnClickListener(R.id.sdv_header)
             }
             val ivSendFail = helper.getView<ImageView>(R.id.iv_send_fail)
             val sendProgress = helper.getView<ProgressBar>(R.id.send_progress)
@@ -123,16 +139,16 @@ class MessageAdapter : BaseQuickAdapter<Message, BaseViewHolder>(null) {
             val previousData = data[previousPosition]
             if (Math.abs(item.sentTime - previousData.sentTime) < 5 * 60 * 1000) {
                 //两条消息间隔在5分钟以内
-                helper.setGone(R.id.view_top, true)
-                helper.setGone(R.id.group, false)
-            } else {
                 helper.setGone(R.id.view_top, false)
                 helper.setGone(R.id.group, true)
+            } else {
+                helper.setGone(R.id.view_top, true)
+                helper.setGone(R.id.group, false)
                 helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.sentTime))
             }
         } else {
-            helper.setGone(R.id.view_top, false)
-            helper.setGone(R.id.group, true)
+            helper.setGone(R.id.view_top, true)
+            helper.setGone(R.id.group, false)
             helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.sentTime))
         }
         val container = helper.getView<ConstraintLayout>(R.id.view_container)
@@ -189,7 +205,7 @@ class MessageAdapter : BaseQuickAdapter<Message, BaseViewHolder>(null) {
 //            conAction.hide()
 //        }
         conAction.hide()
-        helper.addOnClickListener(R.id.iv_send_fail)
+//        helper.addOnClickListener(R.id.iv_send_fail)
     }
 
     /**

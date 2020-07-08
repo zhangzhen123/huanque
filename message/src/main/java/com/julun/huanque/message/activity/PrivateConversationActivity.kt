@@ -116,7 +116,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         mPrivateConversationViewModel?.noMoreState?.observe(this, Observer {
             if (it == true) {
-                mAdapter.isUpFetchEnable = false
+                mAdapter.upFetchModule.isUpFetchEnable = false
             }
         })
 
@@ -261,32 +261,42 @@ class PrivateConversationActivity : BaseActivity() {
                     //重新发送消息
                     val targerId = mPrivateConversationViewModel?.targetIdData?.value ?: return@setOnItemChildClickListener
                     tempData.sentStatus = Message.SentStatus.SENDING
-                    adapter.getViewByPosition(recyclerview, position, R.id.iv_send_fail)?.hide()
-                    adapter.getViewByPosition(recyclerview, position, R.id.send_progress)?.show()
+                    adapter.getViewByPosition( position, R.id.iv_send_fail)?.hide()
+                    adapter.getViewByPosition( position, R.id.send_progress)?.show()
                     RongCloudManager.send(tempData, "$targerId") {
                         if (it) {
                             ChatUtils.deleteSingleMessage(tempData.messageId)
                             mPrivateConversationViewModel?.deleteSingleMessage(tempData)
                         } else {
                             tempData.sentStatus = Message.SentStatus.FAILED
-                            adapter.getViewByPosition(recyclerview, position, R.id.iv_send_fail)
+                            adapter.getViewByPosition( position, R.id.iv_send_fail)
                                 ?.show()
-                            adapter.getViewByPosition(recyclerview, position, R.id.send_progress)
+                            adapter.getViewByPosition( position, R.id.send_progress)
                                 ?.hide()
                         }
                     }
                 }
             }
         }
-        mAdapter.isUpFetchEnable = true
+//        mAdapter.isUpFetchEnable = true
+//        //预加载2个position
+//        mAdapter.setStartUpFetchPosition(2)
+//        mAdapter.setUpFetchListener {
+//            val currLast = mAdapter.getItem(0)
+//            mPrivateConversationViewModel?.getMessageList(
+//                currLast?.messageId ?: return@setUpFetchListener
+//            )
+//            mAdapter.isUpFetching = true
+//        }
+        mAdapter.upFetchModule.isUpFetchEnable = true
         //预加载2个position
-        mAdapter.setStartUpFetchPosition(2)
-        mAdapter.setUpFetchListener {
-            val currLast = mAdapter.getItem(0)
+        mAdapter.upFetchModule.startUpFetchPosition=2
+        mAdapter.upFetchModule.setOnUpFetchListener {
+            val currLast = mAdapter.getItemOrNull(0)
             mPrivateConversationViewModel?.getMessageList(
-                currLast?.messageId ?: return@setUpFetchListener
+                currLast?.messageId ?: return@setOnUpFetchListener
             )
-            mAdapter.isUpFetching = true
+            mAdapter.upFetchModule.isUpFetching = true
         }
     }
 

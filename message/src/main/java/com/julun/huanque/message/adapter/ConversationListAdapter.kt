@@ -2,7 +2,7 @@ package com.julun.huanque.message.adapter
 
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.helper.StringHelper
@@ -20,10 +20,7 @@ import io.rong.message.TextMessage
  */
 class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHolder>(R.layout.recycler_item_conversion) {
 
-    override fun convert(helper: BaseViewHolder?, item: LocalConversation?) {
-        if (helper == null || item == null) {
-            return
-        }
+    override fun convert(helper: BaseViewHolder, item: LocalConversation) {
         val msg = item.conversation.latestMessage
         if (item.showUserInfo != null) {
             //存在用户信息

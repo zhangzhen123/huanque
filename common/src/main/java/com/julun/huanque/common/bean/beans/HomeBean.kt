@@ -11,9 +11,11 @@ class HomeItemBean(var showType: Int, var content: Any) : MultiItemEntity {
         const val GUIDE_TO_COMPLETE_INFORMATION = 4//引导完善资料
     }
 
-    override fun getItemType(): Int {
-        return showType
-    }
+    override val itemType: Int
+        get() = showType
+//    override fun getItemType(): Int {
+//        return showType
+//    }
 }
 
 /**

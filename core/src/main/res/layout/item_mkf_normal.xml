@@ -147,6 +147,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_10"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_mkf_name"
         app:layout_constraintTop_toBottomOf="@+id/header_pic" />
@@ -156,6 +157,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_10"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_mkf_name"
         app:layout_constraintTop_toBottomOf="@+id/header_pic" />
@@ -165,6 +167,7 @@
         android:layout_width="146dp"
         android:layout_height="@dimen/dimen_30"
         android:layout_marginTop="@dimen/dimen_10"
+        android:visibility="gone"
         android:background="@drawable/bg_shape_mkf_audio"
         android:gravity="center_vertical"
         app:layout_constraintStart_toStartOf="@+id/tv_mkf_name"
@@ -196,7 +199,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_15"
             android:layout_marginRight="@dimen/dimen_15"
-            android:text="3”"
+            tools:text="3”"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14" />
     </LinearLayout>
