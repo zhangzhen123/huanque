@@ -17,6 +17,7 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
 import com.julun.huanque.message.R
 import io.rong.imlib.model.Message
+import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import org.jetbrains.anko.bottomPadding
 
@@ -29,6 +30,10 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
     //私聊的情况下，保存对方的用户信息
     var otherUserInfo: ChatUserBean? = null
+
+    init {
+        addChildClickViewIds(R.id.sdv_image)
+    }
 
     companion object {
         //其它人的消息
@@ -46,7 +51,10 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         //显示文案消息
         const val TEXT_MESSAGE = "TEXT_MESSAGE"
 
-        //显示图片消息
+        //显示图片消息(系统消息)
+        const val PIC_MESSAGE_SYSTEM = "PIC_MESSAGE_SYSTEM"
+
+        //图片消息
         const val PIC_MESSAGE = "PIC_MESSAGE"
 
         //单独显示底部操作视图
@@ -54,18 +62,6 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     }
 
     init {
-//        multiTypeDelegate = object : MultiTypeDelegate<Message>() {
-//            override fun getItemType(t: Message?): Int {
-//                return if (t?.senderUserId == "${SessionUtils.getUserId()}") {
-//                    MINE
-//                } else {
-//                    OTHER
-//                }
-//            }
-//        }
-//        multiTypeDelegate.registerItemType(OTHER, R.layout.recycler_item_other)
-//            .registerItemType(MINE, R.layout.recycler_item_mine)
-//            .registerItemType(SYSTEM, R.layout.recycler_item_message_system)
         setMultiTypeDelegate(object : BaseMultiTypeDelegate<Message>() {
 
             override fun getItemType(data: List<Message>, position: Int): Int {
@@ -82,7 +78,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             ?.addItemType(MINE, R.layout.recycler_item_mine)
             ?.addItemType(SYSTEM, R.layout.recycler_item_message_system)
 
-        addChildClickViewIds(R.id.sdv_header,R.id.iv_send_fail)
+        addChildClickViewIds(R.id.sdv_header, R.id.iv_send_fail)
     }
 
     override fun convert(helper: BaseViewHolder, item: Message) {
@@ -128,8 +124,19 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         val tvContent = helper.getView<TextView>(R.id.tv_content)
         tvContent.maxWidth = ScreenUtils.getScreenWidth() - DensityHelper.dp2px(65f) * 2
         if (content is TextMessage) {
-            showMessageView(helper, TEXT_MESSAGE)
+            showMessageView(helper, TEXT_MESSAGE, helper.itemViewType)
             tvContent.text = EmojiUtil.message2emoji(content.content)
+        } else if (content is ImageMessage) {
+            //图片信息
+            showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
+            if(helper.itemViewType == OTHER){
+                //查看远程图片
+                ImageUtils.loadImage(helper.getView(R.id.sdv_image), "${content.remoteUri}", 100f, 100f)
+            }else{
+                //查看本地图片
+                ImageUtils.loadNativeFilePath(helper.getView(R.id.sdv_image), "${content.thumUri}", 100f, 100f)
+            }
+
         }
 
         //时间相关处理
@@ -160,71 +167,30 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         }
 
         val conAction = helper.getView<View>(R.id.con_action)
-        //自定义消息处理
-//        val draweeSpanTextView = helper.getView<DraweeSpanTextView>(R.id.draweeSpanTextView)
-//        if (content is CustomMessage) {
-//            helper.addOnClickListener(R.id.draweeSpanTextView).addOnClickListener(R.id.view_pic)
-//            try {
-//                //自定义消息
-//                val customBean = JsonUtil.deserializeAsObject<MessageActionBean>(content.context,
-//                                                                                 MessageActionBean::class.java)
-//
-//                if (customBean.msyType == "2") {
-//                    //营销消息
-//                    if (customBean.pic.isNotEmpty()) {
-//                        //有图片样式
-//                        showMessageView(helper, PIC_MESSAGE)
-//                        conAction.hide()
-//
-//                        val sdv_pic = helper.getView<SimpleDraweeView>(R.id.sdv_pic)
-//                        val tv_pic = helper.getView<TextView>(R.id.tv_pic)
-//
-//                        ImageUtils.loadImage(sdv_pic, customBean.pic, 160f, 63f)
-//                        tv_pic.text = customBean.content
-//                    } else {
-//                        //无图片样式
-//                        showMessageView(helper, TEXT_MESSAGE)
-//                        if (helper.itemViewType == MINE) {
-//                            conAction.hide()
-//                        } else {
-//                            conAction.show()
-//                        }
-//                        tvContent.text = EmojiUtil.message2emoji(customBean.content)
-//                        val tplBean = customBean.textVO.preProcess()
-//                        draweeSpanTextView.render(tplBean)
-//                    }
-//                } else {
-//                    //系统消息  不支持的消息类型
-//                    showMessageView(helper, ACTION_VIEW)
-//                    draweeSpanTextView.text = "无法识别的消息，请升级到最新版本"
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//        } else {
-//            conAction.hide()
-//        }
         conAction.hide()
-//        helper.addOnClickListener(R.id.iv_send_fail)
     }
 
     /**
      * 显示消息视图
      * @param picMessage 是否是图片消息
      */
-    private fun showMessageView(holder: BaseViewHolder, messageType: String) {
+    private fun showMessageView(holder: BaseViewHolder, messageType: String, itemType: Int) {
         //普通内容区域
-        val rl_content = holder.getView<View>(R.id.rl_content)
+        var rl_content: View? = null
+        if (itemType == OTHER) {
+            rl_content = holder.getView<View>(R.id.rl_content)
+        }
         val tv_content = holder.getView<TextView>(R.id.tv_content)
         //图片消息 相关视图
         val view_pic = holder.getView<View>(R.id.view_pic)
         val sdv_pic = holder.getView<View>(R.id.sdv_pic)
         val view_divider_pic = holder.getView<View>(R.id.view_divider_pic)
-        val tv_pic = holder.getView<View>(R.id.tv_pic)
+//        val tv_pic = holder.getView<View>(R.id.tv_pic)
         //操作视图
         val con_action = holder.getView<View>(R.id.con_action)
         //头像视图
         val sdv_header = holder.getView<View>(R.id.sdv_header)
+        val sdv_image = holder.getView<View>(R.id.sdv_image)
 //        val fl_living = holder.getView<View>(R.id.fl_living)
 
         when (messageType) {
@@ -237,9 +203,10 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 view_pic.hide()
                 sdv_pic.hide()
                 view_divider_pic.hide()
-                tv_pic.hide()
+//                tv_pic.hide()
+                sdv_image.hide()
             }
-            PIC_MESSAGE -> {
+            PIC_MESSAGE_SYSTEM -> {
                 //显示图片视图
                 sdv_header.show()
 
@@ -249,7 +216,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 view_pic.show()
                 sdv_pic.show()
                 view_divider_pic.show()
-                tv_pic.show()
+                sdv_image.hide()
             }
             ACTION_VIEW -> {
                 //只显示底部操作视图,隐藏其他视图
@@ -260,9 +227,20 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 view_pic.hide()
                 sdv_pic.hide()
                 view_divider_pic.hide()
-                tv_pic.hide()
+//                tv_pic.hide()
                 sdv_header.hide()
 //                fl_living?.hide()
+            }
+            PIC_MESSAGE -> {
+                sdv_header.show()
+                rl_content?.show()
+                sdv_image.show()
+
+                view_pic.hide()
+                sdv_pic.hide()
+                view_divider_pic.hide()
+//                tv_pic.hide()
+                tv_content.hide()
             }
             else -> {
 

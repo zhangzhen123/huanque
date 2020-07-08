@@ -3,20 +3,26 @@ package com.julun.huanque.common.manager
 import android.app.Application
 import android.net.Uri
 import android.text.TextUtils
+import androidx.lifecycle.viewModelScope
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
+import com.julun.huanque.common.bean.forms.UpdateHeadForm
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.helper.AppHelper
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.message_dispatch.EventMessageType
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.message_dispatch.MessageReceptor
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.removeScope
+import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
@@ -31,6 +37,7 @@ import io.rong.imlib.model.MessageContent
 import io.rong.message.CommandMessage
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
+import kotlinx.coroutines.launch
 import java.util.*
 
 /**
@@ -255,18 +262,38 @@ object RongCloudManager {
      * @param callback    发送消息的回调，回调中携带 {@link IRongCallback.MediaMessageUploader} 对象，用户调用该对象中的方法更新状态。
      * @group 消息操作
      */
-    fun setMediaMessage(targetId: String, targetUserObj: TargetUserObj? = null, type: Conversation.ConversationType, localUri: Uri) {
-
+    fun sendMediaMessage(
+        targetId: String, targetUserObj: TargetUserObj? = null, type: Conversation.ConversationType, compressLocalImage: String
+        , localImage: String
+    ) {
+        val prefix = "file://"
+        val localUri = if (localImage.startsWith(prefix)) {
+            Uri.parse(localImage)
+        } else {
+            Uri.parse("$prefix$localImage")
+        }
         val imageMessage = ImageMessage.obtain(null, localUri)
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
         imageMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
+
 
         val message = Message.obtain(targetId, type, imageMessage)
         RongIMClient.getInstance().sendMediaMessage(message, null, null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
             override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
                 if (message != null) {
                     switchThread(message)
+                }
+                OssUpLoadManager.uploadImages(arrayListOf(compressLocalImage), OssUpLoadManager.MESSAGE_PIC) { code, list ->
+                    if (code == OssUpLoadManager.CODE_SUCCESS) {
+                        logger("头像上传oss成功：${list} localImage = $localImage")
+                        val headPic = list?.firstOrNull()
+                        if (headPic != null) {
+                            uploader?.success(Uri.parse("$headPic"))
+                        }
+                    } else {
+                        uploader?.error()
+                    }
                 }
             }
 
@@ -449,6 +476,13 @@ object RongCloudManager {
         val content: MessageContent? = message.content
         val isRetrieved = message.receivedStatus.isRetrieved
         when (content) {
+            is ImageMessage -> {
+                //图片信息
+                if (message.conversationType == Conversation.ConversationType.PRIVATE) {
+                    //私聊消息  直接转发
+                    MessageProcessor.processPrivateTextMessageOnMain(message)
+                }
+            }
             is TextMessage -> {
                 //TextUtils.isEmpty(roomId) ||  首页里面没有roomId
                 if (isRetrieved) return

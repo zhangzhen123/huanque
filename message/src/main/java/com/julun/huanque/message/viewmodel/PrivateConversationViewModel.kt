@@ -4,9 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.julun.huanque.common.bean.beans.ChatUserBean
-import com.julun.huanque.common.bean.beans.RoomUserChatExtra
-import com.julun.huanque.common.bean.beans.Session
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -46,11 +44,12 @@ class PrivateConversationViewModel : BaseViewModel() {
     //对方ID
     val targetIdData: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
 
-    /**
-     * 对方数据
-     */
+
+    // 对方数据
     val chatInfoData: MutableLiveData<ChatUserBean> by lazy { MutableLiveData<ChatUserBean>() }
 
+    //亲密度数据
+    val basicBean : MutableLiveData<ConversationBasicBean> by lazy { MutableLiveData<ConversationBasicBean>() }
     /**
      * 获取消息列表
      * @param first 是否是首次获取历史记录
@@ -117,32 +116,29 @@ class PrivateConversationViewModel : BaseViewModel() {
     /**
      * 获取私聊基础信息
      */
-    fun chatBasic(targetId: Long, owner: Boolean = false) {
+    fun chatBasic(targetId: Long) {
         viewModelScope.launch {
             request({
                 val result = socialService.chatBasic(FriendIdForm(targetId)).dataConvert()
-                if (owner) {
-                    //设置本人数据
-                    val user = RoomUserChatExtra().apply {
-                        headPic = result.headPic
-                        senderId = result.friendId
-                        nickname = result.nickname
-                    }
-                    RongCloudManager.resetUserInfoData(user)
-                } else {
-                    chatInfoData.value = result
+                //设置本人数据
+                val mineInfo = result.usr
+                val user = RoomUserChatExtra().apply {
+                    headPic = mineInfo.headPic
+                    senderId = mineInfo.userId
+                    nickname = mineInfo.nickname
                 }
+                RongCloudManager.resetUserInfoData(user)
+
+                chatInfoData.value = result.friendUser
+                basicBean.value = result
             }, {
-                if (owner) {
-                    //设置本人数据
-                    //设置本人数据
-                    val user = RoomUserChatExtra().apply {
-                        headPic = SessionUtils.getHeaderPic()
-                        senderId = SessionUtils.getUserId()
-                        nickname = SessionUtils.getNickName()
-                    }
-                    RongCloudManager.resetUserInfoData(user)
+                //设置本人数据
+                val user = RoomUserChatExtra().apply {
+                    headPic = SessionUtils.getHeaderPic()
+                    senderId = SessionUtils.getUserId()
+                    nickname = SessionUtils.getNickName()
                 }
+                RongCloudManager.resetUserInfoData(user)
             })
         }
 

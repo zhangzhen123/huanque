@@ -218,7 +218,7 @@ class MainActivity : BaseActivity() {
         if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
         } else {
             SessionUtils.clearSession()
+            finish()
         }
-        finish()
     }
 }
