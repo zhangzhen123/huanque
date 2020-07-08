@@ -64,7 +64,21 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val bean = item.content as HomeRecomItem
                 val list = bean.coverPicList.map { PhotoBean(url = it) }
                 val headPic = holder.getView<SimpleDraweeView>(R.id.header_pic)
-                holder.setGone(R.id.living_fg, bean.living).setGone(R.id.living_tag, bean.living)
+
+                holder.setGone(R.id.living_fg, bean.living)
+
+                val authTag = holder.getView<SimpleDraweeView>(R.id.sd_auth_tag)
+                if (bean.living) {
+                    holder.setGone(R.id.living_tag, !bean.living)
+                } else {
+                    if (bean.authMark.isNotEmpty()) {
+                        authTag.show()
+                        ImageUtils.loadImageWithHeight_2(authTag, bean.authMark, dp2px(13))
+                    } else {
+                        authTag.hide()
+                    }
+                }
+
 
                 headPic.loadImage(bean.headPic, 46f, 46f)
                 val name = if (bean.nickname.length > 5) {
@@ -72,13 +86,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 } else {
                     bean.nickname
                 }
-                val authTag = holder.getView<SimpleDraweeView>(R.id.sd_auth_tag)
-                if (bean.authMark.isNotEmpty()) {
-                    authTag.show()
-                    ImageUtils.loadImageWithHeight_2(authTag, bean.authMark, dp2px(13))
-                } else {
-                    authTag.hide()
-                }
+
                 holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_mkf_sign, bean.mySign)
                     .setText(R.id.tv_location, bean.city)
 
@@ -102,6 +110,11 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         }
                         sex.textColor = Color.parseColor("#9BE2FF")
                     }
+                }
+                if (bean.anchor && bean.living) {
+                    holder.setText(R.id.btn_action, "围观")
+                } else {
+                    holder.setText(R.id.btn_action, "私信")
                 }
                 when {
                     list.isNotEmpty() -> {
@@ -154,7 +167,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         mTagAdapter.setList(bean.tagList)
 
                     }
-                    else->{
+                    else -> {
                         holder.setGone(R.id.ll_audio, true).setGone(R.id.rv_photos, true).setGone(R.id.rv_tags, true)
                     }
                 }

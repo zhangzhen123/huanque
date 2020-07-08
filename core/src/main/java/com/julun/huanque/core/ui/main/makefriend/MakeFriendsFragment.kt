@@ -137,7 +137,13 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
         mAdapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.btn_action -> {
-                    logger.info("点击了操作按钮--$position")
+
+                    val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@setOnItemChildClickListener
+                    if (bean.anchor && bean.living) {
+                        logger.info("点击围观--$position")
+                    } else {
+                        logger.info("点击了私信--$position")
+                    }
                 }
                 R.id.iv_audio_play -> {
                     logger.info("点击了音频播放---$position")

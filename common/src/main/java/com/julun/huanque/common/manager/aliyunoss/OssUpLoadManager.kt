@@ -116,6 +116,54 @@ object OssUpLoadManager {
 
     }
 
+    /**
+     *  上传单张图片
+     *  [path] 图片地址
+     *  [position]图片存储位置
+     *  [callback]上传反馈带进度条
+     */
+
+    fun uploadImage(path: String, position: String, callback: ImageUploadCallback? = null) {
+
+        Observable.just(path).observeOn(Schedulers.io()).map { f ->
+            logger.info("当前的文件：$f")
+            val name = "$position/${StringHelper.uuid()}.${FileUtils.getFilextension(f)}"
+            var result = ""
+            val success = mService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
+                override fun onProgress(request: PutObjectRequest?, currentSize: Long, totalSize: Long) {
+                    Observable.empty<Any>().observeOn(AndroidSchedulers.mainThread()).doOnComplete {
+                        callback?.onProgress(currentSize, totalSize)
+                    }.subscribe()
+                }
+
+                override fun onSuccess(request: PutObjectRequest?, result: PutObjectResult?) {
+                }
+
+                override fun onFailure(
+                    request: PutObjectRequest?,
+                    clientException: ClientException?,
+                    serviceException: ServiceException?
+                ) {
+
+                }
+            })
+            if (success) {
+                result = name
+            }
+            result
+        }.subscribe({
+            if (it.isNotEmpty()) {
+                callback?.onResult(CODE_SUCCESS, it)
+            } else {
+                callback?.onResult(CODE_ERROR)
+            }
+        }, {
+            callback?.onResult(CODE_ERROR)
+        })
+
+
+    }
+
     var currentVideoPic: String? = null
 
     //上传视频
@@ -211,6 +259,13 @@ object OssUpLoadManager {
 
         //最后两个时缩略图的宽高
         fun onResult(code: Int, videoPath: String = "", imgPath: String = "", width: Int = 0, height: Int = 0)
+    }
+
+
+    interface ImageUploadCallback {
+        fun onProgress(currentSize: Long, totalSize: Long)
+
+        fun onResult(code: Int, imgPath: String? = null)
     }
 
 }

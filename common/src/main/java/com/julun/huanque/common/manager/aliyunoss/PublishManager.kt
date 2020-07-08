@@ -1,6 +1,5 @@
 package com.julun.huanque.common.manager.aliyunoss
 
-import androidx.appcompat.app.AppCompatActivity
 import com.julun.huanque.common.R
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.forms.PublishVideoForm
