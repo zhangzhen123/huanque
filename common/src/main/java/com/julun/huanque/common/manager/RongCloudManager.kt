@@ -272,7 +272,7 @@ object RongCloudManager {
         } else {
             Uri.parse("$prefix$localImage")
         }
-        val imageMessage = ImageMessage.obtain(null, localUri,true)
+        val imageMessage = ImageMessage.obtain(localUri, localUri)
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
         imageMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
@@ -281,6 +281,7 @@ object RongCloudManager {
         val message = Message.obtain(targetId, type, imageMessage)
         RongIMClient.getInstance().sendMediaMessage(message, null, null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
             override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
+                val imageMessage = message?.content as? ImageMessage
                 if (message != null) {
                     switchThread(message)
                 }

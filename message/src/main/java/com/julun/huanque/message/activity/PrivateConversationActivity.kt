@@ -3,8 +3,11 @@ package com.julun.huanque.message.activity
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -33,6 +36,7 @@ import com.julun.huanque.common.widgets.emotion.EmotionPagerView
 import com.julun.huanque.common.widgets.emotion.Emotions
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
+import com.julun.huanque.message.fragment.MeetDetailFragment
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -46,6 +50,7 @@ import io.rong.message.ImageMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.imageResource
+import java.io.File
 
 
 /**
@@ -87,6 +92,7 @@ class PrivateConversationActivity : BaseActivity() {
         //获取基本数据
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
     }
+
 
     /**
      * 初始化ViewModel
@@ -157,6 +163,10 @@ class PrivateConversationActivity : BaseActivity() {
             edit_text.setText("")
         }
         iv_pic.onClickNew { checkPermissions() }
+        tv_meet.onClickNew {
+            //显示欢遇弹窗
+            MeetDetailFragment.newInstance().show(supportFragmentManager, "MeetDetailFragment")
+        }
     }
 
     /**
@@ -348,7 +358,7 @@ class PrivateConversationActivity : BaseActivity() {
     private fun checkPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions
-            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
             .subscribe { permission ->
                 when {
                     permission.granted -> {
