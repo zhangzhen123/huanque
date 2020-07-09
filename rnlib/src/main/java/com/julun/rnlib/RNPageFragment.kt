@@ -10,6 +10,7 @@ import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactRootView
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
+import com.julun.huanque.common.utils.ToastUtils
 
 /**
  * 通过fragment去加载一个rn页面
@@ -38,16 +39,23 @@ class RNPageFragment : Fragment(), DefaultHardwareBackBtnHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mReactRootView = ReactRootView(requireActivity())
-        mReactInstanceManager = RnManager.createReactInstanceManager(requireActivity().application)
-        val moduleName = arguments?.getString(RnConstant.MODULE_NAME)
-        val initialProperties = arguments?.getBundle(RnConstant.INITIAL_PROPERTIES)
-        // 这个"App1"名字一定要和我们在index.js中注册的名字保持一致AppRegistry.registerComponent()
-        mReactRootView.startReactApplication(mReactInstanceManager, moduleName, initialProperties)
-        mReactRootView.setEventListener {
-            Log.d("RNPageFragment", "我已加载完成")
+        try {
+
+            mReactRootView = ReactRootView(requireActivity())
+            mReactInstanceManager = RnManager.createReactInstanceManager(requireActivity().application)
+            val moduleName = arguments?.getString(RnConstant.MODULE_NAME)
+            val initialProperties = arguments?.getBundle(RnConstant.INITIAL_PROPERTIES)
+            // 这个"App1"名字一定要和我们在index.js中注册的名字保持一致AppRegistry.registerComponent()
+            mReactRootView.startReactApplication(mReactInstanceManager, moduleName, initialProperties)
+            mReactRootView.setEventListener {
+                Log.d("RNPageFragment", "我已加载完成")
+            }
+            mDoubleTapReloadRecognizer = DoubleTapReloadRecognizer()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ToastUtils.show("加载rn模块出错了")
         }
-        mDoubleTapReloadRecognizer = DoubleTapReloadRecognizer()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

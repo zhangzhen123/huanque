@@ -1,4 +1,5 @@
 ext {
+    packageType="com.julun.huanque"
     hq = [
             buildToolsVersion: "29.0.3",
             compileSdkVersion: 29,
@@ -64,13 +65,8 @@ ext {
             WX_KEY_OPPO      : "wx3f055bbd02228139",
 
             //JPUSH
-            //羚萌直播
-//            JPUSH_KEY_TEST_LM : "e6d0c9c6594fbca155aeb30c",
-            JPUSH_KEY_TEST_LM: "20ff9b40a677458b7f51b855",
-            JPUSH_KEY_LM     : "3e3057e7291ce1d80ed7bf15",
-            //番茄直播
-            JPUSH_KEY_TEST_FQ: "bac774f6bdd2d6858eeba962",
-            JPUSH_KEY_FQ     : "8a799752325e5c354acef04f",
+            JPUSH_KEY_TEST_HQ: "490222d958f73dc08833ac44",
+            JPUSH_KEY_HQ     : "79e280b3b945c631a53c54d3",
 
             //OpenInstall
             //羚萌直播

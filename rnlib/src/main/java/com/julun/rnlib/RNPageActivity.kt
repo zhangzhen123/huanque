@@ -21,6 +21,7 @@ import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
+import org.jetbrains.anko.toast
 
 /**
  * Android 通过Activity打开RN页面
@@ -47,19 +48,27 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     private var mDoubleTapReloadRecognizer: DoubleTapReloadRecognizer? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mReactRootView = ReactRootView(this)
-        mReactInstanceManager = RnManager.createReactInstanceManager(application)
-        RnManager.curActivity = this
-        val intent = intent
-        val moduleName = intent.getStringExtra(RnConstant.MODULE_NAME)
-        val initialProperties = intent.getBundleExtra(RnConstant.INITIAL_PROPERTIES)
-        // 这个"App1"名字一定要和我们在index.js中注册的名字保持一致AppRegistry.registerComponent()
-        mReactRootView.startReactApplication(mReactInstanceManager, moduleName, initialProperties)
-        mDoubleTapReloadRecognizer = DoubleTapReloadRecognizer()
-        mReactRootView.setEventListener {
-            Log.d("RNPageFragment", "我已加载完成")
+        try {
+
+            mReactRootView = ReactRootView(this)
+            mReactInstanceManager = RnManager.createReactInstanceManager(application)
+            RnManager.curActivity = this
+            val intent = intent
+            val moduleName = intent.getStringExtra(RnConstant.MODULE_NAME)
+            val initialProperties = intent.getBundleExtra(RnConstant.INITIAL_PROPERTIES)
+            // 这个"App1"名字一定要和我们在index.js中注册的名字保持一致AppRegistry.registerComponent()
+            mReactRootView.startReactApplication(mReactInstanceManager, moduleName, initialProperties)
+            mDoubleTapReloadRecognizer = DoubleTapReloadRecognizer()
+            mReactRootView.setEventListener {
+                Log.d("RNPageFragment", "我已加载完成")
+            }
+            setContentView(mReactRootView)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ToastUtils.show("加载rn模块出错了")
+            finish()
         }
-        setContentView(mReactRootView)
     }
 
     override fun invokeDefaultOnBackPressed() {

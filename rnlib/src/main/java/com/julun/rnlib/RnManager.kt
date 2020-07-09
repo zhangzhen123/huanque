@@ -49,6 +49,9 @@ object RnManager {
                 .addPackage(RNSoundPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)
+                .setNativeModuleCallExceptionHandler {
+                    it.printStackTrace()
+                }
                 .build()
 
         }
