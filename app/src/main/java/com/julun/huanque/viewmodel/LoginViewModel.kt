@@ -7,6 +7,7 @@ import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.Session
 import com.julun.huanque.common.bean.forms.MobileQuickForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.manager.SessionManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
@@ -33,7 +34,7 @@ class LoginViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = userService.mobileQuick(MobileQuickForm(jToken, SmAntiFraud.getDeviceId() ?: "")).dataConvert()
-                SessionUtils.setSession(result)
+                SessionManager.loginSuccess(result)
                 loginData.postValue(result)
             }, {
                 if (it is ResponseError) {

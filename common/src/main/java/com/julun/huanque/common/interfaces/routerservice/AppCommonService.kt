@@ -3,6 +3,7 @@ package com.julun.huanque.common.interfaces.routerservice
 import android.content.Context
 import android.content.Intent
 import com.alibaba.android.arouter.facade.template.IProvider
+import com.julun.huanque.common.bean.beans.Session
 import com.julun.huanque.common.helper.UnExpectedCrashExceptionForhuanqueApp
 
 /**
@@ -45,7 +46,7 @@ interface AppCommonService : IProvider {
     /**
      * 登录成功
      */
-    fun loginSuccess(session : Any)
+    fun loginSuccess(session : Session)
 
     /**
      * 退出登录

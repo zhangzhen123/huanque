@@ -19,6 +19,7 @@ import com.julun.huanque.common.bean.forms.MobileQuickForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.MsgTag.TAG
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.manager.SessionManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
@@ -259,7 +260,7 @@ class PhoneNumLoginViewModel : BaseViewModel() {
 //            request({ val result = userService.mobileLogin(MobileLoginForm(phoneNum, code)).dataConvert() })
             request({
                 val result = userService.mobileLogin(MobileLoginForm(phoneNum, code, shuMeiDeviceId = SmAntiFraud.getDeviceId() ?: "")).dataConvert()
-                SessionUtils.setSession(result)
+                SessionManager.loginSuccess(result)
                 loginData.postValue(result)
             }, {
                 if (it is ResponseError) {

@@ -1,6 +1,11 @@
 package com.julun.huanque.common.manager
 
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.bean.beans.Session
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.interfaces.routerservice.AppCommonService
+import com.julun.huanque.common.utils.SessionUtils
 
 /**
  * Created by djp on 2016/12/9.
@@ -204,19 +209,11 @@ object SessionManager  {
      * 登录成功
      */
     fun loginSuccess(it: Session) {
-//        SessionUtils.saveSession(it)
-//        // 设置bugly用户身份信息
-//        CommonInit.getInstance().getCommonListener()?.loginSuccess(it)
-//
-//        EventBus.getDefault().post(LoginEvent(BusiConstant.SUCCESS_LOGIN_RESULT_CODE))
-    }
+        SessionUtils.setSession(it)
+        //通知登录成功
+        (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
+            .navigation() as? AppCommonService)?.loginSuccess(it)
 
-    /**
-     * 登录成功
-     * @param source 登录来源
-     */
-    fun loginSuccess(it: Session, source: String) {
-        loginSuccess(it)
     }
 
     /**

@@ -43,4 +43,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="跳转图片选择" />
+    <Button
+        android:id="@+id/set_push"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="设置推送id=userId" />
+
 </LinearLayout>
