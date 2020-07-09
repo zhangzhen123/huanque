@@ -48,8 +48,12 @@ class PrivateConversationViewModel : BaseViewModel() {
     // 对方数据
     val chatInfoData: MutableLiveData<ChatUserBean> by lazy { MutableLiveData<ChatUserBean>() }
 
+    //基础数据
+    val basicBean: MutableLiveData<ConversationBasicBean> by lazy { MutableLiveData<ConversationBasicBean>() }
+
     //亲密度数据
-    val basicBean : MutableLiveData<ConversationBasicBean> by lazy { MutableLiveData<ConversationBasicBean>() }
+    val intimateData: MutableLiveData<IntimateBean> by lazy { MutableLiveData<IntimateBean>() }
+
     /**
      * 获取消息列表
      * @param first 是否是首次获取历史记录
@@ -130,6 +134,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                 RongCloudManager.resetUserInfoData(user)
 
                 chatInfoData.value = result.friendUser
+                intimateData.value = result.intimate
                 basicBean.value = result
             }, {
                 //设置本人数据

@@ -3,11 +3,7 @@ package com.julun.huanque.message.activity
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -36,7 +32,8 @@ import com.julun.huanque.common.widgets.emotion.EmotionPagerView
 import com.julun.huanque.common.widgets.emotion.Emotions
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
-import com.julun.huanque.message.fragment.MeetDetailFragment
+import com.julun.huanque.message.fragment.IntimateDetailFragment
+import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -50,7 +47,6 @@ import io.rong.message.ImageMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.imageResource
-import java.io.File
 
 
 /**
@@ -70,11 +66,18 @@ class PrivateConversationActivity : BaseActivity() {
 
     private var mPrivateConversationViewModel: PrivateConversationViewModel? = null
 
+    private var mIntimateDetailViewModel: IntimateDetailViewModel? = null
+
     private var mHelper: PanelSwitchHelper? = null
 
     private val mAdapter = MessageAdapter()
 
     private var mLinearLayoutManager: LinearLayoutManager? = null
+
+    /**
+     * 欢遇弹窗
+     */
+    private var mIntimateDetailFragment: IntimateDetailFragment? = null
 
     override fun getLayoutId() = R.layout.act_private_chat
 
@@ -99,6 +102,7 @@ class PrivateConversationActivity : BaseActivity() {
      */
     private fun initViewModel() {
         mPrivateConversationViewModel = ViewModelProvider(this).get(PrivateConversationViewModel::class.java)
+        mIntimateDetailViewModel = ViewModelProvider(this).get(IntimateDetailViewModel::class.java)
 
         mPrivateConversationViewModel?.targetIdData?.observe(this, Observer {
             if (it != null) {
@@ -140,6 +144,9 @@ class PrivateConversationActivity : BaseActivity() {
                 mAdapter.notifyDataSetChanged()
             }
         })
+        mPrivateConversationViewModel?.basicBean?.observe(this, Observer {
+            mIntimateDetailViewModel?.basicBean?.value = it
+        })
     }
 
     override fun initEvents(rootView: View) {
@@ -165,7 +172,8 @@ class PrivateConversationActivity : BaseActivity() {
         iv_pic.onClickNew { checkPermissions() }
         tv_meet.onClickNew {
             //显示欢遇弹窗
-            MeetDetailFragment.newInstance().show(supportFragmentManager, "MeetDetailFragment")
+            mIntimateDetailFragment = mIntimateDetailFragment ?: IntimateDetailFragment.newInstance()
+            mIntimateDetailFragment?.show(supportFragmentManager, "MeetDetailFragment")
         }
     }
 
@@ -358,7 +366,7 @@ class PrivateConversationActivity : BaseActivity() {
     private fun checkPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions
-            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
             .subscribe { permission ->
                 when {
                     permission.granted -> {
