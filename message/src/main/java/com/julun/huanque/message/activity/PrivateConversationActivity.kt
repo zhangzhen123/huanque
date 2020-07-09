@@ -17,6 +17,7 @@ import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.EventMessageBean
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
@@ -41,6 +42,7 @@ import com.rd.utils.DensityUtils
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
+import io.rong.message.ImageMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.imageResource
@@ -243,7 +245,7 @@ class PrivateConversationActivity : BaseActivity() {
         recyclerview.layoutManager = mLinearLayoutManager
         recyclerview.adapter = mAdapter
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
-            val tempData = mAdapter.getItem(position) ?: return@setOnItemChildClickListener
+            val tempData = mAdapter.getItem(position)
             when (view.id) {
                 R.id.iv_send_fail -> {
                     //重新发送消息
@@ -266,7 +268,10 @@ class PrivateConversationActivity : BaseActivity() {
                 }
                 R.id.sdv_image -> {
                     //查看图片
-                    ImageActivity
+                    val content = tempData.content
+                    if (content is ImageMessage) {
+                        ImageActivity.start(this, 0, medias = listOf(StringHelper.getOssImgUrl("${content.remoteUri}")))
+                    }
                 }
             }
         }
@@ -327,12 +332,16 @@ class PrivateConversationActivity : BaseActivity() {
             userId = targetChatInfo.userId
         }
 
+        if (targetChatInfo.userId == SessionUtils.getUserId()) {
+            ToastUtils.show("不能给自己发消息")
+            return
+        }
         if (!picMode) {
             //文本消息
             RongCloudManager.send(message, "${targetChatInfo.userId}", targetUserObj = targetUser) {}
         } else if (pic.isNotEmpty()) {
             //图片消息
-            RongCloudManager.sendMediaMessage("${targetChatInfo.userId}", targetUser, Conversation.ConversationType.PRIVATE, pic,localPic)
+            RongCloudManager.sendMediaMessage("${targetChatInfo.userId}", targetUser, Conversation.ConversationType.PRIVATE, pic, localPic)
         }
     }
 
@@ -419,9 +428,9 @@ class PrivateConversationActivity : BaseActivity() {
                     } else {
                         media.path
                     }
-                    logger.info("收到图片:$path")
+                    logger.info("DXC  收到图片:$path，media.path = ${media.path}")
                     //media.path
-                    sendChatMessage(pic = path,localPic = media.path, picMode = true)
+                    sendChatMessage(pic = path, localPic = media.path, picMode = true)
 //                    if(!mLoadingDialog.isShowing){
 //                        mLoadingDialog.showDialog()
 //                    }

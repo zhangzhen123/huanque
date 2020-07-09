@@ -12,6 +12,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
@@ -20,6 +21,7 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import org.jetbrains.anko.bottomPadding
+import java.io.File
 
 /**
  *@创建者   dong
@@ -129,12 +131,28 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         } else if (content is ImageMessage) {
             //图片信息
             showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
-            if(helper.itemViewType == OTHER){
-                //查看远程图片
-                ImageUtils.loadImage(helper.getView(R.id.sdv_image), "${content.remoteUri}", 100f, 100f)
-            }else{
-                //查看本地图片
-                ImageUtils.loadNativeFilePath(helper.getView(R.id.sdv_image), "${content.thumUri}", 100f, 100f)
+            if (helper.itemViewType == OTHER) {
+                //接收方查看图片
+//                content.localUri
+                val file = File("${content.thumUri}")
+                if (file.exists()) {
+                    //显示缩略图
+                    ImageUtils.loadNativeFilePath(helper.getView(R.id.sdv_image), "${content.thumUri}", 100f, 100f)
+                } else {
+                    //显示远程图片
+                    ImageUtils.loadImage(helper.getView(R.id.sdv_image), "${content.remoteUri}", 100f, 100f)
+                }
+            } else {
+                //发送方查看图片
+                val file = File("${content.localUri}")
+                if (file.exists()) {
+                    //图片存在，显示本地图片
+                    ImageUtils.loadNativeFilePath(helper.getView(R.id.sdv_image), "${content.localUri}", 100f, 100f)
+                } else {
+                    //图片不存在，显示远程图片
+                    ImageUtils.loadImage(helper.getView(R.id.sdv_image), "${content.remoteUri}", 100f, 100f)
+                }
+                logger("DXC remoteUri = ${content.remoteUri}，localUri = ${content.localUri},localPath = ${content.localPath} ,thumUri = ${content.thumUri} ,exists = ${file.exists()}")
             }
 
         }

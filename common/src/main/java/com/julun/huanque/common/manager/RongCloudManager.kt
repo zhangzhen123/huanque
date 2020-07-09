@@ -272,7 +272,7 @@ object RongCloudManager {
         } else {
             Uri.parse("$prefix$localImage")
         }
-        val imageMessage = ImageMessage.obtain(null, localUri)
+        val imageMessage = ImageMessage.obtain(null, localUri,true)
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
         imageMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
@@ -286,7 +286,7 @@ object RongCloudManager {
                 }
                 OssUpLoadManager.uploadImages(arrayListOf(compressLocalImage), OssUpLoadManager.MESSAGE_PIC) { code, list ->
                     if (code == OssUpLoadManager.CODE_SUCCESS) {
-                        logger("头像上传oss成功：${list} localImage = $localImage")
+                        logger("DXC 头像上传oss成功：${list} localImage = $localImage")
                         val headPic = list?.firstOrNull()
                         if (headPic != null) {
                             uploader?.success(Uri.parse("$headPic"))
@@ -298,7 +298,6 @@ object RongCloudManager {
             }
 
             override fun onSuccess(message: Message?) {
-
             }
 
             override fun onProgress(p0: Message?, p1: Int) {
