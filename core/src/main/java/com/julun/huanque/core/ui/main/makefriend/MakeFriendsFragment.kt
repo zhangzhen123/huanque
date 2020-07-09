@@ -265,7 +265,7 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
                         ctx = requireContext(),
                         msg = state.message,
                         onClick = View.OnClickListener {
-                            mViewModel.queryInfo(QueryType.REFRESH)
+                            mViewModel.queryInfo(QueryType.INIT)
                         })
                 )
 
@@ -276,7 +276,7 @@ class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
                         ctx = requireContext(),
                         msg = "网络错误",
                         onClick = View.OnClickListener {
-                            mViewModel.queryInfo(QueryType.REFRESH)
+                            mViewModel.queryInfo(QueryType.INIT)
                         })
                 )
 
