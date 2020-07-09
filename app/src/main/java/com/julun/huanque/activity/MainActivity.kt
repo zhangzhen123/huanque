@@ -8,7 +8,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.baidu.location.BDAbstractLocationListener
+import com.baidu.location.BDLocation
 import com.julun.huanque.R
+import com.julun.huanque.app.HuanQueApp
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.manager.ActivitiesManager
@@ -20,6 +23,7 @@ import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.ui.main.*
 import com.julun.huanque.viewmodel.MainViewModel
+import com.julun.maplib.LocationService
 import com.julun.rnlib.RNPageFragment
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.coroutines.launch
@@ -34,14 +38,34 @@ class MainActivity : BaseActivity() {
     private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
 
     //    private val mMineFragment: Fragment by lazy { RNPageFragment.start("PH") }
-    private val MAIN_FRAGMENT_INDEX = 0
-    private val LEYUAN_FRAGMENT_INDEX = 1
-    private val MESSAGE_FRAGMENT_INDEX = 2
-    private val MINE_FRAGMENT_INDEX = 3
+
+    companion object {
+        private const val MAIN_FRAGMENT_INDEX = 0
+        private const val LEYUAN_FRAGMENT_INDEX = 1
+        private const val MESSAGE_FRAGMENT_INDEX = 2
+        private const val MINE_FRAGMENT_INDEX = 3
+    }
+
 
     private var mMainViewModel: MainViewModel? = null
 
     private var firstTime = 0L
+
+    //封装百度地图相关的Service
+    private lateinit var mLocationService: LocationService
+    //百度地图监听的Listener
+    private var mLocationListener = object : BDAbstractLocationListener() {
+        override fun onReceiveLocation(location: BDLocation?) {
+            logger.info("location error=${location?.locTypeDescription}")
+            if (null != location && location.locType != BDLocation.TypeServerError) {
+                logger.info("location=${location.addrStr}")
+                //获得一次结果，就结束定位
+                stopLocation()
+                //todo
+//                viewModel.saveLocation("${location.latitude}", "${location.longitude}", location.province, location.city, location.district)
+            }
+        }
+    }
 
     override fun getLayoutId() = R.layout.main_activity
 
@@ -52,6 +76,32 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.main_activity)
         initViewModel()
         mMainViewModel?.indexData?.value = 0
+
+
+        mLocationService = LocationService(this.applicationContext)
+        mLocationService.registerListener(mLocationListener)
+        mLocationService.setLocationOption(mLocationService?.defaultLocationClientOption.apply {
+            //                            this?.setScanSpan(0)
+//                            this?.setIgnoreKillProcess(false)
+        })
+
+
+    }
+    /**
+     * 停止定位
+     */
+    private fun stopLocation() {
+        mLocationService.stop()
+        mLocationService.unregisterListener(mLocationListener)
+    }
+    override fun onStart() {
+        super.onStart()
+        mLocationService.start()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopLocation()
     }
 
     private fun initViewModel() {

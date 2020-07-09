@@ -1,3 +1,4 @@
+include ':maplib'
 include ':jpushlib'
 include ':picture_library'
 include ':agora'

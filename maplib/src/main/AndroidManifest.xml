@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.julun.maplib">
+
+    <!-- 这个权限用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 这个权限用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <application>
+        <!--百度地图的Service-->
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
+        <!--百度地图Key todo 缺少key-->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="k6lKcygr8aVtIESvokA04TlgZIHA8LvE" />
+    </application>
+</manifest>
