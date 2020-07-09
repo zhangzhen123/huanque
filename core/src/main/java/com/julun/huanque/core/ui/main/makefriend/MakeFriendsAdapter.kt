@@ -61,7 +61,6 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
         when (holder.itemViewType) {
             HomeItemBean.NORMAL -> {
                 val bean = item.content as HomeRecomItem
-                logger("NORMAL bean:$bean")
                 val list = bean.coverPicList.map { PhotoBean(url = it) }
                 val headPic = holder.getView<SimpleDraweeView>(R.id.header_pic)
 
