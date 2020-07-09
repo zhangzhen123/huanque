@@ -223,6 +223,5 @@ class MainActivity : BaseActivity() {
             SessionUtils.clearSession()
             finish()
         }
-
     }
 }

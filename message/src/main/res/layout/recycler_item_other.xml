@@ -87,6 +87,17 @@
 
     </RelativeLayout>
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toRightOf="@id/sdv_header"
+        app:layout_constraintTop_toTopOf="@id/sdv_header"
+        app:roundedCornerRadius="10dp" />
+
+
     <LinearLayout
         android:id="@+id/view_pic"
         android:layout_width="wrap_content"

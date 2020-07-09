@@ -150,16 +150,16 @@ object ImageUtils {
     /**
      * 加载本地图片文件
      */
-    fun loadNativeFilePath(
-        imgView: SimpleDraweeView,
-        filePath: String,
-        width: Float = 50f,
-        height: Float = 50f
-    ) {
+    fun loadNativeFilePath(imgView: SimpleDraweeView, filePath: String, width: Float = 50f, height: Float = 50f) {
         if (TextUtils.isEmpty(filePath)) {
             return
         }
-        val uri = Uri.parse("file://$filePath")
+        val prefix = "file://"
+        val uri = if (filePath.startsWith(prefix)) {
+            Uri.parse(filePath)
+        } else {
+            Uri.parse("$prefix$filePath")
+        }
         val request = ImageRequestBuilder.newBuilderWithSource(uri)
             .setResizeOptions(
                 ResizeOptions(DensityHelper.dp2px(width), DensityHelper.dp2px(height))

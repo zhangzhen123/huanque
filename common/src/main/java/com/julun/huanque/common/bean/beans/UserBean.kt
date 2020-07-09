@@ -73,12 +73,37 @@ class IntimateBean(
  * 会话的对象数据
  */
 class ChatUserBean(
-    var activeList: MutableList<String> = mutableListOf(),
-    var friendId: Long = 0L,
-    var headPic: String = "",
-    var intimate : IntimateBean = IntimateBean(),
-    var meetStatus: String = "",
-    var msgFee: Int = 0,
-    var nickname: String = ""
+    var anchorExp: Long = 0,
+    var anchorLevel: Long = 0,
+    var beans: Long = 0,
+    var cash: Long = 0,
+    var headRealPeople: Boolean = false,
+    var royalBjExp: Long = 0,
+    var royalExp: Long = 0,
+    var royalLevel: Int = 0,
+    var sex: String = "",
+    var userExp: Long = 0,
 
+    var userId: Long = 0L,
+    var headPic: String = "",
+    var meetStatus: String = "",
+    var nickname: String = ""
+)
+
+/**
+ * 会话详情页面基础信息
+ */
+class ConversationBasicBean(
+    //小鹊提醒数据
+    var activeList: MutableList<String> = mutableListOf(),
+    //本人数据
+    var usr: ChatUserBean = ChatUserBean(),
+    //对方数据
+    var friendUser: ChatUserBean = ChatUserBean(),
+    //亲密度信息
+    var intimate: IntimateBean = IntimateBean(),
+    //与对方欢遇标识
+    var meetStatus: String = "",
+    //私信费用
+    var msgFee: Int = 0
 )

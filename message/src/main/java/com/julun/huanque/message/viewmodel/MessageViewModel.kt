@@ -14,6 +14,7 @@ import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
+import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -129,7 +130,7 @@ class MessageViewModel : BaseViewModel() {
                         return
                     }
                     val oriList = conversationListData.value
-                    if(oriList != null){
+                    if (oriList != null) {
                         oriList.forEachIndexed { index, lmc ->
                             if (lmc.conversation.targetId == p0.targetId) {
                                 lmc.conversation = p0
@@ -192,36 +193,16 @@ class MessageViewModel : BaseViewModel() {
                     if (currentUser == null) {
                         val lastMessage = conversation.latestMessage
                         when (lastMessage) {
+                            is ImageMessage -> {
+                                lastMessage.extra?.let {
+                                    currentUser = getMessageUserInfo(it)
+                                }
+                            }
+
                             is TextMessage -> {
                                 //文本消息
                                 lastMessage.extra?.let {
-                                    val user: RoomUserChatExtra? = JsonUtil.deserializeAsObject(it, RoomUserChatExtra::class.java)
-                                    if (user != null) {
-                                        if (user.senderId == SessionUtils.getUserId()) {
-                                            //本人发送消息，取targetUserObj
-                                            currentUser = ChatUser().apply {
-                                                headPic = user.targetUserObj?.headPic ?: ""
-                                                nickname = user.targetUserObj?.nickname ?: ""
-                                                intimateLevel = user.targetUserObj?.intimateLevel ?: 0
-                                                //欢遇标识
-                                                meetStatus = user.targetUserObj?.meetStatus ?: ""
-                                                //用户ID
-                                                userId = user.targetUserObj?.userId ?: 0
-                                            }
-                                        } else {
-                                            //对方发送消息
-                                            currentUser = ChatUser().apply {
-                                                headPic = user.headPic
-                                                nickname = user.nickname
-                                                intimateLevel = user.targetUserObj?.intimateLevel ?: 0
-                                                //欢遇标识
-                                                meetStatus = user.targetUserObj?.meetStatus ?: ""
-                                                //用户ID
-                                                userId = user.senderId
-                                            }
-                                        }
-
-                                    }
+                                    currentUser = getMessageUserInfo(it)
                                 }
                             }
                         }
@@ -244,9 +225,45 @@ class MessageViewModel : BaseViewModel() {
     }
 
     /**
+     * 获取消息内部的用户信息
+     */
+    private fun getMessageUserInfo(extra: String): ChatUser? {
+        val user: RoomUserChatExtra? = JsonUtil.deserializeAsObject(extra, RoomUserChatExtra::class.java)
+        var currentUser: ChatUser? = null
+        if (user != null) {
+            if (user.senderId == SessionUtils.getUserId()) {
+                //本人发送消息，取targetUserObj
+                currentUser = ChatUser().apply {
+                    headPic = user.targetUserObj?.headPic ?: ""
+                    nickname = user.targetUserObj?.nickname ?: ""
+                    intimateLevel = user.targetUserObj?.intimateLevel ?: 0
+                    //欢遇标识
+                    meetStatus = user.targetUserObj?.meetStatus ?: ""
+                    //用户ID
+                    userId = user.targetUserObj?.userId ?: 0
+                }
+            } else {
+                //对方发送消息
+                currentUser = ChatUser().apply {
+                    headPic = user.headPic
+                    nickname = user.nickname
+                    intimateLevel = user.targetUserObj?.intimateLevel ?: 0
+                    //欢遇标识
+                    meetStatus = user.targetUserObj?.meetStatus ?: ""
+                    //用户ID
+                    userId = user.senderId
+                }
+            }
+
+        }
+        return currentUser
+    }
+
+
+    /**
      * 刷新会话列表
      */
-    private fun refreshConversationList(list : MutableList<LocalConversation>){
+    private fun refreshConversationList(list: MutableList<LocalConversation>) {
         val sortResult = sortConversation(list)
         conversationListData.postValue(sortResult)
 

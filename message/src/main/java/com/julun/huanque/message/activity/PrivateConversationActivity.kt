@@ -3,6 +3,7 @@ package com.julun.huanque.message.activity
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -16,12 +17,14 @@ import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.EventMessageBean
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.onTouch
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.ChatUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -39,6 +42,7 @@ import com.rd.utils.DensityUtils
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
+import io.rong.message.ImageMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.imageResource
@@ -80,10 +84,8 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.targetIdData?.value = targetID
         registerMessageEventProcessor()
         //        mPrivateConversationViewModel?.getMessageList(first = true)
-        //获取对方数据
+        //获取基本数据
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
-        //获取本人数据
-        mPrivateConversationViewModel?.chatBasic(SessionUtils.getUserId(), true)
     }
 
     /**
@@ -243,37 +245,32 @@ class PrivateConversationActivity : BaseActivity() {
         recyclerview.layoutManager = mLinearLayoutManager
         recyclerview.adapter = mAdapter
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
-            val tempData = mAdapter.getItem(position) ?: return@setOnItemChildClickListener
-            val conent = tempData.content
-            //自定义消息
-            //            var customBean: MessageActionBean? = null
-            //            if (conent is CustomMessage) {
-            //                //自定义消息
-            //                try {
-            //                    customBean = JsonUtil.deserializeAsObject<MessageActionBean>(conent.context,
-            //                                                                                 MessageActionBean::class.java)
-            //                } catch (e: Exception) {
-            //                    e.printStackTrace()
-            //                }
-            //            }
+            val tempData = mAdapter.getItem(position)
             when (view.id) {
                 R.id.iv_send_fail -> {
                     //重新发送消息
                     val targerId = mPrivateConversationViewModel?.targetIdData?.value ?: return@setOnItemChildClickListener
                     tempData.sentStatus = Message.SentStatus.SENDING
-                    adapter.getViewByPosition( position, R.id.iv_send_fail)?.hide()
-                    adapter.getViewByPosition( position, R.id.send_progress)?.show()
+                    adapter.getViewByPosition(position, R.id.iv_send_fail)?.hide()
+                    adapter.getViewByPosition(position, R.id.send_progress)?.show()
                     RongCloudManager.send(tempData, "$targerId") {
                         if (it) {
                             ChatUtils.deleteSingleMessage(tempData.messageId)
                             mPrivateConversationViewModel?.deleteSingleMessage(tempData)
                         } else {
                             tempData.sentStatus = Message.SentStatus.FAILED
-                            adapter.getViewByPosition( position, R.id.iv_send_fail)
+                            adapter.getViewByPosition(position, R.id.iv_send_fail)
                                 ?.show()
-                            adapter.getViewByPosition( position, R.id.send_progress)
+                            adapter.getViewByPosition(position, R.id.send_progress)
                                 ?.hide()
                         }
+                    }
+                }
+                R.id.sdv_image -> {
+                    //查看图片
+                    val content = tempData.content
+                    if (content is ImageMessage) {
+                        ImageActivity.start(this, 0, medias = listOf(StringHelper.getOssImgUrl("${content.remoteUri}")))
                     }
                 }
             }
@@ -290,7 +287,7 @@ class PrivateConversationActivity : BaseActivity() {
 //        }
         mAdapter.upFetchModule.isUpFetchEnable = true
         //预加载2个position
-        mAdapter.upFetchModule.startUpFetchPosition=2
+        mAdapter.upFetchModule.startUpFetchPosition = 2
         mAdapter.upFetchModule.setOnUpFetchListener {
             val currLast = mAdapter.getItemOrNull(0)
             mPrivateConversationViewModel?.getMessageList(
@@ -314,22 +311,38 @@ class PrivateConversationActivity : BaseActivity() {
 
     /**
      * 发送消息
+     * @param message 发送文本消息使用
+     * @param pic 上传图片的地址
+     * @param localPic 图片库中的di
      */
-    private fun sendChatMessage(message: String,pic : String = "") {
-        if (TextUtils.isEmpty(message) || message.isBlank()) {
+    private fun sendChatMessage(message: String = "", pic: String = "", localPic: String = "", picMode: Boolean = false) {
+        if (!picMode && (TextUtils.isEmpty(message) || message.isBlank())) {
             ToastUtils.show("输入不能为空")
+            return
+        }
+        if (picMode && pic.isEmpty()) {
             return
         }
         val targetChatInfo = mPrivateConversationViewModel?.chatInfoData?.value ?: return
         val targetUser = TargetUserObj().apply {
             headPic = targetChatInfo.headPic
             nickname = targetChatInfo.nickname
-            intimateLevel = targetChatInfo.intimate.intimateLevel
+            intimateLevel = mPrivateConversationViewModel?.basicBean?.value?.intimate?.intimateLevel ?: 0
             meetStatus = targetChatInfo.meetStatus
-            userId = targetChatInfo.friendId
+            userId = targetChatInfo.userId
         }
 
-        RongCloudManager.send(message, "${targetChatInfo.friendId}", targetUserObj = targetUser) {}
+        if (targetChatInfo.userId == SessionUtils.getUserId()) {
+            ToastUtils.show("不能给自己发消息")
+            return
+        }
+        if (!picMode) {
+            //文本消息
+            RongCloudManager.send(message, "${targetChatInfo.userId}", targetUserObj = targetUser) {}
+        } else if (pic.isNotEmpty()) {
+            //图片消息
+            RongCloudManager.sendMediaMessage("${targetChatInfo.userId}", targetUser, Conversation.ConversationType.PRIVATE, pic, localPic)
+        }
     }
 
     private fun checkPermissions() {
@@ -415,7 +428,9 @@ class PrivateConversationActivity : BaseActivity() {
                     } else {
                         media.path
                     }
-                    logger.info("收到图片:$path")
+                    logger.info("DXC  收到图片:$path，media.path = ${media.path}")
+                    //media.path
+                    sendChatMessage(pic = path, localPic = media.path, picMode = true)
 //                    if(!mLoadingDialog.isShowing){
 //                        mLoadingDialog.showDialog()
 //                    }
