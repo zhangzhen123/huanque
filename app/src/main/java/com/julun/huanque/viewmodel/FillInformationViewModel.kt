@@ -3,7 +3,6 @@ package com.julun.huanque.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.events.ImformationCompleteBean
 import com.julun.huanque.common.bean.forms.UpdateHeadForm
 import com.julun.huanque.common.bean.forms.UpdateInformationForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -16,7 +15,6 @@ import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.net.service.UserService
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -97,7 +95,7 @@ class FillInformationViewModel : BaseViewModel() {
      * 上传头像
      */
     fun uploadHead(path: String) {
-        OssUpLoadManager.uploadImages(arrayListOf(path), OssUpLoadManager.HEAD_POSITION) { code, list ->
+        OssUpLoadManager.uploadFiles(arrayListOf(path), OssUpLoadManager.HEAD_POSITION) { code, list ->
             if (code == OssUpLoadManager.CODE_SUCCESS) {
                 logger("头像上传oss成功：${list}")
                 val headPic = list?.firstOrNull()

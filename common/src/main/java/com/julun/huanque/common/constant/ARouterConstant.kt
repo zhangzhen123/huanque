@@ -31,9 +31,9 @@ object ARouterConstant {
 
     /*LMAPP模块*/
 
-    const val MAIN_ACTIVITY = "/$COMMON$SERVICE/MAIN_ACTIVITY"
+    const val MAIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/MAIN_ACTIVITY"
 
-    const val TEST_ACTIVITY = "/$COMMON$SERVICE/TEST_ACTIVITY"
+    const val TEST_ACTIVITY = "/$COMMON$PREFIX_ACTIVITY/TEST_ACTIVITY"
 
     const val APP_COMMON_SERVICE = "/$APP$SERVICE/AppCommonService"
     const val LOGIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/LoginActivity"

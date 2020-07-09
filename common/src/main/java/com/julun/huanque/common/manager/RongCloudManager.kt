@@ -285,7 +285,7 @@ object RongCloudManager {
                 if (message != null) {
                     switchThread(message)
                 }
-                OssUpLoadManager.uploadImages(arrayListOf(compressLocalImage), OssUpLoadManager.MESSAGE_PIC) { code, list ->
+                OssUpLoadManager.uploadFiles(arrayListOf(compressLocalImage), OssUpLoadManager.MESSAGE_PIC) { code, list ->
                     if (code == OssUpLoadManager.CODE_SUCCESS) {
                         logger("DXC 头像上传oss成功：${list} localImage = $localImage")
                         val headPic = list?.firstOrNull()

@@ -14,6 +14,7 @@ import com.julun.huanque.common.R
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import org.jay.launchstarter.TaskDispatcher
@@ -121,6 +122,7 @@ class CommonInit {
             }
 
             override fun onActivityStarted(activity: Activity) {
+                logger("onActivityStopped:$activity")
                 setCurrentActivity(activity)
             }
 
@@ -132,6 +134,7 @@ class CommonInit {
             }
 
             override fun onActivityStopped(activity: Activity) {
+                logger("onActivityStopped:$activity")
             }
 
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {

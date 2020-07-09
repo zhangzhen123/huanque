@@ -19,6 +19,8 @@ object BusiConstant {
 
     //系统通知栏回调
     var NOTIFICATION_REQUEST_CODE = 300
+
+    const val WEB_URL="web_url"
 }
 
 /**

@@ -6,9 +6,11 @@ apply plugin: 'kotlin-kapt'
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
-        arg('eventBusIndex', 'com.julun.huanque.message.MessageEventBusIndex')
+        arg('eventBusIndex', 'com.julun.huanque.push.PushEventBusIndex')
     }
 }
+
+
 android {
     compileSdkVersion hq.compileSdkVersion
     buildToolsVersion hq.buildToolsVersion
@@ -20,26 +22,35 @@ android {
         versionName "1.0"
 
         consumerProguardFiles "consumer-rules.pro"
+
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            println("buildTypes release 我已执行")
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        debug {
+            minifyEnabled false
+            println("buildTypes debug 我已执行")
+        }
+
     }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+
+    kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
     implementation project(path: ':common')
+    api "cn.jiguang.sdk:jpush:3.3.6"
+    api 'cn.jiguang.sdk:jcore:2.1.4'
+    implementation 'cn.jiguang.sdk.plugin:huawei:3.3.6'
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.3.6'
+    implementation 'cn.jiguang.sdk.plugin:oppo:3.3.6'
+    implementation 'cn.jiguang.sdk.plugin:vivo:3.3.6'
+    api 'cn.jiguang.sdk:jverification:2.5.2'
 
 }

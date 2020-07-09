@@ -7,8 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.onClickNew
@@ -22,6 +24,7 @@ import com.julun.rnlib.RNPageFragment
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.coroutines.launch
 
+@Route(path = ARouterConstant.MAIN_ACTIVITY)
 class MainActivity : BaseActivity() {
 
     private val mHomeFragment = HomeFragment.newInstance()

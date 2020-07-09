@@ -91,4 +91,8 @@ data class HomeRecomItem(
     var isPlay: Boolean = false
     //本地字段 保存当前的播放进度
     var currentPlayProcess: Int = introduceVoiceLength
+    override fun toString(): String {
+        return "HomeRecomItem(anchor=$anchor, authMark='$authMark', living=$living, mySign='$mySign', nickname='$nickname', userId=$userId)"
+    }
+
 }

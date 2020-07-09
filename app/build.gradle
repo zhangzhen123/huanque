@@ -43,6 +43,20 @@ android {
         buildConfigField "String", "SERVICE_BASE_URL_PRODUCT", "\"${api.BASE_URL_PRODUCT}\""
         //测试地址
         buildConfigField "String", "SERVICE_BASE_URL_DEV", "\"${api.BASE_URL_DEV}\""
+        manifestPlaceholders = [
+                packagename       : rootProject.ext.packageType,
+                HUAWEI_APPID      : "appid=100210995",// 华为平台注册的appid
+
+                XIAOMI_APPKEY     : "MI-5661755253832", // 小米平台注册的appkey
+                XIAOMI_APPID      : "MI-2882303761517552832", // 小米平台注册的appid
+
+                OPPO_APPKEY       : "OP-2f73y9a5s36s04kc444KKO4gw", // OPPO平台注册的appkey
+                OPPO_APPID        : "OP-3547263", // OPPO平台注册的appid
+                OPPO_APPSECRET    : "OP-bB0Acd0bF72AA7081c0205bCc0a3656F",//OPPO平台注册的appsecret
+
+                VIVO_APPKEY       : "34ee4684-4c43-4e9b-ad71-1acef6d8382a", // VIVO平台注册的appkey
+                VIVO_APPID        : "12656", // VIVO平台注册的appid
+        ]
 
         ndk {
             abiFilters 'armeabi-v7a'
@@ -58,7 +72,22 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [
+                    JPUSH_PKGNAME: rootProject.ext.packageType,
+                    JPUSH_APPKEY : "${sdk.JPUSH_KEY_HQ}",
+                    JPUSH_CHANNEL: "developer-default",
+            ]
         }
+        debug {
+            minifyEnabled false
+            manifestPlaceholders = [
+                    JPUSH_PKGNAME: rootProject.ext.packageType,
+                    JPUSH_APPKEY : "${sdk.JPUSH_KEY_TEST_HQ}",
+                    JPUSH_CHANNEL: "developer-default"
+            ]
+            println("buildTypes debug 我已执行")
+        }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -77,13 +106,14 @@ dependencies {
     implementation project(path: ':cockroach')
     implementation project(path: ':message')
     implementation project(path: ':agora')
+    implementation project(':jpushlib')
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
     implementation rootProject.ext.dependencies["BUGLY_CRASHREPORT"]
     implementation rootProject.ext.dependencies["BUGLY_NATIVECRASHREPORT"]
     implementation rootProject.ext.dependencies["LOTTIE"]
     implementation files('libs/smantifraud.aar')
     implementation 'com.jakewharton:process-phoenix:2.0.0'
-    implementation 'cn.jiguang.sdk:jverification:2.6.4'
-    implementation 'cn.jiguang.sdk:jcore:2.3.4'
+//    implementation 'cn.jiguang.sdk:jverification:2.6.4'
+//    implementation 'cn.jiguang.sdk:jcore:2.3.4'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
 }

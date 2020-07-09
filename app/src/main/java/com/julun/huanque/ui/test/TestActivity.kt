@@ -15,7 +15,9 @@ import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.jpushlib.TagAliasOperatorHelper
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnManager
 import com.luck.picture.lib.PictureSelector
@@ -76,6 +78,15 @@ class TestActivity : BaseActivity() {
         }
         goto_photo.onClickNew {
             goToPictureSelectPager(5)
+        }
+        set_push.onClickNew {
+            val userId = SessionUtils.getUserId().toString()
+            logger.info("jpush userId=$userId")
+            val tagAliasBean = TagAliasOperatorHelper.TagAliasBean()
+            tagAliasBean.action = TagAliasOperatorHelper.ACTION_SET
+            tagAliasBean.isAliasAction = true
+            tagAliasBean.alias = userId
+            TagAliasOperatorHelper.getInstance().handleAction(tagAliasBean)
         }
 
     }

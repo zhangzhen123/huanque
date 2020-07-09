@@ -57,36 +57,15 @@
         <activity android:name=".ui.test.TestActivity" />
 
 
-        <!-- since 2.0.0 optional 可选项，使用一键登录功能必须添加  -->
-        <!-- since 2.1.1 optional 可选项，通过screenOrientation设置授权页面横竖屏展示  -->
-        <activity
-            android:name="com.cmic.sso.sdk.activity.OAuthActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop">
-        </activity>
-        <!-- since 2.0.0 optional 可选项，使用一键登录功能必须添加  -->
-        <!-- since 2.1.1 optional 可选项，通过screenOrientation设置授权页面横竖屏展示  -->
-        <activity
-            android:name="com.cmic.sso.sdk.activity.LoginAuthActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop">
-        </activity>
-        <!-- since 2.0.0 optional 可选项，使用一键登录功能必须添加  -->
-        <!-- since 2.1.1 optional 可选项，通过screenOrientation设置授权页面横竖屏展示  -->
-        <activity android:name="cn.jiguang.verifysdk.CtLoginActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop">
-        </activity>
 
-
-        <meta-data
-            android:name="JPUSH_CHANNEL"
-            android:value="developer-default"
-            tools:replace="android:value" />
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="79e280b3b945c631a53c54d3"
-            tools:replace="android:value" /> <!-- </>值来自开发者平台取得的AppKey -->
+<!--        <meta-data-->
+<!--            android:name="JPUSH_CHANNEL"-->
+<!--            android:value="developer-default"-->
+<!--            tools:replace="android:value" />-->
+<!--        <meta-data-->
+<!--            android:name="JPUSH_APPKEY"-->
+<!--            android:value="79e280b3b945c631a53c54d3"-->
+<!--            tools:replace="android:value" /> &lt;!&ndash; </>值来自开发者平台取得的AppKey &ndash;&gt;-->
     </application>
 
 </manifest>

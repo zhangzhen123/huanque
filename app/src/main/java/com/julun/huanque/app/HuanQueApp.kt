@@ -20,6 +20,7 @@ import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.core.init.HuanQueInit
 import com.julun.huanque.ui.cockroach.DebugSafeModeTipActivity
+import com.julun.jpushlib.TagAliasOperatorHelper
 import com.tencent.bugly.crashreport.CrashReport
 import com.wanjian.cockroach.Cockroach
 import com.wanjian.cockroach.CrashLog
@@ -47,6 +48,7 @@ open class HuanQueApp : Application() {
             initBugly(this)
             //初始化声网
             AgoraManager.initAgora(this)
+            TagAliasOperatorHelper.getInstance().init(this)
             /*一键登录相关*/
             JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
             JVerificationInterface.init(this)
