@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="5dp" />
+            <solid android:color="@color/bg_private_chat" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/white" />
+        </shape>
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <scale android:scaleWidth="100%">
+            <shape>
+                <gradient
+                    android:angle="0"
+                    android:endColor="#FFEA00"
+                    android:startColor="#FFBA00" />
+                <stroke
+                    android:width="1dp"
+                    android:color="@color/transparent" />
+                <corners android:radius="5dp" />
+            </shape>
+        </scale>
+    </item>
+
+    <item android:id="@android:id/progress">
+        <!--
+         <clip>
+         <shape>
+               <corners android:topRightRadius="20dp"
+                    android:bottomRightRadius="20dp"/>
+               <solid android:color="#FF009898"/>
+        </shape>
+        </clip>
+       -->
+        <scale android:scaleWidth="100%">
+            <shape>
+                <gradient
+                    android:angle="0"
+                    android:endColor="#FFEA00"
+                    android:startColor="#FFBA00" />
+                <stroke
+                    android:width="1dp"
+                    android:color="@color/transparent" />
+                <corners android:radius="5dp" />
+            </shape>
+        </scale>
+    </item>
+</layer-list>

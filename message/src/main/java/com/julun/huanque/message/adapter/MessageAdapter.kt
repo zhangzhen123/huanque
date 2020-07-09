@@ -1,5 +1,7 @@
 package com.julun.huanque.message.adapter
 
+import android.net.Uri
+import android.provider.MediaStore.Images.Media.getBitmap
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -22,6 +24,7 @@ import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import org.jetbrains.anko.bottomPadding
 import java.io.File
+
 
 /**
  *@创建者   dong
@@ -99,25 +102,26 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             if (helper.itemViewType == MINE) {
 //                helper.addOnClickListener(R.id.sdv_header)
             }
-            val ivSendFail = helper.getView<ImageView>(R.id.iv_send_fail)
-            val sendProgress = helper.getView<ProgressBar>(R.id.send_progress)
-            when (item.sentStatus) {
-                Message.SentStatus.FAILED -> {
-                    //发送失败
-                    ivSendFail.show()
-                    sendProgress.hide()
-                }
-                Message.SentStatus.SENDING -> {
-                    //发送中
-                    ivSendFail.hide()
-                    sendProgress.show()
-                }
-                Message.SentStatus.SENT -> {
-                    //已发送
-                    ivSendFail.hide()
-                    sendProgress.hide()
-                }
-            }
+            //todo 发送状态先关闭(发送中和重试状态)
+//            val ivSendFail = helper.getView<ImageView>(R.id.iv_send_fail)
+//            val sendProgress = helper.getView<ProgressBar>(R.id.send_progress)
+//            when (item.sentStatus) {
+//                Message.SentStatus.FAILED -> {
+//                    //发送失败
+//                    ivSendFail.show()
+//                    sendProgress.hide()
+//                }
+//                Message.SentStatus.SENDING -> {
+//                    //发送中
+//                    ivSendFail.hide()
+//                    sendProgress.show()
+//                }
+//                Message.SentStatus.SENT -> {
+//                    //已发送
+//                    ivSendFail.hide()
+//                    sendProgress.hide()
+//                }
+//            }
             //显示本人头像
             ImageUtils.loadImage(helper.getView(R.id.sdv_header), SessionUtils.getHeaderPic(), 40f, 40f)
         }
@@ -144,15 +148,15 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 }
             } else {
                 //发送方查看图片
-                val file = File("${content.localUri}")
+                val file = File("${content.thumUri?.path}")
                 if (file.exists()) {
                     //图片存在，显示本地图片
-                    ImageUtils.loadNativeFilePath(helper.getView(R.id.sdv_image), "${content.localUri}", 100f, 100f)
+                    ImageUtils.loadNativeFilePath(helper.getView(R.id.sdv_image), "${content.thumUri?.path}", 100f, 100f)
                 } else {
                     //图片不存在，显示远程图片
                     ImageUtils.loadImage(helper.getView(R.id.sdv_image), "${content.remoteUri}", 100f, 100f)
                 }
-                logger("DXC remoteUri = ${content.remoteUri}，localUri = ${content.localUri},localPath = ${content.localPath} ,thumUri = ${content.thumUri} ,exists = ${file.exists()}")
+//                logger("DXC  exists = ${file.exists()} , remoteUri = ${content.remoteUri},content.thumUri.path = ${content.thumUri?.path},thumUri = ${content.thumUri}")
             }
 
         }
@@ -268,5 +272,45 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
     }
 
+//    fun setResource(imageUri: Uri?) {
+//        val options: DisplayImageOptions = createDisplayImageOptions(0, true)
+//        if (imageUri != null) {
+//            val file = File(imageUri.getPath())
+//            if (!file.exists()) {
+//                val imageViewAware = ImageViewAware(this)
+//                ImageLoader.getInstance().displayImage(imageUri.toString(), imageViewAware, options, null, null)
+//            } else {
+//                val bitmap: Bitmap? = getBitmap(imageUri)
+//                if (bitmap != null) {
+//                    setLayoutParam(bitmap)
+//                    setImageBitmap(bitmap)
+//                } else {
+//                    setImageBitmap(null)
+//                    val params: ViewGroup.LayoutParams = getLayoutParams()
+//                    params.height = RongUtils.dip2px(80)
+//                    params.width = RongUtils.dip2px(110)
+//                    setLayoutParams(params)
+//                }
+//            }
+//        }
+//    }
+
+//    fun setResource(imageUri: Uri?) {
+//        val options: DisplayImageOptions = createDisplayImageOptions(0, true)
+//        if (imageUri != null) {
+//            val file = File(imageUri.path)
+//            val bitmap: Bitmap? = getBitmap(imageUri)
+//            if (bitmap != null) {
+//                setLayoutParam(bitmap)
+//                setImageBitmap(bitmap)
+//            } else {
+//                setImageBitmap(null)
+//                val params: ViewGroup.LayoutParams = getLayoutParams()
+//                params.height = RongUtils.dip2px(80)
+//                params.width = RongUtils.dip2px(110)
+//                setLayoutParams(params)
+//            }
+//        }
+//    }
 
 }
