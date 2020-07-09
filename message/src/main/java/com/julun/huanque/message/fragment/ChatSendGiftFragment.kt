@@ -9,7 +9,7 @@ import com.julun.huanque.message.R
  *@描述 聊天页面 送礼对象
  */
 class ChatSendGiftFragment : BaseDialogFragment() {
-    override fun getLayoutId() = R.layout.fragment_meet_detail
+    override fun getLayoutId() = R.layout.fragment_chat_send_gift
 
     override fun initViews() {
     }
