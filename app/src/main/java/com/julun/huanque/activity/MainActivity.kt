@@ -8,14 +8,19 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.location.BDAbstractLocationListener
 import com.baidu.location.BDLocation
 import com.julun.huanque.R
 import com.julun.huanque.app.HuanQueApp
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.beans.NetCallReceiveBean
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ConmmunicationUserType
+import com.julun.huanque.common.constant.ParamKey
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -53,6 +58,7 @@ class MainActivity : BaseActivity() {
 
     //封装百度地图相关的Service
     private lateinit var mLocationService: LocationService
+
     //百度地图监听的Listener
     private var mLocationListener = object : BDAbstractLocationListener() {
         override fun onReceiveLocation(location: BDLocation?) {
@@ -85,8 +91,10 @@ class MainActivity : BaseActivity() {
 //                            this?.setIgnoreKillProcess(false)
         })
 
+        registerMessage()
 
     }
+
     /**
      * 停止定位
      */
@@ -94,6 +102,7 @@ class MainActivity : BaseActivity() {
         mLocationService.stop()
         mLocationService.unregisterListener(mLocationListener)
     }
+
     override fun onStart() {
         super.onStart()
         mLocationService.start()
@@ -274,4 +283,15 @@ class MainActivity : BaseActivity() {
             finish()
         }
     }
+
+    private fun registerMessage() {
+        MessageProcessor.clearProcessors(true)
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallReceiveProcessor {
+            override fun process(data: NetCallReceiveBean) {
+                mMainViewModel?.getVoiceCallInfo(data.callId)
+            }
+        })
+
+    }
+
 }

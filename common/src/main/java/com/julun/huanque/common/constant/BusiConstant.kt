@@ -20,7 +20,22 @@ object BusiConstant {
     //系统通知栏回调
     var NOTIFICATION_REQUEST_CODE = 300
 
-    const val WEB_URL="web_url"
+    const val WEB_URL = "web_url"
+}
+
+/**
+ * 参数key
+ */
+object ParamKey {
+    //type
+    const val TYPE = "TYPE"
+
+    //USER
+    const val USER = "USER"
+
+    //语音会话被叫key
+    const val CallReceiveBean = "CallReceiveBean"
+
 }
 
 /**
@@ -313,4 +328,26 @@ object ContactsTabType {
 
     //好友
     const val Friend = "Friend"
+}
+
+/**
+ * 会话用户类型（主叫还是被叫）
+ */
+object ConmmunicationUserType {
+    //主叫
+    const val CALLING = "CALLING"
+
+    //被叫
+    const val CALLED = "CALLED"
+}
+
+/**
+ * 取消类型
+ */
+object CancelType {
+    //手动取消
+    const val Normal = "Normal"
+
+    //超时
+    const val Timeout = "Timeout"
 }

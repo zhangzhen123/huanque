@@ -15,9 +15,12 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ConmmunicationUserType
+import com.julun.huanque.common.constant.ParamKey
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
@@ -180,9 +183,16 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_phone.onClickNew {
             //跳转语音通话页面
-            val bundle = Bundle()
-//            bundle.putSerializable("USER",mPrivateConversationViewModel?.chatInfoData?.value ?: return@onClickNew)
-//            ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).bun
+            MyAlertDialog(this).showAlertWithOKAndCancel(
+                "语音通话100鹊币/分钟",
+                MyAlertDialog.MyDialogCallback(onRight = {
+                    //发起通话
+                    val bundle = Bundle()
+                    bundle.putString(ParamKey.TYPE,ConmmunicationUserType.CALLING)
+                    bundle.putSerializable(ParamKey.USER, mPrivateConversationViewModel?.chatInfoData?.value ?: return@MyDialogCallback)
+                    ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
+                }), "语音通话费用", "发起通话"
+            )
         }
 
     }
@@ -376,7 +386,7 @@ class PrivateConversationActivity : BaseActivity() {
     private fun checkPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions
-            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             .subscribe { permission ->
                 when {
                     permission.granted -> {

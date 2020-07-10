@@ -2,6 +2,7 @@ package com.julun.huanque.common.bean.beans
 
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.julun.huanque.common.basic.RootListData
+import java.io.Serializable
 
 class HomeItemBean(var showType: Int, var content: Any) : MultiItemEntity {
     companion object {
@@ -79,7 +80,7 @@ data class HomeRecomItem(
     var introduceVoice: String = "",
     var introduceVoiceLength: Int = 0,
     var anchor: Boolean = false,
-    var authMark:String="",
+    var authMark: String = "",
     var living: Boolean = false,
     var mySign: String = "",
     var nickname: String = "",
@@ -89,6 +90,7 @@ data class HomeRecomItem(
 ) {
     //本地字段 保留音频播放状态
     var isPlay: Boolean = false
+
     //本地字段 保存当前的播放进度
     var currentPlayProcess: Int = introduceVoiceLength
     override fun toString(): String {
@@ -96,3 +98,14 @@ data class HomeRecomItem(
     }
 
 }
+
+/**
+ * 邀请语音消息
+ */
+data class NetCallReceiveBean(var callId: Long = 0, var userIds: LongArray = longArrayOf()) : Serializable
+
+/**
+ * 语音通话开始消息
+ */
+data class NetCallAcceptBean(var callId: Long = 0, var startTime: Long = 0, var billUserId: Long = 0, var userIds: LongArray = longArrayOf()) :
+    Serializable

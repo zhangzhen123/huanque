@@ -1,5 +1,6 @@
 package com.julun.huanque.common.bean.beans
 
+import com.julun.huanque.common.bean.ChatUser
 import java.io.Serializable
 
 /**
@@ -116,5 +117,21 @@ class ConversationBasicBean(
     //与对方欢遇标识
     var meetStatus: String = "",
     //私信费用
-    var msgFee: Int = 0
+    var msgFee: Int = 0,
+    //语音费用
+    var voiceFee: Int = 0
 )
+
+/**
+ * 会话详情bean
+ */
+class NetcallBean(
+    var callId: Long = 0,
+    //创建人数据
+    var callerInfo: ChatUserBean = ChatUserBean(),
+    //接收人数据
+    var receiverInfo: ChatUserBean = ChatUserBean(),
+    var channelId: String = "",
+    var token: String = ""
+) :
+    Serializable
