@@ -189,7 +189,7 @@ class PrivateConversationActivity : BaseActivity() {
             if (!dialogShow) {
                 //未显示过价格弹窗，显示弹窗
                 MyAlertDialog(this).showAlertWithOKAndCancel(
-                    "语音通话100鹊币/分钟",
+                    "语音通话${mPrivateConversationViewModel?.basicBean?.value?.voiceFee}鹊币/分钟",
                     MyAlertDialog.MyDialogCallback(onRight = {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
                         judgeBalance()
@@ -207,6 +207,21 @@ class PrivateConversationActivity : BaseActivity() {
      */
     private fun judgeBalance() {
         //发起通话
+        //余额
+        val balance = mPrivateConversationViewModel?.balance?.value ?: 0
+        //单价
+        val price = mPrivateConversationViewModel?.basicBean?.value?.voiceFee ?: 0
+
+        if (balance < price) {
+            //余额不足,显示余额不足弹窗
+            MyAlertDialog(this).showAlertWithOK(
+                "您的鹊币余额不足",
+                MyAlertDialog.MyDialogCallback(onRight = {
+                    //todo 跳转充值页面
+                }), "余额不足", "去充值"
+            )
+            return
+        }
 
         val bundle = Bundle()
         bundle.putString(ParamKey.TYPE, ConmmunicationUserType.CALLING)

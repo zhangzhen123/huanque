@@ -330,7 +330,11 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             channelId,
             null,
             SessionUtils.getUserId().toInt()
-        ) // if you do not specify the uid, we will generate the uid for you
+        )
+        if (result != 0) {
+            //joinchannel失败
+            mVoiceChatViewModel?.hangUpVoice()
+        }
         logger.info("$TAG joinResult = $result")
     }
 
