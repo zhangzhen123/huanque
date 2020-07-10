@@ -86,7 +86,7 @@ class FillInformationViewModel : BaseViewModel() {
     /**
      * 模拟图片上传成功
      */
-    fun headerSuccess(headerPic : String) {
+    fun headerSuccess(headerPic: String) {
         SessionUtils.setHeaderPic(headerPic)
         SessionUtils.setRegComplete(true)
     }
@@ -102,8 +102,12 @@ class FillInformationViewModel : BaseViewModel() {
                 if (headPic != null) {
                     viewModelScope.launch {
                         request({
-                            userService.updateHeadPic(UpdateHeadForm(headPic))
+                            val result = userService.updateHeadPic(UpdateHeadForm(headPic)).dataConvert()
+                            if (result.imToken.isNotEmpty()) {
+                                SessionUtils.setRongImToken(result.imToken)
+                            }
                             logger("头像修改通知后台成功：${list}")
+
                             headerSuccess(headPic)
                             uploadHeadState.value = headPic
                         }, error = {

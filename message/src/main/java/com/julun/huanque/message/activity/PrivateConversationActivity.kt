@@ -11,11 +11,13 @@ import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.EventMessageBean
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
@@ -175,6 +177,14 @@ class PrivateConversationActivity : BaseActivity() {
             mIntimateDetailFragment = mIntimateDetailFragment ?: IntimateDetailFragment.newInstance()
             mIntimateDetailFragment?.show(supportFragmentManager, "MeetDetailFragment")
         }
+
+        iv_phone.onClickNew {
+            //跳转语音通话页面
+            val bundle = Bundle()
+//            bundle.putSerializable("USER",mPrivateConversationViewModel?.chatInfoData?.value ?: return@onClickNew)
+//            ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).bun
+        }
+
     }
 
     /**

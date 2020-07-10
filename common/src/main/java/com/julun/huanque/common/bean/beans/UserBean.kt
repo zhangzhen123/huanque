@@ -1,5 +1,7 @@
 package com.julun.huanque.common.bean.beans
 
+import java.io.Serializable
+
 /**
  *@创建者   dong
  *@创建时间 2020/7/6 16:08
@@ -97,7 +99,7 @@ class ChatUserBean(
     var headPic: String = "",
     var meetStatus: String = "",
     var nickname: String = ""
-)
+) : Serializable
 
 /**
  * 会话详情页面基础信息
