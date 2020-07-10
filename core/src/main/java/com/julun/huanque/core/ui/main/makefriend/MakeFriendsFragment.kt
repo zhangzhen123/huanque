@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.julun.huanque.common.base.BaseViewModelFragment
+import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
@@ -27,7 +27,7 @@ import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.fragment_make_friend.*
 
 
-class MakeFriendsFragment : BaseViewModelFragment<MakeFriendsViewModel>() {
+class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
     companion object {
         fun newInstance() = MakeFriendsFragment()

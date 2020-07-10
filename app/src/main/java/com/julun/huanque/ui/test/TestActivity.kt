@@ -15,8 +15,10 @@ import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.jpushlib.TagAliasOperatorHelper
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnManager
@@ -88,6 +90,12 @@ class TestActivity : BaseActivity() {
             tagAliasBean.alias = userId
             TagAliasOperatorHelper.getInstance().handleAction(tagAliasBean)
         }
+
+        open_gift.onClickNew {
+            val gift=ChatSendGiftFragment()
+            gift.show(this,"ChatSendGiftFragment")
+        }
+
 
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

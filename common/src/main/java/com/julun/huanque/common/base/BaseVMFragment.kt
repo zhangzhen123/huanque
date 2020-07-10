@@ -15,11 +15,11 @@ import com.julun.huanque.common.utils.CommonUtil
  *
  *@Date: 2020/7/1 10:09
  *
- *@Description: BaseViewModelFragment 封装一个方便网络状态管理的Fragment基类 包含一个自己专有的ViewModel
+ *@Description: BaseVMFragment 封装一个方便网络状态管理的Fragment基类 包含一个自己专有的ViewModel
  * 支持懒加载
  *
  */
-abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
+abstract class BaseVMFragment<VM : BaseViewModel> : BaseFragment() {
 
     private var mHasLoadedOnce: Boolean = false//判断是不是第一次加载
     protected lateinit var mViewModel: VM

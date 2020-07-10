@@ -167,8 +167,8 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
      */
     protected fun setDialogSize(
         gravity: Int = Gravity.BOTTOM,
-        width: Int = 0,
-        height: Int = 0,
+        width: Int = ViewGroup.LayoutParams.WRAP_CONTENT ,
+        height: Int = ViewGroup.LayoutParams.WRAP_CONTENT ,
         padding: Int = 0
     ) {
         val window = dialog?.window ?: return

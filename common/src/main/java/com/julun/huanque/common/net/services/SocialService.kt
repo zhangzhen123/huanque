@@ -2,6 +2,7 @@ package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidResult
+import com.julun.huanque.common.bean.beans.ChatGiftInfo
 import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.bean.beans.ConversationBasicBean
 import com.julun.huanque.common.bean.beans.SocialListBean
@@ -40,4 +41,10 @@ interface SocialService {
      */
     @POST("social/friend/chat/basic")
     suspend fun chatBasic(@Body form : FriendIdForm) : Root<ConversationBasicBean>
+
+    /**
+     * 好友聊天礼物列表
+     */
+    @POST("social/friend/chat/giftsInfo")
+    suspend fun giftsInfo(@Body form : EmptyForm = EmptyForm()) : Root<ChatGiftInfo>
 }
