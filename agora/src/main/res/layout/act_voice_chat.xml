@@ -68,12 +68,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/ll_close"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@mipmap/icon_quiet" />
+            android:src="@drawable/sel_quiet" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -124,12 +124,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/ll_close"
         app:layout_constraintRight_toLeftOf="@id/ll_voice_accept"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@mipmap/icon_hands_fee" />
+            android:src="@drawable/sel_hands_fee" />
 
         <TextView
             android:layout_width="wrap_content"

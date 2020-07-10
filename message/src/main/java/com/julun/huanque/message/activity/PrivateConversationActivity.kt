@@ -156,6 +156,7 @@ class PrivateConversationActivity : BaseActivity() {
             mIntimateDetailViewModel?.basicBean?.value = it
         })
 
+        mPrivateConversationViewModel?.balance?.observe(this, Observer { })
     }
 
     override fun initEvents(rootView: View) {
@@ -199,6 +200,8 @@ class PrivateConversationActivity : BaseActivity() {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
                     }), "语音通话费用", "发起通话"
                 )
+            } else {
+                judgeBalance()
             }
 
         }

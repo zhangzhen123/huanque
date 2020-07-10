@@ -155,6 +155,20 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             checkPermissions()
         }
 
+        ll_hands_free.onClickNew {
+            //免提
+            ll_hands_free.isSelected = !ll_hands_free.isSelected
+            AgoraManager.mRtcEngine?.setEnableSpeakerphone(ll_hands_free.isSelected)
+        }
+        ll_quiet.onClickNew {
+            //静音
+            ll_quiet.isSelected = !ll_quiet.isSelected
+            val volume = if (ll_quiet.isSelected) 0 else 100
+            AgoraManager.mRtcEngine?.adjustPlaybackSignalVolume(volume)
+            AgoraManager.mRtcEngine?.adjustAudioMixingPlayoutVolume(volume)
+        }
+
+        //adjustRecordingSignalVolume()
         ll_close.onClickNew {
             //挂断会话
 //            if (mType == ConmmunicationUserType.CALLING) {
@@ -324,6 +338,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         //设置为主播身份
         AgoraManager.mRtcEngine?.setClientRole(Constants.CLIENT_ROLE_BROADCASTER)
         AgoraManager.mRtcEngine?.enableAudio()
+        AgoraManager.mRtcEngine?.setDefaultAudioRoutetoSpeakerphone(false)
+        //默认听筒
         // Allows a user to join a channel.
         val result = AgoraManager.mRtcEngine?.joinChannel(
             accessToken,
