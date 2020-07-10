@@ -21,9 +21,9 @@ class JulunRequestHeaderWrapInterceptor : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
 
-        if (!NetUtils.isNetConnected()) {
-            ToastUtils.show(CommonInit.getInstance().getApp().resources.getString(R.string.network_not_available))
-        }
+//        if (!NetUtils.isNetConnected()) {
+//            ToastUtils.show(CommonInit.getInstance().getApp().resources.getString(R.string.network_not_available))
+//        }
         //new request
         var request: Request = chain.request()
         val body = request.body()

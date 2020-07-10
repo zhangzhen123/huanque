@@ -117,11 +117,11 @@ fun <T> BaseViewModel.requestRx(
     )
 }
 
-fun Throwable.errorMsg(): String {
+fun Throwable.coverError(): ResponseError {
     return if (this is ResponseError) {
-        this.busiMessage
+        this
     } else {
-        "网络错误了"
+        ResponseError (OTHER_DEF_ERROR,"异常错误")
     }
 }
 

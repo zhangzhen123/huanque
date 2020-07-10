@@ -23,7 +23,7 @@
         android:textSize="@dimen/small1_size" />
 
     <TextView
-        android:id="@+id/tv_other"
+        android:id="@+id/tv_empty_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_20"

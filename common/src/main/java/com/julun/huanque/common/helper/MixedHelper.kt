@@ -100,14 +100,14 @@ object MixedHelper {
 
         val mErrorView: View = LayoutInflater.from(ctx).inflate(R.layout.layout_network_unable, null)
         mErrorView.setBackgroundResource(R.color.transparent)
-        val text: TextView = mErrorView.findViewById(R.id.emptyText) as TextView
+        val text: TextView = mErrorView.findViewById(R.id.no_network_Text) as TextView
         if (!TextUtils.isEmpty(msg)) {
             text.text = msg
         } else {
             text.text = ctx.resources.getString(R.string.load_error)
         }
 
-        val reload: TextView = mErrorView.findViewById(R.id.tv_reload) as TextView
+        val reload: TextView = mErrorView.findViewById(R.id.tv_error_reload) as TextView
         reload.setOnClickListener(onClick)
         return mErrorView
     }

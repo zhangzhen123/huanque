@@ -2,12 +2,10 @@ package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidResult
-import com.julun.huanque.common.bean.beans.ChatGiftInfo
-import com.julun.huanque.common.bean.beans.ChatUserBean
-import com.julun.huanque.common.bean.beans.ConversationBasicBean
-import com.julun.huanque.common.bean.beans.SocialListBean
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.EmptyForm
 import com.julun.huanque.common.bean.forms.FriendIdForm
+import com.julun.huanque.common.bean.forms.SendChatGiftForm
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -47,4 +45,11 @@ interface SocialService {
      */
     @POST("social/friend/chat/giftsInfo")
     suspend fun giftsInfo(@Body form : EmptyForm = EmptyForm()) : Root<ChatGiftInfo>
+
+    /**
+     * 好友聊天赠送礼物
+     */
+    @POST("social/friend/chat/sendGift")
+    suspend fun sendGift(@Body form : SendChatGiftForm) : Root<ChatSendResult>
+
 }

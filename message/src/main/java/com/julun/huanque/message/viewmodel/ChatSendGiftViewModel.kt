@@ -1,18 +1,21 @@
 package com.julun.huanque.message.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.*
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.ChatGiftInfo
 import com.julun.huanque.common.bean.beans.ChatGroupGift
+import com.julun.huanque.common.bean.beans.ChatSendResult
+import com.julun.huanque.common.bean.forms.SendChatGiftForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  *
@@ -25,8 +28,9 @@ import com.julun.huanque.common.suger.*
  */
 class ChatSendGiftViewModel : BaseViewModel() {
     private val service: SocialService by lazy { Requests.create(SocialService::class.java) }
+
     //礼物分页数目
-    private val pageLimit=8
+    private val pageLimit = 8
     val giftList: LiveData<ReactiveData<ChatGiftInfo>> = queryState.switchMap { type ->
         liveData {
 
@@ -39,7 +43,7 @@ class ChatSendGiftViewModel : BaseViewModel() {
                 emit(ReactiveData(NetStateType.SUCCESS, homeListData))
             }, error = { e ->
                 logger("报错了：$e")
-                emit(ReactiveData(NetStateType.ERROR, error = e.errorMsg()))
+                emit(ReactiveData(NetStateType.ERROR, error = e.coverError()))
             }, final = {
                 logger("最终返回")
             }, needLoadState = type == QueryType.INIT)
@@ -48,5 +52,20 @@ class ChatSendGiftViewModel : BaseViewModel() {
 
     }
 
+    val sendResult: MutableLiveData<ReactiveData<ChatSendResult>> = MutableLiveData()
+    fun sendGift(friendId: Long, chatGiftId: Int, count: Int = 1) {
+        viewModelScope.launch {
+            request({
+                val result = service.sendGift(SendChatGiftForm(friendId, chatGiftId, count)).dataConvert()
+                sendResult.value = ReactiveData(state = NetStateType.SUCCESS, data = result)
+            }, error = {
+                logger("赠送的结果 报错=${Thread.currentThread().name}")
+                sendResult.value = ReactiveData(state = NetStateType.ERROR, error = it.coverError())
+            })
+
+
+        }
+
+    }
 
 }

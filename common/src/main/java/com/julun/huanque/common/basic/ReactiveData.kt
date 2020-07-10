@@ -14,10 +14,10 @@ import java.lang.Exception
 open class ReactiveData<T>(
     var state: NetStateType = NetStateType.IDLE,
     private var data: T? = null,
-    var error: String = ""
+    var error: ResponseError?=null
 ) {
     fun getT(): T {
-        return data ?: throw Exception("只有在成功状态才有数据 请检测请求时机")
+        return data ?: throw Exception("只有在成功状态才有数据 请检测调用时机")
     }
 }
 

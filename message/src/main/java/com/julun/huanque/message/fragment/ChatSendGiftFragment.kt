@@ -1,9 +1,11 @@
 package com.julun.huanque.message.fragment
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,14 +20,15 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.ChatGiftInfo
 import com.julun.huanque.common.bean.beans.ChatGroupGift
-import com.julun.huanque.common.helper.DensityHelper.Companion.dp2px
+import com.julun.huanque.common.bean.beans.ChatSendResult
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
-import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.message.R
 import com.julun.huanque.message.viewmodel.ChatSendGiftViewModel
-import com.rd.utils.DensityUtils
+import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import kotlinx.android.synthetic.main.fragment_chat_send_gift.*
 import org.jetbrains.anko.imageResource
 
@@ -39,12 +42,20 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
 
     private var currentPagePosition: Int = 0
     private var currentSelectGift: ChatGift? = null
+
+    //记录
+    private var currentGiftAdapter: ChatGiftListAdapter? = null
+    private val mPrivateConversationViewModel: PrivateConversationViewModel by activityViewModels()
     override fun getLayoutId() = R.layout.fragment_chat_send_gift
 
     override fun initViews() {
 
         view_pager.adapter = viewPagerAdapter
         view_pager.registerOnPageChangeCallback(viewPagerChangeListener)
+
+        tv_send.onClickNew {
+            sendGift()
+        }
         initViewModel()
         mViewModel.queryInfo()
     }
@@ -63,8 +74,23 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
                 //dodo
             }
         })
+        mViewModel.sendResult.observe(viewLifecycleOwner, Observer {
+            //
+            tv_send.isEnabled = true
+            logger.info("赠送返回=${it.state}")
+            if (it.state == NetStateType.SUCCESS) {
+                refreshSendResult(it.getT())
+            } else if (it.state == NetStateType.ERROR) {
+                //dodo
+                ToastUtils.show(it.error?.busiMessage ?: return@Observer)
+            }
+        })
 
 
+    }
+
+    private fun refreshSendResult(balance: ChatSendResult) {
+        tv_balance.text = "${balance.beans}"
     }
 
     private fun loadData(info: ChatGiftInfo) {
@@ -77,16 +103,17 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
     override fun showLoadState(state: NetState) {
         when (state.state) {
             NetStateType.SUCCESS -> {//showSuccess()
+                state_pager_view.showSuccess()
             }
             NetStateType.LOADING -> {//showLoading()
-
+                state_pager_view.showLoading()
             }
-            NetStateType.ERROR -> {
-
+            NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
+                state_pager_view.showError(showBtn = true, btnClick = View.OnClickListener {
+                    mViewModel.queryInfo()
+                })
             }
-            NetStateType.NETWORK_ERROR -> {
 
-            }
         }
 
     }
@@ -117,6 +144,23 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
         }
     }
 
+    private fun sendGift() {
+        logger.info("点击了赠送")
+        val targetId = mPrivateConversationViewModel.targetIdData.value
+        if (currentSelectGift == null) {
+            ToastUtils.show("请先选择礼物再赠送")
+            return
+        }
+        if(targetId==null){
+            ToastUtils.show("没有可赠送目标")
+            return
+        }
+        val giftId: Int = currentSelectGift?.chatGiftId ?: return
+
+        mViewModel.sendGift(targetId, giftId)
+        tv_send.isEnabled = false
+    }
+
     //设置一个公共的缓存池 提高效率
     private val mGiftViewPool: RecyclerView.RecycledViewPool by lazy {
         RecyclerView.RecycledViewPool()
@@ -131,10 +175,13 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
                     rv.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(12)))
                 }
                 rv.setRecycledViewPool(mGiftViewPool)
-                val adapter=ChatGiftListAdapter(item.gifts)
+                val adapter = ChatGiftListAdapter(item.gifts)
                 rv.adapter = adapter
                 adapter.setOnItemClickListener { _, _, position ->
-                    currentSelectGift=adapter.getItemOrNull(position)
+                    currentSelectGift = adapter.getItemOrNull(position)
+                    adapter.notifyDataSetChanged()
+                    currentGiftAdapter?.notifyDataSetChanged()
+                    currentGiftAdapter = adapter
                 }
 
             }
@@ -153,11 +200,6 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
 
             override fun onPageSelected(position: Int) {
                 logger.info("onPageSelected=$position")
-                //点亮小圆点
-//                lightPositionDots(position)
-                val view: RecyclerView? = view_pager.getChildAt(position) as? RecyclerView
-                val currentGiftAdapter = view?.adapter as? ChatGiftListAdapter
-                //
                 currentPagePosition = position
                 lightPositionDots(position)
             }

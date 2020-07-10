@@ -34,6 +34,7 @@ import com.julun.huanque.common.widgets.emotion.EmotionPagerView
 import com.julun.huanque.common.widgets.emotion.Emotions
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
+import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.message.fragment.IntimateDetailFragment
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
@@ -76,6 +77,7 @@ class PrivateConversationActivity : BaseActivity() {
 
     private var mLinearLayoutManager: LinearLayoutManager? = null
 
+    private var mChatSendGiftFragment:ChatSendGiftFragment?=null
     /**
      * 欢遇弹窗
      */
@@ -184,7 +186,11 @@ class PrivateConversationActivity : BaseActivity() {
 //            bundle.putSerializable("USER",mPrivateConversationViewModel?.chatInfoData?.value ?: return@onClickNew)
 //            ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).bun
         }
+        iv_gift.onClickNew {
+            mChatSendGiftFragment=mChatSendGiftFragment?: ChatSendGiftFragment()
 
+            mChatSendGiftFragment?.show(this,"ChatSendGiftFragment")
+        }
     }
 
     /**

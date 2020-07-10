@@ -30,7 +30,7 @@ import java.util.*
 
 private const val MSG_DATA_FAILURE = "未能正确的获取数据"
 private const val REQUEST_RETURN_TYPE_DEF_ERROR = -200
-
+const val OTHER_DEF_ERROR = -100//其他错误各种报错异常
 //给各个 接口添加扩展方法
 private fun <T> Observable<Root<T>>.afterRequest(intArray: IntArray? = null): Observable<T> = this.map {
     return@map mapper(it, intArray)

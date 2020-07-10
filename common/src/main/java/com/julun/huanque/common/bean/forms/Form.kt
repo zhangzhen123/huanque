@@ -10,3 +10,5 @@ package com.julun.huanque.common.bean.forms
 class EmptyForm()
 
 class FriendIdForm(var friendId : Long)
+
+class SendChatGiftForm(var friendId : Long,var chatGiftId:Int,var count:Int)

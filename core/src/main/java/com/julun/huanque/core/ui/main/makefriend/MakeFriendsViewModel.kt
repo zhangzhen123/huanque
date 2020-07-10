@@ -13,10 +13,7 @@ import com.julun.huanque.common.bean.forms.RecomListForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.HomeService
-import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.errorMsg
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.suger.*
 
 /**
  *
@@ -99,7 +96,7 @@ class MakeFriendsViewModel : BaseViewModel() {
                 emit(ReactiveData(NetStateType.SUCCESS, rList))
             }, error = { e ->
                 logger("报错了：$e")
-                emit(ReactiveData(NetStateType.ERROR, error = e.errorMsg()))
+                emit(ReactiveData(NetStateType.ERROR, error = e.coverError()))
             }, final = {
                 logger("最终返回")
             }, needLoadState = type == QueryType.INIT)
