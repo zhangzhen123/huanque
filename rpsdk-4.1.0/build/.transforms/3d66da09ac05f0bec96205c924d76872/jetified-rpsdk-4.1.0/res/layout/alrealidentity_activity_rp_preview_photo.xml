@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rp_preview_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:visibility="gone">
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/black"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/reget_button"
+            android:layout_width="0dip"
+            android:layout_height="45dip"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="重拍"
+            android:textColor="@android:color/white" />
+        <View
+            android:layout_width="0dip"
+            android:layout_height="45dip"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/next_button"
+            android:layout_width="0dip"
+            android:layout_height="45dip"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="使用照片"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/picture"
+
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/bottom_layout"
+        android:layout_marginBottom="20dip"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:layout_marginTop="55dip" />
+
+
+</RelativeLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+   android:oneshot="true">
+
+   <item android:drawable="@drawable/face_guide_blink1" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink2" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink3" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink4" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink5" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink6" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink7" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink8" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink9" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink10" android:duration="150" />
+
+   <item android:drawable="@drawable/face_guide_blink1" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink2" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink3" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink4" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink5" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink6" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink7" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink8" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink9" android:duration="150" />
+   <item android:drawable="@drawable/face_guide_blink10" android:duration="150" />
+
+
+</animation-list>

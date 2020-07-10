@@ -9,6 +9,7 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.julun.huanque.common.BuildConfig
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.net.Requests
@@ -120,5 +121,21 @@ class FrescoTask : Task() {
 class OssTask : Task() {
     override fun run() {
         OssUpLoadManager.initOss(mContext)
+    }
+}
+
+/**
+ * 实名认证
+ */
+class RealNameTask : Task() {
+    override fun dependsOn(): List<Class<out Task>>? {
+        val task = ArrayList<Class<out Task>>()
+        task.add(ARouterTask::class.java)
+        return task
+    }
+
+    override fun run() {
+        //初始化实名认证SDK
+        ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation()
     }
 }

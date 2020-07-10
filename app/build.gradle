@@ -17,6 +17,8 @@ android {
     //签名配置
     signingConfigs {
         release {
+            v1SigningEnabled true
+            v2SigningEnabled true
             storeFile file("keystore/lingmeng.jks")
             storePassword "lingmeng@julun"
             keyAlias "lingmeng"
@@ -25,7 +27,13 @@ android {
         }
         debug {
             //下面将配置的跟release一致
-
+            v1SigningEnabled true
+            v2SigningEnabled false
+            //为了让实名认证生效，debug也用签名打包运行
+            storeFile file("keystore/lingmeng.jks")
+            storePassword "lingmeng@julun"
+            keyAlias "lingmeng"
+            keyPassword "lingmeng@julun"
         }
 
     }
@@ -116,4 +124,6 @@ dependencies {
     implementation files('libs/smantifraud.aar')
     implementation 'com.jakewharton:process-phoenix:2.0.0'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
+
+    implementation project(path: ':realname')
 }

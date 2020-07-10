@@ -1,0 +1,160 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rp_take_photo_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/touch_auto_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000" />
+
+        <SurfaceView
+            android:id="@+id/my_surfaceView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:id="@+id/bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="90dip"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/black">
+
+            <TextView
+                android:id="@+id/cancel_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="20dip"
+                android:text="@string/cancel"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/take_photo"
+                android:layout_width="54dip"
+                android:layout_height="54dip"
+                android:layout_centerInParent="true"
+                android:src="@drawable/rp_paizhao" />
+
+            <TextView
+                android:id="@+id/tv_close_examples"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="20dip"
+                android:textColor="#FD6101"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/pick_photo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="20dip"
+                android:text="@string/pick_photo"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_switch_camera_layout"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/black"
+            android:gravity="right|center">
+
+            <ImageView
+                android:id="@+id/iv_switch_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:src="@drawable/rp_ic_switch_camera" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/card_box"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_above="@id/bottom_layout">
+
+            <LinearLayout
+                android:id="@+id/take_modle_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="-60dp"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@color/detile_parent_normalbg" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/take_photo_background_img"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <TextView
+                        android:id="@+id/tv_switch_gesture"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center"
+                        android:padding="10dp"
+                        android:text="@string/switch_gesture"
+                        android:textColor="#FD6101"
+                        android:visibility="gone" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/detile_parent"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@android:color/transparent"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:rotation="90">
+
+                <TextView
+                    android:id="@+id/tv_card_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FD6101"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_take_photo_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <include layout="@layout/alrealidentity_activity_rp_preview_photo"></include>
+</RelativeLayout>

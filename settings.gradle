@@ -1,3 +1,7 @@
+include ':windvane-min-8.0.3.2.3'
+include ':SecurityGuardSDK-external-release-5.4.193-preInstall'
+include ':SecurityBodySDK-external-release-5.4.112-preInstall'
+include ':rpsdk-4.1.0'
 include ':maplib'
 include ':jpushlib'
 include ':picture_library'
@@ -9,6 +13,7 @@ include ':app'
 include ':common'
 include ':core'
 include ':cockroach'
+include ':realname'
 
 
 //rn需要依赖的第三方

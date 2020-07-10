@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/face_dialog_widget_contract"
+        android:layout_width="match_parent"
+        android:layout_height="415dp"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/alrealidentity_face_biometrics_dialog_shape"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
+
+        <LinearLayout
+            android:id="@+id/ll_parant_contract_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <!-- 主提示（当前需要用户操作的内容，或需要用户重点关注的内容） -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="扫脸登录"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/abfl_widget_dialog_da_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textColor="#999999"
+                android:textSize="12sp"
+                tools:text="请 *三本人操作" />
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_loading"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/iv_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:src="@drawable/realidentity_face_waiting_gray" />
+
+
+            <ImageView
+                android:id="@+id/iv_loading_line"
+                android:layout_width="match_parent"
+                android:layout_height="4px"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="#999999"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_contract_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/btn_agree_contract"
+            android:layout_below="@+id/ll_parant_contract_title"
+            android:layout_centerInParent="true"
+            android:gravity="top"
+            android:padding="20dp"
+            android:scrollbars="vertical"
+            android:text="啊发撒的发撒的发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤发撒的发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤发撒的发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤发撒的发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤发撒的发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤发撒的发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤发撒的发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤发撒的发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤发撒的发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤发撒的发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤发撒的发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤发多少发多少放大舒服撒饭卡刷干净的撒开了家高楼大厦减肥高楼大厦就发过来快点撒肌肤；阿但是没法看了的撒麻烦快点撒方面的撒OK免费卡电视免费看大萨拉莫夫拉升；的，分类；撒的，分类；安德森，发；撒发生的身份"
+            android:textColor="#999999"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/btn_agree_contract"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:paddingBottom="6dp"
+            android:background="@drawable/face_nav_button"
+            android:text="同意协议并开始扫脸"
+            android:textColor="@color/identity_white" />
+
+        <TextView
+            android:id="@+id/btn_contract_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:text="授权协议"
+            android:textColor="#999999"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+</merge>
