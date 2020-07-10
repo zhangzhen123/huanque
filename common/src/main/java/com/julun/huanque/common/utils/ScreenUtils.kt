@@ -27,6 +27,25 @@ class ScreenUtils private constructor() {
         private val application by lazy { CommonInit.getInstance().getApp() }
 
         /**
+         * 判断当前软键盘是否打开
+         *
+         * @param activity
+         * @return
+         */
+        fun isSoftInputShow(activity: Activity): Boolean {
+
+            // 虚拟键盘隐藏 判断view是否为空
+            val view = activity.window.peekDecorView()
+            if (view != null) {
+                // 隐藏虚拟键盘
+                val inputmanger = activity
+                    .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                return inputmanger!!.isActive() && activity.window.currentFocus != null
+            }
+            return false
+        }
+
+        /**
          * 显示软键盘
          */
         fun showSoftInput(context: Context, view: View) {

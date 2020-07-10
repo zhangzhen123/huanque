@@ -33,11 +33,20 @@ object ARouterConstant {
 
     const val MAIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/MAIN_ACTIVITY"
 
-    const val TEST_ACTIVITY = "/$COMMON$PREFIX_ACTIVITY/TEST_ACTIVITY"
+    const val TEST_ACTIVITY = "/$APP$PREFIX_ACTIVITY/TEST_ACTIVITY"
 
     const val APP_COMMON_SERVICE = "/$APP$SERVICE/AppCommonService"
     const val LOGIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/LoginActivity"
 
     //语音页面
     const val VOICE_CHAT_ACTIVITY = "/$AGORA$PREFIX_ACTIVITY/VoiceChatActivity"
+
+    /** 实名认证 start **/
+    const val REALNAME = "realname"
+    //实名认证首页
+    const val REALNAME_MAIN_ACTIVITY = "/$REALNAME$PREFIX_ACTIVITY/RealNameActivity"
+    //实名认证服务
+    const val REALNAME_SERVICE = "/$REALNAME$SERVICE/RealNameService"
+    /** 实名认证 end **/
+
 }

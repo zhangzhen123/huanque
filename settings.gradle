@@ -1,3 +1,7 @@
+include ':windvane-min-8.0.3.2.3'
+include ':SecurityGuardSDK-external-release-5.4.193-preInstall'
+include ':SecurityBodySDK-external-release-5.4.112-preInstall'
+include ':rpsdk-4.1.0'
 include ':maplib'
 include ':jpushlib'
 include ':picture_library'
@@ -9,6 +13,7 @@ include ':app'
 include ':common'
 include ':core'
 include ':cockroach'
+include ':realname'
 
 
 //rn需要依赖的第三方
@@ -22,5 +27,8 @@ include ':@react-native-community_masked-view'
 project(':@react-native-community_masked-view').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/@react-native-community/masked-view/android')
 include ':react-native-sound'
 project(':react-native-sound').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-sound/android')
+include ':react-native-svg'
+project(':react-native-svg').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-svg/android')
+
 //apply from: file("rnlib/node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 rootProject.name = "HuanQue"

@@ -1,0 +1,64 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+        arg('eventBusIndex', 'com.julun.huanque.realname.AppEventBusIndex')
+    }
+}
+
+android {
+    compileSdkVersion hq.compileSdkVersion
+    buildToolsVersion hq.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion hq.minSdkVersion
+        targetSdkVersion hq.targetSdkVersion
+        versionCode 1
+        versionName '1.0'
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(path: ':common')
+//    api files('libs/rpsdk-4.1.0.aar')
+//    api files('libs/SecurityGuardSDK-external-release-5.4.193-preInstall.aar')
+//    api files('libs/SecurityBodySDK-external-release-5.4.112-preInstall.aar')
+
+//    implementation(name: 'rpsdk-4.1.0', ext: 'aar')
+//    implementation(name: 'SecurityGuardSDK-external-release-5.4.193-preInstall', ext: 'aar')
+//    implementation(name: 'SecurityBodySDK-external-release-5.4.112-preInstall', ext: 'aar')
+//    implementation rootProject.ext.dependencies["FASTJSON"]
+    kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
+    implementation project(":rpsdk-4.1.0")
+    implementation project(":SecurityGuardSDK-external-release-5.4.193-preInstall")
+    implementation project(":SecurityBodySDK-external-release-5.4.112-preInstall")
+    implementation project(":windvane-min-8.0.3.2.3")
+
+}

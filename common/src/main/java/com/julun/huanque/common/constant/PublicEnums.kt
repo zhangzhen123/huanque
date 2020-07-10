@@ -96,3 +96,20 @@ object DialogOrderNumber {
     const val LOCAL_DIALOG = 9999 //
     //后续如果局部弹窗需要排序 从1000开始定义
 }
+
+/**
+ * 实名认证常量类
+ */
+object RealNameConstants {
+    const val TYPE_NAME = "RealName"
+    const val TYPE_HEAD = "RealHead"
+
+    //取消认证
+    const val TYPE_CANCEL = "cancel"
+    //网络异常
+    const val TYPE_ERROR = "error"
+    //认证成功
+    const val TYPE_SUCCESS = "success"
+    //认证失败
+    const val TYPE_FAIL = "fail"
+}

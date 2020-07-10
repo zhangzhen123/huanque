@@ -44,4 +44,5 @@ web
 
 !/node_modules/@react-native-community
 !/node_modules/react-native-sound/android
+!/node_modules/react-native-svg/android
 

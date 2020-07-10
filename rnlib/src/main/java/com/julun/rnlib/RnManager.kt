@@ -8,6 +8,7 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.LifecycleState
 import com.facebook.react.shell.MainReactPackage
+import com.horcrux.svg.SvgPackage
 import com.julun.huanque.common.net.interceptors.HeaderInfoHelper
 import com.julun.rnlib.reactpackage.OpenPageReactPackage
 import com.julun.rnlib.reactpackage.RequestInfoReactPackage
@@ -47,6 +48,7 @@ object RnManager {
                 .addPackage(SafeAreaContextPackage())
                 .addPackage(RNCMaskedViewPackage())
                 .addPackage(RNSoundPackage())
+                .addPackage(SvgPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)
                 .setNativeModuleCallExceptionHandler {
