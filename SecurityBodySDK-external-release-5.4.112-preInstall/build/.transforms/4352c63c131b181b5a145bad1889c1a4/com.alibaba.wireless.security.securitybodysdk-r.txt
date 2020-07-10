@@ -1,2 +1,0 @@
-com.alibaba.wireless.security.securitybodysdk
-string app_name
