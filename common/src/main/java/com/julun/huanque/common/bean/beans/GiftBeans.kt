@@ -156,3 +156,8 @@ data class ChatGift(
     var pic: String = "",
     var selPic: String = ""
 )
+data class ChatSendResult(
+    var beans: Long = 0,
+    var intimateLevel: Int = 0,
+    var intimateNum: Int = 0
+)

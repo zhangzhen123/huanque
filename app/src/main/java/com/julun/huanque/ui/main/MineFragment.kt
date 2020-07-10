@@ -30,7 +30,7 @@ class MineFragment : BaseFragment() {
 
     override fun initEvents(rootView: View) {
         test_rn.onClickNew {
-            RNPageActivity.start(requireActivity(), "PH");
+            RNPageActivity.start(requireActivity(), "PH",Bundle().apply { putInt("userId",SessionUtils.getUserId().toInt()) });
         }
         tv_clear_session.onClickNew {
             SessionUtils.clearSession()

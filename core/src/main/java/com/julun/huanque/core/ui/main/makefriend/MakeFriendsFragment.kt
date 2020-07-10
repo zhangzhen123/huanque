@@ -23,7 +23,10 @@ import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
 import com.julun.huanque.common.ui.image.ImageActivity
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.R
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_make_friend.*
 
 
@@ -116,6 +119,14 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             val item = mAdapter.getItem(position) ?: return@setOnItemClickListener
             if (item.showType == HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION) {
                 logger.info("跳转编辑资料页")
+            }else if(item.showType==HomeItemBean.NORMAL){
+                val bean=item.content as? HomeRecomItem?:return@setOnItemClickListener
+                if(bean.userId==SessionUtils.getUserId()){
+                    RNPageActivity.start(requireActivity(),RnConstant.MINE_HOMEPAGE)
+                }else{
+                    RNPageActivity.start(requireActivity(),RnConstant.PERSONAL_HOMEPAGE,Bundle().apply { putLong("userId",bean.userId) })
+                }
+
             }
 
         }
@@ -180,7 +191,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     var currentPlayHomeRecomItem: HomeRecomItem? = null
     var currentIndex: Int = -1
     private fun switchAudio(index: Int, bean: HomeRecomItem?) {
-        if (bean == null || bean.userId == 0) {
+        if (bean == null || bean.userId == 0L) {
             return
         }
         //如果此时操作的时同一个item的播放音频

@@ -283,7 +283,7 @@ public class TagAliasOperatorHelper {
         //根据sequence从之前操作缓存中获取缓存记录
         TagAliasBean tagAliasBean = (TagAliasBean) setActionCache.get(sequence);
         if (tagAliasBean == null) {
-            ToastUtils.show("获取缓存记录失败");
+            ToastUtils.INSTANCE.show("获取缓存记录失败");
             return;
         }
         if (jPushMessage.getErrorCode() == 0) {
@@ -302,7 +302,7 @@ public class TagAliasOperatorHelper {
         //根据sequence从之前操作缓存中获取缓存记录
         TagAliasBean tagAliasBean = (TagAliasBean) setActionCache.get(sequence);
         if (tagAliasBean == null) {
-            ToastUtils.show("获取缓存记录失败");
+            ToastUtils.INSTANCE.show("获取缓存记录失败");
             return;
         }
         if (jPushMessage.getErrorCode() == 0) {
@@ -329,7 +329,7 @@ public class TagAliasOperatorHelper {
             String logs = "Failed to set mobile number, errorCode:" + jPushMessage.getErrorCode();
             logger.info(logs);
             if (!RetrySetMObileNumberActionIfNeeded(jPushMessage.getErrorCode(), jPushMessage.getMobileNumber())) {
-                ToastUtils.show(logs);
+                ToastUtils.INSTANCE.show(logs);
             }
         }
     }

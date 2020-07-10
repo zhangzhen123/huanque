@@ -11,7 +11,9 @@ import java.io.Serializable
 //空的form
 class EmptyForm()
 
-class FriendIdForm(var friendId: Long)
+class FriendIdForm(var friendId : Long)
+
+class SendChatGiftForm(var friendId : Long,var chatGiftId:Int,var count:Int)
 
 /**
  * 创建语音通话的form

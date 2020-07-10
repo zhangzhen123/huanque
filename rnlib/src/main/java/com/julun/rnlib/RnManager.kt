@@ -42,7 +42,7 @@ object RnManager {
                 .addPackage(MainReactPackage()) // 背景色渐变：需放到application中
                 .addPackage(LinearGradientPackage()) // 请求头数据：需放到application中
                 .addPackage(RequestInfoReactPackage())
-                .addPackage(ToastReactPackage())
+//                .addPackage(ToastReactPackage())
                 .addPackage(OpenPageReactPackage())
                 .addPackage(RNGestureHandlerPackage())
                 .addPackage(SafeAreaContextPackage())
@@ -71,10 +71,9 @@ object RnManager {
     }
 
     fun closeRnPager() {
-        Observable.empty<Any>().observeOn(AndroidSchedulers.mainThread()).subscribe {
+        Observable.empty<Any>().observeOn(AndroidSchedulers.mainThread()).doOnComplete {
             curActivity?.finish()
-        }
-
+        }.subscribe()
     }
 
     /**

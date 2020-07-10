@@ -86,7 +86,7 @@ data class HomeRecomItem(
     var nickname: String = "",
     var sex: String = "",
     var tagList: List<String> = listOf(),
-    var userId: Int = 0
+    var userId: Long = 0
 ) {
     //本地字段 保留音频播放状态
     var isPlay: Boolean = false
