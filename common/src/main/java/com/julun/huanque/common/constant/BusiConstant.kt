@@ -39,6 +39,14 @@ object ParamKey {
 }
 
 /**
+ * SP使用的key
+ */
+object SPParamKey {
+    //语音通话花费确认弹窗
+    const val VOICE_FEE_DIALOG_SHOW = "VOICE_FEE_DIALOG_SHOW"
+}
+
+/**
  * 测试环境地址
  */
 object EnvironmentAddress {

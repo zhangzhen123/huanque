@@ -12,10 +12,9 @@ import com.geetest.sdk.GT3Listener
 import com.ishumei.smantifraud.SmAntiFraud
 import com.julun.huanque.BuildConfig
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.Session
+import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.bean.forms.GetValidCode
 import com.julun.huanque.common.bean.forms.MobileLoginForm
-import com.julun.huanque.common.bean.forms.MobileQuickForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.MsgTag.TAG
 import com.julun.huanque.common.init.CommonInit
@@ -23,7 +22,6 @@ import com.julun.huanque.common.manager.SessionManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
-import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.svga.SVGAHelper.logger
 import com.julun.huanque.net.service.UserService

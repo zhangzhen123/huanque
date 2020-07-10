@@ -87,7 +87,6 @@ class IntimateBean(
 class ChatUserBean(
     var anchorExp: Long = 0,
     var anchorLevel: Long = 0,
-    var beans: Long = 0,
     var cash: Long = 0,
     var headRealPeople: Boolean = false,
     var royalBjExp: Long = 0,
@@ -116,6 +115,8 @@ class ConversationBasicBean(
     var intimate: IntimateBean = IntimateBean(),
     //与对方欢遇标识
     var meetStatus: String = "",
+    //账户余额
+    var beans: Long = 0,
     //私信费用
     var msgFee: Int = 0,
     //语音费用

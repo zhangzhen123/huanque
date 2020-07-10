@@ -2,7 +2,9 @@ package com.julun.huanque.common.database
 
 import androidx.room.*
 import com.julun.huanque.common.bean.ChatUser
-import com.julun.huanque.common.dao.ChatUserDao
+import com.julun.huanque.common.database.dao.BalanceDao
+import com.julun.huanque.common.database.dao.ChatUserDao
+import com.julun.huanque.common.database.table.Balance
 import com.julun.huanque.common.init.CommonInit
 
 /**
@@ -10,9 +12,11 @@ import com.julun.huanque.common.init.CommonInit
  *@创建时间 2020/7/8 10:39
  *@描述 欢鹊数据库
  */
-@Database(entities = [ChatUser::class], version = 1, exportSchema = false)
+@Database(entities = [ChatUser::class,Balance::class], version = 1, exportSchema = false)
 abstract class HuanQueDatabase : RoomDatabase() {
     abstract fun chatUserDao(): ChatUserDao
+    abstract fun balanceDao(): BalanceDao
+
     companion object {
 
         @Volatile

@@ -1,4 +1,4 @@
-package com.julun.huanque.common.dao
+package com.julun.huanque.common.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

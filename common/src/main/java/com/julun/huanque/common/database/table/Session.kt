@@ -1,4 +1,4 @@
-package com.julun.huanque.common.bean.beans
+package com.julun.huanque.common.database.table
 
 /**
  * Created by my on 2018/07/09 0009.

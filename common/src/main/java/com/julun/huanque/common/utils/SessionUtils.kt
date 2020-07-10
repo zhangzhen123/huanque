@@ -1,6 +1,6 @@
 package com.julun.huanque.common.utils
 
-import com.julun.huanque.common.bean.beans.Session
+import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.manager.SessionManager
 
 /**

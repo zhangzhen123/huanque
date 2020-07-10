@@ -1,5 +1,6 @@
 package com.julun.huanque.message.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,12 +9,16 @@ import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.database.table.Balance
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.SessionUtils
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
@@ -53,6 +58,10 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //亲密度数据
     val intimateData: MutableLiveData<IntimateBean> by lazy { MutableLiveData<IntimateBean>() }
+
+    //余额数据
+    val balance: LiveData<Long> by lazy { BalanceUtils.getBalance() }
+
 
     /**
      * 获取消息列表
@@ -136,6 +145,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                 chatInfoData.value = result.friendUser
                 intimateData.value = result.intimate
                 basicBean.value = result
+                BalanceUtils.saveBalance(result.beans)
             }, {
                 //设置本人数据
                 val user = RoomUserChatExtra().apply {
@@ -148,4 +158,19 @@ class PrivateConversationViewModel : BaseViewModel() {
         }
 
     }
+
+    //获取余额
+//    fun getBalance() {
+//        mBalanceDisposable?.dispose()
+//        BalanceUtils.getBalance()?.let { f ->
+//            mBalanceDisposable = f.subscribeOn(Schedulers.io())
+//                /* .observeOn(Schedulers.io())*/
+//                .subscribe({
+//                    if (it.userId == SessionUtils.getUserId()) {
+//                        //是当前用户的余额
+//                        balance.postValue(it.balance)
+//                    }
+//                }, { it.printStackTrace() })
+//        }
+//    }
 }

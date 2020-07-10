@@ -1,9 +1,8 @@
 package com.julun.huanque.common.manager
 
 import com.alibaba.android.arouter.launcher.ARouter
-import com.julun.huanque.common.bean.beans.Session
+import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.routerservice.AppCommonService
 import com.julun.huanque.common.utils.SessionUtils
 

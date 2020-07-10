@@ -4,14 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ishumei.smantifraud.SmAntiFraud
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.Session
+import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.bean.forms.MobileQuickForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.manager.SessionManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
-import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.net.service.UserService
 import kotlinx.coroutines.launch
