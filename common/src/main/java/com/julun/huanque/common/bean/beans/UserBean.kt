@@ -1,5 +1,7 @@
 package com.julun.huanque.common.bean.beans
 
+import java.io.Serializable
+
 /**
  *@创建者   dong
  *@创建时间 2020/7/6 16:08
@@ -58,15 +60,24 @@ class SocialListBean(
 class FollowResultBean(var type: String, var userId: Long, var follow: Boolean)
 
 /**
+ * 亲密特权
+ */
+class IntimatePrivilege(var icon: String = "", var key: String = "", var minLevel: Int = 0, var title: String = "")
+
+/**
  * 亲密数据
  */
 class IntimateBean(
     //亲密度等级
     var intimateLevel: Int = 0,
+    //下一级亲密等级
+    var intimateNextLevel: Int = 0,
     //亲密度值
     var intimateNum: Int = 0,
     //下一个等级所需亲密度值
-    var nextIntimateNum: Int = 0
+    var nextIntimateNum: Int = 0,
+    //亲密特权
+    var intimatePrivilegeList: MutableList<IntimatePrivilege> = mutableListOf()
 )
 
 /**
@@ -88,7 +99,7 @@ class ChatUserBean(
     var headPic: String = "",
     var meetStatus: String = "",
     var nickname: String = ""
-)
+) : Serializable
 
 /**
  * 会话详情页面基础信息
