@@ -15,9 +15,13 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ConmmunicationUserType
+import com.julun.huanque.common.constant.ParamKey
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
@@ -26,9 +30,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.onTouch
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.image.ImageActivity
-import com.julun.huanque.common.utils.ChatUtils
-import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.emotion.EmotionPagerView
 import com.julun.huanque.common.widgets.emotion.Emotions
@@ -43,6 +45,7 @@ import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.rd.PageIndicatorView
 import com.rd.utils.DensityUtils
+import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
@@ -50,6 +53,7 @@ import io.rong.message.ImageMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.imageResource
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -151,6 +155,7 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.basicBean?.observe(this, Observer {
             mIntimateDetailViewModel?.basicBean?.value = it
         })
+
     }
 
     override fun initEvents(rootView: View) {
@@ -182,6 +187,49 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_phone.onClickNew {
             //跳转语音通话页面
+            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, false)
+            if (!dialogShow) {
+                //未显示过价格弹窗，显示弹窗
+                MyAlertDialog(this).showAlertWithOKAndCancel(
+                    "语音通话${mPrivateConversationViewModel?.basicBean?.value?.voiceFee}鹊币/分钟",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
+                        judgeBalance()
+                    }, onCancel = {
+                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
+                    }), "语音通话费用", "发起通话"
+                )
+            }
+
+        }
+    }
+
+    /**
+     * 判断余额
+     */
+    private fun judgeBalance() {
+        //发起通话
+        //余额
+        val balance = mPrivateConversationViewModel?.balance?.value ?: 0
+        //单价
+        val price = mPrivateConversationViewModel?.basicBean?.value?.voiceFee ?: 0
+
+        if (balance < price) {
+            //余额不足,显示余额不足弹窗
+            MyAlertDialog(this).showAlertWithOK(
+                "您的鹊币余额不足",
+                MyAlertDialog.MyDialogCallback(onRight = {
+                    //todo 跳转充值页面
+                }), "余额不足", "去充值"
+            )
+            return
+        }
+
+        val bundle = Bundle()
+        bundle.putString(ParamKey.TYPE, ConmmunicationUserType.CALLING)
+        bundle.putSerializable(ParamKey.USER, mPrivateConversationViewModel?.chatInfoData?.value ?: return)
+        ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
+    }
             val bundle = Bundle()
 //            bundle.putSerializable("USER",mPrivateConversationViewModel?.chatInfoData?.value ?: return@onClickNew)
 //            ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).bun
@@ -382,7 +430,7 @@ class PrivateConversationActivity : BaseActivity() {
     private fun checkPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions
-            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             .subscribe { permission ->
                 when {
                     permission.granted -> {

@@ -262,6 +262,7 @@ class CommonInit {
             ?.addTask(RongTask())
             ?.addTask(SVGATask())
             ?.addTask(OssTask())
+            ?.addTask(RealNameTask())
 
         if (inSDK) {
             taskDispatcher?.start()

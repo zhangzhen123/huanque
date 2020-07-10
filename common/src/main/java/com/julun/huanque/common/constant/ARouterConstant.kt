@@ -40,4 +40,13 @@ object ARouterConstant {
 
     //语音页面
     const val VOICE_CHAT_ACTIVITY = "/$AGORA$PREFIX_ACTIVITY/VoiceChatActivity"
+
+    /** 实名认证 start **/
+    const val REALNAME = "realname"
+    //实名认证首页
+    const val REALNAME_MAIN_ACTIVITY = "/$REALNAME$PREFIX_ACTIVITY/RealNameActivity"
+    //实名认证服务
+    const val REALNAME_SERVICE = "/$REALNAME$SERVICE/RealNameService"
+    /** 实名认证 end **/
+
 }

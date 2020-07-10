@@ -225,6 +225,14 @@ object MessageProcessor {
         eventProcessors.add(processor)
     }
 
+
+    /**
+     * 移除单个EventProcessor
+     */
+    fun removeEventProcessor(processor: EventMessageProcessor<*>) {
+        eventProcessors.remove(processor)
+    }
+
     fun processEventMessage(data: Any?, eventCode: String) {
         try {
             if (data is String && !TextUtils.isEmpty(data)) {
@@ -1134,6 +1142,57 @@ object MessageProcessor {
         EventMessageProcessor<ThemeOnlineTreasureEnableInfo> {
         override fun getEventType() = EventMessageType.UserThemeOnlineTreasure
     }
+
+    /**
+     * 语音通话被叫消息
+     */
+    interface NetCallReceiveProcessor : EventMessageProcessor<NetCallReceiveBean> {
+        override fun getEventType() = EventMessageType.NetCallReceive
+        override fun isGlobal() = true
+    }
+
+    /**
+     * 语音通话接通消息
+     */
+    interface NetCallAcceptProcessor : EventMessageProcessor<NetCallAcceptBean> {
+        override fun getEventType() = EventMessageType.NetCallAccept
+    }
+
+    /**
+     * 主叫取消会话消息
+     */
+    interface NetCallCancelProcessor : EventMessageProcessor<VoidResult> {
+        override fun getEventType() = EventMessageType.NetCallCancel
+    }
+
+    /**
+     * 挂断消息
+     */
+    interface NetCallHangUpProcessor : EventMessageProcessor<VoidResult> {
+        override fun getEventType() = EventMessageType.NetCallHangUp
+    }
+
+    /**
+     * 被叫拒绝通话消息
+     */
+    interface NetCallRefuseProcessor : EventMessageProcessor<VoidResult> {
+        override fun getEventType() = EventMessageType.NetCallRefuse
+    }
+
+    /**
+     * 会话断开消息（服务端断开）
+     */
+    interface NetCallDisconnectProcessor : EventMessageProcessor<VoidResult> {
+        override fun getEventType() = EventMessageType.NetCallDisconnect
+    }
+    /**
+     * 余额不足提醒消息
+     */
+    interface NetCallBalanceRemindProcessor : EventMessageProcessor<VoidResult> {
+        override fun getEventType() = EventMessageType.NetCallBalanceRemind
+    }
+
+
 }
 
 enum class EventMessageType(val klass: Class<*>) {
@@ -1448,5 +1507,27 @@ enum class EventMessageType(val klass: Class<*>) {
     ThemeProgramShowChangeNotice(ProgramRoomBean::class.java),
 
     //主题房可以领取宝箱
-    UserThemeOnlineTreasure(ThemeOnlineTreasureEnableInfo::class.java)
+    UserThemeOnlineTreasure(ThemeOnlineTreasureEnableInfo::class.java),
+
+    //接下来是欢鹊使用
+    //别人向你发起语音通话
+    NetCallReceive(NetCallReceiveBean::class.java),
+
+    //语音成功消息
+    NetCallAccept(NetCallAcceptBean::class.java),
+
+    //主叫取消会话消息
+    NetCallCancel(VoidResult::class.java),
+
+    //挂断消息
+    NetCallHangUp(VoidResult::class.java),
+
+    //被叫拒绝通话
+    NetCallRefuse(VoidResult::class.java),
+
+    //通话断开消息(服务端断开)
+    NetCallDisconnect(VoidResult::class.java),
+
+    //余额不足提醒消息
+    NetCallBalanceRemind(VoidResult::class.java)
 }

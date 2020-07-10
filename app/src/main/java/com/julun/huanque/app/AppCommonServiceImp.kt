@@ -3,7 +3,7 @@ package com.julun.huanque.app
 import android.content.Context
 import android.content.Intent
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.julun.huanque.common.bean.beans.Session
+import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.helper.UnExpectedCrashExceptionForhuanqueApp
 import com.julun.huanque.common.interfaces.routerservice.AppCommonService
 import com.julun.huanque.common.constant.ARouterConstant

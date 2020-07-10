@@ -6,26 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/black_333">
 
-    <TextView
-        android:id="@+id/tv_joinChannel"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:gravity="center"
-        android:background="@color/white"
-        android:text="加入频道"/>
-
-    <TextView
-        android:id="@+id/tv_leaveChannel"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:gravity="center"
-        android:background="@color/white"
-        android:text="离开频道"/>
-
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left"
@@ -47,7 +27,6 @@
         android:layout_height="100dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="150dp"
-        android:background="@color/primary_color"
         app:failureImageScaleType="centerInside"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -87,10 +66,9 @@
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintLeft_toRightOf="@id/guideline_left"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/ll_close"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <ImageView
             android:layout_width="60dp"
@@ -146,7 +124,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/ll_close"
         app:layout_constraintRight_toLeftOf="@id/ll_voice_accept"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <ImageView
             android:layout_width="60dp"
@@ -174,7 +152,7 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/ll_hands_free"
-        app:layout_constraintRight_toLeftOf="@id/guideline_right"
+        app:layout_constraintRight_toRightOf="parent"
         tools:visibility="visible">
 
         <ImageView

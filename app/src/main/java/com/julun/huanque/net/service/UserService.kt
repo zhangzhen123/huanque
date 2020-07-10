@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.ImTokenBean
-import com.julun.huanque.common.bean.beans.Session
+import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
 import com.julun.huanque.common.bean.forms.*
