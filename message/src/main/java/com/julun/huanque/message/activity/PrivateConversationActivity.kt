@@ -202,6 +202,11 @@ class PrivateConversationActivity : BaseActivity() {
             }
 
         }
+        iv_gift.onClickNew {
+            mChatSendGiftFragment=mChatSendGiftFragment?: ChatSendGiftFragment()
+
+            mChatSendGiftFragment?.show(this,"ChatSendGiftFragment")
+        }
     }
 
     /**
@@ -229,16 +234,6 @@ class PrivateConversationActivity : BaseActivity() {
         bundle.putString(ParamKey.TYPE, ConmmunicationUserType.CALLING)
         bundle.putSerializable(ParamKey.USER, mPrivateConversationViewModel?.chatInfoData?.value ?: return)
         ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
-    }
-            val bundle = Bundle()
-//            bundle.putSerializable("USER",mPrivateConversationViewModel?.chatInfoData?.value ?: return@onClickNew)
-//            ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).bun
-        }
-        iv_gift.onClickNew {
-            mChatSendGiftFragment=mChatSendGiftFragment?: ChatSendGiftFragment()
-
-            mChatSendGiftFragment?.show(this,"ChatSendGiftFragment")
-        }
     }
 
     /**
