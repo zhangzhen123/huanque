@@ -214,7 +214,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
                 val list = arrayListOf<PhotoBean>()
                 repeat(4) {
-                    list.add(PhotoBean(res = R.mipmap.icon_upload_photo))
+                    list.add(PhotoBean(res = R.mipmap.icon_upload_image))
                 }
                 if (rv.itemDecorationCount <= 0) {
                     rv.addItemDecoration(HorizontalItemDecoration(dp2px(10)))
