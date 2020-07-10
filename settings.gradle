@@ -1,4 +1,3 @@
-include ':windvane-min-8.0.3.2.3'
 include ':SecurityGuardSDK-external-release-5.4.193-preInstall'
 include ':SecurityBodySDK-external-release-5.4.112-preInstall'
 include ':rpsdk-4.1.0'

@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('windvane-min-8.0.3.2.3.jar'))
