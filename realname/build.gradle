@@ -59,6 +59,6 @@ dependencies {
     implementation project(":rpsdk-4.1.0")
     implementation project(":SecurityGuardSDK-external-release-5.4.193-preInstall")
     implementation project(":SecurityBodySDK-external-release-5.4.112-preInstall")
-    implementation project(":windvane-min-8.0.3.2.3")
+//    implementation project(":windvane-min-8.0.3.2.3")
 
 }
