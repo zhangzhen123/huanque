@@ -30,10 +30,7 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClick
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
-import com.julun.huanque.common.utils.ImageUtils
-import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.TimeUtils
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
@@ -64,6 +61,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun getLayoutId() = R.layout.act_voice_chat
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        StatusBarUtil.setTransparent(this)
         initViewModel()
         mType = intent?.getStringExtra(ParamKey.TYPE) ?: ""
         if (mType == ConmmunicationUserType.CALLING) {
