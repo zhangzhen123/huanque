@@ -9,6 +9,7 @@ import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_mine.*
 
 /**
@@ -30,7 +31,7 @@ class MineFragment : BaseFragment() {
 
     override fun initEvents(rootView: View) {
         test_rn.onClickNew {
-            RNPageActivity.start(requireActivity(), "PH",Bundle().apply { putInt("userId",SessionUtils.getUserId().toInt()) });
+            RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE);
         }
         tv_clear_session.onClickNew {
             SessionUtils.clearSession()
