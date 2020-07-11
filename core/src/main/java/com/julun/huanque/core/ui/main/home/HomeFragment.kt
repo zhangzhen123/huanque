@@ -19,6 +19,8 @@ import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.makefriend.MakeFriendsFragment
+import com.luck.picture.lib.tools.ScreenUtils
+import com.luck.picture.lib.tools.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_main.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -27,6 +29,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.CommonPagerTitleView
+import org.jetbrains.anko.topPadding
 
 /**
  *
@@ -54,6 +57,8 @@ class HomeFragment : BaseFragment() {
     private val viewModel: HomeViewModel by activityViewModels()
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        //设置头部边距
+        home_container.topPadding=StatusBarUtil.getStatusBarHeight(requireContext())
         initViewModel()
         initViewPager()
         initMagicIndicator()
@@ -67,7 +72,6 @@ class HomeFragment : BaseFragment() {
             ARouter.getInstance().build(ARouterConstant.TEST_ACTIVITY).navigation()
         }
     }
-
     private fun initViewPager() {
         //注 这里只是用到不可滑动功能 没有使用关联viewpager
         view_pager.adapter = mPagerAdapter

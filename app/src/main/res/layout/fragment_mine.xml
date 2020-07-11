@@ -5,46 +5,505 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="我的"
+    <View
+        android:id="@+id/top_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_250"
+        android:background="@color/app_main"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/holder_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55"
+        android:background="@drawable/bg_shape_top_white1"
+        app:layout_constraintBottom_toBottomOf="@+id/top_bg" />
+
+    <LinearLayout
+        android:id="@+id/llTitleRootView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_44"
+        android:gravity="center_vertical|end"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/tvService"
+            android:layout_width="@dimen/dimen_40"
+            android:layout_height="@dimen/dimen_40"
+            android:scaleType="centerInside"
+            android:src="@mipmap/icon_service" />
+
+        <ImageView
+            android:id="@+id/ivSetting"
+            android:layout_width="@dimen/dimen_40"
+            android:layout_height="@dimen/dimen_40"
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:layout_marginRight="@dimen/dimen_10"
+            android:scaleType="centerInside"
+            android:src="@mipmap/icon_setting" />
+    </LinearLayout>
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/llTitleRootView">
 
-    <Button
-        android:id="@+id/test_rn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="340dp"
-        android:layout_marginEnd="160dp"
-        android:layout_marginRight="160dp"
-        android:text="跳转rn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-    <Button
-        android:id="@+id/test_real"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="跳转实名认证"
-        android:layout_marginTop="@dimen/dimen_20"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test_rn" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_clear_session"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="清除登录数据"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/test_rn" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clHeadRoot"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_90">
 
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/headImage"
+                        android:layout_width="@dimen/dimen_60"
+                        android:layout_height="@dimen/dimen_60"
+                        android:layout_marginStart="@dimen/dimen_15"
+                        android:layout_marginLeft="@dimen/dimen_15"
+                        android:padding="@dimen/dimen_1"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:placeholderImage="@mipmap/logo_placeholder_small"
+                        app:placeholderImageScaleType="fitCenter"
+                        app:roundAsCircle="true"
+                        app:roundingBorderColor="@color/white"
+                        app:roundingBorderWidth="@dimen/dimen_1" />
+
+                    <TextView
+                        android:id="@+id/tvCertification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_shape_grey1"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/dimen_6"
+                        android:paddingTop="@dimen/dimen_2"
+                        android:paddingRight="@dimen/dimen_6"
+                        android:paddingBottom="@dimen/dimen_2"
+                        android:text="@string/photo_uncertificated"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_10"
+                        app:layout_constraintBottom_toBottomOf="@+id/headImage"
+                        app:layout_constraintEnd_toEndOf="@+id/headImage"
+                        app:layout_constraintStart_toStartOf="@+id/headImage" />
+
+                    <ImageView
+                        android:id="@+id/ivReal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_real_man"
+                        app:layout_constraintBottom_toBottomOf="@+id/headImage"
+                        app:layout_constraintEnd_toEndOf="@+id/tvCertification"
+                        app:layout_constraintStart_toStartOf="@+id/tvCertification" />
+
+                    <FrameLayout
+                        android:id="@+id/flNickNameRoot"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimen_20"
+                        android:layout_marginLeft="@dimen/dimen_20"
+                        app:layout_constraintBottom_toTopOf="@+id/tvUserId"
+                        app:layout_constraintLeft_toRightOf="@+id/headImage"
+                        app:layout_constraintRight_toLeftOf="@+id/ivImage"
+                        app:layout_constraintTop_toTopOf="@+id/headImage"
+                        app:layout_constraintVertical_chainStyle="packed">
+
+                        <TextView
+                            android:id="@+id/tvNickName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/dimen_5"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:textColor="@color/black_333"
+                            android:textSize="@dimen/sp_18"
+                            android:textStyle="bold"
+                            tools:text="1111111111111" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tvUserId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_8"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/black_333"
+                        android:textSize="@dimen/sp_12"
+                        app:layout_constraintBottom_toBottomOf="@+id/headImage"
+                        app:layout_constraintLeft_toLeftOf="@+id/flNickNameRoot"
+                        app:layout_constraintTop_toBottomOf="@+id/flNickNameRoot"
+                        tools:text="1111111111111" />
+
+
+                    <ImageView
+                        android:id="@+id/ivImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dimen_15"
+                        android:layout_marginRight="@dimen/dimen_15"
+                        android:src="@mipmap/icon_forward_black_01"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_tabs_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_26"
+                    android:layout_marginStart="@dimen/dimen_15"
+                    android:layout_marginLeft="@dimen/dimen_15" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_75"
+                    android:background="@drawable/bg_user_balance"
+                    android:gravity="center_vertical">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/dimen_15"
+                        android:layout_marginLeft="@dimen/dimen_15"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/ivQueBi"
+                            android:layout_width="@dimen/dimen_40"
+                            android:layout_height="@dimen/dimen_40"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/icon_que_bi" />
+
+                        <TextView
+                            android:id="@+id/tvQueBiTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@+id/ivQueBi"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginLeft="14dp"
+                            android:layout_marginTop="@dimen/dimen_2"
+                            android:layout_toEndOf="@+id/ivQueBi"
+                            android:layout_toRightOf="@+id/ivQueBi"
+                            android:text="鹊币"
+                            android:textColor="@color/black_333"
+                            android:textSize="@dimen/sp_12" />
+
+                        <TextView
+                            android:id="@+id/tvQueBi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvQueBiTitle"
+                            android:layout_alignBottom="@+id/ivQueBi"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginLeft="14dp"
+                            android:layout_toEndOf="@+id/ivQueBi"
+                            android:layout_toRightOf="@+id/ivQueBi"
+                            android:drawableEnd="@mipmap/icon_forward_black_02"
+                            android:drawableRight="@mipmap/icon_forward_black_02"
+                            android:drawablePadding="@dimen/dimen_2"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:textColor="@color/black_333"
+                            android:textSize="@dimen/sp_16"
+                            tools:text="9999999" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="@dimen/dimen_2"
+                        android:layout_height="@dimen/dimen_24"
+                        android:background="@color/stroke" />
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/dimen_15"
+                        android:layout_marginLeft="@dimen/dimen_15"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/ivLingQian"
+                            android:layout_width="@dimen/dimen_40"
+                            android:layout_height="@dimen/dimen_40"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/icon_ling_qian" />
+
+                        <TextView
+                            android:id="@+id/tvLQTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@+id/ivLingQian"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginLeft="14dp"
+                            android:layout_marginTop="@dimen/dimen_2"
+                            android:layout_toEndOf="@+id/ivLingQian"
+                            android:layout_toRightOf="@+id/ivLingQian"
+                            android:text="零钱"
+                            android:textColor="@color/black_333"
+                            android:textSize="@dimen/sp_12" />
+
+                        <TextView
+                            android:id="@+id/tvLingQian"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvLQTitle"
+                            android:layout_alignBottom="@+id/ivLingQian"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginLeft="14dp"
+                            android:layout_toEndOf="@+id/ivLingQian"
+                            android:layout_toRightOf="@+id/ivLingQian"
+                            android:drawableEnd="@mipmap/icon_forward_black_02"
+                            android:drawableRight="@mipmap/icon_forward_black_02"
+                            android:drawablePadding="@dimen/dimen_2"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:textColor="@color/black_333"
+                            android:textSize="@dimen/sp_16"
+                            tools:text="9999999" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_user_wealth_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_50"
+                    android:background="@color/white">
+
+                    <ImageView
+                        android:id="@+id/iv_user_wealth"
+                        android:layout_width="@dimen/dimen_22"
+                        android:layout_height="@dimen/dimen_22"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/dimen_15"
+                        android:layout_marginLeft="@dimen/dimen_15"
+                        android:src="@mipmap/icon_user_wealth"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_user_wealth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/dimen_15"
+                        android:layout_marginLeft="@dimen/dimen_15"
+                        android:text="@string/wealth_level"
+                        android:textColor="@color/black_333"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_user_wealth"
+                        app:layout_constraintLeft_toRightOf="@+id/iv_user_wealth"
+                        app:layout_constraintTop_toTopOf="@+id/iv_user_wealth" />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/sd_wealth"
+                        android:layout_width="50dp"
+                        android:layout_height="@dimen/dimen_16"
+                        android:layout_marginStart="@dimen/dimen_6"
+                        android:layout_marginLeft="@dimen/dimen_6"
+                        android:layout_marginEnd="@dimen/dimen_6"
+                        android:layout_marginRight="@dimen/dimen_6"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_user_wealth"
+                        app:layout_constraintRight_toLeftOf="@+id/iv_wealth_forward"
+                        app:layout_constraintTop_toTopOf="@+id/iv_user_wealth" />
+
+                    <ImageView
+                        android:id="@+id/iv_wealth_forward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/dimen_15"
+                        android:layout_marginRight="@dimen/dimen_15"
+                        android:src="@mipmap/icon_forward_grey_01"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_user_wealth"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/iv_user_wealth" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_royal_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_50"
+                    android:background="@color/white">
+
+                    <ImageView
+                        android:id="@+id/iv_royal_level"
+                        android:layout_width="@dimen/dimen_22"
+                        android:layout_height="@dimen/dimen_22"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/dimen_15"
+                        android:layout_marginLeft="@dimen/dimen_15"
+                        android:src="@mipmap/icon_royal_level"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_royal_level_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/dimen_15"
+                        android:layout_marginLeft="@dimen/dimen_15"
+                        android:text="@string/haunque_royal"
+                        android:textColor="@color/black_333"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_royal_level"
+                        app:layout_constraintLeft_toRightOf="@+id/iv_royal_level"
+                        app:layout_constraintTop_toTopOf="@+id/iv_royal_level" />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/tv_royal_level"
+                        android:layout_width="50dp"
+                        android:layout_height="@dimen/dimen_16"
+                        android:layout_marginStart="@dimen/dimen_6"
+                        android:layout_marginLeft="@dimen/dimen_6"
+                        android:layout_marginEnd="@dimen/dimen_6"
+                        android:layout_marginRight="@dimen/dimen_6"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_royal_level"
+                        app:layout_constraintRight_toLeftOf="@+id/iv_royal_forward"
+                        app:layout_constraintTop_toTopOf="@+id/iv_royal_level" />
+
+                    <ImageView
+                        android:id="@+id/iv_royal_forward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/dimen_15"
+                        android:layout_marginRight="@dimen/dimen_15"
+                        android:src="@mipmap/icon_forward_grey_01"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_royal_level"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/iv_royal_level" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_author_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_50"
+                    android:background="@color/white">
+
+                    <ImageView
+                        android:id="@+id/iv_author_level"
+                        android:layout_width="@dimen/dimen_22"
+                        android:layout_height="@dimen/dimen_22"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/dimen_15"
+                        android:layout_marginLeft="@dimen/dimen_15"
+                        android:src="@mipmap/icon_anchor_level"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_author_level_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/dimen_15"
+                        android:layout_marginLeft="@dimen/dimen_15"
+                        android:text="@string/author_level"
+                        android:textColor="@color/black_333"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_author_level"
+                        app:layout_constraintLeft_toRightOf="@+id/iv_author_level"
+                        app:layout_constraintTop_toTopOf="@+id/iv_author_level" />
+
+                    <TextView
+                        android:id="@+id/tv_author_privilege"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dimen_6"
+                        android:layout_marginRight="@dimen/dimen_6"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/black_999"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_author_level"
+                        app:layout_constraintRight_toLeftOf="@+id/tv_author_level"
+                        app:layout_constraintTop_toTopOf="@+id/iv_author_level"
+                        android:text="查看特权" />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/tv_author_level"
+                        android:layout_width="50dp"
+                        android:layout_height="@dimen/dimen_16"
+                        android:layout_marginStart="@dimen/dimen_6"
+                        android:layout_marginLeft="@dimen/dimen_6"
+                        android:layout_marginEnd="@dimen/dimen_6"
+                        android:layout_marginRight="@dimen/dimen_6"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_author_level"
+                        app:layout_constraintRight_toLeftOf="@+id/iv_author_forward"
+                        app:layout_constraintTop_toTopOf="@+id/iv_author_level" />
+
+                    <ImageView
+                        android:id="@+id/iv_author_forward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/dimen_15"
+                        android:layout_marginRight="@dimen/dimen_15"
+                        android:src="@mipmap/icon_forward_grey_01"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_author_level"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/iv_author_level" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ImageView
+                    android:id="@+id/ivInviteFriend"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_75"
+                    android:layout_marginLeft="@dimen/dimen_15"
+                    android:layout_marginRight="@dimen/dimen_15"
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/image_invite_friend" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_5"
+                    android:background="#F3F4F5" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvUserTools"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/dimen_5"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.julun.huanque.common.widgets.statepage.StatePageView
+        android:id="@+id/state_pager_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

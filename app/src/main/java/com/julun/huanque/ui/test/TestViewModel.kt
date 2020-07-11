@@ -27,7 +27,7 @@ class TestViewModel : BaseViewModel() {
         liveData<UserDetailInfo> {
             if (it) {
                 request({
-                    val user = userService.queryUserDetailInfo(SessionForm()).dataConvert()
+                    val user = userService.queryUserDetailInfo().dataConvert()
                     emit(user)
                 }, error = { e ->
                     logger("报错了：$e")
@@ -88,7 +88,7 @@ class TestViewModel : BaseViewModel() {
 //        return withContext(Dispatchers.IO) {
         logger("开始请求网络：${Thread.currentThread().name}")
         try {
-            val call = userService.queryUserDetailInfo(SessionForm())
+            val call = userService.queryUserDetailInfo()
 //                val result = call.execute().body()
             logger("请求完成：${Thread.currentThread().name}")
             return call.data!!

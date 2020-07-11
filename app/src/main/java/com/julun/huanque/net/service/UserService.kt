@@ -30,8 +30,8 @@ interface UserService {
     /**
      * 查询用户基本信息
      */
-    @POST("user/acct/info/basic")
-    suspend fun queryUserDetailInfo(@Body form: SessionForm): Root<UserDetailInfo>
+    @POST("user/acct/info/myInfo")
+    suspend fun queryUserDetailInfo(@Body form: EmptyForm = EmptyForm()): Root<UserDetailInfo>
 
     /**
      * 查询用户等级信息
@@ -44,19 +44,19 @@ interface UserService {
      * 手机号登录
      */
     @POST("user/acct/login/mobile")
-    suspend fun mobileLogin(@Body form: MobileLoginForm) : Root<Session>
+    suspend fun mobileLogin(@Body form: MobileLoginForm): Root<Session>
 
     /**
      * 手机号一键登录
      */
     @POST("user/acct/login/mobileQuick")
-    suspend fun mobileQuick(@Body form: MobileQuickForm) : Root<Session>
+    suspend fun mobileQuick(@Body form: MobileQuickForm): Root<Session>
 
     /**
      * 更新用户数据
      */
     @POST("user/acct/data/update")
-    suspend fun updateInformation(@Body form : UpdateInformationForm): Root<VoidResult>
+    suspend fun updateInformation(@Body form: UpdateInformationForm): Root<VoidResult>
 
     /**
      * 开始获取验证码
@@ -68,11 +68,11 @@ interface UserService {
      * 同意协议
      */
     @POST("user/acct/info/agreement")
-    suspend fun agreement(@Body form : AgreementResultForm) : Root<Void>
+    suspend fun agreement(@Body form: AgreementResultForm): Root<Void>
 
     /**
      * 修改头像
      */
     @POST("user/acct/data/updateHeadPic")
-    suspend fun updateHeadPic(@Body form : UpdateHeadForm) : Root<ImTokenBean>
+    suspend fun updateHeadPic(@Body form: UpdateHeadForm): Root<ImTokenBean>
 }
