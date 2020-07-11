@@ -83,4 +83,5 @@
     <color name="bg_phone_number_login">#FFB830</color>
     <!--高亮按钮颜色-->
     <color name="textColor_alert_button_destructive">#ff3b30</color>
+    <color name="color_quebi">#FF7B00</color>
 </resources>

@@ -79,23 +79,32 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
             tv_send.isEnabled = true
             logger.info("赠送返回=${it.state}")
             if (it.state == NetStateType.SUCCESS) {
-                refreshSendResult(it.getT())
+//                refreshSendResult(it.getT())
             } else if (it.state == NetStateType.ERROR) {
                 //dodo
                 ToastUtils.show(it.error?.busiMessage ?: return@Observer)
             }
         })
 
+        mViewModel.sendGiftBean.observe(this, Observer {
+            if (it != null) {
+                mPrivateConversationViewModel.sendGiftSuccessData.value = it
+                mViewModel.sendGiftBean.value = null
+            }
+
+        })
+        mPrivateConversationViewModel.balance.observe(this, Observer {
+            if(it != null){
+                tv_balance.text = "$it"
+            }
+        })
 
     }
 
-    private fun refreshSendResult(balance: ChatSendResult) {
-        tv_balance.text = "${balance.beans}"
-    }
 
     private fun loadData(info: ChatGiftInfo) {
         tv_gift_tips.text = info.tips
-        tv_balance.text = "${info.beans}"
+//        tv_balance.text = "${info.beans}"
         viewPagerAdapter.setNewInstance(info.viewPagerData)
         initDotLayout(info.viewPagerData.size)
     }
@@ -151,13 +160,13 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
             ToastUtils.show("请先选择礼物再赠送")
             return
         }
-        if(targetId==null){
+        if (targetId == null) {
             ToastUtils.show("没有可赠送目标")
             return
         }
-        val giftId: Int = currentSelectGift?.chatGiftId ?: return
+//        val giftId: Int = currentSelectGift?.chatGiftId ?: return
 
-        mViewModel.sendGift(targetId, giftId)
+        mViewModel.sendGift(targetId, currentSelectGift ?: return)
         tv_send.isEnabled = false
     }
 

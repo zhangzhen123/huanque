@@ -109,3 +109,17 @@ data class NetCallReceiveBean(var callId: Long = 0, var userIds: LongArray = lon
  */
 data class NetCallAcceptBean(var callId: Long = 0, var startTime: Long = 0, var billUserId: Long = 0, var userIds: LongArray = longArrayOf()) :
     Serializable
+
+data class NetCallHangUpBeam(
+    var callId: Long = 0,
+    //挂断通话的用户ID
+    var hangUpId: Long = 0,
+    //付费用户ID
+    var billUserId: Long = 0,
+    //通话时长(单位秒)
+    var duration: Long = 0,
+    //通话总鹊币
+    var totalBeans: Long = 0,
+    //结束类型
+    var finishType: String = ""
+) : Serializable

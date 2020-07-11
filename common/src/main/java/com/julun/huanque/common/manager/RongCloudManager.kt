@@ -1,19 +1,19 @@
 package com.julun.huanque.common.manager
 
+import android.R
 import android.app.Application
 import android.net.Uri
 import android.text.TextUtils
-import androidx.lifecycle.viewModelScope
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
-import com.julun.huanque.common.bean.forms.UpdateHeadForm
+import com.julun.huanque.common.bean.message.CustomMessage
+import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.helper.AppHelper
-import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
@@ -22,7 +22,6 @@ import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.message_dispatch.MessageReceptor
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.removeScope
-import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
@@ -37,8 +36,8 @@ import io.rong.imlib.model.MessageContent
 import io.rong.message.CommandMessage
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
-import kotlinx.coroutines.launch
 import java.util.*
+
 
 /**
  * Created by djp on 2016/12/19.
@@ -92,7 +91,13 @@ object RongCloudManager {
             RongIMClient.setChatRoomActionListener(chatRoomActionListener)
             //            imState = RCIM_STATE_INITED
             extraWork()
+            registeCustomMessage()
         }
+    }
+
+    private fun registeCustomMessage() {
+        RongIMClient.registerMessageType(CustomMessage::class.java)
+        RongIMClient.registerMessageType(CustomSimulateMessage::class.java)
     }
 
     var maxConnectCount = 0
@@ -244,6 +249,105 @@ object RongCloudManager {
     }
 
     /**
+     * 发送模拟消息
+     */
+    fun sendSimulateMessage(
+        targetId: String,
+        senderId: String = "",
+        extra: RoomUserChatExtra,
+        conversationType: Conversation.ConversationType,
+        customType: String,
+        customBean: Any
+    ) {
+        val messageContent = CustomSimulateMessage.obtain().apply {
+            type = customType
+            context = JsonUtil.seriazileAsString(customBean)
+        }
+
+        messageContent.extra = JsonUtil.seriazileAsString(extra)
+
+        val callback = object : RongIMClient.ResultCallback<Message>() {
+            override fun onSuccess(message: Message?) {
+                if (message != null) {
+                    switchThread(message)
+                }
+            }
+
+            override fun onError(p0: ErrorCode?) {
+            }
+
+        }
+        if (targetId == "${SessionUtils.getUserId()}") {
+            //插入接收消息
+            val receivedStatus = Message.ReceivedStatus(0x1);
+            RongIMClient.getInstance()
+                .insertIncomingMessage(conversationType, senderId, senderId, receivedStatus, messageContent, callback)
+        } else {
+            //插入发送消息
+            RongIMClient.getInstance().insertOutgoingMessage(conversationType, targetId, Message.SentStatus.SENT, messageContent, callback)
+        }
+    }
+
+    /**
+     * 发送自定义消息
+     * @param targetId 对方ID
+     * @param targetUserObj 对方数据
+     * @param conversationType 会话类型
+     * @param customType 自定义对象的类型
+     * @param customBean 自定义对象
+     */
+    fun sendCustomMessage(
+        targetId: String,
+        targetUserObj: TargetUserObj? = null,
+        conversationType: Conversation.ConversationType,
+        customType: String,
+        customBean: Any
+    ) {
+        val pushContent = "收到礼物"
+        val pushData = "收到礼物"
+
+        val messageContent = CustomMessage.obtain().apply {
+            type = customType
+            context = JsonUtil.seriazileAsString(customBean)
+        }
+
+        currentUserObj?.targetUserObj = targetUserObj
+        currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
+        messageContent.extra = JsonUtil.seriazileAsString(currentUserObj)
+
+        val message = Message.obtain(targetId, conversationType, messageContent)
+        RongIMClient.getInstance().sendMessage(message, pushContent, pushData, object : IRongCallback.ISendMessageCallback {
+            /**
+             * 消息发送前回调, 回调时消息已存储数据库
+             * @param message 已存库的消息体
+             */
+            override fun onAttached(message: Message?) {
+                logger.info("DXC  自定发消息 onAttached")
+            }
+
+            /**
+             * 消息发送成功。
+             * @param message 发送成功后的消息体
+             */
+            override fun onSuccess(message: Message?) {
+                logger.info("DXC  自定发消息 onSuccess")
+                if (message != null) {
+                    switchThread(message)
+                }
+            }
+
+            /**
+             * 消息发送失败
+             * @param message   发送失败的消息体
+             * @param errorCode 具体的错误
+             */
+            override fun onError(message: Message?, errorCode: ErrorCode?) {
+            }
+        })
+    }
+
+
+    /**
      * 发送多媒体消息，可以使用该方法将多媒体文件上传到自己的服务器。
      * <p>
      * 上传多媒体文件时，会回调 {@link io.rong.imlib.IRongCallback.ISendMediaMessageCallbackWithUploader#onAttached(Message, IRongCallback.MediaMessageUploader)}
@@ -281,7 +385,6 @@ object RongCloudManager {
         val message = Message.obtain(targetId, type, imageMessage)
         RongIMClient.getInstance().sendMediaMessage(message, null, null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
             override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
-                val imageMessage = message?.content as? ImageMessage
                 if (message != null) {
                     switchThread(message)
                 }
@@ -476,6 +579,21 @@ object RongCloudManager {
         val content: MessageContent? = message.content
         val isRetrieved = message.receivedStatus.isRetrieved
         when (content) {
+            is CustomMessage -> {
+                //自定义消息
+                if (message.conversationType == Conversation.ConversationType.PRIVATE) {
+                    //发往私聊的自定义消息
+                    MessageProcessor.processPrivateTextMessageOnMain(message)
+                }
+            }
+            is CustomSimulateMessage -> {
+                //模拟 自定义消息
+                if (message.conversationType == Conversation.ConversationType.PRIVATE) {
+                    //发往私聊的自定义消息
+                    MessageProcessor.processPrivateTextMessageOnMain(message)
+                }
+            }
+
             is ImageMessage -> {
                 //图片信息
                 if (message.conversationType == Conversation.ConversationType.PRIVATE) {

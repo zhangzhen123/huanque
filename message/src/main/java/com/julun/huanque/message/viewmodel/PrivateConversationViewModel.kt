@@ -59,6 +59,9 @@ class PrivateConversationViewModel : BaseViewModel() {
     //亲密度数据
     val intimateData: MutableLiveData<IntimateBean> by lazy { MutableLiveData<IntimateBean>() }
 
+    //送礼成功(送礼成功之后，发送自定义消息)
+    val sendGiftSuccessData: MutableLiveData<ChatGift> by lazy { MutableLiveData<ChatGift>() }
+
     //余额数据
     val balance: LiveData<Long> by lazy { BalanceUtils.getBalance() }
 

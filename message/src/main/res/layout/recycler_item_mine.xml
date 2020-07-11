@@ -94,12 +94,23 @@
         app:layout_constraintTop_toTopOf="@id/sdv_header"
         app:roundedCornerRadius="10dp" />
 
+    <com.facebook.drawee.span.SimpleDraweeSpanTextView
+        android:id="@+id/tv_pic_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/sp_14"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="@id/sdv_image"
+        app:layout_constraintTop_toBottomOf="@id/sdv_image" />
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="left"
-        app:constraint_referenced_ids="tv_content,sdv_image" />
+        app:constraint_referenced_ids="tv_content,tv_pic_content" />
 
     <ImageView
         android:id="@+id/iv_send_fail"
@@ -130,89 +141,12 @@
         app:layout_constraintTop_toTopOf="@id/tv_content"
         tools:visibility="visible" />
 
-    <LinearLayout
-        android:id="@+id/view_pic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/bg_mine_white"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintRight_toLeftOf="@id/sdv_header"
-        app:layout_constraintTop_toTopOf="@id/sdv_header"
-        tools:visibility="gone">
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/sdv_pic"
-            android:layout_width="160dp"
-            android:layout_height="63dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="12dp"
-            app:layout_constraintLeft_toLeftOf="@id/view_pic"
-            app:layout_constraintTop_toTopOf="@id/view_pic" />
-
-        <View
-            android:id="@+id/view_divider_pic"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginRight="12dp"
-            android:background="#D9DBDE" />
-
-        <TextView
-            android:id="@+id/tv_pic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:includeFontPadding="false"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:textColor="@color/black_999"
-            android:textSize="@dimen/sp_12"
-            tools:text="打开链接" />
-    </LinearLayout>
-
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="view_pic,tv_content" />
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/con_action"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="30dp"
-        android:background="@drawable/bg_message_system"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrier_bottom"
-        tools:visibility="gone">
-
-        <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
-            android:id="@+id/draweeSpanTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="22dp"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/pk_name_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="九快乐回复接口和史蒂芬" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:constraint_referenced_ids="tv_pic_content,tv_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -359,3 +359,35 @@ object CancelType {
     //超时
     const val Timeout = "Timeout"
 }
+
+/**
+ * 语音会话结果状态
+ */
+object VoiceResultType {
+    //已接通，正常结束
+    const val CONMMUNICATION_FINISH = "CONMMUNICATION_FINISH"
+
+    //对方已拒绝
+    const val RECEIVE_REFUSE = "RECEIVE_REFUSE"
+
+    //对方未应答
+    const val RECEIVE_NOT_ACCEPT = "RECEIVE_NOT_ACCEPT"
+
+    //对方忙
+    const val RECEIVE_BUSY = "RECEIVE_BUSY"
+
+    //已取消
+    const val CANCEL = "CANCEL"
+
+}
+
+/**
+ * 私聊  自定义消息 type
+ */
+object MessageCustomBeanType {
+    //礼物消息
+    const val Gift = "Gift"
+
+    //模拟语音通话消息
+    const val Voice_Conmmunication_Simulate = "Voice_Conmmunication_Simulate"
+}

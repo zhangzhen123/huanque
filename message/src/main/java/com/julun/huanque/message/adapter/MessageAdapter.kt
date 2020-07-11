@@ -1,20 +1,31 @@
 package com.julun.huanque.message.adapter
 
 import android.net.Uri
-import android.provider.MediaStore.Images.Media.getBitmap
+import android.text.Spanned
+import android.text.format.Time
+import android.text.style.ForegroundColorSpan
 import android.view.View
-import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
 import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate
 import com.chad.library.adapter.base.module.UpFetchModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.drawable.ScalingUtils
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
+import com.facebook.drawee.span.DraweeSpan
+import com.facebook.drawee.span.DraweeSpanStringBuilder
+import com.facebook.drawee.span.SimpleDraweeSpanTextView
+import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.ChatUserBean
+import com.julun.huanque.common.bean.message.CustomMessage
+import com.julun.huanque.common.bean.message.CustomSimulateMessage
+import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
+import com.julun.huanque.common.constant.MessageCustomBeanType
+import com.julun.huanque.common.constant.VoiceResultType
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
@@ -24,6 +35,7 @@ import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import org.jetbrains.anko.bottomPadding
 import java.io.File
+import kotlin.math.max
 
 
 /**
@@ -64,6 +76,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
         //单独显示底部操作视图
         const val ACTION_VIEW = "ACTION_VIEW"
+
+        //礼物视图
+        const val GIFT_VIEW = "GIFT_VIEW"
     }
 
     init {
@@ -96,8 +111,6 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         if (helper.itemViewType == OTHER) {
             //头像和直播状态
             ImageUtils.loadImage(helper.getView(R.id.sdv_header), otherUserInfo?.headPic ?: "", 40f, 40f)
-            //点击事件
-//            helper.addOnClickListener(R.id.sdv_header)
         } else {
             if (helper.itemViewType == MINE) {
 //                helper.addOnClickListener(R.id.sdv_header)
@@ -126,41 +139,75 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             ImageUtils.loadImage(helper.getView(R.id.sdv_header), SessionUtils.getHeaderPic(), 40f, 40f)
         }
 
-        //通用内容处理
-        val tvContent = helper.getView<TextView>(R.id.tv_content)
-        tvContent.maxWidth = ScreenUtils.getScreenWidth() - DensityHelper.dp2px(65f) * 2
-        if (content is TextMessage) {
-            showMessageView(helper, TEXT_MESSAGE, helper.itemViewType)
-            tvContent.text = EmojiUtil.message2emoji(content.content)
-        } else if (content is ImageMessage) {
-            //图片信息
-            showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
-            if (helper.itemViewType == OTHER) {
-                //接收方查看图片
-//                content.localUri
-                val file = File("${content.thumUri}")
-                if (file.exists()) {
-                    //显示缩略图
-                    ImageUtils.loadNativeFilePath(helper.getView(R.id.sdv_image), "${content.thumUri}", 100f, 100f)
-                } else {
-                    //显示远程图片
-                    ImageUtils.loadImage(helper.getView(R.id.sdv_image), "${content.remoteUri}", 100f, 100f)
+        if (content is CustomMessage) {
+            //自定义消息
+            when (content.type) {
+                MessageCustomBeanType.Gift -> {
+                    showMessageView(helper, GIFT_VIEW, helper.itemViewType)
+                    showGiftView(helper, content.context)
                 }
-            } else {
-                //发送方查看图片
-                val file = File("${content.thumUri?.path}")
-                if (file.exists()) {
-                    //图片存在，显示本地图片
-                    ImageUtils.loadNativeFilePath(helper.getView(R.id.sdv_image), "${content.thumUri?.path}", 100f, 100f)
-                } else {
-                    //图片不存在，显示远程图片
-                    ImageUtils.loadImage(helper.getView(R.id.sdv_image), "${content.remoteUri}", 100f, 100f)
+                else -> {
                 }
-//                logger("DXC  exists = ${file.exists()} , remoteUri = ${content.remoteUri},content.thumUri.path = ${content.thumUri?.path},thumUri = ${content.thumUri}")
             }
 
-        }
+        } else if (content is CustomSimulateMessage) {
+            when (content.type) {
+                MessageCustomBeanType.Voice_Conmmunication_Simulate -> {
+                    //语音消息
+                    showMessageView(helper, TEXT_MESSAGE, helper.itemViewType)
+                    //
+                    val tvContent = helper.getView<TextView>(R.id.tv_content)
+                    if (helper.itemViewType == OTHER) {
+                        tvContent.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.icon_phone_voice, 0, 0, 0)
+                    } else if (helper.itemViewType == MINE) {
+                        tvContent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.icon_phone_voice, 0)
+                    }
+                    tvContent.compoundDrawablePadding = 15
+                    showVoiceView(tvContent, content.context)
+                }
+                else -> {
+                }
+            }
+        } else {
+            //通用内容处理
+            val tvContent = helper.getView<TextView>(R.id.tv_content)
 
+            tvContent.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+            tvContent.compoundDrawablePadding = 0
+
+            tvContent.maxWidth = ScreenUtils.getScreenWidth() - DensityHelper.dp2px(65f) * 2
+            if (content is TextMessage) {
+                showMessageView(helper, TEXT_MESSAGE, helper.itemViewType)
+                tvContent.text = EmojiUtil.message2emoji(content.content)
+            } else if (content is ImageMessage) {
+                //图片信息
+                showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
+                if (helper.itemViewType == OTHER) {
+                    //接收方查看图片
+//                content.localUri
+                    val file = File("${content.thumUri}")
+                    if (file.exists()) {
+                        //显示缩略图
+                        ImageUtils.loadNativeFilePath(helper.getView(R.id.sdv_image), "${content.thumUri}", 100f, 100f)
+                    } else {
+                        //显示远程图片
+                        ImageUtils.loadImage(helper.getView(R.id.sdv_image), "${content.remoteUri}", 100f, 100f)
+                    }
+                } else {
+                    //发送方查看图片
+                    val file = File("${content.thumUri?.path}")
+                    if (file.exists()) {
+                        //图片存在，显示本地图片
+                        ImageUtils.loadNativeFilePath(helper.getView(R.id.sdv_image), "${content.thumUri?.path}", 100f, 100f)
+                    } else {
+                        //图片不存在，显示远程图片
+                        ImageUtils.loadImage(helper.getView(R.id.sdv_image), "${content.remoteUri}", 100f, 100f)
+                    }
+//                logger("DXC  exists = ${file.exists()} , remoteUri = ${content.remoteUri},content.thumUri.path = ${content.thumUri?.path},thumUri = ${content.thumUri}")
+                }
+
+            }
+        }
         //时间相关处理
         val currentPosition = helper.adapterPosition
         val previousPosition = currentPosition - 1
@@ -188,8 +235,6 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             container.bottomPadding = 0
         }
 
-        val conAction = helper.getView<View>(R.id.con_action)
-        conAction.hide()
     }
 
     /**
@@ -203,17 +248,11 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             rl_content = holder.getView<View>(R.id.rl_content)
         }
         val tv_content = holder.getView<TextView>(R.id.tv_content)
-        //图片消息 相关视图
-        val view_pic = holder.getView<View>(R.id.view_pic)
-        val sdv_pic = holder.getView<View>(R.id.sdv_pic)
-        val view_divider_pic = holder.getView<View>(R.id.view_divider_pic)
-//        val tv_pic = holder.getView<View>(R.id.tv_pic)
-        //操作视图
-        val con_action = holder.getView<View>(R.id.con_action)
+
         //头像视图
         val sdv_header = holder.getView<View>(R.id.sdv_header)
         val sdv_image = holder.getView<View>(R.id.sdv_image)
-//        val fl_living = holder.getView<View>(R.id.fl_living)
+        val tv_pic_content = holder.getView<View>(R.id.tv_pic_content)
 
         when (messageType) {
             TEXT_MESSAGE -> {
@@ -222,10 +261,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 rl_content?.show()
                 tv_content.show()
 
-                view_pic.hide()
-                sdv_pic.hide()
-                view_divider_pic.hide()
-//                tv_pic.hide()
+                tv_pic_content.hide()
                 sdv_image.hide()
             }
             PIC_MESSAGE_SYSTEM -> {
@@ -235,21 +271,12 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 rl_content?.hide()
                 tv_content.hide()
 
-                view_pic.show()
-                sdv_pic.show()
-                view_divider_pic.show()
                 sdv_image.hide()
+                tv_pic_content.hide()
             }
             ACTION_VIEW -> {
-                //只显示底部操作视图,隐藏其他视图
-                con_action.show()
-
                 rl_content?.hide()
                 tv_content.hide()
-                view_pic.hide()
-                sdv_pic.hide()
-                view_divider_pic.hide()
-//                tv_pic.hide()
                 sdv_header.hide()
 //                fl_living?.hide()
             }
@@ -258,59 +285,106 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 rl_content?.show()
                 sdv_image.show()
 
-                view_pic.hide()
-                sdv_pic.hide()
-                view_divider_pic.hide()
-//                tv_pic.hide()
+                tv_pic_content.hide()
+                tv_content.hide()
+            }
+            GIFT_VIEW -> {
+                sdv_header.show()
+                rl_content?.show()
+                sdv_image.show()
+                tv_pic_content.show()
+
                 tv_content.hide()
             }
             else -> {
 
             }
         }
-
-
     }
 
-//    fun setResource(imageUri: Uri?) {
-//        val options: DisplayImageOptions = createDisplayImageOptions(0, true)
-//        if (imageUri != null) {
-//            val file = File(imageUri.getPath())
-//            if (!file.exists()) {
-//                val imageViewAware = ImageViewAware(this)
-//                ImageLoader.getInstance().displayImage(imageUri.toString(), imageViewAware, options, null, null)
-//            } else {
-//                val bitmap: Bitmap? = getBitmap(imageUri)
-//                if (bitmap != null) {
-//                    setLayoutParam(bitmap)
-//                    setImageBitmap(bitmap)
-//                } else {
-//                    setImageBitmap(null)
-//                    val params: ViewGroup.LayoutParams = getLayoutParams()
-//                    params.height = RongUtils.dip2px(80)
-//                    params.width = RongUtils.dip2px(110)
-//                    setLayoutParams(params)
-//                }
-//            }
-//        }
-//    }
+    /**
+     * 显示礼物视图的数据
+     */
+    private fun showGiftView(helper: BaseViewHolder, str: String) {
+        try {
+            val chatGift = JsonUtil.deserializeAsObject<ChatGift>(str, ChatGift::class.java)
+            ImageUtils.loadImage(helper.getView(R.id.sdv_image), chatGift.selPic, 100f, 100f)
+            val draweeView = helper.getView<SimpleDraweeSpanTextView>(R.id.tv_pic_content)
+            val bi = chatGift.beans * max(chatGift.giftCount, 1)
+            val str = "送你一${chatGift.giftName}+#$bi"
 
-//    fun setResource(imageUri: Uri?) {
-//        val options: DisplayImageOptions = createDisplayImageOptions(0, true)
-//        if (imageUri != null) {
-//            val file = File(imageUri.path)
-//            val bitmap: Bitmap? = getBitmap(imageUri)
-//            if (bitmap != null) {
-//                setLayoutParam(bitmap)
-//                setImageBitmap(bitmap)
-//            } else {
-//                setImageBitmap(null)
-//                val params: ViewGroup.LayoutParams = getLayoutParams()
-//                params.height = RongUtils.dip2px(80)
-//                params.width = RongUtils.dip2px(110)
-//                setLayoutParams(params)
-//            }
-//        }
-//    }
+            val draweeSpanStringBuilder = DraweeSpanStringBuilder(str)
+            val draweeHierarchy = GenericDraweeHierarchyBuilder.newInstance(context.resources)
+                .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE)
+                .build()
+            val uri = Uri.parse("res://${context!!.packageName}/" + R.mipmap.icon_quebi_message)
 
+            val controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                .build()
+
+            val index = str.indexOf("#")
+
+            draweeSpanStringBuilder.setImageSpan(
+                context, /* Context */
+                draweeHierarchy, /* hierarchy to be used */
+                controller, /* controller to be used to update the hierarchy */
+                index, /* image index within the text */
+                30, /* image width */
+                30, /* image height */
+                false, /* auto resize */
+                DraweeSpan.ALIGN_CENTER
+            ) /* alignment */
+
+            draweeSpanStringBuilder.setSpan(
+                ForegroundColorSpan(GlobalUtils.getColor(R.color.color_quebi)), index, str.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+            draweeView.setDraweeSpanStringBuilder(draweeSpanStringBuilder)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * 显示模拟的语音消息
+     */
+    private fun showVoiceView(tv: TextView, str: String) {
+
+        try {
+            val voiceBean = JsonUtil.deserializeAsObject<VoiceConmmunicationSimulate>(str, VoiceConmmunicationSimulate::class.java)
+            var showStr = ""
+            when (voiceBean.type) {
+                VoiceResultType.CONMMUNICATION_FINISH -> {
+                    //已接通，正常结束
+                    showStr = "聊天时长 ${TimeUtils.countDownTimeFormat1(voiceBean.duration)}"
+                }
+                VoiceResultType.RECEIVE_REFUSE -> {
+                    //对方已拒绝
+                    showStr = "对方已拒绝"
+                }
+                VoiceResultType.RECEIVE_NOT_ACCEPT -> {
+                    //对方未应答
+                    showStr = "对方未应答"
+                }
+                VoiceResultType.RECEIVE_BUSY -> {
+                    //对方忙
+                    showStr = "对方忙"
+                }
+                VoiceResultType.CANCEL -> {
+                    //主叫取消通话
+                    showStr = "已取消"
+                }
+                else -> {
+                }
+
+            }
+            tv.text = showStr
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
 }
