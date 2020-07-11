@@ -59,6 +59,7 @@ class CommonInit {
     //当前处于活动状态的Activity
     private var mActivityReference: WeakReference<Activity>? = null
 
+
     //判断app是否在前台
     var isAppOnForeground: Boolean = false
 
@@ -73,6 +74,18 @@ class CommonInit {
             mActivityReference?.clear()
     }
 
+    //保存首页引用 以供特殊地方使用
+    private var mMainActivityReference: WeakReference<Activity>? = null
+    fun getMainActivity(): Activity? {
+        return mMainActivityReference?.get()
+    }
+
+    fun setMainActivity(activity: Activity?) {
+        if (activity != null)
+            mMainActivityReference = WeakReference(activity)
+        else
+            mMainActivityReference?.clear()
+    }
 
     fun getContext(): Context {
         return mContext.applicationContext

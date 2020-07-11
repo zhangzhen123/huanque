@@ -7,6 +7,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.react.bridge.Arguments
 import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
@@ -28,6 +29,8 @@ import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.android.synthetic.main.activity_test.*
+import kotlinx.android.synthetic.main.activity_test.test_rn
+import kotlinx.android.synthetic.main.fragment_mine.*
 import org.jetbrains.anko.startActivity
 
 /**
@@ -99,7 +102,13 @@ class TestActivity : BaseActivity() {
             gift.show(this,"ChatSendGiftFragment")
         }
 
-
+        test_real.onClickNew {
+            //实名认证界面
+            ARouter.getInstance().build(ARouterConstant.REALNAME_MAIN_ACTIVITY).navigation()
+        }
+        tv_clear_session.onClickNew {
+            SessionUtils.clearSession()
+        }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.marginTop
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,10 +27,12 @@ import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.adapter.ConversationListAdapter
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.message.widget.MessageHeaderView
+import com.luck.picture.lib.tools.StatusBarUtil
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_message.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.topPadding
 import java.lang.Exception
 
 /**
@@ -56,6 +59,8 @@ class MessageFragment : BaseFragment() {
 
     override fun getLayoutId() = R.layout.fragment_message
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        //设置头部边距
+        msg_container.topPadding= StatusBarUtil.getStatusBarHeight(requireContext())
         initViewModel()
         initRecyclerView()
         initHeaderView()

@@ -18,6 +18,7 @@ import com.julun.huanque.common.bean.beans.NetCallReceiveBean
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ConmmunicationUserType
 import com.julun.huanque.common.constant.ParamKey
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
@@ -76,6 +77,7 @@ class MainActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.main_activity
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        CommonInit.getInstance().setMainActivity(this)
         //连接融云
         RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
         logger.info("DXC  userID = ${SessionUtils.getUserId()}，header = ${SessionUtils.getHeaderPic()}")

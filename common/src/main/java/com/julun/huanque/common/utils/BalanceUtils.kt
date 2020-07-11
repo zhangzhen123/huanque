@@ -2,12 +2,10 @@ package com.julun.huanque.common.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.database.table.Balance
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**

@@ -25,8 +25,8 @@ typealias SBlock<T> = suspend () -> T
 typealias SNError = suspend (t: Throwable) -> Unit
 typealias SNAction = suspend () -> Unit
 
-fun <T> Root<T>.dataConvert(): T {
-    return mapper(this)
+fun <T> Root<T>.dataConvert( intArray: IntArray? = null): T {
+    return mapper(this,intArray)
 }
 
 /**

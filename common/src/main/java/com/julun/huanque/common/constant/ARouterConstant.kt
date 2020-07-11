@@ -40,6 +40,8 @@ object ARouterConstant {
 
     //语音页面
     const val VOICE_CHAT_ACTIVITY = "/$AGORA$PREFIX_ACTIVITY/VoiceChatActivity"
+    //充值页面
+    const val RECHARGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/RechargeCenterActivity"
 
     /** 实名认证 start **/
     const val REALNAME = "realname"
@@ -49,4 +51,6 @@ object ARouterConstant {
     const val REALNAME_SERVICE = "/$REALNAME$SERVICE/RealNameService"
     /** 实名认证 end **/
 
+    //微信支付服务
+    const val WEIXIN_PAY_SERVICE = "/$APP$SERVICE/WeiXinPayService"
 }
