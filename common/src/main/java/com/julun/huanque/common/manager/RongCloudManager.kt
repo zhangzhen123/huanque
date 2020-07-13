@@ -277,11 +277,11 @@ object RongCloudManager {
             }
 
         }
-        if (targetId == "${SessionUtils.getUserId()}") {
+        if (senderId == targetId) {
             //插入接收消息
             val receivedStatus = Message.ReceivedStatus(0x1);
             RongIMClient.getInstance()
-                .insertIncomingMessage(conversationType, senderId, senderId, receivedStatus, messageContent, callback)
+                .insertIncomingMessage(conversationType, targetId, senderId, receivedStatus, messageContent, callback)
         } else {
             //插入发送消息
             RongIMClient.getInstance().insertOutgoingMessage(conversationType, targetId, Message.SentStatus.SENT, messageContent, callback)

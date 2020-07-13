@@ -394,11 +394,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
         val chatExtra = RoomUserChatExtra()
         val sId: String
-        val tId: String
+        val tId = "${targetChatInfo.userId}"
 
         if (createUserId == SessionUtils.getUserId()) {
             //本人是主叫(插入发送消息)
-            tId = "${targetChatInfo.userId}"
             sId = "${SessionUtils.getUserId()}"
             targetUser.apply {
                 headPic = targetChatInfo.headPic
@@ -415,7 +414,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             }
         } else {
             //本人是被叫（插入接收消息）
-            tId = "${SessionUtils.getUserId()}"
             sId = "${targetChatInfo.userId}"
             targetUser.apply {
                 headPic = SessionUtils.getHeaderPic()
