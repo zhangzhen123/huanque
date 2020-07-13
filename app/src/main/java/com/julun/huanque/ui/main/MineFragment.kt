@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
@@ -21,6 +22,7 @@ import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.StatusBarUtil
@@ -99,6 +101,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         }
         toolsAdapter.setOnItemClickListener { _, _, position ->
             //todo
+        }
+        ivSetting.onClickNew {
+            ARouter.getInstance().build(ARouterConstant.REALNAME_MAIN_ACTIVITY).navigation()
         }
     }
 
