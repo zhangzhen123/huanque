@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -39,6 +40,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.internal.operators.observable.ObservableTake
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.act_voice_chat.*
+import org.jetbrains.anko.Android
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -59,6 +61,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun getLayoutId() = R.layout.act_voice_chat
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         StatusBarUtil.setTransparent(this)
         initViewModel()
         mType = intent?.getStringExtra(ParamKey.TYPE) ?: ""
@@ -118,7 +121,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         //主叫取消会话消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallCancelProcessor {
             override fun process(data: VoidResult) {
-                mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.CONMMUNICATION_FINISH)
+                mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }
         })
@@ -150,10 +153,11 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         })
         //余额不足提醒消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallBalanceRemindProcessor {
-            override fun process(data: VoidResult) {
-//                mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
+            override fun process(data: NetCallBalanceRemindBean) {
+                showBalanceNotEnoughView(data)
             }
         })
+
     }
 
     override fun initEvents(rootView: View) {
@@ -171,8 +175,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             //静音
             ll_quiet.isSelected = !ll_quiet.isSelected
             val volume = if (ll_quiet.isSelected) 0 else 100
-            AgoraManager.mRtcEngine?.adjustPlaybackSignalVolume(volume)
-            AgoraManager.mRtcEngine?.adjustAudioMixingPlayoutVolume(volume)
+            AgoraManager.mRtcEngine?.adjustRecordingSignalVolume(volume)
         }
 
         //adjustRecordingSignalVolume()
@@ -292,6 +295,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         leaveChannel()
 //                        ToastUtils.show("通话已结束")
                         mDisposable?.dispose()
+                        mDurationDisposable?.dispose()
                         Observable.timer(1, TimeUnit.SECONDS)
                             .bindUntilEvent(this, ActivityEvent.DESTROY)
                             .observeOn(AndroidSchedulers.mainThread())
@@ -508,6 +512,44 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onError(err: Int) {
         logger.info("$TAG onError err = $err")
     }
+
+
+    //余额不足，剩余时间使用的定时器
+    private var mDurationDisposable: Disposable? = null
+
+    /**
+     * 显示余额不足弹窗
+     */
+    private fun showBalanceNotEnoughView(bean: NetCallBalanceRemindBean) {
+        if (bean.enough) {
+            //隐藏视图
+            mDurationDisposable?.dispose()
+            view_balance.hide()
+            tv_recharge.hide()
+            tv_attention.hide()
+            tv_surplus_time.hide()
+
+        } else {
+            //显示视图
+            view_balance.show()
+            tv_recharge.show()
+            tv_attention.show()
+            tv_surplus_time.show()
+
+            mDurationDisposable?.dispose()
+            val duration = bean.duration
+            mDurationDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
+                .take(duration + 1)
+                .map { "${duration - it}" }
+                .bindUntilEvent(this, ActivityEvent.DESTROY)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    tv_surplus_time.text = it
+                }, { it.printStackTrace() })
+        }
+
+    }
+
 
     override fun onViewDestroy() {
         super.onViewDestroy()

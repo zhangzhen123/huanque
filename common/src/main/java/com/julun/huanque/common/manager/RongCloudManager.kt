@@ -677,7 +677,7 @@ object RongCloudManager {
                         }
                         MessageProcessor.MessageType.Event.name -> {
                             val eventCode = jsonObject.getString(MessageProcessor.EVENT_CODE)
-                            if (!TextUtils.isEmpty(eventCode) && eventCode == EventMessageType.MsgCenterNewMsg.name) {
+                            if (!TextUtils.isEmpty(eventCode)) {
                                 if (message.receivedStatus.isRetrieved) {
                                     //如果这条消息被被其他登录的多端收取过，那么直接丢弃
                                     return@forEach

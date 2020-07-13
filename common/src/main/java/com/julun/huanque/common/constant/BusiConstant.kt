@@ -370,6 +370,9 @@ object VoiceResultType {
     //对方已拒绝
     const val RECEIVE_REFUSE = "RECEIVE_REFUSE"
 
+    //被叫拒绝通话（被叫方使用）
+    const val MINE_REFUSE = "MINE_REFUSE"
+
     //对方未应答
     const val RECEIVE_NOT_ACCEPT = "RECEIVE_NOT_ACCEPT"
 

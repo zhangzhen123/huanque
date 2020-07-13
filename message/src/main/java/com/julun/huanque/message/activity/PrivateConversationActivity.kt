@@ -238,12 +238,12 @@ class PrivateConversationActivity : BaseActivity() {
         //单价
         val price = mPrivateConversationViewModel?.basicBean?.value?.voiceFee ?: 0
 
-        if (balance < price) {
+        if (balance < price * 2) {
             //余额不足,显示余额不足弹窗
             MyAlertDialog(this).showAlertWithOK(
                 "您的鹊币余额不足",
                 MyAlertDialog.MyDialogCallback(onRight = {
-                    //todo 跳转充值页面
+                    //跳转充值页面
                 }), "余额不足", "去充值"
             )
             return
