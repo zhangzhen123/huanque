@@ -157,6 +157,7 @@
                     app:layout_constraintTop_toTopOf="@id/edit_text" />
 
                 <TextView
+                    android:id="@+id/tv_free"
                     android:layout_width="30dp"
                     android:layout_height="15dp"
                     android:layout_marginRight="9dp"

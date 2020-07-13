@@ -368,7 +368,7 @@ object RongCloudManager {
      */
     fun sendMediaMessage(
         targetId: String, targetUserObj: TargetUserObj? = null, type: Conversation.ConversationType, compressLocalImage: String
-        , localImage: String
+        , localImage: String, callback: (IRongCallback.MediaMessageUploader?, String?) -> Unit = { upLoader, picUrl -> }
     ) {
         val prefix = "file://"
         val localUri = if (localImage.startsWith(prefix)) {
@@ -393,7 +393,8 @@ object RongCloudManager {
                         logger("DXC 头像上传oss成功：${list} localImage = $localImage")
                         val headPic = list?.firstOrNull()
                         if (headPic != null) {
-                            uploader?.success(Uri.parse("$headPic"))
+                            callback(uploader,headPic)
+//                            uploader?.success(Uri.parse("$headPic"))
                         }
                     } else {
                         uploader?.error()

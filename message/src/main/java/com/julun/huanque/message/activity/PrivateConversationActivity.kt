@@ -215,6 +215,17 @@ class PrivateConversationActivity : BaseActivity() {
                 sendChatMessage(messageType = Message_Gift)
             }
         })
+        mPrivateConversationViewModel?.msgFeeData?.observe(this, Observer {
+            if (it != null) {
+                if (it > 0) {
+                    //不免费
+                    tv_free.hide()
+                } else {
+                    //免费
+                    tv_free.show()
+                }
+            }
+        })
     }
 
     override fun initEvents(rootView: View) {
@@ -425,7 +436,6 @@ class PrivateConversationActivity : BaseActivity() {
                             }
                         }
                     }
-
                 }
             }.contentCanScrollOutside(false)    //可选模式，默认true，当面板实现时内容区域是否往上滑动
                 .logTrack(true)                 //可选，默认false，是否开启log信息输出
@@ -571,11 +581,19 @@ class PrivateConversationActivity : BaseActivity() {
         when (messageType) {
             Message_Text -> {
                 //文本消息
-                RongCloudManager.send(message, "${targetChatInfo.userId}", targetUserObj = targetUser) {}
+                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser)
             }
             Message_Pic -> {
                 //图片消息
-                RongCloudManager.sendMediaMessage("${targetChatInfo.userId}", targetUser, Conversation.ConversationType.PRIVATE, pic, localPic)
+                RongCloudManager.sendMediaMessage(
+                    "${targetChatInfo.userId}",
+                    targetUser.apply { fee = mPrivateConversationViewModel?.msgFeeData?.value ?: 0 },
+                    Conversation.ConversationType.PRIVATE,
+                    pic,
+                    localPic
+                ) { upLoader, headerPic ->
+                    mPrivateConversationViewModel?.sendPic(upLoader, targetChatInfo.userId, "$headerPic")
+                }
             }
             Message_Gift -> {
                 //送礼消息

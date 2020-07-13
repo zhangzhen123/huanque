@@ -1,23 +1,18 @@
 package com.julun.huanque.agora.activity
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.agora.AgoraManager
 import com.julun.huanque.agora.R
 import com.julun.huanque.agora.handler.EventHandler
 import com.julun.huanque.agora.viewmodel.VoiceChatViewModel
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.basic.VoidResult
-import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.constant.*
@@ -25,7 +20,6 @@ import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.onClick
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
@@ -40,8 +34,6 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.internal.operators.observable.ObservableTake
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.act_voice_chat.*
-import org.jetbrains.anko.Android
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -127,7 +119,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         })
         //挂断消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallHangUpProcessor {
-            override fun process(data: NetCallHangUpBeam) {
+            override fun process(data: NetCallHangUpBean) {
                 if (data.hangUpId != SessionUtils.getUserId()) {
                     //非本人挂断
                     mVoiceChatViewModel?.voiceBeanData?.value =

@@ -87,7 +87,9 @@ class TargetUserObj(
     //性别
     var sex: String = "",
     //用户ID
-    var userId: Long = 0L
+    var userId: Long = 0L,
+    //本次花费金额（发送消息的时候传值）
+    var fee: Long = 0
 )
 
 /**

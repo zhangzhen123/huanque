@@ -1,5 +1,6 @@
 package com.julun.huanque.message.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.forms.FriendIdForm
+import com.julun.huanque.common.bean.forms.SendMsgForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.database.table.Balance
 import com.julun.huanque.common.manager.RongCloudManager
@@ -19,6 +21,7 @@ import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.rong.imlib.IRongCallback
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
@@ -64,6 +67,9 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //余额数据
     val balance: LiveData<Long> by lazy { BalanceUtils.getBalance() }
+
+    //当前发送消费花费金额
+    val msgFeeData : MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
 
     //小鹊语料数据
     var wordList = mutableListOf<ActiveWord>()
@@ -153,6 +159,7 @@ class PrivateConversationViewModel : BaseViewModel() {
 
                 chatInfoData.value = result.friendUser
                 intimateData.value = result.intimate
+                msgFeeBean.value = result.msgFee
                 basicBean.value = result
                 BalanceUtils.saveBalance(result.beans)
             }, {
@@ -178,6 +185,34 @@ class PrivateConversationViewModel : BaseViewModel() {
                 val result = socialService.getActiveWord().dataConvert()
                 wordList.clear()
                 wordList.addAll(result.activeList)
+            })
+        }
+    }
+
+    /**
+     * 发送消息接口
+     */
+    fun sendMsg(targetId: Long, content: String, targetUser: TargetUserObj) {
+        viewModelScope.launch {
+            request({
+                val result = socialService.sendMsg(SendMsgForm(targetId, content)).dataConvert()
+                BalanceUtils.saveBalance(result.beans)
+                RongCloudManager.send(content, "$targetId", targetUserObj = targetUser.apply { fee = result.consumeBeans }) {}
+            }, {})
+        }
+    }
+
+    /**
+     * 发送图片消息
+     */
+    fun sendPic(uploader: IRongCallback.MediaMessageUploader?, targetId: Long, content: String) {
+        viewModelScope.launch {
+            request({
+                val result = socialService.sendPic(SendMsgForm(targetId, content)).dataConvert()
+                BalanceUtils.saveBalance(result.beans)
+                uploader?.success(Uri.parse(content))
+            }, {
+                uploader?.error()
             })
         }
     }

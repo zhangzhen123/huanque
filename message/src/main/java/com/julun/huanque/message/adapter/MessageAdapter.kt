@@ -17,6 +17,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.span.DraweeSpan
 import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.drawee.span.SimpleDraweeSpanTextView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.bean.message.CustomMessage
@@ -110,7 +111,11 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         //其它的普通聊天消息
         if (helper.itemViewType == OTHER) {
             //头像和直播状态
-            ImageUtils.loadImage(helper.getView(R.id.sdv_header), otherUserInfo?.headPic ?: "", 40f, 40f)
+            val sdv_header = helper.getView<SimpleDraweeView>(R.id.sdv_header)
+
+            ImageUtils.setDefaultHeaderPic(sdv_header, otherUserInfo?.headPic ?: "")
+
+            ImageUtils.loadImage(sdv_header, otherUserInfo?.headPic ?: "", 40f, 40f)
         } else {
             if (helper.itemViewType == MINE) {
 //                helper.addOnClickListener(R.id.sdv_header)
@@ -136,7 +141,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 //                }
 //            }
             //显示本人头像
-            ImageUtils.loadImage(helper.getView(R.id.sdv_header), SessionUtils.getHeaderPic(), 40f, 40f)
+            val sdv_header = helper.getView<SimpleDraweeView>(R.id.sdv_header)
+            ImageUtils.setDefaultHeaderPic(sdv_header, SessionUtils.getSex())
+            ImageUtils.loadImage(sdv_header, SessionUtils.getHeaderPic(), 40f, 40f)
         }
 
         if (content is CustomMessage) {

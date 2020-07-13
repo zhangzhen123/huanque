@@ -119,7 +119,7 @@ class ConversationBasicBean(
     //账户余额
     var beans: Long = 0,
     //私信费用
-    var msgFee: Int = 0,
+    var msgFee: Long = 0,
     //语音费用
     var voiceFee: Int = 0
 )

@@ -149,9 +149,14 @@ class VoiceChatViewModel : BaseViewModel() {
     fun hangUpVoice() {
         viewModelScope.launch {
             request({
-                socialService.netcallHangUp(NetcallHangUpForm(callId, duration)).dataConvert()
+                val result = socialService.netcallHangUp(NetcallHangUpForm(callId, duration)).dataConvert()
+                voiceBeanData.value = VoiceConmmunicationSimulate(
+                    VoiceResultType.CONMMUNICATION_FINISH,
+                    result.duration,
+                    billUserId = result.billUserId,
+                    totalBeans = result.totalBeans
+                )
                 currentVoiceState.value = VOICE_CLOSE
-                voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.CONMMUNICATION_FINISH, duration)
             })
         }
     }

@@ -113,7 +113,7 @@ data class NetCallAcceptBean(var callId: Long = 0, var startTime: Long = 0, var 
 /**
  * 通话挂断消息
  */
-data class NetCallHangUpBeam(
+data class NetCallHangUpBean(
     var callId: Long = 0,
     //挂断通话的用户ID
     var hangUpId: Long = 0,

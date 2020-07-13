@@ -79,7 +79,7 @@ interface SocialService {
      * 挂断通话
      */
     @POST("social/friend/netcall/hangUp")
-    suspend fun netcallHangUp(@Body form: NetcallHangUpForm): Root<VoidResult>
+    suspend fun netcallHangUp(@Body form: NetcallHangUpForm): Root<NetCallHangUpBean>
 
     /**
      * 好友聊天礼物列表
@@ -98,5 +98,17 @@ interface SocialService {
      */
     @POST("social/friend/chat/getActiveWord")
     suspend fun getActiveWord(@Body form: EmptyForm = EmptyForm()): Root<ActiveBean>
+
+    /**
+     * 发送私聊消息
+     */
+    @POST("social/friend/chat/sendMsg")
+    suspend fun sendMsg(@Body form: SendMsgForm): Root<SendMsgBean>
+
+    /**
+     * 发送图片消息
+     */
+    @POST("social/friend/chat/sendPic")
+    suspend fun sendPic(@Body form: SendMsgForm): Root<SendMsgBean>
 
 }
