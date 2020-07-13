@@ -12,6 +12,8 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import com.julun.huanque.common.R
+import com.julun.huanque.common.constant.MeetStatus
 import com.julun.huanque.common.init.CommonInit
 import java.io.*
 import java.lang.ref.SoftReference
@@ -149,7 +151,6 @@ object GlobalUtils {
     fun getDrawable(@DrawableRes dId: Int) = CommonInit.getInstance().getApp().resources.getDrawable(dId)
 
 
-
     /**
      * 获取Context对应的Activity
      */
@@ -197,6 +198,25 @@ object GlobalUtils {
             }
         } else {
             callback()
+        }
+    }
+
+    /**
+     * 获取欢遇标识
+     */
+    fun getMeetStatusResource(status: String) : Int {
+        return when (status) {
+            MeetStatus.Wait -> {
+                //待欢遇
+                R.mipmap.icon_huanyu_disable
+            }
+            MeetStatus.Meet -> {
+                //欢遇中
+                R.mipmap.icon_huanyu
+            }
+            else -> {
+                0
+            }
         }
     }
 }

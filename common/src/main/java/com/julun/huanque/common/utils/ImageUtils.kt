@@ -27,6 +27,7 @@ import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.julun.huanque.common.R
+import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
@@ -605,6 +606,27 @@ object ImageUtils {
 //                .setUri(Uri.parse(tempUri))//设置uri
             .build()
         sdv.controller = draweeController
+    }
+
+    /**
+     * 设置默认头像
+     */
+    fun setDefaultHeaderPic(sdv: SimpleDraweeView, sex: String, guan: Boolean = false) {
+        val hierarchy = sdv.hierarchy
+        val defaultHeader = if (guan) {
+            //官方
+            R.mipmap.icon_logo_avatar_yellow
+        } else {
+            if (sex == Sex.MALE) {
+                //男性
+                R.mipmap.icon_logo_avatar_blue
+            } else {
+                //女性
+                R.mipmap.icon_logo_avatar_blue
+            }
+        }
+        //设置占位图
+        hierarchy.setPlaceholderImage(defaultHeader)
     }
 
 }

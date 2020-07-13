@@ -28,5 +28,7 @@ data class Session(
     //数据是否完整的标记
     var regComplete: Boolean = false,
     //是否为注册用户
-    var regUser : Boolean = false
+    var regUser: Boolean = false,
+    //性别
+    var sex: String = ""
 )

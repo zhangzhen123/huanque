@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -60,10 +61,20 @@ import java.util.concurrent.TimeUnit
  */
 class PrivateConversationActivity : BaseActivity() {
     companion object {
+        //用户ID
         const val TARGETID = "TARGETID"
-        fun newInstance(activity: Activity, targetId: Long) {
+
+        //昵称
+        const val NICKNAME = "NICKNAME"
+
+        //欢遇标识
+        const val MEET_STATUS = "MEET_STATUS"
+
+        fun newInstance(activity: Activity, targetId: Long, nickname: String = "", meetStatus: String = "") {
             val intent = Intent(activity, PrivateConversationActivity::class.java)
             intent.putExtra(TARGETID, targetId)
+            intent.putExtra(NICKNAME, nickname)
+            intent.putExtra(MEET_STATUS, meetStatus)
             activity.startActivity(intent)
         }
     }
@@ -104,11 +115,41 @@ class PrivateConversationActivity : BaseActivity() {
         initViewModel()
         initRecyclerView()
         val targetID = intent?.getLongExtra(TARGETID, 0)
+        val nickName = intent?.getStringExtra(NICKNAME) ?: ""
+        val meetStatus = intent?.getStringExtra(MEET_STATUS) ?: ""
+        showTitleView(nickName, meetStatus)
         mPrivateConversationViewModel?.targetIdData?.value = targetID
         registerMessageEventProcessor()
         //        mPrivateConversationViewModel?.getMessageList(first = true)
         //获取基本数据
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
+        //获取小鹊语料
+        mPrivateConversationViewModel?.getActiveWord()
+
+    }
+
+    /**
+     * 显示标题
+     */
+    private fun showTitleView(nickname: String, meetStatus: String) {
+        val title = findViewById<TextView>(R.id.tvTitle)
+        if (nickname.isEmpty()) {
+            title.text = "欢鹊"
+        } else {
+            title.text = nickname
+        }
+        val meetResource = GlobalUtils.getMeetStatusResource(meetStatus)
+
+        if (meetResource > 0) {
+            //有欢遇标识
+            title.setCompoundDrawablesWithIntrinsicBounds(0, 0, meetResource, 0)
+            title.compoundDrawablePadding = 5
+        } else {
+            title.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+            title.compoundDrawablePadding = 5
+        }
+
+
     }
 
 
@@ -156,6 +197,7 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.chatInfoData?.observe(this, Observer {
             if (it != null) {
+                showTitleView(it.nickname, it.meetStatus)
                 mAdapter.otherUserInfo = it
                 mAdapter.notifyDataSetChanged()
             }
@@ -221,12 +263,68 @@ class PrivateConversationActivity : BaseActivity() {
             }
 
         }
+
         iv_gift.onClickNew {
             mChatSendGiftFragment = mChatSendGiftFragment ?: ChatSendGiftFragment()
 
             mChatSendGiftFragment?.show(this, "ChatSendGiftFragment")
         }
+
+        iv_xiaoque.onClickNew {
+            //点击小鹊助手
+            showXiaoQueView(true)
+            //显示文案
+            mPrivateConversationViewModel?.let { vModel ->
+                val wordList = vModel.wordList
+                if (wordList.isEmpty()) {
+                    return@onClickNew
+                }
+                vModel.wordPosition++
+                val position = vModel.wordPosition % wordList.size
+                if (ForceUtils.isIndexNotOutOfBounds(position, wordList)) {
+                    val word = wordList[position]
+                    tv_active_content.text = "${word.wordType},\"${word.content}\""
+                }
+            }
+        }
+
+        tv_send_exactly.onClickNew {
+            //小鹊助手，直接发送
+            showXiaoQueView(false)
+            sendChatMessage(getActiveWord(), "", "")
+        }
+        tv_edit.onClickNew {
+            //小鹊助手，编辑
+            showXiaoQueView(false)
+            edit_text.setText(getActiveWord())
+        }
+
+        iv_que_close.onClickNew {
+            showXiaoQueView(false)
+        }
     }
+
+    /**
+     * 获取小鹊助手的文案
+     */
+    private fun getActiveWord(): String {
+        mPrivateConversationViewModel?.let { vModel ->
+            val wordList = vModel.wordList
+            if (wordList.isEmpty()) {
+                return ""
+            }
+            val position = vModel.wordPosition % wordList.size
+            if (ForceUtils.isIndexNotOutOfBounds(position, wordList)) {
+                val word = wordList[position]
+                return word.content
+            } else {
+                return ""
+            }
+
+        }
+        return ""
+    }
+
 
     /**
      * 判断余额
@@ -400,6 +498,32 @@ class PrivateConversationActivity : BaseActivity() {
             }
         } else {
             edit_text.post { mLinearLayoutManager?.scrollToPosition(mAdapter.itemCount - 1) }
+        }
+
+    }
+
+    /**
+     * 显示小鹊提示视图
+     */
+    private fun showXiaoQueView(show: Boolean) {
+        if (show) {
+            //显示助手文案视图
+            view_xiaoque.show()
+            tv_send_exactly.show()
+            iv_que_close.show()
+            tv_edit.show()
+            iv_eye.show()
+            tv_active_content.show()
+            view_xiaoque_top.show()
+        } else {
+            //隐藏助手文案视图
+            view_xiaoque.hide()
+            tv_send_exactly.hide()
+            iv_que_close.hide()
+            tv_edit.hide()
+            iv_eye.hide()
+            tv_active_content.hide()
+            view_xiaoque_top.hide()
         }
 
     }

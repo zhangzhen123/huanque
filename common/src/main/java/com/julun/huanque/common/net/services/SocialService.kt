@@ -73,24 +73,30 @@ interface SocialService {
      * 主叫取消通话
      */
     @POST("social/friend/netcall/cancel")
-    suspend fun netcallCancel(@Body form : NetcallCancelForm) : Root<VoidResult>
+    suspend fun netcallCancel(@Body form: NetcallCancelForm): Root<VoidResult>
 
     /**
      * 挂断通话
      */
     @POST("social/friend/netcall/hangUp")
-    suspend fun netcallHangUp(@Body form : NetcallHangUpForm) : Root<VoidResult>
+    suspend fun netcallHangUp(@Body form: NetcallHangUpForm): Root<VoidResult>
 
     /**
      * 好友聊天礼物列表
      */
     @POST("social/friend/chat/giftsInfo")
-    suspend fun giftsInfo(@Body form : EmptyForm = EmptyForm()) : Root<ChatGiftInfo>
+    suspend fun giftsInfo(@Body form: EmptyForm = EmptyForm()): Root<ChatGiftInfo>
 
     /**
      * 好友聊天赠送礼物
      */
     @POST("social/friend/chat/sendGift")
-    suspend fun sendGift(@Body form : SendChatGiftForm) : Root<ChatSendResult>
+    suspend fun sendGift(@Body form: SendChatGiftForm): Root<ChatSendResult>
+
+    /**
+     * 获取小鹊助手语料
+     */
+    @POST("social/friend/chat/getActiveWord")
+    suspend fun getActiveWord(@Body form: EmptyForm = EmptyForm()): Root<ActiveBean>
 
 }

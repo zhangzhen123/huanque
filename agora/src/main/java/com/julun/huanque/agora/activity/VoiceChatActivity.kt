@@ -407,12 +407,14 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 headPic = targetChatInfo.headPic
                 nickname = targetChatInfo.nickname
                 meetStatus = targetChatInfo.meetStatus
+                sex = targetChatInfo.sex
                 userId = targetChatInfo.userId
             }
             chatExtra.apply {
                 headPic = SessionUtils.getHeaderPic()
                 senderId = SessionUtils.getUserId()
                 nickname = SessionUtils.getNickName()
+                sex = SessionUtils.getSex()
                 targetUserObj = targetUser
                 userAbcd = AppHelper.getMD5(sId)
             }
@@ -424,11 +426,13 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 nickname = SessionUtils.getNickName()
                 meetStatus = targetChatInfo.meetStatus
                 userId = SessionUtils.getUserId()
+                sex = SessionUtils.getSex()
             }
             chatExtra.apply {
                 headPic = targetChatInfo.headPic
                 senderId = targetChatInfo.userId
                 nickname = targetChatInfo.nickname
+                sex = targetChatInfo.sex
                 targetUserObj = targetUser
                 userAbcd = AppHelper.getMD5(sId)
             }

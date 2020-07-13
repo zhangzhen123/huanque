@@ -65,6 +65,11 @@ class PrivateConversationViewModel : BaseViewModel() {
     //余额数据
     val balance: LiveData<Long> by lazy { BalanceUtils.getBalance() }
 
+    //小鹊语料数据
+    var wordList = mutableListOf<ActiveWord>()
+
+    //语料position（当前已显示）
+    var wordPosition = -1
 
     /**
      * 获取消息列表
@@ -142,6 +147,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     headPic = mineInfo.headPic
                     senderId = mineInfo.userId
                     nickname = mineInfo.nickname
+                    sex = mineInfo.sex
                 }
                 RongCloudManager.resetUserInfoData(user)
 
@@ -155,6 +161,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     headPic = SessionUtils.getHeaderPic()
                     senderId = SessionUtils.getUserId()
                     nickname = SessionUtils.getNickName()
+                    sex = SessionUtils.getSex()
                 }
                 RongCloudManager.resetUserInfoData(user)
             })
@@ -162,18 +169,17 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     }
 
-    //获取余额
-//    fun getBalance() {
-//        mBalanceDisposable?.dispose()
-//        BalanceUtils.getBalance()?.let { f ->
-//            mBalanceDisposable = f.subscribeOn(Schedulers.io())
-//                /* .observeOn(Schedulers.io())*/
-//                .subscribe({
-//                    if (it.userId == SessionUtils.getUserId()) {
-//                        //是当前用户的余额
-//                        balance.postValue(it.balance)
-//                    }
-//                }, { it.printStackTrace() })
-//        }
-//    }
+    /**
+     * 获取小鹊语料
+     */
+    fun getActiveWord() {
+        viewModelScope.launch {
+            request({
+                val result = socialService.getActiveWord().dataConvert()
+                wordList.clear()
+                wordList.addAll(result.activeList)
+            })
+        }
+    }
+
 }

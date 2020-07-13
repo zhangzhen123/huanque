@@ -46,25 +46,29 @@ class RunwayCache(
  * userId, nickname, userLevel, royalLevel, roomGuardPic, roomManagerPic, officalManagerPic, badgesPic, nickcolor,textColor
  */
 class RoomUserChatExtra(
-    var userId: Int = -1
-    , var userAbcd: String = ""
-    , var nickname: String = "", var royalLevel: Int = 0
-    , var userLevel: Int = 0
-    , var anchorLevel: Int = -1
-    , var badgesPic: List<String?> = ArrayList()//添加勋章列表
-    , var nickcolor: String = ""
-    , var textColor: String = ""
-    , var senderId: Long = 0 //发送者的ID
+    var userId: Int = -1,
+    var userAbcd: String = "",
+    var nickname: String = "", var royalLevel: Int = 0,
+    var userLevel: Int = 0,
+    var anchorLevel: Int = -1,
+    //添加勋章列表
+    var badgesPic: List<String?> = ArrayList(),
+    var nickcolor: String = "",
+    var textColor: String = "",
+    //发送者的ID
+    var senderId: Long = 0,
     //发送者的头像
-    , var headPic: String = ""
-    , var targetUserObj: TargetUserObj? = null
+    var headPic: String = "",
+    //发送者的性别
+    var sex: String = "",
+    var targetUserObj: TargetUserObj? = null,
     //贵族图片，远程图片
-    , var royalPic: String = ""
+    var royalPic: String = "",
     //贵族图片，远程图片(圆角小图片)
-    , var royalSmallPic: String = ""
+    var royalSmallPic: String = "",
     //msgType= 1 表示为系统消息
-    , var msgType: Int = 0,
-//显示类别 炫彩发言使用
+    var msgType: Int = 0,
+    //显示类别 炫彩发言使用
     var displayType: List<String>? = null
 )
 
@@ -80,6 +84,8 @@ class TargetUserObj(
     var intimateLevel: Int = 0,
     //欢遇标识
     var meetStatus: String = "",
+    //性别
+    var sex: String = "",
     //用户ID
     var userId: Long = 0L
 )

@@ -246,7 +246,7 @@ class MessageViewModel : BaseViewModel() {
         var user: RoomUserChatExtra? = null
         try {
             user = JsonUtil.deserializeAsObject(extra, RoomUserChatExtra::class.java)
-        }catch (e : Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
         var currentUser: ChatUser? = null
@@ -261,6 +261,8 @@ class MessageViewModel : BaseViewModel() {
                     meetStatus = user.targetUserObj?.meetStatus ?: ""
                     //用户ID
                     userId = user.targetUserObj?.userId ?: 0
+                    //用户性别
+                    sex = user.targetUserObj?.sex ?: ""
                 }
             } else {
                 //对方发送消息
@@ -272,6 +274,8 @@ class MessageViewModel : BaseViewModel() {
                     meetStatus = user.targetUserObj?.meetStatus ?: ""
                     //用户ID
                     userId = user.senderId
+                    //用户性别
+                    sex = user.sex
                 }
             }
 

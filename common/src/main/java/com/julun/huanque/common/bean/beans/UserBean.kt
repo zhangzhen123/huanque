@@ -93,9 +93,9 @@ class ChatUserBean(
     var royalBjExp: Long = 0,
     var royalExp: Long = 0,
     var royalLevel: Int = 0,
-    var sex: String = "",
     var userExp: Long = 0,
 
+    var sex: String = "",
     var userId: Long = 0L,
     var headPic: String = "",
     var meetStatus: String = "",

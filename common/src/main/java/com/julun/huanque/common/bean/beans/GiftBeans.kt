@@ -164,3 +164,11 @@ data class ChatSendResult(
     var intimateLevel: Int = 0,
     var intimateNum: Int = 0
 )
+
+/**
+ * 小鹊互动语料
+ */
+data class ActiveWord(var content : String = "",var wordType : String = "")
+
+
+data class ActiveBean(var activeList : MutableList<ActiveWord> = mutableListOf())

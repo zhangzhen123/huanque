@@ -279,7 +279,7 @@ object RongCloudManager {
         }
         if (senderId == targetId) {
             //插入接收消息
-            val receivedStatus = Message.ReceivedStatus(0x1);
+            val receivedStatus = Message.ReceivedStatus(0x1)
             RongIMClient.getInstance()
                 .insertIncomingMessage(conversationType, targetId, senderId, receivedStatus, messageContent, callback)
         } else {

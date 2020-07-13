@@ -36,6 +36,9 @@ object SessionUtils {
     //是否注册用户
     private var REG_USER = "REG_USER"
 
+    //用户性别
+    private var SEX = "SEX"
+
     fun setSession(session: Session) {
         SessionManager.isCheckSession = true
         setSessionId(session.sessionId)
@@ -48,6 +51,7 @@ object SessionUtils {
         setRegComplete(session.regComplete)
         setRongImToken(session.imToken)
         setIsRegUser(session.regUser)
+        setSex(session.sex)
     }
 
     //与deleteSession合并 不再单独调用
@@ -68,47 +72,47 @@ object SessionUtils {
     /**
      * 保存头像
      */
-    fun setHeaderPic(headerPic : String){
-        SharedPreferencesUtils.commitString(HEAD_PIC,headerPic)
+    fun setHeaderPic(headerPic: String) {
+        SharedPreferencesUtils.commitString(HEAD_PIC, headerPic)
     }
 
-    fun getHeaderPic() = SharedPreferencesUtils.getString(HEAD_PIC,"")
+    fun getHeaderPic() = SharedPreferencesUtils.getString(HEAD_PIC, "")
 
     /**
      * 保存用户类型
      */
-    fun setUserType(userType : String){
-        SharedPreferencesUtils.commitString(USER_TYPE,userType)
+    fun setUserType(userType: String) {
+        SharedPreferencesUtils.commitString(USER_TYPE, userType)
     }
 
-    fun getUserType() = SharedPreferencesUtils.getString(USER_TYPE,"")
+    fun getUserType() = SharedPreferencesUtils.getString(USER_TYPE, "")
 
     /**
      * 设置声网token
      */
-    fun setAgoraToken(agoraToken : String){
-        SharedPreferencesUtils.commitString(VOICE_TOKEN,agoraToken)
+    fun setAgoraToken(agoraToken: String) {
+        SharedPreferencesUtils.commitString(VOICE_TOKEN, agoraToken)
     }
 
-    fun getAgoraToken() = SharedPreferencesUtils.getString(VOICE_TOKEN,"")
+    fun getAgoraToken() = SharedPreferencesUtils.getString(VOICE_TOKEN, "")
 
     /**
      * 设置是否是新用户
      */
-    fun setNewUser(newUser : Boolean){
-        SharedPreferencesUtils.commitBoolean(NEW_USER,newUser)
+    fun setNewUser(newUser: Boolean) {
+        SharedPreferencesUtils.commitBoolean(NEW_USER, newUser)
     }
 
-    fun getNewUser() = SharedPreferencesUtils.getBoolean(NEW_USER,false)
+    fun getNewUser() = SharedPreferencesUtils.getBoolean(NEW_USER, false)
 
     /**
      * 设置数据是否完整
      */
-    fun setRegComplete(complete : Boolean){
-        SharedPreferencesUtils.commitBoolean(REG_COMPLETE,complete)
+    fun setRegComplete(complete: Boolean) {
+        SharedPreferencesUtils.commitBoolean(REG_COMPLETE, complete)
     }
 
-    fun getRegComplete() = SharedPreferencesUtils.getBoolean(REG_COMPLETE,false)
+    fun getRegComplete() = SharedPreferencesUtils.getBoolean(REG_COMPLETE, false)
 
 
     fun getSessionId(): String {
@@ -152,6 +156,13 @@ object SessionUtils {
     fun setIsRegUser(isRegUser: Boolean) {
         SharedPreferencesUtils.commitBoolean(REG_USER, isRegUser)
     }
+
+    //设置性别
+    fun setSex(sex: String) {
+        SharedPreferencesUtils.commitString(SEX, sex)
+    }
+
+    fun getSex() = SharedPreferencesUtils.getString(SEX, "")
 
 //
 //
