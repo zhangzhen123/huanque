@@ -18,10 +18,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.EventMessageBean
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.ConmmunicationUserType
-import com.julun.huanque.common.constant.ParamKey
-import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
@@ -71,6 +68,15 @@ class PrivateConversationActivity : BaseActivity() {
         }
     }
 
+    //文本消息
+    private val Message_Text = "Message_Text"
+
+    //图片消息
+    private val Message_Pic = "Message_Pic"
+
+    //送礼消息
+    private val Message_Gift = "Message_Gift"
+
     private var mPrivateConversationViewModel: PrivateConversationViewModel? = null
 
     private var mIntimateDetailViewModel: IntimateDetailViewModel? = null
@@ -81,7 +87,8 @@ class PrivateConversationActivity : BaseActivity() {
 
     private var mLinearLayoutManager: LinearLayoutManager? = null
 
-    private var mChatSendGiftFragment:ChatSendGiftFragment?=null
+    private var mChatSendGiftFragment: ChatSendGiftFragment? = null
+
     /**
      * 欢遇弹窗
      */
@@ -130,6 +137,7 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.messageChangeState?.observe(this, Observer {
             if (it == true) {
                 mAdapter.notifyDataSetChanged()
+                scrollToBottom()
                 mPrivateConversationViewModel?.messageChangeState?.value = null
             }
         })
@@ -156,7 +164,15 @@ class PrivateConversationActivity : BaseActivity() {
             mIntimateDetailViewModel?.basicBean?.value = it
         })
 
+        //获取余额
         mPrivateConversationViewModel?.balance?.observe(this, Observer { })
+
+        mPrivateConversationViewModel?.sendGiftSuccessData?.observe(this, Observer {
+            if (it != null) {
+                //送礼成功.发送自定义消息
+                sendChatMessage(messageType = Message_Gift)
+            }
+        })
     }
 
     override fun initEvents(rootView: View) {
@@ -206,9 +222,9 @@ class PrivateConversationActivity : BaseActivity() {
 
         }
         iv_gift.onClickNew {
-            mChatSendGiftFragment=mChatSendGiftFragment?: ChatSendGiftFragment()
+            mChatSendGiftFragment = mChatSendGiftFragment ?: ChatSendGiftFragment()
 
-            mChatSendGiftFragment?.show(this,"ChatSendGiftFragment")
+            mChatSendGiftFragment?.show(this, "ChatSendGiftFragment")
         }
     }
 
@@ -250,7 +266,7 @@ class PrivateConversationActivity : BaseActivity() {
                 if (msg.targetId == "$targetId") {
                     //就是当前的消息，直接显示
                     mPrivateConversationViewModel?.addMessage(msg)
-                    scrollToBottom()
+//                    scrollToBottom()
                 }
             }
         }
@@ -395,14 +411,26 @@ class PrivateConversationActivity : BaseActivity() {
      * @param pic 上传图片的地址
      * @param localPic 图片库中的di
      */
-    private fun sendChatMessage(message: String = "", pic: String = "", localPic: String = "", picMode: Boolean = false) {
-        if (!picMode && (TextUtils.isEmpty(message) || message.isBlank())) {
+    private fun sendChatMessage(message: String = "", pic: String = "", localPic: String = "", messageType: String = Message_Text) {
+        if (messageType == Message_Text && (TextUtils.isEmpty(message) || message.isBlank())) {
+            //文本消息判断
             ToastUtils.show("输入不能为空")
             return
         }
-        if (picMode && pic.isEmpty()) {
+        if (messageType == Message_Pic && pic.isEmpty()) {
+            //图片消息判断
             return
         }
+        val giftBean = mPrivateConversationViewModel?.sendGiftSuccessData?.value
+        if (messageType == Message_Gift && giftBean == null) {
+            //礼物消息判断
+            return
+        }
+        if (giftBean == null) {
+            mPrivateConversationViewModel?.sendGiftSuccessData?.value = null
+        }
+
+
         val targetChatInfo = mPrivateConversationViewModel?.chatInfoData?.value ?: return
         val targetUser = TargetUserObj().apply {
             headPic = targetChatInfo.headPic
@@ -416,12 +444,28 @@ class PrivateConversationActivity : BaseActivity() {
             ToastUtils.show("不能给自己发消息")
             return
         }
-        if (!picMode) {
-            //文本消息
-            RongCloudManager.send(message, "${targetChatInfo.userId}", targetUserObj = targetUser) {}
-        } else if (pic.isNotEmpty()) {
-            //图片消息
-            RongCloudManager.sendMediaMessage("${targetChatInfo.userId}", targetUser, Conversation.ConversationType.PRIVATE, pic, localPic)
+        when (messageType) {
+            Message_Text -> {
+                //文本消息
+                RongCloudManager.send(message, "${targetChatInfo.userId}", targetUserObj = targetUser) {}
+            }
+            Message_Pic -> {
+                //图片消息
+                RongCloudManager.sendMediaMessage("${targetChatInfo.userId}", targetUser, Conversation.ConversationType.PRIVATE, pic, localPic)
+            }
+            Message_Gift -> {
+                //送礼消息
+                RongCloudManager.sendCustomMessage(
+                    "${targetChatInfo.userId}",
+                    targetUser,
+                    Conversation.ConversationType.PRIVATE,
+                    MessageCustomBeanType.Gift,
+                    giftBean ?: return
+                )
+            }
+            else -> {
+
+            }
         }
     }
 
@@ -510,7 +554,7 @@ class PrivateConversationActivity : BaseActivity() {
                     }
                     logger.info("DXC  收到图片:$path，media.path = ${media.path}")
                     //media.path
-                    sendChatMessage(pic = path, localPic = media.path, picMode = true)
+                    sendChatMessage(pic = path, localPic = media.path, messageType = Message_Pic)
 //                    if(!mLoadingDialog.isShowing){
 //                        mLoadingDialog.showDialog()
 //                    }
@@ -529,7 +573,7 @@ class PrivateConversationActivity : BaseActivity() {
         if (mHelper != null && mHelper?.hookSystemBackByPanelSwitcher() == true) {
             return
         }
-        super.onBackPressed();
+        super.onBackPressed()
     }
 
     override fun onViewDestroy() {

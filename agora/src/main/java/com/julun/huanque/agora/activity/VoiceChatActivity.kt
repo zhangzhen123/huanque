@@ -17,14 +17,11 @@ import com.julun.huanque.agora.viewmodel.VoiceChatViewModel
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.ChatUser
-import com.julun.huanque.common.bean.beans.ChatUserBean
-import com.julun.huanque.common.bean.beans.NetCallAcceptBean
-import com.julun.huanque.common.bean.beans.NetCallReceiveBean
-import com.julun.huanque.common.bean.beans.NetcallBean
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.CancelType
-import com.julun.huanque.common.constant.ConmmunicationUserType
-import com.julun.huanque.common.constant.ParamKey
+import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
+import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.AppHelper
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClick
@@ -40,6 +37,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.internal.operators.observable.ObservableTake
+import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.act_voice_chat.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -66,6 +64,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         mType = intent?.getStringExtra(ParamKey.TYPE) ?: ""
         if (mType == ConmmunicationUserType.CALLING) {
             //主叫
+            mVoiceChatViewModel?.createUserId = SessionUtils.getUserId()
             val mTargetUserInfo = intent?.getSerializableExtra(ParamKey.USER) as? ChatUserBean
             if (mTargetUserInfo == null) {
                 ToastUtils.show("没有对方数据")
@@ -80,6 +79,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 ToastUtils.show("没有对方数据")
                 return
             }
+            mVoiceChatViewModel?.createUserId = netCallBean.callerInfo.userId
             mVoiceChatViewModel?.netcallBeanData?.value = netCallBean
             mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_WAIT_ACCEPT
         }
@@ -118,24 +118,33 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         //主叫取消会话消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallCancelProcessor {
             override fun process(data: VoidResult) {
+                mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.CONMMUNICATION_FINISH)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }
         })
         //挂断消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallHangUpProcessor {
-            override fun process(data: VoidResult) {
+            override fun process(data: NetCallHangUpBeam) {
+                if (data.hangUpId != SessionUtils.getUserId()) {
+                    //非本人挂断
+                    mVoiceChatViewModel?.voiceBeanData?.value =
+                        VoiceConmmunicationSimulate(VoiceResultType.CONMMUNICATION_FINISH, mVoiceChatViewModel?.duration ?: 0)
+                }
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }
         })
         //被叫拒绝消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallRefuseProcessor {
             override fun process(data: VoidResult) {
+                mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_REFUSE)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }
         })
         //服务端断开消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallDisconnectProcessor {
             override fun process(data: VoidResult) {
+                mVoiceChatViewModel?.voiceBeanData?.value =
+                    VoiceConmmunicationSimulate(VoiceResultType.CONMMUNICATION_FINISH, mVoiceChatViewModel?.duration ?: 0)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }
         })
@@ -281,7 +290,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         //结束状态
                         //退出频道
                         leaveChannel()
-                        ToastUtils.show("通话已结束")
+//                        ToastUtils.show("通话已结束")
                         mDisposable?.dispose()
                         Observable.timer(1, TimeUnit.SECONDS)
                             .bindUntilEvent(this, ActivityEvent.DESTROY)
@@ -313,6 +322,12 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 mVoiceChatViewModel?.channelId = netCallBean.channelId
                 mVoiceChatViewModel?.callId = netCallBean.callId
                 mVoiceChatViewModel?.duration = 0
+            }
+        })
+
+        mVoiceChatViewModel?.voiceBeanData?.observe(this, Observer {
+            if (it != null) {
+                sendSimulateMessage(it)
             }
         })
     }
@@ -365,6 +380,68 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     // Tutorial Step 6
     private fun onRemoteUserVoiceMuted(uid: Int, muted: Boolean) {
 
+    }
+
+    /**
+     * 发送模拟消息
+     */
+    private fun sendSimulateMessage(bean: VoiceConmmunicationSimulate) {
+        val targetChatInfo = mVoiceChatViewModel?.targetUserBean?.value ?: return
+        val targetUser = TargetUserObj()
+
+        val createUserId = mVoiceChatViewModel?.createUserId ?: return
+        bean.createUserID = createUserId
+
+        val chatExtra = RoomUserChatExtra()
+        val sId: String
+        val tId: String
+
+        if (createUserId == SessionUtils.getUserId()) {
+            //本人是主叫(插入发送消息)
+            tId = "${targetChatInfo.userId}"
+            sId = "${SessionUtils.getUserId()}"
+            targetUser.apply {
+                headPic = targetChatInfo.headPic
+                nickname = targetChatInfo.nickname
+                meetStatus = targetChatInfo.meetStatus
+                userId = targetChatInfo.userId
+            }
+            chatExtra.apply {
+                headPic = SessionUtils.getHeaderPic()
+                senderId = SessionUtils.getUserId()
+                nickname = SessionUtils.getNickName()
+                targetUserObj = targetUser
+                userAbcd = AppHelper.getMD5(sId)
+            }
+        } else {
+            //本人是被叫（插入接收消息）
+            tId = "${SessionUtils.getUserId()}"
+            sId = "${targetChatInfo.userId}"
+            targetUser.apply {
+                headPic = SessionUtils.getHeaderPic()
+                nickname = SessionUtils.getNickName()
+                meetStatus = targetChatInfo.meetStatus
+                userId = SessionUtils.getUserId()
+            }
+            chatExtra.apply {
+                headPic = targetChatInfo.headPic
+                senderId = targetChatInfo.userId
+                nickname = targetChatInfo.nickname
+                targetUserObj = targetUser
+                userAbcd = AppHelper.getMD5(sId)
+            }
+        }
+
+
+
+        RongCloudManager.sendSimulateMessage(
+            tId,
+            sId,
+            chatExtra,
+            Conversation.ConversationType.PRIVATE,
+            MessageCustomBeanType.Voice_Conmmunication_Simulate,
+            bean
+        )
     }
 
 

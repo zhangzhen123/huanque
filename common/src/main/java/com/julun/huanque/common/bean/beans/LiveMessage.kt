@@ -11,6 +11,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
+
+
 /** 送礼事件 **/
 class SendGiftEvent(var giftId: Int = -1,
                     var cacheIt: Boolean = false,

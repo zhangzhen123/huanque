@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
+import com.julun.huanque.common.bean.message.CustomMessage
+import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
@@ -199,6 +201,19 @@ class MessageViewModel : BaseViewModel() {
                                 }
                             }
 
+                            is CustomMessage -> {
+                                lastMessage.extra?.let {
+                                    currentUser = getMessageUserInfo(it)
+                                }
+                            }
+
+                            is CustomSimulateMessage -> {
+                                lastMessage.extra?.let {
+                                    currentUser = getMessageUserInfo(it)
+                                }
+                            }
+
+
                             is TextMessage -> {
                                 //文本消息
                                 lastMessage.extra?.let {
@@ -228,7 +243,12 @@ class MessageViewModel : BaseViewModel() {
      * 获取消息内部的用户信息
      */
     private fun getMessageUserInfo(extra: String): ChatUser? {
-        val user: RoomUserChatExtra? = JsonUtil.deserializeAsObject(extra, RoomUserChatExtra::class.java)
+        var user: RoomUserChatExtra? = null
+        try {
+            user = JsonUtil.deserializeAsObject(extra, RoomUserChatExtra::class.java)
+        }catch (e : Exception){
+            e.printStackTrace()
+        }
         var currentUser: ChatUser? = null
         if (user != null) {
             if (user.senderId == SessionUtils.getUserId()) {

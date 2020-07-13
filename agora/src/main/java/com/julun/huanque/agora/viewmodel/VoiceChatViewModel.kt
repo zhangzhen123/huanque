@@ -8,11 +8,15 @@ import com.julun.huanque.common.bean.forms.CreateCommunicationForm
 import com.julun.huanque.common.bean.forms.NetcallCancelForm
 import com.julun.huanque.common.bean.forms.NetcallHangUpForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm
+import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.CancelType
+import com.julun.huanque.common.constant.VoiceResultType
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
 
@@ -49,6 +53,9 @@ class VoiceChatViewModel : BaseViewModel() {
     //会话详情数据
     val netcallBeanData: MutableLiveData<NetcallBean> by lazy { MutableLiveData<NetcallBean>() }
 
+    //会话结束  发送模拟消息使用
+    val voiceBeanData: MutableLiveData<VoiceConmmunicationSimulate> by lazy { MutableLiveData<VoiceConmmunicationSimulate>() }
+
     //token
     var agoraToken = ""
 
@@ -60,6 +67,9 @@ class VoiceChatViewModel : BaseViewModel() {
 
     //通话时长
     var duration = 0L
+
+    //创建者ID
+    var createUserId = 0L
 
 
     /**
@@ -93,6 +103,7 @@ class VoiceChatViewModel : BaseViewModel() {
             request({
                 socialService.netcallRefuse(NetcallIdForm(callId)).dataConvert()
                 currentVoiceState.value = VOICE_CLOSE
+                voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_REFUSE)
             })
         }
     }
@@ -104,7 +115,11 @@ class VoiceChatViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 socialService.netcallCancel(NetcallCancelForm(callId, type)).dataConvert()
+                if (type == CancelType.Timeout) {
+                    ToastUtils.show("对方无应答")
+                }
                 currentVoiceState.value = VOICE_CLOSE
+                voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
             })
         }
     }
@@ -115,8 +130,9 @@ class VoiceChatViewModel : BaseViewModel() {
     fun hangUpVoice() {
         viewModelScope.launch {
             request({
-                socialService.netcallHangUp(NetcallHangUpForm(callId,duration)).dataConvert()
+                socialService.netcallHangUp(NetcallHangUpForm(callId, duration)).dataConvert()
                 currentVoiceState.value = VOICE_CLOSE
+                voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.CONMMUNICATION_FINISH, duration)
             })
         }
     }

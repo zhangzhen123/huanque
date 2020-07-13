@@ -136,7 +136,7 @@ data class ProcessInfo(
 )
 
 data class ChatGiftInfo(
-    var beans: Int = 0,
+    var beans: Long = 0,
     var giftList: List<ChatGift> = listOf(),
     var tips: String = "",
     //本地字段
@@ -154,8 +154,11 @@ data class ChatGift(
     var chatGiftId: Int = 0,
     var giftName: String = "",
     var pic: String = "",
-    var selPic: String = ""
+    var selPic: String = "",
+    //本地字段 送礼数量，发送自定义消息场景下使用
+    var giftCount: Int = 1
 )
+
 data class ChatSendResult(
     var beans: Long = 0,
     var intimateLevel: Int = 0,

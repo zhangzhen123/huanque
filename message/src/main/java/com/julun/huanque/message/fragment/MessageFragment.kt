@@ -157,7 +157,7 @@ class MessageFragment : BaseFragment() {
         mMessageViewModel.conversationListData.observe(this, Observer {
             if (it != null) {
 //                mAdapter.setNewData(it)
-                mAdapter.setNewInstance(it)
+                mAdapter.setList(it)
             }
         })
 
