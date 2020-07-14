@@ -83,8 +83,6 @@
             android:textColor="@color/black_333"
             android:textSize="@dimen/text_size_big"
             tools:text="考虑i偶记得发可累计跌幅上看到了的风景二手房价送到附近送到附近" />
-
-
     </RelativeLayout>
 
     <com.facebook.drawee.view.SimpleDraweeView
@@ -98,24 +96,40 @@
         app:roundedCornerRadius="10dp"
         tools:visibility="visible" />
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_msg_quebi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="sdv_image,rl_content" />
+
+
+    <TextView
+        android:id="@+id/tv_quebi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="6dp"
+        android:drawableLeft="@mipmap/icon_quebi_message"
+        android:drawablePadding="3dp"
+        android:textColor="@color/color_quebi"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone"
+        app:layout_constraintLeft_toRightOf="@id/sdv_header"
+        app:layout_constraintTop_toBottomOf="@id/barrier_msg_quebi"
+        tools:text="九二九号"
+        tools:visibility="visible" />
+
+
     <com.facebook.drawee.span.SimpleDraweeSpanTextView
         android:id="@+id/tv_pic_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:layout_marginTop="7dp"
+        android:gravity="center_vertical"
         android:textColor="@color/black_666"
         android:textSize="@dimen/sp_14"
         app:layout_constraintLeft_toLeftOf="@id/sdv_image"
         app:layout_constraintTop_toBottomOf="@id/sdv_image" />
-
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="tv_pic_content,rl_content" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

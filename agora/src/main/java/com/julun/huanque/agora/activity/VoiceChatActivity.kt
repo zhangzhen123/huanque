@@ -123,7 +123,13 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 if (data.hangUpId != SessionUtils.getUserId()) {
                     //非本人挂断
                     mVoiceChatViewModel?.voiceBeanData?.value =
-                        VoiceConmmunicationSimulate(VoiceResultType.CONMMUNICATION_FINISH, mVoiceChatViewModel?.duration ?: 0)
+                        VoiceConmmunicationSimulate(
+                            VoiceResultType.CONMMUNICATION_FINISH,
+                            mVoiceChatViewModel?.duration ?: 0,
+                            0,
+                            data.billUserId,
+                            data.totalBeans
+                        )
                 }
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }

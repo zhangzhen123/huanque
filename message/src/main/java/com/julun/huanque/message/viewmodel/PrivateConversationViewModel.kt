@@ -159,7 +159,7 @@ class PrivateConversationViewModel : BaseViewModel() {
 
                 chatInfoData.value = result.friendUser
                 intimateData.value = result.intimate
-                msgFeeBean.value = result.msgFee
+                msgFeeData.value = result.msgFee
                 basicBean.value = result
                 BalanceUtils.saveBalance(result.beans)
             }, {
@@ -197,6 +197,7 @@ class PrivateConversationViewModel : BaseViewModel() {
             request({
                 val result = socialService.sendMsg(SendMsgForm(targetId, content)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
+                msgFeeData.value = result.consumeBeans
                 RongCloudManager.send(content, "$targetId", targetUserObj = targetUser.apply { fee = result.consumeBeans }) {}
             }, {})
         }
@@ -210,6 +211,7 @@ class PrivateConversationViewModel : BaseViewModel() {
             request({
                 val result = socialService.sendPic(SendMsgForm(targetId, content)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
+                msgFeeData.value = result.consumeBeans
                 uploader?.success(Uri.parse(content))
             }, {
                 uploader?.error()
