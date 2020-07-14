@@ -1,4 +1,4 @@
-package arouter
+package com.julun.huanque.arouter
 
 import android.app.Activity
 import android.content.Context

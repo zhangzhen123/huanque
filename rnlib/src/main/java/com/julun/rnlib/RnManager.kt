@@ -3,23 +3,25 @@ package com.julun.rnlib
 import android.app.Application
 import com.BV.LinearGradient.LinearGradientPackage
 import com.facebook.react.ReactInstanceManager
+import com.facebook.react.ReactInstanceManager.ReactInstanceEventListener
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.LifecycleState
 import com.facebook.react.shell.MainReactPackage
 import com.horcrux.svg.SvgPackage
 import com.julun.huanque.common.net.interceptors.HeaderInfoHelper
+import com.julun.huanque.common.suger.logger
 import com.julun.rnlib.reactpackage.OpenPageReactPackage
 import com.julun.rnlib.reactpackage.RequestInfoReactPackage
-import com.julun.rnlib.reactpackage.ToastReactPackage
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage
 import com.zmxv.RNSound.RNSoundPackage
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import org.reactnative.maskedview.RNCMaskedViewPackage
+
 
 object RnManager {
     //上传方法的标识
@@ -34,6 +36,7 @@ object RnManager {
      * 创建ReactInstanceManager 全局复用唯一
      */
     fun createReactInstanceManager(application: Application): ReactInstanceManager {
+        logger("createReactInstanceManager 初始化")
         if (mReactInstanceManager == null) {
             mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(application)
@@ -55,8 +58,18 @@ object RnManager {
                     it.printStackTrace()
                 }
                 .build()
-
+//            mReactInstanceManager!!.createReactContextInBackground()
+            if (!mReactInstanceManager!!.hasStartedCreatingInitialContext()) {
+                mReactInstanceManager!!.addReactInstanceEventListener(object : ReactInstanceEventListener {
+                    override fun onReactContextInitialized(context: ReactContext) {
+                        mReactInstanceManager!!.removeReactInstanceEventListener(this)
+                        logger("ReactInstanceManager 加载完成了")
+                    }
+                })
+                mReactInstanceManager!!.createReactContextInBackground()
+            }
         }
+
         return mReactInstanceManager!!
 
     }

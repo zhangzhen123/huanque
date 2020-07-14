@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
@@ -59,6 +60,7 @@ import java.util.concurrent.TimeUnit
  *@创建时间 2020/6/30 16:55
  *@描述 私聊会话页面
  */
+@Route(path = ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY)
 class PrivateConversationActivity : BaseActivity() {
     companion object {
         //用户ID

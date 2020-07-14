@@ -22,6 +22,7 @@ object ARouterConstant {
     //声网播放器使用
     const val AGORA = "AGORA"
 
+    const val MESSAGE = "message"
     /*--GROUP相关结束--*/
 
     /*--PATH相关开始--*/
@@ -40,6 +41,8 @@ object ARouterConstant {
 
     //语音页面
     const val VOICE_CHAT_ACTIVITY = "/$AGORA$PREFIX_ACTIVITY/VoiceChatActivity"
+    //私信页面
+    const val PRIVATE_CONVERSATION_ACTIVITY = "/$MESSAGE$PREFIX_ACTIVITY/PrivateConversationActivity"
     //充值页面
     const val RECHARGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/RechargeCenterActivity"
 
