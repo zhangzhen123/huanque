@@ -67,6 +67,7 @@ class MessageFragment : BaseFragment() {
         initRecyclerView()
         initHeaderView()
         mMessageViewModel.getConversationList()
+        mMessageViewModel.queryRongPrivateCount()
     }
 
     /**
@@ -187,6 +188,17 @@ class MessageFragment : BaseFragment() {
                     mAdapter.notifyItemChanged(it + mAdapter.headerLayoutCount)
                 }
                 mMessageViewModel.changePosition.value = null
+            }
+        })
+
+        mMessageViewModel.unreadMsgCount.observe(this, Observer {
+            if (it != null) {
+                val str = if (it > 0) {
+                    "消息($it)"
+                } else {
+                    "消息"
+                }
+                tv_message_unread.text = str
             }
         })
     }

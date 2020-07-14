@@ -37,6 +37,9 @@ class MessageViewModel : BaseViewModel() {
     //有变化的数据  <0  刷新整个列表  >=0 刷新单个条目
     val changePosition: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
+    //未读消息数量
+    val unreadMsgCount : MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
+
     /**
      * 删除会话
      */
@@ -116,9 +119,9 @@ class MessageViewModel : BaseViewModel() {
      * 查询私聊未读消息数
      */
     fun queryRongPrivateCount() {
-//        RongCloudManager.queryPMessage {
-//            hasNewMsg.postValue(it > 0)
-//        }
+        RongCloudManager.queryPMessage {
+            unreadMsgCount.postValue(it)
+        }
     }
 
     /**
