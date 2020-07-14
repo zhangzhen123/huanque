@@ -120,3 +120,26 @@ object RealNameConstants {
 object ByteConstants {
     const val BYTE_KB_FORM_128 = 128
 }
+
+/**
+ * 消息常量类
+ */
+object MessageConstants{
+    //跳转H5
+    const val ACTION_URL = "URL"
+    //什么都不做
+    const val ACTION_None = "None"
+}
+
+/**
+ * activity codes
+ */
+object ActivityCodes {
+    //响应码
+    //通用基础响应码
+    const val RESPONSE_CODE_NORMAL = 20000
+
+    //请求码
+    //通用基础请求码
+    const val REQUEST_CODE_NORMAL = 10000
+}
