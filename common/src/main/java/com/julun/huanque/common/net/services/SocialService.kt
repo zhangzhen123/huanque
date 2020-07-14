@@ -25,7 +25,7 @@ interface SocialService {
      * 获取联系人
      */
     @POST("social/friend/relation/linkInfo")
-    suspend fun socialList(@Body form: EmptyForm = EmptyForm()): Root<SocialListBean>
+    suspend fun socialList(@Body form: ContactsForm): Root<SocialListBean>
 
     /**
      * 关注好友

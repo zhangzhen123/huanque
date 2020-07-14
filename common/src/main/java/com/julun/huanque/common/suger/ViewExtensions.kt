@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.listener.OnItemChildClickListener
+import com.chad.library.adapter.base.listener.OnItemClickListener
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.helper.MixedHelper
@@ -90,6 +92,28 @@ fun ViewGroup.hideOnly(view: View):Unit  {
 }
 
 /**
+ * 防止adapter连续过快点击造成的重复提交
+ */
+fun <T, K : BaseViewHolder> BaseQuickAdapter<T, K>.onAdapterClickNew(l: (adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) -> Unit) {
+    setOnItemClickListener(object : NoDoubleAdapterClickListener() {
+        override fun onNoDoubleAdapterChildClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
+            l(adapter, view, position)
+        }
+    })
+}
+
+/**
+ * 防止adapter child连续过快点击造成的重复提交
+ */
+fun <T, K : BaseViewHolder> BaseQuickAdapter<T, K>.onAdapterChildClickNew(l: (adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) -> Unit) {
+    setOnItemChildClickListener(object : NoDoubleAdapterChildClickListener() {
+        override fun onNoDoubleAdapterChildClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
+            l(adapter, view, position)
+        }
+    })
+}
+
+/**
  * 防止连续过快点击造成的重复提交
  */
 fun android.view.View.onClickNew(l: (v: android.view.View?) -> Unit) {
@@ -145,6 +169,33 @@ abstract class NoDoubleClickListener : View.OnClickListener {
     }
 }
 
+abstract class NoDoubleAdapterClickListener : OnItemClickListener {
+    private var lastClickTime: Long = 0
+    private val MIN_CLICK_DELAY_TIME = 500
+
+    override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
+        val currentTime = Calendar.getInstance().timeInMillis
+        if (currentTime - lastClickTime >= MIN_CLICK_DELAY_TIME) {
+            lastClickTime = currentTime
+            onNoDoubleAdapterChildClick(adapter, view, position)
+        }
+    }
+    abstract fun onNoDoubleAdapterChildClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int)
+}
+
+abstract class NoDoubleAdapterChildClickListener : OnItemChildClickListener {
+    private var lastClickTime: Long = 0
+    private val MIN_CLICK_DELAY_TIME = 500
+
+    override fun onItemChildClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
+        val currentTime = Calendar.getInstance().timeInMillis
+        if (currentTime - lastClickTime >= MIN_CLICK_DELAY_TIME) {
+            lastClickTime = currentTime
+            onNoDoubleAdapterChildClick(adapter, view, position)
+        }
+    }
+    abstract fun onNoDoubleAdapterChildClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int)
+}
 
 val tfDinCdc2: Typeface by lazy {
     Typeface.createFromAsset(CommonInit.getInstance().getContext().assets, "fonts/DINCondensedC-2.ttf")

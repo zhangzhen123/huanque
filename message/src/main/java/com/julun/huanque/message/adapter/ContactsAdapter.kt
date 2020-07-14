@@ -2,6 +2,7 @@ package com.julun.huanque.message.adapter
 
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.beans.SocialUserInfo
 import com.julun.huanque.common.constant.ContactsTabType
@@ -19,10 +20,11 @@ import org.jetbrains.anko.textColor
  *@创建时间 2020/7/7 11:28
  *@描述 联系人使用的Adapter
  */
-class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layout.recycler_item_contacts) {
+class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layout.recycler_item_contacts), LoadMoreModule {
     init {
         addChildClickViewIds(R.id.tv_action)
     }
+
     //当前的联系人类型
     var type = ""
     override fun convert(helper: BaseViewHolder, item: SocialUserInfo) {

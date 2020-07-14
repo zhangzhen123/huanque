@@ -6,17 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.marginTop
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.MessageHeaderBean
 import com.julun.huanque.common.bean.events.EventMessageBean
-import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ActivityCodes
 import com.julun.huanque.common.constant.ContactsTabType
+import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -24,6 +23,7 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.ContactsActivity
 import com.julun.huanque.message.activity.MessageSettingActivity
 import com.julun.huanque.message.activity.PrivateConversationActivity
+import com.julun.huanque.message.activity.SysMsgActivity
 import com.julun.huanque.message.adapter.ConversationListAdapter
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.message.widget.MessageHeaderView
@@ -35,7 +35,6 @@ import kotlinx.android.synthetic.main.fragment_message.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.topPadding
-import java.lang.Exception
 
 /**
  *@创建者   dong
@@ -74,7 +73,8 @@ class MessageFragment : BaseFragment() {
      * 初始化HeaderView
      */
     private fun initHeaderView() {
-        headerView = LayoutInflater.from(context).inflate(R.layout.header_conversions_view, null) as? LinearLayout
+        headerView = LayoutInflater.from(context)
+            .inflate(R.layout.header_conversions_view, null) as? LinearLayout
         headerView?.let {
             val view1 = it.findViewById<MessageHeaderView>(R.id.system_msg)
             headerViewList.add(view1)
@@ -118,14 +118,31 @@ class MessageFragment : BaseFragment() {
         mAdapter.setOnItemClickListener { adapter, view, position ->
             //            val realPosition = position - mAdapter.headerLayoutCount
             mAdapter.getItem(position)?.let { lmc ->
-                //首页IM
-                activity?.let { act ->
-                    try {
-                        PrivateConversationActivity.newInstance(act, lmc.conversation.targetId.toLong())
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+                when (lmc.conversation.targetId) {
+                    "systemNoticeSender" -> {
+                        //系统消息
+//                        startActivityForResult(SysMsgActivity::class.java, ActivityCodes.REQUEST_CODE_NORMAL, Bundle().apply {
+//                            putString(IntentParamKey.SYS_MSG_ID.name, lmc.conversation.targetId)
+//                        })
 
+                        val intent = Intent(activity, SysMsgActivity::class.java)
+                        intent.putExtra(IntentParamKey.SYS_MSG_ID.name, lmc.conversation.targetId)
+                        startActivityForResult(intent, ActivityCodes.REQUEST_CODE_NORMAL)
+                    }
+                    else -> {
+                        //首页IM
+                        activity?.let { act ->
+                            try {
+                                PrivateConversationActivity.newInstance(
+                                    act,
+                                    lmc.conversation.targetId.toLong()
+                                )
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+
+                        }
+                    }
                 }
             }
         }
@@ -136,7 +153,10 @@ class MessageFragment : BaseFragment() {
                 val longId = targetId.toLong()
                 if (view.id == R.id.sdv_header) {
                     //跳转他们主页
-                    RNPageActivity.start(requireActivity(), RnConstant.PERSONAL_HOMEPAGE, Bundle().apply { putLong("userId", longId) })
+                    RNPageActivity.start(
+                        requireActivity(),
+                        RnConstant.PERSONAL_HOMEPAGE,
+                        Bundle().apply { putLong("userId", longId) })
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -237,4 +257,17 @@ class MessageFragment : BaseFragment() {
 //        //融云连接成功通知
 //        conversationListViewModel?.getConversationList()
 //    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            ActivityCodes.REQUEST_CODE_NORMAL ->{
+                if(resultCode == ActivityCodes.RESPONSE_CODE_NORMAL){
+                    //也许是从系统消息页面返回，刷新列表一次
+                    mMessageViewModel.getConversationList()
+                    mMessageViewModel.queryRongPrivateCount()
+                }
+            }
+        }
+    }
 }

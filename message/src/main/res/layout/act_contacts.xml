@@ -25,17 +25,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_top" />
 
-    <TextView
-        android:id="@+id/tv_friends_attention"
-        android:layout_width="0px"
-        android:layout_height="30dp"
-        android:background="@color/bg_private_chat"
-        android:gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:text="亲密等级1级及以上，即可成为密友"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/magic_indicator" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"
@@ -44,6 +33,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_friends_attention" />
+        app:layout_constraintTop_toBottomOf="@id/magic_indicator" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

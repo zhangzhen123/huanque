@@ -19,7 +19,7 @@ import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.ProgramFragmentAdapter
-import com.julun.huanque.message.viewmodel.ContactsViewModel
+import com.julun.huanque.message.viewmodel.ContactsActivityViewModel
 import kotlinx.android.synthetic.main.act_contacts.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.UIUtil
@@ -46,7 +46,7 @@ class ContactsActivity : BaseActivity() {
     }
 
     private lateinit var mCommonNavigator: CommonNavigator
-    private var mViewModel: ContactsViewModel? = null
+    private var mActivityViewModel: ContactsActivityViewModel? = null
     private var mPagerAdapter: ProgramFragmentAdapter? = null
 
     //默认选中的tab标识
@@ -58,7 +58,7 @@ class ContactsActivity : BaseActivity() {
         mDefaultType = intent?.getStringExtra(DEFAULT_TYPE) ?: ""
         findViewById<TextView>(R.id.tvTitle).text = "联系人"
         initViewModel()
-        mViewModel?.getContacts()
+        mActivityViewModel?.getContacts()
         mPagerAdapter = ProgramFragmentAdapter(supportFragmentManager, this)
         pager.adapter = mPagerAdapter
         initMagicIndicator()
@@ -68,17 +68,17 @@ class ContactsActivity : BaseActivity() {
      * 初始化ViewModel
      */
     private fun initViewModel() {
-        mViewModel = ViewModelProvider(this).get(ContactsViewModel::class.java)
-        mViewModel?.tabListData?.observe(this, Observer {
+        mActivityViewModel = ViewModelProvider(this).get(ContactsActivityViewModel::class.java)
+        mActivityViewModel?.tabListData?.observe(this, Observer {
             if (it != null) {
                 refreshTabList(it)
             }
         })
-        mViewModel?.followStatusData?.observe(this, Observer {
-            if (it != null) {
-
-            }
-        })
+//        mActivityViewModel?.followStatusData?.observe(this, Observer {
+//            if (it != null) {
+//
+//            }
+//        })
     }
 
     override fun initEvents(rootView: View) {

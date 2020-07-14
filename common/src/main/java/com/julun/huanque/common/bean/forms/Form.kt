@@ -44,3 +44,9 @@ class ReportForm{
     var detail: String =""
     var pics: String? = null
 }
+
+
+/**
+ * 联系人使用的form
+ */
+class ContactsForm(var userDataTabType : String = "",var offset : Int = 0)
