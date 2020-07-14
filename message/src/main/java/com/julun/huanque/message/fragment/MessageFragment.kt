@@ -27,6 +27,8 @@ import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.adapter.ConversationListAdapter
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.message.widget.MessageHeaderView
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import com.luck.picture.lib.tools.StatusBarUtil
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_message.*
@@ -60,7 +62,7 @@ class MessageFragment : BaseFragment() {
     override fun getLayoutId() = R.layout.fragment_message
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         //设置头部边距
-        msg_container.topPadding= StatusBarUtil.getStatusBarHeight(requireContext())
+        msg_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         initViewModel()
         initRecyclerView()
         initHeaderView()
@@ -100,7 +102,7 @@ class MessageFragment : BaseFragment() {
 //                activity?.startActivity<InteractionNewActivity>()
             }
         }
-        mAdapter.addHeaderView(headerView?:return)
+        mAdapter.addHeaderView(headerView ?: return)
     }
 
     /**
@@ -125,8 +127,21 @@ class MessageFragment : BaseFragment() {
 
                 }
             }
-
         }
+
+        mAdapter.setOnItemChildClickListener { adapter, view, position ->
+            val targetId = mAdapter.getItem(position).conversation.targetId
+            try {
+                val longId = targetId.toLong()
+                if (view.id == R.id.sdv_header) {
+                    //跳转他们主页
+                    RNPageActivity.start(requireActivity(), RnConstant.PERSONAL_HOMEPAGE, Bundle().apply { putLong("userId", longId) })
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
         mAdapter.setOnItemLongClickListener { adapter, view, position ->
             val realPosition = position
             val data = mAdapter.data
@@ -169,7 +184,7 @@ class MessageFragment : BaseFragment() {
                 } else {
                     //单个变动
 //                    mAdapter.refreshNotifyItemChanged(it)
-                    mAdapter.notifyItemChanged(it+mAdapter.headerLayoutCount)
+                    mAdapter.notifyItemChanged(it + mAdapter.headerLayoutCount)
                 }
                 mMessageViewModel.changePosition.value = null
             }
