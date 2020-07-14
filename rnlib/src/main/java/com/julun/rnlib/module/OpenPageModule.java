@@ -12,6 +12,9 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.julun.huanque.common.constant.ARouterConstant;
 import com.julun.huanque.common.constant.BusiConstant;
+import com.julun.huanque.common.constant.OperationType;
+import com.julun.huanque.common.constant.ParamConstant;
+import com.julun.huanque.common.utils.ULog;
 
 import java.util.Map;
 
@@ -36,6 +39,7 @@ public class OpenPageModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void openPageByName(String pageName, Map<String, String> params) {
+        ULog.Companion.i("openPageByName :" + pageName);
         try {
             switch (pageName) {
                 case "PrivateMessagePage": {
@@ -43,14 +47,25 @@ public class OpenPageModule extends ReactContextBaseJavaModule {
                     if (id != null) {
                         long userId = Long.parseLong(id);
                         Bundle bundle = new Bundle();
-                        bundle.putLong("TARGETID", userId);
+                        bundle.putLong(ParamConstant.TARGETID, userId);
+//                        bundle.putString(ParamConstant.NICKNAME, nickname);
+//                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
                         ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle).navigation(getCurrentActivity());
                     }
 
                     break;
                 }
                 case "TelephoneCallPage": {
-                    ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).navigation(getCurrentActivity());
+                    String id = params.get("userId");
+                    if (id != null) {
+                        long userId = Long.parseLong(id);
+                        Bundle bundle = new Bundle();
+                        bundle.putLong(ParamConstant.TARGETID, userId);
+//                        bundle.putString(ParamConstant.NICKNAME, nickname);
+//                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
+                        bundle.putString(ParamConstant.OPERATION, OperationType.CALL_PHONE);
+                        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle).navigation(getCurrentActivity());
+                    }
                     break;
                 }
                 case "SendGiftPage": {
@@ -58,9 +73,10 @@ public class OpenPageModule extends ReactContextBaseJavaModule {
                     if (id != null) {
                         long userId = Long.parseLong(id);
                         Bundle bundle = new Bundle();
-                        bundle.putLong("TARGETID", userId);
-                        //todo 打开相关页面的参数
-//                        bundle.putInt("open");
+                        bundle.putLong(ParamConstant.TARGETID, userId);
+//                        bundle.putString(ParamConstant.NICKNAME, nickname);
+//                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
+                        bundle.putString(ParamConstant.OPERATION, OperationType.OPEN_GIFT);
                         ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle).navigation(getCurrentActivity());
                     }
                     break;
