@@ -38,25 +38,6 @@ class MakeFriendsViewModel : BaseViewModel() {
 
             request({
                 val homeListData = service.homeRecom(RecomListForm(offset)).dataConvert()
-                //todo test
-//                val hasMore = offset <= 20
-//                val list = arrayListOf<HomeItemBean>()
-//                val rList = RootListData(type != QueryType.LOAD_MORE, list, hasMore)
-//                if (offset == 0) {
-//
-//                    list.add(HomeItemBean(HomeItemBean.HEADER, user))
-//                    list.add(HomeItemBean(HomeItemBean.GUIDE_TO_ADD_TAG, Any()))
-//                    list.add(HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, Any()))
-//                    repeat(10) {
-//                        list.add(HomeItemBean(HomeItemBean.NORMAL, Any()))
-//                    }
-//
-//
-//                } else {
-//                    repeat(10) {
-//                        list.add(HomeItemBean(HomeItemBean.NORMAL, Any()))
-//                    }
-//                }
                 val list = arrayListOf<HomeItemBean>()
                 if (offset == 0) {
                     val headNavigateInfo= HeadNavigateInfo().apply {

@@ -86,6 +86,17 @@ public class OpenPageModule extends ReactContextBaseJavaModule {
 
                     break;
                 }
+                case "ReportUserPage":{
+                    String id = params.getString("userId");
+                    if (id != null) {
+                        long userId = Long.parseLong(id);
+                        Bundle extra = new Bundle();
+                        extra.putLong(ParamConstant.TARGET_USER_ID, userId);
+                        extra.putInt(ParamConstant.REPORT_TYPE, 0);
+                        ARouter.getInstance().build(ARouterConstant.REPORT_ACTIVITY).with(extra).navigation();
+                        break;
+                    }
+                }
             }
 
         } catch (Exception e) {

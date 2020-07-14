@@ -10,7 +10,7 @@
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_nav_bg"
         android:layout_width="@dimen/dimen_90"
-        android:layout_height="0dp"
+        android:layout_height="70dp"
         app:actualImageScaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,48 +18,33 @@
         app:roundedCornerRadius="@dimen/dimen_6"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_user_head"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="@dimen/dimen_7"
-        android:layout_marginLeft="@dimen/dimen_7"
-        android:layout_marginTop="@dimen/dimen_5"
-        android:visibility="invisible"
-        app:actualImageResource="@mipmap/icon_upload_image"
-        app:actualImageScaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:roundAsCircle="true"
-        app:roundingBorderColor="#FFC5CA"
-        app:roundingBorderWidth="@dimen/dimen_1" />
 
     <TextView
         android:id="@+id/tv_title1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_7"
-        android:layout_marginLeft="@dimen/dimen_7"
-        android:layout_marginTop="@dimen/dimen_2"
+        android:layout_marginStart="@dimen/dimen_8"
+        android:layout_marginLeft="@dimen/dimen_8"
+        android:layout_marginTop="@dimen/dimen_8"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_11"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sdv_user_head"
         tools:text="蒙面女王" />
 
     <TextView
         android:id="@+id/tv_title2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_7"
-        android:layout_marginLeft="@dimen/dimen_7"
+        android:layout_marginStart="@dimen/dimen_8"
+        android:layout_marginLeft="@dimen/dimen_8"
         android:layout_marginTop="@dimen/dimen_1"
         android:textColor="#99FFFFFF"
         android:textSize="8sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title1"
         android:layout_marginBottom="@dimen/dimen_5"
-        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="今日剩余3次" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

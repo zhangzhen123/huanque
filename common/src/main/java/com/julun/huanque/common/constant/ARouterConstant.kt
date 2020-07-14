@@ -44,7 +44,8 @@ object ARouterConstant {
     const val VOICE_CHAT_ACTIVITY = "/$AGORA$PREFIX_ACTIVITY/VoiceChatActivity"
     //message模块
     const val PRIVATE_CONVERSATION_ACTIVITY = "/$MESSAGE$PREFIX_ACTIVITY/PrivateConversationActivity"
-
+    //举报页面
+    const val REPORT_ACTIVITY = "/$APP$PREFIX_ACTIVITY/ReportActivity"
     //充值页面
     const val RECHARGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/RechargeCenterActivity"
 
