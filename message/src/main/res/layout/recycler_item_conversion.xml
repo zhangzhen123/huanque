@@ -52,12 +52,22 @@
         app:layout_constraintLeft_toRightOf="@id/tv_nickname"
         app:layout_constraintTop_toTopOf="@id/tv_nickname" />
 
-    <ImageView
-        android:id="@+id/iv_royal_level"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/tv_royal_level"
+        android:layout_width="46dp"
         android:layout_height="16dp"
         android:layout_marginLeft="5dp"
         android:visibility="gone"
+        tools:visibility="visible"
+        android:gravity="center"
+        android:textSize="@dimen/sp_10"
+        android:textColor="@color/white"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:drawablePadding="3dp"
+        tools:text="Lv.7"
+        android:drawableLeft="@mipmap/icon_intimate_heart"
+        android:background="@drawable/bg_intimate_level"
         app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
         app:layout_constraintLeft_toRightOf="@id/iv_user_level"
         app:layout_constraintTop_toTopOf="@id/tv_nickname" />

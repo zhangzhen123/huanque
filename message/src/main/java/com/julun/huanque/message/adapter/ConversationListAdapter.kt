@@ -51,6 +51,16 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 //隐藏图标
                 ivHuanyu.hide()
             }
+            //亲密度等级
+            val tvRoyalLevel = helper.getView<TextView>(R.id.tv_royal_level)
+            val level = item.showUserInfo?.intimateLevel ?: 0
+            if (level > 0) {
+                tvRoyalLevel.text = "Lv.$level"
+                tvRoyalLevel.show()
+            } else {
+                tvRoyalLevel.hide()
+            }
+
         }
 
 
