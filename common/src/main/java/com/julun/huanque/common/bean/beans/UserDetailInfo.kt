@@ -40,8 +40,12 @@ data class UserLevelInfo(
     var userLevel: Int = 0
 )
 
-data class ImTokenBean(
+/**
+ * 更新头像使用的bean
+ */
+data class UpdateHeaderBean(
     //聊天token
-    var imToken: String = ""
+    var imToken: String = "",
+    var sex : String = ""
 )
 

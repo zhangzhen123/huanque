@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
@@ -17,10 +18,10 @@ import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.StatusBarUtil
@@ -29,7 +30,6 @@ import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_mine.*
-import kotlinx.android.synthetic.main.fragment_mine.state_pager_view
 import org.jetbrains.anko.startActivity
 import java.math.RoundingMode
 
@@ -102,6 +102,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         }
         toolsAdapter.setOnItemClickListener { _, _, position ->
             //todo
+        }
+        ivSetting.onClickNew {
         }
         rlQueBi.onClickNew {
             requireActivity().startActivity<RechargeCenterActivity>()

@@ -3,7 +3,7 @@ package com.julun.huanque.net.service
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidResult
-import com.julun.huanque.common.bean.beans.ImTokenBean
+import com.julun.huanque.common.bean.beans.UpdateHeaderBean
 import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
@@ -74,5 +74,5 @@ interface UserService {
      * 修改头像
      */
     @POST("user/acct/data/updateHeadPic")
-    suspend fun updateHeadPic(@Body form: UpdateHeadForm): Root<ImTokenBean>
+    suspend fun updateHeadPic(@Body form: UpdateHeadForm): Root<UpdateHeaderBean>
 }

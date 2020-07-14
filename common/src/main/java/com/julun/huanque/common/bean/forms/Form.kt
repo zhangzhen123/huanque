@@ -11,9 +11,9 @@ import java.io.Serializable
 //空的form
 class EmptyForm()
 
-class FriendIdForm(var friendId : Long)
+class FriendIdForm(var friendId: Long)
 
-class SendChatGiftForm(var friendId : Long,var chatGiftId:Int,var count:Int)
+class SendChatGiftForm(var friendId: Long, var chatGiftId: Int, var count: Int)
 
 /**
  * 创建语音通话的form
@@ -29,3 +29,10 @@ class NetcallCancelForm(var callId: Long, var cancelType: String)
  * 挂断通话的form
  */
 class NetcallHangUpForm(var callId: Long = 0, var duration: Long = 0) : Serializable
+
+/**
+ * 发送消息 form
+ * @param friendId 发送的好友ID
+ * @param content 消息内容
+ */
+class SendMsgForm(var friendId: Long = 0, var content: String = "")

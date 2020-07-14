@@ -2,6 +2,7 @@ package com.julun.huanque.agora.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.bean.beans.NetcallBean
 import com.julun.huanque.common.bean.forms.CreateCommunicationForm
@@ -56,6 +57,9 @@ class VoiceChatViewModel : BaseViewModel() {
     //会话结束  发送模拟消息使用
     val voiceBeanData: MutableLiveData<VoiceConmmunicationSimulate> by lazy { MutableLiveData<VoiceConmmunicationSimulate>() }
 
+    //余额不足标识，显示余额不足弹窗
+    val notEnoughData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //token
     var agoraToken = ""
 
@@ -80,6 +84,19 @@ class VoiceChatViewModel : BaseViewModel() {
             request({
                 val result = socialService.createCommunication(CreateCommunicationForm(userId)).dataConvert()
                 netcallBeanData.value = result
+            }, {
+                if (it is ResponseError) {
+                    //对方忙
+                    when (it.busiCode) {
+                        1403 -> {
+                            //对方忙
+                            voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_BUSY)
+                        }
+
+                    }
+
+                    currentVoiceState.value = VOICE_CLOSE
+                }
             })
         }
     }
@@ -103,7 +120,7 @@ class VoiceChatViewModel : BaseViewModel() {
             request({
                 socialService.netcallRefuse(NetcallIdForm(callId)).dataConvert()
                 currentVoiceState.value = VOICE_CLOSE
-                voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_REFUSE)
+                voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.MINE_REFUSE)
             })
         }
     }
@@ -117,9 +134,11 @@ class VoiceChatViewModel : BaseViewModel() {
                 socialService.netcallCancel(NetcallCancelForm(callId, type)).dataConvert()
                 if (type == CancelType.Timeout) {
                     ToastUtils.show("对方无应答")
+                    voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_NOT_ACCEPT)
+                } else {
+                    voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
                 }
                 currentVoiceState.value = VOICE_CLOSE
-                voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
             })
         }
     }
@@ -130,9 +149,14 @@ class VoiceChatViewModel : BaseViewModel() {
     fun hangUpVoice() {
         viewModelScope.launch {
             request({
-                socialService.netcallHangUp(NetcallHangUpForm(callId, duration)).dataConvert()
+                val result = socialService.netcallHangUp(NetcallHangUpForm(callId, duration)).dataConvert()
+                voiceBeanData.value = VoiceConmmunicationSimulate(
+                    VoiceResultType.CONMMUNICATION_FINISH,
+                    result.duration,
+                    billUserId = result.billUserId,
+                    totalBeans = result.totalBeans
+                )
                 currentVoiceState.value = VOICE_CLOSE
-                voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.CONMMUNICATION_FINISH, duration)
             })
         }
     }

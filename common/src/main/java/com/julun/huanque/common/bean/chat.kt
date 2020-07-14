@@ -20,9 +20,11 @@ data class ChatUser(
     //主播等级
     var anchorLevel: Int = 0,
     //亲密等级
-    var intimateLevel : Int = 0,
+    var intimateLevel: Int = 0,
     //欢遇标识
-    var meetStatus : String = "",
+    var meetStatus: String = "",
+    //用户性别
+    var sex: String = "",
     //用户类型  主播还是用户
     var userType: String = "",
     //直播间ID
@@ -239,7 +241,7 @@ data class MsgCountBean(var newCount: Int = 0) : Serializable
 
 data class MessageHeaderBean(
     //头像
-    var headRes:Int=0,
+    var headRes: Int = 0,
     var headPic: String = "",
     var title: String = "",
     var content: String = "",

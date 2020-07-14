@@ -277,11 +277,11 @@ object RongCloudManager {
             }
 
         }
-        if (targetId == "${SessionUtils.getUserId()}") {
+        if (senderId == targetId) {
             //插入接收消息
-            val receivedStatus = Message.ReceivedStatus(0x1);
+            val receivedStatus = Message.ReceivedStatus(0x1)
             RongIMClient.getInstance()
-                .insertIncomingMessage(conversationType, senderId, senderId, receivedStatus, messageContent, callback)
+                .insertIncomingMessage(conversationType, targetId, senderId, receivedStatus, messageContent, callback)
         } else {
             //插入发送消息
             RongIMClient.getInstance().insertOutgoingMessage(conversationType, targetId, Message.SentStatus.SENT, messageContent, callback)
@@ -368,7 +368,7 @@ object RongCloudManager {
      */
     fun sendMediaMessage(
         targetId: String, targetUserObj: TargetUserObj? = null, type: Conversation.ConversationType, compressLocalImage: String
-        , localImage: String
+        , localImage: String, callback: (IRongCallback.MediaMessageUploader?, String?) -> Unit = { upLoader, picUrl -> }
     ) {
         val prefix = "file://"
         val localUri = if (localImage.startsWith(prefix)) {
@@ -393,7 +393,8 @@ object RongCloudManager {
                         logger("DXC 头像上传oss成功：${list} localImage = $localImage")
                         val headPic = list?.firstOrNull()
                         if (headPic != null) {
-                            uploader?.success(Uri.parse("$headPic"))
+                            callback(uploader,headPic)
+//                            uploader?.success(Uri.parse("$headPic"))
                         }
                     } else {
                         uploader?.error()
@@ -677,7 +678,7 @@ object RongCloudManager {
                         }
                         MessageProcessor.MessageType.Event.name -> {
                             val eventCode = jsonObject.getString(MessageProcessor.EVENT_CODE)
-                            if (!TextUtils.isEmpty(eventCode) && eventCode == EventMessageType.MsgCenterNewMsg.name) {
+                            if (!TextUtils.isEmpty(eventCode)) {
                                 if (message.receivedStatus.isRetrieved) {
                                     //如果这条消息被被其他登录的多端收取过，那么直接丢弃
                                     return@forEach

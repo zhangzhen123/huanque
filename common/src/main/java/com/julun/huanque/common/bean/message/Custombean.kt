@@ -9,7 +9,12 @@ package com.julun.huanque.common.bean.message
 /**
  * 语音会话模拟消息
  * @param type 会话结束类型
- * @param 通话时长
+ * @param duration 通话时长
  * @param createUserID 创建者ID
+ * @param billUserId 付费的用户ID
+ * @param totalBeans 总共花费的金额
  */
-data class VoiceConmmunicationSimulate(var type: String = "", var duration: Long = 0, var createUserID: Long = 0)
+data class VoiceConmmunicationSimulate(
+    var type: String = "", var duration: Long = 0, var createUserID: Long = 0,
+    var billUserId: Long = 0, var totalBeans: Long = 0
+)

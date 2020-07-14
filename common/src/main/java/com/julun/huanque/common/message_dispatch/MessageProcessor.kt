@@ -1168,7 +1168,7 @@ object MessageProcessor {
     /**
      * 挂断消息
      */
-    interface NetCallHangUpProcessor : EventMessageProcessor<NetCallHangUpBeam> {
+    interface NetCallHangUpProcessor : EventMessageProcessor<NetCallHangUpBean> {
         override fun getEventType() = EventMessageType.NetCallHangUp
     }
 
@@ -1188,7 +1188,7 @@ object MessageProcessor {
     /**
      * 余额不足提醒消息
      */
-    interface NetCallBalanceRemindProcessor : EventMessageProcessor<VoidResult> {
+    interface NetCallBalanceRemindProcessor : EventMessageProcessor<NetCallBalanceRemindBean> {
         override fun getEventType() = EventMessageType.NetCallBalanceRemind
     }
 
@@ -1520,7 +1520,7 @@ enum class EventMessageType(val klass: Class<*>) {
     NetCallCancel(VoidResult::class.java),
 
     //挂断消息
-    NetCallHangUp(NetCallHangUpBeam::class.java),
+    NetCallHangUp(NetCallHangUpBean::class.java),
 
     //被叫拒绝通话
     NetCallRefuse(VoidResult::class.java),
@@ -1529,5 +1529,5 @@ enum class EventMessageType(val klass: Class<*>) {
     NetCallDisconnect(VoidResult::class.java),
 
     //余额不足提醒消息
-    NetCallBalanceRemind(VoidResult::class.java)
+    NetCallBalanceRemind(NetCallBalanceRemindBean::class.java)
 }

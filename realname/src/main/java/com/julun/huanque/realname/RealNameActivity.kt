@@ -73,6 +73,11 @@ class RealNameActivity : BaseActivity() {
                         }
                         else -> {
                             //认证取消
+                            ToastUtils.show("${if(des.isNotEmpty()){
+                                des
+                            }else{
+                                "认证取消"
+                            }}")
                         }
                     }
                 }

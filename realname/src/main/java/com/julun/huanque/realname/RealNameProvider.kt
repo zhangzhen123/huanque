@@ -10,34 +10,32 @@ import com.alibaba.security.realidentity.RPVerify
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.RealNameConstants
-import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
-import com.julun.huanque.common.net.RequestCaller
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.suger.handleResponse
+import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.whatEver
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
-import com.julun.huanque.realname.net.bean.RealNameBean
 import com.julun.huanque.realname.net.form.RealNameForm
 import com.julun.huanque.realname.net.service.RealNameService
+import kotlinx.coroutines.*
 
 /**
+ * 实名认证服务
  * @author WanZhiYuan
  * @since 1.0.0
  * @date 2020/07/09
  */
 @Route(path = ARouterConstant.REALNAME_SERVICE)
-class RealNameProvider : IRealNameService, RequestCaller {
+class RealNameProvider : IRealNameService {
 
     private var mCallback: RealNameCallback? = null
     private var mIsRequest: Boolean = false
     private val logger = ULog.getLogger(RealNameProvider::class.java.simpleName)
 
-    private val uuid: String = StringHelper.uuid()
-    override fun getRequestCallerId(): String = uuid
+    private var mTokenJob: Job? = null
 
     override fun init(context: Context?) {
         // 初始化实人认证SDK。
@@ -65,7 +63,8 @@ class RealNameProvider : IRealNameService, RequestCaller {
 
     override fun release() {
         mCallback = null
-        cancelAllRequest()
+        //取消协程
+        mTokenJob?.cancel()
     }
 
     private fun checkAndGo(
@@ -85,21 +84,7 @@ class RealNameProvider : IRealNameService, RequestCaller {
                 when {
                     permission.granted -> {
                         mIsRequest = true
-                        Requests.create(RealNameService::class.java).getCertificationToken(
-                            RealNameForm(authType = type, realName = realName, certNum = realIdCard)
-                        ).handleResponse(makeSubscriber<RealNameBean> {
-                            //获取token并打开人脸识别页面
-                            start(activity, it.token, type, realName, realIdCard)
-                        }.ifError {
-                            //提示失败
-                            if (it is ResponseError) {
-                                callback(RealNameConstants.TYPE_ERROR, it.busiMessage)
-                            } else {
-                                callback(RealNameConstants.TYPE_ERROR, "网络异常，请稍后重试！")
-                            }
-                        }.withFinalCall {
-                            mIsRequest = false
-                        })
+                        execute(activity, type, realName, realIdCard)
                     }
                     permission.shouldShowRequestPermissionRationale ->
                         ToastUtils.show("获取权限失败")
@@ -130,29 +115,15 @@ class RealNameProvider : IRealNameService, RequestCaller {
                     RPResult.AUDIT_PASS -> {
                         // 认证通过。建议接入方调用实人认证服务端接口DescribeVerifyResult来获取最终的认证状态，并以此为准进行业务上的判断和处理
                         callback(RealNameConstants.TYPE_SUCCESS, "认证成功~！")
-                        Requests.create(RealNameService::class.java).saveCertificationRes(
-                            RealNameForm(
-                                authType = type,
-                                realName = realName,
-                                certNum = realIdCard
-                            )
-                        )
-                            .whatEver()
+                        save(type, realName, realIdCard)
                     }
                     RPResult.AUDIT_FAIL -> {
                         // 认证不通过。建议接入方调用实人认证服务端接口DescribeVerifyResult来获取最终的认证状态，并以此为准进行业务上的判断和处理
                         callback(RealNameConstants.TYPE_FAIL, "认证失败,请检查认证材料是否匹配~！code :$code")
-                        Requests.create(RealNameService::class.java).saveCertificationRes(
-                            RealNameForm(
-                                authType = type,
-                                realName = realName,
-                                certNum = realIdCard
-                            )
-                        )
-                            .whatEver()
+                        save(type, realName, realIdCard)
                     }
-                    RPResult.AUDIT_NOT -> {
-                        // 未认证，具体原因可通过code来区分（code取值参见下方表格），通常是用户主动退出或者姓名身份证号实名校验不匹配等原因，导致未完成认证流程
+                    else -> {
+                        // 未认证，RPResult.AUDIT_NOT具体原因可通过code来区分（code取值参见下方表格），通常是用户主动退出或者姓名身份证号实名校验不匹配等原因，导致未完成认证流程
                         if (code == "-1") {
                             callback(RealNameConstants.TYPE_CANCEL, code)
                         } else {
@@ -160,14 +131,7 @@ class RealNameProvider : IRealNameService, RequestCaller {
                                 RealNameConstants.TYPE_FAIL,
                                 "认证失败,请检查认证材料是否匹配~！code :$code"
                             )
-                            Requests.create(RealNameService::class.java).saveCertificationRes(
-                                RealNameForm(
-                                    authType = type,
-                                    realName = realName,
-                                    certNum = realIdCard
-                                )
-                            )
-                                .whatEver()
+                            save(type, realName, realIdCard)
                         }
                     }
                 }
@@ -181,4 +145,60 @@ class RealNameProvider : IRealNameService, RequestCaller {
         }
     }
 
+
+    private fun execute(
+        activity: Activity,
+        type: String,
+        realName: String? = null,
+        realIdCard: String? = null
+    ) {
+        mTokenJob = GlobalScope.launch(Dispatchers.Main) {
+            try {
+                val info = Requests.create(RealNameService::class.java)
+                    .getCertificationToken(
+                        RealNameForm(
+                            authType = type,
+                            realName = realName,
+                            certNum = realIdCard
+                        )
+                    ).dataConvert()
+                //协程并未取消，那么就可以继续往下执行
+                if (mTokenJob?.isActive == true) {
+                    //获取token并打开人脸识别页面
+                    start(activity, info.token, type, realName, realIdCard)
+                } else {
+                    callback(RealNameConstants.TYPE_CANCEL, "")
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                if (e is ResponseError) {
+                    callback(RealNameConstants.TYPE_ERROR, e.busiMessage)
+                } else {
+                    callback(RealNameConstants.TYPE_ERROR, "网络异常，请稍后重试！")
+                }
+            } finally {
+                mIsRequest = false
+            }
+        }
+    }
+
+    private fun save(
+        type: String,
+        realName: String? = null,
+        realIdCard: String? = null
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                Requests.create(RealNameService::class.java).saveCertificationRes(
+                    RealNameForm(
+                        authType = type,
+                        realName = realName,
+                        certNum = realIdCard
+                    )
+                )
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }
+    }
 }

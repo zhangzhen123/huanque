@@ -2,7 +2,6 @@ package com.julun.huanque.message.adapter
 
 import android.net.Uri
 import android.text.Spanned
-import android.text.format.Time
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.TextView
@@ -17,8 +16,10 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.span.DraweeSpan
 import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.drawee.span.SimpleDraweeSpanTextView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.ChatUserBean
+import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
@@ -110,9 +111,14 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         //其它的普通聊天消息
         if (helper.itemViewType == OTHER) {
             //头像和直播状态
-            ImageUtils.loadImage(helper.getView(R.id.sdv_header), otherUserInfo?.headPic ?: "", 40f, 40f)
+            val sdv_header = helper.getView<SimpleDraweeView>(R.id.sdv_header)
+
+            ImageUtils.setDefaultHeaderPic(sdv_header, otherUserInfo?.headPic ?: "")
+
+            ImageUtils.loadImage(sdv_header, otherUserInfo?.headPic ?: "", 40f, 40f)
         } else {
             if (helper.itemViewType == MINE) {
+
 //                helper.addOnClickListener(R.id.sdv_header)
             }
             //todo 发送状态先关闭(发送中和重试状态)
@@ -136,7 +142,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 //                }
 //            }
             //显示本人头像
-            ImageUtils.loadImage(helper.getView(R.id.sdv_header), SessionUtils.getHeaderPic(), 40f, 40f)
+            val sdv_header = helper.getView<SimpleDraweeView>(R.id.sdv_header)
+            ImageUtils.setDefaultHeaderPic(sdv_header, SessionUtils.getSex())
+            ImageUtils.loadImage(sdv_header, SessionUtils.getHeaderPic(), 40f, 40f)
         }
 
         if (content is CustomMessage) {
@@ -163,7 +171,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                         tvContent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.icon_phone_voice, 0)
                     }
                     tvContent.compoundDrawablePadding = 15
-                    showVoiceView(tvContent, content.context)
+                    showVoiceView(tvContent, helper.getView<TextView>(R.id.tv_quebi), content.context)
                 }
                 else -> {
                 }
@@ -179,6 +187,10 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             if (content is TextMessage) {
                 showMessageView(helper, TEXT_MESSAGE, helper.itemViewType)
                 tvContent.text = EmojiUtil.message2emoji(content.content)
+                //判断是否显示文本鹊币
+                if (helper.itemViewType == OTHER) {
+                    showTextImageQueBi(helper.getView<TextView>(R.id.tv_quebi), item, helper.adapterPosition)
+                }
             } else if (content is ImageMessage) {
                 //图片信息
                 showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
@@ -193,6 +205,8 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                         //显示远程图片
                         ImageUtils.loadImage(helper.getView(R.id.sdv_image), "${content.remoteUri}", 100f, 100f)
                     }
+                    //
+                    showTextImageQueBi(helper.getView<TextView>(R.id.tv_quebi), item, helper.adapterPosition)
                 } else {
                     //发送方查看图片
                     val file = File("${content.thumUri?.path}")
@@ -253,6 +267,8 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         val sdv_header = holder.getView<View>(R.id.sdv_header)
         val sdv_image = holder.getView<View>(R.id.sdv_image)
         val tv_pic_content = holder.getView<View>(R.id.tv_pic_content)
+        //隐藏收益视图
+        holder.getView<View>(R.id.tv_quebi).hide()
 
         when (messageType) {
             TEXT_MESSAGE -> {
@@ -351,7 +367,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     /**
      * 显示模拟的语音消息
      */
-    private fun showVoiceView(tv: TextView, str: String) {
+    private fun showVoiceView(tv: TextView, qbTv: TextView, str: String) {
 
         try {
             val voiceBean = JsonUtil.deserializeAsObject<VoiceConmmunicationSimulate>(str, VoiceConmmunicationSimulate::class.java)
@@ -377,14 +393,82 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     //主叫取消通话
                     showStr = "已取消"
                 }
+                VoiceResultType.MINE_REFUSE -> {
+                    showStr = "已拒绝"
+                }
                 else -> {
                 }
-
             }
             tv.text = showStr
+
+            if (voiceBean.totalBeans > 0 && voiceBean.billUserId != SessionUtils.getUserId()) {
+                //本人是收费方
+                qbTv.text = "${voiceBean.totalBeans}"
+                qbTv.show()
+            }else{
+                qbTv.hide()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
+    }
+
+
+    /**
+     * 显示文本/图片消息 鹊币
+     */
+    private fun showTextImageQueBi(tv: TextView, item: Message, position: Int) {
+        if (item.senderUserId == SessionUtils.getSessionId()) {
+            tv.hide()
+            return
+        }
+        val content = item.content
+        if (content !is TextMessage && content !is ImageMessage) {
+            tv.hide()
+            return
+        }
+        var user: RoomUserChatExtra? = null
+        try {
+            if (content is TextMessage) {
+                user = JsonUtil.deserializeAsObject(content.extra, RoomUserChatExtra::class.java)
+            }
+
+            if (content is ImageMessage) {
+                user = JsonUtil.deserializeAsObject(content.extra, RoomUserChatExtra::class.java)
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        val fee = user?.targetUserObj?.fee ?: 0
+        if (fee > 0 && item.senderUserId != SessionUtils.getSessionId()) {
+            //对方发送消息
+            //消息时间
+            val sendTime = item.sentTime
+            //离当前消息最近的一次本人发送消息
+            var mineReplyTime = 0L
+            //获取离当前消息最近的本人发送消息
+            for (index in position until data.size) {
+                val msg = data[index]
+                val conent = msg.content
+                if ((conent is TextMessage || conent is ImageMessage) && msg.senderUserId == "${SessionUtils.getUserId()}") {
+                    //获取到需要的消息
+                    mineReplyTime = msg.sentTime
+                    break
+                }
+            }
+
+            if (mineReplyTime > 0 && mineReplyTime - sendTime < DAY) {
+                //24小时内回复
+                tv.show()
+                tv.text = "$fee"
+            } else {
+                //24小时外回复
+                tv.hide()
+            }
+        } else {
+            tv.hide()
+        }
     }
 }

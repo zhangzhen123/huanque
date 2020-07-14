@@ -84,6 +84,7 @@
         app:layout_constraintTop_toTopOf="@id/sdv_header"
         tools:text="考虑i偶记得大家快来发货发考虑i偶记得大家快来发货发" />
 
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_image"
         android:layout_width="100dp"
@@ -93,6 +94,32 @@
         app:layout_constraintRight_toLeftOf="@id/sdv_header"
         app:layout_constraintTop_toTopOf="@id/sdv_header"
         app:roundedCornerRadius="10dp" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_msg_quebi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="sdv_image,tv_content" />
+
+    <TextView
+        android:id="@+id/tv_quebi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="6dp"
+        android:drawableLeft="@mipmap/icon_quebi_message"
+        android:drawablePadding="3dp"
+        android:gravity="center"
+        android:textColor="@color/color_quebi"
+        android:textSize="@dimen/sp_10"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="@id/tv_content"
+        app:layout_constraintTop_toBottomOf="@id/barrier_msg_quebi"
+        tools:text="九二九号"
+        tools:visibility="visible" />
+
 
     <com.facebook.drawee.span.SimpleDraweeSpanTextView
         android:id="@+id/tv_pic_content"
@@ -141,12 +168,5 @@
         app:layout_constraintTop_toTopOf="@id/tv_content"
         tools:visibility="visible" />
 
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="tv_pic_content,tv_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -192,7 +192,9 @@ class MessageFragment : BaseFragment() {
         }
 
         tv_message_unread.onClickNew {
-            ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).navigation()
+            activity?.let { act ->
+                PrivateConversationActivity.newInstance(act, 20000041)
+            }
         }
 
     }

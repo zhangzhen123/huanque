@@ -106,6 +106,10 @@ class FillInformationViewModel : BaseViewModel() {
                             if (result.imToken.isNotEmpty()) {
                                 SessionUtils.setRongImToken(result.imToken)
                             }
+
+                            if (result.sex.isNotEmpty()) {
+                                SessionUtils.setSex(result.sex)
+                            }
                             logger("头像修改通知后台成功：${list}")
 
                             headerSuccess(headPic)

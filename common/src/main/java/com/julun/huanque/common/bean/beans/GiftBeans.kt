@@ -164,3 +164,19 @@ data class ChatSendResult(
     var intimateLevel: Int = 0,
     var intimateNum: Int = 0
 )
+
+/**
+ * 小鹊互动语料
+ */
+data class ActiveWord(var content: String = "", var wordType: String = "")
+
+
+data class ActiveBean(var activeList: MutableList<ActiveWord> = mutableListOf())
+
+
+/**
+ * 余额数据
+ * @param beans 鹊币余额
+ * @param consumeBeans 本次花费金额
+ */
+data class SendMsgBean(var beans: Long = 0, var consumeBeans: Long = 0)

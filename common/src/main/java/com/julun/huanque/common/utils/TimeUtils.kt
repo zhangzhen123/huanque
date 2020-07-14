@@ -10,7 +10,7 @@ import java.util.*
 private const val SECOND = 1000L
 private const val MINUTE = 60 * SECOND
 private const val HOUR = 60 * MINUTE
-private const val DAY = 24 * HOUR
+const val DAY = 24 * HOUR
 /**
  * 格式化剩余时间  eg:1天10:12:12
  * @param time 毫秒

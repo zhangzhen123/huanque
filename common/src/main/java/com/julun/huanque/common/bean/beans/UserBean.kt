@@ -93,9 +93,9 @@ class ChatUserBean(
     var royalBjExp: Long = 0,
     var royalExp: Long = 0,
     var royalLevel: Int = 0,
-    var sex: String = "",
     var userExp: Long = 0,
 
+    var sex: String = "",
     var userId: Long = 0L,
     var headPic: String = "",
     var meetStatus: String = "",
@@ -119,7 +119,7 @@ class ConversationBasicBean(
     //账户余额
     var beans: Long = 0,
     //私信费用
-    var msgFee: Int = 0,
+    var msgFee: Long = 0,
     //语音费用
     var voiceFee: Int = 0
 )

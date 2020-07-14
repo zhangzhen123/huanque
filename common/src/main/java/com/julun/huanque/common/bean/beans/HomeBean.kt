@@ -110,7 +110,10 @@ data class NetCallReceiveBean(var callId: Long = 0, var userIds: LongArray = lon
 data class NetCallAcceptBean(var callId: Long = 0, var startTime: Long = 0, var billUserId: Long = 0, var userIds: LongArray = longArrayOf()) :
     Serializable
 
-data class NetCallHangUpBeam(
+/**
+ * 通话挂断消息
+ */
+data class NetCallHangUpBean(
     var callId: Long = 0,
     //挂断通话的用户ID
     var hangUpId: Long = 0,
@@ -122,4 +125,16 @@ data class NetCallHangUpBeam(
     var totalBeans: Long = 0,
     //结束类型
     var finishType: String = ""
+) : Serializable
+
+/**
+ * 语音通话余额不足提醒
+ */
+data class NetCallBalanceRemindBean(
+    //通话ID
+    var callId: Long = 0,
+    //剩余可通话时长
+    var duration: Long = 0,
+    //余额是否充足
+    var enough: Boolean = false
 ) : Serializable
