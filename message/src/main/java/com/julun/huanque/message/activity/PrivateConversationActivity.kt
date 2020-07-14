@@ -115,6 +115,7 @@ class PrivateConversationActivity : BaseActivity() {
         showTitleView(nickName, meetStatus)
         mPrivateConversationViewModel?.targetIdData?.value = targetID
         registerMessageEventProcessor()
+        mPrivateConversationViewModel?.operationType = intent?.getStringExtra(ParamConstant.OPERATION) ?: ""
         //        mPrivateConversationViewModel?.getMessageList(first = true)
         //获取基本数据
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
@@ -198,6 +199,21 @@ class PrivateConversationActivity : BaseActivity() {
             }
         })
         mPrivateConversationViewModel?.basicBean?.observe(this, Observer {
+            if (it != null) {
+                when (mPrivateConversationViewModel?.operationType) {
+                    OperationType.OPEN_GIFT -> {
+                        //打开礼物
+                        iv_gift.performClick()
+                    }
+                    OperationType.CALL_PHONE -> {
+                        //拨打电话
+                        iv_phone.performClick()
+                    }
+                    else -> {
+                    }
+                }
+                mPrivateConversationViewModel?.operationType = ""
+            }
             mIntimateDetailViewModel?.basicBean?.value = it
         })
 

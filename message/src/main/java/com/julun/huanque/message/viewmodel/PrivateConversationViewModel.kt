@@ -69,7 +69,10 @@ class PrivateConversationViewModel : BaseViewModel() {
     val balance: LiveData<Long> by lazy { BalanceUtils.getBalance() }
 
     //当前发送消费花费金额
-    val msgFeeData : MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+    val msgFeeData: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+
+    //操作类型
+    var operationType = ""
 
     //小鹊语料数据
     var wordList = mutableListOf<ActiveWord>()
