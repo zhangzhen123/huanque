@@ -36,3 +36,8 @@ class NetcallHangUpForm(var callId: Long = 0, var duration: Long = 0) : Serializ
  * @param content 消息内容
  */
 class SendMsgForm(var friendId: Long = 0, var content: String = "")
+
+/**
+ * 联系人使用的form
+ */
+class ContactsForm(var userDataTabType : String = "",var offset : Int = 0)

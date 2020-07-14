@@ -19,7 +19,7 @@ class UserDataTab(
     var userTabName: String = "",
     //数据条数
     var count: Long = 0,
-    var tagCount:Int =0
+    var tagCount: Int = 0
 )
 
 /**
@@ -53,7 +53,9 @@ class SocialListBean(
     //当前数据的type
     var userDataTabType: String = "",
     //列表数据
-    var linkList: MutableList<SocialUserInfo> = mutableListOf()
+    var linkList: MutableList<SocialUserInfo> = mutableListOf(),
+    //是否有更多数据
+    var hasMore: Boolean = false
 )
 
 /**
