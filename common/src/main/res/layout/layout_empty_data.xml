@@ -10,7 +10,7 @@
         android:id="@+id/no_data_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/empty_data" />
+        android:src="@mipmap/icon_default_empty" />
 
     <TextView
         android:id="@+id/emptyText"

@@ -99,7 +99,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 when (bean.sex) {//Male、Female、Unknow
 
                     Sex.FEMALE -> {
-                        val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_mkf_female)
+                        val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_sex_female)
                         if (drawable != null) {
                             drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
                             sex.setCompoundDrawables(drawable, null, null, null)
@@ -107,7 +107,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         sex.textColor = Color.parseColor("#FF9BC5")
                     }
                     else -> {
-                        val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_mkf_male)
+                        val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_sex_male)
                         if (drawable != null) {
                             drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
                             sex.setCompoundDrawables(drawable, null, null, null)

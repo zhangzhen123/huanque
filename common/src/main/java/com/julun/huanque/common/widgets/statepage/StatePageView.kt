@@ -62,7 +62,7 @@ class StatePageView : FrameLayout {
 
     }
 
-    fun showEmpty(@DrawableRes emptyRes: Int = R.mipmap.empty_data, emptyTxt: String = "") {
+    fun showEmpty(@DrawableRes emptyRes: Int = R.mipmap.icon_default_empty, emptyTxt: String = "") {
         this.show()
         loading_view.hide()
         empty_view.show()
@@ -74,7 +74,7 @@ class StatePageView : FrameLayout {
     }
 
     fun showError(
-        @DrawableRes errorRes: Int = R.mipmap.network_unable,
+        @DrawableRes errorRes: Int = R.mipmap.icon_default_empty,
         errorTxt: String = "",
         showBtn: Boolean = true,
         btnClick: OnClickListener? = null

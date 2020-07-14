@@ -9,22 +9,22 @@
         android:id="@+id/no_network_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/network_unable"
+        android:src="@mipmap/icon_default_empty"
         app:layout_constraintBottom_toTopOf="@+id/no_network_Text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"/>
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/no_network_Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
+        android:gravity="center"
         android:text="@string/network_unenable"
         android:textColor="@color/text_03"
         android:textSize="@dimen/small1_size"
-        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/tv_error_reload"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,14 +32,15 @@
 
     <TextView
         android:id="@+id/tv_error_reload"
-        android:layout_width="125dp"
+        android:layout_width="160dp"
         android:layout_height="40dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/reload"
+        android:background="@drawable/bg_solid_btn2"
         android:gravity="center"
+        android:text="@string/reload"
+        android:textSize="@dimen/size_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/black_999"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/no_network_Text" />
 </androidx.constraintlayout.widget.ConstraintLayout>
