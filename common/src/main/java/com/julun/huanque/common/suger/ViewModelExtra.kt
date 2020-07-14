@@ -1,10 +1,7 @@
 package com.julun.huanque.common.suger
 
 import androidx.lifecycle.MutableLiveData
-import com.julun.huanque.common.basic.Root
-import com.julun.huanque.common.basic.NetState
-import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.basic.ResponseError
+import com.julun.huanque.common.basic.*
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.net.NError
@@ -117,11 +114,22 @@ fun <T> BaseViewModel.requestRx(
     )
 }
 
-fun Throwable.coverError(): ResponseError {
-    return if (this is ResponseError) {
+/**
+ * 错误封装为ReactiveData
+ */
+fun <T>Throwable.coverError(): ReactiveData<T>{
+    val err= if (this is ResponseError) {
         this
     } else {
         ResponseError (OTHER_DEF_ERROR,"异常错误")
     }
+    return ReactiveData(state = NetStateType.ERROR,error = err)
+}
+
+/**
+ * 正确的数据封装为ReactiveData
+ */
+fun <T>T.coverRtData():ReactiveData<T>{
+    return ReactiveData(state = NetStateType.SUCCESS,data = this)
 }
 

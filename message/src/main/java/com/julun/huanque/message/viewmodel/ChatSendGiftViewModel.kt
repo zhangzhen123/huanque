@@ -48,7 +48,8 @@ class ChatSendGiftViewModel : BaseViewModel() {
                 emit(ReactiveData(NetStateType.SUCCESS, homeListData))
             }, error = { e ->
                 logger("报错了：$e")
-                emit(ReactiveData(NetStateType.ERROR, error = e.coverError()))
+//                emit(ReactiveData(NetStateType.ERROR, error = e.coverError()))
+                emit(e.coverError())
             }, final = {
                 logger("最终返回")
             }, needLoadState = type == QueryType.INIT)
@@ -67,7 +68,8 @@ class ChatSendGiftViewModel : BaseViewModel() {
                 BalanceUtils.saveBalance(result.beans)
             }, error = {
                 logger("赠送的结果 报错=${Thread.currentThread().name}")
-                sendResult.value = ReactiveData(state = NetStateType.ERROR, error = it.coverError())
+//                sendResult.value = ReactiveData(state = NetStateType.ERROR, error = it.coverError())
+                sendResult.value =it.coverError()
             })
 
 

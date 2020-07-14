@@ -14,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
+import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
@@ -66,15 +67,10 @@ class HomeFragment : BaseFragment() {
         initViewModel()
         initViewPager()
         initMagicIndicator()
-        //todo test
-        view_pager.postDelayed({
-            mTabTitles.addAll(arrayListOf("交友", "推荐"))
-            refreshTabList("交友")
-            logger.info("设置viewpager")
-        }, 100)
         bt_test.onClickNew {
             ARouter.getInstance().build(ARouterConstant.TEST_ACTIVITY).navigation()
         }
+
     }
     private fun initViewPager() {
         //注 这里只是用到不可滑动功能 没有使用关联viewpager
@@ -86,12 +82,15 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
-        viewModel.userInfo.observe(viewLifecycleOwner, Observer {
-            mTabTitles.clear()
-            mTabTitles.addAll(arrayListOf("交友", "推荐"))
-            refreshTabList("交友")
+        viewModel.tabList.observe(viewLifecycleOwner, Observer {
+            if(it.state==NetStateType.SUCCESS){
+                mTabTitles.clear()
+                mTabTitles.addAll(it.getT())
+                refreshTabList("交友")
+            }
+
         })
-        viewModel.getInfo()
+        viewModel.queryInfo()
 
     }
 
