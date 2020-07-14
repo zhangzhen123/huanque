@@ -8,5 +8,7 @@ import java.io.Serializable
  * @date 2020/07/10
  */
 data class RealNameBean(
-    var token: String = ""
+    var token: String = "",
+    var need: Boolean = true,
+    var result: Boolean = false
 ) : Serializable

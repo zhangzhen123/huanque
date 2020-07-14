@@ -10,6 +10,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 import com.julun.huanque.common.constant.ARouterConstant;
 import com.julun.huanque.common.constant.BusiConstant;
 import com.julun.huanque.common.constant.OperationType;
@@ -38,12 +39,12 @@ public class OpenPageModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void openPageByName(String pageName, Map<String, String> params) {
+    public void openPageByName(String pageName, ReadableMap params) {
         ULog.Companion.i("openPageByName :" + pageName);
         try {
             switch (pageName) {
                 case "PrivateMessagePage": {
-                    String id = params.get("userId");
+                    String id = params.getString("userId");
                     if (id != null) {
                         long userId = Long.parseLong(id);
                         Bundle bundle = new Bundle();
@@ -56,7 +57,7 @@ public class OpenPageModule extends ReactContextBaseJavaModule {
                     break;
                 }
                 case "TelephoneCallPage": {
-                    String id = params.get("userId");
+                    String id = params.getString("userId");
                     if (id != null) {
                         long userId = Long.parseLong(id);
                         Bundle bundle = new Bundle();
@@ -69,7 +70,7 @@ public class OpenPageModule extends ReactContextBaseJavaModule {
                     break;
                 }
                 case "SendGiftPage": {
-                    String id = params.get("userId");
+                    String id = params.getString("userId");
                     if (id != null) {
                         long userId = Long.parseLong(id);
                         Bundle bundle = new Bundle();

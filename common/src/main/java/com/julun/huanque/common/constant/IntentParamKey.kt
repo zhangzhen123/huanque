@@ -75,4 +75,6 @@ enum class IntentParamKey {
     PAGE_TYPE //页面类型
     ,
     OPEN_OPERATE //打开操作
+    ,
+    SYS_MSG_ID//系统消息id
 }

@@ -14,13 +14,16 @@ import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.whatEver
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
+import com.julun.huanque.realname.net.bean.RealNameBean
 import com.julun.huanque.realname.net.form.RealNameForm
 import com.julun.huanque.realname.net.service.RealNameService
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 /**
  * 实名认证服务
@@ -103,13 +106,32 @@ class RealNameProvider : IRealNameService {
      * 打开一个认证页（H5）
      */
     private fun start(
-        activity: Activity, token: String,
+        activity: Activity, info: RealNameBean,
         type: String,
         realName: String? = null,
         realIdCard: String? = null
     ) {
+        if (!info.need) {
+            //不需要打开扫描页
+            if (info.result) {
+                //认证通过
+                callback(RealNameConstants.TYPE_SUCCESS, "认证成功~！")
+            } else {
+                //认证不通过
+                val src = when (type) {
+                    RealNameConstants.TYPE_HEAD -> {
+                        "头像对比不通过"
+                    }
+                    else -> {
+                        "认证失败,请检查认证材料是否匹配~！"
+                    }
+                }
+                callback(RealNameConstants.TYPE_FAIL, src)
+            }
+            return
+        }
         logger.info("打开实名认证认证页")
-        RPVerify.start(activity, token, object : RPEventListener() {
+        RPVerify.start(activity, info.token, object : RPEventListener() {
             override fun onFinish(auditResult: RPResult, code: String, msg: String) {
                 when (auditResult) {
                     RPResult.AUDIT_PASS -> {
@@ -165,7 +187,7 @@ class RealNameProvider : IRealNameService {
                 //协程并未取消，那么就可以继续往下执行
                 if (mTokenJob?.isActive == true) {
                     //获取token并打开人脸识别页面
-                    start(activity, info.token, type, realName, realIdCard)
+                    start(activity, info, type, realName, realIdCard)
                 } else {
                     callback(RealNameConstants.TYPE_CANCEL, "")
                 }
