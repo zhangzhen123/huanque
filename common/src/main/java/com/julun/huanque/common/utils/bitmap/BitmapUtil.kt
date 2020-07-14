@@ -1,4 +1,4 @@
-package com.julun.huanque.common.utils
+package com.julun.huanque.common.utils.bitmap
 
 import android.graphics.Bitmap
 import java.io.ByteArrayOutputStream
@@ -23,6 +23,42 @@ object BitmapUtil {
             if (baos != null) {
                 baos.close()
             }
+        }
+        return byteArray!!
+    }
+    /**
+     * bitmap转化成指定大小的byte[]
+     */
+    fun bitmap2AssignBytes(bitmap: Bitmap, size: Int): ByteArray {
+        var byteArray: ByteArray? = null
+        var baos: ByteArrayOutputStream? = null
+        try {
+            var options = 100
+            baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos)
+            //图片原始大小
+            val originalSize = baos.toByteArray()?.size ?: 0
+            //是否继续执行压缩
+            var isStartCompress = originalSize / 1024 > size
+            while (isStartCompress && (baos.toByteArray()?.size ?: 0) / 1024 > size) {
+                baos.reset()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos)
+                if (options <= 0) {
+                    //避免死循环
+                    isStartCompress = false
+                } else {
+                    options -= 10
+                    if (options <= 0) {
+                        options = 0
+                    }
+                }
+            }
+            byteArray = baos.toByteArray()
+//            logger.info("atLastSize -> ${byteArray.size}")
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            baos?.close()
         }
         return byteArray!!
     }

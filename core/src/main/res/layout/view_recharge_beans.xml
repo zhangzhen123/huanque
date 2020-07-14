@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--用户萌豆-->
+    <LinearLayout
+        android:id="@+id/my_count_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_5"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:visibility="visible"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/account_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="0"
+            android:textColor="@color/black_333"
+            android:textSize="46sp" />
+
+        <TextView
+            android:id="@+id/que_bi_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/que_bi_total"
+            android:textColor="@color/black_333"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <!--他人充值-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/other_count_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_67"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/other_userId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_15"
+            android:layout_marginRight="6dp"
+            android:background="@null"
+            android:gravity="start|center"
+            android:hint="@string/other_recharge_hint"
+            android:includeFontPadding="false"
+            android:inputType="number"
+            android:maxLength="20"
+            android:textColor="@color/black_333"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/other_count_name"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/others_btn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/other_count_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/other_userId"
+            android:gravity="center"
+            android:text="当前充值帐户()"
+            android:textColor="@color/black_999"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/other_userId"
+            app:layout_constraintTop_toBottomOf="@+id/other_userId" />
+
+        <TextView
+            android:id="@+id/others_btn"
+            android:layout_width="58dp"
+            android:layout_height="28dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dimen_15"
+            android:background="@drawable/selector_btn_solid"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/btn_text_color"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divide_color"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</merge>

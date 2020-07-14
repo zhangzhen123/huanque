@@ -1,6 +1,7 @@
 package com.julun.huanque.common.manager
 
 import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.interfaces.routerservice.AppCommonService
@@ -38,7 +39,7 @@ object SessionManager  {
     private var wxLogining = false
 
     // 微信授权登录
-    fun doLoginByWinXin(code: String, programId: Int? = null, callback: () -> Unit = {}) {
+    fun doLoginByWinXin(code: String, callback: () -> Unit = {}) {
 //        if (wxLogining) {
 //            return
 //        }
@@ -72,7 +73,7 @@ object SessionManager  {
     /**
      * 手机号快捷登录
      */
-    fun doLoginByFastLogin(loginToken: String, programId: Int? = null, callback: () -> Unit = {}, errCallback: () -> Unit) {
+    fun doLoginByFastLogin(loginToken: String, callback: () -> Unit = {}, errCallback: (ResponseError) -> Unit) {
 //        val deviceID = (ProviderPoolManager.getService(ARouterConstant.SHUMEI_SERVICE) as? ShuMeiDeviceIdService)?.getDeviceId() ?: ""
 //        service.mobileQuickLogin(MobileFastLoginForm(loginToken, programId, deviceID))
 //                .handleResponse(makeSubscriber<NewSession> {
@@ -107,7 +108,7 @@ object SessionManager  {
     private var qqLogining = false
 
     //qq授权登录
-    fun doLoginByQQ(code: String, programId: Int? = null, callback: () -> Unit = {}) {
+    fun doLoginByQQ(code: String, callback: () -> Unit = {}) {
         // 这里如果本地存在游客sessionId，
         // 就传入游客的sessionId进行回收
 //        if (qqLogining) {
@@ -172,7 +173,7 @@ object SessionManager  {
 //    }
 
     //手机登录
-    fun loginByMobile(mobile: String, code: String, programId: Int? = null, callback: () -> Unit = {}, errCallback: () -> Unit) {
+    fun loginByMobile(mobile: String, code: String, callback: () -> Unit = {}, errCallback: (ResponseError) -> Unit) {
         // 这里如果本地存在游客sessionId，
         // 就传入游客的sessionId进行回收
 //        val deviceID = (ProviderPoolManager.getService(ARouterConstant.SHUMEI_SERVICE) as? ShuMeiDeviceIdService)?.getDeviceId() ?: ""

@@ -14,6 +14,7 @@ import com.julun.huanque.common.suger.coverError
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.net.service.UserService
 
 /**
@@ -36,6 +37,7 @@ class MineViewModel : BaseViewModel() {
         liveData {
             request({
                 val user = userService.queryUserDetailInfo().dataConvert()
+                BalanceUtils.saveBalance(user.userBasic.beans)
                 emit(ReactiveData(NetStateType.SUCCESS, user))
             }, error = { e ->
                 logger("报错了：$e")

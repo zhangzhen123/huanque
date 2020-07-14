@@ -47,8 +47,8 @@
         android:padding="10dp"
         android:scaleType="centerInside"
         android:visibility="gone"
-        tools:src="@mipmap/icon_conversation_setting"
-         />
+        tools:visibility="visible"
+        android:src="@mipmap/icon_conversation_setting" />
 
     <TextView
         android:id="@+id/tvOperation"

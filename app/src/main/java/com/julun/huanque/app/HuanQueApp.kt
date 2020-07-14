@@ -22,6 +22,7 @@ import com.julun.huanque.core.init.HuanQueInit
 import com.julun.huanque.ui.cockroach.DebugSafeModeTipActivity
 import com.julun.jpushlib.TagAliasOperatorHelper
 import com.tencent.bugly.crashreport.CrashReport
+import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.wanjian.cockroach.Cockroach
 import com.wanjian.cockroach.CrashLog
 import com.wanjian.cockroach.ExceptionHandler
@@ -30,7 +31,10 @@ import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.TimeUnit
 
 open class HuanQueApp : Application() {
-
+    companion object{
+        var wxApi: IWXAPI? = null
+//        var qqApi: Tencent? = null
+    }
     //数美分发的deviceId，用于过滤。（设置一次监听会触发两次onSuccess）
     private var mDeviceId = ""
 
@@ -49,9 +53,9 @@ open class HuanQueApp : Application() {
             //初始化声网
             AgoraManager.initAgora(this)
             TagAliasOperatorHelper.getInstance().init(this)
-            /*一键登录相关*/
-            JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
-            JVerificationInterface.init(this)
+//            /*一键登录相关*/
+//            JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
+//            JVerificationInterface.init(this)
             try {
                 initShumei(this)
             } catch (e: Exception) {
@@ -61,6 +65,9 @@ open class HuanQueApp : Application() {
         if(AppHelper.isMainProcess(this)){
             CommonInit.getInstance().inSDK=false
             HuanQueInit.getInstance().init(this)
+            CommonInit.getInstance().taskDispatcher
+                ?.addTask(JPushTask())
+                ?.addTask(TencentTask())
 
             CommonInit.getInstance().taskDispatcher?.start()
             CommonInit.getInstance().taskDispatcher?.await()

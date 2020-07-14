@@ -113,3 +113,10 @@ object RealNameConstants {
     //认证失败
     const val TYPE_FAIL = "fail"
 }
+
+/**
+ * 配置的byte常量
+ */
+object ByteConstants {
+    const val BYTE_KB_FORM_128 = 128
+}

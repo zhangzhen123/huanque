@@ -51,6 +51,10 @@ android {
         buildConfigField "String", "SERVICE_BASE_URL_PRODUCT", "\"${api.BASE_URL_PRODUCT}\""
         //测试地址
         buildConfigField "String", "SERVICE_BASE_URL_DEV", "\"${api.BASE_URL_DEV}\""
+
+        //微信APPID
+        buildConfigField "String", "WX_APP_ID", "\"${sdk.WX_KEY_HQ}\""
+
         manifestPlaceholders = [
                 packagename       : rootProject.ext.packageType,
                 HUAWEI_APPID      : "appid=100210995",// 华为平台注册的appid
@@ -124,6 +128,6 @@ dependencies {
     implementation files('libs/smantifraud.aar')
     implementation 'com.jakewharton:process-phoenix:2.0.0'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
-
+    implementation rootProject.ext.dependencies["WECHAT"]
     implementation project(path: ':realname')
 }

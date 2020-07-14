@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <string name="lingqian">零钱</string>
     <string name="go_make_money">去赚钱</string>
@@ -11,4 +11,8 @@
     <string name="complete_info">完善资料</string>
     <string name="complete_your_info_des">主页资料越完善越容易被人搭讪</string>
     <string name="upload_photo">上传照片</string>
+
+    <string name="other_recharge_hint">请输入羚萌ID号，不支持靓号</string>
+    <string name="que_bi_total">鹊币总额</string>
+    <string name="recharge_help">充值获得的鹊币显示为充值获得，其余方式获得的鹊币显示为平台赠送，使用鹊币时优先扣除平台赠送鹊币。</string>
 </resources>

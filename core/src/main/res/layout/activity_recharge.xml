@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.julun.huanque.common.widgets.HeaderPageView
+        android:id="@+id/headerPageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <net.lucode.hackware.magicindicator.MagicIndicator
+        android:id="@+id/magic_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_40" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/recharge_pager"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp" />
+
+    <!--客服-->
+    <TextView
+        android:id="@+id/recharge_problem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:textColor="@color/black_999"
+        android:textSize="12sp" />
+</LinearLayout>

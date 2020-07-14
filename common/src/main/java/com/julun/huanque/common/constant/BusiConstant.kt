@@ -92,18 +92,36 @@ object ErrorCodes {
     const val CREATE_MICRO_FAIL = 501
 }
 
+/**
+ * 充值入口： 直播间快捷充值Room， 个人中心充值My， 公众号菜单充值MPMenu(可选项：Room、My、Cms)
+ */
+object RechargeEntry {
+    val Room = "Room"//直播间快捷充值
+    val My = "My"//个人中心充值
+    val CallBack = "CallBack"//回归礼包
+}
 
+/**
+ * 支付方式
+ */
+object  PayType {
+    const val AliPayApp = "AlipayApp"
+    const val WXPayApp = "WXPayApp"
+
+    const val WXPayWap = "WXPayWap"
+    const val OppoPay = "OppoPay"
+    const val AliPayWap = "AlipayWap"
+    const val WXPayH5 = "WXPayH5"
+
+
+}
 enum class PayResult {
     IS_PAY,//去支付了 但是不知道结果的情况
-    WX_PAY_SUCCESS,
-    WX_PAY_CANCEL,
-    WX_PAY_FAIL,
-    ALIPAY_SUCCESS,
-    ALIPAY_CACEL,
-    ALIPAY_FAIL,
-
+    PAY_SUCCESS,
+    PAY_CANCEL,
+    PAY_FAIL,
     //重复请求
-    ALIPAY_REPETITION
+    PAY_REPETITION
 }
 
 enum class PlatformType {
@@ -390,4 +408,43 @@ object MessageCustomBeanType {
 
     //模拟语音通话消息
     const val Voice_Conmmunication_Simulate = "Voice_Conmmunication_Simulate"
+}
+/**
+ * banner资源类型
+ */
+object BannerResType {
+    //图片
+    val Pic = "Pic"
+
+    //视频
+    val Video = "Video"
+}
+
+/**
+ * banner点击效果
+ */
+object BannerTouchType {
+    //活动页面
+    val Url = "Url"
+
+    //直播间
+    val Room = "Room"
+
+    //充值
+    val Recharge = "Recharge"
+
+    //首页
+    val Home = "Home"
+
+    //打开原生页面
+    val Native = "Native"
+
+    //弹窗类型
+    const val Toast = "Toast"
+
+    //小程序
+    const val MINI = "Mini"
+
+    //打开星球霸主
+    const val OpenLiveRoomAndPlanet = "OpenLiveRoomAndPlanet"
 }

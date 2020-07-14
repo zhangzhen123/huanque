@@ -99,8 +99,4 @@ class StatePageView : FrameLayout {
         this.hide()
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-
-    }
 }

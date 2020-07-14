@@ -44,5 +44,7 @@ dependencies {
 
     api project(':common')
     api project(":rnlib")
+    api files('libs/alipaySdk-15.6.5-20190718211159-noUtdid.aar')
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
+//    implementation project(":alipaySdk-15.6.5-20190718211159-noUtdid")
 }

@@ -8,6 +8,9 @@ import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.TypeReference
 import com.alibaba.fastjson.parser.deserializer.ExtraProcessor
 import com.alibaba.fastjson.serializer.SerializerFeature
+import com.julun.huanque.common.bean.beans.OppoPayInfo
+import com.julun.huanque.common.bean.beans.OrderInfo
+import com.julun.huanque.common.bean.beans.PayResultInfo
 import java.lang.reflect.Type
 
 
@@ -29,6 +32,14 @@ object JsonUtil {
 //                    bean.styleParamMap = hashMapOf<String, StyleParam>().apply {
 //                        putAll(list.map { it.el to it })
 //                    }
+//                }
+//            }
+//            if (bean is PayResultInfo && "content" == key) {
+//                if (value is String) {
+//                    bean.alipayOrderInfo = value
+//                } else if (value is Map<*, *>) {
+//                    bean.wxOrderInfo = JsonUtil.deserializeAsObject(JsonUtil.seriazileAsString(value), OrderInfo::class.java)
+//                    bean.oppoOrderInfo = JsonUtil.deserializeAsObject(JsonUtil.seriazileAsString(value), OppoPayInfo::class.java)
 //                }
 //            }
         }
