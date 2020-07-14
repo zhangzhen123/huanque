@@ -11,6 +11,7 @@ import com.facebook.infer.annotation.Assertions
 import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactRootView
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
 import com.julun.huanque.common.base.dialog.LoadingDialog
@@ -49,20 +50,37 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
-
-            mReactRootView = ReactRootView(this)
-            mReactInstanceManager = RnManager.createReactInstanceManager(application)
-            RnManager.curActivity = this
             val intent = intent
             val moduleName = intent.getStringExtra(RnConstant.MODULE_NAME)
             val initialProperties = intent.getBundleExtra(RnConstant.INITIAL_PROPERTIES)
-            // 这个"App1"名字一定要和我们在index.js中注册的名字保持一致AppRegistry.registerComponent()
-            mReactRootView.startReactApplication(mReactInstanceManager, moduleName, initialProperties)
-            mDoubleTapReloadRecognizer = DoubleTapReloadRecognizer()
-            mReactRootView.setEventListener {
-                Log.d("RNPageFragment", "我已加载完成")
+            RnManager.curActivity = this
+
+            mReactRootView = ReactRootView(this)
+            mReactInstanceManager = RnManager.createReactInstanceManager(application)
+            fun mustRun(){
+                // 这个"App1"名字一定要和我们在index.js中注册的名字保持一致AppRegistry.registerComponent()
+                mReactRootView.startReactApplication(mReactInstanceManager, moduleName, initialProperties)
+                mDoubleTapReloadRecognizer = DoubleTapReloadRecognizer()
+
+                setContentView(mReactRootView)
+                mReactRootView.setEventListener {
+                    logger("RNPageActivity 我已加载完成")
+                }
             }
-            setContentView(mReactRootView)
+            if (!mReactInstanceManager!!.hasStartedCreatingInitialContext()) {
+                mReactInstanceManager!!.addReactInstanceEventListener(object :
+                    ReactInstanceManager.ReactInstanceEventListener {
+                    override fun onReactContextInitialized(context: ReactContext) {
+                        mReactInstanceManager!!.removeReactInstanceEventListener(this)
+                        logger("ReactInstanceManager 刚刚加载完成了")
+                        mustRun()
+                    }
+                })
+            }else{
+                logger("ReactInstanceManager 已经加载完成了")
+                mustRun()
+            }
+
 
         } catch (e: Exception) {
             e.printStackTrace()

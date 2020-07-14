@@ -1,6 +1,5 @@
 package com.julun.huanque.core.init
 
-import android.app.Activity
 import android.app.Application
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.init.CommonInit
@@ -50,8 +49,6 @@ class HuanQueInit private constructor()  {
     fun getDebug(): Boolean {
         return debug
     }
-
-    var mainActivity: Activity? = null//aliPay用到 防止依赖的activity内存泄漏
 
     fun init(application: Application) {
         mContext = application

@@ -15,10 +15,12 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.makefriend.MakeFriendsFragment
+import com.julun.rnlib.RnManager
 import com.luck.picture.lib.tools.ScreenUtils
 import com.luck.picture.lib.tools.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -57,6 +59,8 @@ class HomeFragment : BaseFragment() {
     private val viewModel: HomeViewModel by activityViewModels()
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        //
+        RnManager.createReactInstanceManager(CommonInit.getInstance().getApp())
         //设置头部边距
         home_container.topPadding=StatusBarUtil.getStatusBarHeight(requireContext())
         initViewModel()
