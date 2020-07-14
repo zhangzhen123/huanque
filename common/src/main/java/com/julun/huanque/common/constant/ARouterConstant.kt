@@ -18,7 +18,9 @@ object ARouterConstant {
 
     //common
     private const val COMMON = "common"
-
+    //message使用
+    private const val MESSAGE = "message"
+//PrivateConversationActivity
     //声网播放器使用
     const val AGORA = "AGORA"
 
@@ -40,6 +42,10 @@ object ARouterConstant {
 
     //语音页面
     const val VOICE_CHAT_ACTIVITY = "/$AGORA$PREFIX_ACTIVITY/VoiceChatActivity"
+
+    //message模块
+    const val PRIVATE_CONVERSATION_ACTIVITY = "/$MESSAGE$PREFIX_ACTIVITY/PrivateConversationActivity"
+
     //充值页面
     const val RECHARGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/RechargeCenterActivity"
 

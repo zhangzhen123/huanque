@@ -104,7 +104,7 @@ object RechargeEntry {
 /**
  * 支付方式
  */
-object  PayType {
+object PayType {
     const val AliPayApp = "AlipayApp"
     const val WXPayApp = "WXPayApp"
 
@@ -115,11 +115,13 @@ object  PayType {
 
 
 }
+
 enum class PayResult {
     IS_PAY,//去支付了 但是不知道结果的情况
     PAY_SUCCESS,
     PAY_CANCEL,
     PAY_FAIL,
+
     //重复请求
     PAY_REPETITION
 }
@@ -412,6 +414,7 @@ object MessageCustomBeanType {
     //模拟语音通话消息
     const val Voice_Conmmunication_Simulate = "Voice_Conmmunication_Simulate"
 }
+
 /**
  * banner资源类型
  */
@@ -450,4 +453,16 @@ object BannerTouchType {
 
     //打开星球霸主
     const val OpenLiveRoomAndPlanet = "OpenLiveRoomAndPlanet"
+}
+
+/**
+ * 操作类型
+ */
+object OperationType {
+    //打开送礼面板
+    const val OPEN_GIFT = "OPEN_GIFT"
+
+    //拨打电话
+    const val CALL_PHONE = "CALL_PHONE"
+
 }

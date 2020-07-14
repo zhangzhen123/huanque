@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
@@ -59,22 +60,16 @@ import java.util.concurrent.TimeUnit
  *@创建时间 2020/6/30 16:55
  *@描述 私聊会话页面
  */
+@Route(path = ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY)
 class PrivateConversationActivity : BaseActivity() {
     companion object {
-        //用户ID
-        const val TARGETID = "TARGETID"
 
-        //昵称
-        const val NICKNAME = "NICKNAME"
-
-        //欢遇标识
-        const val MEET_STATUS = "MEET_STATUS"
-
-        fun newInstance(activity: Activity, targetId: Long, nickname: String = "", meetStatus: String = "") {
+        fun newInstance(activity: Activity, targetId: Long, nickname: String = "", meetStatus: String = "", operation: String = "") {
             val intent = Intent(activity, PrivateConversationActivity::class.java)
-            intent.putExtra(TARGETID, targetId)
-            intent.putExtra(NICKNAME, nickname)
-            intent.putExtra(MEET_STATUS, meetStatus)
+            intent.putExtra(ParamConstant.TARGETID, targetId)
+            intent.putExtra(ParamConstant.NICKNAME, nickname)
+            intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
+            intent.putExtra(ParamConstant.OPERATION, operation)
             activity.startActivity(intent)
         }
     }
@@ -114,9 +109,9 @@ class PrivateConversationActivity : BaseActivity() {
 
         initViewModel()
         initRecyclerView()
-        val targetID = intent?.getLongExtra(TARGETID, 0)
-        val nickName = intent?.getStringExtra(NICKNAME) ?: ""
-        val meetStatus = intent?.getStringExtra(MEET_STATUS) ?: ""
+        val targetID = intent?.getLongExtra(ParamConstant.TARGETID, 0)
+        val nickName = intent?.getStringExtra(ParamConstant.NICKNAME) ?: ""
+        val meetStatus = intent?.getStringExtra(ParamConstant.MEET_STATUS) ?: ""
         showTitleView(nickName, meetStatus)
         mPrivateConversationViewModel?.targetIdData?.value = targetID
         registerMessageEventProcessor()
