@@ -30,6 +30,8 @@ import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.adapter.ContactsAdapter
 import com.julun.huanque.message.viewmodel.ContactsActivityViewModel
 import com.julun.huanque.message.viewmodel.ContactsFragmentViewModel
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_contacts.*
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.textColor
@@ -114,7 +116,13 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
             headerView.layoutParams = params
 
         }
-        mAdapter.setOnItemClickListener { adapter, view, position -> }
+        mAdapter.setOnItemClickListener { adapter, view, position ->
+            val userId = mAdapter.getItem(position).userId
+            RNPageActivity.start(
+                requireActivity(),
+                RnConstant.PERSONAL_HOMEPAGE,
+                Bundle().apply { putLong("userId", userId) })
+        }
 
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
             val tempData = adapter.getItem(position) as? SocialUserInfo ?: return@setOnItemChildClickListener
