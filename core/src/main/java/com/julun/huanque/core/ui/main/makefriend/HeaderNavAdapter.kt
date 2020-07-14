@@ -15,14 +15,13 @@ class HeaderNavAdapter : BaseQuickAdapter<HeadModule, BaseViewHolder>(R.layout.i
 
         val container = holder.getView<SimpleDraweeView>(R.id.sdv_nav_bg)
         container.loadImage(item.bgPic, 90f, 70f)
-        val imgView = holder.getView<SimpleDraweeView>(R.id.sdv_user_head)
-        val url = item.baseInfo.headPic
-        if (url.isNotEmpty()) {
-            imgView.show()
-            imgView.loadImage(url, 60f, 60f)
-        } else {
-            imgView.inVisiable()
-        }
+//        val url = item.baseInfo.headPic
+//        if (url.isNotEmpty()) {
+//            imgView.show()
+//            imgView.loadImage(url, 60f, 60f)
+//        } else {
+//            imgView.inVisiable()
+//        }
 
         holder.setText(R.id.tv_title1, item.moduleName)
 

@@ -3,6 +3,7 @@ package com.julun.huanque.net.service
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidResult
+import com.julun.huanque.common.bean.beans.ManagerInfo
 import com.julun.huanque.common.bean.beans.UpdateHeaderBean
 import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.bean.beans.UserDetailInfo
@@ -75,4 +76,18 @@ interface UserService {
      */
     @POST("user/acct/data/updateHeadPic")
     suspend fun updateHeadPic(@Body form: UpdateHeadForm): Root<UpdateHeaderBean>
+
+    /**
+     * 举报
+     */
+    @POST("social/friend/relation/report")
+    suspend fun report(@Body form: ReportForm): Root<VoidResult>
+
+    /**
+     * 举报
+     */
+    @POST("social/friend/relation/reportTypeList")
+    suspend fun reportTypeList(): Root<ArrayList<ManagerInfo>>
+
+
 }

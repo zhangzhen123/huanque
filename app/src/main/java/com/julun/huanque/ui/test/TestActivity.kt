@@ -12,7 +12,9 @@ import com.facebook.react.bridge.Arguments
 import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
@@ -98,8 +100,8 @@ class TestActivity : BaseActivity() {
             PrivateConversationActivity.newInstance(this, 20000041)
         }
         open_gift.onClickNew {
-            val gift=ChatSendGiftFragment()
-            gift.show(this,"ChatSendGiftFragment")
+            val gift = ChatSendGiftFragment()
+            gift.show(this, "ChatSendGiftFragment")
         }
 
         test_real.onClickNew {
@@ -109,7 +111,18 @@ class TestActivity : BaseActivity() {
         tv_clear_session.onClickNew {
             SessionUtils.clearSession()
         }
+        report.onClickNew {
+            val extra = Bundle()
+            extra.putLong(ParamConstant.TARGET_USER_ID, 2000000)
+            extra.putInt(ParamConstant.REPORT_TYPE, 0)
+
+            ARouter.getInstance().build(ARouterConstant.REPORT_ACTIVITY).with(extra).navigation()
+        }
+        test_loading.onClickNew {
+            LoadingDialog(this).showDialog(true)
+        }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         logger("onActivityResult")

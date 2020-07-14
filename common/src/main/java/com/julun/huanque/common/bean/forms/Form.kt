@@ -37,6 +37,15 @@ class NetcallHangUpForm(var callId: Long = 0, var duration: Long = 0) : Serializ
  */
 class SendMsgForm(var friendId: Long = 0, var content: String = "")
 
+class ReportForm{
+    // 举报用户
+    var userId: Long = 0
+    var reportType: String =""
+    var detail: String =""
+    var pics: String? = null
+}
+
+
 /**
  * 联系人使用的form
  */

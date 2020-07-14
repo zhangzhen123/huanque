@@ -46,4 +46,10 @@ object ParamConstant {
     //标记tag正在播放
     const val IS_AUDIO_PLAY = "isAudioPlay"
 
+
+    const val TARGET_USER_ID = "TargetUserId"
+    //举报类型 主播或者用户
+    const val REPORT_TYPE = "reportType"
+
+
 }
