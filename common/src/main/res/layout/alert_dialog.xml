@@ -18,6 +18,7 @@
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
         android:text="温馨提示"
+        android:textStyle="bold"
         android:textColor="@color/black_333"
         android:textSize="18sp" />
 

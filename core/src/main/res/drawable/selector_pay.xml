@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bg_shape_pay_select" android:state_selected="true" />
+    <item android:drawable="@drawable/bg_shape_pay_select" android:state_pressed="true" />
+
+    <item>
+        <shape>
+            <stroke android:width="@dimen/dimen_1" android:color="#F3F4F5" />
+            <corners android:radius="@dimen/dimen_10" />
+        </shape>
+    </item>
+</selector>

@@ -18,7 +18,6 @@ import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
@@ -26,10 +25,12 @@ import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.StatusBarUtil
+import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_mine.*
+import org.jetbrains.anko.startActivity
 import java.math.RoundingMode
 
 /**
@@ -103,11 +104,28 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             //todo
         }
         ivSetting.onClickNew {
-            ARouter.getInstance().build(ARouterConstant.REALNAME_MAIN_ACTIVITY).navigation()
+        }
+        rlQueBi.onClickNew {
+            requireActivity().startActivity<RechargeCenterActivity>()
         }
     }
 
     override fun showLoadState(state: NetState) {
+        when (state.state) {
+            NetStateType.SUCCESS -> {
+                state_pager_view.showSuccess()
+            }
+            NetStateType.LOADING -> {
+                state_pager_view.showLoading()
+            }
+            NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
+                state_pager_view.showError(showBtn = true, btnClick = View.OnClickListener {
+                    mViewModel.queryInfo()
+                })
+            }
+
+        }
+
     }
 
     override fun lazyLoadData() {

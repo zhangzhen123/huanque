@@ -1,5 +1,6 @@
 package com.julun.huanque.common.bean.events
 
+import com.julun.huanque.common.constant.PayResult
 import java.io.Serializable
 
 /**
@@ -15,3 +16,8 @@ class EventMessageBean(var tardetId: String = "") : Serializable
  * @param headerPic 头像
  */
 class ImformationCompleteBean(var sextype: String = "", var nickname: String = "", var birthday: String = "", var headerPic: String = "")
+
+/**
+ * 支付结果
+ */
+class PayResultEvent(var payResult: PayResult,var payType: String )

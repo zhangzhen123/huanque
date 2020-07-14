@@ -27,6 +27,8 @@ ext {
             //rx相关
             RXJAVA                       : "io.reactivex.rxjava3:rxjava:3.0.4",
             RXANDROID                    : "io.reactivex.rxjava3:rxandroid:3.0.0",
+            //微信
+            WECHAT                       : 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.4',
     ]
 
     api = [
@@ -54,15 +56,8 @@ ext {
             QQ_KEY_OPPO      : "101831510",
 
             //WX
-            //羚萌直播
-            WX_KEY_LM        : "wx9b372bb68c24a0e0",
-            //番茄直播
-            WX_KEY_FQ        : "wxdfc5770627e731a4",
-            //黄瓜直播
-            WX_KEY_CK        : "wx4ad58056a4a10510",
-            //樱桃直播
-            WX_KEY_CE        : "wx056e3a00cf93a19d",
-            WX_KEY_OPPO      : "wx3f055bbd02228139",
+            //
+            WX_KEY_HQ       : "wx9b372bb68c24a0e0",
 
             //JPUSH
             JPUSH_KEY_TEST_HQ: "490222d958f73dc08833ac44",

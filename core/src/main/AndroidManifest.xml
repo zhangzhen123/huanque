@@ -59,4 +59,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <!-- 融云 Permissions Required -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <application>
+        <activity
+            android:name=".ui.recharge.RechargeCenterActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme"
+            android:windowSoftInputMode="stateHidden|adjustNothing" />
+    </application>
 </manifest>

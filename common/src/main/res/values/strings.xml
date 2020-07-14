@@ -282,36 +282,6 @@
     <!--自动更新模块-->
     <string name="find_new_version">发现新版本</string>
     <string name="update_now">立即更新</string>
-    <!--个人中心-->
-    <string name="md">萌豆</string>
-    <string name="royal_privilege">贵族特权</string>
-    <string name="more_royal_privilege">更多玩法在这里</string>
-    <string name="user_level">我的等级</string>
-    <string name="user_royal">我的贵族</string>
-    <string name="user_royal_month_card">贵族月卡</string>
-    <string name="user_welfare_center">福利中心</string>
-    <string name="user_royal_hot">贵族热度卡</string>
-    <string name="user_wallet">我的钱包</string>
-    <string name="user_dynamic">我的视频/动态</string>
-    <string name="user_helper_center">帮助中心</string>
-    <string name="user_about_us">关于我们</string>
-    <string name="im_center">消息中心</string>
-    <string name="user_cards">我的卡券</string>
-    <string name="user_discount">礼物折扣券</string>
-    <string name="im_notice">你有未读消息</string>
-    <string name="user_badge">我的背包</string>
-    <string name="user_history">观看记录</string>
-    <string name="user_vehicle">我的座驾</string>
-    <string name="apply_author">开通手机直播</string>
-    <string name="my_earnings">我的收益</string>
-    <string name="on_leave">请假</string>
-    <string name="private_message">私信设置</string>
-    <string name="live_preview">直播预告设置</string>
-    <string name="friends_share">发送朋友圈</string>
-    <string name="help_affiche">帮助与公告</string>
-    <string name="user_prerogative">我的特权</string>
-    <string name="ta_prerogative">Ta的特权</string>
-    <string name="prerogative_center">特权中心</string>
 
     <!--设置-->
     <string name="set_binding_phone">绑定手机</string>
@@ -350,13 +320,6 @@
     <string name="level_notice_002">注：消费如送礼，开通守护</string>
     <string name="level_notice_003">玩家每消费100萌豆，即可获得100升级经验</string>
 
-    <!--WorldCup-->
-    <string name="world_cup_guess">世界杯竞猜</string>
-    <string name="according_opening">距封盘</string>
-    <string name="other">其他</string>
-    <string name="not_enough_coin">竞猜币余额不足\n是否赠送足球获取竞猜币？</string>
-    <string name="send_gift">去赠送</string>
-    <string name="odds_changed">赔率发生变化，请重新下注哦</string>
 
     <!--直播间-->
     <string name="live_anchor_stop_msg">当前主播账号已禁用</string>
@@ -575,29 +538,6 @@
     <!-- 用户管理规范 -->
     <string name="html_user_spec">rules/userMgrSpec.html</string>
     <string name="propose_address">/rules/officialProposal.html</string>
-    <!--豪车工厂说明页-->
-    <string name="luxury_car">/cargc</string>
-    <!--PK道具说明-->
-    <string name="pk_prop_address">/rules/pkyhPropRules.html</string>
-
-    <string name="egg_type">砸蛋模式</string>
-    <string name="egg_high">高爆模式</string>
-    <string name="egg_lucky">幸运模式</string>
-
-    <string name="lucky_pan_normal">普通模式</string>
-    <string name="lucky_pan_high">高级模式</string>
-
-    <string name="record_prize">中奖记录</string>
-    <string name="mount_compound">座驾合成</string>
-    <string name="double_prize">双倍奖励</string>
-    <string name="in_use">使用中</string>
-    <string name="mount_compounded">可合成</string>
-    <string name="discounts">优惠</string>
-    <string name="lucky_pan_congratulation">恭喜</string>
-    <string name="lucky_pan_getted">抽到了</string>
-    <string name="lucky_result_congratulation">恭喜获得</string>
-    <string name="lucky_moment_attention_left">幸运时刻\n座驾概率\n2倍</string>
-    <string name="double_probability_attention_right">双倍奖励\n剩余次数\n%1$d次</string>
 
     <string name="rights_double_possibility">使用权益：</string>
     <string name="can_not_repetition_use">不能重复使用</string>
@@ -615,6 +555,7 @@
     <string name="ali_pay">支付宝</string>
     <string name="pay_immediately">立即支付</string>
     <string name="weixin">微信</string>
+    <string name="ensure_recharge">确认充值</string>
     <string name="online_service">在线客服</string>
     <string name="phone_number_fast_login">手机快捷登录</string>
     <string name="last_login">上次登录</string>
