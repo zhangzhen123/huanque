@@ -4,6 +4,7 @@ import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.SocialUserInfo
 import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.FollowStatus
@@ -31,7 +32,9 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
         if (helper == null || item == null) {
             return
         }
-        ImageUtils.loadImage(helper.getView(R.id.sdv_header), item.headPic, 56f, 56f)
+        val sdv_header = helper.getView<SimpleDraweeView>(R.id.sdv_header)
+        ImageUtils.setDefaultHeaderPic(sdv_header, item.sex)
+        ImageUtils.loadImage(sdv_header, item.headPic, 56f, 56f)
         val oriNicknamge = item.nickname
         val showNickname = if (oriNicknamge.length > 5) {
             "${oriNicknamge.substring(0, 4)}..."

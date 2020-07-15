@@ -194,10 +194,52 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
             override fun onChanged(it: FollowResultBean?) {
                 if (it != null) {
                     //关注状态变动
+                    changeFollowData(it)
                 }
             }
 
         })
+    }
+
+    /**
+     * 关注状态变更
+     */
+    private fun changeFollowData(bean: FollowResultBean) {
+        val userID = bean.userId
+        var userInfo: SocialUserInfo? = null
+        var changeIndex = 0
+        mAdapter.data.filter { it.userId == userID }.forEachIndexed { index, data ->
+            userInfo = data
+            changeIndex = index
+            return@forEachIndexed
+        }
+        userInfo?.let { info ->
+            //找到对应的联系人
+            if (mViewModel.mType == ContactsTabType.Fan) {
+                //粉丝  都是关注我的人(状态在FollowStatus.True和FollowStatus.Mutual之间切换)
+                val followStatus = if (bean.follow) {
+                    FollowStatus.Mutual
+                } else {
+                    FollowStatus.False
+                }
+                info.follow = followStatus
+            }
+            if (mViewModel.mType == ContactsTabType.Follow) {
+                //关注 都是我关注的人(状态在FollowStatus.True,FollowStatus.Mutual,FollowStatus.False之间切换)
+//                val currentFollowStatus = info.follow
+//                if(currentFollowStatus == FollowStatus.Mutual){
+//
+//                }
+                val followStatus = if (bean.follow) {
+                    FollowStatus.True
+                } else {
+                    FollowStatus.False
+                }
+                info.follow = followStatus
+            }
+            mAdapter.notifyItemChanged(changeIndex)
+        }
+
     }
 
     private fun loadData(stateList: RootListData<SocialUserInfo>) {

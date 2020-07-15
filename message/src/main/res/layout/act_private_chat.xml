@@ -137,7 +137,7 @@
                     android:layout_height="40dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
-                    android:background="@color/send_free"
+                    android:src="@mipmap/pic_xiaoque_active"
                     app:layout_constraintBottom_toBottomOf="@id/edit_text"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="@id/edit_text" />
