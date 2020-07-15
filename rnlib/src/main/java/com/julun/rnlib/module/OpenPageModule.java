@@ -3,6 +3,7 @@ package com.julun.rnlib.module;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -32,7 +33,7 @@ public class OpenPageModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void openPageByName(String pageName, ReadableMap params) {
+    public void openPageByName(String pageName, ReadableMap params, Promise promise) {
         ULog.Companion.i("openPageByName :" + pageName);
         try {
             switch (pageName) {

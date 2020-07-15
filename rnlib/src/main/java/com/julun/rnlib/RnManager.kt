@@ -46,7 +46,6 @@ object RnManager {
                 .addPackage(MainReactPackage()) // 背景色渐变：需放到application中
                 .addPackage(LinearGradientPackage()) // 请求头数据：需放到application中
                 .addPackage(RequestInfoReactPackage())
-//                .addPackage(ToastReactPackage())
                 .addPackage(OpenPageReactPackage())
                 .addPackage(RNGestureHandlerPackage())
                 .addPackage(SafeAreaContextPackage())
