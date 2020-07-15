@@ -127,6 +127,10 @@ object ByteConstants {
 object MessageConstants{
     //跳转H5
     const val ACTION_URL = "URL"
+    //跳转主页
+    const val ACTION_MAIN_PAGE = "main_page"
+    //跳转私聊
+    const val ACTION_MESSAGE = "打开私聊"
     //什么都不做
     const val ACTION_None = "None"
 

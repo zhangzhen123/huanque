@@ -101,17 +101,17 @@ class SysMsgActivity : BaseActivity() {
             when (view?.id) {
                 R.id.llSysRootView -> {
                     val item = view.getTag(R.id.msg_bean_id) as? SysMsgBean
-                    customAction(item ?: return@onAdapterChildClickNew)
+                    customAction(item?.touchType?:return@onAdapterChildClickNew)
                 }
                 R.id.clFriendsRootView -> {
                     val item = view.getTag(R.id.msg_bean_id) as? FriendBean
                     //打开他人主页
-                    ToastUtils.show("打开他人主页 id-> ${item?.friendId ?: ""}")
+                    customAction(MessageConstants.ACTION_MAIN_PAGE)
                 }
                 R.id.tvMessage -> {
                     val item = view.getTag(R.id.msg_bean_id) as? FriendBean
                     //打开私聊
-                    ToastUtils.show("打开私聊 id-> ${item?.friendId ?: ""}")
+                    customAction(MessageConstants.ACTION_MESSAGE)
                 }
             }
         }
@@ -187,16 +187,22 @@ class SysMsgActivity : BaseActivity() {
         }
     }
 
-    private fun customAction(info: SysMsgBean) {
-        when (info.touchType) {
+    private fun customAction(touchType:String) {
+        when (touchType) {
             MessageConstants.ACTION_URL -> {
                 //H5
                 ToastUtils.show("打开H5页")
             }
+            MessageConstants.ACTION_MAIN_PAGE -> {
+                ToastUtils.show("打开主页")
+            }
+            MessageConstants.ACTION_MESSAGE -> {
+                ToastUtils.show("打开私聊")
+            }
             MessageConstants.ACTION_None -> {
             }
             else -> {
-                ToastUtils.show("没有记录的action类型 -> ${info.touchType}")
+                ToastUtils.show("没有记录的action类型 -> ${touchType}")
             }
         }
     }
