@@ -37,13 +37,20 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginLeft="15dp"
-        android:background="@color/primary_color"
         app:failureImageScaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="@id/view_info"
         app:layout_constraintLeft_toLeftOf="@id/view_info"
         app:layout_constraintTop_toTopOf="@id/view_info"
         app:placeholderImageScaleType="centerInside"
         app:roundAsCircle="true" />
+
+    <ImageView
+        android:id="@+id/iv_huanyu"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_header"
+        app:layout_constraintRight_toRightOf="@id/sdv_header" />
+
 
     <ImageView
         android:layout_width="wrap_content"
@@ -140,7 +147,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="35dp"
-        android:text="亲密度等级Lv5解锁 "
+        tools:text="亲密度等级Lv5解锁"
         android:textColor="@color/black_999"
         android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toBottomOf="@id/view_set_bg"
@@ -202,6 +209,17 @@
         android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toBottomOf="@id/view_blacklist"
         app:layout_constraintLeft_toLeftOf="@id/view_blacklist"
+        app:layout_constraintTop_toTopOf="@id/view_blacklist" />
+
+    <TextView
+        android:id="@+id/tv_black_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="35dp"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/view_blacklist"
+        app:layout_constraintRight_toRightOf="@id/view_blacklist"
         app:layout_constraintTop_toTopOf="@id/view_blacklist" />
 
 

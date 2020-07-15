@@ -111,4 +111,18 @@ interface SocialService {
     @POST("social/friend/chat/sendPic")
     suspend fun sendPic(@Body form: SendMsgForm): Root<SendMsgBean>
 
+    @POST("social/friend/chat/detail")
+    suspend fun chatDetail(@Body form: TargetIdForm): Root<ChatDetailBean>
+
+    /**
+     * 拉黑
+     */
+    @POST("social/friend/relation/black")
+    suspend fun black(@Body form: FriendIdForm): Root<VoidResult>
+
+    /**
+     * 取消拉黑
+     */
+    @POST("social/friend/relation/recover")
+    suspend fun recover(@Body form: FriendIdForm): Root<VoidResult>
 }

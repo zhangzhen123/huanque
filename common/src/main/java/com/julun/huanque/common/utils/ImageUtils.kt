@@ -6,6 +6,7 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.drawable.Animatable
 import android.net.Uri
+import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import android.view.ViewGroup
@@ -713,5 +714,16 @@ object ImageUtils {
             params.borderWidth = bean.borderWidth
         }
         return params
+    }
+
+    /**
+     * 将选择的聊天背景图片拷贝到本地
+     */
+    fun copyImageToSdCard(fileAddress: String, name: String) {
+        val realName = "$name.jpg"
+        val sdAddress = Environment.getExternalStorageDirectory().absolutePath
+        //完整文件名
+        val wholeName = "$sdAddress/${CommonInit.getInstance().getApp().packageName}/$realName"
+        val options = BitmapFactory.Options()
     }
 }

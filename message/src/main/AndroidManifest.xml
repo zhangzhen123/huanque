@@ -15,7 +15,7 @@
         <activity
             android:name=".activity.PrivateConversationActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+            android:windowSoftInputMode="adjustNothing"/>
 
         <activity
             android:name=".activity.SysMsgActivity"

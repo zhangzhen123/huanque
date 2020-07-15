@@ -204,7 +204,7 @@ object GlobalUtils {
     /**
      * 获取欢遇标识
      */
-    fun getMeetStatusResource(status: String) : Int {
+    fun getMeetStatusResource(status: String): Int {
         return when (status) {
             MeetStatus.Wait -> {
                 //待欢遇
@@ -219,4 +219,10 @@ object GlobalUtils {
             }
         }
     }
+
+    /**
+     * 获取背景的key(本人ID-对方ID)
+     */
+    fun getBackgroundKey(friendID: Long) = "${SessionUtils.getUserId()}-$friendID"
+
 }
