@@ -1,7 +1,10 @@
 package com.julun.huanque.realname
 
 import android.os.Bundle
+import android.text.InputType
+import android.text.method.DigitsKeyListener
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -11,10 +14,12 @@ import com.julun.huanque.common.constant.RealNameConstants
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_main_realname.*
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
+import org.jetbrains.anko.textColor
 
 /**
  * 实名认证首页
@@ -56,6 +61,7 @@ class RealNameActivity : BaseActivity() {
                 isHighLight()
             }
         }
+
         btnCommit.onClickNew {
             mRealNameService =
                 mRealNameService ?: ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
@@ -88,6 +94,10 @@ class RealNameActivity : BaseActivity() {
     private fun isHighLight() {
         if (edtRealname.editableText.isNotEmpty() && edtIDCard.editableText.length >= 18) {
             btnCommit?.isEnabled = true
+            btnCommit?.textColor = GlobalUtils.getColor(R.color.black_333)
+        }else{
+            btnCommit?.isEnabled = false
+            btnCommit?.textColor = GlobalUtils.getColor(R.color.black_999)
         }
     }
 

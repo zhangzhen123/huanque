@@ -41,7 +41,9 @@ class SocialUserInfo(
     //签名
     var mySign: String = "",
     //关注类型
-    var follow: String = ""
+    var follow: String = "",
+    //性别
+    var sex: String = ""
 )
 
 /**
