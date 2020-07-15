@@ -21,3 +21,8 @@ class ImformationCompleteBean(var sextype: String = "", var nickname: String = "
  * 支付结果
  */
 class PayResultEvent(var payResult: PayResult,var payType: String )
+
+/**
+ * 登录事件true代表成功 false代表失败
+ */
+class LoginEvent(val result: Boolean)

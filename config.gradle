@@ -44,20 +44,10 @@ ext {
     sdk = [
             //三方对应相关的key or scheme
             //QQ
-            //羚萌直播
-            QQ_KEY_LM        : "1105752551",
-            //番茄直播
-            QQ_KEY_FQ        : "101582374",
-            //黄瓜直播
-            QQ_KEY_CK        : "101580983",
-            //樱桃直播
-            QQ_KEY_CE        : "101814741",
-            //OPPO联运
-            QQ_KEY_OPPO      : "101831510",
+            QQ_KEY_HQ       : "1105752551",
 
             //WX
-            //
-            WX_KEY_HQ       : "wx9b372bb68c24a0e0",
+            WX_KEY_HQ       : "wxae95c4e2c7e7c6f2",
 
             //JPUSH
             JPUSH_KEY_TEST_HQ: "490222d958f73dc08833ac44",

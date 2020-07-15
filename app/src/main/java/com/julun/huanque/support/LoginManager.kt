@@ -1,11 +1,13 @@
 package com.julun.huanque.support
 
 import com.julun.huanque.common.basic.ResponseError
+import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.SessionManager
 import com.julun.huanque.common.utils.ULog
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.TimeUnit
 
 /**
@@ -18,8 +20,8 @@ import java.util.concurrent.TimeUnit
  **/
 object LoginManager {
     val logger = ULog.getLogger("LoginManager")
-    val WECHAT_LOGIN = 0
-    val QQ_LOGIN = 1
+    const val WECHAT_LOGIN = 0
+    const val QQ_LOGIN = 1
 
     /**
      * 对登录成功回调后 统一请求后台和回调
@@ -87,7 +89,7 @@ object LoginManager {
                 //后台获取ImToken成功   连接融云
                 ULog.i("DXC 登录成功  连接融云")
                 RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
-                //                    EventBus.getDefault().post(LoginEvent(SUCCESS_LOGIN_RESULT_CODE))
+                EventBus.getDefault().post(LoginEvent(true))
                 loginSuccess()
             }
     }
