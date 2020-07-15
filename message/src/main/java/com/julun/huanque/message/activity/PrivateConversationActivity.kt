@@ -19,6 +19,8 @@ import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.ChatUserBean
+import com.julun.huanque.common.bean.beans.IntimateBean
+import com.julun.huanque.common.bean.beans.NetCallAcceptBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.constant.*
@@ -457,6 +459,23 @@ class PrivateConversationActivity : BaseActivity() {
                 }
             }
         }
+
+        //亲密度变化消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.IntimateChangeProcessor {
+            override fun process(data: IntimateBean) {
+                val userIds = data.userIds
+                if (userIds.contains(SessionUtils.getUserId()) && userIds.contains(mPrivateConversationViewModel?.targetIdData?.value ?: 0)) {
+                    //当前两个人亲密度发生变化
+                    mPrivateConversationViewModel?.basicBean?.value?.intimate?.apply {
+                        intimateLevel = data.intimateLevel
+                        nextIntimateLevel = data.nextIntimateLevel
+                        intimateNum = data.intimateNum
+                        nextIntimateNum = data.nextIntimateNum
+                    }
+                    mIntimateDetailViewModel?.basicBean?.value = mPrivateConversationViewModel?.basicBean?.value
+                }
+            }
+        })
     }
 
     override fun onStart() {

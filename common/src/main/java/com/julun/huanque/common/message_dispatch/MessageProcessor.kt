@@ -1185,11 +1185,16 @@ object MessageProcessor {
     interface NetCallDisconnectProcessor : EventMessageProcessor<VoidResult> {
         override fun getEventType() = EventMessageType.NetCallDisconnect
     }
+
     /**
      * 余额不足提醒消息
      */
     interface NetCallBalanceRemindProcessor : EventMessageProcessor<NetCallBalanceRemindBean> {
         override fun getEventType() = EventMessageType.NetCallBalanceRemind
+    }
+
+    interface IntimateChangeProcessor : EventMessageProcessor<IntimateBean> {
+        override fun getEventType() = EventMessageType.IntimateChange
     }
 
 
@@ -1529,5 +1534,8 @@ enum class EventMessageType(val klass: Class<*>) {
     NetCallDisconnect(VoidResult::class.java),
 
     //余额不足提醒消息
-    NetCallBalanceRemind(NetCallBalanceRemindBean::class.java)
+    NetCallBalanceRemind(NetCallBalanceRemindBean::class.java),
+
+    //亲密度变化消息
+    IntimateChange(IntimateBean::class.java)
 }
