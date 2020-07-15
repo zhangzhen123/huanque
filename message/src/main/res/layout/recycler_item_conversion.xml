@@ -42,34 +42,36 @@
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="可累计跌幅" />
 
-    <ImageView
-        android:id="@+id/iv_user_level"
-        android:layout_width="wrap_content"
-        android:layout_height="16dp"
-        android:layout_marginLeft="5dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
-        app:layout_constraintLeft_toRightOf="@id/tv_nickname"
-        app:layout_constraintTop_toTopOf="@id/tv_nickname" />
 
     <TextView
         android:id="@+id/tv_royal_level"
         android:layout_width="46dp"
         android:layout_height="16dp"
         android:layout_marginLeft="5dp"
-        android:visibility="gone"
-        tools:visibility="visible"
+        android:background="@drawable/bg_intimate_level"
+        android:drawableLeft="@mipmap/icon_intimate_heart"
+        android:drawablePadding="3dp"
         android:gravity="center"
-        android:textSize="@dimen/sp_10"
-        android:textColor="@color/white"
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
-        android:drawablePadding="3dp"
-        tools:text="Lv.7"
-        android:drawableLeft="@mipmap/icon_intimate_heart"
-        android:background="@drawable/bg_intimate_level"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_10"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
-        app:layout_constraintLeft_toRightOf="@id/iv_user_level"
+        app:layout_constraintLeft_toRightOf="@id/tv_nickname"
+        app:layout_constraintTop_toTopOf="@id/tv_nickname"
+        tools:text="Lv.7"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_guan"
+        android:layout_width="46dp"
+        android:layout_height="16dp"
+        android:paddingLeft="5dp"
+        android:src="@mipmap/icon_guan"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+        app:layout_constraintLeft_toRightOf="@id/tv_nickname"
         app:layout_constraintTop_toTopOf="@id/tv_nickname" />
 
 

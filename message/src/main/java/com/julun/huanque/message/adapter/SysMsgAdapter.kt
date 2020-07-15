@@ -9,6 +9,7 @@ import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.beans.SysMsgContent
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.JsonUtil
+import com.julun.huanque.common.utils.MessageFormatUtils
 import com.julun.huanque.common.utils.TimeUtils
 import com.julun.huanque.message.R
 import io.rong.imlib.model.Message
@@ -34,13 +35,7 @@ class SysMsgAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.item_sy
         item?.let {
             var customBean: SysMsgContent? = null
             try {
-                val content = parseJson(item.content)
-                if (content?.isNotEmpty()) {
-                    customBean = JsonUtil.deserializeAsObject<SysMsgContent>(
-                        content,
-                        SysMsgContent::class.java
-                    )
-                }
+                customBean = MessageFormatUtils.formatSysMsgContent(item.content)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -72,19 +67,6 @@ class SysMsgAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.item_sy
                     .setGone(R.id.vLine, true)
             }
         }
-    }
-
-    private fun parseJson(content: String): String {
-        try {
-            val baseList = JsonUtil.deserializeAsObjectList(content, BaseData::class.java)
-            if (baseList?.isNotEmpty() == true) {
-                val jsonObject = baseList.first().data as JSONObject
-                return jsonObject.toJSONString()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return ""
     }
 
 }
