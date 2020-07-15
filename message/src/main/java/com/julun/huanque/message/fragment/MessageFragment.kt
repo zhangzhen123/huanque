@@ -17,6 +17,7 @@ import com.julun.huanque.common.constant.ActivityCodes
 import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.SystemTargetId
+import com.julun.huanque.common.constant.MessageConstants
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -120,18 +121,11 @@ class MessageFragment : BaseFragment() {
             //            val realPosition = position - mAdapter.headerLayoutCount
             mAdapter.getItem(position)?.let { lmc ->
                 when (lmc.conversation.targetId) {
-                    SystemTargetId.systemNoticeSender -> {
-                        //系统消息
-//                        startActivityForResult(SysMsgActivity::class.java, ActivityCodes.REQUEST_CODE_NORMAL, Bundle().apply {
-//                            putString(IntentParamKey.SYS_MSG_ID.name, lmc.conversation.targetId)
-//                        })
-
+                    SystemTargetId.systemNoticeSender,SystemTargetId.friendNoticeSender -> {
+                        //系统消息 or 好友通知消息
                         val intent = Intent(activity, SysMsgActivity::class.java)
                         intent.putExtra(IntentParamKey.SYS_MSG_ID.name, lmc.conversation.targetId)
                         startActivityForResult(intent, ActivityCodes.REQUEST_CODE_NORMAL)
-                    }
-                    SystemTargetId.friendNoticeSender -> {
-                        //鹊友通知
                     }
                     else -> {
                         //首页IM

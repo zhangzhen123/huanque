@@ -5,12 +5,11 @@ package com.julun.huanque.common.utils
  */
 
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONObject
 import com.alibaba.fastjson.TypeReference
 import com.alibaba.fastjson.parser.deserializer.ExtraProcessor
 import com.alibaba.fastjson.serializer.SerializerFeature
-import com.julun.huanque.common.bean.beans.OppoPayInfo
-import com.julun.huanque.common.bean.beans.OrderInfo
-import com.julun.huanque.common.bean.beans.PayResultInfo
+import com.julun.huanque.common.bean.BaseData
 import java.lang.reflect.Type
 
 
@@ -76,7 +75,7 @@ object JsonUtil {
                 return null
             }
             try {
-                  return JSON.parseObject<T>(jsonString, clazz, styleParamProcessor)
+                return JSON.parseObject<T>(jsonString, clazz, styleParamProcessor)
             } catch (ex: Exception) {
                 throw Exception("Could not write JSON: " + ex.message, ex)
             }
@@ -106,6 +105,7 @@ object JsonUtil {
     fun <T> deserializeAsObject(jsonString: String, clazz: Type): T {
         return FJU.deserializeAsObject<T>(jsonString, clazz)!!
     }
+
     //解析数组的
     fun <T> deserializeAsObjectList(jsonString: String?, type: Class<T>): List<T>? {
         if (jsonString == null) {
@@ -118,6 +118,7 @@ object JsonUtil {
         }
 
     }
+
     /**
      * 将一个对象，转换成对象
 
@@ -144,5 +145,25 @@ object JsonUtil {
         }.type
     }
 
+
+    /**
+     * 解析TextMessage消息
+     */
+    fun <T> parseJsonFromTextMessage(clazz: Class<T>, content: String): T? {
+        try {
+            val baseList = deserializeAsObjectList(content, BaseData::class.java)
+            if (baseList?.isNotEmpty() == true) {
+                val jsonObject = baseList.first().data as JSONObject
+                val json = jsonObject.toJSONString()
+                return deserializeAsObject<T>(
+                    json,
+                    clazz
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
 
 }

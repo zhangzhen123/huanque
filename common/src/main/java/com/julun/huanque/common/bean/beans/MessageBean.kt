@@ -1,0 +1,45 @@
+package com.julun.huanque.common.bean.beans
+
+import java.io.Serializable
+
+/**
+ * 系统消息
+ * @author WanZhiYuan
+ * @since 1.0.0
+ * @date 2020/07/14
+ */
+data class SysMsgContent(
+    var context: SysMsgBean? = null,
+    var eventCode: String = ""
+) : Serializable
+
+data class SysMsgBean(
+    var subTitle: String = "",
+    var touchValue: String = "",
+    var touchType: String = "",
+    var icon: String = "",
+    var title: String = "",
+    var body: String = ""
+) : Serializable
+
+/**
+ * 好友通知消息
+ * @author WanZhiYuan
+ * @date 2020/07/15
+ * @since 1.0.0
+ */
+data class FriendContent(
+    var context: FriendBean? = null,
+    var eventCode: String = ""
+) : Serializable
+
+data class FriendBean(
+    var friendHeadPic: String = "",
+    var friendId: String = "",
+    var friendNickname: String = "",
+    var userId: String = "",
+    //（好友关系变化类型）： Follow（关注），Friend（成为好友），IntimateFriend（成为密友），IntimateLevelUp（亲密度等级提升）
+    var relationChangeType: String = "",
+    // relationChangeType = IntimateLevelUp 时返回
+    var intimateLevel: String = ""
+) : Serializable

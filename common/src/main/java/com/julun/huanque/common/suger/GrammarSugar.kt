@@ -9,9 +9,11 @@ import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import androidx.annotation.ColorInt
 import androidx.fragment.app.DialogFragment
 import androidx.core.content.FileProvider
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.drawee.generic.RoundingParams
 import com.julun.huanque.common.utils.ULog
 import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.widget.text.span.BetterImageSpan
@@ -189,6 +191,20 @@ fun DraweeSpanStringBuilder.setImageSpan(
             true,
             BetterImageSpan.ALIGN_CENTER
     )
+}
+
+/**
+ * 设置一个圆形图片
+ */
+fun DraweeSpanStringBuilder.setCircleImageSpan(context: Context, url: String, @ColorInt borderRedId: Int = 0, borderWidth: Float = 0f, position: Int, widthPx: Int, heigthPx: Int) {
+    setImageSpan(DraweeHolderBuilder.createCircleHolder(context, url, borderRedId, borderWidth), position, widthPx, heigthPx, true, BetterImageSpan.ALIGN_CENTER)
+}
+
+/**
+ * 设置一个圆形图片
+ */
+fun DraweeSpanStringBuilder.setCircleImageSpan(context: Context, url: String, params: RoundingParams, position: Int, widthPx: Int, heigthPx: Int) {
+    setImageSpan(DraweeHolderBuilder.createCircleHolder(context, url, params), position, widthPx, heigthPx, true, BetterImageSpan.ALIGN_CENTER)
 }
 
 //Int的几个扩展

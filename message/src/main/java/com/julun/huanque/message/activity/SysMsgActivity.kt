@@ -6,23 +6,31 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.beans.FriendBean
+import com.julun.huanque.common.bean.beans.FriendContent
 import com.julun.huanque.common.bean.beans.SysMsgBean
 import com.julun.huanque.common.bean.beans.SysMsgContent
 import com.julun.huanque.common.constant.ActivityCodes
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.MessageConstants
+import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.message.R
+import com.julun.huanque.message.adapter.FriendsAdapter
 import com.julun.huanque.message.adapter.SysMsgAdapter
 import com.julun.huanque.message.viewmodel.SysMsgViewModel
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
 import kotlinx.android.synthetic.main.activity_sys_msg.*
+import org.jetbrains.anko.backgroundResource
 
 /**
  * 官方系统消息
@@ -33,7 +41,10 @@ import kotlinx.android.synthetic.main.activity_sys_msg.*
 class SysMsgActivity : BaseActivity() {
 
     private var mViewModel: SysMsgViewModel? = null
-    private val mAdapter: SysMsgAdapter by lazy { SysMsgAdapter() }
+    private val mSysAdapter: SysMsgAdapter by lazy { SysMsgAdapter() }
+    private val mFriendsAdapter: FriendsAdapter by lazy { FriendsAdapter() }
+
+    private var mAdapter: BaseQuickAdapter<Message, BaseViewHolder>? = null
 
     override fun getLayoutId(): Int = R.layout.activity_sys_msg
 
@@ -42,8 +53,22 @@ class SysMsgActivity : BaseActivity() {
 
         MixedHelper.setSwipeRefreshStytle(rlRefreshView, this)
         rvList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        when (targetId) {
+            SystemTargetId.systemNoticeSender -> {
+                //系统消息
+                mAdapter = mSysAdapter
+                clMsgRootView.backgroundResource = R.color.color_gray_three
+                tvTitle.text = "系统消息"
+            }
+            else -> {
+                //好友通知
+                mAdapter = mFriendsAdapter
+                clMsgRootView.backgroundResource = R.color.white
+                tvTitle.text = "鹊友通知"
+            }
+        }
         rvList.adapter = mAdapter
-        mAdapter.loadMoreModule.isEnableLoadMore = true
+        mAdapter?.loadMoreModule?.isEnableLoadMore = true
 
         prepareViewModel()
         queryData(true, targetId)
@@ -62,8 +87,8 @@ class SysMsgActivity : BaseActivity() {
             queryData(true, mViewModel?.targetId ?: return@setOnRefreshListener)
         }
         //添加加载更多的监听
-        mAdapter.loadMoreModule.setOnLoadMoreListener {
-            val lastItem = mAdapter.data.last() as? Message
+        mAdapter?.loadMoreModule?.setOnLoadMoreListener {
+            val lastItem = mAdapter?.data?.last() as? Message
             queryData(
                 false,
                 mViewModel?.targetId ?: return@setOnLoadMoreListener,
@@ -72,11 +97,21 @@ class SysMsgActivity : BaseActivity() {
         }
 //        mAdapter.onAdapterClickNew { _, view, _ ->
 //        }
-        mAdapter.onAdapterChildClickNew { _, view, _ ->
+        mAdapter?.onAdapterChildClickNew { _, view, _ ->
             when (view?.id) {
                 R.id.llSysRootView -> {
-                    val item = view.getTag(R.id.sys_msg_bean_id) as? SysMsgContent
-                    customAction(item?.context ?: return@onAdapterChildClickNew)
+                    val item = view.getTag(R.id.msg_bean_id) as? SysMsgBean
+                    customAction(item?.touchType?:return@onAdapterChildClickNew)
+                }
+                R.id.clFriendsRootView -> {
+                    val item = view.getTag(R.id.msg_bean_id) as? FriendBean
+                    //打开他人主页
+                    customAction(MessageConstants.ACTION_MAIN_PAGE)
+                }
+                R.id.tvMessage -> {
+                    val item = view.getTag(R.id.msg_bean_id) as? FriendBean
+                    //打开私聊
+                    customAction(MessageConstants.ACTION_MESSAGE)
                 }
             }
         }
@@ -88,14 +123,14 @@ class SysMsgActivity : BaseActivity() {
             it ?: return@Observer
             if (it.list.isNotEmpty()) {
                 if (it.isPull) {
-                    mAdapter.setList(it.list)
+                    mAdapter?.setList(it.list)
                 } else {
-                    mAdapter.addData(it.list)
+                    mAdapter?.addData(it.list)
                 }
                 if (!it.hasMore) {
-                    mAdapter.loadMoreModule.loadMoreEnd()
+                    mAdapter?.loadMoreModule?.loadMoreEnd()
                 } else {
-                    mAdapter.loadMoreModule.loadMoreComplete()
+                    mAdapter?.loadMoreModule?.loadMoreComplete()
                 }
                 hideCommonView()
             } else {
@@ -104,7 +139,7 @@ class SysMsgActivity : BaseActivity() {
         })
         mViewModel?.refreshErrorStats?.observe(this, Observer {
             it ?: return@Observer
-            if (mAdapter.data.isEmpty()) {
+            if (mAdapter?.data?.isEmpty() == true) {
                 isShowError(isShow = true, isError = true)
                 return@Observer
             }
@@ -112,7 +147,11 @@ class SysMsgActivity : BaseActivity() {
         })
         mViewModel?.loadMoreErrorStats?.observe(this, Observer {
             it ?: return@Observer
-            mAdapter.loadMoreModule.loadMoreFail()
+            mAdapter?.loadMoreModule?.loadMoreFail()
+        })
+        mViewModel?.finalState?.observe(this, Observer {
+            it ?: return@Observer
+            finishRefresh()
         })
     }
 
@@ -125,7 +164,7 @@ class SysMsgActivity : BaseActivity() {
             override fun processMessage(msg: Message) {
                 if (msg.targetId == mViewModel?.targetId) {
                     //就是当前的消息，直接显示
-                    mAdapter.addData(0, msg)
+                    mAdapter?.addData(0, msg)
                     scrollToTop()
                     //获取会话消息直接置为已读
                     RongIMClient.getInstance()
@@ -148,22 +187,28 @@ class SysMsgActivity : BaseActivity() {
         }
     }
 
-    private fun customAction(info: SysMsgBean) {
-        when (info.touchType) {
+    private fun customAction(touchType:String) {
+        when (touchType) {
             MessageConstants.ACTION_URL -> {
                 //H5
                 ToastUtils.show("打开H5页")
             }
+            MessageConstants.ACTION_MAIN_PAGE -> {
+                ToastUtils.show("打开主页")
+            }
+            MessageConstants.ACTION_MESSAGE -> {
+                ToastUtils.show("打开私聊")
+            }
             MessageConstants.ACTION_None -> {
             }
             else -> {
-                ToastUtils.show("没有记录的action类型 -> ${info.touchType}")
+                ToastUtils.show("没有记录的action类型 -> ${touchType}")
             }
         }
     }
 
     private fun scrollToTop() {
-        if (mAdapter.itemCount > 0) {
+        if ((mAdapter?.itemCount ?: 0) > 0) {
             rvList?.post {
                 rvList?.smoothScrollToPosition(0)
             }
@@ -200,6 +245,14 @@ class SysMsgActivity : BaseActivity() {
     private fun hideCommonView() {
         if (commonView.isVisible()) {
             commonView.hide()
+        }
+    }
+
+    private fun finishRefresh() {
+        rlRefreshView.post {
+            rlRefreshView?.let {
+                it.isRefreshing = false
+            }
         }
     }
 

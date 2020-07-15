@@ -1,5 +1,8 @@
 package com.julun.huanque.common.bean.beans
 
+import android.graphics.Typeface
+import androidx.annotation.ColorInt
+
 /**
  * Created by nirack on 16-11-10.
  */
@@ -180,3 +183,41 @@ data class ActiveBean(var activeList: MutableList<ActiveWord> = mutableListOf())
  * @param consumeBeans 本次花费金额
  */
 data class SendMsgBean(var beans: Long = 0, var consumeBeans: Long = 0)
+
+/**
+ * 图文混排对象
+ */
+class TIBean {
+    companion object {
+        const val TEXT = 0
+        const val IMAGE = 1
+    }
+    //类型为0表示是文字，其他表示图片
+    var type: Int = 0
+    //文字颜色
+    var textColor: String = ""
+    //文字颜色int
+    @ColorInt
+    var textColorInt: Int = 0
+    //文字大小
+    var textSize: Int = 0
+    //该段文字的内容
+    var text: String = ""
+    //文字类型
+    var styleSpan: Int = Typeface.NORMAL
+    //图片地址
+    var url: String = ""
+    //本地图片
+    var imgRes: Int = 0
+    //图片宽度
+    var width = 0
+    //图片高度
+    var height = 0
+    //是否转换成圆形
+    var isCircle: Boolean = false
+    //圆形边框颜色
+    @ColorInt
+    var borderRedId: Int = 0
+    //圆形边框宽度
+    var borderWidth: Float = 0f
+}

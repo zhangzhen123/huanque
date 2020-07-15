@@ -1,10 +1,15 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="RnAppTheme" parent="Theme.ReactNative.AppCompat.Light.NoActionBar.FullScreen">
+    <style name="RnAppTheme" parent="BaseAppTheme">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary_rn</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark_rn</item>
-        <item name="colorAccent">@color/colorAccent_rn</item>
+<!--        <item name="colorPrimary">@color/colorPrimary_lib</item>-->
+<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark_lib</item>-->
+<!--        <item name="colorAccent">@color/colorAccent_lib</item>-->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/FeelYouWindowAnimTheme</item>
     </style>
 
 </resources>

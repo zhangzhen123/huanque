@@ -1,11 +1,9 @@
 package com.julun.huanque.message.adapter
 
 import android.view.View
-import com.alibaba.fastjson.JSONObject
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.beans.SysMsgContent
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.JsonUtil
@@ -33,15 +31,14 @@ class SysMsgAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.item_sy
 
         val item = info.content as? TextMessage
         item?.let {
-            var customBean: SysMsgContent? = null
-            try {
-                customBean = MessageFormatUtils.formatSysMsgContent(item.content)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            rootView.setTag(R.id.sys_msg_bean_id, customBean)
+            val customBean: SysMsgContent? =
+                JsonUtil.parseJsonFromTextMessage(SysMsgContent::class.java, item.content)
 
             val itemInfo = customBean?.context
+
+            rootView.setTag(R.id.msg_bean_id, itemInfo)
+
+
             //title head
             ImageUtils.loadImage(
                 holder.getView(R.id.ivTitle),

@@ -5,9 +5,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 
+import androidx.annotation.ColorInt;
+
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
@@ -72,6 +75,36 @@ public class DraweeHolderBuilder {
         DraweeHolder<GenericDraweeHierarchy> mDraweeHolder = DraweeHolder.create(hierarchy, context);
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
+                .setOldController(mDraweeHolder.getController())
+                .build();
+        mDraweeHolder.setController(controller);
+        return mDraweeHolder;
+    }
+
+    /**
+     * 返回一个圆形图片 如果不需要边框传0
+     *
+     * @param borderRedId 边框的颜色
+     * @param borderWidth 边框的大小
+     */
+    public static DraweeHolder createCircleHolder(Context context, String uri, @ColorInt int borderRedId, float borderWidth) {
+        RoundingParams roundingParams = RoundingParams.asCircle();
+        if (borderRedId != 0 && borderWidth > 0f) {
+            roundingParams.setBorder(borderRedId, borderWidth);
+        }
+        return createCircleHolder(context, uri, roundingParams);
+    }
+
+    public static DraweeHolder createCircleHolder(Context context, String uri, RoundingParams params) {
+
+        GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(context.getResources())
+                .setPlaceholderImage(new ColorDrawable(Color.GRAY))
+                .setRoundingParams(params)
+                .build();
+        DraweeHolder<GenericDraweeHierarchy> mDraweeHolder = DraweeHolder.create(hierarchy, context);
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
                 .setOldController(mDraweeHolder.getController())
                 .build();
         mDraweeHolder.setController(controller);
