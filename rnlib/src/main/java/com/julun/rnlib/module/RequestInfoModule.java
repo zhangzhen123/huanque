@@ -2,6 +2,7 @@ package com.julun.rnlib.module;
 
 import androidx.annotation.NonNull;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -9,9 +10,16 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.IllegalViewOperationException;
+import com.julun.huanque.common.constant.ARouterConstant;
 import com.julun.huanque.common.constant.BusiConstant;
+import com.julun.huanque.common.constant.RealNameConstants;
 import com.julun.huanque.common.init.CommonInit;
+import com.julun.huanque.common.interfaces.routerservice.IRealNameService;
+import com.julun.huanque.common.interfaces.routerservice.RealNameCallback;
+import com.julun.huanque.common.utils.ToastUtils;
 import com.julun.rnlib.RnManager;
+
+import org.jetbrains.annotations.NotNull;
 
 public class RequestInfoModule extends ReactContextBaseJavaModule {
     private static final String E_LAYOUT_ERROR = "E_LAYOUT_ERROR";
@@ -52,15 +60,38 @@ public class RequestInfoModule extends ReactContextBaseJavaModule {
             promise.reject(E_LAYOUT_ERROR, e);
         }
     }
+
     @ReactMethod
-    public void uploadPhotos(int max,Promise promise){
+    public void uploadPhotos(int max, Promise promise) {
         RnManager.INSTANCE.uploadPhotos(max);
-        RnManager.INSTANCE.getPromiseMap().put(RnManager.uploadPhotos,promise);
+        RnManager.INSTANCE.getPromiseMap().put(RnManager.uploadPhotos, promise);
 
     }
+
     @ReactMethod
-    public void  sessionPast() {
+    public void sessionPast() {
         RnManager.INSTANCE.closeRnPager();
     }
 
+    @ReactMethod
+    public void avatarAuth(final Promise promise) {
+        try {
+            IRealNameService service = (IRealNameService) ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation();
+            service.startRealHead(getCurrentActivity(), new RealNameCallback() {
+                @Override
+                public void onCallback(@NotNull String status, @NotNull String des) {
+                    if (status.equals(RealNameConstants.TYPE_SUCCESS)) {
+                        promise.resolve(true);
+                    } else {
+                        ToastUtils.INSTANCE.show(des);
+                        promise.resolve(false);
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+
+    }
 }
