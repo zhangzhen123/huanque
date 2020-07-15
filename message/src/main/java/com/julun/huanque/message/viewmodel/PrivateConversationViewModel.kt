@@ -77,6 +77,9 @@ class PrivateConversationViewModel : BaseViewModel() {
     //小鹊语料数据
     var wordList = mutableListOf<ActiveWord>()
 
+    //当前选中小鹊语料
+    var currentActiveWord: ActiveWord? = null
+
     //语料position（当前已显示）
     var wordPosition = -1
 

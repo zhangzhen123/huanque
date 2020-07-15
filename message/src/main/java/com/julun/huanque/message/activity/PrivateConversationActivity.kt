@@ -263,7 +263,7 @@ class PrivateConversationActivity : BaseActivity() {
         iv_intimate.onClickNew {
             //显示欢遇弹窗
             mIntimateDetailFragment = mIntimateDetailFragment ?: IntimateDetailFragment.newInstance()
-            mIntimateDetailFragment?.show(supportFragmentManager, "MeetDetailFragment")
+            mIntimateDetailFragment?.show(supportFragmentManager, "IntimateDetailFragment")
         }
 
         iv_phone.onClickNew {
@@ -305,6 +305,7 @@ class PrivateConversationActivity : BaseActivity() {
                 val position = vModel.wordPosition % wordList.size
                 if (ForceUtils.isIndexNotOutOfBounds(position, wordList)) {
                     val word = wordList[position]
+                    vModel.currentActiveWord = word
                     tv_active_content.text = "${word.wordType},\"${word.content}\""
                 }
             }
@@ -335,14 +336,12 @@ class PrivateConversationActivity : BaseActivity() {
             if (wordList.isEmpty()) {
                 return ""
             }
-            val position = vModel.wordPosition % wordList.size
-            if (ForceUtils.isIndexNotOutOfBounds(position, wordList)) {
-                val word = wordList[position]
+            val word = vModel.currentActiveWord
+            if (word != null) {
                 return word.content
             } else {
                 return ""
             }
-
         }
         return ""
     }

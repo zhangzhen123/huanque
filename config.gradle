@@ -1,5 +1,5 @@
 ext {
-    packageType="com.julun.huanque"
+    packageType = "com.julun.huanque"
     hq = [
             buildToolsVersion: "29.0.3",
             compileSdkVersion: 29,
@@ -34,9 +34,9 @@ ext {
     api = [
             BASE_URL_PRODUCT: "https://api.51lm.tv/",
             BASE_URL_DEV    : "http://192.168.96.249:7777/",
-//            BASE_URL_DEV    : "http://192.168.97.6:6630/",
+//            BASE_URL_DEV    : "http://192.168.96.240:7777/",
 
-            IMAGE_SERVER_URL:"https://huanque.oss-cn-hangzhou.aliyuncs.com/"
+            IMAGE_SERVER_URL: "https://huanque.oss-cn-hangzhou.aliyuncs.com/"
 //            BASE_URL_DEV    : "http://192.168.96.249:7777/"
 //            BASE_URL_DEV    : "http://192.168.97.254:7777/"
 //            BASE_URL_DEV    : "http://192.168.97.6:6630/"
@@ -44,10 +44,10 @@ ext {
     sdk = [
             //三方对应相关的key or scheme
             //QQ
-            QQ_KEY_HQ       : "1105752551",
+            QQ_KEY_HQ        : "1105752551",
 
             //WX
-            WX_KEY_HQ       : "wxae95c4e2c7e7c6f2",
+            WX_KEY_HQ        : "wxae95c4e2c7e7c6f2",
 
             //JPUSH
             JPUSH_KEY_TEST_HQ: "490222d958f73dc08833ac44",
