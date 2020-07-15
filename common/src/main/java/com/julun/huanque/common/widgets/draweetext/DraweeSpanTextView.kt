@@ -23,6 +23,7 @@ import com.julun.huanque.common.constant.MessageDisplayType
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.suger.setCircleImageSpan
 import com.julun.huanque.common.utils.*
 import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.dip
@@ -248,11 +249,14 @@ class DraweeSpanTextView @JvmOverloads constructor(
         val builder = DraweeSpanStringBuilder(textBean.realText)
         textBean.imgParams.forEach {
             if (it.imgRes == 0) {
-                builder.setImageSpan(context, it.url, it.index, it.width, it.height)
+                if (it.isCircle) {
+                    builder.setCircleImageSpan(context, it.url, it.borderRedId, it.borderWidth, it.index, it.width, it.height)
+                } else {
+                    builder.setImageSpan(context, it.url, it.index, it.width, it.height)
+                }
             } else {
                 builder.setImageSpan(context, it.imgRes, it.index, it.index, it.width, it.height)
             }
-
         }
         textBean.textParams.forEach {
             val indexEnd = it.indexStart + it.text.length

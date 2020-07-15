@@ -24,6 +24,7 @@ class SysMsgViewModel : BaseViewModel() {
     val getNewSysMsg: MutableLiveData<Message> by lazy { MutableLiveData<Message>() }
     val refreshErrorStats: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val loadMoreErrorStats: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val finalState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     var targetId: String = ""
 
@@ -47,6 +48,7 @@ class SysMsgViewModel : BaseViewModel() {
                             }
                             list = messages
                         }
+                        finalState.value = true
                     }
 
                     /**
@@ -59,6 +61,7 @@ class SysMsgViewModel : BaseViewModel() {
                         } else {
                             loadMoreErrorStats.value = true
                         }
+                        finalState.value = true
                     }
                 })
 

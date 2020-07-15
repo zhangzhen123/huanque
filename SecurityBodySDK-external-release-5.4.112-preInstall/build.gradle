@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('SecurityBodySDK-external-release-5.4.112-preInstall.aar'))

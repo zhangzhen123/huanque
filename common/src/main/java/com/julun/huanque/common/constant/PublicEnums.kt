@@ -129,6 +129,18 @@ object MessageConstants{
     const val ACTION_URL = "URL"
     //什么都不做
     const val ACTION_None = "None"
+
+    //好友类型
+    //关注
+    const val FRIEDN_FOLLOW = "Follow"
+    //成为好友
+    const val FRIEDN = "Friend"
+    //成为密友
+    const val FRIEDN_INTIMATE = "IntimateFriend"
+    //亲密度等级提升
+    const val FRIEDN_LEVEL_UP = "IntimateLevelUp"
+
+
 }
 
 /**

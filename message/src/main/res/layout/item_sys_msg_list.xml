@@ -22,8 +22,6 @@
             android:layout_marginLeft="@dimen/dimen_15"
             app:failureImage="@mipmap/icon_logo_avatar_yellow"
             app:failureImageScaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:placeholderImage="@mipmap/logo_placeholder"
             app:placeholderImageScaleType="centerCrop"
             app:roundAsCircle="true" />
