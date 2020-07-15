@@ -67,7 +67,12 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
         } else {
             //显示个性签名
             tvChangeNumber.hide()
-            tvIntimateNumber.text = item.mySign
+            val content = if (item.mySign.length < 13) {
+                item.mySign
+            } else {
+                "${item.mySign.substring(0, 13)}..."
+            }
+            tvIntimateNumber.text = content
         }
         //
         val tvAction = helper.getView<TextView>(R.id.tv_action)
@@ -80,6 +85,7 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
                 tvAction.backgroundResource = R.drawable.bg_icon_private_chat
                 tvAction.textColor = GlobalUtils.getColor(R.color.send_private_chat)
                 tvAction.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                tvAction.compoundDrawablePadding = 0
             }
             ContactsTabType.Follow, ContactsTabType.Fan -> {
                 //关注，粉丝  显示关注样式
@@ -92,19 +98,24 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
                     FollowStatus.True -> {
                         //已关注
                         actionText = "已关注"
+                        actionResource = R.mipmap.icon_attentioned
                     }
                     FollowStatus.Mutual -> {
                         //相互关注
                         actionText = "相互关注"
+                        actionResource = R.mipmap.icon_attention_each_other
                     }
                     FollowStatus.False -> {
                         //未关注
                         actionText = "关注"
+                        actionResource = R.mipmap.icon_add_attention
                     }
                     else -> {
+                        actionResource = 0
                     }
                 }
                 tvAction.setCompoundDrawablesWithIntrinsicBounds(actionResource, 0, 0, 0)
+                tvAction.compoundDrawablePadding = 5
                 tvAction.text = actionText
             }
         }

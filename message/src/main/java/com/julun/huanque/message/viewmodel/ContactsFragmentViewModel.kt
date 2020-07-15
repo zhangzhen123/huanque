@@ -34,17 +34,6 @@ class ContactsFragmentViewModel : BaseViewModel() {
 
     var offset = 0
 
-//    /**
-//     * 获取数据
-//     */
-//    fun getData(type: String, refresh: Boolean = false) {
-//        viewModelScope.launch {
-//            request({
-//                val offset = if (refresh) 0 else offset
-//                service.socialList(ContactsForm(type, offset)).dataConvert()
-//            })
-//        }
-//    }
 
     val stateList: LiveData<ReactiveData<RootListData<SocialUserInfo>>> = queryState.switchMap { type ->
         liveData {
