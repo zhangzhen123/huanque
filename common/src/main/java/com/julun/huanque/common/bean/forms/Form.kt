@@ -37,11 +37,11 @@ class NetcallHangUpForm(var callId: Long = 0, var duration: Long = 0) : Serializ
  */
 class SendMsgForm(var friendId: Long = 0, var content: String = "")
 
-class ReportForm{
+class ReportForm {
     // 举报用户
     var userId: Long = 0
-    var reportType: String =""
-    var detail: String =""
+    var reportType: String = ""
+    var detail: String = ""
     var pics: String? = null
 }
 
@@ -49,4 +49,25 @@ class ReportForm{
 /**
  * 联系人使用的form
  */
-class ContactsForm(var userDataTabType : String = "",var offset : Int = 0)
+class ContactsForm(var userDataTabType: String = "", var offset: Int = 0)
+
+/**
+ * 更新用户消息使用的form
+ */
+class SettingForm(
+    //非好友私信费用
+    var privateMsgFee: Int? = null,
+    //折叠非好友 密友消息
+    var foldMsg: String? = null,
+    //接听语音
+    var answer: String? = null,
+    //私信提醒
+    var privateMsgRemind: String? = null,
+    //关注提醒
+    var followRemind: String? = null
+)
+
+/**
+ * 节目关注列表使用的form
+ */
+class LiveRemindForm(var offset:Int = 0)

@@ -43,3 +43,24 @@ data class FriendBean(
     // relationChangeType = IntimateLevelUp 时返回
     var intimateLevel: String = ""
 ) : Serializable
+
+/**
+ * 用户消息设置
+ * @author WanZhiYuan
+ * @date 2020/07/15
+ * @since 1.0.0
+ */
+data class MessageSettingBean(
+    //接听语音
+    var answer: Boolean = false,
+    //折叠非好友 密友消息
+    var foldMsg: Boolean = false,
+    //关注提醒
+    var followRemind: Boolean = false,
+    //非好友私信费用
+    var privateMsgFee: Int = 0,
+    //私信推送通知提醒
+    var privateMsgRemind: Boolean = false,
+    //已设置开播提醒主播数量
+    var showRemindCnt: Int = 0
+) : Serializable

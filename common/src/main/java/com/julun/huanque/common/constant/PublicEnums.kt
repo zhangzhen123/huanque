@@ -152,8 +152,8 @@ object MessageConstants{
  */
 object ActivityCodes {
     //响应码
-    //通用基础响应码
-    const val RESPONSE_CODE_NORMAL = 20000
+    //刷新
+    const val RESPONSE_CODE_REFRESH = 20000
 
     //请求码
     //通用基础请求码

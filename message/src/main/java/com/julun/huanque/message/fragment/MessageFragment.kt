@@ -260,7 +260,7 @@ class MessageFragment : BaseFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             ActivityCodes.REQUEST_CODE_NORMAL -> {
-                if (resultCode == ActivityCodes.RESPONSE_CODE_NORMAL) {
+                if (resultCode == ActivityCodes.RESPONSE_CODE_REFRESH) {
                     //也许是从系统消息页面返回，刷新列表一次
                     mMessageViewModel.getConversationList()
                     mMessageViewModel.queryRongPrivateCount()
