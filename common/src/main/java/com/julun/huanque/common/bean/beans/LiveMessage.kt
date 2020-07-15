@@ -568,16 +568,25 @@ class BaseTextBean {
     var textParams: MutableList<TextParam> = mutableListOf()
 }
 
-class ImageParam {
+open class BaseParams()
+
+class ImageParam: BaseParams() {
     var url: String = ""
     var index: Int = 0
     var imgRes: Int = 0//本地图片 优先使用 如果没有再使用远程
     var width = 0
     var height = 0
+    //是否转化成圆形
+    var isCircle: Boolean = false
+    //圆形边框颜色
+    @ColorInt
+    var borderRedId: Int = 0
+    //圆形边框宽度
+    var borderWidth: Float = 0f
 }
 
 //文字的属性
-class TextParam {
+class TextParam: BaseParams() {
     var indexStart: Int = 0 //文字变化开始位置
     var textColor: String = ""
     @ColorInt

@@ -18,6 +18,9 @@ import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
+import com.julun.huanque.common.bean.beans.ChatUserBean
+import com.julun.huanque.common.bean.beans.IntimateBean
+import com.julun.huanque.common.bean.beans.NetCallAcceptBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.constant.*
@@ -44,12 +47,19 @@ import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.rd.PageIndicatorView
 import com.rd.utils.DensityUtils
+import com.trello.rxlifecycle4.android.ActivityEvent
+import com.trello.rxlifecycle4.kotlin.bindUntilEvent
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableEmitter
+import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
+import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
+import kotlinx.android.synthetic.main.item_header_conversions.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.imageResource
 import java.util.concurrent.TimeUnit
@@ -102,12 +112,33 @@ class PrivateConversationActivity : BaseActivity() {
 
     override fun getLayoutId() = R.layout.act_private_chat
 
+    //首次进入私聊详情的倒计时
+    private var mFirstXiaoQueDisposable: Disposable? = null
+
+    //为回复倒计时
+    private var mNoReceiveDisposable: Disposable? = null
+
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val ivOperation = findViewById<ImageView>(R.id.ivOperation)
         ivOperation.imageResource = R.mipmap.icon_conversation_setting
         ivOperation.show()
 
         initViewModel()
+        //之前是否加入过私聊
+        val joined = SharedPreferencesUtils.getBoolean(SPParamKey.JOINED_PRIVATE_CHAT, false)
+        if (!joined) {
+            mFirstXiaoQueDisposable?.dispose()
+            SharedPreferencesUtils.commitBoolean(SPParamKey.JOINED_PRIVATE_CHAT, true)
+            mFirstXiaoQueDisposable = Observable.timer(3, TimeUnit.SECONDS)
+                .bindUntilEvent(this, ActivityEvent.DESTROY)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if (mPrivateConversationViewModel?.enableShowXiaoQue == true) {
+                        iv_xiaoque.performClick()
+                    }
+                }, { it.printStackTrace() })
+        }
+
         initRecyclerView()
         val targetID = intent?.getLongExtra(ParamConstant.TARGETID, 0)
         val nickName = intent?.getStringExtra(ParamConstant.NICKNAME) ?: ""
@@ -169,6 +200,7 @@ class PrivateConversationActivity : BaseActivity() {
             if (it != null) {
                 mAdapter.setNewData(it)
                 scrollToBottom(true)
+                showXiaoQueAuto()
             }
         })
         mPrivateConversationViewModel?.messageChangeState?.observe(this, Observer {
@@ -176,6 +208,7 @@ class PrivateConversationActivity : BaseActivity() {
                 mAdapter.notifyDataSetChanged()
                 scrollToBottom()
                 mPrivateConversationViewModel?.messageChangeState?.value = null
+                showXiaoQueAuto()
             }
         })
 
@@ -263,7 +296,7 @@ class PrivateConversationActivity : BaseActivity() {
         iv_intimate.onClickNew {
             //显示欢遇弹窗
             mIntimateDetailFragment = mIntimateDetailFragment ?: IntimateDetailFragment.newInstance()
-            mIntimateDetailFragment?.show(supportFragmentManager, "MeetDetailFragment")
+            mIntimateDetailFragment?.show(supportFragmentManager, "IntimateDetailFragment")
         }
 
         iv_phone.onClickNew {
@@ -293,10 +326,12 @@ class PrivateConversationActivity : BaseActivity() {
         }
 
         iv_xiaoque.onClickNew {
+            mFirstXiaoQueDisposable?.dispose()
             //点击小鹊助手
             showXiaoQueView(true)
             //显示文案
             mPrivateConversationViewModel?.let { vModel ->
+                vModel.xiaoqueCountDown()
                 val wordList = vModel.wordList
                 if (wordList.isEmpty()) {
                     return@onClickNew
@@ -305,7 +340,12 @@ class PrivateConversationActivity : BaseActivity() {
                 val position = vModel.wordPosition % wordList.size
                 if (ForceUtils.isIndexNotOutOfBounds(position, wordList)) {
                     val word = wordList[position]
+                    vModel.currentActiveWord = word
                     tv_active_content.text = "${word.wordType},\"${word.content}\""
+                }
+                if (vModel.wordPosition >= wordList.size - 1) {
+                    //数据已经使用光，从后台获取新的数据
+                    vModel.getActiveWord()
                 }
             }
         }
@@ -335,16 +375,45 @@ class PrivateConversationActivity : BaseActivity() {
             if (wordList.isEmpty()) {
                 return ""
             }
-            val position = vModel.wordPosition % wordList.size
-            if (ForceUtils.isIndexNotOutOfBounds(position, wordList)) {
-                val word = wordList[position]
+            val word = vModel.currentActiveWord
+            if (word != null) {
                 return word.content
             } else {
                 return ""
             }
-
         }
         return ""
+    }
+
+    /**
+     * 被动显示小鹊判断
+     */
+    private fun showXiaoQueAuto() {
+        //小鹊提示相关
+        val message = mAdapter.data.lastOrNull() ?: return
+        if (message.senderUserId != "${SessionUtils.getUserId()}") {
+            //对方消息
+            val content = message.content
+            if (content is TextMessage || content is ImageMessage) {
+                //最后一条消息是对方回复的文本消息,开始倒计时
+                if (mNoReceiveDisposable?.isDisposed == false) {
+                    //正在倒计时
+                    return
+                }
+                mNoReceiveDisposable = Observable.timer(10, TimeUnit.SECONDS)
+                    .bindUntilEvent(this, ActivityEvent.DESTROY)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        if (mPrivateConversationViewModel?.enableShowXiaoQue == true) {
+                            iv_xiaoque.performClick()
+                        }
+                    }, {})
+            } else {
+                mNoReceiveDisposable?.dispose()
+            }
+        } else {
+            mNoReceiveDisposable?.dispose()
+        }
     }
 
 
@@ -390,6 +459,23 @@ class PrivateConversationActivity : BaseActivity() {
                 }
             }
         }
+
+        //亲密度变化消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.IntimateChangeProcessor {
+            override fun process(data: IntimateBean) {
+                val userIds = data.userIds
+                if (userIds.contains(SessionUtils.getUserId()) && userIds.contains(mPrivateConversationViewModel?.targetIdData?.value ?: 0)) {
+                    //当前两个人亲密度发生变化
+                    mPrivateConversationViewModel?.basicBean?.value?.intimate?.apply {
+                        intimateLevel = data.intimateLevel
+                        nextIntimateLevel = data.nextIntimateLevel
+                        intimateNum = data.intimateNum
+                        nextIntimateNum = data.nextIntimateNum
+                    }
+                    mIntimateDetailViewModel?.basicBean?.value = mPrivateConversationViewModel?.basicBean?.value
+                }
+            }
+        })
     }
 
     override fun onStart() {
@@ -571,7 +657,7 @@ class PrivateConversationActivity : BaseActivity() {
             //礼物消息判断
             return
         }
-        if (giftBean == null) {
+        if (giftBean != null) {
             mPrivateConversationViewModel?.sendGiftSuccessData?.value = null
         }
 

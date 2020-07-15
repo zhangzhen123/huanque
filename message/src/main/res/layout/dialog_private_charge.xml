@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/hq_message_bg_shape_white_two"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/btnCharge"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_46"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="30鹊币/条"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16" />
+
+    <TextView
+        android:id="@+id/btnFree"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_46"
+        android:gravity="center"
+        android:text="免费"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16" />
+
+    <TextView
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_46"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16" />
+</LinearLayout>

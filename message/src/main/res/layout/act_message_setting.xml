@@ -137,12 +137,12 @@
 
 
     <View
-    android:id="@+id/view_voice_communication"
-    android:layout_width="0px"
-    android:layout_height="54dp"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/view_fold_stranger_msg" />
+        android:id="@+id/view_voice_communication"
+        android:layout_width="0px"
+        android:layout_height="54dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_fold_stranger_msg" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -255,6 +255,7 @@
         app:layout_constraintTop_toTopOf="@id/view_start_live" />
 
     <TextView
+        android:id="@+id/tv_start_live"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="35dp"
@@ -273,5 +274,16 @@
         app:layout_constraintBottom_toBottomOf="@id/view_start_live"
         app:layout_constraintRight_toRightOf="@id/view_start_live"
         app:layout_constraintTop_toTopOf="@id/view_start_live" />
+
+    <com.julun.huanque.common.widgets.statepage.StatePageView
+        android:id="@+id/commonView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dimen_45"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

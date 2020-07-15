@@ -77,7 +77,7 @@ class IntimateDetailFragment : BaseDialogFragment() {
         val intimateBean = bean.intimate
         tv_meet_level.text = "Lv.${intimateBean.intimateLevel}"
 
-        val progress = if (intimateBean.intimateLevel == intimateBean.intimateNextLevel) {
+        val progress = if (intimateBean.intimateLevel == intimateBean.nextIntimateLevel) {
             //满级
             tv_meet_attention.text = "亲密度${intimateBean.intimateNum}"
             100

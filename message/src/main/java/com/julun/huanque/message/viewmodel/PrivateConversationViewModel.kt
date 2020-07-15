@@ -19,6 +19,7 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.SessionUtils
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.rong.imlib.IRongCallback
@@ -27,6 +28,7 @@ import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
+import java.util.concurrent.TimeUnit
 
 /**
  *@创建者   dong
@@ -77,8 +79,30 @@ class PrivateConversationViewModel : BaseViewModel() {
     //小鹊语料数据
     var wordList = mutableListOf<ActiveWord>()
 
+    //当前选中小鹊语料
+    var currentActiveWord: ActiveWord? = null
+
     //语料position（当前已显示）
     var wordPosition = -1
+
+    //是否允许显示小鹊(默认允许)
+    var enableShowXiaoQue = true
+
+    //小鹊冷却倒计时
+    private var mCoolingDisposable: Disposable? = null
+
+    /**
+     * 小鹊冷却时间(被动显示)
+     */
+    fun xiaoqueCountDown() {
+        mCoolingDisposable?.dispose()
+        //间隔5分钟
+        mCoolingDisposable = Observable.timer(5 * 60, TimeUnit.SECONDS)
+            .doOnSubscribe { enableShowXiaoQue = false }
+            .subscribe({
+                enableShowXiaoQue = true
+            }, {})
+    }
 
     /**
      * 获取消息列表
@@ -188,6 +212,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                 val result = socialService.getActiveWord().dataConvert()
                 wordList.clear()
                 wordList.addAll(result.activeList)
+                wordPosition = -1
             })
         }
     }
@@ -220,6 +245,11 @@ class PrivateConversationViewModel : BaseViewModel() {
                 uploader?.error()
             })
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        mCoolingDisposable?.dispose()
     }
 
 }

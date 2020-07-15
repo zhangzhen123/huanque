@@ -44,6 +44,9 @@ object ParamKey {
 object SPParamKey {
     //语音通话花费确认弹窗
     const val VOICE_FEE_DIALOG_SHOW = "VOICE_FEE_DIALOG_SHOW"
+
+    //已经进入过私聊详情页面的标识
+    const val JOINED_PRIVATE_CHAT = "JOINED_PRIVATE_CHAT"
 }
 
 /**

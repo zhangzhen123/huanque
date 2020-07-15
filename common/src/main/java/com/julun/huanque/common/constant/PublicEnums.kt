@@ -127,8 +127,24 @@ object ByteConstants {
 object MessageConstants{
     //跳转H5
     const val ACTION_URL = "URL"
+    //跳转主页
+    const val ACTION_MAIN_PAGE = "main_page"
+    //跳转私聊
+    const val ACTION_MESSAGE = "打开私聊"
     //什么都不做
     const val ACTION_None = "None"
+
+    //好友类型
+    //关注
+    const val FRIEDN_FOLLOW = "Follow"
+    //成为好友
+    const val FRIEDN = "Friend"
+    //成为密友
+    const val FRIEDN_INTIMATE = "IntimateFriend"
+    //亲密度等级提升
+    const val FRIEDN_LEVEL_UP = "IntimateLevelUp"
+
+
 }
 
 /**
@@ -136,8 +152,8 @@ object MessageConstants{
  */
 object ActivityCodes {
     //响应码
-    //通用基础响应码
-    const val RESPONSE_CODE_NORMAL = 20000
+    //刷新
+    const val RESPONSE_CODE_REFRESH = 20000
 
     //请求码
     //通用基础请求码
