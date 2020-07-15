@@ -20,14 +20,19 @@ class ImformationCompleteBean(var sextype: String = "", var nickname: String = "
 /**
  * 支付结果
  */
-class PayResultEvent(var payResult: PayResult,var payType: String )
+class PayResultEvent(var payResult: PayResult, var payType: String)
 
 /**
- * 登录事件true代表成功 false代表失败
+ * 登录事件true代表登录 false代表退出
  */
 class LoginEvent(val result: Boolean)
 
 /**
  * 背景变化通知
  */
-class ChatBackgroundChangedEvent(var friendId : Long)
+class ChatBackgroundChangedEvent(var friendId: Long)
+
+/**
+ * 微信登录code
+ */
+class WeiXinCodeEvent(val code: String)

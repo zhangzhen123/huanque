@@ -316,7 +316,7 @@ class RechargeCenterActivity : BaseActivity() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun receivePayResult(result: PayResultEvent) {
-        logger.info("收到支付结果：" + result.payResult)
+        logger.info("收到支付结果：${result.payResult} type=${result.payType}" )
         when (result.payResult) {
             PayResult.PAY_SUCCESS -> {
                 mViewModel.isRefresh.value = mPayPosition

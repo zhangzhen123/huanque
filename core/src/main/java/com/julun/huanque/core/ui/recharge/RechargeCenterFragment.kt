@@ -414,7 +414,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
             ScreenUtils.showSoftInput(requireContext(), view)
         }
     }
-
+    //todo 这里过时了
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         mHasEditFocus = true

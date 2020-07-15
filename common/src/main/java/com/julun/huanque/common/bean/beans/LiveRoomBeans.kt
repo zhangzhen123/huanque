@@ -28,7 +28,12 @@ class UserLevelMap : Serializable {
  * @param currentLifeUsed 当前轮是否使用过该数据
  * @param time 时间
  */
-class DanmuEvent(var factoryCarPrizeCount: Int = 0, var useing: Boolean = false, var currentLifeUsed: Boolean = false, var time: Long = 0) :
+class DanmuEvent(
+    var factoryCarPrizeCount: Int = 0,
+    var useing: Boolean = false,
+    var currentLifeUsed: Boolean = false,
+    var time: Long = 0
+) :
     Serializable, TplBean()
 
 /**
@@ -174,7 +179,11 @@ data class RoomUserInfo(
     }
 }
 
-class OnlineData<T>(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) :
+class OnlineData<T>(
+    isPull: Boolean = false,
+    hasMore: Boolean = false,
+    extDataJson: String? = null
+) :
     RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
     var royalUserList: List<T> = arrayListOf()
     var royalLevelUrl: String = ""
@@ -560,8 +569,12 @@ class SdkParam(
 ) : Serializable
 
 class YueSaiDto(
-    var label1: String? = "", var label2: String? = "", var url: String? = null, var top: String? = null,
-    var type: String? = null, var icon: String? = ""
+    var label1: String? = "",
+    var label2: String? = "",
+    var url: String? = null,
+    var top: String? = null,
+    var type: String? = null,
+    var icon: String? = ""
 )
 
 class RunWayMessage : Serializable {
@@ -1004,7 +1017,11 @@ class StopBean(var liveMinutes: Int = 0, var presentBeans: Int = 0)
 data class TopDialogBean(var content: String = "", var drawable: Int)
 
 //显示余额不足的Bean
-data class NotEnoughBalanceBean(var content: String = "", var count: Int? = null, var beans: Long = 0) : BaseDialogBean()
+data class NotEnoughBalanceBean(
+    var content: String = "",
+    var count: Int? = null,
+    var beans: Long = 0
+) : BaseDialogBean()
 
 //赠送礼物的结果bean
 data class SendGiftResult(
@@ -1222,7 +1239,11 @@ data class CountItem(
 data class PrivateMessageBean(var userId: Int = -1, var nickName: String = "") : Serializable
 
 //页面跳转的Bean
-data class JumpActivityBean(var next: Class<out Activity>, var intentFlag: Int = 0, var extra: Bundle? = null)
+data class JumpActivityBean(
+    var next: Class<out Activity>,
+    var intentFlag: Int = 0,
+    var extra: Bundle? = null
+)
 
 //显示用户信息弹窗的Bean
 data class UserInfoBean(
@@ -1244,17 +1265,26 @@ data class GoToUrl(var needLogin: Boolean = false, var url: String = "")
  * @param itemValue 字段类型
  *
  */
-data class ManagerInfo(var itemKey: String = "", var itemName: String = "", var itemValue: String = "") : Serializable
+data class ManagerInfo(
+    var itemKey: String = "",
+    var itemName: String = "",
+    var itemValue: String = ""
+) : Serializable
 
 /**
  * 查询余额的返回对象
  */
-data class BeansResult(var beans: Long = 0, var danMuCard: Int = 0, var lightGunCardNum: Int = 0) : Serializable
+data class BeansResult(var beans: Long = 0, var danMuCard: Int = 0, var lightGunCardNum: Int = 0) :
+    Serializable
 
 /**
  * 连麦信息返回对象
  */
-data class QueryMicInfo(var anchors: ArrayList<MicAnchor> = arrayListOf(), var micId: Long = 0, var status: String = "") : Serializable
+data class QueryMicInfo(
+    var anchors: ArrayList<MicAnchor> = arrayListOf(),
+    var micId: Long = 0,
+    var status: String = ""
+) : Serializable
 
 /**
  * 连麦设置接口
@@ -1842,7 +1872,8 @@ data class BannerStatusBean(var showPopup: Boolean = false, var adCode: String =
 /**
  * banner校验结果
  */
-data class SingleBannerCheckResult(var adCode: String = "", var showPopup: Boolean = false) : Serializable
+data class SingleBannerCheckResult(var adCode: String = "", var showPopup: Boolean = false) :
+    Serializable
 
 //豪车工厂初始化数据
 data class LuxuryCarFactoryBasic(
@@ -2746,7 +2777,11 @@ data class OnlineUserInfo(
  * 在线用户信息
  * @author WanZhiYuan
  */
-class NewOnlineData<T>(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) :
+class NewOnlineData<T>(
+    isPull: Boolean = false,
+    hasMore: Boolean = false,
+    extDataJson: String? = null
+) :
     RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
     var royalHonorList: List<T>? = null
 
@@ -3018,7 +3053,8 @@ data class HitPlanetBean(
 /**
  * 打开直播间的同时 需要打开[operate]弹窗的操作 附带[params]参数
  */
-data class OpenOperateBean(var operate: String, var params: HashMap<String, Any>? = null) : Serializable
+data class OpenOperateBean(var operate: String, var params: HashMap<String, Any>? = null) :
+    Serializable
 
 /**
  * 星球  奖励
@@ -3328,5 +3364,47 @@ data class ThemeProgram(
     var showTimeTtl: Long = 0,
     var showType: String = ""
 )
+
+/**
+ * 节目关注列表
+ * @author WanZhiYuan
+ * @date 2020/07/15
+ * @since 1.0.0
+ */
+data class LiveRemindBeans(
+    //主播id
+    var anchorId: Int = 0,
+    //主播头像
+    var anchorPic: String = "",
+    //直播中
+    var livingStatus: Boolean = false,
+    //PC直播中
+    var pcLiveStatus: Boolean = false,
+    //开启通知
+    var pushOpen: Boolean = false,
+    //最后直播时间
+    var lastShowTime: String = "",
+    //签名
+    var mySign: String = "",
+    //昵称
+    var nickname: String = "",
+    //在线人数
+    var onlineUserNum: Int = 0,
+    //节目id
+    var programId: Int = 0,
+    //节目名称
+    var programName: String = ""
+) : Serializable {
+    override fun equals(other: Any?): Boolean {
+        if (other is LiveRemindBeans) {
+            return other.programId == this.programId
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return programId.hashCode()
+    }
+}
 
 

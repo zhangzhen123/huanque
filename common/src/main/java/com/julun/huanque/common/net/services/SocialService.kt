@@ -1,6 +1,7 @@
 package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.VoidForm
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.EmptyForm
@@ -125,4 +126,14 @@ interface SocialService {
      */
     @POST("social/friend/relation/recover")
     suspend fun recover(@Body form: FriendIdForm): Root<VoidResult>
+    /**
+     * 获取用户消息设置
+     */
+    @POST("social/user/message/settings")
+    suspend fun settings(@Body form: VoidForm = VoidForm()): Root<MessageSettingBean>
+    /**
+     * 更新用户消息设置
+     */
+    @POST("social/user/message/updateSettings")
+    suspend fun updateSettings(@Body form: SettingForm): Root<VoidResult>
 }

@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import cn.jiguang.verifysdk.api.AuthPageEventListener
 import cn.jiguang.verifysdk.api.JVerificationInterface
 import cn.jiguang.verifysdk.api.JVerifyUIConfig
@@ -23,16 +24,23 @@ import cn.jiguang.verifysdk.api.LoginSettings
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.helper.DensityHelper
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.support.LoginManager
+import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.act_login.*
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.textColor
 
 /**
@@ -64,6 +72,9 @@ class LoginActivity : BaseActivity() {
         initFastLogin()
     }
 
+    override fun isRegisterEventBus(): Boolean {
+        return true
+    }
     /**
      * 初始化ViewModel
      */
@@ -92,6 +103,9 @@ class LoginActivity : BaseActivity() {
                 val intent = Intent(this, PhoneNumLoginActivity::class.java)
                 startActivity(intent)
             }
+        }
+        view_weixin.onClickNew {
+            WXApiManager.doLogin(this)
         }
     }
 
@@ -300,6 +314,12 @@ class LoginActivity : BaseActivity() {
             startActivity(intent)
         }
         super.finish()
+
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveWeiXinCode(event:WeiXinCodeEvent){
+        logger.info("收到微信登录code:${event.code}")
+        mViewModel?.weiXinLogin(event.code)
 
     }
 

@@ -259,11 +259,11 @@ class SysMsgActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         MessageProcessor.privateTextProcessor = null
-        setResult(ActivityCodes.RESPONSE_CODE_NORMAL)
+        setResult(ActivityCodes.RESPONSE_CODE_REFRESH)
     }
 
     override fun onBackPressed() {
-        setResult(ActivityCodes.RESPONSE_CODE_NORMAL)
+        setResult(ActivityCodes.RESPONSE_CODE_REFRESH)
         super.onBackPressed()
     }
 }

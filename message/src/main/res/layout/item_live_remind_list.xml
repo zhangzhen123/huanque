@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_80">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/ivHead"
+        android:layout_width="@dimen/dimen_56"
+        android:layout_height="@dimen/dimen_56"
+        app:failureImage="@mipmap/icon_logo_avatar_yellow"
+        app:failureImageScaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@mipmap/logo_placeholder"
+        app:placeholderImageScaleType="centerCrop"
+        app:roundAsCircle="true" />
+
+
+    <TextView
+        android:id="@+id/tvNickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_15"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:maxLines="1"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toTopOf="@+id/tvSign"
+        app:layout_constraintLeft_toRightOf="@+id/ivHead"
+        app:layout_constraintTop_toTopOf="@+id/ivHead"
+        tools:text="昵称五个…" />
+
+    <TextView
+        android:id="@+id/tvSign"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dimen_20"
+        android:adjustViewBounds="true"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:maxLines="1"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@+id/ivHead"
+        app:layout_constraintLeft_toLeftOf="@+id/tvNickname"
+        app:layout_constraintRight_toLeftOf="@+id/ivPush"
+        app:layout_constraintTop_toBottomOf="@+id/tvNickname" />
+
+    <ImageView
+        android:id="@+id/ivPush"
+        android:layout_width="wrap_content"
+        android:layout_height="0px"
+        android:src="@drawable/sel_msg_setting"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

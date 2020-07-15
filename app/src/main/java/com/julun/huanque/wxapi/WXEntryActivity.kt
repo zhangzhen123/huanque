@@ -4,13 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.julun.huanque.activity.FillInformationActivity
+import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.app.HuanQueApp
-import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.suger.hideDialogs
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.viewmodel.WechatViewModel
 import com.tencent.mm.opensdk.constants.ConstantsAPI
@@ -23,14 +27,14 @@ import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
  * @since 4.27
  * @date 2020/03/05 0005
  */
-class WXEntryActivity : BaseActivity(), IWXAPIEventHandler {
-    private var mViewModel: WechatViewModel? = null
+class WXEntryActivity : AppCompatActivity(), IWXAPIEventHandler {
+    private val mViewModel: WechatViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prepareViewModel()
         // 微信事件回调接口注册
-        logger.info("设置微信组件回调接口")
+        logger("设置微信组件回调接口")
         this.handleIntent(intent)
     }
 
@@ -45,13 +49,14 @@ class WXEntryActivity : BaseActivity(), IWXAPIEventHandler {
     }
 
     private fun prepareViewModel() {
-        mViewModel = ViewModelProviders.of(this).get(WechatViewModel::class.java)
-        mViewModel?.finish?.observe(this, Observer {
+        mViewModel.finish.observe(this, Observer {
             if (it) {
                 finish()
             }
         })
-        mViewModel?.showDialog?.observe(this, Observer<String> { it ->
+        //
+
+        mViewModel.showDialog.observe(this, Observer<String> { it ->
             var str = it
             if (TextUtils.isEmpty(str)) {
                 str = ""
@@ -76,7 +81,7 @@ class WXEntryActivity : BaseActivity(), IWXAPIEventHandler {
             }
             finish()
         } else {
-            mViewModel?.onEntryResp(p0)
+            mViewModel.onEntryResp(p0)
         }
     }
 
@@ -92,9 +97,5 @@ class WXEntryActivity : BaseActivity(), IWXAPIEventHandler {
         super.onDestroy()
         this.hideDialogs()
     }
-
-    override fun getLayoutId(): Int = 0
-
-    override fun initViews(rootView: View, savedInstanceState: Bundle?) {}
 
 }
