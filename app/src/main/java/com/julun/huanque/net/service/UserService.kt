@@ -48,6 +48,18 @@ interface UserService {
     suspend fun mobileLogin(@Body form: MobileLoginForm): Root<Session>
 
     /**
+     * 微信登录
+     */
+    @POST("user/acct/login/weixin")
+    suspend fun weiXinLogin(@Body form: WeiXinForm): Root<Session>
+
+    /**
+     * 退出登录
+     */
+    @POST("user/acct/login/logout")
+    suspend fun logout(@Body form: EmptyForm = EmptyForm()): Root<Session>
+
+    /**
      * 手机号一键登录
      */
     @POST("user/acct/login/mobileQuick")

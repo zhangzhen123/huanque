@@ -1,13 +1,36 @@
 package com.julun.huanque.support
 
+import com.alibaba.android.arouter.launcher.ARouter
+import com.ishumei.smantifraud.SmAntiFraud
+import com.julun.huanque.BuildConfig
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.bean.forms.MobileLoginForm
+import com.julun.huanque.common.bean.forms.MobileQuickForm
+import com.julun.huanque.common.bean.forms.WeiXinForm
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.database.table.Session
+import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.interfaces.routerservice.AppCommonService
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.manager.SessionManager
+import com.julun.huanque.common.net.NAction
+import com.julun.huanque.common.net.NError
+import com.julun.huanque.common.net.Requests
+import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.ULog
+import com.julun.huanque.net.service.UserService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.rong.imlib.RongIMClient
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
+import java.lang.Exception
+import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 /**
@@ -21,36 +44,179 @@ import java.util.concurrent.TimeUnit
 object LoginManager {
     val logger = ULog.getLogger("LoginManager")
     const val WECHAT_LOGIN = 0
-    const val QQ_LOGIN = 1
+    const val MOBILE_LOGIN = 1
+    const val MOBILE_FAST_LOGIN = 2
+    const val QQ_LOGIN = 3
+    private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
-    /**
-     * 对登录成功回调后 统一请求后台和回调
-     */
-    fun loginSuccess(type: Int, code: String/*, loginSuccess: () -> Unit = {}*/) {
-        when (type) {
-            WECHAT_LOGIN -> {
-                doLoginByWinXin(code) {
-//                    SharedPreferencesUtils.commitString(ParamConstant.LAST_LOGIN_TYPE, BusiConstant.WEIXIN)
-                    delayCallBack()
+//    /**
+//     * 对第三方登录成功回调后 统一请求后台和回调
+//     */
+//    suspend fun callbackSuccess(type: Int, code: String, loginSuccess: (Session) -> Unit = {}) {
+//        when (type) {
+//            WECHAT_LOGIN -> {
+//                doLoginByWinXin(code) {
+//                    delayToConnectRong()
+//                    loginSuccess(it)
+//                }
+//            }
+//            QQ_LOGIN -> {
+//                //增加一个小延时 qq授权后可能无法后台立即刷新权限 延时再去获取试试 todo
+////                Observable.timer(200, TimeUnit.MILLISECONDS)
+////                    .observeOn(AndroidSchedulers.mainThread())
+////                    .subscribe {
+////                        doLoginByQQ(code) {
+////                            delayToConnectRong()
+////                            loginSuccess()
+////                        }
+////                    }
+//            }
+//        }
+//    }
+
+
+    //微信登录接口是否处于请求中
+    private var isLogging = false
+
+    // 微信授权登录
+    suspend fun doLoginByWinXin(code: String, success: (Session) -> Unit) {
+        if (isLogging) {
+            ToastUtils.show("当前正在登录中，请不要重复操作")
+            return
+        }
+//        GlobalScope.launch {
+            try {
+                isLogging = true
+                val deviceID = SmAntiFraud.getDeviceId() ?: ""
+                val result = userService.weiXinLogin(WeiXinForm(code, BuildConfig.WX_APP_ID, deviceID)).dataConvert()
+                loginSuccess(result, WECHAT_LOGIN)
+                // 当前连接着融云，先退出，因为token变了，需要退出重连
+                processRongYun(result, success)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                var message = "${e.message}"
+                if (e is SocketTimeoutException) {
+                    message = "连接超时,可能是网络不太好,您可以稍后重试"
                 }
+                if (e is ResponseError) {
+                    message = e.busiMessage
+                }
+                ToastUtils.show("登陆出错!\n $message ")
+            } finally {
+                isLogging = false
             }
-            QQ_LOGIN -> {
-                //增加一个小延时 qq授权后可能无法后台立即刷新权限 延时再去获取试试
-                Observable.timer(200, TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        doLoginByQQ(code) {
-//                                SharedPreferencesUtils.commitString(ParamConstant.LAST_LOGIN_TYPE, BusiConstant.QQ)
-                            delayCallBack()
-                        }
-                    }
-            }
+//        }
+    }
+
+    //手机登录
+    suspend fun loginByMobile(phoneNum: String, code: String, success: (Session) -> Unit, error: NError? = null) {
+        if (isLogging) {
+            ToastUtils.show("当前正在登录中，请不要重复操作")
+            return
+        }
+        try {
+            isLogging = true
+            val result =
+                userService.mobileLogin(MobileLoginForm(phoneNum, code, shuMeiDeviceId = SmAntiFraud.getDeviceId() ?: ""))
+                    .dataConvert()
+            loginSuccess(result, MOBILE_LOGIN)
+            // 当前连接着融云，先退出，因为token变了，需要退出重连
+            processRongYun(result, success)
+        } catch (e: Exception) {
+            error?.invoke(e)
+        } finally {
+            isLogging = false
         }
     }
+
+    /**
+     * 手机号一键登录
+     */
+    suspend fun fastLogin(jToken: String, success: (Session) -> Unit, error: NError? = null) {
+        if (isLogging) {
+            ToastUtils.show("当前正在登录中，请不要重复操作")
+            return
+        }
+        try {
+            isLogging = true
+            val result = userService.mobileQuick(MobileQuickForm(jToken, SmAntiFraud.getDeviceId() ?: "")).dataConvert()
+            loginSuccess(result, MOBILE_FAST_LOGIN)
+            // 当前连接着融云，先退出，因为token变了，需要退出重连
+            processRongYun(result, success)
+        } catch (e: Exception) {
+            error?.invoke(e)
+        } finally {
+            isLogging = false
+        }
+    }
+
+    //处理融云
+    private fun processRongYun(result: Session, success: (Session) -> Unit) {
+        if (result.regComplete) {
+            if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
+                RongCloudManager.logout {
+                    delayToConnectRong()
+                    success(result)
+                }
+            } else {
+                delayToConnectRong()
+                success(result)
+            }
+
+        }else{
+            success(result)
+        }
+
+    }
+
+    /**
+     * 登录成功
+     */
+    private fun loginSuccess(it: Session, type: Int = 0) {
+        SessionUtils.setSession(it)
+        //通知登录成功
+        if(it.regComplete){
+            (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
+                .navigation() as? AppCommonService)?.loginSuccess(it)
+            EventBus.getDefault().post(LoginEvent(true))
+        }
+
+    }
+
+    /**
+     * 完善注册后 代表真正的成功
+     */
+    fun loginSuccessComplete(){
+        SessionUtils.setRegComplete(true)
+        (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
+            .navigation() as? AppCommonService)?.loginSuccess(SessionUtils.getSession())
+        EventBus.getDefault().post(LoginEvent(true))
+        //连接融云
+        RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
+    }
+
+    fun doLoginOut(callback: (Boolean) -> Unit) {
+        GlobalScope.launch {
+            kotlin.runCatching {
+                /*  val result = */userService.logout().dataConvert()
+                SessionUtils.clearSession()
+                if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED)
+                    RongCloudManager.logout { callback(true) }
+                else {
+                    callback(true)
+                }
+                EventBus.getDefault().post(LoginEvent(false))
+            }.onFailure {
+                callback(false)
+            }
+        }
+
+    }
+
     /**
      * 之所以加延迟 是为了确保融云已经断开 如果直接重连可能会失败 融云会有延迟
      */
-    private fun delayCallBack(loginSuccess: () -> Unit = {}) {
+    private fun delayToConnectRong() {
         RongCloudManager.clearRoomList()
         Observable.timer(100, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
@@ -58,82 +224,8 @@ object LoginManager {
                 //后台获取ImToken成功   连接融云
                 ULog.i("DXC 登录成功  连接融云")
                 RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
-                EventBus.getDefault().post(LoginEvent(true))
-                loginSuccess()
             }
     }
-
-    //微信登录接口是否处于请求中
-    private var wxLogining = false
-
-    // 微信授权登录
-    fun doLoginByWinXin(code: String, callback: () -> Unit = {}) {
-//        if (wxLogining) {
-//            return
-//        }
-//        wxLogining = true
-//        val deviceID = (ProviderPoolManager.getService(ARouterConstant.SHUMEI_SERVICE) as? ShuMeiDeviceIdService)?.getDeviceId() ?: ""
-//        service.loginByWeixin(NewWeixinOpenLoginForm(code, programId, deviceID)).handleResponse(makeSubscriber<NewSession> {
-//            loginSuccess(it, "微信")
-//            // 当前连接着融云，先退出，因为token变了，需要退出重连
-//            if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
-//                RongCloudManager.logout(callback)
-//            } else {
-//                callback()
-//            }
-//        }.ifError {
-//            var message = "${it.message}"
-//            if (it is SocketTimeoutException) {
-//                message = "连接超时,可能是网络不太好,您可以稍后重试"
-//            }
-//            if (it is ResponseError) {
-//                message = it.busiMessage
-//                EventBus.getDefault().post(LoginErrorEvent(it.busiCode))
-//            }
-//            showErrorAlertView(0, "登陆出错!\n $message ")
-//        }.withSpecifiedCodes(-1).withFinalCall { wxLogining = false })
-
-    }
-
-    //快捷登录接口是否处于请求中
-    private var mFastLogining = false
-
-    /**
-     * 手机号快捷登录
-     */
-    fun doLoginByFastLogin(loginToken: String, callback: () -> Unit = {}, errCallback: (ResponseError) -> Unit) {
-//        val deviceID = (ProviderPoolManager.getService(ARouterConstant.SHUMEI_SERVICE) as? ShuMeiDeviceIdService)?.getDeviceId() ?: ""
-//        service.mobileQuickLogin(MobileFastLoginForm(loginToken, programId, deviceID))
-//                .handleResponse(makeSubscriber<NewSession> {
-//                    loginSuccess(it, "本机号码")
-//                    // 当前连接着融云，先退出，因为token变了，需要退出重连
-//                    if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
-//                        RongCloudManager.logout(callback)
-//                    } else {
-//                        callback()
-//                    }
-//                }.ifError {
-//                    var message = "${it.message}"
-//                    if (it is SocketTimeoutException) {
-//                        message = "连接超时,可能是网络不太好,您可以稍后重试"
-//                    }
-//                    if (it is ResponseError) {
-//                        EventBus.getDefault().post(LoginErrorEvent(it.busiCode))
-//                        when (it.busiCode) {
-//                            5015, 5011, 5012, 5010, 501 -> {
-//                                ToastUtils.show(it.busiMessage)
-//                            }
-//                            else -> {
-//                                ToastUtils.show(message)
-//                            }
-//                        }
-//                    }
-//                    errCallback()
-//                }.withSpecifiedCodes(5015, 5011, 5012, 5010, 501))
-    }
-
-    //QQ登录接口是否处于请求中
-    private var qqLogining = false
 
     //qq授权登录
     fun doLoginByQQ(code: String, callback: () -> Unit = {}) {
@@ -165,38 +257,4 @@ object LoginManager {
 //        }.withSpecifiedCodes(-1).withFinalCall { qqLogining = false })
 
     }
-
-    //手机登录
-    fun loginByMobile(mobile: String, code: String, callback: () -> Unit = {}, errCallback: (ResponseError) -> Unit) {
-        // 这里如果本地存在游客sessionId，
-        // 就传入游客的sessionId进行回收
-//        val deviceID = (ProviderPoolManager.getService(ARouterConstant.SHUMEI_SERVICE) as? ShuMeiDeviceIdService)?.getDeviceId() ?: ""
-//        service.loginByMobile(MobileLoginForm(mobile, code, programId, deviceID)).handleResponse(makeSubscriber<NewSession> {
-//            loginSuccess(it, "其他手机")
-//            // 当前连接着融云，先退出，因为token变了，需要退出重连
-//            if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
-//                RongCloudManager.logout(callback)
-//            } else {
-//                callback()
-//            }
-//        }.ifError {
-//            var message = "${it.message}"
-//            if (it is SocketTimeoutException) {
-//                message = "连接超时,可能是网络不太好,您可以稍后重试"
-//            }
-//            if (it is ResponseError) {
-//                EventBus.getDefault().post(LoginErrorEvent(it.busiCode))
-//                when (it.busiCode) {
-//                    5015, 5011, 5012, 5010, 501 -> {
-//                        ToastUtils.show(it.busiMessage)
-//                    }
-//                    else -> {
-//                        ToastUtils.show(message)
-//                    }
-//                }
-//            }
-//            errCallback()
-//        }.withSpecifiedCodes(5015, 5011, 5012, 5010, 501))
-    }
-
 }

@@ -1,7 +1,5 @@
 package com.julun.huanque.common.utils
 
-import com.julun.huanque.common.manager.SessionManager
-
 import io.rong.imlib.RongIMClient
 
 /**
@@ -36,5 +34,5 @@ object RongCloudUtils {
     /**
      * 是否需要验证session
      */
-    fun isNeedCheckSession() = SessionUtils.getSessionId().isNotEmpty() && !SessionManager.isCheckSession
+//    fun isNeedCheckSession() = SessionUtils.getSessionId().isNotEmpty() && !SessionManager.isCheckSession
 }

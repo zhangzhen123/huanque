@@ -9,12 +9,22 @@ package com.julun.huanque.common.bean.forms
 /**
  * 手机号登录的form
  */
-class MobileLoginForm(var mobile: String = "", var code: String = "", var programId: Int? = null, var shuMeiDeviceId: String? = null)
+class MobileLoginForm(
+    var mobile: String = "",
+    var code: String = "",
+    var programId: Int? = null,
+    var shuMeiDeviceId: String? = null
+)
 
 /**
  * 手机号一键登录form
  */
 class MobileQuickForm(var loginToken: String = "", var shuMeiDeviceId: String = "")
+
+/**
+ * 微信登录form
+ */
+class WeiXinForm(var code: String, var appId: String = "", var shuMeiDeviceId: String = "")
 
 /**
  * 更新基础数据的form
@@ -48,4 +58,4 @@ class GetValidCode {
  */
 class AgreementResultForm(var result: String = "True", var agreementCode: String = "")
 
-class UpdateHeadForm(var headPic: String )
+class UpdateHeadForm(var headPic: String)

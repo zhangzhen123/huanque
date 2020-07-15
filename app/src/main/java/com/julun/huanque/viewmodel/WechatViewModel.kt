@@ -1,10 +1,13 @@
 package com.julun.huanque.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.events.PayResultEvent
+import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.PayResult
 import com.julun.huanque.common.constant.PayType
+import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.support.LoginManager
@@ -12,6 +15,8 @@ import com.julun.huanque.support.WXApiManager
 import com.tencent.mm.opensdk.constants.ConstantsAPI
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.modelmsg.SendAuth
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -23,6 +28,7 @@ import org.greenrobot.eventbus.EventBus
 class WechatViewModel : BaseViewModel() {
 
     val finish: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     val showDialog: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
     /**
@@ -73,7 +79,9 @@ class WechatViewModel : BaseViewModel() {
         when (errCode) {
             BaseResp.ErrCode.ERR_OK -> {
                 logger("请求微信登录成功返回，code = $code")
-                LoginManager.loginSuccess(LoginManager.WECHAT_LOGIN, code ?: "")
+                if(code!=null){
+                    EventBus.getDefault().post(WeiXinCodeEvent(code))
+                }
                 finish.value = true
             }
             BaseResp.ErrCode.ERR_USER_CANCEL -> {

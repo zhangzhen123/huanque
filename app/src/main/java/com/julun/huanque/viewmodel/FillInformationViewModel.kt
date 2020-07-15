@@ -14,6 +14,7 @@ import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.net.service.UserService
+import com.julun.huanque.support.LoginManager
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -88,7 +89,7 @@ class FillInformationViewModel : BaseViewModel() {
      */
     fun headerSuccess(headerPic: String) {
         SessionUtils.setHeaderPic(headerPic)
-        SessionUtils.setRegComplete(true)
+        LoginManager.loginSuccessComplete()
     }
 
     /**

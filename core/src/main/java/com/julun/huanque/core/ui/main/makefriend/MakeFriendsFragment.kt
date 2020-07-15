@@ -16,6 +16,7 @@ import com.julun.huanque.common.bean.beans.HeadModule
 import com.julun.huanque.common.bean.beans.HomeItemBean
 import com.julun.huanque.common.bean.beans.HomeRecomItem
 import com.julun.huanque.common.bean.beans.PhotoBean
+import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
@@ -28,6 +29,8 @@ import com.julun.huanque.core.R
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_make_friend.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
@@ -44,6 +47,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     override fun getLayoutId(): Int {
         return R.layout.fragment_make_friend
     }
+
+    override fun isRegisterEventBus(): Boolean =true
 
     private val audioPlayerManager: AudioPlayerManager by lazy { AudioPlayerManager(requireContext()) }
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -119,12 +124,15 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             val item = mAdapter.getItem(position) ?: return@setOnItemClickListener
             if (item.showType == HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION) {
                 logger.info("跳转编辑资料页")
-            }else if(item.showType==HomeItemBean.NORMAL){
-                val bean=item.content as? HomeRecomItem?:return@setOnItemClickListener
-                if(bean.userId==SessionUtils.getUserId()){
-                    RNPageActivity.start(requireActivity(),RnConstant.MINE_HOMEPAGE)
-                }else{
-                    RNPageActivity.start(requireActivity(),RnConstant.PERSONAL_HOMEPAGE,Bundle().apply { putLong("userId",bean.userId) })
+            } else if (item.showType == HomeItemBean.NORMAL) {
+                val bean = item.content as? HomeRecomItem ?: return@setOnItemClickListener
+                if (bean.userId == SessionUtils.getUserId()) {
+                    RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
+                } else {
+                    RNPageActivity.start(
+                        requireActivity(),
+                        RnConstant.PERSONAL_HOMEPAGE,
+                        Bundle().apply { putLong("userId", bean.userId) })
                 }
 
             }
@@ -295,4 +303,12 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveLoginCode(event: LoginEvent) {
+        logger.info("登录事件:${event.result}")
+        if (event.result) {
+            mViewModel.queryInfo(QueryType.REFRESH)
+        }
+
+    }
 }

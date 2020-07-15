@@ -115,10 +115,11 @@ class FillInformationActivity : BaseActivity() {
         mViewModel?.uploadHeadState?.observe(this, Observer {
             if (it != null) {
                 startActivity(Intent(this, LoginActivity::class.java))
-                if(mLoadingDialog.isShowing){
-                    mLoadingDialog.dismiss()
-                }
             }
+            if(mLoadingDialog.isShowing){
+                mLoadingDialog.dismiss()
+            }
+
         })
     }
 

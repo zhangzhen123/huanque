@@ -15,6 +15,8 @@ import com.julun.huanque.R
 import com.julun.huanque.app.HuanQueApp
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
+import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ConmmunicationUserType
 import com.julun.huanque.common.constant.ParamKey
@@ -33,6 +35,8 @@ import com.julun.maplib.LocationService
 import com.julun.rnlib.RNPageFragment
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 @Route(path = ARouterConstant.MAIN_ACTIVITY)
 class MainActivity : BaseActivity() {
@@ -74,12 +78,12 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun isRegisterEventBus(): Boolean=true
+
     override fun getLayoutId() = R.layout.main_activity
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         CommonInit.getInstance().setMainActivity(this)
-        //连接融云
-        RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
         logger.info("DXC  userID = ${SessionUtils.getUserId()}，header = ${SessionUtils.getHeaderPic()}")
         setContentView(R.layout.main_activity)
         initViewModel()
@@ -293,6 +297,14 @@ class MainActivity : BaseActivity() {
                 mMainViewModel?.getVoiceCallInfo(data.callId)
             }
         })
+
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveLoginCode(event: LoginEvent){
+        logger.info("登录事件:${event.result}")
+        if(event.result){
+
+        }
 
     }
 

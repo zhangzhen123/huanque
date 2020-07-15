@@ -2,17 +2,14 @@ package com.julun.huanque.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.ishumei.smantifraud.SmAntiFraud
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.database.table.Session
-import com.julun.huanque.common.bean.forms.MobileQuickForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.manager.SessionManager
+import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.net.service.UserService
+import com.julun.huanque.support.LoginManager
 import kotlinx.coroutines.launch
 
 /**
@@ -31,16 +28,34 @@ class LoginViewModel : BaseViewModel() {
      */
     fun fastLogin(jToken: String) {
         viewModelScope.launch {
-            request({
-                val result = userService.mobileQuick(MobileQuickForm(jToken, SmAntiFraud.getDeviceId() ?: "")).dataConvert()
-                SessionManager.loginSuccess(result)
+//            request({
+//                val result = userService.mobileQuick(MobileQuickForm(jToken, SmAntiFraud.getDeviceId() ?: "")).dataConvert()
+//                SessionManager.loginSuccess(result)
+//                loginData.postValue(result)
+//            }, {
+//                if (it is ResponseError) {
+//                    ToastUtils.show(it.busiMessage)
+//                }
+//            })
+            LoginManager.fastLogin(jToken, success = { result ->
                 loginData.postValue(result)
-            }, {
+            }, error = {
                 if (it is ResponseError) {
                     ToastUtils.show(it.busiMessage)
                 }
             })
+        }
+    }
+
+    fun weiXinLogin(code:String){
+        logger("weiXinLogin的线程：${Thread.currentThread().name}")
+        viewModelScope.launch {
+            LoginManager.doLoginByWinXin(code) {
+                logger("weiXinLogin处理结果的线程：${Thread.currentThread().name}")
+                loginData.postValue(it)
+            }
 
         }
+        logger("weiXinLogin后当前的线程：${Thread.currentThread().name}")
     }
 }

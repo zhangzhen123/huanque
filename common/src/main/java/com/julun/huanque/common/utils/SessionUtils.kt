@@ -1,7 +1,6 @@
 package com.julun.huanque.common.utils
 
 import com.julun.huanque.common.database.table.Session
-import com.julun.huanque.common.manager.SessionManager
 
 /**
  * 重要的信息和启动配参放在这里 不重要的参数放在[com.julun.huanque.common.helper.StorageHelper]中 以提高初始化效率
@@ -16,7 +15,7 @@ object SessionUtils {
     private val NICK_NAME: String = "NICK_NAME"
 
     //头像
-    private val HEAD_PIC: String = ""
+    private val HEAD_PIC: String = "HEAD_PIC"
 
     //用户类型
     private val USER_TYPE = "USER_TYPE"
@@ -39,8 +38,13 @@ object SessionUtils {
     //用户性别
     private var SEX = "SEX"
 
+    //是否验证过session
+    var isCheckSession = false
+
+    var currentSession:Session?=null
     fun setSession(session: Session) {
-        SessionManager.isCheckSession = true
+        currentSession=session
+        isCheckSession = true
         setSessionId(session.sessionId)
         setUserId(session.userId)
         setNickName(session.nickname)
@@ -54,8 +58,24 @@ object SessionUtils {
         setSex(session.sex)
     }
 
+    fun getSession():Session{
+        return currentSession?:Session().apply {
+            this.sessionId= getSessionId()
+            this.nickname= getNickName()
+            this.userId= getUserId()
+            this.headPic= getHeaderPic()
+            this.userType= getUserType()
+            this.voiceToken= getAgoraToken()
+            this.newUser= getNewUser()
+            this.regComplete= getRegComplete()
+            this.imToken= getRongImToken()
+            this.regUser= getIsRegUser()
+            this.sex= getSex()
+        }
+    }
     //与deleteSession合并 不再单独调用
     fun clearSession() {
+        currentSession=null
         setSessionId("")
         setUserId(0)
         setNickName("")
@@ -164,85 +184,4 @@ object SessionUtils {
 
     fun getSex() = SharedPreferencesUtils.getString(SEX, "")
 
-//
-//
-//    //保存Session
-//    fun saveSession(session: NewSession) {
-//        //加入数据库有延迟，先保存在SP。保存数据库出错，直接删除
-//        setSession(session)
-//        Completable.fromAction {
-//            val database = huanqueDatabase.getInstance()
-//            try {
-//                database.beginTransaction()
-//                database.sessionDao().deleteSession()
-//                database.sessionDao().insert(session)
-//                database.setTransactionSuccessful()
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                ULog.i("Planet 设置sessionId 3")
-//                clearSession()
-//            } finally {
-//                database.endTransaction()
-//            }
-//        }.subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({
-//                    //                    setSession(session)
-//                }, { e ->
-//                    e.printStackTrace()
-//                    ULog.i("Planet 设置sessionId 4")
-//                    clearSession()
-//                })
-//
-//    }
-//
-//    //session过期 /  退出登录   删除  session
-//    fun deleteSession(callback: () -> Unit = {}) {
-//        val database = huanqueDatabase.getInstance()
-//        Observable.create<NewSession> {
-//            val session = database.sessionDao().getSingleSession()
-//            if (session != null) {
-//                it.onNext(session)
-//                it.onComplete()
-//            } else {
-//                it.onComplete()
-//            }
-//        }.map {
-//            try {
-//                ULog.i("Planet 设置sessionId 5")
-//                clearSession()//合并处理 不再单独调用
-//                database.beginTransaction()
-//                it.isLogin = false
-//                database.sessionDao().insert(it)
-////                database.messageDao().clearMessageBean()//清空系统消息
-//                database.setTransactionSuccessful()
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            } finally {
-//                database.endTransaction()
-//            }
-//        }
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({
-//                    callback()
-//                    CommonInit.getInstance().getCommonListener()?.logout()
-////                    ZegoApiManager.getInstance().refreshUserInfo()
-//                }, {})
-//
-//
-//    }
-
-    /**
-     * 退出成功后操作以及回调
-     */
-    fun loginOutSuccess(callback: () -> Unit) {
-//        deleteSession {
-//            if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED)
-//                RongCloudManager.logout(callback)
-//            else {
-//                callback()
-//            }
-//        }
-    }
 }

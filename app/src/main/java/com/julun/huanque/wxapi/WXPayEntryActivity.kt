@@ -3,10 +3,10 @@ package com.julun.huanque.wxapi
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.julun.huanque.app.HuanQueApp
-import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.viewmodel.WechatViewModel
 import com.tencent.mm.opensdk.modelbase.BaseReq
@@ -17,9 +17,9 @@ import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
  * Created by djp on 2016/11/20.
  */
 
-class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
+class WXPayEntryActivity : AppCompatActivity(), IWXAPIEventHandler {
 
-    private var mViewModel: WechatViewModel? = null
+    private val mViewModel: WechatViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +39,7 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
     }
 
     private fun prepareViewModel() {
-        mViewModel = ViewModelProviders.of(this).get(WechatViewModel::class.java)
-        mViewModel?.finish?.observe(this, Observer {
+        mViewModel.finish.observe(this, Observer {
             if (it) {
                 finish()
             }
@@ -61,15 +60,11 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
      * @param baseResp
      */
     override fun onResp(resp: BaseResp) {
-        mViewModel?.onPayEntryResp(resp)
+        mViewModel.onPayEntryResp(resp)
     }
 
     override fun onBackPressed() {
         startActivity(Intent(this, RechargeCenterActivity::class.java))
         finish()
     }
-
-    override fun getLayoutId(): Int = 0
-
-    override fun initViews(rootView: View, savedInstanceState: Bundle?) {}
 }

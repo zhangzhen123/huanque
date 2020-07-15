@@ -23,6 +23,7 @@ import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
+import com.julun.huanque.support.LoginManager
 import com.julun.jpushlib.TagAliasOperatorHelper
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnManager
@@ -109,7 +110,11 @@ class TestActivity : BaseActivity() {
             ARouter.getInstance().build(ARouterConstant.REALNAME_MAIN_ACTIVITY).navigation()
         }
         tv_clear_session.onClickNew {
-            SessionUtils.clearSession()
+            LoginManager.doLoginOut {
+                if(it){
+                    logger.info("退出登录成功")
+                }
+            }
         }
         report.onClickNew {
             val extra = Bundle()
