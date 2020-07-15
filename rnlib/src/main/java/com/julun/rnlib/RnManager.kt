@@ -16,6 +16,7 @@ import com.julun.huanque.common.suger.logger
 import com.julun.rnlib.reactpackage.OpenPageReactPackage
 import com.julun.rnlib.reactpackage.RequestInfoReactPackage
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage
+import com.swmansion.reanimated.ReanimatedPackage
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage
 import com.zmxv.RNSound.RNSoundPackage
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -45,13 +46,13 @@ object RnManager {
                 .addPackage(MainReactPackage()) // 背景色渐变：需放到application中
                 .addPackage(LinearGradientPackage()) // 请求头数据：需放到application中
                 .addPackage(RequestInfoReactPackage())
-//                .addPackage(ToastReactPackage())
                 .addPackage(OpenPageReactPackage())
                 .addPackage(RNGestureHandlerPackage())
                 .addPackage(SafeAreaContextPackage())
                 .addPackage(RNCMaskedViewPackage())
                 .addPackage(RNSoundPackage())
                 .addPackage(SvgPackage())
+                .addPackage(ReanimatedPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)
                 .setNativeModuleCallExceptionHandler {

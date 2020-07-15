@@ -1,23 +1,17 @@
 package com.julun.rnlib.module;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.julun.huanque.common.constant.ARouterConstant;
-import com.julun.huanque.common.constant.BusiConstant;
 import com.julun.huanque.common.constant.OperationType;
 import com.julun.huanque.common.constant.ParamConstant;
 import com.julun.huanque.common.utils.ULog;
-
-import java.util.Map;
 
 /**
  * 打开指定页面的交互模块
@@ -39,7 +33,7 @@ public class OpenPageModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void openPageByName(String pageName, ReadableMap params) {
+    public void openPageByName(String pageName, ReadableMap params, Promise promise) {
         ULog.Companion.i("openPageByName :" + pageName);
         try {
             switch (pageName) {
