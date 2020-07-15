@@ -29,7 +29,7 @@ object LoginManager {
     fun loginSuccess(type: Int, code: String/*, loginSuccess: () -> Unit = {}*/) {
         when (type) {
             WECHAT_LOGIN -> {
-                SessionManager.doLoginByWinXin(code) {
+                doLoginByWinXin(code) {
 //                    SharedPreferencesUtils.commitString(ParamConstant.LAST_LOGIN_TYPE, BusiConstant.WEIXIN)
                     delayCallBack()
                 }
@@ -39,7 +39,7 @@ object LoginManager {
                 Observable.timer(200, TimeUnit.MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
-                        SessionManager.doLoginByQQ(code) {
+                        doLoginByQQ(code) {
 //                                SharedPreferencesUtils.commitString(ParamConstant.LAST_LOGIN_TYPE, BusiConstant.QQ)
                             delayCallBack()
                         }
@@ -47,37 +47,6 @@ object LoginManager {
             }
         }
     }
-
-    /**
-     * 手机登录/动态码登录
-     * authToken和authCode 同时不为空  标识动态码登录
-     */
-    fun loginForMobile(
-        phone: String,
-        code: String,
-        authToken: String? = null,
-        authCode: String? = null,
-        loginSuccess: () -> Unit = {},
-        loginError: (ResponseError) -> Unit
-    ) {
-        SessionManager.loginByMobile(phone, code, {
-            //登陆成功
-            delayCallBack(loginSuccess)
-//            SharedPreferencesUtils.commitString(ParamConstant.LAST_LOGIN_TYPE, BusiConstant.PHONE)
-        }, loginError)
-    }
-
-
-    /**
-     * 手机号快捷登录
-     */
-    fun loginForFastLogin(loginToken: String, loginSuccess: () -> Unit = {}, errCallback: (ResponseError) -> Unit) {
-        SessionManager.doLoginByFastLogin(loginToken, {
-//            SharedPreferencesUtils.commitString(ParamConstant.LAST_LOGIN_TYPE, BusiConstant.PHONE)
-            delayCallBack(loginSuccess)
-        }, errCallback)
-    }
-
     /**
      * 之所以加延迟 是为了确保融云已经断开 如果直接重连可能会失败 融云会有延迟
      */
@@ -93,4 +62,141 @@ object LoginManager {
                 loginSuccess()
             }
     }
+
+    //微信登录接口是否处于请求中
+    private var wxLogining = false
+
+    // 微信授权登录
+    fun doLoginByWinXin(code: String, callback: () -> Unit = {}) {
+//        if (wxLogining) {
+//            return
+//        }
+//        wxLogining = true
+//        val deviceID = (ProviderPoolManager.getService(ARouterConstant.SHUMEI_SERVICE) as? ShuMeiDeviceIdService)?.getDeviceId() ?: ""
+//        service.loginByWeixin(NewWeixinOpenLoginForm(code, programId, deviceID)).handleResponse(makeSubscriber<NewSession> {
+//            loginSuccess(it, "微信")
+//            // 当前连接着融云，先退出，因为token变了，需要退出重连
+//            if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
+//                RongCloudManager.logout(callback)
+//            } else {
+//                callback()
+//            }
+//        }.ifError {
+//            var message = "${it.message}"
+//            if (it is SocketTimeoutException) {
+//                message = "连接超时,可能是网络不太好,您可以稍后重试"
+//            }
+//            if (it is ResponseError) {
+//                message = it.busiMessage
+//                EventBus.getDefault().post(LoginErrorEvent(it.busiCode))
+//            }
+//            showErrorAlertView(0, "登陆出错!\n $message ")
+//        }.withSpecifiedCodes(-1).withFinalCall { wxLogining = false })
+
+    }
+
+    //快捷登录接口是否处于请求中
+    private var mFastLogining = false
+
+    /**
+     * 手机号快捷登录
+     */
+    fun doLoginByFastLogin(loginToken: String, callback: () -> Unit = {}, errCallback: (ResponseError) -> Unit) {
+//        val deviceID = (ProviderPoolManager.getService(ARouterConstant.SHUMEI_SERVICE) as? ShuMeiDeviceIdService)?.getDeviceId() ?: ""
+//        service.mobileQuickLogin(MobileFastLoginForm(loginToken, programId, deviceID))
+//                .handleResponse(makeSubscriber<NewSession> {
+//                    loginSuccess(it, "本机号码")
+//                    // 当前连接着融云，先退出，因为token变了，需要退出重连
+//                    if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
+//                        RongCloudManager.logout(callback)
+//                    } else {
+//                        callback()
+//                    }
+//                }.ifError {
+//                    var message = "${it.message}"
+//                    if (it is SocketTimeoutException) {
+//                        message = "连接超时,可能是网络不太好,您可以稍后重试"
+//                    }
+//                    if (it is ResponseError) {
+//                        EventBus.getDefault().post(LoginErrorEvent(it.busiCode))
+//                        when (it.busiCode) {
+//                            5015, 5011, 5012, 5010, 501 -> {
+//                                ToastUtils.show(it.busiMessage)
+//                            }
+//                            else -> {
+//                                ToastUtils.show(message)
+//                            }
+//                        }
+//                    }
+//                    errCallback()
+//                }.withSpecifiedCodes(5015, 5011, 5012, 5010, 501))
+    }
+
+    //QQ登录接口是否处于请求中
+    private var qqLogining = false
+
+    //qq授权登录
+    fun doLoginByQQ(code: String, callback: () -> Unit = {}) {
+        // 这里如果本地存在游客sessionId，
+        // 就传入游客的sessionId进行回收
+//        if (qqLogining) {
+//            return
+//        }
+//        qqLogining = true
+//        val deviceID = (ProviderPoolManager.getService(ARouterConstant.SHUMEI_SERVICE) as? ShuMeiDeviceIdService)?.getDeviceId() ?: ""
+//        service.loginByQQ(NewQQOpenLoginForm(code, programId, deviceID)).handleResponse(makeSubscriber<NewSession> {
+//            loginSuccess(it, "QQ")
+//            // 当前连接着融云，先退出，因为token变了，需要退出重连
+//            if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
+//                RongCloudManager.logout(callback)
+//            } else {
+//                callback()
+//            }
+//        }.ifError {
+//            var message = "${it.message}"
+//            if (it is SocketTimeoutException) {
+//                message = "连接超时,可能是网络不太好,您可以稍后重试"
+//            }
+//            if (it is ResponseError) {
+//                message = it.busiMessage
+//                EventBus.getDefault().post(LoginErrorEvent(it.busiCode))
+//            }
+//            showErrorAlertView(0, "登陆出错!\n $message ")
+//        }.withSpecifiedCodes(-1).withFinalCall { qqLogining = false })
+
+    }
+
+    //手机登录
+    fun loginByMobile(mobile: String, code: String, callback: () -> Unit = {}, errCallback: (ResponseError) -> Unit) {
+        // 这里如果本地存在游客sessionId，
+        // 就传入游客的sessionId进行回收
+//        val deviceID = (ProviderPoolManager.getService(ARouterConstant.SHUMEI_SERVICE) as? ShuMeiDeviceIdService)?.getDeviceId() ?: ""
+//        service.loginByMobile(MobileLoginForm(mobile, code, programId, deviceID)).handleResponse(makeSubscriber<NewSession> {
+//            loginSuccess(it, "其他手机")
+//            // 当前连接着融云，先退出，因为token变了，需要退出重连
+//            if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
+//                RongCloudManager.logout(callback)
+//            } else {
+//                callback()
+//            }
+//        }.ifError {
+//            var message = "${it.message}"
+//            if (it is SocketTimeoutException) {
+//                message = "连接超时,可能是网络不太好,您可以稍后重试"
+//            }
+//            if (it is ResponseError) {
+//                EventBus.getDefault().post(LoginErrorEvent(it.busiCode))
+//                when (it.busiCode) {
+//                    5015, 5011, 5012, 5010, 501 -> {
+//                        ToastUtils.show(it.busiMessage)
+//                    }
+//                    else -> {
+//                        ToastUtils.show(message)
+//                    }
+//                }
+//            }
+//            errCallback()
+//        }.withSpecifiedCodes(5015, 5011, 5012, 5010, 501))
+    }
+
 }

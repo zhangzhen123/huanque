@@ -7,19 +7,19 @@
         <item name="colorAccent">@color/colorAccent_lib</item>
         <item name="android:windowBackground">@color/default_bg</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@style/FeelyouWindowAnimTheme</item>
+        <item name="android:windowAnimationStyle">@style/FeelYouWindowAnimTheme</item>
     </style>
 
     <style name="BaseAppThemeTrans" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary_lib</item>
-        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorPrimaryDark">@color/white</item>
         <item name="colorAccent">@color/colorAccent_lib</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@style/FeelyouWindowAnimTheme</item>
+        <item name="android:windowAnimationStyle">@style/FeelYouWindowAnimTheme</item>
     </style>
     <!--去除直播间默认的背景-->
     <style name="LiveTheme" parent="BaseAppTheme">
@@ -30,7 +30,7 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@style/FeelyouWindowAnimTheme</item>
+        <item name="android:windowAnimationStyle">@style/FeelYouWindowAnimTheme</item>
     </style>
     <style name="RadiobuttonStyle">
         <item name="android:gravity">center</item>
@@ -61,7 +61,7 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
-    <style name="FeelyouWindowAnimTheme" parent="@android:style/Animation.Activity">
+    <style name="FeelYouWindowAnimTheme" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/anim_enter_right</item>
         <!--<item name="android:activityOpenExitAnimation">@anim/anim_leave_left</item>-->
         <!--<item name="android:activityCloseEnterAnimation">@anim/anim_enter_left</item>-->
