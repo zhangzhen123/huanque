@@ -466,3 +466,11 @@ object OperationType {
     const val CALL_PHONE = "CALL_PHONE"
 
 }
+
+object SystemTargetId {
+    //鹊友通知
+    const val friendNoticeSender = "friendNoticeSender"
+
+    //系统通知
+    const val systemNoticeSender = "systemNoticeSender"
+}

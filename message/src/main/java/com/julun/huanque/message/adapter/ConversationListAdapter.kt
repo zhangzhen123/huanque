@@ -1,5 +1,6 @@
 package com.julun.huanque.message.adapter
 
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -10,11 +11,13 @@ import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.MeetStatus
 import com.julun.huanque.common.constant.MessageCustomBeanType
+import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.MessageFormatUtils
 import com.julun.huanque.common.utils.TimeUtils
 import com.julun.huanque.message.R
 import io.rong.message.ImageMessage
@@ -33,15 +36,22 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
 
     override fun convert(helper: BaseViewHolder, item: LocalConversation) {
         val msg = item.conversation.latestMessage
+        //头像
+        val sdvHeader = helper.getView<SimpleDraweeView>(R.id.sdv_header)
+        //欢遇状态
+        val ivHuanyu = helper.getView<ImageView>(R.id.iv_huanyu)
+        //亲密度等级
+        val tvRoyalLevel = helper.getView<TextView>(R.id.tv_royal_level)
+        //官方图标
+        val ivGuan = helper.getView<View>(R.id.iv_guan)
         if (item.showUserInfo != null) {
+            ivGuan.hide()
             //存在用户信息
-            val sdvHeader = helper.getView<SimpleDraweeView>(R.id.sdv_header)
             ImageUtils.setDefaultHeaderPic(sdvHeader, item.showUserInfo?.sex ?: "")
             //设置默认头像
             ImageUtils.loadImage(sdvHeader, item.showUserInfo?.headPic ?: "", 50f, 50f)
             helper.setText(R.id.tv_nickname, item.showUserInfo?.nickname ?: "")
             //欢遇状态
-            val ivHuanyu = helper.getView<ImageView>(R.id.iv_huanyu)
             val meetResource = GlobalUtils.getMeetStatusResource(item.showUserInfo?.meetStatus ?: "")
             if (meetResource > 0) {
                 //显示图标
@@ -52,7 +62,6 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 ivHuanyu.hide()
             }
             //亲密度等级
-            val tvRoyalLevel = helper.getView<TextView>(R.id.tv_royal_level)
             val level = item.showUserInfo?.intimateLevel ?: 0
             if (level > 0) {
                 tvRoyalLevel.text = "Lv.$level"
@@ -60,14 +69,39 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             } else {
                 tvRoyalLevel.hide()
             }
+        } else {
+            //用户数据为空，判断是否是系统和鹊友会话
+            ivHuanyu.hide()
+            tvRoyalLevel.hide()
 
+            val targetId = item.conversation.targetId
+            if (targetId == SystemTargetId.systemNoticeSender) {
+                //系统通知
+                ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_system)
+                helper.setText(R.id.tv_nickname, "系统消息")
+                ivGuan.show()
+            } else {
+                ivGuan.hide()
+            }
+            if (targetId == SystemTargetId.friendNoticeSender) {
+                //鹊友通知
+                ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_friend)
+                helper.setText(R.id.tv_nickname, "鹊友通知")
+
+            }
         }
 
 
         when (msg) {
             is TextMessage -> {
                 //文本消息
-                helper.setText(R.id.tv_content, msg.content)
+                val targetId = item.conversation.targetId
+                if (targetId == SystemTargetId.systemNoticeSender || targetId == SystemTargetId.friendNoticeSender) {
+                    val msgConent = MessageFormatUtils.formatSysMsgContent(msg.content)
+                    helper.setText(R.id.tv_content, msgConent?.context?.body ?: "")
+                } else {
+                    helper.setText(R.id.tv_content, msg.content)
+                }
             }
             is ImageMessage -> {
                 //图片消息

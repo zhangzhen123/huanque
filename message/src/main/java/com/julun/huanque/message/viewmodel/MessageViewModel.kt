@@ -8,6 +8,8 @@ import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.logger
@@ -38,7 +40,7 @@ class MessageViewModel : BaseViewModel() {
     val changePosition: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     //未读消息数量
-    val unreadMsgCount : MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
+    val unreadMsgCount: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     /**
      * 删除会话
@@ -172,7 +174,10 @@ class MessageViewModel : BaseViewModel() {
                 if (it.conversationType == Conversation.ConversationType.PRIVATE) {
                     //私聊消息
                     try {
-                        idList.add(it.targetId.toLong())
+                        val targetId = it.targetId
+                        if (targetId != SystemTargetId.friendNoticeSender && targetId != SystemTargetId.systemNoticeSender) {
+                            idList.add(it.targetId.toLong())
+                        }
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -246,6 +251,9 @@ class MessageViewModel : BaseViewModel() {
      * 获取消息内部的用户信息
      */
     private fun getMessageUserInfo(extra: String): ChatUser? {
+        if(extra.isEmpty()){
+            return null
+        }
         var user: RoomUserChatExtra? = null
         try {
             user = JsonUtil.deserializeAsObject(extra, RoomUserChatExtra::class.java)

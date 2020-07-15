@@ -16,6 +16,7 @@ import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.constant.ActivityCodes
 import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -64,7 +65,7 @@ class MessageFragment : BaseFragment() {
         msg_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         initViewModel()
         initRecyclerView()
-        initHeaderView()
+//        initHeaderView()
         mMessageViewModel.getConversationList()
         mMessageViewModel.queryRongPrivateCount()
     }
@@ -119,7 +120,7 @@ class MessageFragment : BaseFragment() {
             //            val realPosition = position - mAdapter.headerLayoutCount
             mAdapter.getItem(position)?.let { lmc ->
                 when (lmc.conversation.targetId) {
-                    "systemNoticeSender" -> {
+                    SystemTargetId.systemNoticeSender -> {
                         //系统消息
 //                        startActivityForResult(SysMsgActivity::class.java, ActivityCodes.REQUEST_CODE_NORMAL, Bundle().apply {
 //                            putString(IntentParamKey.SYS_MSG_ID.name, lmc.conversation.targetId)
@@ -128,6 +129,9 @@ class MessageFragment : BaseFragment() {
                         val intent = Intent(activity, SysMsgActivity::class.java)
                         intent.putExtra(IntentParamKey.SYS_MSG_ID.name, lmc.conversation.targetId)
                         startActivityForResult(intent, ActivityCodes.REQUEST_CODE_NORMAL)
+                    }
+                    SystemTargetId.friendNoticeSender -> {
+                        //鹊友通知
                     }
                     else -> {
                         //首页IM
@@ -260,9 +264,9 @@ class MessageFragment : BaseFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
-            ActivityCodes.REQUEST_CODE_NORMAL ->{
-                if(resultCode == ActivityCodes.RESPONSE_CODE_NORMAL){
+        when (requestCode) {
+            ActivityCodes.REQUEST_CODE_NORMAL -> {
+                if (resultCode == ActivityCodes.RESPONSE_CODE_NORMAL) {
                     //也许是从系统消息页面返回，刷新列表一次
                     mMessageViewModel.getConversationList()
                     mMessageViewModel.queryRongPrivateCount()
