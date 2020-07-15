@@ -31,7 +31,7 @@ interface SocialService {
      * 关注好友
      */
     @POST("social/friend/relation/follow")
-    suspend fun follow(@Body form: FriendIdForm): Root<VoidResult>
+    suspend fun follow(@Body form: FriendIdForm): Root<FollowBean>
 
     /**
      * 取消关注好友

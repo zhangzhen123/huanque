@@ -11,6 +11,7 @@ import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.RecomListForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.ContactsTabType
+import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.coverError
@@ -65,8 +66,8 @@ class ContactsFragmentViewModel : BaseViewModel() {
     fun follow(type: String, userId: Long) {
         viewModelScope.launch {
             request({
-                service.follow(FriendIdForm(userId))
-                val followBean = FollowResultBean(type, userId, true)
+                val follow = service.follow(FriendIdForm(userId)).dataConvert()
+                val followBean = FollowResultBean(type, userId, follow.follow)
                 followStatusData.value = followBean
             }, {
             })
@@ -79,8 +80,8 @@ class ContactsFragmentViewModel : BaseViewModel() {
     fun unFollow(type: String, userId: Long) {
         viewModelScope.launch {
             request({
-                service.unFollow(FriendIdForm(userId))
-                val followBean = FollowResultBean(type, userId, false)
+                service.unFollow(FriendIdForm(userId)).dataConvert()
+                val followBean = FollowResultBean(type, userId, FollowStatus.False)
                 followStatusData.value = followBean
             }, {
             })

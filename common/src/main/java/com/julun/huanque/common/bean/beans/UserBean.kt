@@ -63,7 +63,7 @@ class SocialListBean(
 /**
  * 关注结果使用的Bean
  */
-class FollowResultBean(var type: String, var userId: Long, var follow: Boolean)
+class FollowResultBean(var type: String, var userId: Long, var follow: String)
 
 /**
  * 亲密特权
@@ -139,5 +139,9 @@ class NetcallBean(
     var receiverInfo: ChatUserBean = ChatUserBean(),
     var channelId: String = "",
     var token: String = ""
-) :
-    Serializable
+) : Serializable
+
+/**
+ * 关注返回的实体
+ */
+class FollowBean(var follow: String = "") : Serializable
