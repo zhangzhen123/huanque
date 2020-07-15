@@ -49,8 +49,8 @@ class MessageSettingViewModel : BaseViewModel() {
      * @param followRemind 关注提醒
      */
     fun updateSetting(
-        privateMsgFee: Int? = null, foldMsg: String?=null, answer: String?=null,
-        privateMsgRemind: String?=null, followRemind: String?=null
+        privateMsgFee: Int? = null, foldMsg: String? = null, answer: String? = null,
+        privateMsgRemind: String? = null, followRemind: String? = null
     ) {
         viewModelScope.launch {
             request({
@@ -60,12 +60,11 @@ class MessageSettingViewModel : BaseViewModel() {
                         , answer, privateMsgRemind, followRemind
                     )
                 ).dataConvert()
+                queryData.value = true
             }, error = { e ->
                 if (e !is ResponseError) {
                     ToastUtils.show("网络异常，请重试~！")
                 }
-            }, final = {
-                queryData.value = true
             }, needLoadState = true)
         }
     }

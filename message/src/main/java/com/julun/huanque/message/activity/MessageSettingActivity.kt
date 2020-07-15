@@ -22,6 +22,9 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.fragment.PrivateChargeDialogFragment
 import com.julun.huanque.message.viewmodel.MessageSettingViewModel
 import kotlinx.android.synthetic.main.act_message_setting.*
+import kotlinx.android.synthetic.main.act_message_setting.commonView
+import kotlinx.android.synthetic.main.activity_live_remind.*
+import org.jetbrains.anko.backgroundResource
 
 /**
  *@创建者   dong
@@ -40,6 +43,7 @@ class MessageSettingActivity : BaseActivity() {
         findViewById<TextView>(R.id.tvTitle).text = "消息设置"
         prepareViewModel()
         mViewModel?.queryData?.value = true
+        commonView.backgroundResource = R.color.transparent
     }
 
     override fun onResume() {

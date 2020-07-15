@@ -3381,7 +3381,7 @@ data class LiveRemindBeans(
     //PC直播中
     var isPcLive: Boolean = false,
     //开启通知
-    var isPush: Boolean = false,
+    var pushOpen: Boolean = false,
     //最后直播时间
     var lastShowTime: String = "",
     //签名
@@ -3394,6 +3394,17 @@ data class LiveRemindBeans(
     var programId: Int = 0,
     //节目名称
     var programName: String = ""
-) : Serializable
+) : Serializable {
+    override fun equals(other: Any?): Boolean {
+        if (other is LiveRemindBeans) {
+            return other == this.programId
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return programId.hashCode()
+    }
+}
 
 

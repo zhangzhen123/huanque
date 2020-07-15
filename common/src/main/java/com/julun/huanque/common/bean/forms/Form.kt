@@ -70,4 +70,8 @@ class SettingForm(
 /**
  * 节目关注列表使用的form
  */
-class LiveRemindForm(var offset:Int = 0)
+class LiveRemindForm(
+    var offset: Int? = null,
+    var pushOpen: String? = null,
+    var programId: Int? = null
+)
