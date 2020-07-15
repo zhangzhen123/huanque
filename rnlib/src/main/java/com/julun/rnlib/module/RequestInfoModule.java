@@ -42,13 +42,6 @@ public class RequestInfoModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getRequestInfo(Promise promise) {
         try {
-//            WritableMap headerMap = Arguments.createMap();
-//            headerMap.putString("s", "111");
-//            headerMap.putString("t", "222");
-//            headerMap.putString("s", "1.0.0");
-//            headerMap.putDouble("h", new Date().getTime());
-//
-//            Map<String, String> headerInfo = HeaderInfoHelper.INSTANCE.getMobileDeviceInfo();
             WritableMap map = Arguments.createMap();
             map.putMap("requestInfo", RnManager.INSTANCE.getHeaderInfo());
             map.putString("baseURL", CommonInit.Companion.getInstance().getBaseUrl());
