@@ -208,16 +208,18 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         val userID = bean.userId
         var userInfo: SocialUserInfo? = null
         var changeIndex = 0
-        mAdapter.data.filter { it.userId == userID }.forEachIndexed { index, data ->
-            userInfo = data
-            changeIndex = index
-            return@forEachIndexed
+        mAdapter.data.forEachIndexed { index, data ->
+            if(data.userId == userID){
+                userInfo = data
+                changeIndex = index
+                return@forEachIndexed
+            }
         }
         userInfo?.let { info ->
             //找到对应的联系人
             if (mViewModel.mType == ContactsTabType.Fan) {
                 //粉丝  都是关注我的人(状态在FollowStatus.True和FollowStatus.Mutual之间切换)
-                val followStatus = if (bean.follow) {
+                val followStatus = if (bean.follow != FollowStatus.False) {
                     FollowStatus.Mutual
                 } else {
                     FollowStatus.False
@@ -230,12 +232,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
 //                if(currentFollowStatus == FollowStatus.Mutual){
 //
 //                }
-                val followStatus = if (bean.follow) {
-                    FollowStatus.True
-                } else {
-                    FollowStatus.False
-                }
-                info.follow = followStatus
+                info.follow = bean.follow
             }
             mAdapter.notifyItemChanged(changeIndex)
         }
