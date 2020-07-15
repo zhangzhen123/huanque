@@ -29,6 +29,7 @@
     <style name="MainPageTheme" parent="BaseAppTheme">
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowAnimationStyle">@style/FeelYouWindowAnimTheme</item>
     </style>
