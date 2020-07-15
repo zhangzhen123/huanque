@@ -3377,9 +3377,9 @@ data class LiveRemindBeans(
     //主播头像
     var anchorPic: String = "",
     //直播中
-    var isLiving: Boolean = false,
+    var livingStatus: Boolean = false,
     //PC直播中
-    var isPcLive: Boolean = false,
+    var pcLiveStatus: Boolean = false,
     //开启通知
     var pushOpen: Boolean = false,
     //最后直播时间
@@ -3397,7 +3397,7 @@ data class LiveRemindBeans(
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is LiveRemindBeans) {
-            return other == this.programId
+            return other.programId == this.programId
         }
         return false
     }

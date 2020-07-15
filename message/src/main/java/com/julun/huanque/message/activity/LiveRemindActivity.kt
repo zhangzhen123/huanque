@@ -126,7 +126,7 @@ class LiveRemindActivity : BaseActivity() {
                     mClickItem!!.pushOpen = !mClickItem!!.pushOpen
                     val index = mAdapter.data.indexOf(mClickItem!!)
                     if (index != -1) {
-                        mAdapter.notifyItemChanged(index)
+                        mAdapter.notifyItemChanged(index,1)
                     } else {
                         mAdapter.notifyDataSetChanged()
                     }
