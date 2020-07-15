@@ -22,9 +22,13 @@ import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.RealNameConstants
 import com.julun.huanque.common.constant.Sex
+import com.julun.huanque.common.interfaces.routerservice.IRealNameService
+import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.StatusBarUtil
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
@@ -44,6 +48,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         fun newInstance() = MineFragment()
     }
 
+    private val mIRealNameService:IRealNameService by lazy{
+        ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation() as IRealNameService
+    }
     override fun getLayoutId() = R.layout.fragment_mine
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -79,6 +86,18 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             ivReal.showContextMenu()
         } else {
             tvCertification.show()
+            tvCertification.onClickNew {
+                mIRealNameService?.startRealHead(requireActivity(),object :RealNameCallback{
+                    override fun onCallback(status: String, des: String) {
+                        if(status== RealNameConstants.TYPE_SUCCESS ){
+                            mViewModel.queryInfo(QueryType.REFRESH)
+                        }else{
+                            ToastUtils.show("认证失败，请稍后重试")
+                        }
+                    }
+                } )
+
+            }
             ivReal.hide()
         }
 //        sd_wealth.loadImage(info.userBasic.royalLevel)
