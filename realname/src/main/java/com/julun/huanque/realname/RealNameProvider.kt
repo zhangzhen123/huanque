@@ -194,7 +194,7 @@ class RealNameProvider : IRealNameService {
             } catch (e: Throwable) {
                 e.printStackTrace()
                 if (e is ResponseError) {
-                    callback(RealNameConstants.TYPE_ERROR, e.busiMessage)
+                    callback(RealNameConstants.TYPE_ERROR, "")
                 } else {
                     callback(RealNameConstants.TYPE_ERROR, "网络异常，请稍后重试！")
                 }
