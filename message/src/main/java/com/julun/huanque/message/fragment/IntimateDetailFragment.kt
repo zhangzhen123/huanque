@@ -41,6 +41,9 @@ class IntimateDetailFragment : BaseDialogFragment() {
     private fun initRecyclerView() {
         recycler_privilege.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         recycler_privilege.adapter = mAdapter
+        mAdapter.setOnItemClickListener { adapter, view, position ->
+
+        }
     }
 
     override fun onStart() {
@@ -97,6 +100,7 @@ class IntimateDetailFragment : BaseDialogFragment() {
 
     }
 
+    override fun needEnterAnimation() = false
 
     private fun setWindowConfig() {
         val window = dialog?.window ?: return
@@ -109,6 +113,6 @@ class IntimateDetailFragment : BaseDialogFragment() {
 
         //不需要半透明遮罩层
         window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        window.setWindowAnimations(R.style.dialog_bottom_bottom_style)
+//        window.setWindowAnimations(R.style.dialog_bottom_bottom_style)
     }
 }

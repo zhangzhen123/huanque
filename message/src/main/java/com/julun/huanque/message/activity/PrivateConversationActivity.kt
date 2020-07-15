@@ -260,7 +260,7 @@ class PrivateConversationActivity : BaseActivity() {
             edit_text.setText("")
         }
         iv_pic.onClickNew { checkPermissions() }
-        tv_meet.onClickNew {
+        iv_intimate.onClickNew {
             //显示欢遇弹窗
             mIntimateDetailFragment = mIntimateDetailFragment ?: IntimateDetailFragment.newInstance()
             mIntimateDetailFragment?.show(supportFragmentManager, "MeetDetailFragment")
