@@ -207,14 +207,24 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 //                holder.addOnClickListener(R.id.iv_guide_tag_close)
             }
             HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION -> {
-
+                val bean = item.content as? CoverRemind ?: return
                 val rv = holder.getView<RecyclerView>(R.id.rv_add_photos)
+                val logo = holder.getView<SimpleDraweeView>(R.id.sdv_logo)
+                val name = holder.getView<TextView>(R.id.tv_name)
+                logo.loadImage(bean.headPic, 30f, 30f)
+                name.text = bean.nickname
                 rv.setRecycledViewPool(mPhotoViewPool)
                 rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
                 val list = arrayListOf<PhotoBean>()
                 repeat(4) {
-                    list.add(PhotoBean(res = R.mipmap.icon_upload_image))
+                    val url = bean.picList.getOrNull(it)
+                    if (url != null) {
+                        list.add(PhotoBean(url = url))
+                    } else {
+                        list.add(PhotoBean(res = R.mipmap.icon_upload_image))
+                    }
+
                 }
                 if (rv.itemDecorationCount <= 0) {
                     rv.addItemDecoration(HorizontalItemDecoration(dp2px(10)))

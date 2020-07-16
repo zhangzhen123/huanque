@@ -119,6 +119,24 @@ object PayType {
 
 }
 
+/**
+ * 提现方式
+ */
+object WithdrawType {
+    const val AliWithdraw = "AliWithdraw"
+    const val WXWithdraw = "WXWithdraw"
+
+}
+
+object WithdrawCode {
+    const val Money1 = "Money1"
+    const val Money20 = "Money20"
+    const val Money50 = "Money50"
+    const val Money100 = "Money100"
+    const val Money300 = "Money300"
+    const val Money500 = "Money500"
+}
+
 enum class PayResult {
     IS_PAY,//去支付了 但是不知道结果的情况
     PAY_SUCCESS,
@@ -485,11 +503,23 @@ object SystemTargetId {
 }
 
 //表情类型
-object EmojiType{
+object EmojiType {
     //普通表情
     const val NORMAL = "NORMAL"
+
     //特权表情
     const val PREROGATIVE = "PREROGATIVE"
+
     //高级表情
     const val HIGH = "HIGH"
+}
+/**
+ * 操作类型
+ */
+object MineToolType {
+    const val Office = "Office"
+    const val RoomSpecial = "RoomSpecial"
+    const val VisitHistory = "VisitHistory"
+    const val ChatBubble = "ChatBubble"
+    const val InviteFriend = "InviteFriend"
 }

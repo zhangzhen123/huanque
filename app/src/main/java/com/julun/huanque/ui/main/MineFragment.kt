@@ -22,6 +22,7 @@ import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.MineToolType
 import com.julun.huanque.common.constant.RealNameConstants
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
@@ -30,6 +31,7 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
+import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -120,12 +122,32 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
         toolsAdapter.setOnItemClickListener { _, _, position ->
-            //todo
+            val item=toolsAdapter.getItemOrNull(position)?:return@setOnItemClickListener
+            when(item.toolType){
+                MineToolType.Office->{
+                    RNPageActivity.start(requireActivity(), RnConstant.OFFICIAL_CERT_PAGE)
+                }
+                MineToolType.RoomSpecial->{
+
+                }
+                MineToolType.ChatBubble->{
+
+                }
+                MineToolType.VisitHistory->{
+
+                }
+                MineToolType.InviteFriend->{
+                    RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+                }
+            }
         }
         ivSetting.onClickNew {
         }
         rlQueBi.onClickNew {
             requireActivity().startActivity<RechargeCenterActivity>()
+        }
+        rlLingQian.onClickNew {
+            requireActivity().startActivity<WithdrawActivity>()
         }
     }
 

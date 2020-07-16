@@ -59,6 +59,7 @@
         android:layout_marginRight="5dp"
         android:padding="10dp"
         android:text="保存"
+        android:textColor="@color/black_333"
         android:textSize="16sp"
         android:visibility="gone" />
 

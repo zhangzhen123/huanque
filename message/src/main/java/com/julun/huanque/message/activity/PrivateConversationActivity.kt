@@ -416,7 +416,7 @@ class PrivateConversationActivity : BaseActivity() {
         }
     }
 
-    /**
+    /**BusiConstant
      * 显示表情悬浮效果
      */
     private fun showEmojiSuspend(view: View, emotion: Emotion) {

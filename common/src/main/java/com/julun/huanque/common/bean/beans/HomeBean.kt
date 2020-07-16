@@ -70,7 +70,16 @@ data class HeadBaseInfo(
 //}
 class HomeListData<T> : RootListData<T>() {
     var moduleList: List<HeadModule> = arrayListOf()
+    var coverRemind: CoverRemind? = null
+    var tagRemind:Boolean=false
 }
+
+data class CoverRemind(
+    var headPic: String = "",
+    var nickname: String = "",
+    var picList: List<String> = listOf(),
+    var userId: Int = 0
+)
 
 data class HomeRecomItem(
     var age: Int = 0,
@@ -107,7 +116,12 @@ data class NetCallReceiveBean(var callId: Long = 0, var userIds: LongArray = lon
 /**
  * 语音通话开始消息
  */
-data class NetCallAcceptBean(var callId: Long = 0, var startTime: Long = 0, var billUserId: Long = 0, var userIds: LongArray = longArrayOf()) :
+data class NetCallAcceptBean(
+    var callId: Long = 0,
+    var startTime: Long = 0,
+    var billUserId: Long = 0,
+    var userIds: LongArray = longArrayOf()
+) :
     Serializable
 
 /**

@@ -94,7 +94,7 @@ android {
             minifyEnabled false
             manifestPlaceholders = [
                     JPUSH_PKGNAME: rootProject.ext.packageType,
-                    JPUSH_APPKEY : "${sdk.JPUSH_KEY_TEST_HQ}",
+                    JPUSH_APPKEY : "${sdk.JPUSH_KEY_HQ}",
                     JPUSH_CHANNEL: "developer-default"
             ]
             println("buildTypes debug 我已执行")

@@ -582,4 +582,6 @@
     <string name="recommend">推荐</string>
     <string name="star_lucky">幸运星球</string>
     <string name="personal_information_protection_title">个人信息保护指引</string>
+
+    <string name="ensure_withdraw">确认提现</string>
 </resources>

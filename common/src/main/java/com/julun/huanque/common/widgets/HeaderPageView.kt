@@ -53,19 +53,27 @@ class HeaderPageView : FrameLayout {
     val textTitle:TextView by lazy { tvTitle }
     val textOperation:TextView by lazy { tvOperation }
     val imageOperation:ImageView by lazy { ivOperation }
+
+    /**
+     * 初始化头部
+     * [backImg]返回键样式
+     * [titleTxt]标题
+     * [operateImg]操作图片
+     * [operateTxt]操作文字 两种只能选择一个
+     */
     fun initHeaderView(
-        @DrawableRes emptyRes: Int = R.mipmap.icon_back_black_01,
+        @DrawableRes backImg: Int = R.mipmap.icon_back_black_01,
         titleTxt: String = "",
-        @DrawableRes operateRes: Int? = null,
+        @DrawableRes operateImg: Int? = null,
         operateTxt: String? = null
     ) {
-        ivback.imageResource = emptyRes
+        ivback.imageResource = backImg
         if (titleTxt.isNotEmpty()) {
             tvTitle.text = titleTxt
         }
-        if (operateRes != null) {
+        if (operateImg != null) {
             ivOperation.show()
-            ivOperation.imageResource = operateRes
+            ivOperation.imageResource = operateImg
         } else {
             ivOperation.hide()
         }

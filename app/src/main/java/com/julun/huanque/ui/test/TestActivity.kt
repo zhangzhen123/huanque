@@ -55,6 +55,9 @@ class TestActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         viewModel.userInfo.observe(this, Observer {
             println("我是用户信息：=$it")
+            ret_resp.text="语音签名：${it.points.getOrNull(0)?.voiceContent}"
+            ret_resp1.text="语音签名：${it.points.getOrNull(1)?.voiceContent}"
+            ret_resp2.text="语音签名：${it.points.getOrNull(2)?.voiceContent}"
         })
         viewModel.userLevelInfo.observe(this, Observer {
             println("我是用户等级信息：=$it")
@@ -74,7 +77,6 @@ class TestActivity : BaseActivity() {
         test_rn.onClickNew {
             logger.info("测试rn跳转")
             RNPageActivity.start(this, "HomePage");
-            viewModel.getInfo()
         }
 
         crash.onClickNew {
