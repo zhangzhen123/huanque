@@ -36,6 +36,8 @@ class MessageViewModel : BaseViewModel() {
     //会话列表
     val conversationListData: MutableLiveData<MutableList<LocalConversation>> by lazy { MutableLiveData<MutableList<LocalConversation>>() }
 
+    val blockListData : MutableLiveData<MutableList<String>> by lazy { MutableLiveData<MutableList<String>>() }
+
     //有变化的数据  <0  刷新整个列表  >=0 刷新单个条目
     val changePosition: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
@@ -99,6 +101,26 @@ class MessageViewModel : BaseViewModel() {
             }
 
         })
+    }
+
+    /**
+     * 获取免打扰会话列表
+     */
+    fun getBlockedConversationList() {
+        RongIMClient.getInstance().getBlockedConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
+            override fun onSuccess(list: List<Conversation>?) {
+                val blockedIdList = mutableListOf<String>()
+                list?.forEach {
+                    blockedIdList.add(it.targetId)
+                }
+                blockListData.value = blockedIdList
+            }
+
+            override fun onError(errorCode: RongIMClient.ErrorCode?) {
+                logger("errorCode = $errorCode")
+            }
+
+        }, Conversation.ConversationType.PRIVATE)
     }
 
 
@@ -251,7 +273,7 @@ class MessageViewModel : BaseViewModel() {
      * 获取消息内部的用户信息
      */
     private fun getMessageUserInfo(extra: String): ChatUser? {
-        if(extra.isEmpty()){
+        if (extra.isEmpty()) {
             return null
         }
         var user: RoomUserChatExtra? = null

@@ -30,6 +30,9 @@ import io.rong.message.TextMessage
  */
 class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHolder>(R.layout.recycler_item_conversion) {
 
+    //免打扰列表
+    var blockList = mutableListOf<String>()
+
     init {
         addChildClickViewIds(R.id.sdv_header)
     }
@@ -44,6 +47,8 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
         val tvRoyalLevel = helper.getView<TextView>(R.id.tv_royal_level)
         //官方图标
         val ivGuan = helper.getView<View>(R.id.iv_guan)
+        val targetId = item.conversation.targetId
+
         if (item.showUserInfo != null) {
             ivGuan.hide()
             //存在用户信息
@@ -74,7 +79,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             ivHuanyu.hide()
             tvRoyalLevel.hide()
 
-            val targetId = item.conversation.targetId
+
             if (targetId == SystemTargetId.systemNoticeSender) {
                 //系统通知
                 ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_system)
@@ -95,7 +100,6 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
         when (msg) {
             is TextMessage -> {
                 //文本消息
-                val targetId = item.conversation.targetId
                 if (targetId == SystemTargetId.systemNoticeSender || targetId == SystemTargetId.friendNoticeSender) {
                     val msgConent = MessageFormatUtils.formatSysMsgContent(msg.content)
                     helper.setText(R.id.tv_content, msgConent?.context?.body ?: "")
@@ -131,6 +135,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
         tvUnread.text = "${StringHelper.formatMessageCount(unreadCount)}"
         if (unreadCount > 0) {
             tvUnread.show()
+            tvUnread.isEnabled = !blockList.contains(targetId)
         } else {
             tvUnread.hide()
         }

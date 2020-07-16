@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
-import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
+import com.julun.huanque.common.bean.events.MessageBlockEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.hide
@@ -72,6 +72,8 @@ class PrivateConversationSettingActivity : BaseActivity() {
         mPrivateConversationSettingViewModel?.disturbStatus?.observe(this, Observer {
             if (it != null) {
                 iv_no_disturbing.isSelected = it == Conversation.ConversationNotificationStatus.DO_NOT_DISTURB.value
+                //免打扰状态发生变化
+                EventBus.getDefault().post(MessageBlockEvent())
             }
         })
         mPrivateConversationSettingViewModel?.chatDetailData?.observe(this, Observer {
