@@ -3,7 +3,6 @@ package com.julun.huanque.support
 import com.alibaba.android.arouter.launcher.ARouter
 import com.ishumei.smantifraud.SmAntiFraud
 import com.julun.huanque.BuildConfig
-import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.forms.MobileLoginForm
@@ -11,10 +10,8 @@ import com.julun.huanque.common.bean.forms.MobileQuickForm
 import com.julun.huanque.common.bean.forms.WeiXinForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.database.table.Session
-import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.routerservice.AppCommonService
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.net.NError
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
@@ -26,10 +23,8 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-import java.lang.Exception
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 

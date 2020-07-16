@@ -171,9 +171,11 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 }
                 R.id.iv_guide_tag_close -> {
                     logger.info("点击引导标签关闭---$position")
+                    mAdapter.removeAt(position)
                 }
                 R.id.iv_guide_info_close -> {
                     logger.info("点击引导完善资料关闭---$position")
+                    mAdapter.removeAt(position)
                 }
             }
         }

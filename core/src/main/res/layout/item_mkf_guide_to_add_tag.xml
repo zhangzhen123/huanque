@@ -60,7 +60,7 @@
             android:layout_width="@dimen/dimen_30"
             android:layout_height="@dimen/dimen_30"
             android:layout_margin="@dimen/dimen_10"
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/icon_logo_avatar_yellow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

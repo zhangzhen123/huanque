@@ -115,7 +115,7 @@ fun <T> BaseViewModel.requestRx(
 }
 
 /**
- * 错误封装为ReactiveData
+ * 错误 封装为ReactiveData
  */
 fun <T>Throwable.coverError(): ReactiveData<T>{
     val err= if (this is ResponseError) {
@@ -127,7 +127,7 @@ fun <T>Throwable.coverError(): ReactiveData<T>{
 }
 
 /**
- * 正确的数据封装为ReactiveData
+ * 正确的数据 封装为ReactiveData
  */
 fun <T>T.coverRtData():ReactiveData<T>{
     return ReactiveData(state = NetStateType.SUCCESS,data = this)
