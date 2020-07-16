@@ -118,6 +118,7 @@ object PayType {
 
 
 }
+
 /**
  * 提现方式
  */
@@ -126,7 +127,8 @@ object WithdrawType {
     const val WXWithdraw = "WXWithdraw"
 
 }
-object WithdrawCode{
+
+object WithdrawCode {
     const val Money1 = "Money1"
     const val Money20 = "Money20"
     const val Money50 = "Money50"
@@ -134,6 +136,7 @@ object WithdrawCode{
     const val Money300 = "Money300"
     const val Money500 = "Money500"
 }
+
 enum class PayResult {
     IS_PAY,//去支付了 但是不知道结果的情况
     PAY_SUCCESS,
@@ -497,4 +500,16 @@ object SystemTargetId {
 
     //系统通知
     const val systemNoticeSender = "systemNoticeSender"
+}
+
+/**
+ * 操作类型
+ */
+object MineToolType {
+    const val Office = "Office"
+    const val RoomSpecial = "RoomSpecial"
+    const val VisitHistory = "VisitHistory"
+    const val ChatBubble = "ChatBubble"
+    const val InviteFriend = "InviteFriend"
+
 }

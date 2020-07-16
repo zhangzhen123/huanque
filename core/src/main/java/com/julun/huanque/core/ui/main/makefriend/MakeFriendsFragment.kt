@@ -48,7 +48,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         return R.layout.fragment_make_friend
     }
 
-    override fun isRegisterEventBus(): Boolean =true
+    override fun isRegisterEventBus(): Boolean = true
 
     private val audioPlayerManager: AudioPlayerManager by lazy { AudioPlayerManager(requireContext()) }
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -122,19 +122,27 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         mAdapter.setOnItemClickListener { _, _, position ->
             logger.info("点击了第几个index=$position")
             val item = mAdapter.getItem(position) ?: return@setOnItemClickListener
-            if (item.showType == HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION) {
-                logger.info("跳转编辑资料页")
-            } else if (item.showType == HomeItemBean.NORMAL) {
-                val bean = item.content as? HomeRecomItem ?: return@setOnItemClickListener
-                if (bean.userId == SessionUtils.getUserId()) {
-                    RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
-                } else {
-                    RNPageActivity.start(
-                        requireActivity(),
-                        RnConstant.PERSONAL_HOMEPAGE,
-                        Bundle().apply { putLong("userId", bean.userId) })
+            when (item.showType) {
+                HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION -> {
+                    logger.info("跳转编辑资料页")
+                    RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
                 }
+                HomeItemBean.GUIDE_TO_ADD_TAG -> {
+                    logger.info("跳转添加标签页")
+                    RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+                }
+                HomeItemBean.NORMAL -> {
+                    val bean = item.content as? HomeRecomItem ?: return@setOnItemClickListener
+                    if (bean.userId == SessionUtils.getUserId()) {
+                        RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
+                    } else {
+                        RNPageActivity.start(
+                            requireActivity(),
+                            RnConstant.PERSONAL_HOMEPAGE,
+                            Bundle().apply { putLong("userId", bean.userId) })
+                    }
 
+                }
             }
 
         }

@@ -22,6 +22,7 @@ import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.MineToolType
 import com.julun.huanque.common.constant.RealNameConstants
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
@@ -121,7 +122,24 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
         toolsAdapter.setOnItemClickListener { _, _, position ->
-            //todo
+            val item=toolsAdapter.getItemOrNull(position)?:return@setOnItemClickListener
+            when(item.toolType){
+                MineToolType.Office->{
+                    RNPageActivity.start(requireActivity(), RnConstant.OFFICIAL_CERT_PAGE)
+                }
+                MineToolType.RoomSpecial->{
+
+                }
+                MineToolType.ChatBubble->{
+
+                }
+                MineToolType.VisitHistory->{
+
+                }
+                MineToolType.InviteFriend->{
+                    RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+                }
+            }
         }
         ivSetting.onClickNew {
         }

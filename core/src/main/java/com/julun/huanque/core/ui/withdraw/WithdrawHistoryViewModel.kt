@@ -11,6 +11,7 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.core.net.RechargeService
+import kotlinx.coroutines.delay
 
 /**
  *
@@ -36,6 +37,7 @@ class WithdrawHistoryViewModel : BaseViewModel() {
             request({
 //                val result = service.queryWithdrawInfo().dataConvert()
                 //todo
+                delay(500)
                 val list = mutableListOf<Any>()
                 repeat(10) {
                     list.add(Any())
