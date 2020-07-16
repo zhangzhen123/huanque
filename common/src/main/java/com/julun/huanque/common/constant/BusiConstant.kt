@@ -483,3 +483,13 @@ object SystemTargetId {
     //系统通知
     const val systemNoticeSender = "systemNoticeSender"
 }
+
+//表情类型
+object EmojiType{
+    //普通表情
+    const val NORMAL = "NORMAL"
+    //特权表情
+    const val PREROGATIVE = "PREROGATIVE"
+    //高级表情
+    const val HIGH = "HIGH"
+}

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--普通表情-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_emoji"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!--特权表情-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_prerogative"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--高级表情-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_high"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="recyclerView_emoji,recyclerView_prerogative,recyclerView_high" />
+
+    <View
+        android:id="@+id/view_bottom"
+        android:layout_width="0px"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_emoji"
+        android:layout_width="48dp"
+        android:layout_height="38dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/bg_panel_icon"
+        android:src="@mipmap/icon_panel_heart"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="@id/view_bottom"
+        app:layout_constraintTop_toTopOf="@id/view_bottom" />
+
+    <ImageView
+        android:id="@+id/iv_prerogative"
+        android:layout_width="48dp"
+        android:layout_height="38dp"
+        android:background="@drawable/bg_panel_icon"
+        android:src="@mipmap/icon_panel_heart"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintLeft_toRightOf="@id/iv_emoji"
+        app:layout_constraintTop_toTopOf="@id/view_bottom" />
+
+
+    <ImageView
+        android:id="@+id/iv_high"
+        android:layout_width="48dp"
+        android:layout_height="38dp"
+        android:background="@drawable/bg_panel_icon"
+        android:src="@mipmap/icon_panel_heart"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintLeft_toRightOf="@id/iv_prerogative"
+        app:layout_constraintTop_toTopOf="@id/view_bottom" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
