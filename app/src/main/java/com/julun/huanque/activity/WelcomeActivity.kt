@@ -6,6 +6,7 @@ import android.view.View
 import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.utils.SessionUtils
 
 /**
@@ -19,6 +20,7 @@ class WelcomeActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val registerUser = SessionUtils.getIsRegUser()
         val intent = if (registerUser && SessionUtils.getRegComplete()) {
+            RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
             //登录成功并且数据已经填写完成
             Intent(this, MainActivity::class.java)
         } else {

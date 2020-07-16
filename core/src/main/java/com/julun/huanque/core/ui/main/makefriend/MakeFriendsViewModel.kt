@@ -14,6 +14,7 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.HomeService
 import com.julun.huanque.common.suger.*
+import kotlinx.coroutines.delay
 
 /**
  *
@@ -38,6 +39,7 @@ class MakeFriendsViewModel : BaseViewModel() {
 
             request({
                 val homeListData = service.homeRecom(RecomListForm(offset)).dataConvert()
+                delay(100*1000)
                 val list = arrayListOf<HomeItemBean>()
                 if (offset == 0) {
                     val headNavigateInfo= HeadNavigateInfo().apply {
