@@ -30,6 +30,7 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
+import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -126,6 +127,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         }
         rlQueBi.onClickNew {
             requireActivity().startActivity<RechargeCenterActivity>()
+        }
+        rlLingQian.onClickNew {
+            requireActivity().startActivity<WithdrawActivity>()
         }
     }
 

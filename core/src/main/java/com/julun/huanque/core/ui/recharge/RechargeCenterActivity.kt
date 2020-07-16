@@ -76,7 +76,7 @@ class RechargeCenterActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
 
-        headerPageView.initHeaderView(titleTxt = "充值", operateRes = R.mipmap.icon_help_black_01)
+        headerPageView.initHeaderView(titleTxt = "充值", operateImg = R.mipmap.icon_help_black_01)
         initViewModel()
         mPagerAdapter = RechargePagerAdapter(supportFragmentManager, this)
         mPagerAdapter?.setTabList(tabList)

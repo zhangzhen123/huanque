@@ -45,3 +45,17 @@ class OppoPayInfo : Serializable {
     //商品名称
     var productName: String = ""
 }
+
+data class WithdrawInfo(
+    var myCash: Int = 0,
+    var todayCash: Int = 0,
+    var totalWithdraw: Int = 0,
+    var tplList: MutableList<WithdrawTpl> = mutableListOf()
+)
+
+data class WithdrawTpl(
+    var fast: Boolean = false,
+    var money: Int = 0,
+    var moneyText: String = "",
+    var tplCode: String = ""
+)

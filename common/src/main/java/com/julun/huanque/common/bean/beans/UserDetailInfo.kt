@@ -49,3 +49,12 @@ data class UpdateHeaderBean(
     var sex : String = ""
 )
 
+data class VoiceSignPointBean(
+    var points: List<Point> = listOf()
+)
+
+data class Point(
+    var voiceContent: String = "",
+    var voiceTitle: String = ""
+)
+

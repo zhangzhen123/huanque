@@ -6,6 +6,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.net.service.UserService
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
+import com.julun.huanque.common.bean.beans.VoiceSignPointBean
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.suger.*
 
@@ -23,12 +24,13 @@ class TestViewModel : BaseViewModel() {
     private val getInfo = MutableLiveData<Boolean>()//这个作为开关标识
 
     //协程请求示例
-    val userInfo: LiveData<UserDetailInfo> = getInfo.switchMap {
-        liveData<UserDetailInfo> {
+    val userInfo: LiveData<VoiceSignPointBean> = getInfo.switchMap {
+        liveData<VoiceSignPointBean> {
             if (it) {
                 request({
-                    val user = userService.queryUserDetailInfo().dataConvert()
+                    val user = userService.getVoiceSignPoint().dataConvert()
                     emit(user)
+                    logger("getVoiceSignPoint：${user.points.getOrNull(0)?.voiceContent}")
                 }, error = { e ->
                     logger("报错了：$e")
                 }, final = {

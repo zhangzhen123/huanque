@@ -118,7 +118,22 @@ object PayType {
 
 
 }
+/**
+ * 提现方式
+ */
+object WithdrawType {
+    const val AliWithdraw = "AliWithdraw"
+    const val WXWithdraw = "WXWithdraw"
 
+}
+object WithdrawCode{
+    const val Money1 = "Money1"
+    const val Money20 = "Money20"
+    const val Money50 = "Money50"
+    const val Money100 = "Money100"
+    const val Money300 = "Money300"
+    const val Money500 = "Money500"
+}
 enum class PayResult {
     IS_PAY,//去支付了 但是不知道结果的情况
     PAY_SUCCESS,

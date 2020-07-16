@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.julun.huanque.common.widgets.HeaderPageView
+        android:id="@+id/pagerHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:id="@+id/sv_withdraw_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimen_45"
+        android:layout_marginBottom="@dimen/dimen_60"
+        android:scrollbars="none"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_15"
+            android:layout_marginRight="@dimen/dimen_15"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/dimen_10">
+
+            <LinearLayout
+                android:id="@+id/my_count_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="@dimen/dimen_5"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/account_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="0"
+                    android:textColor="@color/black_333"
+                    android:textSize="46sp" />
+
+                <TextView
+                    android:id="@+id/que_bi_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="零钱(元)"
+                    android:textColor="@color/black_333"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/clRealMoneyRootView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_45"
+                android:gravity="center_vertical">
+
+
+                <TextView
+                    android:id="@+id/withdrawMoney"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="今日奖励：0元"
+                    android:textColor="@color/black_999"
+                    android:textSize="@dimen/sp_14" />
+
+                <TextView
+                    android:id="@+id/totalMoney"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="累计提现：0元"
+                    android:textColor="@color/black_999"
+                    android:textSize="@dimen/sp_14" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="提现金额"
+                android:textColor="@color/black_333"
+                android:textSize="14sp" />
+
+            <!--充值列表-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_15"
+                android:overScrollMode="never" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="提现方式"
+                android:textColor="@color/black_333"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_47"
+                android:layout_marginTop="@dimen/dimen_10">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/wxpay_ctr"
+                    android:layout_width="@dimen/dimen_105"
+                    android:layout_height="47dp">
+
+                    <View
+                        android:id="@+id/view_bg_wx"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/dimen_7"
+                        android:layout_marginEnd="@dimen/dimen_7"
+                        android:layout_marginRight="@dimen/dimen_7"
+                        android:background="@drawable/selector_pay" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:drawableStart="@mipmap/icon_wechat"
+                        android:drawableLeft="@mipmap/icon_wechat"
+                        android:drawablePadding="@dimen/dimen_5"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:text="@string/weixin"
+                        android:textColor="@color/black_333"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintBottom_toBottomOf="@+id/view_bg_wx"
+                        app:layout_constraintEnd_toEndOf="@+id/view_bg_wx"
+                        app:layout_constraintStart_toStartOf="@+id/view_bg_wx"
+                        app:layout_constraintTop_toTopOf="@+id/view_bg_wx" />
+
+                    <TextView
+                        android:id="@+id/withdraw_tips_wx"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_shape_withdraw_tip"
+                        android:gravity="center"
+                        android:lines="1"
+                        android:padding="@dimen/dimen_4"
+                        android:textColor="@color/white"
+                        android:textSize="8sp"
+                        android:visibility="gone"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="未授权"
+                        tools:visibility="visible" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/alipay_ctr"
+                    android:layout_width="@dimen/dimen_105"
+                    android:layout_height="47dp"
+                    android:layout_marginStart="@dimen/dimen_8"
+                    android:layout_marginLeft="@dimen/dimen_8">
+
+                    <View
+                        android:id="@+id/view_bg_ali"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/dimen_7"
+                        android:layout_marginEnd="@dimen/dimen_7"
+                        android:layout_marginRight="@dimen/dimen_7"
+                        android:background="@drawable/selector_pay" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:drawableStart="@mipmap/icon_alipay"
+                        android:drawableLeft="@mipmap/icon_alipay"
+                        android:drawablePadding="@dimen/dimen_5"
+                        android:gravity="center"
+                        android:text="@string/ali_pay"
+                        android:textColor="@color/black_333"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/view_bg_ali"
+                        app:layout_constraintEnd_toEndOf="@+id/view_bg_ali"
+                        app:layout_constraintStart_toStartOf="@+id/view_bg_ali"
+                        app:layout_constraintTop_toTopOf="@+id/view_bg_ali" />
+
+                    <TextView
+                        android:id="@+id/withdraw_tips_ali"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_shape_withdraw_tip"
+                        android:gravity="center"
+                        android:lines="1"
+                        android:padding="@dimen/dimen_4"
+                        android:textColor="@color/white"
+                        android:textSize="8sp"
+                        android:visibility="gone"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="未授权"
+                        tools:visibility="visible" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="提现说明"
+                android:textColor="@color/black_333"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:lineSpacingExtra="@dimen/dimen_3"
+                android:text="@string/withdraw_tips"
+                android:textColor="@color/black_999"
+                android:textSize="12sp" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/btn_ensure"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/dimen_15"
+        android:background="@drawable/bg_solid_btn3"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:text="@string/ensure_withdraw"
+        android:textColor="@color/black_333"
+        android:textSize="16sp" />
+
+
+    <com.julun.huanque.common.widgets.statepage.StatePageView
+        android:id="@+id/state_pager_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+</FrameLayout>

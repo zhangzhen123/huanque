@@ -4,6 +4,8 @@ package com.julun.huanque.core.net
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.bean.beans.PayResultInfo
 import com.julun.huanque.common.bean.beans.RechargeRespDto
+import com.julun.huanque.common.bean.beans.WithdrawInfo
+import com.julun.huanque.common.bean.forms.EmptyForm
 import com.julun.huanque.common.bean.forms.PayForm
 import com.julun.huanque.common.bean.forms.RechargeRuleQueryForm
 import com.julun.huanque.common.bean.forms.SessionForm
@@ -38,5 +40,13 @@ interface RechargeService {
      */
     @POST("user/pay/recharge/recom")
     suspend fun queryRecomPay(@Body form: PayForm): Root<RechargeRespDto>
+
+
+    /**
+     * 获取提现信息
+     */
+    @POST("user/pay/withdraw/info")
+    suspend fun queryWithdrawInfo(@Body form: EmptyForm = EmptyForm()): Root<WithdrawInfo>
+
 
 }

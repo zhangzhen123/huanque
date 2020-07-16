@@ -3,11 +3,8 @@ package com.julun.huanque.net.service
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidResult
-import com.julun.huanque.common.bean.beans.ManagerInfo
-import com.julun.huanque.common.bean.beans.UpdateHeaderBean
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.database.table.Session
-import com.julun.huanque.common.bean.beans.UserDetailInfo
-import com.julun.huanque.common.bean.beans.UserLevelInfo
 import com.julun.huanque.common.bean.forms.*
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
@@ -100,6 +97,13 @@ interface UserService {
      */
     @POST("social/friend/relation/reportTypeList")
     suspend fun reportTypeList(): Root<ArrayList<ManagerInfo>>
+
+    /**
+     * 获取语音信息
+     */
+    @POST("user/acct/data/getVoiceSignPoint")
+    suspend fun getVoiceSignPoint(@Body form: EmptyForm= EmptyForm()): Root<VoiceSignPointBean>
+
 
 
 }
