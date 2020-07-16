@@ -2,6 +2,7 @@ package com.julun.huanque.common.bean.beans
 
 import android.graphics.Typeface
 import androidx.annotation.ColorInt
+import java.io.Serializable
 
 /**
  * Created by nirack on 16-11-10.
@@ -192,32 +193,67 @@ class TIBean {
         const val TEXT = 0
         const val IMAGE = 1
     }
+
     //类型为0表示是文字，其他表示图片
     var type: Int = 0
+
     //文字颜色
     var textColor: String = ""
+
     //文字颜色int
     @ColorInt
     var textColorInt: Int = 0
+
     //文字大小
     var textSize: Int = 0
+
     //该段文字的内容
     var text: String = ""
+
     //文字类型
     var styleSpan: Int = Typeface.NORMAL
+
     //图片地址
     var url: String = ""
+
     //本地图片
     var imgRes: Int = 0
+
     //图片宽度
     var width = 0
+
     //图片高度
     var height = 0
+
     //是否转换成圆形
     var isCircle: Boolean = false
+
     //圆形边框颜色
     @ColorInt
     var borderRedId: Int = 0
+
     //圆形边框宽度
     var borderWidth: Float = 0f
 }
+
+data class ChatDetailBean(
+    //拉黑状态
+    var blacklistSign: Boolean = false,
+    //背景所需要等级
+    var chatBackgroundLevel: Int = 0,
+    //用户ID
+    var friendId: Long = 0,
+    //头像
+    var headPic: String = "",
+    //当前亲密度等级
+    var intimateLevel: Int = 0,
+    //欢遇状态
+    var meetStatus: String = "",
+    //昵称
+    var nickname: String = "",
+    //签名
+    var mySign: String = "签名不足以表达我自己，找我私聊吧~",
+
+    var remindSign: String = ""
+) :
+    Serializable

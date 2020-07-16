@@ -39,6 +39,9 @@ object ParamConstant {
     //操作类型
     const val OPERATION = "OPERATION"
 
+    //性别数据
+    const val SEX = "SEX"
+
 
     //UUID
     const val UUID = "UUID"
@@ -48,6 +51,7 @@ object ParamConstant {
 
 
     const val TARGET_USER_ID = "TargetUserId"
+
     //举报类型 主播或者用户
     const val REPORT_TYPE = "reportType"
 

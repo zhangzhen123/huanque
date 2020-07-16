@@ -22,6 +22,7 @@ import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.NetCallAcceptBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
+import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
@@ -61,7 +62,10 @@ import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
 import kotlinx.android.synthetic.main.item_header_conversions.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.px2dip
 import java.util.concurrent.TimeUnit
 
 
@@ -118,6 +122,8 @@ class PrivateConversationActivity : BaseActivity() {
     //为回复倒计时
     private var mNoReceiveDisposable: Disposable? = null
 
+    override fun isRegisterEventBus() = true
+
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val ivOperation = findViewById<ImageView>(R.id.ivOperation)
         ivOperation.imageResource = R.mipmap.icon_conversation_setting
@@ -152,7 +158,7 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
         //获取小鹊语料
         mPrivateConversationViewModel?.getActiveWord()
-
+        showBackground()
     }
 
     /**
@@ -278,8 +284,8 @@ class PrivateConversationActivity : BaseActivity() {
         }
         findViewById<ImageView>(R.id.ivOperation).onClickNew {
             //打开会话设置
-            val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: return@onClickNew
-            PrivateConversationSettingActivity.newInstance(this, "$targetId")
+            val chatUserBean = mPrivateConversationViewModel?.chatInfoData?.value ?: return@onClickNew
+            PrivateConversationSettingActivity.newInstance(this, chatUserBean.userId, chatUserBean.sex)
         }
 
         bottom_action.onTouch { v, event ->
@@ -818,5 +824,29 @@ class PrivateConversationActivity : BaseActivity() {
     override fun onViewDestroy() {
         super.onViewDestroy()
         MessageProcessor.privateTextProcessor = null
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun backgroundChange(event: ChatBackgroundChangedEvent) {
+        if (event.friendId == mPrivateConversationViewModel?.targetIdData?.value ?: 0) {
+            //当前页面背景变化
+            showBackground()
+        }
+    }
+
+    /**
+     * 显示背景
+     */
+    private fun showBackground() {
+        val key = GlobalUtils.getBackgroundKey(mPrivateConversationViewModel?.targetIdData?.value ?: 0)
+        val picSource = SharedPreferencesUtils.getString(key, "")
+        if (picSource.isNotEmpty()) {
+            ImageUtils.loadNativeFilePath(
+                iv_background,
+                picSource,
+                px2dip(ScreenUtils.screenWidthFloat.toInt()),
+                px2dip(ScreenUtils.screenHeightFloat.toInt())
+            )
+        }
     }
 }

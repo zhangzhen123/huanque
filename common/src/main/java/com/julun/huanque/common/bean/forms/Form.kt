@@ -13,6 +13,8 @@ class EmptyForm()
 
 class FriendIdForm(var friendId: Long)
 
+class TargetIdForm(var targetUserId: Long)
+
 class SendChatGiftForm(var friendId: Long, var chatGiftId: Int, var count: Int)
 
 /**
