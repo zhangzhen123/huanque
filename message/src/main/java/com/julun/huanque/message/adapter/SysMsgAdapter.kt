@@ -31,8 +31,7 @@ class SysMsgAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.item_sy
 
         val item = info.content as? TextMessage
         item?.let {
-            val customBean: SysMsgContent? =
-                JsonUtil.parseJsonFromTextMessage(SysMsgContent::class.java, item.content)
+            val customBean: SysMsgContent? = MessageFormatUtils.parseJsonFromTextMessage(SysMsgContent::class.java, item.content)
 
             val itemInfo = customBean?.context
 

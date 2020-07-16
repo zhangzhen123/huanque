@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.beans.RootListLiveData
 import com.julun.huanque.common.bean.beans.SysMsgContent
+import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.utils.JsonUtil
 import io.rong.imlib.RongIMClient
@@ -39,6 +40,9 @@ class SysMsgViewModel : BaseViewModel() {
                      * @param messages 获取的消息列表
                      */
                     override fun onSuccess(messages: MutableList<Message>) {
+                        if(messages.isNotEmpty() && messages[0].content is CustomSimulateMessage){
+                            messages.removeAt(0)
+                        }
                         getSysMsgList.value = RootListLiveData<Message>().apply {
                             if (lastMessageId == -1) {
                                 isPull = true

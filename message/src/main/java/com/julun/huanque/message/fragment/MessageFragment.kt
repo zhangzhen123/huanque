@@ -174,9 +174,11 @@ class MessageFragment : BaseFragment() {
                     resources.getString(R.string.delete_conversation_or_not),
                     MyAlertDialog.MyDialogCallback(onRight = {
                         //确定删除
-                        mMessageViewModel?.removeConversation(
-                            tId, Conversation.ConversationType.PRIVATE
-                        )
+                        if (tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender) {
+                            ToastUtils.show("该消息无法删除")
+                            return@MyDialogCallback
+                        }
+                        mMessageViewModel.removeConversation(tId, Conversation.ConversationType.PRIVATE)
                     })
                 )
 

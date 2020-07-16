@@ -75,7 +75,7 @@
         app:layout_constraintTop_toTopOf="@id/tv_nickname" />
 
 
-    <TextView
+    <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
         android:id="@+id/tv_content"
         android:layout_width="0px"
         android:layout_height="wrap_content"

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/llSysRootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -74,7 +75,7 @@
             android:layout_marginTop="@dimen/dimen_15"
             android:layout_marginRight="@dimen/dimen_15"
             android:gravity="left"
-            android:text="恭喜注册成功，完成绑定手机号码，成为欢鹊的成员，恭喜您完成注册，开启的您的欢鹊之旅，恭喜恭喜恭喜恭喜。"
+            tools:text="恭喜注册成功，完成绑定手机号码，成为欢鹊的成员，恭喜您完成注册，开启的您的欢鹊之旅，恭喜恭喜恭喜恭喜。"
             android:textColor="@color/black_999"
             android:layout_marginBottom="@dimen/dimen_20"
             android:textSize="@dimen/sp_14" />

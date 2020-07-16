@@ -146,24 +146,5 @@ object JsonUtil {
     }
 
 
-    /**
-     * 解析TextMessage消息
-     */
-    fun <T> parseJsonFromTextMessage(clazz: Class<T>, content: String): T? {
-        try {
-            val baseList = deserializeAsObjectList(content, BaseData::class.java)
-            if (baseList?.isNotEmpty() == true) {
-                val jsonObject = baseList.first().data as JSONObject
-                val json = jsonObject.toJSONString()
-                return deserializeAsObject<T>(
-                    json,
-                    clazz
-                )
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return null
-    }
 
 }

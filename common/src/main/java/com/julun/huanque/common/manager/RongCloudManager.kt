@@ -254,7 +254,7 @@ object RongCloudManager {
     fun sendSimulateMessage(
         targetId: String,
         senderId: String = "",
-        extra: RoomUserChatExtra,
+        extra: RoomUserChatExtra?,
         conversationType: Conversation.ConversationType,
         customType: String,
         customBean: Any
@@ -264,7 +264,9 @@ object RongCloudManager {
             context = JsonUtil.seriazileAsString(customBean)
         }
 
-        messageContent.extra = JsonUtil.seriazileAsString(extra)
+        if(extra != null){
+            messageContent.extra = JsonUtil.seriazileAsString(extra)
+        }
 
         val callback = object : RongIMClient.ResultCallback<Message>() {
             override fun onSuccess(message: Message?) {
