@@ -431,6 +431,12 @@ object MessageCustomBeanType {
 
     //模拟语音通话消息
     const val Voice_Conmmunication_Simulate = "Voice_Conmmunication_Simulate"
+
+    //模拟系统消息
+    const val SYSTEM_MESSAGE = "SYSTEM_MESSAGE"
+
+    //模拟好友消息
+    const val FRIEND_MESSAGE = "FRIEND_MESSAGE"
 }
 
 /**

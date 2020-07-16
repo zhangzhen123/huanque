@@ -13,6 +13,7 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.MessageHeaderBean
 import com.julun.huanque.common.bean.events.EventMessageBean
+import com.julun.huanque.common.bean.events.MessageBlockEvent
 import com.julun.huanque.common.constant.ActivityCodes
 import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.IntentParamKey
@@ -69,6 +70,7 @@ class MessageFragment : BaseFragment() {
 //        initHeaderView()
         mMessageViewModel.getConversationList()
         mMessageViewModel.queryRongPrivateCount()
+        mMessageViewModel.getBlockedConversationList()
     }
 
     /**
@@ -121,7 +123,7 @@ class MessageFragment : BaseFragment() {
             //            val realPosition = position - mAdapter.headerLayoutCount
             mAdapter.getItem(position)?.let { lmc ->
                 when (lmc.conversation.targetId) {
-                    SystemTargetId.systemNoticeSender,SystemTargetId.friendNoticeSender -> {
+                    SystemTargetId.systemNoticeSender, SystemTargetId.friendNoticeSender -> {
                         //系统消息 or 好友通知消息
                         val intent = Intent(activity, SysMsgActivity::class.java)
                         intent.putExtra(IntentParamKey.SYS_MSG_ID.name, lmc.conversation.targetId)
@@ -172,9 +174,11 @@ class MessageFragment : BaseFragment() {
                     resources.getString(R.string.delete_conversation_or_not),
                     MyAlertDialog.MyDialogCallback(onRight = {
                         //确定删除
-                        mMessageViewModel?.removeConversation(
-                            tId, Conversation.ConversationType.PRIVATE
-                        )
+                        if (tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender) {
+                            ToastUtils.show("该消息无法删除")
+                            return@MyDialogCallback
+                        }
+                        mMessageViewModel.removeConversation(tId, Conversation.ConversationType.PRIVATE)
                     })
                 )
 
@@ -219,6 +223,13 @@ class MessageFragment : BaseFragment() {
                 tv_message_unread.text = str
             }
         })
+
+        mMessageViewModel.blockListData.observe(this, Observer {
+            if (it != null) {
+                mAdapter.blockList = it
+                mAdapter.notifyDataSetChanged()
+            }
+        })
     }
 
     override fun initEvents(rootView: View) {
@@ -248,6 +259,11 @@ class MessageFragment : BaseFragment() {
     fun privateMessageReceive(bean: EventMessageBean) {
         mMessageViewModel.queryRongPrivateCount()
         mMessageViewModel.refreshConversation(bean.tardetId)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun blockChange(event: MessageBlockEvent) {
+        mMessageViewModel.getBlockedConversationList()
     }
 
 //    @Subscribe(threadMode = ThreadMode.MAIN)

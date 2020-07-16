@@ -12,6 +12,7 @@ import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.constant.MessageConstants
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.JsonUtil
+import com.julun.huanque.common.utils.MessageFormatUtils
 import com.julun.huanque.common.utils.TimeUtils
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
 import com.julun.huanque.message.R
@@ -40,7 +41,7 @@ class FriendsAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.item_f
         val item = info.content as? TextMessage
         item?.let {
             val customBean: FriendContent? =
-                JsonUtil.parseJsonFromTextMessage(FriendContent::class.java, item.content)
+                MessageFormatUtils.parseJsonFromTextMessage(FriendContent::class.java, item.content)
 
             val itemInfo = customBean?.context
 
@@ -53,43 +54,8 @@ class FriendsAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.item_f
                 .setText(R.id.tvDate,TimeUtils.formatMessageTime(time))
 
 
-            renderImage(holder.getView(R.id.tvDesc),itemInfo?:return)
+            MessageFormatUtils.renderImage(holder.getView(R.id.tvDesc),itemInfo?:return)
         }
     }
 
-    private fun renderImage(sdstv: DraweeSpanTextView, result: FriendBean) {
-        val list = arrayListOf<TIBean>()
-        val text = TIBean()
-        text.type = TIBean.TEXT
-        text.textColor = "#999999"
-        text.textSize = DensityUtils.dpToPx(14)
-        list.add(text)
-        when(result.relationChangeType){
-            MessageConstants.FRIEDN ->{
-                //成为好友
-                text.text = "和你成了鹊友"
-            }
-            MessageConstants.FRIEDN_FOLLOW ->{
-                //关注
-                text.text = "关注了你"
-            }
-            MessageConstants.FRIEDN_INTIMATE ->{
-                //成为密友
-                text.text = "和你成为了密友"
-            }
-            else ->{
-                //亲密度等级提升
-                text.text = "和你升级为了"
-                val image = TIBean()
-                image.type = TIBean.IMAGE
-                image.imgRes = R.mipmap.icon_logo_avatar_yellow
-                image.height = DensityUtils.dpToPx(16)
-                image.width = DensityUtils.dpToPx(46)
-                list.add(image)
-            }
-        }
-        ImageUtils.renderTextAndImage(list)?.let {
-            sdstv.renderBaseText(it)
-        }
-    }
 }

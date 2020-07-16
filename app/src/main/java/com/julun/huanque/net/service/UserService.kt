@@ -65,7 +65,7 @@ interface UserService {
     /**
      * 更新用户数据
      */
-    @POST("user/acct/data/update")
+    @POST("user/acct/data/initInfo")
     suspend fun updateInformation(@Body form: UpdateInformationForm): Root<VoidResult>
 
     /**
@@ -83,7 +83,7 @@ interface UserService {
     /**
      * 修改头像
      */
-    @POST("user/acct/data/updateHeadPic")
+    @POST("user/acct/data/initHeadPic")
     suspend fun updateHeadPic(@Body form: UpdateHeadForm): Root<UpdateHeaderBean>
 
     /**

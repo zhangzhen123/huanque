@@ -75,7 +75,7 @@
         app:layout_constraintTop_toTopOf="@id/tv_nickname" />
 
 
-    <TextView
+    <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
         android:id="@+id/tv_content"
         android:layout_width="0px"
         android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/bg_unread_count"
+        android:background="@drawable/sel_unread_count"
         android:gravity="center"
         android:includeFontPadding="false"
         android:paddingLeft="5dp"

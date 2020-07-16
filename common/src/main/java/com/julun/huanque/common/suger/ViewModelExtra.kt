@@ -7,6 +7,7 @@ import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.net.NError
 import com.julun.huanque.common.net.NSuccess
 import com.julun.huanque.common.net.NetExceptionHandle
+import com.julun.huanque.common.utils.ToastUtils
 import io.reactivex.rxjava3.core.Observable
 
 /**
@@ -53,6 +54,9 @@ suspend fun BaseViewModel.request(
             NetExceptionHandle.handleException(e, loadState)
         }
 
+        if(e is ResponseError){
+            ToastUtils.show(e.busiMessage)
+        }
         error?.invoke(e)
         e.printStackTrace()
     } finally {

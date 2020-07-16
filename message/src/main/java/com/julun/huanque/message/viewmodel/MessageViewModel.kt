@@ -9,6 +9,7 @@ import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
@@ -35,6 +36,8 @@ class MessageViewModel : BaseViewModel() {
 
     //会话列表
     val conversationListData: MutableLiveData<MutableList<LocalConversation>> by lazy { MutableLiveData<MutableList<LocalConversation>>() }
+
+    val blockListData: MutableLiveData<MutableList<String>> by lazy { MutableLiveData<MutableList<String>>() }
 
     //有变化的数据  <0  刷新整个列表  >=0 刷新单个条目
     val changePosition: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
@@ -88,6 +91,7 @@ class MessageViewModel : BaseViewModel() {
     fun getConversationList() {
         RongIMClient.getInstance().getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(p0: List<Conversation>?) {
+                dealWithStableConversation(p0)
                 if (p0 == null || p0.isEmpty()) {
                     return
                 }
@@ -99,6 +103,26 @@ class MessageViewModel : BaseViewModel() {
             }
 
         })
+    }
+
+    /**
+     * 获取免打扰会话列表
+     */
+    fun getBlockedConversationList() {
+        RongIMClient.getInstance().getBlockedConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
+            override fun onSuccess(list: List<Conversation>?) {
+                val blockedIdList = mutableListOf<String>()
+                list?.forEach {
+                    blockedIdList.add(it.targetId)
+                }
+                blockListData.value = blockedIdList
+            }
+
+            override fun onError(errorCode: RongIMClient.ErrorCode?) {
+                logger("errorCode = $errorCode")
+            }
+
+        }, Conversation.ConversationType.PRIVATE)
     }
 
 
@@ -251,7 +275,7 @@ class MessageViewModel : BaseViewModel() {
      * 获取消息内部的用户信息
      */
     private fun getMessageUserInfo(extra: String): ChatUser? {
-        if(extra.isEmpty()){
+        if (extra.isEmpty()) {
             return null
         }
         var user: RoomUserChatExtra? = null
@@ -301,6 +325,44 @@ class MessageViewModel : BaseViewModel() {
     private fun refreshConversationList(list: MutableList<LocalConversation>) {
         val sortResult = sortConversation(list)
         conversationListData.postValue(sortResult)
+    }
 
+    /**
+     * 对固定会话进行处理
+     */
+    private fun dealWithStableConversation(list: List<Conversation>?) {
+        var hasSystem = false
+        var hasFriend = false
+        list?.forEach {
+            if (it.targetId == SystemTargetId.friendNoticeSender) {
+                hasFriend = true
+            }
+            if (it.targetId == SystemTargetId.systemNoticeSender) {
+                hasSystem = true
+            }
+        }
+        if (!hasSystem) {
+            //系统消息发送自定义消息
+            RongCloudManager.sendSimulateMessage(
+                SystemTargetId.systemNoticeSender,
+                "${SessionUtils.getUserId()}",
+                null,
+                Conversation.ConversationType.PRIVATE,
+                MessageCustomBeanType.SYSTEM_MESSAGE,
+                ""
+            )
+        }
+
+        if (!hasFriend) {
+            //鹊友消息发送自定义消息
+            RongCloudManager.sendSimulateMessage(
+                SystemTargetId.friendNoticeSender,
+                "${SessionUtils.getUserId()}",
+                null,
+                Conversation.ConversationType.PRIVATE,
+                MessageCustomBeanType.SYSTEM_MESSAGE,
+                ""
+            )
+        }
     }
 }
