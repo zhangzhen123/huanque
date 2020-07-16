@@ -29,6 +29,7 @@ import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
 import com.julun.huanque.message.R
 import io.rong.imlib.model.Message
@@ -106,7 +107,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         if (helper == null || item == null) {
             return
         }
-
+        //EmojiSpanBuilder.buildEmotionSpannable(binding.getRoot().getContext(), chatInfo.message)
         val content = item.content
         //其它的普通聊天消息
         if (helper.itemViewType == OTHER) {
@@ -186,7 +187,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             tvContent.maxWidth = ScreenUtils.getScreenWidth() - DensityHelper.dp2px(65f) * 2
             if (content is TextMessage) {
                 showMessageView(helper, TEXT_MESSAGE, helper.itemViewType)
-                tvContent.text = EmojiUtil.message2emoji(content.content)
+
+                tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content)
+//                    EmojiUtil.message2emoji(content.content)
                 //判断是否显示文本鹊币
                 if (helper.itemViewType == OTHER) {
                     showTextImageQueBi(helper.getView<TextView>(R.id.tv_quebi), item, helper.adapterPosition)
@@ -405,7 +408,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 //本人是收费方
                 qbTv.text = "${voiceBean.totalBeans}"
                 qbTv.show()
-            }else{
+            } else {
                 qbTv.hide()
             }
         } catch (e: Exception) {
