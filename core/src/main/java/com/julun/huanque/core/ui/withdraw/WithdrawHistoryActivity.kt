@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
@@ -17,6 +18,7 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.activity_withdraw_history.*
+import kotlinx.android.synthetic.main.activity_withdraw_history.mRecyclerView
 import org.jetbrains.anko.textColor
 
 
@@ -32,7 +34,7 @@ import org.jetbrains.anko.textColor
 class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
 
 
-    private val mAdapter = object : BaseQuickAdapter<Any, BaseViewHolder>(R.layout.item_withdraw_history) {
+    private val mAdapter = object : BaseQuickAdapter<Any, BaseViewHolder>(R.layout.item_withdraw_history), LoadMoreModule {
         override fun convert(holder: BaseViewHolder, item: Any) {
             holder.setText(R.id.tv_draw_title,"支付宝（xxx）").setText(R.id.tv_draw_time,"提现时间：20202020-2-2")
                 .setText(R.id.tv_draw_money,"100元")
@@ -66,10 +68,16 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
         mViewModel.queryInfo(queryType = QueryType.INIT)
     }
 
-    private var currentWithdrawType: String = ""
     override fun initEvents(rootView: View) {
         pagerHeader.imageViewBack.onClickNew {
             finish()
+        }
+        mAdapter.loadMoreModule.setOnLoadMoreListener {
+            logger.info("loadMoreModule 加载更多")
+            mViewModel.queryInfo(QueryType.LOAD_MORE)
+        }
+        mRefreshView.setOnRefreshListener {
+            mViewModel.queryInfo(QueryType.REFRESH)
         }
     }
 
