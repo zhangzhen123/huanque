@@ -2,6 +2,7 @@ package com.julun.rnlib
 
 import android.app.Application
 import com.BV.LinearGradient.LinearGradientPackage
+import com.brentvatne.react.ReactVideoPackage
 import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactInstanceManager.ReactInstanceEventListener
 import com.facebook.react.bridge.Arguments
@@ -53,6 +54,7 @@ object RnManager {
                 .addPackage(RNSoundPackage())
                 .addPackage(SvgPackage())
                 .addPackage(ReanimatedPackage())
+                .addPackage(ReactVideoPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)
                 .setNativeModuleCallExceptionHandler {

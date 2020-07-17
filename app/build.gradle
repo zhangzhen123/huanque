@@ -127,7 +127,6 @@ dependencies {
     implementation rootProject.ext.dependencies["LOTTIE"]
     implementation files('libs/smantifraud.aar')
     implementation 'com.jakewharton:process-phoenix:2.0.0'
-    implementation 'com.contrarywind:Android-PickerView:4.1.9'
     implementation rootProject.ext.dependencies["WECHAT"]
     implementation project(path: ':realname')
 }
