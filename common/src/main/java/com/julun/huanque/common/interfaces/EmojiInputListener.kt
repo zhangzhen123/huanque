@@ -13,7 +13,7 @@ interface EmojiInputListener {
     fun onClick(type: String, emotion: Emotion)
 
     //长按事件
-    fun onLongClick(view: View, emotion: Emotion)
+    fun onLongClick(type: String, view: View, emotion: Emotion)
 
     //抬起事件
     fun onActionUp()

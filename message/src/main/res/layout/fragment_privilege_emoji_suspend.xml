@@ -2,33 +2,33 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="50dp"
-    android:layout_height="66dp"
-    >
+    android:layout_width="94dp"
+    android:layout_height="116dp">
 
     <ImageView
         android:id="@+id/iv_emoji"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_emoji"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/tv_emoji"
-        tools:src="@drawable/ku"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:src="@drawable/ku" />
 
     <TextView
         android:id="@+id/tv_emoji"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="4dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="3dp"
-        android:includeFontPadding="false"
         app:layout_constraintTop_toBottomOf="@id/iv_emoji"
-        android:textSize="@dimen/sp_10"
-        android:textColor="@color/black_333"
         tools:text="肯德" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

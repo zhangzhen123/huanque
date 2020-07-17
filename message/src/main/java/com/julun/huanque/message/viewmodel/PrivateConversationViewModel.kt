@@ -11,6 +11,7 @@ import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.SendMsgForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.database.table.Balance
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
@@ -220,13 +221,22 @@ class PrivateConversationViewModel : BaseViewModel() {
     /**
      * 发送消息接口
      */
-    fun sendMsg(targetId: Long, content: String, targetUser: TargetUserObj) {
+    fun sendMsg(targetId: Long, content: String, targetUser: TargetUserObj, type: String = "") {
         viewModelScope.launch {
             request({
                 val result = socialService.sendMsg(SendMsgForm(targetId, content)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
                 msgFeeData.value = result.consumeBeans
-                RongCloudManager.send(content, "$targetId", targetUserObj = targetUser.apply { fee = result.consumeBeans }) {}
+                if (type.isEmpty()) {
+                    RongCloudManager.send(content, "$targetId", targetUserObj = targetUser.apply { fee = result.consumeBeans }) {}
+                } else {
+                    //发送特权礼物消息
+                    RongCloudManager.sendCustomMessage(
+                        "$targetId",
+                        targetUser.apply { fee = result.consumeBeans },
+                        Conversation.ConversationType.PRIVATE, MessageCustomBeanType.Expression_Privilege, content
+                    )
+                }
             }, {})
         }
     }

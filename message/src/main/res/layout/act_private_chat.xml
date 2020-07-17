@@ -321,7 +321,6 @@
                 android:id="@+id/panel_emotion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cus_panel_toggle="true"
                 app:cus_panel_trigger="@id/iv_emoji" />
 
 

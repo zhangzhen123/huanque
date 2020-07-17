@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
@@ -19,10 +20,43 @@ import java.util.regex.Pattern;
  */
 public class EmojiSpanBuilder {
 
-    private static Pattern sPatternEmotion =
-            Pattern.compile("\\[([\u4e00-\u9fa5\\w])+\\]|[\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]");
+    private static Pattern sPatternEmotion = Pattern.compile(
+            "\\[([\u4e00-\u9fa5\\w])+\\]|[\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]");
+
+    /**
+     * 是否都是表情
+     * @return
+     */
+    public static boolean allEmoji(Context context, String text) {
+        Matcher matcherEmotion = sPatternEmotion.matcher(text);
+        int keyLengh = 0;
+        while (matcherEmotion.find()) {
+            String key = matcherEmotion.group();
+            keyLengh += key.length();
+        }
+        if (keyLengh == text.length()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public static Spannable buildEmotionSpannable(Context context, String text) {
+        return buildEmotionSpannable(context, text, false);
+    }
+
+    /**
+     *
+     * @param context
+     * @param text
+     * @param allEmojiBig 都是表情放大
+     * @return
+     */
+    public static Spannable buildEmotionSpannable(Context context, String text, Boolean allEmojiBig) {
+        int border = DensityHelper.dp2px(20f);
+        if (allEmojiBig && allEmoji(context, text)) {
+            border = DensityHelper.dp2px(44f);
+        }
         Matcher matcherEmotion = sPatternEmotion.matcher(text);
         SpannableString spannableString = new SpannableString(text);
         while (matcherEmotion.find()) {
@@ -31,12 +65,28 @@ public class EmojiSpanBuilder {
             if (imgRes != -1) {
                 int start = matcherEmotion.start();
                 Drawable drawable = ContextCompat.getDrawable(context, imgRes);
-                drawable.setBounds(0, 0, DensityHelper.dp2px(20f), DensityHelper.dp2px(20f));
+                drawable.setBounds(0, 0, border, border);
                 CenterImageSpan span = new CenterImageSpan(drawable);
                 spannableString.setSpan(span, start, start + key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
 
         return spannableString;
+    }
+
+    /**
+     * 获取特权表情的地址
+     * @param context
+     * @param text
+     * @return
+     */
+    public static int getPrivilegeResource(Context context, String text) {
+        Matcher matcherEmotion = sPatternEmotion.matcher(text);
+        if(matcherEmotion.find()){
+            String key = matcherEmotion.group();
+            int imgRes = Emotions.getDrawableResByName(key);
+            return imgRes;
+        }
+        return 0;
     }
 }

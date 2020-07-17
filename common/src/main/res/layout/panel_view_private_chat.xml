@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--普通表情-->
@@ -14,7 +15,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <!--特权表情-->
-    <androidx.recyclerview.widget.RecyclerView
+    <com.julun.huanque.common.widgets.EventRecyclerView
         android:id="@+id/recyclerView_prerogative"
         android:layout_width="0px"
         android:layout_height="0px"
@@ -23,6 +24,37 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_shade"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="#66000000"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/recyclerView_prerogative"
+        app:layout_constraintLeft_toLeftOf="@id/recyclerView_prerogative"
+        app:layout_constraintRight_toRightOf="@id/recyclerView_prerogative"
+        app:layout_constraintTop_toTopOf="@id/recyclerView_prerogative"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_privilege_attetnion"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:background="@drawable/bg_privilege_attetnion"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/view_shade"
+        app:layout_constraintLeft_toLeftOf="@id/view_shade"
+        app:layout_constraintRight_toRightOf="@id/view_shade"
+        app:layout_constraintTop_toTopOf="@id/view_shade"
+        tools:text="亲密度等级Lv.5，立即解锁"
+        tools:visibility="visible" />
 
     <!--高级表情-->
     <androidx.recyclerview.widget.RecyclerView

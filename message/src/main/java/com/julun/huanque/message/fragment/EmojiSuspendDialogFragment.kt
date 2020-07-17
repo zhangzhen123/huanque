@@ -3,7 +3,6 @@ package com.julun.huanque.message.fragment
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Gravity
-import android.view.ViewGroup
 import android.view.WindowManager
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.constant.ParamConstant
@@ -11,7 +10,7 @@ import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.message.R
-import kotlinx.android.synthetic.main.fragment_emoji_suspend.*
+import kotlinx.android.synthetic.main.fragment_normal_emoji_suspend.*
 import org.jetbrains.anko.imageResource
 
 /**
@@ -35,7 +34,7 @@ class EmojiSuspendDialogFragment : BaseDialogFragment() {
 
     private var mLocation: IntArray? = null
 
-    override fun getLayoutId() = R.layout.fragment_emoji_suspend
+    override fun getLayoutId() = R.layout.fragment_normal_emoji_suspend
 
     override fun needEnterAnimation() = false
 
