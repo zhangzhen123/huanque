@@ -3,7 +3,7 @@ ext {
     hq = [
             buildToolsVersion: "29.0.3",
             compileSdkVersion: 29,
-            minSdkVersion    : 16,
+            minSdkVersion    : 17,
             targetSdkVersion : 29
     ]
 

@@ -158,7 +158,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 MessageCustomBeanType.Expression_Privilege -> {
                     //特权表情
                     showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
-                    showGiftView(helper, content.context)
+//                    showGiftView(helper, content.context)
                     val imageResource = EmojiSpanBuilder.getPrivilegeResource(context, content.context)
                     ImageUtils.loadImageLocal(helper.getView(R.id.sdv_image), imageResource)
                     showTextImageQueBi(helper.getView<TextView>(R.id.tv_quebi), item, helper.adapterPosition)

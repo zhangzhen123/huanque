@@ -1,12 +1,14 @@
 package com.julun.huanque.agora.activity
 
 import android.Manifest
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.agora.AgoraManager
 import com.julun.huanque.agora.R
 import com.julun.huanque.agora.handler.EventHandler
@@ -43,12 +45,24 @@ import java.util.concurrent.TimeUnit
  */
 @Route(path = ARouterConstant.VOICE_CHAT_ACTIVITY)
 class VoiceChatActivity : BaseActivity(), EventHandler {
+    companion object {
+        //拨打状态
+        const val CALLING = "CALLING"
+
+        //挂断状态
+        const val CLOSE = "CLOSE"
+    }
+
     private val TAG = "VoiceChatActivity"
     private var mVoiceChatViewModel: VoiceChatViewModel? = null
 
 
     private var mType = ""
 
+    private var mCallingContentDisposable: Disposable? = null
+
+    //音频播放器
+    private var mPlayer: MediaPlayer? = null
 
     override fun getLayoutId() = R.layout.act_voice_chat
 
@@ -158,6 +172,19 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     }
 
+
+    /**
+     * 播放音效
+     */
+    private fun playAudio(calling: Boolean) {
+        mPlayer = if (calling) {
+            MediaPlayer.create(this, R.raw.ring)?.apply { isLooping = true }
+        } else {
+            MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }
+        }
+        mPlayer?.start()
+    }
+
     override fun initEvents(rootView: View) {
         ll_voice_accept.onClickNew {
             //接收邀请
@@ -206,6 +233,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 //                mVoiceChatViewModel?.refuseVoice()
 //            }
         }
+
+        tv_recharge.onClickNew {
+            ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
+        }
     }
 
     /**
@@ -235,6 +266,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         logger.info("获取权限成功")
                         if (mType == ConmmunicationUserType.CALLING) {
                             calling()
+                            playAudio(true)
                         } else if (mType == ConmmunicationUserType.CALLED) {
                             mVoiceChatViewModel?.acceptVoice()
                             //加入会话
@@ -268,7 +300,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         ll_close.show()
                         ll_hands_free.hide()
                         ll_voice_accept.hide()
-                        tv_call_duration.text = "正在呼叫对方，等待接通…"
+                        showWaitContent(true)
+
                     }
                     VoiceChatViewModel.VOICE_WAIT_ACCEPT -> {
                         //待接听状态
@@ -276,7 +309,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         ll_close.show()
                         ll_hands_free.hide()
                         ll_voice_accept.show()
-                        tv_call_duration.text = "正在邀请您语音通话…"
+                        showWaitContent(false)
+                        playAudio(true)
                     }
                     VoiceChatViewModel.VOICE_ACCEPT -> {
                         //接听状态
@@ -284,16 +318,26 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         ll_close.show()
                         ll_hands_free.show()
                         ll_voice_accept.hide()
+
+                        mPlayer?.stop()
+                        mPlayer = null
+
                         //取消超时倒计时
                         mDisposable?.dispose()
+                        mCallingContentDisposable?.dispose()
                     }
                     VoiceChatViewModel.VOICE_CLOSE -> {
                         //结束状态
+                        mPlayer?.stop()
+                        mPlayer = null
+
+                        playAudio(false)
                         //退出频道
                         leaveChannel()
 //                        ToastUtils.show("通话已结束")
                         mDisposable?.dispose()
                         mDurationDisposable?.dispose()
+                        mCallingContentDisposable?.dispose()
                         Observable.timer(1, TimeUnit.SECONDS)
                             .bindUntilEvent(this, ActivityEvent.DESTROY)
                             .observeOn(AndroidSchedulers.mainThread())
@@ -314,16 +358,28 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
         mVoiceChatViewModel?.netcallBeanData?.observe(this, Observer { netCallBean ->
             if (netCallBean != null) {
+                var backPic = ""
                 if (mType == ConmmunicationUserType.CALLING) {
                     //主叫
                     mVoiceChatViewModel?.targetUserBean?.value = netCallBean.receiverInfo
+                    backPic = netCallBean.receiverInfo.backPic
                 } else if (mType == ConmmunicationUserType.CALLED) {
                     mVoiceChatViewModel?.targetUserBean?.value = netCallBean.callerInfo
+                    backPic = netCallBean.callerInfo.backPic
                 }
                 mVoiceChatViewModel?.agoraToken = netCallBean.token
                 mVoiceChatViewModel?.channelId = netCallBean.channelId
                 mVoiceChatViewModel?.callId = netCallBean.callId
                 mVoiceChatViewModel?.duration = 0
+                if (netCallBean.beans > 0) {
+                    //付费方
+                    tv_price.show()
+                    tv_price.text = "${netCallBean.beans}鹊币/分钟"
+                }
+
+                ImageUtils.loadImageWithBlur(
+                    sdv_bg, backPic, 1, 1, ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight()
+                )
             }
         })
 
@@ -335,11 +391,65 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
     /**
+     * 循环显示呼叫状态
+     * @param calling  true ： 拨号状态   false : 带接听状态
+     */
+    private fun showWaitContent(calling: Boolean) {
+        mCallingContentDisposable?.dispose()
+        mCallingContentDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
+            .bindUntilEvent(this, ActivityEvent.DESTROY)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                val index = it % 3
+                when (index) {
+                    0L -> {
+                        tv_call_duration.text = if (calling) {
+                            "正在呼叫对方，等待接通."
+                        } else {
+                            "正在邀请您语音通话."
+                        }
+                    }
+                    1L -> {
+                        tv_call_duration.text = if (calling) {
+                            "正在呼叫对方，等待接通.."
+                        } else {
+                            "正在邀请您语音通话.."
+                        }
+                    }
+                    else -> {
+                        tv_call_duration.text = if (calling) {
+                            "正在呼叫对方，等待接通..."
+                        } else {
+                            "正在邀请您语音通话..."
+                        }
+                    }
+                }
+
+            }, { it.printStackTrace() })
+
+    }
+
+    /**
      * 显示页面
      */
     private fun showViewByData(bean: ChatUserBean) {
         ImageUtils.loadImage(sdv_header, bean.headPic, 100f, 100f)
         tv_nickname.text = bean.nickname
+        val sexImage = when (bean.sex) {
+            Sex.MALE -> {
+                R.mipmap.icon_sex_male
+            }
+            Sex.FEMALE -> {
+                R.mipmap.icon_sex_female
+            }
+            else -> {
+                0
+            }
+        }
+        if (sexImage > 0) {
+            tv_nickname.setCompoundDrawablesWithIntrinsicBounds(0, 0, sexImage, 0)
+            tv_nickname.compoundDrawablePadding = 4
+        }
     }
 
 
@@ -556,6 +666,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onViewDestroy() {
         super.onViewDestroy()
         leaveChannel()
+        mPlayer?.stop()
+        mPlayer = null
     }
 
     override fun onDestroy() {
