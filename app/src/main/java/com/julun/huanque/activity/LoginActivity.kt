@@ -117,6 +117,7 @@ class LoginActivity : BaseActivity() {
             //没有对应权限，直接退出
             return
         }
+        logger.info("JPush success = ${JVerificationInterface.isInitSuccess()} time = ${System.currentTimeMillis()}")
         //判断是否初始化成功
         if (!JVerificationInterface.isInitSuccess()) {
             //初始化未成功，直接返回
