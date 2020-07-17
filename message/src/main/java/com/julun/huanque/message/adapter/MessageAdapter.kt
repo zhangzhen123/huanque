@@ -155,6 +155,14 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     showMessageView(helper, GIFT_VIEW, helper.itemViewType)
                     showGiftView(helper, content.context)
                 }
+                MessageCustomBeanType.Expression_Privilege -> {
+                    //特权表情
+                    showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
+                    showGiftView(helper, content.context)
+                    val imageResource = EmojiSpanBuilder.getPrivilegeResource(context, content.context)
+                    ImageUtils.loadImageLocal(helper.getView(R.id.sdv_image), imageResource)
+                    showTextImageQueBi(helper.getView<TextView>(R.id.tv_quebi), item, helper.adapterPosition)
+                }
                 else -> {
                 }
             }
@@ -188,7 +196,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             if (content is TextMessage) {
                 showMessageView(helper, TEXT_MESSAGE, helper.itemViewType)
 
-                tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content)
+                tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content, true)
 //                    EmojiUtil.message2emoji(content.content)
                 //判断是否显示文本鹊币
                 if (helper.itemViewType == OTHER) {

@@ -432,6 +432,9 @@ object MessageCustomBeanType {
     //礼物消息
     const val Gift = "Gift"
 
+    //特权表情
+    const val Expression_Privilege = "Expression_Privilege"
+
     //模拟语音通话消息
     const val Voice_Conmmunication_Simulate = "Voice_Conmmunication_Simulate"
 
@@ -513,6 +516,7 @@ object EmojiType {
     //高级表情
     const val HIGH = "HIGH"
 }
+
 /**
  * 操作类型
  */

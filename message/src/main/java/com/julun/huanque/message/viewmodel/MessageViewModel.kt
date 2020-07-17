@@ -66,7 +66,7 @@ class MessageViewModel : BaseViewModel() {
                 }
                 tempData?.let {
                     list.remove(it)
-                    changePosition.value = -1
+                    conversationListData.value = list
                 }
             }
 

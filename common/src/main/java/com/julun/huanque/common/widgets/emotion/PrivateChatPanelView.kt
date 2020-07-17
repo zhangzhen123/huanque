@@ -1,6 +1,9 @@
 package com.julun.huanque.common.widgets.emotion
 
 import android.content.Context
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -18,12 +21,13 @@ import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.GlobalUtils
 import kotlinx.android.synthetic.main.panel_view_private_chat.view.*
 
 /**
  *@创建者   dong
  *@创建时间 2020/7/16 15:29
- *@描述
+ *@描述 表情面板
  */
 class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView, ConstraintLayout(context, attrs) {
 
@@ -31,10 +35,19 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
     private var isToggle = true
 
     //普通表情的Adapter
-    private var mNormalEmojiAdapter = EmojiAdapter()
+    private var mNormalEmojiAdapter = NormalEmojiAdapter()
+
+    //特权表情的Adapter
+    private var mPrivilegeAdapter = PrerogativeEmojiAdapter()
+
+    private var mNeedLevel = 0
+
+    private var mCurrentLevel = 0
+
 
     //点击表情的回调
     var mListener: EmojiInputListener? = null
+
 
     init {
         if (context != null && attrs != null) {
@@ -47,6 +60,44 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
 
             initListener()
             initRecyclerView()
+        }
+    }
+
+    /**
+     * 设置专属表情所需要等级
+     * @param needLevel 解锁专属表情所需等级
+     * @param currentLevel 当前两人的亲密度等级
+     */
+    fun setIntimate(needLevel: Int, currentLevel: Int) {
+        mNeedLevel = needLevel
+        mCurrentLevel = currentLevel
+
+        val str = "亲密度等级$needLevel，立即解锁"
+        val spannableString = SpannableString(str)
+        val colorText = "立即解锁"
+        val index = str.indexOf(colorText)
+        spannableString.setSpan(
+            ForegroundColorSpan(GlobalUtils.getColor(R.color.send_private_chat)),
+            index,
+            index + colorText.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        tv_privilege_attetnion.text = spannableString
+
+        showPrivilegeShade()
+    }
+
+    /**
+     * 特权表情的遮罩是否显示
+     */
+    private fun showPrivilegeShade() {
+        if (iv_prerogative.isSelected && mNeedLevel > mCurrentLevel) {
+            //需要显示特权表情遮罩
+            view_shade.show()
+            tv_privilege_attetnion.show()
+        } else {
+            view_shade.hide()
+            tv_privilege_attetnion.hide()
         }
 
     }
@@ -72,6 +123,19 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
             showRecyclerView(iv_emoji, recyclerView_emoji)
         }
         iv_prerogative.onClickNew {
+            if (mPrivilegeAdapter.itemCount == 0) {
+                //未设置数据,设置数据
+                val list = mutableListOf<Emotion>()
+                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
+                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
+                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
+                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
+                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
+                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
+                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
+                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
+                mPrivilegeAdapter.setList(list)
+            }
             showRecyclerView(iv_prerogative, recyclerView_prerogative)
         }
         iv_high.onClickNew {
@@ -84,12 +148,23 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
                 }
             }
         }
+        recyclerView_prerogative.mEventListener = object : EventListener {
+            override fun onDispatch(ev: MotionEvent?) {
+                if (ev?.action == MotionEvent.ACTION_UP) {
+                    mListener?.onActionUp()
+                }
+            }
+        }
+
+        tv_privilege_attetnion.onClickNew {
+            //弹窗说明弹窗
+        }
     }
 
     private fun initRecyclerView() {
         recyclerView_emoji.layoutManager = GridLayoutManager(context, 7)
         recyclerView_emoji.adapter = mNormalEmojiAdapter
-        mNormalEmojiAdapter.setList(Emotions.getEmotions())
+        mNormalEmojiAdapter.setList(Emotions.getEmotions(EmojiType.NORMAL))
         mNormalEmojiAdapter.setOnItemClickListener { adapter, view, position ->
             if (position < mNormalEmojiAdapter.data.size) {
                 val tempData = mNormalEmojiAdapter.getItem(position)
@@ -100,14 +175,30 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
         mNormalEmojiAdapter.setOnItemLongClickListener { adapter, view, position ->
             if (position < mNormalEmojiAdapter.data.size) {
                 val tempData = mNormalEmojiAdapter.getItem(position)
-                mListener?.onLongClick(view, tempData)
+                mListener?.onLongClick(EmojiType.NORMAL, view, tempData)
                 view.isSelected = true
             }
             return@setOnItemLongClickListener true
         }
 
-        recyclerView_prerogative.layoutManager = GridLayoutManager(context, 7)
-//        recyclerView_prerogative.adapter = mNormalEmojiAdapter
+        recyclerView_prerogative.layoutManager = GridLayoutManager(context, 5)
+        recyclerView_prerogative.adapter = mPrivilegeAdapter
+
+        mPrivilegeAdapter.setOnItemClickListener { adapter, view, position ->
+            if (position < mPrivilegeAdapter.data.size) {
+                val tempData = mPrivilegeAdapter.getItem(position)
+                mListener?.onClick(EmojiType.PREROGATIVE, tempData)
+            }
+        }
+
+        mPrivilegeAdapter.setOnItemLongClickListener { adapter, view, position ->
+            if (position < mPrivilegeAdapter.data.size) {
+                val tempData = mPrivilegeAdapter.getItem(position)
+                mListener?.onLongClick(EmojiType.PREROGATIVE, view, tempData)
+                view.isSelected = true
+            }
+            return@setOnItemLongClickListener true
+        }
 
         recyclerView_high.layoutManager = GridLayoutManager(context, 7)
 //        recyclerView_high.adapter = mNormalEmojiAdapter
@@ -131,21 +222,25 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
                 it.hide()
             }
         }
-
+        showPrivilegeShade()
     }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
         assertView()
     }
-
-
 }
 
 /**
- * 图片Adapter
+ * 普通图片Adapter
  */
-private class EmojiAdapter() : BaseQuickAdapter<Emotion, BaseViewHolder>(R.layout.vh_emotion_item_layout) {
+private class NormalEmojiAdapter() : BaseQuickAdapter<Emotion, BaseViewHolder>(R.layout.vh_emotion_item_layout) {
+    override fun convert(holder: BaseViewHolder, item: Emotion) {
+        holder.setImageResource(R.id.image, item.drawableRes)
+    }
+}
+
+private class PrerogativeEmojiAdapter : BaseQuickAdapter<Emotion, BaseViewHolder>(R.layout.vh_privilege_emotion_item_layout) {
     override fun convert(holder: BaseViewHolder, item: Emotion) {
         holder.setImageResource(R.id.image, item.drawableRes)
     }

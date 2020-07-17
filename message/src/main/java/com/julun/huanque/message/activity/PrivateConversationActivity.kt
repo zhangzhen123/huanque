@@ -41,20 +41,15 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
-import com.julun.huanque.common.widgets.emotion.EmotionPagerView
-import com.julun.huanque.common.widgets.emotion.Emotions
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
-import com.julun.huanque.message.fragment.EmojiSuspendDialogFragment
 import com.julun.huanque.message.fragment.IntimateDetailFragment
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
-import com.rd.PageIndicatorView
-import com.rd.utils.DensityUtils
 import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -67,7 +62,6 @@ import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
 import kotlinx.android.synthetic.main.act_private_chat.iv_emoji
-import kotlinx.android.synthetic.main.fragment_emoji_suspend.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -104,6 +98,9 @@ class PrivateConversationActivity : BaseActivity() {
 
     //送礼消息
     private val Message_Gift = "Message_Gift"
+
+    //特权表情
+    private val Message_Privilege = "Message_Privilege"
 
     private var mPrivateConversationViewModel: PrivateConversationViewModel? = null
 
@@ -260,6 +257,8 @@ class PrivateConversationActivity : BaseActivity() {
                     }
                 }
                 mPrivateConversationViewModel?.operationType = ""
+                //刷新特权表情
+                refreshPrivilegeEmoji(it.intimate)
             }
             mIntimateDetailViewModel?.basicBean?.value = it
         })
@@ -285,6 +284,22 @@ class PrivateConversationActivity : BaseActivity() {
             }
         })
     }
+
+    /**
+     * 刷新特权表情
+     */
+    private fun refreshPrivilegeEmoji(bean: IntimateBean) {
+        //当前亲密度等级
+        val currentLent = bean.intimateLevel
+        bean.intimatePrivilegeList.forEach {
+            if (it.key == "ZSBQ") {
+                val emojiLevel = it.minLevel
+                panel_emotion.setIntimate(emojiLevel, currentLent)
+                return
+            }
+        }
+    }
+
 
     override fun initEvents(rootView: View) {
         findViewById<View>(R.id.ivback).onClickNew {
@@ -391,8 +406,8 @@ class PrivateConversationActivity : BaseActivity() {
                         editable.insert(start, emotionSpannable)
                     }
                     EmojiType.PREROGATIVE -> {
-                        //特权表情
-
+                        //特权表情,直接发送
+                        sendChatMessage(message = emotion.text, messageType = Message_Privilege)
                     }
                     EmojiType.HIGH -> {
                         //高级表情
@@ -400,18 +415,9 @@ class PrivateConversationActivity : BaseActivity() {
                 }
             }
 
-            override fun onLongClick(view: View, emotion: Emotion) {
+            override fun onLongClick(type: String, view: View, emotion: Emotion) {
                 //长按,显示弹窗
-//                val location = IntArray(2)
-//                view.getLocationOnScreen(location)
-//                val localParams = IntArray(4)
-//                localParams[0] = location[0]
-//                localParams[1] = location[1]
-//                localParams[2] = view.width
-//                localParams[3] = view.height
-//
-//                EmojiSuspendDialogFragment.newInstance(emotion, localParams).show(supportFragmentManager, "EmojiSuspendDialogFragment")
-                showEmojiSuspend(view, emotion)
+                showEmojiSuspend(type, view, emotion)
             }
 
             override fun onActionUp() {
@@ -426,20 +432,44 @@ class PrivateConversationActivity : BaseActivity() {
     /**
      * 显示表情悬浮效果
      */
-    private fun showEmojiSuspend(view: View, emotion: Emotion) {
-        val rootView = LayoutInflater.from(this).inflate(R.layout.fragment_emoji_suspend, null)
-        rootView.findViewById<ImageView>(R.id.iv_emoji).imageResource = emotion.drawableRes
-        rootView.findViewById<TextView>(R.id.tv_emoji).text = emotion.text
-
+    private fun showEmojiSuspend(type: String, view: View, emotion: Emotion) {
         val location = IntArray(2)
         view.getLocationOnScreen(location)
+        var dx = 0
+        var dy = 0
+        var rootView: View? = null
+        when (type) {
+            EmojiType.NORMAL -> {
+                rootView = LayoutInflater.from(this).inflate(R.layout.fragment_normal_emoji_suspend, null)
+                mEmojiPopupWindow = PopupWindow(rootView, dip(50), dip(66))
+                val drawable = GlobalUtils.getDrawable(R.drawable.bg_emoji_suspend)
+                mEmojiPopupWindow?.setBackgroundDrawable(drawable)
+                dx = location[0] + (view.width - dip(50)) / 2
+                dy = location[1] - dip(66) + dip(13)
+            }
+            EmojiType.PREROGATIVE -> {
+                rootView = LayoutInflater.from(this).inflate(R.layout.fragment_privilege_emoji_suspend, null)
+                mEmojiPopupWindow = PopupWindow(rootView, dip(94), dip(116))
+                val drawable = GlobalUtils.getDrawable(R.drawable.bg_expression_privilege_suspend)
+                mEmojiPopupWindow?.setBackgroundDrawable(drawable)
+                dx = location[0] + (view.width - dip(94)) / 2
+                dy = location[1] - dip(116) + dip(13)
+            }
+            else -> {
 
-        mEmojiPopupWindow = PopupWindow(rootView, dip(50), dip(66))
-        val drawable = GlobalUtils.getDrawable(R.drawable.bg_emoji_suspend)
-        mEmojiPopupWindow?.setBackgroundDrawable(drawable)
+            }
+        }
+
+        if (rootView == null) {
+            return
+        }
+
+        rootView.findViewById<ImageView>(R.id.iv_emoji)?.imageResource = emotion.drawableRes
+        rootView.findViewById<TextView>(R.id.tv_emoji)?.text = emotion.text
+
+
+
         mEmojiPopupWindow?.isOutsideTouchable = false
-        val dx = location[0] + (view.width - dip(50)) / 2
-        val dy = location[1] - dip(66) + dip(13)
         mEmojiPopupWindow?.showAtLocation(view, Gravity.TOP or Gravity.LEFT, dx, dy)
     }
 
@@ -543,13 +573,14 @@ class PrivateConversationActivity : BaseActivity() {
                 val userIds = data.userIds
                 if (userIds.contains(SessionUtils.getUserId()) && userIds.contains(mPrivateConversationViewModel?.targetIdData?.value ?: 0)) {
                     //当前两个人亲密度发生变化
-                    mPrivateConversationViewModel?.basicBean?.value?.intimate?.apply {
+                    val basicData = mPrivateConversationViewModel?.basicBean?.value
+                    basicData?.intimate?.apply {
                         intimateLevel = data.intimateLevel
                         nextIntimateLevel = data.nextIntimateLevel
                         intimateNum = data.intimateNum
                         nextIntimateNum = data.nextIntimateNum
                     }
-                    mIntimateDetailViewModel?.basicBean?.value = mPrivateConversationViewModel?.basicBean?.value
+                    mPrivateConversationViewModel?.basicBean?.value = basicData
                 }
             }
         })
@@ -597,17 +628,17 @@ class PrivateConversationActivity : BaseActivity() {
                     //可选实现，输入法动态调整时引起的面板高度变化动态回调
                     if (panelView is PanelView) {
                         when (panelView.id) {
-                            R.id.panel_emotion -> {
-                                val pagerView = findViewById<EmotionPagerView>(R.id.view_pager)
-                                val viewPagerSize: Int = height - DensityUtils.dpToPx(30)
-                                pagerView.buildEmotionViews(
-                                    findViewById<PageIndicatorView>(R.id.pageIndicatorView),
-                                    edit_text,
-                                    Emotions.getEmotions(),
-                                    width,
-                                    viewPagerSize
-                                )
-                            }
+//                            R.id.panel_emotion -> {
+//                                val pagerView = findViewById<EmotionPagerView>(R.id.view_pager)
+//                                val viewPagerSize: Int = height - DensityUtils.dpToPx(30)
+//                                pagerView.buildEmotionViews(
+//                                    findViewById<PageIndicatorView>(R.id.pageIndicatorView),
+//                                    edit_text,
+//                                    Emotions.getEmotions(),
+//                                    width,
+//                                    viewPagerSize
+//                                )
+//                            }
                         }
                     }
                 }
@@ -778,6 +809,10 @@ class PrivateConversationActivity : BaseActivity() {
                     MessageCustomBeanType.Gift,
                     giftBean ?: return
                 )
+            }
+            Message_Privilege -> {
+                //特权表情消息
+                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser,Message_Privilege)
             }
             else -> {
 
