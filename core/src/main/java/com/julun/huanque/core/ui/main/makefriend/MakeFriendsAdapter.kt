@@ -61,7 +61,13 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
         when (holder.itemViewType) {
             HomeItemBean.NORMAL -> {
                 val bean = item.content as HomeRecomItem
-                val list = bean.coverPicList.map { PhotoBean(url = it) }
+
+                val rl = bean.coverPicList.map { PhotoBean(url = it) }.toMutableList()
+                val list = if (rl.size > 4) {
+                    rl.subList(0, 4)
+                } else {
+                    rl
+                }
                 val headPic = holder.getView<SimpleDraweeView>(R.id.header_pic)
 
                 holder.setGone(R.id.living_fg, !bean.living)
@@ -140,7 +146,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         }
                         mPhotosAdapter.setList(list)
                         mPhotosAdapter.setOnItemClickListener { _, _, position ->
-                            mOnItemAdapterListener?.onPhotoClick(holder.layoutPosition, position, mPhotosAdapter.data)
+                            mOnItemAdapterListener?.onPhotoClick(holder.layoutPosition, position, rl)
                         }
 
 

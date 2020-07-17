@@ -467,13 +467,16 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
             NetStateType.LOADING -> {
                 state_pager_view.showLoading()
                 sv_recharge_root.hide()
+                btn_ensure.hide()
             }
             NetStateType.SUCCESS -> {
                 state_pager_view.showSuccess()
                 sv_recharge_root.show()
+                btn_ensure.show()
             }
             NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
                 sv_recharge_root.hide()
+                btn_ensure.hide()
                 state_pager_view.showError(btnClick = View.OnClickListener {
                     mViewModel.queryInfo(QueryType.INIT)
                 })

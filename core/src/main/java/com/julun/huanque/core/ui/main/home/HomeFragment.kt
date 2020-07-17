@@ -18,7 +18,9 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.makefriend.MakeFriendsFragment
 import com.julun.rnlib.RnManager
@@ -63,15 +65,13 @@ class HomeFragment : BaseFragment() {
         //
         RnManager.createReactInstanceManager(CommonInit.getInstance().getApp())
         //设置头部边距
-        home_container.topPadding=StatusBarUtil.getStatusBarHeight(requireContext())
+        home_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         initViewModel()
         initViewPager()
         initMagicIndicator()
-        bt_test.onClickNew {
-            ARouter.getInstance().build(ARouterConstant.TEST_ACTIVITY).navigation()
-        }
 
     }
+
     private fun initViewPager() {
         //注 这里只是用到不可滑动功能 没有使用关联viewpager
         view_pager.adapter = mPagerAdapter
@@ -83,7 +83,7 @@ class HomeFragment : BaseFragment() {
 
     private fun initViewModel() {
         viewModel.tabList.observe(viewLifecycleOwner, Observer {
-            if(it.state==NetStateType.SUCCESS){
+            if (it.state == NetStateType.SUCCESS) {
                 mTabTitles.clear()
                 mTabTitles.addAll(it.getT())
                 refreshTabList("交友")
@@ -142,6 +142,9 @@ class HomeFragment : BaseFragment() {
             }
 
             override fun getIndicator(context: Context): IPagerIndicator? {
+                if (mTabTitles.size <= 1) {
+                    return null
+                }
                 val indicator = LinePagerIndicator(context)
                 indicator.mode = LinePagerIndicator.MODE_EXACTLY
                 indicator.lineHeight = dp2pxf(3)
@@ -166,6 +169,13 @@ class HomeFragment : BaseFragment() {
             mPagerAdapter.notifyDataSetChanged()
             view_pager.offscreenPageLimit = mTabTitles.size
             mCommonNavigator.notifyDataSetChanged()
+//            if(mTabTitles.size>1){
+//                magic_indicator.show()
+//                mCommonNavigator.notifyDataSetChanged()
+//            }else{
+//                magic_indicator.hide()
+//            }
+
 
             if (currentTab.isNotEmpty()) {
                 switchToTab(currentTab)
