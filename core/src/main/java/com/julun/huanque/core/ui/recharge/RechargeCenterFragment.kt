@@ -20,11 +20,9 @@ import com.julun.huanque.common.bean.beans.RechargeAdInfo
 import com.julun.huanque.common.bean.beans.RechargeRespDto
 import com.julun.huanque.common.bean.beans.RechargeTpl
 import com.julun.huanque.common.bean.forms.PayForm
-import com.julun.huanque.common.constant.BannerResType
-import com.julun.huanque.common.constant.BannerTouchType
-import com.julun.huanque.common.constant.PayType
-import com.julun.huanque.common.constant.RechargeEntry
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
@@ -503,11 +501,10 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
         BGABanner.Delegate<SimpleDraweeView, RechargeAdInfo> { _, _, model, _ ->
             when (model?.touchType) {
                 BannerTouchType.Url -> {
-                    //todo
-//                    val extra = Bundle()
-//                    extra.putString(BusiConstant.PUSH_URL, model.touchValue)
-//                    extra.putBoolean(IntentParamKey.EXTRA_FLAG_DO_NOT_GO_HOME.name, true)
-//                    jump(PushWebActivity::class.java, extra = extra)
+                    val extra = Bundle()
+                    extra.putString(BusiConstant.WEB_URL, model.touchValue)
+                    extra.putBoolean(IntentParamKey.EXTRA_FLAG_GO_HOME.name, false)
+                    jump(WebActivity::class.java, extra = extra)
                 }
                 BannerTouchType.Toast -> {
                     //弹窗类型

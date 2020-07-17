@@ -48,6 +48,8 @@ object ARouterConstant {
     const val REPORT_ACTIVITY = "/$APP$PREFIX_ACTIVITY/ReportActivity"
     //充值页面
     const val RECHARGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/RechargeCenterActivity"
+    //H5页面
+    const val WEB_ACTIVITY = "/$COMMON$PREFIX_ACTIVITY/WebActivity"
 
     /** 实名认证 start **/
     const val REALNAME = "realname"

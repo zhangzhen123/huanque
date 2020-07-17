@@ -21,6 +21,8 @@ object BusiConstant {
     var NOTIFICATION_REQUEST_CODE = 300
 
     const val WEB_URL = "web_url"
+    const val ROOM_AD = "ROOM_AD"
+
 }
 
 /**

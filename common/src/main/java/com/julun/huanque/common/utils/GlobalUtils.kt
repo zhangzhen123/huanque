@@ -125,26 +125,6 @@ object GlobalUtils {
             getColor(errorColor)
         }
     }
-
-    /**
-     * 检查是否登录
-     */
-    fun checkLogin(): Boolean {
-        //未登录
-        if (!SessionUtils.getIsRegUser()) {
-//            ARouter.getInstance().build(ARouterConstant.GUIDE_LOGIN_ACTIVITY).navigation()
-//            showLoginDialogFragment()
-            return false
-        }
-        return true
-    }
-
-    /**
-     * 检查是否登录
-     * 只检查，不跳转
-     */
-    fun checkLoginNoJump() = SessionUtils.getIsRegUser()
-
     /**
      * 获取Drawable
      */
