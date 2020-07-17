@@ -21,6 +21,8 @@ object BusiConstant {
     var NOTIFICATION_REQUEST_CODE = 300
 
     const val WEB_URL = "web_url"
+    const val ROOM_AD = "ROOM_AD"
+
 }
 
 /**
@@ -526,4 +528,18 @@ object MineToolType {
     const val VisitHistory = "VisitHistory"
     const val ChatBubble = "ChatBubble"
     const val InviteFriend = "InviteFriend"
+}
+
+/**
+ * 更新类型
+ */
+object UpdateType {
+    //强制更新
+    val Force = "Force"
+
+    //推荐更新
+    val Recommend = "Recommend"
+
+    //无更新
+    val None = "None"
 }

@@ -31,10 +31,10 @@ import java.util.concurrent.TimeUnit
  *@描述 验证码登录页面
  */
 class PhoneNumLoginActivity : BaseActivity() {
-    val loadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
+    private val loadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
 
     companion object {
-        val MAXCOUNT = 60L
+        const val MAXCOUNT = 60L
     }
 
     private var mViewModel: PhoneNumLoginViewModel? = null

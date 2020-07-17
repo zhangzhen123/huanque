@@ -17,14 +17,13 @@ import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.PayResultInfo
 import com.julun.huanque.common.bean.events.PayResultEvent
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.PayResult
-import com.julun.huanque.common.constant.PayType
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.routerservice.WeiXinPayService
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
 import com.julun.huanque.core.R
@@ -264,10 +263,10 @@ class RechargeCenterActivity : BaseActivity() {
             PayType.WXPayApp -> {
                 if (pay.contentString.isNotEmpty()) {
                     //调用H5充值
-//                    val extra = Bundle()
-//                    extra.putString(BusiConstant.PUSH_URL, pay.contentString)
-//                    extra.putBoolean(IntentParamKey.EXTRA_FLAG_DO_NOT_GO_HOME.name, true)
-//                    jump(PushWebActivity::class.java, extra = extra)
+                    val extra = Bundle()
+                    extra.putString(BusiConstant.WEB_URL, pay.contentString)
+                    extra.putBoolean(IntentParamKey.EXTRA_FLAG_GO_HOME.name, false)
+                    jump(WebActivity::class.java, extra = extra)
                 } else {
                     //调用SDK支付
 //                    WXApiManager.doPay(this, pay.wxOrderInfo)

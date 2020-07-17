@@ -13,6 +13,7 @@ import com.baidu.location.BDAbstractLocationListener
 import com.baidu.location.BDLocation
 import com.julun.huanque.R
 import com.julun.huanque.app.HuanQueApp
+import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
 import com.julun.huanque.common.bean.events.LoginEvent
@@ -83,6 +84,12 @@ class MainActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.main_activity
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        if(SessionUtils.getIsRegUser()&&SessionUtils.getSessionId().isNotEmpty()){
+            AppChecker.startCheck(true)
+        }else{
+            ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+        }
+
         CommonInit.getInstance().setMainActivity(this)
         logger.info("DXC  userID = ${SessionUtils.getUserId()}，header = ${SessionUtils.getHeaderPic()}")
         setContentView(R.layout.main_activity)

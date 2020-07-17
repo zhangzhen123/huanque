@@ -28,7 +28,7 @@ abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
 
     private var activityDestroyed: Boolean = false
     private var activityForeground: Boolean = false
-    private var goHome: Boolean = false //整合所有界面的返回操作 重写onBackPressed()方法
+    protected var goHome: Boolean = false //整合所有界面的返回操作 重写onBackPressed()方法
     protected val logger = ULog.getLogger(this.javaClass.name)
 
     private lateinit var mOrderDialogManager: OrderDialogManager

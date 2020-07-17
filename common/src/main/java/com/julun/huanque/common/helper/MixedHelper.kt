@@ -25,6 +25,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.layout_empty_data.view.*
@@ -52,6 +53,25 @@ object MixedHelper {
 //        alertDialog.show()
 //        return false
 //    }
+
+    /**
+     * 检查是否登录
+     */
+    fun checkLogin(): Boolean {
+        //未登录
+        if (!SessionUtils.getIsRegUser()) {
+//            ARouter.getInstance().build(ARouterConstant.GUIDE_LOGIN_ACTIVITY).navigation()
+//            showLoginDialogFragment()
+            return false
+        }
+        return true
+    }
+
+    /**
+     * 检查是否登录
+     * 只检查，不跳转
+     */
+    fun checkLoginNoJump() = SessionUtils.getIsRegUser()
 
 
     fun showAlertMessage(message: String) {

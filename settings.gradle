@@ -27,5 +27,11 @@ include ':react-native-svg'
 project(':react-native-svg').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-svg/android')
 include ':react-native-reanimated'
 project(':react-native-reanimated').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-reanimated/android')
+
+include ':react-native-video'
+project(':react-native-video').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-video/android')
+//include ':react-native-video'
+//project(':react-native-video').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-video/android-exoplayer')
+
 //apply from: file("rnlib/node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 rootProject.name = "HuanQue"

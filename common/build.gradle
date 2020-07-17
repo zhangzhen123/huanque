@@ -159,5 +159,5 @@ dependencies {
     api 'com.aliyun.dpa:oss-android-sdk:2.9.2'
     /* 相册选择 因为很多地方可能会用到 放在common中方便调用*/
     api project(':picture_library')
-
+    api 'com.contrarywind:Android-PickerView:4.1.9'
 }
