@@ -84,7 +84,7 @@ data class CoverRemind(
 data class HomeRecomItem(
     var age: Int = 0,
     var city: String = "",
-    var coverPicList: List<String> = listOf(),
+    var coverPicList: MutableList<String> = mutableListOf(),
     var headPic: String = "",
     var introduceVoice: String = "",
     var introduceVoiceLength: Int = 0,

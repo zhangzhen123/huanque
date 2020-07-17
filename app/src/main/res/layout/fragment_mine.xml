@@ -12,13 +12,6 @@
         android:background="@color/app_main"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/holder_bg"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_55"
-        android:background="@drawable/bg_shape_top_white1"
-        app:layout_constraintBottom_toBottomOf="@+id/top_bg" />
-
     <LinearLayout
         android:id="@+id/llTitleRootView"
         android:layout_width="match_parent"
@@ -28,6 +21,17 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试"
+            android:textColor="@color/black_333"
+            android:textStyle="bold"
+            android:padding="@dimen/dimen_5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/tvService"
@@ -176,117 +180,126 @@
                     android:layout_height="@dimen/dimen_26"
                     android:layout_marginStart="@dimen/dimen_15"
                     android:layout_marginLeft="@dimen/dimen_15" />
-
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_75"
-                    android:background="@drawable/bg_user_balance"
-                    android:gravity="center_vertical">
-
-                    <RelativeLayout
-                        android:id="@+id/rlQueBi"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/dimen_15"
-                        android:layout_marginLeft="@dimen/dimen_15"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:id="@+id/ivQueBi"
-                            android:layout_width="@dimen/dimen_40"
-                            android:layout_height="@dimen/dimen_40"
-                            android:layout_centerVertical="true"
-                            android:src="@mipmap/icon_que_bi" />
-
-                        <TextView
-                            android:id="@+id/tvQueBiTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignTop="@+id/ivQueBi"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginLeft="14dp"
-                            android:layout_marginTop="@dimen/dimen_2"
-                            android:layout_toEndOf="@+id/ivQueBi"
-                            android:layout_toRightOf="@+id/ivQueBi"
-                            android:text="鹊币"
-                            android:textColor="@color/black_333"
-                            android:textSize="@dimen/sp_12" />
-
-                        <TextView
-                            android:id="@+id/tvQueBi"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/tvQueBiTitle"
-                            android:layout_alignBottom="@+id/ivQueBi"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginLeft="14dp"
-                            android:layout_toEndOf="@+id/ivQueBi"
-                            android:layout_toRightOf="@+id/ivQueBi"
-                            android:drawableEnd="@mipmap/icon_forward_black_02"
-                            android:drawableRight="@mipmap/icon_forward_black_02"
-                            android:drawablePadding="@dimen/dimen_2"
-                            android:gravity="center"
-                            android:includeFontPadding="false"
-                            android:textColor="@color/black_333"
-                            android:textSize="@dimen/sp_16"
-                            tools:text="9999999" />
-
-                    </RelativeLayout>
-
+                    android:layout_height="@dimen/dimen_78">
                     <View
-                        android:layout_width="@dimen/dimen_2"
-                        android:layout_height="@dimen/dimen_24"
-                        android:background="@color/stroke" />
+                        android:background="@drawable/bg_shape_top_white1"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="bottom"
+                        android:layout_height="40dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_75"
+                        android:background="@drawable/bg_user_balance"
+                        android:gravity="center_vertical">
 
-                    <RelativeLayout
-                        android:id="@+id/rlLingQian"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/dimen_15"
-                        android:layout_marginLeft="@dimen/dimen_15"
-                        android:layout_weight="1">
+                        <RelativeLayout
+                            android:id="@+id/rlQueBi"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/dimen_15"
+                            android:layout_marginLeft="@dimen/dimen_15"
+                            android:layout_weight="1">
 
-                        <ImageView
-                            android:id="@+id/ivLingQian"
-                            android:layout_width="@dimen/dimen_40"
-                            android:layout_height="@dimen/dimen_40"
-                            android:layout_centerVertical="true"
-                            android:src="@mipmap/icon_ling_qian" />
+                            <ImageView
+                                android:id="@+id/ivQueBi"
+                                android:layout_width="@dimen/dimen_40"
+                                android:layout_height="@dimen/dimen_40"
+                                android:layout_centerVertical="true"
+                                android:src="@mipmap/icon_que_bi" />
 
-                        <TextView
-                            android:id="@+id/tvLQTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignTop="@+id/ivLingQian"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginLeft="14dp"
-                            android:layout_marginTop="@dimen/dimen_2"
-                            android:layout_toEndOf="@+id/ivLingQian"
-                            android:layout_toRightOf="@+id/ivLingQian"
-                            android:text="零钱"
-                            android:textColor="@color/black_333"
-                            android:textSize="@dimen/sp_12" />
+                            <TextView
+                                android:id="@+id/tvQueBiTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignTop="@+id/ivQueBi"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginLeft="14dp"
+                                android:layout_marginTop="@dimen/dimen_2"
+                                android:layout_toEndOf="@+id/ivQueBi"
+                                android:layout_toRightOf="@+id/ivQueBi"
+                                android:text="鹊币"
+                                android:textColor="@color/black_333"
+                                android:textSize="@dimen/sp_12" />
 
-                        <TextView
-                            android:id="@+id/tvLingQian"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/tvLQTitle"
-                            android:layout_alignBottom="@+id/ivLingQian"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginLeft="14dp"
-                            android:layout_toEndOf="@+id/ivLingQian"
-                            android:layout_toRightOf="@+id/ivLingQian"
-                            android:drawableEnd="@mipmap/icon_forward_black_02"
-                            android:drawableRight="@mipmap/icon_forward_black_02"
-                            android:drawablePadding="@dimen/dimen_2"
-                            android:gravity="center"
-                            android:includeFontPadding="false"
-                            android:textColor="@color/black_333"
-                            android:textSize="@dimen/sp_16"
-                            tools:text="9999999" />
-                    </RelativeLayout>
-                </LinearLayout>
+                            <TextView
+                                android:id="@+id/tvQueBi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/tvQueBiTitle"
+                                android:layout_alignBottom="@+id/ivQueBi"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginLeft="14dp"
+                                android:layout_toEndOf="@+id/ivQueBi"
+                                android:layout_toRightOf="@+id/ivQueBi"
+                                android:drawableEnd="@mipmap/icon_forward_black_02"
+                                android:drawableRight="@mipmap/icon_forward_black_02"
+                                android:drawablePadding="@dimen/dimen_2"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:textColor="@color/black_333"
+                                android:textSize="@dimen/sp_16"
+                                tools:text="9999999" />
+
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="@dimen/dimen_2"
+                            android:layout_height="@dimen/dimen_24"
+                            android:background="@color/stroke" />
+
+                        <RelativeLayout
+                            android:id="@+id/rlLingQian"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/dimen_15"
+                            android:layout_marginLeft="@dimen/dimen_15"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:id="@+id/ivLingQian"
+                                android:layout_width="@dimen/dimen_40"
+                                android:layout_height="@dimen/dimen_40"
+                                android:layout_centerVertical="true"
+                                android:src="@mipmap/icon_ling_qian" />
+
+                            <TextView
+                                android:id="@+id/tvLQTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignTop="@+id/ivLingQian"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginLeft="14dp"
+                                android:layout_marginTop="@dimen/dimen_2"
+                                android:layout_toEndOf="@+id/ivLingQian"
+                                android:layout_toRightOf="@+id/ivLingQian"
+                                android:text="零钱"
+                                android:textColor="@color/black_333"
+                                android:textSize="@dimen/sp_12" />
+
+                            <TextView
+                                android:id="@+id/tvLingQian"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/tvLQTitle"
+                                android:layout_alignBottom="@+id/ivLingQian"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginLeft="14dp"
+                                android:layout_toEndOf="@+id/ivLingQian"
+                                android:layout_toRightOf="@+id/ivLingQian"
+                                android:drawableEnd="@mipmap/icon_forward_black_02"
+                                android:drawableRight="@mipmap/icon_forward_black_02"
+                                android:drawablePadding="@dimen/dimen_2"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:textColor="@color/black_333"
+                                android:textSize="@dimen/sp_16"
+                                tools:text="9999999" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                    
+                </FrameLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_user_wealth_level"

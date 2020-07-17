@@ -13,6 +13,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
@@ -50,9 +51,10 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         fun newInstance() = MineFragment()
     }
 
-    private val mIRealNameService:IRealNameService by lazy{
+    private val mIRealNameService: IRealNameService by lazy {
         ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation() as IRealNameService
     }
+
     override fun getLayoutId() = R.layout.fragment_mine
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -89,23 +91,23 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         } else {
             tvCertification.show()
             tvCertification.onClickNew {
-                mIRealNameService.startRealHead(requireActivity(),object :RealNameCallback{
+                mIRealNameService.startRealHead(requireActivity(), object : RealNameCallback {
                     override fun onCallback(status: String, des: String) {
-                        if(status== RealNameConstants.TYPE_SUCCESS ){
+                        if (status == RealNameConstants.TYPE_SUCCESS) {
                             mViewModel.queryInfo(QueryType.REFRESH)
-                        }else{
+                        } else {
                             ToastUtils.show("认证失败，请稍后重试")
                         }
                     }
-                } )
+                })
 
             }
             ivReal.hide()
         }
 //        sd_wealth.loadImage(info.userBasic.royalLevel)
-        if(info.userBasic.sex== Sex.FEMALE){
+        if (info.userBasic.sex == Sex.FEMALE) {
             ivInviteFriend.hide()
-        }else{
+        } else {
             ivInviteFriend.show()
         }
 
@@ -122,21 +124,21 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
         toolsAdapter.setOnItemClickListener { _, _, position ->
-            val item=toolsAdapter.getItemOrNull(position)?:return@setOnItemClickListener
-            when(item.toolType){
-                MineToolType.Office->{
+            val item = toolsAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            when (item.toolType) {
+                MineToolType.Office -> {
                     RNPageActivity.start(requireActivity(), RnConstant.OFFICIAL_CERT_PAGE)
                 }
-                MineToolType.RoomSpecial->{
+                MineToolType.RoomSpecial -> {
 
                 }
-                MineToolType.ChatBubble->{
+                MineToolType.ChatBubble -> {
 
                 }
-                MineToolType.VisitHistory->{
+                MineToolType.VisitHistory -> {
 
                 }
-                MineToolType.InviteFriend->{
+                MineToolType.InviteFriend -> {
                     RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
                 }
             }
@@ -149,6 +151,16 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         rlLingQian.onClickNew {
             requireActivity().startActivity<WithdrawActivity>()
         }
+
+        if (BuildConfig.DEBUG) {
+            tv_test.show()
+            tv_test.onClickNew {
+                ARouter.getInstance().build(ARouterConstant.TEST_ACTIVITY).navigation()
+            }
+        } else {
+            tv_test.hide()
+        }
+
     }
 
     override fun showLoadState(state: NetState) {
@@ -176,11 +188,12 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     private val infoTabAdapter: BaseQuickAdapter<UserDataTab, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<UserDataTab, BaseViewHolder>(R.layout.item_tab_user_info) {
             override fun onCreateDefViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-                val holder=super.onCreateDefViewHolder(parent, viewType)
-                val tv=holder.getViewOrNull<TextView>(R.id.tvCount)
+                val holder = super.onCreateDefViewHolder(parent, viewType)
+                val tv = holder.getViewOrNull<TextView>(R.id.tvCount)
                 tv?.setTFDinCdc2()
                 return holder
             }
+
             override fun convert(holder: BaseViewHolder, item: UserDataTab) {
                 val tvCount = holder.getView<TextView>(R.id.tvCount)
                 tvCount.text = "${item.count}"

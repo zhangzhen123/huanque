@@ -9,6 +9,7 @@
         android:id="@+id/sv_recharge_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dimen_65"
         android:scrollbars="none"
         android:visibility="gone"
         tools:visibility="visible">
@@ -153,22 +154,25 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/btn_ensure"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="39dp"
-                android:background="@drawable/bg_solid_btn3"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:text="@string/ensure_recharge"
-                android:textColor="@color/black_333"
-                android:textSize="16sp" />
 
 
         </LinearLayout>
     </ScrollView>
 
+    <TextView
+        android:id="@+id/btn_ensure"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="@dimen/dimen_15"
+        android:layout_marginRight="@dimen/dimen_15"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_solid_btn3"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:text="@string/ensure_recharge"
+        android:textColor="@color/black_333"
+        android:textSize="16sp" />
 
     <com.julun.huanque.common.widgets.statepage.StatePageView
         android:id="@+id/state_pager_view"
