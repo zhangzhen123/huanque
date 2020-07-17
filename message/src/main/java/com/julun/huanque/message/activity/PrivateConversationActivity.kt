@@ -4,10 +4,15 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.Spannable
 import android.text.TextUtils
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,14 +23,13 @@ import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
-import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.bean.beans.IntimateBean
-import com.julun.huanque.common.bean.beans.NetCallAcceptBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
@@ -35,11 +39,14 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
+import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
+import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.common.widgets.emotion.EmotionPagerView
 import com.julun.huanque.common.widgets.emotion.Emotions
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
+import com.julun.huanque.message.fragment.EmojiSuspendDialogFragment
 import com.julun.huanque.message.fragment.IntimateDetailFragment
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
@@ -52,7 +59,6 @@ import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.ObservableEmitter
 import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
@@ -60,10 +66,12 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
-import kotlinx.android.synthetic.main.item_header_conversions.*
+import kotlinx.android.synthetic.main.act_private_chat.iv_emoji
+import kotlinx.android.synthetic.main.fragment_emoji_suspend.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.px2dip
 import java.util.concurrent.TimeUnit
@@ -370,6 +378,69 @@ class PrivateConversationActivity : BaseActivity() {
         iv_que_close.onClickNew {
             showXiaoQueView(false)
         }
+
+        panel_emotion.mListener = object : EmojiInputListener {
+            override fun onClick(type: String, emotion: Emotion) {
+                //单击
+                when (type) {
+                    EmojiType.NORMAL -> {
+                        //普通表情
+                        val start: Int = edit_text.selectionStart
+                        val editable: Editable = edit_text.editableText
+                        val emotionSpannable: Spannable = EmojiSpanBuilder.buildEmotionSpannable(this@PrivateConversationActivity, emotion.text)
+                        editable.insert(start, emotionSpannable)
+                    }
+                    EmojiType.PREROGATIVE -> {
+                        //特权表情
+
+                    }
+                    EmojiType.HIGH -> {
+                        //高级表情
+                    }
+                }
+            }
+
+            override fun onLongClick(view: View, emotion: Emotion) {
+                //长按,显示弹窗
+//                val location = IntArray(2)
+//                view.getLocationOnScreen(location)
+//                val localParams = IntArray(4)
+//                localParams[0] = location[0]
+//                localParams[1] = location[1]
+//                localParams[2] = view.width
+//                localParams[3] = view.height
+//
+//                EmojiSuspendDialogFragment.newInstance(emotion, localParams).show(supportFragmentManager, "EmojiSuspendDialogFragment")
+                showEmojiSuspend(view, emotion)
+            }
+
+            override fun onActionUp() {
+                mEmojiPopupWindow?.dismiss()
+            }
+        }
+    }
+
+    //悬浮表情
+    private var mEmojiPopupWindow: PopupWindow? = null
+
+    /**
+     * 显示表情悬浮效果
+     */
+    private fun showEmojiSuspend(view: View, emotion: Emotion) {
+        val rootView = LayoutInflater.from(this).inflate(R.layout.fragment_emoji_suspend, null)
+        rootView.findViewById<ImageView>(R.id.iv_emoji).imageResource = emotion.drawableRes
+        rootView.findViewById<TextView>(R.id.tv_emoji).text = emotion.text
+
+        val location = IntArray(2)
+        view.getLocationOnScreen(location)
+
+        mEmojiPopupWindow = PopupWindow(rootView, dip(50), dip(66))
+        val drawable = GlobalUtils.getDrawable(R.drawable.bg_emoji_suspend)
+        mEmojiPopupWindow?.setBackgroundDrawable(drawable)
+        mEmojiPopupWindow?.isOutsideTouchable = false
+        val dx = location[0] + (view.width - dip(50)) / 2
+        val dy = location[1] - dip(66) + dip(13)
+        mEmojiPopupWindow?.showAtLocation(view, Gravity.TOP or Gravity.LEFT, dx, dy)
     }
 
     /**

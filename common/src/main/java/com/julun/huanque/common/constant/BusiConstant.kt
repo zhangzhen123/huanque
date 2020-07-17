@@ -502,6 +502,17 @@ object SystemTargetId {
     const val systemNoticeSender = "systemNoticeSender"
 }
 
+//表情类型
+object EmojiType {
+    //普通表情
+    const val NORMAL = "NORMAL"
+
+    //特权表情
+    const val PREROGATIVE = "PREROGATIVE"
+
+    //高级表情
+    const val HIGH = "HIGH"
+}
 /**
  * 操作类型
  */
@@ -511,5 +522,4 @@ object MineToolType {
     const val VisitHistory = "VisitHistory"
     const val ChatBubble = "ChatBubble"
     const val InviteFriend = "InviteFriend"
-
 }

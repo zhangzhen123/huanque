@@ -3,12 +3,14 @@ package com.julun.huanque.common.widgets.emotion;
 
 import androidx.annotation.DrawableRes;
 
+import java.io.Serializable;
+
 /**
  * Created by yummyLau on 18-7-11
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-public class Emotion {
+public class Emotion implements Serializable {
     
     public String text;
 

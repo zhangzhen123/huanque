@@ -19,6 +19,12 @@
         <attr name="showLine" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="CusPanelView">
+        <attr name="cus_panel_trigger" format="reference" />
+        <attr name="cus_panel_toggle" format="boolean" />
+    </declare-styleable>
+
+
 
     <!--礼物视图-->
     <declare-styleable name="MagicTextView">

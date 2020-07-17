@@ -62,8 +62,8 @@
                 android:id="@+id/bottom_action"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
-                android:minHeight="104dp"
                 android:background="@color/color_gray_three"
+                android:minHeight="104dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent">
@@ -305,18 +305,26 @@
             android:id="@+id/panel_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="@color/color_gray_three">
 
             <!-- 每一项面板 -->
             <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
             <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
             <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
-            <com.effective.android.panel.view.panel.PanelView
+<!--            <com.effective.android.panel.view.panel.PanelView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:panel_layout="@layout/panel_emotion_layout"-->
+<!--                app:panel_trigger="@id/iv_emoji" />-->
+
+            <com.julun.huanque.common.widgets.emotion.PrivateChatPanelView
                 android:id="@+id/panel_emotion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:panel_layout="@layout/panel_emotion_layout"
-                app:panel_trigger="@id/iv_emoji" />
+                app:cus_panel_toggle="true"
+                app:cus_panel_trigger="@id/iv_emoji" />
+
+
 
             <!-- 除了使用框架提供的 PanelView，也可以使用自定义 Panel -->
             <!--            <com.effective.android.panel.view.panel.PanelView-->

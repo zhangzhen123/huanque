@@ -42,6 +42,12 @@ object ParamConstant {
     //性别数据
     const val SEX = "SEX"
 
+    //表情对象
+    const val Emotion = "Emotion"
+
+    //显示的视图位置
+    const val LOCATION = "LOCATION"
+
 
     //UUID
     const val UUID = "UUID"
