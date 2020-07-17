@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import com.julun.huanque.R
 import com.julun.huanque.activity.MainActivity
+import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.utils.SessionUtils

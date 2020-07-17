@@ -77,3 +77,7 @@ class LiveRemindForm(
     var pushOpen: String? = null,
     var programId: Int? = null
 )
+
+class FindNewsForm {
+    var startAdsVersion: String? = null
+}

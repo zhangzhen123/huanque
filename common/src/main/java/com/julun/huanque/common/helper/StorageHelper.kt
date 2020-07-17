@@ -10,14 +10,15 @@ import com.julun.huanque.common.utils.SharedPreferencesUtils
  */
 object StorageHelper {
 
-    private val TEST: String = "TEST_SP"
-
+    private const val AD_VERSION: String = "AdVersion"
     /**
-     * 保存头像
+     * 保存ad
      */
-    fun setTest(headerPic: String) {
-        SPUtils.commitString(TEST, headerPic)
+    fun setAdVersion(headerPic: String) {
+        SPUtils.commitString(AD_VERSION, headerPic)
     }
 
-    fun getTest() = SPUtils.getString(TEST, "")
+    fun getAdVersion() = SPUtils.getString(AD_VERSION, "")
+
+
 }

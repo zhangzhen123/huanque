@@ -523,3 +523,17 @@ object MineToolType {
     const val ChatBubble = "ChatBubble"
     const val InviteFriend = "InviteFriend"
 }
+
+/**
+ * 更新类型
+ */
+object UpdateType {
+    //强制更新
+    val Force = "Force"
+
+    //推荐更新
+    val Recommend = "Recommend"
+
+    //无更新
+    val None = "None"
+}
