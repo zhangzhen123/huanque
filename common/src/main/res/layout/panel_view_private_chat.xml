@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--普通表情-->
-    <androidx.recyclerview.widget.RecyclerView
+    <com.julun.huanque.common.widgets.EventRecyclerView
         android:id="@+id/recyclerView_emoji"
         android:layout_width="0px"
         android:layout_height="0px"

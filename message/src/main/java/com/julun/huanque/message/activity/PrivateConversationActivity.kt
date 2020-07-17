@@ -413,10 +413,17 @@ class PrivateConversationActivity : BaseActivity() {
 //                EmojiSuspendDialogFragment.newInstance(emotion, localParams).show(supportFragmentManager, "EmojiSuspendDialogFragment")
                 showEmojiSuspend(view, emotion)
             }
+
+            override fun onActionUp() {
+                mEmojiPopupWindow?.dismiss()
+            }
         }
     }
 
-    /**BusiConstant
+    //悬浮表情
+    private var mEmojiPopupWindow: PopupWindow? = null
+
+    /**
      * 显示表情悬浮效果
      */
     private fun showEmojiSuspend(view: View, emotion: Emotion) {
@@ -427,8 +434,13 @@ class PrivateConversationActivity : BaseActivity() {
         val location = IntArray(2)
         view.getLocationOnScreen(location)
 
-        val popupWindow = PopupWindow(rootView, dip(50), dip(66))
-        popupWindow.showAtLocation(view, Gravity.TOP, px2dip(location[0]).toInt(), location[1])
+        mEmojiPopupWindow = PopupWindow(rootView, dip(50), dip(66))
+        val drawable = GlobalUtils.getDrawable(R.drawable.bg_emoji_suspend)
+        mEmojiPopupWindow?.setBackgroundDrawable(drawable)
+        mEmojiPopupWindow?.isOutsideTouchable = false
+        val dx = location[0] + (view.width - dip(50)) / 2
+        val dy = location[1] - dip(66) + dip(13)
+        mEmojiPopupWindow?.showAtLocation(view, Gravity.TOP or Gravity.LEFT, dx, dy)
     }
 
     /**

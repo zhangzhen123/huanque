@@ -3,6 +3,7 @@ package com.julun.huanque.common.widgets.emotion
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
@@ -13,6 +14,7 @@ import com.effective.android.panel.view.panel.IPanelView
 import com.julun.huanque.common.R
 import com.julun.huanque.common.constant.EmojiType
 import com.julun.huanque.common.interfaces.EmojiInputListener
+import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -75,6 +77,13 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
         iv_high.onClickNew {
             showRecyclerView(iv_high, recyclerView_high)
         }
+        recyclerView_emoji.mEventListener = object : EventListener {
+            override fun onDispatch(ev: MotionEvent?) {
+                if (ev?.action == MotionEvent.ACTION_UP) {
+                    mListener?.onActionUp()
+                }
+            }
+        }
     }
 
     private fun initRecyclerView() {
@@ -92,8 +101,9 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
             if (position < mNormalEmojiAdapter.data.size) {
                 val tempData = mNormalEmojiAdapter.getItem(position)
                 mListener?.onLongClick(view, tempData)
+                view.isSelected = true
             }
-            return@setOnItemLongClickListener false
+            return@setOnItemLongClickListener true
         }
 
         recyclerView_prerogative.layoutManager = GridLayoutManager(context, 7)

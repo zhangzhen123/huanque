@@ -9,8 +9,12 @@ import com.julun.huanque.common.widgets.emotion.Emotion
  *@描述 表情输入监听
  */
 interface EmojiInputListener {
-    //
-    fun onClick(type : String, emotion : Emotion)
+    //点击事件
+    fun onClick(type: String, emotion: Emotion)
 
-    fun onLongClick(view : View,emotion : Emotion)
+    //长按事件
+    fun onLongClick(view: View, emotion: Emotion)
+
+    //抬起事件
+    fun onActionUp()
 }
