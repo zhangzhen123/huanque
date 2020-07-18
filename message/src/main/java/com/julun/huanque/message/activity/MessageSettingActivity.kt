@@ -10,20 +10,22 @@ import androidx.lifecycle.ViewModelProvider
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.MessageSettingBean
+import com.julun.huanque.common.bean.events.FoldStrangerMessageEvent
 import com.julun.huanque.common.constant.ActivityCodes
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.NotificationUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.fragment.PrivateChargeDialogFragment
 import com.julun.huanque.message.viewmodel.MessageSettingViewModel
 import kotlinx.android.synthetic.main.act_message_setting.*
 import kotlinx.android.synthetic.main.act_message_setting.commonView
-import kotlinx.android.synthetic.main.activity_live_remind.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundResource
 
 /**
@@ -44,6 +46,10 @@ class MessageSettingActivity : BaseActivity() {
         prepareViewModel()
         mViewModel?.queryData?.value = true
         commonView.backgroundResource = R.color.transparent
+        //折叠陌生人消息
+        val folderMsg = SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)
+        iv_fold_stranger_msg.isSelected = folderMsg
+
     }
 
     override fun onResume() {
@@ -77,43 +83,46 @@ class MessageSettingActivity : BaseActivity() {
         }
         iv_fold_stranger_msg.onClickNew {
             //折叠陌生人消息
-            val sel = !iv_fold_stranger_msg.isSelected
-            mViewModel?.updateSetting(foldMsg = if(sel){
-                "True"
-            }else{
-                "False"
-            })
+            iv_fold_stranger_msg.isSelected = !iv_fold_stranger_msg.isSelected
+            SharedPreferencesUtils.commitBoolean(SPParamKey.FOLD_STRANGER_MSG, iv_fold_stranger_msg.isSelected)
+            EventBus.getDefault().post(FoldStrangerMessageEvent())
         }
         iv_voice_communication.onClickNew {
             //接收语音通话
             val sel = !iv_voice_communication.isSelected
-            mViewModel?.updateSetting(answer = if(sel){
-                "True"
-            }else{
-                "False"
-            })
+            mViewModel?.updateSetting(
+                answer = if (sel) {
+                    "True"
+                } else {
+                    "False"
+                }
+            )
         }
         iv_private_msg.onClickNew {
             //私信提醒
             val sel = !iv_private_msg.isSelected
-            mViewModel?.updateSetting(privateMsgRemind = if(sel){
-                "True"
-            }else{
-                "False"
-            })
+            mViewModel?.updateSetting(
+                privateMsgRemind = if (sel) {
+                    "True"
+                } else {
+                    "False"
+                }
+            )
         }
         iv_attention.onClickNew {
             //关注提醒
             val sel = !iv_attention.isSelected
-            mViewModel?.updateSetting(followRemind = if(sel){
-                "True"
-            }else{
-                "False"
-            })
+            mViewModel?.updateSetting(
+                followRemind = if (sel) {
+                    "True"
+                } else {
+                    "False"
+                }
+            )
         }
         view_start_live.onClickNew {
             //开播提醒
-            startActivityForResult(LiveRemindActivity::class.java,ActivityCodes.REQUEST_CODE_NORMAL)
+            startActivityForResult(LiveRemindActivity::class.java, ActivityCodes.REQUEST_CODE_NORMAL)
         }
     }
 
@@ -121,20 +130,20 @@ class MessageSettingActivity : BaseActivity() {
         mViewModel = ViewModelProvider(this).get(MessageSettingViewModel::class.java)
 
         mViewModel?.loadState?.observe(this, Observer {
-            it?:return@Observer
-            when(it.state){
-                NetStateType.LOADING ->{
+            it ?: return@Observer
+            when (it.state) {
+                NetStateType.LOADING -> {
                     //加载中
                     commonView.showLoading("加载中~！")
                 }
-                NetStateType.SUCCESS ->{
+                NetStateType.SUCCESS -> {
                     //成功
                     commonView.hide()
                 }
-                NetStateType.IDLE->{
+                NetStateType.IDLE -> {
                     //闲置，什么都不做
                 }
-                else ->{
+                else -> {
                     //都是异常
                     commonView.showError(errorTxt = "网络异常~！", btnClick = View.OnClickListener {
                         mViewModel?.queryData?.value = true
@@ -156,7 +165,6 @@ class MessageSettingActivity : BaseActivity() {
         } else {
             "免费"
         }
-        iv_fold_stranger_msg.isSelected = info.foldMsg
         iv_voice_communication.isSelected = info.answer
         iv_private_msg.isSelected = info.privateMsgRemind
         iv_attention.isSelected = info.followRemind

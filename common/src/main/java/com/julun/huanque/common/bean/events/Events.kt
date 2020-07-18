@@ -41,3 +41,8 @@ class WeiXinCodeEvent(val code: String)
  * 消息免打扰状态变化通知
  */
 class MessageBlockEvent()
+
+/**
+ * 折叠陌生人消息变化
+ */
+class FoldStrangerMessageEvent()

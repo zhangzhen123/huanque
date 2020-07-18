@@ -49,6 +49,9 @@ object SPParamKey {
 
     //已经进入过私聊详情页面的标识
     const val JOINED_PRIVATE_CHAT = "JOINED_PRIVATE_CHAT"
+
+    //折叠陌生人消息
+    const val FOLD_STRANGER_MSG = "FOLD_STRANGER_MSG"
 }
 
 /**

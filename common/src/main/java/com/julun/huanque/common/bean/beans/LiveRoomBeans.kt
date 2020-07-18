@@ -66,6 +66,8 @@ class RoomUserChatExtra(
     var headPic: String = "",
     //发送者的性别
     var sex: String = "",
+    //是否是陌生人
+    var stranger: Boolean = false,
     var targetUserObj: TargetUserObj? = null,
     //贵族图片，远程图片
     var royalPic: String = "",

@@ -42,7 +42,9 @@ data class ChatUser(
     //贵族等级，远程图片
     var royalPic: String = "",
     //贵族等级，远程图片  圆角小图标
-    var royalSmallPic: String = ""
+    var royalSmallPic: String = "",
+    //是否是陌生人
+    var stranger: Boolean = false
 )
 
 /**
@@ -131,8 +133,22 @@ data class LocalConversation(
     //私聊的时候显示的对方用户信息
     var showUserInfo: ChatUser? = null,
     //Conversation
-    var conversation: Conversation = Conversation()
-)
+    var conversation: Conversation = Conversation(),
+    //陌生人item使用
+    var strangerInfo: HashMap<String, String> = hashMapOf()
+) {
+    companion object {
+        //陌生人会话使用key
+        //时间
+        const val TIME = "TIME"
+
+        //昵称
+        const val NICKNAME = "NICKNAME"
+
+        //未读数量
+        const val UNREADCOUNT = "UNREADCOUNT"
+    }
+}
 
 
 /**
