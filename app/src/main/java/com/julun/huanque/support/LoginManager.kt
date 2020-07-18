@@ -202,6 +202,7 @@ object LoginManager {
                 }
                 EventBus.getDefault().post(LoginEvent(false))
             }.onFailure {
+                it.printStackTrace()
                 callback(false)
             }
         }

@@ -36,15 +36,18 @@ class PhotoBean(
 }
 
 data class HeadNavigateInfo(
-    var moduleList: List<HeadModule> = listOf(),
-    var myCash: Int = 0
+    var moduleList: List<HeadModule>,
+    var taskBar: HomeTaskBar
 )
 
 data class HeadModule(
-    var baseInfo: HeadBaseInfo = HeadBaseInfo(),
-    var bgPic: String = "",
-    var moduleName: String = "",
-    var moduleType: String = ""
+    var num: String = "",
+    var type: String = "",
+    var hot: Boolean = false
+//    var baseInfo: HeadBaseInfo = HeadBaseInfo(),
+//    var bgPic: String = "",
+//    var moduleName: String = "",
+//    var moduleType: String = ""
 ) {
     companion object {
         const val MaskQueen = "MaskQueen"
@@ -55,31 +58,44 @@ data class HeadModule(
     }
 }
 
-data class HeadBaseInfo(
-    var headPic: String = "",
-    var hotValue: Int = 0,
-    var joinNum: Int = 0,
-    var nickname: String = "",
-    var programList: List<Any> = listOf(),
-    var remainTimes: Int = 0
-)
+//data class HeadBaseInfo(
+//    var headPic: String = "",
+//    var hotValue: Int = 0,
+//    var joinNum: Int = 0,
+//    var nickname: String = "",
+//    var programList: List<Any> = listOf(),
+//    var remainTimes: Int = 0
+//)
 
 //class HomeListData(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) :
 //    RootListData<HomeRecomItem>(isPull, arrayListOf(), hasMore, extDataJson) {
 //    var moduleList: List<HeadModule> = arrayListOf()
 //}
 class HomeListData<T> : RootListData<T>() {
-    var moduleList: List<HeadModule> = arrayListOf()
-    var coverRemind: CoverRemind? = null
-    var tagRemind:Boolean=false
+    var modules: List<HeadModule> = arrayListOf()
+    var remind: HomeRemind = HomeRemind()
+    var taskBar: HomeTaskBar = HomeTaskBar()
+    var offset:Int?=null
 }
 
-data class CoverRemind(
-    var headPic: String = "",
-    var nickname: String = "",
+data class HomeRemind(
+    var coverRemind: Boolean = false,
     var picList: List<String> = listOf(),
-    var userId: Int = 0
+    var tagRemind: Boolean = false
 )
+
+data class HomeTaskBar(
+    val desc:String="",
+    val type:String="",
+    var label: String = "",
+    var myCash: String = ""
+)
+//data class CoverRemind(
+//    var headPic: String = "",
+//    var nickname: String = "",
+//    var picList: List<String> = listOf(),
+//    var userId: Int = 0
+//)
 
 data class HomeRecomItem(
     var age: Int = 0,
@@ -97,9 +113,20 @@ data class HomeRecomItem(
     var tagList: List<String> = listOf(),
     var userId: Long = 0
 ) {
+
+    //去重需要的重写
+    override fun equals(other: Any?): Boolean {
+        if(other is HomeRecomItem){
+            return this.userId==other.userId
+        }
+      return false
+    }
+    override fun hashCode(): Int {
+        return userId.toInt()
+    }
+
     //本地字段 保留音频播放状态
     var isPlay: Boolean = false
-
     //本地字段 保存当前的播放进度
     var currentPlayProcess: Int = introduceVoiceLength
     override fun toString(): String {

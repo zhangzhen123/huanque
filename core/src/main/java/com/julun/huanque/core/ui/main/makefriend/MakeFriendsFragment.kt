@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -17,6 +18,7 @@ import com.julun.huanque.common.bean.beans.HomeItemBean
 import com.julun.huanque.common.bean.beans.HomeRecomItem
 import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
@@ -157,7 +159,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
 
             override fun onHeadClick(item: HeadModule?) {
-                logger.info("头部分类：${item?.moduleType}")
+                logger.info("头部分类：${item?.type}")
             }
 
         }
@@ -170,6 +172,10 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                         logger.info("点击围观--$position")
                     } else {
                         logger.info("点击了私信--$position")
+                        val bundle = Bundle()
+                        bundle.putLong(ParamConstant.TARGETID, bean.userId)
+                        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
+                            .navigation(requireActivity())
                     }
                 }
                 R.id.iv_audio_play -> {

@@ -17,6 +17,7 @@ import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
 import org.jetbrains.anko.textColor
@@ -188,8 +189,10 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val headerInfo = item.content as? HeadNavigateInfo ?: return
                 val rv = holder.getView<RecyclerView>(R.id.header_recyclerView)
                 val tvBalance = holder.getView<TextView>(R.id.tv_balance)
-                tvBalance.text = "${headerInfo.myCash}"
+                val tvTask = holder.getView<TextView>(R.id.tv_task)
 
+                tvBalance.text = headerInfo.taskBar.myCash
+                tvTask.text="${headerInfo.taskBar.label}:${headerInfo.taskBar.desc}"
                 rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
                 if (rv.itemDecorationCount <= 0) {
                     rv.addItemDecoration(HorizontalItemDecoration(dp2px(10)))
@@ -213,12 +216,12 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 //                holder.addOnClickListener(R.id.iv_guide_tag_close)
             }
             HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION -> {
-                val bean = item.content as? CoverRemind ?: return
+                val bean = item.content as? HomeRemind ?: return
                 val rv = holder.getView<RecyclerView>(R.id.rv_add_photos)
                 val logo = holder.getView<SimpleDraweeView>(R.id.sdv_logo)
                 val name = holder.getView<TextView>(R.id.tv_name)
-                logo.loadImage(bean.headPic, 30f, 30f)
-                name.text = bean.nickname
+                logo.loadImage(SessionUtils.getHeaderPic(), 30f, 30f)
+                name.text = SessionUtils.getNickName()
                 rv.setRecycledViewPool(mPhotoViewPool)
                 rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 

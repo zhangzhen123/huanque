@@ -61,10 +61,13 @@
         app:layout_constraintTop_toTopOf="@+id/ll_balance">
 
         <TextView
+            android:id="@+id/tv_task"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_13"
             android:layout_weight="1"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/black_333"
             android:text="@string/go_make_money" />
 
         <TextView

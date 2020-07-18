@@ -7,16 +7,19 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/sdv_nav_bg"
         android:layout_width="@dimen/dimen_90"
         android:layout_height="70dp"
-        app:actualImageScaleType="centerCrop"
+        android:layout_marginTop="@dimen/dimen_8"
+        android:layout_marginEnd="@dimen/dimen_6"
+        android:layout_marginRight="@dimen/dimen_6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:roundedCornerRadius="@dimen/dimen_6"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="fitCenter"
+        tools:src="@mipmap/bg_header_mask" />
 
 
     <TextView
@@ -29,8 +32,8 @@
         android:textColor="@color/white"
         android:textSize="@dimen/sp_11"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/sdv_nav_bg"
+        app:layout_constraintTop_toTopOf="@+id/sdv_nav_bg"
         tools:text="蒙面女王" />
 
     <TextView
@@ -40,11 +43,20 @@
         android:layout_marginStart="@dimen/dimen_8"
         android:layout_marginLeft="@dimen/dimen_8"
         android:layout_marginTop="@dimen/dimen_1"
+        android:layout_marginBottom="@dimen/dimen_5"
         android:textColor="#99FFFFFF"
         android:textSize="8sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/sdv_nav_bg"
         app:layout_constraintTop_toBottomOf="@+id/tv_title1"
-        android:layout_marginBottom="@dimen/dimen_5"
         tools:text="今日剩余3次" />
+
+    <ImageView
+        android:id="@+id/iv_hot_tag"
+        android:layout_width="@dimen/dimen_20"
+        android:layout_height="@dimen/dimen_22"
+        android:src="@mipmap/icon_hot"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
