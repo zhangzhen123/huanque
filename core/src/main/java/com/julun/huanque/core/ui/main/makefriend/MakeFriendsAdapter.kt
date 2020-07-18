@@ -205,7 +205,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
                 tvBalance.text = headerInfo.taskBar.myCash
                 val content = StringBuilder()
-                content.append("${headerInfo.taskBar.label}:")
+                content.append("${headerInfo.taskBar.label}：")
                 val start = content.length//记录开始位置
                 content.append(headerInfo.taskBar.desc)
                 val styleSpan1A = StyleSpan(Typeface.BOLD)

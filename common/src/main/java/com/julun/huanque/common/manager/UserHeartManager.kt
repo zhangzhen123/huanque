@@ -1,6 +1,9 @@
 package com.julun.huanque.common.manager
 
+import com.julun.huanque.common.bean.beans.OnlineInfo
 import com.julun.huanque.common.bean.forms.UserOnlineHeartForm
+import com.julun.huanque.common.net.NError
+import com.julun.huanque.common.net.NSuccess
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.AppService
 import com.julun.huanque.common.suger.handleWithResponse
@@ -20,14 +23,18 @@ import java.util.concurrent.TimeUnit
  *
  */
 object UserHeartManager {
-    private const val HEART_DURATION=60L
+    private const val HEART_DURATION = 60L
+
+    //最大重试次数
+    private const val MAX_RQ = 3
     private val service: AppService by lazy { Requests.create(AppService::class.java) }
     private var currentProgramId: Int? = null
+    private var onlineId: String? = null
     var disposable: Disposable? = null
-    fun startHeartbeat() {
+    private fun startHeartbeat() {
         disposable?.dispose()
         disposable = Observable.interval(HEART_DURATION, HEART_DURATION, TimeUnit.SECONDS).subscribe {
-            val form = UserOnlineHeartForm(currentProgramId)
+            val form = UserOnlineHeartForm(currentProgramId, onlineId)
             service.alive(form).handleWithResponse({
                 logger("心跳成功")
             }
@@ -36,7 +43,39 @@ object UserHeartManager {
         }
     }
 
+    val success: NSuccess<OnlineInfo> = {
+        logger("online成功")
+        onlineId=it.onlineId
+        startHeartbeat()
+    }
+    var rqCount:Int=0
+    val error: NError = {
+        logger("startOnline失败了 5秒后重试")
+        Observable.timer(5, TimeUnit.SECONDS).subscribe {
+            if(rqCount< MAX_RQ){
+                startOnline()
+                rqCount++
+            }
+
+        }
+
+    }
+
+    /**
+     * 开始启动在线功能
+     */
+    fun startOnline() {
+        service.online().handleWithResponse({
+
+            success(it)
+        }, { e ->
+            error(e)
+        }
+        )
+    }
+
     fun stopBeat() {
+        onlineId=null
         disposable?.dispose()
     }
 }

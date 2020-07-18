@@ -85,7 +85,7 @@ class MainActivity : BaseActivity() {
         }else{
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         }
-        UserHeartManager.startHeartbeat()
+        UserHeartManager.startOnline()
         CommonInit.getInstance().setMainActivity(this)
         logger.info("DXC  userID = ${SessionUtils.getUserId()}，header = ${SessionUtils.getHeaderPic()}")
         setContentView(R.layout.main_activity)

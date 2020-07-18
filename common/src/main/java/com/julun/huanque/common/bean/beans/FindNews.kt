@@ -31,3 +31,8 @@ class CheckVersionResult(
     , var newVersion: String = ""
     , var updateType: String = "None"
 ) : Serializable
+
+
+data class OnlineInfo(
+    var onlineId: String = ""
+)

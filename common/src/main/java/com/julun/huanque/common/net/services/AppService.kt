@@ -4,6 +4,7 @@ import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.EmptyForm
 import com.julun.huanque.common.bean.forms.FindNewsForm
 import com.julun.huanque.common.bean.forms.RecomListForm
 import com.julun.huanque.common.bean.forms.UserOnlineHeartForm
@@ -40,4 +41,11 @@ interface AppService {
      */
     @POST("user/app/alive")
     fun alive(@Body form: UserOnlineHeartForm): Observable<Root<VoidResult>>
+
+    /**
+     * 用户上线
+     */
+    @POST("user/app/online")
+    fun online(@Body form: EmptyForm = EmptyForm()): Observable<Root<OnlineInfo>>
+
 }
