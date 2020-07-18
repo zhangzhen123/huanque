@@ -8,6 +8,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.support.LoginManager
 import kotlinx.android.synthetic.main.act_setting.*
+import kotlinx.android.synthetic.main.act_setting.header_view
 
 /**
  *@创建者   dong
@@ -23,6 +24,11 @@ class SettingActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
+
+        header_view.imageViewBack.onClickNew {
+            finish()
+        }
+
         tv_logout.onClickNew {
             //退出登录
             LoginManager.doLoginOut {

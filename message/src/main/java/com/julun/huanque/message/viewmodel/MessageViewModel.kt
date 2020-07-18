@@ -26,6 +26,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
+import kotlin.math.max
 
 /**
  *@创建者   dong
@@ -44,6 +45,12 @@ class MessageViewModel : BaseViewModel() {
 
     //未读消息数量
     val unreadMsgCount: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
+
+    //折叠陌生人消息标识位
+    var foldStrangerMsg = false
+
+    //陌生人标识
+    var mStranger = false
 
     /**
      * 删除会话
@@ -91,7 +98,9 @@ class MessageViewModel : BaseViewModel() {
     fun getConversationList() {
         RongIMClient.getInstance().getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(p0: List<Conversation>?) {
-                dealWithStableConversation(p0)
+                if (!mStranger) {
+                    dealWithStableConversation(p0)
+                }
                 if (p0 == null || p0.isEmpty()) {
                     return
                 }
@@ -130,14 +139,28 @@ class MessageViewModel : BaseViewModel() {
      * 取到Conversation之后的统一处理方法(最后一条消息的顺序进行排序)
      */
     fun sortConversation(conList: MutableList<LocalConversation>): MutableList<LocalConversation> {
-        Collections.sort(conList, Comparator { o1, o2 ->
-            when {
-                o1.conversation.sentTime > o2.conversation.sentTime -> return@Comparator -1
-                o1.conversation.sentTime == o2.conversation.sentTime -> return@Comparator 0
-                else -> return@Comparator 1
-            }
+        try {
+            Collections.sort(conList, Comparator { o1, o2 ->
+                val time1 = if (o1.conversation.sentTime != 0L) {
+                    o1.conversation.sentTime
+                } else {
+                    o1.strangerInfo[LocalConversation.TIME]?.toLong() ?: 0L
+                }
+                val time2 = if (o2.conversation.sentTime != 0L) {
+                    o2.conversation.sentTime
+                } else {
+                    o2.strangerInfo[LocalConversation.TIME]?.toLong() ?: 0L
+                }
+                when {
+                    time1 > time2 -> return@Comparator -1
+                    time1 == time2 -> return@Comparator 0
+                    else -> return@Comparator 1
+                }
 
-        })
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         return conList
     }
 
@@ -160,6 +183,7 @@ class MessageViewModel : BaseViewModel() {
                     if (p0 == null) {
                         return
                     }
+
                     val oriList = conversationListData.value
                     if (oriList != null) {
                         oriList.forEachIndexed { index, lmc ->
@@ -244,8 +268,6 @@ class MessageViewModel : BaseViewModel() {
                                     currentUser = getMessageUserInfo(it)
                                 }
                             }
-
-
                             is TextMessage -> {
                                 //文本消息
                                 lastMessage.extra?.let {
@@ -253,7 +275,12 @@ class MessageViewModel : BaseViewModel() {
                                 }
                             }
                         }
+                    }
 
+                    if (currentUser?.stranger == true && add && !mStranger) {
+                        //包含陌生人数据，直接重新刷新列表
+                        getConversationList()
+                        return@withContext
                     }
                     val localConversation = LocalConversation(currentUser, conversation)
                     localConversationList.add(localConversation)
@@ -266,7 +293,50 @@ class MessageViewModel : BaseViewModel() {
                     }
                 }
                 allList.addAll(localConversationList)
-                refreshConversationList(allList)
+                val realList = mutableListOf<LocalConversation>()
+                //陌生人列表
+                val strangerList = mutableListOf<LocalConversation>()
+                var strangerLastestTime = 0L
+                var strangerUnreadCount = 0
+                var targetName = ""
+
+                if (mStranger) {
+                    //陌生人消息页面
+                    allList.forEach {
+                        if (it.showUserInfo?.stranger == true) {
+                            realList.add(it)
+                        }
+                    }
+                } else {
+                    //首页  消息列表
+                    if (foldStrangerMsg) {
+                        //折叠陌生人消息
+                        allList.forEach {
+                            if (it.showUserInfo?.stranger == false || it.conversation.targetId == SystemTargetId.systemNoticeSender || it.conversation.targetId == SystemTargetId.friendNoticeSender) {
+                                realList.add(it)
+                            } else {
+                                if (strangerLastestTime < it.conversation.sentTime) {
+                                    strangerLastestTime = it.conversation.sentTime
+                                    targetName = it.showUserInfo?.nickname ?: ""
+                                }
+                                strangerUnreadCount += it.conversation.unreadMessageCount
+                                strangerList.add(it)
+                            }
+                        }
+                        //插入陌生人item
+                        val info = hashMapOf<String, String>()
+                        info.put(LocalConversation.TIME, "$strangerLastestTime")
+                        info.put(LocalConversation.UNREADCOUNT, "$strangerUnreadCount")
+                        info.put(LocalConversation.NICKNAME, targetName)
+                        val strangerConversation = LocalConversation().apply {
+                            strangerInfo = info
+                        }
+                        realList.add(strangerConversation)
+                    } else {
+                        realList.addAll(allList)
+                    }
+                }
+                refreshConversationList(realList)
             }
         }
     }
@@ -298,6 +368,7 @@ class MessageViewModel : BaseViewModel() {
                     userId = user.targetUserObj?.userId ?: 0
                     //用户性别
                     sex = user.targetUserObj?.sex ?: ""
+                    stranger = user.stranger
                 }
             } else {
                 //对方发送消息
@@ -311,6 +382,7 @@ class MessageViewModel : BaseViewModel() {
                     userId = user.senderId
                     //用户性别
                     sex = user.sex
+                    stranger = user.stranger
                 }
             }
 
@@ -363,6 +435,10 @@ class MessageViewModel : BaseViewModel() {
                 MessageCustomBeanType.SYSTEM_MESSAGE,
                 ""
             )
+        }
+        //刷新列表
+        if (!hasSystem || !hasFriend) {
+            getConversationList()
         }
     }
 }

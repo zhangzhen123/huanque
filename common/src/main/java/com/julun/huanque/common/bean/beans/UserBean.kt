@@ -131,7 +131,9 @@ class ConversationBasicBean(
     //语音费用
     var voiceFee: Int = 0,
     //对方是否接受语音通话
-    var answer: Boolean = false
+    var answer: Boolean = false,
+    //是否是陌生人
+    var stranger: Boolean = false
 )
 
 /**

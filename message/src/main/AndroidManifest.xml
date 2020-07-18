@@ -7,6 +7,9 @@
             android:name=".activity.MessageSettingActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.StrangerActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.ContactsActivity"
             android:screenOrientation="portrait" />
         <activity

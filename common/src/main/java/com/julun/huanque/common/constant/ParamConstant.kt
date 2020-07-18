@@ -48,6 +48,9 @@ object ParamConstant {
     //显示的视图位置
     const val LOCATION = "LOCATION"
 
+    //陌生人标识
+    const val STRANGER = "STRANGER"
+
 
     //UUID
     const val UUID = "UUID"

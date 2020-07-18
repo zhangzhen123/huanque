@@ -13,20 +13,16 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.MessageHeaderBean
 import com.julun.huanque.common.bean.events.EventMessageBean
+import com.julun.huanque.common.bean.events.FoldStrangerMessageEvent
 import com.julun.huanque.common.bean.events.MessageBlockEvent
-import com.julun.huanque.common.constant.ActivityCodes
-import com.julun.huanque.common.constant.ContactsTabType
-import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.SystemTargetId
-import com.julun.huanque.common.constant.MessageConstants
+import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.message.R
-import com.julun.huanque.message.activity.ContactsActivity
-import com.julun.huanque.message.activity.MessageSettingActivity
-import com.julun.huanque.message.activity.PrivateConversationActivity
-import com.julun.huanque.message.activity.SysMsgActivity
+import com.julun.huanque.message.activity.*
 import com.julun.huanque.message.adapter.ConversationListAdapter
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.message.widget.MessageHeaderView
@@ -37,6 +33,7 @@ import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_message.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.topPadding
 
 /**
@@ -56,7 +53,14 @@ class MessageFragment : BaseFragment() {
     private val headerViewList: ArrayList<MessageHeaderView> by lazy { arrayListOf<MessageHeaderView>() }
 
     companion object {
-        fun newInstance() = MessageFragment()
+        /**
+         * @param stranger 是否是陌生人
+         */
+        fun newInstance(stranger: Boolean = false): MessageFragment {
+            val fragment = MessageFragment()
+            fragment.arguments = Bundle().apply { putBoolean(ParamConstant.STRANGER, stranger) }
+            return fragment
+        }
     }
 
     override fun isRegisterEventBus() = true
@@ -67,48 +71,21 @@ class MessageFragment : BaseFragment() {
         msg_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         initViewModel()
         initRecyclerView()
-//        initHeaderView()
+        mMessageViewModel.foldStrangerMsg = SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)
+        mMessageViewModel.mStranger = arguments?.getBoolean(ParamConstant.STRANGER, false) ?: false
+
+        if (mMessageViewModel.mStranger) {
+            view_top.hide()
+            iv_setting.hide()
+            iv_contacts.hide()
+            tv_message_unread.hide()
+        }
+
         mMessageViewModel.getConversationList()
         mMessageViewModel.queryRongPrivateCount()
         mMessageViewModel.getBlockedConversationList()
     }
 
-    /**
-     * 初始化HeaderView
-     */
-    private fun initHeaderView() {
-        headerView = LayoutInflater.from(context)
-            .inflate(R.layout.header_conversions_view, null) as? LinearLayout
-        headerView?.let {
-            val view1 = it.findViewById<MessageHeaderView>(R.id.system_msg)
-            headerViewList.add(view1)
-            view1.setViewData(
-                MessageHeaderBean(
-                    headRes = R.mipmap.icon_message_system,
-                    title = "系统消息",
-                    content = "暂无系统消息"
-                )
-            )
-            val view2 = it.findViewById<MessageHeaderView>(R.id.friend_msg)
-            headerViewList.add(view2)
-            view2.setViewData(
-                MessageHeaderBean(
-                    headRes = R.mipmap.icon_message_friend,
-                    title = "好友通知",
-                    content = "暂无好友通知"
-                )
-            )
-            view1.onClickNew {
-                ToastUtils.show("系统消息")
-//                ARouter.getInstance().build(ARouterConstant.MESSAGE_ACTIVITY).navigation()
-            }
-            view2.onClickNew {
-                ToastUtils.show("好友通知")
-//                activity?.startActivity<InteractionNewActivity>()
-            }
-        }
-        mAdapter.addHeaderView(headerView ?: return)
-    }
 
     /**
      * 初始化RecyclerView
@@ -128,6 +105,10 @@ class MessageFragment : BaseFragment() {
                         val intent = Intent(activity, SysMsgActivity::class.java)
                         intent.putExtra(IntentParamKey.SYS_MSG_ID.name, lmc.conversation.targetId)
                         startActivityForResult(intent, ActivityCodes.REQUEST_CODE_NORMAL)
+                    }
+                    null -> {
+                        //陌生人折叠消息
+                        requireActivity().startActivity<StrangerActivity>()
                     }
                     else -> {
                         //首页IM
@@ -181,7 +162,6 @@ class MessageFragment : BaseFragment() {
                         mMessageViewModel.removeConversation(tId, Conversation.ConversationType.PRIVATE)
                     })
                 )
-
             }
 
             return@setOnItemLongClickListener true
@@ -249,7 +229,7 @@ class MessageFragment : BaseFragment() {
 
         tv_message_unread.onClickNew {
             activity?.let { act ->
-                PrivateConversationActivity.newInstance(act, 20000081)
+                PrivateConversationActivity.newInstance(act, 20000148)
             }
         }
 
@@ -264,6 +244,18 @@ class MessageFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun blockChange(event: MessageBlockEvent) {
         mMessageViewModel.getBlockedConversationList()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun foldMessage(bean: FoldStrangerMessageEvent) {
+        val fold = SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)
+        if (fold == mMessageViewModel.foldStrangerMsg) {
+            return
+        } else {
+            //折叠状态变化
+            mMessageViewModel.foldStrangerMsg = fold
+            mMessageViewModel.getConversationList()
+        }
     }
 
 //    @Subscribe(threadMode = ThreadMode.MAIN)

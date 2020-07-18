@@ -90,7 +90,33 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 //鹊友通知
                 ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_friend)
                 helper.setText(R.id.tv_nickname, "鹊友通知")
+            }
 
+            val info = item.strangerInfo
+            if (targetId?.isNotEmpty() != true) {
+                //陌生人消息
+                var time = 0L
+                var unreadCount = 0
+                try {
+                    time = info[LocalConversation.TIME]?.toLong() ?: 0
+                    unreadCount = info[LocalConversation.UNREADCOUNT]?.toInt() ?: 0
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+                ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_stranger)
+                helper.setText(R.id.tv_nickname, "陌生人消息")
+                    .setText(R.id.tv_content, info[LocalConversation.NICKNAME])
+                    .setText(R.id.tv_time, TimeUtils.formatDetailTime(time))
+
+                val tvUnread = helper.getView<TextView>(R.id.tv_unread_count)
+                tvUnread.text = StringHelper.formatMessageCount(unreadCount)
+                if (unreadCount > 0) {
+                    tvUnread.show()
+                    tvUnread.isEnabled = !blockList.contains(targetId)
+                } else {
+                    tvUnread.hide()
+                }
             }
         }
 
@@ -132,20 +158,26 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 }
             }
             else -> {
-                helper.setText(R.id.tv_content, "")
+                if (targetId?.isNotEmpty() == true) {
+                    helper.setText(R.id.tv_content, "")
+                }
             }
         }
-        val tvUnread = helper.getView<TextView>(R.id.tv_unread_count)
-        val unreadCount = item.conversation.unreadMessageCount
-        tvUnread.text = "${StringHelper.formatMessageCount(unreadCount)}"
-        if (unreadCount > 0) {
-            tvUnread.show()
-            tvUnread.isEnabled = !blockList.contains(targetId)
-        } else {
-            tvUnread.hide()
-        }
 
-        helper.setText(R.id.tv_time, TimeUtils.formatDetailTime(item.conversation.sentTime))
+        if (targetId?.isNotEmpty() == true) {
+            //非陌生人消息
+            val tvUnread = helper.getView<TextView>(R.id.tv_unread_count)
+            val unreadCount = item.conversation.unreadMessageCount
+            tvUnread.text = "${StringHelper.formatMessageCount(unreadCount)}"
+            if (unreadCount > 0) {
+                tvUnread.show()
+                tvUnread.isEnabled = !blockList.contains(targetId)
+            } else {
+                tvUnread.hide()
+            }
+
+            helper.setText(R.id.tv_time, TimeUtils.formatDetailTime(item.conversation.sentTime))
+        }
 
         //存在会话消息，显示常规的布局
         helper.setVisible(R.id.tv_time, true)
