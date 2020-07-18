@@ -68,7 +68,6 @@ class FillInformationActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initViewModel()
-        findViewById<TextView>(R.id.tvTitle).text = "消息设置"
         initTimePicker()
         mViewModel?.currentStatus?.value = FillInformationViewModel.FIRST
         //隐私协议弹窗
@@ -124,7 +123,7 @@ class FillInformationActivity : BaseActivity() {
     }
 
     override fun initEvents(rootView: View) {
-        findViewById<View>(R.id.ivback).onClickNew { finish() }
+        ivback.onClickNew { finish() }
         et_nickname.textChangedListener {
             afterTextChanged { judgeNextEnable() }
         }

@@ -94,7 +94,7 @@ class LoginActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         view_phone_number_fast_login.onClickNew {
-            ToastUtils.show("mPreviewSuccess = $mPreviewSuccess")
+//            ToastUtils.show("mPreviewSuccess = $mPreviewSuccess")
             if (mPreviewSuccess) {
                 //预取号成功，跳转一键登录页面
                 loginAuth()

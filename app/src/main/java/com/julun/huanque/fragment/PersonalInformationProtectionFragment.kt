@@ -1,5 +1,6 @@
 package com.julun.huanque.fragment
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -7,6 +8,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -14,8 +16,6 @@ import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.constant.XYCode
-import com.julun.huanque.common.manager.ActivitiesManager
-import com.julun.huanque.common.suger.onClick
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -75,6 +75,12 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
     override fun onStart() {
         super.onStart()
         setWindowConfig()
+        dialog?.setCancelable(false);
+        dialog?.setCanceledOnTouchOutside(false);
+
+        dialog?.setOnKeyListener { _, keyCode, _ ->
+            keyCode == KeyEvent.KEYCODE_BACK
+        }
     }
 
     private fun setWindowConfig() {

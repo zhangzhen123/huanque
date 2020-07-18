@@ -97,11 +97,12 @@ class PhoneNumLoginActivity : BaseActivity() {
                             when (mIsCountting) {
                                 false -> get_code.isEnabled = false//验证码按钮不可点
                             }
-//                            login_btn?.isEnabled = false//登陆按钮不可点
+                            login_btn?.isEnabled = false//登陆按钮不可点
                             when (it.length) {
                                 0 -> phone_num_clear.visibility = View.INVISIBLE//清除号码编辑内容隐藏
                                 else -> phone_num_clear.visibility = View.VISIBLE
                             }
+                            get_code.isEnabled = false
                         }
                         11 -> {
                             when (mIsCountting) {
@@ -110,15 +111,21 @@ class PhoneNumLoginActivity : BaseActivity() {
                                     get_code.textColor = GlobalUtils.getColor(R.color.black_333)
                                 }
                             }
-//                            when (code_num?.editableText?.length) {
-//                                4 -> {
-//                                    login_btn?.isEnabled = true
-//                                }
-//                                else -> {
-//                                    login_btn?.isEnabled = false
-//                                }
-//                            }
+                            login_btn.isEnabled = code_num.editableText.length >= 4
                         }
+                    }
+                }
+            }
+        }
+        code_num.textChangedListener {
+            afterTextChanged {
+                if (it != null) {
+                    if (it.length >= 4) {
+                        code_num_clear.visibility = View.VISIBLE
+
+                        login_btn.isEnabled = phone_num.editableText.length >= 11
+                    } else {
+                        code_num_clear.visibility = View.GONE
                     }
                 }
             }

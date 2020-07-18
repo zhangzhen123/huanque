@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/login_root"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white">
 
     <View
@@ -37,27 +37,42 @@
         android:layout_marginTop="42dp"
         android:text="验证码登录"
         android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_20"
+        android:textSize="@dimen/sp_24"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_top" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="未注册的手机号验证通过后将自动注册"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintLeft_toLeftOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
     <View
         android:id="@+id/view_phone_number"
         android:layout_width="0px"
         android:layout_height="54dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginTop="86dp"
+        android:layout_marginRight="38dp"
+        android:background="@drawable/bg_login_input"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
     <TextView
+        android:id="@+id/tv_formar"
         android:layout_width="wrap_content"
         android:layout_height="0px"
-        android:layout_marginLeft="22dp"
+        android:layout_marginLeft="20dp"
         android:gravity="center"
         android:text="+86"
         android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/sp_18"
         app:layout_constraintBottom_toBottomOf="@id/view_phone_number"
         app:layout_constraintLeft_toLeftOf="@id/view_phone_number"
         app:layout_constraintTop_toTopOf="@id/view_phone_number" />
@@ -66,17 +81,17 @@
         android:id="@+id/view_line"
         android:layout_width="1dp"
         android:layout_height="12dp"
-        android:layout_marginLeft="66dp"
         android:background="@color/enabled"
         app:layout_constraintBottom_toBottomOf="@id/view_phone_number"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/tv_formar"
+        app:layout_constraintRight_toLeftOf="@id/phone_num"
         app:layout_constraintTop_toTopOf="@id/view_phone_number" />
 
     <EditText
         android:id="@+id/phone_num"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:layout_marginLeft="90dp"
+        android:layout_marginLeft="100dp"
         android:background="@null"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -84,15 +99,15 @@
         android:hint="请输入手机号"
         android:inputType="phone"
         android:maxLength="11"
-        android:text="18616746675"
         android:maxLines="1"
         android:padding="@dimen/dimen_4"
+        android:text="18616746675"
         android:textColor="@color/black_333"
         android:textColorHint="@color/black_999"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/sp_18"
         app:layout_constraintBottom_toBottomOf="@id/view_phone_number"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/view_phone_number"
+        app:layout_constraintRight_toRightOf="@id/view_phone_number"
         app:layout_constraintTop_toTopOf="@id/view_phone_number" />
 
     <ImageView
@@ -106,41 +121,25 @@
         app:layout_constraintRight_toRightOf="@id/phone_num"
         app:layout_constraintTop_toTopOf="@id/phone_num" />
 
-    <View
-        android:layout_width="0px"
-        android:layout_height="1dp"
-        android:layout_marginLeft="22dp"
-        android:layout_marginRight="22dp"
-        android:background="@color/enabled"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_phone_number" />
 
     <View
         android:id="@+id/view_code"
         android:layout_width="0px"
         android:layout_height="54dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="38dp"
+        android:background="@drawable/bg_login_input"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_phone_number" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="22dp"
-        android:gravity="center"
-        android:text="验证码"
-        android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_16"
-        app:layout_constraintBottom_toBottomOf="@id/view_code"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@id/view_code" />
 
     <EditText
         android:id="@+id/code_num"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:layout_marginLeft="90dp"
+        android:layout_marginLeft="20dp"
         android:background="@null"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -149,67 +148,58 @@
         android:inputType="phone"
         android:maxLength="4"
         android:maxLines="1"
-        android:text="2345"
         android:padding="@dimen/dimen_4"
+        android:text="2345"
         android:textColor="@color/black_333"
         android:textColorHint="@color/black_999"
         android:textSize="@dimen/sp_16"
         app:layout_constraintBottom_toBottomOf="@id/view_code"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/view_code"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/view_code" />
 
     <TextView
         android:id="@+id/get_code"
-        android:layout_width="80dp"
-        android:layout_height="30dp"
-        android:layout_marginRight="22dp"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
         android:background="@drawable/sel_verification_code"
         android:enabled="false"
         android:gravity="center"
         android:text="发送验证码"
         android:textColor="@color/black_999"
-        android:textSize="@dimen/sp_12"
+        android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toBottomOf="@id/view_code"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toRightOf="@id/view_code"
         app:layout_constraintTop_toTopOf="@id/view_code" />
 
     <ImageView
         android:id="@+id/code_num_clear"
         android:layout_width="wrap_content"
         android:layout_height="0px"
-        android:paddingLeft="10dp"
         android:layout_marginRight="13dp"
+        android:paddingLeft="10dp"
         android:src="@mipmap/icon_login_clear"
         android:visibility="invisible"
-        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/code_num"
         app:layout_constraintEnd_toStartOf="@+id/get_code"
-        app:layout_constraintTop_toTopOf="@+id/code_num" />
+        app:layout_constraintTop_toTopOf="@+id/code_num"
+        tools:visibility="visible" />
 
-
-    <View
-        android:layout_width="0px"
-        android:layout_height="1dp"
-        android:layout_marginLeft="22dp"
-        android:layout_marginRight="22dp"
-        android:background="@color/enabled"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_code" />
 
     <TextView
         android:id="@+id/login_btn"
         android:layout_width="0px"
-        android:layout_height="40dp"
+        android:layout_height="54dp"
         android:layout_marginLeft="22dp"
         android:layout_marginTop="60dp"
         android:layout_marginRight="22dp"
-        android:background="@drawable/bg_personal_agree"
+        android:background="@drawable/sel_verification_code"
+        android:enabled="false"
         android:gravity="center"
         android:text="登录"
-        android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_16"
+        android:textColor="@color/col_verification_code"
+        android:textSize="@dimen/sp_18"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_code" />
