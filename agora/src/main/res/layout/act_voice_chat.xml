@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     android:background="@color/black_333">
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bg"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left"
@@ -170,6 +179,20 @@
             android:textSize="@dimen/sp_16" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="#99FFFFFF"
+        android:textSize="@dimen/sp_10"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@id/ll_voice_accept"
+        app:layout_constraintRight_toRightOf="@id/ll_voice_accept"
+        app:layout_constraintTop_toBottomOf="@id/ll_voice_accept"
+        tools:text="100鹊币/分钟"
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/view_balance"

@@ -1,5 +1,6 @@
 package com.julun.huanque.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
+import com.julun.huanque.activity.SettingActivity
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -144,6 +146,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             }
         }
         ivSetting.onClickNew {
+            requireActivity().startActivity<SettingActivity>()
         }
         rlQueBi.onClickNew {
             requireActivity().startActivity<RechargeCenterActivity>()

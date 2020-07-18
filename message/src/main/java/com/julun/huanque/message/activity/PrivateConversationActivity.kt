@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -337,13 +338,13 @@ class PrivateConversationActivity : BaseActivity() {
                     "语音通话${mPrivateConversationViewModel?.basicBean?.value?.voiceFee}鹊币/分钟",
                     MyAlertDialog.MyDialogCallback(onRight = {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
-                        judgeBalance()
+                        judgeIntimateLevel()
                     }, onCancel = {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
                     }), "语音通话费用", "发起通话"
                 )
             } else {
-                judgeBalance()
+                judgeIntimateLevel()
             }
 
         }
@@ -523,6 +524,27 @@ class PrivateConversationActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 判断当前亲密度等级是否可以发起语音通话
+     */
+    private fun judgeIntimateLevel() {
+        val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
+        val currentLevel = intimate.intimateLevel
+        intimate.intimatePrivilegeList.forEach {
+            if (it.key == "YYTH") {
+                val needLevel = it.minLevel
+                if (needLevel <= currentLevel) {
+                    //亲密度允许，接下来判断余额
+                    judgeBalance()
+                } else {
+                    //亲密度等级不足
+                    ToastUtils.show("亲密度等级不足")
+                }
+                return
+            }
+        }
+    }
+
 
     /**
      * 判断余额
@@ -545,10 +567,15 @@ class PrivateConversationActivity : BaseActivity() {
             return
         }
 
-        val bundle = Bundle()
-        bundle.putString(ParamKey.TYPE, ConmmunicationUserType.CALLING)
-        bundle.putSerializable(ParamKey.USER, mPrivateConversationViewModel?.chatInfoData?.value ?: return)
-        ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
+        if (mPrivateConversationViewModel?.basicBean?.value?.answer == true) {
+            val bundle = Bundle()
+            bundle.putString(ParamKey.TYPE, ConmmunicationUserType.CALLING)
+            bundle.putSerializable(ParamKey.USER, mPrivateConversationViewModel?.chatInfoData?.value ?: return)
+            ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
+        } else {
+            ToastUtils.show("对方关闭了语音通话服务")
+        }
+
     }
 
     /**
@@ -812,7 +839,7 @@ class PrivateConversationActivity : BaseActivity() {
             }
             Message_Privilege -> {
                 //特权表情消息
-                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser,Message_Privilege)
+                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser, Message_Privilege)
             }
             else -> {
 

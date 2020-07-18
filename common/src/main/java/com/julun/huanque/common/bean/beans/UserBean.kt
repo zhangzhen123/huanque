@@ -105,7 +105,9 @@ class ChatUserBean(
     var userId: Long = 0L,
     var headPic: String = "",
     var meetStatus: String = "",
-    var nickname: String = ""
+    var nickname: String = "",
+    //会话背景
+    var backPic: String = ""
 ) : Serializable
 
 /**
@@ -127,7 +129,9 @@ class ConversationBasicBean(
     //私信费用
     var msgFee: Long = 0,
     //语音费用
-    var voiceFee: Int = 0
+    var voiceFee: Int = 0,
+    //对方是否接受语音通话
+    var answer: Boolean = false
 )
 
 /**
@@ -140,7 +144,9 @@ class NetcallBean(
     //接收人数据
     var receiverInfo: ChatUserBean = ChatUserBean(),
     var channelId: String = "",
-    var token: String = ""
+    var token: String = "",
+    //价格（如果大于0，标识位付费方）
+    var beans: Long = 0
 ) : Serializable
 
 /**

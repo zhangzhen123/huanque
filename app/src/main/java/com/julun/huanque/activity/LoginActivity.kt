@@ -94,7 +94,7 @@ class LoginActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         view_phone_number_fast_login.onClickNew {
-            ToastUtils.show("mPreviewSuccess = $mPreviewSuccess")
+//            ToastUtils.show("mPreviewSuccess = $mPreviewSuccess")
             if (mPreviewSuccess) {
                 //预取号成功，跳转一键登录页面
                 loginAuth()
@@ -117,6 +117,7 @@ class LoginActivity : BaseActivity() {
             //没有对应权限，直接退出
             return
         }
+        logger.info("JPush success = ${JVerificationInterface.isInitSuccess()} time = ${System.currentTimeMillis()}")
         //判断是否初始化成功
         if (!JVerificationInterface.isInitSuccess()) {
             //初始化未成功，直接返回
