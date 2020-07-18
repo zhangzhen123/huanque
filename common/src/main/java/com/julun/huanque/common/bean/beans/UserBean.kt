@@ -89,37 +89,13 @@ class IntimateBean(
 )
 
 /**
- * 会话的对象数据
- */
-class ChatUserBean(
-    var anchorExp: Long = 0,
-    var anchorLevel: Long = 0,
-    var cash: Long = 0,
-    var headRealPeople: Boolean = false,
-    var royalBjExp: Long = 0,
-    var royalExp: Long = 0,
-    var royalLevel: Int = 0,
-    var userExp: Long = 0,
-
-    var sex: String = "",
-    var userId: Long = 0L,
-    var headPic: String = "",
-    var meetStatus: String = "",
-    var nickname: String = "",
-    //会话背景
-    var backPic: String = ""
-) : Serializable
-
-/**
  * 会话详情页面基础信息
  */
 class ConversationBasicBean(
-    //小鹊提醒数据
-    var activeList: MutableList<String> = mutableListOf(),
     //本人数据
-    var usr: ChatUserBean = ChatUserBean(),
+    var usr: ChatUser = ChatUser(),
     //对方数据
-    var friendUser: ChatUserBean = ChatUserBean(),
+    var friendUser: ChatUser = ChatUser(),
     //亲密度信息
     var intimate: IntimateBean = IntimateBean(),
     //与对方欢遇标识
@@ -142,9 +118,9 @@ class ConversationBasicBean(
 class NetcallBean(
     var callId: Long = 0,
     //创建人数据
-    var callerInfo: ChatUserBean = ChatUserBean(),
+    var callerInfo: ChatUser = ChatUser(),
     //接收人数据
-    var receiverInfo: ChatUserBean = ChatUserBean(),
+    var receiverInfo: ChatUser = ChatUser(),
     var channelId: String = "",
     var token: String = "",
     //价格（如果大于0，标识位付费方）

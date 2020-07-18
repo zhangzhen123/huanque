@@ -3,7 +3,7 @@ package com.julun.huanque.agora.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.ChatUserBean
+import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.NetcallBean
 import com.julun.huanque.common.bean.forms.CreateCommunicationForm
 import com.julun.huanque.common.bean.forms.NetcallCancelForm
@@ -17,7 +17,6 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
-import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
 
@@ -49,7 +48,7 @@ class VoiceChatViewModel : BaseViewModel() {
     val currentVoiceState: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
     //对方用户数据
-    val targetUserBean: MutableLiveData<ChatUserBean> by lazy { MutableLiveData<ChatUserBean>() }
+    val targetUserBean: MutableLiveData<ChatUser> by lazy { MutableLiveData<ChatUser>() }
 
     //会话详情数据
     val netcallBeanData: MutableLiveData<NetcallBean> by lazy { MutableLiveData<NetcallBean>() }

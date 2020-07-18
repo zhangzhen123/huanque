@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
+import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -440,5 +441,58 @@ class MessageViewModel : BaseViewModel() {
         if (!hasSystem || !hasFriend) {
             getConversationList()
         }
+    }
+
+    /**
+     * 用户数据更新
+     */
+    fun userInfoUpdate(bean: UserInfoChangeEvent) {
+        //用户ID
+        val userId = bean.userId
+        //陌生人状态
+        val stranger = bean.stranger
+
+        if (mStranger) {
+            //todo 当前处于陌生人列表页面
+        } else {
+            //会话列表页面
+            if (stranger) {
+                //会话列表，接收到变为陌生人消息
+                val list = conversationListData.value ?: return
+                var index = -1
+                list.forEachIndexed { ind, it ->
+                    if (it.conversation.targetId == "$userId") {
+                        index = ind
+                        return@forEachIndexed
+                    }
+                }
+
+                if (index > 0) {
+                    //当前列表里面存在该会话，直接删除就可以
+                    list.removeAt(index)
+                    //显示新的列表
+                    conversationListData.value = list
+                }
+                //不存在该会话，什么都不用处理
+            } else {
+                //会话列表 接收到好友数据变化消息
+                val list = conversationListData.value
+                var index = -1
+                list?.forEachIndexed { ind, it ->
+                    if (it.conversation.targetId == "$userId") {
+                        index = ind
+                        return@forEachIndexed
+                    }
+                }
+
+                if (index >= 0) {
+                    //1列表当中存在当前会话,刷新用户数据
+                } else {
+                    //2列表当中不存在当前会话,不存在  判断本地是否有当前会话
+                    refreshConversation("$userId")
+                }
+            }
+        }
+
     }
 }

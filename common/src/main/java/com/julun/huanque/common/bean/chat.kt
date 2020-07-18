@@ -13,39 +13,28 @@ data class ChatUser(
     var nickname: String = "",
     //用户ID
     var userId: Long = 0,
-    //用户等级
-    var userLevel: Int = 0,
-    //好友状态
-    var status: String = "",
-    //主播等级
-    var anchorLevel: Int = 0,
     //亲密等级
     var intimateLevel: Int = 0,
     //欢遇标识
     var meetStatus: String = "",
     //用户性别
     var sex: String = "",
-    //用户类型  主播还是用户
-    var userType: String = "",
-    //直播间ID
-    var programId: Long = 0,
     //个性签名
     var mySign: String = "",
-    //贵族等级
-    var royalLevel: Int = -1,
-    //用户昵称颜色
-    var nickcolor: String = "",
-    //拼音
-    var pinyin: String = "",
     //登录用户ID，用于切换账号时使用
     var mineUserId: Long = SessionUtils.getUserId(),
-    //贵族等级，远程图片
-    var royalPic: String = "",
-    //贵族等级，远程图片  圆角小图标
-    var royalSmallPic: String = "",
     //是否是陌生人
-    var stranger: Boolean = false
-)
+    var stranger: Boolean = false,
+    //聊天背景
+    var backPic: String = ""
+) : Serializable{
+
+
+    override fun toString(): String {
+        return "ChatUser(headPic='$headPic', nickname='$nickname', userId=$userId, intimateLevel=$intimateLevel, meetStatus='$meetStatus', sex='$sex', mineUserId=$mineUserId, stranger=$stranger, backPic='$backPic')"
+    }
+
+}
 
 /**
  *@创建者   dong
