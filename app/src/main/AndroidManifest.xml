@@ -73,14 +73,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
-        <!--        <meta-data-->
-        <!--            android:name="JPUSH_CHANNEL"-->
-        <!--            android:value="developer-default"-->
-        <!--            tools:replace="android:value" />-->
-        <!--        <meta-data-->
-        <!--            android:name="JPUSH_APPKEY"-->
-        <!--            android:value="79e280b3b945c631a53c54d3"-->
-        <!--            tools:replace="android:value" /> &lt;!&ndash; </>值来自开发者平台取得的AppKey &ndash;&gt;-->
     </application>
 
 </manifest>

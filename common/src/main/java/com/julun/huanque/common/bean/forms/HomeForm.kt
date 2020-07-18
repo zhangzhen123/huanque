@@ -9,4 +9,4 @@ package com.julun.huanque.common.bean.forms
  *@Description: 主页相关的请求form
  *
  */
-class RecomListForm(var offset: Int = 0)
+class RecomListForm(var offset: Int? = null)

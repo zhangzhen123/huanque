@@ -128,20 +128,29 @@ object PayType {
  * 提现方式
  */
 object WithdrawType {
-    const val AliWithdraw = "AliWithdraw"
-    const val WXWithdraw = "WXWithdraw"
+    const val AliWithdraw = "Alipay"
+    const val WXWithdraw = "Weixin"
 
 }
 
 object WithdrawCode {
-    const val Money1 = "Money1"
-    const val Money20 = "Money20"
-    const val Money50 = "Money50"
-    const val Money100 = "Money100"
-    const val Money300 = "Money300"
-    const val Money500 = "Money500"
+    const val Money1 = 7
+    const val Money20 = 8
+    const val Money50 = 9
+    const val Money100 = 10
+    const val Money300 = 11
+    const val Money500 = 12
 }
+/**
+ * 提现方式
+ */
+object WithdrawErrorCode {
+    //未绑定手机
+    const val NO_BIND_PHONE = 1004
+    //未实名认证
+    const val NO_VERIFIED = 1005
 
+}
 enum class PayResult {
     IS_PAY,//去支付了 但是不知道结果的情况
     PAY_SUCCESS,

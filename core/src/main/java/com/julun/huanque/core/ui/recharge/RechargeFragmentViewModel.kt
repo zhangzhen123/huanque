@@ -10,7 +10,7 @@ import com.julun.huanque.common.bean.beans.RechargeRespDto
 import com.julun.huanque.common.bean.forms.RechargeRuleQueryForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.suger.coverError
+import com.julun.huanque.common.suger.convertError
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
@@ -44,7 +44,7 @@ class RechargeFragmentViewModel : BaseViewModel() {
             }, error = { e ->
                 logger("报错了：$e")
 //                emit(ReactiveData(NetStateType.ERROR, error = e.coverError()))
-                emit(e.coverError())
+                emit(e.convertError())
             }, final = {
                 logger("最终返回")
             }, needLoadState = it == QueryType.INIT)

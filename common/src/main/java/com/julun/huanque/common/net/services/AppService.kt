@@ -2,9 +2,11 @@ package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.FindNewsForm
 import com.julun.huanque.common.bean.forms.RecomListForm
+import com.julun.huanque.common.bean.forms.UserOnlineHeartForm
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -31,4 +33,11 @@ interface AppService {
      */
     @POST("user/app/findStartAds")
     fun findStartAds(@Body form: Any): Observable<Root<Any>>
+
+
+    /**
+     * 心跳
+     */
+    @POST("user/app/alive")
+    fun alive(@Body form: UserOnlineHeartForm): Observable<Root<VoidResult>>
 }

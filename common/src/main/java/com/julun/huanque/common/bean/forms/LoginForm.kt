@@ -59,3 +59,5 @@ class GetValidCode {
 class AgreementResultForm(var result: String = "True", var agreementCode: String = "")
 
 class UpdateHeadForm(var headPic: String)
+
+class UserOnlineHeartForm(var programId: Int?=null)

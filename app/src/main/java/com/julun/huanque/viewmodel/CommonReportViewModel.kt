@@ -9,8 +9,8 @@ import com.julun.huanque.common.bean.beans.ManagerInfo
 import com.julun.huanque.common.bean.forms.ReportForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.suger.coverError
-import com.julun.huanque.common.suger.coverRtData
+import com.julun.huanque.common.suger.convertError
+import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.net.service.UserService
@@ -45,9 +45,9 @@ class CommonReportViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = userService.report(form).dataConvert()
-                reportStateResult.value = result.coverRtData()
+                reportStateResult.value = result.convertRtData()
             },error = {
-                reportStateResult.value=it.coverError()
+                reportStateResult.value=it.convertError()
             })
         }
     }

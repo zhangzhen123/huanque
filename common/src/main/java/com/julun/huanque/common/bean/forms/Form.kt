@@ -81,3 +81,8 @@ class LiveRemindForm(
 class FindNewsForm {
     var startAdsVersion: String? = null
 }
+
+class WithDrawAuthForm(var code:String)
+class WithdrawApplyForm(var tplId:Int,type:String)
+
+class WithdrawHistoryForm ( var lastId: Long?=null)

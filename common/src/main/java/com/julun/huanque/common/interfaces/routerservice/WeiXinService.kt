@@ -3,6 +3,7 @@ package com.julun.huanque.common.interfaces.routerservice
 import android.app.Activity
 import com.alibaba.android.arouter.facade.template.IProvider
 import com.julun.huanque.common.bean.beans.OrderInfo
+import com.julun.huanque.common.bean.beans.ShareObject
 
 /**
  *
@@ -12,9 +13,13 @@ import com.julun.huanque.common.bean.beans.OrderInfo
  *
  **/
 
-interface WeiXinPayService : IProvider {
+interface WeiXinService : IProvider {
     /**
      * 微信支付
      */
-    fun weixinPay(activity: Activity, orderInfo: OrderInfo)
+    fun weiXinPay(activity: Activity, orderInfo: OrderInfo)
+
+    fun weiXinAuth(activity: Activity)
+
+    fun weiXinShare(context: Activity, scene: Int, shareObj: ShareObject)
 }

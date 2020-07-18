@@ -24,6 +24,7 @@ import java.io.File
 import java.io.Serializable
 import java.lang.reflect.Field
 import java.util.*
+import kotlin.collections.HashSet
 
 
 /**
@@ -103,7 +104,7 @@ fun Context.installApk(targetDownloadFile: File): Unit {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         val uriForFile: Uri =
-                FileProvider.getUriForFile(this, "${this.packageName}.fileprovider", targetDownloadFile)
+            FileProvider.getUriForFile(this, "${this.packageName}.fileprovider", targetDownloadFile)
         //添加这一句表示对目标应用临时授权该Uri所代表的文件
         intent.setDataAndType(uriForFile, "application/vnd.android.package-archive")
     } else {
@@ -120,9 +121,9 @@ fun Context.installApk(targetDownloadFile: File): Unit {
  * 取代 if(someObject != null){}else{}
  */
 fun <T> safeRunNullOrNonNull(
-        objectPassedBy: T?,
-        whenItsNotNull: (objectPassedBy: T) -> Unit = {},
-        whenItsNull: () -> Unit = {}
+    objectPassedBy: T?,
+    whenItsNotNull: (objectPassedBy: T) -> Unit = {},
+    whenItsNull: () -> Unit = {}
 ): Unit {
     if (objectPassedBy != null) {
         whenItsNotNull(objectPassedBy)
@@ -137,74 +138,103 @@ fun Any.anyhow(callback: () -> Unit = {}): Unit {
 }
 
 fun DraweeSpanStringBuilder.setImageSpan(
-        context: Context,
-        url: String,
-        position: Int,
-        widthPx: Int,
-        heigthPx: Int
+    context: Context,
+    url: String,
+    position: Int,
+    widthPx: Int,
+    heigthPx: Int
 ) {
 //    ULog.i("当前的span图片url:"+url)
     setImageSpan(
-            DraweeHolderBuilder.createHolder(context, url),
-            position,
-            widthPx,
-            heigthPx,
-            true,
-            BetterImageSpan.ALIGN_CENTER
+        DraweeHolderBuilder.createHolder(context, url),
+        position,
+        widthPx,
+        heigthPx,
+        true,
+        BetterImageSpan.ALIGN_CENTER
     )
 }
 
 fun DraweeSpanStringBuilder.setImageSpan(
-        context: Context,
-        url: String,
-        start: Int,
-        end: Int,
-        widthPx: Int,
-        heigthPx: Int
+    context: Context,
+    url: String,
+    start: Int,
+    end: Int,
+    widthPx: Int,
+    heigthPx: Int
 ) {
     setImageSpan(
-            DraweeHolderBuilder.createHolder(context, url),
-            start,
-            end,
-            widthPx,
-            heigthPx,
-            true,
-            BetterImageSpan.ALIGN_CENTER
+        DraweeHolderBuilder.createHolder(context, url),
+        start,
+        end,
+        widthPx,
+        heigthPx,
+        true,
+        BetterImageSpan.ALIGN_CENTER
     )
 }
 
 fun DraweeSpanStringBuilder.setImageSpan(
-        context: Context,
-        imageResId: Int,
-        start: Int,
-        end: Int,
-        widthPx: Int,
-        heigthPx: Int
+    context: Context,
+    imageResId: Int,
+    start: Int,
+    end: Int,
+    widthPx: Int,
+    heigthPx: Int
 ) {
 //    ULog.i("当前的span图片Id:"+imageResId)
     setImageSpan(
-            DraweeHolderBuilder.createHolder(context, imageResId),
-            start,
-            end,
-            widthPx,
-            heigthPx,
-            true,
-            BetterImageSpan.ALIGN_CENTER
+        DraweeHolderBuilder.createHolder(context, imageResId),
+        start,
+        end,
+        widthPx,
+        heigthPx,
+        true,
+        BetterImageSpan.ALIGN_CENTER
     )
 }
 
 /**
  * 设置一个圆形图片
  */
-fun DraweeSpanStringBuilder.setCircleImageSpan(context: Context, url: String, @ColorInt borderRedId: Int = 0, borderWidth: Float = 0f, position: Int, widthPx: Int, heigthPx: Int) {
-    setImageSpan(DraweeHolderBuilder.createCircleHolder(context, url, borderRedId, borderWidth), position, widthPx, heigthPx, true, BetterImageSpan.ALIGN_CENTER)
+fun DraweeSpanStringBuilder.setCircleImageSpan(
+    context: Context,
+    url: String,
+    @ColorInt borderRedId: Int = 0,
+    borderWidth: Float = 0f,
+    position: Int,
+    widthPx: Int,
+    heigthPx: Int
+) {
+    setImageSpan(
+        DraweeHolderBuilder.createCircleHolder(context, url, borderRedId, borderWidth),
+        position,
+        widthPx,
+        heigthPx,
+        true,
+        BetterImageSpan.ALIGN_CENTER
+    )
 }
 
 /**
  * 设置一个圆形图片
  */
-fun DraweeSpanStringBuilder.setCircleImageSpan(context: Context, url: String, params: RoundingParams, position: Int, widthPx: Int, heigthPx: Int) {
-    setImageSpan(DraweeHolderBuilder.createCircleHolder(context, url, params), position, widthPx, heigthPx, true, BetterImageSpan.ALIGN_CENTER)
+fun DraweeSpanStringBuilder.setCircleImageSpan(
+    context: Context,
+    url: String,
+    params: RoundingParams,
+    position: Int,
+    widthPx: Int,
+    heigthPx: Int
+) {
+    setImageSpan(
+        DraweeHolderBuilder.createCircleHolder(context, url, params),
+        position,
+        widthPx,
+        heigthPx,
+        true,
+        BetterImageSpan.ALIGN_CENTER
+    )
 }
 
 //Int的几个扩展
@@ -230,11 +260,11 @@ fun Int.isEven(): Boolean = !this.isOdd()
 object ColorHax {
     private val random: Random = Random()
     private val HAX_PAIRS: List<Pair<Int, String>> =
-            (0..15).toMutableList().map { if (it < 10) it to "$it" else it to "${'A' + (it - 10)}" }
+        (0..15).toMutableList().map { if (it < 10) it to "$it" else it to "${'A' + (it - 10)}" }
 
     fun randomColor(): String {
         return "#${(1..6).map { HAX_PAIRS[random.nextInt(16)].second }
-                .joinToString(separator = "")}"
+            .joinToString(separator = "")}"
     }
 }
 
@@ -295,7 +325,7 @@ object Anys {
      * 判断两个对象只有一个为空
      */
     fun oneNullAndOnlyOne(obj1: Any?, obj2: Any?): Boolean =
-            (obj1 == null && obj2 != null) || (obj1 != null && obj2 == null)
+        (obj1 == null && obj2 != null) || (obj1 != null && obj2 == null)
 
     /**
      * 全部为空
@@ -313,9 +343,9 @@ object Anys {
     }
 
     fun <T> ifTrueOrElse(
-            conditionFunc: () -> Boolean,
-            valueToUseIfTrue: T,
-            valueToUseIfFalse: T
+        conditionFunc: () -> Boolean,
+        valueToUseIfTrue: T,
+        valueToUseIfFalse: T
     ): T {
         return ifTrueOrElse(conditionFunc(), valueToUseIfTrue, valueToUseIfFalse)
     }
@@ -324,9 +354,9 @@ object Anys {
      * @see ifTrueOrElse
      */
     fun <T> ifTrueOrElse(
-            condition: Boolean,
-            functionToInvokeIfTrue: () -> T,
-            functionToInvokeIfFalse: () -> T
+        condition: Boolean,
+        functionToInvokeIfTrue: () -> T,
+        functionToInvokeIfFalse: () -> T
     ): T {
         return ifTrueOrElse(condition, functionToInvokeIfTrue(), functionToInvokeIfFalse())
     }
@@ -335,9 +365,9 @@ object Anys {
      * @see ifTrueOrElse
      */
     fun <T> ifTrueOrElse(
-            conditionFunc: () -> Boolean,
-            functionToInvokeIfTrue: () -> T,
-            functionToInvokeIfFalse: () -> T
+        conditionFunc: () -> Boolean,
+        functionToInvokeIfTrue: () -> T,
+        functionToInvokeIfFalse: () -> T
     ): T {
         return ifTrueOrElse(conditionFunc(), functionToInvokeIfTrue, functionToInvokeIfFalse)
     }
@@ -365,6 +395,22 @@ fun <T> ArrayList<T>.removeDuplicate() {
     set.addAll(this)
     this.clear()
     this.addAll(set)
+}
+
+/**
+ * list去重操作 (对象去重必须重写equals和hashcode两方法)
+ * [target]去重比对的目标list
+ */
+fun <T> List<T>.removeDuplicate(target: List<T>): List<T> {
+    val set = HashSet<T>(target)
+    val resultList = mutableListOf<T>()
+    forEach {
+        if (set.add(it)) {
+            resultList.add(it)
+        }
+
+    }
+    return resultList
 }
 
 /**
@@ -439,9 +485,9 @@ fun <T> List<T>.mergeAndSort(newList: List<T>, vararg comparators: Comparator<T>
  *
  */
 fun <T> List<T>.mergeNoDuplicateAndSort(
-        newList: List<T>,
-        keyNames: ArrayList<Field>,
-        comparator: Comparator<T>
+    newList: List<T>,
+    keyNames: ArrayList<Field>,
+    comparator: Comparator<T>
 ): List<T> {
     val comparator0 = Comparator { t1: T, t2: T ->
         var ret = 0
