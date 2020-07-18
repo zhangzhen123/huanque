@@ -54,7 +54,7 @@ interface UserService {
      * 退出登录
      */
     @POST("user/acct/login/logout")
-    suspend fun logout(@Body form: EmptyForm = EmptyForm()): Root<Session>
+    suspend fun logout(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
 
     /**
      * 手机号一键登录
