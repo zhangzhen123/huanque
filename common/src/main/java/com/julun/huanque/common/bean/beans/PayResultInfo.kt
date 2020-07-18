@@ -46,16 +46,23 @@ class OppoPayInfo : Serializable {
     var productName: String = ""
 }
 
+
 data class WithdrawInfo(
-    var myCash: Int = 0,
-    var todayCash: Int = 0,
-    var totalWithdraw: Int = 0,
-    var tplList: MutableList<WithdrawTpl> = mutableListOf()
+    var cash: String = "",
+    var todayCash: String = "",
+    var tplList: MutableList<WithdrawTpl> = mutableListOf(),
+    var typeList: List<WithdrawType> = listOf(),
+    var withdrawCash: String = ""
 )
 
 data class WithdrawTpl(
-    var fast: Boolean = false,
-    var money: Int = 0,
-    var moneyText: String = "",
-    var tplCode: String = ""
+    var money: String = "",
+    var quick: Boolean = false,
+    var remark: String = "",
+    var tplId: Int = 0
+)
+
+data class WithdrawType(
+    var authorized: Boolean = false,
+    var type: String = ""
 )

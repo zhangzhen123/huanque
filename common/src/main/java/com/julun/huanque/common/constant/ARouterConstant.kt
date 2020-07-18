@@ -60,5 +60,5 @@ object ARouterConstant {
     /** 实名认证 end **/
 
     //微信支付服务
-    const val WEIXIN_PAY_SERVICE = "/$APP$SERVICE/WeiXinPayService"
+    const val WEIXIN_SERVICE = "/$APP$SERVICE/WeiXinService"
 }

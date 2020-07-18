@@ -8,13 +8,11 @@ import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.ContactsForm
 import com.julun.huanque.common.bean.forms.FriendIdForm
-import com.julun.huanque.common.bean.forms.RecomListForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
-import com.julun.huanque.common.suger.coverError
+import com.julun.huanque.common.suger.convertError
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
@@ -51,7 +49,7 @@ class ContactsFragmentViewModel : BaseViewModel() {
             }, error = { e ->
                 logger("报错了：$e")
 //                emit(ReactiveData(NetStateType.ERROR, error = e.coverError()))
-                emit(e.coverError())
+                emit(e.convertError())
             }, final = {
                 logger("最终返回")
             }, needLoadState = type == QueryType.INIT)

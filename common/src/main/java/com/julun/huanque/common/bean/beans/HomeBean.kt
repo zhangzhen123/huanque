@@ -58,19 +58,6 @@ data class HeadModule(
     }
 }
 
-//data class HeadBaseInfo(
-//    var headPic: String = "",
-//    var hotValue: Int = 0,
-//    var joinNum: Int = 0,
-//    var nickname: String = "",
-//    var programList: List<Any> = listOf(),
-//    var remainTimes: Int = 0
-//)
-
-//class HomeListData(isPull: Boolean = false, hasMore: Boolean = false, extDataJson: String? = null) :
-//    RootListData<HomeRecomItem>(isPull, arrayListOf(), hasMore, extDataJson) {
-//    var moduleList: List<HeadModule> = arrayListOf()
-//}
 class HomeListData<T> : RootListData<T>() {
     var modules: List<HeadModule> = arrayListOf()
     var remind: HomeRemind = HomeRemind()
@@ -85,8 +72,8 @@ data class HomeRemind(
 )
 
 data class HomeTaskBar(
-    val desc:String="",
-    val type:String="",
+    var desc:String="",
+    var type:String="",
     var label: String = "",
     var myCash: String = ""
 )
@@ -103,7 +90,6 @@ data class HomeRecomItem(
     var coverPicList: MutableList<String> = mutableListOf(),
     var headPic: String = "",
     var introduceVoice: String = "",
-    var introduceVoiceLength: Int = 0,
     var anchor: Boolean = false,
     var authMark: String = "",
     var living: Boolean = false,
@@ -124,11 +110,16 @@ data class HomeRecomItem(
     override fun hashCode(): Int {
         return userId.toInt()
     }
-
+    var introduceVoiceLength: Int = 0
+    set(value) {
+        field=value
+        currentPlayProcess=value
+    }
     //本地字段 保留音频播放状态
     var isPlay: Boolean = false
     //本地字段 保存当前的播放进度
-    var currentPlayProcess: Int = introduceVoiceLength
+    var currentPlayProcess: Int = 0
+
     override fun toString(): String {
         return "HomeRecomItem(anchor=$anchor, authMark='$authMark', living=$living, mySign='$mySign', nickname='$nickname', userId=$userId)"
     }

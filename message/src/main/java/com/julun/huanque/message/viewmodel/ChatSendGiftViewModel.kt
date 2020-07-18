@@ -14,9 +14,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.BalanceUtils
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  *
@@ -49,7 +47,7 @@ class ChatSendGiftViewModel : BaseViewModel() {
             }, error = { e ->
                 logger("报错了：$e")
 //                emit(ReactiveData(NetStateType.ERROR, error = e.coverError()))
-                emit(e.coverError())
+                emit(e.convertError())
             }, final = {
                 logger("最终返回")
             }, needLoadState = type == QueryType.INIT)
@@ -69,7 +67,7 @@ class ChatSendGiftViewModel : BaseViewModel() {
             }, error = {
                 logger("赠送的结果 报错=${Thread.currentThread().name}")
 //                sendResult.value = ReactiveData(state = NetStateType.ERROR, error = it.coverError())
-                sendResult.value =it.coverError()
+                sendResult.value =it.convertError()
             })
 
 

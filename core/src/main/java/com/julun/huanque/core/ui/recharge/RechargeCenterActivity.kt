@@ -19,7 +19,7 @@ import com.julun.huanque.common.bean.beans.PayResultInfo
 import com.julun.huanque.common.bean.events.PayResultEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.interfaces.routerservice.WeiXinPayService
+import com.julun.huanque.common.interfaces.routerservice.WeiXinService
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -63,8 +63,10 @@ class RechargeCenterActivity : BaseActivity() {
 
     private var mHelpUrl: String = ""
     private var mPayPosition: Int = -1
-    private var wxService: WeiXinPayService? =
-        ARouter.getInstance().build(ARouterConstant.WEIXIN_PAY_SERVICE).navigation() as? WeiXinPayService
+    private val wxService: WeiXinService?  by lazy {
+        ARouter.getInstance().build(ARouterConstant.WEIXIN_SERVICE).navigation() as? WeiXinService
+    }
+
 
     //是否充值成功
     private var mIsPaySuccess: Boolean = false
@@ -270,7 +272,7 @@ class RechargeCenterActivity : BaseActivity() {
                 } else {
                     //调用SDK支付
 //                    WXApiManager.doPay(this, pay.wxOrderInfo)
-                    wxService?.weixinPay(this, pay.wxOrderInfo)
+                    wxService?.weiXinPay(this, pay.wxOrderInfo)
                 }
             }
             //优先使用mainActivity防止内存泄漏

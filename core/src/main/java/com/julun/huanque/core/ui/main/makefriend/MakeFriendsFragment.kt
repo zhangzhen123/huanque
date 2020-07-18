@@ -104,6 +104,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 }
             }
         })
+
     }
 
     override fun initEvents(rootView: View) {
@@ -209,7 +210,6 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
 
         })
-
     }
 
     var currentPlayHomeRecomItem: HomeRecomItem? = null
@@ -262,6 +262,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     private fun loadData(stateList: RootListData<HomeItemBean>) {
 
         if (stateList.isPull) {
+            //每次刷新后重置播放
+            audioPlayerManager.stop()
+            currentPlayHomeRecomItem=null
             mAdapter.setList(stateList.list)
         } else {
             mAdapter.addData(stateList.list)

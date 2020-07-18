@@ -21,9 +21,9 @@ class HeaderNavAdapter : BaseQuickAdapter<HeadModule, BaseViewHolder>(R.layout.i
 //            imgView.inVisiable()
 //        }
         if (item.hot) {
-            holder.setGone(R.id.iv_hot_tag, true)
-        } else {
             holder.setGone(R.id.iv_hot_tag, false)
+        } else {
+            holder.setGone(R.id.iv_hot_tag, true)
         }
 
         when (item.type) {

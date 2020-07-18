@@ -24,6 +24,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
+import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.MineToolType
 import com.julun.huanque.common.constant.RealNameConstants
@@ -39,6 +40,8 @@ import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_mine.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 import java.math.RoundingMode
 
@@ -59,6 +62,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
     override fun getLayoutId() = R.layout.fragment_mine
 
+    override fun isRegisterEventBus(): Boolean =true
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val lt = llTitleRootView.layoutParams as ConstraintLayout.LayoutParams
         lt.topMargin = StatusBarUtil.getStatusBarHeight(requireContext())
@@ -187,7 +191,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     override fun lazyLoadData() {
         mViewModel.queryInfo()
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveLoginCode(event: LoginEvent){
+        logger.info("登录事件:${event.result}")
+        if(event.result){
+            mViewModel.queryInfo(QueryType.REFRESH)
+        }
 
+    }
     private val infoTabAdapter: BaseQuickAdapter<UserDataTab, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<UserDataTab, BaseViewHolder>(R.layout.item_tab_user_info) {
             override fun onCreateDefViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

@@ -2,7 +2,6 @@ package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
-import com.julun.huanque.common.bean.beans.HeadNavigateInfo
 import com.julun.huanque.common.bean.beans.HomeItemBean
 import com.julun.huanque.common.bean.beans.HomeListData
 import com.julun.huanque.common.bean.beans.HomeRecomItem

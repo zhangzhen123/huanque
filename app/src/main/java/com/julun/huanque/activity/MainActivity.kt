@@ -12,28 +12,24 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.location.BDAbstractLocationListener
 import com.baidu.location.BDLocation
 import com.julun.huanque.R
-import com.julun.huanque.app.HuanQueApp
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
 import com.julun.huanque.common.bean.events.LoginEvent
-import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.ConmmunicationUserType
-import com.julun.huanque.common.constant.ParamKey
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
-import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.message.fragment.MessageFragment
-import com.julun.huanque.ui.main.*
+import com.julun.huanque.ui.main.LeYuanFragment
+import com.julun.huanque.ui.main.MineFragment
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.maplib.LocationService
-import com.julun.rnlib.RNPageFragment
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
@@ -89,7 +85,7 @@ class MainActivity : BaseActivity() {
         }else{
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         }
-
+        UserHeartManager.startHeartbeat()
         CommonInit.getInstance().setMainActivity(this)
         logger.info("DXC  userID = ${SessionUtils.getUserId()}，header = ${SessionUtils.getHeaderPic()}")
         setContentView(R.layout.main_activity)
@@ -126,6 +122,10 @@ class MainActivity : BaseActivity() {
         stopLocation()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        UserHeartManager.stopBeat()
+    }
     private fun initViewModel() {
         mMainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         mMainViewModel?.indexData?.observe(this, Observer {

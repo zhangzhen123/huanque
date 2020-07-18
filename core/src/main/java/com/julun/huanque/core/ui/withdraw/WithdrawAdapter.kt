@@ -45,19 +45,19 @@ class WithdrawAdapter : BaseQuickAdapter<WithdrawTpl, BaseViewHolder>(R.layout.i
         val withdrawTitle = helper.getView<TextView>(R.id.withdraw_title)
         val withdrawTips = helper.getView<TextView>(R.id.withdraw_tips)
         //
-        if(item.fast){
+        if (item.quick) {
             withdrawTips.show()
-            withdrawTips.text="秒到账"
-        }else{
+            withdrawTips.text = "秒到账"
+        } else {
             withdrawTips.hide()
         }
 
-        withdrawNum.text=item.moneyText
+        withdrawNum.text = item.money
 
-        if(item.tplCode== WithdrawCode.Money1){
+        if (item.remark.isNotEmpty()) {
             withdrawTitle.show()
-            withdrawTitle.text="新人专享"
-        }else{
+            withdrawTitle.text = item.remark
+        } else {
             withdrawTitle.hide()
         }
     }
