@@ -499,7 +499,7 @@ class MessageViewModel : BaseViewModel() {
             }
         }
 
-        if (index > 0) {
+        if (index >= 0) {
             //当前列表里面存在该会话，直接删除就可以
             list.removeAt(index)
             //显示新的列表

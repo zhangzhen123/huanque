@@ -23,6 +23,12 @@ object BusiConstant {
     const val WEB_URL = "web_url"
     const val ROOM_AD = "ROOM_AD"
 
+    //True
+    const val True = "True"
+
+    //False
+    const val False = "False"
+
 }
 
 /**
@@ -141,16 +147,19 @@ object WithdrawCode {
     const val Money300 = 11
     const val Money500 = 12
 }
+
 /**
  * 提现方式
  */
 object WithdrawErrorCode {
     //未绑定手机
     const val NO_BIND_PHONE = 1004
+
     //未实名认证
     const val NO_VERIFIED = 1005
 
 }
+
 enum class PayResult {
     IS_PAY,//去支付了 但是不知道结果的情况
     PAY_SUCCESS,

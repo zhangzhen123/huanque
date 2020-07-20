@@ -85,7 +85,9 @@ class IntimateBean(
     //亲密特权
     var intimatePrivilegeList: MutableList<IntimatePrivilege> = mutableListOf(),
     //用户ID数据
-    var userIds: LongArray = longArrayOf()
+    var userIds: LongArray = longArrayOf(),
+    //是否是陌生人状态
+    var stranger: HashMap<Long,Boolean> = hashMapOf()
 )
 
 /**

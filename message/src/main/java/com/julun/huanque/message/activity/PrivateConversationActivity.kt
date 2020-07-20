@@ -596,7 +596,8 @@ class PrivateConversationActivity : BaseActivity() {
         MessageProcessor.registerEventProcessor(object : MessageProcessor.IntimateChangeProcessor {
             override fun process(data: IntimateBean) {
                 val userIds = data.userIds
-                if (userIds.contains(SessionUtils.getUserId()) && userIds.contains(mPrivateConversationViewModel?.targetIdData?.value ?: 0)) {
+                val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: 0
+                if (userIds.contains(SessionUtils.getUserId()) && userIds.contains(targetId)) {
                     //当前两个人亲密度发生变化
                     //更新数据库标识
                     var updateDataBase = false
@@ -614,7 +615,8 @@ class PrivateConversationActivity : BaseActivity() {
                     mPrivateConversationViewModel?.basicBean?.value = basicData
                     if (updateDataBase) {
                         //需要更新数据库
-                        mPrivateConversationViewModel?.updateIntimate(data.intimateLevel)
+                        val stranger = data.stranger[targetId] ?: false
+                        mPrivateConversationViewModel?.updateIntimate(data.intimateLevel, stranger)
                     }
                 }
             }

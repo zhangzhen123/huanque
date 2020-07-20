@@ -287,15 +287,16 @@ class PrivateConversationViewModel : BaseViewModel() {
     /**
      * 更新亲密度
      */
-    fun updateIntimate(intimateLevel: Int) {
+    fun updateIntimate(intimateLevel: Int, stranger: Boolean) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val user = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(targetIdData.value ?: 0) ?: return@withContext
-                if (user.intimateLevel != intimateLevel) {
+                if (user.intimateLevel != intimateLevel || user.stranger != stranger) {
                     //需要更新亲密度数据
                     user.intimateLevel = intimateLevel
+                    user.stranger = stranger
                     HuanQueDatabase.getInstance().chatUserDao().insert(user)
-                    EventBus.getDefault().post(UserInfoChangeEvent(user.userId, user.stranger))
+                    EventBus.getDefault().post(UserInfoChangeEvent(user.userId, stranger))
                 }
             }
 
