@@ -245,4 +245,11 @@ object GlobalUtils {
         return user?.stranger ?: false
     }
 
+
+    /**
+     * 更新陌生人状态
+     */
+    fun updataStrangerData(userId: Long, stranger: Boolean) {
+
+    }
 }

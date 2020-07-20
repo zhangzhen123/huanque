@@ -135,10 +135,10 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
             }
         }
 
-        // 余额不足
-        ErrorCodes.BALANCE_NOT_ENOUGH -> {
-
-        }
+//        // 余额不足
+//        ErrorCodes.BALANCE_NOT_ENOUGH -> {
+//
+//        }
         // 其他系统定义错误代码
         else -> {
             Observable.just(it.message.toString()).compose(DefaultRxTransformer<String>()).subscribe {
