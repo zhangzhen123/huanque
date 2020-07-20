@@ -9,20 +9,21 @@ import java.io.Serializable
 data class ChatUser(
     //头像
     var headPic: String = "",
+    //个性签名
+    var mySign: String = "",
     //昵称
     var nickname: String = "",
     //用户ID
     var userId: Long = 0,
+    //用户性别
+    var sex: String = "",
+    //登录用户ID，用于切换账号时使用
+    var mineUserId: Long = SessionUtils.getUserId(),
+
     //亲密等级
     var intimateLevel: Int = 0,
     //欢遇标识
     var meetStatus: String = "",
-    //用户性别
-    var sex: String = "",
-    //个性签名
-    var mySign: String = "",
-    //登录用户ID，用于切换账号时使用
-    var mineUserId: Long = SessionUtils.getUserId(),
     //是否是陌生人
     var stranger: Boolean = false,
     //聊天背景

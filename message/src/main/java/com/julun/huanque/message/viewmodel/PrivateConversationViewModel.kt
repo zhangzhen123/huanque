@@ -198,12 +198,16 @@ class PrivateConversationViewModel : BaseViewModel() {
 
                 withContext(Dispatchers.IO) {
                     //判断当前用户是否和数据库数据保持一致
-                    val friendUser = result.friendUser
+                    val friendUser = result.friendUser.apply {
+                        intimateLevel = result.intimate.intimateLevel
+                        meetStatus = result.meetStatus
+                        stranger = result.stranger
+                    }
                     val userInDb = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(friendUser.userId)
                     if (friendUser.toString() != (userInDb?.toString() ?: "")) {
                         //数据不一致，需要保存用户数据
                         HuanQueDatabase.getInstance().chatUserDao().insert(friendUser)
-                        EventBus.getDefault().post(UserInfoChangeEvent(friendUser.userId,friendUser.stranger))
+                        EventBus.getDefault().post(UserInfoChangeEvent(friendUser.userId, friendUser.stranger))
                     }
                 }
             }, {
@@ -277,6 +281,25 @@ class PrivateConversationViewModel : BaseViewModel() {
     override fun onCleared() {
         super.onCleared()
         mCoolingDisposable?.dispose()
+    }
+
+
+    /**
+     * 更新亲密度
+     */
+    fun updateIntimate(intimateLevel: Int) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val user = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(targetIdData.value ?: 0) ?: return@withContext
+                if (user.intimateLevel != intimateLevel) {
+                    //需要更新亲密度数据
+                    user.intimateLevel = intimateLevel
+                    HuanQueDatabase.getInstance().chatUserDao().insert(user)
+                    EventBus.getDefault().post(UserInfoChangeEvent(user.userId, user.stranger))
+                }
+            }
+
+        }
     }
 
 }
