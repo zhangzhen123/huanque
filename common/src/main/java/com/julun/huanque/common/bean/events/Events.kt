@@ -5,8 +5,10 @@ import java.io.Serializable
 
 /**
  * 接收到私聊消息使用
+ * @param targetId 目标ID
+ * @param stranger 陌生人状态
  */
-class EventMessageBean(var tardetId: String = "") : Serializable
+class EventMessageBean(var targetId: String = "", var stranger: Boolean = false) : Serializable
 
 /**
  * 信息填写完成事件

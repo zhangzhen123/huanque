@@ -10,7 +10,6 @@ import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.bean.beans.FriendContent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
-import com.julun.huanque.common.constant.MeetStatus
 import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.helper.StringHelper
