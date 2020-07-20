@@ -15,6 +15,7 @@ import com.julun.huanque.agora.handler.EventHandler
 import com.julun.huanque.agora.viewmodel.VoiceChatViewModel
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.basic.VoidResult
+import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.constant.*
@@ -74,7 +75,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         if (mType == ConmmunicationUserType.CALLING) {
             //主叫
             mVoiceChatViewModel?.createUserId = SessionUtils.getUserId()
-            val mTargetUserInfo = intent?.getSerializableExtra(ParamKey.USER) as? ChatUserBean
+            val mTargetUserInfo = intent?.getSerializableExtra(ParamKey.USER) as? ChatUser
             if (mTargetUserInfo == null) {
                 ToastUtils.show("没有对方数据")
                 return
@@ -432,7 +433,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     /**
      * 显示页面
      */
-    private fun showViewByData(bean: ChatUserBean) {
+    private fun showViewByData(bean: ChatUser) {
         ImageUtils.loadImage(sdv_header, bean.headPic, 100f, 100f)
         tv_nickname.text = bean.nickname
         val sexImage = when (bean.sex) {

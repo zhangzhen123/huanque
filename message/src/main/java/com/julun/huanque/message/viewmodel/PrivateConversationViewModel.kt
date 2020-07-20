@@ -6,12 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
+import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.SendMsgForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.MessageCustomBeanType
+import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.database.table.Balance
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
@@ -27,7 +30,9 @@ import io.rong.imlib.IRongCallback
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.TimeUnit
 
@@ -55,9 +60,8 @@ class PrivateConversationViewModel : BaseViewModel() {
     //对方ID
     val targetIdData: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
 
-
     // 对方数据
-    val chatInfoData: MutableLiveData<ChatUserBean> by lazy { MutableLiveData<ChatUserBean>() }
+    val chatInfoData: MutableLiveData<ChatUser> by lazy { MutableLiveData<ChatUser>() }
 
     //基础数据
     val basicBean: MutableLiveData<ConversationBasicBean> by lazy { MutableLiveData<ConversationBasicBean>() }
@@ -191,6 +195,21 @@ class PrivateConversationViewModel : BaseViewModel() {
                 msgFeeData.value = result.msgFee
                 basicBean.value = result
                 BalanceUtils.saveBalance(result.beans)
+
+                withContext(Dispatchers.IO) {
+                    //判断当前用户是否和数据库数据保持一致
+                    val friendUser = result.friendUser.apply {
+                        intimateLevel = result.intimate.intimateLevel
+                        meetStatus = result.meetStatus
+                        stranger = result.stranger
+                    }
+                    val userInDb = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(friendUser.userId)
+                    if (friendUser.toString() != (userInDb?.toString() ?: "")) {
+                        //数据不一致，需要保存用户数据
+                        HuanQueDatabase.getInstance().chatUserDao().insert(friendUser)
+                        EventBus.getDefault().post(UserInfoChangeEvent(friendUser.userId, friendUser.stranger))
+                    }
+                }
             }, {
                 //设置本人数据
                 val user = RoomUserChatExtra().apply {
@@ -262,6 +281,26 @@ class PrivateConversationViewModel : BaseViewModel() {
     override fun onCleared() {
         super.onCleared()
         mCoolingDisposable?.dispose()
+    }
+
+
+    /**
+     * 更新亲密度
+     */
+    fun updateIntimate(intimateLevel: Int, stranger: Boolean) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val user = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(targetIdData.value ?: 0) ?: return@withContext
+                if (user.intimateLevel != intimateLevel || user.stranger != stranger) {
+                    //需要更新亲密度数据
+                    user.intimateLevel = intimateLevel
+                    user.stranger = stranger
+                    HuanQueDatabase.getInstance().chatUserDao().insert(user)
+                    EventBus.getDefault().post(UserInfoChangeEvent(user.userId, stranger))
+                }
+            }
+
+        }
     }
 
 }

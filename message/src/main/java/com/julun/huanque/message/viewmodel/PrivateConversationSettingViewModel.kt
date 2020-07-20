@@ -2,9 +2,7 @@ package com.julun.huanque.message.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.ChatDetailBean
-import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.TargetIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel

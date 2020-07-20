@@ -63,8 +63,8 @@ class JPushTask : Task() {
         JPushInterface.setDebugMode(BuildConfig.DEBUG)    // 设置开启日志,发布时请关闭日志
         JPushInterface.init(mContext.applicationContext)            // 初始化 JPush
         /*一键登录相关*/
-        JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
-        JVerificationInterface.init(mContext)
+//        JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
+//        JVerificationInterface.init(mContext)
     }
 }
 

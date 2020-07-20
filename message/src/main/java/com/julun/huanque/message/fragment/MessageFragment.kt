@@ -15,6 +15,7 @@ import com.julun.huanque.common.bean.MessageHeaderBean
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.FoldStrangerMessageEvent
 import com.julun.huanque.common.bean.events.MessageBlockEvent
+import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -229,7 +230,8 @@ class MessageFragment : BaseFragment() {
 
         tv_message_unread.onClickNew {
             activity?.let { act ->
-                PrivateConversationActivity.newInstance(act, 20000148)
+//                PrivateConversationActivity.newInstance(act, 20000143)
+                PrivateConversationActivity.newInstance(act, 10)
             }
         }
 
@@ -256,6 +258,12 @@ class MessageFragment : BaseFragment() {
             mMessageViewModel.foldStrangerMsg = fold
             mMessageViewModel.getConversationList()
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun userInfoChangeEvent(bean: UserInfoChangeEvent) {
+        //用户数据发生变化
+        mMessageViewModel.userInfoUpdate(bean)
     }
 
 //    @Subscribe(threadMode = ThreadMode.MAIN)

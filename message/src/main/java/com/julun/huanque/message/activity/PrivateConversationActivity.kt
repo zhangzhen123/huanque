@@ -14,7 +14,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -62,7 +61,6 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
-import kotlinx.android.synthetic.main.act_private_chat.iv_emoji
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -598,16 +596,28 @@ class PrivateConversationActivity : BaseActivity() {
         MessageProcessor.registerEventProcessor(object : MessageProcessor.IntimateChangeProcessor {
             override fun process(data: IntimateBean) {
                 val userIds = data.userIds
-                if (userIds.contains(SessionUtils.getUserId()) && userIds.contains(mPrivateConversationViewModel?.targetIdData?.value ?: 0)) {
+                val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: 0
+                if (userIds.contains(SessionUtils.getUserId()) && userIds.contains(targetId)) {
                     //当前两个人亲密度发生变化
+                    //更新数据库标识
+                    var updateDataBase = false
                     val basicData = mPrivateConversationViewModel?.basicBean?.value
                     basicData?.intimate?.apply {
+                        if (data.intimateLevel != intimateLevel) {
+                            //亲密度等级发生变化，需要更新数据库
+                            updateDataBase = true
+                        }
                         intimateLevel = data.intimateLevel
                         nextIntimateLevel = data.nextIntimateLevel
                         intimateNum = data.intimateNum
                         nextIntimateNum = data.nextIntimateNum
                     }
                     mPrivateConversationViewModel?.basicBean?.value = basicData
+                    if (updateDataBase) {
+                        //需要更新数据库
+                        val stranger = data.stranger[targetId] ?: false
+                        mPrivateConversationViewModel?.updateIntimate(data.intimateLevel, stranger)
+                    }
                 }
             }
         })

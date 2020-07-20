@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
+import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -324,14 +325,17 @@ class MessageViewModel : BaseViewModel() {
                             }
                         }
                         //插入陌生人item
-                        val info = hashMapOf<String, String>()
-                        info.put(LocalConversation.TIME, "$strangerLastestTime")
-                        info.put(LocalConversation.UNREADCOUNT, "$strangerUnreadCount")
-                        info.put(LocalConversation.NICKNAME, targetName)
-                        val strangerConversation = LocalConversation().apply {
-                            strangerInfo = info
+                        if (strangerLastestTime > 0) {
+                            //包含陌生人数据
+                            val info = hashMapOf<String, String>()
+                            info.put(LocalConversation.TIME, "$strangerLastestTime")
+                            info.put(LocalConversation.UNREADCOUNT, "$strangerUnreadCount")
+                            info.put(LocalConversation.NICKNAME, targetName)
+                            val strangerConversation = LocalConversation().apply {
+                                strangerInfo = info
+                            }
+                            realList.add(strangerConversation)
                         }
-                        realList.add(strangerConversation)
                     } else {
                         realList.addAll(allList)
                     }
@@ -441,4 +445,115 @@ class MessageViewModel : BaseViewModel() {
             getConversationList()
         }
     }
+
+    /**
+     * 用户数据更新
+     */
+    fun userInfoUpdate(bean: UserInfoChangeEvent) {
+
+        viewModelScope.launch {
+            //用户ID
+            val userId = bean.userId
+            //陌生人状态
+            val stranger = bean.stranger
+
+            if (!foldStrangerMsg) {
+                //未折叠消息
+                doWithSameEvent(userId)
+                return@launch
+            }
+
+            if (mStranger) {
+                //当前处于陌生人列表页面
+                if (stranger) {
+                    //陌生人状态变化
+                    doWithSameEvent(userId)
+                } else {
+                    //非陌生人状态变化
+                    doWithExclusionEvent(userId)
+                }
+            } else {
+                //会话列表页面
+                if (stranger) {
+                    //会话列表，接收到变为陌生人消息
+                    doWithExclusionEvent(userId)
+                } else {
+                    //会话列表 接收到好友数据变化消息
+                    doWithSameEvent(userId)
+                }
+            }
+        }
+    }
+
+    /**
+     * 接收到互斥消息处理
+     * 折叠消息开启   1 消息页面接受到陌生人变动消息   2 陌生人会话页面 接收到好友变动消息
+     */
+    private fun doWithExclusionEvent(userId: Long) {
+        val list = conversationListData.value ?: return
+        var index = -1
+        list.forEachIndexed { ind, it ->
+            if (it.conversation.targetId == "$userId") {
+                index = ind
+                return@forEachIndexed
+            }
+        }
+
+        if (index >= 0) {
+            //当前列表里面存在该会话，直接删除就可以
+            list.removeAt(index)
+            //显示新的列表
+            conversationListData.value = list
+        }
+        //不存在该会话，什么都不用处理
+    }
+
+    /**
+     * 接收到相同类型消息处理
+     * 折叠消息开启   1 消息页面接受到好友变动消息   2 陌生人会话页面 接收到陌生人变动变动消息
+     * 折叠消息关闭   收到变化消息
+     */
+    private fun doWithSameEvent(userId: Long) {
+        viewModelScope.launch {
+            val list = conversationListData.value
+            var index = -1
+            var tempConversation: LocalConversation? = null
+
+            list?.forEachIndexed { ind, it ->
+                if (it.conversation.targetId == "$userId") {
+                    index = ind
+                    tempConversation = it
+                    return@forEachIndexed
+                }
+            }
+
+            if (index >= 0) {
+                //1列表当中存在当前会话,刷新用户数据
+                withContext(Dispatchers.IO) {
+                    val user = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(userId) ?: return@withContext
+                    tempConversation?.showUserInfo = user
+                    changePosition.postValue(index)
+                }
+
+            } else {
+                //2列表当中不存在当前会话,不存在  判断本地是否有当前会话(存在本地数据，需要刷新整个列表)
+                RongIMClient.getInstance()
+                    .getConversation(Conversation.ConversationType.PRIVATE, "$userId", object : RongIMClient.ResultCallback<Conversation>() {
+                        override fun onSuccess(p0: Conversation?) {
+                            if (p0 == null) {
+                                //不存在本地会话，什么都不用处理
+                                return
+                            } else {
+                                //存在本地会话，需要刷新整个列表
+                                getConversationList()
+                            }
+                        }
+
+                        override fun onError(p0: RongIMClient.ErrorCode?) {
+                        }
+                    })
+            }
+        }
+    }
+
 }

@@ -19,14 +19,15 @@ interface ChatUserDao {
 //    @Query("SELECT * FROM ChatUser where status = 'Normal' and mineUserId = :mineId order by pinyin")
 //    fun queryAllFriends(mineId: Long = SessionUtils.getUserId()): Flowable<List<ChatUser>>
 
-    @Query("SELECT * FROM ChatUser where status = 'Normal' and mineUserId = :mineId order by pinyin")
+    //    @Query("SELECT * FROM ChatUser where status = 'Normal' and mineUserId = :mineId order by pinyin")
+    @Query("SELECT * FROM ChatUser where  mineUserId = :mineId ")
     fun queryAllFriendsByList(mineId: Long = SessionUtils.getUserId()): List<ChatUser>
 
     /**
      * 查询单个聊天用户
      */
     @Query("SELECT * FROM ChatUser where userId = :uId and mineUserId = :mineId LIMIT 1")
-    fun querySingleUser(uId: Int, mineId: Long = SessionUtils.getUserId()): ChatUser?
+    fun querySingleUser(uId: Long, mineId: Long = SessionUtils.getUserId()): ChatUser?
 
     /**
      * 查询多个用户

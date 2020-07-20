@@ -51,3 +51,10 @@ class MessageBlockEvent()
  * 折叠陌生人消息变化
  */
 class FoldStrangerMessageEvent()
+
+/**
+ * 用户数据变化通知
+ * @param userId 变化的用户ID
+ * @param stranger 陌生人状态
+ */
+class UserInfoChangeEvent(val userId: Long, val stranger: Boolean)

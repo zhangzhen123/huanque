@@ -17,8 +17,8 @@ import com.facebook.drawee.span.DraweeSpan
 import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.drawee.span.SimpleDraweeSpanTextView
 import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.ChatGift
-import com.julun.huanque.common.bean.beans.ChatUserBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
@@ -30,7 +30,6 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
-import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
 import com.julun.huanque.message.R
 import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
@@ -48,7 +47,7 @@ import kotlin.math.max
 class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFetchModule {
 
     //私聊的情况下，保存对方的用户信息
-    var otherUserInfo: ChatUserBean? = null
+    var otherUserInfo: ChatUser? = null
 
     init {
         addChildClickViewIds(R.id.sdv_image)

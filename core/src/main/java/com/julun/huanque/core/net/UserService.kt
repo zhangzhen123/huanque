@@ -67,7 +67,7 @@ interface UserService {
      * 更新用户数据
      */
     @POST("user/acct/data/initInfo")
-    suspend fun updateInformation(@Body form: UpdateInformationForm): Root<VoidResult>
+    suspend fun updateInformation(@Body form: UpdateInformationForm): Root<UpdateHeaderBean>
 
     /**
      * 开始获取验证码
@@ -81,11 +81,11 @@ interface UserService {
     @POST("user/acct/info/agreement")
     suspend fun agreement(@Body form: AgreementResultForm): Root<Void>
 
-    /**
-     * 修改头像
-     */
-    @POST("user/acct/data/initHeadPic")
-    suspend fun updateHeadPic(@Body form: UpdateHeadForm): Root<UpdateHeaderBean>
+//    /**
+//     * 修改头像
+//     */
+//    @POST("user/acct/data/initHeadPic")
+//    suspend fun updateHeadPic(@Body form: UpdateHeadForm): Root<UpdateHeaderBean>
 
     /**
      * 举报
@@ -104,6 +104,9 @@ interface UserService {
      */
     @POST("user/acct/data/getVoiceSignPoint")
     suspend fun getVoiceSignPoint(@Body form: EmptyForm= EmptyForm()): Root<VoiceSignPointBean>
+
+    @POST("user/acct/data/checkNickName")
+    suspend fun checkNickName(@Body form : NicknameForm) : Root<VoidResult>
 
 
     /**

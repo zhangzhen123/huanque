@@ -75,6 +75,7 @@ class LoginActivity : BaseActivity() {
     override fun isRegisterEventBus(): Boolean {
         return true
     }
+
     /**
      * 初始化ViewModel
      */
@@ -204,12 +205,13 @@ class LoginActivity : BaseActivity() {
             DensityHelper.px2dp(heightPx.toFloat()), 0, 0, true
         )
         //设置logo
-        uiConfigBuilder.setLogoHeight(98)
-        uiConfigBuilder.setLogoWidth(92)
-        uiConfigBuilder.setLogoImgPath("ic_launcher")
+        uiConfigBuilder.setLogoHeight(161)
+        uiConfigBuilder.setLogoWidth(198)
+        uiConfigBuilder.setLogoImgPath("bg_logo_login")
         uiConfigBuilder.setLogoHidden(false)
+        uiConfigBuilder.setLogoOffsetY(110)
         //设置手机号码
-        uiConfigBuilder.setNumberFieldOffsetBottomY(275)
+        uiConfigBuilder.setNumberFieldOffsetBottomY(197)
             .setNumberColor(GlobalUtils.getColor(R.color.black_333))
             .setNumberSize(16)
         //设置slogan
@@ -222,15 +224,15 @@ class LoginActivity : BaseActivity() {
 
 
         //设置登录按钮
-        val phoneNumWidthPx = widthPx - DensityHelper.dp2px(40) * 2
+        val phoneNumWidthPx = widthPx - DensityHelper.dp2px(38) * 2
         val viewWidth = DensityHelper.px2dp(phoneNumWidthPx.toFloat())
         uiConfigBuilder.setLogBtnText(GlobalUtils.getString(R.string.owner_phone_number_fast_login))
         uiConfigBuilder.setLogBtnTextColor(Color.WHITE)
         uiConfigBuilder.setLogBtnImgPath("bg_phone_number_fast_login")
-        uiConfigBuilder.setLogBtnHeight(40)
+        uiConfigBuilder.setLogBtnHeight(50)
         uiConfigBuilder.setLogBtnWidth(viewWidth)
         uiConfigBuilder.setLogBtnTextSize(16)
-        uiConfigBuilder.setLogBtnBottomOffsetY(205)
+        uiConfigBuilder.setLogBtnBottomOffsetY(127)
 
         //设置隐私协议相关
         uiConfigBuilder.setAppPrivacyOne(GlobalUtils.getString(R.string.register_rule_02), "www.baidu.com")
@@ -248,14 +250,14 @@ class LoginActivity : BaseActivity() {
         uiConfigBuilder.setPrivacyTextWidth(viewWidth)
         //        uiConfigBuilder.setPrivacyOffsetX(52-15);
         uiConfigBuilder.setPrivacyTextSize(10)
-        uiConfigBuilder.setPrivacyOffsetY(34)
+        uiConfigBuilder.setPrivacyOffsetY(15)
 
 
         // 自定义View   其它手机号登录
         val layoutParamPhoneLogin = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, DensityHelper.dp2px(18))
         layoutParamPhoneLogin.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
         layoutParamPhoneLogin.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE)
-        layoutParamPhoneLogin.setMargins(0, 0, 0, DensityHelper.dp2px(136))
+        layoutParamPhoneLogin.setMargins(0, 0, 0, DensityHelper.dp2px(93))
         val tvPhoneLogin = TextView(this)
         tvPhoneLogin.text = GlobalUtils.getString(R.string.others_phone_login)
         tvPhoneLogin.layoutParams = layoutParamPhoneLogin
@@ -317,8 +319,9 @@ class LoginActivity : BaseActivity() {
         super.finish()
 
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun receiveWeiXinCode(event:WeiXinCodeEvent){
+    fun receiveWeiXinCode(event: WeiXinCodeEvent) {
         logger.info("收到微信登录code:${event.code}")
         mViewModel?.weiXinLogin(event.code)
 
