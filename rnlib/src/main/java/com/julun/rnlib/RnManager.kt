@@ -14,6 +14,7 @@ import com.facebook.react.shell.MainReactPackage
 import com.horcrux.svg.SvgPackage
 import com.julun.huanque.common.net.interceptors.HeaderInfoHelper
 import com.julun.huanque.common.suger.logger
+import com.julun.rnlib.reactpackage.AppMessageReactPackage
 import com.julun.rnlib.reactpackage.OpenPageReactPackage
 import com.julun.rnlib.reactpackage.RequestInfoReactPackage
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage
@@ -47,6 +48,7 @@ object RnManager {
                 .addPackage(MainReactPackage()) // 背景色渐变：需放到application中
                 .addPackage(LinearGradientPackage()) // 请求头数据：需放到application中
                 .addPackage(RequestInfoReactPackage())
+                .addPackage(AppMessageReactPackage())//新增统一的消息通信模块
                 .addPackage(OpenPageReactPackage())
                 .addPackage(RNGestureHandlerPackage())
                 .addPackage(SafeAreaContextPackage())

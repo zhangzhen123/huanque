@@ -17,5 +17,10 @@ object RnConstant {
     const val OFFICIAL_CERT_PAGE:String="OfficialCertPage"
 
 
+    //Action事件码
+    //用户关注变化
+    const val FOLLOW_USER_CHANGE:String="FollowUserChange"
+    //我的信息修改变化
+    const val MY_PROFILE_CHANGE:String="MyProfileChange"
 
 }

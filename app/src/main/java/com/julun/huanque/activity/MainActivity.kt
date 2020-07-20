@@ -82,10 +82,11 @@ class MainActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         if(SessionUtils.getIsRegUser()&&SessionUtils.getSessionId().isNotEmpty()){
             AppChecker.startCheck(true)
+            UserHeartManager.startOnline()
         }else{
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         }
-        UserHeartManager.startOnline()
+
         CommonInit.getInstance().setMainActivity(this)
         logger.info("DXC  userID = ${SessionUtils.getUserId()}，header = ${SessionUtils.getHeaderPic()}")
         setContentView(R.layout.main_activity)

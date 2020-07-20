@@ -2,21 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mkf_header_container"
+    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/header_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_78"
-        android:layout_marginStart="@dimen/dimen_15"
-        android:layout_marginLeft="@dimen/dimen_15"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="50dp">
 
     <LinearLayout
-        android:id="@+id/ll_balance"
+        android:id="@+id/ll_balance_h"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="@dimen/dimen_15"
@@ -26,10 +17,10 @@
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_recyclerView">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tv_balance"
+            android:id="@+id/tv_balance_h"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#F55656"
@@ -37,7 +28,7 @@
             tools:text="99" />
 
         <TextView
-            android:id="@+id/tv_balance_title"
+            android:id="@+id/tv_balance_title_h"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lingqian"
@@ -46,7 +37,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_task"
+        android:id="@+id/ll_task_h"
         android:layout_width="0dp"
         android:layout_height="@dimen/dimen_30"
         android:layout_marginStart="@dimen/dimen_11"
@@ -56,13 +47,13 @@
         android:background="@drawable/bg_shape_mkf_task"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/ll_balance"
+        app:layout_constraintBottom_toBottomOf="@+id/ll_balance_h"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ll_balance"
-        app:layout_constraintTop_toTopOf="@+id/ll_balance">
+        app:layout_constraintStart_toEndOf="@+id/ll_balance_h"
+        app:layout_constraintTop_toTopOf="@+id/ll_balance_h">
 
         <TextView
-            android:id="@+id/tv_task"
+            android:id="@+id/tv_task_h"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_13"
@@ -74,7 +65,7 @@
             android:textSize="@dimen/sp_14" />
 
         <TextView
-            android:id="@+id/tv_go_make_money"
+            android:id="@+id/tv_go_make_money_h"
             android:layout_width="50dp"
             android:layout_height="20dp"
             android:layout_marginEnd="@dimen/dimen_3"

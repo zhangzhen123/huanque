@@ -45,12 +45,12 @@ class HeaderNavAdapter : BaseQuickAdapter<HeadModule, BaseViewHolder>(R.layout.i
             }
             HeadModule.HotLive -> {
                 holder.setText(R.id.tv_title1, "热门直播")
-                holder.setText(R.id.tv_title2, "火${item.num}")
+                holder.setText(R.id.tv_title2, "热度${item.num}")
                 container.imageResource = R.mipmap.bg_header_living
             }
             HeadModule.PlumFlower -> {
                 holder.setText(R.id.tv_title1, "今日花魁")
-                holder.setText(R.id.tv_title2, "${item.num}")
+                holder.setText(R.id.tv_title2, item.num)
                 container.imageResource = R.mipmap.bg_header_day_top
             }
             else -> {

@@ -1,5 +1,6 @@
 package com.julun.huanque.common.manager
 
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.OnlineInfo
 import com.julun.huanque.common.bean.forms.UserOnlineHeartForm
 import com.julun.huanque.common.net.NError
@@ -43,39 +44,36 @@ object UserHeartManager {
         }
     }
 
-    val success: NSuccess<OnlineInfo> = {
-        logger("online成功")
-        onlineId=it.onlineId
-        startHeartbeat()
-    }
-    var rqCount:Int=0
-    val error: NError = {
-        logger("startOnline失败了 5秒后重试")
-        Observable.timer(5, TimeUnit.SECONDS).subscribe {
-            if(rqCount< MAX_RQ){
-                startOnline()
-                rqCount++
-            }
-
-        }
-
-    }
+    var rqCount: Int = 0
 
     /**
      * 开始启动在线功能
      */
     fun startOnline() {
         service.online().handleWithResponse({
-
-            success(it)
+            logger("online成功")
+            onlineId = it.onlineId
+            startHeartbeat()
         }, { e ->
-            error(e)
+            //刷新用户 不是500的错误以及其他非业务错误 这里进行重试
+            if (e is ResponseError && (e.busiCode != 500) || (e !is ResponseError)) {
+                logger("startOnline失败了 5秒后重试")
+                Observable.timer(5, TimeUnit.SECONDS).subscribe {
+                    if (rqCount < MAX_RQ) {
+                        startOnline()
+                        rqCount++
+                    }
+
+                }
+            }
+
+
         }
         )
     }
 
     fun stopBeat() {
-        onlineId=null
+        onlineId = null
         disposable?.dispose()
     }
 }

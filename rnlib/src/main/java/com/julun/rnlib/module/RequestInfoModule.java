@@ -8,6 +8,7 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.julun.huanque.common.constant.ARouterConstant;
@@ -60,7 +61,12 @@ public class RequestInfoModule extends ReactContextBaseJavaModule {
         RnManager.INSTANCE.getPromiseMap().put(RnManager.uploadPhotos, promise);
 
     }
+    @ReactMethod
+    public void uploadVideos(int max,Promise promise) {
+        //todo
 
+
+    }
     @ReactMethod
     public void sessionPast() {
         RnManager.INSTANCE.closeRnPager();

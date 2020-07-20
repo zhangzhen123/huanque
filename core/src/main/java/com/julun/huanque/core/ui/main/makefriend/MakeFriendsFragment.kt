@@ -1,8 +1,13 @@
 package com.julun.huanque.core.ui.main.makefriend
 
+import android.graphics.Typeface
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.StyleSpan
 import android.view.View
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,10 +18,7 @@ import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
-import com.julun.huanque.common.bean.beans.HeadModule
-import com.julun.huanque.common.bean.beans.HomeItemBean
-import com.julun.huanque.common.bean.beans.HomeRecomItem
-import com.julun.huanque.common.bean.beans.PhotoBean
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
@@ -25,12 +27,17 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
+import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.R
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_make_friend.*
+import kotlinx.android.synthetic.main.sticky_mkf_task.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -192,7 +199,15 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     logger.info("点击引导完善资料关闭---$position")
                     mAdapter.removeAt(position)
                 }
+                R.id.tv_go_make_money -> {
+                    //todo 去赚钱
+                    logger.info("去赚钱")
+                }
             }
+        }
+        tv_go_make_money_h.onClickNew {
+            //todo 去赚钱
+            logger.info("去赚钱")
         }
         mRecyclerView.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewDetachedFromWindow(view: View) {
@@ -210,6 +225,35 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
 
         })
+
+        mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val viewHead: View? = linearLayoutManager.findViewByPosition(0)
+                val view: View? = linearLayoutManager.findViewByPosition(1)
+                if (viewHead != null && view != null && viewHead.id == R.id.mkf_header_container) {
+                    val top = view.top
+//                    logger.info("top=$top ")
+
+//                    if (top <= stickyHeight) {
+//                        ic_sticky_mkf_task.y = 0f
+//                    } else {
+//                        ic_sticky_mkf_task.y = (-(stickyHeight - top)).toFloat()
+//                    }
+                    if (top <= dp2px(50)) {
+                        ic_sticky_mkf_task.show()
+                    } else {
+                        ic_sticky_mkf_task.hide()
+                    }
+                }
+            }
+        })
+
     }
 
     var currentPlayHomeRecomItem: HomeRecomItem? = null
@@ -264,7 +308,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         if (stateList.isPull) {
             //每次刷新后重置播放
             audioPlayerManager.stop()
-            currentPlayHomeRecomItem=null
+            currentPlayHomeRecomItem = null
             mAdapter.setList(stateList.list)
         } else {
             mAdapter.addData(stateList.list)
@@ -283,6 +327,21 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
 
         }
+        val headerData = stateList.list.getOrNull(0)
+        if (headerData?.showType == HomeItemBean.HEADER) {
+            val headerInfo = headerData.content as? HeadNavigateInfo ?: return
+            tv_balance_h.text = headerInfo.taskBar.myCash
+            val content = StringBuilder()
+            content.append("${headerInfo.taskBar.label}：")
+            val start = content.length//记录开始位置
+            content.append(headerInfo.taskBar.desc)
+            val styleSpan1A = StyleSpan(Typeface.BOLD)
+//                val end = content.length
+            val sp = SpannableString(content)
+            sp.setSpan(styleSpan1A, 0, start, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+            tv_task_h.text = sp
+        }
+
     }
 
     override fun onDestroy() {
