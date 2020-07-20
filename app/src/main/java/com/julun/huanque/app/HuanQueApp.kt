@@ -54,8 +54,8 @@ open class HuanQueApp : Application() {
             AgoraManager.initAgora(this)
             TagAliasOperatorHelper.getInstance().init(this)
 //            /*一键登录相关*/
-//            JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
-//            JVerificationInterface.init(this)
+            JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
+            JVerificationInterface.init(this)
             try {
                 initShumei(this)
             } catch (e: Exception) {

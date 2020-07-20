@@ -15,9 +15,11 @@ import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import org.jay.launchstarter.TaskDispatcher
+import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
 import java.lang.ref.WeakReference
@@ -118,10 +120,11 @@ class CommonInit {
                     val realContent = "本机号码：$viewContent"
                     phoneView.text = realContent
                     phoneView.backgroundResource = R.drawable.bg_owner_phone_number
+//                    phoneView.backgroundColor = GlobalUtils.getColor(R.color.black_333)
                     //设置宽高
                     val params = phoneView.layoutParams
-                    params.height = activity.dip(40)
-                    val phoneNumWidthPx = ScreenUtils.getScreenWidth() - activity.dip(40) * 2
+                    params.height = activity.dip(50)
+                    val phoneNumWidthPx = ScreenUtils.getScreenWidth() - activity.dip(38) * 2
                     params.width = phoneNumWidthPx
                     phoneView.layoutParams = params
                     //获取隐私栏
