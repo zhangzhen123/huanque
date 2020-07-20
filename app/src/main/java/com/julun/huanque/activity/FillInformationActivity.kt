@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -24,6 +25,7 @@ import com.julun.huanque.common.base.dialog.CommonLoadingDialog
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -37,6 +39,7 @@ import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import kotlinx.android.synthetic.main.act_fill_information.*
+import org.jetbrains.anko.sdk23.listeners.onTouch
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import org.jetbrains.anko.startActivity
 import java.text.SimpleDateFormat
@@ -80,16 +83,16 @@ class FillInformationActivity : BaseActivity() {
     private fun initViewModel() {
         mViewModel = ViewModelProvider(this).get(FillInformationViewModel::class.java)
 
-        mViewModel?.updateInformationState?.observe(this, Observer {
-            if (it != null) {
-                if (it) {
-                    //加载中，加载完成
-                    loadingDialog.show(supportFragmentManager, "CommonLoadingDialog")
-                } else {
-                    loadingDialog.dismiss()
-                }
-            }
-        })
+//        mViewModel?.updateInformationState?.observe(this, Observer {
+//            if (it != null) {
+//                if (it) {
+//                    //加载中，加载完成
+//                    loadingDialog.show(supportFragmentManager, "CommonLoadingDialog")
+//                } else {
+//                    loadingDialog.dismiss()
+//                }
+//            }
+//        })
 
         mViewModel?.currentStatus?.observe(this, Observer {
             if (it != null) {
@@ -115,17 +118,27 @@ class FillInformationActivity : BaseActivity() {
             if (it != null) {
                 startActivity(Intent(this, LoginActivity::class.java))
             }
-            if(mLoadingDialog.isShowing){
+            if (mLoadingDialog.isShowing) {
                 mLoadingDialog.dismiss()
             }
+        })
 
+        mViewModel?.nicknameEnable?.observe(this, Observer {
+            if (it == true) {
+                judgeNextEnable()
+            }
         })
     }
 
     override fun initEvents(rootView: View) {
         ivback.onClickNew { finish() }
         et_nickname.textChangedListener {
-            afterTextChanged { judgeNextEnable() }
+            afterTextChanged {
+                //有变更就将昵称置为不可用
+                mViewModel?.nicknameEnable?.value = false
+                mViewModel?.nicknameChange = true
+                judgeNextEnable()
+            }
         }
 
         tv_next.onClickNew {
@@ -140,8 +153,9 @@ class FillInformationActivity : BaseActivity() {
             if (sexType.isEmpty() || nickname.isEmpty() || birthday.isEmpty()) {
                 return@onClickNew
             }
+            mViewModel?.currentStatus?.value = FillInformationViewModel.SECOND
 
-            mViewModel?.updateInformation(sexType, birthday, nickname, et_invitation_code.text.toString())
+//            mViewModel?.updateInformation(sexType, birthday, nickname, et_invitation_code.text.toString())
         }
         con_root.onClickNew {
             closeKeyBoard()
@@ -163,6 +177,25 @@ class FillInformationActivity : BaseActivity() {
 //            startActivity(Intent(this, LoginActivity::class.java))
             checkPermissions()
         }
+
+        con_root.mEventListener = object : EventListener {
+            override fun onDispatch(ev: MotionEvent?) {
+                //昵称有变化再请求，没有变化 无需请求
+                if (ev?.action == MotionEvent.ACTION_DOWN && mViewModel?.nicknameChange == true) {
+                    val nickname = et_nickname.text.toString()
+                    if (mViewModel?.nicknameEnable?.value != true && nickname.isNotEmpty()) {
+                        mViewModel?.checkNickName(nickname)
+                    }
+                }
+            }
+        }
+
+//        {
+//            if (mViewModel?.nicknameEnable?.value == true) {
+//                return@onClickNew
+//            }
+//            mViewModel?.checkNickName(et_nickname.text.toString())
+//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -187,10 +220,18 @@ class FillInformationActivity : BaseActivity() {
                         media.path
                     }
                     logger.info("收到图片:$path")
-                    if(!mLoadingDialog.isShowing){
+                    if (!mLoadingDialog.isShowing) {
                         mLoadingDialog.showDialog()
                     }
-                    mViewModel?.uploadHead(path)
+                    var sexType = ""
+                    if (iv_male.isSelected) {
+                        sexType = "Male"
+                    } else if (iv_female.isSelected) {
+                        sexType = "Female"
+                    }
+                    val nickname = et_nickname.text.toString()
+                    val birthday = getTime(mViewModel?.birthdayData ?: return) ?: return
+                    mViewModel?.uploadHead(path,sexType,birthday,nickname,et_invitation_code.text.toString())
                 }
             }
         } catch (e: Exception) {
@@ -198,7 +239,8 @@ class FillInformationActivity : BaseActivity() {
             logger.info("图片返回出错了")
         }
     }
-    private val mLoadingDialog:LoadingDialog by lazy { LoadingDialog(this) }
+
+    private val mLoadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
     private fun checkPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions
@@ -275,7 +317,8 @@ class FillInformationActivity : BaseActivity() {
      */
     private fun judgeNextEnable() {
         val sexEnable = iv_male.isSelected || iv_female.isSelected
-        val nicknameEnable = et_nickname.text.toString().isNotEmpty()
+//        val nicknameEnable = et_nickname.text.toString().isNotEmpty()
+        val nicknameEnable = mViewModel?.nicknameEnable?.value == true
         val birEnable = mViewModel?.birthdayData != null
 
         tv_next.isEnabled = sexEnable && nicknameEnable && birEnable

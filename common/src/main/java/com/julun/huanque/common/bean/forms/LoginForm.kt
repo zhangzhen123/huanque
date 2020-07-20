@@ -38,7 +38,8 @@ class UpdateInformationForm(
     var weight: Int? = null,
     var jobId: Int? = null,
     //邀请码
-    var invitationCode: String? = null
+    var invitationCode: String? = null,
+    var headPic : String = ""
 )
 
 /**

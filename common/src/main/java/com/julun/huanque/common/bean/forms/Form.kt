@@ -82,7 +82,12 @@ class FindNewsForm {
     var startAdsVersion: String? = null
 }
 
-class WithDrawAuthForm(var code:String)
-class WithdrawApplyForm(var tplId:Int,type:String)
+class WithDrawAuthForm(var code: String)
+class WithdrawApplyForm(var tplId: Int, type: String)
 
-class WithdrawHistoryForm ( var lastId: Long?=null)
+class WithdrawHistoryForm(var lastId: Long? = null)
+
+/**
+ * 校验nickname使用
+ */
+class NicknameForm(var nickname: String)

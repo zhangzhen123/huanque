@@ -238,6 +238,9 @@ class MessageFragment : BaseFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateMessageReceive(bean: EventMessageBean) {
+        if (bean.tardetId == SystemTargetId.friendNoticeSender || bean.tardetId == SystemTargetId.systemNoticeSender) {
+            return
+        }
         mMessageViewModel.queryRongPrivateCount()
         mMessageViewModel.refreshConversation(bean.tardetId)
     }

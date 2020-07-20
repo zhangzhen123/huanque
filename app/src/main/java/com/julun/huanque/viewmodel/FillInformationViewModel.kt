@@ -3,6 +3,7 @@ package com.julun.huanque.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
+import com.julun.huanque.common.bean.forms.NicknameForm
 import com.julun.huanque.common.bean.forms.UpdateHeadForm
 import com.julun.huanque.common.bean.forms.UpdateInformationForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -37,10 +38,10 @@ class FillInformationViewModel : BaseViewModel() {
 
     val currentStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
-    /**
-     * 上传昵称之类的 状态
-     */
-    val updateInformationState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+//    /**
+//     * 上传昵称之类的 状态
+//     */
+//    val updateInformationState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     var birthdayData: Date? = null
 
@@ -49,6 +50,12 @@ class FillInformationViewModel : BaseViewModel() {
      */
     val uploadHeadState: MutableLiveData<String?> by lazy { MutableLiveData<String?>() }
 
+    //昵称是否可用标识
+    val nicknameEnable: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //昵称是否有变化
+    var nicknameChange = false
+
 
     /**
      * @param sex 性别
@@ -56,27 +63,34 @@ class FillInformationViewModel : BaseViewModel() {
      * @param nickname 昵称
      * @param code 邀请码
      */
-    fun updateInformation(sex: String, bir: String, nickname: String, code: String) {
+    private fun updateInformation(headerPic: String, sex: String, bir: String, nickname: String, code: String) {
         viewModelScope.launch {
             request({
-                updateInformationState.value = true
-                userService.updateInformation(
+//                updateInformationState.value = true
+                val result = userService.updateInformation(
                     UpdateInformationForm(
                         sexType = sex,
                         birthday = bir,
                         nickname = nickname,
-                        invitationCode = code
+                        invitationCode = code,
+                        headPic = headerPic
                     )
                 )
                     .dataConvert()
-                updateInformationState.value = false
+//                updateInformationState.value = false
                 SessionUtils.setNickName(nickname)
-//                completeBean.sextype = sex
-//                completeBean.birthday = bir
-//                completeBean.nickname = nickname
-                currentStatus.value = SECOND
+                SessionUtils.setHeaderPic(headerPic)
+                if (result.sex.isNotEmpty()) {
+                    SessionUtils.setSex(result.sex)
+                }
+                if (result.imToken.isNotEmpty()) {
+                    SessionUtils.setRongImToken(result.imToken)
+                }
+                LoginManager.loginSuccessComplete()
+                uploadHeadState.value = headerPic
             }, {
-                updateInformationState.value = false
+//                updateInformationState.value = false
+                uploadHeadState.value = null
                 if (it is ResponseError) {
                     ToastUtils.show(it.busiMessage)
                 }
@@ -85,40 +99,15 @@ class FillInformationViewModel : BaseViewModel() {
     }
 
     /**
-     * 模拟图片上传成功
-     */
-    fun headerSuccess(headerPic: String) {
-        SessionUtils.setHeaderPic(headerPic)
-        LoginManager.loginSuccessComplete()
-    }
-
-    /**
      * 上传头像
      */
-    fun uploadHead(path: String) {
+    fun uploadHead(path: String, sex: String, bir: String, nickname: String, iCode: String) {
         OssUpLoadManager.uploadFiles(arrayListOf(path), OssUpLoadManager.HEAD_POSITION) { code, list ->
             if (code == OssUpLoadManager.CODE_SUCCESS) {
                 logger("头像上传oss成功：${list}")
                 val headPic = list?.firstOrNull()
                 if (headPic != null) {
-                    viewModelScope.launch {
-                        request({
-                            val result = userService.updateHeadPic(UpdateHeadForm(headPic)).dataConvert()
-                            if (result.imToken.isNotEmpty()) {
-                                SessionUtils.setRongImToken(result.imToken)
-                            }
-
-                            if (result.sex.isNotEmpty()) {
-                                SessionUtils.setSex(result.sex)
-                            }
-                            logger("头像修改通知后台成功：${list}")
-
-                            headerSuccess(headPic)
-                            uploadHeadState.value = headPic
-                        }, error = {
-                            uploadHeadState.value = null
-                        })
-                    }
+                    updateInformation(headPic, sex, bir, nickname, iCode)
                 }
 
             } else {
@@ -126,5 +115,19 @@ class FillInformationViewModel : BaseViewModel() {
             }
         }
     }
+
+    /**
+     * 校验昵称
+     */
+    fun checkNickName(chickName: String) {
+        nicknameChange = false
+        viewModelScope.launch {
+            request({
+                val result = userService.checkNickName(NicknameForm(chickName)).dataConvert()
+                nicknameEnable.value = true
+            })
+        }
+    }
+
 
 }
