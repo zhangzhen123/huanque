@@ -8,6 +8,8 @@ import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
+import com.julun.huanque.common.bean.message.CustomSimulateMessage
+import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.ULog
@@ -79,7 +81,12 @@ object MessageProcessor {
     private fun processPrivateMessage(msg: Message) {
         try {
             if (privateTextProcessor == null) {
-                EventBus.getDefault().post(EventMessageBean(msg.targetId ?: ""))
+                val targetId = msg.targetId
+                if ((targetId == SystemTargetId.systemNoticeSender || targetId == SystemTargetId.friendNoticeSender) && msg.content is CustomSimulateMessage) {
+                    //模拟插入的系统消息或者好友通知(不做通知处理)
+                } else {
+                    EventBus.getDefault().post(EventMessageBean(msg.targetId ?: ""))
+                }
             }
             privateTextProcessor?.processMessage(msg)
         } catch (e: Exception) {

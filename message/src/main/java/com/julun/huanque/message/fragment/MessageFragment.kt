@@ -230,7 +230,8 @@ class MessageFragment : BaseFragment() {
 
         tv_message_unread.onClickNew {
             activity?.let { act ->
-                PrivateConversationActivity.newInstance(act, 20000143)
+//                PrivateConversationActivity.newInstance(act, 20000143)
+                PrivateConversationActivity.newInstance(act, 10)
             }
         }
 
@@ -238,9 +239,6 @@ class MessageFragment : BaseFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateMessageReceive(bean: EventMessageBean) {
-        if (bean.tardetId == SystemTargetId.friendNoticeSender || bean.tardetId == SystemTargetId.systemNoticeSender) {
-            return
-        }
         mMessageViewModel.queryRongPrivateCount()
         mMessageViewModel.refreshConversation(bean.tardetId)
     }
