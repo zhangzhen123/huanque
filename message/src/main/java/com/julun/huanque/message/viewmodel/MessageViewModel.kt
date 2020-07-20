@@ -91,6 +91,12 @@ class MessageViewModel : BaseViewModel() {
             }
 
         })
+        //删除用户数据
+        try {
+            HuanQueDatabase.getInstance().chatUserDao().removeSingleChatUser(cId.toLong())
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     /**
@@ -176,8 +182,9 @@ class MessageViewModel : BaseViewModel() {
 
     /**
      * 接收到私聊消息之后刷新单个会话
+     * @param stranger 消息是否是陌生人发送
      */
-    fun refreshConversation(targerId: String) {
+    fun refreshConversation(targerId: String, stranger: Boolean) {
         RongIMClient.getInstance()
             .getConversation(Conversation.ConversationType.PRIVATE, targerId, object : RongIMClient.ResultCallback<Conversation>() {
                 override fun onSuccess(p0: Conversation?) {
@@ -186,18 +193,37 @@ class MessageViewModel : BaseViewModel() {
                     }
 
                     val oriList = conversationListData.value
-                    if (oriList != null) {
-                        oriList.forEachIndexed { index, lmc ->
-                            if (lmc.conversation.targetId == p0.targetId) {
-                                lmc.conversation = p0
-                                //刷新列表（重新排序）
+                    oriList?.forEachIndexed { index, lmc ->
+                        if (lmc.conversation.targetId == p0.targetId) {
+                            lmc.conversation = p0
+                            //刷新列表（重新排序）
+                            if (foldStrangerMsg && stranger != lmc.showUserInfo?.stranger) {
+                                //折叠消息开启,陌生人状态有变更，需要在会话列表中删除当前会话
+                                try {
+                                    updataStrangerData(targerId.toLong(), stranger)
+                                    getConversationList()
+                                }catch (e : Exception){
+                                    e.printStackTrace()
+                                }
+
+                            } else {
                                 refreshConversationList(oriList)
-                                return
                             }
+                            return
                         }
                     }
 
                     //走到这里，标识之前的列表里面没有该会话
+                    if (foldStrangerMsg && stranger == mStranger) {
+                        //开启陌生人折叠，标识相同，需要在当前会话列表中添加改会话
+                        try {
+                            updataStrangerData(targerId.toLong(), stranger)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                        return getConversationList()
+                    }
+
                     val singleList = mutableListOf<Conversation>().apply {
                         add(p0)
                     }
@@ -208,6 +234,27 @@ class MessageViewModel : BaseViewModel() {
                 }
 
             })
+    }
+
+
+    /**
+     * 更新陌生人数据
+     * @param userId 用户Id
+     * @param stranger 陌生人状态
+     */
+    private fun updataStrangerData(userId: Long, stranger: Boolean) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                //更新数据库数据
+                val user = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(userId)
+                if (user != null && user.stranger != stranger) {
+                    //更新数据库陌生人状态
+                    user.stranger = stranger
+                    HuanQueDatabase.getInstance().chatUserDao().insert(user)
+                    getConversationList()
+                }
+            }
+        }
     }
 
     /**

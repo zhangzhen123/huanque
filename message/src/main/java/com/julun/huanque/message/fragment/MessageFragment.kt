@@ -2,16 +2,13 @@ package com.julun.huanque.message.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
-import com.julun.huanque.common.bean.MessageHeaderBean
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.FoldStrangerMessageEvent
 import com.julun.huanque.common.bean.events.MessageBlockEvent
@@ -26,7 +23,6 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.*
 import com.julun.huanque.message.adapter.ConversationListAdapter
 import com.julun.huanque.message.viewmodel.MessageViewModel
-import com.julun.huanque.message.widget.MessageHeaderView
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import com.luck.picture.lib.tools.StatusBarUtil
@@ -48,10 +44,6 @@ class MessageFragment : BaseFragment() {
 
     private var mAdapter = ConversationListAdapter()
 
-    //头部视图
-    private var headerView: LinearLayout? = null
-
-    private val headerViewList: ArrayList<MessageHeaderView> by lazy { arrayListOf<MessageHeaderView>() }
 
     companion object {
         /**
@@ -74,7 +66,6 @@ class MessageFragment : BaseFragment() {
         initRecyclerView()
         mMessageViewModel.foldStrangerMsg = SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)
         mMessageViewModel.mStranger = arguments?.getBoolean(ParamConstant.STRANGER, false) ?: false
-
         if (mMessageViewModel.mStranger) {
             view_top.hide()
             iv_setting.hide()
@@ -240,7 +231,7 @@ class MessageFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateMessageReceive(bean: EventMessageBean) {
         mMessageViewModel.queryRongPrivateCount()
-        mMessageViewModel.refreshConversation(bean.tardetId)
+        mMessageViewModel.refreshConversation(bean.targetId,bean.stranger)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

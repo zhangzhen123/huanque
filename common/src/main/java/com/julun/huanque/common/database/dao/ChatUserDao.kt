@@ -1,9 +1,6 @@
 package com.julun.huanque.common.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.utils.SessionUtils
 import io.reactivex.rxjava3.core.Flowable
@@ -52,4 +49,10 @@ interface ChatUserDao {
      */
     @Query("DELETE FROM ChatUser")
     fun clearChatUser()
+
+    /**
+     * 删除单个chatuser
+     */
+    @Query("DELETE FROM ChatUser where userId = :uId")
+    fun removeSingleChatUser(uId: Long)
 }

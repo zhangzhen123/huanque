@@ -11,6 +11,7 @@ import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.helper.reportCrash
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.reflect.ReflectUtil
@@ -85,7 +86,7 @@ object MessageProcessor {
                 if ((targetId == SystemTargetId.systemNoticeSender || targetId == SystemTargetId.friendNoticeSender) && msg.content is CustomSimulateMessage) {
                     //模拟插入的系统消息或者好友通知(不做通知处理)
                 } else {
-                    EventBus.getDefault().post(EventMessageBean(msg.targetId ?: ""))
+                    EventBus.getDefault().post(EventMessageBean(msg.targetId ?: "", GlobalUtils.getStrangerType(msg)))
                 }
             }
             privateTextProcessor?.processMessage(msg)

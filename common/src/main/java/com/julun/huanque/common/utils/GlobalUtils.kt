@@ -6,6 +6,7 @@ import android.content.ContextWrapper
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
+import android.os.Message
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -13,8 +14,13 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.julun.huanque.common.R
+import com.julun.huanque.common.bean.beans.RoomUserChatExtra
+import com.julun.huanque.common.bean.message.CustomMessage
+import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.MeetStatus
 import com.julun.huanque.common.init.CommonInit
+import io.rong.message.ImageMessage
+import io.rong.message.TextMessage
 import java.io.*
 import java.lang.ref.SoftReference
 
@@ -125,6 +131,7 @@ object GlobalUtils {
             getColor(errorColor)
         }
     }
+
     /**
      * 获取Drawable
      */
@@ -204,5 +211,38 @@ object GlobalUtils {
      * 获取背景的key(本人ID-对方ID)
      */
     fun getBackgroundKey(friendID: Long) = "${SessionUtils.getUserId()}-$friendID"
+
+
+    fun getStrangerType(msg: io.rong.imlib.model.Message): Boolean {
+        var extra: String = ""
+        val conent = msg.content
+        when (conent) {
+            is ImageMessage -> {
+                //图片消息
+                extra = conent.extra
+            }
+
+            is CustomMessage -> {
+                //自定义消息
+                extra = conent.extra
+            }
+
+            is CustomSimulateMessage -> {
+                //模拟消息
+                extra = conent.extra
+            }
+            is TextMessage -> {
+                //文本消息
+                extra = conent.extra
+            }
+        }
+        var user: RoomUserChatExtra? = null
+        try {
+            user = JsonUtil.deserializeAsObject(extra, RoomUserChatExtra::class.java)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return user?.stranger ?: false
+    }
 
 }
