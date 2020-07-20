@@ -84,7 +84,7 @@ class FindNewsForm {
 
 class BindForm(var code:String)
 class BindPhoneForm(var code:String,var mobile:String)
-class WithdrawApplyForm(var tplId:Int,type:String)
+class WithdrawApplyForm(var tplId:Int,var type:String)
 
 class WithdrawHistoryForm ( var lastId: Long?=null)
 

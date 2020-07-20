@@ -6,6 +6,7 @@ import androidx.lifecycle.switchMap
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.bean.beans.WithdrawRecord
 import com.julun.huanque.common.bean.forms.WithdrawHistoryForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -28,7 +29,7 @@ class WithdrawHistoryViewModel : BaseViewModel() {
 
     private var lastId: Long? = null
 
-    val historyData: LiveData<ReactiveData<RootListData<Any>>> = queryState.switchMap { type ->
+    val historyData: LiveData<ReactiveData<RootListData<WithdrawRecord>>> = queryState.switchMap { type ->
         liveData {
             if (type != QueryType.LOAD_MORE) {
                 lastId = null

@@ -3,9 +3,11 @@ package com.julun.huanque.core.ui.withdraw
 import androidx.lifecycle.*
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
+import com.julun.huanque.common.bean.beans.ApplyWithdrawResult
 import com.julun.huanque.common.bean.beans.WithdrawInfo
 import com.julun.huanque.common.bean.forms.WithdrawApplyForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.WithdrawErrorCode
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
@@ -26,7 +28,7 @@ class WithdrawViewModel : BaseViewModel() {
 
     private val service: WithDrawService by lazy { Requests.create(WithDrawService::class.java) }
 
-    val withdrawResult:MutableLiveData<ReactiveData<Any>> by lazy { MutableLiveData<ReactiveData<Any>>() }
+    val withdrawResult: MutableLiveData<ReactiveData<ApplyWithdrawResult>> by lazy { MutableLiveData<ReactiveData<ApplyWithdrawResult>>() }
 
     val withdrawData: LiveData<ReactiveData<WithdrawInfo>> = queryState.switchMap {
         liveData {
@@ -46,14 +48,20 @@ class WithdrawViewModel : BaseViewModel() {
 
     }
 
-    fun startApplyWithdraw(tplId:Int,type:String){
+    fun startApplyWithdraw(tplId: Int, type: String) {
         viewModelScope.launch {
             request({
-                val form= WithdrawApplyForm(tplId,type)
-                val result=service.applyWithdraw(form).dataConvert(intArrayOf(WithdrawErrorCode.NO_VERIFIED,WithdrawErrorCode.NO_BIND_PHONE))
-                withdrawResult.value=result.convertRtData()
-            },error = {
-                withdrawResult.value=it.convertError()
+                val form = WithdrawApplyForm(tplId, type)
+                val result = service.applyWithdraw(form).dataConvert(
+                    intArrayOf(
+                        WithdrawErrorCode.NO_VERIFIED,
+                        WithdrawErrorCode.NO_BIND_PHONE,
+                        ErrorCodes.CASH_NOT_ENOUGH
+                    )
+                )
+                withdrawResult.value = result.convertRtData()
+            }, error = {
+                withdrawResult.value = it.convertError()
             })
         }
 

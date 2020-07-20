@@ -14,6 +14,8 @@ import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.bean.beans.WithdrawRecord
+import com.julun.huanque.common.constant.WithdrawType
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.core.R
@@ -34,22 +36,31 @@ import org.jetbrains.anko.textColor
 class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
 
 
-    private val mAdapter = object : BaseQuickAdapter<Any, BaseViewHolder>(R.layout.item_withdraw_history), LoadMoreModule {
-        override fun convert(holder: BaseViewHolder, item: Any) {
-            holder.setText(R.id.tv_draw_title, "支付宝（xxx）").setText(R.id.tv_draw_time, "提现时间：20202020-2-2")
-                .setText(R.id.tv_draw_money, "100元")
-            val state = holder.getView<TextView>(R.id.tv_draw_state)
-            if (holder.adapterPosition % 2 == 0) {
-                state.text = "已到账"
-                state.textColor = Color.parseColor("#32CE3C")
-            } else {
-                state.text = "打款中"
-                state.textColor = Color.parseColor("#FE5F63")
+    private val mAdapter =
+        object : BaseQuickAdapter<WithdrawRecord, BaseViewHolder>(R.layout.item_withdraw_history), LoadMoreModule {
+            override fun convert(holder: BaseViewHolder, item: WithdrawRecord) {
+                val title = if (item.type == WithdrawType.AliWithdraw) {
+                    "支付宝(${item.nickname})"
+                } else {
+                    "微信(${item.nickname})"
+                }
+                holder.setText(R.id.tv_draw_title, title).setText(R.id.tv_draw_time, "提现时间：${item.time}")
+                    .setText(R.id.tv_draw_money, item.money)
+                val state = holder.getView<TextView>(R.id.tv_draw_state)
+                when (item.status) {
+                    "打款中" -> {
+                        state.text = "打款中"
+                        state.textColor = Color.parseColor("#FE5F63")
+                    }
+                    "已到账" -> {
+                        state.text = "已到账"
+                        state.textColor = Color.parseColor("#32CE3C")
+                    }
+                }
+
+
             }
-
-
         }
-    }
 
 
     override fun getLayoutId(): Int = R.layout.activity_withdraw_history
@@ -94,7 +105,7 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
     /**
      * 刷新数据
      */
-    private fun refreshData(listData: RootListData<Any>) {
+    private fun refreshData(listData: RootListData<WithdrawRecord>) {
 
         if (listData.isPull) {
             mAdapter.setList(listData.list)

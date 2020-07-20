@@ -3,9 +3,7 @@ package com.julun.huanque.core.net
 
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
-import com.julun.huanque.common.bean.beans.PayResultInfo
-import com.julun.huanque.common.bean.beans.RechargeRespDto
-import com.julun.huanque.common.bean.beans.WithdrawInfo
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.*
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -33,13 +31,13 @@ interface WithDrawService {
      * 申请提现
      */
     @POST("cash/withdraw/apply")
-    suspend fun applyWithdraw(@Body form: WithdrawApplyForm): Root<WithdrawInfo>
+    suspend fun applyWithdraw(@Body form: WithdrawApplyForm): Root<ApplyWithdrawResult>
 
     /**
      * 获取提现记录
      */
     @POST("cash/withdraw/history")
-    suspend fun withdrawHistory(@Body form: WithdrawHistoryForm): Root<RootListData<Any>>
+    suspend fun withdrawHistory(@Body form: WithdrawHistoryForm): Root<RootListData<WithdrawRecord>>
 
 
 }

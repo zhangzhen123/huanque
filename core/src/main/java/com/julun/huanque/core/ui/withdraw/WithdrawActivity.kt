@@ -16,8 +16,10 @@ import com.julun.huanque.common.bean.beans.WithdrawTpl
 import com.julun.huanque.common.bean.events.AliAuthCodeEvent
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.WithdrawErrorCode
 import com.julun.huanque.common.constant.WithdrawType
+import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.WeiXinService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ToastUtils
@@ -47,12 +49,12 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         ARouter.getInstance().build(ARouterConstant.WEIXIN_SERVICE).navigation() as? WeiXinService
     }
 
-
     private val mAdapter: WithdrawAdapter by lazy { WithdrawAdapter() }
 
     // 用户充值选择的面额对象
     private var mSelectItem: WithdrawTpl? = null
 
+    private val alertDialog by lazy { MyAlertDialog(this) }
 
     override fun getLayoutId(): Int = R.layout.activity_withdraw
 
@@ -117,8 +119,21 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
             ToastUtils.show("请先选择提现方式")
             return
         }
-        btn_ensure.isEnabled = false
-        mViewModel.startApplyWithdraw(mSelectItem!!.tplId, currentWithdrawType)
+        val message = if (currentWithdrawType == WithdrawType.AliWithdraw) {
+            "确定提现至你的支付宝账号（xxxxxxxxxxx）吗？"
+        } else {
+            "确定提现至你的微信账号（xxxxxxxxxxx）吗？"
+        }
+        alertDialog.showAlertWithOKAndCancel(
+            message = message,
+            okText = "提现",
+            title = "提现确认",
+            callback = MyAlertDialog.MyDialogCallback(onRight = {
+                btn_ensure.isEnabled = false
+                mViewModel.startApplyWithdraw(mSelectItem!!.tplId, currentWithdrawType)
+            })
+        )
+
     }
 
     private fun checkItem(position: Int) {
@@ -135,7 +150,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         when (withdrawType) {
             WithdrawType.WXWithdraw -> {
                 if (!wxAuthorized) {
-                    MyAlertDialog(this).showAlertWithOKAndCancel(
+                    alertDialog.showAlertWithOKAndCancel(
                         message = "微信未授权，完成授权即可提现",
                         okText = "去授权",
                         title = "授权提示",
@@ -150,7 +165,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
             }
             WithdrawType.AliWithdraw -> {
                 if (!aliAuthorized) {
-                    MyAlertDialog(this).showAlertWithOKAndCancel(
+                    alertDialog.showAlertWithOKAndCancel(
                         message = "支付宝未授权，完成授权即可提现",
                         okText = "去授权",
                         title = "授权提示",
@@ -189,27 +204,40 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
             btn_ensure.isEnabled = true
             if (it.state == NetStateType.SUCCESS) {
                 val data = it.getT()
-
+                ToastUtils.show(data.msg)
+                account_money.text = data.cash
             } else if (it.state == NetStateType.ERROR) {
                 when (it.error?.busiCode) {
                     WithdrawErrorCode.NO_BIND_PHONE -> {
-                        MyAlertDialog(this).showAlertWithOKAndCancel(
+                        alertDialog.showAlertWithOKAndCancel(
                             message = "你还未绑定手机，完成授权即可提现",
                             okText = "去绑定",
                             title = "未绑定手机提示",
                             callback = MyAlertDialog.MyDialogCallback(onRight = {
-
+                                //todo 跳转绑定手机
                             })
                         )
 
                     }
                     WithdrawErrorCode.NO_VERIFIED -> {
-                        MyAlertDialog(this).showAlertWithOKAndCancel(
+                        alertDialog.showAlertWithOKAndCancel(
                             message = "你还未实名认证，完成认证即可提现",
                             okText = "去认证",
                             title = "实名认证提示",
                             callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                ARouter.getInstance().build(ARouterConstant.REALNAME_MAIN_ACTIVITY).navigation()
+                            })
+                        )
 
+                    }
+                    ErrorCodes.CASH_NOT_ENOUGH -> {
+                        logger.info("零钱不足")
+                        alertDialog.showAlertWithOKAndCancel(
+                            message = "当前零钱余额不足，无法提现，快去赚钱获得更多吧~",
+                            okText = "去赚钱",
+                            title = "零钱不足",
+                            callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                //男用户跳转到养鹊乐园，女用户跳转到任务页面
                             })
                         )
 

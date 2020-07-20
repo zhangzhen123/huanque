@@ -99,8 +99,8 @@ object ErrorCodes {
     const val BALANCE_NOT_ENOUGH = 1001//余额不足
     const val SYSTEM_ERROR = -1//系统异常
 
-    //非法字符
-    const val MESSAGENOTPERMIT = 501
+    //零钱不足
+    const val CASH_NOT_ENOUGH = 1006
 
     //创建连麦异常
     const val CREATE_MICRO_FAIL = 501
