@@ -5,6 +5,7 @@ import com.ishumei.smantifraud.SmAntiFraud
 import com.julun.huanque.BuildConfig
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.bean.forms.BindForm
 import com.julun.huanque.common.bean.forms.MobileLoginForm
 import com.julun.huanque.common.bean.forms.MobileQuickForm
 import com.julun.huanque.common.bean.forms.WeiXinForm
@@ -18,7 +19,8 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.ULog
-import com.julun.huanque.net.service.UserService
+import com.julun.huanque.core.net.UserService
+import com.julun.huanque.core.manager.AliPayManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
@@ -42,7 +44,11 @@ object LoginManager {
     const val MOBILE_LOGIN = 1
     const val MOBILE_FAST_LOGIN = 2
     const val QQ_LOGIN = 3
-    private val userService: UserService by lazy { Requests.create(UserService::class.java) }
+    private val userService: UserService by lazy {
+        Requests.create(
+            UserService::class.java
+        )
+    }
 
 //    /**
 //     * 对第三方登录成功回调后 统一请求后台和回调
@@ -80,29 +86,28 @@ object LoginManager {
             return
         }
 //        GlobalScope.launch {
-            try {
-                isLogging = true
-                val deviceID = SmAntiFraud.getDeviceId() ?: ""
-                val result = userService.weiXinLogin(WeiXinForm(code, BuildConfig.WX_APP_ID, deviceID)).dataConvert()
-                loginSuccess(result, WECHAT_LOGIN)
-                // 当前连接着融云，先退出，因为token变了，需要退出重连
-                processRongYun(result, success)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                var message = "${e.message}"
-                if (e is SocketTimeoutException) {
-                    message = "连接超时,可能是网络不太好,您可以稍后重试"
-                }
-                if (e is ResponseError) {
-                    message = e.busiMessage
-                }
-                ToastUtils.show("登陆出错!\n $message ")
-            } finally {
-                isLogging = false
+        try {
+            isLogging = true
+            val deviceID = SmAntiFraud.getDeviceId() ?: ""
+            val result = userService.weiXinLogin(WeiXinForm(code, BuildConfig.WX_APP_ID, deviceID)).dataConvert()
+            loginSuccess(result, WECHAT_LOGIN)
+            // 当前连接着融云，先退出，因为token变了，需要退出重连
+            processRongYun(result, success)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            var message = "${e.message}"
+            if (e is SocketTimeoutException) {
+                message = "连接超时,可能是网络不太好,您可以稍后重试"
             }
+            if (e is ResponseError) {
+                message = e.busiMessage
+            }
+            ToastUtils.show("登陆出错!\n $message ")
+        } finally {
+            isLogging = false
+        }
 //        }
     }
-
     //手机登录
     suspend fun loginByMobile(phoneNum: String, code: String, success: (Session) -> Unit, error: NError? = null) {
         if (isLogging) {
@@ -158,7 +163,7 @@ object LoginManager {
                 success(result)
             }
 
-        }else{
+        } else {
             success(result)
         }
 
@@ -170,7 +175,7 @@ object LoginManager {
     private fun loginSuccess(it: Session, type: Int = 0) {
         SessionUtils.setSession(it)
         //通知登录成功
-        if(it.regComplete){
+        if (it.regComplete) {
             (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
                 .navigation() as? AppCommonService)?.loginSuccess(it)
             EventBus.getDefault().post(LoginEvent(true))
@@ -181,7 +186,7 @@ object LoginManager {
     /**
      * 完善注册后 代表真正的成功
      */
-    fun loginSuccessComplete(){
+    fun loginSuccessComplete() {
         SessionUtils.setRegComplete(true)
         (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
             .navigation() as? AppCommonService)?.loginSuccess(SessionUtils.getSession())
@@ -253,4 +258,6 @@ object LoginManager {
 //        }.withSpecifiedCodes(-1).withFinalCall { qqLogining = false })
 
     }
+
+
 }

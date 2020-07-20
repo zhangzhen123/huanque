@@ -351,9 +351,10 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
     override fun showLoadState(state: NetState) {
         when (state.state) {
-            NetStateType.SUCCESS -> {//showSuccess()
+            NetStateType.SUCCESS -> {
+                mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext()))
             }
-            NetStateType.LOADING -> {//showLoading()
+            NetStateType.LOADING -> {
                 mAdapter.setEmptyView(MixedHelper.getLoadingView(requireContext()))
             }
             NetStateType.ERROR -> {

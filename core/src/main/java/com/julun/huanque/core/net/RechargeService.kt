@@ -42,11 +42,5 @@ interface RechargeService {
     suspend fun queryRecomPay(@Body form: PayForm): Root<RechargeRespDto>
 
 
-    /**
-     * 获取提现信息
-     */
-    @POST("cash/withdraw/info")
-    suspend fun queryWithdrawInfo(@Body form: EmptyForm = EmptyForm()): Root<WithdrawInfo>
-
 
 }

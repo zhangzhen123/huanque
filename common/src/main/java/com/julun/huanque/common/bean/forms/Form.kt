@@ -82,7 +82,8 @@ class FindNewsForm {
     var startAdsVersion: String? = null
 }
 
-class WithDrawAuthForm(var code:String)
+class BindForm(var code:String)
+class BindPhoneForm(var code:String,var mobile:String)
 class WithdrawApplyForm(var tplId:Int,type:String)
 
 class WithdrawHistoryForm ( var lastId: Long?=null)

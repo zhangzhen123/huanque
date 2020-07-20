@@ -29,26 +29,6 @@ interface WithDrawService {
     @POST("cash/withdraw/info")
     suspend fun queryWithdrawInfo(@Body form: EmptyForm = EmptyForm()): Root<WithdrawInfo>
 
-
-    /**
-     * 支付宝授权信息
-     */
-    @POST("cash/authorize/alipayAuthInfo")
-    suspend fun alipayAuthInfo(@Body form: EmptyForm = EmptyForm()): Root<String>
-
-    /**
-     * 支付宝授权回调
-     */
-    @POST("cash/authorize/alipay")
-    suspend fun alipayCallback(@Body form: WithDrawAuthForm): Root<WithdrawInfo>
-
-    /**
-     * 微信授权回调
-     */
-    @POST("cash/authorize/weixin")
-    suspend fun weixinCallback(@Body form: WithDrawAuthForm): Root<WithdrawInfo>
-
-
     /**
      * 申请提现
      */

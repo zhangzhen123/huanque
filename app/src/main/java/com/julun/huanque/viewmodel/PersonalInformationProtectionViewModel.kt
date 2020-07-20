@@ -6,7 +6,7 @@ import com.julun.huanque.common.bean.forms.AgreementResultForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.request
-import com.julun.huanque.net.service.UserService
+import com.julun.huanque.core.net.UserService
 import kotlinx.coroutines.launch
 
 /**
@@ -16,7 +16,8 @@ import kotlinx.coroutines.launch
  */
 class PersonalInformationProtectionViewModel : BaseViewModel() {
     val agreeState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-    private val userService: UserService by lazy { Requests.create(UserService::class.java) }
+    private val userService: UserService by lazy { Requests.create(
+        UserService::class.java) }
 
     /**
      * 同意协议

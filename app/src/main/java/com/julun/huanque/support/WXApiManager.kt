@@ -7,10 +7,13 @@ import android.text.TextUtils
 import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.app.HuanQueApp
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.OrderInfo
 import com.julun.huanque.common.bean.beans.ShareObject
+import com.julun.huanque.common.bean.forms.BindForm
 import com.julun.huanque.common.bean.forms.ShareWay
 import com.julun.huanque.common.constant.ByteConstants
+import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -21,6 +24,7 @@ import com.tencent.mm.opensdk.modelmsg.*
 import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
+import java.net.SocketTimeoutException
 
 
 /**

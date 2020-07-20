@@ -155,3 +155,7 @@ class NetcallBean(
  * 关注返回的实体
  */
 class FollowBean(var follow: String = "") : Serializable
+
+data class AliAuthInfo(
+    var authInfo: String = ""
+)

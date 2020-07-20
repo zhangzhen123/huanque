@@ -27,7 +27,7 @@ import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
 import com.julun.huanque.core.R
-import com.julun.huanque.core.pay.AliPayManager
+import com.julun.huanque.core.manager.AliPayManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_recharge.*

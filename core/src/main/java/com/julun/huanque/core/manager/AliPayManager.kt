@@ -1,4 +1,4 @@
-package com.julun.huanque.core.pay
+package com.julun.huanque.core.manager
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -9,6 +9,7 @@ import com.alipay.sdk.app.AuthTask
 import com.alipay.sdk.app.PayTask
 import com.julun.huanque.common.bean.beans.alipay.AliAuthResult
 import com.julun.huanque.common.bean.beans.alipay.AliPayResult
+import com.julun.huanque.common.bean.events.AliAuthCodeEvent
 import com.julun.huanque.common.bean.events.PayResultEvent
 import com.julun.huanque.common.constant.PayResult
 import com.julun.huanque.common.constant.PayType
@@ -87,7 +88,7 @@ object AliPayManager {
             } else if (msg.what == SDK_AUTH_FLAG) {
                 val authResult = AliAuthResult(msg.obj as Map<String?, String?>, true)
                 val resultStatus: String = authResult.resultStatus
-
+                ULog.i("DXC  authResult = $authResult")
                 // 判断resultStatus 为“9000”且result_code
                 // 为“200”则代表授权成功，具体状态码代表含义可参考授权接口文档
 
@@ -97,6 +98,7 @@ object AliPayManager {
                     // 获取alipay_open_id，调支付时作为参数extern_token 的value
                     // 传入，则支付账户为该授权账户
                     //授权成功
+                    EventBus.getDefault().post(AliAuthCodeEvent(authResult.authCode))
                 } else {
 
                     //授权失败
@@ -105,6 +107,5 @@ object AliPayManager {
 
         }
     }
-
 
 }

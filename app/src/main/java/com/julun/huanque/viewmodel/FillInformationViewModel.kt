@@ -13,7 +13,7 @@ import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.net.service.UserService
+import com.julun.huanque.core.net.UserService
 import com.julun.huanque.support.LoginManager
 import kotlinx.coroutines.launch
 import java.util.*
@@ -33,7 +33,8 @@ class FillInformationViewModel : BaseViewModel() {
         const val SECOND = "SECOND"
     }
 
-    private val userService: UserService by lazy { Requests.create(UserService::class.java) }
+    private val userService: UserService by lazy { Requests.create(
+        UserService::class.java) }
 
     val currentStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 

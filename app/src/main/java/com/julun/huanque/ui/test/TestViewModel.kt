@@ -3,7 +3,7 @@ package com.julun.huanque.ui.test
 import androidx.lifecycle.*
 import com.julun.huanque.common.bean.forms.SessionForm
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.net.service.UserService
+import com.julun.huanque.core.net.UserService
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
 import com.julun.huanque.common.bean.beans.VoiceSignPointBean

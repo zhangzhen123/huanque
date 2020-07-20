@@ -2,6 +2,7 @@ package com.julun.huanque.core.ui.withdraw
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
@@ -12,6 +13,8 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.WithdrawInfo
 import com.julun.huanque.common.bean.beans.WithdrawTpl
+import com.julun.huanque.common.bean.events.AliAuthCodeEvent
+import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.WithdrawErrorCode
 import com.julun.huanque.common.constant.WithdrawType
@@ -20,7 +23,11 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
+import com.julun.huanque.core.manager.AliPayManager
+import com.julun.huanque.core.viewmodel.UserBindViewModel
 import kotlinx.android.synthetic.main.activity_withdraw.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
@@ -34,6 +41,8 @@ import org.jetbrains.anko.startActivity
  */
 class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
 
+    private val userBindViewModel: UserBindViewModel by viewModels()
+
     private val wxService: WeiXinService? by lazy {
         ARouter.getInstance().build(ARouterConstant.WEIXIN_SERVICE).navigation() as? WeiXinService
     }
@@ -46,6 +55,8 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
 
 
     override fun getLayoutId(): Int = R.layout.activity_withdraw
+
+    override fun isRegisterEventBus(): Boolean = true
 
     override fun setHeader() {
         pagerHeader.initHeaderView(titleTxt = "提现", operateTxt = "提现记录")
@@ -129,7 +140,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                         okText = "去授权",
                         title = "授权提示",
                         callback = MyAlertDialog.MyDialogCallback(onRight = {
-
+                            wxService?.weiXinAuth(this)
                         })
                     )
                     return
@@ -144,7 +155,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                         okText = "去授权",
                         title = "授权提示",
                         callback = MyAlertDialog.MyDialogCallback(onRight = {
-
+                            userBindViewModel.getAliPayAuthInfo()
                         })
                     )
                     return
@@ -180,8 +191,8 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                 val data = it.getT()
 
             } else if (it.state == NetStateType.ERROR) {
-                when(it.error?.busiCode){
-                    WithdrawErrorCode.NO_BIND_PHONE->{
+                when (it.error?.busiCode) {
+                    WithdrawErrorCode.NO_BIND_PHONE -> {
                         MyAlertDialog(this).showAlertWithOKAndCancel(
                             message = "你还未绑定手机，完成授权即可提现",
                             okText = "去绑定",
@@ -192,7 +203,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                         )
 
                     }
-                    WithdrawErrorCode.NO_VERIFIED->{
+                    WithdrawErrorCode.NO_VERIFIED -> {
                         MyAlertDialog(this).showAlertWithOKAndCancel(
                             message = "你还未实名认证，完成认证即可提现",
                             okText = "去认证",
@@ -206,7 +217,39 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                 }
             }
         })
+        userBindViewModel.aliPayAuth.observe(this, Observer {
+            btn_ensure.isEnabled = true
+            if (it.state == NetStateType.SUCCESS) {
+                val data = it.getT()
+                logger.info("获取后台支付宝授权信息成功 开始发起授权")
+                AliPayManager.aliAuth(this, data.authInfo)
+            } else if (it.state == NetStateType.ERROR) {
+//                ToastUtils.show("${it.error?.busiMessage}")
+            }
+        })
 
+        userBindViewModel.bindAliData.observe(this, Observer {
+            btn_ensure.isEnabled = true
+            if (it.state == NetStateType.SUCCESS) {
+//                val data = it.getT()
+                logger.info("绑定支付宝成功")
+                refreshAliBindTag(true)
+            } else if (it.state == NetStateType.ERROR) {
+                logger.info("绑定支付宝报错")
+//                ToastUtils.show("${it.error?.busiMessage}")
+            }
+        })
+        userBindViewModel.bindWinXinData.observe(this, Observer {
+            btn_ensure.isEnabled = true
+            if (it.state == NetStateType.SUCCESS) {
+//                val data = it.getT()
+                logger.info("绑定微信成功")
+                refreshWxBindTag(true)
+            } else if (it.state == NetStateType.ERROR) {
+                logger.info("绑定微信报错")
+//                ToastUtils.show("${it.error?.busiMessage}")
+            }
+        })
 
     }
 
@@ -226,25 +269,32 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         mAdapter.setNewInstance(info.tplList)
         info.typeList.forEach { type ->
             if (type.type == WithdrawType.AliWithdraw) {
-                aliAuthorized = type.authorized
-                if (type.authorized) {
-                    withdraw_tips_ali.hide()
-                } else {
-                    withdraw_tips_ali.show()
-                }
+                refreshAliBindTag(type.authorized)
             }
             if (type.type == WithdrawType.WXWithdraw) {
-                wxAuthorized = type.authorized
-                if (type.authorized) {
-                    withdraw_tips_wx.hide()
-                } else {
-                    withdraw_tips_wx.show()
-                }
+                refreshWxBindTag(type.authorized)
             }
         }
 
     }
 
+    private fun refreshAliBindTag(authorized: Boolean) {
+        aliAuthorized = authorized
+        if (aliAuthorized) {
+            withdraw_tips_ali.hide()
+        } else {
+            withdraw_tips_ali.show()
+        }
+    }
+
+    private fun refreshWxBindTag(authorized: Boolean) {
+        wxAuthorized = authorized
+        if (wxAuthorized) {
+            withdraw_tips_wx.hide()
+        } else {
+            withdraw_tips_wx.show()
+        }
+    }
 
     override fun showLoadState(state: NetState) {
         when (state.state) {
@@ -270,5 +320,16 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveWeiXinCode(event: WeiXinCodeEvent) {
+        logger.info("收到微信授权code:${event.code}")
+        userBindViewModel.bindWinXin(event.code)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveAliCode(event: AliAuthCodeEvent) {
+        logger.info("收到支付宝授权code:${event.code}")
+        userBindViewModel.bindAliPay(event.code)
+    }
 
 }

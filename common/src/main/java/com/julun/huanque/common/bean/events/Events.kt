@@ -33,6 +33,11 @@ class LoginEvent(val result: Boolean)
 class ChatBackgroundChangedEvent(var friendId: Long)
 
 /**
+ * 阿里授权code
+ */
+class AliAuthCodeEvent(val code: String)
+
+/**
  * 微信登录code
  */
 class WeiXinCodeEvent(val code: String)

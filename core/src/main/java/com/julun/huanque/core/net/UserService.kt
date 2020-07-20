@@ -1,4 +1,4 @@
-package com.julun.huanque.net.service
+package com.julun.huanque.core.net
 
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.basic.Root
@@ -49,6 +49,7 @@ interface UserService {
      */
     @POST("user/acct/login/weixin")
     suspend fun weiXinLogin(@Body form: WeiXinForm): Root<Session>
+
 
     /**
      * 退出登录
@@ -105,7 +106,28 @@ interface UserService {
     suspend fun getVoiceSignPoint(@Body form: EmptyForm= EmptyForm()): Root<VoiceSignPointBean>
 
 
+    /**
+     * 绑定手机
+     */
+    @POST("user/acct/info/bindMobile")
+    suspend fun bindMobile(@Body form: BindPhoneForm): Root<VoidResult>
+    /**
+     * 获取支付宝登录授权信息
+     */
+    @POST("user/acct/login/alipayAuthInfo")
+    suspend fun getAlipayAuthInfo(@Body form: EmptyForm= EmptyForm()): Root<AliAuthInfo>
 
+
+    /**
+     * 绑定支付宝
+     */
+    @POST("user/acct/info/bindAlipay")
+    suspend fun bindAliPay(@Body form: BindForm): Root<VoidResult>
+    /**
+     * 绑定微信
+     */
+    @POST("user/acct/info/bindWeixin")
+    suspend fun bindWeiXin(@Body form: BindForm): Root<VoidResult>
 
 
 }

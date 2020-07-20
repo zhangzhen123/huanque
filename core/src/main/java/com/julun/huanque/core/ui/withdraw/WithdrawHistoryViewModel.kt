@@ -6,11 +6,11 @@ import androidx.lifecycle.switchMap
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.bean.forms.WithdrawHistoryForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.core.net.RechargeService
-import kotlinx.coroutines.delay
+import com.julun.huanque.core.net.WithDrawService
 
 /**
  *
@@ -24,25 +24,22 @@ import kotlinx.coroutines.delay
 class WithdrawHistoryViewModel : BaseViewModel() {
 
 
-    private val service: RechargeService by lazy { Requests.create(RechargeService::class.java) }
+    private val service: WithDrawService by lazy { Requests.create(WithDrawService::class.java) }
 
-    private var offset = 0
+    private var lastId: Long? = null
 
     val historyData: LiveData<ReactiveData<RootListData<Any>>> = queryState.switchMap { type ->
         liveData {
             if (type != QueryType.LOAD_MORE) {
-                offset = 0
+                lastId = null
             }
+            val form = WithdrawHistoryForm(lastId)
             request({
-//                val result = service.queryWithdrawInfo().dataConvert()
+                val result = service.withdrawHistory(form).dataConvert()
                 //todo
-                delay(500)
-                val list = mutableListOf<Any>()
-                repeat(10) {
-                    list.add(Any())
-                }
-                val rl = RootListData(isPull = type != QueryType.LOAD_MORE, list = list, hasMore = true)
-                emit(rl.convertRtData())
+//                lastId=result.list.lastOrNull()?.lastId
+                result.isPull = type != QueryType.LOAD_MORE
+                emit(result.convertRtData())
             }, error = { e ->
                 logger("报错了：$e")
 //                emit(ReactiveData(NetStateType.ERROR, error = e.coverError()))

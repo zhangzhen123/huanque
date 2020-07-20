@@ -66,3 +66,5 @@ data class WithdrawType(
     var authorized: Boolean = false,
     var type: String = ""
 )
+
+

@@ -36,21 +36,20 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
 
     private val mAdapter = object : BaseQuickAdapter<Any, BaseViewHolder>(R.layout.item_withdraw_history), LoadMoreModule {
         override fun convert(holder: BaseViewHolder, item: Any) {
-            holder.setText(R.id.tv_draw_title,"支付宝（xxx）").setText(R.id.tv_draw_time,"提现时间：20202020-2-2")
-                .setText(R.id.tv_draw_money,"100元")
-            val state=holder.getView<TextView>(R.id.tv_draw_state)
-            if(holder.adapterPosition%2==0){
-                state.text="已到账"
-                state.textColor= Color.parseColor("#32CE3C")
-            }else{
-                state.text="打款中"
-                state.textColor= Color.parseColor("#FE5F63")
+            holder.setText(R.id.tv_draw_title, "支付宝（xxx）").setText(R.id.tv_draw_time, "提现时间：20202020-2-2")
+                .setText(R.id.tv_draw_money, "100元")
+            val state = holder.getView<TextView>(R.id.tv_draw_state)
+            if (holder.adapterPosition % 2 == 0) {
+                state.text = "已到账"
+                state.textColor = Color.parseColor("#32CE3C")
+            } else {
+                state.text = "打款中"
+                state.textColor = Color.parseColor("#FE5F63")
             }
 
 
         }
     }
-
 
 
     override fun getLayoutId(): Int = R.layout.activity_withdraw_history
@@ -123,9 +122,10 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
 
     override fun showLoadState(state: NetState) {
         when (state.state) {
-            NetStateType.SUCCESS -> {//showSuccess()
+            NetStateType.SUCCESS -> {
+                mAdapter.setEmptyView(MixedHelper.getEmptyView(this))
             }
-            NetStateType.LOADING -> {//showLoading()
+            NetStateType.LOADING -> {
                 mAdapter.setEmptyView(MixedHelper.getLoadingView(this))
             }
             NetStateType.ERROR -> {

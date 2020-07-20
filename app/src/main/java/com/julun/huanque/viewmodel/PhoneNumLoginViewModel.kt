@@ -21,7 +21,7 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.svga.SVGAHelper.logger
-import com.julun.huanque.net.service.UserService
+import com.julun.huanque.core.net.UserService
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.utils.GeeTestHttpUtils
 import kotlinx.coroutines.launch
@@ -35,7 +35,8 @@ import org.json.JSONObject
  */
 class PhoneNumLoginViewModel : BaseViewModel() {
 
-    private val userService: UserService by lazy { Requests.create(UserService::class.java) }
+    private val userService: UserService by lazy { Requests.create(
+        UserService::class.java) }
 
     //倒计时标识位
     val tickState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }

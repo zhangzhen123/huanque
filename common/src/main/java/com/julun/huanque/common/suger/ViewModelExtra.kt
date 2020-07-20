@@ -54,9 +54,6 @@ suspend fun BaseViewModel.request(
             NetExceptionHandle.handleException(e, loadState)
         }
 
-        if(e is ResponseError){
-            ToastUtils.show(e.busiMessage)
-        }
         error?.invoke(e)
         e.printStackTrace()
     } finally {

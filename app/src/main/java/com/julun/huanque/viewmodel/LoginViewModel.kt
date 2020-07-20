@@ -8,7 +8,7 @@ import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.net.service.UserService
+import com.julun.huanque.core.net.UserService
 import com.julun.huanque.support.LoginManager
 import kotlinx.coroutines.launch
 
@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
  *@描述 登录页面使用的微信
  */
 class LoginViewModel : BaseViewModel() {
-    private val userService: UserService by lazy { Requests.create(UserService::class.java) }
+    private val userService: UserService by lazy { Requests.create(
+        UserService::class.java) }
 
     //登录数据
     val loginData: MutableLiveData<Session> by lazy { MutableLiveData<Session>() }

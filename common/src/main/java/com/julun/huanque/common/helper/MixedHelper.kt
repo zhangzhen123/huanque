@@ -132,57 +132,41 @@ object MixedHelper {
         return mErrorView
     }
 
-    fun setEmptyView(context: Context, msg: String): View {
-        var emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data, null)
-        emptyView.emptyText.text = msg
-        return emptyView
-    }
 
-    fun setEmptyView(context: Context, parent: ViewGroup, msg: String, isImageHide: Boolean = false): View {
-        var emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data, parent, false)
-        emptyView.emptyText.text = msg
+    fun getEmptyView(
+        context: Context,
+        parent: ViewGroup,
+        msg: String? = null,
+        isImageHide: Boolean = false,
+        resId: Int? = null
+    ): View {
+        val emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data, parent, false)
+        if (msg != null)
+            emptyView.emptyText.text = msg
         if (isImageHide) {
             emptyView.no_data_image.hide()
         } else {
             emptyView.no_data_image.show()
+
         }
-        return emptyView
-    }
-
-    fun setEmptyView(context: Context, parent: ViewGroup, msg: String, resId: Int): View {
-        var emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data, parent, false)
-        emptyView.emptyText.text = msg
-        emptyView.no_data_image.setImageResource(resId)
-        return emptyView
-    }
-
-    fun setEmptyView(context: Context, msg: String, resId: Int): View {
-        var emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data, null)
-        emptyView.emptyText.text = msg
-        emptyView.no_data_image.setImageResource(resId)
-        return emptyView
-    }
-
-    fun setEmptyView(context: Context, parent: ViewGroup, msg: String, resId: Int, marginTop: Int = 0): View {
-        var emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data, parent, false)
-        emptyView.emptyText.text = msg
-        emptyView.no_data_image.setImageResource(resId)
-
-        var layoutParams = emptyView.emptyText.layoutParams as? ConstraintLayout.LayoutParams
-        if (layoutParams != null && marginTop != 0) {
-            layoutParams?.topMargin = marginTop
-            emptyView.emptyText.layoutParams = layoutParams
+        if (resId != null) {
+            emptyView.no_data_image.setImageResource(resId)
         }
 
         return emptyView
     }
 
-//    fun setEmptyViewWhite(context: Context, parent: ViewGroup, msg: String, resId: Int): View {
-//        var emptyView = LayoutInflater.from(context).inflate(R.layout.view_empty_history, parent, false)
-//        emptyView.emptyText.text = msg
-//        emptyView.no_data_image.setImageResource(resId)
-//        return emptyView
-//    }
+
+    fun getEmptyView(context: Context, msg: String? = null, resId: Int? = null): View {
+        val emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data, null)
+        if (msg != null)
+            emptyView.emptyText.text = msg
+        if (resId != null) {
+            emptyView.no_data_image.setImageResource(resId)
+        }
+
+        return emptyView
+    }
 
     /**
      * 设置下拉刷新的风格
