@@ -390,8 +390,13 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         } else if (type == PictureConfig.TYPE_IMAGE) {
             currentRootPath = rootPath
         }
-        currentMaxSize = maxSize
-        currentMinTime = minTime
+        if (maxSize != 0) {
+            currentMaxSize = maxSize
+        }
+        if (minTime != 0) {
+            currentMinTime = minTime
+        }
+
         runOnUiThread {
             checkPermissions(max, type)
         }
