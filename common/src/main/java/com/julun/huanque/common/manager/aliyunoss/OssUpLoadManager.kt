@@ -174,7 +174,8 @@ object OssUpLoadManager {
      */
     fun uploadVideo(videoPath: String, position: String, ImagePosition: String, callback: VideoUploadCallback) {
         isUploading = true
-        val bitmap = VideoUtils.getVideoThumbnail2(File(videoPath))
+//        val bitmap = VideoUtils.getVideoThumbnail2(File(videoPath))
+        val bitmap = VideoUtils.getVideoThumbnail(videoPath)
         val vf = File(videoPath)
         val bFile = FileUtils.bitmap2File(
             bitmap

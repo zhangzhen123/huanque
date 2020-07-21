@@ -259,8 +259,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                             map.putString("videoURL", videoPath)
                             map.putString("imageURL", imgPath)
                             map.putInt("size", size.toInt())
-                            map.putInt("time", media.duration.toInt())
-                            RnManager.promiseMap[RnManager.uploadPhotos]?.resolve(map)
+                            map.putInt("time", (media.duration/1000).toInt())
+                            RnManager.promiseMap[RnManager.uploadVideo]?.resolve(map)
                             currentRootPath = ""
                             currentImagePath = ""
                         } else {
