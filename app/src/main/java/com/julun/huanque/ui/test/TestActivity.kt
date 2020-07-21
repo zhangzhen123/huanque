@@ -167,12 +167,13 @@ class TestActivity : BaseActivity() {
             }else if(requestCode==1002){
                 val selectList = PictureSelector.obtainMultipleResult(data)
                 val media = selectList[0]
-                val bitmap = VideoUtils.getVideoThumbnail2(File(media.path))
+//                val bitmap = VideoUtils.getVideoThumbnail2(File(media.path))
+                val bitmap = VideoUtils.getVideoThumbnail(media.path)
                 val vf = File(media.path)
-//                val bFile = FileUtils.bitmap2File(
-//                    bitmap
-//                        ?: return, vf.nameWithoutExtension, CommonInit.getInstance().getApp()
-//                ) ?: return
+                val bFile = FileUtils.bitmap2File(
+                    bitmap
+                        ?: return, vf.nameWithoutExtension, CommonInit.getInstance().getApp()
+                ) ?: return
                 logger("bitmap=${bitmap?.byteCount} ")
             }
         } catch (e: Exception) {

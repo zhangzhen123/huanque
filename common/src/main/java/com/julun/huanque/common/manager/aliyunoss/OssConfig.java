@@ -21,7 +21,7 @@ public class OssConfig {
     public static final String STS_SERVER_URL = CommonInit.Companion.getInstance().getBaseUrl()+"user/app/ossAuth";//STS 地址
 
     public static final String BUCKET_NAME = "huanque";//图片上传位置
-    public static final String BUCKET_VIDEO_NAME = "lingmeng-video";//视频上传目录位置
+    public static final String BUCKET_VIDEO_NAME = "huanque";//视频上传目录位置
     public static final String OSS_ACCESS_KEY_ID = "*************";
     public static final String OSS_ACCESS_KEY_SECRET = "*************";
 

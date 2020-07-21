@@ -229,7 +229,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             if (selectList.isNotEmpty()) {
                 val media = selectList[0]
                 //视频要求 大于15秒
-                if (currentMinTime * 1000L < media.duration) {
+                if (currentMinTime * 1000L > media.duration) {
                     ToastUtils.show(resources.getString(R.string.video_duration_is_out))
                     RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 选择的视频时长不符合要求 通知rn回调")
                     return
@@ -237,7 +237,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 //大于100M的不给上传
                 val size = FileUtils.getFileOrFilesSize(media.path, FileUtils.SIZETYPE_KB)//单位kb
                 logger("当前视频的大小：${size}kb")
-                if (size > currentMaxSize) {
+                if (currentMaxSize < size) {
                     ToastUtils.show(resources.getString(R.string.video_size_is_out))
                     RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 选择的视频大小不符合要求 通知rn回调")
                     return
@@ -259,8 +259,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                             map.putString("videoURL", videoPath)
                             map.putString("imageURL", imgPath)
                             map.putInt("size", size.toInt())
-                            map.putInt("time", media.duration.toInt())
-                            RnManager.promiseMap[RnManager.uploadPhotos]?.resolve(map)
+                            map.putInt("time", (media.duration/1000).toInt())
+                            RnManager.promiseMap[RnManager.uploadVideo]?.resolve(map)
                             currentRootPath = ""
                             currentImagePath = ""
                         } else {
@@ -390,8 +390,13 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         } else if (type == PictureConfig.TYPE_IMAGE) {
             currentRootPath = rootPath
         }
-        currentMaxSize = maxSize
-        currentMinTime = minTime
+        if (maxSize != 0) {
+            currentMaxSize = maxSize
+        }
+        if (minTime != 0) {
+            currentMinTime = minTime
+        }
+
         runOnUiThread {
             checkPermissions(max, type)
         }

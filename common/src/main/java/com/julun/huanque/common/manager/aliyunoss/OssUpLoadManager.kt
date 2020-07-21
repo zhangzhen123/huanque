@@ -31,7 +31,7 @@ object OssUpLoadManager {
 
     //OSS的上传下载
     private lateinit var mService: OssService
-    private lateinit var mVideoService: OssService //视频上传位置
+//    private lateinit var mVideoService: OssService //视频上传位置
 
 
     const val REPORT_USER_POSITION = "user/report"// 举报用户的位置
@@ -61,7 +61,7 @@ object OssUpLoadManager {
         conf.maxErrorRetry = 2 // 失败后最大重试次数，默认2次
         val oss = OSSClient(applicationContext, OssConfig.OSS_ENDPOINT, credentialProvider, conf)
         mService = OssService(oss, OssConfig.BUCKET_NAME)
-        mVideoService = OssService(oss, OssConfig.BUCKET_VIDEO_NAME)
+//        mVideoService = OssService(oss, OssConfig.BUCKET_VIDEO_NAME)
     }
 
     /**
@@ -174,7 +174,8 @@ object OssUpLoadManager {
      */
     fun uploadVideo(videoPath: String, position: String, ImagePosition: String, callback: VideoUploadCallback) {
         isUploading = true
-        val bitmap = VideoUtils.getVideoThumbnail2(File(videoPath))
+//        val bitmap = VideoUtils.getVideoThumbnail2(File(videoPath))
+        val bitmap = VideoUtils.getVideoThumbnail(videoPath)
         val vf = File(videoPath)
         val bFile = FileUtils.bitmap2File(
             bitmap
@@ -213,7 +214,7 @@ object OssUpLoadManager {
 //                    val name = "$VIDEO_POSITION/${SessionUtils.getUserId()}/${StringHelper.uuid()}.${FileUtils.getFilextension(file)}"
                     val name = "$position/${StringHelper.uuid()}.${FileUtils.getFilextension(file)}"
                     var curResult = ""
-                    val success = mVideoService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
+                    val success = mService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
                         override fun onProgress(request: PutObjectRequest?, currentSize: Long, totalSize: Long) {
                             Observable.empty<Any>().observeOn(AndroidSchedulers.mainThread()).doOnComplete {
                                 callback.onProgress(currentSize, totalSize)

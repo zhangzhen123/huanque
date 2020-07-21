@@ -27,10 +27,7 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.R
@@ -111,7 +108,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 }
             }
         })
-
+        tv_balance_h.setTFDinCdc2()
     }
 
     override fun initEvents(rootView: View) {

@@ -401,7 +401,7 @@
     <string name="publish_success">发布成功</string>
     <string name="video_size_is_out">视频的大小超出100M</string>
 
-    <string name="video_duration_is_out">请上传时长大于5s的视频哦</string>
+    <string name="video_duration_is_out">请上传时长大于15s的视频哦</string>
     <string name="state_out_of_range">超出字数限制，动态最多输入100个字~</string>
     <string name="video_out_of_range">超出字数限制，视频最多输入32个字~</string>
     <string name="report_out_of_range">超出字数限制，举报最多输入200个字~</string>
