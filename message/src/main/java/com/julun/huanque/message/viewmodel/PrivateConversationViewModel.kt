@@ -226,6 +226,30 @@ class PrivateConversationViewModel : BaseViewModel() {
     }
 
     /**
+     * 清除未读数
+     */
+    fun clearUnreadCount(targerId: String) {
+        RongIMClient.getInstance()
+            .getConversation(Conversation.ConversationType.PRIVATE, targerId, object : RongIMClient.ResultCallback<Conversation>() {
+                override fun onSuccess(conversation: Conversation?) {
+                    if (conversation == null) {
+                        return
+                    }
+                    val unreadCount = conversation.unreadMessageCount
+                    if (unreadCount > 0) {
+                        //未读数大于0，需要设置所有消息已读
+                        RongIMClient.getInstance().clearMessagesUnreadStatus(Conversation.ConversationType.PRIVATE, targerId)
+                        EventBus.getDefault().post(EventMessageBean(targerId))
+                    }
+                }
+
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                }
+
+            })
+    }
+
+    /**
      * 获取小鹊语料
      */
     fun getActiveWord() {

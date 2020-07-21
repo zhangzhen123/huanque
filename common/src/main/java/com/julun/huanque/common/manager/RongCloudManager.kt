@@ -545,6 +545,13 @@ object RongCloudManager {
         currentUserObj = userObj
     }
 
+    /**
+     * 陌生人状态变化
+     */
+    fun strangerChange(stranger : Boolean){
+        currentUserObj?.stranger = stranger
+    }
+
     //    fun rongCloudIsInited(): Boolean {
     //        return imState == RCIM_STATE_INITED
     //    }

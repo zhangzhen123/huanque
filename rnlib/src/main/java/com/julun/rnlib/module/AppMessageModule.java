@@ -12,6 +12,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent;
 import com.julun.huanque.common.constant.ARouterConstant;
+import com.julun.huanque.common.constant.BusiConstant;
 import com.julun.huanque.common.constant.OperationType;
 import com.julun.huanque.common.constant.ParamConstant;
 import com.julun.huanque.common.utils.GlobalUtils;
@@ -41,11 +42,14 @@ public class AppMessageModule extends ReactContextBaseJavaModule {
         try {
             switch (type) {
             case RnConstant.FOLLOW_USER_CHANGE: {
-                Boolean follow = params.getBoolean("follow");
-                Boolean stranger = params.getBoolean("stranger");
+                // Boolean follow = params.getBoolean("follow");
+                String stranger = params.getString("stranger");
                 int userId = params.getInt("userId");
-                GlobalUtils.INSTANCE.updataStrangerData(userId, stranger);
-                EventBus.getDefault().post(new UserInfoChangeEvent(userId, stranger));
+                if (stranger != null) {
+                    GlobalUtils.INSTANCE.updataStrangerData(userId, stranger.equals(BusiConstant.True));
+                    EventBus.getDefault().post(new UserInfoChangeEvent(userId, stranger.equals(BusiConstant.True)));
+                }
+
                 break;
             }
             case RnConstant.MY_PROFILE_CHANGE: {
