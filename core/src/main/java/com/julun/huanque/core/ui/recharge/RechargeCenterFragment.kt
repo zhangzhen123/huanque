@@ -112,7 +112,6 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
 
         account_balance.setTFDinAltB()
 
-
     }
 
     private var currentPayType: String = ""
@@ -194,6 +193,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
                 oppopay_ctr.isSelected = true
             }
         }
+        checkEnsureBtn()
     }
 
     private fun initViewModel() {
@@ -333,10 +333,10 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
 
         mActivityViewModel.getHelpUrl.value = "${obj.helpUrl}"
 
-        var payTypes = ""
-        if (!TextUtils.isEmpty(obj.payTypes)) {
-            payTypes = obj.payTypes
-        }
+//        var payTypes = ""
+//        if (!TextUtils.isEmpty(obj.payTypes)) {
+//            payTypes = obj.payTypes
+//        }
 
 //        if (mActivityViewModel.mOppoService != null) {
 //            //oppo联运模式
@@ -412,6 +412,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
             ScreenUtils.showSoftInput(requireContext(), view)
         }
     }
+
     //todo 这里过时了
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
@@ -457,7 +458,11 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
 
         mAdapter.setSelection(position)
 
+        checkEnsureBtn()
+    }
 
+    private fun checkEnsureBtn() {
+        btn_ensure.isEnabled = mSelectItem != null && currentPayType.isNotEmpty()
     }
 
     override fun showLoadState(state: NetState) {

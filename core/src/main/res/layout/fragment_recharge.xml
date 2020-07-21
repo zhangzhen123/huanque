@@ -167,11 +167,12 @@
         android:layout_marginLeft="@dimen/dimen_15"
         android:layout_marginRight="@dimen/dimen_15"
         android:layout_gravity="bottom"
-        android:background="@drawable/bg_solid_btn3"
+        android:background="@drawable/selector_btn_solid"
         android:gravity="center"
         android:orientation="horizontal"
         android:text="@string/ensure_recharge"
-        android:textColor="@color/black_333"
+        android:enabled="false"
+        android:textColor="@color/selector_btn_text_color_common"
         android:textSize="16sp" />
 
     <com.julun.huanque.common.widgets.statepage.StatePageView

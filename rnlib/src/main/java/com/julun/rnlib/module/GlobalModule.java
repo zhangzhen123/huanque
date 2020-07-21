@@ -1,7 +1,5 @@
 package com.julun.rnlib.module;
 
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 
 import com.alibaba.android.arouter.launcher.ARouter;

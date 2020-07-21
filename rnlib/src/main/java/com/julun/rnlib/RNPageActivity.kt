@@ -237,7 +237,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 //大于100M的不给上传
                 val size = FileUtils.getFileOrFilesSize(media.path, FileUtils.SIZETYPE_KB)//单位kb
                 logger("当前视频的大小：${size}kb")
-                if (size > currentMaxSize) {
+                if (currentMaxSize < size) {
                     ToastUtils.show(resources.getString(R.string.video_size_is_out))
                     RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 选择的视频大小不符合要求 通知rn回调")
                     return

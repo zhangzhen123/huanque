@@ -54,18 +54,17 @@ public class UploadModule extends ReactContextBaseJavaModule {
 
     }
 
-    //{videoURL:'',imageURL:'',size:10000,time:100}
     @ReactMethod
     public void uploadVideos(ReadableMap params, Promise promise) {
         String rootPath = params.getString("rootPath");
         String imagePath = params.getString("imagePath");
 
         int maxSize = 0;
-        if (!params.isNull("maxSize")) {
+        if (params.hasKey("maxSize")) {
             maxSize = params.getInt("maxSize");
         }
         int minTime = 0;
-        if (!params.isNull("minTime")) {
+        if (params.hasKey("minTime")) {
             minTime = params.getInt("minTime");
         }
 
