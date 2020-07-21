@@ -17,18 +17,21 @@ class OrderInfo {
 }
 
 class PayResultInfo : Serializable {
-    var content:Any= Any()
+    var content: Any = Any()
     var alipayOrderInfo: String = ""
 
     var wxOrderInfo: OrderInfo = OrderInfo()
 
     var payType: String = ""
+
     //网页跳转链接
     var contentString: String = ""
+
     //oppo支付
-    var oppoOrderInfo : OppoPayInfo? = null
+    var oppoOrderInfo: OppoPayInfo? = null
+
     //订单号，oppo支付
-    var orderNo : String? = null
+    var orderNo: String? = null
 
 }
 
@@ -38,10 +41,13 @@ class PayResultInfo : Serializable {
 class OppoPayInfo : Serializable {
     //商品描述
     var productDesc: String = ""
+
     //支付金额（单位：分）
     var amount: String = ""
+
     //回调服务器的地址
     var callbackUrl: String = ""
+
     //商品名称
     var productName: String = ""
 }
@@ -64,6 +70,7 @@ data class WithdrawTpl(
 
 data class WithdrawTypeBean(
     var authorized: Boolean = false,
+    var nickname: String = "",
     var type: String = ""
 )
 

@@ -158,7 +158,9 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             for (media in selectList) {
                 Log.i("视频-----》", media.path)
             }
-            startUploadVideo(selectList)
+            startUploadVideo(currentRootPath, currentImagePath, selectList)
+
+
         }
 
     }
@@ -215,26 +217,34 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
 
     }
 
-    private fun startUploadVideo(selectList: List<LocalMedia>) {
+    private fun startUploadVideo(position: String, imagePosition: String, selectList: List<LocalMedia>) {
         try {
             if (!NetUtils.isNetConnected()) {
                 ToastUtils.show(this.resources.getString(R.string.upload_no_network))
+                RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 网络异常 通知rn回调")
                 return
             }
 
             if (selectList.isNotEmpty()) {
                 val media = selectList[0]
-                //大于30M的不给上传
+                //视频要求 大于5秒
+                if (5000 < media.duration ) {
+                    ToastUtils.show(resources.getString(R.string.video_duration_is_out))
+                    RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 选择的视频时长不符合要求 通知rn回调")
+                    return
+                }
+                //大于100M的不给上传
                 val size = FileUtils.getFileOrFilesSize(media.path, FileUtils.SIZETYPE_KB)//单位kb
                 logger("当前视频的大小：${size}kb")
                 if (size > 100 * 1024) {
                     ToastUtils.show(resources.getString(R.string.video_size_is_out))
+                    RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 选择的视频大小不符合要求 通知rn回调")
                     return
                 }
                 if (!mLoadingDialog.isShowing) {
                     mLoadingDialog.showDialog()
                 }
-                OssUpLoadManager.uploadVideo(media.path, object : OssUpLoadManager.VideoUploadCallback {
+                OssUpLoadManager.uploadVideo(media.path, position, imagePosition, object : OssUpLoadManager.VideoUploadCallback {
                     override fun onProgress(currentSize: Long, totalSize: Long) {
                     }
 
@@ -347,14 +357,25 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         //结果回调onActivityResult code
     }
 
+    //当前的需要存储的根目录
+    var currentRootPath: String = ""
+    var currentImagePath: String = ""
+
     /**
      * [PictureConfig.TYPE_IMAGE]图片 [PictureConfig.TYPE_VIDEO]视频 [PictureConfig.TYPE_AUDIO]音频
      */
-    fun openPhotoSelect(max: Int, type: Int) {
+    fun openPhotoSelect(max: Int = 1, rootPath: String = "", imagePath: String = "", type: Int) {
+
+        if (type == PictureConfig.TYPE_VIDEO) {
+            currentRootPath = rootPath
+            currentImagePath = imagePath
+        } else if (type == PictureConfig.TYPE_IMAGE) {
+            currentRootPath = rootPath
+        }
+
         runOnUiThread {
             checkPermissions(max, type)
         }
     }
-
 
 }

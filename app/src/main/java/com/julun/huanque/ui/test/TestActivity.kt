@@ -15,12 +15,15 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.FileUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.VideoUtils
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
@@ -35,6 +38,7 @@ import kotlinx.android.synthetic.main.activity_test.*
 import kotlinx.android.synthetic.main.activity_test.test_rn
 import kotlinx.android.synthetic.main.fragment_mine.*
 import org.jetbrains.anko.startActivity
+import java.io.File
 
 /**
  *
@@ -88,7 +92,7 @@ class TestActivity : BaseActivity() {
             finish()
         }
         goto_photo.onClickNew {
-            goToPictureSelectPager(5)
+            goToPictureSelectPager(1,PictureConfig.TYPE_VIDEO)
         }
         set_push.onClickNew {
             val userId = SessionUtils.getUserId().toString()
@@ -134,7 +138,7 @@ class TestActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         logger("onActivityResult")
         try {
-            if (requestCode == PictureConfig.CHOOSE_REQUEST) {
+            if (requestCode == 1001) {
 
                 val selectList = PictureSelector.obtainMultipleResult(data)
                 logger("收到图片=$selectList")
@@ -160,40 +164,76 @@ class TestActivity : BaseActivity() {
                     }
 
                 }
+            }else if(requestCode==1002){
+                val selectList = PictureSelector.obtainMultipleResult(data)
+                val media = selectList[0]
+                val bitmap = VideoUtils.getVideoThumbnail2(File(media.path))
+                val vf = File(media.path)
+//                val bFile = FileUtils.bitmap2File(
+//                    bitmap
+//                        ?: return, vf.nameWithoutExtension, CommonInit.getInstance().getApp()
+//                ) ?: return
+                logger("bitmap=${bitmap?.byteCount} ")
             }
         } catch (e: Exception) {
             e.printStackTrace()
             logger("图片返回出错了")
         }
     }
-
-    /**
-     *打开相册选择
-     */
-    private fun goToPictureSelectPager(max: Int) {
-        PictureSelector.create(this)
-            .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
-            .theme(com.julun.rnlib.R.style.picture_me_style_multi)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
-            .minSelectNum(1)// 最小选择数量
-            .maxSelectNum(max)
-            .imageSpanCount(4)// 每行显示个数
-            .selectionMode(PictureConfig.MULTIPLE)
-            .previewImage(true)// 是否可预览图片
-            .isCamera(true)// 是否显示拍照按钮
-            .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
-            .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
-            //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
-            .enableCrop(true)// 是否裁剪
-            .compress(true)// 是否压缩
-            .synOrAsy(true)//同步true或异步false 压缩 默认同步
-            //.compressSavePath(getPath())//压缩图片保存地址
-            .glideOverride(150, 150)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
-            .isGif(false)// 是否显示gif图片
+    private fun goToPictureSelectPager(max: Int, type: Int) {
+        if (type == PictureConfig.TYPE_IMAGE) {
+            PictureSelector.create(this)
+                .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+                .theme(com.julun.rnlib.R.style.picture_me_style_multi)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+                .minSelectNum(1)// 最小选择数量
+                .maxSelectNum(max)
+                .imageSpanCount(4)// 每行显示个数
+                .selectionMode(PictureConfig.MULTIPLE)
+                .previewImage(true)// 是否可预览图片
+                .isCamera(true)// 是否显示拍照按钮
+                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+                .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
+                //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
+                .enableCrop(true)// 是否裁剪
+                .compress(true)// 是否压缩
+                .synOrAsy(true)//同步true或异步false 压缩 默认同步
+                //.compressSavePath(getPath())//压缩图片保存地址
+                .glideOverride(150, 150)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+                .isGif(false)// 是否显示gif图片
 //                    .selectionMedia(selectList)// 是否传入已选图片
-            .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
-            .minimumCompressSize(100)// 小于100kb的图片不压缩
-            .forResult(PictureConfig.CHOOSE_REQUEST)
+                .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+                .minimumCompressSize(100)// 小于100kb的图片不压缩
+                .forResult(1001)
+
+        } else if (type == PictureConfig.TYPE_VIDEO) {
+            //只传单视频
+            PictureSelector.create(this).openGallery(PictureMimeType.ofVideo())
+                .theme(com.julun.huanque.common.R.style.picture_me_style_multi)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+                .maxSelectNum(1)// 最大图片选择数量
+                .minSelectNum(1)// 最小选择数量
+                .imageSpanCount(4)// 每行显示个数
+                .selectionMode(PictureConfig.SINGLE)
+                .previewVideo(true)// 是否可预览视频
+                .isCamera(true)// 是否显示拍照按钮
+                //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
+                .compress(true)// 是否压缩
+                .synOrAsy(true)//同步true或异步false 压缩 默认同步
+                //.compressSavePath(getPath())//压缩图片保存地址
+                .glideOverride(150, 150)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+//                .selectionMedia(selectList)// 是否传入已选图片
+                .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+                //.cropCompressQuality(90)// 裁剪压缩质量 默认100
+                .minimumCompressSize(100)// 小于100kb的图片不压缩
+                //.cropWH()// 裁剪宽高比，设置如果大于图片本身宽高则无效
+                //.rotateEnabled(true) // 裁剪是否可旋转图片
+                //.scaleEnabled(true)// 裁剪是否可放大缩小图片
+                //.videoQuality()// 视频录制质量 0 or 1
+                //.videoSecond()//显示多少秒以内的视频or音频也可适用
+                //.recordVideoSecond()//录制视频秒数 默认60s
+                .forResult(1002)
+        }
 
         //结果回调onActivityResult code
     }
+
 }
