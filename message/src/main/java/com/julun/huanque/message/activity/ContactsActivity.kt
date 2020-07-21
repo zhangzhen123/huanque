@@ -13,6 +13,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.UserDataTab
+import com.julun.huanque.common.constant.ContactsTabType
+import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
@@ -74,6 +76,86 @@ class ContactsActivity : BaseActivity() {
                 refreshTabList(it)
             }
         })
+
+        mActivityViewModel?.followChangeFlag?.observe(this, Observer {
+            if (it != null) {
+                val type = it.type
+                val formerFollow = it.formerFollow
+                val currentFollow = it.follow
+//                if (type == ContactsTabType.Follow) {
+                val tabList = mActivityViewModel?.tabListData?.value ?: return@Observer
+                //关注列表,粉丝列表  操作一致
+                when (currentFollow) {
+                    FollowStatus.False -> {
+                        //未关注状态
+                        if (formerFollow == FollowStatus.Mutual) {
+                            //之前处于相互关注状态，关注数 减1  好友数 减1
+                            tabList.forEach {
+                                if (it.userDataTabType == ContactsTabType.Follow) {
+                                    it.count -= 1
+                                } else if (it.userDataTabType == ContactsTabType.Friend) {
+                                    it.count -= 1
+                                }
+                            }
+                        } else {
+                            //之前未处于相互关注状态，关注数 减1
+                            tabList.forEach {
+                                if (it.userDataTabType == ContactsTabType.Follow) {
+                                    it.count -= 1
+                                }
+                            }
+                        }
+                    }
+                    FollowStatus.True -> {
+                        //关注成功，未处于相互关注状态  关注数 加1
+                        tabList.forEach {
+                            if (it.userDataTabType == ContactsTabType.Follow) {
+                                it.count += 1
+                            }
+                        }
+                    }
+                    FollowStatus.Mutual -> {
+                        //互相关注状态   好友数 加1  关注数 加1
+                        tabList.forEach {
+                            if (it.userDataTabType == ContactsTabType.Follow) {
+                                it.count += 1
+                            } else if (it.userDataTabType == ContactsTabType.Friend) {
+                                it.count += 1
+                            }
+                        }
+                    }
+                    else -> {
+                    }
+                }
+
+                mPagerAdapter?.setTypeList(tabList)
+                //必须先执行刷新
+                mCommonNavigator.notifyDataSetChanged()
+//                } else if (type == ContactsTabType.Fan) {
+//                    //粉丝列表
+//                    when (currentFollow) {
+//                        FollowStatus.False -> {
+//                            //未关注状态
+//                            if (formerFollow == FollowStatus.Mutual) {
+//                                //之前处于相互关注状态，关注数 减1  好友数 减1
+//                            } else {
+//                                //之前未处于相互关注状态，关注数 减1
+//                            }
+//                        }
+//                        FollowStatus.True -> {
+//                            //关注成功，未处于相互关注状态  关注数 加1
+//                        }
+//                        FollowStatus.Mutual -> {
+//                            //互相关注状态   好友数 加1  关注数 加1
+//                        }
+//                        else -> {
+//                        }
+//                    }
+//                }
+
+            }
+        })
+
 //        mActivityViewModel?.followStatusData?.observe(this, Observer {
 //            if (it != null) {
 //

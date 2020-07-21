@@ -63,7 +63,7 @@ class SocialListBean(
 /**
  * 关注结果使用的Bean
  */
-class FollowResultBean(var type: String, var userId: Long, var follow: String)
+class FollowResultBean(var type: String, var userId: Long, var follow: String, var formerFollow: String)
 
 /**
  * 亲密特权
@@ -87,7 +87,7 @@ class IntimateBean(
     //用户ID数据
     var userIds: LongArray = longArrayOf(),
     //是否是陌生人状态
-    var stranger: HashMap<Long,Boolean> = hashMapOf()
+    var stranger: HashMap<Long, Boolean> = hashMapOf()
 )
 
 /**

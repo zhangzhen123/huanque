@@ -45,7 +45,7 @@ class ContactsFragmentViewModel : BaseViewModel() {
                 val list = homeListData.linkList
                 val rList = RootListData(isPull = type != QueryType.LOAD_MORE, list = list, hasMore = homeListData.hasMore)
                 offset += list.size
-                emit(ReactiveData(NetStateType.SUCCESS,rList))
+                emit(ReactiveData(NetStateType.SUCCESS, rList))
             }, error = { e ->
                 logger("报错了：$e")
 //                emit(ReactiveData(NetStateType.ERROR, error = e.coverError()))
@@ -61,11 +61,11 @@ class ContactsFragmentViewModel : BaseViewModel() {
     /**
      * 关注
      */
-    fun follow(type: String, userId: Long) {
+    fun follow(type: String, userId: Long, formerFollow: String) {
         viewModelScope.launch {
             request({
                 val follow = service.follow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(type, userId, follow.follow)
+                val followBean = FollowResultBean(type, userId, follow.follow, formerFollow)
                 followStatusData.value = followBean
             }, {
             })
@@ -75,11 +75,11 @@ class ContactsFragmentViewModel : BaseViewModel() {
     /**
      * 取消关注
      */
-    fun unFollow(type: String, userId: Long) {
+    fun unFollow(type: String, userId: Long, formerFollow: String) {
         viewModelScope.launch {
             request({
                 service.unFollow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(type, userId, FollowStatus.False)
+                val followBean = FollowResultBean(type, userId, FollowStatus.False, formerFollow)
                 followStatusData.value = followBean
             }, {
             })

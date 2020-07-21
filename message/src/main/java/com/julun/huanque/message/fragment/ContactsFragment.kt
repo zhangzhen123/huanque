@@ -9,14 +9,12 @@ import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.FollowResultBean
-import com.julun.huanque.common.bean.beans.HomeItemBean
 import com.julun.huanque.common.bean.beans.SocialUserInfo
 import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.FollowStatus
@@ -140,11 +138,11 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
                         when (tempData.follow) {
                             FollowStatus.Mutual, FollowStatus.True -> {
                                 //执行取消关注操作
-                                mViewModel.unFollow(type, tempData.userId)
+                                mViewModel.unFollow(type, tempData.userId, tempData.follow)
                             }
                             FollowStatus.False -> {
                                 //执行关注操作
-                                mViewModel.follow(type, tempData.userId)
+                                mViewModel.follow(type, tempData.userId, tempData.follow)
                             }
                             else -> {
 
@@ -195,6 +193,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
                 if (it != null) {
                     //关注状态变动
                     changeFollowData(it)
+                    mActivityViewModel.followChangeFlag.value = it
                 }
             }
 
@@ -209,7 +208,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         var userInfo: SocialUserInfo? = null
         var changeIndex = 0
         mAdapter.data.forEachIndexed { index, data ->
-            if(data.userId == userID){
+            if (data.userId == userID) {
                 userInfo = data
                 changeIndex = index
                 return@forEachIndexed

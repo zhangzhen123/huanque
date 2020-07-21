@@ -241,6 +241,9 @@ object GlobalUtils {
                 extra = conent.extra
             }
         }
+        if(extra.isEmpty()){
+            return false
+        }
         var user: RoomUserChatExtra? = null
         try {
             user = JsonUtil.deserializeAsObject(extra, RoomUserChatExtra::class.java)
