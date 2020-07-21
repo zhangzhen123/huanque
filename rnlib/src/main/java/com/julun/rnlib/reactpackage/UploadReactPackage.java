@@ -4,18 +4,19 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.julun.rnlib.module.RequestInfoModule;
+import com.julun.rnlib.module.GlobalModule;
+import com.julun.rnlib.module.UploadModule;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class RequestInfoReactPackage implements ReactPackage {
+public class UploadReactPackage implements ReactPackage {
 
     @Override
     public List<NativeModule> createNativeModules(
             ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(new RequestInfoModule(reactContext));
+        return Arrays.<NativeModule>asList(new UploadModule(reactContext));
     }
 
     @Override

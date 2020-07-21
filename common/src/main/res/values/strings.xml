@@ -399,7 +399,7 @@
     <string name="upload_fail">上传失败</string>
     <string name="publish_state_fail">发布失败</string>
     <string name="publish_success">发布成功</string>
-    <string name="video_size_is_out">视频的大小超出30M</string>
+    <string name="video_size_is_out">视频的大小超出100M</string>
 
     <string name="video_duration_is_out">请上传时长大于5s的视频哦</string>
     <string name="state_out_of_range">超出字数限制，动态最多输入100个字~</string>

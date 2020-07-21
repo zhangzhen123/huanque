@@ -125,12 +125,12 @@ interface UserService {
      * 绑定支付宝
      */
     @POST("user/acct/info/bindAlipay")
-    suspend fun bindAliPay(@Body form: BindForm): Root<VoidResult>
+    suspend fun bindAliPay(@Body form: BindForm): Root<BindResultBean>
     /**
      * 绑定微信
      */
     @POST("user/acct/info/bindWeixin")
-    suspend fun bindWeiXin(@Body form: BindForm): Root<VoidResult>
+    suspend fun bindWeiXin(@Body form: BindForm): Root<BindResultBean>
 
 
 }
