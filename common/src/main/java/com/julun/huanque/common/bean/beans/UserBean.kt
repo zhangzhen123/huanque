@@ -69,8 +69,13 @@ class FollowResultBean(var type: String, var userId: Long, var follow: String, v
 
 /**
  * 亲密特权
+ * @param icon 点亮的图标
+ * @param grayIcon 未点亮图标
+ * @param key 对应的key
+ * @param minLevel 特权对应的最小亲密度等级
+ * @param title 标题
  */
-class IntimatePrivilege(var icon: String = "", var key: String = "", var minLevel: Int = 0, var title: String = "")
+class IntimatePrivilege(var icon: String = "", var grayIcon: String = "", var key: String = "", var minLevel: Int = 0, var title: String = "")
 
 /**
  * 亲密数据

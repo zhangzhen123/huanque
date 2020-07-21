@@ -26,7 +26,6 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
-import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
@@ -56,15 +55,14 @@ import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.px2dip
@@ -130,9 +128,10 @@ class PrivateConversationActivity : BaseActivity() {
     override fun isRegisterEventBus() = true
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        val ivOperation = findViewById<ImageView>(R.id.ivOperation)
-        ivOperation.imageResource = R.mipmap.icon_conversation_setting
-        ivOperation.show()
+
+        header_view.headerContainer.backgroundColor = GlobalUtils.getColor(R.color.color_gray_three)
+        header_view.imageOperation.imageResource = R.mipmap.icon_conversation_setting
+        header_view.imageOperation.show()
 
         initViewModel()
         //之前是否加入过私聊
@@ -170,7 +169,7 @@ class PrivateConversationActivity : BaseActivity() {
      * 显示标题
      */
     private fun showTitleView(nickname: String, meetStatus: String) {
-        val title = findViewById<TextView>(R.id.tvTitle)
+        val title = header_view.textTitle
         if (nickname.isEmpty()) {
             title.text = "欢鹊"
         } else {
@@ -303,10 +302,10 @@ class PrivateConversationActivity : BaseActivity() {
 
 
     override fun initEvents(rootView: View) {
-        findViewById<View>(R.id.ivback).onClickNew {
+        header_view.imageViewBack.onClickNew {
             finish()
         }
-        findViewById<ImageView>(R.id.ivOperation).onClickNew {
+        header_view.imageOperation.onClickNew {
             //打开会话设置
             val chatUserBean = mPrivateConversationViewModel?.chatInfoData?.value ?: return@onClickNew
             PrivateConversationSettingActivity.newInstance(this, chatUserBean.userId, chatUserBean.sex)

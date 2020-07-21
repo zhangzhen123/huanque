@@ -4,15 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_gray_three"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/view_top"
-        layout="@layout/layout_pager_header"
+    <com.julun.huanque.common.widgets.HeaderPageView
+        android:id="@+id/header_view"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/iv_background"
@@ -22,7 +24,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_top" />
+        app:layout_constraintTop_toBottomOf="@id/header_view" />
 
 
     <com.effective.android.panel.view.PanelSwitchLayout
@@ -34,7 +36,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_top">
+        app:layout_constraintTop_toBottomOf="@id/header_view">
 
         <!-- 内容区域 -->
         <!-- linear_edit_view 指定一个 EditText 用于输入 ，必须项-->
@@ -345,6 +347,6 @@
         android:layout_marginRight="21dp"
         android:src="@mipmap/icon_intimate_level_heart"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_top" />
+        app:layout_constraintTop_toBottomOf="@id/header_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

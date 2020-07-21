@@ -1,5 +1,7 @@
 package com.julun.huanque.common.constant
 
+import com.julun.huanque.common.bean.beans.IntimatePrivilege
+
 
 /**
  *
@@ -467,6 +469,7 @@ object MessageCustomBeanType {
     //模拟好友消息
     const val FRIEND_MESSAGE = "FRIEND_MESSAGE"
 }
+
 
 /**
  * banner资源类型

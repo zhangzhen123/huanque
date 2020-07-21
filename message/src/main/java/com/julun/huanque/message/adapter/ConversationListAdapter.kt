@@ -105,8 +105,16 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
 
                 ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_stranger)
                 helper.setText(R.id.tv_nickname, "陌生人消息")
-                    .setText(R.id.tv_content, info[LocalConversation.NICKNAME])
                     .setText(R.id.tv_time, TimeUtils.formatDetailTime(time))
+
+                val nickname = info[LocalConversation.NICKNAME]
+                val tvContent = helper.getView<TextView>(R.id.tv_content)
+                if (nickname?.isNotEmpty() == true) {
+                    tvContent.text = "${info[LocalConversation.NICKNAME]}发来一条消息"
+                } else {
+                    tvContent.text = ""
+                }
+
 
                 val tvUnread = helper.getView<TextView>(R.id.tv_unread_count)
                 tvUnread.text = StringHelper.formatMessageCount(unreadCount)
@@ -149,11 +157,22 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 }
             }
             is CustomSimulateMessage -> {
-                if (msg.type == MessageCustomBeanType.Voice_Conmmunication_Simulate) {
-                    //语音通话消息
-                    helper.setText(R.id.tv_content, "[语音通话]")
-                } else {
-                    helper.setText(R.id.tv_content, "")
+                when (msg.type) {
+                    MessageCustomBeanType.Voice_Conmmunication_Simulate -> {
+                        //语音通话消息
+                        helper.setText(R.id.tv_content, "[语音通话]")
+                    }
+                    MessageCustomBeanType.SYSTEM_MESSAGE -> {
+                        //模拟系统消息
+                        helper.setText(R.id.tv_content, "暂无新消息")
+                    }
+                    MessageCustomBeanType.FRIEND_MESSAGE -> {
+                        //模拟好友消息
+                        helper.setText(R.id.tv_content, "暂无新消息")
+                    }
+                    else -> {
+                        helper.setText(R.id.tv_content, "")
+                    }
                 }
             }
             else -> {

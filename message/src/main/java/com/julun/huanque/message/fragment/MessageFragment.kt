@@ -147,7 +147,7 @@ class MessageFragment : BaseFragment() {
                     resources.getString(R.string.delete_conversation_or_not),
                     MyAlertDialog.MyDialogCallback(onRight = {
                         //确定删除
-                        if (tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender) {
+                        if (tId == null || tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender) {
                             ToastUtils.show("该消息无法删除")
                             return@MyDialogCallback
                         }
@@ -231,7 +231,7 @@ class MessageFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateMessageReceive(bean: EventMessageBean) {
         mMessageViewModel.queryRongPrivateCount()
-        mMessageViewModel.refreshConversation(bean.targetId,bean.stranger)
+        mMessageViewModel.refreshConversation(bean.targetId, bean.stranger)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

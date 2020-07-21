@@ -11,6 +11,7 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.ConversationBasicBean
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.IntimateUtil
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.PrivilegeAdapter
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
@@ -64,6 +65,7 @@ class IntimateDetailFragment : BaseDialogFragment() {
     }
 
     private fun showViewByData(bean: ConversationBasicBean) {
+
         //显示对方头像和昵称
         val otherInfo = bean.friendUser
         ImageUtils.loadImage(sdv_other, otherInfo.headPic)
@@ -75,6 +77,8 @@ class IntimateDetailFragment : BaseDialogFragment() {
 
         //显示亲密度相关
         val intimateBean = bean.intimate
+        mAdapter.currentLevel = intimateBean.intimateLevel
+
         tv_meet_level.text = "Lv.${intimateBean.intimateLevel}"
 
         val progress = if (intimateBean.intimateLevel == intimateBean.nextIntimateLevel) {
@@ -87,7 +91,7 @@ class IntimateDetailFragment : BaseDialogFragment() {
         }
         progress_meet.progress = progress
 
-        val privilegeList = intimateBean.intimatePrivilegeList
+        val privilegeList = IntimateUtil.intimatePrivilegeList
         var enablePrivilege = 0
         privilegeList.forEach {
             if (intimateBean.intimateLevel >= it.minLevel) {

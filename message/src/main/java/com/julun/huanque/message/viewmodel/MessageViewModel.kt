@@ -483,7 +483,7 @@ class MessageViewModel : BaseViewModel() {
                 "${SessionUtils.getUserId()}",
                 null,
                 Conversation.ConversationType.PRIVATE,
-                MessageCustomBeanType.SYSTEM_MESSAGE,
+                MessageCustomBeanType.FRIEND_MESSAGE,
                 ""
             )
         }
