@@ -139,7 +139,7 @@ object PublishManager : RequestCaller {
 //        if (activity != null && activity is AppCompatActivity) {
 //            tips.show(activity.supportFragmentManager, "tipsFail")
 //        }
-
+        ToastUtils.show("发布失败，请稍后重试")
     }
 
     private fun publishSuccess() {
@@ -152,6 +152,7 @@ object PublishManager : RequestCaller {
 //        if (activity != null && activity is AppCompatActivity) {
 //            tips.show(activity.supportFragmentManager, "tipsSuccess")
 //        }
+        ToastUtils.show("发布成功")
     }
 
     //发布视频

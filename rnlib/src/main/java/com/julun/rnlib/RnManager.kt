@@ -17,6 +17,7 @@ import com.julun.huanque.common.suger.logger
 import com.julun.rnlib.reactpackage.AppMessageReactPackage
 import com.julun.rnlib.reactpackage.OpenPageReactPackage
 import com.julun.rnlib.reactpackage.RequestInfoReactPackage
+import com.luck.picture.lib.config.PictureConfig
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage
 import com.swmansion.reanimated.ReanimatedPackage
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage
@@ -27,8 +28,10 @@ import org.reactnative.maskedview.RNCMaskedViewPackage
 
 
 object RnManager {
-    //上传方法的标识
+    //上传图片方法的标识
     const val uploadPhotos = "uploadPhotos"
+    //上传视频方法的标识
+    const val uploadVideo = "uploadVideo"
     private var mReactInstanceManager: ReactInstanceManager? = null
 
     var curActivity: RNPageActivity? = null
@@ -98,9 +101,15 @@ object RnManager {
      * 打开上传图片功能
      */
     fun uploadPhotos(max: Int) {
-        curActivity?.openPhotoSelect(max)
+        curActivity?.openPhotoSelect(max,PictureConfig.TYPE_IMAGE)
     }
 
+    /**
+     * 打开上传视频功能
+     */
+    fun uploadVideo(max: Int) {
+        curActivity?.openPhotoSelect(max,PictureConfig.TYPE_VIDEO)
+    }
     fun clearPromiseMap() {
 //        promiseMap.forEach { it ->
 //            when (it.key) {

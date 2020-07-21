@@ -63,8 +63,8 @@ public class RequestInfoModule extends ReactContextBaseJavaModule {
     }
     @ReactMethod
     public void uploadVideos(int max,Promise promise) {
-        //todo
-
+        RnManager.INSTANCE.uploadVideo(max);
+        RnManager.INSTANCE.getPromiseMap().put(RnManager.uploadVideo, promise);
 
     }
     @ReactMethod

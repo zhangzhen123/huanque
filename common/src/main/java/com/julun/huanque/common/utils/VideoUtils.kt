@@ -5,6 +5,9 @@ import android.media.MediaMetadataRetriever
 import android.media.ThumbnailUtils
 import android.provider.MediaStore
 import android.util.Log
+import com.julun.huanque.common.suger.logger
+import java.io.File
+
 
 /**
  * @author zhangzhen
@@ -51,5 +54,35 @@ object VideoUtils {
             mmr.release()
         }
         return null
+    }
+
+    /**
+     * 获取视频缩略图
+     * @param vedioFile
+     * @return
+     */
+    fun getVedioThumbnail(vedioFile: File): Bitmap? {
+        if (!vedioFile.exists()) {
+            logger("视频文件不存在")
+            return null
+        }
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(vedioFile.absolutePath)
+        return retriever.frameAtTime
+    }
+    /**
+     * 返回视频播放总时长
+     * @param vedioFile
+     * @return
+     */
+    fun getVedioTotalTime(vedioFile: File): Long? {
+        if (!vedioFile.exists()) {
+            logger("视频文件不存在")
+            return null
+        }
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(vedioFile.getAbsolutePath())
+        val timeString = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+        return java.lang.Long.valueOf(timeString)
     }
 }
