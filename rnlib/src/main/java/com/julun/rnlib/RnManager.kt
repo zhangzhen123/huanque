@@ -30,6 +30,7 @@ import org.reactnative.maskedview.RNCMaskedViewPackage
 object RnManager {
     //上传图片方法的标识
     const val uploadPhotos = "uploadPhotos"
+
     //上传视频方法的标识
     const val uploadVideo = "uploadVideo"
     private var mReactInstanceManager: ReactInstanceManager? = null
@@ -100,16 +101,17 @@ object RnManager {
     /**
      * 打开上传图片功能
      */
-    fun uploadPhotos(max: Int) {
-        curActivity?.openPhotoSelect(max,PictureConfig.TYPE_IMAGE)
+    fun uploadPhotos(rootPath: String, max: Int) {
+        curActivity?.openPhotoSelect(max = max, type = PictureConfig.TYPE_IMAGE)
     }
 
     /**
      * 打开上传视频功能
      */
-    fun uploadVideo(max: Int) {
-        curActivity?.openPhotoSelect(max,PictureConfig.TYPE_VIDEO)
+    fun uploadVideo(rootPath: String, imagePath: String) {
+        curActivity?.openPhotoSelect(rootPath = rootPath, imagePath = imagePath, type = PictureConfig.TYPE_VIDEO)
     }
+
     fun clearPromiseMap() {
 //        promiseMap.forEach { it ->
 //            when (it.key) {

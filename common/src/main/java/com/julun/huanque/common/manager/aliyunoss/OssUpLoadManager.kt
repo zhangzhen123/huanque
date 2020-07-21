@@ -32,14 +32,13 @@ object OssUpLoadManager {
     //OSS的上传下载
     private lateinit var mService: OssService
     private lateinit var mVideoService: OssService //视频上传位置
-    private const val VIDEO_THUMBNAIL_POSITION = "lm/user/video"//视频缩略图上传的位置
-    private const val VIDEO_POSITION = "lm"//视频上传的位置
+
 
     const val REPORT_USER_POSITION = "user/report"// 举报用户的位置
     const val COVER_POSITION = "user/cover"// 封面路径
     const val VOICE_POSITION = "user/voice"// 语音文件
     const val HEAD_POSITION = "user/head"// 头像路径
-    const val MESSAGE_PIC = "user/message"// 头像路径
+    const val MESSAGE_PIC = "user/message"// im图片路径
 
 
     var isUploading = false
@@ -167,10 +166,15 @@ object OssUpLoadManager {
 
     var currentVideoPic: String? = null
 
-    //上传视频
-    fun uploadVideo(videoPath: String, callback: VideoUploadCallback) {
+    /**
+     * [videoPath]本地视频文件地址
+     * [position]要上传的视频存储位置
+     * [ImagePosition]要上传的预览图地址
+     * [callback]回调
+     */
+    fun uploadVideo(videoPath: String, position: String, ImagePosition: String, callback: VideoUploadCallback) {
         isUploading = true
-        val bitmap = VideoUtils.getVideoThumbnail(videoPath)
+        val bitmap = VideoUtils.getVideoThumbnail2(File(videoPath))
         val vf = File(videoPath)
         val bFile = FileUtils.bitmap2File(
             bitmap
@@ -192,7 +196,7 @@ object OssUpLoadManager {
                 Observable.just(file).observeOn(Schedulers.io()).map { f ->
                     logger.info("当前的文件：$f")
                     val name =
-                        "$VIDEO_THUMBNAIL_POSITION/${StringHelper.uuid()}.${FileUtils.getFilextension(
+                        "$ImagePosition/${StringHelper.uuid()}.${FileUtils.getFilextension(
                             file
                         )}"
                     var curResult = ""
@@ -207,7 +211,7 @@ object OssUpLoadManager {
                 Observable.just(file).observeOn(Schedulers.io()).map { f ->
                     logger.info("当前的文件：$f")
 //                    val name = "$VIDEO_POSITION/${SessionUtils.getUserId()}/${StringHelper.uuid()}.${FileUtils.getFilextension(file)}"
-                    val name = "$VIDEO_POSITION/${StringHelper.uuid()}.${FileUtils.getFilextension(file)}"
+                    val name = "$position/${StringHelper.uuid()}.${FileUtils.getFilextension(file)}"
                     var curResult = ""
                     val success = mVideoService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
                         override fun onProgress(request: PutObjectRequest?, currentSize: Long, totalSize: Long) {

@@ -95,7 +95,7 @@ object PublishManager : RequestCaller {
         publish_state = PUBLISH_ING
         currentMedia = media
         currentContent = content
-        OssUpLoadManager.uploadVideo(media.path, object : OssUpLoadManager.VideoUploadCallback {
+        OssUpLoadManager.uploadVideo(media.path,"视频目录","缩略图目录", object : OssUpLoadManager.VideoUploadCallback {
             override fun onProgress(currentSize: Long, totalSize: Long) {
 //                logger.info("上传进度 current:$currentSize total:$totalSize 线程：${Thread.currentThread()}")
                 val current = currentSize / totalSize.toFloat() * total * 90 / 100  //取90%

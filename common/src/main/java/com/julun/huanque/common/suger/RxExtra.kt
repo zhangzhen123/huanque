@@ -114,7 +114,6 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
             if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
                 RongCloudManager.logout()
             }
-            //todo 登出声网
             //跳转登录页面
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         }

@@ -58,16 +58,16 @@ object VideoUtils {
 
     /**
      * 获取视频缩略图
-     * @param vedioFile
+     * @param videoFile
      * @return
      */
-    fun getVedioThumbnail(vedioFile: File): Bitmap? {
-        if (!vedioFile.exists()) {
+    fun getVideoThumbnail2(videoFile: File): Bitmap? {
+        if (!videoFile.exists()) {
             logger("视频文件不存在")
             return null
         }
         val retriever = MediaMetadataRetriever()
-        retriever.setDataSource(vedioFile.absolutePath)
+        retriever.setDataSource(videoFile.absolutePath)
         return retriever.frameAtTime
     }
     /**

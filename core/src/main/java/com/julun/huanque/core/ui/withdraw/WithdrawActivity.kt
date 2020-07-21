@@ -120,9 +120,9 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
             return
         }
         val message = if (currentWithdrawType == WithdrawType.AliWithdraw) {
-            "确定提现至你的支付宝账号（xxxxxxxxxxx）吗？"
+            "确定提现至你的支付宝账号（${aliNickname}）吗？"
         } else {
-            "确定提现至你的微信账号（xxxxxxxxxxx）吗？"
+            "确定提现至你的微信账号（${wxNickname}）吗？"
         }
         alertDialog.showAlertWithOKAndCancel(
             message = message,
@@ -285,6 +285,10 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
 
     private var aliAuthorized: Boolean = false
 
+
+    private var wxNickname: String = ""
+    private var aliNickname: String = ""
+
     /**
      * 刷新数据
      */
@@ -298,9 +302,11 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         info.typeList.forEach { type ->
             if (type.type == WithdrawType.AliWithdraw) {
                 refreshAliBindTag(type.authorized)
+                aliNickname = type.nickname
             }
             if (type.type == WithdrawType.WXWithdraw) {
                 refreshWxBindTag(type.authorized)
+                wxNickname = type.nickname
             }
         }
 

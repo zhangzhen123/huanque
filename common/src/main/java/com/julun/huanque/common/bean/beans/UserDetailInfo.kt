@@ -11,9 +11,9 @@ data class UserDetailInfo(
 
 data class UserBasic(
     var anchorExp: Long = 0L,
-    var anchorLevel: Int = 0,
+    var anchorLevel: Int = -1,
     var beans: Long = 0L,
-    var cash: BigDecimal = BigDecimal.ZERO,
+    var cash: String = "",
     var headPic: String = "",
     var headRealPeople: Boolean = false,
     var mySign: String = "",
@@ -21,10 +21,13 @@ data class UserBasic(
     var royalBjExp: Long = 0L,
     var royalExp: Long = 0L,
     var royalLevel: Int = 0,
+    var royalLevelIcon: String = "",
     var sex: String = "",
     var userExp: Long = 0L,
     var userId: Long = 0L,
     var userLevel: Int = 0,
+    var userLevelIcon: String = "",
+    var anchorLevelIcon: String = "",
     var userType: String = ""
 )
 
@@ -46,7 +49,7 @@ data class UserLevelInfo(
 data class UpdateHeaderBean(
     //聊天token
     var imToken: String = "",
-    var sex : String = ""
+    var sex: String = ""
 )
 
 data class VoiceSignPointBean(

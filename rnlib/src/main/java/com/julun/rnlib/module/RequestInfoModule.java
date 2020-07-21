@@ -1,5 +1,7 @@
 package com.julun.rnlib.module;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -8,7 +10,6 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.julun.huanque.common.constant.ARouterConstant;
@@ -56,17 +57,27 @@ public class RequestInfoModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void uploadPhotos(int max, Promise promise) {
-        RnManager.INSTANCE.uploadPhotos(max);
+    public void uploadPhotos(String rootPath, int max, Promise promise) {
+        if (TextUtils.isEmpty(rootPath)) {
+            promise.reject("-1", "图片上传功能 存储目录不能空 通知rn回调");
+            return;
+        }
+        RnManager.INSTANCE.uploadPhotos(rootPath, max);
         RnManager.INSTANCE.getPromiseMap().put(RnManager.uploadPhotos, promise);
 
     }
+
     @ReactMethod
-    public void uploadVideos(int max,Promise promise) {
-        RnManager.INSTANCE.uploadVideo(max);
+    public void uploadVideos(String rootPath, String imagePath, Promise promise) {
+        if (TextUtils.isEmpty(rootPath) || TextUtils.isEmpty(imagePath)) {
+            promise.reject("-1", "视频上传功能 存储目录不能空 通知rn回调");
+            return;
+        }
+        RnManager.INSTANCE.uploadVideo(rootPath, imagePath);
         RnManager.INSTANCE.getPromiseMap().put(RnManager.uploadVideo, promise);
 
     }
+
     @ReactMethod
     public void sessionPast() {
         RnManager.INSTANCE.closeRnPager();

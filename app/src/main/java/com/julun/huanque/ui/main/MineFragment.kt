@@ -90,7 +90,19 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         tvNickName.text = info.userBasic.nickname
         tvUserId.text = "欢鹊ID:${info.userBasic.userId}"
         tvQueBi.text = "${info.userBasic.beans}"
-        tvLingQian.text = "${info.userBasic.cash.setScale(2, RoundingMode.HALF_UP)}"
+        tvLingQian.text = info.userBasic.cash
+
+        sdv_wealth.loadImage(info.userBasic.userLevelIcon,50f,16f)
+
+        sdv_royal_level.loadImage(info.userBasic.royalLevelIcon,50f,16f)
+        if(info.userBasic.anchorLevel==-1){
+            cl_author_level.hide()
+        }else{
+            cl_author_level.show()
+            sdv_author_level.loadImage(info.userBasic.anchorLevelIcon,50f,16f)
+        }
+
+
         if (info.userBasic.headRealPeople) {
             tvCertification.hide()
             ivReal.showContextMenu()
@@ -114,6 +126,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         if (info.userBasic.sex == Sex.FEMALE) {
             ivInviteFriend.hide()
         } else {
+
             ivInviteFriend.show()
         }
 
