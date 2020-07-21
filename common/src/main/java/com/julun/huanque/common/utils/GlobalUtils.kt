@@ -194,25 +194,6 @@ object GlobalUtils {
     }
 
     /**
-     * 获取欢遇标识
-     */
-    fun getMeetStatusResource(status: String): Int {
-        return when (status) {
-            MeetStatus.Wait -> {
-                //待欢遇
-                R.mipmap.icon_huanyu_disable
-            }
-            MeetStatus.Meet -> {
-                //欢遇中
-                R.mipmap.icon_huanyu
-            }
-            else -> {
-                0
-            }
-        }
-    }
-
-    /**
      * 获取背景的key(本人ID-对方ID)
      */
     fun getBackgroundKey(friendID: Long) = "${SessionUtils.getUserId()}-$friendID"

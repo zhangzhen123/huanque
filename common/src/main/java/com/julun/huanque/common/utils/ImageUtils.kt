@@ -29,6 +29,7 @@ import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.julun.huanque.common.R
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.constant.MeetStatus
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StringHelper
@@ -717,13 +718,39 @@ object ImageUtils {
     }
 
     /**
-     * 将选择的聊天背景图片拷贝到本地
+     * 获取亲密度等级图片
      */
-    fun copyImageToSdCard(fileAddress: String, name: String) {
-        val realName = "$name.jpg"
-        val sdAddress = Environment.getExternalStorageDirectory().absolutePath
-        //完整文件名
-        val wholeName = "$sdAddress/${CommonInit.getInstance().getApp().packageName}/$realName"
-        val options = BitmapFactory.Options()
+    fun getIntimateLevelPic(level: Int): Int {
+        return when (level) {
+            1 -> R.mipmap.intimate_level_1
+            2 -> R.mipmap.intimate_level_2
+            3 -> R.mipmap.intimate_level_3
+            4 -> R.mipmap.intimate_level_4
+            5 -> R.mipmap.intimate_level_5
+            6 -> R.mipmap.intimate_level_6
+            7 -> R.mipmap.intimate_level_7
+            else -> {
+                0
+            }
+        }
+    }
+
+    /**
+     * 获取欢遇标识
+     */
+    fun getMeetStatusResource(status: String): Int {
+        return when (status) {
+            MeetStatus.Wait -> {
+                //待欢遇
+                R.mipmap.icon_huanyu_disable
+            }
+            MeetStatus.Meet -> {
+                //欢遇中
+                R.mipmap.icon_huanyu
+            }
+            else -> {
+                0
+            }
+        }
     }
 }

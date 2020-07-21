@@ -54,7 +54,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             ImageUtils.loadImage(sdvHeader, item.showUserInfo?.headPic ?: "", 50f, 50f)
             helper.setText(R.id.tv_nickname, item.showUserInfo?.nickname ?: "")
             //欢遇状态
-            val meetResource = GlobalUtils.getMeetStatusResource(item.showUserInfo?.meetStatus ?: "")
+            val meetResource = ImageUtils.getMeetStatusResource(item.showUserInfo?.meetStatus ?: "")
             if (meetResource > 0) {
                 //显示图标
                 ivHuanyu.show()

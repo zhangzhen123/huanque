@@ -17,6 +17,14 @@
         app:placeholderImageScaleType="centerCrop"
         app:roundAsCircle="true" />
 
+    <ImageView
+        android:id="@+id/iv_meet"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginLeft="38dp"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_header"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_header" />
+
     <TextView
         android:id="@+id/tv_nickname"
         android:layout_width="wrap_content"
@@ -32,6 +40,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="口点击23344" />
+
+    <ImageView
+        android:id="@+id/iv_intimate"
+        android:layout_width="46dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintLeft_toRightOf="@id/tv_nickname" />
 
 
     <TextView
