@@ -195,7 +195,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                             writeArrayList.pushString(it)
                         }
                         RnManager.promiseMap[RnManager.uploadPhotos]?.resolve(writeArrayList)
-
+                        currentRootPath = ""
+                        currentImagePath = ""
                     } else {
                         ToastUtils.show("上传失败，请稍后重试")
                         RnManager.promiseMap[RnManager.uploadPhotos]?.reject("-1", "图片上传功能 上传失败，请稍后重试 通知rn回调")
@@ -227,8 +228,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
 
             if (selectList.isNotEmpty()) {
                 val media = selectList[0]
-                //视频要求 大于5秒
-                if (5000 < media.duration ) {
+                //视频要求 大于15秒
+                if (currentMinTime * 1000L < media.duration) {
                     ToastUtils.show(resources.getString(R.string.video_duration_is_out))
                     RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 选择的视频时长不符合要求 通知rn回调")
                     return
@@ -236,7 +237,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 //大于100M的不给上传
                 val size = FileUtils.getFileOrFilesSize(media.path, FileUtils.SIZETYPE_KB)//单位kb
                 logger("当前视频的大小：${size}kb")
-                if (size > 100 * 1024) {
+                if (size > currentMaxSize) {
                     ToastUtils.show(resources.getString(R.string.video_size_is_out))
                     RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 选择的视频大小不符合要求 通知rn回调")
                     return
@@ -257,8 +258,11 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                             val map = Arguments.createMap()
                             map.putString("videoURL", videoPath)
                             map.putString("imageURL", imgPath)
+                            map.putInt("size", size.toInt())
+                            map.putInt("time", media.duration.toInt())
                             RnManager.promiseMap[RnManager.uploadPhotos]?.resolve(map)
-
+                            currentRootPath = ""
+                            currentImagePath = ""
                         } else {
                             RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 上传失败 通知rn回调")
                         }
@@ -361,10 +365,24 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     var currentRootPath: String = ""
     var currentImagePath: String = ""
 
+    //当前的最大文件限制
+    var currentMaxSize: Int = 100 * 1024
+
+    //当前的最小视频时长
+    var currentMinTime: Int = 15
+
     /**
+     * [type]打开相册操作分类
      * [PictureConfig.TYPE_IMAGE]图片 [PictureConfig.TYPE_VIDEO]视频 [PictureConfig.TYPE_AUDIO]音频
      */
-    fun openPhotoSelect(max: Int = 1, rootPath: String = "", imagePath: String = "", type: Int) {
+    fun openPhotoSelect(
+        type: Int,
+        max: Int = 1,
+        rootPath: String = "",
+        imagePath: String = "",
+        maxSize: Int = 100 * 1024,
+        minTime: Int = 15
+    ) {
 
         if (type == PictureConfig.TYPE_VIDEO) {
             currentRootPath = rootPath
@@ -372,7 +390,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         } else if (type == PictureConfig.TYPE_IMAGE) {
             currentRootPath = rootPath
         }
-
+        currentMaxSize = maxSize
+        currentMinTime = minTime
         runOnUiThread {
             checkPermissions(max, type)
         }

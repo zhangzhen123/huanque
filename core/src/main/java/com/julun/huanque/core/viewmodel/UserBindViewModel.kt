@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.AliAuthInfo
+import com.julun.huanque.common.bean.beans.BindResultBean
 import com.julun.huanque.common.bean.forms.BindForm
 import com.julun.huanque.common.bean.forms.BindPhoneForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -33,18 +34,19 @@ class UserBindViewModel : BaseViewModel() {
     }
 
     //绑定微信结果
-    val bindWinXinData: MutableLiveData<ReactiveData<VoidResult>> by lazy { MutableLiveData<ReactiveData<VoidResult>>() }
+    val bindWinXinData: MutableLiveData<ReactiveData<BindResultBean>> by lazy { MutableLiveData<ReactiveData<BindResultBean>>() }
 
     //获取支付宝信息
     val aliPayAuth: MutableLiveData<ReactiveData<AliAuthInfo>> by lazy { MutableLiveData<ReactiveData<AliAuthInfo>>() }
 
 
     //绑定支付宝结果
-    val bindAliData: MutableLiveData<ReactiveData<VoidResult>> by lazy { MutableLiveData<ReactiveData<VoidResult>>() }
+    val bindAliData: MutableLiveData<ReactiveData<BindResultBean>> by lazy { MutableLiveData<ReactiveData<BindResultBean>>() }
 
 
-    //绑定支付宝结果
+    //绑定手机结果
     val bindPhoneData: MutableLiveData<ReactiveData<VoidResult>> by lazy { MutableLiveData<ReactiveData<VoidResult>>() }
+
     // 微信绑定操作
     fun bindWinXin(code: String) {
         viewModelScope.launch {
@@ -58,6 +60,7 @@ class UserBindViewModel : BaseViewModel() {
 
 
     }
+
     // 获取支付宝授权信息
     fun getAliPayAuthInfo() {
         viewModelScope.launch {
@@ -72,6 +75,7 @@ class UserBindViewModel : BaseViewModel() {
 
 
     }
+
     // 支付宝绑定操作
     fun bindAliPay(code: String) {
         viewModelScope.launch {

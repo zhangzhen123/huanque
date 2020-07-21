@@ -137,3 +137,7 @@ class FollowBean(var follow: String = "") : Serializable
 data class AliAuthInfo(
     var authInfo: String = ""
 )
+
+data class BindResultBean(
+    var nickname: String = ""
+)

@@ -259,9 +259,10 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         userBindViewModel.bindAliData.observe(this, Observer {
             btn_ensure.isEnabled = true
             if (it.state == NetStateType.SUCCESS) {
-//                val data = it.getT()
-                logger.info("绑定支付宝成功")
+                val data = it.getT()
+                ToastUtils.show("绑定支付宝成功")
                 refreshAliBindTag(true)
+                aliNickname = data.nickname
             } else if (it.state == NetStateType.ERROR) {
                 logger.info("绑定支付宝报错")
 //                ToastUtils.show("${it.error?.busiMessage}")
@@ -270,9 +271,10 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         userBindViewModel.bindWinXinData.observe(this, Observer {
             btn_ensure.isEnabled = true
             if (it.state == NetStateType.SUCCESS) {
-//                val data = it.getT()
-                logger.info("绑定微信成功")
+                val data = it.getT()
+                ToastUtils.show("绑定微信成功")
                 refreshWxBindTag(true)
+                wxNickname = data.nickname
             } else if (it.state == NetStateType.ERROR) {
                 logger.info("绑定微信报错")
 //                ToastUtils.show("${it.error?.busiMessage}")

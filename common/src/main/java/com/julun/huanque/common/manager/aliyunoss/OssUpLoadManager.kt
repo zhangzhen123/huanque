@@ -168,8 +168,8 @@ object OssUpLoadManager {
 
     /**
      * [videoPath]本地视频文件地址
-     * [position]要上传的视频存储位置
-     * [ImagePosition]要上传的预览图地址
+     * [position]要上传的视频存储目录
+     * [ImagePosition]要上传的预览图目录
      * [callback]回调
      */
     fun uploadVideo(videoPath: String, position: String, ImagePosition: String, callback: VideoUploadCallback) {
