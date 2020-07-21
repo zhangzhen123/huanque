@@ -131,7 +131,13 @@ class FillInformationActivity : BaseActivity() {
     }
 
     override fun initEvents(rootView: View) {
-        ivback.onClickNew { finish() }
+        ivback.onClickNew {
+            if (mViewModel?.currentStatus?.value == FillInformationViewModel.FIRST) {
+                finish()
+            } else {
+                mViewModel?.currentStatus?.value = FillInformationViewModel.FIRST
+            }
+        }
         et_nickname.textChangedListener {
             afterTextChanged {
                 //有变更就将昵称置为不可用
@@ -231,7 +237,7 @@ class FillInformationActivity : BaseActivity() {
                     }
                     val nickname = et_nickname.text.toString()
                     val birthday = getTime(mViewModel?.birthdayData ?: return) ?: return
-                    mViewModel?.uploadHead(path,sexType,birthday,nickname,et_invitation_code.text.toString())
+                    mViewModel?.uploadHead(path, sexType, birthday, nickname, et_invitation_code.text.toString())
                 }
             }
         } catch (e: Exception) {
