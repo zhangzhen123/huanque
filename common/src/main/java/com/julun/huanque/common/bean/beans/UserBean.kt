@@ -34,6 +34,8 @@ class SocialUserInfo(
     var headPic: String = "",
     //欢遇状态
     var meetStatus: String = "",
+    //亲密度等级
+    var intimateLevel: Int = 0,
     //亲密值
     var num: Long = 0,
     //变化的亲密值

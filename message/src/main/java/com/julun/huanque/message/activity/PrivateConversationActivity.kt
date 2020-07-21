@@ -176,7 +176,7 @@ class PrivateConversationActivity : BaseActivity() {
         } else {
             title.text = nickname
         }
-        val meetResource = GlobalUtils.getMeetStatusResource(meetStatus)
+        val meetResource = ImageUtils.getMeetStatusResource(meetStatus)
 
         if (meetResource > 0) {
             //有欢遇标识

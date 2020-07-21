@@ -35,6 +35,9 @@ class ContactsActivityViewModel : BaseViewModel() {
     //关注列表 关注状态变化
     val followChangeFlag: MutableLiveData<FollowResultBean> by lazy { MutableLiveData<FollowResultBean>() }
 
+    //关注列表需要刷新的标识位
+    var followNeedRefresh = false
+
     /**
      * 获取联系人数据
      */

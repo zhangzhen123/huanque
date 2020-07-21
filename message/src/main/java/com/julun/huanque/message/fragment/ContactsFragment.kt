@@ -7,6 +7,9 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.julun.huanque.common.base.BaseVMFragment
@@ -59,6 +62,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
 
     override fun getLayoutId() = R.layout.fragment_contacts
 
+
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initViewModel()
         state_pager_view.showEmpty()
@@ -97,7 +101,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
             val content = if (type == ContactsTabType.Intimate) {
                 "亲密等级1级及以上，即可成为密友"
             } else {
-                "双方相互，关注即可成为鹊友"
+                "双方互相关注，即可成为鹊友"
             }
             val headerView = TextView(context).apply {
                 backgroundColor = GlobalUtils.formatColor("#FFFAEE")

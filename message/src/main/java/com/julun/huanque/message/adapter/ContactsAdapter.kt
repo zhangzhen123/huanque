@@ -1,5 +1,6 @@
 package com.julun.huanque.message.adapter
 
+import android.widget.ImageView
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
@@ -14,6 +15,7 @@ import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.message.R
 import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.textColor
 
 /**
@@ -41,6 +43,26 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
         } else {
             oriNicknamge
         }
+
+        val ivMeet = helper.getView<ImageView>(R.id.iv_meet)
+        val meetStatus = ImageUtils.getMeetStatusResource(item.meetStatus)
+        if (meetStatus > 0) {
+            ivMeet.imageResource = meetStatus
+            ivMeet.show()
+        } else {
+            ivMeet.hide()
+        }
+
+        //亲密度等级
+        val ivIntimate = helper.getView<ImageView>(R.id.iv_intimate)
+        val intimateResource = ImageUtils.getIntimateLevelPic(item.intimateLevel)
+        if (intimateResource > 0) {
+            ivIntimate.show()
+            ivIntimate.imageResource = intimateResource
+        } else {
+            ivIntimate.hide()
+        }
+
         helper.setText(R.id.tv_nickname, showNickname)
         //亲密度和昵称使用
         val tvIntimateNumber = helper.getView<TextView>(R.id.tv_intimate_number)
@@ -49,7 +71,7 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
 
         if (type == ContactsTabType.Intimate) {
             //显示亲密值
-            tvIntimateNumber.text = "${item.num}"
+            tvIntimateNumber.text = "亲密度${item.num}"
             tvChangeNumber.show()
 
             val changeNumber = item.changeNum

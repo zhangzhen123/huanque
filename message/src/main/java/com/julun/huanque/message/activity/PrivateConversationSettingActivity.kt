@@ -90,7 +90,7 @@ class PrivateConversationSettingActivity : BaseActivity() {
                 }
 
                 //欢遇状态
-                val meetResource = GlobalUtils.getMeetStatusResource(it.meetStatus)
+                val meetResource = ImageUtils.getMeetStatusResource(it.meetStatus)
                 if (meetResource > 0) {
                     //显示图标
                     iv_huanyu.show()

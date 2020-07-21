@@ -79,6 +79,7 @@ class ContactsActivity : BaseActivity() {
 
         mActivityViewModel?.followChangeFlag?.observe(this, Observer {
             if (it != null) {
+                mActivityViewModel?.followNeedRefresh = true
                 val type = it.type
                 val formerFollow = it.formerFollow
                 val currentFollow = it.follow
