@@ -194,15 +194,15 @@ class MessageViewModel : BaseViewModel() {
 
                     val oriList = conversationListData.value
                     oriList?.forEachIndexed { index, lmc ->
-                        if (lmc.conversation.targetId == p0.targetId) {
+                        if (lmc.conversation.targetId == targerId) {
                             lmc.conversation = p0
                             //刷新列表（重新排序）
-                            if (foldStrangerMsg && stranger != lmc.showUserInfo?.stranger) {
+                            if (foldStrangerMsg && stranger != lmc.showUserInfo?.stranger && (targerId != SystemTargetId.systemNoticeSender && targerId != SystemTargetId.friendNoticeSender)) {
                                 //折叠消息开启,陌生人状态有变更，需要在会话列表中删除当前会话
                                 try {
                                     updataStrangerData(targerId.toLong(), stranger)
                                     getConversationList()
-                                }catch (e : Exception){
+                                } catch (e: Exception) {
                                     e.printStackTrace()
                                 }
 

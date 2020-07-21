@@ -27,6 +27,7 @@ import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.EventMessageBean
+import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
@@ -201,8 +202,9 @@ class PrivateConversationActivity : BaseActivity() {
             if (it != null) {
                 mPrivateConversationViewModel?.messageListData?.value?.clear()
                 mPrivateConversationViewModel?.getMessageList(first = true)
-                RongIMClient.getInstance().clearMessagesUnreadStatus(Conversation.ConversationType.PRIVATE, "$it")
-                EventBus.getDefault().post(EventMessageBean("$it"))
+
+                mPrivateConversationViewModel?.clearUnreadCount("$it")
+
             }
         })
 
@@ -976,6 +978,16 @@ class PrivateConversationActivity : BaseActivity() {
             showBackground()
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun strangerChange(event: UserInfoChangeEvent) {
+        if (event.userId == mPrivateConversationViewModel?.targetIdData?.value) {
+            //当前会话，陌生人状态变化
+            mPrivateConversationViewModel?.basicBean?.value?.stranger = event.stranger
+            RongCloudManager.strangerChange(event.stranger)
+        }
+    }
+
 
     /**
      * 显示背景

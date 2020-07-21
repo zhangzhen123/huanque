@@ -257,7 +257,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         } else {
             if (stateList.isPull) {
 //                mAdapter.loadMoreEnd(true)
-                mAdapter.loadMoreModule.loadMoreEnd(true)
+                mAdapter.loadMoreModule.loadMoreEnd(false)
             } else {
 //                mAdapter.loadMoreEnd()
                 mAdapter.loadMoreModule.loadMoreEnd()

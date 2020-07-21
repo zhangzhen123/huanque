@@ -18,9 +18,14 @@ import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.MeetStatus
+import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.init.CommonInit
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.*
 import java.lang.ref.SoftReference
 
@@ -250,6 +255,14 @@ object GlobalUtils {
      * 更新陌生人状态
      */
     fun updataStrangerData(userId: Long, stranger: Boolean) {
-
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                val chatUser = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(userId) ?: return@withContext
+                if (chatUser.stranger != stranger) {
+                    chatUser.stranger = stranger
+                    HuanQueDatabase.getInstance().chatUserDao().insert(chatUser)
+                }
+            }
+        }
     }
 }
