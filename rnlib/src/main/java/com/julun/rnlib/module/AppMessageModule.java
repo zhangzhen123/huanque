@@ -10,10 +10,14 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.julun.huanque.common.bean.events.UserInfoChangeEvent;
 import com.julun.huanque.common.constant.ARouterConstant;
 import com.julun.huanque.common.constant.OperationType;
 import com.julun.huanque.common.constant.ParamConstant;
+import com.julun.huanque.common.utils.GlobalUtils;
 import com.julun.rnlib.RnConstant;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class AppMessageModule extends ReactContextBaseJavaModule {
 
@@ -36,27 +40,28 @@ public class AppMessageModule extends ReactContextBaseJavaModule {
     public void sendAction(String type, ReadableMap params, Promise promise) {
         try {
             switch (type) {
-                case RnConstant.FOLLOW_USER_CHANGE: {
-                    Boolean follow = params.getBoolean("follow");
-                    //todo
+            case RnConstant.FOLLOW_USER_CHANGE: {
+                Boolean follow = params.getBoolean("follow");
+                Boolean stranger = params.getBoolean("stranger");
+                int userId = params.getInt("userId");
+                GlobalUtils.INSTANCE.updataStrangerData(userId, stranger);
+                EventBus.getDefault().post(new UserInfoChangeEvent(userId, stranger));
+                break;
+            }
+            case RnConstant.MY_PROFILE_CHANGE: {
+                int id = params.getInt("userId");
+                String nickname = params.getString("nickname");
+                // todo
+                break;
+            }
+            default: {
 
-                    break;
-                }
-                case  RnConstant.MY_PROFILE_CHANGE: {
-                    int id = params.getInt("userId");
-                    String nickname = params.getString("nickname");
-                    //todo
-                    break;
-                }
-                default:{
-
-                }
+            }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
     }
 
