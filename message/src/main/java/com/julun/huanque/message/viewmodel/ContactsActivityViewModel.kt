@@ -11,6 +11,7 @@ import com.julun.huanque.common.bean.forms.ContactsForm
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.ContactsTabType
+import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
@@ -31,6 +32,9 @@ class ContactsActivityViewModel : BaseViewModel() {
 
     val socialListData: MutableLiveData<SocialListBean> by lazy { MutableLiveData<SocialListBean>() }
 
+    //关注列表 关注状态变化
+    val followChangeFlag: MutableLiveData<FollowResultBean> by lazy { MutableLiveData<FollowResultBean>() }
+
     /**
      * 获取联系人数据
      */
@@ -40,7 +44,6 @@ class ContactsActivityViewModel : BaseViewModel() {
                 val contactsData = service.socialList(ContactsForm()).dataConvert()
                 tabListData.value = contactsData.userDataTabList
                 socialListData.value = contactsData
-
             }, {
                 if (it is ResponseError) {
                     ToastUtils.show(it.busiMessage)
