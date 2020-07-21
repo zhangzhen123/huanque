@@ -13,6 +13,7 @@ import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.interfaces.routerservice.AppCommonService
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.net.NError
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
@@ -200,6 +201,7 @@ object LoginManager {
             kotlin.runCatching {
                 /*  val result = */userService.logout().dataConvert()
                 SessionUtils.clearSession()
+                UserHeartManager.stopBeat()
                 if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED)
                     RongCloudManager.logout { callback(true) }
                 else {

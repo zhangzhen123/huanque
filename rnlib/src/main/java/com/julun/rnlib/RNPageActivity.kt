@@ -229,7 +229,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             if (selectList.isNotEmpty()) {
                 val media = selectList[0]
                 //视频要求 大于15秒
-                if (currentMinTime * 1000L < media.duration) {
+                if (currentMinTime * 1000L > media.duration) {
                     ToastUtils.show(resources.getString(R.string.video_duration_is_out))
                     RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 选择的视频时长不符合要求 通知rn回调")
                     return

@@ -53,19 +53,27 @@ public class UploadModule extends ReactContextBaseJavaModule {
         RnManager.INSTANCE.getPromiseMap().put(RnManager.uploadPhotos, promise);
 
     }
-//{videoURL:'',imageURL:'',size:10000,time:100}
+
+    //{videoURL:'',imageURL:'',size:10000,time:100}
     @ReactMethod
     public void uploadVideos(ReadableMap params, Promise promise) {
-        String rootPath=params.getString("rootPath") ;
-        String imagePath=params.getString("imagePath") ;
-        int maxSize = params.getInt("maxSize");
-        int minTime =params.getInt("minTime");
+        String rootPath = params.getString("rootPath");
+        String imagePath = params.getString("imagePath");
+
+        int maxSize = 0;
+        if (!params.isNull("maxSize")) {
+            maxSize = params.getInt("maxSize");
+        }
+        int minTime = 0;
+        if (!params.isNull("minTime")) {
+            minTime = params.getInt("minTime");
+        }
 
         if (TextUtils.isEmpty(rootPath) || TextUtils.isEmpty(imagePath)) {
             promise.reject("-1", "视频上传功能 存储目录不能空 通知rn回调");
             return;
         }
-        RnManager.INSTANCE.uploadVideo(rootPath, imagePath,maxSize,minTime);
+        RnManager.INSTANCE.uploadVideo(rootPath, imagePath, maxSize, minTime);
         RnManager.INSTANCE.getPromiseMap().put(RnManager.uploadVideo, promise);
 
     }
