@@ -51,6 +51,12 @@ object ParamConstant {
     //陌生人标识
     const val STRANGER = "STRANGER"
 
+    //亲密度特权
+    const val IntimatePrivilege = "IntimatePrivilege"
+
+    //当前亲密度等级
+    const val CurrentIntimatePrivilege = "CurrentIntimatePrivilege"
+
 
     //UUID
     const val UUID = "UUID"

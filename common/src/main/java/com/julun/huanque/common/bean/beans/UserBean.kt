@@ -74,8 +74,17 @@ class FollowResultBean(var type: String, var userId: Long, var follow: String, v
  * @param key 对应的key
  * @param minLevel 特权对应的最小亲密度等级
  * @param title 标题
+ * @param attentionContent 提醒文案，特权弹窗中显示
  */
-class IntimatePrivilege(var icon: String = "", var grayIcon: String = "", var key: String = "", var minLevel: Int = 0, var title: String = "")
+class IntimatePrivilege(
+    var title: String = "",
+    var icon: String = "",
+    var grayIcon: String = "",
+    var privilegeExplainPic: String = "",
+    var key: String = "",
+    var minLevel: Int = 0,
+    var attentionContent: String = ""
+) : Serializable
 
 /**
  * 亲密数据
@@ -89,8 +98,6 @@ class IntimateBean(
     var intimateNum: Int = 0,
     //下一个等级所需亲密度值
     var nextIntimateNum: Int = 0,
-    //亲密特权
-    var intimatePrivilegeList: MutableList<IntimatePrivilege> = mutableListOf(),
     //用户ID数据
     var userIds: LongArray = longArrayOf(),
     //是否是陌生人状态

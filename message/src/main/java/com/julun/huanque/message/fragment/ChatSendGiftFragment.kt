@@ -56,13 +56,14 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
         tv_send.onClickNew {
             sendGift()
         }
-        initViewModel()
-        mViewModel.queryInfo()
+
     }
 
     override fun onStart() {
         super.onStart()
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT)
+        initViewModel()
+        mViewModel.queryInfo()
     }
 
     private fun initViewModel() {
@@ -94,7 +95,7 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
 
         })
         mPrivateConversationViewModel.balance.observe(this, Observer {
-            if(it != null){
+            if (it != null) {
                 tv_balance.text = "$it"
             }
         })

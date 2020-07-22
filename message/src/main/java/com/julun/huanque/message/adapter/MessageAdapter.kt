@@ -51,6 +51,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
     init {
         addChildClickViewIds(R.id.sdv_image)
+        addChildClickViewIds(R.id.tv_content)
     }
 
     companion object {

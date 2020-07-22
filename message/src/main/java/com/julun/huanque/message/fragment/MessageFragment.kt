@@ -125,7 +125,7 @@ class MessageFragment : BaseFragment() {
             try {
                 val longId = targetId.toLong()
                 if (view.id == R.id.sdv_header) {
-                    //跳转他们主页
+                    //跳转他人主页
                     RNPageActivity.start(
                         requireActivity(),
                         RnConstant.PERSONAL_HOMEPAGE,

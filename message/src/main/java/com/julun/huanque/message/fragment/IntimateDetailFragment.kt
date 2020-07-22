@@ -27,6 +27,9 @@ class IntimateDetailFragment : BaseDialogFragment() {
         fun newInstance() = IntimateDetailFragment()
     }
 
+    //当前亲密度等级
+    private var mCurrentIntimateLevel = 0
+
     private val mViewModel: IntimateDetailViewModel by activityViewModels()
     private val mAdapter = PrivilegeAdapter()
 
@@ -43,7 +46,8 @@ class IntimateDetailFragment : BaseDialogFragment() {
         recycler_privilege.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         recycler_privilege.adapter = mAdapter
         mAdapter.setOnItemClickListener { adapter, view, position ->
-
+            val bean = mAdapter.getItem(position)
+            SingleIntimateprivilegeFragment.newInstance(bean, mCurrentIntimateLevel).show(childFragmentManager, "SingleIntimateprivilegeFragment")
         }
     }
 
@@ -77,11 +81,12 @@ class IntimateDetailFragment : BaseDialogFragment() {
 
         //显示亲密度相关
         val intimateBean = bean.intimate
-        mAdapter.currentLevel = intimateBean.intimateLevel
+        mCurrentIntimateLevel = intimateBean.intimateLevel
+        mAdapter.currentLevel = mCurrentIntimateLevel
 
-        tv_meet_level.text = "Lv.${intimateBean.intimateLevel}"
+        tv_meet_level.text = "Lv.${mCurrentIntimateLevel}"
 
-        val progress = if (intimateBean.intimateLevel == intimateBean.nextIntimateLevel) {
+        val progress = if (mCurrentIntimateLevel == intimateBean.nextIntimateLevel) {
             //满级
             tv_meet_attention.text = "亲密度${intimateBean.intimateNum}"
             100
@@ -94,7 +99,7 @@ class IntimateDetailFragment : BaseDialogFragment() {
         val privilegeList = IntimateUtil.intimatePrivilegeList
         var enablePrivilege = 0
         privilegeList.forEach {
-            if (intimateBean.intimateLevel >= it.minLevel) {
+            if (mCurrentIntimateLevel >= it.minLevel) {
                 enablePrivilege++
             }
         }

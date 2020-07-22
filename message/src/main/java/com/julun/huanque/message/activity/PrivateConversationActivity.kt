@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +28,7 @@ import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
+import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
@@ -45,8 +47,11 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.message.fragment.IntimateDetailFragment
+import com.julun.huanque.message.fragment.SingleIntimateprivilegeFragment
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
@@ -66,6 +71,7 @@ import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.px2dip
+import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import java.util.concurrent.TimeUnit
 
 
@@ -183,7 +189,7 @@ class PrivateConversationActivity : BaseActivity() {
             title.compoundDrawablePadding = 5
         } else {
             title.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-            title.compoundDrawablePadding = 5
+            title.compoundDrawablePadding = 0
         }
 
 
@@ -274,7 +280,7 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.msgFeeData?.observe(this, Observer {
             if (it != null) {
-                if (it > 0) {
+                if (it > 0 || SessionUtils.getSex() == Sex.FEMALE) {
                     //不免费
                     tv_free.hide()
                 } else {
@@ -291,7 +297,7 @@ class PrivateConversationActivity : BaseActivity() {
     private fun refreshPrivilegeEmoji(bean: IntimateBean) {
         //当前亲密度等级
         val currentLent = bean.intimateLevel
-        bean.intimatePrivilegeList.forEach {
+        IntimateUtil.intimatePrivilegeList.forEach {
             if (it.key == "ZSBQ") {
                 val emojiLevel = it.minLevel
                 panel_emotion.setIntimate(emojiLevel, currentLent)
@@ -317,11 +323,35 @@ class PrivateConversationActivity : BaseActivity() {
 
         tv_send.onClickNew {
             //发送按钮
+            val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
+            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
+            if (msgFee != null && msgFee > 0 && !dialogShow) {
+                //消息需要付费
+                showMessageFeeDialog(true, msgFee)
+                return@onClickNew
+            }
+
             val message = edit_text.text.toString()
             sendChatMessage(message)
             edit_text.setText("")
         }
-        iv_pic.onClickNew { checkPermissions() }
+
+        edit_text.textChangedListener {
+            afterTextChanged {
+                tv_send.isEnabled = it.toString().isNotEmpty()
+            }
+        }
+
+        iv_pic.onClickNew {
+            val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
+            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
+            if (msgFee != null && msgFee > 0 && !dialogShow) {
+                //消息需要付费
+                showMessageFeeDialog(true, msgFee)
+                return@onClickNew
+            }
+            checkPermissions()
+        }
         iv_intimate.onClickNew {
             //显示欢遇弹窗
             mIntimateDetailFragment = mIntimateDetailFragment ?: IntimateDetailFragment.newInstance()
@@ -337,13 +367,13 @@ class PrivateConversationActivity : BaseActivity() {
                     "语音通话${mPrivateConversationViewModel?.basicBean?.value?.voiceFee}鹊币/分钟",
                     MyAlertDialog.MyDialogCallback(onRight = {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
-                        judgeIntimateLevel()
+                        judgeIntimateLevelForVoice()
                     }, onCancel = {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
                     }), "语音通话费用", "发起通话"
                 )
             } else {
-                judgeIntimateLevel()
+                judgeIntimateLevelForVoice()
             }
 
         }
@@ -426,8 +456,42 @@ class PrivateConversationActivity : BaseActivity() {
         }
     }
 
+
+    /**
+     * 显示消息付费弹窗
+     * @param text true 标识文字   false   标识图片
+     * @param fee 价格
+     */
+    private fun showMessageFeeDialog(text: Boolean, fee: Long) {
+        val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
+        if (!dialogShow) {
+            //未显示过价格弹窗，显示弹窗
+            MyAlertDialog(this).showAlertWithOKAndCancel(
+                "私信消息${fee}鹊币/条",
+                MyAlertDialog.MyDialogCallback(onRight = {
+                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                    if (text) {
+                        tv_send.performClick()
+                    } else {
+                        iv_pic.performClick()
+                    }
+                }, onCancel = {
+                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                }), "私信消息费用", "继续发送"
+            )
+        } else {
+            if (text) {
+                tv_send.performClick()
+            } else {
+                iv_pic.performClick()
+            }
+        }
+    }
+
+
     //悬浮表情
     private var mEmojiPopupWindow: PopupWindow? = null
+
 
     /**
      * 显示表情悬浮效果
@@ -526,10 +590,10 @@ class PrivateConversationActivity : BaseActivity() {
     /**
      * 判断当前亲密度等级是否可以发起语音通话
      */
-    private fun judgeIntimateLevel() {
+    private fun judgeIntimateLevelForVoice() {
         val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
         val currentLevel = intimate.intimateLevel
-        intimate.intimatePrivilegeList.forEach {
+        IntimateUtil.intimatePrivilegeList.forEach {
             if (it.key == "YYTH") {
                 val needLevel = it.minLevel
                 if (needLevel <= currentLevel) {
@@ -537,7 +601,28 @@ class PrivateConversationActivity : BaseActivity() {
                     judgeBalance()
                 } else {
                     //亲密度等级不足
-                    ToastUtils.show("亲密度等级不足")
+                    SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(this, "SingleIntimateprivilegeFragment")
+                }
+                return
+            }
+        }
+    }
+
+    /**
+     * 判断当前亲密等级是否可以发送图片
+     */
+    private fun judgeIntimateLevelForPic() {
+        val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
+        val currentLevel = intimate.intimateLevel
+        IntimateUtil.intimatePrivilegeList.forEach {
+            if (it.key == "FSTP") {
+                val needLevel = it.minLevel
+                if (needLevel <= currentLevel) {
+                    //亲密度允许
+                    goToPictureSelectPager()
+                } else {
+                    //亲密度等级不足
+                    SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(this, "SingleIntimateprivilegeFragment")
                 }
                 return
             }
@@ -720,18 +805,48 @@ class PrivateConversationActivity : BaseActivity() {
                         ImageActivity.start(this, 0, medias = listOf(StringHelper.getOssImgUrl("${content.remoteUri}")))
                     }
                 }
+                R.id.sdv_header -> {
+                    //跳转他人主页
+                    if (tempData.senderUserId == "${SessionUtils.getUserId()}") {
+                        //本人发送消息
+                        RNPageActivity.start(
+                            this,
+                            RnConstant.PERSONAL_HOMEPAGE,
+                            Bundle().apply { putLong("userId", SessionUtils.getUserId()) })
+                    } else {
+                        //对方发送消息
+                        try {
+                            RNPageActivity.start(
+                                this,
+                                RnConstant.PERSONAL_HOMEPAGE,
+                                Bundle().apply { putLong("userId", tempData.targetId.toLong()) })
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+                R.id.tv_content -> {
+                    val content = tempData.content
+                    if (content is CustomSimulateMessage) {
+                        if (content.type == MessageCustomBeanType.Voice_Conmmunication_Simulate) {
+                            //点击的是语音消息,直接拨打电话
+                            iv_phone.performClick()
+                        }
+                    }
+                }
             }
         }
-//        mAdapter.isUpFetchEnable = true
-//        //预加载2个position
-//        mAdapter.setStartUpFetchPosition(2)
-//        mAdapter.setUpFetchListener {
-//            val currLast = mAdapter.getItem(0)
-//            mPrivateConversationViewModel?.getMessageList(
-//                currLast?.messageId ?: return@setUpFetchListener
-//            )
-//            mAdapter.isUpFetching = true
+
+//        mAdapter.setOnItemClickListener { adapter, view, position ->
+//            val content = mAdapter.getItem(position).content
+//            if (content is CustomSimulateMessage) {
+//                if (content.type == MessageCustomBeanType.Voice_Conmmunication_Simulate) {
+//                    //点击的是语音消息,直接拨打电话
+//                    iv_phone.performClick()
+//                }
+//            }
 //        }
+
         mAdapter.upFetchModule.isUpFetchEnable = true
         //预加载2个position
         mAdapter.upFetchModule.startUpFetchPosition = 2
@@ -866,7 +981,8 @@ class PrivateConversationActivity : BaseActivity() {
                 when {
                     permission.granted -> {
                         logger.info("获取权限成功")
-                        goToPictureSelectPager()
+                        //判断亲密特权
+                        judgeIntimateLevelForPic()
                     }
                     permission.shouldShowRequestPermissionRationale -> // Oups permission denied
                         ToastUtils.show("权限无法获取")

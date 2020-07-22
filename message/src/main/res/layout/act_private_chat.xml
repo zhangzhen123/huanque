@@ -55,6 +55,7 @@
                 android:layout_width="0px"
                 android:layout_height="0dp"
                 android:layout_marginBottom="104dp"
+                android:overScrollMode="never"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -156,13 +157,14 @@
 
                 <TextView
                     android:id="@+id/tv_send"
-                    android:layout_width="72dp"
+                    android:layout_width="60dp"
                     android:layout_height="40dp"
                     android:layout_marginRight="15dp"
-                    android:background="@drawable/bg_send_message"
+                    android:background="@drawable/sel_verification_code"
+                    android:enabled="false"
                     android:gravity="center"
                     android:text="发送"
-                    android:textColor="@color/black_333"
+                    android:textColor="@color/col_verification_code"
                     android:textSize="@dimen/sp_16"
                     app:layout_constraintBottom_toBottomOf="@id/edit_text"
                     app:layout_constraintRight_toRightOf="parent"
@@ -193,7 +195,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_private_input"
-                    android:hint="请输入文字..."
+                    android:hint="聊点什么吧..."
                     android:imeOptions="actionSearch"
                     android:maxLength="60"
                     android:minHeight="40dp"
@@ -313,18 +315,17 @@
             <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
             <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
             <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
-<!--            <com.effective.android.panel.view.panel.PanelView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:panel_layout="@layout/panel_emotion_layout"-->
-<!--                app:panel_trigger="@id/iv_emoji" />-->
+            <!--            <com.effective.android.panel.view.panel.PanelView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                app:panel_layout="@layout/panel_emotion_layout"-->
+            <!--                app:panel_trigger="@id/iv_emoji" />-->
 
             <com.julun.huanque.common.widgets.emotion.PrivateChatPanelView
                 android:id="@+id/panel_emotion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:cus_panel_trigger="@id/iv_emoji" />
-
 
 
             <!-- 除了使用框架提供的 PanelView，也可以使用自定义 Panel -->
