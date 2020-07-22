@@ -1,6 +1,7 @@
 package com.julun.huanque.common.interfaces
 
 import android.view.View
+import com.julun.huanque.common.bean.beans.IntimatePrivilege
 import com.julun.huanque.common.widgets.emotion.Emotion
 
 /**
@@ -17,4 +18,10 @@ interface EmojiInputListener {
 
     //抬起事件
     fun onActionUp()
+
+    //删除事件
+    fun onClickDelete()
+
+    //显示特权弹窗
+    fun showPrivilegeFragment(code: String)
 }

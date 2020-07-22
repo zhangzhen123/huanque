@@ -158,6 +158,11 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
 
         tv_privilege_attetnion.onClickNew {
             //弹窗说明弹窗
+            mListener?.showPrivilegeFragment("ZSBQ")
+        }
+
+        iv_delete.onClickNew {
+            mListener?.onClickDelete()
         }
     }
 

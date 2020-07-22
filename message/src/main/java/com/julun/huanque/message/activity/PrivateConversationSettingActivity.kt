@@ -272,6 +272,7 @@ class PrivateConversationSettingActivity : BaseActivity() {
 //                    sendChatMessage(pic = path, localPic = media.path, messageType = Message_Pic)
                     SharedPreferencesUtils.commitString(GlobalUtils.getBackgroundKey(mPrivateConversationSettingViewModel?.targetId ?: 0), media.path)
                     EventBus.getDefault().post(ChatBackgroundChangedEvent(mPrivateConversationSettingViewModel?.targetId ?: 0))
+                    finish()
 //                    ImageUtils.copyImageToSdCard(media.path,"${SessionUtils.getUserId()}-${mPrivateConversationSettingViewModel?.targetId}")
 //                    if(!mLoadingDialog.isShowing){
 //                        mLoadingDialog.showDialog()

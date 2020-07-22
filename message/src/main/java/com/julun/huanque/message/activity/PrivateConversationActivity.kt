@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.Selection
 import android.text.Spannable
 import android.text.TextUtils
 import android.util.Log
@@ -14,6 +15,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,10 +23,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
+import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.IntimateBean
+import com.julun.huanque.common.bean.beans.IntimatePrivilege
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
@@ -73,6 +77,7 @@ import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.px2dip
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 
 
 /**
@@ -417,7 +422,11 @@ class PrivateConversationActivity : BaseActivity() {
         tv_edit.onClickNew {
             //小鹊助手，编辑
             showXiaoQueView(false)
-            edit_text.setText(getActiveWord())
+            val text = getActiveWord()
+            edit_text.setText(text)
+            //唤起键盘
+            edit_text.requestFocus()
+//            ScreenUtils.showSoftInput(tv_edit)
         }
 
         iv_que_close.onClickNew {
@@ -453,7 +462,73 @@ class PrivateConversationActivity : BaseActivity() {
             override fun onActionUp() {
                 mEmojiPopupWindow?.dismiss()
             }
+
+            override fun onClickDelete() {
+                //点击了删除事件
+                deleteInputEmoji()
+            }
+
+            override fun showPrivilegeFragment(code: String) {
+                //显示特权弹窗
+                val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
+                val currentLevel = intimate.intimateLevel
+                IntimateUtil.intimatePrivilegeList.forEach {
+                    if (it.key == "ZSBQ") {
+                        SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(supportFragmentManager, "SingleIntimateprivilegeFragment")
+                        return
+                    }
+                }
+            }
         }
+    }
+
+    // 删除光标所在前一位(不考虑切换到emoji时的光标位置，直接删除最后一位)
+    private fun deleteInputEmoji() {
+//        var start = Selection.getSelectionStart(edit_text.text)
+//        var end = Selection.getSelectionEnd(edit_text.text)
+//        // 光标在第一位
+//        if (start == 0 && end == 0) return
+//        var sourceTxt = edit_text.text
+//        if (sourceTxt.length == 0) return
+//
+//        // 光标后面的消息串
+//        var lastMsg: String = ""
+//        if (end != sourceTxt.length) {
+//            lastMsg = sourceTxt.substring(end)
+//        }
+//        // 结束光标默认为当前光标前一位
+//        var endIndex = end - 1
+//        if (sourceTxt.contains(EmojiUtil.emojiRegex.toRegex())) {
+//            // 光标前一位，要删除的字符
+//            // 最后一位是“]”结尾，判断是否是emoji
+//            var delText = sourceTxt[end - 1].toString()
+//            if (delText == "]") {
+//                // 光标前半段消息
+//                var tempText = sourceTxt.substring(0, end)
+//                var matcher = Pattern.compile(EmojiUtil.emojiRegex).matcher(tempText)
+//                while (matcher.find()) {
+//                    if (matcher.end() == tempText.length) {
+//                        var emojiTxt = matcher.group()
+//                        if (EmojiUtil.EmojiTextArray.contains(emojiTxt)) {
+//                            endIndex = matcher.start()
+//                        }
+//                    }
+//                }
+//            }
+//            // 0到光标之前的消息 + 删除前光标后面剩余的消息串
+//            var newContent = sourceTxt.substring(0, endIndex) + lastMsg
+//            // 删除后的消息串是否还包含emoji图标
+//            if (newContent.contains(EmojiUtil.emojiRegex.toRegex())) {
+//                chatInputEt.text = EmojiUtil.message2emoji(newContent)
+//            } else {
+//                chatInputEt.setText(newContent)
+//            }
+//        } else {
+//            // 聊天消息中不包含emoji，直接删除最后一位
+//            chatInputEt.setText(sourceTxt.substring(0, endIndex) + lastMsg)
+//        }
+//        // 设置新的光标
+//        Selection.setSelection(chatInputEt.text, endIndex)
     }
 
 
@@ -529,7 +604,9 @@ class PrivateConversationActivity : BaseActivity() {
         }
 
         rootView.findViewById<ImageView>(R.id.iv_emoji)?.imageResource = emotion.drawableRes
-        rootView.findViewById<TextView>(R.id.tv_emoji)?.text = emotion.text
+        val content = emotion.text
+        val name = content.substring(content.indexOf("[") + 1, content.indexOf("]"))
+        rootView.findViewById<TextView>(R.id.tv_emoji)?.text = name
 
 
 
@@ -723,34 +800,35 @@ class PrivateConversationActivity : BaseActivity() {
                         scrollToBottom()
                     }
                 }
-            }.addViewClickListener {
-                onClickBefore { view ->
-                    //可选实现，监听触发器的点击
-                    if (view?.id == R.id.iv_emoji) {
+            }
+                .addViewClickListener {
+                    onClickBefore { view ->
+                        //可选实现，监听触发器的点击
+                        if (view?.id == R.id.iv_emoji) {
+                            scrollToBottom()
+                        }
+                    }
+                }.addPanelChangeListener {
+                    onKeyboard {
+                        //可选实现，输入法显示回调
+                        iv_emoji.isSelected = false
                         scrollToBottom()
                     }
-                }
-            }.addPanelChangeListener {
-                onKeyboard {
-                    //可选实现，输入法显示回调
-                    iv_emoji.isSelected = false
-                    scrollToBottom()
-                }
-                onNone {
-                    //可选实现，默认状态回调
-                    iv_emoji.isSelected = false
-                }
-                onPanel { view ->
-                    //可选实现，面板显示回调
-                    if (view is PanelView) {
-                        iv_emoji.isSelected = view.id == R.id.panel_emotion
-                        scrollToBottom()
+                    onNone {
+                        //可选实现，默认状态回调
+                        iv_emoji.isSelected = false
                     }
-                }
-                onPanelSizeChange { panelView, _, _, _, width, height ->
-                    //可选实现，输入法动态调整时引起的面板高度变化动态回调
-                    if (panelView is PanelView) {
-                        when (panelView.id) {
+                    onPanel { view ->
+                        //可选实现，面板显示回调
+                        if (view is PanelView) {
+                            iv_emoji.isSelected = view.id == R.id.panel_emotion
+                            scrollToBottom()
+                        }
+                    }
+                    onPanelSizeChange { panelView, _, _, _, width, height ->
+                        //可选实现，输入法动态调整时引起的面板高度变化动态回调
+                        if (panelView is PanelView) {
+                            when (panelView.id) {
 //                            R.id.panel_emotion -> {
 //                                val pagerView = findViewById<EmotionPagerView>(R.id.view_pager)
 //                                val viewPagerSize: Int = height - DensityUtils.dpToPx(30)
@@ -762,11 +840,16 @@ class PrivateConversationActivity : BaseActivity() {
 //                                    viewPagerSize
 //                                )
 //                            }
+                            }
                         }
                     }
-                }
-            }.contentCanScrollOutside(false)    //可选模式，默认true，当面板实现时内容区域是否往上滑动
-                .logTrack(true)                 //可选，默认false，是否开启log信息输出
+                }    //可选模式，默认true，当面板实现时内容区域是否往上滑动
+//                .logTrack(true)                 //可选，默认false，是否开启log信息输出
+                .addContentScrollMeasurer(object : ContentScrollMeasurer {
+                    override fun getScrollDistance(defaultDistance: Int) = 0
+
+                    override fun getScrollViewId() = R.id.iv_background
+                })
                 .build(false)                      //可选，默认false，是否默认打开输入法
         }
     }
@@ -836,16 +919,6 @@ class PrivateConversationActivity : BaseActivity() {
                 }
             }
         }
-
-//        mAdapter.setOnItemClickListener { adapter, view, position ->
-//            val content = mAdapter.getItem(position).content
-//            if (content is CustomSimulateMessage) {
-//                if (content.type == MessageCustomBeanType.Voice_Conmmunication_Simulate) {
-//                    //点击的是语音消息,直接拨打电话
-//                    iv_phone.performClick()
-//                }
-//            }
-//        }
 
         mAdapter.upFetchModule.isUpFetchEnable = true
         //预加载2个position
@@ -1111,6 +1184,11 @@ class PrivateConversationActivity : BaseActivity() {
         val key = GlobalUtils.getBackgroundKey(mPrivateConversationViewModel?.targetIdData?.value ?: 0)
         val picSource = SharedPreferencesUtils.getString(key, "")
         if (picSource.isNotEmpty()) {
+//            val params = iv_background.layoutParams as? ConstraintLayout.LayoutParams
+//            params?.height = ScreenUtils.getScreenHeight() - dip(44 + 104)
+//            params?.width = ScreenUtils.getScreenWidth()
+//            iv_background.layoutParams = params
+
             ImageUtils.loadNativeFilePath(
                 iv_background,
                 picSource,
