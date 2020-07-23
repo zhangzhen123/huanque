@@ -14,12 +14,12 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.WithdrawInfo
 import com.julun.huanque.common.bean.beans.WithdrawTpl
 import com.julun.huanque.common.bean.events.AliAuthCodeEvent
+import com.julun.huanque.common.bean.events.RPVerifyResult
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.WithdrawErrorCode
 import com.julun.huanque.common.constant.WithdrawType
-import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.WeiXinService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ToastUtils
@@ -225,7 +225,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                             okText = "去认证",
                             title = "实名认证提示",
                             callback = MyAlertDialog.MyDialogCallback(onRight = {
-                                ARouter.getInstance().build(ARouterConstant.REALNAME_MAIN_ACTIVITY).navigation()
+                                ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
                             })
                         )
 

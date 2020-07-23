@@ -134,10 +134,10 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/tvQueBi"
+                android:id="@+id/tv_record_voice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="测试" />
+                android:text="跳转语音签名" />
         </LinearLayout>
 
     </ScrollView>

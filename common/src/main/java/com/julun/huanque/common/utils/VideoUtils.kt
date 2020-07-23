@@ -57,11 +57,11 @@ object VideoUtils {
     }
 
     /**
-     * 获取视频缩略图
+     * 获取视频首帧预览图
      * @param videoFile
      * @return
      */
-    fun getVideoThumbnail2(videoFile: File): Bitmap? {
+    fun getVideoFirstFrame(videoFile: File): Bitmap? {
         if (!videoFile.exists()) {
             logger("视频文件不存在")
             return null
@@ -72,16 +72,16 @@ object VideoUtils {
     }
     /**
      * 返回视频播放总时长
-     * @param vedioFile
+     * @param videoFile
      * @return
      */
-    fun getVedioTotalTime(vedioFile: File): Long? {
-        if (!vedioFile.exists()) {
+    fun getVideoTotalTime(videoFile: File): Long? {
+        if (!videoFile.exists()) {
             logger("视频文件不存在")
             return null
         }
         val retriever = MediaMetadataRetriever()
-        retriever.setDataSource(vedioFile.getAbsolutePath())
+        retriever.setDataSource(videoFile.absolutePath)
         val timeString = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
         return java.lang.Long.valueOf(timeString)
     }

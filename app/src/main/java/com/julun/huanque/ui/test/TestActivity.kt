@@ -8,7 +8,6 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.facebook.react.bridge.Arguments
 import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseActivity
@@ -16,27 +15,24 @@ import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.FileUtils
 import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.VideoUtils
+import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
 import com.julun.jpushlib.TagAliasOperatorHelper
 import com.julun.rnlib.RNPageActivity
-import com.julun.rnlib.RnManager
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.android.synthetic.main.activity_test.*
 import kotlinx.android.synthetic.main.activity_test.test_rn
-import kotlinx.android.synthetic.main.fragment_mine.*
 import org.jetbrains.anko.startActivity
 import java.io.File
 
@@ -59,9 +55,9 @@ class TestActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         viewModel.userInfo.observe(this, Observer {
             println("我是用户信息：=$it")
-            ret_resp.text="语音签名：${it.points.getOrNull(0)?.voiceContent}"
-            ret_resp1.text="语音签名：${it.points.getOrNull(1)?.voiceContent}"
-            ret_resp2.text="语音签名：${it.points.getOrNull(2)?.voiceContent}"
+            ret_resp.text = "语音签名：${it.points.getOrNull(0)?.voiceContent}"
+            ret_resp1.text = "语音签名：${it.points.getOrNull(1)?.voiceContent}"
+            ret_resp2.text = "语音签名：${it.points.getOrNull(2)?.voiceContent}"
         })
         viewModel.userLevelInfo.observe(this, Observer {
             println("我是用户等级信息：=$it")
@@ -92,7 +88,7 @@ class TestActivity : BaseActivity() {
             finish()
         }
         goto_photo.onClickNew {
-            goToPictureSelectPager(1,PictureConfig.TYPE_VIDEO)
+            goToPictureSelectPager(1, PictureConfig.TYPE_VIDEO)
         }
         set_push.onClickNew {
             val userId = SessionUtils.getUserId().toString()
@@ -113,11 +109,11 @@ class TestActivity : BaseActivity() {
 
         test_real.onClickNew {
             //实名认证界面
-            ARouter.getInstance().build(ARouterConstant.REALNAME_MAIN_ACTIVITY).navigation()
+            ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
         }
         tv_clear_session.onClickNew {
             LoginManager.doLoginOut {
-                if(it){
+                if (it) {
                     logger.info("退出登录成功")
                 }
             }
@@ -131,6 +127,10 @@ class TestActivity : BaseActivity() {
         }
         test_loading.onClickNew {
             LoadingDialog(this).showDialog(true)
+        }
+
+        tv_record_voice.onClickNew {
+            startActivity<VoiceSignActivity>()
         }
     }
 
@@ -164,11 +164,11 @@ class TestActivity : BaseActivity() {
                     }
 
                 }
-            }else if(requestCode==1002){
+            } else if (requestCode == 1002) {
                 val selectList = PictureSelector.obtainMultipleResult(data)
                 val media = selectList[0]
-//                val bitmap = VideoUtils.getVideoThumbnail2(File(media.path))
-                val bitmap = VideoUtils.getVideoThumbnail(media.path)
+                val bitmap = VideoUtils.getVideoFirstFrame(File(media.path))
+//                val bitmap = VideoUtils.getVideoThumbnail(media.path)
                 val vf = File(media.path)
                 val bFile = FileUtils.bitmap2File(
                     bitmap
@@ -181,6 +181,7 @@ class TestActivity : BaseActivity() {
             logger("图片返回出错了")
         }
     }
+
     private fun goToPictureSelectPager(max: Int, type: Int) {
         if (type == PictureConfig.TYPE_IMAGE) {
             PictureSelector.create(this)

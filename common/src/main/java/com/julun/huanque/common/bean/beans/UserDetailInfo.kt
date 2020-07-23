@@ -53,11 +53,16 @@ data class UpdateHeaderBean(
 )
 
 data class VoiceSignPointBean(
-    var points: List<Point> = listOf()
+    var points: List<SignPoint> = listOf()
 )
 
-data class Point(
+data class SignPoint(
     var voiceContent: String = "",
     var voiceTitle: String = ""
 )
+
+/**
+ * 资料完成度
+ */
+data class InfoPerfection(val perfection: Int = 0)
 

@@ -65,12 +65,12 @@ object OssUpLoadManager {
     }
 
     /**
-     * [imgList] 文件本地地址 [position]图片存储位置 [callback]上传反馈
+     * [fileList] 文件本地地址 [position]图片存储位置 [callback]上传反馈
      *
      */
-    fun uploadFiles(imgList: MutableList<String>, position: String, callback: (code: Int, list: MutableList<String>?) -> Unit) {
+    fun uploadFiles(fileList: MutableList<String>, position: String, callback: (code: Int, list: MutableList<String>?) -> Unit) {
 //        isUploading = true
-        val observable = Observable.fromIterable(imgList)
+        val observable = Observable.fromIterable(fileList)
         val map = mutableMapOf<String, String>()
         observable.flatMap { file ->
             logger.info("开始任务队列：${Thread.currentThread()}")
@@ -88,17 +88,17 @@ object OssUpLoadManager {
         }.toList().toObservable()/*.subscribeOn(Schedulers.io())*/
             .observeOn(AndroidSchedulers.mainThread()).subscribe({
 
-                if (it.size == imgList.size) {
+                if (it.size == fileList.size) {
                     //重新排序
                     val resultList = mutableListOf<String>()
-                    imgList.forEach { item ->
+                    fileList.forEach { item ->
                         val value = map[item]
                         if (value != null && value.isNotEmpty()) {
                             resultList.add(value)
                         }
                     }
                     logger.info("结果：$resultList ")
-                    if (resultList.size == imgList.size) {
+                    if (resultList.size == fileList.size) {
                         callback(CODE_SUCCESS, resultList)
                     } else {
                         callback(CODE_ERROR, null)
@@ -117,13 +117,13 @@ object OssUpLoadManager {
     }
 
     /**
-     *  上传单张图片
-     *  [path] 图片地址
-     *  [position]图片存储位置
+     *  上传单个文件
+     *  [path] 文件地址
+     *  [position]文件存储位置
      *  [callback]上传反馈带进度条
      */
 
-    fun uploadImage(path: String, position: String, callback: ImageUploadCallback? = null) {
+    fun uploadFile(path: String, position: String, callback: FileUploadCallback? = null) {
 
         Observable.just(path).observeOn(Schedulers.io()).map { f ->
             logger.info("当前的文件：$f")
@@ -171,11 +171,21 @@ object OssUpLoadManager {
      * [position]要上传的视频存储目录
      * [ImagePosition]要上传的预览图目录
      * [callback]回调
+     * [highImage]是否需要高质量预览图
      */
-    fun uploadVideo(videoPath: String, position: String, ImagePosition: String, callback: VideoUploadCallback) {
+    fun uploadVideo(
+        videoPath: String,
+        position: String,
+        ImagePosition: String,
+        callback: VideoUploadCallback? = null,
+        highImage: Boolean = false
+    ) {
         isUploading = true
-//        val bitmap = VideoUtils.getVideoThumbnail2(File(videoPath))
-        val bitmap = VideoUtils.getVideoThumbnail(videoPath)
+        val bitmap = if (highImage) {
+            VideoUtils.getVideoFirstFrame(File(videoPath))
+        } else {
+            VideoUtils.getVideoThumbnail(videoPath)
+        }
         val vf = File(videoPath)
         val bFile = FileUtils.bitmap2File(
             bitmap
@@ -217,7 +227,7 @@ object OssUpLoadManager {
                     val success = mService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
                         override fun onProgress(request: PutObjectRequest?, currentSize: Long, totalSize: Long) {
                             Observable.empty<Any>().observeOn(AndroidSchedulers.mainThread()).doOnComplete {
-                                callback.onProgress(currentSize, totalSize)
+                                callback?.onProgress(currentSize, totalSize)
                             }.subscribe()
                         }
 
@@ -246,16 +256,16 @@ object OssUpLoadManager {
                 val filterList = it.filter { str -> str.isNotEmpty() }
                 logger.info("结果：$filterList")
                 if (filterList.size == 2) {
-                    callback.onResult(CODE_SUCCESS, resultVideoPath, resultPicPath, sWidth, sHigh)
+                    callback?.onResult(CODE_SUCCESS, resultVideoPath, resultPicPath, sWidth, sHigh)
                 } else {
-                    callback.onResult(CODE_ERROR)
+                    callback?.onResult(CODE_ERROR)
                 }
 //            currentVideoPic=null
                 isUploading = false
             }, {
                 //            currentVideoPic=null
                 isUploading = false
-                callback.onResult(CODE_ERROR)
+                callback?.onResult(CODE_ERROR)
                 it.printStackTrace()
             })
     }
@@ -268,7 +278,7 @@ object OssUpLoadManager {
     }
 
 
-    interface ImageUploadCallback {
+    interface FileUploadCallback {
         fun onProgress(currentSize: Long, totalSize: Long)
 
         fun onResult(code: Int, imgPath: String? = null)

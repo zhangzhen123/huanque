@@ -7,14 +7,20 @@ import android.util.Log
 import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
+import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.infer.annotation.Assertions
 import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactRootView
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
 import com.julun.huanque.common.base.dialog.LoadingDialog
+import com.julun.huanque.common.bean.events.AliAuthCodeEvent
+import com.julun.huanque.common.bean.events.RPVerifyResult
+import com.julun.huanque.common.bean.events.VoiceSignEvent
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.FileUtils
@@ -25,6 +31,9 @@ import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Android 通过Activity打开RN页面
@@ -52,6 +61,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
+            EventBus.getDefault().register(this)
             val intent = intent
             val moduleName = intent.getStringExtra(RnConstant.MODULE_NAME)
             val initialProperties = intent.getBundleExtra(RnConstant.INITIAL_PROPERTIES)
@@ -140,6 +150,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         mReactRootView.unmountReactApplication()
         RnManager.curActivity = null
         RnManager.clearPromiseMap()
+        EventBus.getDefault().unregister(this)
     }
 
     private val mLoadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
@@ -247,6 +258,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 }
                 OssUpLoadManager.uploadVideo(media.path, position, imagePosition, object : OssUpLoadManager.VideoUploadCallback {
                     override fun onProgress(currentSize: Long, totalSize: Long) {
+                        logger("视频上传进度条：$currentSize / $totalSize")
                     }
 
                     override fun onResult(code: Int, videoPath: String, imgPath: String, width: Int, height: Int) {
@@ -259,7 +271,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                             map.putString("videoURL", videoPath)
                             map.putString("imageURL", imgPath)
                             map.putInt("size", size.toInt())
-                            map.putInt("time", (media.duration/1000).toInt())
+                            map.putInt("time", (media.duration / 1000).toInt())
                             RnManager.promiseMap[RnManager.uploadVideo]?.resolve(map)
                             currentRootPath = ""
                             currentImagePath = ""
@@ -280,7 +292,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
 
     }
 
-    private fun checkPermissions(max: Int, type: Int) {
+    private fun checkPhotoPermissions(max: Int, type: Int) {
         val rxPermissions = RxPermissions(this)
         rxPermissions
             .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -398,8 +410,118 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         }
 
         runOnUiThread {
-            checkPermissions(max, type)
+            checkPhotoPermissions(max, type)
         }
     }
 
+    /**
+     * 打开页面操作
+     */
+    fun openPager(pageName: String, params: ReadableMap? = null) {
+        runOnUiThread {
+            when (pageName) {
+                RnConstant.PRIVATE_MESSAGE_PAGE -> {
+                    val id = params!!.getString("userId")
+                    if (id != null) {
+                        val userId = id.toLong()
+                        val bundle = Bundle()
+                        bundle.putLong(ParamConstant.TARGET_USER_ID, userId)
+                        //                        bundle.putString(ParamConstant.NICKNAME, nickname);
+//                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
+                        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
+                            .navigation(this)
+                    }
+                }
+                RnConstant.TELEPHONE_CALL_PAGE -> {
+                    val id = params!!.getString("userId")
+                    if (id != null) {
+                        val rxPermissions = RxPermissions(this)
+                        rxPermissions.requestEachCombined(Manifest.permission.RECORD_AUDIO)
+                            .subscribe { permission ->
+                                when {
+                                    permission.granted -> {
+                                        logger("获取权限成功")
+                                        val userId = id.toLong()
+                                        val bundle = Bundle()
+                                        bundle.putLong(ParamConstant.UserId, userId)
+                                        bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLING)
+                                        //                        bundle.putString(ParamConstant.NICKNAME, nickname);
+//                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
+//                                        bundle.putString(ParamConstant.OPERATION, OperationType.CALL_PHONE)
+                                        ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle)
+                                            .navigation(this)
+                                    }
+                                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+                                        ToastUtils.show("权限无法获取")
+                                    else -> {
+                                        logger("获取权限被永久拒绝")
+                                        val message = "无法获取到录音权限，请手动到设置中开启"
+                                        ToastUtils.show(message)
+                                    }
+                                }
+
+                            }
+
+                    }
+                }
+                RnConstant.SEND_GIFT_PAGE -> {
+                    val id = params!!.getString("userId")
+                    if (id != null) {
+                        val userId = id.toLong()
+                        val bundle = Bundle()
+                        bundle.putLong(ParamConstant.TARGET_USER_ID, userId)
+                        //                        bundle.putString(ParamConstant.NICKNAME, nickname);
+//                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
+                        bundle.putString(ParamConstant.OPERATION, OperationType.OPEN_GIFT)
+                        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
+                            .navigation(this)
+                    }
+                }
+                RnConstant.RECORD_VOICE_PAGE -> {
+                    ARouter.getInstance().build(ARouterConstant.VOICE_SIGN_ACTIVITY).navigation()
+                }
+                RnConstant.REPORT_USER_PAGE -> {
+                    val id = params!!.getString("userId")
+                    if (id != null) {
+                        val userId = id.toLong()
+                        val extra = Bundle()
+                        extra.putLong(ParamConstant.TARGET_USER_ID, userId)
+                        extra.putInt(ParamConstant.REPORT_TYPE, 0)
+                        ARouter.getInstance().build(ARouterConstant.REPORT_ACTIVITY).with(extra).navigation()
+                    }
+                }
+                RnConstant.REAL_NAME_AUTH_PAGE -> {
+                    ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
+                }
+            }
+
+        }
+
+    }
+
+
+    /**
+     ******************************************* 以下是收到各种刷新广播的Rn处理****************************************************
+     */
+    /**
+     * 语音签名后结果返回
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveVoiceSignEvent(event: VoiceSignEvent) {
+        logger("收到语音签名修改成功")
+        RnManager.promiseMap[RnConstant.RECORD_VOICE_PAGE]?.resolve(true)
+    }
+
+    /**
+     * 实名认证结果返回
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveRP(event: RPVerifyResult) {
+        logger("收到实名认证结果：${event.result}")
+        if (event.result == RealNameConstants.TYPE_SUCCESS) {
+            RnManager.promiseMap[RnConstant.REAL_NAME_AUTH_PAGE]?.resolve(true)
+        } else {
+            RnManager.promiseMap[RnConstant.REAL_NAME_AUTH_PAGE]?.resolve(false)
+        }
+    }
 }

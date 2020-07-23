@@ -37,16 +37,12 @@ class WithdrawHistoryViewModel : BaseViewModel() {
             val form = WithdrawHistoryForm(lastId)
             request({
                 val result = service.withdrawHistory(form).dataConvert()
-                //todo
-//                lastId=result.list.lastOrNull()?.lastId
+                lastId=result.list.lastOrNull()?.orderNo
                 result.isPull = type != QueryType.LOAD_MORE
                 emit(result.convertRtData())
             }, error = { e ->
                 logger("报错了：$e")
-//                emit(ReactiveData(NetStateType.ERROR, error = e.coverError()))
                 emit(e.convertError())
-            }, final = {
-                logger("最终返回")
             }, needLoadState = type == QueryType.INIT)
 
 

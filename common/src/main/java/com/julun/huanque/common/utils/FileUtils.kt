@@ -114,6 +114,22 @@ object FileUtils {
     }
 
     /**
+     * 返回指定文件 如果已经存在删除重新创建 保证文件是新的
+     */
+    fun getNewFile(path: String, name: String): File? {
+        val file = File(path, name)
+        if (file.exists()) {
+            file.delete()
+        }
+        try {
+            file.createNewFile()
+            return file
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+    /**
      * 删除文件或目录
      *
      * @param path 文件或目录。

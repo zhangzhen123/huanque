@@ -23,4 +23,19 @@ object RnConstant {
     //我的信息修改变化
     const val MY_PROFILE_CHANGE:String="MyProfileChange"
 
+
+    //私信
+    const val PRIVATE_MESSAGE_PAGE:String="PrivateMessagePage"
+    //语音界面
+    const val TELEPHONE_CALL_PAGE:String="TelephoneCallPage"
+    //私信页面 并且打开送礼面板
+    const val SEND_GIFT_PAGE:String="SendGiftPage"
+    //语音签名
+    const val RECORD_VOICE_PAGE:String="RecordVoicePage"
+    //举报
+    const val REPORT_USER_PAGE:String="ReportUserPage"
+    //实名认证
+    const val REAL_NAME_AUTH_PAGE:String="RealNameAuthPage"
+
+
 }

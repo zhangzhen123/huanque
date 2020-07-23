@@ -11,7 +11,7 @@ package com.julun.huanque.common.constant
 object ARouterConstant {
     /*--GROUP相关开始--*/
     //core使用
-    const val CORE = "core"
+    private const val CORE = "core"
 
     //app使用
     private const val APP = "app"
@@ -24,7 +24,7 @@ object ARouterConstant {
 
     //PrivateConversationActivity
     //声网播放器使用
-    const val AGORA = "AGORA"
+    private const val AGORA = "AGORA"
 
     /*--GROUP相关结束--*/
 
@@ -37,7 +37,7 @@ object ARouterConstant {
 
     const val MAIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/MAIN_ACTIVITY"
 
-    const val TEST_ACTIVITY = "/$APP$PREFIX_ACTIVITY/TEST_ACTIVITY"
+    const val TEST_ACTIVITY = "/$APP$PREFIX_ACTIVITY/TestActivity"
 
     const val APP_COMMON_SERVICE = "/$APP$SERVICE/AppCommonService"
     const val LOGIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/LoginActivity"
@@ -59,15 +59,18 @@ object ARouterConstant {
 
     //H5页面
     const val WEB_ACTIVITY = "/$COMMON$PREFIX_ACTIVITY/WebActivity"
+    //语音签名界面
+    const val VOICE_SIGN_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/VoiceSignActivity"
+
 
     /** 实名认证 start **/
-    const val REALNAME = "realname"
+    private const val REAL_NAME = "realname"
 
     //实名认证首页
-    const val REALNAME_MAIN_ACTIVITY = "/$REALNAME$PREFIX_ACTIVITY/RealNameActivity"
+    const val REAL_NAME_MAIN_ACTIVITY = "/$REAL_NAME$PREFIX_ACTIVITY/RealNameActivity"
 
     //实名认证服务
-    const val REALNAME_SERVICE = "/$REALNAME$SERVICE/RealNameService"
+    const val REALNAME_SERVICE = "/$REAL_NAME$SERVICE/RealNameService"
 
     /** 实名认证 end **/
 

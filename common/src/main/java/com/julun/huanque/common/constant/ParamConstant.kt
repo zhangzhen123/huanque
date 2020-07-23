@@ -27,9 +27,6 @@ object ParamConstant {
     //屏幕方法  横屏 or 竖屏  传递系统值
     const val ORIENTATION = "ORIENTATION"
 
-    //会话详情页使用
-    const val TARGETID = "TARGETID"
-
     //昵称
     const val NICKNAME = "NICKNAME"
 

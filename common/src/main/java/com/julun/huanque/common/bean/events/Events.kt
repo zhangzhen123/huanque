@@ -60,3 +60,13 @@ class FoldStrangerMessageEvent()
  * @param stranger 陌生人状态
  */
 class UserInfoChangeEvent(val userId: Long, val stranger: Boolean)
+
+/**
+ * 实名认证结果的广播
+ */
+class RPVerifyResult(val result:String)
+
+/**
+ * 语音签名修改成功的广播
+ */
+class VoiceSignEvent()
