@@ -9,6 +9,7 @@ import android.text.Spannable
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -468,6 +469,11 @@ class PrivateConversationActivity : BaseActivity() {
 
     // 删除光标所在前一位(不考虑切换到emoji时的光标位置，直接删除最后一位)
     private fun deleteInputEmoji() {
+        val keyCode = KeyEvent.KEYCODE_DEL
+        val keyEventDown = KeyEvent(KeyEvent.ACTION_DOWN, keyCode)
+        val keyEventUp = KeyEvent(KeyEvent.ACTION_UP, keyCode)
+        edit_text.onKeyDown(keyCode, keyEventDown)
+        edit_text.onKeyUp(keyCode, keyEventUp)
 //        var start = Selection.getSelectionStart(edit_text.text)
 //        var end = Selection.getSelectionEnd(edit_text.text)
 //        // 光标在第一位
