@@ -16,6 +16,7 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.message.R
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
@@ -141,7 +142,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                         MessageFormatUtils.renderImage(helper.getView(R.id.tv_content), msgConent?.context ?: return)
                     }
                     else -> {
-                        helper.setText(R.id.tv_content, msg.content)
+                        helper.setText(R.id.tv_content, EmojiSpanBuilder.buildEmotionSpannable(context, msg.content))
                     }
                 }
             }

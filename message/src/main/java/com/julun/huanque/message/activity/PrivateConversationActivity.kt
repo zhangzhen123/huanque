@@ -764,6 +764,10 @@ class PrivateConversationActivity : BaseActivity() {
                         val stranger = data.stranger[targetId] ?: false
                         mPrivateConversationViewModel?.updateIntimate(data.intimateLevel, stranger)
                     }
+                    if (data.msgFree) {
+                        //消息免费
+                        mPrivateConversationViewModel?.msgFeeData?.value = 0L
+                    }
                 }
             }
         })

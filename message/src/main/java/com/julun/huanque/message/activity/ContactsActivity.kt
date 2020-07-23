@@ -77,7 +77,7 @@ class ContactsActivity : BaseActivity() {
 
             override fun onPageSelected(position: Int) {
                 //选中对应的tab
-                if (mActivityViewModel?.followNeedRefresh == true || position == mFollowPosition) {
+                if (mActivityViewModel?.followNeedRefresh == true && position == mFollowPosition) {
                     //关注列表需要刷新，同时选中了关注tab,刷新关注列表
                     mActivityViewModel?.followRefreshFlag?.value = true
                 }
