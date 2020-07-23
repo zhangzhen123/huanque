@@ -45,7 +45,7 @@ class PrivateConversationSettingActivity : BaseActivity() {
     companion object {
         fun newInstance(activity: Activity, targetID: Long, sex: String) {
             val intent = Intent(activity, PrivateConversationSettingActivity::class.java)
-            intent.putExtra(ParamConstant.TARGETID, targetID)
+            intent.putExtra(ParamConstant.TARGET_USER_ID, targetID)
             intent.putExtra(ParamConstant.SEX, sex)
             activity.startActivity(intent)
         }
@@ -57,7 +57,7 @@ class PrivateConversationSettingActivity : BaseActivity() {
         findViewById<TextView>(R.id.tvTitle).text = "聊天详情"
 
         initViewModel()
-        mPrivateConversationSettingViewModel?.targetId = intent?.getLongExtra(ParamConstant.TARGETID, 0) ?: 0
+        mPrivateConversationSettingViewModel?.targetId = intent?.getLongExtra(ParamConstant.TARGET_USER_ID, 0) ?: 0
         mPrivateConversationSettingViewModel?.getConversationDisturbStatus()
         val sex = intent?.getStringExtra(ParamConstant.SEX) ?: ""
         ImageUtils.setDefaultHeaderPic(sdv_header, sex)

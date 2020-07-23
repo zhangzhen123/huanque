@@ -86,7 +86,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         fun newInstance(activity: Activity, targetId: Long, nickname: String = "", meetStatus: String = "", operation: String = "") {
             val intent = Intent(activity, PrivateConversationActivity::class.java)
-            intent.putExtra(ParamConstant.TARGETID, targetId)
+            intent.putExtra(ParamConstant.TARGET_USER_ID, targetId)
             intent.putExtra(ParamConstant.NICKNAME, nickname)
             intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
             intent.putExtra(ParamConstant.OPERATION, operation)
@@ -156,7 +156,7 @@ class PrivateConversationActivity : BaseActivity() {
         }
 
         initRecyclerView()
-        val targetID = intent?.getLongExtra(ParamConstant.TARGETID, 0)
+        val targetID = intent?.getLongExtra(ParamConstant.TARGET_USER_ID, 0)
         val nickName = intent?.getStringExtra(ParamConstant.NICKNAME) ?: ""
         val meetStatus = intent?.getStringExtra(ParamConstant.MEET_STATUS) ?: ""
         showTitleView(nickName, meetStatus)

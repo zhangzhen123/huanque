@@ -20,10 +20,7 @@ import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.bean.events.AliAuthCodeEvent
 import com.julun.huanque.common.bean.events.RPVerifyResult
 import com.julun.huanque.common.bean.events.VoiceSignEvent
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.OperationType
-import com.julun.huanque.common.constant.ParamConstant
-import com.julun.huanque.common.constant.RealNameConstants
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.FileUtils
@@ -428,7 +425,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     if (id != null) {
                         val userId = id.toLong()
                         val bundle = Bundle()
-                        bundle.putLong(ParamConstant.TARGETID, userId)
+                        bundle.putLong(ParamConstant.TARGET_USER_ID, userId)
                         //                        bundle.putString(ParamConstant.NICKNAME, nickname);
 //                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
                         ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
@@ -446,7 +443,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                                         logger("获取权限成功")
                                         val userId = id.toLong()
                                         val bundle = Bundle()
-                                        bundle.putLong(ParamConstant.TARGETID, userId)
+                                        bundle.putLong(ParamConstant.UserId, userId)
+                                        bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLING)
                                         //                        bundle.putString(ParamConstant.NICKNAME, nickname);
 //                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
 //                                        bundle.putString(ParamConstant.OPERATION, OperationType.CALL_PHONE)
@@ -471,7 +469,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     if (id != null) {
                         val userId = id.toLong()
                         val bundle = Bundle()
-                        bundle.putLong(ParamConstant.TARGETID, userId)
+                        bundle.putLong(ParamConstant.TARGET_USER_ID, userId)
                         //                        bundle.putString(ParamConstant.NICKNAME, nickname);
 //                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
                         bundle.putString(ParamConstant.OPERATION, OperationType.OPEN_GIFT)

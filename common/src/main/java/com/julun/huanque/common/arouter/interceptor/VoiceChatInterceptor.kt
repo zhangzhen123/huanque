@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import com.alibaba.android.arouter.facade.Postcard
@@ -194,7 +195,7 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
      * 显示亲密度弹窗
      */
     private fun showIntimateDialog() {
-        val act = (CommonInit.getInstance().getCurrentActivity() as? BaseActivity) ?: return
+        val act = (CommonInit.getInstance().getCurrentActivity() as? AppCompatActivity) ?: return
         IntimateUtil.intimatePrivilegeList.forEach {
             if (it.key == "YYTH") {
                 val bundle = Bundle()

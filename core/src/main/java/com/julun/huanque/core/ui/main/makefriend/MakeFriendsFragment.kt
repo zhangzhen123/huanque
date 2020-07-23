@@ -178,7 +178,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     } else {
                         logger.info("点击了私信--$position")
                         val bundle = Bundle()
-                        bundle.putLong(ParamConstant.TARGETID, bean.userId)
+                        bundle.putLong(ParamConstant.TARGET_USER_ID, bean.userId)
                         ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
                             .navigation(requireActivity())
                     }
