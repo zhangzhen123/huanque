@@ -13,11 +13,18 @@ import com.julun.huanque.message.R
  *@描述 亲密度特权
  */
 class PrivilegeAdapter : BaseQuickAdapter<IntimatePrivilege, BaseViewHolder>(R.layout.recycler_item_intimate_privilege) {
+    //当前亲密度等级
+    var currentLevel: Int = 0
+
     override fun convert(holder: BaseViewHolder, item: IntimatePrivilege) {
         if (holder == null || item == null) {
             return
         }
-        ImageUtils.loadImage(holder.getView(R.id.sdv_pic),item.icon,33f,33f)
-        holder.setText(R.id.tv_title,"Lv.${item.minLevel}${item.title}")
+        if (currentLevel >= item.minLevel) {
+            ImageUtils.loadImage(holder.getView(R.id.sdv_pic), item.icon, 33f, 33f)
+        } else {
+            ImageUtils.loadImage(holder.getView(R.id.sdv_pic), item.grayIcon, 33f, 33f)
+        }
+        holder.setText(R.id.tv_title, "Lv.${item.minLevel}${item.title}")
     }
 }

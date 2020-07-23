@@ -75,10 +75,11 @@
         app:layout_constraintTop_toBottomOf="@id/tv_title_make_friends" />
 
     <TextView
+        android:id="@+id/tv_charge_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:text="非好友私信费用"
+        android:text="非鹊友私信费用"
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toBottomOf="@id/view_charge"
@@ -95,9 +96,10 @@
         app:layout_constraintBottom_toBottomOf="@id/view_charge"
         app:layout_constraintRight_toRightOf="@id/view_charge"
         app:layout_constraintTop_toTopOf="@id/view_charge"
-        tools:text="20雀币/条" />
+        tools:text="20鹊币/条" />
 
     <ImageView
+        android:id="@+id/iv_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="15dp"

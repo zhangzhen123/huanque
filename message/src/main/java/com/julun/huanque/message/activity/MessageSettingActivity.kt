@@ -14,11 +14,14 @@ import com.julun.huanque.common.bean.events.FoldStrangerMessageEvent
 import com.julun.huanque.common.constant.ActivityCodes
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.NotificationUtils
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.fragment.PrivateChargeDialogFragment
@@ -49,7 +52,8 @@ class MessageSettingActivity : BaseActivity() {
         //折叠陌生人消息
         val folderMsg = SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)
         iv_fold_stranger_msg.isSelected = folderMsg
-
+        //todo 先不做判断
+//        showPriceSetView(SessionUtils.getSex() == Sex.FEMALE)
     }
 
     override fun onResume() {
@@ -126,6 +130,24 @@ class MessageSettingActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 设置价格视图
+     * 女性显示该视图,男性隐藏
+     */
+    private fun showPriceSetView(show: Boolean) {
+        if (show) {
+            view_charge.show()
+            tv_charge_title.show()
+            tv_charge.show()
+            iv_arrow.show()
+        } else {
+            view_charge.hide()
+            tv_charge_title.hide()
+            tv_charge.hide()
+            iv_arrow.hide()
+        }
+    }
+
     private fun prepareViewModel() {
         mViewModel = ViewModelProvider(this).get(MessageSettingViewModel::class.java)
 
@@ -161,7 +183,7 @@ class MessageSettingActivity : BaseActivity() {
 
     private fun setViews(info: MessageSettingBean) {
         tv_charge.text = if (info.privateMsgFee > 0) {
-            "${info.privateMsgFee}/条"
+            "${info.privateMsgFee}鹊币/条"
         } else {
             "免费"
         }

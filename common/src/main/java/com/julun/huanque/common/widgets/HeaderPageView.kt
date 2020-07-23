@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -49,10 +50,13 @@ class HeaderPageView : FrameLayout {
     }
 
     //向外暴露几个常用view
-    val imageViewBack:ImageView by lazy { ivback }
-    val textTitle:TextView by lazy { tvTitle }
-    val textOperation:TextView by lazy { tvOperation }
-    val imageOperation:ImageView by lazy { ivOperation }
+    val imageViewBack: ImageView by lazy { ivback }
+    val textTitle: TextView by lazy { tvTitle }
+    val textOperation: TextView by lazy { tvOperation }
+    val imageOperation: ImageView by lazy { ivOperation }
+
+    //容器
+    val headerContainer: View by lazy { header_container }
 
     /**
      * 初始化头部

@@ -114,4 +114,21 @@
         app:layout_constraintLeft_toRightOf="@id/iv_prerogative"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />
 
+    <ImageView
+        android:id="@+id/iv_delete"
+        android:layout_width="64dp"
+        android:layout_height="48dp"
+        android:src="@mipmap/icon_emoji_delete"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintRight_toRightOf="@id/view_bottom"
+        app:layout_constraintTop_toTopOf="@id/view_bottom" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="24dp"
+        android:background="@color/enabled"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintRight_toLeftOf="@id/iv_delete"
+        app:layout_constraintTop_toTopOf="@id/view_bottom" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

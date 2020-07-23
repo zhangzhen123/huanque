@@ -1,5 +1,7 @@
 package com.julun.huanque.common.constant
 
+import com.julun.huanque.common.bean.beans.IntimatePrivilege
+
 
 /**
  *
@@ -32,26 +34,14 @@ object BusiConstant {
 }
 
 /**
- * 参数key
- */
-object ParamKey {
-    //type
-    const val TYPE = "TYPE"
-
-    //USER
-    const val USER = "USER"
-
-    //语音会话被叫key
-    const val CallReceiveBean = "CallReceiveBean"
-
-}
-
-/**
  * SP使用的key
  */
 object SPParamKey {
     //语音通话花费确认弹窗
     const val VOICE_FEE_DIALOG_SHOW = "VOICE_FEE_DIALOG_SHOW"
+
+    //消息通话花费确认弹窗
+    const val MESSAGE_FEE_DIALOG_SHOW = "MESSAGE_FEE_DIALOG_SHOW"
 
     //已经进入过私聊详情页面的标识
     const val JOINED_PRIVATE_CHAT = "JOINED_PRIVATE_CHAT"
@@ -467,6 +457,7 @@ object MessageCustomBeanType {
     //模拟好友消息
     const val FRIEND_MESSAGE = "FRIEND_MESSAGE"
 }
+
 
 /**
  * banner资源类型

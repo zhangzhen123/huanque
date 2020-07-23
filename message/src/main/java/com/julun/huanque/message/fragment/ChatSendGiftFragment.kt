@@ -7,29 +7,37 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.viewpager2.widget.ViewPager2
+import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseVMDialogFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.ChatGiftInfo
 import com.julun.huanque.common.bean.beans.ChatGroupGift
 import com.julun.huanque.common.bean.beans.ChatSendResult
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.svga.SVGAHelper
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.message.R
 import com.julun.huanque.message.viewmodel.ChatSendGiftViewModel
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import kotlinx.android.synthetic.main.fragment_chat_send_gift.*
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.imageResource
 
 /**
@@ -56,13 +64,14 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
         tv_send.onClickNew {
             sendGift()
         }
-        initViewModel()
-        mViewModel.queryInfo()
+
     }
 
     override fun onStart() {
         super.onStart()
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT)
+        initViewModel()
+        mViewModel.queryInfo()
     }
 
     private fun initViewModel() {
@@ -77,12 +86,19 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
         mViewModel.sendResult.observe(viewLifecycleOwner, Observer {
             //
             tv_send.isEnabled = true
+            it ?: return@Observer
             logger.info("赠送返回=${it.state}")
             if (it.state == NetStateType.SUCCESS) {
 //                refreshSendResult(it.getT())
             } else if (it.state == NetStateType.ERROR) {
                 //dodo
-                ToastUtils.show(it.error?.busiMessage ?: return@Observer)
+                if (it.error?.busiCode == 1001) {
+                    //余额不足
+                    showBalanceNotEnough()
+                } else {
+                    ToastUtils.show(it.error?.busiMessage ?: return@Observer)
+                }
+                mViewModel.sendResult.value = null
             }
         })
 
@@ -94,7 +110,7 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
 
         })
         mPrivateConversationViewModel.balance.observe(this, Observer {
-            if(it != null){
+            if (it != null) {
                 tv_balance.text = "$it"
             }
         })
@@ -229,6 +245,25 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
             }
             holder.setText(R.id.tv_gift_name, item.giftName).setText(R.id.tv_gift_price, "${item.beans}鹊币")
 
+        }
+    }
+
+    /**
+     * 显示余额不足弹窗
+     */
+    private fun showBalanceNotEnough() {
+        activity?.let { act ->
+            MyAlertDialog(act).showAlertWithOK(
+                "您的鹊币余额不足",
+                MyAlertDialog.MyDialogCallback(onRight = {
+                    //跳转充值页面
+                    (act as? BaseActivity)?.lifecycleScope?.launch {
+                        SVGAHelper.logger.info("threadName = ${Thread.currentThread().name}")
+                        ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
+                    }
+
+                }), "余额不足", "去充值"
+            )
         }
     }
 }

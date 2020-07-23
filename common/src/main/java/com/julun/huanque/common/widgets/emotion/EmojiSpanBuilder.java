@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  */
 public class EmojiSpanBuilder {
 
-    private static Pattern sPatternEmotion = Pattern.compile(
+    public static Pattern sPatternEmotion = Pattern.compile(
             "\\[([\u4e00-\u9fa5\\w])+\\]|[\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]");
 
     /**

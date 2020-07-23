@@ -79,25 +79,25 @@ class VoiceChatViewModel : BaseViewModel() {
      * 创建会话
      */
     fun createConmmunication(userId: Long) {
-        viewModelScope.launch {
-            request({
-                val result = socialService.createCommunication(CreateCommunicationForm(userId)).dataConvert()
-                netcallBeanData.value = result
-            }, {
-                if (it is ResponseError) {
-                    //对方忙
-                    when (it.busiCode) {
-                        1403 -> {
-                            //对方忙
-                            voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_BUSY)
-                        }
-
-                    }
-
-                    currentVoiceState.value = VOICE_CLOSE
-                }
-            })
-        }
+//        viewModelScope.launch {
+//            request({
+//                val result = socialService.createCommunication(CreateCommunicationForm(userId)).dataConvert()
+//                netcallBeanData.value = result
+//            }, {
+//                if (it is ResponseError) {
+//                    //对方忙
+//                    when (it.busiCode) {
+//                        1403 -> {
+//                            //对方忙
+//                            voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_BUSY)
+//                        }
+//
+//                    }
+//
+//                    currentVoiceState.value = VOICE_CLOSE
+//                }
+//            })
+//        }
     }
 
     /**

@@ -20,14 +20,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
+import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
-import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
+import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
@@ -46,8 +47,11 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.message.fragment.IntimateDetailFragment
+import com.julun.huanque.message.fragment.SingleIntimateprivilegeFragment
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
@@ -56,18 +60,18 @@ import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.px2dip
+import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import java.util.concurrent.TimeUnit
 
 
@@ -130,9 +134,10 @@ class PrivateConversationActivity : BaseActivity() {
     override fun isRegisterEventBus() = true
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        val ivOperation = findViewById<ImageView>(R.id.ivOperation)
-        ivOperation.imageResource = R.mipmap.icon_conversation_setting
-        ivOperation.show()
+
+        header_view.headerContainer.backgroundColor = GlobalUtils.getColor(R.color.color_gray_three)
+        header_view.imageOperation.imageResource = R.mipmap.icon_conversation_setting
+        header_view.imageOperation.show()
 
         initViewModel()
         //之前是否加入过私聊
@@ -170,7 +175,7 @@ class PrivateConversationActivity : BaseActivity() {
      * 显示标题
      */
     private fun showTitleView(nickname: String, meetStatus: String) {
-        val title = findViewById<TextView>(R.id.tvTitle)
+        val title = header_view.textTitle
         if (nickname.isEmpty()) {
             title.text = "欢鹊"
         } else {
@@ -184,7 +189,7 @@ class PrivateConversationActivity : BaseActivity() {
             title.compoundDrawablePadding = 5
         } else {
             title.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-            title.compoundDrawablePadding = 5
+            title.compoundDrawablePadding = 0
         }
 
 
@@ -275,7 +280,7 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.msgFeeData?.observe(this, Observer {
             if (it != null) {
-                if (it > 0) {
+                if (it > 0 || SessionUtils.getSex() == Sex.FEMALE) {
                     //不免费
                     tv_free.hide()
                 } else {
@@ -292,7 +297,7 @@ class PrivateConversationActivity : BaseActivity() {
     private fun refreshPrivilegeEmoji(bean: IntimateBean) {
         //当前亲密度等级
         val currentLent = bean.intimateLevel
-        bean.intimatePrivilegeList.forEach {
+        IntimateUtil.intimatePrivilegeList.forEach {
             if (it.key == "ZSBQ") {
                 val emojiLevel = it.minLevel
                 panel_emotion.setIntimate(emojiLevel, currentLent)
@@ -303,10 +308,10 @@ class PrivateConversationActivity : BaseActivity() {
 
 
     override fun initEvents(rootView: View) {
-        findViewById<View>(R.id.ivback).onClickNew {
+        header_view.imageViewBack.onClickNew {
             finish()
         }
-        findViewById<ImageView>(R.id.ivOperation).onClickNew {
+        header_view.imageOperation.onClickNew {
             //打开会话设置
             val chatUserBean = mPrivateConversationViewModel?.chatInfoData?.value ?: return@onClickNew
             PrivateConversationSettingActivity.newInstance(this, chatUserBean.userId, chatUserBean.sex)
@@ -318,11 +323,35 @@ class PrivateConversationActivity : BaseActivity() {
 
         tv_send.onClickNew {
             //发送按钮
+            val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
+            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
+            if (msgFee != null && msgFee > 0 && !dialogShow) {
+                //消息需要付费
+                showMessageFeeDialog(true, msgFee)
+                return@onClickNew
+            }
+
             val message = edit_text.text.toString()
             sendChatMessage(message)
             edit_text.setText("")
         }
-        iv_pic.onClickNew { checkPermissions() }
+
+        edit_text.textChangedListener {
+            afterTextChanged {
+                tv_send.isEnabled = it.toString().isNotEmpty()
+            }
+        }
+
+        iv_pic.onClickNew {
+            val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
+            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
+            if (msgFee != null && msgFee > 0 && !dialogShow) {
+                //消息需要付费
+                showMessageFeeDialog(true, msgFee)
+                return@onClickNew
+            }
+            checkPicPermissions()
+        }
         iv_intimate.onClickNew {
             //显示欢遇弹窗
             mIntimateDetailFragment = mIntimateDetailFragment ?: IntimateDetailFragment.newInstance()
@@ -331,22 +360,23 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_phone.onClickNew {
             //跳转语音通话页面
-            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, false)
-            if (!dialogShow) {
-                //未显示过价格弹窗，显示弹窗
-                MyAlertDialog(this).showAlertWithOKAndCancel(
-                    "语音通话${mPrivateConversationViewModel?.basicBean?.value?.voiceFee}鹊币/分钟",
-                    MyAlertDialog.MyDialogCallback(onRight = {
-                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
-                        judgeIntimateLevel()
-                    }, onCancel = {
-                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
-                    }), "语音通话费用", "发起通话"
-                )
-            } else {
-                judgeIntimateLevel()
-            }
-
+//            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, false)
+//            if (!dialogShow) {
+//                //未显示过价格弹窗，显示弹窗
+//                MyAlertDialog(this).showAlertWithOKAndCancel(
+//                    "语音通话${mPrivateConversationViewModel?.basicBean?.value?.voiceFee}鹊币/分钟",
+//                    MyAlertDialog.MyDialogCallback(onRight = {
+//                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
+//                        judgeIntimateLevelForVoice()
+//                    }, onCancel = {
+//                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
+//                    }), "语音通话费用", "发起通话"
+//                )
+//            } else {
+//                judgeIntimateLevelForVoice()
+//            }
+            //检查权限
+            checkRecordPermissions()
         }
 
         iv_gift.onClickNew {
@@ -388,7 +418,11 @@ class PrivateConversationActivity : BaseActivity() {
         tv_edit.onClickNew {
             //小鹊助手，编辑
             showXiaoQueView(false)
-            edit_text.setText(getActiveWord())
+            val text = getActiveWord()
+            edit_text.setText(text)
+            //唤起键盘
+            edit_text.requestFocus()
+//            ScreenUtils.showSoftInput(tv_edit)
         }
 
         iv_que_close.onClickNew {
@@ -424,11 +458,111 @@ class PrivateConversationActivity : BaseActivity() {
             override fun onActionUp() {
                 mEmojiPopupWindow?.dismiss()
             }
+
+            override fun onClickDelete() {
+                //点击了删除事件
+                deleteInputEmoji()
+            }
+
+            override fun showPrivilegeFragment(code: String) {
+                //显示特权弹窗
+                val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
+                val currentLevel = intimate.intimateLevel
+                IntimateUtil.intimatePrivilegeList.forEach {
+                    if (it.key == "ZSBQ") {
+                        SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(supportFragmentManager, "SingleIntimateprivilegeFragment")
+                        return
+                    }
+                }
+            }
         }
     }
 
+    // 删除光标所在前一位(不考虑切换到emoji时的光标位置，直接删除最后一位)
+    private fun deleteInputEmoji() {
+//        var start = Selection.getSelectionStart(edit_text.text)
+//        var end = Selection.getSelectionEnd(edit_text.text)
+//        // 光标在第一位
+//        if (start == 0 && end == 0) return
+//        var sourceTxt = edit_text.text
+//        if (sourceTxt.length == 0) return
+//
+//        // 光标后面的消息串
+//        var lastMsg: String = ""
+//        if (end != sourceTxt.length) {
+//            lastMsg = sourceTxt.substring(end)
+//        }
+//        // 结束光标默认为当前光标前一位
+//        var endIndex = end - 1
+//        if (sourceTxt.contains(EmojiUtil.emojiRegex.toRegex())) {
+//            // 光标前一位，要删除的字符
+//            // 最后一位是“]”结尾，判断是否是emoji
+//            var delText = sourceTxt[end - 1].toString()
+//            if (delText == "]") {
+//                // 光标前半段消息
+//                var tempText = sourceTxt.substring(0, end)
+//                var matcher = Pattern.compile(EmojiUtil.emojiRegex).matcher(tempText)
+//                while (matcher.find()) {
+//                    if (matcher.end() == tempText.length) {
+//                        var emojiTxt = matcher.group()
+//                        if (EmojiUtil.EmojiTextArray.contains(emojiTxt)) {
+//                            endIndex = matcher.start()
+//                        }
+//                    }
+//                }
+//            }
+//            // 0到光标之前的消息 + 删除前光标后面剩余的消息串
+//            var newContent = sourceTxt.substring(0, endIndex) + lastMsg
+//            // 删除后的消息串是否还包含emoji图标
+//            if (newContent.contains(EmojiUtil.emojiRegex.toRegex())) {
+//                chatInputEt.text = EmojiUtil.message2emoji(newContent)
+//            } else {
+//                chatInputEt.setText(newContent)
+//            }
+//        } else {
+//            // 聊天消息中不包含emoji，直接删除最后一位
+//            chatInputEt.setText(sourceTxt.substring(0, endIndex) + lastMsg)
+//        }
+//        // 设置新的光标
+//        Selection.setSelection(chatInputEt.text, endIndex)
+    }
+
+
+    /**
+     * 显示消息付费弹窗
+     * @param text true 标识文字   false   标识图片
+     * @param fee 价格
+     */
+    private fun showMessageFeeDialog(text: Boolean, fee: Long) {
+        val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
+        if (!dialogShow) {
+            //未显示过价格弹窗，显示弹窗
+            MyAlertDialog(this).showAlertWithOKAndCancel(
+                "私信消息${fee}鹊币/条",
+                MyAlertDialog.MyDialogCallback(onRight = {
+                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                    if (text) {
+                        tv_send.performClick()
+                    } else {
+                        iv_pic.performClick()
+                    }
+                }, onCancel = {
+                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                }), "私信消息费用", "继续发送"
+            )
+        } else {
+            if (text) {
+                tv_send.performClick()
+            } else {
+                iv_pic.performClick()
+            }
+        }
+    }
+
+
     //悬浮表情
     private var mEmojiPopupWindow: PopupWindow? = null
+
 
     /**
      * 显示表情悬浮效果
@@ -466,7 +600,9 @@ class PrivateConversationActivity : BaseActivity() {
         }
 
         rootView.findViewById<ImageView>(R.id.iv_emoji)?.imageResource = emotion.drawableRes
-        rootView.findViewById<TextView>(R.id.tv_emoji)?.text = emotion.text
+        val content = emotion.text
+        val name = content.substring(content.indexOf("[") + 1, content.indexOf("]"))
+        rootView.findViewById<TextView>(R.id.tv_emoji)?.text = name
 
 
 
@@ -527,10 +663,10 @@ class PrivateConversationActivity : BaseActivity() {
     /**
      * 判断当前亲密度等级是否可以发起语音通话
      */
-    private fun judgeIntimateLevel() {
+    private fun judgeIntimateLevelForVoice() {
         val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
         val currentLevel = intimate.intimateLevel
-        intimate.intimatePrivilegeList.forEach {
+        IntimateUtil.intimatePrivilegeList.forEach {
             if (it.key == "YYTH") {
                 val needLevel = it.minLevel
                 if (needLevel <= currentLevel) {
@@ -538,7 +674,28 @@ class PrivateConversationActivity : BaseActivity() {
                     judgeBalance()
                 } else {
                     //亲密度等级不足
-                    ToastUtils.show("亲密度等级不足")
+                    SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(this, "SingleIntimateprivilegeFragment")
+                }
+                return
+            }
+        }
+    }
+
+    /**
+     * 判断当前亲密等级是否可以发送图片
+     */
+    private fun judgeIntimateLevelForPic() {
+        val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
+        val currentLevel = intimate.intimateLevel
+        IntimateUtil.intimatePrivilegeList.forEach {
+            if (it.key == "FSTP") {
+                val needLevel = it.minLevel
+                if (needLevel <= currentLevel) {
+                    //亲密度允许
+                    goToPictureSelectPager()
+                } else {
+                    //亲密度等级不足
+                    SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(this, "SingleIntimateprivilegeFragment")
                 }
                 return
             }
@@ -569,8 +726,8 @@ class PrivateConversationActivity : BaseActivity() {
 
         if (mPrivateConversationViewModel?.basicBean?.value?.answer == true) {
             val bundle = Bundle()
-            bundle.putString(ParamKey.TYPE, ConmmunicationUserType.CALLING)
-            bundle.putSerializable(ParamKey.USER, mPrivateConversationViewModel?.chatInfoData?.value ?: return)
+            bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLING)
+            bundle.putLong(ParamConstant.UserId, mPrivateConversationViewModel?.targetIdData?.value ?: return)
             ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
         } else {
             ToastUtils.show("对方关闭了语音通话服务")
@@ -639,34 +796,35 @@ class PrivateConversationActivity : BaseActivity() {
                         scrollToBottom()
                     }
                 }
-            }.addViewClickListener {
-                onClickBefore { view ->
-                    //可选实现，监听触发器的点击
-                    if (view?.id == R.id.iv_emoji) {
+            }
+                .addViewClickListener {
+                    onClickBefore { view ->
+                        //可选实现，监听触发器的点击
+                        if (view?.id == R.id.iv_emoji) {
+                            scrollToBottom()
+                        }
+                    }
+                }.addPanelChangeListener {
+                    onKeyboard {
+                        //可选实现，输入法显示回调
+                        iv_emoji.isSelected = false
                         scrollToBottom()
                     }
-                }
-            }.addPanelChangeListener {
-                onKeyboard {
-                    //可选实现，输入法显示回调
-                    iv_emoji.isSelected = false
-                    scrollToBottom()
-                }
-                onNone {
-                    //可选实现，默认状态回调
-                    iv_emoji.isSelected = false
-                }
-                onPanel { view ->
-                    //可选实现，面板显示回调
-                    if (view is PanelView) {
-                        iv_emoji.isSelected = view.id == R.id.panel_emotion
-                        scrollToBottom()
+                    onNone {
+                        //可选实现，默认状态回调
+                        iv_emoji.isSelected = false
                     }
-                }
-                onPanelSizeChange { panelView, _, _, _, width, height ->
-                    //可选实现，输入法动态调整时引起的面板高度变化动态回调
-                    if (panelView is PanelView) {
-                        when (panelView.id) {
+                    onPanel { view ->
+                        //可选实现，面板显示回调
+                        if (view is PanelView) {
+                            iv_emoji.isSelected = view.id == R.id.panel_emotion
+                            scrollToBottom()
+                        }
+                    }
+                    onPanelSizeChange { panelView, _, _, _, width, height ->
+                        //可选实现，输入法动态调整时引起的面板高度变化动态回调
+                        if (panelView is PanelView) {
+                            when (panelView.id) {
 //                            R.id.panel_emotion -> {
 //                                val pagerView = findViewById<EmotionPagerView>(R.id.view_pager)
 //                                val viewPagerSize: Int = height - DensityUtils.dpToPx(30)
@@ -678,11 +836,16 @@ class PrivateConversationActivity : BaseActivity() {
 //                                    viewPagerSize
 //                                )
 //                            }
+                            }
                         }
                     }
-                }
-            }.contentCanScrollOutside(false)    //可选模式，默认true，当面板实现时内容区域是否往上滑动
-                .logTrack(true)                 //可选，默认false，是否开启log信息输出
+                }    //可选模式，默认true，当面板实现时内容区域是否往上滑动
+//                .logTrack(true)                 //可选，默认false，是否开启log信息输出
+                .addContentScrollMeasurer(object : ContentScrollMeasurer {
+                    override fun getScrollDistance(defaultDistance: Int) = 0
+
+                    override fun getScrollViewId() = R.id.iv_background
+                })
                 .build(false)                      //可选，默认false，是否默认打开输入法
         }
     }
@@ -721,18 +884,38 @@ class PrivateConversationActivity : BaseActivity() {
                         ImageActivity.start(this, 0, medias = listOf(StringHelper.getOssImgUrl("${content.remoteUri}")))
                     }
                 }
+                R.id.sdv_header -> {
+                    //跳转他人主页
+                    if (tempData.senderUserId == "${SessionUtils.getUserId()}") {
+                        //本人发送消息
+                        RNPageActivity.start(
+                            this,
+                            RnConstant.PERSONAL_HOMEPAGE,
+                            Bundle().apply { putLong("userId", SessionUtils.getUserId()) })
+                    } else {
+                        //对方发送消息
+                        try {
+                            RNPageActivity.start(
+                                this,
+                                RnConstant.PERSONAL_HOMEPAGE,
+                                Bundle().apply { putLong("userId", tempData.targetId.toLong()) })
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+                R.id.tv_content -> {
+                    val content = tempData.content
+                    if (content is CustomSimulateMessage) {
+                        if (content.type == MessageCustomBeanType.Voice_Conmmunication_Simulate) {
+                            //点击的是语音消息,直接拨打电话
+                            iv_phone.performClick()
+                        }
+                    }
+                }
             }
         }
-//        mAdapter.isUpFetchEnable = true
-//        //预加载2个position
-//        mAdapter.setStartUpFetchPosition(2)
-//        mAdapter.setUpFetchListener {
-//            val currLast = mAdapter.getItem(0)
-//            mPrivateConversationViewModel?.getMessageList(
-//                currLast?.messageId ?: return@setUpFetchListener
-//            )
-//            mAdapter.isUpFetching = true
-//        }
+
         mAdapter.upFetchModule.isUpFetchEnable = true
         //预加载2个position
         mAdapter.upFetchModule.startUpFetchPosition = 2
@@ -859,7 +1042,10 @@ class PrivateConversationActivity : BaseActivity() {
         }
     }
 
-    private fun checkPermissions() {
+    /**
+     * 检查图片权限
+     */
+    private fun checkPicPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions
             .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -867,7 +1053,36 @@ class PrivateConversationActivity : BaseActivity() {
                 when {
                     permission.granted -> {
                         logger.info("获取权限成功")
-                        goToPictureSelectPager()
+                        //判断亲密特权
+                        judgeIntimateLevelForPic()
+                    }
+                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+                        ToastUtils.show("权限无法获取")
+                    else -> {
+                        logger.info("获取权限被永久拒绝")
+                        val message = "无法获取到相机/存储权限，请手动到设置中开启"
+                        ToastUtils.show(message)
+                    }
+                }
+
+            }
+    }
+
+    /**
+     * 检查录音权限
+     */
+    private fun checkRecordPermissions() {
+        val rxPermissions = RxPermissions(this)
+        rxPermissions
+            .requestEachCombined(Manifest.permission.RECORD_AUDIO)
+            .subscribe { permission ->
+                when {
+                    permission.granted -> {
+                        logger.info("获取权限成功")
+                        val bundle = Bundle()
+                        bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLING)
+                        bundle.putLong(ParamConstant.UserId, mPrivateConversationViewModel?.targetIdData?.value ?: return@subscribe)
+                        ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
                     }
                     permission.shouldShowRequestPermissionRationale -> // Oups permission denied
                         ToastUtils.show("权限无法获取")
@@ -996,6 +1211,11 @@ class PrivateConversationActivity : BaseActivity() {
         val key = GlobalUtils.getBackgroundKey(mPrivateConversationViewModel?.targetIdData?.value ?: 0)
         val picSource = SharedPreferencesUtils.getString(key, "")
         if (picSource.isNotEmpty()) {
+//            val params = iv_background.layoutParams as? ConstraintLayout.LayoutParams
+//            params?.height = ScreenUtils.getScreenHeight() - dip(44 + 104)
+//            params?.width = ScreenUtils.getScreenWidth()
+//            iv_background.layoutParams = params
+
             ImageUtils.loadNativeFilePath(
                 iv_background,
                 picSource,

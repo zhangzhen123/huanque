@@ -20,7 +20,7 @@ class SendChatGiftForm(var friendId: Long, var chatGiftId: Int, var count: Int)
 /**
  * 创建语音通话的form
  */
-class CreateCommunicationForm(var friendId: Long, var confirmed: String = "True")
+class CreateCommunicationForm(var friendId: Long, var confirmed: String? = null)
 
 class NetcallIdForm(var callId: Long)
 
@@ -82,11 +82,11 @@ class FindNewsForm {
     var startAdsVersion: String? = null
 }
 
-class BindForm(var code:String)
-class BindPhoneForm(var code:String,var mobile:String)
-class WithdrawApplyForm(var tplId:Int,var type:String)
+class BindForm(var code: String)
+class BindPhoneForm(var code: String, var mobile: String)
+class WithdrawApplyForm(var tplId: Int, var type: String)
 
-class WithdrawHistoryForm ( var lastId: Long?=null)
+class WithdrawHistoryForm(var lastId: Long? = null)
 
 /**
  * 校验nickname使用

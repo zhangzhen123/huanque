@@ -12,6 +12,7 @@ import com.julun.huanque.common.bean.beans.ConversationBasicBean
 import com.julun.huanque.common.bean.beans.NetcallBean
 import com.julun.huanque.common.bean.beans.SocialListBean
 import com.julun.huanque.common.bean.forms.*
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -50,7 +51,7 @@ interface SocialService {
      * 创建通话
      */
     @POST("social/friend/netcall/create")
-    suspend fun createCommunication(@Body form: CreateCommunicationForm): Root<NetcallBean>
+    fun createCommunication(@Body form: CreateCommunicationForm): Observable<Root<NetcallBean>>
 
     /**
      * 获取语音会话详情

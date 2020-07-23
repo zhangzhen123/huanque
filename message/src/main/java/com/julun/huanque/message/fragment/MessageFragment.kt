@@ -125,7 +125,7 @@ class MessageFragment : BaseFragment() {
             try {
                 val longId = targetId.toLong()
                 if (view.id == R.id.sdv_header) {
-                    //跳转他们主页
+                    //跳转他人主页
                     RNPageActivity.start(
                         requireActivity(),
                         RnConstant.PERSONAL_HOMEPAGE,
@@ -147,7 +147,7 @@ class MessageFragment : BaseFragment() {
                     resources.getString(R.string.delete_conversation_or_not),
                     MyAlertDialog.MyDialogCallback(onRight = {
                         //确定删除
-                        if (tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender) {
+                        if (tId == null || tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender) {
                             ToastUtils.show("该消息无法删除")
                             return@MyDialogCallback
                         }
@@ -222,7 +222,7 @@ class MessageFragment : BaseFragment() {
         tv_message_unread.onClickNew {
             activity?.let { act ->
 //                PrivateConversationActivity.newInstance(act, 20000143)
-                PrivateConversationActivity.newInstance(act, 10)
+                PrivateConversationActivity.newInstance(act, 20000248)
             }
         }
 
@@ -231,7 +231,7 @@ class MessageFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateMessageReceive(bean: EventMessageBean) {
         mMessageViewModel.queryRongPrivateCount()
-        mMessageViewModel.refreshConversation(bean.targetId,bean.stranger)
+        mMessageViewModel.refreshConversation(bean.targetId, bean.stranger)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

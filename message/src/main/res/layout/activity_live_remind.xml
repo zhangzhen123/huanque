@@ -35,7 +35,7 @@
         android:id="@+id/tvTips"
         android:layout_width="0dp"
         android:layout_height="@dimen/dimen_30"
-        android:layout_marginLeft="@dimen/dimen_15"
+        android:paddingLeft="15dp"
         android:layout_marginTop="@dimen/dimen_44"
         android:background="#FFFAEE"
         android:gravity="left|center_vertical"

@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.view.content.ContentContainerImpl
 import com.effective.android.panel.view.content.IContentContainer
 import com.effective.android.panel.view.content.IInputAction
@@ -20,7 +21,8 @@ import com.julun.huanque.common.R
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-class CusContentContainer @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ConstraintLayout(context, attrs, defStyleAttr), IContentContainer {
+class CusContentContainer @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    ConstraintLayout(context, attrs, defStyleAttr), IContentContainer {
     @IdRes
     private var editTextId = 0
 
@@ -41,9 +43,6 @@ class CusContentContainer @JvmOverloads constructor(context: Context?, attrs: At
         contentContainer = ContentContainerImpl(this, autoResetByOnTouch, editTextId, resetViewId)
     }
 
-    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int) {
-        contentContainer.layoutContainer(l, t, r, b)
-    }
 
     override fun findTriggerView(id: Int): View? {
         return contentContainer.findTriggerView(id)
@@ -68,6 +67,18 @@ class CusContentContainer @JvmOverloads constructor(context: Context?, attrs: At
     override fun getInputActionImpl(): IInputAction = contentContainer.getInputActionImpl()
 
     override fun getResetActionImpl(): IResetAction = contentContainer.getResetActionImpl()
+    override fun layoutContainer(
+        l: Int,
+        t: Int,
+        r: Int,
+        b: Int,
+        contentScrollMeasurer: MutableList<ContentScrollMeasurer>,
+        defaultScrollHeight: Int,
+        canScrollOutsize: Boolean,
+        reset: Boolean
+    ) {
+        contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurer, defaultScrollHeight, canScrollOutsize, reset)
+    }
 
     init {
         initView(attrs, defStyleAttr, 0)

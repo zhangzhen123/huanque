@@ -11,6 +11,7 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.ConversationBasicBean
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.IntimateUtil
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.PrivilegeAdapter
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
@@ -25,6 +26,9 @@ class IntimateDetailFragment : BaseDialogFragment() {
     companion object {
         fun newInstance() = IntimateDetailFragment()
     }
+
+    //当前亲密度等级
+    private var mCurrentIntimateLevel = 0
 
     private val mViewModel: IntimateDetailViewModel by activityViewModels()
     private val mAdapter = PrivilegeAdapter()
@@ -42,7 +46,8 @@ class IntimateDetailFragment : BaseDialogFragment() {
         recycler_privilege.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         recycler_privilege.adapter = mAdapter
         mAdapter.setOnItemClickListener { adapter, view, position ->
-
+            val bean = mAdapter.getItem(position)
+            SingleIntimateprivilegeFragment.newInstance(bean, mCurrentIntimateLevel).show(childFragmentManager, "SingleIntimateprivilegeFragment")
         }
     }
 
@@ -64,6 +69,7 @@ class IntimateDetailFragment : BaseDialogFragment() {
     }
 
     private fun showViewByData(bean: ConversationBasicBean) {
+
         //显示对方头像和昵称
         val otherInfo = bean.friendUser
         ImageUtils.loadImage(sdv_other, otherInfo.headPic)
@@ -75,9 +81,12 @@ class IntimateDetailFragment : BaseDialogFragment() {
 
         //显示亲密度相关
         val intimateBean = bean.intimate
-        tv_meet_level.text = "Lv.${intimateBean.intimateLevel}"
+        mCurrentIntimateLevel = intimateBean.intimateLevel
+        mAdapter.currentLevel = mCurrentIntimateLevel
 
-        val progress = if (intimateBean.intimateLevel == intimateBean.nextIntimateLevel) {
+        tv_meet_level.text = "Lv.${mCurrentIntimateLevel}"
+
+        val progress = if (mCurrentIntimateLevel == intimateBean.nextIntimateLevel) {
             //满级
             tv_meet_attention.text = "亲密度${intimateBean.intimateNum}"
             100
@@ -87,10 +96,10 @@ class IntimateDetailFragment : BaseDialogFragment() {
         }
         progress_meet.progress = progress
 
-        val privilegeList = intimateBean.intimatePrivilegeList
+        val privilegeList = IntimateUtil.intimatePrivilegeList
         var enablePrivilege = 0
         privilegeList.forEach {
-            if (intimateBean.intimateLevel >= it.minLevel) {
+            if (mCurrentIntimateLevel >= it.minLevel) {
                 enablePrivilege++
             }
         }

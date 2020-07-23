@@ -46,14 +46,6 @@ import java.util.concurrent.TimeUnit
  */
 @Route(path = ARouterConstant.VOICE_CHAT_ACTIVITY)
 class VoiceChatActivity : BaseActivity(), EventHandler {
-    companion object {
-        //拨打状态
-        const val CALLING = "CALLING"
-
-        //挂断状态
-        const val CLOSE = "CLOSE"
-    }
-
     private val TAG = "VoiceChatActivity"
     private var mVoiceChatViewModel: VoiceChatViewModel? = null
 
@@ -71,28 +63,26 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         StatusBarUtil.setTransparent(this)
         initViewModel()
-        mType = intent?.getStringExtra(ParamKey.TYPE) ?: ""
+        mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
+
+        val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
+        if (netCallBean == null) {
+            ToastUtils.show("没有对方数据")
+            return
+        }
+        mVoiceChatViewModel?.netcallBeanData?.value = netCallBean
+
         if (mType == ConmmunicationUserType.CALLING) {
             //主叫
             mVoiceChatViewModel?.createUserId = SessionUtils.getUserId()
-            val mTargetUserInfo = intent?.getSerializableExtra(ParamKey.USER) as? ChatUser
-            if (mTargetUserInfo == null) {
-                ToastUtils.show("没有对方数据")
-                return
-            }
-            mVoiceChatViewModel?.targetUserBean?.value = mTargetUserInfo
             mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CALLING
         } else if (mType == ConmmunicationUserType.CALLED) {
             //被叫
-            val netCallBean = intent?.getSerializableExtra(ParamKey.CallReceiveBean) as? NetcallBean
-            if (netCallBean == null) {
-                ToastUtils.show("没有对方数据")
-                return
-            }
             mVoiceChatViewModel?.createUserId = netCallBean.callerInfo.userId
-            mVoiceChatViewModel?.netcallBeanData?.value = netCallBean
             mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_WAIT_ACCEPT
         }
+
+
 
         AgoraManager.mHandler.addHandler(this)
         if (mType == ConmmunicationUserType.CALLING) {
@@ -566,7 +556,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 发起呼叫
      */
     private fun calling() {
-        mVoiceChatViewModel?.createConmmunication(mVoiceChatViewModel?.targetUserBean?.value?.userId ?: 0)
+//        mVoiceChatViewModel?.createConmmunication(mVoiceChatViewModel?.targetUserBean?.value?.userId ?: 0)
         //超时计算
         mDisposable = Observable.timer(10, TimeUnit.SECONDS)
             .bindUntilEvent(this, ActivityEvent.DESTROY)
@@ -660,7 +650,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     tv_surplus_time.text = it
                 }, { it.printStackTrace() })
         }
-
     }
 
 
@@ -676,5 +665,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         MessageProcessor.clearProcessors(false)
     }
 
+    override fun onBackPressed() {
+        //不允许返回键关闭该页面
+//        super.onBackPressed()
+    }
 
 }

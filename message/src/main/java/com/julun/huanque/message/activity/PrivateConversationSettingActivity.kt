@@ -22,6 +22,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.message.R
+import com.julun.huanque.message.fragment.SingleIntimateprivilegeFragment
 import com.julun.huanque.message.viewmodel.PrivateConversationSettingViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -170,7 +171,7 @@ class PrivateConversationSettingActivity : BaseActivity() {
                 when {
                     permission.granted -> {
                         logger.info("获取权限成功")
-                        goToPictureSelectPager()
+                        judgeLevel()
                     }
                     permission.shouldShowRequestPermissionRationale -> // Oups permission denied
                         ToastUtils.show("权限无法获取")
@@ -182,6 +183,27 @@ class PrivateConversationSettingActivity : BaseActivity() {
                 }
 
             }
+    }
+
+    /**
+     * 判断等级是否足够
+     */
+    private fun judgeLevel() {
+        val data = mPrivateConversationSettingViewModel?.chatDetailData?.value
+        val currentLevel = data?.intimateLevel ?: 0
+        if (currentLevel >= (data?.chatBackgroundLevel ?: 0)) {
+            //亲密度等级足够
+            goToPictureSelectPager()
+        } else {
+            //亲密度等级不够，显示特权弹窗
+            IntimateUtil.intimatePrivilegeList.forEach {
+                if (it.key == "LTBJ") {
+                    SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(supportFragmentManager, "SingleIntimateprivilegeFragment")
+                    return
+                }
+            }
+
+        }
     }
 
     /**
@@ -250,6 +272,7 @@ class PrivateConversationSettingActivity : BaseActivity() {
 //                    sendChatMessage(pic = path, localPic = media.path, messageType = Message_Pic)
                     SharedPreferencesUtils.commitString(GlobalUtils.getBackgroundKey(mPrivateConversationSettingViewModel?.targetId ?: 0), media.path)
                     EventBus.getDefault().post(ChatBackgroundChangedEvent(mPrivateConversationSettingViewModel?.targetId ?: 0))
+                    finish()
 //                    ImageUtils.copyImageToSdCard(media.path,"${SessionUtils.getUserId()}-${mPrivateConversationSettingViewModel?.targetId}")
 //                    if(!mLoadingDialog.isShowing){
 //                        mLoadingDialog.showDialog()
