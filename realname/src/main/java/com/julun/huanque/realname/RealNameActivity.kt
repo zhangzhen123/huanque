@@ -1,14 +1,12 @@
 package com.julun.huanque.realname
 
 import android.os.Bundle
-import android.text.InputType
-import android.text.method.DigitsKeyListener
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.events.RPVerifyResult
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.RealNameConstants
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
@@ -18,6 +16,7 @@ import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_main_realname.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import org.jetbrains.anko.textColor
 
@@ -27,7 +26,7 @@ import org.jetbrains.anko.textColor
  * @since 1.0.0
  * @date 2020/07/09
  */
-@Route(path = ARouterConstant.REALNAME_MAIN_ACTIVITY)
+@Route(path = ARouterConstant.REAL_NAME_MAIN_ACTIVITY)
 class RealNameActivity : BaseActivity() {
 
     private var mRealNameService: IRealNameService? = null
@@ -66,28 +65,36 @@ class RealNameActivity : BaseActivity() {
             mRealNameService =
                 mRealNameService ?: ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
                     .navigation() as? IRealNameService
-            mRealNameService?.startRealName(this,edtRealname.text.toString(),edtIDCard.text.toString(),object :RealNameCallback{
-                override fun onCallback(status: String, des: String) {
-                    when (status) {
-                        RealNameConstants.TYPE_SUCCESS -> {
-                            //认证成功
-                            ToastUtils.show(des)
-                        }
-                        RealNameConstants.TYPE_FAIL, RealNameConstants.TYPE_ERROR -> {
-                            //认证失败 or 认证网络请求异常
-                            ToastUtils.show(des)
-                        }
-                        else -> {
-                            //认证取消
-                            ToastUtils.show("${if(des.isNotEmpty()){
-                                des
-                            }else{
-                                "认证取消"
-                            }}")
+            mRealNameService?.startRealName(
+                this,
+                edtRealname.text.toString(),
+                edtIDCard.text.toString(),
+                object : RealNameCallback {
+                    override fun onCallback(status: String, des: String) {
+                        EventBus.getDefault().post(RPVerifyResult(status))
+                        when (status) {
+                            RealNameConstants.TYPE_SUCCESS -> {
+                                //认证成功
+                                ToastUtils.show(des)
+                                finish()
+                            }
+                            RealNameConstants.TYPE_FAIL, RealNameConstants.TYPE_ERROR -> {
+                                //认证失败 or 认证网络请求异常
+                                ToastUtils.show(des)
+                            }
+                            else -> {
+                                //认证取消
+                                ToastUtils.show(
+                                    if (des.isNotEmpty()) {
+                                        des
+                                    } else {
+                                        "认证取消"
+                                    }
+                                )
+                            }
                         }
                     }
-                }
-            })
+                })
         }
     }
 
@@ -95,7 +102,7 @@ class RealNameActivity : BaseActivity() {
         if (edtRealname.editableText.isNotEmpty() && edtIDCard.editableText.length >= 18) {
             btnCommit?.isEnabled = true
             btnCommit?.textColor = GlobalUtils.getColor(R.color.black_333)
-        }else{
+        } else {
             btnCommit?.isEnabled = false
             btnCommit?.textColor = GlobalUtils.getColor(R.color.black_999)
         }

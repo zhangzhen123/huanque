@@ -15,6 +15,7 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.WithdrawRecord
+import com.julun.huanque.common.constant.WithdrawStatus
 import com.julun.huanque.common.constant.WithdrawType
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.onClickNew
@@ -45,16 +46,20 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
                     "微信(${item.nickname})"
                 }
                 holder.setText(R.id.tv_draw_title, title).setText(R.id.tv_draw_time, "提现时间：${item.time}")
-                    .setText(R.id.tv_draw_money, item.money)
+                    .setText(R.id.tv_draw_money, "${item.money}元")
                 val state = holder.getView<TextView>(R.id.tv_draw_state)
                 when (item.status) {
-                    "打款中" -> {
+                    WithdrawStatus.Processing-> {
                         state.text = "打款中"
                         state.textColor = Color.parseColor("#FE5F63")
                     }
-                    "已到账" -> {
+                    WithdrawStatus.Success -> {
                         state.text = "已到账"
                         state.textColor = Color.parseColor("#32CE3C")
+                    }
+                    WithdrawStatus.Failure -> {
+                        state.text = "打款失败"
+                        state.textColor = Color.parseColor("#FE5F63")
                     }
                 }
 

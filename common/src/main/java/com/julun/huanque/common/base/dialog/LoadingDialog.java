@@ -42,7 +42,7 @@ public class LoadingDialog extends AlertDialog {
 
     public void showDialog(String text) {
         dialogMsg.setText(text);
-        setCancelable(true);
+        setCancelable(false);
         show();
         setContentView(rootView);
     }

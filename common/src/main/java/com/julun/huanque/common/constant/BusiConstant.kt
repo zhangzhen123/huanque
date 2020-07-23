@@ -556,11 +556,17 @@ object MineToolType {
  */
 object UpdateType {
     //强制更新
-    val Force = "Force"
+    const val Force = "Force"
 
     //推荐更新
-    val Recommend = "Recommend"
+    const val Recommend = "Recommend"
 
     //无更新
-    val None = "None"
+    const val None = "None"
+}
+//    Processing：打款中 Success：已到账 Failure：打款失败
+object WithdrawStatus{
+    const val Processing = "Processing"
+    const val Success = "Success"
+    const val Failure = "Failure"
 }

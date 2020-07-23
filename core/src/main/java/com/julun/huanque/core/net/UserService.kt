@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.bean.forms.*
+import com.julun.huanque.common.database.table.Session
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -100,13 +100,19 @@ interface UserService {
     suspend fun reportTypeList(): Root<ArrayList<ManagerInfo>>
 
     /**
-     * 获取语音信息
+     * 获取语音文本提示信息
      */
     @POST("user/acct/data/getVoiceSignPoint")
-    suspend fun getVoiceSignPoint(@Body form: EmptyForm= EmptyForm()): Root<VoiceSignPointBean>
+    suspend fun getVoiceSignPoint(@Body form: EmptyForm = EmptyForm()): Root<VoiceSignPointBean>
+
+    /**
+     * 修改语音签名
+     */
+    @POST("user/acct/data/updateVoice")
+    suspend fun updateVoice(@Body form: UpdateVoiceForm): Root<InfoPerfection>
 
     @POST("user/acct/data/checkNickName")
-    suspend fun checkNickName(@Body form : NicknameForm) : Root<VoidResult>
+    suspend fun checkNickName(@Body form: NicknameForm): Root<VoidResult>
 
 
     /**
@@ -114,11 +120,12 @@ interface UserService {
      */
     @POST("user/acct/info/bindMobile")
     suspend fun bindMobile(@Body form: BindPhoneForm): Root<VoidResult>
+
     /**
      * 获取支付宝登录授权信息
      */
     @POST("user/acct/login/alipayAuthInfo")
-    suspend fun getAlipayAuthInfo(@Body form: EmptyForm= EmptyForm()): Root<AliAuthInfo>
+    suspend fun getAlipayAuthInfo(@Body form: EmptyForm = EmptyForm()): Root<AliAuthInfo>
 
 
     /**
@@ -126,6 +133,7 @@ interface UserService {
      */
     @POST("user/acct/info/bindAlipay")
     suspend fun bindAliPay(@Body form: BindForm): Root<BindResultBean>
+
     /**
      * 绑定微信
      */

@@ -74,5 +74,9 @@
             android:name=".ui.withdraw.WithdrawHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.record_voice.VoiceSignActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
     </application>
 </manifest>
