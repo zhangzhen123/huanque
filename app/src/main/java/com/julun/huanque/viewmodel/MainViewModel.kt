@@ -12,7 +12,7 @@ import com.julun.huanque.common.bean.forms.NetcallIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ConmmunicationUserType
-import com.julun.huanque.common.constant.ParamKey
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.*
 import kotlinx.coroutines.launch
@@ -119,8 +119,8 @@ class MainViewModel : BaseViewModel() {
             request({
                 val result = socialService.voiceCallInfo(NetcallIdForm(callId)).dataConvert()
                 val bundle = Bundle()
-                bundle.putString(ParamKey.TYPE, ConmmunicationUserType.CALLED)
-                bundle.putSerializable(ParamKey.CallReceiveBean, result)
+                bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLED)
+                bundle.putSerializable(ParamConstant.NetCallBean, result)
                 ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
 
             })

@@ -45,6 +45,7 @@ dependencies {
     api project(':common')
     api project(":rnlib")
     api files('libs/alipaySdk-15.7.7-20200702160044.aar')
+    api rootProject.ext.dependencies["AGORA"]
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
 //    implementation project(":alipaySdk-15.6.5-20190718211159-noUtdid")
 }

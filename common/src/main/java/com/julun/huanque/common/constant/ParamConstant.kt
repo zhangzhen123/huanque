@@ -57,6 +57,18 @@ object ParamConstant {
     //当前亲密度等级
     const val CurrentIntimatePrivilege = "CurrentIntimatePrivilege"
 
+    //USER
+    const val USER = "USER"
+
+    //用户ID
+    const val UserId = "UserId"
+
+    //语音会话被叫key
+    const val CallReceiveBean = "CallReceiveBean"
+
+    //语音会话传递数据key
+    const val NetCallBean = "NetCallBean"
+
 
     //UUID
     const val UUID = "UUID"

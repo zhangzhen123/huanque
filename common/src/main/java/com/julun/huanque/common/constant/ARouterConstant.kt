@@ -18,9 +18,11 @@ object ARouterConstant {
 
     //common
     private const val COMMON = "common"
+
     //message使用
     private const val MESSAGE = "message"
-//PrivateConversationActivity
+
+    //PrivateConversationActivity
     //声网播放器使用
     const val AGORA = "AGORA"
 
@@ -42,21 +44,31 @@ object ARouterConstant {
 
     //语音页面
     const val VOICE_CHAT_ACTIVITY = "/$AGORA$PREFIX_ACTIVITY/VoiceChatActivity"
+
     //message模块
     const val PRIVATE_CONVERSATION_ACTIVITY = "/$MESSAGE$PREFIX_ACTIVITY/PrivateConversationActivity"
+
+    //亲密特权弹窗
+    const val SINGLE_INTIMATE_PRIVILEGE_FRAGMENT = "/$MESSAGE$PREFIX_FRAGMENT/SingleIntimateprivilegeFragment"
+
     //举报页面
     const val REPORT_ACTIVITY = "/$APP$PREFIX_ACTIVITY/ReportActivity"
+
     //充值页面
     const val RECHARGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/RechargeCenterActivity"
+
     //H5页面
     const val WEB_ACTIVITY = "/$COMMON$PREFIX_ACTIVITY/WebActivity"
 
     /** 实名认证 start **/
     const val REALNAME = "realname"
+
     //实名认证首页
     const val REALNAME_MAIN_ACTIVITY = "/$REALNAME$PREFIX_ACTIVITY/RealNameActivity"
+
     //实名认证服务
     const val REALNAME_SERVICE = "/$REALNAME$SERVICE/RealNameService"
+
     /** 实名认证 end **/
 
     //微信支付服务

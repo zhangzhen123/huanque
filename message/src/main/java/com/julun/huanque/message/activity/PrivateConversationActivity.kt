@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.text.Selection
 import android.text.Spannable
 import android.text.TextUtils
 import android.util.Log
@@ -15,8 +14,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,7 +25,6 @@ import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.IntimateBean
-import com.julun.huanque.common.bean.beans.IntimatePrivilege
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
@@ -77,7 +73,6 @@ import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.px2dip
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import java.util.concurrent.TimeUnit
-import java.util.regex.Pattern
 
 
 /**
@@ -355,7 +350,7 @@ class PrivateConversationActivity : BaseActivity() {
                 showMessageFeeDialog(true, msgFee)
                 return@onClickNew
             }
-            checkPermissions()
+            checkPicPermissions()
         }
         iv_intimate.onClickNew {
             //显示欢遇弹窗
@@ -365,22 +360,23 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_phone.onClickNew {
             //跳转语音通话页面
-            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, false)
-            if (!dialogShow) {
-                //未显示过价格弹窗，显示弹窗
-                MyAlertDialog(this).showAlertWithOKAndCancel(
-                    "语音通话${mPrivateConversationViewModel?.basicBean?.value?.voiceFee}鹊币/分钟",
-                    MyAlertDialog.MyDialogCallback(onRight = {
-                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
-                        judgeIntimateLevelForVoice()
-                    }, onCancel = {
-                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
-                    }), "语音通话费用", "发起通话"
-                )
-            } else {
-                judgeIntimateLevelForVoice()
-            }
-
+//            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, false)
+//            if (!dialogShow) {
+//                //未显示过价格弹窗，显示弹窗
+//                MyAlertDialog(this).showAlertWithOKAndCancel(
+//                    "语音通话${mPrivateConversationViewModel?.basicBean?.value?.voiceFee}鹊币/分钟",
+//                    MyAlertDialog.MyDialogCallback(onRight = {
+//                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
+//                        judgeIntimateLevelForVoice()
+//                    }, onCancel = {
+//                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
+//                    }), "语音通话费用", "发起通话"
+//                )
+//            } else {
+//                judgeIntimateLevelForVoice()
+//            }
+            //检查权限
+            checkRecordPermissions()
         }
 
         iv_gift.onClickNew {
@@ -730,8 +726,8 @@ class PrivateConversationActivity : BaseActivity() {
 
         if (mPrivateConversationViewModel?.basicBean?.value?.answer == true) {
             val bundle = Bundle()
-            bundle.putString(ParamKey.TYPE, ConmmunicationUserType.CALLING)
-            bundle.putSerializable(ParamKey.USER, mPrivateConversationViewModel?.chatInfoData?.value ?: return)
+            bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLING)
+            bundle.putLong(ParamConstant.UserId, mPrivateConversationViewModel?.targetIdData?.value ?: return)
             ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
         } else {
             ToastUtils.show("对方关闭了语音通话服务")
@@ -1046,7 +1042,10 @@ class PrivateConversationActivity : BaseActivity() {
         }
     }
 
-    private fun checkPermissions() {
+    /**
+     * 检查图片权限
+     */
+    private fun checkPicPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions
             .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -1056,6 +1055,34 @@ class PrivateConversationActivity : BaseActivity() {
                         logger.info("获取权限成功")
                         //判断亲密特权
                         judgeIntimateLevelForPic()
+                    }
+                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+                        ToastUtils.show("权限无法获取")
+                    else -> {
+                        logger.info("获取权限被永久拒绝")
+                        val message = "无法获取到相机/存储权限，请手动到设置中开启"
+                        ToastUtils.show(message)
+                    }
+                }
+
+            }
+    }
+
+    /**
+     * 检查录音权限
+     */
+    private fun checkRecordPermissions() {
+        val rxPermissions = RxPermissions(this)
+        rxPermissions
+            .requestEachCombined(Manifest.permission.RECORD_AUDIO)
+            .subscribe { permission ->
+                when {
+                    permission.granted -> {
+                        logger.info("获取权限成功")
+                        val bundle = Bundle()
+                        bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLING)
+                        bundle.putLong(ParamConstant.UserId, mPrivateConversationViewModel?.targetIdData?.value ?: return@subscribe)
+                        ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
                     }
                     permission.shouldShowRequestPermissionRationale -> // Oups permission denied
                         ToastUtils.show("权限无法获取")

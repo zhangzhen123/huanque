@@ -2,25 +2,14 @@ package com.julun.huanque.message.fragment
 
 import android.os.Bundle
 import android.view.Gravity
-import android.view.ViewGroup
-import android.view.WindowManager
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseDialogFragment
-import com.julun.huanque.common.bean.beans.ConversationBasicBean
 import com.julun.huanque.common.bean.beans.IntimatePrivilege
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
-import com.julun.huanque.common.constant.ParamKey
-import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ImageUtils
-import com.julun.huanque.common.utils.IntimateUtil
 import com.julun.huanque.message.R
-import com.julun.huanque.message.adapter.PrivilegeAdapter
-import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
-import kotlinx.android.synthetic.main.fragment_meet_detail.*
 import kotlinx.android.synthetic.main.fragment_single_intimate_privilege.*
 
 /**
@@ -28,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_single_intimate_privilege.*
  *@创建时间 2020/7/9 11:28
  *@描述 单个亲密度特权说明弹窗
  */
+@Route(path = ARouterConstant.SINGLE_INTIMATE_PRIVILEGE_FRAGMENT)
 class SingleIntimateprivilegeFragment : BaseDialogFragment() {
     companion object {
         fun newInstance(bean: IntimatePrivilege, currentLevel: Int): SingleIntimateprivilegeFragment {

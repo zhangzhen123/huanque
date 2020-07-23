@@ -34,21 +34,6 @@ object BusiConstant {
 }
 
 /**
- * 参数key
- */
-object ParamKey {
-    //type
-    const val TYPE = "TYPE"
-
-    //USER
-    const val USER = "USER"
-
-    //语音会话被叫key
-    const val CallReceiveBean = "CallReceiveBean"
-
-}
-
-/**
  * SP使用的key
  */
 object SPParamKey {
