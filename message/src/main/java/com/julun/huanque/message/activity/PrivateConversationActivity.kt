@@ -46,6 +46,7 @@ import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
+import com.julun.huanque.message.fragment.CopyDialogFragment
 import com.julun.huanque.message.fragment.IntimateDetailFragment
 import com.julun.huanque.message.fragment.SingleIntimateprivilegeFragment
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
@@ -338,6 +339,8 @@ class PrivateConversationActivity : BaseActivity() {
 
         edit_text.textChangedListener {
             afterTextChanged {
+//                val editable: Editable = edit_text.editableText
+//                edit_text.setText(EmojiSpanBuilder.buildEmotionSpannable(this@PrivateConversationActivity, editable.toString()))
                 tv_send.isEnabled = it.toString().isNotEmpty()
             }
         }
@@ -360,21 +363,6 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_phone.onClickNew {
             //跳转语音通话页面
-//            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, false)
-//            if (!dialogShow) {
-//                //未显示过价格弹窗，显示弹窗
-//                MyAlertDialog(this).showAlertWithOKAndCancel(
-//                    "语音通话${mPrivateConversationViewModel?.basicBean?.value?.voiceFee}鹊币/分钟",
-//                    MyAlertDialog.MyDialogCallback(onRight = {
-//                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
-//                        judgeIntimateLevelForVoice()
-//                    }, onCancel = {
-//                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
-//                    }), "语音通话费用", "发起通话"
-//                )
-//            } else {
-//                judgeIntimateLevelForVoice()
-//            }
             //检查权限
             checkRecordPermissions()
         }
@@ -604,10 +592,24 @@ class PrivateConversationActivity : BaseActivity() {
         val name = content.substring(content.indexOf("[") + 1, content.indexOf("]"))
         rootView.findViewById<TextView>(R.id.tv_emoji)?.text = name
 
-
-
         mEmojiPopupWindow?.isOutsideTouchable = false
         mEmojiPopupWindow?.showAtLocation(view, Gravity.TOP or Gravity.LEFT, dx, dy)
+    }
+
+    /**
+     * 显示复制视图
+     */
+    private fun showCopyView(view: View, content: String) {
+        val location = IntArray(2)
+        view.getLocationOnScreen(location)
+
+        val localParams = IntArray(4)
+        localParams[0] = location[0]
+        localParams[1] = location[1]
+        localParams[2] = view.width
+        localParams[3] = view.height
+
+        CopyDialogFragment.newInstance(content, localParams).show(supportFragmentManager, "CopyDialogFragment")
     }
 
     /**
@@ -657,27 +659,6 @@ class PrivateConversationActivity : BaseActivity() {
             }
         } else {
             mNoReceiveDisposable?.dispose()
-        }
-    }
-
-    /**
-     * 判断当前亲密度等级是否可以发起语音通话
-     */
-    private fun judgeIntimateLevelForVoice() {
-        val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
-        val currentLevel = intimate.intimateLevel
-        IntimateUtil.intimatePrivilegeList.forEach {
-            if (it.key == "YYTH") {
-                val needLevel = it.minLevel
-                if (needLevel <= currentLevel) {
-                    //亲密度允许，接下来判断余额
-                    judgeBalance()
-                } else {
-                    //亲密度等级不足
-                    SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(this, "SingleIntimateprivilegeFragment")
-                }
-                return
-            }
         }
     }
 
@@ -914,6 +895,23 @@ class PrivateConversationActivity : BaseActivity() {
                     }
                 }
             }
+        }
+
+        mAdapter.setOnItemChildLongClickListener { adapter, view, position ->
+            val tempData = mAdapter.getItem(position)
+            when (view.id) {
+                R.id.tv_content -> {
+                    val content = tempData.content
+                    if (content is TextMessage) {
+                        //显示复制弹窗
+                        showCopyView(view, content.content)
+                    }
+                }
+                else -> {
+
+                }
+            }
+            return@setOnItemChildLongClickListener true
         }
 
         mAdapter.upFetchModule.isUpFetchEnable = true
