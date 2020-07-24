@@ -19,6 +19,7 @@ import com.julun.rnlib.reactpackage.OpenPageReactPackage
 import com.julun.rnlib.reactpackage.GlobalReactPackage
 import com.julun.rnlib.reactpackage.UploadReactPackage
 import com.luck.picture.lib.config.PictureConfig
+import com.reactnativecommunity.viewpager.RNCViewPagerPackage
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage
 import com.swmansion.reanimated.ReanimatedPackage
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage
@@ -62,6 +63,7 @@ object RnManager {
                 .addPackage(RNSoundPackage())
                 .addPackage(SvgPackage())
                 .addPackage(ReanimatedPackage())
+                .addPackage(RNCViewPagerPackage())
                 .addPackage(ReactVideoPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)

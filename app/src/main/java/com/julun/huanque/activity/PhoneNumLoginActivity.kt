@@ -9,7 +9,11 @@ import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -30,14 +34,19 @@ import java.util.concurrent.TimeUnit
  *@创建者   dong
  *@创建时间 2020/7/3 13:47
  *@描述 验证码登录页面
+ * 新增手机绑定功能
  */
 class PhoneNumLoginActivity : BaseActivity() {
     private val loadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
 
     companion object {
-        const val MAXCOUNT = 60L
+        const val MAX_COUNT = 60L
+        const val TYPE_LOGIN = 0
+        const val TYPE_BIND = 1
     }
 
+    //是登录操作还是绑定操作
+    private var type: Int = 0
     private var mViewModel: PhoneNumLoginViewModel? = null
 
     //是否正在倒计时
@@ -46,7 +55,18 @@ class PhoneNumLoginActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_phone_num
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        type = intent.getIntExtra(IntentParamKey.TYPE.name, 0)
         initViewModel()
+
+        if (type == TYPE_LOGIN) {
+            tv_title.show()
+            csl_bind_tips.hide()
+            login_btn.text = "登录"
+        } else {
+            tv_title.hide()
+            csl_bind_tips.show()
+            login_btn.text = "绑定"
+        }
     }
 
 
@@ -208,10 +228,10 @@ class PhoneNumLoginActivity : BaseActivity() {
         stopTick()
         mIsCountting = true
         ToastUtils.show(R.string.send_code_success)
-        disposable = Observable.intervalRange(1, MAXCOUNT + 1, 0, 1, TimeUnit.SECONDS)
+        disposable = Observable.intervalRange(1, MAX_COUNT + 1, 0, 1, TimeUnit.SECONDS)
             .bindUntilEvent(this, ActivityEvent.DESTROY)
             .observeOn(AndroidSchedulers.mainThread())
-            .map { MAXCOUNT + 1 - it }
+            .map { MAX_COUNT + 1 - it }
             .subscribe({
                 get_code.text = "${it}s"
             }, {}, {
