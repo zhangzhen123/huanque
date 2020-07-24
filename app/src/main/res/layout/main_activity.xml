@@ -72,8 +72,8 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_make_friends"
-            android:layout_width="340px"
-            android:layout_height="117px"
+            android:layout_width="122dp"
+            android:layout_height="42dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="15dp"
             app:lottie_fileName="json/make_friends.json"
@@ -106,8 +106,8 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_leyuan"
-            android:layout_width="340px"
-            android:layout_height="117px"
+            android:layout_width="122dp"
+            android:layout_height="42dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="15dp"
             app:lottie_fileName="json/leyuan.json"
@@ -142,8 +142,8 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_message"
-            android:layout_width="340px"
-            android:layout_height="117px"
+            android:layout_width="122dp"
+            android:layout_height="42dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="15dp"
             app:lottie_fileName="json/message.json"
@@ -176,8 +176,8 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_mine"
-            android:layout_width="340px"
-            android:layout_height="117px"
+            android:layout_width="122dp"
+            android:layout_height="42dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="18dp"
             app:lottie_fileName="json/mine.json"
