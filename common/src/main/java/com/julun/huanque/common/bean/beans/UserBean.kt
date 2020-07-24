@@ -101,7 +101,9 @@ class IntimateBean(
     //用户ID数据
     var userIds: LongArray = longArrayOf(),
     //是否是陌生人状态
-    var stranger: HashMap<Long, Boolean> = hashMapOf()
+    var stranger: HashMap<Long, Boolean> = hashMapOf(),
+    //消息免费标识
+    var msgFree: Boolean = false
 )
 
 /**

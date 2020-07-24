@@ -11,6 +11,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.ViewPager
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.constant.ContactsTabType
@@ -54,6 +55,9 @@ class ContactsActivity : BaseActivity() {
     //默认选中的tab标识
     private var mDefaultType = ""
 
+    //关注tab索引
+    private var mFollowPosition = -1
+
     override fun getLayoutId() = R.layout.act_contacts
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -64,6 +68,22 @@ class ContactsActivity : BaseActivity() {
         mPagerAdapter = ProgramFragmentAdapter(supportFragmentManager, this)
         pager.adapter = mPagerAdapter
         initMagicIndicator()
+        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                //选中对应的tab
+                if (mActivityViewModel?.followNeedRefresh == true && position == mFollowPosition) {
+                    //关注列表需要刷新，同时选中了关注tab,刷新关注列表
+                    mActivityViewModel?.followRefreshFlag?.value = true
+                }
+            }
+
+        })
     }
 
     /**
@@ -74,6 +94,12 @@ class ContactsActivity : BaseActivity() {
         mActivityViewModel?.tabListData?.observe(this, Observer {
             if (it != null) {
                 refreshTabList(it)
+                it.forEachIndexed { index, bean ->
+                    if (bean.userDataTabType == ContactsTabType.Follow) {
+                        mFollowPosition = index
+                        return@Observer
+                    }
+                }
             }
         })
 

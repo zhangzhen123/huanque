@@ -181,6 +181,14 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
             }
         })
 
+        mActivityViewModel.followRefreshFlag.observe(this, Observer {
+            if (it == true && mViewModel.mType == ContactsTabType.Follow) {
+                //需要刷新关注列表
+                swiperefreshlayout.isRefreshing = true
+                mViewModel.queryInfo(QueryType.LOAD_MORE)
+            }
+        })
+
         mViewModel.stateList.observe(viewLifecycleOwner, Observer {
             //
             swiperefreshlayout.isRefreshing = false
@@ -202,6 +210,8 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
             }
 
         })
+
+
     }
 
     /**

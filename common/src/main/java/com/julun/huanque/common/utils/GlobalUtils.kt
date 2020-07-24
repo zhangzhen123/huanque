@@ -1,13 +1,17 @@
 package com.julun.huanque.common.utils
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.view.Gravity
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -222,7 +226,7 @@ object GlobalUtils {
                 extra = conent.extra
             }
         }
-        if(extra.isEmpty()){
+        if (extra.isEmpty()) {
             return false
         }
         var user: RoomUserChatExtra? = null
@@ -247,6 +251,17 @@ object GlobalUtils {
                     HuanQueDatabase.getInstance().chatUserDao().insert(chatUser)
                 }
             }
+        }
+    }
+
+    /**
+     * 复制文案
+     */
+    fun copyToSharePlate(contxt: Context, text: String, attentionContent: String = "内容已复制到剪切板") {
+        val myClipboard: ClipboardManager = contxt.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        myClipboard.setPrimaryClip(ClipData.newPlainText("text", text))
+        if (attentionContent.isNotEmpty()) {
+            ToastUtils.showCustom(attentionContent, Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL or Gravity.BOTTOM)
         }
     }
 }

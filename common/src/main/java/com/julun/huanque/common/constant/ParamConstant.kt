@@ -45,6 +45,9 @@ object ParamConstant {
     //显示的视图位置
     const val LOCATION = "LOCATION"
 
+    //内容
+    const val CONTENT = "CONTENT"
+
     //陌生人标识
     const val STRANGER = "STRANGER"
 
