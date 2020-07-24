@@ -67,7 +67,10 @@ object StringHelper {
      * 生成uuid
      */
     fun uuid(): String = UUID.randomUUID().toString()
-
+    /**
+     * 生成uuid 去掉“-”
+     */
+    fun uuid2(): String = UUID.randomUUID().toString().replace("-","")
     /**
      * 判断字符串是否为空
 

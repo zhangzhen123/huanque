@@ -124,8 +124,8 @@ object AppHelper {
      */
     fun getMD5(str: String): String {
         val temp =
-            MD5Util.EncodePassword(str + MsgTag.PREFIX) + MsgTag.TAG
-        return MD5Util.EncodePassword(temp)
+            MD5Util.encodePassword(str + MsgTag.PREFIX) + MsgTag.TAG
+        return MD5Util.encodePassword(temp)
     }
 
     /**

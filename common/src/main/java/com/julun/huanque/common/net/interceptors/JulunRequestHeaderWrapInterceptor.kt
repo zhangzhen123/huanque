@@ -1,11 +1,7 @@
 package com.julun.huanque.common.net.interceptors
 
-import com.julun.huanque.common.R
 import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.utils.MD5Util
-import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.common.utils.NetUtils
 import okhttp3.*
 import okio.Buffer
 import okio.BufferedSource
@@ -50,7 +46,7 @@ class JulunRequestHeaderWrapInterceptor : Interceptor {
         val httpUrl: HttpUrl = request.url().newBuilder()
                 .build()
         val value = "$lmInfoParams#$strBody#${BusiConstant.API_KEY}"
-        val info = MD5Util.EncodePassword(value)
+        val info = MD5Util.encodePassword(value)
         request = request.newBuilder()
                 .addHeader(BusiConstant.REQUEST_HEADER_FLAG, "G=$info&$lmInfoParams")
 //                .addHeader("JVer", huanqueApp.APP_VERSION)

@@ -138,6 +138,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="跳转语音签名" />
+
+            <Button
+                android:id="@+id/tv_test_md5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="md5耗时测试" />
+
         </LinearLayout>
 
     </ScrollView>

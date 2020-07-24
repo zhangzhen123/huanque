@@ -76,7 +76,7 @@ object OssUpLoadManager {
             logger.info("开始任务队列：${Thread.currentThread()}")
             Observable.just(file).observeOn(Schedulers.computation()).map { f ->
                 logger.info("当前的文件：" + f + "当前的线程：${Thread.currentThread()}")
-                val name = "$position/${StringHelper.uuid()}.${FileUtils.getFilextension(f)}"
+                val name = "$position/${StringHelper.uuid2()}.${FileUtils.getFilextension(f)}"
                 var curresult = ""
                 val success = mService.syncPutImage(name, f, null)
                 if (success) {
@@ -127,7 +127,7 @@ object OssUpLoadManager {
 
         Observable.just(path).observeOn(Schedulers.io()).map { f ->
             logger.info("当前的文件：$f")
-            val name = "$position/${StringHelper.uuid()}.${FileUtils.getFilextension(f)}"
+            val name = "$position/${StringHelper.uuid2()}.${FileUtils.getFilextension(f)}"
             var result = ""
             val success = mService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
                 override fun onProgress(request: PutObjectRequest?, currentSize: Long, totalSize: Long) {
@@ -207,7 +207,7 @@ object OssUpLoadManager {
                 Observable.just(file).observeOn(Schedulers.io()).map { f ->
                     logger.info("当前的文件：$f")
                     val name =
-                        "$ImagePosition/${StringHelper.uuid()}.${FileUtils.getFilextension(
+                        "$ImagePosition/${StringHelper.uuid2()}.${FileUtils.getFilextension(
                             file
                         )}"
                     var curResult = ""
@@ -221,8 +221,8 @@ object OssUpLoadManager {
             } else {
                 Observable.just(file).observeOn(Schedulers.io()).map { f ->
                     logger.info("当前的文件：$f")
-//                    val name = "$VIDEO_POSITION/${SessionUtils.getUserId()}/${StringHelper.uuid()}.${FileUtils.getFilextension(file)}"
-                    val name = "$position/${StringHelper.uuid()}.${FileUtils.getFilextension(file)}"
+//                    val name = "$VIDEO_POSITION/${SessionUtils.getUserId()}/${StringHelper.uuid2()}.${FileUtils.getFilextension(file)}"
+                    val name = "$position/${StringHelper.uuid2()}.${FileUtils.getFilextension(file)}"
                     var curResult = ""
                     val success = mService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
                         override fun onProgress(request: PutObjectRequest?, currentSize: Long, totalSize: Long) {

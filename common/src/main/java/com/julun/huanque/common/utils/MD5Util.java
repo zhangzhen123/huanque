@@ -35,10 +35,10 @@ public class MD5Util {
         if (loginPassword == null || loginKey == null) {
             return null;
         }
-        return EncodePassword (loginPassword + loginKey);
+        return encodePassword(loginPassword + loginKey);
     }
 
-    public static String EncodePassword (String input) {
+    public static String encodePassword(String input) {
         if (input == null)
             return null;
         byte[] digesta = null;
@@ -51,7 +51,32 @@ public class MD5Util {
         }
         return byte2hex (digesta);
     }
-
+    public static String encodeBySHA (String input) {
+        if (input == null)
+            return null;
+        byte[] digesta = null;
+        try {
+            MessageDigest alga = MessageDigest.getInstance ("SHA");
+            alga.update (input.getBytes ());
+            digesta = alga.digest ();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace ();
+        }
+        return byte2hex (digesta);
+    }
+    public static String encodeBySHA256 (String input) {
+        if (input == null)
+            return null;
+        byte[] digesta = null;
+        try {
+            MessageDigest alga = MessageDigest.getInstance ("SHA-256");
+            alga.update (input.getBytes ());
+            digesta = alga.digest ();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace ();
+        }
+        return byte2hex (digesta);
+    }
     public static String getFileMD5String (File file) throws Exception {
         MessageDigest messagedigest = MessageDigest.getInstance ("MD5");
 

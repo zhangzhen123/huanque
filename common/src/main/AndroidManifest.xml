@@ -60,9 +60,15 @@
                 <action android:name="io.rong.push.intent.THIRD_PARTY_PUSH_STATE" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".ui.image.ImageActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.web.WebActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
     </application>
 
 </manifest>

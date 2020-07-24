@@ -10,7 +10,10 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.VerificationUtils
 import com.julun.huanque.viewmodel.PhoneNumLoginViewModel
 import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
@@ -18,8 +21,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.act_phone_num.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import org.jetbrains.anko.textColor
 import java.util.concurrent.TimeUnit
@@ -82,7 +83,7 @@ class PhoneNumLoginActivity : BaseActivity() {
     }
 
     override fun initEvents(rootView: View) {
-        ivback.onClickNew {
+        view_top.imageViewBack.onClickNew {
             finish()
         }
         login_root.onClickNew {

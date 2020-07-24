@@ -19,6 +19,7 @@ import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.FileUtils
+import com.julun.huanque.common.utils.MD5Util
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.VideoUtils
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
@@ -35,6 +36,7 @@ import kotlinx.android.synthetic.main.activity_test.*
 import kotlinx.android.synthetic.main.activity_test.test_rn
 import org.jetbrains.anko.startActivity
 import java.io.File
+import java.util.*
 
 /**
  *
@@ -65,6 +67,7 @@ class TestActivity : BaseActivity() {
         viewModel.loadState.observe(this, Observer {
             println("我请求状态信息：=$it")
         })
+
         test_net.onClickNew {
             viewModel.getInfo()
         }
@@ -131,6 +134,44 @@ class TestActivity : BaseActivity() {
 
         tv_record_voice.onClickNew {
             startActivity<VoiceSignActivity>()
+        }
+
+        tv_test_md5.onClickNew {
+            val count = 50000
+            val current = System.currentTimeMillis()
+            repeat(count) {
+                val r = MD5Util.encodePassword(UUID.randomUUID().toString())
+            }
+            logger.info("UUID+md5耗时=${System.currentTimeMillis() - current}")
+            val current2 = System.currentTimeMillis()
+            repeat(count) {
+                val r = UUID.randomUUID().toString().replace("-", "")
+            }
+            logger.info("UUID+replace耗时=${System.currentTimeMillis() - current2}")
+
+            val current3 = System.currentTimeMillis()
+            repeat(count) {
+                val r = UUID.randomUUID().toString()
+            }
+            logger.info("UUID耗时=${System.currentTimeMillis() - current3}")
+            val current4 = System.currentTimeMillis()
+            repeat(count) {
+                val r = MD5Util.encodeBySHA256(UUID.randomUUID().toString())
+            }
+            logger.info("UUID+SHA256耗时=${System.currentTimeMillis() - current4}")
+
+            val current5 = System.currentTimeMillis()
+            repeat(count) {
+                val r = MD5Util.encodeBySHA(UUID.randomUUID().toString())
+            }
+            logger.info("UUID+SHA耗时=${System.currentTimeMillis() - current5}")
+            /**50000次计算的耗时：
+             * 2020-07-23 19:47:30.519 11886-11886/com.julun.huanque I/TestActivity: UUID+md5耗时=2880
+            2020-07-23 19:47:32.003 11886-11886/com.julun.huanque I/TestActivity: UUID+replace耗时=1483
+            2020-07-23 19:47:32.665 11886-11886/com.julun.huanque I/TestActivity: UUID耗时=662
+            2020-07-23 19:47:36.972 11886-11886/com.julun.huanque I/TestActivity: UUID+SHA256耗时=4307
+            2020-07-23 19:47:40.047 11886-11886/com.julun.huanque I/TestActivity: UUID+SHA耗时=3075
+             */
         }
     }
 
