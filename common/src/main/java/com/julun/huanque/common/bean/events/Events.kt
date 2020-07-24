@@ -64,9 +64,14 @@ class UserInfoChangeEvent(val userId: Long, val stranger: Boolean)
 /**
  * 实名认证结果的广播
  */
-class RPVerifyResult(val result:String)
+class RPVerifyResult(val result: String)
 
 /**
  * 语音签名修改成功的广播
  */
 class VoiceSignEvent()
+
+/**
+ * 融云连接上的事件
+ */
+class RongConnectEvent(var state: String)

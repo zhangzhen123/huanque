@@ -9,11 +9,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
-import com.julun.huanque.common.bean.events.EventMessageBean
-import com.julun.huanque.common.bean.events.FoldStrangerMessageEvent
-import com.julun.huanque.common.bean.events.MessageBlockEvent
-import com.julun.huanque.common.bean.events.UserInfoChangeEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
@@ -257,11 +255,24 @@ class MessageFragment : BaseFragment() {
         mMessageViewModel.userInfoUpdate(bean)
     }
 
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    fun connectSuccess(event: RongConnectEvent) {
-//        //融云连接成功通知
-//        conversationListViewModel?.getConversationList()
-//    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun loginChange(event: LoginEvent) {
+        if (!event.result) {
+            //退出登录，清空会话列表
+            mMessageViewModel.conversationListData.value = null
+            mAdapter.setNewInstance(null)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun connectSuccess(event: RongConnectEvent) {
+        if (RongCloudManager.RONG_CONNECTED == event.state) {
+            //融云连接成功，加载数据
+            mMessageViewModel.getConversationList()
+            mMessageViewModel.queryRongPrivateCount()
+        }
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
