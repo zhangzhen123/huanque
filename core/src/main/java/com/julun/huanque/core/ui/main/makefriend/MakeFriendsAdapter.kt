@@ -27,6 +27,7 @@ import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
 
 class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolder>(null), LoadMoreModule, PhotosAdapter.OnItemClick {
@@ -47,7 +48,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
         addChildClickViewIds(
             R.id.iv_audio_play, R.id.btn_action,
-            R.id.tv_go_make_money, R.id.tv_btn_lift,
+            R.id.tv_go_make_money,
             R.id.iv_guide_tag_close, R.id.iv_guide_info_close
         )
     }
@@ -98,7 +99,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 }
 
 
-                headPic.loadImage(bean.headPic, 46f, 46f)
+                headPic.loadImage(bean.headPic, 66f, 66f)
                 val name = if (bean.nickname.length > 5) {
                     "${bean.nickname.substring(0, 5)}…"
                 } else {
@@ -107,7 +108,11 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
                 holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_mkf_sign, bean.mySign)
                     .setText(R.id.tv_location, bean.city)
-
+                if(bean.city.isEmpty()){
+                    holder.setGone(R.id.tv_location,true)
+                }else{
+                    holder.setGone(R.id.tv_location,false)
+                }
                 val sex = holder.getView<TextView>(R.id.tv_sex)
                 sex.text = "${bean.age}"
                 when (bean.sex) {//Male、Female、Unknow
@@ -119,6 +124,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                             sex.setCompoundDrawables(drawable, null, null, null)
                         }
                         sex.textColor = Color.parseColor("#FF9BC5")
+                        sex.backgroundResource=R.drawable.bg_shape_mkf_sex_female
                     }
                     else -> {
                         val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_sex_male)
@@ -126,7 +132,8 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                             drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
                             sex.setCompoundDrawables(drawable, null, null, null)
                         }
-                        sex.textColor = Color.parseColor("#9BE2FF")
+                        sex.textColor = Color.parseColor("#58CEFF")
+                        sex.backgroundResource=R.drawable.bg_shape_mkf_sex_male
                     }
                 }
                 if (bean.anchor && bean.living) {
@@ -215,7 +222,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 tvTask.text=sp
                 rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
                 if (rv.itemDecorationCount <= 0) {
-                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(10)))
+                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(4)))
                 }
                 val mHeaderNavAdapter: HeaderNavAdapter
                 if (rv.adapter != null) {
@@ -256,7 +263,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
                 }
                 if (rv.itemDecorationCount <= 0) {
-                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(10)))
+                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(15)))
                 }
                 val mPhotosAdapter: PhotosAdapter
                 if (rv.adapter != null) {

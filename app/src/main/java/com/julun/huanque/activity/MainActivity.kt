@@ -311,7 +311,7 @@ class MainActivity : BaseActivity() {
     fun receiveLoginCode(event: LoginEvent){
         logger.info("登录事件:${event.result}")
         if(event.result){
-
+            goToTab(MAIN_FRAGMENT_INDEX)
         }
 
     }

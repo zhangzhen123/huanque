@@ -103,8 +103,6 @@ class MakeFriendsViewModel : BaseViewModel() {
             }, error = { e ->
                 logger("报错了：$e")
                 emit(e.convertError())
-            }, final = {
-                logger("最终返回")
             }, needLoadState = type == QueryType.INIT)
 
         }
