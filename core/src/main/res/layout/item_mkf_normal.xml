@@ -14,7 +14,6 @@
         android:layout_marginTop="@dimen/dimen_15"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:placeholderImage="@mipmap/logo_placeholder"
         app:roundAsCircle="true" />
 
     <View

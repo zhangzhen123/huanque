@@ -26,6 +26,7 @@ import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.VoiceResultType
 import com.julun.huanque.common.helper.DensityHelper
+import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
@@ -115,7 +116,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             //头像和直播状态
             val sdv_header = helper.getView<SimpleDraweeView>(R.id.sdv_header)
 
-            ImageUtils.setDefaultHeaderPic(sdv_header, otherUserInfo?.headPic ?: "")
+            ImageHelper.setDefaultHeaderPic(sdv_header, otherUserInfo?.headPic ?: "")
 
             ImageUtils.loadImage(sdv_header, otherUserInfo?.headPic ?: "", 40f, 40f)
         } else {
@@ -145,7 +146,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 //            }
             //显示本人头像
             val sdv_header = helper.getView<SimpleDraweeView>(R.id.sdv_header)
-            ImageUtils.setDefaultHeaderPic(sdv_header, SessionUtils.getSex())
+            ImageHelper.setDefaultHeaderPic(sdv_header, SessionUtils.getSex())
             ImageUtils.loadImage(sdv_header, SessionUtils.getHeaderPic(), 40f, 40f)
         }
 

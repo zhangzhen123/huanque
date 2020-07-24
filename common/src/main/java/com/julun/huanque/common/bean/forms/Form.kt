@@ -94,3 +94,5 @@ class WithdrawHistoryForm(var lastId: Long? = null)
 class NicknameForm(var nickname: String)
 
 class UpdateVoiceForm(var voiceUrl: String, var length: Long)
+//{"city":"","district":"","lat":"","lng":"","province":""}
+class SaveLocationForm(var lat: String,var lng: String,var city: String,var province: String?=null, var district: String?=null)

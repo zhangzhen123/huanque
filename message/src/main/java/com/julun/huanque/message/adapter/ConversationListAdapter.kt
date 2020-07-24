@@ -12,6 +12,7 @@ import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.SystemTargetId
+import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
@@ -48,12 +49,12 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
 
         if (item.showUserInfo != null) {
             //存在用户信息
-            ImageUtils.setDefaultHeaderPic(sdvHeader, item.showUserInfo?.sex ?: "")
+            ImageHelper.setDefaultHeaderPic(sdvHeader, item.showUserInfo?.sex ?: "")
             //设置默认头像
             ImageUtils.loadImage(sdvHeader, item.showUserInfo?.headPic ?: "", 50f, 50f)
             helper.setText(R.id.tv_nickname, item.showUserInfo?.nickname ?: "")
             //欢遇状态
-            val meetResource = ImageUtils.getMeetStatusResource(item.showUserInfo?.meetStatus ?: "")
+            val meetResource = ImageHelper.getMeetStatusResource(item.showUserInfo?.meetStatus ?: "")
             if (meetResource > 0) {
                 //显示图标
                 ivHuanyu.show()
@@ -64,7 +65,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             }
             //亲密度等级
             val level = item.showUserInfo?.intimateLevel ?: 0
-            val levelPic = ImageUtils.getIntimateLevelPic(level)
+            val levelPic = ImageHelper.getIntimateLevelPic(level)
 
             if (levelPic > 0) {
                 ivPic.show()

@@ -7,6 +7,7 @@ import com.julun.huanque.common.bean.beans.FriendBean
 import com.julun.huanque.common.bean.beans.SysMsgContent
 import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.constant.MessageConstants
+import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
 import com.rd.utils.DensityUtils
 
@@ -90,13 +91,13 @@ object MessageFormatUtils {
                 text.text = "和你升级为了"
                 val image = TIBean()
                 image.type = TIBean.IMAGE
-                image.imgRes = ImageUtils.getIntimateLevelPic(result.intimateLevel)
+                image.imgRes = ImageHelper.getIntimateLevelPic(result.intimateLevel)
                 image.height = DensityUtils.dpToPx(16)
                 image.width = DensityUtils.dpToPx(46)
                 list.add(image)
             }
         }
-        ImageUtils.renderTextAndImage(list)?.let {
+        ImageHelper.renderTextAndImage(list)?.let {
             sdstv.renderBaseText(it)
         }
     }

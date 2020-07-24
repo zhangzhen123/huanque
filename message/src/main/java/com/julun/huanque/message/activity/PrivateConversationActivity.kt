@@ -31,6 +31,7 @@ import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.manager.RongCloudManager
@@ -192,7 +193,7 @@ class PrivateConversationActivity : BaseActivity() {
         } else {
             title.text = nickname
         }
-        val meetResource = ImageUtils.getMeetStatusResource(meetStatus)
+        val meetResource = ImageHelper.getMeetStatusResource(meetStatus)
 
         if (meetResource > 0) {
             //有欢遇标识

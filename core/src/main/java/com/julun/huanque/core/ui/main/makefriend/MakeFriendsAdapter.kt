@@ -22,6 +22,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
+import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.SessionUtils
@@ -97,7 +98,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         authTag.hide()
                     }
                 }
-
+                ImageHelper.setDefaultHeaderPic(headPic,bean.sex)
 
                 headPic.loadImage(bean.headPic, 66f, 66f)
                 val name = if (bean.nickname.length > 5) {

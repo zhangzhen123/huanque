@@ -1,7 +1,14 @@
 package com.julun.huanque.common.helper
 
+import android.text.TextUtils
+import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.R
 import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.StyleParam
+import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.constant.MeetStatus
+import com.julun.huanque.common.constant.Sex
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
 
@@ -288,6 +295,152 @@ object ImageHelper {
             ULog.i("图片类型不明,既不是用户等级,又不是贵族等级,还不是emoji表情")
             -1
 //            throw RuntimeException("图片类型不明,既不是用户等级,又不是贵族等级,还不是emoji表情")
+        }
+    }
+
+    /**
+     * 图文混排工具
+     * @param arrayList 传入对应混排list
+     */
+    fun renderTextAndImage(arrayList: ArrayList<TIBean>): BaseTextBean? {
+        if (arrayList.isEmpty()) {
+            return null
+        }
+        try {
+            var textIndex = 0
+            var text = ""
+            val textBean = BaseTextBean()
+            arrayList.forEachIndexed { index, bean ->
+                if (index == 0) {
+                    when (bean.type) {
+                        TIBean.TEXT -> {
+                            if (TextUtils.isEmpty(bean.text)) {
+                                return@forEachIndexed
+                            }
+                            val testParam = copyImageParams(TextParam(), bean) as TextParam
+                            testParam.indexStart = textIndex
+                            text = bean.text
+                            textIndex += bean.text.length - 1
+                            textBean.textParams.add(testParam)
+                        }
+                        else -> {
+                            val imgParam = copyImageParams(ImageParam(), bean) as ImageParam
+                            imgParam.index = textIndex
+                            text = "#"
+                            textIndex += 0
+                            textBean.imgParams.add(imgParam)
+                        }
+                    }
+                } else {
+                    when (bean.type) {
+                        TIBean.TEXT -> {
+                            if (TextUtils.isEmpty(bean.text)) {
+                                return@forEachIndexed
+                            }
+                            val testParam = copyImageParams(TextParam(), bean) as TextParam
+                            testParam.indexStart = textIndex + 1
+                            text += bean.text
+                            textBean.textParams.add(testParam)
+                            textIndex += bean.text.length
+                        }
+                        else -> {
+                            val imgParam = copyImageParams(ImageParam(), bean) as ImageParam
+                            textIndex += 2
+                            text += " #"
+                            imgParam.index = textIndex
+                            textBean.imgParams.add(imgParam)
+                        }
+                    }
+                }
+            }
+            textBean.realText = text
+            return textBean
+        } catch (e: Exception) {
+            reportCrash("renderTextAndImage解析异常", e)
+            e.printStackTrace()
+            return null
+        }
+    }
+
+
+
+    private fun copyImageParams(params: BaseParams, bean: TIBean): BaseParams {
+        if (params is TextParam) {
+            params.textColor = bean.textColor
+            params.textColorInt = bean.textColorInt
+            params.textSize = bean.textSize
+            params.text = bean.text
+            params.styleSpan = bean.styleSpan
+        } else if (params is ImageParam) {
+            params.imgRes = bean.imgRes
+            params.url = bean.url
+            params.height = bean.height
+            params.width = bean.width
+            params.isCircle = bean.isCircle
+            params.borderRedId = bean.borderRedId
+            params.borderWidth = bean.borderWidth
+        }
+        return params
+    }
+
+    /**
+     * 设置默认头像
+     */
+    fun setDefaultHeaderPic(sdv: SimpleDraweeView, sex: String, official: Boolean = false) {
+        val hierarchy = sdv.hierarchy
+        val defaultHeader = if (official) {
+            //官方
+            R.mipmap.icon_logo_avatar_yellow
+        } else {
+            if (sex == Sex.MALE) {
+                //男性
+                R.mipmap.icon_logo_avatar_blue
+            } else {
+                //女性
+                R.mipmap.icon_logo_avatar_red
+            }
+        }
+        //设置占位图
+        hierarchy.setPlaceholderImage(defaultHeader)
+    }
+
+
+
+
+    /**
+     * 获取亲密度等级图片
+     */
+    fun getIntimateLevelPic(level: Int): Int {
+        return when (level) {
+            1 -> R.mipmap.intimate_level_1
+            2 -> R.mipmap.intimate_level_2
+            3 -> R.mipmap.intimate_level_3
+            4 -> R.mipmap.intimate_level_4
+            5 -> R.mipmap.intimate_level_5
+            6 -> R.mipmap.intimate_level_6
+            7 -> R.mipmap.intimate_level_7
+            else -> {
+                0
+            }
+        }
+    }
+
+    /**
+     * 获取欢遇标识
+     */
+    fun getMeetStatusResource(status: String): Int {
+        return when (status) {
+            MeetStatus.Wait -> {
+                //待欢遇
+                R.mipmap.icon_huanyu_disable
+            }
+            MeetStatus.Meet -> {
+                //欢遇中
+                R.mipmap.icon_huanyu
+            }
+            else -> {
+                0
+            }
         }
     }
 }

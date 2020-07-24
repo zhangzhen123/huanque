@@ -1,5 +1,6 @@
 package com.julun.huanque.activity
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -16,6 +17,7 @@ import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
 import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
@@ -24,6 +26,7 @@ import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.ui.main.LeYuanFragment
@@ -69,21 +72,28 @@ class MainActivity : BaseActivity() {
                 logger.info("location=${location.addrStr}")
                 //获得一次结果，就结束定位
                 stopLocation()
-                //todo
-//                viewModel.saveLocation("${location.latitude}", "${location.longitude}", location.province, location.city, location.district)
+                mMainViewModel?.saveLocation(
+                    SaveLocationForm(
+                        "${location.latitude}",
+                        "${location.longitude}",
+                        location.city,
+                        location.province,
+                        location.district
+                    )
+                )
             }
         }
     }
 
-    override fun isRegisterEventBus(): Boolean=true
+    override fun isRegisterEventBus(): Boolean = true
 
     override fun getLayoutId() = R.layout.main_activity
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        if(SessionUtils.getIsRegUser()&&SessionUtils.getSessionId().isNotEmpty()){
+        if (SessionUtils.getIsRegUser() && SessionUtils.getSessionId().isNotEmpty()) {
             AppChecker.startCheck(true)
             UserHeartManager.startOnline()
-        }else{
+        } else {
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         }
 
@@ -115,7 +125,25 @@ class MainActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        mLocationService.start()
+        val rxPermissions = RxPermissions(this)
+        rxPermissions
+            .requestEachCombined(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION)
+            .subscribe { permission ->
+                //不管有没有给权限 都不影响百度定位 只不过不给权限会不太准确
+                mLocationService.start()
+                when {
+                    permission.granted -> {
+                        logger.info("获取权限成功")
+                    }
+                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+                        logger.info("获取定位被拒绝")
+                    else -> {
+                        logger.info("获取定位被永久拒绝")
+                    }
+                }
+
+            }
+
     }
 
     override fun onStop() {
@@ -127,6 +155,7 @@ class MainActivity : BaseActivity() {
         super.onDestroy()
         UserHeartManager.stopBeat()
     }
+
     private fun initViewModel() {
         mMainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         mMainViewModel?.indexData?.observe(this, Observer {
@@ -307,10 +336,11 @@ class MainActivity : BaseActivity() {
         })
 
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun receiveLoginCode(event: LoginEvent){
+    fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")
-        if(event.result){
+        if (event.result) {
             goToTab(MAIN_FRAGMENT_INDEX)
         }
 

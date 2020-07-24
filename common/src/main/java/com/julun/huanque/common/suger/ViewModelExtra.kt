@@ -128,6 +128,17 @@ fun <T>Throwable.convertError(): ReactiveData<T>{
 }
 
 /**
+ * 列表加载错误 封装为ReactiveData
+ */
+fun <T>Throwable.convertListError(data: T): ReactiveData<T>{
+    val err= if (this is ResponseError) {
+        this
+    } else {
+        ResponseError (OTHER_DEF_ERROR,"异常错误")
+    }
+    return ReactiveData(state = NetStateType.ERROR,data = data,error = err)
+}
+/**
  * 正确的数据 封装为ReactiveData
  */
 fun <T>T.convertRtData():ReactiveData<T>{

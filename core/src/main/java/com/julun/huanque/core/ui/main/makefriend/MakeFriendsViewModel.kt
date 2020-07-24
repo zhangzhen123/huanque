@@ -32,6 +32,7 @@ class MakeFriendsViewModel : BaseViewModel() {
     companion object {
         //添加tag引导的位置
         const val GUIDE_INDEX_01 = 14
+
         //添加资料完善引导的位置
         const val GUIDE_INDEX_02 = 29
     }
@@ -39,19 +40,20 @@ class MakeFriendsViewModel : BaseViewModel() {
     private val service: HomeService by lazy {
         Requests.create(HomeService::class.java)
     }
-    private var offset:Int? = 0
+    private var offset: Int? = 0
     private var curRemind: HomeRemind? = null
     private var needGuide1 = true
     private var needGuide2 = true
+
     //记录全部的列表
     private var totalList = mutableListOf<HomeRecomItem>()
 
     val stateList: LiveData<ReactiveData<RootListData<HomeItemBean>>> = queryState.switchMap { type ->
         liveData {
-            val form:RecomListForm = if (type != QueryType.LOAD_MORE) {
+            val form: RecomListForm = if (type != QueryType.LOAD_MORE) {
                 totalList.clear()
                 RecomListForm()
-            }else{
+            } else {
                 RecomListForm(offset)
             }
 
@@ -59,10 +61,10 @@ class MakeFriendsViewModel : BaseViewModel() {
                 val homeListData = service.homeRecom(form).dataConvert()
                 val list = arrayListOf<HomeItemBean>()
                 //去重操作
-                val resultList= homeListData.list.removeDuplicate(totalList)
+                val resultList = homeListData.list.removeDuplicate(totalList)
                 totalList.addAll(resultList)
                 if (type != QueryType.LOAD_MORE) {
-                    val headNavigateInfo = HeadNavigateInfo(homeListData.modules,homeListData.taskBar)
+                    val headNavigateInfo = HeadNavigateInfo(homeListData.modules, homeListData.taskBar)
                     list.add(HomeItemBean(HomeItemBean.HEADER, headNavigateInfo))
 
                     resultList.forEach {
@@ -79,7 +81,7 @@ class MakeFriendsViewModel : BaseViewModel() {
                 }
 
                 //处理引导插入
-                if (totalList.size >= GUIDE_INDEX_01 && curRemind?.tagRemind==true) {
+                if (totalList.size >= GUIDE_INDEX_01 && curRemind?.tagRemind == true) {
                     if (needGuide1) {
                         needGuide1 = false
                         logger("添加tag引导")
@@ -97,12 +99,12 @@ class MakeFriendsViewModel : BaseViewModel() {
                     }
                 }
                 val rList = RootListData(isPull = type != QueryType.LOAD_MORE, list = list, hasMore = homeListData.hasMore)
-                offset=homeListData.offset
+                offset = homeListData.offset
 
                 emit(ReactiveData(NetStateType.SUCCESS, rList))
             }, error = { e ->
                 logger("报错了：$e")
-                emit(e.convertError())
+                emit(e.convertListError(RootListData(isPull = type != QueryType.LOAD_MORE)))
             }, needLoadState = type == QueryType.INIT)
 
         }
