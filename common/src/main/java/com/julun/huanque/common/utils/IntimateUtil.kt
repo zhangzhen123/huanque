@@ -19,7 +19,8 @@ object IntimateUtil {
                 "config/icon/color_privilege_MY.png",
                 "CWMY",
                 1,
-                "成为密友，Ta才会想起你呀。"
+                "成为密友，Ta才会想起你呀。",
+                "相敬如宾"
             )
         )
         intimatePrivilegeList.add(
@@ -30,7 +31,8 @@ object IntimateUtil {
                 "config/icon/color_privilege_MY.png",
                 "FSTP",
                 2,
-                "我有一张自拍，难道你不想看吗？"
+                "我有一张自拍，难道你不想看吗？",
+                "怦然心动"
             )
         )
         intimatePrivilegeList.add(
@@ -41,7 +43,8 @@ object IntimateUtil {
                 "config/icon/color_privilege_MY.png",
                 "YYTH",
                 3,
-                "明明可以靠声音，为什么还要打字？"
+                "明明可以靠声音，为什么还要打字？",
+                "情窦初开"
             )
         )
         intimatePrivilegeList.add(
@@ -52,7 +55,8 @@ object IntimateUtil {
                 "config/icon/color_privilege_MY.png",
                 "CSM",
                 3,
-                "喂喂喂，我在这个直播间快点来找我。"
+                "喂喂喂，我在这个直播间快点来找我。",
+                "情窦初开"
             )
         )
         intimatePrivilegeList.add(
@@ -63,7 +67,8 @@ object IntimateUtil {
                 "config/icon/color_privilege_MY.png",
                 "LTQP",
                 4,
-                "我说话的时候必须带点个性的。"
+                "我说话的时候必须带点个性的。",
+                "比翼双飞"
             )
         )
         intimatePrivilegeList.add(
@@ -74,7 +79,8 @@ object IntimateUtil {
                 "config/icon/color_privilege_MY.png",
                 "ZSBQ",
                 4,
-                "这么有趣的表情，怎么能不发？"
+                "这么有趣的表情，怎么能不发？",
+                "比翼双飞"
             )
         )
         intimatePrivilegeList.add(
@@ -85,7 +91,8 @@ object IntimateUtil {
                 "config/icon/color_privilege_MY.png",
                 "LTBJ",
                 5,
-                "你值得拥有一个独一无二的背景。"
+                "你值得拥有一个独一无二的背景。",
+                "一生一世"
             )
         )
         intimatePrivilegeList.add(
@@ -96,7 +103,8 @@ object IntimateUtil {
                 "config/icon/color_privilege_MY.png",
                 "MFLT",
                 6,
-                "大家都这么熟了，聊天就别收钱啦!"
+                "大家都这么熟了，聊天就别收钱啦!",
+                "生生世世"
             )
         )
         intimatePrivilegeList.add(
@@ -107,7 +115,8 @@ object IntimateUtil {
                 "config/icon/color_privilege_MY.png",
                 "MFYY",
                 7,
-                "语音免费打，真的超划算呢！"
+                "语音免费打，真的超划算呢！",
+                "天长地久"
             )
         )
     }

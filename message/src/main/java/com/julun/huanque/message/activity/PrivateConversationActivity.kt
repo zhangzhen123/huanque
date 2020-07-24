@@ -18,6 +18,7 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
@@ -846,10 +847,32 @@ class PrivateConversationActivity : BaseActivity() {
 
                     override fun getScrollViewId() = R.id.iv_background
                 })
+                .addContentScrollMeasurer(object : ContentScrollMeasurer {
+                    override fun getScrollDistance(defaultDistance: Int) = defaultDistance - unfilledHeight
+
+                    override fun getScrollViewId() = R.id.recyclerview
+                })
                 .build(false)                      //可选，默认false，是否默认打开输入法
+
+            recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val layoutManager = recyclerView.layoutManager
+                    if (layoutManager is LinearLayoutManager) {
+                        val childCount = recyclerView.childCount
+                        if (childCount > 0) {
+                            val lastChildView = recyclerView.getChildAt(childCount - 1)
+                            val bottom = lastChildView.bottom
+                            val listHeight: Int = recyclerview.height - recyclerview.paddingBottom
+                            unfilledHeight = listHeight - bottom
+                        }
+                    }
+                }
+            })
         }
     }
 
+    private var unfilledHeight = 0
 
     private fun initRecyclerView() {
         mLinearLayoutManager = LinearLayoutManager(this)

@@ -69,7 +69,6 @@ class IntimateDetailFragment : BaseDialogFragment() {
     }
 
     private fun showViewByData(bean: ConversationBasicBean) {
-
         //显示对方头像和昵称
         val otherInfo = bean.friendUser
         ImageUtils.loadImage(sdv_other, otherInfo.headPic)
@@ -101,6 +100,9 @@ class IntimateDetailFragment : BaseDialogFragment() {
         privilegeList.forEach {
             if (mCurrentIntimateLevel >= it.minLevel) {
                 enablePrivilege++
+            }
+            if (mCurrentIntimateLevel == it.minLevel) {
+                tv_content.text = it.detailContent
             }
         }
 
