@@ -75,6 +75,7 @@ class FollowResultBean(var type: String, var userId: Long, var follow: String, v
  * @param minLevel 特权对应的最小亲密度等级
  * @param title 标题
  * @param attentionContent 提醒文案，特权弹窗中显示
+ * @param detailContent 详情弹窗里面显示的文案
  */
 class IntimatePrivilege(
     var title: String = "",
@@ -83,7 +84,8 @@ class IntimatePrivilege(
     var privilegeExplainPic: String = "",
     var key: String = "",
     var minLevel: Int = 0,
-    var attentionContent: String = ""
+    var attentionContent: String = "",
+    var detailContent: String = ""
 ) : Serializable
 
 /**
