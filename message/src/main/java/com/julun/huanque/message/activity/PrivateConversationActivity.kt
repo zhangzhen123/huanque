@@ -140,8 +140,17 @@ class PrivateConversationActivity : BaseActivity() {
         header_view.headerContainer.backgroundColor = GlobalUtils.getColor(R.color.color_gray_three)
         header_view.imageOperation.imageResource = R.mipmap.icon_conversation_setting
         header_view.imageOperation.show()
-
         initViewModel()
+        initRecyclerView()
+
+        initBasic(intent)
+        registerMessageEventProcessor()
+    }
+
+    /**
+     * 初始化基础数据
+     */
+    private fun initBasic(intent: Intent?) {
         //之前是否加入过私聊
         val joined = SharedPreferencesUtils.getBoolean(SPParamKey.JOINED_PRIVATE_CHAT, false)
         if (!joined) {
@@ -157,21 +166,21 @@ class PrivateConversationActivity : BaseActivity() {
                 }, { it.printStackTrace() })
         }
 
-        initRecyclerView()
+
         val targetID = intent?.getLongExtra(ParamConstant.TARGET_USER_ID, 0)
         val nickName = intent?.getStringExtra(ParamConstant.NICKNAME) ?: ""
         val meetStatus = intent?.getStringExtra(ParamConstant.MEET_STATUS) ?: ""
         showTitleView(nickName, meetStatus)
         mPrivateConversationViewModel?.targetIdData?.value = targetID
-        registerMessageEventProcessor()
+
         mPrivateConversationViewModel?.operationType = intent?.getStringExtra(ParamConstant.OPERATION) ?: ""
-        //        mPrivateConversationViewModel?.getMessageList(first = true)
         //获取基本数据
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
         //获取小鹊语料
         mPrivateConversationViewModel?.getActiveWord()
         showBackground()
     }
+
 
     /**
      * 显示标题
@@ -1219,11 +1228,6 @@ class PrivateConversationActivity : BaseActivity() {
         val key = GlobalUtils.getBackgroundKey(mPrivateConversationViewModel?.targetIdData?.value ?: 0)
         val picSource = SharedPreferencesUtils.getString(key, "")
         if (picSource.isNotEmpty()) {
-//            val params = iv_background.layoutParams as? ConstraintLayout.LayoutParams
-//            params?.height = ScreenUtils.getScreenHeight() - dip(44 + 104)
-//            params?.width = ScreenUtils.getScreenWidth()
-//            iv_background.layoutParams = params
-
             ImageUtils.loadNativeFilePath(
                 iv_background,
                 picSource,
@@ -1231,5 +1235,10 @@ class PrivateConversationActivity : BaseActivity() {
                 px2dip(ScreenUtils.screenHeightFloat.toInt())
             )
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        initBasic(intent)
     }
 }

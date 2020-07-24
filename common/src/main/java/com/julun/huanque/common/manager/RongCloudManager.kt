@@ -10,6 +10,7 @@ import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
+import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.BusiConstant
@@ -36,6 +37,7 @@ import io.rong.imlib.model.MessageContent
 import io.rong.message.CommandMessage
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 
@@ -264,7 +266,7 @@ object RongCloudManager {
             context = JsonUtil.seriazileAsString(customBean)
         }
 
-        if(extra != null){
+        if (extra != null) {
             messageContent.extra = JsonUtil.seriazileAsString(extra)
         }
 
@@ -395,7 +397,7 @@ object RongCloudManager {
                         logger("DXC 头像上传oss成功：${list} localImage = $localImage")
                         val headPic = list?.firstOrNull()
                         if (headPic != null) {
-                            callback(uploader,headPic)
+                            callback(uploader, headPic)
 //                            uploader?.success(Uri.parse("$headPic"))
                         }
                     } else {
@@ -548,7 +550,7 @@ object RongCloudManager {
     /**
      * 陌生人状态变化
      */
-    fun strangerChange(stranger : Boolean){
+    fun strangerChange(stranger: Boolean) {
         currentUserObj?.stranger = stranger
     }
 
@@ -851,7 +853,7 @@ object RongCloudManager {
                      * 发送广播不能放在connect回调中，防止网络变化的情况下，直播页面收不到消息。用户停留在加载页面
                      * 不用粘性事件 如果用户重复登录账号 就会连接两次融云 从而发送两个粘性事件 再进入直播间就会收到连续两个连续触发
                      */
-                    //                    EventBus.getDefault().post(RongConnectEvent(RONG_CONNECTED))
+                    EventBus.getDefault().post(RongConnectEvent(RONG_CONNECTED))
                 }
                 RongIMClient.ConnectionStatusListener.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT -> {
                     ToastUtils.showErrorMessage("您已在其它客户端登陆，当前客户端已下线~")

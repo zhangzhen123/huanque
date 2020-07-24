@@ -25,10 +25,7 @@ import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
 import com.julun.huanque.common.bean.events.LoginEvent
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.MineToolType
-import com.julun.huanque.common.constant.RealNameConstants
-import com.julun.huanque.common.constant.Sex
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.suger.*
@@ -36,6 +33,7 @@ import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
+import com.julun.huanque.message.activity.ContactsActivity
 import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -62,11 +60,17 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
     override fun getLayoutId() = R.layout.fragment_mine
 
-    override fun isRegisterEventBus(): Boolean =true
+    override fun isRegisterEventBus(): Boolean = true
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val lt = llTitleRootView.layoutParams as ConstraintLayout.LayoutParams
         lt.topMargin = StatusBarUtil.getStatusBarHeight(requireContext())
         rv_tabs_info.adapter = infoTabAdapter
+        infoTabAdapter.setOnItemClickListener { adapter, view, position ->
+            val tempData = adapter.getItem(position) as? UserDataTab
+            if (tempData?.userDataTabType != ContactsTabType.Visit) {
+                ContactsActivity.newInstance(requireActivity(), tempData?.userDataTabType ?: "")
+            }
+        }
         rv_tabs_info.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
         rvUserTools.adapter = toolsAdapter
@@ -92,14 +96,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         tvQueBi.text = "${info.userBasic.beans}"
         tvLingQian.text = info.userBasic.cash
 
-        sdv_wealth.loadImage(info.userBasic.userLevelIcon,50f,16f)
+        sdv_wealth.loadImage(info.userBasic.userLevelIcon, 50f, 16f)
 
-        sdv_royal_level.loadImage(info.userBasic.royalLevelIcon,50f,16f)
-        if(info.userBasic.anchorLevel==-1){
+        sdv_royal_level.loadImage(info.userBasic.royalLevelIcon, 50f, 16f)
+        if (info.userBasic.anchorLevel == -1) {
             cl_author_level.hide()
-        }else{
+        } else {
             cl_author_level.show()
-            sdv_author_level.loadImage(info.userBasic.anchorLevelIcon,50f,16f)
+            sdv_author_level.loadImage(info.userBasic.anchorLevelIcon, 50f, 16f)
         }
 
 
@@ -204,14 +208,16 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     override fun lazyLoadData() {
         mViewModel.queryInfo()
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun receiveLoginCode(event: LoginEvent){
+    fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")
-        if(event.result){
+        if (event.result) {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
 
     }
+
     private val infoTabAdapter: BaseQuickAdapter<UserDataTab, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<UserDataTab, BaseViewHolder>(R.layout.item_tab_user_info) {
             override fun onCreateDefViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

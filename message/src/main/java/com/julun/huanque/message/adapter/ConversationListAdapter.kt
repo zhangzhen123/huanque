@@ -20,6 +20,7 @@ import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.message.R
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
+import org.jetbrains.anko.imageResource
 
 /**
  *@创建者   dong
@@ -41,14 +42,11 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
         val sdvHeader = helper.getView<SimpleDraweeView>(R.id.sdv_header)
         //欢遇状态
         val ivHuanyu = helper.getView<ImageView>(R.id.iv_huanyu)
-        //亲密度等级
-        val tvRoyalLevel = helper.getView<TextView>(R.id.tv_royal_level)
         //官方图标
-        val ivGuan = helper.getView<View>(R.id.iv_guan)
+        val ivPic = helper.getView<ImageView>(R.id.iv_pic)
         val targetId = item.conversation.targetId
 
         if (item.showUserInfo != null) {
-            ivGuan.hide()
             //存在用户信息
             ImageUtils.setDefaultHeaderPic(sdvHeader, item.showUserInfo?.sex ?: "")
             //设置默认头像
@@ -66,25 +64,26 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             }
             //亲密度等级
             val level = item.showUserInfo?.intimateLevel ?: 0
-            if (level > 0) {
-                tvRoyalLevel.text = "Lv.$level"
-                tvRoyalLevel.show()
+            val levelPic = ImageUtils.getIntimateLevelPic(level)
+
+            if (levelPic > 0) {
+                ivPic.show()
+                ivPic.imageResource = levelPic
             } else {
-                tvRoyalLevel.hide()
+                ivPic.hide()
             }
         } else {
             //用户数据为空，判断是否是系统和鹊友会话
             ivHuanyu.hide()
-            tvRoyalLevel.hide()
-
 
             if (targetId == SystemTargetId.systemNoticeSender) {
                 //系统通知
                 ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_system)
                 helper.setText(R.id.tv_nickname, "系统消息")
-                ivGuan.show()
+                ivPic.show()
+                ivPic.imageResource = R.mipmap.icon_guan
             } else {
-                ivGuan.hide()
+                ivPic.hide()
             }
             if (targetId == SystemTargetId.friendNoticeSender) {
                 //鹊友通知
