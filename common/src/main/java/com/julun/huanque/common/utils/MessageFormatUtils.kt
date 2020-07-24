@@ -90,7 +90,7 @@ object MessageFormatUtils {
                 text.text = "和你升级为了"
                 val image = TIBean()
                 image.type = TIBean.IMAGE
-                image.imgRes = R.mipmap.icon_logo_avatar_yellow
+                image.imgRes = ImageUtils.getIntimateLevelPic(result.intimateLevel)
                 image.height = DensityUtils.dpToPx(16)
                 image.width = DensityUtils.dpToPx(46)
                 list.add(image)

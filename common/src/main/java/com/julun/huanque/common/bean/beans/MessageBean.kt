@@ -41,7 +41,7 @@ data class FriendBean(
     //（好友关系变化类型）： Follow（关注），Friend（成为好友），IntimateFriend（成为密友），IntimateLevelUp（亲密度等级提升）
     var relationChangeType: String = "",
     // relationChangeType = IntimateLevelUp 时返回
-    var intimateLevel: String = ""
+    var intimateLevel: Int = 0
 ) : Serializable
 
 /**
