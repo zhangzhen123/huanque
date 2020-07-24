@@ -128,6 +128,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         }
         mAdapter.setOnItemClickListener { _, _, position ->
             logger.info("点击了第几个index=$position")
+//            pauseAudio()
             val item = mAdapter.getItem(position) ?: return@setOnItemClickListener
             when (item.showType) {
                 HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION -> {
@@ -242,7 +243,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 //                    } else {
 //                        ic_sticky_mkf_task.y = (-(stickyHeight - top)).toFloat()
 //                    }
-                    if (top <= dp2px(50)) {
+                    if (top <= dp2px(45)) {
                         ic_sticky_mkf_task.show()
                     } else {
                         ic_sticky_mkf_task.hide()
@@ -286,6 +287,35 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         mAdapter.notifyItemChanged(index)
     }
 
+    /**
+     * 暂停音频
+     */
+    private fun pauseAudio(){
+        if(currentPlayHomeRecomItem?.isPlay==true){
+            audioPlayerManager.pause()
+            currentPlayHomeRecomItem?.isPlay=false
+            mAdapter.notifyItemChanged(currentIndex)
+        }
+    }
+
+    override fun onPause() {
+        logger.info("onPause")
+        super.onPause()
+        pauseAudio()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        logger.info("onHiddenChanged=$hidden")
+        super.onHiddenChanged(hidden)
+        if(hidden){
+            pauseAudio()
+        }
+    }
+    //父组件调用
+    fun hideTodo(){
+        logger.info("hideTodo")
+        pauseAudio()
+    }
     private fun initViewModel() {
         mViewModel.stateList.observe(viewLifecycleOwner, Observer {
             //

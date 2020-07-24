@@ -9,6 +9,7 @@
         android:id="@+id/magic_indicator"
         android:layout_width="wrap_content"
         android:layout_height="53dp"
+        android:layout_marginStart="@dimen/dimen_10"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

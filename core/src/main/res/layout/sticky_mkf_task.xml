@@ -2,19 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="45dp"
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/ll_balance_h"
-        android:layout_width="40dp"
+        android:layout_width="42dp"
         android:layout_height="40dp"
         android:layout_marginStart="@dimen/dimen_15"
-        android:layout_marginLeft="@dimen/dimen_15"
-        android:layout_marginTop="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_5"
         android:background="@mipmap/bg_mkf_red_packet"
-        android:gravity="center"
+        android:gravity="top|center_horizontal"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,27 +22,20 @@
             android:id="@+id/tv_balance_h"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_6"
+            android:includeFontPadding="false"
             android:textColor="#F55656"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_15"
             tools:text="99" />
 
-        <TextView
-            android:id="@+id/tv_balance_title_h"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lingqian"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_10" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_task_h"
         android:layout_width="0dp"
-        android:layout_height="@dimen/dimen_30"
+        android:layout_height="@dimen/dimen_36"
         android:layout_marginStart="@dimen/dimen_11"
-        android:layout_marginLeft="@dimen/dimen_11"
         android:layout_marginEnd="@dimen/dimen_16"
-        android:layout_marginRight="@dimen/dimen_16"
         android:background="@drawable/bg_shape_mkf_task"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -66,15 +58,15 @@
 
         <TextView
             android:id="@+id/tv_go_make_money_h"
-            android:layout_width="50dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="@dimen/dimen_3"
-            android:layout_marginRight="@dimen/dimen_3"
+            android:layout_width="54dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="@dimen/dimen_6"
+            android:layout_marginRight="@dimen/dimen_6"
             android:background="@drawable/bg_solid_btn1"
             android:gravity="center"
             android:includeFontPadding="false"
             android:text="@string/go_make_money"
             android:textColor="@color/black_333"
-            android:textSize="10sp" />
+            android:textSize="11sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

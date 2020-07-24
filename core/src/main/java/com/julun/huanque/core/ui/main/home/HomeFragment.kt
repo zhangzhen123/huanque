@@ -8,6 +8,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.util.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.activityViewModels
@@ -142,14 +143,14 @@ class HomeFragment : BaseFragment() {
             }
 
             override fun getIndicator(context: Context): IPagerIndicator? {
-                if (mTabTitles.size <= 1) {
-                    return null
-                }
+//                if (mTabTitles.size <= 1) {
+//                    return null
+//                }
                 val indicator = LinePagerIndicator(context)
                 indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = dp2pxf(3)
-                indicator.lineWidth = dp2pxf(29)
-                indicator.roundRadius = dp2pxf(3)
+                indicator.lineHeight = dp2pxf(4)
+                indicator.lineWidth = dp2pxf(13)
+                indicator.roundRadius = dp2pxf(2)
                 indicator.startInterpolator = AccelerateInterpolator()
                 indicator.endInterpolator = DecelerateInterpolator(2.0f)
                 indicator.yOffset = dp2pxf(4)
@@ -202,6 +203,18 @@ class HomeFragment : BaseFragment() {
         val count = mPagerAdapter.count
         if (count >= position) {
             view_pager.currentItem = position
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        logger.info("onHiddenChanged=$hidden")
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            mFragmentList.forEach { key, value ->
+                if (value is MakeFriendsFragment) {
+                    value.hideTodo()
+                }
+            }
         }
     }
 

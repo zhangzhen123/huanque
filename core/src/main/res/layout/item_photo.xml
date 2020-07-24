@@ -6,4 +6,5 @@
     android:layout_height="@dimen/dimen_60"
     app:roundedCornerRadius="6dp"
     app:actualImageScaleType="centerCrop"
-    app:actualImageResource="@mipmap/icon_upload_image" />
+    app:placeholderImageScaleType="fitCenter"
+    app:placeholderImage="@mipmap/logo_placeholder_medium" />
