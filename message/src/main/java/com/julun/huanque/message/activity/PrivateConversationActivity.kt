@@ -68,6 +68,7 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
+import kotlinx.android.synthetic.main.item_header_conversions.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundColor
@@ -222,6 +223,12 @@ class PrivateConversationActivity : BaseActivity() {
 
                 mPrivateConversationViewModel?.clearUnreadCount("$it")
 
+            }
+        })
+
+        mPrivateConversationViewModel?.msgData?.observe(this, Observer {
+            if (it != null) {
+                mAdapter.notifyDataSetChanged()
             }
         })
 
@@ -883,22 +890,12 @@ class PrivateConversationActivity : BaseActivity() {
             when (view.id) {
                 R.id.iv_send_fail -> {
                     //重新发送消息
-                    val targerId = mPrivateConversationViewModel?.targetIdData?.value ?: return@setOnItemChildClickListener
-                    tempData.sentStatus = Message.SentStatus.SENDING
-                    adapter.getViewByPosition(position, R.id.iv_send_fail)?.hide()
-                    adapter.getViewByPosition(position, R.id.send_progress)?.show()
-                    RongCloudManager.send(tempData, "$targerId") {
-                        if (it) {
-                            ChatUtils.deleteSingleMessage(tempData.messageId)
-                            mPrivateConversationViewModel?.deleteSingleMessage(tempData)
-                        } else {
-                            tempData.sentStatus = Message.SentStatus.FAILED
-                            adapter.getViewByPosition(position, R.id.iv_send_fail)
-                                ?.show()
-                            adapter.getViewByPosition(position, R.id.send_progress)
-                                ?.hide()
-                        }
-                    }
+                    MyAlertDialog(this).showAlertWithOKAndCancel(
+                        "确定重复该消息吗？",
+                        MyAlertDialog.MyDialogCallback(onRight = {
+                            resendMessage(tempData)
+                        }), hasTitle = false, okText = "确定"
+                    )
                 }
                 R.id.sdv_image -> {
                     //查看图片
@@ -967,6 +964,59 @@ class PrivateConversationActivity : BaseActivity() {
             mAdapter.upFetchModule.isUpFetching = true
         }
     }
+
+    /**
+     * 重发消息
+     */
+    private fun resendMessage(msg: Message) {
+        if (msg.messageId != 0) {
+            mPrivateConversationViewModel?.deleteSingleMessage(msg.messageId)
+        }
+        mAdapter.data.remove(msg)
+        mAdapter.notifyDataSetChanged()
+        var extraMap: HashMap<String, String>? = null
+        try {
+            extraMap = JsonUtil.deserializeAsObject(msg.extra, HashMap::class.java)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        val failType = extraMap?.get(ParamConstant.MSG_FAIL_TYPE)
+        if (failType != MessageFailType.RONG_CLOUD) {
+            //服务端校验未通过
+            val content = msg.content
+            when (content) {
+                is TextMessage -> {
+                    //重发文本消息
+                    sendChatMessage(content.content, messageType = Message_Text)
+                }
+                else -> {
+
+                }
+            }
+
+        } else {
+            //融云未发送成功
+            val targerId = msg.targetId
+            msg.sentStatus = Message.SentStatus.SENDING
+//            view.findViewById<View>(R.id.iv_send_fail)?.hide()
+//            view.findViewById<View>(R.id.send_progress)?.hide()
+            //添加模拟消息
+            mPrivateConversationViewModel?.addMessage(msg)
+//            //直接发送
+            RongCloudManager.send(msg, targerId) { result, message ->
+                if (!result) {
+                    //发送不成功
+                    msg.messageId = message.messageId
+                    mPrivateConversationViewModel?.sendMessageFail(msg, MessageFailType.RONG_CLOUD)
+                } else {
+                    msg.sentStatus = Message.SentStatus.SENT
+                    mAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+    }
+
 
     private fun scrollToBottom(firstLoad: Boolean = false) {
         if (firstLoad) {
@@ -1048,7 +1098,9 @@ class PrivateConversationActivity : BaseActivity() {
         when (messageType) {
             Message_Text -> {
                 //文本消息
-                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser)
+                val msg = RongCloudManager.obtainTextMessage(message, "${targetChatInfo.userId}", targetUser)
+                mPrivateConversationViewModel?.addMessage(msg)
+                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser, localMsg = msg)
             }
             Message_Pic -> {
                 //图片消息

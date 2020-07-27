@@ -555,9 +555,21 @@ object UpdateType {
     //无更新
     const val None = "None"
 }
+
 //    Processing：打款中 Success：已到账 Failure：打款失败
-object WithdrawStatus{
+object WithdrawStatus {
     const val Processing = "Processing"
     const val Success = "Success"
     const val Failure = "Failure"
+}
+
+//消息错误类型
+object MessageFailType {
+    //融云
+    const val RONG_CLOUD = "RONG_CLOUD"
+
+    //服务端
+    const val WEB = "WEB"
+
+
 }

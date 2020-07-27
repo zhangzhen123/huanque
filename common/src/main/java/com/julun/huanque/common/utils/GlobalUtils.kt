@@ -22,6 +22,8 @@ import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.MeetStatus
+import com.julun.huanque.common.constant.MessageFailType
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.init.CommonInit
 import io.rong.message.ImageMessage
@@ -263,5 +265,14 @@ object GlobalUtils {
         if (attentionContent.isNotEmpty()) {
             ToastUtils.showCustom(attentionContent, Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL or Gravity.BOTTOM)
         }
+    }
+
+    /**
+     * 消息的额外属性，数据发送失败数据
+     */
+    fun messageExtra(type: String): HashMap<String, String> {
+        val map = hashMapOf<String, String>()
+        map.put(ParamConstant.MSG_FAIL_TYPE, type)
+        return map
     }
 }

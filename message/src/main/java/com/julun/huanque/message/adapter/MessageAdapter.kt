@@ -4,6 +4,8 @@ import android.net.Uri
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
@@ -124,25 +126,25 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 //                helper.addOnClickListener(R.id.sdv_header)
             }
             //todo 发送状态先关闭(发送中和重试状态)
-//            val ivSendFail = helper.getView<ImageView>(R.id.iv_send_fail)
-//            val sendProgress = helper.getView<ProgressBar>(R.id.send_progress)
-//            when (item.sentStatus) {
-//                Message.SentStatus.FAILED -> {
-//                    //发送失败
-//                    ivSendFail.show()
-//                    sendProgress.hide()
-//                }
-//                Message.SentStatus.SENDING -> {
-//                    //发送中
-//                    ivSendFail.hide()
-//                    sendProgress.show()
-//                }
-//                Message.SentStatus.SENT -> {
-//                    //已发送
-//                    ivSendFail.hide()
-//                    sendProgress.hide()
-//                }
-//            }
+            val ivSendFail = helper.getView<ImageView>(R.id.iv_send_fail)
+            val sendProgress = helper.getView<ProgressBar>(R.id.send_progress)
+            when (item.sentStatus) {
+                Message.SentStatus.FAILED -> {
+                    //发送失败
+                    ivSendFail.show()
+                    sendProgress.hide()
+                }
+                Message.SentStatus.SENDING -> {
+                    //发送中
+                    ivSendFail.hide()
+                    sendProgress.show()
+                }
+                Message.SentStatus.SENT -> {
+                    //已发送
+                    ivSendFail.hide()
+                    sendProgress.hide()
+                }
+            }
             //显示本人头像
             val sdv_header = helper.getView<SimpleDraweeView>(R.id.sdv_header)
             ImageUtils.setDefaultHeaderPic(sdv_header, SessionUtils.getSex())

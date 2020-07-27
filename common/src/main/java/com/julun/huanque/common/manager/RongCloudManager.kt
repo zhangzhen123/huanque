@@ -1,6 +1,5 @@
 package com.julun.huanque.common.manager
 
-import android.R
 import android.app.Application
 import android.net.Uri
 import android.text.TextUtils
@@ -14,11 +13,11 @@ import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.MessageFailType
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
-import com.julun.huanque.common.message_dispatch.EventMessageType
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.message_dispatch.MessageReceptor
 import com.julun.huanque.common.suger.logger
@@ -346,6 +345,9 @@ object RongCloudManager {
              * @param errorCode 具体的错误
              */
             override fun onError(message: Message?, errorCode: ErrorCode?) {
+                if (message != null) {
+                    updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD)))
+                }
             }
         })
     }
@@ -418,17 +420,32 @@ object RongCloudManager {
             }
 
             override fun onError(p0: Message?, p1: ErrorCode?) {
-
+                p0?.extra = JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD))
             }
 
         })
+    }
+
+    /**
+     * 生成文本消息
+     */
+    fun obtainTextMessage(message: String, targetId: String, targetUserObj: TargetUserObj? = null): Message {
+        val chatMessage: TextMessage = TextMessage.obtain(message)
+        currentUserObj?.targetUserObj = targetUserObj
+        currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
+        chatMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
+
+        val msg = Message.obtain(targetId, Conversation.ConversationType.PRIVATE, chatMessage)
+        msg.senderUserId = "${SessionUtils.getUserId()}"
+        msg.sentTime = System.currentTimeMillis()
+        return msg
     }
 
 
     /**
      * 发送聊天消息
      */
-    fun send(message: String, toUserId: String? = null, targetUserObj: TargetUserObj? = null, callback: (Boolean) -> Unit = {}) {
+    fun send(message: String, toUserId: String? = null, targetUserObj: TargetUserObj? = null, callback: (Boolean, Message) -> Unit = { result, msg -> }) {
         val chatMessage: TextMessage = TextMessage.obtain(message)
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
@@ -453,23 +470,24 @@ object RongCloudManager {
                 override fun onSuccess(message: Message?) {
                     logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
                     if (message != null) {
+                        callback(true,message)
                         //                            try {
                         //                                onReceived(message)
                         //                            } catch (e: Exception) {
                         //                                e.printStackTrace()
                         //                            }
-                        switchThread(message)
-                        callback(true)
+                        //已经手动显示了消息
+//                        switchThread(message)
                     } else {
-                        callback(false)
+//                        callback(false)
                     }
                 }
 
-                override fun onError(
-                    message: Message?, errorCode: ErrorCode?
-                ) {
+                override fun onError(message: Message?, errorCode: ErrorCode?) {
                     if (message != null) {
-                        switchThread(message)
+//                        switchThread(message)
+                        callback(false,message)
+                        updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD)))
                     }
                     logger.info(
                         "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
@@ -477,7 +495,7 @@ object RongCloudManager {
                         )}"
                     )
                     handleErrorCode(errorCode, "sendMessage")
-                    callback(false)
+
                 }
 
             })
@@ -489,37 +507,33 @@ object RongCloudManager {
     /**
      * 私聊重发消息使用
      */
-    fun send(oMessage: Message, targetId: String, callback: (Boolean) -> Unit = {}): Unit {
+    fun send(oMessage: Message, targetId: String, callback: (Boolean, Message) -> Unit = { result, msg -> }): Unit {
         //        EventBus.getDefault().post(EventMessageBean(targetId))
-        RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE,
-            targetId,
-            oMessage.content,
-            null,
-            null,
+        RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE, targetId, oMessage.content, null, null,
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
                 }
 
                 override fun onSuccess(message: Message?) {
                     logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
-                    callback(true)
                     if (message != null) {
+                        callback(true,message)
                         //                            try {
                         //                                onReceived(message)
                         //                            } catch (e: Exception) {
                         //                                e.printStackTrace()
                         //                            }
-                        switchThread(message)
+//                        switchThread(message)
                     } else {
                     }
                 }
 
-                override fun onError(
-                    message: Message?, errorCode: ErrorCode?
-                ) {
-                    callback(false)
+                override fun onError(message: Message?, errorCode: ErrorCode?) {
+
                     if (message != null) {
                         //                            ChatUtils.deleteSingleMessage(message.messageId)
+                        callback(false,message)
+                        updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD)))
                     }
                     logger.info(
                         "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
@@ -531,6 +545,15 @@ object RongCloudManager {
 
             })
 
+    }
+
+    /**
+     * 修改消息的extra
+     * @param msgId 消息ID
+     * @param content extra内容
+     */
+    private fun updateMessageExtra(msgId: Int, content: String) {
+        RongIMClient.getInstance().setMessageExtra(msgId, content)
     }
 
 

@@ -69,6 +69,12 @@ object ParamConstant {
     //语音会话传递数据key
     const val NetCallBean = "NetCallBean"
 
+    //消息发送失败类型
+    const val MSG_FAIL_TYPE = "MSG_FAIL_TYPE"
+
+    //消息发送失败原因
+    const val MSG_FAIL_REASON = "MSG_FAIL_REASON"
+
 
     //UUID
     const val UUID = "UUID"
