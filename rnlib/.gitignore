@@ -34,6 +34,7 @@ BUCK
 .gitignore
 ios
 web
+gradle
 #先过滤全部node_modules内容 然后根据需要保存相应的文件
 /node_modules/*
 !/node_modules/jsc-android
@@ -47,3 +48,4 @@ web
 !/node_modules/react-native-svg/android
 !/node_modules/react-native-reanimated/android
 !/node_modules/react-native-video/android
+

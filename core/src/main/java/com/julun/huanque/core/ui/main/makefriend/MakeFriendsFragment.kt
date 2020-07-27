@@ -30,6 +30,7 @@ import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -324,6 +325,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 loadData(it.getT())
             } else if (it.state == NetStateType.ERROR) {
                 //dodo
+                val data=it.getT()
+                loadFail(data.isPull)
             }
         })
 
@@ -342,14 +345,17 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         }
 
         if (stateList.hasMore) {
-//            mAdapter.loadMoreComplete()
-            mAdapter.loadMoreModule.loadMoreComplete()
+            //如果下拉加载更多时 返回的列表为空 会触发死循环 这里直接设置加载完毕状态
+            if(stateList.list.isEmpty()){
+                mAdapter.loadMoreModule.loadMoreEnd(false)
+            }else{
+                mAdapter.loadMoreModule.loadMoreComplete()
+            }
+
         } else {
             if (stateList.isPull) {
-//                mAdapter.loadMoreEnd(true)
                 mAdapter.loadMoreModule.loadMoreEnd(true)
             } else {
-//                mAdapter.loadMoreEnd()
                 mAdapter.loadMoreModule.loadMoreEnd()
             }
 
@@ -369,6 +375,13 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             tv_task_h.text = sp
         }
 
+    }
+    private fun loadFail(isPull:Boolean){
+        if(isPull){
+            ToastUtils.show("刷新失败")
+        }else{
+            mAdapter.loadMoreModule.loadMoreFail()
+        }
     }
 
     override fun onDestroy() {

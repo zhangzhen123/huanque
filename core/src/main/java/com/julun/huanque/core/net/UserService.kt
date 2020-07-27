@@ -140,5 +140,12 @@ interface UserService {
     @POST("user/acct/info/bindWeixin")
     suspend fun bindWeiXin(@Body form: BindForm): Root<BindResultBean>
 
+    /**
+     * 保存用户地址
+     */
+    @POST("user/acct/data/saveLocation")
+    suspend fun saveLocation(@Body form: SaveLocationForm): Root<VoidResult>
+
+
 
 }

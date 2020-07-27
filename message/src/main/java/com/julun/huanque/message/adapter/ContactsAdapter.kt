@@ -9,6 +9,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.SocialUserInfo
 import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.FollowStatus
+import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
@@ -35,7 +36,7 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
             return
         }
         val sdv_header = helper.getView<SimpleDraweeView>(R.id.sdv_header)
-        ImageUtils.setDefaultHeaderPic(sdv_header, item.sex)
+        ImageHelper.setDefaultHeaderPic(sdv_header, item.sex)
         ImageUtils.loadImage(sdv_header, item.headPic, 56f, 56f)
         val oriNicknamge = item.nickname
         val showNickname = if (oriNicknamge.length > 5) {
@@ -45,7 +46,7 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
         }
 
         val ivMeet = helper.getView<ImageView>(R.id.iv_meet)
-        val meetStatus = ImageUtils.getMeetStatusResource(item.meetStatus)
+        val meetStatus = ImageHelper.getMeetStatusResource(item.meetStatus)
         if (meetStatus > 0) {
             ivMeet.imageResource = meetStatus
             ivMeet.show()
@@ -55,7 +56,7 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
 
         //亲密度等级
         val ivIntimate = helper.getView<ImageView>(R.id.iv_intimate)
-        val intimateResource = ImageUtils.getIntimateLevelPic(item.intimateLevel)
+        val intimateResource = ImageHelper.getIntimateLevelPic(item.intimateLevel)
         if (intimateResource > 0) {
             ivIntimate.show()
             ivIntimate.imageResource = intimateResource

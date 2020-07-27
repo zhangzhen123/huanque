@@ -16,6 +16,7 @@ import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.MessageBlockEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -60,7 +61,7 @@ class PrivateConversationSettingActivity : BaseActivity() {
         mPrivateConversationSettingViewModel?.targetId = intent?.getLongExtra(ParamConstant.TARGET_USER_ID, 0) ?: 0
         mPrivateConversationSettingViewModel?.getConversationDisturbStatus()
         val sex = intent?.getStringExtra(ParamConstant.SEX) ?: ""
-        ImageUtils.setDefaultHeaderPic(sdv_header, sex)
+        ImageHelper.setDefaultHeaderPic(sdv_header, sex)
 
         mPrivateConversationSettingViewModel?.getChatDetail()
     }
@@ -91,7 +92,7 @@ class PrivateConversationSettingActivity : BaseActivity() {
                 }
 
                 //欢遇状态
-                val meetResource = ImageUtils.getMeetStatusResource(it.meetStatus)
+                val meetResource = ImageHelper.getMeetStatusResource(it.meetStatus)
                 if (meetResource > 0) {
                     //显示图标
                     iv_huanyu.show()

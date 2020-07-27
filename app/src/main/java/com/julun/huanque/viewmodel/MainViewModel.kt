@@ -9,6 +9,7 @@ import com.julun.huanque.core.net.UserService
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
 import com.julun.huanque.common.bean.forms.NetcallIdForm
+import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ConmmunicationUserType
@@ -92,26 +93,6 @@ class MainViewModel : BaseViewModel() {
 
 
     /**
-     * 获取用户信息
-     */
-    suspend fun queryUserDetailInfo(): UserDetailInfo {
-//        return withContext(Dispatchers.IO) {
-        logger("开始请求网络：${Thread.currentThread().name}")
-        try {
-            val call = userService.queryUserDetailInfo()
-//                val result = call.execute().body()
-            logger("请求完成：${Thread.currentThread().name}")
-            return call.data!!
-        } catch (e: Exception) {
-            logger("报错了")
-            e.printStackTrace()
-        }
-        return UserDetailInfo()
-//        }
-
-    }
-
-    /**
      * 获取语音会话详情
      */
     fun getVoiceCallInfo(callId: Long) {
@@ -123,6 +104,17 @@ class MainViewModel : BaseViewModel() {
                 bundle.putSerializable(ParamConstant.NetCallBean, result)
                 ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
 
+            })
+        }
+    }
+
+    /**
+     * 保存定位地址
+     */
+    fun saveLocation(form: SaveLocationForm) {
+        viewModelScope.launch {
+            request({
+                userService.saveLocation(form = form).dataConvert()
             })
         }
     }

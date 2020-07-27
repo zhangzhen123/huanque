@@ -11,9 +11,8 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
-        <!--百度地图Key todo 缺少key-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="k6lKcygr8aVtIESvokA04TlgZIHA8LvE" />
+            android:value="a1DLC9IfqQDldMdju2C9TwpeYNTsp82m" />
     </application>
 </manifest>

@@ -20,7 +20,7 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="33dp"
+        android:layout_marginStart="38dp"
         android:layout_marginTop="42dp"
         android:text="验证码登录"
         android:textColor="@color/black_333"
@@ -33,9 +33,9 @@
         android:id="@+id/tv_title2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="33dp"
+        android:layout_marginStart="@dimen/dimen_38"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="@dimen/dimen_33"
+        android:layout_marginEnd="@dimen/dimen_38"
         android:text="未注册的手机号验证通过后将自动注册"
         android:textColor="@color/black_999"
         android:textSize="@dimen/sp_16"
@@ -183,9 +183,9 @@
         android:id="@+id/login_btn"
         android:layout_width="0px"
         android:layout_height="54dp"
-        android:layout_marginLeft="22dp"
+        android:layout_marginLeft="@dimen/dimen_38"
         android:layout_marginTop="60dp"
-        android:layout_marginRight="22dp"
+        android:layout_marginRight="@dimen/dimen_38"
         android:background="@drawable/sel_verification_code"
         android:enabled="false"
         android:gravity="center"
@@ -197,11 +197,13 @@
         app:layout_constraintTop_toBottomOf="@id/view_code" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/csl_bind_tips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_45"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/login_btn">
+        app:layout_constraintTop_toBottomOf="@+id/login_btn"
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/login_tips"
@@ -218,6 +220,38 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_safe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="19dp"
+            android:drawableTop="@mipmap/icon_bind_save"
+            android:drawablePadding="@dimen/dimen_10"
+            android:text="安全认证"
+            android:gravity="center"
+            android:textColor="@color/black_999"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toStartOf="@+id/tv_cash"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/login_tips"
+            app:layout_constraintTop_toBottomOf="@id/login_tips" />
+
+        <TextView
+            android:id="@+id/tv_cash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="19dp"
+            android:drawableTop="@mipmap/icon_bind_cash"
+            android:drawablePadding="@dimen/dimen_10"
+            android:text="零钱提现"
+            android:gravity="center"
+            android:textColor="@color/black_999"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toEndOf="@+id/login_tips"
+            app:layout_constraintStart_toEndOf="@+id/tv_safe"
+            app:layout_constraintTop_toBottomOf="@id/login_tips" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
