@@ -16,10 +16,7 @@ import com.julun.huanque.common.bean.beans.WithdrawTpl
 import com.julun.huanque.common.bean.events.AliAuthCodeEvent
 import com.julun.huanque.common.bean.events.RPVerifyResult
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.ErrorCodes
-import com.julun.huanque.common.constant.WithdrawErrorCode
-import com.julun.huanque.common.constant.WithdrawType
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.interfaces.routerservice.WeiXinService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ToastUtils
@@ -214,7 +211,9 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                             okText = "去绑定",
                             title = "未绑定手机提示",
                             callback = MyAlertDialog.MyDialogCallback(onRight = {
-                                //todo 跳转绑定手机
+                                ARouter.getInstance().build(ARouterConstant.PHONE_NUM_LOGIN_ACTIVITY).with(Bundle().apply {
+                                    putInt(IntentParamKey.TYPE.name,PhoneLoginType.TYPE_BIND)
+                                }).navigation()
                             })
                         )
 

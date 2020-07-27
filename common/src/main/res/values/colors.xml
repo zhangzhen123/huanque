@@ -45,7 +45,8 @@
     <color name="percent60translucentBlack">#99000000</color>
     <color name="percent70translucentBlack">#B3000000</color>
     <color name="percent75translucentBlack">#BF000000</color>
-
+    <color name="percent80translucentBlack">#CC000000</color>
+    <color name="percent90translucentBlack">#E6000000</color>
 
     <color name="agreement_blue">#1197DC</color>
 

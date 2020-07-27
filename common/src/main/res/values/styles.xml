@@ -303,19 +303,19 @@
     <style name="picture.me.style_single" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <!--标题栏背景色-->
-        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/percent90translucentBlack</item>
         <!--状态栏背景色-->
-        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorPrimaryDark">@color/percent90translucentBlack</item>
         <!--是否改变图片列表界面状态栏字体颜色为黑色-->
-        <item name="picture.statusFontColor">true</item>
+        <item name="picture.statusFontColor">false</item>
         <!--返回键图标-->
-        <item name="picture.leftBack.icon">@mipmap/icon_back_black_01</item>
+        <item name="picture.leftBack.icon">@mipmap/icon_back_white_01</item>
         <!--标题下拉箭头-->
         <item name="picture.arrow_down.icon">@mipmap/icon_arrow_down</item>
         <!--标题上拉箭头-->
         <item name="picture.arrow_up.icon">@mipmap/icon_arrow_up</item>
         <!--标题文字颜色-->
-        <item name="picture.title.textColor">@color/black_333</item>
+        <item name="picture.title.textColor">@color/white</item>
         <!--标题栏右边文字-->
         <item name="picture.right.textColor">@color/white</item>
         <!--图片列表勾选样式-->
@@ -323,7 +323,7 @@
 
 
         <!--图片列表底部背景色-->
-        <item name="picture.bottom.bg">@color/white</item>
+        <item name="picture.bottom.bg">@color/percent90translucentBlack</item>
         <!--图片列表预览文字颜色-->
         <item name="picture.preview.textColor">@color/black_333</item>
         <!--图片列表已完成文字颜色-->
@@ -331,15 +331,15 @@
         <!--图片已选数量圆点背景色-->
         <item name="picture.num.style">@drawable/num_oval</item>
         <!--预览界面标题文字颜色-->
-        <item name="picture.ac_preview.title.textColor">@color/black_333</item>
+        <item name="picture.ac_preview.title.textColor">@color/white</item>
         <!--预览界面已完成文字颜色-->
-        <item name="picture.ac_preview.complete.textColor">@color/black_333</item>
+        <item name="picture.ac_preview.complete.textColor">@color/white</item>
         <!--预览界面标题栏背景色-->
-        <item name="picture.ac_preview.title.bg">@color/white</item>
+        <item name="picture.ac_preview.title.bg">@color/percent90translucentBlack</item>
         <!--预览界面底部背景色-->
-        <item name="picture.ac_preview.bottom.bg">@color/white</item>
+        <item name="picture.ac_preview.bottom.bg">@color/percent80translucentBlack</item>
         <!--预览界面返回箭头-->
-        <item name="picture.preview.leftBack.icon">@mipmap/icon_back_black_01</item>
+        <item name="picture.preview.leftBack.icon">@mipmap/icon_back_white_01</item>
         <!--裁剪页面标题背景色-->
         <item name="picture.crop.toolbar.bg">@color/bar_grey</item>
         <!--裁剪页面状态栏颜色-->

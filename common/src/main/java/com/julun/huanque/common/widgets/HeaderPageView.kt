@@ -14,7 +14,7 @@ import com.julun.huanque.common.R
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ULog
-import kotlinx.android.synthetic.main.layout_pager_header.view.*
+import kotlinx.android.synthetic.main.layout_pager_header_include.view.*
 import org.jetbrains.anko.imageResource
 
 
@@ -46,7 +46,7 @@ class HeaderPageView : FrameLayout {
     )
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.layout_pager_header, this)
+        LayoutInflater.from(context).inflate(R.layout.layout_pager_header_include, this)
     }
 
     //向外暴露几个常用view
@@ -56,7 +56,7 @@ class HeaderPageView : FrameLayout {
     val imageOperation: ImageView by lazy { ivOperation }
 
     //容器
-    val headerContainer: View by lazy { header_container }
+//    val headerContainer: View by lazy { this }
 
     /**
      * 初始化头部

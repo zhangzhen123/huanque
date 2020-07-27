@@ -11,6 +11,8 @@ import com.julun.huanque.common.utils.SharedPreferencesUtils
 object StorageHelper {
 
     private const val AD_VERSION: String = "AdVersion"
+
+    private const val PHONE_NUM_CACHE: String = "phone_num_cache"
     /**
      * 保存ad
      */
@@ -20,5 +22,12 @@ object StorageHelper {
 
     fun getAdVersion() = SPUtils.getString(AD_VERSION, "")
 
+    /**
+     * 记录最近一次的登录的PhoneNum 方便登录
+     */
+    fun setPhoneNumCache(headerPic: String) {
+        SPUtils.commitString(PHONE_NUM_CACHE, headerPic)
+    }
 
+    fun getPhoneNumCache() = SPUtils.getString(PHONE_NUM_CACHE, "")
 }

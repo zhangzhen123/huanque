@@ -139,7 +139,7 @@ class PrivateConversationActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
 
-        header_view.headerContainer.backgroundColor = GlobalUtils.getColor(R.color.color_gray_three)
+        header_view.backgroundColor = GlobalUtils.getColor(R.color.color_gray_three)
         header_view.imageOperation.imageResource = R.mipmap.icon_conversation_setting
         header_view.imageOperation.show()
         initViewModel()

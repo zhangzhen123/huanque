@@ -159,3 +159,11 @@ object ActivityCodes {
     //通用基础请求码
     const val REQUEST_CODE_NORMAL = 10000
 }
+
+/**
+ * 手机登录还是绑定
+ */
+object PhoneLoginType{
+    const val TYPE_LOGIN = 0
+    const val TYPE_BIND = 1
+}

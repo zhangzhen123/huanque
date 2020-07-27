@@ -274,7 +274,6 @@ class PhoneNumLoginViewModel : BaseViewModel() {
         }
 
     }
-
     /**
      * 请求手机验证码接口
      */

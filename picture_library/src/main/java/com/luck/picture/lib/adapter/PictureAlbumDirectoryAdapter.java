@@ -72,6 +72,8 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
         int checkedNum = folder.getCheckedNum();
         holder.tv_sign.setVisibility(checkedNum > 0 ? View.VISIBLE : View.INVISIBLE);
         holder.itemView.setSelected(isChecked);
+        holder.tv_folder_name.setSelected(isChecked);
+        holder.image_num.setSelected(isChecked);
         if (mimeType == PictureMimeType.ofAudio()) {
 //            holder.first_image.setImageResource(R.drawable.audio_placeholder);
             FrescoImageUtils.loadImageLocal(holder.first_image, R.drawable.audio_placeholder, mContext);

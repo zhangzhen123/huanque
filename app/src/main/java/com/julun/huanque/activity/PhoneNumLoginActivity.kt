@@ -3,14 +3,18 @@ package com.julun.huanque.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.PhoneLoginType
+import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -18,6 +22,7 @@ import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.VerificationUtils
+import com.julun.huanque.core.viewmodel.UserBindViewModel
 import com.julun.huanque.viewmodel.PhoneNumLoginViewModel
 import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
@@ -36,18 +41,19 @@ import java.util.concurrent.TimeUnit
  *@描述 验证码登录页面
  * 新增手机绑定功能
  */
+@Route(path = ARouterConstant.PHONE_NUM_LOGIN_ACTIVITY)
 class PhoneNumLoginActivity : BaseActivity() {
     private val loadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
 
     companion object {
         const val MAX_COUNT = 60L
-        const val TYPE_LOGIN = 0
-        const val TYPE_BIND = 1
     }
 
     //是登录操作还是绑定操作
     private var type: Int = 0
     private var mViewModel: PhoneNumLoginViewModel? = null
+
+    private val bindViewModel: UserBindViewModel by viewModels()
 
     //是否正在倒计时
     private var mIsCountting: Boolean = false
@@ -58,14 +64,25 @@ class PhoneNumLoginActivity : BaseActivity() {
         type = intent.getIntExtra(IntentParamKey.TYPE.name, 0)
         initViewModel()
 
-        if (type == TYPE_LOGIN) {
+        if (type == PhoneLoginType.TYPE_LOGIN) {
             tv_title.show()
+            tv_title2.text = "未注册的手机号验证通过后将自动注册"
             csl_bind_tips.hide()
             login_btn.text = "登录"
-        } else {
+            view_top.textTitle.hide()
+        } else if (type == PhoneLoginType.TYPE_BIND) {
             tv_title.hide()
+            tv_title2.text = "为防止账号丢失以及方便找回，建议您绑定 手机号后再使用"
             csl_bind_tips.show()
             login_btn.text = "绑定"
+            view_top.initHeaderView(titleTxt = "手机绑定")
+        }
+        phone_num.post {
+            val num = StorageHelper.getPhoneNumCache()
+            if (num.isNotEmpty()) {
+                phone_num.setText(num)
+            }
+
         }
     }
 
@@ -98,6 +115,15 @@ class PhoneNumLoginActivity : BaseActivity() {
                 } else {
                     FillInformationActivity.newInstance(this)
                 }
+            }
+        })
+
+        bindViewModel.bindPhoneData.observe(this, Observer {
+            if (it.state == NetStateType.SUCCESS) {
+                ToastUtils.show("手机绑定成功!")
+                finish()
+            } else {
+                ToastUtils.show(it.error?.busiMessage)
             }
         })
     }
@@ -164,8 +190,12 @@ class PhoneNumLoginActivity : BaseActivity() {
                 ToastUtils.show("请输入4位验证码")
                 return@onClickNew
             }
-
-            mViewModel?.login(phoneNum, code)
+            StorageHelper.setPhoneNumCache(phoneNum)
+            if (type == PhoneLoginType.TYPE_LOGIN) {
+                mViewModel?.login(phoneNum, code)
+            } else if (type == PhoneLoginType.TYPE_BIND) {
+                bindViewModel.bindPhone(phoneNum, code)
+            }
             //直接跳转填写资料页面
 //            FillInformationActivity.newInstance(this)
         }

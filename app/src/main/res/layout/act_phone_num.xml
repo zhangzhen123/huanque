@@ -93,7 +93,7 @@
         android:maxLength="11"
         android:maxLines="1"
         android:padding="@dimen/dimen_4"
-        android:text="18616746675"
+        tools:text="18616746675"
         android:textColor="@color/black_333"
         android:textColorHint="@color/black_999"
         android:textSize="@dimen/sp_18"

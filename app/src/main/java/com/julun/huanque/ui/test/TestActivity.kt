@@ -10,10 +10,13 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
+import com.julun.huanque.activity.PhoneNumLoginActivity
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.PhoneLoginType
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
@@ -91,7 +94,7 @@ class TestActivity : BaseActivity() {
             finish()
         }
         goto_photo.onClickNew {
-            goToPictureSelectPager(1, PictureConfig.TYPE_VIDEO)
+            goToPictureSelectPager(6, PictureConfig.TYPE_IMAGE)
         }
         set_push.onClickNew {
             val userId = SessionUtils.getUserId().toString()
@@ -172,6 +175,11 @@ class TestActivity : BaseActivity() {
             2020-07-23 19:47:36.972 11886-11886/com.julun.huanque I/TestActivity: UUID+SHA256耗时=4307
             2020-07-23 19:47:40.047 11886-11886/com.julun.huanque I/TestActivity: UUID+SHA耗时=3075
              */
+        }
+        tv_bind.onClickNew {
+            ARouter.getInstance().build(ARouterConstant.PHONE_NUM_LOGIN_ACTIVITY).with(Bundle().apply {
+                putInt(IntentParamKey.TYPE.name, PhoneLoginType.TYPE_BIND)
+            }).navigation()
         }
     }
 

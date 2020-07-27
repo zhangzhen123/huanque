@@ -83,7 +83,7 @@ class FindNewsForm {
 }
 
 class BindForm(var code: String)
-class BindPhoneForm(var code: String, var mobile: String)
+class BindPhoneForm(var mobile: String,var code: String)
 class WithdrawApplyForm(var tplId: Int, var type: String)
 
 class WithdrawHistoryForm(var lastId: Long? = null)
@@ -94,5 +94,8 @@ class WithdrawHistoryForm(var lastId: Long? = null)
 class NicknameForm(var nickname: String)
 
 class UpdateVoiceForm(var voiceUrl: String, var length: Long)
-//{"city":"","district":"","lat":"","lng":"","province":""}
+
+/**
+ * 保存定位信息
+ */
 class SaveLocationForm(var lat: String,var lng: String,var city: String,var province: String?=null, var district: String?=null)

@@ -46,15 +46,15 @@
             <TextView
                 android:id="@+id/picture_tv_ok"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:paddingRight="20dp"
                 android:paddingLeft="20dp"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="发送"
+                android:text="选择"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/selector_publish_bg"
-                android:textColor="@color/sel_text_login"
+                android:textColor="@color/sel_text_ensure"
                 android:textSize="16sp" />
 
         </LinearLayout>
