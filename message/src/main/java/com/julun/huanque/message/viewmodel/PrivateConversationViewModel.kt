@@ -291,12 +291,18 @@ class PrivateConversationViewModel : BaseViewModel() {
                         }
                     }
                 } else {
-                    //发送特权礼物消息
+                    //发送特权表情消息
                     RongCloudManager.sendCustomMessage(
                         "$targetId",
                         targetUser.apply { fee = result.consumeBeans },
                         Conversation.ConversationType.PRIVATE, MessageCustomBeanType.Expression_Privilege, content
-                    )
+                    ) { result, message ->
+                        if (!result) {
+                            //发送失败
+                            localMsg?.messageId = message.messageId
+                            sendMessageFail(localMsg ?: return@sendCustomMessage, MessageFailType.RONG_CLOUD)
+                        }
+                    }
                 }
             }, {
                 sendMessageFail(localMsg ?: return@request, MessageFailType.WEB)

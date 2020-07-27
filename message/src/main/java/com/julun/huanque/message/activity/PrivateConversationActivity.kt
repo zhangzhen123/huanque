@@ -30,6 +30,7 @@ import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
+import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
@@ -977,11 +978,7 @@ class PrivateConversationActivity : BaseActivity() {
         mAdapter.data.remove(msg)
         mAdapter.notifyDataSetChanged()
 
-        if (msg.content is ImageMessage) {
-            //图片消息,重试机制
-            sendPicMessage(msg)
-            return
-        }
+        val content = msg.content
 
         var extraMap: HashMap<String, String>? = null
         try {
@@ -990,14 +987,24 @@ class PrivateConversationActivity : BaseActivity() {
             e.printStackTrace()
         }
 
+        if (content is ImageMessage) {
+            //图片消息,重试
+            sendPicMessage(msg)
+            return
+        }
+
         val failType = extraMap?.get(ParamConstant.MSG_FAIL_TYPE)
         if (failType != MessageFailType.RONG_CLOUD) {
             //服务端校验未通过
-            val content = msg.content
             when (content) {
                 is TextMessage -> {
                     //重发文本消息
                     sendChatMessage(content.content, messageType = Message_Text)
+                }
+                is CustomMessage -> {
+                    //自定义消息重发
+                    val extra = JsonUtil.deserializeAsObject<String>(content.context, String::class.java)
+                    sendChatMessage(message = extra, messageType = Message_Privilege)
                 }
                 else -> {
 
@@ -1012,17 +1019,26 @@ class PrivateConversationActivity : BaseActivity() {
 //            view.findViewById<View>(R.id.send_progress)?.hide()
             //添加模拟消息
             mPrivateConversationViewModel?.addMessage(msg)
-//            //直接发送
-            RongCloudManager.send(msg, targerId) { result, message ->
-                if (!result) {
-                    //发送不成功
-                    msg.messageId = message.messageId
-                    mPrivateConversationViewModel?.sendMessageFail(msg, MessageFailType.RONG_CLOUD)
-                } else {
-                    msg.sentStatus = Message.SentStatus.SENT
-                    mAdapter.notifyDataSetChanged()
+            when (content) {
+                is TextMessage -> {
+                    //直接发送
+                    RongCloudManager.send(msg, targerId) { result, message ->
+                        if (!result) {
+                            //发送不成功
+                            msg.messageId = message.messageId
+                            mPrivateConversationViewModel?.sendMessageFail(msg, MessageFailType.RONG_CLOUD)
+                        } else {
+                            msg.sentStatus = Message.SentStatus.SENT
+                            mAdapter.notifyDataSetChanged()
+                        }
+                    }
+                }
+                is CustomMessage -> {
+                    //自定义消息重发
+                    sendCustomMessage(msg)
                 }
             }
+
         }
     }
 
@@ -1130,17 +1146,29 @@ class PrivateConversationActivity : BaseActivity() {
             }
             Message_Gift -> {
                 //送礼消息
-                RongCloudManager.sendCustomMessage(
+                val msg = RongCloudManager.obtainCustomMessage(
                     "${targetChatInfo.userId}",
                     targetUser,
                     Conversation.ConversationType.PRIVATE,
                     MessageCustomBeanType.Gift,
                     giftBean ?: return
                 )
+                msg.senderUserId = "${SessionUtils.getUserId()}"
+                sendCustomMessage(msg)
             }
             Message_Privilege -> {
                 //特权表情消息
-                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser, Message_Privilege)
+                val msg = RongCloudManager.obtainCustomMessage(
+                    "${targetChatInfo.userId}",
+                    targetUser,
+                    Conversation.ConversationType.PRIVATE,
+                    MessageCustomBeanType.Expression_Privilege,
+                    message
+                )
+                msg.senderUserId = "${SessionUtils.getUserId()}"
+                msg.sentStatus = Message.SentStatus.SENT
+                mPrivateConversationViewModel?.addMessage(msg)
+                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser, Message_Privilege, msg)
             }
             else -> {
 
@@ -1150,9 +1178,29 @@ class PrivateConversationActivity : BaseActivity() {
 
 
     /**
+     * 发送自定义消息
+     */
+    private fun sendCustomMessage(message: Message) {
+        //重置消息ID(不重置ID，融云会沿用数据库中内容，上一步存在删除消息的操作，异步会出现问题)
+        message.messageId = 0
+        message.sentStatus = Message.SentStatus.SENT
+        mPrivateConversationViewModel?.addMessage(message)
+        RongCloudManager.sendCustomMessage(message) { _, msg ->
+            message.messageId = msg.messageId
+            logger.info("Messge result = $msg")
+            if (msg != null) {
+                message.sentStatus = msg.sentStatus
+            }
+            mAdapter.notifyDataSetChanged()
+        }
+    }
+
+
+    /**
      * 发送图片
      */
     private fun sendPicMessage(imageMessage: Message) {
+        imageMessage.messageId = 0
         imageMessage.sentStatus = Message.SentStatus.SENDING
         mPrivateConversationViewModel?.addMessage(imageMessage)
 

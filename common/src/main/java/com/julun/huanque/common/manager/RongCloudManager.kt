@@ -9,6 +9,7 @@ import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
+import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
@@ -293,39 +294,21 @@ object RongCloudManager {
 
     /**
      * 发送自定义消息
-     * @param targetId 对方ID
-     * @param targetUserObj 对方数据
-     * @param conversationType 会话类型
-     * @param customType 自定义对象的类型
-     * @param customBean 自定义对象
      */
-    fun sendCustomMessage(
-        targetId: String,
-        targetUserObj: TargetUserObj? = null,
-        conversationType: Conversation.ConversationType,
-        customType: String,
-        customBean: Any
-    ) {
-        val pushContent = "收到礼物"
-        val pushData = "收到礼物"
+    fun sendCustomMessage(msg: Message, callback: (Boolean, Message) -> Unit = { result, msg -> }) {
 
-        val messageContent = CustomMessage.obtain().apply {
-            type = customType
-            context = JsonUtil.seriazileAsString(customBean)
-        }
-
-        currentUserObj?.targetUserObj = targetUserObj
-        currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
-        messageContent.extra = JsonUtil.seriazileAsString(currentUserObj)
-
-        val message = Message.obtain(targetId, conversationType, messageContent)
-        RongIMClient.getInstance().sendMessage(message, pushContent, pushData, object : IRongCallback.ISendMessageCallback {
+        RongIMClient.getInstance().sendMessage(msg, null, null, object : IRongCallback.ISendMessageCallback {
             /**
              * 消息发送前回调, 回调时消息已存储数据库
              * @param message 已存库的消息体
              */
             override fun onAttached(message: Message?) {
-                logger.info("DXC  自定发消息 onAttached")
+//                if (message != null) {
+//                    switchThread(message)
+//                }
+                if(message != null){
+                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                }
             }
 
             /**
@@ -333,9 +316,11 @@ object RongCloudManager {
              * @param message 发送成功后的消息体
              */
             override fun onSuccess(message: Message?) {
-                logger.info("DXC  自定发消息 onSuccess")
+//                if (message != null) {
+//                    switchThread(message)
+//                }
                 if (message != null) {
-                    switchThread(message)
+                    callback(true, message)
                 }
             }
 
@@ -347,9 +332,59 @@ object RongCloudManager {
             override fun onError(message: Message?, errorCode: ErrorCode?) {
                 if (message != null) {
                     updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD)))
+                    callback(false, message)
                 }
             }
         })
+    }
+
+    /**
+     *发送自定义消息
+     * @param targetId 对方ID
+     * @param targetUserObj 对方数据
+     * @param conversationType 会话类型
+     * @param customType 自定义对象的类型
+     * @param customBean 自定义对象
+     */
+    fun sendCustomMessage(
+        targetId: String,
+        targetUserObj: TargetUserObj? = null,
+        conversationType: Conversation.ConversationType,
+        customType: String,
+        customBean: Any,
+        callback: (Boolean, Message) -> Unit = { result, msg -> }
+    ) {
+        val customMessage = obtainCustomMessage(targetId, targetUserObj, conversationType, customType, customBean).apply {
+            sentTime = System.currentTimeMillis()
+        }
+        sendCustomMessage(customMessage, callback)
+    }
+
+    /**
+     *生成自定义消息
+     * @param targetId 对方ID
+     * @param targetUserObj 对方数据
+     * @param conversationType 会话类型
+     * @param customType 自定义对象的类型
+     * @param customBean 自定义对象
+     */
+    fun obtainCustomMessage(
+        targetId: String,
+        targetUserObj: TargetUserObj? = null,
+        conversationType: Conversation.ConversationType,
+        customType: String,
+        customBean: Any
+    ): Message {
+        val messageContent = CustomMessage.obtain().apply {
+            type = customType
+            context = JsonUtil.seriazileAsString(customBean)
+        }
+
+        currentUserObj?.targetUserObj = targetUserObj
+        currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
+        messageContent.extra = JsonUtil.seriazileAsString(currentUserObj)
+
+        return Message.obtain(targetId, conversationType, messageContent).apply { sentTime = System.currentTimeMillis() }
     }
 
 
@@ -390,6 +425,7 @@ object RongCloudManager {
             override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
                 if (message != null) {
 //                    switchThread(message)
+                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
                 }
                 OssUpLoadManager.uploadFiles(arrayListOf(targetUserObj.localPic), OssUpLoadManager.MESSAGE_PIC) { code, list ->
                     if (code == OssUpLoadManager.CODE_SUCCESS) {
@@ -490,6 +526,9 @@ object RongCloudManager {
             null,
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
+                    if (message != null) {
+                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                    }
                 }
 
                 override fun onSuccess(message: Message?) {
@@ -537,6 +576,9 @@ object RongCloudManager {
         RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE, targetId, oMessage.content, null, null,
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
+                    if (message != null) {
+                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                    }
                 }
 
                 override fun onSuccess(message: Message?) {
