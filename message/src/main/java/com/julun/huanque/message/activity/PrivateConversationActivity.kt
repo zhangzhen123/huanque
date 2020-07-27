@@ -902,6 +902,7 @@ class PrivateConversationActivity : BaseActivity() {
                     //查看图片
                     val content = tempData.content
                     if (content is ImageMessage) {
+                        //todo 添加本地地址查看
                         ImageActivity.start(this, 0, medias = listOf(StringHelper.getOssImgUrl("${content.remoteUri}")))
                     }
                 }
@@ -975,6 +976,13 @@ class PrivateConversationActivity : BaseActivity() {
         }
         mAdapter.data.remove(msg)
         mAdapter.notifyDataSetChanged()
+
+        if (msg.content is ImageMessage) {
+            //图片消息,重试机制
+            sendPicMessage(msg)
+            return
+        }
+
         var extraMap: HashMap<String, String>? = null
         try {
             extraMap = JsonUtil.deserializeAsObject(msg.extra, HashMap::class.java)
@@ -1103,17 +1111,22 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.addMessage(msg)
                 mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser, localMsg = msg)
             }
+
             Message_Pic -> {
                 //图片消息
-                RongCloudManager.sendMediaMessage(
+                val imageMessage = RongCloudManager.obtainImageMessage(
                     "${targetChatInfo.userId}",
-                    targetUser.apply { fee = mPrivateConversationViewModel?.msgFeeData?.value ?: 0 },
-                    Conversation.ConversationType.PRIVATE,
-                    pic,
-                    localPic
-                ) { upLoader, headerPic ->
-                    mPrivateConversationViewModel?.sendPic(upLoader, targetChatInfo.userId, "$headerPic")
-                }
+                    localPic,
+                    targetUser.apply {
+                        fee = mPrivateConversationViewModel?.msgFeeData?.value ?: 0
+                        this.localPic = localPic
+                    },
+                    Conversation.ConversationType.PRIVATE
+                )
+
+                imageMessage.senderUserId = "${SessionUtils.getUserId()}"
+                sendPicMessage(imageMessage)
+
             }
             Message_Gift -> {
                 //送礼消息
@@ -1132,6 +1145,45 @@ class PrivateConversationActivity : BaseActivity() {
             else -> {
 
             }
+        }
+    }
+
+
+    /**
+     * 发送图片
+     */
+    private fun sendPicMessage(imageMessage: Message) {
+        imageMessage.sentStatus = Message.SentStatus.SENDING
+        mPrivateConversationViewModel?.addMessage(imageMessage)
+
+        RongCloudManager.sendMediaMessage(imageMessage) { msg, upLoader, picUrl ->
+            imageMessage.messageId = msg?.messageId ?: 0
+            when (msg?.sentStatus) {
+                Message.SentStatus.SENDING -> {
+                    //发送中
+                    try {
+                        mPrivateConversationViewModel?.sendPic(upLoader, imageMessage.targetId.toLong(), "$picUrl")
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                Message.SentStatus.FAILED -> {
+                    //发送失败
+                    logger.info("Message 消息发送失败")
+                    imageMessage.sentStatus = Message.SentStatus.FAILED
+                    mAdapter.notifyDataSetChanged()
+                }
+                Message.SentStatus.SENT -> {
+                    //发送成功
+                    logger.info("Message 消息发送成功")
+                    imageMessage.sentStatus = Message.SentStatus.SENT
+                    (imageMessage.content as? ImageMessage)?.remoteUri = (msg.content as? ImageMessage)?.remoteUri
+                    mAdapter.notifyDataSetChanged()
+                }
+                else -> {
+                }
+            }
+
         }
     }
 

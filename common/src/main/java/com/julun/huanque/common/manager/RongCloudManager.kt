@@ -373,9 +373,64 @@ object RongCloudManager {
      * @group 消息操作
      */
     fun sendMediaMessage(
-        targetId: String, targetUserObj: TargetUserObj? = null, type: Conversation.ConversationType, compressLocalImage: String
-        , localImage: String, callback: (IRongCallback.MediaMessageUploader?, String?) -> Unit = { upLoader, picUrl -> }
+        localMessage: Message,
+        callback: (Message?, IRongCallback.MediaMessageUploader?, String?) -> Unit = { message, upLoader, picUrl -> }
     ) {
+        val extra = (localMessage.content as? ImageMessage)?.extra ?: ""
+        var targetUserObj: TargetUserObj? = null
+        try {
+            val mRoomUserChatExtra = JsonUtil.deserializeAsObject<RoomUserChatExtra>(extra, RoomUserChatExtra::class.java)
+            targetUserObj = mRoomUserChatExtra.targetUserObj
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        targetUserObj ?: return
+
+        RongIMClient.getInstance().sendMediaMessage(localMessage, null, null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
+            override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
+                if (message != null) {
+//                    switchThread(message)
+                }
+                OssUpLoadManager.uploadFiles(arrayListOf(targetUserObj.localPic), OssUpLoadManager.MESSAGE_PIC) { code, list ->
+                    if (code == OssUpLoadManager.CODE_SUCCESS) {
+                        logger("DXC 头像上传oss成功：${list} localImage =")
+                        val headPic = list?.firstOrNull()
+                        if (headPic != null) {
+                            callback(message, uploader, headPic)
+//                            uploader?.success(Uri.parse("$headPic"))
+                        }
+                    } else {
+                        uploader?.error()
+                    }
+                }
+            }
+
+            override fun onSuccess(message: Message?) {
+                callback(message, null, null)
+            }
+
+            override fun onProgress(p0: Message?, p1: Int) {
+
+            }
+
+            override fun onCanceled(p0: Message?) {
+
+            }
+
+            override fun onError(message: Message?, p1: ErrorCode?) {
+                if (message != null) {
+                    callback(message, null, null)
+                    updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD)))
+                }
+            }
+
+        })
+    }
+
+    /**
+     * 模拟生成图片消息
+     */
+    fun obtainImageMessage(targetId: String, localImage: String, targetUserObj: TargetUserObj? = null, type: Conversation.ConversationType): Message {
         val prefix = "file://"
         val localUri = if (localImage.startsWith(prefix)) {
             Uri.parse(localImage)
@@ -387,44 +442,9 @@ object RongCloudManager {
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
         imageMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
 
-
-        val message = Message.obtain(targetId, type, imageMessage)
-        RongIMClient.getInstance().sendMediaMessage(message, null, null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
-            override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
-                if (message != null) {
-                    switchThread(message)
-                }
-                OssUpLoadManager.uploadFiles(arrayListOf(compressLocalImage), OssUpLoadManager.MESSAGE_PIC) { code, list ->
-                    if (code == OssUpLoadManager.CODE_SUCCESS) {
-                        logger("DXC 头像上传oss成功：${list} localImage = $localImage")
-                        val headPic = list?.firstOrNull()
-                        if (headPic != null) {
-                            callback(uploader, headPic)
-//                            uploader?.success(Uri.parse("$headPic"))
-                        }
-                    } else {
-                        uploader?.error()
-                    }
-                }
-            }
-
-            override fun onSuccess(message: Message?) {
-            }
-
-            override fun onProgress(p0: Message?, p1: Int) {
-
-            }
-
-            override fun onCanceled(p0: Message?) {
-
-            }
-
-            override fun onError(p0: Message?, p1: ErrorCode?) {
-                p0?.extra = JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD))
-            }
-
-        })
+        return Message.obtain(targetId, type, imageMessage)
     }
+
 
     /**
      * 生成文本消息
@@ -445,7 +465,12 @@ object RongCloudManager {
     /**
      * 发送聊天消息
      */
-    fun send(message: String, toUserId: String? = null, targetUserObj: TargetUserObj? = null, callback: (Boolean, Message) -> Unit = { result, msg -> }) {
+    fun send(
+        message: String,
+        toUserId: String? = null,
+        targetUserObj: TargetUserObj? = null,
+        callback: (Boolean, Message) -> Unit = { result, msg -> }
+    ) {
         val chatMessage: TextMessage = TextMessage.obtain(message)
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
@@ -470,7 +495,7 @@ object RongCloudManager {
                 override fun onSuccess(message: Message?) {
                     logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
                     if (message != null) {
-                        callback(true,message)
+                        callback(true, message)
                         //                            try {
                         //                                onReceived(message)
                         //                            } catch (e: Exception) {
@@ -486,7 +511,7 @@ object RongCloudManager {
                 override fun onError(message: Message?, errorCode: ErrorCode?) {
                     if (message != null) {
 //                        switchThread(message)
-                        callback(false,message)
+                        callback(false, message)
                         updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD)))
                     }
                     logger.info(
@@ -517,7 +542,7 @@ object RongCloudManager {
                 override fun onSuccess(message: Message?) {
                     logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
                     if (message != null) {
-                        callback(true,message)
+                        callback(true, message)
                         //                            try {
                         //                                onReceived(message)
                         //                            } catch (e: Exception) {
@@ -532,7 +557,7 @@ object RongCloudManager {
 
                     if (message != null) {
                         //                            ChatUtils.deleteSingleMessage(message.messageId)
-                        callback(false,message)
+                        callback(false, message)
                         updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD)))
                     }
                     logger.info(

@@ -137,7 +137,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="left"
-        app:constraint_referenced_ids="tv_content,tv_pic_content" />
+        app:constraint_referenced_ids="tv_content,tv_pic_content,sdv_image" />
 
     <ImageView
         android:id="@+id/iv_send_fail"
@@ -164,7 +164,7 @@
         android:indeterminateDrawable="@drawable/rc_progress_sending_style"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/tv_content"
-        app:layout_constraintRight_toLeftOf="@id/tv_content"
+        app:layout_constraintRight_toLeftOf="@id/barrier_content"
         app:layout_constraintTop_toTopOf="@id/tv_content"
         tools:visibility="visible" />
 
