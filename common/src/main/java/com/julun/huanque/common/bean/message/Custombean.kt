@@ -1,5 +1,7 @@
 package com.julun.huanque.common.bean.message
 
+import java.io.Serializable
+
 /**
  *@创建者   dong
  *@创建时间 2020/7/11 11:07
@@ -18,3 +20,8 @@ data class VoiceConmmunicationSimulate(
     var type: String = "", var duration: Long = 0, var createUserID: Long = 0,
     var billUserId: Long = 0, var totalBeans: Long = 0
 )
+
+/**
+ * 自定义动画消息
+ */
+data class ExpressionAnimationBean(var name: String = "", var result: String = "") : Serializable

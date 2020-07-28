@@ -23,6 +23,8 @@ public class Emotions {
     public static Map<String, Integer> NORMAL_EMOTIONS = new LinkedHashMap<>();
     // 特权表情
     public static Map<String, Integer> PRIVILEGE_EMOTIONS = new LinkedHashMap<>();
+    // 动画表情
+    public static Map<String, Integer> ANIMATION_EMOTIONS = new LinkedHashMap<>();
 
     static {
         // 加载普通表情
@@ -56,6 +58,10 @@ public class Emotions {
 
         // 加载特权表情
         PRIVILEGE_EMOTIONS.put("[晚安]", R.drawable.expression_privilege_wanan);
+
+        // 加载动画表情
+        ANIMATION_EMOTIONS.put("[猜拳]", R.drawable.icon_caiquan);
+        ANIMATION_EMOTIONS.put("[骰子]", R.drawable.icon_shaizi);
     }
 
     private static String emotionCode2String(int code) {
@@ -70,6 +76,10 @@ public class Emotions {
         if (!TextUtils.isEmpty(emotionName) && PRIVILEGE_EMOTIONS.containsKey(emotionName)) {
             return PRIVILEGE_EMOTIONS.get(emotionName);
         }
+
+        if (!TextUtils.isEmpty(emotionName) && ANIMATION_EMOTIONS.containsKey(emotionName)) {
+            return ANIMATION_EMOTIONS.get(emotionName);
+        }
         return -1;
     }
 
@@ -82,6 +92,9 @@ public class Emotions {
             break;
         case EmojiType.PREROGATIVE:
             entries = PRIVILEGE_EMOTIONS.entrySet().iterator();
+            break;
+        case EmojiType.ANIMATION:
+            entries = ANIMATION_EMOTIONS.entrySet().iterator();
             break;
         default:
             break;

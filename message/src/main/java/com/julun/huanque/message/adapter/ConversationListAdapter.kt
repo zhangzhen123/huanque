@@ -158,6 +158,9 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                     MessageCustomBeanType.Expression_Privilege -> {
                         helper.setText(R.id.tv_content, "[表情]")
                     }
+                    MessageCustomBeanType.Expression_Animation -> {
+                        helper.setText(R.id.tv_content, "[表情]")
+                    }
                     else -> {
                         helper.setText(R.id.tv_content, "")
                     }

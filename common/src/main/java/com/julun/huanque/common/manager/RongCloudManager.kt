@@ -15,6 +15,7 @@ import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.MessageFailType
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
@@ -331,7 +332,8 @@ object RongCloudManager {
              */
             override fun onError(message: Message?, errorCode: ErrorCode?) {
                 if (message != null) {
-                    updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD)))
+                    updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
+                        ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
                     callback(false, message)
                 }
             }
@@ -456,7 +458,8 @@ object RongCloudManager {
             override fun onError(message: Message?, p1: ErrorCode?) {
                 if (message != null) {
                     callback(message, null, null)
-                    updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD)))
+                    updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
+                        ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
                 }
             }
 
@@ -551,7 +554,8 @@ object RongCloudManager {
                     if (message != null) {
 //                        switchThread(message)
                         callback(false, message)
-                        updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD)))
+                        updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
+                            ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
                     }
                     logger.info(
                         "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
@@ -600,7 +604,8 @@ object RongCloudManager {
                     if (message != null) {
                         //                            ChatUtils.deleteSingleMessage(message.messageId)
                         callback(false, message)
-                        updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.messageExtra(MessageFailType.RONG_CLOUD)))
+                        updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
+                            ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
                     }
                     logger.info(
                         "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
@@ -619,7 +624,7 @@ object RongCloudManager {
      * @param msgId 消息ID
      * @param content extra内容
      */
-    private fun updateMessageExtra(msgId: Int, content: String) {
+    fun updateMessageExtra(msgId: Int, content: String) {
         RongIMClient.getInstance().setMessageExtra(msgId, content)
     }
 

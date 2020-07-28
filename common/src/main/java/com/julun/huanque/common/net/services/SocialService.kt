@@ -127,14 +127,22 @@ interface SocialService {
      */
     @POST("social/friend/relation/recover")
     suspend fun recover(@Body form: FriendIdForm): Root<VoidResult>
+
     /**
      * 获取用户消息设置
      */
     @POST("social/user/message/settings")
     suspend fun settings(@Body form: VoidForm = VoidForm()): Root<MessageSettingBean>
+
     /**
      * 更新用户消息设置
      */
     @POST("social/user/message/updateSettings")
     suspend fun updateSettings(@Body form: SettingForm): Root<VoidResult>
+
+    /**
+     * 发送骰子表情
+     */
+    @POST("social/friend/chat/sendDice")
+    suspend fun sendDice(@Body form: SendMsgForm): Root<SendMsgBean>
 }

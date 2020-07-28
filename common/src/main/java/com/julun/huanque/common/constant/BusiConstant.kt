@@ -448,6 +448,9 @@ object MessageCustomBeanType {
     //特权表情
     const val Expression_Privilege = "Expression_Privilege"
 
+    //动画表情
+    const val Expression_Animation = "Expression_Animation"
+
     //模拟语音通话消息
     const val Voice_Conmmunication_Simulate = "Voice_Conmmunication_Simulate"
 
@@ -527,8 +530,8 @@ object EmojiType {
     //特权表情
     const val PREROGATIVE = "PREROGATIVE"
 
-    //高级表情
-    const val HIGH = "HIGH"
+    //动画表情
+    const val ANIMATION = "ANIMATION"
 }
 
 /**

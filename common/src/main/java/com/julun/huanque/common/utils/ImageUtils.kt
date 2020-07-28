@@ -530,8 +530,8 @@ object ImageUtils {
     fun showAnimator(
         sdv: SimpleDraweeView,
         uri: String,
-        animatorListener: WebpAnimatorListener? = null,
-        count: Int = 1
+        count: Int = 1,
+        animatorListener: WebpAnimatorListener? = null
     ) {
         val tempUri = if (uri.startsWith("res://") || uri.startsWith("asset://")) {
             //本地资源

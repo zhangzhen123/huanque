@@ -40,6 +40,9 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
     //特权表情的Adapter
     private var mPrivilegeAdapter = PrerogativeEmojiAdapter()
 
+    //动画表情的Adapter
+    private var mAnimationAdapter = AnimationAdapter()
+
     private var mNeedLevel = 0
 
     private var mCurrentLevel = 0
@@ -138,8 +141,15 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
             }
             showRecyclerView(iv_prerogative, recyclerView_prerogative)
         }
+
         iv_high.onClickNew {
-            showRecyclerView(iv_high, recyclerView_high)
+            if (mAnimationAdapter.itemCount == 0) {
+                //未设置数据,设置数据
+                val list = mutableListOf<Emotion>()
+                list.addAll(Emotions.getEmotions(EmojiType.ANIMATION))
+                mAnimationAdapter.setList(list)
+            }
+            showRecyclerView(iv_high, recyclerView_animation)
         }
         recyclerView_emoji.mEventListener = object : EventListener {
             override fun onDispatch(ev: MotionEvent?) {
@@ -205,8 +215,14 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
             return@setOnItemLongClickListener true
         }
 
-        recyclerView_high.layoutManager = GridLayoutManager(context, 7)
-//        recyclerView_high.adapter = mNormalEmojiAdapter
+        recyclerView_animation.layoutManager = GridLayoutManager(context, 4)
+        recyclerView_animation.adapter = mAnimationAdapter
+        mAnimationAdapter.setOnItemClickListener { adapter, view, position ->
+            if (position < mAnimationAdapter.data.size) {
+                val tempData = mAnimationAdapter.getItem(position)
+                mListener?.onClick(EmojiType.ANIMATION, tempData)
+            }
+        }
     }
 
     /**
@@ -214,7 +230,7 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
      */
     private fun showRecyclerView(view: View, rv: RecyclerView) {
         val viewList = arrayListOf<View>(iv_emoji, iv_prerogative, iv_high)
-        val rvList = arrayListOf<RecyclerView>(recyclerView_emoji, recyclerView_prerogative, recyclerView_high)
+        val rvList = arrayListOf<RecyclerView>(recyclerView_emoji, recyclerView_prerogative, recyclerView_animation)
 
         viewList.forEach {
             it.isSelected = it == view
@@ -245,8 +261,21 @@ private class NormalEmojiAdapter() : BaseQuickAdapter<Emotion, BaseViewHolder>(R
     }
 }
 
+/**
+ * 特权图片Adapter
+ */
 private class PrerogativeEmojiAdapter : BaseQuickAdapter<Emotion, BaseViewHolder>(R.layout.vh_privilege_emotion_item_layout) {
     override fun convert(holder: BaseViewHolder, item: Emotion) {
         holder.setImageResource(R.id.image, item.drawableRes)
+    }
+}
+
+/**
+ * 动画表情Adapter
+ */
+private class AnimationAdapter : BaseQuickAdapter<Emotion, BaseViewHolder>(R.layout.vh_animation_emotion_item_layout) {
+    override fun convert(holder: BaseViewHolder, item: Emotion) {
+        holder.setImageResource(R.id.image, item.drawableRes)
+
     }
 }

@@ -315,7 +315,10 @@ class PrivateConversationViewModel : BaseViewModel() {
      */
     fun sendMessageFail(msg: Message, type: String) {
         msg.sentStatus = Message.SentStatus.FAILED
-        val hashMap = GlobalUtils.messageExtra(type)
+        val hashMap = GlobalUtils.addExtra(
+            msg.extra,
+            ParamConstant.MSG_FAIL_TYPE, type
+        )
         msgData.value = msg.apply { extra = JsonUtil.seriazileAsString(hashMap) }
     }
 
@@ -331,6 +334,28 @@ class PrivateConversationViewModel : BaseViewModel() {
                 uploader?.success(Uri.parse(content))
             }, {
                 uploader?.error()
+            })
+        }
+    }
+
+    /**
+     * 发送骰子表情
+     */
+    fun sendDice(targetId: Long, content: String, localMsg: Message) {
+        viewModelScope.launch {
+            request({
+                val result = socialService.sendDice(SendMsgForm(targetId, content)).dataConvert()
+                BalanceUtils.saveBalance(result.beans)
+                msgFeeData.value = result.consumeBeans
+                RongCloudManager.sendCustomMessage(localMsg) { result, message ->
+                    if (!result) {
+                        //发送失败
+                        localMsg.messageId = message.messageId
+                        sendMessageFail(localMsg, MessageFailType.RONG_CLOUD)
+                    }
+                }
+            }, {
+                sendMessageFail(localMsg ?: return@request, MessageFailType.WEB)
             })
         }
     }
