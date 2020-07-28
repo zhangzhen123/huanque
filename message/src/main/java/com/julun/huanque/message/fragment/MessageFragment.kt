@@ -72,7 +72,6 @@ class MessageFragment : BaseFragment() {
         }
 
         mMessageViewModel.getConversationList()
-        mMessageViewModel.queryRongPrivateCount()
         mMessageViewModel.getBlockedConversationList()
     }
 
@@ -228,7 +227,6 @@ class MessageFragment : BaseFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateMessageReceive(bean: EventMessageBean) {
-        mMessageViewModel.queryRongPrivateCount()
         mMessageViewModel.refreshConversation(bean.targetId, bean.stranger)
     }
 
@@ -269,7 +267,6 @@ class MessageFragment : BaseFragment() {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，加载数据
             mMessageViewModel.getConversationList()
-            mMessageViewModel.queryRongPrivateCount()
         }
     }
 
