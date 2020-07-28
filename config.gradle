@@ -29,6 +29,9 @@ ext {
             RXANDROID                    : "io.reactivex.rxjava3:rxandroid:3.0.0",
             //微信
             WECHAT                       : 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.4',
+
+            //MMKV
+            MMKV                         : 'com.tencent:mmkv-static:1.2.1'
     ]
 
     api = [

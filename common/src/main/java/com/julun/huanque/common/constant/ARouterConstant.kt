@@ -41,6 +41,8 @@ object ARouterConstant {
 
     const val APP_COMMON_SERVICE = "/$APP$SERVICE/AppCommonService"
     const val LOGIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/LoginActivity"
+    //环境切换
+    const val ENVIRONMENT_CONFIGURATION_ACTIVITY = "/$APP$PREFIX_ACTIVITY/EnvironmentConfigurationActivity"
 
     const val PHONE_NUM_LOGIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/PhoneNumLoginActivity"
 
