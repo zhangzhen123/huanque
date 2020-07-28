@@ -91,7 +91,11 @@ class IntimateDetailFragment : BaseDialogFragment() {
             100
         } else {
             tv_meet_attention.text = "距离下一级差${intimateBean.nextIntimateNum - intimateBean.intimateNum}亲密度"
-            intimateBean.intimateNum * 100 / intimateBean.nextIntimateNum
+            if (intimateBean.nextIntimateNum != 0) {
+                0
+            } else {
+                intimateBean.intimateNum * 100 / intimateBean.nextIntimateNum
+            }
         }
         progress_meet.progress = progress
 
