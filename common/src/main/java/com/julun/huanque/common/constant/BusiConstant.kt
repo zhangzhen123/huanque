@@ -573,6 +573,14 @@ object MessageFailType {
 
     //服务端
     const val WEB = "WEB"
+}
 
-
+//猜拳结果
+object FingerGuessingResult {
+    //石头
+    const val ROCK = "rock"
+    //布
+    const val PAPER = "paper"
+    //剪刀
+    const val SCISSORS = "scissors"
 }

@@ -360,6 +360,29 @@ class PrivateConversationViewModel : BaseViewModel() {
         }
     }
 
+    /**
+     * 发送猜拳表情
+     */
+    fun sendFinger(targetId: Long, content: String, localMsg: Message) {
+        viewModelScope.launch {
+            request({
+                val result = socialService.sendFinger(SendMsgForm(targetId, content)).dataConvert()
+                BalanceUtils.saveBalance(result.beans)
+                msgFeeData.value = result.consumeBeans
+                RongCloudManager.sendCustomMessage(localMsg) { result, message ->
+                    if (!result) {
+                        //发送失败
+                        localMsg.messageId = message.messageId
+                        sendMessageFail(localMsg, MessageFailType.RONG_CLOUD)
+                    }
+                }
+            }, {
+                sendMessageFail(localMsg ?: return@request, MessageFailType.WEB)
+            })
+        }
+    }
+
+
     override fun onCleared() {
         super.onCleared()
         mCoolingDisposable?.dispose()

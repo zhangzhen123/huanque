@@ -48,6 +48,7 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
+import com.julun.huanque.common.widgets.emotion.Emotions
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
@@ -459,8 +460,31 @@ class PrivateConversationActivity : BaseActivity() {
                     EmojiType.ANIMATION -> {
                         //动画表情
                         //随机结果
-                        val result = java.util.Random().nextInt(6) + 1
-                        sendChatMessage(message = emotion.text, animationResult = "$result", messageType = Message_Animation)
+                        when (emotion.text) {
+                            "[猜拳]" -> {
+                                val result = java.util.Random().nextInt(3) + 1
+                                val type = when (result) {
+                                    1 -> {
+                                        FingerGuessingResult.PAPER
+                                    }
+                                    2 -> {
+                                        FingerGuessingResult.ROCK
+                                    }
+                                    else -> {
+                                        FingerGuessingResult.SCISSORS
+                                    }
+                                }
+                                sendChatMessage(message = emotion.text, animationResult = type, messageType = Message_Animation)
+                            }
+                            "[骰子]" -> {
+                                val result = java.util.Random().nextInt(6) + 1
+                                sendChatMessage(message = emotion.text, animationResult = "$result", messageType = Message_Animation)
+                            }
+                            else -> {
+                                logger.info("Message 未兼容该表情")
+                            }
+                        }
+
                     }
                 }
             }
@@ -1217,7 +1241,17 @@ class PrivateConversationActivity : BaseActivity() {
                 msg.senderUserId = "${SessionUtils.getUserId()}"
                 msg.sentStatus = Message.SentStatus.SENT
                 mPrivateConversationViewModel?.addMessage(msg)
-                mPrivateConversationViewModel?.sendDice(targetChatInfo.userId, animationResult, msg)
+                when (message) {
+                    "[猜拳]" -> {
+                        mPrivateConversationViewModel?.sendFinger(targetChatInfo.userId, animationResult, msg)
+                    }
+                    "[骰子]" -> {
+                        mPrivateConversationViewModel?.sendDice(targetChatInfo.userId, animationResult, msg)
+                    }
+                    else -> {
+                    }
+                }
+
             }
             else -> {
 
@@ -1234,10 +1268,6 @@ class PrivateConversationActivity : BaseActivity() {
         RongCloudManager.sendCustomMessage(message) { result, msg ->
             message.messageId = msg.messageId
             message.sentStatus = msg.sentStatus
-            val content = message.content
-            if (result && content is CustomMessage && content.type == MessageCustomBeanType.Expression_Animation) {
-                //动画表情发送成功，设置数据库数据
-            }
             mAdapter.notifyDataSetChanged()
         }
     }

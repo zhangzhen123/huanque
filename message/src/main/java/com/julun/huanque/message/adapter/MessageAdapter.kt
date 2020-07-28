@@ -26,6 +26,7 @@ import com.julun.huanque.common.bean.message.ExpressionAnimationBean
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
+import com.julun.huanque.common.constant.FingerGuessingResult
 import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.VoiceResultType
@@ -39,12 +40,16 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.message.R
+import com.trello.rxlifecycle4.kotlin.bindToLifecycle
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.bottomPadding
 import java.io.File
+import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
 
@@ -187,15 +192,16 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     }
                     showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
                     if (expressionAnimationBean != null) {
+                        val started = map?.get(ParamConstant.MSG_ANIMATION_STARTED) as? Boolean
                         when (EmojiSpanBuilder.getPrivilegeResource(context, expressionAnimationBean.name)) {
                             R.drawable.icon_shaizi -> {
                                 //骰子动效
-                                val started = map?.get(ParamConstant.MSG_ANIMATION_STARTED) as? Boolean
                                 showShaiziAnimation(item, helper.getView(R.id.sdv_image), expressionAnimationBean.result, started ?: false)
 
                             }
                             R.drawable.icon_caiquan -> {
                                 //猜拳动效
+                                showGuessAnimation(item, helper.getView(R.id.sdv_image), expressionAnimationBean.result, started ?: false)
                             }
                             else -> {
                             }
@@ -586,6 +592,50 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             ImageUtils.loadImageLocal(view, resultPic)
         }
     }
+
+    /**
+     * 显示猜拳动画
+     */
+    private fun showGuessAnimation(msg: Message, view: SimpleDraweeView, result: String, started: Boolean) {
+        val resultList = arrayListOf<Int>(R.drawable.pic_guessing_scissors, R.drawable.pic_guessing_rock, R.drawable.pic_guessing_paper)
+        val resultPic = when (result) {
+            FingerGuessingResult.ROCK -> {
+                //石头
+                R.drawable.pic_guessing_rock
+            }
+            FingerGuessingResult.PAPER -> {
+                //布
+                R.drawable.pic_guessing_paper
+            }
+            else -> {
+                //剪刀
+                R.drawable.pic_guessing_scissors
+            }
+        }
+
+        if (!started) {
+            //动画没有播放过，播放动画
+            Observable.interval(0, 200L, TimeUnit.MILLISECONDS)
+                .take(10)
+                .bindToLifecycle(view)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val pic = resultList[it.toInt() % resultList.size]
+                    ImageUtils.loadImageLocal(view, pic)
+
+                }, {
+                    ImageUtils.loadImageLocal(view, resultPic)
+                    setAnimationStarted(msg)
+                }, {
+                    ImageUtils.loadImageLocal(view, resultPic)
+                    setAnimationStarted(msg)
+                })
+        } else {
+            //直接显示结果
+            ImageUtils.loadImageLocal(view, resultPic)
+        }
+    }
+
 
     /**
      * 设置动画已经播放过
