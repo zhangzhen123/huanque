@@ -3,6 +3,7 @@ package com.julun.huanque.viewmodel
 import android.os.AsyncTask
 import android.text.TextUtils
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.geetest.sdk.GT3ConfigBean
@@ -19,6 +20,7 @@ import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.LoginStatusUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.svga.SVGAHelper.logger
 import com.julun.huanque.core.net.UserService
@@ -46,6 +48,9 @@ class PhoneNumLoginViewModel : BaseViewModel() {
 
     //登录数据
     val loginData: MutableLiveData<Session> by lazy { MutableLiveData<Session>() }
+
+    //登录状态
+    val loginStatus: LiveData<Boolean> by lazy { LoginStatusUtils.getLoginStatus() }
 
     private val gt3Config: GT3ConfigBean by lazy {
         val gt3ConfigBean = GT3ConfigBean()

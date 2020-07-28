@@ -27,6 +27,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.helper.DensityHelper
+import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
@@ -89,6 +90,12 @@ class LoginActivity : BaseActivity() {
                 } else {
                     FillInformationActivity.newInstance(this)
                 }
+            }
+        })
+        mViewModel?.loginStatus?.observe(this, Observer {
+            if (it == true) {
+                //登录成功
+                finish()
             }
         })
     }
@@ -296,28 +303,27 @@ class LoginActivity : BaseActivity() {
         return uiConfigBuilder.build()
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
-            //注册成功，跳转首页
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        } else {
-            SessionUtils.clearSession()
-        }
-        finish()
-    }
+//    override fun onNewIntent(intent: Intent?) {
+//        super.onNewIntent(intent)
+//        if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
+//            //注册成功，跳转首页
+//            val intent = Intent(this, MainActivity::class.java)
+//            startActivity(intent)
+//        } else {
+//            SessionUtils.clearSession()
+//        }
+//        finish()
+//    }
 
     override fun finish() {
         if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
-
+            //登录成功，直接finish
         } else {
+            //未登录成功，需要退出APP
             SessionUtils.clearSession()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            ActivitiesManager.finishApp()
         }
         super.finish()
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

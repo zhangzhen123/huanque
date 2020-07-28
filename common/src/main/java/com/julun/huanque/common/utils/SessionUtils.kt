@@ -140,7 +140,6 @@ object SessionUtils {
     }
 
     fun setSessionId(sessionId: String) {
-        ULog.i("Planet 设置sessionId = $sessionId")
         SharedPreferencesUtils.commitString(SESSION_ID, sessionId)
     }
 
