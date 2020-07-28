@@ -435,7 +435,8 @@ class PrivateConversationActivity : BaseActivity() {
             edit_text.setText(text)
             //唤起键盘
             edit_text.requestFocus()
-//            ScreenUtils.showSoftInput(tv_edit)
+            //修改光标位置
+            edit_text.setSelection(text.length);
         }
 
         iv_que_close.onClickNew {

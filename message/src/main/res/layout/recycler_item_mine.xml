@@ -141,8 +141,8 @@
 
     <ImageView
         android:id="@+id/iv_send_fail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:src="@mipmap/msg_send_failure"

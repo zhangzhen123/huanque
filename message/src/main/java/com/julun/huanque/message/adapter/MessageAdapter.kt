@@ -289,7 +289,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         val previousPosition = currentPosition - 1
         if (ForceUtils.isIndexNotOutOfBounds(previousPosition, data)) {
             val previousData = data[previousPosition]
-            if (Math.abs(item.sentTime - previousData.sentTime) < 5 * 60 * 1000) {
+            if (Math.abs(item.sentTime - previousData.sentTime) < 2 * 60 * 1000) {
                 //两条消息间隔在5分钟以内
                 helper.setGone(R.id.view_top, false)
                 helper.setGone(R.id.group, true)
