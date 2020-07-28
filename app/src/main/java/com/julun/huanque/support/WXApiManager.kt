@@ -2,18 +2,16 @@ package com.julun.huanque.support
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.text.TextUtils
 import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.app.HuanQueApp
-import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.OrderInfo
 import com.julun.huanque.common.bean.beans.ShareObject
-import com.julun.huanque.common.bean.forms.BindForm
-import com.julun.huanque.common.bean.forms.ShareWay
-import com.julun.huanque.common.constant.ByteConstants
-import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.constant.WeiXinShareType
+import com.julun.huanque.common.constant.ShareWayEnum
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -24,13 +22,14 @@ import com.tencent.mm.opensdk.modelmsg.*
 import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
-import java.net.SocketTimeoutException
 
 
 /**
  * Created by djp on 2016/11/26.
  */
 object WXApiManager {
+
+    private const val THUMB_SIZE = 150
 
     //来自于动态页的分享
     private var mIsFromDynamic: Boolean = false
@@ -39,12 +38,14 @@ object WXApiManager {
         if (HuanQueApp.wxApi?.isWXAppInstalled == true) {
             if (checkPay) {
                 if ((HuanQueApp.wxApi?.wxAppSupportAPI
-                                ?: 0) >= Build.PAY_SUPPORTED_SDK_INT) {
+                        ?: 0) >= Build.PAY_SUPPORTED_SDK_INT
+                ) {
                     //判断微信当前版本是否支持微信支付
                     return true
                 }
             } else if ((HuanQueApp.wxApi?.wxAppSupportAPI
-                            ?: 0) >= Build.TIMELINE_SUPPORTED_SDK_INT) {
+                    ?: 0) >= Build.TIMELINE_SUPPORTED_SDK_INT
+            ) {
                 //判断微信当前版本是否过低
                 return true
             }
@@ -114,84 +115,127 @@ object WXApiManager {
         }
     }
 
-    // 微信分享
-    fun doShare(context: Activity, scene: Int, shareObj: ShareObject) {
-        if (checkWXInstalled(context)) {
-            shareObject = shareObj
-            if (scene == SendMessageToWX.Req.WXSceneSession) {
-                shareObject?.shareWay = ShareWay.WXFriends.name
-            } else {
-                shareObject?.shareWay = ShareWay.WXTimeline.name
-            }
-            val webpage = WXWebpageObject()
-            webpage.webpageUrl = shareObj.shareUrl
-
-            val msg = WXMediaMessage(webpage)
-            msg.title = shareObj.shareTitle
-            msg.description = shareObj.shareContent
-//            SessionUtils.setWeiXinUse(true)
-            // 没有给分享图片，就用app icon
-            if (TextUtils.isEmpty(shareObj.sharePic)) {
-                loadLocalImg(context, msg, scene)
-            } else {
-                loadNetworkImg(context, msg, scene, shareObj.sharePic ?: "")
-            }
-        }
-    }
-
     /**
-     * 分享小程序
-     * 小程序目前只支持发送到微信
+     * 微信分享
+     * [shareObj] 分享的实体类
      */
-    fun shareToMini(context: Activity, shareObj: ShareObject) {
-        if (shareObj.touchType != "Mini") {
-            //做一次兼容，分享到微信
-            doShare(context, SendMessageToWX.Req.WXSceneSession, shareObj)
-            return
-        }
-        //小程序
-        if (checkWXInstalled(context)) {
-            shareObject = shareObj
-            shareObject?.shareWay = ShareWay.WXFriends.name
-            val miniProgramObj = WXMiniProgramObject()
-            // 兼容低版本的网页链接
-            miniProgramObj.webpageUrl = shareObj.shareUrl
-            // 正式版:0，测试版:1，体验版:2
-            miniProgramObj.miniprogramType = if (BuildConfig.DEBUG) {
-                WXLaunchMiniProgram.Req.MINIPROGRAM_TYPE_PREVIEW
-            } else {
-                WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE
+    fun doShare(context: Activity, shareObj: ShareObject) {
+        shareObject = shareObj
+        var scene: Int = SendMessageToWX.Req.WXSceneSession
+        when (shareObj.shareWay) {
+            ShareWayEnum.WXSceneTimeline -> {
+                scene = SendMessageToWX.Req.WXSceneTimeline
             }
-            miniProgramObj.withShareTicket = true
-            // 小程序原始id
-            miniProgramObj.userName = shareObj.miniUserName
-            //小程序页面路径；对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"
-            miniProgramObj.path = shareObj.touchValue2
-//            miniProgramObj.path = if (GlobalUtils.checkLoginNoJump()) {
-//                "${shareObj.touchValue}?roomId=${shareObj.programId}&dd=${SessionUtils.getUserId()}"
-//            } else {
-//                "${shareObj.touchValue}?roomId=${shareObj.programId}"
-//            }
-            val msg = WXMediaMessage(miniProgramObj)
-            // 小程序消息title
-            msg.title = shareObj.shareTitle
-            // 小程序消息desc
-            msg.description = shareObj.shareContent
-            // 小程序消息封面图片，小于128k
-            ImageUtils.requestImageForBitmap(shareObj.shareBigPic, {
-                if (it != null && !it.isRecycled) {
-                    msg.thumbData = BitmapUtil.bitmap2AssignBytes(it, ByteConstants.BYTE_KB_FORM_128)
+            ShareWayEnum.WXSceneSession -> {
+                scene = SendMessageToWX.Req.WXSceneSession
+            }
+            ShareWayEnum.WXSceneFavorite -> {
+                scene = SendMessageToWX.Req.WXSceneFavorite
+            }
+        }
+        if (checkWXInstalled(context)) {
+            when (shareObj.shareType) {
+                WeiXinShareType.WXText -> {
+                    val webpage = WXWebpageObject()
+                    webpage.webpageUrl = shareObj.shareUrl
+
+                    val msg = WXMediaMessage(webpage)
+                    msg.title = shareObj.shareTitle
+                    msg.description = shareObj.shareContent
+//            SessionUtils.setWeiXinUse(true)
+                    // 没有给分享图片，就用app icon
+                    if (TextUtils.isEmpty(shareObj.sharePic)) {
+                        loadLocalImg(context, msg, scene)
+                    } else {
+                        loadNetworkImg(context, msg, scene, shareObj.sharePic ?: "")
+                    }
                 }
-                val req = SendMessageToWX.Req()
-                req.transaction = "miniProgram"
-                req.message = msg
-                req.scene = SendMessageToWX.Req.WXSceneSession
-                if (HuanQueApp.wxApi?.sendReq(req) == false) {
-                    ToastUtils.showErrorMessage(context.getString(R.string.not_open_wx_share))
+                WeiXinShareType.WXImage -> {
+
+                    val bmp = shareObj.shareImage ?: return
+                    //初始化 WXImageObject 和 WXMediaMessage 对象
+                    val imgObj = WXImageObject(bmp)
+                    val msg = WXMediaMessage()
+                    msg.mediaObject = imgObj
+                    //设置缩略图
+//                    val bitmap = BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher)
+                    val thumbBmp: Bitmap = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true)
+                    bmp.recycle()
+                    msg.thumbData = BitmapUtil.bitmap2Bytes(thumbBmp)
+
+                    //构造一个Req
+                    val req = SendMessageToWX.Req()
+                    req.transaction = buildTransaction("img")
+                    req.message = msg
+                    req.scene = scene
+                    //调用api接口，发送数据到微信
+                    HuanQueApp.wxApi?.sendReq(req)
                 }
-            }, R.mipmap.ic_launcher)
+
+            }
+
+
         }
     }
+
+    private fun buildTransaction(type: String?): String? {
+        return if (type == null) System.currentTimeMillis()
+            .toString() else type + System.currentTimeMillis()
+    }
+
+//    /**
+//     * 分享小程序
+//     * 小程序目前只支持发送到微信
+//     */
+//    fun shareToMini(context: Activity, shareObj: ShareObject) {
+//        if (shareObj.touchType != "Mini") {
+//            //做一次兼容，分享到微信
+//            doShare(context, SendMessageToWX.Req.WXSceneSession, shareObj = shareObj)
+//            return
+//        }
+//        //小程序
+//        if (checkWXInstalled(context)) {
+//            shareObject = shareObj
+//            shareObject?.shareWay = ShareWay.WXFriends.name
+//            val miniProgramObj = WXMiniProgramObject()
+//            // 兼容低版本的网页链接
+//            miniProgramObj.webpageUrl = shareObj.shareUrl
+//            // 正式版:0，测试版:1，体验版:2
+//            miniProgramObj.miniprogramType = if (BuildConfig.DEBUG) {
+//                WXLaunchMiniProgram.Req.MINIPROGRAM_TYPE_PREVIEW
+//            } else {
+//                WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE
+//            }
+//            miniProgramObj.withShareTicket = true
+//            // 小程序原始id
+//            miniProgramObj.userName = shareObj.miniUserName
+//            //小程序页面路径；对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"
+//            miniProgramObj.path = shareObj.touchValue2
+////            miniProgramObj.path = if (GlobalUtils.checkLoginNoJump()) {
+////                "${shareObj.touchValue}?roomId=${shareObj.programId}&dd=${SessionUtils.getUserId()}"
+////            } else {
+////                "${shareObj.touchValue}?roomId=${shareObj.programId}"
+////            }
+//            val msg = WXMediaMessage(miniProgramObj)
+//            // 小程序消息title
+//            msg.title = shareObj.shareTitle
+//            // 小程序消息desc
+//            msg.description = shareObj.shareContent
+//            // 小程序消息封面图片，小于128k
+//            ImageUtils.requestImageForBitmap(shareObj.shareBigPic, {
+//                if (it != null && !it.isRecycled) {
+//                    msg.thumbData = BitmapUtil.bitmap2AssignBytes(it, ByteConstants.BYTE_KB_FORM_128)
+//                }
+//                val req = SendMessageToWX.Req()
+//                req.transaction = "miniProgram"
+//                req.message = msg
+//                req.scene = SendMessageToWX.Req.WXSceneSession
+//                if (HuanQueApp.wxApi?.sendReq(req) == false) {
+//                    ToastUtils.showErrorMessage(context.getString(R.string.not_open_wx_share))
+//                }
+//            }, R.mipmap.ic_launcher)
+//        }
+//    }
 
     /**
      * 唤起小程序

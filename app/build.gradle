@@ -128,5 +128,6 @@ dependencies {
     implementation files('libs/smantifraud.aar')
     implementation 'com.jakewharton:process-phoenix:2.0.0'
     implementation rootProject.ext.dependencies["WECHAT"]
+    implementation 'com.sina.weibo.sdk:core:10.7.0:openDefaultRelease@aar'
     implementation project(path: ':realname')
 }

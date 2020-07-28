@@ -493,6 +493,9 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 RnConstant.REAL_NAME_AUTH_PAGE -> {
                     ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
                 }
+                RnConstant.SHARE_INVITE_PAGE->{
+                    ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name,"Invite").navigation()
+                }
             }
 
         }

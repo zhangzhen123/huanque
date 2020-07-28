@@ -96,15 +96,6 @@ object MixedHelper {
         )
     }
 
-    fun copyToSharePlate(contxt: Context, text: String) {
-        val myClipboard: ClipboardManager = contxt.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        myClipboard.setPrimaryClip(ClipData.newPlainText("text", text))
-        ToastUtils.showCustom(
-            "内容已复制到剪切板",
-            Toast.LENGTH_SHORT,
-            Gravity.CENTER_VERTICAL or Gravity.BOTTOM
-        )
-    }
 
     /**
      * 新增Adapter展示加载中

@@ -78,5 +78,8 @@
             android:name=".ui.record_voice.VoiceSignActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.share.InviteShareActivity"
+            android:theme="@style/CustomToolBarThemeTran" />
     </application>
 </manifest>

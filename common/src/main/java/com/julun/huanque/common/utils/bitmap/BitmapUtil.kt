@@ -1,6 +1,9 @@
 package com.julun.huanque.common.utils.bitmap
 
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.view.View
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
@@ -79,5 +82,21 @@ object BitmapUtil {
             options -= 10
         }
         return output.toByteArray()
+    }
+
+
+    /**
+     * view转bitmap
+     */
+    fun viewConversionBitmap(v: View): Bitmap {
+        val w: Int = v.width
+        val h: Int = v.height
+        val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        val c = Canvas(bmp)
+        c.drawColor(Color.WHITE)
+        /** 如果不设置canvas画布为白色，则生成透明  */
+        v.layout(0, 0, w, h)
+        v.draw(c)
+        return bmp
     }
 }

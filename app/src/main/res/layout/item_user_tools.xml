@@ -19,7 +19,7 @@
         android:layout_marginTop="@dimen/dimen_10"
         android:gravity="center"
         android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_12"
+        android:textSize="@dimen/sp_10"
         tools:text="关注" />
 
 </LinearLayout>

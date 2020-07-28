@@ -1,9 +1,16 @@
 package com.julun.huanque.common.utils
 
+import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.text.TextUtils
+import android.util.Log
+import com.julun.huanque.common.init.CommonInit
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.*
@@ -18,12 +25,15 @@ import java.util.zip.ZipOutputStream
  */
 object FileUtils {
     val TAG = "huanque"
+
     //SD卡保存文件使用的根文件夹名称
     const val ROOT_NAME = "/huanque/"
+
     //用户归因使用，保存UUID
     const val SOURCE = "source.txt"
 
     private val BUFF_SIZE = 2048
+
     // 在sd卡或app缓存路径中创建要上传的图片
     fun createPhotoFile(context: Context, photoName: String): File {
         val filePath = File.separator + "upload" + File.separator + photoName
@@ -129,6 +139,7 @@ object FileUtils {
         }
         return null
     }
+
     /**
      * 删除文件或目录
      *
@@ -279,8 +290,10 @@ object FileUtils {
      * @param append
      * true 增加到文件末，false则覆盖掉原来的文件
      */
-    fun writeJson(c: Context, json: String, fileName: String,
-                  append: Boolean) {
+    fun writeJson(
+        c: Context, json: String, fileName: String,
+        append: Boolean
+    ) {
 
         val cacheRoot = if (Environment.getExternalStorageState() === Environment.MEDIA_MOUNTED)
             c.externalCacheDir
@@ -575,13 +588,13 @@ object FileUtils {
      */
     fun createFile(folder: String, name: String) {
         Single.just(1)
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    val file = File("$folder/$name")
-                    if (!file.exists()) {
-                        file.createNewFile()
-                    }
-                }, {})
+            .subscribeOn(Schedulers.io())
+            .subscribe({
+                val file = File("$folder/$name")
+                if (!file.exists()) {
+                    file.createNewFile()
+                }
+            }, {})
     }
 
     //获取文件后缀
@@ -610,6 +623,7 @@ object FileUtils {
     val SIZETYPE_KB = 2//获取文件大小单位为KB的double值
     val SIZETYPE_MB = 3//获取文件大小单位为MB的double值
     val SIZETYPE_GB = 4//获取文件大小单位为GB的double值
+
     /**
      * 获取文件指定文件的指定单位的大小
      *
@@ -743,5 +757,130 @@ object FileUtils {
     }
 
     /******* 以上是文件大小相关***************************************************/
+
+    /**
+     * 兼容方法
+     * 保存图片到相册
+     */
+    open fun saveBitmapToDCIM(bitmap: Bitmap, bitName: String): Boolean {
+        val fileName: String
+        val file: File
+        val brand: String = Build.BRAND
+        fileName = if (brand == "xiaomi") { // 小米手机brand.equals("xiaomi")
+            Environment.getExternalStorageDirectory().path + "/DCIM/Camera/" + bitName
+        } else if (brand.equals("Huawei", ignoreCase = true)) {
+            Environment.getExternalStorageDirectory().path + "/DCIM/Camera/" + bitName
+        } else { // Meizu 、Oppo
+            Environment.getExternalStorageDirectory().path + "/DCIM/" + bitName
+        }
+        //        fileName = Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/" + bitName;
+        file = if (Build.VERSION.SDK_INT >= 29) {
+            //            boolean isTrue = saveSignImage(bitName, bitmap);
+            saveSignImage(bitName, bitmap)
+            return true
+            //            file= getPrivateAlbumStorageDir(NewPeoActivity.this, bitName,brand);
+            //            return isTrue;
+        } else {
+            Log.v("saveBitmap brand", "" + brand)
+            File(fileName)
+        }
+        if (file.exists()) {
+            file.delete()
+        }
+        val out: FileOutputStream
+        try {
+            out = FileOutputStream(file)
+            // 格式为 JPEG，照相机拍出的图片为JPEG格式的，PNG格式的不能显示在相册中
+            if (bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)) {
+                out.flush()
+                out.close()
+                // 插入图库
+                if (Build.VERSION.SDK_INT >= 29) {
+                    val values = ContentValues()
+                    values.put(MediaStore.Images.Media.DATA, file.absolutePath)
+                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                    val uri: Uri? = CommonInit.getInstance().getContext().contentResolver.insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        values
+                    )
+                } else {
+                    MediaStore.Images.Media.insertImage(
+                        CommonInit.getInstance().getContext().contentResolver,
+                        file.absolutePath,
+                        bitName,
+                        null
+                    )
+                }
+            }
+        } catch (e: FileNotFoundException) {
+            Log.e("FileNotFoundException", "FileNotFoundException:$e")
+            e.printStackTrace()
+            return false
+        } catch (e: IOException) {
+            Log.e("IOException", "IOException:$e")
+            e.printStackTrace()
+            return false
+        } catch (e: java.lang.Exception) {
+            Log.e("IOException", "IOException:" + e.message.toString())
+            e.printStackTrace()
+            return false
+
+// 发送广播，通知刷新图库的显示
+        }
+        //        if(Build.VERSION.SDK_INT >= 29){
+//            copyPrivateToDownload(this,file.getAbsolutePath(),bitName);
+//        }
+        CommonInit.getInstance().getContext()
+            .sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://$fileName")))
+        return true
+    }
+
+    //将文件保存到公共的媒体文件夹
+    //这里的filepath不是绝对路径，而是某个媒体文件夹下的子路径，和沙盒子文件夹类似
+    //这里的filename单纯的指文件名，不包含路径
+    private fun saveSignImage( /*String filePath,*/
+        fileName: String?, bitmap: Bitmap
+    ) {
+        try {
+            //设置保存参数到ContentValues中
+            val contentValues = ContentValues()
+            //设置文件名
+            contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
+            //兼容Android Q和以下版本
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                //android Q中不再使用DATA字段，而用RELATIVE_PATH代替
+                //RELATIVE_PATH是相对路径不是绝对路径
+                //DCIM是系统文件夹，关于系统文件夹可以到系统自带的文件管理器中查看，不可以写没存在的名字
+                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "DCIM/")
+                //contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Music/signImage");
+            } else {
+                contentValues.put(
+                    MediaStore.Images.Media.DATA,
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).path
+                )
+            }
+            //设置文件类型
+            contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/JPEG")
+            //执行insert操作，向系统文件夹中添加文件
+            //EXTERNAL_CONTENT_URI代表外部存储器，该值不变
+            val uri: Uri? = CommonInit.getInstance().getContext().contentResolver.insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues
+            )
+            if (uri != null) {
+                //若生成了uri，则表示该文件添加成功
+                //使用流将内容写入该uri中即可
+                val outputStream: OutputStream? = CommonInit.getInstance().getContext().contentResolver.openOutputStream(uri)
+                if (outputStream != null) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+                    outputStream.flush()
+                    outputStream.close()
+                }
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
 
 }

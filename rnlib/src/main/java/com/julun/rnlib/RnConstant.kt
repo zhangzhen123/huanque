@@ -36,6 +36,9 @@ object RnConstant {
     const val REPORT_USER_PAGE:String="ReportUserPage"
     //实名认证
     const val REAL_NAME_AUTH_PAGE:String="RealNameAuthPage"
+    //分享邀友功能
+    const val SHARE_INVITE_PAGE:String="ShareInvitePage"
+
 
 
 }

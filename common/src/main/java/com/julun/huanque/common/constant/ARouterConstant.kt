@@ -64,6 +64,8 @@ object ARouterConstant {
     //语音签名界面
     const val VOICE_SIGN_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/VoiceSignActivity"
 
+    //邀友分享
+    const val INVITE_SHARE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/InviteShareActivity"
 
     /** 实名认证 start **/
     private const val REAL_NAME = "realname"

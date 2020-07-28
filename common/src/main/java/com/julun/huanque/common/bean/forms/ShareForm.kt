@@ -28,11 +28,16 @@ class ShareForm : SessionForm {
     }
 }
 
+/**
+ * 	适用模块，Invite：邀友(可选项：Invite)
+ */
+class SharePosterQueryForm(var applyModule:String)
+
 
 enum class ShareWay {
     WXFriends,
     WXTimeline,
     QQFriends,
     QQZone,
-    WXMini
+    WXMini,
 }

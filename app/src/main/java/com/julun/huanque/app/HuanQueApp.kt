@@ -11,8 +11,8 @@ import cn.jiguang.verifysdk.api.JVerificationInterface
 import com.ishumei.smantifraud.SmAntiFraud
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.julun.huanque.BuildConfig
-import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.R
+import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.agora.AgoraManager
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
@@ -21,6 +21,7 @@ import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.core.init.HuanQueInit
 import com.julun.huanque.ui.cockroach.DebugSafeModeTipActivity
 import com.julun.jpushlib.TagAliasOperatorHelper
+import com.sina.weibo.sdk.openapi.IWBAPI
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.wanjian.cockroach.Cockroach
@@ -31,10 +32,12 @@ import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.TimeUnit
 
 open class HuanQueApp : Application() {
-    companion object{
+    companion object {
         var wxApi: IWXAPI? = null
-//        var qqApi: Tencent? = null
+
+        //        var qqApi: Tencent? = null
     }
+
     //数美分发的deviceId，用于过滤。（设置一次监听会触发两次onSuccess）
     private var mDeviceId = ""
 
@@ -62,8 +65,8 @@ open class HuanQueApp : Application() {
                 e.printStackTrace()
             }
         }
-        if(AppHelper.isMainProcess(this)){
-            CommonInit.getInstance().inSDK=false
+        if (AppHelper.isMainProcess(this)) {
+            CommonInit.getInstance().inSDK = false
             HuanQueInit.getInstance().init(this)
             CommonInit.getInstance().taskDispatcher
                 ?.addTask(JPushTask())

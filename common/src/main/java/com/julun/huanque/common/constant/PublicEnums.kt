@@ -4,9 +4,10 @@ package com.julun.huanque.common.constant
  * Created by nirack on 16-11-24.
  */
 
-object SPType{
+object SPType {
     val COMMON_SP = "common_sp"//使用最频繁的
 }
+
 /** 动画类型  */
 class AnimationTypes {
     companion object {
@@ -48,12 +49,16 @@ object MessageCfgPlatform {
 object LoginType {
     //游客
     val VISITOR = "VISITOR"
+
     // SESSION登陆
     val LOGIN_SESSION = "LOGIN_SESSION"
+
     // 本站登陆
     val LOGIN_NORMAL = "LOGIN_NORMAL"
+
     /**靓号登录 */
     val LOGIN_BY_BEAUTY_NUM = "LOGIN_BY_BEAUTY_NUM"
+
     //第三方登陆已绑定
     val THIRD_BINDED = "THIRD_BINDED"
 }
@@ -106,10 +111,13 @@ object RealNameConstants {
 
     //取消认证
     const val TYPE_CANCEL = "cancel"
+
     //网络 or 接口反馈 异常
     const val TYPE_ERROR = "error"
+
     //认证成功
     const val TYPE_SUCCESS = "success"
+
     //认证失败
     const val TYPE_FAIL = "fail"
 }
@@ -124,23 +132,29 @@ object ByteConstants {
 /**
  * 消息常量类
  */
-object MessageConstants{
+object MessageConstants {
     //跳转H5
     const val ACTION_URL = "URL"
+
     //跳转主页
     const val ACTION_MAIN_PAGE = "main_page"
+
     //跳转私聊
     const val ACTION_MESSAGE = "打开私聊"
+
     //什么都不做
     const val ACTION_None = "None"
 
     //好友类型
     //关注
     const val FRIEDN_FOLLOW = "Follow"
+
     //成为好友
     const val FRIEDN = "Friend"
+
     //成为密友
     const val FRIEDN_INTIMATE = "IntimateFriend"
+
     //亲密度等级提升
     const val FRIEDN_LEVEL_UP = "IntimateLevelUp"
 
@@ -163,7 +177,71 @@ object ActivityCodes {
 /**
  * 手机登录还是绑定
  */
-object PhoneLoginType{
+object PhoneLoginType {
     const val TYPE_LOGIN = 0
     const val TYPE_BIND = 1
+}
+
+/**
+ * 分享类型
+ */
+object ShareTypeEnum {
+    const val WeChat = "WeChat"
+    const val FriendCircle = "FriendCircle"
+    const val Sina = "Sina"
+    const val SaveImage = "SaveImage"
+}
+
+/**
+ * 	分享到对话:
+    SendMessageToWX.Req.WXSceneSession
+    分享到朋友圈:
+    SendMessageToWX.Req.WXSceneTimeline
+    分享到收藏:
+    SendMessageToWX.Req.WXSceneFavorite
+
+ */
+object ShareWayEnum {
+    //分享到对话
+    const val WXSceneSession = "WXSceneSession"
+
+    //分享到朋友圈
+    const val WXSceneTimeline = "WXSceneTimeline"
+
+    //分享到收藏
+    const val WXSceneFavorite = "WXSceneFavorite"
+
+    const val Sina = "Sina"
+
+    const val SaveImage = "SaveImage"
+}
+
+object WeiXinShareType {
+    //文字类型分享
+    const val WXText = "WXText"
+
+    //图片类型分享
+    const val WXImage = "WXImage"
+
+    //音乐类型分享
+    const val WXMusic = "WXMusic"
+
+    //视频类型分享
+    const val WXVideo = "WXVideo"
+}
+object WeiBoShareType {
+    //文字类型分享
+    const val WbText = "WbText"
+
+    //图片类型分享
+    const val WbImage = "WbImage"
+    //多图分享
+    const val WbMultiImage = "WbMultiImage"
+    //音乐类型分享
+    const val WbMusic = "WbMusic"
+
+    //视频类型分享
+    const val WbVideo = "WbVideo"
+    //网页
+    const val WbWeb = "WbWeb"
 }

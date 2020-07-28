@@ -8,20 +8,16 @@ import android.content.ContextWrapper
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
-import android.os.Message
 import android.view.Gravity
-import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import com.julun.huanque.common.R
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
-import com.julun.huanque.common.constant.MeetStatus
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.init.CommonInit
 import io.rong.message.ImageMessage
@@ -242,7 +238,7 @@ object GlobalUtils {
     /**
      * 更新陌生人状态
      */
-    fun updataStrangerData(userId: Long, stranger: Boolean) {
+    fun updateStrangerData(userId: Long, stranger: Boolean) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
                 val chatUser = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(userId) ?: return@withContext
@@ -257,8 +253,8 @@ object GlobalUtils {
     /**
      * 复制文案
      */
-    fun copyToSharePlate(contxt: Context, text: String, attentionContent: String = "内容已复制到剪切板") {
-        val myClipboard: ClipboardManager = contxt.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    fun copyToSharePlate(context: Context, text: String, attentionContent: String = "内容已复制到剪切板") {
+        val myClipboard: ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         myClipboard.setPrimaryClip(ClipData.newPlainText("text", text))
         if (attentionContent.isNotEmpty()) {
             ToastUtils.showCustom(attentionContent, Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL or Gravity.BOTTOM)

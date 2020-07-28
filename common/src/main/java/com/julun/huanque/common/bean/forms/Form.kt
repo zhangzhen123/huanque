@@ -99,3 +99,5 @@ class UpdateVoiceForm(var voiceUrl: String, var length: Long)
  * 保存定位信息
  */
 class SaveLocationForm(var lat: String,var lng: String,var city: String,var province: String?=null, var district: String?=null)
+
+

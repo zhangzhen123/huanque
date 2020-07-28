@@ -1,20 +1,14 @@
 package com.julun.rnlib.module;
 
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent;
-import com.julun.huanque.common.constant.ARouterConstant;
 import com.julun.huanque.common.constant.BusiConstant;
-import com.julun.huanque.common.constant.OperationType;
-import com.julun.huanque.common.constant.ParamConstant;
 import com.julun.huanque.common.utils.GlobalUtils;
 import com.julun.rnlib.RnConstant;
 
@@ -46,7 +40,7 @@ public class AppMessageModule extends ReactContextBaseJavaModule {
                 String stranger = params.getString("stranger");
                 int userId = params.getInt("userId");
                 if (stranger != null) {
-                    GlobalUtils.INSTANCE.updataStrangerData(userId, stranger.equals(BusiConstant.True));
+                    GlobalUtils.INSTANCE.updateStrangerData(userId, stranger.equals(BusiConstant.True));
                     EventBus.getDefault().post(new UserInfoChangeEvent(userId, stranger.equals(BusiConstant.True)));
                 }
 

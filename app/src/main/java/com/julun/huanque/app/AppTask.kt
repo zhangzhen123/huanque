@@ -1,18 +1,9 @@
 package com.julun.huanque.app
 
-import android.text.TextUtils
-import android.util.Log
-import cn.jiguang.verifysdk.api.JVerificationInterface
 import cn.jpush.android.api.JPushInterface
-import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.BuildConfig
-import com.julun.huanque.common.init.ARouterTask
-import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.support.WXApiManager
-import com.tencent.bugly.crashreport.CrashReport
-import org.jay.launchstarter.MainTask
 import org.jay.launchstarter.Task
-import java.util.*
 
 //class MSATask : Task() {
 //    override fun dependsOn(): List<Class<out Task>>? {

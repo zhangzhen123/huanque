@@ -40,6 +40,8 @@ allprojects {
             // Android JSC is installed from npm
             url("$rootDir/rnlib/node_modules/jsc-android/dist")
         }
+        //新浪微博
+        maven { url 'https://dl.bintray.com/thelasterstar/maven/' }
     }
 }
 

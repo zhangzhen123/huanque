@@ -181,6 +181,10 @@ class TestActivity : BaseActivity() {
                 putInt(IntentParamKey.TYPE.name, PhoneLoginType.TYPE_BIND)
             }).navigation()
         }
+
+        tv_invite.onClickNew {
+            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name,"Invite").navigation()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
