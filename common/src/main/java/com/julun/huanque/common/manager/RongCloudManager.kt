@@ -1,6 +1,5 @@
 package com.julun.huanque.common.manager
 
-import android.R
 import android.app.Application
 import android.net.Uri
 import android.text.TextUtils
@@ -10,15 +9,17 @@ import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
+import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.MessageFailType
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
-import com.julun.huanque.common.message_dispatch.EventMessageType
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.message_dispatch.MessageReceptor
 import com.julun.huanque.common.suger.logger
@@ -294,6 +295,53 @@ object RongCloudManager {
 
     /**
      * 发送自定义消息
+     */
+    fun sendCustomMessage(msg: Message, callback: (Boolean, Message) -> Unit = { result, msg -> }) {
+
+        RongIMClient.getInstance().sendMessage(msg, null, null, object : IRongCallback.ISendMessageCallback {
+            /**
+             * 消息发送前回调, 回调时消息已存储数据库
+             * @param message 已存库的消息体
+             */
+            override fun onAttached(message: Message?) {
+//                if (message != null) {
+//                    switchThread(message)
+//                }
+                if(message != null){
+                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                }
+            }
+
+            /**
+             * 消息发送成功。
+             * @param message 发送成功后的消息体
+             */
+            override fun onSuccess(message: Message?) {
+//                if (message != null) {
+//                    switchThread(message)
+//                }
+                if (message != null) {
+                    callback(true, message)
+                }
+            }
+
+            /**
+             * 消息发送失败
+             * @param message   发送失败的消息体
+             * @param errorCode 具体的错误
+             */
+            override fun onError(message: Message?, errorCode: ErrorCode?) {
+                if (message != null) {
+                    updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
+                        ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
+                    callback(false, message)
+                }
+            }
+        })
+    }
+
+    /**
+     *发送自定义消息
      * @param targetId 对方ID
      * @param targetUserObj 对方数据
      * @param conversationType 会话类型
@@ -305,11 +353,30 @@ object RongCloudManager {
         targetUserObj: TargetUserObj? = null,
         conversationType: Conversation.ConversationType,
         customType: String,
-        customBean: Any
+        customBean: Any,
+        callback: (Boolean, Message) -> Unit = { result, msg -> }
     ) {
-        val pushContent = "收到礼物"
-        val pushData = "收到礼物"
+        val customMessage = obtainCustomMessage(targetId, targetUserObj, conversationType, customType, customBean).apply {
+            sentTime = System.currentTimeMillis()
+        }
+        sendCustomMessage(customMessage, callback)
+    }
 
+    /**
+     *生成自定义消息
+     * @param targetId 对方ID
+     * @param targetUserObj 对方数据
+     * @param conversationType 会话类型
+     * @param customType 自定义对象的类型
+     * @param customBean 自定义对象
+     */
+    fun obtainCustomMessage(
+        targetId: String,
+        targetUserObj: TargetUserObj? = null,
+        conversationType: Conversation.ConversationType,
+        customType: String,
+        customBean: Any
+    ): Message {
         val messageContent = CustomMessage.obtain().apply {
             type = customType
             context = JsonUtil.seriazileAsString(customBean)
@@ -319,35 +386,7 @@ object RongCloudManager {
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
         messageContent.extra = JsonUtil.seriazileAsString(currentUserObj)
 
-        val message = Message.obtain(targetId, conversationType, messageContent)
-        RongIMClient.getInstance().sendMessage(message, pushContent, pushData, object : IRongCallback.ISendMessageCallback {
-            /**
-             * 消息发送前回调, 回调时消息已存储数据库
-             * @param message 已存库的消息体
-             */
-            override fun onAttached(message: Message?) {
-                logger.info("DXC  自定发消息 onAttached")
-            }
-
-            /**
-             * 消息发送成功。
-             * @param message 发送成功后的消息体
-             */
-            override fun onSuccess(message: Message?) {
-                logger.info("DXC  自定发消息 onSuccess")
-                if (message != null) {
-                    switchThread(message)
-                }
-            }
-
-            /**
-             * 消息发送失败
-             * @param message   发送失败的消息体
-             * @param errorCode 具体的错误
-             */
-            override fun onError(message: Message?, errorCode: ErrorCode?) {
-            }
-        })
+        return Message.obtain(targetId, conversationType, messageContent).apply { sentTime = System.currentTimeMillis() }
     }
 
 
@@ -371,9 +410,66 @@ object RongCloudManager {
      * @group 消息操作
      */
     fun sendMediaMessage(
-        targetId: String, targetUserObj: TargetUserObj? = null, type: Conversation.ConversationType, compressLocalImage: String
-        , localImage: String, callback: (IRongCallback.MediaMessageUploader?, String?) -> Unit = { upLoader, picUrl -> }
+        localMessage: Message,
+        callback: (Message?, IRongCallback.MediaMessageUploader?, String?) -> Unit = { message, upLoader, picUrl -> }
     ) {
+        val extra = (localMessage.content as? ImageMessage)?.extra ?: ""
+        var targetUserObj: TargetUserObj? = null
+        try {
+            val mRoomUserChatExtra = JsonUtil.deserializeAsObject<RoomUserChatExtra>(extra, RoomUserChatExtra::class.java)
+            targetUserObj = mRoomUserChatExtra.targetUserObj
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        targetUserObj ?: return
+
+        RongIMClient.getInstance().sendMediaMessage(localMessage, null, null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
+            override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
+                if (message != null) {
+//                    switchThread(message)
+                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                }
+                OssUpLoadManager.uploadFiles(arrayListOf(targetUserObj.localPic), OssUpLoadManager.MESSAGE_PIC) { code, list ->
+                    if (code == OssUpLoadManager.CODE_SUCCESS) {
+                        logger("DXC 头像上传oss成功：${list} localImage =")
+                        val headPic = list?.firstOrNull()
+                        if (headPic != null) {
+                            callback(message, uploader, headPic)
+//                            uploader?.success(Uri.parse("$headPic"))
+                        }
+                    } else {
+                        uploader?.error()
+                    }
+                }
+            }
+
+            override fun onSuccess(message: Message?) {
+                callback(message, null, null)
+            }
+
+            override fun onProgress(p0: Message?, p1: Int) {
+
+            }
+
+            override fun onCanceled(p0: Message?) {
+
+            }
+
+            override fun onError(message: Message?, p1: ErrorCode?) {
+                if (message != null) {
+                    callback(message, null, null)
+                    updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
+                        ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
+                }
+            }
+
+        })
+    }
+
+    /**
+     * 模拟生成图片消息
+     */
+    fun obtainImageMessage(targetId: String, localImage: String, targetUserObj: TargetUserObj? = null, type: Conversation.ConversationType): Message {
         val prefix = "file://"
         val localUri = if (localImage.startsWith(prefix)) {
             Uri.parse(localImage)
@@ -385,50 +481,35 @@ object RongCloudManager {
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
         imageMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
 
+        return Message.obtain(targetId, type, imageMessage)
+    }
 
-        val message = Message.obtain(targetId, type, imageMessage)
-        RongIMClient.getInstance().sendMediaMessage(message, null, null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
-            override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
-                if (message != null) {
-                    switchThread(message)
-                }
-                OssUpLoadManager.uploadFiles(arrayListOf(compressLocalImage), OssUpLoadManager.MESSAGE_PIC) { code, list ->
-                    if (code == OssUpLoadManager.CODE_SUCCESS) {
-                        logger("DXC 头像上传oss成功：${list} localImage = $localImage")
-                        val headPic = list?.firstOrNull()
-                        if (headPic != null) {
-                            callback(uploader, headPic)
-//                            uploader?.success(Uri.parse("$headPic"))
-                        }
-                    } else {
-                        uploader?.error()
-                    }
-                }
-            }
 
-            override fun onSuccess(message: Message?) {
-            }
+    /**
+     * 生成文本消息
+     */
+    fun obtainTextMessage(message: String, targetId: String, targetUserObj: TargetUserObj? = null): Message {
+        val chatMessage: TextMessage = TextMessage.obtain(message)
+        currentUserObj?.targetUserObj = targetUserObj
+        currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
+        chatMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
 
-            override fun onProgress(p0: Message?, p1: Int) {
-
-            }
-
-            override fun onCanceled(p0: Message?) {
-
-            }
-
-            override fun onError(p0: Message?, p1: ErrorCode?) {
-
-            }
-
-        })
+        val msg = Message.obtain(targetId, Conversation.ConversationType.PRIVATE, chatMessage)
+        msg.senderUserId = "${SessionUtils.getUserId()}"
+        msg.sentTime = System.currentTimeMillis()
+        return msg
     }
 
 
     /**
      * 发送聊天消息
      */
-    fun send(message: String, toUserId: String? = null, targetUserObj: TargetUserObj? = null, callback: (Boolean) -> Unit = {}) {
+    fun send(
+        message: String,
+        toUserId: String? = null,
+        targetUserObj: TargetUserObj? = null,
+        callback: (Boolean, Message) -> Unit = { result, msg -> }
+    ) {
         val chatMessage: TextMessage = TextMessage.obtain(message)
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
@@ -448,28 +529,33 @@ object RongCloudManager {
             null,
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
+                    if (message != null) {
+                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                    }
                 }
 
                 override fun onSuccess(message: Message?) {
                     logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
                     if (message != null) {
+                        callback(true, message)
                         //                            try {
                         //                                onReceived(message)
                         //                            } catch (e: Exception) {
                         //                                e.printStackTrace()
                         //                            }
-                        switchThread(message)
-                        callback(true)
+                        //已经手动显示了消息
+//                        switchThread(message)
                     } else {
-                        callback(false)
+//                        callback(false)
                     }
                 }
 
-                override fun onError(
-                    message: Message?, errorCode: ErrorCode?
-                ) {
+                override fun onError(message: Message?, errorCode: ErrorCode?) {
                     if (message != null) {
-                        switchThread(message)
+//                        switchThread(message)
+                        callback(false, message)
+                        updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
+                            ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
                     }
                     logger.info(
                         "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
@@ -477,7 +563,7 @@ object RongCloudManager {
                         )}"
                     )
                     handleErrorCode(errorCode, "sendMessage")
-                    callback(false)
+
                 }
 
             })
@@ -489,37 +575,37 @@ object RongCloudManager {
     /**
      * 私聊重发消息使用
      */
-    fun send(oMessage: Message, targetId: String, callback: (Boolean) -> Unit = {}): Unit {
+    fun send(oMessage: Message, targetId: String, callback: (Boolean, Message) -> Unit = { result, msg -> }): Unit {
         //        EventBus.getDefault().post(EventMessageBean(targetId))
-        RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE,
-            targetId,
-            oMessage.content,
-            null,
-            null,
+        RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE, targetId, oMessage.content, null, null,
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
+                    if (message != null) {
+                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                    }
                 }
 
                 override fun onSuccess(message: Message?) {
                     logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
-                    callback(true)
                     if (message != null) {
+                        callback(true, message)
                         //                            try {
                         //                                onReceived(message)
                         //                            } catch (e: Exception) {
                         //                                e.printStackTrace()
                         //                            }
-                        switchThread(message)
+//                        switchThread(message)
                     } else {
                     }
                 }
 
-                override fun onError(
-                    message: Message?, errorCode: ErrorCode?
-                ) {
-                    callback(false)
+                override fun onError(message: Message?, errorCode: ErrorCode?) {
+
                     if (message != null) {
                         //                            ChatUtils.deleteSingleMessage(message.messageId)
+                        callback(false, message)
+                        updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
+                            ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
                     }
                     logger.info(
                         "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
@@ -531,6 +617,15 @@ object RongCloudManager {
 
             })
 
+    }
+
+    /**
+     * 修改消息的extra
+     * @param msgId 消息ID
+     * @param content extra内容
+     */
+    fun updateMessageExtra(msgId: Int, content: String) {
+        RongIMClient.getInstance().setMessageExtra(msgId, content)
     }
 
 

@@ -260,4 +260,23 @@ object GlobalUtils {
             ToastUtils.showCustom(attentionContent, Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL or Gravity.BOTTOM)
         }
     }
+
+    /**
+     * 消息extra添加字段
+     */
+    fun addExtra(extra: String?, key: String, value: Any): HashMap<String, Any> {
+        var map = hashMapOf<String, Any>()
+        try {
+            if (extra?.isNotEmpty() == true) {
+                val tempMap = JsonUtil.toJsonMap(extra) as? HashMap
+                if (tempMap != null) {
+                    map = tempMap
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        map.put(key, value)
+        return map
+    }
 }

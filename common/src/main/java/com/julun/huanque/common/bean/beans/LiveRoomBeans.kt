@@ -96,7 +96,9 @@ class TargetUserObj(
     //用户ID
     var userId: Long = 0L,
     //本次花费金额（发送消息的时候传值）
-    var fee: Long = 0
+    var fee: Long = 0,
+    //本地图片地址（图片消息使用）
+    var localPic: String = ""
 )
 
 /**

@@ -58,7 +58,7 @@
 
     <!--高级表情-->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_high"
+        android:id="@+id/recyclerView_animation"
         android:layout_width="0px"
         android:layout_height="0px"
         android:overScrollMode="never"
@@ -72,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="recyclerView_emoji,recyclerView_prerogative,recyclerView_high" />
+        app:constraint_referenced_ids="recyclerView_emoji,recyclerView_prerogative,recyclerView_animation" />
 
     <View
         android:id="@+id/view_bottom"

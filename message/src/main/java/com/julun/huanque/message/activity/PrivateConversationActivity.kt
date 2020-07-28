@@ -30,6 +30,8 @@ import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
+import com.julun.huanque.common.bean.message.ExpressionAnimationBean
+import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
@@ -69,6 +71,7 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
+import kotlinx.android.synthetic.main.item_header_conversions.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundColor
@@ -109,6 +112,9 @@ class PrivateConversationActivity : BaseActivity() {
 
     //特权表情
     private val Message_Privilege = "Message_Privilege"
+
+    //动画表情
+    private val Message_Animation = "Message_Animation"
 
     private var mPrivateConversationViewModel: PrivateConversationViewModel? = null
 
@@ -223,6 +229,12 @@ class PrivateConversationActivity : BaseActivity() {
 
                 mPrivateConversationViewModel?.clearUnreadCount("$it")
 
+            }
+        })
+
+        mPrivateConversationViewModel?.msgData?.observe(this, Observer {
+            if (it != null) {
+                mAdapter.notifyDataSetChanged()
             }
         })
 
@@ -444,8 +456,11 @@ class PrivateConversationActivity : BaseActivity() {
                         //特权表情,直接发送
                         sendChatMessage(message = emotion.text, messageType = Message_Privilege)
                     }
-                    EmojiType.HIGH -> {
-                        //高级表情
+                    EmojiType.ANIMATION -> {
+                        //动画表情
+                        //随机结果
+                        val result = java.util.Random().nextInt(6) + 1
+                        sendChatMessage(message = emotion.text, animationResult = "$result", messageType = Message_Animation)
                     }
                 }
             }
@@ -884,27 +899,18 @@ class PrivateConversationActivity : BaseActivity() {
             when (view.id) {
                 R.id.iv_send_fail -> {
                     //重新发送消息
-                    val targerId = mPrivateConversationViewModel?.targetIdData?.value ?: return@setOnItemChildClickListener
-                    tempData.sentStatus = Message.SentStatus.SENDING
-                    adapter.getViewByPosition(position, R.id.iv_send_fail)?.hide()
-                    adapter.getViewByPosition(position, R.id.send_progress)?.show()
-                    RongCloudManager.send(tempData, "$targerId") {
-                        if (it) {
-                            ChatUtils.deleteSingleMessage(tempData.messageId)
-                            mPrivateConversationViewModel?.deleteSingleMessage(tempData)
-                        } else {
-                            tempData.sentStatus = Message.SentStatus.FAILED
-                            adapter.getViewByPosition(position, R.id.iv_send_fail)
-                                ?.show()
-                            adapter.getViewByPosition(position, R.id.send_progress)
-                                ?.hide()
-                        }
-                    }
+                    MyAlertDialog(this).showAlertWithOKAndCancel(
+                        "确定重复该消息吗？",
+                        MyAlertDialog.MyDialogCallback(onRight = {
+                            resendMessage(tempData)
+                        }), hasTitle = false, okText = "确定"
+                    )
                 }
                 R.id.sdv_image -> {
                     //查看图片
                     val content = tempData.content
                     if (content is ImageMessage) {
+                        //todo 添加本地地址查看
                         ImageActivity.start(this, 0, medias = listOf(StringHelper.getOssImgUrl("${content.remoteUri}")))
                     }
                 }
@@ -969,6 +975,98 @@ class PrivateConversationActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 重发消息
+     */
+    private fun resendMessage(msg: Message) {
+        if (msg.messageId != 0) {
+            mPrivateConversationViewModel?.deleteSingleMessage(msg.messageId)
+        }
+        mAdapter.data.remove(msg)
+        mAdapter.notifyDataSetChanged()
+
+        val content = msg.content
+
+        var extraMap: HashMap<String, Any>? = null
+        try {
+            extraMap = JsonUtil.deserializeAsObject(msg.extra, HashMap::class.java)
+
+
+            if (content is ImageMessage) {
+                //图片消息,重试
+                sendPicMessage(msg)
+                return
+            }
+
+            val failType = "${extraMap?.get(ParamConstant.MSG_FAIL_TYPE)}"
+            if (failType != MessageFailType.RONG_CLOUD) {
+                //服务端校验未通过
+                when (content) {
+                    is TextMessage -> {
+                        //重发文本消息
+                        sendChatMessage(content.content, messageType = Message_Text)
+                    }
+                    is CustomMessage -> {
+                        //自定义消息重发
+                        when (content.type) {
+                            MessageCustomBeanType.Expression_Privilege -> {
+                                //特权表情
+                                val extra = JsonUtil.deserializeAsObject<String>(content.context, String::class.java)
+                                sendChatMessage(message = extra, messageType = Message_Privilege)
+                            }
+                            MessageCustomBeanType.Expression_Animation -> {
+                                //动画表情
+                                val bean = JsonUtil.deserializeAsObject<ExpressionAnimationBean>(content.context, ExpressionAnimationBean::class.java)
+                                sendChatMessage(message = bean.name, animationResult = bean.result, messageType = Message_Animation)
+                            }
+                        }
+                    }
+                    else -> {
+
+                    }
+                }
+
+            } else {
+                //融云未发送成功
+                val targerId = msg.targetId
+                msg.sentStatus = Message.SentStatus.SENDING
+                //重置消息ID(不重置ID，融云会沿用数据库中内容，上一步存在删除消息的操作，异步会出现问题)
+                msg.messageId = 0
+                //添加模拟消息
+                mPrivateConversationViewModel?.addMessage(msg)
+                when (content) {
+                    is TextMessage -> {
+                        //直接发送
+                        RongCloudManager.send(msg, targerId) { result, message ->
+                            if (!result) {
+                                //发送不成功
+                                msg.messageId = message.messageId
+                                mPrivateConversationViewModel?.sendMessageFail(msg, MessageFailType.RONG_CLOUD)
+                            } else {
+                                msg.sentStatus = Message.SentStatus.SENT
+                                mAdapter.notifyDataSetChanged()
+                            }
+                        }
+                    }
+                    is CustomMessage -> {
+                        //自定义消息重发
+                        if (content.type == MessageCustomBeanType.Expression_Animation) {
+                            //动画消息，重置 播放动画标识
+                            msg.extra =
+                                JsonUtil.seriazileAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, false))
+                        }
+                        msg.sentStatus = Message.SentStatus.SENT
+                        sendCustomMessage(msg)
+                    }
+                }
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+
     private fun scrollToBottom(firstLoad: Boolean = false) {
         if (firstLoad) {
             if (mAdapter.itemCount > 0) {
@@ -1012,8 +1110,15 @@ class PrivateConversationActivity : BaseActivity() {
      * @param message 发送文本消息使用
      * @param pic 上传图片的地址
      * @param localPic 图片库中的di
+     * @param animationResult 动画表情结果
      */
-    private fun sendChatMessage(message: String = "", pic: String = "", localPic: String = "", messageType: String = Message_Text) {
+    private fun sendChatMessage(
+        message: String = "",
+        pic: String = "",
+        localPic: String = "",
+        animationResult: String = "",
+        messageType: String = Message_Text
+    ) {
         if (messageType == Message_Text && (TextUtils.isEmpty(message) || message.isBlank())) {
             //文本消息判断
             ToastUtils.show("输入不能为空")
@@ -1049,37 +1154,131 @@ class PrivateConversationActivity : BaseActivity() {
         when (messageType) {
             Message_Text -> {
                 //文本消息
-                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser)
+                val msg = RongCloudManager.obtainTextMessage(message, "${targetChatInfo.userId}", targetUser)
+                mPrivateConversationViewModel?.addMessage(msg)
+                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser, localMsg = msg)
             }
+
             Message_Pic -> {
                 //图片消息
-                RongCloudManager.sendMediaMessage(
+                val imageMessage = RongCloudManager.obtainImageMessage(
                     "${targetChatInfo.userId}",
-                    targetUser.apply { fee = mPrivateConversationViewModel?.msgFeeData?.value ?: 0 },
-                    Conversation.ConversationType.PRIVATE,
-                    pic,
-                    localPic
-                ) { upLoader, headerPic ->
-                    mPrivateConversationViewModel?.sendPic(upLoader, targetChatInfo.userId, "$headerPic")
-                }
+                    localPic,
+                    targetUser.apply {
+                        fee = mPrivateConversationViewModel?.msgFeeData?.value ?: 0
+                        this.localPic = localPic
+                    },
+                    Conversation.ConversationType.PRIVATE
+                )
+
+                imageMessage.senderUserId = "${SessionUtils.getUserId()}"
+                sendPicMessage(imageMessage)
+
             }
             Message_Gift -> {
                 //送礼消息
-                RongCloudManager.sendCustomMessage(
+                val msg = RongCloudManager.obtainCustomMessage(
                     "${targetChatInfo.userId}",
                     targetUser,
                     Conversation.ConversationType.PRIVATE,
                     MessageCustomBeanType.Gift,
                     giftBean ?: return
                 )
+                msg.senderUserId = "${SessionUtils.getUserId()}"
+                msg.sentStatus = Message.SentStatus.SENT
+                mPrivateConversationViewModel?.addMessage(msg)
+                sendCustomMessage(msg)
             }
             Message_Privilege -> {
                 //特权表情消息
-                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser, Message_Privilege)
+                val msg = RongCloudManager.obtainCustomMessage(
+                    "${targetChatInfo.userId}",
+                    targetUser,
+                    Conversation.ConversationType.PRIVATE,
+                    MessageCustomBeanType.Expression_Privilege,
+                    message
+                )
+                msg.senderUserId = "${SessionUtils.getUserId()}"
+                msg.sentStatus = Message.SentStatus.SENT
+                mPrivateConversationViewModel?.addMessage(msg)
+                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser, Message_Privilege, msg)
+            }
+            Message_Animation -> {
+                //动画表情
+                val bean = ExpressionAnimationBean(message, animationResult)
+                val msg = RongCloudManager.obtainCustomMessage(
+                    "${targetChatInfo.userId}",
+                    targetUser,
+                    Conversation.ConversationType.PRIVATE,
+                    MessageCustomBeanType.Expression_Animation,
+                    bean
+                )
+
+                msg.senderUserId = "${SessionUtils.getUserId()}"
+                msg.sentStatus = Message.SentStatus.SENT
+                mPrivateConversationViewModel?.addMessage(msg)
+                mPrivateConversationViewModel?.sendDice(targetChatInfo.userId, animationResult, msg)
             }
             else -> {
 
             }
+        }
+    }
+
+
+    /**
+     * 发送自定义消息
+     * 只发送，不添加模拟消息
+     */
+    private fun sendCustomMessage(message: Message) {
+        RongCloudManager.sendCustomMessage(message) { result, msg ->
+            message.messageId = msg.messageId
+            message.sentStatus = msg.sentStatus
+            val content = message.content
+            if (result && content is CustomMessage && content.type == MessageCustomBeanType.Expression_Animation) {
+                //动画表情发送成功，设置数据库数据
+            }
+            mAdapter.notifyDataSetChanged()
+        }
+    }
+
+
+    /**
+     * 发送图片
+     */
+    private fun sendPicMessage(imageMessage: Message) {
+        imageMessage.messageId = 0
+        imageMessage.sentStatus = Message.SentStatus.SENDING
+        mPrivateConversationViewModel?.addMessage(imageMessage)
+
+        RongCloudManager.sendMediaMessage(imageMessage) { msg, upLoader, picUrl ->
+            imageMessage.messageId = msg?.messageId ?: 0
+            when (msg?.sentStatus) {
+                Message.SentStatus.SENDING -> {
+                    //发送中
+                    try {
+                        mPrivateConversationViewModel?.sendPic(upLoader, imageMessage.targetId.toLong(), "$picUrl")
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                Message.SentStatus.FAILED -> {
+                    //发送失败
+                    logger.info("Message 消息发送失败")
+                    imageMessage.sentStatus = Message.SentStatus.FAILED
+                    mAdapter.notifyDataSetChanged()
+                }
+                Message.SentStatus.SENT -> {
+                    //发送成功
+                    logger.info("Message 消息发送成功")
+                    imageMessage.sentStatus = Message.SentStatus.SENT
+                    (imageMessage.content as? ImageMessage)?.remoteUri = (msg.content as? ImageMessage)?.remoteUri
+                    mAdapter.notifyDataSetChanged()
+                }
+                else -> {
+                }
+            }
+
         }
     }
 

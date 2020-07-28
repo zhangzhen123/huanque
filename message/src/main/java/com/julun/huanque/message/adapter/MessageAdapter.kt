@@ -4,6 +4,8 @@ import android.net.Uri
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
@@ -20,13 +22,18 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
+import com.julun.huanque.common.bean.message.ExpressionAnimationBean
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.constant.MessageCustomBeanType
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.VoiceResultType
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
+import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.interfaces.WebpAnimatorListener
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
@@ -35,6 +42,7 @@ import com.julun.huanque.message.R
 import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.bottomPadding
 import java.io.File
 import kotlin.math.max
@@ -124,26 +132,25 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
 //                helper.addOnClickListener(R.id.sdv_header)
             }
-            //todo 发送状态先关闭(发送中和重试状态)
-//            val ivSendFail = helper.getView<ImageView>(R.id.iv_send_fail)
-//            val sendProgress = helper.getView<ProgressBar>(R.id.send_progress)
-//            when (item.sentStatus) {
-//                Message.SentStatus.FAILED -> {
-//                    //发送失败
-//                    ivSendFail.show()
-//                    sendProgress.hide()
-//                }
-//                Message.SentStatus.SENDING -> {
-//                    //发送中
-//                    ivSendFail.hide()
-//                    sendProgress.show()
-//                }
-//                Message.SentStatus.SENT -> {
-//                    //已发送
-//                    ivSendFail.hide()
-//                    sendProgress.hide()
-//                }
-//            }
+            val ivSendFail = helper.getView<ImageView>(R.id.iv_send_fail)
+            val sendProgress = helper.getView<ProgressBar>(R.id.send_progress)
+            when (item.sentStatus) {
+                Message.SentStatus.FAILED -> {
+                    //发送失败
+                    ivSendFail.show()
+                    sendProgress.hide()
+                }
+                Message.SentStatus.SENDING -> {
+                    //发送中
+                    ivSendFail.hide()
+                    sendProgress.show()
+                }
+                Message.SentStatus.SENT -> {
+                    //已发送
+                    ivSendFail.hide()
+                    sendProgress.hide()
+                }
+            }
             //显示本人头像
             val sdv_header = helper.getView<SimpleDraweeView>(R.id.sdv_header)
             ImageHelper.setDefaultHeaderPic(sdv_header, SessionUtils.getSex())
@@ -163,6 +170,37 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 //                    showGiftView(helper, content.context)
                     val imageResource = EmojiSpanBuilder.getPrivilegeResource(context, content.context)
                     ImageUtils.loadImageLocal(helper.getView(R.id.sdv_image), imageResource)
+                    showTextImageQueBi(helper.getView<TextView>(R.id.tv_quebi), item, helper.adapterPosition)
+                }
+                MessageCustomBeanType.Expression_Animation -> {
+                    //动画表情
+                    var map: Map<String, Any>? = null
+                    var expressionAnimationBean: ExpressionAnimationBean? = null
+                    try {
+                        if (item.extra?.isNotEmpty() == true) {
+                            map = JsonUtil.toJsonMap(item.extra)
+                        }
+                        expressionAnimationBean =
+                            JsonUtil.deserializeAsObject<ExpressionAnimationBean>(content.context, ExpressionAnimationBean::class.java)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
+                    if (expressionAnimationBean != null) {
+                        when (EmojiSpanBuilder.getPrivilegeResource(context, expressionAnimationBean.name)) {
+                            R.drawable.icon_shaizi -> {
+                                //骰子动效
+                                val started = map?.get(ParamConstant.MSG_ANIMATION_STARTED) as? Boolean
+                                showShaiziAnimation(item, helper.getView(R.id.sdv_image), expressionAnimationBean.result, started ?: false)
+
+                            }
+                            R.drawable.icon_caiquan -> {
+                                //猜拳动效
+                            }
+                            else -> {
+                            }
+                        }
+                    }
                     showTextImageQueBi(helper.getView<TextView>(R.id.tv_quebi), item, helper.adapterPosition)
                 }
                 else -> {
@@ -197,7 +235,12 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             tvContent.maxWidth = ScreenUtils.getScreenWidth() - DensityHelper.dp2px(65f) * 2
             if (content is TextMessage) {
                 showMessageView(helper, TEXT_MESSAGE, helper.itemViewType)
+                //是否都是表情
+                val allEmoji = EmojiSpanBuilder.allEmoji(context, content.content)
 
+                if (allEmoji) {
+                    tvContent.background = null
+                }
                 tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content, true)
 //                    EmojiUtil.message2emoji(content.content)
                 //判断是否显示文本鹊币
@@ -289,6 +332,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 sdv_header.show()
                 rl_content?.show()
                 tv_content.show()
+                tv_content.backgroundResource = R.drawable.bg_chat_mine
 
                 tv_pic_content.hide()
                 sdv_image.hide()
@@ -451,6 +495,10 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 user = JsonUtil.deserializeAsObject(content.extra, RoomUserChatExtra::class.java)
             }
 
+            if (content is CustomMessage) {
+                user = JsonUtil.deserializeAsObject(content.extra, RoomUserChatExtra::class.java)
+            }
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -484,4 +532,76 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             tv.hide()
         }
     }
+
+    /**
+     * 显示骰子动画
+     * @param msg 自定义消息
+     * @param result 动画结果
+     * @param started 是否播放过动画
+     */
+    private fun showShaiziAnimation(msg: Message, view: SimpleDraweeView, result: String, started: Boolean) {
+        val resultPic = when (result) {
+            "2" -> {
+                R.drawable.shaizi_2
+            }
+            "3" -> {
+                R.drawable.shaizi_3
+            }
+            "4" -> {
+                R.drawable.shaizi_4
+            }
+            "5" -> {
+                R.drawable.shaizi_5
+            }
+            "6" -> {
+                R.drawable.shaizi_6
+            }
+            else -> {
+                //默认使用 1点
+                R.drawable.shaizi_1
+            }
+        }
+        if (!started) {
+            //动画没有播放过，播放动画
+            ImageUtils.showAnimator(
+                view,
+                "asset://${CommonInit.getInstance().getApp().assets}/webp/shaizi.webp",
+                4, object : WebpAnimatorListener {
+                    override fun onStart() {
+                    }
+
+                    override fun onError() {
+                        ImageUtils.loadImageLocal(view, resultPic)
+                        setAnimationStarted(msg)
+                    }
+
+                    override fun onEnd() {
+                        ImageUtils.loadImageLocal(view, resultPic)
+                        setAnimationStarted(msg)
+                    }
+                }
+            )
+        } else {
+            //已经播放过
+            ImageUtils.loadImageLocal(view, resultPic)
+        }
+    }
+
+    /**
+     * 设置动画已经播放过
+     */
+    private fun setAnimationStarted(msg: Message) {
+        try {
+            val extra = JsonUtil.seriazileAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, true))
+            msg.extra = extra
+
+            if (msg.messageId > 0) {
+                //数据库修改
+                RongCloudManager.updateMessageExtra(msg.messageId, extra)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }

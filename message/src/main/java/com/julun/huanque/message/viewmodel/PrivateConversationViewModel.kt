@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
@@ -14,6 +15,8 @@ import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.SendMsgForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.MessageCustomBeanType
+import com.julun.huanque.common.constant.MessageFailType
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.database.table.Balance
 import com.julun.huanque.common.manager.RongCloudManager
@@ -22,6 +25,8 @@ import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.BalanceUtils
+import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -77,6 +82,9 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //当前发送消费花费金额
     val msgFeeData: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+
+    //消息状态变化变化使用
+    val msgData: MutableLiveData<Message> by lazy { MutableLiveData<Message>() }
 
     //操作类型
     var operationType = ""
@@ -144,11 +152,10 @@ class PrivateConversationViewModel : BaseViewModel() {
     }
 
     /**
-     * 删除单个消息
+     * 删除数据库中单个消息
      */
-    fun deleteSingleMessage(message: Message) {
-        messageListData.value?.remove(message)
-        messageChangeState.postValue(true)
+    fun deleteSingleMessage(msgId: Int) {
+        RongIMClient.getInstance().deleteMessages(intArrayOf(msgId))
     }
 
     /**
@@ -265,25 +272,54 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     /**
      * 发送消息接口
+     * @param localMsg 在本地显示的消息
      */
-    fun sendMsg(targetId: Long, content: String, targetUser: TargetUserObj, type: String = "") {
+    fun sendMsg(targetId: Long, content: String, targetUser: TargetUserObj, type: String = "", localMsg: Message? = null) {
         viewModelScope.launch {
             request({
                 val result = socialService.sendMsg(SendMsgForm(targetId, content)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
                 msgFeeData.value = result.consumeBeans
                 if (type.isEmpty()) {
-                    RongCloudManager.send(content, "$targetId", targetUserObj = targetUser.apply { fee = result.consumeBeans }) {}
+                    localMsg?.sentStatus = Message.SentStatus.SENT
+                    msgData.value = localMsg
+                    RongCloudManager.send(content, "$targetId", targetUserObj = targetUser.apply { fee = result.consumeBeans }) { result, message ->
+                        if (!result) {
+                            //发送失败
+                            localMsg?.messageId = message.messageId
+                            sendMessageFail(localMsg ?: return@send, MessageFailType.RONG_CLOUD)
+                        }
+                    }
                 } else {
-                    //发送特权礼物消息
+                    //发送特权表情消息
                     RongCloudManager.sendCustomMessage(
                         "$targetId",
                         targetUser.apply { fee = result.consumeBeans },
                         Conversation.ConversationType.PRIVATE, MessageCustomBeanType.Expression_Privilege, content
-                    )
+                    ) { result, message ->
+                        if (!result) {
+                            //发送失败
+                            localMsg?.messageId = message.messageId
+                            sendMessageFail(localMsg ?: return@sendCustomMessage, MessageFailType.RONG_CLOUD)
+                        }
+                    }
                 }
-            }, {})
+            }, {
+                sendMessageFail(localMsg ?: return@request, MessageFailType.WEB)
+            })
         }
+    }
+
+    /**
+     * 消息发送失败
+     */
+    fun sendMessageFail(msg: Message, type: String) {
+        msg.sentStatus = Message.SentStatus.FAILED
+        val hashMap = GlobalUtils.addExtra(
+            msg.extra,
+            ParamConstant.MSG_FAIL_TYPE, type
+        )
+        msgData.value = msg.apply { extra = JsonUtil.seriazileAsString(hashMap) }
     }
 
     /**
@@ -298,6 +334,28 @@ class PrivateConversationViewModel : BaseViewModel() {
                 uploader?.success(Uri.parse(content))
             }, {
                 uploader?.error()
+            })
+        }
+    }
+
+    /**
+     * 发送骰子表情
+     */
+    fun sendDice(targetId: Long, content: String, localMsg: Message) {
+        viewModelScope.launch {
+            request({
+                val result = socialService.sendDice(SendMsgForm(targetId, content)).dataConvert()
+                BalanceUtils.saveBalance(result.beans)
+                msgFeeData.value = result.consumeBeans
+                RongCloudManager.sendCustomMessage(localMsg) { result, message ->
+                    if (!result) {
+                        //发送失败
+                        localMsg.messageId = message.messageId
+                        sendMessageFail(localMsg, MessageFailType.RONG_CLOUD)
+                    }
+                }
+            }, {
+                sendMessageFail(localMsg ?: return@request, MessageFailType.WEB)
             })
         }
     }

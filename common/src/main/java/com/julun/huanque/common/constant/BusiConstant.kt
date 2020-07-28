@@ -448,6 +448,9 @@ object MessageCustomBeanType {
     //特权表情
     const val Expression_Privilege = "Expression_Privilege"
 
+    //动画表情
+    const val Expression_Animation = "Expression_Animation"
+
     //模拟语音通话消息
     const val Voice_Conmmunication_Simulate = "Voice_Conmmunication_Simulate"
 
@@ -527,8 +530,8 @@ object EmojiType {
     //特权表情
     const val PREROGATIVE = "PREROGATIVE"
 
-    //高级表情
-    const val HIGH = "HIGH"
+    //动画表情
+    const val ANIMATION = "ANIMATION"
 }
 
 /**
@@ -555,9 +558,21 @@ object UpdateType {
     //无更新
     const val None = "None"
 }
+
 //    Processing：打款中 Success：已到账 Failure：打款失败
-object WithdrawStatus{
+object WithdrawStatus {
     const val Processing = "Processing"
     const val Success = "Success"
     const val Failure = "Failure"
+}
+
+//消息错误类型
+object MessageFailType {
+    //融云
+    const val RONG_CLOUD = "RONG_CLOUD"
+
+    //服务端
+    const val WEB = "WEB"
+
+
 }

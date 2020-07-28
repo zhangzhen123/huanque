@@ -151,10 +151,19 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 helper.setText(R.id.tv_content, "[图片]")
             }
             is CustomMessage -> {
-                if (msg.type == MessageCustomBeanType.Gift) {
-                    helper.setText(R.id.tv_content, "[私信礼物]")
-                } else {
-                    helper.setText(R.id.tv_content, "")
+                when (msg.type) {
+                    MessageCustomBeanType.Gift -> {
+                        helper.setText(R.id.tv_content, "[私信礼物]")
+                    }
+                    MessageCustomBeanType.Expression_Privilege -> {
+                        helper.setText(R.id.tv_content, "[表情]")
+                    }
+                    MessageCustomBeanType.Expression_Animation -> {
+                        helper.setText(R.id.tv_content, "[表情]")
+                    }
+                    else -> {
+                        helper.setText(R.id.tv_content, "")
+                    }
                 }
             }
             is CustomSimulateMessage -> {
