@@ -1,12 +1,11 @@
 package com.julun.huanque.core.ui.share
 
-import androidx.lifecycle.*
-import com.julun.huanque.common.basic.QueryType
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.bean.beans.SharePosterInfo
 import com.julun.huanque.common.bean.beans.ShareType
 import com.julun.huanque.common.bean.forms.SharePosterQueryForm
-import com.julun.huanque.common.bean.forms.ShareWay
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.ShareTypeEnum
 import com.julun.huanque.common.net.Requests

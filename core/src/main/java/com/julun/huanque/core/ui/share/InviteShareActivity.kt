@@ -21,7 +21,7 @@ import com.julun.huanque.common.bean.beans.SharePoster
 import com.julun.huanque.common.bean.beans.SharePosterInfo
 import com.julun.huanque.common.bean.beans.ShareType
 import com.julun.huanque.common.constant.*
-import com.julun.huanque.common.interfaces.routerservice.WeiXinService
+import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
 import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.FileUtils
@@ -55,8 +55,8 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
     private var currentSelect: SharePoster? = null
 
     private var applyModule: String=""
-    private val wxService: WeiXinService? by lazy {
-        ARouter.getInstance().build(ARouterConstant.WEIXIN_SERVICE).navigation() as? WeiXinService
+    private val wxService: LoginAndShareService? by lazy {
+        ARouter.getInstance().build(ARouterConstant.LOGIN_SHARE_SERVICE).navigation() as? LoginAndShareService
     }
 
     override fun getLayoutId(): Int = R.layout.activity_invite_share

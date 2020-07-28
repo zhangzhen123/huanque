@@ -7,7 +7,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.bean.beans.OrderInfo
 import com.julun.huanque.common.bean.beans.ShareObject
 import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.interfaces.routerservice.WeiXinService
+import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
 import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.support.WeiBoApiManager
 
@@ -18,8 +18,8 @@ import com.julun.huanque.support.WeiBoApiManager
  * Date: 2019/4/4
  * Time: 11:13
  */
-@Route(path = ARouterConstant.WEIXIN_SERVICE)
-class WeiXinServiceImpl : WeiXinService {
+@Route(path = ARouterConstant.LOGIN_SHARE_SERVICE)
+class LoginAndShareServiceImpl : LoginAndShareService {
     override fun weiXinPay(activity: Activity, orderInfo: OrderInfo) {
         //调用SDK支付
         WXApiManager.doPay(activity, orderInfo)
@@ -34,7 +34,7 @@ class WeiXinServiceImpl : WeiXinService {
     }
 
     override fun weiBoShare(context: Activity, shareObj: ShareObject) {
-       WeiBoApiManager.doWeiBoShare(context,shareObj)
+        WeiBoApiManager.doWeiBoShare(context, shareObj)
     }
 
     override fun weiBoShareResult(data: Intent) {

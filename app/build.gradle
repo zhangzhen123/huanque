@@ -97,7 +97,6 @@ android {
                     JPUSH_APPKEY : "${sdk.JPUSH_KEY_HQ}",
                     JPUSH_CHANNEL: "developer-default"
             ]
-            println("buildTypes debug 我已执行")
         }
 
     }

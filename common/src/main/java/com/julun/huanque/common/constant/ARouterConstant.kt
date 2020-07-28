@@ -78,6 +78,6 @@ object ARouterConstant {
 
     /** 实名认证 end **/
 
-    //微信支付服务
-    const val WEIXIN_SERVICE = "/$APP$SERVICE/WeiXinService"
+    //微信支付 微信授权 微博授权 微信分享 微博分享服务
+    const val LOGIN_SHARE_SERVICE = "/$APP$SERVICE/LoginAndShareService"
 }

@@ -14,10 +14,9 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.WithdrawInfo
 import com.julun.huanque.common.bean.beans.WithdrawTpl
 import com.julun.huanque.common.bean.events.AliAuthCodeEvent
-import com.julun.huanque.common.bean.events.RPVerifyResult
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.*
-import com.julun.huanque.common.interfaces.routerservice.WeiXinService
+import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
@@ -42,8 +41,8 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
 
     private val userBindViewModel: UserBindViewModel by viewModels()
 
-    private val wxService: WeiXinService? by lazy {
-        ARouter.getInstance().build(ARouterConstant.WEIXIN_SERVICE).navigation() as? WeiXinService
+    private val wxService: LoginAndShareService? by lazy {
+        ARouter.getInstance().build(ARouterConstant.LOGIN_SHARE_SERVICE).navigation() as? LoginAndShareService
     }
 
     private val mAdapter: WithdrawAdapter by lazy { WithdrawAdapter() }

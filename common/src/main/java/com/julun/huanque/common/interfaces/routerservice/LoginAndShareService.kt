@@ -5,7 +5,6 @@ import android.content.Intent
 import com.alibaba.android.arouter.facade.template.IProvider
 import com.julun.huanque.common.bean.beans.OrderInfo
 import com.julun.huanque.common.bean.beans.ShareObject
-import com.julun.huanque.common.bean.forms.ShareWay
 
 /**
  *
@@ -15,7 +14,7 @@ import com.julun.huanque.common.bean.forms.ShareWay
  *
  **/
 
-interface WeiXinService : IProvider {
+interface LoginAndShareService : IProvider {
     /**
      * 微信支付
      */
@@ -28,5 +27,5 @@ interface WeiXinService : IProvider {
     fun weiBoShare(context: Activity, shareObj: ShareObject)
 
 
-    fun weiBoShareResult(data:Intent)
+    fun weiBoShareResult(data: Intent)
 }

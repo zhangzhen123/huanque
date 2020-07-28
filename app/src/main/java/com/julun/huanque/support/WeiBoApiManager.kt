@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import com.julun.huanque.R
-import com.julun.huanque.app.HuanQueApp
 import com.julun.huanque.common.bean.beans.ShareObject
 import com.julun.huanque.common.constant.WeiBoShareType
 import com.julun.huanque.common.init.CommonInit
