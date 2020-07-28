@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import cn.jiguang.verifysdk.api.JVerificationInterface
@@ -14,6 +15,7 @@ import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.agora.AgoraManager
+import com.julun.huanque.common.constant.MMKVConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
@@ -24,6 +26,7 @@ import com.julun.jpushlib.TagAliasOperatorHelper
 import com.sina.weibo.sdk.openapi.IWBAPI
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.mm.opensdk.openapi.IWXAPI
+import com.tencent.mmkv.MMKV
 import com.wanjian.cockroach.Cockroach
 import com.wanjian.cockroach.CrashLog
 import com.wanjian.cockroach.ExceptionHandler
@@ -44,8 +47,14 @@ open class HuanQueApp : Application() {
     override fun onCreate() {
         super.onCreate()
         install()
+        MMKV.initialize(this)
         val baseUrl = if (BuildConfig.DEBUG) {
-            BuildConfig.SERVICE_BASE_URL_DEV
+            val url = MMKV.defaultMMKV().decodeString(MMKVConstant.URL)
+            if(!TextUtils.isEmpty(url) && url?.startsWith("http") == true){
+                url
+            }else{
+                BuildConfig.SERVICE_BASE_URL_DEV
+            }
         } else {
             BuildConfig.SERVICE_BASE_URL_PRODUCT
         }

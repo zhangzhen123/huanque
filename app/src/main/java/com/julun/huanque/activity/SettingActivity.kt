@@ -3,8 +3,10 @@ package com.julun.huanque.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.support.LoginManager
 import kotlinx.android.synthetic.main.act_setting.*
@@ -27,6 +29,10 @@ class SettingActivity : BaseActivity() {
 
         header_view.imageViewBack.onClickNew {
             finish()
+        }
+
+        tvChange.onClickNew {
+            ARouter.getInstance().build(ARouterConstant.ENVIRONMENT_CONFIGURATION_ACTIVITY).navigation()
         }
 
         tv_logout.onClickNew {
