@@ -53,7 +53,8 @@ class RunwayCache(
 class RoomUserChatExtra(
     var userId: Int = -1,
     var userAbcd: String = "",
-    var nickname: String = "", var royalLevel: Int = 0,
+    var nickname: String = "",
+    var royalLevel: Int = 0,
     var userLevel: Int = 0,
     var anchorLevel: Int = -1,
     //添加勋章列表
@@ -98,7 +99,9 @@ class TargetUserObj(
     //本次花费金额（发送消息的时候传值）
     var fee: Long = 0,
     //本地图片地址（图片消息使用）
-    var localPic: String = ""
+    var localPic: String = "",
+    //是否是陌生人
+    var stranger: Boolean = false
 )
 
 /**

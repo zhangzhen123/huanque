@@ -231,7 +231,7 @@ object GlobalUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return user?.stranger ?: false
+        return user?.targetUserObj?.stranger ?: false
     }
 
 
