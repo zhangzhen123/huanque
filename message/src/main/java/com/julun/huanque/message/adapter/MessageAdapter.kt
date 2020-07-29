@@ -523,7 +523,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
         if (item.senderUserId == SessionUtils.getSessionId()) {
             //本人消息，费用退回，显示
-            if (replayTime > DAY || (replayTime == 0L && (System.currentTimeMillis() - replayTime) > DAY)) {
+            if (replayTime > DAY || (replayTime == 0L && (System.currentTimeMillis() - item.sentTime) > DAY)) {
                 //回复时间超过一天,或者超过24小时内没有回复(消息费用退回)
                 showFee(tv, fee, true)
                 tv.show()
@@ -533,7 +533,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         } else {
             //他人消息,费用未退回，显示付费样式,费用退回，显示退费样式
             tv.show()
-            if (replayTime > DAY || (replayTime == 0L && (System.currentTimeMillis() - replayTime) > DAY)) {
+            if (replayTime > DAY || (replayTime == 0L && (System.currentTimeMillis() - item.sentTime) > DAY)) {
                 //超时未回复(退回)
                 showFee(tv, fee, true)
             } else {
