@@ -21,8 +21,6 @@ include ':react-native-safe-area-context'
 project(':react-native-safe-area-context').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-safe-area-context/android')
 include ':@react-native-community_masked-view'
 project(':@react-native-community_masked-view').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/@react-native-community/masked-view/android')
-include ':react-native-sound'
-project(':react-native-sound').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-sound/android')
 include ':react-native-svg'
 project(':react-native-svg').projectDir = new File(rootProject.projectDir, 'rnlib/node_modules/react-native-svg/android')
 include ':react-native-reanimated'

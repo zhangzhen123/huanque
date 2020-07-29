@@ -21,10 +21,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 project.ext.react = [
-        enableHermes: false,
+    enableHermes: false,
 ]
 def enableHermes = project.ext.react.get("enableHermes", false);
 def jscFlavor = 'org.webkit:android-jsc:+'
@@ -46,7 +45,6 @@ dependencies {
     implementation project(':react-native-gesture-handler')
     implementation project(':react-native-safe-area-context')
     implementation project(':@react-native-community_masked-view')
-    implementation project(':react-native-sound')
     implementation project(':react-native-svg')
     implementation project(':react-native-reanimated')
     implementation project(':react-native-video')
