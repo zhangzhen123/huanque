@@ -116,7 +116,7 @@ class IntimateDetailFragment : BaseDialogFragment() {
         }
 
         tv_intimate_privilege.text = "亲密特权($enablePrivilege/${privilegeList.size})"
-        mAdapter.setNewInstance(privilegeList)
+        mAdapter.setList(privilegeList)
 
     }
 

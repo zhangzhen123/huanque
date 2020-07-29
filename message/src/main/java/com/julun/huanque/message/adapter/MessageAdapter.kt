@@ -390,7 +390,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             ImageUtils.loadImage(helper.getView(R.id.sdv_image), chatGift.selPic, 100f, 100f)
             val draweeView = helper.getView<SimpleDraweeSpanTextView>(R.id.tv_pic_content)
             val bi = chatGift.beans * max(chatGift.giftCount, 1)
-            val str = "送你一${chatGift.giftName}+#$bi"
+            val str = "送你一${chatGift.giftName}#$bi"
 
             val draweeSpanStringBuilder = DraweeSpanStringBuilder(str)
             val draweeHierarchy = GenericDraweeHierarchyBuilder.newInstance(context.resources)

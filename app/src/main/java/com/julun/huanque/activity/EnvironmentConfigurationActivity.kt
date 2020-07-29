@@ -40,7 +40,7 @@ class EnvironmentConfigurationActivity : BaseActivity() {
     private val developers by lazy {
         arrayListOf<String>(
             "http://192.168.96.249:7777/",
-            "developer 例子，自己修改"
+            "http://192.168.96.246:7777/"
         )
     }
     private val tests by lazy {

@@ -27,6 +27,7 @@ import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.IntimateBean
+import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
@@ -1012,17 +1013,20 @@ class PrivateConversationActivity : BaseActivity() {
 
         val content = msg.content
 
+        if (content is ImageMessage) {
+            //图片消息,重试
+            sendPicMessage(msg)
+            return
+        }
+
         var extraMap: HashMap<String, Any>? = null
         try {
-            extraMap = JsonUtil.deserializeAsObject(msg.extra, HashMap::class.java)
+            extraMap = JsonUtil.deserializeAsObject(msg.extra ?: "", HashMap::class.java)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
-
-            if (content is ImageMessage) {
-                //图片消息,重试
-                sendPicMessage(msg)
-                return
-            }
-
+        try {
             val failType = "${extraMap?.get(ParamConstant.MSG_FAIL_TYPE)}"
             if (failType != MessageFailType.RONG_CLOUD) {
                 //服务端校验未通过
@@ -1046,6 +1050,13 @@ class PrivateConversationActivity : BaseActivity() {
                             }
                         }
                     }
+//                    is ImageMessage -> {
+//                        //图片消息
+//                        val mRoomUserChatExtra = JsonUtil.deserializeAsObject<RoomUserChatExtra>(content.extra, RoomUserChatExtra::class.java)
+//                        var targetUserObj = mRoomUserChatExtra.targetUserObj
+//
+//                        sendChatMessage(localPic = targetUserObj?.localPic ?: return, messageType = Message_Pic)
+//                    }
                     else -> {
 
                     }
@@ -1081,6 +1092,10 @@ class PrivateConversationActivity : BaseActivity() {
                                 JsonUtil.seriazileAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, false))
                         }
                         msg.sentStatus = Message.SentStatus.SENT
+                        sendCustomMessage(msg)
+                    }
+                    else -> {
+                        //直接发送
                         sendCustomMessage(msg)
                     }
                 }

@@ -20,7 +20,7 @@
         tools:targetApi="q">
         <activity
             android:name=".activity.VoiceChatActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
     </application>

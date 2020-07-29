@@ -1,6 +1,7 @@
 package com.julun.huanque.agora.activity
 
 import android.Manifest
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
@@ -668,6 +669,17 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onBackPressed() {
         //不允许返回键关闭该页面
 //        super.onBackPressed()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        //接收到新的语音通话邀请
+        val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
+        if (netCallBean != null) {
+            val callId = netCallBean.callId
+            //取消通话
+            mVoiceChatViewModel?.refuseVoice(callId)
+        }
     }
 
 }
