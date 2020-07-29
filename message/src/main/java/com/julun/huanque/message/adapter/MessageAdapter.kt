@@ -48,6 +48,7 @@ import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.bottomPadding
+import org.jetbrains.anko.textColor
 import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -175,7 +176,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 //                    showGiftView(helper, content.context)
                     val imageResource = EmojiSpanBuilder.getPrivilegeResource(context, content.context)
                     ImageUtils.loadImageLocal(helper.getView(R.id.sdv_image), imageResource)
-                    showTextImageQueBi(helper.getView<TextView>(R.id.tv_quebi), item, helper.adapterPosition)
+                    showTextImageQueBi(helper.getView<SimpleDraweeSpanTextView>(R.id.tv_quebi), item, helper.adapterPosition)
                 }
                 MessageCustomBeanType.Expression_Animation -> {
                     //动画表情
@@ -207,7 +208,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                             }
                         }
                     }
-                    showTextImageQueBi(helper.getView<TextView>(R.id.tv_quebi), item, helper.adapterPosition)
+                    showTextImageQueBi(helper.getView<SimpleDraweeSpanTextView>(R.id.tv_quebi), item, helper.adapterPosition)
                 }
                 else -> {
                 }
@@ -226,7 +227,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                         tvContent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.icon_phone_voice, 0)
                     }
                     tvContent.compoundDrawablePadding = 15
-                    showVoiceView(tvContent, helper.getView<TextView>(R.id.tv_quebi), content.context)
+                    showVoiceView(tvContent, helper.getView<SimpleDraweeSpanTextView>(R.id.tv_quebi), content.context)
                 }
                 else -> {
                 }
@@ -250,9 +251,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content, true)
 //                    EmojiUtil.message2emoji(content.content)
                 //判断是否显示文本鹊币
-                if (helper.itemViewType == OTHER) {
-                    showTextImageQueBi(helper.getView<TextView>(R.id.tv_quebi), item, helper.adapterPosition)
-                }
+//                if (helper.itemViewType == OTHER) {
+                showTextImageQueBi(helper.getView<SimpleDraweeSpanTextView>(R.id.tv_quebi), item, helper.adapterPosition)
+//                }
             } else if (content is ImageMessage) {
                 //图片信息
                 showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
@@ -268,7 +269,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                         ImageUtils.loadImage(helper.getView(R.id.sdv_image), "${content.remoteUri}", 100f, 100f)
                     }
                     //
-                    showTextImageQueBi(helper.getView<TextView>(R.id.tv_quebi), item, helper.adapterPosition)
+                    showTextImageQueBi(helper.getView<SimpleDraweeSpanTextView>(R.id.tv_quebi), item, helper.adapterPosition)
                 } else {
                     //发送方查看图片
                     val file = File("${content.thumUri?.path}")
@@ -481,11 +482,11 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     /**
      * 显示文本/图片消息 鹊币
      */
-    private fun showTextImageQueBi(tv: TextView, item: Message, position: Int) {
-        if (item.senderUserId == SessionUtils.getSessionId()) {
-            tv.hide()
-            return
-        }
+    private fun showTextImageQueBi(tv: SimpleDraweeSpanTextView, item: Message, position: Int) {
+//        if (item.senderUserId == SessionUtils.getSessionId()) {
+//            tv.hide()
+//            return
+//        }
         val content = item.content
         if (content !is TextMessage && content !is ImageMessage) {
             tv.hide()
@@ -509,33 +510,139 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             e.printStackTrace()
         }
         val fee = user?.targetUserObj?.fee ?: 0
-        if (fee > 0 && item.senderUserId != SessionUtils.getSessionId()) {
-            //对方发送消息
-            //消息时间
-            val sendTime = item.sentTime
-            //离当前消息最近的一次本人发送消息
-            var mineReplyTime = 0L
-            //获取离当前消息最近的本人发送消息
-            for (index in position until data.size) {
-                val msg = data[index]
-                val conent = msg.content
-                if ((conent is TextMessage || conent is ImageMessage) && msg.senderUserId == "${SessionUtils.getUserId()}") {
-                    //获取到需要的消息
-                    mineReplyTime = msg.sentTime
-                    break
-                }
-            }
 
-            if (mineReplyTime > 0 && mineReplyTime - sendTime < DAY) {
-                //24小时内回复
+        if (fee <= 0) {
+            //免费消息，不显示
+            tv.hide()
+            return
+        }
+
+
+        //消息回复间隔
+        val replayTime = msgReplayTime(item, position)
+
+        if (item.senderUserId == SessionUtils.getSessionId()) {
+            //本人消息，费用退回，显示
+            if (replayTime > DAY || (replayTime == 0L && (System.currentTimeMillis() - replayTime) > DAY)) {
+                //回复时间超过一天,或者超过24小时内没有回复(消息费用退回)
+                showFee(tv, fee, true)
                 tv.show()
-                tv.text = "$fee"
             } else {
-                //24小时外回复
                 tv.hide()
             }
         } else {
-            tv.hide()
+            //他人消息,费用未退回，显示付费样式,费用退回，显示退费样式
+            tv.show()
+            if (replayTime > DAY || (replayTime == 0L && (System.currentTimeMillis() - replayTime) > DAY)) {
+                //超时未回复(退回)
+                showFee(tv, fee, true)
+            } else {
+                showFee(tv, fee, false)
+            }
+
+        }
+
+
+//        if (fee > 0 && item.senderUserId != SessionUtils.getSessionId()) {
+//            //对方发送消息
+//            //消息时间
+//            val sendTime = item.sentTime
+//            //离当前消息最近的一次本人发送消息
+//            var mineReplyTime = 0L
+//            //获取离当前消息最近的本人发送消息
+//            for (index in position until data.size) {
+//                val msg = data[index]
+//                val conent = msg.content
+//                if ((conent is TextMessage || conent is ImageMessage) && msg.senderUserId == "${SessionUtils.getUserId()}") {
+//                    //获取到需要的消息
+//                    mineReplyTime = msg.sentTime
+//                    break
+//                }
+//            }
+//
+//            if (mineReplyTime > 0 && mineReplyTime - sendTime < DAY) {
+//                //24小时内回复
+//                tv.show()
+//                tv.text = "$fee"
+//            } else {
+//                //24小时外回复
+//                tv.hide()
+//            }
+//        } else {
+//            tv.hide()
+//        }
+    }
+
+    /**
+     * 显示收费样式
+     * @param fee 费用
+     * @param giveback 退回状态
+     */
+    private fun showFee(draweeView: SimpleDraweeSpanTextView, fee: Long, giveback: Boolean) {
+        val str = if (giveback) {
+            //费用退回
+            "超过24小时未回复，# ${fee}已退回"
+        } else {
+            //费用未退回
+            "# $fee"
+        }
+
+        val draweeSpanStringBuilder = DraweeSpanStringBuilder(str)
+        val draweeHierarchy = GenericDraweeHierarchyBuilder.newInstance(context.resources)
+            .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE)
+            .build()
+        val uri = Uri.parse("res://${context!!.packageName}/" + R.mipmap.icon_quebi_message)
+
+        val controller = Fresco.newDraweeControllerBuilder()
+            .setUri(uri)
+            .setAutoPlayAnimations(true)
+            .build()
+
+        val index = str.indexOf("#")
+
+        draweeSpanStringBuilder.setImageSpan(
+            context, /* Context */
+            draweeHierarchy, /* hierarchy to be used */
+            controller, /* controller to be used to update the hierarchy */
+            index, /* image index within the text */
+            30, /* image width */
+            30, /* image height */
+            false, /* auto resize */
+            DraweeSpan.ALIGN_CENTER
+        ) /* alignment */
+
+        draweeSpanStringBuilder.setSpan(
+            ForegroundColorSpan(GlobalUtils.getColor(R.color.color_quebi)), index + 1, index + 2 + "$fee".length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        draweeView.setDraweeSpanStringBuilder(draweeSpanStringBuilder)
+    }
+
+    /**
+     * 消息回复间隔时间
+     * @param targetMsg 目标消息
+     * @param position 目标消息的position
+     */
+    private fun msgReplayTime(targetMsg: Message, position: Int): Long {
+        //消息时间
+        val sendTime = targetMsg.sentTime
+        //离当前消息最近的一次对方发送消息时间
+        var otherReplyTime = 0L
+        //获取离当前消息最近的对方发送消息
+        for (index in position until data.size) {
+            val msg = data[index]
+            val conent = msg.content
+            if ((conent is TextMessage || conent is ImageMessage) && targetMsg.senderUserId != msg.senderUserId) {
+                //获取到需要的消息
+                otherReplyTime = msg.sentTime
+                break
+            }
+        }
+        return if (otherReplyTime == 0L) {
+            0
+        } else {
+            otherReplyTime - sendTime
         }
     }
 

@@ -420,7 +420,7 @@ class MessageViewModel : BaseViewModel() {
                     userId = user.targetUserObj?.userId ?: 0
                     //用户性别
                     sex = user.targetUserObj?.sex ?: ""
-                    stranger = user.stranger
+                    stranger = user.targetUserObj?.stranger ?: false
                 }
             } else {
                 //对方发送消息
@@ -434,7 +434,7 @@ class MessageViewModel : BaseViewModel() {
                     userId = user.senderId
                     //用户性别
                     sex = user.sex
-                    stranger = user.stranger
+                    stranger = user.targetUserObj?.stranger ?: false
                 }
             }
 

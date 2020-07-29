@@ -104,15 +104,13 @@
         app:constraint_referenced_ids="sdv_image,rl_content" />
 
 
-    <TextView
+    <com.facebook.drawee.span.SimpleDraweeSpanTextView
         android:id="@+id/tv_quebi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="6dp"
-        android:drawableLeft="@mipmap/icon_quebi_message"
-        android:drawablePadding="3dp"
-        android:textColor="@color/color_quebi"
+        android:textColor="@color/black_999"
         android:textSize="@dimen/sp_12"
         android:visibility="gone"
         app:layout_constraintLeft_toRightOf="@id/sdv_header"

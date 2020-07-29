@@ -309,7 +309,7 @@ object RongCloudManager {
 //                    switchThread(message)
 //                }
                 if (message != null) {
-                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
                 }
             }
 
@@ -442,7 +442,7 @@ object RongCloudManager {
             override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
                 if (message != null) {
 //                    switchThread(message)
-                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
                 }
                 OssUpLoadManager.uploadFiles(arrayListOf(targetUserObj.localPic), OssUpLoadManager.MESSAGE_PIC) { code, list ->
                     if (code == OssUpLoadManager.CODE_SUCCESS) {
@@ -551,7 +551,7 @@ object RongCloudManager {
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
                     if (message != null) {
-                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
                     }
                 }
 
@@ -608,7 +608,7 @@ object RongCloudManager {
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
                     if (message != null) {
-                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
                     }
                 }
 
@@ -673,13 +673,6 @@ object RongCloudManager {
     // 提供给直播间调用，刷新用户数据
     fun resetUserInfoData(userObj: RoomUserChatExtra) {
         currentUserObj = userObj
-    }
-
-    /**
-     * 陌生人状态变化
-     */
-    fun strangerChange(stranger: Boolean) {
-        currentUserObj?.stranger = stranger
     }
 
     //    fun rongCloudIsInited(): Boolean {

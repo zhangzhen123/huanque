@@ -193,7 +193,6 @@ class PrivateConversationViewModel : BaseViewModel() {
                     senderId = mineInfo.userId
                     nickname = mineInfo.nickname
                     sex = mineInfo.sex
-                    stranger = result.stranger
                 }
                 RongCloudManager.resetUserInfoData(user)
 
@@ -224,7 +223,6 @@ class PrivateConversationViewModel : BaseViewModel() {
                     senderId = SessionUtils.getUserId()
                     nickname = SessionUtils.getNickName()
                     sex = SessionUtils.getSex()
-                    stranger = false
                 }
                 RongCloudManager.resetUserInfoData(user)
             })

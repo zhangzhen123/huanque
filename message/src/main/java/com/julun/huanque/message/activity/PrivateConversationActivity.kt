@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -724,7 +725,11 @@ class PrivateConversationActivity : BaseActivity() {
      * 判断当前亲密等级是否可以发送图片
      */
     private fun judgeIntimateLevelForPic() {
-        val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
+        val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate
+        if (intimate == null) {
+            Toast.makeText(this, "缺少亲密度等级数据", Toast.LENGTH_SHORT).show()
+            return
+        }
         val currentLevel = intimate.intimateLevel
         IntimateUtil.intimatePrivilegeList.forEach {
             if (it.key == "FSTP") {
@@ -1485,7 +1490,7 @@ class PrivateConversationActivity : BaseActivity() {
         if (event.userId == mPrivateConversationViewModel?.targetIdData?.value) {
             //当前会话，陌生人状态变化
             mPrivateConversationViewModel?.basicBean?.value?.stranger = event.stranger
-            RongCloudManager.strangerChange(event.stranger)
+//            RongCloudManager.strangerChange(event.stranger)
         }
     }
 
