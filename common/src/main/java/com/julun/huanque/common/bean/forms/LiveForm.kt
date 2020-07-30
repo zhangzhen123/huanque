@@ -83,11 +83,6 @@ class MallBuyForm(
     /**守护的节目编号 */
     , var programId: Int = -1) : SessionForm()
 
-class UserProgramForm(
-    var programId: Int = -1,
-    var targetUserId: Long = -1,
-    var chatRoomId: Long = -1
-) : Serializable
 
 /**
  * 主播名片权限
