@@ -14,6 +14,7 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.helper.DensityHelper
+import com.julun.huanque.common.utils.GlobalUtils
 
 import com.julun.huanque.common.widgets.WebViewAdapter
 import kotlinx.android.synthetic.main.dialog_web.*
@@ -132,9 +133,9 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
                 tvWebTitle?.textSize = mTextSize!!
             }
             if (mTextColor == null || mTextColor == 0) {
-                tvWebTitle?.textColor = MixedHelper.getColor(R.color.white)
+                tvWebTitle?.textColor = GlobalUtils.getColor(R.color.white)
             } else {
-                tvWebTitle?.textColor = MixedHelper.getColor(mTextColor!!)
+                tvWebTitle?.textColor = GlobalUtils.getColor(mTextColor!!)
             }
             if (mLeftResid == null) {
                 ivWebLeft.hide()

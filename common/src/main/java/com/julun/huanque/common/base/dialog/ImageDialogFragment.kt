@@ -68,8 +68,8 @@ class ImageDialogFragment : BaseDialogFragment() {
         val title = arguments?.getString(IntentParamKey.TITLE.name) ?: ""
         if (!TextUtils.isEmpty(pic)) {
 //            val params = sdvPicture.layoutParams as ConstraintLayout.LayoutParams
-//            params.width = DensityUtils.dp2px(mWidth)
-//            params.height = DensityUtils.dp2px(mHeight)
+//            params.width = DensityHelper.dp2px(mWidth)
+//            params.height = DensityHelper.dp2px(mHeight)
 //            sdvPicture.layoutParams = params
 //            ImageUtils.loadImage(sdvPicture, pic, mWidth,mHeight)
             ImageUtils.loadImageWithWidth(sdvPicture, pic, DensityHelper.dp2px(mWidth))

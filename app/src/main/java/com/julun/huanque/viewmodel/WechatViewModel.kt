@@ -153,7 +153,7 @@ class WechatViewModel : BaseViewModel() {
 //                        finish.value = true
 //                    })
 //                }
-//                LingMengService.getService(IStatistics::class.java)?.onShare(WXApiManager.getShareObject().source
+//                huanqueService.getService(IStatistics::class.java)?.onShare(WXApiManager.getShareObject().source
 //                        ?: "",
 //                        WXApiManager.getShareObject().programId ?: "",
 //                        WXApiManager.getShareObject().platForm ?: "")

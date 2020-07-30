@@ -7,9 +7,9 @@ import com.julun.huanque.common.bean.beans.FriendBean
 import com.julun.huanque.common.bean.beans.SysMsgContent
 import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.constant.MessageConstants
+import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
-import com.rd.utils.DensityUtils
 
 /**
  *@创建者   dong
@@ -71,7 +71,7 @@ object MessageFormatUtils {
         val text = TIBean()
         text.type = TIBean.TEXT
         text.textColor = "#999999"
-        text.textSize = DensityUtils.dpToPx(14)
+        text.textSize = DensityHelper.dp2px(14)
         list.add(text)
         when (result.relationChangeType) {
             MessageConstants.FRIEDN -> {
@@ -92,8 +92,8 @@ object MessageFormatUtils {
                 val image = TIBean()
                 image.type = TIBean.IMAGE
                 image.imgRes = ImageHelper.getIntimateLevelPic(result.intimateLevel)
-                image.height = DensityUtils.dpToPx(16)
-                image.width = DensityUtils.dpToPx(46)
+                image.height = DensityHelper.dp2px(16)
+                image.width = DensityHelper.dp2px(46)
                 list.add(image)
             }
         }

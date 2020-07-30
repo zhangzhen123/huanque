@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.julun.huanque.common.widgets.happybubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bubbleColor="#5733B8"
+    app:bubblePadding="0dp"
+    app:bubbleRadius="5dp"
+    app:lookAt="bottom"
+    app:lookLength="9dp"
+    app:shadowRadius="0dp"
+    app:lookPosition="10dp"
+    app:lookWidth="18dp">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_10"
+        android:text="@string/guide_to_send"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+</com.julun.huanque.common.widgets.happybubble.BubbleLayout>

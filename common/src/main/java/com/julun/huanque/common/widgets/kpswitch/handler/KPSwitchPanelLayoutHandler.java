@@ -73,7 +73,7 @@ public class KPSwitchPanelLayoutHandler implements IPanelConflictLayout {
      * <p/>
      * Default is false.
      *
-     * @attr ref com.julun.lingmeng.lmcore.kpswitch.R.styleable#KPSwitchPanelLayout_ignore_recommend_height
+     * @attr ref com.julun.huanque.core.kpswitch.R.styleable#KPSwitchPanelLayout_ignore_recommend_height
      */
     @SuppressWarnings("JavaDoc")
     private boolean mIgnoreRecommendHeight = false;
@@ -204,7 +204,7 @@ public class KPSwitchPanelLayoutHandler implements IPanelConflictLayout {
     /**
      * @param ignoreRecommendHeight Whether ignore the recommend panel height, what would be equal
      *                              to the height of keyboard in most situations.
-     * @attr ref com.julun.lingmeng.lmcore.kpswitch.R.styleable#KPSwitchPanelLayout_ignore_recommend_height
+     * @attr ref com.julun.huanque.core.kpswitch.R.styleable#KPSwitchPanelLayout_ignore_recommend_height
      * @see #resetToRecommendPanelHeight(int)
      */
     @SuppressWarnings("JavaDoc")

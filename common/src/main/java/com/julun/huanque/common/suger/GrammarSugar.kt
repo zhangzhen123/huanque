@@ -59,7 +59,6 @@ fun Any.px2dp(value: Float): Int {
     return DensityHelper.px2dp(value)
 }
 
-
 /**
  * 将一个list分割,按照每个
  */

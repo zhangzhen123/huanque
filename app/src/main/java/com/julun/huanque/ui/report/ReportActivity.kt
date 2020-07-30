@@ -151,9 +151,9 @@ class ReportActivity : BaseReportActivity() {
      */
 //    private fun statistics() {
 //        if (reportType == 0) {
-//            LingMengService.getService(IStatistics::class.java)?.onReportClick("用户", "用户:$mTargetUserId")
+//            huanqueService.getService(IStatistics::class.java)?.onReportClick("用户", "用户:$mTargetUserId")
 //        } else {
-//            LingMengService.getService(IStatistics::class.java)?.onReportClick("主播", "主播:$mProgramId")
+//            huanqueService.getService(IStatistics::class.java)?.onReportClick("主播", "主播:$mProgramId")
 //        }
 //    }
 }

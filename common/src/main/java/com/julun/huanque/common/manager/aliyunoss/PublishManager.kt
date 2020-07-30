@@ -122,7 +122,7 @@ object PublishManager : RequestCaller {
                     publish_state = UPLOAD_FAIL
                     callback?.onResult(UPLOAD_FAIL)
                     publishFail()
-//                    ToastUtils.show(LingMengInit.getInstance().getContext().resources.getString(R.string.upload_video_fail))
+//                    ToastUtils.show(huanqueInit.getInstance().getContext().resources.getString(R.string.upload_video_fail))
                 }
             }
 
@@ -168,7 +168,7 @@ object PublishManager : RequestCaller {
                 currentMedia = null
                 currentContent = null
             }.ifError {
-//                    ToastUtils.show(LingMengInit.getInstance().getContext().resources.getString(R.string.publish_video_fail))
+//                    ToastUtils.show(huanqueInit.getInstance().getContext().resources.getString(R.string.publish_video_fail))
                 publishFail()
                 publish_state = PUBLISH_FAIL
                 callback?.onResult(PUBLISH_FAIL)

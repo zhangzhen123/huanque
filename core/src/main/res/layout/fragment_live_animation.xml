@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/playerContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!--竖屏独有-->
+    <FrameLayout
+        android:id="@+id/vertical_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--主播升级进度条-->
+<!--        <com.julun.huanque.lmcore.basic.widgets.live.message.AuthorLevelProgressView-->
+<!--            android:id="@+id/author_progress_up"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/author_progress_height"-->
+<!--            android:layout_marginStart="2dp"-->
+<!--            android:layout_marginLeft="2dp" />-->
+
+        <com.julun.huanque.core.widgets.live.pk.PkMicView
+            android:id="@+id/pkMicView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/dimen_73" />
+
+        <com.julun.huanque.core.widgets.live.banner.BannerWebView
+            android:id="@+id/bannerWebView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="42dp" />
+
+<!--        <com.julun.huanque.lmcore.basic.widgets.GameBannerView-->
+<!--            android:id="@+id/gdavGameBanner"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:layout_marginRight="8dp"-->
+<!--            android:visibility="gone" />-->
+
+
+        <TextView
+            android:id="@+id/tv_exit_chat_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:text="@string/exit_chat_mode"
+            android:textColor="@color/primary_color"
+            android:textSize="@dimen/text_10size"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+
+        <LinearLayout
+            android:id="@+id/container_001"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!-- 弹幕-->
+            <com.julun.huanque.core.widgets.live.message.BarrageAnimatorView
+                android:id="@+id/barrage_view"
+                android:layout_width="match_parent"
+                android:layout_height="36dp" />
+            <!--入场动画-->
+            <!--<com.julun.huanque.lmcore.basic.widgets.live.message.UserEnterAnimatorView-->
+            <!--android:id="@+id/user_enter_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="150dp"-->
+            <!--tools:visibility="visible"-->
+            <!--android:visibility="gone" />-->
+        </LinearLayout>
+
+        <!--主播升级动画-->
+        <com.julun.huanque.core.widgets.live.message.AnchorsLevelUpView
+            android:id="@+id/anchor_level_up_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <!-- 各种高级动画（中奖、开守护等） -->
+        <com.julun.huanque.core.widgets.live.HighlyAnimationView
+            android:id="@+id/highlyAnimation"
+            android:layout_width="@dimen/live_layer_anim_height"
+            android:layout_height="@dimen/live_layer_anim_height"
+            android:layout_gravity="center" />
+
+        <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
+            android:id="@+id/svga"
+            android:layout_width="match_parent"
+            android:layout_height="235dp"
+            app:antiAlias="true"
+            app:clearsAfterStop="true"
+            app:loopCount="1" />
+
+        <com.julun.huanque.common.widgets.live.WebpGifView
+            android:id="@+id/luxury_enter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dimen_45" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="113dp"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/dimen_5"
+            android:paddingRight="@dimen/dimen_5">
+
+
+            <TextView
+                android:id="@+id/tv_mysterious_time"
+                android:layout_width="34dp"
+                android:layout_height="41dp"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal|bottom"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/text_10size"
+                android:visibility="gone"
+                tools:text="10:00"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+    </FrameLayout>
+    <!--横屏独有-->
+    <FrameLayout
+        android:id="@+id/horizontal_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <!--<include layout="@layout/view_shield_list" />-->
+    </FrameLayout>
+    <!--主播端横屏独有-->
+    <FrameLayout
+        android:id="@+id/anchor_horizontal_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
+    <!--横竖屏都有-->
+    <FrameLayout
+        android:id="@+id/retain_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--<com.julun.huanque.common.utils.live.WebpGifView-->
+        <!--android:id="@+id/luxury_enter"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="end"-->
+        <!--android:layout_marginBottom="@dimen/dimen_45" />-->
+
+        <!-- 简单送礼物动画  单独拎出来-->
+        <com.julun.huanque.core.widgets.live.simpleffects.SimpleGiftEffectsContainerView
+            android:id="@+id/simpleGift"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/simple_gift_container_height"
+            android:layout_gravity="bottom" />
+        <!--入场动画-->
+        <FrameLayout
+            android:id="@+id/user_enter_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end">
+
+            <com.julun.huanque.core.widgets.live.message.UserEnterAnimatorView
+                android:id="@+id/user_enter_view"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </FrameLayout>
+
+    </FrameLayout>
+</FrameLayout>

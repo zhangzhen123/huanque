@@ -91,5 +91,7 @@ object ParamConstant {
     //举报类型 主播或者用户
     const val REPORT_TYPE = "reportType"
 
+    const val CHAT_MODE = "CHAT_MODE"
+
 
 }

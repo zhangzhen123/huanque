@@ -30,7 +30,7 @@ object BusiConstant {
 
     //False
     const val False = "False"
-
+    var ACTIVITY_DIALOG_CODE = 603   //关闭透明activity弹窗返回的通知
 }
 
 /**
@@ -94,6 +94,12 @@ object ErrorCodes {
 
     //创建连麦异常
     const val CREATE_MICRO_FAIL = 501
+
+    //PK相关异常，需要toast
+    const val PK_ERROR = 1011
+
+    //PK相关异常，需要toast
+    const val PK_ERROR2 = 1014
 }
 
 /**
@@ -216,6 +222,13 @@ object ConnectMicroOperate {
 }
 
 
+object AnchorSearch {
+    //类型参数
+    val TYPE = "TYPE"
+
+    //连麦的type以及回传数据的key
+    val CONNECT_MICRO = "CONNECT_MICRO"
+}
 /**
  * 红包类型
  */
@@ -227,6 +240,33 @@ object RedPackageType {
     val TIME_OUT = 5//红包等待超时
 }
 
+/**
+ * 周星展示类型
+ */
+object WeekType {
+    const val WEEK = "week"
+    const val REDPACKET = "RedPacket"
+    const val HOTRANGE = "HotRange"
+    const val RESCUE = "Rescue"
+
+    //主播头条
+    const val HEADLINE = "Headline"
+
+    //抽奖
+    const val DrawAct = "DrawAct"
+}
+//SVGA内置动画
+object RunWaySVGAType {
+    //SVGA动画  暂时只支持飞机和飞艇
+    //飞机
+    val AIRPLANE = "svga/airplane.svga"
+
+    //飞艇
+    val AIRSHIP = "svga/airship.svga"
+
+    //加载动画
+    val LOADING = "svga/loading.svga"
+}
 /**
  * 消息中心消息类型
  */
@@ -303,7 +343,7 @@ object FriendStatus {
 }
 
 //用户类型
-object ChatUserType {
+object UserType {
     //注册用户
     const val Viewer = "Viewer"
 
@@ -319,7 +359,6 @@ object ChatUserType {
     //客服
     const val Customer = "Customer"
 }
-
 
 /**
  * 人脸识别对应常量类型
@@ -583,4 +622,93 @@ object FingerGuessingResult {
     const val PAPER = "paper"
     //剪刀
     const val SCISSORS = "scissors"
+}
+
+object BooleanType {
+    val TRUE = "True"
+    val FALSE = "False"
+}
+
+/**
+ * PK结果类型
+ */
+object PKResultType {
+    val WIN = "Win"//
+    val DRAW = "Draw"//
+    val LOSE = "Lose" //
+}
+
+/**
+ * PK类型
+ */
+object PKType {
+    const val PK = "Normal"//普通PK
+    const val MONTH_PK = "YUESAI"//月赛
+    const val DYNAMIC = "DYNAMIC" // 动态配置
+    const val WORLDCUP = "WORLDCUP"//世界杯
+    const val LANDLORD = "Landlord"//斗地主
+}
+
+/**
+ * 直播间背景切换
+ */
+object LiveBgType {
+    const val NORMAL = 0//初始状态
+    const val PK_TWO = 1//二人PK
+    const val PK_THREE = 2//三人PK
+    const val PK_LANDLORD = 3//斗地主
+}
+/**
+ * 礼物任务状态：Doing：进行中Finished：已完成Fail：任务失败
+ */
+object PKTaskStatus {
+    const val Doing = "Doing"
+    const val Finished = "Finished"
+    const val Fail = "Fail"
+}
+
+/**
+ * 道具状态Competing：抢夺中Fail：抢夺失败UnUse：待使用Effect：生效中Used：已使用
+ */
+object PKPropStatus {
+    const val Competing = "Competing"
+    const val Fail = "Fail"
+    const val UnUse = "UnUse"
+    const val Effect = "Effect"
+    const val Used = "Used"
+}
+
+/**
+ * Blood：加血瓶Smoke：烟雾罐
+ */
+object PKPropType {
+    const val Blood = "Blood"//大血瓶2倍
+    const val Smoke = "Smoke"
+    const val SmallBlood = "SmallBlood"//小血瓶1.5倍
+}
+
+object PKAction {
+    const val CREATE = "Create" //空闲状态
+    const val EXISTED = "Existed" //
+    const val REJECT = "Reject"
+    const val CANCEL = "Cancel"
+    const val ACCEPT = "Accept"
+    const val TIMEOUT = "Timeout"
+    const val WAITING = "Waiting"//等待确认
+
+    const val PKING = "Pking"//正在PK中
+    const val ALL = "All" //代表无限制礼物
+    const val ONE = "One" //代表选择一个礼物
+
+    const val WIN = "Win" //代表胜利
+    const val DRAW = "Draw" //代表战平
+    const val LOSE = "Lose" //代表失败
+}
+
+object MessageBanner {
+    //活动显示
+    const val PopupShow = "PopupShow"
+
+    //活动隐藏
+    const val PopupHide = "PopupHide"
 }

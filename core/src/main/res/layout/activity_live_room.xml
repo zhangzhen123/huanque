@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.julun.huanque.core.widgets.live.slide.ScrollVerticalContainer
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/live_bg_color">
+
+        <FrameLayout
+            android:id="@+id/playerPanel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/live_header_height" />
+
+        <ViewStub
+            android:id="@+id/viewStub"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/frame_danmu" />
+
+        <FrameLayout
+            android:id="@+id/anchor_no_online"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/live_header_height" />
+
+        <com.julun.huanque.core.widgets.SuperAnimationView
+            android:id="@+id/highly_anim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|end" />
+        <!--聊天布局-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/chat_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/app_bottom_shadow"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/bottom_shadow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+            <!--android:background="@mipmap/bottom_shadow"-->
+            <com.julun.huanque.core.widgets.live.chat.ChatInputBoxView
+                android:id="@+id/chatInputView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <com.julun.huanque.core.widgets.live.message.PublicChatMessageView
+                android:id="@+id/publicMessageView"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/chatInputView"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--可滑动布局-->
+        <com.julun.huanque.core.widgets.live.slide.SlideViewContainer
+            android:id="@+id/surface_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--<ImageView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="233dp"-->
+            <!--android:background="@mipmap/live_button_bg"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--app:layout_constraintRight_toRightOf="parent" />-->
+            <com.julun.huanque.core.widgets.live.LiveHeaderView
+                android:id="@+id/liveHeader"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_marginTop="7dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.julun.huanque.core.widgets.LiveRunwayView
+                android:id="@+id/liveRunwayView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/liveHeader" />
+
+            <com.julun.huanque.core.widgets.live.LiveRoomBottomActionView
+                android:id="@+id/actionView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/horizontalGuideline02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="252dp" />
+
+            <FrameLayout
+                android:id="@+id/animation_container"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.julun.huanque.core.widgets.live.GuideToSendMessageView
+                android:id="@+id/guideToSendMessageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_marginRight="@dimen/dimen_5"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/actionView"
+                app:layout_constraintStart_toStartOf="parent" />
+            <!--<com.julun.huanque.core.widgets.bezierview.PeriscopeLayout-->
+            <!--android:id="@+id/periscope"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:visibility="gone"-->
+            <!--app:layout_constraintBottom_toTopOf="@+id/actionView"-->
+            <!--app:layout_constraintHorizontal_bias="0.0"-->
+            <!--app:layout_constraintLeft_toLeftOf="@+id/verticalGuideline03"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="@+id/horizontalGuideline02"-->
+            <!--app:layout_constraintVertical_bias="1.0" />-->
+            <!--<ImageView-->
+            <!--android:id="@+id/ivFansBubbleRemind"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:clickable="false"-->
+            <!--android:src="@mipmap/lm_icon_fans_remind"-->
+            <!--android:visibility="invisible" />-->
+
+
+            <include
+                android:id="@id/right_drawer"
+                layout="@layout/view_layout_right_drawer"
+                android:layout_width="@dimen/right_drawer_width"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </com.julun.huanque.core.widgets.live.slide.SlideViewContainer>
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/cur_live_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:actualImageScaleType="centerCrop" />
+
+    </com.julun.huanque.core.widgets.live.slide.ScrollVerticalContainer>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/up_stair_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:actualImageScaleType="centerCrop" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/down_stair_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:actualImageScaleType="centerCrop" />
+
+    <!--加载布局 只保留关闭按钮-->
+    <ImageView
+        android:id="@+id/live_room_back"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/selector_live_action_exit"
+        android:visibility="gone" />
+
+    <ViewStub
+        android:id="@+id/liveGestureGuideView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/player_gesture_guide" />
+
+</FrameLayout>

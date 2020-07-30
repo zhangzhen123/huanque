@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/live_room_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/countDownTimeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/timerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text=" 秒后自动跳转"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/countDownTimerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/timerText"
+            android:text="3"
+            android:textColor="@color/colorAccent_lib"
+            android:textSize="11sp" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="主播正在路上，看看其Ta主播吧!"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+
+    <GridView
+        android:id="@+id/recommandGrid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:fadingEdge="none"
+        android:horizontalSpacing="10dp"
+        android:listSelector="@color/transparent"
+        android:overScrollMode="never"
+        android:stretchMode="none" />
+
+    <TextView
+        android:id="@+id/noRecommandAnchorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:text="暂无其Ta推荐的主播"
+        android:textColor="#888888"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+</LinearLayout>

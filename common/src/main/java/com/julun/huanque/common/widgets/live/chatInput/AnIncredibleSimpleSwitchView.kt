@@ -14,7 +14,7 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import com.julun.huanque.common.R
 import com.julun.huanque.common.utils.ULog
-import com.julun.huanque.lmcore.animtors.evaluators.HsvEvaluator
+import com.julun.huanque.core.animtors.evaluators.HsvEvaluator
 import org.jetbrains.anko.*
 import kotlin.properties.Delegates
 import kotlin.reflect.KProperty

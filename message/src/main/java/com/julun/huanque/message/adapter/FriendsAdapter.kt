@@ -16,7 +16,6 @@ import com.julun.huanque.common.utils.MessageFormatUtils
 import com.julun.huanque.common.utils.TimeUtils
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
 import com.julun.huanque.message.R
-import com.rd.utils.DensityUtils
 import io.rong.imlib.model.Message
 import io.rong.message.TextMessage
 

@@ -1,0 +1,925 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<!--    <include-->
+<!--        android:id="@+id/landlordView"-->
+<!--        layout="@layout/view_landlords_mic"-->
+<!--        android:visibility="gone" />-->
+
+    <LinearLayout
+        android:id="@+id/pk_props_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <com.julun.huanque.lmcore.basic.widgets.live.PkPropView
+            android:id="@+id/pk_prop_01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <com.julun.huanque.lmcore.basic.widgets.live.PkPropView
+            android:id="@+id/pk_prop_02"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <com.julun.huanque.lmcore.basic.widgets.live.PkPropView
+            android:id="@+id/pk_prop_03"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/pk_time_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="@dimen/dimen_42"
+        android:background="@drawable/pk_mic_title_bg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_10"
+        android:paddingRight="@dimen/dimen_10"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/pk_title_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/pk_title_two" />
+
+        <TextView
+            android:id="@+id/pk_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4.1dp"
+            android:text="00:00"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_12" />
+    </LinearLayout>
+
+    <com.julun.huanque.core.widgets.live.pk.PkPropsPanelView
+        android:id="@+id/pk_props_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_42"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/pk_result_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="42dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <FrameLayout
+            android:id="@+id/pk_win_layout_01"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/pk_win_logo_01"
+                android:layout_width="40dp"
+                android:layout_height="36dp"
+                android:layout_margin="8.5dp"
+                android:visibility="gone" />
+
+            <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
+                android:id="@+id/pk_win_sign_01"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dimen_6"
+                android:layout_marginLeft="@dimen/dimen_6"
+                android:scaleType="fitCenter"
+                app:antiAlias="true"
+                app:clearsAfterStop="true"
+                app:loopCount="1" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/pk_win_layout_02"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/pk_win_logo_02"
+                android:layout_width="40dp"
+                android:layout_height="36dp"
+                android:layout_margin="8.5dp"
+                android:visibility="gone" />
+
+            <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
+                android:id="@+id/pk_win_sign_02"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dimen_6"
+                android:layout_marginLeft="@dimen/dimen_6"
+                android:scaleType="fitCenter"
+                app:antiAlias="true"
+                app:clearsAfterStop="true"
+                app:loopCount="1" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/pk_win_layout_03"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/pk_win_logo_03"
+                android:layout_width="40dp"
+                android:layout_height="36dp"
+                android:layout_margin="8.5dp"
+                android:visibility="gone" />
+
+            <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
+                android:id="@+id/pk_win_sign_03"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dimen_6"
+                android:layout_marginLeft="@dimen/dimen_6"
+                android:scaleType="fitCenter"
+                app:antiAlias="true"
+                app:clearsAfterStop="true"
+                app:loopCount="1" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/bezier_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/pk_process_high"
+        android:orientation="horizontal">
+
+        <com.julun.huanque.core.widgets.bezierview.BezierView
+            android:id="@+id/bezier_01"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <com.julun.huanque.core.widgets.bezierview.BezierView
+            android:id="@+id/bezier_02"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <com.julun.huanque.core.widgets.bezierview.BezierView
+            android:id="@+id/bezier_03"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
+        android:id="@+id/pk_vs_ani"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        app:antiAlias="true"
+        app:clearsAfterStop="true"
+        app:loopCount="1"
+        app:source="svga/vs.svga" />
+
+    <LinearLayout
+        android:id="@+id/two_pk_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_44"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="38dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/pk2_container_1"
+            android:layout_width="@dimen/dimen_44"
+            android:layout_height="match_parent"
+            android:background="@drawable/pk_anchor_bg_01"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp">
+
+            <View
+                android:id="@+id/pk2_stub_01"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerVertical="true" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/pk2_anchor_img01"
+                android:layout_width="@dimen/pk_img_size"
+                android:layout_height="@dimen/pk_img_size"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/pk2_stub_01"
+                android:layout_toRightOf="@+id/pk2_stub_01"
+                app:failureImage="@mipmap/logo_placeholder_small"
+                app:failureImageScaleType="fitCenter"
+                app:placeholderImage="@mipmap/logo_placeholder_small"
+                app:roundAsCircle="true"
+                app:roundingBorderColor="@color/white"
+                app:roundingBorderWidth="2dp" />
+
+            <TextView
+                android:id="@+id/pk2_anchor_name_01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_5"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_marginTop="@dimen/dimen_6"
+                android:layout_toEndOf="@+id/pk2_anchor_img01"
+                android:layout_toRightOf="@+id/pk2_anchor_img01"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/pk_name_size" />
+
+            <TextView
+                android:id="@+id/pk2_text01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pk2_anchor_name_01"
+                android:layout_marginStart="@dimen/dimen_5"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_toEndOf="@+id/pk2_anchor_img01"
+                android:layout_toRightOf="@+id/pk2_anchor_img01"
+                android:maxLines="1"
+                android:text="我方"
+                android:textColor="@color/white"
+                android:textSize="@dimen/pk_tx_size" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/pk2_container_2"
+            android:layout_width="@dimen/dimen_44"
+            android:layout_height="match_parent"
+            android:background="@drawable/pk_anchor_bg_03"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp">
+
+
+            <View
+                android:id="@+id/pk2_stub_02"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/pk2_anchor_img02"
+                android:layout_width="@dimen/pk_img_size"
+                android:layout_height="@dimen/pk_img_size"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/pk2_stub_02"
+                android:layout_toLeftOf="@+id/pk2_stub_02"
+                app:failureImage="@mipmap/logo_placeholder_small"
+                app:failureImageScaleType="fitCenter"
+                app:placeholderImage="@mipmap/logo_placeholder_small"
+                app:roundAsCircle="true"
+                app:roundingBorderColor="@color/white"
+                app:roundingBorderWidth="2dp" />
+
+            <TextView
+                android:id="@+id/pk2_anchor_name02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_6"
+                android:layout_marginEnd="@dimen/dimen_5"
+                android:layout_marginRight="@dimen/dimen_5"
+                android:layout_toStartOf="@+id/pk2_anchor_img02"
+                android:layout_toLeftOf="@+id/pk2_anchor_img02"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/pk_name_size" />
+
+            <TextView
+                android:id="@+id/pk2_text02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pk2_anchor_name02"
+                android:layout_alignRight="@+id/pk2_anchor_name02"
+                android:maxLines="1"
+                android:text="对方"
+                android:textColor="@color/white"
+                android:textSize="@dimen/pk_tx_size" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/pk2_title_img"
+        android:layout_width="54dp"
+        android:layout_height="38dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/dimen_2"
+        android:visibility="gone"
+        app:actualImageScaleType="fitCenter"
+        app:failureImageScaleType="fitCenter"
+        app:placeholderImage="@mipmap/pk_normal_flag"
+        app:placeholderImageScaleType="fitCenter"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/pk2_process"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pk_process_high"
+        android:layout_gravity="top"
+        android:layout_marginTop="@dimen/dimen_12"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/pk_dan_level_img01"
+            android:layout_width="@dimen/dimen_26"
+            android:layout_height="@dimen/dimen_26"
+            android:layout_marginStart="@dimen/dimen_5"
+            android:layout_marginLeft="@dimen/dimen_5"
+            android:visibility="gone"
+            app:actualImageScaleType="fitXY"
+            tools:visibility="visible" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/pk_process_high"
+            android:layout_marginLeft="@dimen/dimen_5"
+            android:layout_marginRight="@dimen/dimen_5"
+            android:layout_weight="1"
+            android:background="@drawable/pk_process_bg_main"
+            android:orientation="horizontal"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp">
+
+            <View
+                android:id="@+id/pk2_speed_process_01"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:background="@drawable/pk_process_speed_color_01"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/pk2_process_02"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <View
+                android:id="@+id/pk2_speed_process_02"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:background="@drawable/pk_process_speed_color_02"
+                android:gravity="center_vertical|end"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/pk2_process_01"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/pk2_title_01"
+                android:layout_width="53dp"
+                android:layout_height="20dp"
+                android:background="@drawable/pk_process_color_01"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dimen_5"
+                android:text="我方"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/pk2_title_02"
+                android:layout_width="53dp"
+                android:layout_height="20dp"
+                android:background="@drawable/pk_process_color_03"
+                android:gravity="center_vertical|end"
+                android:paddingEnd="@dimen/dimen_5"
+                android:paddingRight="@dimen/dimen_5"
+                android:text="对方"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/pk2_process_01"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="48dp"
+                android:background="@drawable/pk_process_color_01"
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/pk2_process_02"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/pk2_process_02"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="48dp"
+                android:layout_marginRight="48dp"
+                android:background="@drawable/pk_process_color_03"
+                android:gravity="center_vertical|end"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/pk2_process_01"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="15dp"
+                android:layout_height="26dp"
+                android:src="@mipmap/pk_2_bar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/pk2_process_02"
+                app:layout_constraintStart_toEndOf="@+id/pk2_process_01"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.julun.huanque.common.widgets.NumberAnimTextView
+                android:id="@+id/pk2_process_text01"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="30dp"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.julun.huanque.common.widgets.NumberAnimTextView
+                android:id="@+id/pk2_process_text02"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginRight="30dp"
+                android:gravity="center_vertical|end"
+                android:maxLines="1"
+                android:paddingRight="@dimen/dimen_5"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/pk2_speed_img1"
+                android:layout_width="@dimen/dimen_57"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/dimen_5"
+                android:layout_marginRight="@dimen/dimen_5"
+                android:visibility="gone"
+                app:actualImageScaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/imageView4"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/pk2_speed_img2"
+                android:layout_width="@dimen/dimen_57"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dimen_5"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:rotationY="-180"
+                android:visibility="gone"
+                app:actualImageScaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/imageView4"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/pk_dan_level_img02"
+            android:layout_width="@dimen/dimen_26"
+            android:layout_height="@dimen/dimen_26"
+            android:layout_marginEnd="@dimen/dimen_5"
+            android:layout_marginRight="@dimen/dimen_5"
+            android:visibility="gone"
+            app:actualImageScaleType="fitXY"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/three_pk_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_44"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="38dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+
+        <RelativeLayout
+            android:id="@+id/pk3_container_01"
+            android:layout_width="44dp"
+            android:layout_height="0dp"
+            android:background="@drawable/pk_anchor_bg_01"
+            android:paddingLeft="@dimen/dimen_6"
+            android:paddingRight="@dimen/dimen_6"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/pk3_container_02"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/pk3_anchor_img01"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                app:failureImage="@mipmap/logo_placeholder_small"
+                app:failureImageScaleType="fitCenter"
+                app:placeholderImage="@mipmap/logo_placeholder_small"
+                app:roundAsCircle="true"
+                app:roundingBorderColor="@color/white"
+                app:roundingBorderWidth="2dp" />
+
+            <TextView
+                android:id="@+id/pk3_anchor_name_01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_5"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_marginTop="@dimen/dimen_6"
+                android:layout_toEndOf="@+id/pk3_anchor_img01"
+                android:layout_toRightOf="@+id/pk3_anchor_img01"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/pk_name_size" />
+
+            <TextView
+                android:id="@+id/pk3_text01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pk3_anchor_name_01"
+                android:layout_marginStart="@dimen/dimen_5"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_toEndOf="@+id/pk3_anchor_img01"
+                android:layout_toRightOf="@+id/pk3_anchor_img01"
+                android:maxLines="1"
+                android:text="我方"
+                android:textColor="@color/white"
+                android:textSize="@dimen/pk_tx_size" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/pk3_container_02"
+            android:layout_width="44dp"
+            android:layout_height="0dp"
+            android:background="@drawable/pk_anchor_bg_02"
+            android:paddingLeft="@dimen/dimen_6"
+            android:paddingRight="@dimen/dimen_6"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/pk3_container_03"
+            app:layout_constraintStart_toEndOf="@+id/pk3_container_01"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/pk3_anchor_img02"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                app:failureImage="@mipmap/logo_placeholder_small"
+                app:failureImageScaleType="fitCenter"
+                app:placeholderImage="@mipmap/logo_placeholder_small"
+                app:roundAsCircle="true"
+                app:roundingBorderColor="@color/white"
+                app:roundingBorderWidth="2dp" />
+
+            <TextView
+                android:id="@+id/pk3_anchor_name_02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_marginTop="@dimen/dimen_6"
+                android:layout_toEndOf="@+id/pk3_anchor_img02"
+                android:layout_toRightOf="@+id/pk3_anchor_img02"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/pk_name_size" />
+
+            <TextView
+                android:id="@+id/pk3_text02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pk3_anchor_name_02"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_toEndOf="@+id/pk3_anchor_img02"
+                android:layout_toRightOf="@+id/pk3_anchor_img02"
+                android:maxLines="1"
+                android:text="对方"
+                android:textColor="@color/white"
+                android:textSize="@dimen/pk_tx_size" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/pk3_container_03"
+            android:layout_width="44dp"
+            android:layout_height="0dp"
+            android:background="@drawable/pk_anchor_bg_03"
+            android:paddingLeft="@dimen/dimen_6"
+            android:paddingRight="@dimen/dimen_6"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/pk3_container_02"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/pk3_anchor_img03"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                app:failureImage="@mipmap/logo_placeholder_small"
+                app:failureImageScaleType="fitCenter"
+                app:placeholderImage="@mipmap/logo_placeholder_small"
+                app:roundAsCircle="true"
+                app:roundingBorderColor="@color/white"
+                app:roundingBorderWidth="2dp" />
+
+            <TextView
+                android:id="@+id/pk3_anchor_name_03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_marginTop="@dimen/dimen_6"
+                android:layout_toEndOf="@+id/pk3_anchor_img03"
+                android:layout_toRightOf="@+id/pk3_anchor_img03"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/pk_name_size" />
+
+            <TextView
+                android:id="@+id/pk3_text03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pk3_anchor_name_03"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_toEndOf="@+id/pk3_anchor_img03"
+                android:layout_toRightOf="@+id/pk3_anchor_img03"
+                android:maxLines="1"
+                android:text="对方"
+                android:textColor="@color/white"
+                android:textSize="@dimen/pk_tx_size" />
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/pk3_process"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pk_process_high"
+        android:layout_gravity="top"
+        android:layout_marginTop="@dimen/dimen_12"
+        android:background="@drawable/pk_process_bg_main"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/pk_process_bg_01">
+
+            <View
+                android:id="@+id/pk3_process_01"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/pk_process_color_01" />
+
+            <com.julun.huanque.common.widgets.NumberAnimTextView
+                android:id="@+id/pk3_process_text_01"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/dimen_6"
+                android:paddingRight="4dp"
+                android:textColor="@color/white" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/pk_process_bg_02">
+
+            <View
+                android:id="@+id/pk3_process_02"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/pk_process_color_02" />
+
+            <com.julun.huanque.common.widgets.NumberAnimTextView
+                android:id="@+id/pk3_process_text_02"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/dimen_6"
+                android:paddingRight="4dp"
+                android:textColor="@color/white" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/pk_process_bg_03">
+
+            <View
+                android:id="@+id/pk3_process_03"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/pk_process_color_04" />
+
+            <com.julun.huanque.common.widgets.NumberAnimTextView
+                android:id="@+id/pk3_process_text_03"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/dimen_6"
+                android:paddingRight="4dp"
+                android:text="0"
+                android:textColor="@color/white" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
+        android:id="@+id/pk_cloud"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pk_cloud_high"
+        android:layout_gravity="top"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        app:antiAlias="true"
+        app:autoPlay="false"
+        app:clearsAfterStop="false"
+        app:loopCount="1"
+        app:source="svga/pk_cloud.svga" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pk_dan_result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/pk_cloud_high"
+        android:background="@color/percent50translucentBlack"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.julun.huanque.common.widgets.live.WebpGifView
+            android:id="@+id/pk_dan_bg_ani"
+            android:layout_width="match_parent"
+            android:layout_height="222dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/pk_dan_level"
+            android:layout_width="@dimen/dimen_200"
+            android:layout_height="@dimen/dimen_200"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.julun.huanque.common.widgets.live.WebpGifView
+            android:id="@+id/pk_dan_fg_ani"
+            android:layout_width="match_parent"
+            android:layout_height="222dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RelativeLayout
+            android:id="@+id/rl_dan_mvp"
+            android:layout_width="64dp"
+            android:layout_height="49dp"
+            android:layout_marginEnd="@dimen/dimen_45"
+            android:layout_marginRight="@dimen/dimen_45"
+            android:layout_marginBottom="@dimen/dimen_40"
+            app:layout_constraintBottom_toBottomOf="@+id/pk_dan_level"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/pk_mvp_header"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerHorizontal="true"
+                app:failureImage="@mipmap/logo_placeholder_small"
+                app:failureImageScaleType="fitCenter"
+                app:placeholderImage="@mipmap/logo_placeholder_small"
+                app:roundAsCircle="true" />
+
+            <TextView
+                android:id="@+id/tv_dan_mvp_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                tools:text="xxxVIP" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/bg_live_red_point"
+                android:paddingLeft="@dimen/dimen_3"
+                android:paddingRight="@dimen/dimen_3"
+                android:text="MVP"
+                android:textColor="@color/white"
+                android:textSize="8sp" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_dan_score"
+            android:layout_width="159dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="164dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/pk_dan_level"
+            app:layout_constraintStart_toStartOf="@+id/pk_dan_level"
+            app:layout_constraintTop_toTopOf="@+id/pk_dan_level"
+            tools:background="@mipmap/bg_pk_dan_success">
+
+            <TextView
+                android:id="@+id/tv_dan_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                tools:text="胜利" />
+
+            <TextView
+                android:id="@+id/tv_dan_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                tools:text="段位分 +3" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</merge>

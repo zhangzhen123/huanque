@@ -97,7 +97,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <action android:name="com.julun.lingmeng.lmapp.jpush.PushSpringboardActivity" />
+                <action android:name="com.julun.huanque.lmapp.jpush.PushSpringboardActivity" />
             </intent-filter>
         </activity>
     </application>

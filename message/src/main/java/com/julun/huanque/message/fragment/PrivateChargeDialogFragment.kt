@@ -6,7 +6,6 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.message.R
 import com.julun.huanque.message.viewmodel.MessageSettingViewModel
-import com.rd.utils.DensityUtils
 import kotlinx.android.synthetic.main.dialog_private_charge.*
 
 /**

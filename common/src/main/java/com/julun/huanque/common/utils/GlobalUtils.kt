@@ -16,6 +16,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
+import com.julun.huanque.common.bean.beans.UserInfo
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.database.HuanQueDatabase
@@ -278,5 +279,33 @@ object GlobalUtils {
         }
         map.put(key, value)
         return map
+    }
+
+    /**
+     * 获取发言数量
+     * @param isAnchor 是否是主播
+     * @param info 用户信息
+     */
+    fun speakCount(isAnchor: Boolean, info: UserInfo?): Int {
+        var count = 0
+        if (isAnchor || info?.officalManager == true) {
+            count = 60
+        } else if (info?.roomGuard == true || (info?.royalLevel ?: 0) > 0) {
+            //上神45字
+            if (info?.royalLevel ?: 0 >= 9) {
+                count = 45
+            } else {
+                //守护或贵族
+                count = 40
+            }
+        } else {
+            val level = info?.userLevel ?: 1
+            when {
+                level in 1..5 -> count = 10
+                level in 6..9 -> count = 15
+                level >= 10 -> count = 20
+            }
+        }
+        return count
     }
 }

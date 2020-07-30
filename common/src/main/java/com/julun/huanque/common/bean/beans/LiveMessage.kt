@@ -18,10 +18,10 @@ class SendGiftEvent(var giftId: Int = -1,
                     var cacheIt: Boolean = false,
                     var count: Int = 0,
                     var seconds: Int = 0,
-                    var toUserId: Int = -1,
+                    var toUserId: Long = -1,
                     var nickname: String = "",
                     var giftPic: String = "",
-                    var userId: Int = -1,
+                    var userId: Long = -1L,
                     var toNickname: String = "",
                     var giftName: String = ""
                     , var headPic: String = ""
@@ -63,7 +63,7 @@ data class RoomUserChangeEvent(
 )
 
 /** 开通守护 **/
-class OpenGuardEvent(val months: Int = 1, var nickname: String = "", var userId: Int = 0, var headPic: String = "")
+class OpenGuardEvent(val months: Int = 1, var nickname: String = "", var userId: Long = 0L, var headPic: String = "")
 
 /**愚人节福蛋**/
 class YuRenJieEvent(var yurenjiettl: Int = 0)
@@ -72,7 +72,7 @@ class YuRenJieEvent(var yurenjiettl: Int = 0)
 class ContributionEvent(var score: Long = 0)
 
 /** 幸运礼物 **/
-class LuckGiftEvent(var userId: Int = 0, var nickname: String = "", var luckTotalBeans: Long = 0, var giftName: String = "")
+class LuckGiftEvent(var userId: Long = 0, var nickname: String = "", var luckTotalBeans: Long = 0, var giftName: String = "")
 
 /**PK开始**/
 class PKStartEvent(var pkInfo: PKInfoBean? = null,
@@ -184,7 +184,7 @@ data class PKCreateEvent(
         var action: String = "",
         var pkId: Int = 0,
         var userId: Int = 0,
-        var userIds: List<Int> = listOf(),
+        var userIds: List<Long> = listOf(),
         var detailList: List<PKUser> = listOf(),
         var countDown: Int = 0,
         /** 节目id **/
@@ -233,10 +233,10 @@ data class PkPropUseWarnInfo(
 /**
  * 超级幸运礼物
  */
-class SuperLuckGiftEvent(var goodsName: String? = "", var coin: Long = 0, var goodsPicId: String? = "", var nickname: String? = "", var userId: Int? = 0)
+class SuperLuckGiftEvent(var goodsName: String? = "", var coin: Long = 0, var goodsPicId: String? = "", var nickname: String? = "", var userId: Long? = 0)
 
 /**主播、用户升级事件**/
-class UserUpgradeEvent(var userId: Int = 0, var nickname: String = "", var newLevel: Int = 0, var newExp: Long = 0L) {
+class UserUpgradeEvent(var userId: Long = 0, var nickname: String = "", var newLevel: Int = 0, var newExp: Long = 0L) {
     var grantInfo: List<GrantInfo>? = null
 }
 
@@ -306,11 +306,11 @@ class AnimEventItem {
 //主播升级事件
 data class AnchorUpgradeEvent(
         var nickname: String = "",
-        var userId: Int = 0,
+        var userId: Long = 0,
         var newExpValue: Long = 0,
         var newLevel: Int = 0, //升级的下一级值
         //升级成功
-        var sendUserId: Int = 0, //升级中奖的用户
+        var sendUserId: Long = 0L, //升级中奖的用户
         var awardValue: Int = 0,    //奖励萌豆
         var sendNickname: String = ""     //提示的用户名
 )
@@ -502,7 +502,7 @@ class TplBeanExtraContext(var programId: Int = 0, var cacheIt: Boolean = false, 
                           var factoryCarPrizeCount: Int = 0,
                           var giftPic: String = "",
         //点击卡片时用到
-                          var userId: Int = 0,
+                          var userId: Long = 0,
         //调整直播间时用到
                           var roomId: Int = 0,
         //礼盒价值

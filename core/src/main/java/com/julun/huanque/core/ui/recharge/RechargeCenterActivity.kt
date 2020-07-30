@@ -19,7 +19,7 @@ import com.julun.huanque.common.bean.beans.PayResultInfo
 import com.julun.huanque.common.bean.events.PayResultEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.interfaces.routerservice.WeiXinService
+import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -63,8 +63,8 @@ class RechargeCenterActivity : BaseActivity() {
 
     private var mHelpUrl: String = ""
     private var mPayPosition: Int = -1
-    private val wxService: WeiXinService?  by lazy {
-        ARouter.getInstance().build(ARouterConstant.WEIXIN_SERVICE).navigation() as? WeiXinService
+    private val wxService: LoginAndShareService?  by lazy {
+        ARouter.getInstance().build(ARouterConstant.LOGIN_SHARE_SERVICE).navigation() as? LoginAndShareService
     }
 
 

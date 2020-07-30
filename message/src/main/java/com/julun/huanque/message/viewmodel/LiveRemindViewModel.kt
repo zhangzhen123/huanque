@@ -8,7 +8,7 @@ import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.forms.LiveRemindForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.net.services.LiveService
+import com.julun.huanque.common.net.services.LiveRemindService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.ToastUtils
@@ -34,7 +34,7 @@ class LiveRemindViewModel : BaseViewModel() {
             }
             request({
                 val data =
-                    Requests.create(LiveService::class.java)
+                    Requests.create(LiveRemindService::class.java)
                         .followList(LiveRemindForm(offset = offset))
                         .dataConvert()
                 offset += data.list.size
@@ -47,7 +47,7 @@ class LiveRemindViewModel : BaseViewModel() {
     fun updatePush(push: String, programId: Int) {
         viewModelScope.launch {
             request({
-                Requests.create(LiveService::class.java)
+                Requests.create(LiveRemindService::class.java)
                     .changeFollowPush(LiveRemindForm(pushOpen = push, programId = programId))
                     .dataConvert()
                 success.value = true
