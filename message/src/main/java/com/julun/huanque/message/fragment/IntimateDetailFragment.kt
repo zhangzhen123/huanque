@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.ConversationBasicBean
 import com.julun.huanque.common.helper.DensityHelper
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.IntimateUtil
 import com.julun.huanque.message.R
@@ -37,6 +39,9 @@ class IntimateDetailFragment : BaseDialogFragment() {
 
     override fun initViews() {
         initRecyclerView()
+        iv_rule.onClickNew {
+            WebActivity.startWeb(requireActivity(), "www.baidu.com")
+        }
     }
 
     /**
@@ -91,7 +96,7 @@ class IntimateDetailFragment : BaseDialogFragment() {
             100
         } else {
             tv_meet_attention.text = "距离下一级差${intimateBean.nextIntimateNum - intimateBean.intimateNum}亲密度"
-            if (intimateBean.nextIntimateNum != 0) {
+            if (intimateBean.nextIntimateNum == 0) {
                 0
             } else {
                 intimateBean.intimateNum * 100 / intimateBean.nextIntimateNum
@@ -111,7 +116,7 @@ class IntimateDetailFragment : BaseDialogFragment() {
         }
 
         tv_intimate_privilege.text = "亲密特权($enablePrivilege/${privilegeList.size})"
-        mAdapter.setNewInstance(privilegeList)
+        mAdapter.setList(privilegeList)
 
     }
 

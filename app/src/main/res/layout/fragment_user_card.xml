@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black_999"
+    tools:ignore="MissingDefaultResource">
+
+
+    <View
+        android:id="@+id/view_bg"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/bg_user_card"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_header"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginTop="28dp"
+        app:roundAsCircle="true"
+        app:roundingBorderColor="@color/white"
+        app:roundingBorderWidth="2dp" />
+
+    <TextView
+        android:id="@+id/tv_manage"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="11dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="管理"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toLeftOf="@id/view_bg"
+        app:layout_constraintTop_toTopOf="@id/view_bg" />
+
+    <TextView
+        android:id="@+id/tv_report"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginRight="7dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="举报"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintRight_toRightOf="@id/view_bg"
+        app:layout_constraintTop_toTopOf="@id/view_bg" />
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_bg">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="电热壶" />
+
+            <TextView
+                android:id="@+id/tv_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_999"
+                android:textSize="@dimen/sp_12"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tv_sex"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="欢鹊ID:7463" />
+
+            <TextView
+                android:id="@+id/tv_sex"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/bg_shape_mkf_sex_female"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toBottomOf="@id/tv_id"
+                app:layout_constraintLeft_toRightOf="@id/tv_id"
+                app:layout_constraintRight_toLeftOf="@id/tv_location"
+                app:layout_constraintTop_toTopOf="@id/tv_id"
+                tools:text="35"
+                tools:textColor="@color/black_333" />
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/bg_shape_mkf_location"
+                android:drawableLeft="@mipmap/icon_location"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="#82ABD1"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toBottomOf="@id/tv_id"
+                app:layout_constraintLeft_toRightOf="@id/tv_sex"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_id"
+                tools:text="柯东湖" />
+
+            <TextView
+                android:id="@+id/tv_sign"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="54dp"
+                android:layout_marginRight="30dp"
+                android:gravity="center"
+                android:textColor="@color/black_999"
+                android:textSize="@dimen/sp_12"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="肯定就很" />
+
+            <View
+                android:id="@+id/view_caifu_level"
+                android:layout_width="105dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/bg_caifu"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/view_guizu_level"
+                app:layout_constraintTop_toBottomOf="@id/tv_sign" />
+
+            <ImageView
+                android:id="@+id/iv_caifu"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginLeft="6dp"
+                android:src="@mipmap/ic_launcher"
+                app:layout_constraintBottom_toBottomOf="@id/view_caifu_level"
+                app:layout_constraintLeft_toLeftOf="@id/view_caifu_level"
+                app:layout_constraintTop_toTopOf="@id/view_caifu_level" />
+
+            <TextView
+                android:id="@+id/tv_caifu_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:includeFontPadding="false"
+                android:text="财富等级"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toTopOf="@+id/tv_caifu_level"
+                app:layout_constraintLeft_toRightOf="@id/iv_caifu"
+                app:layout_constraintRight_toRightOf="@id/view_caifu_level"
+                app:layout_constraintTop_toTopOf="@id/view_caifu_level" />
+
+            <TextView
+                android:id="@+id/tv_caifu_level"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_caifu_level"
+                app:layout_constraintLeft_toLeftOf="@id/tv_caifu_title"
+                app:layout_constraintRight_toRightOf="@id/tv_caifu_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_caifu_title"
+                tools:text="9" />
+
+
+            <View
+                android:id="@+id/view_guizu_level"
+                android:layout_width="105dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/bg_guizu"
+                app:layout_constraintLeft_toRightOf="@id/view_caifu_level"
+                app:layout_constraintRight_toLeftOf="@+id/view_zhubo_level"
+                app:layout_constraintTop_toTopOf="@id/view_caifu_level" />
+
+            <ImageView
+                android:id="@+id/iv_guizu"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginLeft="6dp"
+                android:src="@mipmap/ic_launcher"
+                app:layout_constraintBottom_toBottomOf="@id/view_guizu_level"
+                app:layout_constraintLeft_toLeftOf="@id/view_guizu_level"
+                app:layout_constraintTop_toTopOf="@id/view_guizu_level" />
+
+            <TextView
+                android:id="@+id/tv_guizu_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:includeFontPadding="false"
+                android:text="贵族等级"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toTopOf="@+id/tv_guizu_level"
+                app:layout_constraintLeft_toRightOf="@id/iv_guizu"
+                app:layout_constraintRight_toRightOf="@id/view_guizu_level"
+                app:layout_constraintTop_toTopOf="@id/view_guizu_level" />
+
+            <TextView
+                android:id="@+id/tv_guizu_level"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_guizu_level"
+                app:layout_constraintLeft_toLeftOf="@id/tv_guizu_title"
+                app:layout_constraintRight_toRightOf="@id/tv_guizu_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_guizu_title"
+                tools:text="9" />
+
+
+            <View
+                android:id="@+id/view_zhubo_level"
+                android:layout_width="105dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/bg_zhubo"
+                app:layout_constraintLeft_toRightOf="@id/view_guizu_level"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/view_caifu_level" />
+
+            <ImageView
+                android:id="@+id/iv_zhubo"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginLeft="6dp"
+                android:src="@mipmap/ic_launcher"
+                app:layout_constraintBottom_toBottomOf="@id/view_zhubo_level"
+                app:layout_constraintLeft_toLeftOf="@id/view_zhubo_level"
+                app:layout_constraintTop_toTopOf="@id/view_zhubo_level" />
+
+            <TextView
+                android:id="@+id/tv_zhubo_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:includeFontPadding="false"
+                android:text="主播等级"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toTopOf="@+id/tv_zhubo_level"
+                app:layout_constraintLeft_toRightOf="@id/iv_zhubo"
+                app:layout_constraintRight_toRightOf="@id/view_zhubo_level"
+                app:layout_constraintTop_toTopOf="@id/view_zhubo_level" />
+
+            <TextView
+                android:id="@+id/tv_zhubo_level"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_zhubo_level"
+                app:layout_constraintLeft_toLeftOf="@id/tv_zhubo_title"
+                app:layout_constraintRight_toRightOf="@id/tv_zhubo_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_zhubo_title"
+                tools:text="9" />
+
+            <TextView
+                android:id="@+id/tv_medal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="90dp"
+                android:includeFontPadding="false"
+                android:text="勋章"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_sign" />
+
+            <com.facebook.drawee.span.SimpleDraweeSpanTextView
+                android:id="@+id/stv_medal"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_medal" />
+
+            <TextView
+                android:id="@+id/tv_leyuan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="25dp"
+                android:includeFontPadding="false"
+                android:text="养鹊乐园"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stv_medal" />
+
+
+            <LinearLayout
+                android:id="@+id/ll_leyuan"
+                android:layout_width="0px"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_leyuan">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@color/black_666"
+                    android:textSize="@dimen/sp_16"
+                    tools:text="共5只小鹊" />
+
+                <View
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="25dp"
+                android:includeFontPadding="false"
+                android:text="标签"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_leyuan" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/tv_attention"
+        android:layout_width="0px"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="关注"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tv_private_chat"
+        app:layout_constraintTop_toBottomOf="@id/scroll_view" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0px"
+        android:layout_marginTop="17dp"
+        android:layout_marginBottom="17dp"
+        android:background="@color/color_gray_three"
+        app:layout_constraintBottom_toBottomOf="@id/tv_attention"
+        app:layout_constraintLeft_toRightOf="@id/tv_attention"
+        app:layout_constraintTop_toTopOf="@id/tv_attention" />
+
+    <TextView
+        android:id="@+id/tv_private_chat"
+        android:layout_width="0px"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="私信"
+        app:layout_constraintLeft_toRightOf="@id/tv_attention"
+        app:layout_constraintRight_toLeftOf="@+id/tv_at"
+        app:layout_constraintTop_toBottomOf="@id/scroll_view" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0px"
+        android:layout_marginTop="17dp"
+        android:layout_marginBottom="17dp"
+        android:background="@color/color_gray_three"
+        app:layout_constraintBottom_toBottomOf="@id/tv_attention"
+        app:layout_constraintLeft_toRightOf="@id/tv_private_chat"
+        app:layout_constraintTop_toTopOf="@id/tv_attention" />
+
+
+    <TextView
+        android:id="@+id/tv_at"
+        android:layout_width="0px"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="\@ta"
+        app:layout_constraintLeft_toRightOf="@id/tv_private_chat"
+        app:layout_constraintRight_toLeftOf="@+id/tv_home_page"
+        app:layout_constraintTop_toBottomOf="@id/scroll_view" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0px"
+        android:layout_marginTop="17dp"
+        android:layout_marginBottom="17dp"
+        android:background="@color/color_gray_three"
+        app:layout_constraintBottom_toBottomOf="@id/tv_attention"
+        app:layout_constraintLeft_toRightOf="@id/tv_at"
+        app:layout_constraintTop_toTopOf="@id/tv_attention" />
+
+
+    <TextView
+        android:id="@+id/tv_home_page"
+        android:layout_width="0px"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="主页"
+        app:layout_constraintLeft_toRightOf="@id/tv_at"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scroll_view" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

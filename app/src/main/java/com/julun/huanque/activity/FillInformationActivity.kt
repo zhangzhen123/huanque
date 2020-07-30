@@ -94,6 +94,13 @@ class FillInformationActivity : BaseActivity() {
 //            }
 //        })
 
+        mViewModel?.loginStatus?.observe(this, Observer {
+            if (it == true) {
+                //登录成功
+                finish()
+            }
+        })
+
         mViewModel?.currentStatus?.observe(this, Observer {
             if (it != null) {
                 when (it) {
@@ -116,7 +123,7 @@ class FillInformationActivity : BaseActivity() {
 
         mViewModel?.uploadHeadState?.observe(this, Observer {
             if (it != null) {
-                startActivity(Intent(this, LoginActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
             }
             if (mLoadingDialog.isShowing) {
                 mLoadingDialog.dismiss()

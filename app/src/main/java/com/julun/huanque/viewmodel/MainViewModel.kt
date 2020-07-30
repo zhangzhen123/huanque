@@ -14,8 +14,10 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ConmmunicationUserType
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.*
+import io.rong.imlib.RongIMClient
 import kotlinx.coroutines.launch
 
 class MainViewModel : BaseViewModel() {
@@ -27,6 +29,9 @@ class MainViewModel : BaseViewModel() {
     val indexData: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     val socialService: SocialService by lazy { Requests.create(SocialService::class.java) }
+
+    //未读消息数量
+    val unreadMsgCount: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     private val userService: UserService by lazy {
         Requests.create(UserService::class.java)
@@ -118,4 +123,14 @@ class MainViewModel : BaseViewModel() {
             })
         }
     }
+
+    /**
+     * 获取未读数
+     */
+    fun getUnreadCount(){
+        RongCloudManager.queryPMessage {
+            unreadMsgCount.postValue(it)
+        }
+    }
+
 }

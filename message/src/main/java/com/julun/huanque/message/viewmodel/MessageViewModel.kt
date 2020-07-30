@@ -47,6 +47,9 @@ class MessageViewModel : BaseViewModel() {
     //未读消息数量
     val unreadMsgCount: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
+    //查询未读消息的标识位
+    val queryUnreadCountFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //折叠陌生人消息标识位
     var foldStrangerMsg = false
 
@@ -175,9 +178,7 @@ class MessageViewModel : BaseViewModel() {
      * 查询私聊未读消息数
      */
     fun queryRongPrivateCount() {
-        RongCloudManager.queryPMessage {
-            unreadMsgCount.postValue(it)
-        }
+        queryUnreadCountFlag.postValue(true)
     }
 
     /**
@@ -419,7 +420,7 @@ class MessageViewModel : BaseViewModel() {
                     userId = user.targetUserObj?.userId ?: 0
                     //用户性别
                     sex = user.targetUserObj?.sex ?: ""
-                    stranger = user.stranger
+                    stranger = user.targetUserObj?.stranger ?: false
                 }
             } else {
                 //对方发送消息
@@ -433,7 +434,7 @@ class MessageViewModel : BaseViewModel() {
                     userId = user.senderId
                     //用户性别
                     sex = user.sex
-                    stranger = user.stranger
+                    stranger = user.targetUserObj?.stranger ?: false
                 }
             }
 

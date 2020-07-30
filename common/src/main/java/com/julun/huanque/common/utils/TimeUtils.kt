@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 private const val SECOND = 1000L
-private const val MINUTE = 60 * SECOND
+const val MINUTE = 60 * SECOND
 private const val HOUR = 60 * MINUTE
 const val DAY = 24 * HOUR
 /**

@@ -1,5 +1,6 @@
 package com.julun.huanque.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
@@ -12,6 +13,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.LoginStatusUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.net.UserService
@@ -53,6 +55,9 @@ class FillInformationViewModel : BaseViewModel() {
 
     //昵称是否可用标识
     val nicknameEnable: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //登录状态
+    val loginStatus: LiveData<Boolean> by lazy { LoginStatusUtils.getLoginStatus() }
 
     //昵称是否有变化
     var nicknameChange = false

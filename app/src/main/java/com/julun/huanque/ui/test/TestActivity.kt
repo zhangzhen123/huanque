@@ -183,7 +183,11 @@ class TestActivity : BaseActivity() {
         }
 
         tv_invite.onClickNew {
-            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name,"Invite").navigation()
+            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name, "Invite").navigation()
+        }
+
+        btn_usercard.onClickNew {
+            //用户卡片
         }
     }
 

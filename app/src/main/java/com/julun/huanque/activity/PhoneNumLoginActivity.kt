@@ -111,7 +111,7 @@ class PhoneNumLoginActivity : BaseActivity() {
         mViewModel?.loginData?.observe(this, Observer {
             if (it != null) {
                 if (it.regComplete) {
-                    startActivity(Intent(this, LoginActivity::class.java))
+                    startActivity(Intent(this, MainActivity::class.java))
                 } else {
                     FillInformationActivity.newInstance(this)
                 }
@@ -126,6 +126,14 @@ class PhoneNumLoginActivity : BaseActivity() {
                 ToastUtils.show(it.error?.busiMessage)
             }
         })
+        if(type == PhoneLoginType.TYPE_LOGIN){
+            mViewModel?.loginStatus?.observe(this, Observer {
+                if (it == true) {
+                    //登录成功
+                    finish()
+                }
+            })
+        }
     }
 
     override fun initEvents(rootView: View) {

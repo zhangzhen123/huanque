@@ -23,7 +23,6 @@ import com.reactnativecommunity.viewpager.RNCViewPagerPackage
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage
 import com.swmansion.reanimated.ReanimatedPackage
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage
-import com.zmxv.RNSound.RNSoundPackage
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import org.reactnative.maskedview.RNCMaskedViewPackage
@@ -60,7 +59,6 @@ object RnManager {
                 .addPackage(RNGestureHandlerPackage())
                 .addPackage(SafeAreaContextPackage())
                 .addPackage(RNCMaskedViewPackage())
-                .addPackage(RNSoundPackage())
                 .addPackage(SvgPackage())
                 .addPackage(ReanimatedPackage())
                 .addPackage(RNCViewPagerPackage())

@@ -14,6 +14,7 @@ import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.MessageFailType
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.AppHelper
@@ -307,8 +308,8 @@ object RongCloudManager {
 //                if (message != null) {
 //                    switchThread(message)
 //                }
-                if(message != null){
-                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                if (message != null) {
+                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
                 }
             }
 
@@ -322,6 +323,14 @@ object RongCloudManager {
 //                }
                 if (message != null) {
                     callback(true, message)
+                    val content = message.content
+                    if (content is CustomMessage && content.type == MessageCustomBeanType.Expression_Animation) {
+                        //动画表情发送成功，设置数据库数据（设置动画已播放）
+                        updateMessageExtra(
+                            message.messageId,
+                            JsonUtil.seriazileAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, true))
+                        )
+                    }
                 }
             }
 
@@ -332,8 +341,14 @@ object RongCloudManager {
              */
             override fun onError(message: Message?, errorCode: ErrorCode?) {
                 if (message != null) {
-                    updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
-                        ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
+                    updateMessageExtra(
+                        message.messageId, JsonUtil.seriazileAsString(
+                            GlobalUtils.addExtra(
+                                message.extra,
+                                ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
+                            )
+                        )
+                    )
                     callback(false, message)
                 }
             }
@@ -427,7 +442,7 @@ object RongCloudManager {
             override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
                 if (message != null) {
 //                    switchThread(message)
-                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
                 }
                 OssUpLoadManager.uploadFiles(arrayListOf(targetUserObj.localPic), OssUpLoadManager.MESSAGE_PIC) { code, list ->
                     if (code == OssUpLoadManager.CODE_SUCCESS) {
@@ -458,8 +473,14 @@ object RongCloudManager {
             override fun onError(message: Message?, p1: ErrorCode?) {
                 if (message != null) {
                     callback(message, null, null)
-                    updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
-                        ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
+                    updateMessageExtra(
+                        message.messageId, JsonUtil.seriazileAsString(
+                            GlobalUtils.addExtra(
+                                message.extra,
+                                ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
+                            )
+                        )
+                    )
                 }
             }
 
@@ -530,7 +551,7 @@ object RongCloudManager {
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
                     if (message != null) {
-                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
                     }
                 }
 
@@ -554,8 +575,14 @@ object RongCloudManager {
                     if (message != null) {
 //                        switchThread(message)
                         callback(false, message)
-                        updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
-                            ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
+                        updateMessageExtra(
+                            message.messageId, JsonUtil.seriazileAsString(
+                                GlobalUtils.addExtra(
+                                    message.extra,
+                                    ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
+                                )
+                            )
+                        )
                     }
                     logger.info(
                         "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
@@ -581,7 +608,7 @@ object RongCloudManager {
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
                     if (message != null) {
-                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.stranger ?: false))
+                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
                     }
                 }
 
@@ -604,8 +631,14 @@ object RongCloudManager {
                     if (message != null) {
                         //                            ChatUtils.deleteSingleMessage(message.messageId)
                         callback(false, message)
-                        updateMessageExtra(message.messageId, JsonUtil.seriazileAsString(GlobalUtils.addExtra(message.extra,
-                            ParamConstant.MSG_FAIL_TYPE,MessageFailType.RONG_CLOUD)))
+                        updateMessageExtra(
+                            message.messageId, JsonUtil.seriazileAsString(
+                                GlobalUtils.addExtra(
+                                    message.extra,
+                                    ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
+                                )
+                            )
+                        )
                     }
                     logger.info(
                         "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
@@ -640,13 +673,6 @@ object RongCloudManager {
     // 提供给直播间调用，刷新用户数据
     fun resetUserInfoData(userObj: RoomUserChatExtra) {
         currentUserObj = userObj
-    }
-
-    /**
-     * 陌生人状态变化
-     */
-    fun strangerChange(stranger: Boolean) {
-        currentUserObj?.stranger = stranger
     }
 
     //    fun rongCloudIsInited(): Boolean {

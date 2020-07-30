@@ -102,17 +102,15 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="sdv_image,tv_content" />
 
-    <TextView
+    <com.facebook.drawee.span.SimpleDraweeSpanTextView
         android:id="@+id/tv_quebi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="6dp"
-        android:drawableLeft="@mipmap/icon_quebi_message"
-        android:drawablePadding="3dp"
         android:gravity="center"
-        android:textColor="@color/color_quebi"
+        android:textColor="@color/black_999"
         android:textSize="@dimen/sp_10"
         android:visibility="gone"
         app:layout_constraintRight_toRightOf="@id/tv_content"
@@ -141,8 +139,8 @@
 
     <ImageView
         android:id="@+id/iv_send_fail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:src="@mipmap/msg_send_failure"

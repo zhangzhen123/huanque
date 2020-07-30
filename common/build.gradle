@@ -161,4 +161,7 @@ dependencies {
     api project(':picture_library')
     api 'com.contrarywind:Android-PickerView:4.1.9'
     api rootProject.ext.dependencies["LOTTIE"]
+
+    //MMKV
+    api rootProject.ext.dependencies["MMKV"]
 }

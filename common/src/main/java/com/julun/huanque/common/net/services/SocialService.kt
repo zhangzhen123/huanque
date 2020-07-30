@@ -145,4 +145,10 @@ interface SocialService {
      */
     @POST("social/friend/chat/sendDice")
     suspend fun sendDice(@Body form: SendMsgForm): Root<SendMsgBean>
+
+    /**
+     * 发送猜拳表情
+     */
+    @POST("social/friend/chat/sendFinger")
+    suspend fun sendFinger(@Body form: SendMsgForm): Root<SendMsgBean>
 }

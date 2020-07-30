@@ -17,6 +17,7 @@ import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.net.NError
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.utils.LoginStatusUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.ULog
@@ -109,6 +110,7 @@ object LoginManager {
         }
 //        }
     }
+
     //手机登录
     suspend fun loginByMobile(phoneNum: String, code: String, success: (Session) -> Unit, error: NError? = null) {
         if (isLogging) {
@@ -180,6 +182,7 @@ object LoginManager {
             (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
                 .navigation() as? AppCommonService)?.loginSuccess(it)
             EventBus.getDefault().post(LoginEvent(true))
+            LoginStatusUtils.loginSuccess()
         }
 
     }
@@ -192,6 +195,7 @@ object LoginManager {
         (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
             .navigation() as? AppCommonService)?.loginSuccess(SessionUtils.getSession())
         EventBus.getDefault().post(LoginEvent(true))
+        LoginStatusUtils.loginSuccess()
         //连接融云
         RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
     }

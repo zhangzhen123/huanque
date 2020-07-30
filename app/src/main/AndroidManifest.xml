@@ -74,7 +74,11 @@
             android:name=".ui.report.ReportActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-
+        <!-- 环境配置页 -->
+        <activity
+            android:name=".activity.EnvironmentConfigurationActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

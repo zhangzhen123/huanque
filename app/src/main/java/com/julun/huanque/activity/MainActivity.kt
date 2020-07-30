@@ -16,19 +16,25 @@ import com.julun.huanque.R
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
+import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.message.fragment.MessageFragment
+import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.ui.main.LeYuanFragment
 import com.julun.huanque.ui.main.MineFragment
 import com.julun.huanque.viewmodel.MainViewModel
@@ -58,6 +64,8 @@ class MainActivity : BaseActivity() {
 
 
     private var mMainViewModel: MainViewModel? = null
+
+    private var mMessageViewModel: MessageViewModel? = null
 
     private var firstTime = 0L
 
@@ -112,7 +120,8 @@ class MainActivity : BaseActivity() {
         })
 
         registerMessage()
-
+        //查询未读数
+        mMainViewModel?.getUnreadCount()
     }
 
     /**
@@ -127,7 +136,7 @@ class MainActivity : BaseActivity() {
         super.onStart()
         val rxPermissions = RxPermissions(this)
         rxPermissions
-            .requestEachCombined(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION)
+            .requestEachCombined(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
             .subscribe { permission ->
                 //不管有没有给权限 都不影响百度定位 只不过不给权限会不太准确
                 mLocationService.start()
@@ -158,9 +167,27 @@ class MainActivity : BaseActivity() {
 
     private fun initViewModel() {
         mMainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        mMessageViewModel = ViewModelProvider(this).get(MessageViewModel::class.java)
         mMainViewModel?.indexData?.observe(this, Observer {
             if (it != null) {
                 goToTab(it)
+            }
+        })
+        mMainViewModel?.unreadMsgCount?.observe(this, Observer {
+            if (it != null) {
+                mMessageViewModel?.unreadMsgCount?.value = it
+                tv_unread_count.text = if (it <= 99) {
+                    "$it"
+                } else {
+                    "99+"
+                }
+                showUnreadCount()
+            }
+        })
+        mMessageViewModel?.queryUnreadCountFlag?.observe(this, Observer {
+            if (it == true) {
+                mMainViewModel?.getUnreadCount()
+                mMessageViewModel?.queryUnreadCountFlag?.value = false
             }
         })
     }
@@ -220,23 +247,22 @@ class MainActivity : BaseActivity() {
      * tab上面的imageview添加动画
      */
     private fun tabIconAnimation(index: Int) {
-        lifecycleScope.launch {
-            val list = arrayOf(lottie_make_friends, lottie_leyuan, lottie_message, lottie_mine)
-            val textList = arrayOf(item_make_friends, item_leyuan, item_message, item_mine)
-            list.forEachIndexed { position, lottieAnimationView ->
-                if (index == position) {
-                    if (!lottieAnimationView.isAnimating) {
-                        lottieAnimationView.setSpeed(1f)
-                        lottieAnimationView.playAnimation()
-                    }
-                    textList[position].isSelected = true
-                } else {
-                    lottieAnimationView.cancelAnimation()
-                    lottieAnimationView.progress = 0f
-                    textList[position].isSelected = false
+        val list = arrayOf(lottie_make_friends, lottie_leyuan, lottie_message, lottie_mine)
+        val textList = arrayOf(item_make_friends, item_leyuan, item_message, item_mine)
+        list.forEachIndexed { position, lottieAnimationView ->
+            if (index == position) {
+                if (!lottieAnimationView.isAnimating) {
+                    lottieAnimationView.setSpeed(1f)
+                    lottieAnimationView.playAnimation()
                 }
+                textList[position].isSelected = true
+            } else {
+                lottieAnimationView.cancelAnimation()
+                lottieAnimationView.progress = 0f
+                textList[position].isSelected = false
             }
         }
+        showUnreadCount()
     }
 
 
@@ -295,6 +321,21 @@ class MainActivity : BaseActivity() {
         return null
     }
 
+    /**
+     * 显示未读数
+     */
+    private fun showUnreadCount() {
+        val unreadCount = mMainViewModel?.unreadMsgCount?.value ?: 0
+        if (!item_message.isSelected && unreadCount > 0) {
+            //未选中消息模块，同时未读数大于0(显示)
+            tv_unread_count.show()
+        } else {
+            tv_unread_count.hide()
+        }
+
+    }
+
+
     override fun onBackPressed() {
         exit()
     }
@@ -346,4 +387,17 @@ class MainActivity : BaseActivity() {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun privateMessageReceive(bean: EventMessageBean) {
+        //接收到私聊消息
+        mMainViewModel?.getUnreadCount()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun connectSuccess(event: RongConnectEvent) {
+        if (RongCloudManager.RONG_CONNECTED == event.state) {
+            //融云连接成功，查询未读数
+            mMainViewModel?.getUnreadCount()
+        }
+    }
 }
