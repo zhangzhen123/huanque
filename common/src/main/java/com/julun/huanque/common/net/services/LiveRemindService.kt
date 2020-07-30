@@ -4,7 +4,9 @@ import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.LiveRemindBeans
 import com.julun.huanque.common.bean.beans.RootListLiveData
+import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.bean.forms.LiveRemindForm
+import com.julun.huanque.common.bean.forms.UserProgramForm
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -26,4 +28,10 @@ interface LiveRemindService {
      */
     @POST("live/program/info/changeFollowPush")
     suspend fun changeFollowPush(@Body form: LiveRemindForm): Root<VoidResult>
+
+    /**
+     * 用户名片数据
+     */
+    @POST("live/room/user/info")
+    suspend fun userInfo(@Body form: UserProgramForm) : Root<UserInfoInRoom>
 }

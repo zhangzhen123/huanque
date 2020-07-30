@@ -26,6 +26,7 @@ import com.julun.huanque.common.utils.MD5Util
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.VideoUtils
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
+import com.julun.huanque.fragment.UserCardFragment
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
@@ -188,6 +189,7 @@ class TestActivity : BaseActivity() {
 
         btn_usercard.onClickNew {
             //用户卡片
+            UserCardFragment.newInstance(10).show(supportFragmentManager, "UserCardFragment")
         }
     }
 

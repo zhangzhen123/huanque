@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/black_999"
+    android:background="@color/transparent"
     tools:ignore="MissingDefaultResource">
 
 
     <View
         android:id="@+id/view_bg"
         android:layout_width="0px"
-        android:layout_height="wrap_content"
+        android:layout_height="0px"
         android:layout_marginTop="60dp"
         android:background="@drawable/bg_user_card"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_attention"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -63,14 +64,19 @@
         android:id="@+id/scroll_view"
         android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="12dp"
+        android:maxHeight="240dp"
+        android:minHeight="156dp"
+        android:overScrollMode="never"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/view_bg">
+        app:layout_constraintTop_toBottomOf="@id/sdv_header">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp">
 
             <TextView
                 android:id="@+id/tv_nickname"
@@ -95,7 +101,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/tv_sex"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="欢鹊ID:7463" />
+                tools:text="欢鹊ID：7463" />
 
             <TextView
                 android:id="@+id/tv_sex"
@@ -124,9 +130,8 @@
                 android:drawableLeft="@mipmap/icon_location"
                 android:drawablePadding="3dp"
                 android:gravity="center"
-                android:includeFontPadding="false"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingRight="6dp"
                 android:textColor="#82ABD1"
                 android:textSize="@dimen/sp_10"
                 app:layout_constraintBottom_toBottomOf="@id/tv_id"
@@ -153,8 +158,8 @@
             <View
                 android:id="@+id/view_caifu_level"
                 android:layout_width="105dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="25dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/bg_caifu"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -166,7 +171,7 @@
                 android:layout_width="34dp"
                 android:layout_height="34dp"
                 android:layout_marginLeft="6dp"
-                android:src="@mipmap/ic_launcher"
+                android:src="@mipmap/icon_caifu_level"
                 app:layout_constraintBottom_toBottomOf="@id/view_caifu_level"
                 app:layout_constraintLeft_toLeftOf="@id/view_caifu_level"
                 app:layout_constraintTop_toTopOf="@id/view_caifu_level" />
@@ -188,7 +193,7 @@
             <TextView
                 android:id="@+id/tv_caifu_level"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="16dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
@@ -203,19 +208,20 @@
             <View
                 android:id="@+id/view_guizu_level"
                 android:layout_width="105dp"
-                android:layout_height="40dp"
+                android:layout_height="44dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/bg_guizu"
                 app:layout_constraintLeft_toRightOf="@id/view_caifu_level"
                 app:layout_constraintRight_toLeftOf="@+id/view_zhubo_level"
-                app:layout_constraintTop_toTopOf="@id/view_caifu_level" />
+                app:layout_constraintTop_toBottomOf="@id/tv_sign" />
 
             <ImageView
                 android:id="@+id/iv_guizu"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
                 android:layout_marginLeft="6dp"
-                android:src="@mipmap/ic_launcher"
+                android:src="@mipmap/icon_guizu_level"
                 app:layout_constraintBottom_toBottomOf="@id/view_guizu_level"
                 app:layout_constraintLeft_toLeftOf="@id/view_guizu_level"
                 app:layout_constraintTop_toTopOf="@id/view_guizu_level" />
@@ -237,7 +243,7 @@
             <TextView
                 android:id="@+id/tv_guizu_level"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="16dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
@@ -252,19 +258,20 @@
             <View
                 android:id="@+id/view_zhubo_level"
                 android:layout_width="105dp"
-                android:layout_height="40dp"
+                android:layout_height="44dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/bg_zhubo"
                 app:layout_constraintLeft_toRightOf="@id/view_guizu_level"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/view_caifu_level" />
+                app:layout_constraintTop_toBottomOf="@id/tv_sign" />
 
             <ImageView
                 android:id="@+id/iv_zhubo"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
                 android:layout_marginLeft="6dp"
-                android:src="@mipmap/ic_launcher"
+                android:src="@mipmap/icon_zhubo_level"
                 app:layout_constraintBottom_toBottomOf="@id/view_zhubo_level"
                 app:layout_constraintLeft_toLeftOf="@id/view_zhubo_level"
                 app:layout_constraintTop_toTopOf="@id/view_zhubo_level" />
@@ -286,7 +293,7 @@
             <TextView
                 android:id="@+id/tv_zhubo_level"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="16dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
@@ -297,18 +304,28 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_zhubo_title"
                 tools:text="9" />
 
+            <View
+                android:id="@+id/view_line"
+                android:layout_width="0px"
+                android:layout_height="1px"
+                android:layout_marginTop="59dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_sign" />
+
             <TextView
                 android:id="@+id/tv_medal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="90dp"
+                android:layout_marginTop="25dp"
                 android:includeFontPadding="false"
                 android:text="勋章"
                 android:textColor="@color/black_333"
                 android:textSize="@dimen/sp_14"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_sign" />
+                app:layout_constraintTop_toBottomOf="@id/view_line" />
 
             <com.facebook.drawee.span.SimpleDraweeSpanTextView
                 android:id="@+id/stv_medal"
@@ -316,6 +333,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_medal" />
 
@@ -329,6 +347,7 @@
                 android:text="养鹊乐园"
                 android:textColor="@color/black_333"
                 android:textSize="@dimen/sp_14"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/stv_medal" />
 
@@ -341,11 +360,13 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_leyuan">
 
                 <TextView
+                    android:id="@+id/tv_que_count"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -374,10 +395,30 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ll_leyuan" />
 
+            <com.julun.huanque.common.widgets.LinefeedLinearLayout
+                android:id="@+id/linefeed_ll"
+                android:layout_width="0px"
+                android:layout_height="35dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:maxHeight="65dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_tag" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="1dp"
+        android:background="@drawable/divider_main"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scroll_view" />
 
     <TextView
         android:id="@+id/tv_attention"
@@ -385,6 +426,8 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="关注"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/tv_private_chat"
         app:layout_constraintTop_toBottomOf="@id/scroll_view" />
@@ -405,6 +448,8 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="私信"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toRightOf="@id/tv_attention"
         app:layout_constraintRight_toLeftOf="@+id/tv_at"
         app:layout_constraintTop_toBottomOf="@id/scroll_view" />
@@ -426,6 +471,8 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="\@ta"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toRightOf="@id/tv_private_chat"
         app:layout_constraintRight_toLeftOf="@+id/tv_home_page"
         app:layout_constraintTop_toBottomOf="@id/scroll_view" />
@@ -447,6 +494,8 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="主页"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toRightOf="@id/tv_at"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scroll_view" />

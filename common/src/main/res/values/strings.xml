@@ -586,4 +586,5 @@
     <string name="personal_information_protection_title">个人信息保护指引</string>
 
     <string name="ensure_withdraw">确认提现</string>
+    <string name="default_sign">签名不足以表达我自己，找我私聊吧~</string>
 </resources>

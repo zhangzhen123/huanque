@@ -579,6 +579,12 @@ class RunWayMessage : Serializable {
 class UserInfoInRoom : Serializable {
     var userInfo: UserInfoForLmRoom? = null
 
+    //年龄
+    var age: Int = 0
+
+    //城市
+    var city: String = ""
+
     /** 有操作权限的会存到operateList **/
     var operateList: ArrayList<ManagerInfo> = ArrayList<ManagerInfo>()
 
@@ -605,6 +611,12 @@ class UserInfoInRoom : Serializable {
 
     /** 勋章图标列表(不含房管勋章),已排序 **/
     var badgesPic: List<String> = ArrayList()
+
+    //小鹊数据
+    var magpieList: List<String> = mutableListOf()
+
+    //标签
+    var userTags: List<String> = mutableListOf()
 
     /** 主播等级 **/
     var anchorLevel: Int = 0

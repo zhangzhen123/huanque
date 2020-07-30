@@ -83,7 +83,7 @@ class FindNewsForm {
 }
 
 class BindForm(var code: String)
-class BindPhoneForm(var mobile: String,var code: String)
+class BindPhoneForm(var mobile: String, var code: String)
 class WithdrawApplyForm(var tplId: Int, var type: String)
 
 class WithdrawHistoryForm(var lastId: Long? = null)
@@ -98,6 +98,15 @@ class UpdateVoiceForm(var voiceUrl: String, var length: Long)
 /**
  * 保存定位信息
  */
-class SaveLocationForm(var lat: String,var lng: String,var city: String,var province: String?=null, var district: String?=null)
+class SaveLocationForm(var lat: String, var lng: String, var city: String, var province: String? = null, var district: String? = null)
+
+
+/**
+ * 用户名片
+ */
+class UserProgramForm(
+    var programId: Long = -1,
+    var targetUserId: Long = -1
+) : Serializable
 
 
