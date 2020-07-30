@@ -64,13 +64,15 @@ class HomeFragment : BaseFragment() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         //
-        RnManager.createReactInstanceManager(CommonInit.getInstance().getApp())
+
         //设置头部边距
         home_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         initViewModel()
         initViewPager()
         initMagicIndicator()
-
+        home_container.post {
+            RnManager.createReactInstanceManager(CommonInit.getInstance().getApp())
+        }
     }
 
     private fun initViewPager() {
@@ -138,7 +140,13 @@ class HomeFragment : BaseFragment() {
                 }
                 tabTitle.text = mTabTitles[index]
                 simplePagerTitleView.setOnClickListener { view_pager.currentItem = index }
-
+                if (view_pager.currentItem == index) {
+                    tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_333))
+                    tabTitle.textSize = 24f
+                } else {
+                    tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_666))
+                    tabTitle.textSize = 14f
+                }
                 return simplePagerTitleView
             }
 

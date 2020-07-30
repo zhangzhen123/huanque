@@ -158,12 +158,12 @@
             <!--android:visibility="invisible" />-->
 
 
-            <include
-                android:id="@id/right_drawer"
-                layout="@layout/view_layout_right_drawer"
-                android:layout_width="@dimen/right_drawer_width"
-                android:layout_height="match_parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+<!--            <include-->
+<!--                android:id="@id/right_drawer"-->
+<!--                layout="@layout/view_layout_right_drawer"-->
+<!--                android:layout_width="@dimen/right_drawer_width"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent" />-->
         </com.julun.huanque.core.widgets.live.slide.SlideViewContainer>
 
 

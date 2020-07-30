@@ -11,11 +11,17 @@
 
     <TextView
         android:id="@+id/sayImage"
-        android:layout_width="@dimen/dimen_100"
+        android:layout_width="wrap_content"
         android:layout_height="36dp"
+        android:layout_marginStart="@dimen/dimen_10"
+        android:background="@drawable/bg_shape_black_p20"
+        android:drawableStart="@mipmap/icon_live_public_chat"
+        android:gravity="center"
+        android:drawablePadding="@dimen/dimen_4"
+        android:paddingStart="@dimen/dimen_8"
+        android:paddingEnd="@dimen/dimen_16"
         android:text="聊一聊吧"
-        android:textColor="#80ffffff"
-        android:src="@drawable/bg_shape_grey1" />
+        android:textColor="#80ffffff" />
 
 
     <androidx.legacy.widget.Space
@@ -25,39 +31,12 @@
         android:layout_weight="1" />
 
 
-
     <ImageView
         android:id="@+id/iv_shield"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:visibility="gone"
         tools:visibility="visible" />
-
-    <RelativeLayout
-        android:id="@+id/rl_game"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginLeft="6dp"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <ImageView
-            android:id="@+id/gameImage"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/selector_live_action_game" />
-
-        <View
-            android:id="@+id/tv_light_count"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/bg_live_red_point"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-    </RelativeLayout>
 
 
     <RelativeLayout
@@ -114,12 +93,37 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_game"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginLeft="6dp">
+
+        <ImageView
+            android:id="@+id/gameImage"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/selector_live_action_game" />
+
+        <View
+            android:id="@+id/tv_light_count"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_live_red_point"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </RelativeLayout>
+
 
     <ImageView
         android:id="@+id/iv_beautify"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginLeft="6dp" />
+        android:layout_marginLeft="6dp"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/privateMessageLayout"

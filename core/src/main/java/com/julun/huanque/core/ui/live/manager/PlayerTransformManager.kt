@@ -41,7 +41,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
     //播放器使用的ViewModel
     private val mVideoViewModel: VideoViewModel by act.viewModels()
 
-    private val liveFollowListViewModel: LiveFollowListViewModel by act.viewModels()
+//    private val liveFollowListViewModel: LiveFollowListViewModel by act.viewModels()
 
     //新版PK
     private val pKViewModel: PKViewModel by act.viewModels()
@@ -70,7 +70,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
         mPlayerViewModel.baseData.observe(act, Observer {
             mVideoViewModel.baseData.value = it
-            liveFollowListViewModel.requestFollowLivingList(mPlayerViewModel.programId, true)
+//            liveFollowListViewModel.requestFollowLivingList(mPlayerViewModel.programId, true)
         })
 
         mPlayerViewModel.loginSuccessData.observe(act, Observer { dto ->

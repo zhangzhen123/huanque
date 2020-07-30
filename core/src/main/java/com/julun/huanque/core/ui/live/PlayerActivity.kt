@@ -330,8 +330,6 @@ class PlayerActivity : BaseActivity() {
             }
         })
 
-        viewModel.attentionAble.observe(this, Observer { setAttentionAble() })
-
         viewModel.alertViewMsg.observe(this, Observer {
             if (it?.isNotEmpty() == true) {
 //                showAlertViewWithCallback(it) { finish() }

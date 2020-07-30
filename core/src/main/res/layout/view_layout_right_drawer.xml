@@ -6,36 +6,6 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/right_drawer_bg" />
-
-    <TextView
-        android:id="@+id/follow_title"
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:gravity="start|center_vertical"
-        android:paddingStart="@dimen/dimen_10"
-        android:paddingLeft="@dimen/dimen_10"
-        android:text="关注主播"
-        android:layout_marginTop="@dimen/dimen_10"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/liveFollowRefreshView"
-        android:layout_width="130dp"
-        android:layout_height="match_parent"
-        android:layout_below="@id/follow_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dimen_5">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/follow_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </com.julun.huanque.core.widgets.live.slide.SlideViewRightDrawer>

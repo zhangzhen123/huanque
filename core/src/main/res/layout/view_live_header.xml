@@ -72,30 +72,40 @@
             android:layout_marginRight="4dp"
             android:layout_toRightOf="@+id/authorNicknameText">
 
-            <ImageView
+            <TextView
                 android:id="@+id/subscribeAnchor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/lm_icon_subscribe" />
+                android:layout_width="@dimen/dimen_34"
+                android:layout_height="@dimen/dimen_22"
+                android:background="@drawable/bg_solid_btn4"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="@string/tab_follow_title"
+                android:textColor="@color/black_333"
+                android:textSize="10sp" />
+            <!--            <ImageView-->
+            <!--                android:id="@+id/subscribeAnchor"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:src="@mipmap/lm_icon_subscribe" />-->
 
             <!-- 粉丝团事件 -->
-<!--            <ImageView-->
-<!--                android:id="@+id/ivFansJoin"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:src="@mipmap/lm_icon_fans_join"-->
-<!--                android:visibility="gone" />-->
+            <!--            <ImageView-->
+            <!--                android:id="@+id/ivFansJoin"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:src="@mipmap/lm_icon_fans_join"-->
+            <!--                android:visibility="gone" />-->
 
-<!--            <com.airbnb.lottie.LottieAnimationView-->
-<!--                android:id="@+id/lavFansEvent"-->
-<!--                android:layout_width="35dp"-->
-<!--                android:layout_height="23dp"-->
-<!--                android:scaleType="centerCrop"-->
-<!--                android:visibility="gone"-->
-<!--                app:lottie_autoPlay="true"-->
-<!--                app:lottie_fileName="json/join_fans.json"-->
-<!--                app:lottie_imageAssetsFolder="image/join_fans"-->
-<!--                app:lottie_loop="true" />-->
+            <!--            <com.airbnb.lottie.LottieAnimationView-->
+            <!--                android:id="@+id/lavFansEvent"-->
+            <!--                android:layout_width="35dp"-->
+            <!--                android:layout_height="23dp"-->
+            <!--                android:scaleType="centerCrop"-->
+            <!--                android:visibility="gone"-->
+            <!--                app:lottie_autoPlay="true"-->
+            <!--                app:lottie_fileName="json/join_fans.json"-->
+            <!--                app:lottie_imageAssetsFolder="image/join_fans"-->
+            <!--                app:lottie_loop="true" />-->
         </FrameLayout>
     </RelativeLayout>
 
@@ -153,13 +163,14 @@
 
         <ImageView
             android:id="@+id/exitImage"
-            android:layout_width="36dp"
+            android:layout_width="43dp"
             android:layout_height="36dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="6dp"
-            android:src="@drawable/selector_live_action_exit" />
+            android:scaleType="centerInside"
+            android:src="@mipmap/icon_close_white_01" />
         <!--        <LinearLayout-->
         <!--            android:id="@+id/count_container_001"-->
         <!--            android:layout_width="wrap_content"-->
@@ -200,8 +211,8 @@
             android:id="@+id/onlineUserListView"
             android:layout_width="match_parent"
             android:layout_height="32dp"
-            android:layout_toLeftOf="@+id/exitImage"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/exitImage"
             android:cacheColorHint="@color/transparent"
             android:fadingEdge="none"
             android:listSelector="@color/transparent"

@@ -16,9 +16,12 @@ import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.core.net.UserService
 import com.julun.huanque.common.bean.beans.SingleGame
+import com.julun.huanque.common.bean.forms.AnchorProgramForm
 import com.julun.huanque.common.bean.forms.ProgramIdForm
+import com.julun.huanque.common.bean.forms.SwitchForm
 import com.julun.huanque.common.constant.PKType
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.manager.GlobalDataPool
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.SessionUtils
@@ -39,7 +42,7 @@ import kotlinx.coroutines.launch
  */
 class PlayerViewModel : BaseViewModel() {
 
-    val liveService: LiveRoomService by lazy {
+    private val liveService: LiveRoomService by lazy {
         Requests.create(LiveRoomService::class.java)
     }
 
@@ -91,10 +94,8 @@ class PlayerViewModel : BaseViewModel() {
     val needRefreshAll: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //刷新关注数据
-    val modifySubscribe: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val modifySubscribe: MutableLiveData<Boolean?> by lazy { MutableLiveData<Boolean?>() }
 
-    //关注按钮可用
-    val attentionAble: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //添加主播不在线fragment
 //    val notOnLineFragment: MutableLiveData<RecommendPrograms> by lazy { MutableLiveData<RecommendPrograms>() }
@@ -146,8 +147,6 @@ class PlayerViewModel : BaseViewModel() {
     //显示用户信息弹窗
     val userInfoView: MutableLiveData<UserInfoBean> by lazy { MutableLiveData<UserInfoBean>() }
 
-    //点击关注按钮
-    val subscribe: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
 //    //显示在线列表视图
 //    val onlineView: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
@@ -461,14 +460,16 @@ class PlayerViewModel : BaseViewModel() {
             return
         }
         logger("刷新切换列表$programId")
-        //todo
-//        val fromType: String? = GIODataPool.fromType
-//        val typeCode: String = GIODataPool.typeCode
-//        GIODataPool.typeCode = ""
-//        liveService.switchList(SwitchForm(fromType, programId, typeCode))
-//            .handleResponse(makeSubscriber {
-//                switchList.value = it
-//            })
+        viewModelScope.launch {
+            request({
+                val fromType: String? = GlobalDataPool.fromType
+                val typeCode: String = GlobalDataPool.typeCode
+                GlobalDataPool.typeCode = ""
+                switchList.value = liveService.switchList(SwitchForm(fromType, programId, typeCode)).dataConvert()
+            })
+        }
+
+
     }
 
     fun refreshUserInfoData() {
@@ -512,6 +513,34 @@ class PlayerViewModel : BaseViewModel() {
 
     fun closeAllDelayTime() {
         logger("closeAllDelayTime")
+    }
+
+    /**
+     * 关注主播
+     */
+    fun follow() {
+        viewModelScope.launch {
+            request({
+                liveService.queryFollow(ProgramIdForm(programId)).dataConvert()
+                modifySubscribe.value = true
+            }, error = {
+                modifySubscribe.value = null
+            })
+        }
+    }
+
+    /**
+     * 取消关注主播
+     */
+    fun unFollow() {
+        viewModelScope.launch {
+            request({
+                liveService.queryUnFollow(ProgramIdForm(programId)).dataConvert()
+                modifySubscribe.value = false
+            }, error = {
+                modifySubscribe.value = null
+            })
+        }
     }
 
     /**
