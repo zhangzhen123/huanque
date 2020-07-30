@@ -1,4 +1,4 @@
-package com.julun.huanque.fragment
+package com.julun.huanque.core.ui.live.fragment
 
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -8,14 +8,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.marginRight
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.facebook.drawee.view.SimpleDraweeView
-import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseDialogFragment
-import com.julun.huanque.common.bean.beans.UserInfo
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
@@ -26,7 +22,8 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.viewmodel.UserCardViewModel
+import com.julun.huanque.core.R
+import com.julun.huanque.core.viewmodel.UserCardViewModel
 import kotlinx.android.synthetic.main.fragment_user_card.*
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.padding

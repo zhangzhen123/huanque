@@ -1,4 +1,4 @@
-package com.julun.huanque.viewmodel
+package com.julun.huanque.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope

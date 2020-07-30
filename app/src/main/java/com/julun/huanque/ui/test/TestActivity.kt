@@ -10,7 +10,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
-import com.julun.huanque.activity.PhoneNumLoginActivity
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.constant.ARouterConstant
@@ -26,7 +25,7 @@ import com.julun.huanque.common.utils.MD5Util
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.VideoUtils
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
-import com.julun.huanque.fragment.UserCardFragment
+import com.julun.huanque.core.ui.live.fragment.UserCardFragment
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
