@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.live
+package com.julun.huanque.core.ui.live.fragment
 
 import android.animation.*
 import android.annotation.SuppressLint
@@ -35,6 +35,8 @@ import com.julun.huanque.common.utils.svga.SVGAHelper
 import com.julun.huanque.common.viewmodel.ConnectMicroViewModel
 import com.julun.huanque.common.widgets.live.WebpGifView
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.live.PlayerActivity
+import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.*
 import com.julun.huanque.core.widgets.live.HighlyAnimationView
 import com.julun.huanque.core.widgets.live.banner.BannerListener

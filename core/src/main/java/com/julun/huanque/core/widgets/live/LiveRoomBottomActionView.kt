@@ -88,11 +88,11 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
                     bean.type = ClickType.GIFT
                 }
             }
-            R.id.exitImage -> {
-                if (!ClickListenerUtils.isDoubleClick) {
-                    bean.type = ClickType.CLOSE
-                }
-            }
+//            R.id.exitImage -> {
+//                if (!ClickListenerUtils.isDoubleClick) {
+//                    bean.type = ClickType.CLOSE
+//                }
+//            }
             R.id.gameImage -> {
                 if (!ClickListenerUtils.isDoubleClick) {
                     when (mGameType) {
@@ -236,12 +236,12 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
                 iv_shield.show()
                 privateMessageLayout.hide()
                 rl_more.hide()
-                rl_welfare.hide()
+//                rl_welfare.hide()
                 iv_to_v.show()
             } else {
                 iv_shield.hide()
                 privateMessageLayout.show()
-                rl_welfare.show()
+//                rl_welfare.show()
                 rl_more.show()
                 iv_to_v.hide()
             }

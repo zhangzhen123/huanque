@@ -2,21 +2,17 @@ package com.julun.huanque.core.ui.live.manager
 
 import android.animation.*
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.graphics.Color
 import android.os.Build
-import android.view.*
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.WindowManager
 import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.*
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.android.arouter.launcher.ARouter
+import androidx.lifecycle.Observer
 import com.alibaba.fastjson.JSONObject
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.BaseData
@@ -27,13 +23,10 @@ import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.RechargeRuleQueryForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.DensityHelper
-import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.NotifyManager
-import com.julun.huanque.common.manager.OrderDialogManager
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
@@ -43,21 +36,18 @@ import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
-import com.julun.huanque.core.ui.live.adapter.LiveFollowAdapter
 import com.julun.huanque.core.viewmodel.*
 import com.julun.huanque.core.widgets.LiveRunwayView
 import com.julun.huanque.core.widgets.live.message.MessageRecyclerView
-import com.trello.rxlifecycle4.android.ActivityEvent
-import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_live_room.*
 import kotlinx.android.synthetic.main.player_gesture_guide.*
-import kotlinx.android.synthetic.main.view_layout_right_drawer.*
-import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.*
-import java.math.BigDecimal
+import kotlinx.android.synthetic.main.view_live_header.*
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.topPadding
 import java.util.concurrent.TimeUnit
 
 /**
@@ -147,7 +137,7 @@ class PlayerViewManager(val context: PlayerActivity) {
     var mDialogManager: PlayerDialogManager
 
 
-    private val followAdapter by lazy { LiveFollowAdapter() }
+//    private val followAdapter by lazy { LiveFollowAdapter() }
 
     private val chatMessageClickCallback by lazy {
         object : MessageRecyclerView.OnChatMessageItemClickListener {
@@ -214,7 +204,7 @@ class PlayerViewManager(val context: PlayerActivity) {
         })
 
         viewModel.modifySubscribe.observe(context, Observer {
-            modifySubscribe(it ?: return@Observer)
+            modifySubscribe(it)
         })
 
         viewModel.openOtherAction.observe(context, Observer {
@@ -486,14 +476,14 @@ class PlayerViewManager(val context: PlayerActivity) {
             it ?: return@Observer
             preUpAndDownData()
         })
-        liveFollowListViewModel.queryDataList.observe(context, Observer {
-            showFollowData(it)
-        })
-        if (!liveFollowListViewModel.finalState.hasObservers()) {
-            liveFollowListViewModel.finalState.observe(context, Observer {
-                followListFinal()
-            })
-        }
+//        liveFollowListViewModel.queryDataList.observe(context, Observer {
+//            showFollowData(it)
+//        })
+//        if (!liveFollowListViewModel.finalState.hasObservers()) {
+//            liveFollowListViewModel.finalState.observe(context, Observer {
+//                followListFinal()
+//            })
+//        }
 
         viewModel.openGiftAndSelPack.observe(context, Observer {
             it ?: return@Observer
@@ -519,41 +509,41 @@ class PlayerViewManager(val context: PlayerActivity) {
      * 加载view跟playerActivity一样
      */
     private fun initView() {
-        val followList = context.follow_recyclerView
-        val followRefresh = context.liveFollowRefreshView
-        followList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        followList.adapter = followAdapter
-        MixedHelper.setSwipeRefreshStytle(followRefresh, context)
+//        val followList = context.follow_recyclerView
+//        val followRefresh = context.liveFollowRefreshView
+//        followList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+//        followList.adapter = followAdapter
+//        MixedHelper.setSwipeRefreshStytle(followRefresh, context)
     }
 
     private fun initEvent() {
-        val followRefresh = context.liveFollowRefreshView
-        followRefresh.setOnRefreshListener {
-            getFollowList(true)
-        }
-
-        followAdapter.loadMoreModule.setOnLoadMoreListener {
-            getFollowList(false)
-        }
-
-        followAdapter.setOnItemClickListener { _, _, position ->
-            val item = followAdapter.getItem(position)
-            item?.let {
-                viewModel.checkoutRoom.value = it.programId
-            }
-        }
+//        val followRefresh = context.liveFollowRefreshView
+//        followRefresh.setOnRefreshListener {
+//            getFollowList(true)
+//        }
+//
+//        followAdapter.loadMoreModule.setOnLoadMoreListener {
+//            getFollowList(false)
+//        }
+//
+//        followAdapter.setOnItemClickListener { _, _, position ->
+//            val item = followAdapter.getItem(position)
+//            item?.let {
+//                viewModel.checkoutRoom.value = it.programId
+//            }
+//        }
 
         context.publicMessageView.messageRecyclerView.setOnChatMessageItemClickListener(chatMessageClickCallback)
 
     }
 
     //处理关注列表数据显示
-    private fun followListFinal() {
-        val followRefresh = context.liveFollowRefreshView
-        followRefresh.isRefreshing = false
-        val emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data_text, null)
-        followAdapter.setEmptyView(emptyView)
-    }
+//    private fun followListFinal() {
+//        val followRefresh = context.liveFollowRefreshView
+//        followRefresh.isRefreshing = false
+//        val emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data_text, null)
+//        followAdapter.setEmptyView(emptyView)
+//    }
 
     fun addOtherPublicMessageItem(chatMessageBean: ChatMessageBean) {
         val publicMessageView = context.publicMessageView
@@ -1158,7 +1148,11 @@ class PlayerViewManager(val context: PlayerActivity) {
     }
 
     // 关注、取消关注后，修改直播间数据
-    fun modifySubscribe(isSubscribed: Boolean) {
+    private fun modifySubscribe(isSubscribed: Boolean?) {
+        context.subscribeAnchor.isEnabled = true
+        if (isSubscribed == null) {
+            return
+        }
         if (isSubscribed) {
 //            ToastUtils.show(context.getString(R.string.subscribe_success))
             //
@@ -1574,39 +1568,39 @@ class PlayerViewManager(val context: PlayerActivity) {
     /**
      * 根据[dataList]展示数据
      */
-    private fun showFollowData(dataList: LiveFollowListData) {
-        logger.info("showFollowData${dataList.dataType}")
-        val followTitle = context.follow_title
-        if (dataList.list.isNotEmpty()) {
-            followTitle.show()
-        }
-        if (dataList.isPull) {
-            //
-            followAdapter.replaceData(dataList.list)
-        } else {
-            followAdapter.addData(dataList.list)
-        }
-        if (!dataList.hasMore) {
-            followAdapter.loadMoreModule.loadMoreEnd()
-        } else {
-            followAdapter.loadMoreModule.loadMoreComplete()
-        }
-        when (dataList.dataType) {
-            //关注列表
-            0 -> {
-                followTitle.text = "关注主播"
-                followTitle.backgroundResource = R.drawable.bg_live_follow_title
-            }
-            //推荐列表
-            1 -> {
-                followTitle.text = "推荐主播"
-                followTitle.backgroundResource = R.drawable.bg_live_recommend_title
-            }
-        }
-        if (dataList.isPull) {
-            showRightFollowView()
-        }
-    }
+//    private fun showFollowData(dataList: LiveFollowListData) {
+//        logger.info("showFollowData${dataList.dataType}")
+//        val followTitle = context.follow_title
+//        if (dataList.list.isNotEmpty()) {
+//            followTitle.show()
+//        }
+//        if (dataList.isPull) {
+//            //
+//            followAdapter.replaceData(dataList.list)
+//        } else {
+//            followAdapter.addData(dataList.list)
+//        }
+//        if (!dataList.hasMore) {
+//            followAdapter.loadMoreModule.loadMoreEnd()
+//        } else {
+//            followAdapter.loadMoreModule.loadMoreComplete()
+//        }
+//        when (dataList.dataType) {
+//            //关注列表
+//            0 -> {
+//                followTitle.text = "关注主播"
+//                followTitle.backgroundResource = R.drawable.bg_live_follow_title
+//            }
+//            //推荐列表
+//            1 -> {
+//                followTitle.text = "推荐主播"
+//                followTitle.backgroundResource = R.drawable.bg_live_recommend_title
+//            }
+//        }
+//        if (dataList.isPull) {
+//            showRightFollowView()
+//        }
+//    }
 
     //记录上下页的节目数据
     var previous: SwitchBean? = null

@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
@@ -64,7 +64,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     //是否是主播
     var isAnchor: Boolean by Delegates.observable(false) { d, old, new ->
         if (new) {
-            subscribeSuccess(isSubscribed)
+            subscribeAnchor.hide()
         }
     }
 
@@ -85,30 +85,27 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     private fun initViewModel() {
         val activity = context as? PlayerActivity
         activity?.let {
-            playerViewModel = ViewModelProviders.of(activity).get(PlayerViewModel::class.java)
+            playerViewModel = ViewModelProvider(activity).get(PlayerViewModel::class.java)
             //todo
-//            playerViewModel?.updateRoyalCount?.observe(activity, androidx.lifecycle.Observer {
-//                it ?: return@Observer
-//                val royalCount = it.royalCount ?: 0
-//                val guardCount = it.guardCount ?: 0
-//                when {
-//                    royalCount < 0 -> tvRoyalContent.text = "0"
-//                    royalCount > 9999 -> tvRoyalContent.text = "9999"
-//                    else -> tvRoyalContent.text = "$royalCount"
-//                }
-//                when {
-//                    guardCount < 0 -> tvGuardContent.text = "0"
-//                    guardCount > 9999 -> tvGuardContent.text = "9999"
-//                    else -> tvGuardContent.text = "$guardCount"
-//                }
-//            })
-//            playerViewModel?.baseData?.observe(activity, androidx.lifecycle.Observer {
-//                if (it.themeRoom) {
-//                    stopAniWithOriginal()
-//                } else {
-//                    royalButtonAnimation()
-//                }
-//            })
+            playerViewModel?.updateRoyalCount?.observe(activity, androidx.lifecycle.Observer {
+                it ?: return@Observer
+                val royalCount = it.royalCount ?: 0
+                val guardCount = it.guardCount ?: 0
+                when {
+                    royalCount < 0 -> tvRoyalContent.text = "0"
+                    royalCount > 9999 -> tvRoyalContent.text = "9999"
+                    else -> tvRoyalContent.text = "$royalCount"
+                }
+                when {
+                    guardCount < 0 -> tvGuardContent.text = "0"
+                    guardCount > 9999 -> tvGuardContent.text = "9999"
+                    else -> tvGuardContent.text = "$guardCount"
+                }
+            })
+            playerViewModel?.baseData?.observe(activity, androidx.lifecycle.Observer {
+                    royalButtonAnimation()
+            })
+            playerViewModel
         }
     }
 
@@ -129,7 +126,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //                imgView.setPadding(context.dip(1), context.dip(1), context.dip(1), context.dip(1))
 //            }
 //            imgView.hierarchy.roundingParams = roundingParams
-            ImageUtils.loadImage(imgView, item.headPic, 35f, 35f)
+            ImageUtils.loadImage(imgView, item.headPic, 32f, 32f)
             val smpImage: SimpleDraweeView = vh.getView(R.id.identityImage)
             // 优先显示 守护 图标
             if (item.smallPic.isNotEmpty()) {
@@ -161,18 +158,20 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         onlineUserListView.adapter = userListAdapter
         authorContainer.onClickNew {
             // 主播个人信息界面
-//            playerViewModel?.userInfoView?.value = UserInfoBean(userId = userId, isAnchor = true, royalLevel = 0, userPortrait = anchorInfo?.headPic
-//                    ?: "", programName = anchorNicknameText.text.toString())
+            playerViewModel?.userInfoView?.value = UserInfoBean(userId = userId, isAnchor = true, royalLevel = 0, userPortrait = anchorInfo?.headPic
+                    ?: "", programName = authorNicknameText.text.toString())
 
         }
         // 关注
         subscribeAnchor.onClickNew {
             // 没关注直接关注，关注了打开主播信息界面
             if (!isSubscribed) {
-//                playerActivity.subscribe()
-//                playerViewModel?.subscribeSource = "直播间左上角"
-//                playerViewModel?.subscribe?.value = true
+                playerViewModel?.subscribeSource = "直播间左上角"
+                playerViewModel?.follow()
             }
+        }
+        exitImage.onClickNew {
+            playerViewModel?.finishState?.value=true
         }
 //        count_container_001.onClickNew {
 //            //            playerActivity.openOnlineView()
@@ -360,19 +359,20 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     // 取消关注：隐藏主播等级图标，显示关注图标
     fun subscribeSuccess(bool: Boolean) {
         isSubscribed = bool
+
+        if (isAnchor) {
+            subscribeAnchor.hide()
+//            lavFansEvent.hide()
+//            ivFansJoin.hide()
+            return
+        }
         changeFansViews(isFansJoin, isFansClockIn)
-//        if (isAnchor) {
-//            subscribeAnchor.hide()
+        if (!bool) {
+            subscribeAnchor.show()
 //            lavFansEvent.hide()
 //            ivFansJoin.hide()
-//            return
-//        }
-//        if (!bool) {
-//            subscribeAnchor.show()
-//            lavFansEvent.hide()
-//            ivFansJoin.hide()
-//        } else {
-//            subscribeAnchor.hide()
+        } else {
+            subscribeAnchor.hide()
 //            lavFansEvent.hide()
 //            ivFansJoin.hide()
 //            if (!isFansJoin && playerViewModel?.isThemeRoom != true) {
@@ -382,7 +382,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //                    lavFansEvent.show()
 //                }
 //            }
-//        }
+        }
 
     }
 
@@ -392,12 +392,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     fun changeFansViews(gruopMember: Boolean = false, fansJoin: Boolean = false) {
         isFansClockIn = fansJoin
         isFansJoin = gruopMember
-//        if (isAnchor) {
-//            subscribeAnchor.hide()
-//            lavFansEvent.hide()
-//            ivFansJoin.hide()
-//            return
-//        }
 //        if (!isSubscribed) {
 //            subscribeAnchor.show()
 //            lavFansEvent.hide()
