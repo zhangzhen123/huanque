@@ -38,6 +38,7 @@ import com.julun.huanque.common.viewmodel.VideoChangeViewModel
 import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
+import com.julun.huanque.core.ui.live.fragment.AnimationFragment
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
 import com.julun.huanque.core.ui.live.manager.PlayerViewManager
 import com.julun.huanque.core.viewmodel.*

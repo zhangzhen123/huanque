@@ -15,7 +15,6 @@ build
 
 *.apk
 *.ap_
-*.json
 
 # Files for the Dalvik VM
 *.dex
