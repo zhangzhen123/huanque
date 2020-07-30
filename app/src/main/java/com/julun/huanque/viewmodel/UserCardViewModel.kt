@@ -6,7 +6,7 @@ import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.bean.forms.UserProgramForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.net.services.LiveService
+import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import kotlinx.coroutines.launch
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
  */
 class UserCardViewModel : BaseViewModel() {
 
-    private val mLiveService: LiveService by lazy { Requests.create(LiveService::class.java) }
+    private val mLiveService: LiveRoomService by lazy { Requests.create(LiveRoomService::class.java) }
 
     //用户数据
     val userInfoData: MutableLiveData<UserInfoInRoom> by lazy { MutableLiveData<UserInfoInRoom>() }

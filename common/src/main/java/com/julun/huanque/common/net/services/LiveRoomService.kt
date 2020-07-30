@@ -7,9 +7,11 @@ import com.julun.huanque.common.bean.beans.SwitchBean
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespDto
 import com.julun.huanque.common.bean.forms.AnchorProgramForm
+import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.bean.forms.ProgramIdForm
 import com.julun.huanque.common.bean.forms.SwitchForm
 import com.julun.huanque.common.bean.forms.UserEnterRoomForm
+import com.julun.huanque.common.bean.forms.UserProgramForm
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Url
@@ -46,4 +48,7 @@ interface LiveRoomService {
      */
     @POST("live/room/info/switchList")
     suspend fun switchList(@Body form: SwitchForm): Root<ArrayList<SwitchBean>>
+
+    @POST("live/room/user/info")
+    suspend fun userInfo(@Body form : UserProgramForm): Root<UserInfoInRoom>
 }
