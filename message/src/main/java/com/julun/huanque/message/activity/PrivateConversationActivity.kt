@@ -844,7 +844,7 @@ class PrivateConversationActivity : BaseActivity() {
                             when (panelView.id) {
 //                            R.id.panel_emotion -> {
 //                                val pagerView = findViewById<EmotionPagerView>(R.id.view_pager)
-//                                val viewPagerSize: Int = height - DensityUtils.dpToPx(30)
+//                                val viewPagerSize: Int = height - DensityHelper.dpToPx(30)
 //                                pagerView.buildEmotionViews(
 //                                    findViewById<PageIndicatorView>(R.id.pageIndicatorView),
 //                                    edit_text,

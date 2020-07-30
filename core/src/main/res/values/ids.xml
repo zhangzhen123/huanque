@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<item name="gift_guard" type="id"/>-->
+    <item name="fans_tag" type="id" />
+    <item name="right_drawer" type="id" />
+    <item name="tag_pk_rank" type="id"/>
+</resources>

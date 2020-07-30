@@ -388,7 +388,7 @@
     <string name="task_done">已完成</string>
     <string name="task_got">已领取</string>
     <string name="guard">守护</string>
-    <string name="header_info">头条</string>
+    <string name="header_info">直播广场</string>
     <string name="living">直播中</string>
     <!--发布相关-->
     <string name="upload_no_network">当前未连接网络，请联网后再发布！</string>

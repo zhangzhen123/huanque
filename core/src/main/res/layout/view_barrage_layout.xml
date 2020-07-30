@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/barrage_container"
+    android:layout_width="wrap_content"
+    android:layout_height="36dp">
+
+    <TextView
+        android:id="@+id/barrage_content"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="3dp"
+        android:drawablePadding="@dimen/dimen_2"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:paddingLeft="28dp"
+        android:paddingRight="5dp"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/user_headImage"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        app:failureImage="@mipmap/logo_placeholder_small"
+        app:failureImageScaleType="fitCenter"
+        app:placeholderImage="@mipmap/logo_placeholder_small"
+        app:roundAsCircle="true" />
+
+    <ImageView
+        android:id="@+id/royalLevelImage"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_alignRight="@+id/user_headImage"
+        android:layout_alignBottom="@+id/user_headImage"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/group_001"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toEndOf="@+id/user_headImage"
+        android:layout_toRightOf="@+id/user_headImage"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/user_level"
+            android:layout_width="29dp"
+            android:layout_height="16dp" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginStart="@dimen/dimen_3"
+            android:layout_marginLeft="@dimen/dimen_3" />
+
+        <TextView
+            android:id="@+id/user_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLength="15"
+            android:maxLines="1"
+            android:text="名字"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

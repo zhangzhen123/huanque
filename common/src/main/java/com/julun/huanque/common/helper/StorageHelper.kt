@@ -13,6 +13,17 @@ object StorageHelper {
     private const val AD_VERSION: String = "AdVersion"
 
     private const val PHONE_NUM_CACHE: String = "phone_num_cache"
+
+    //直播间第一次展示右侧关注
+    private const val FIRST_LIVE_SHOW_FOLLOW = "FIRST_LIVE_SHOW_FOLLOW"
+
+    //直播间第一次展示手势引导
+    private const val FIRST_LIVE_GUIDE_GESTURE = "FIRST_LIVE_GUIDE_GESTURE"
+
+    //记录通知提醒刷新的日期
+    private const val NOTIFY_REFRESH_DATE = "notify_refresh_date"
+
+    private const val NEED_GUIDE_TO_SPEAK = "NEED_GUIDE_TO_SPEAK"
     /**
      * 保存ad
      */
@@ -30,4 +41,32 @@ object StorageHelper {
     }
 
     fun getPhoneNumCache() = SPUtils.getString(PHONE_NUM_CACHE, "")
+
+
+    //直播间是否展示关注
+    fun setLiveShowFollow(status: Boolean) {
+        SharedPreferencesUtils.commitBoolean(FIRST_LIVE_SHOW_FOLLOW, status)
+    }
+    fun getLiveShowFollowStatus() = SharedPreferencesUtils.getBoolean(FIRST_LIVE_SHOW_FOLLOW, true)
+
+
+
+    //直播间是否展示手势引导
+    fun setLiveFirstGestureGuide(status: Boolean) {
+        SharedPreferencesUtils.commitBoolean(FIRST_LIVE_GUIDE_GESTURE, status)
+    }
+    fun getLiveFirstGestureGuideStatus() = SharedPreferencesUtils.getBoolean(FIRST_LIVE_GUIDE_GESTURE, true)
+
+
+    fun setNotifyRefreshDate(date: String) {
+        SharedPreferencesUtils.commitString(NOTIFY_REFRESH_DATE, date)
+    }
+    fun getNotifyRefreshDate() = SharedPreferencesUtils.getString(NOTIFY_REFRESH_DATE, "")
+
+    //是否需要引导发言
+    fun setNeedGuideToSpeak(status: Boolean) {
+        SharedPreferencesUtils.commitBoolean(NEED_GUIDE_TO_SPEAK, status)
+    }
+
+    fun getNeedGuideToSpeakStatus() = SharedPreferencesUtils.getBoolean(NEED_GUIDE_TO_SPEAK, true)
 }

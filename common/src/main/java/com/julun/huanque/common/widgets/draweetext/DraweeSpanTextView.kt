@@ -95,8 +95,8 @@ class DraweeSpanTextView @JvmOverloads constructor(
                             }
                             item.userInfo?.displayType?.contains(MessageDisplayType.COLORFUL) == true -> {
                                 //炫彩发言
-//                                setPadding(DensityUtils.dp2px(6f), DensityUtils.dp2px(5f) + DensityUtils.dp2px(4f),
-//                                        DensityUtils.dp2px(8f) + DensityUtils.dp2px(3f), DensityUtils.dp2px(5f) + DensityUtils.dp2px(4f))
+//                                setPadding(DensityHelper.dp2px(6f), DensityHelper.dp2px(5f) + DensityHelper.dp2px(4f),
+//                                        DensityHelper.dp2px(8f) + DensityHelper.dp2px(3f), DensityHelper.dp2px(5f) + DensityHelper.dp2px(4f))
 //                                val drawableNobility = DrawableNobility()
 //                                backgroundDrawable = drawableNobility
                             }

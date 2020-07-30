@@ -21,6 +21,7 @@ import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
@@ -32,12 +33,15 @@ import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_make_friend.*
 import kotlinx.android.synthetic.main.sticky_mkf_task.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.startActivity
 
 
 class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
@@ -167,6 +171,28 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
             override fun onHeadClick(item: HeadModule?) {
                 logger.info("头部分类：${item?.type}")
+                when (item?.type) {
+                    HeadModule.MaskQueen -> {
+
+                    }
+                    HeadModule.AnonymousVoice -> {
+
+                    }
+                    HeadModule.MagpieParadise -> {
+
+                    }
+                    HeadModule.HotLive -> {
+                        requireActivity().startActivity<PlayerActivity>(IntentParamKey.PROGRAM_ID.name to 10007)
+
+                    }
+                    HeadModule.PlumFlower -> {
+
+                    }
+                    else -> {
+
+                    }
+                }
+
             }
 
         }

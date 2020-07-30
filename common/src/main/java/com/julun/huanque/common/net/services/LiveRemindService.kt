@@ -14,7 +14,7 @@ import retrofit2.http.POST
  * @since 1.0.0
  * @date 2020/07/15
  */
-interface LiveService {
+interface LiveRemindService {
     /**
      * 节目关注列表
      */

@@ -1,4 +1,4 @@
-package com.julun.huanque.lmcore.animtors.evaluators
+package com.julun.huanque.core.animtors.evaluators
 
 import android.animation.TypeEvaluator
 import android.graphics.Color

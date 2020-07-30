@@ -2,4 +2,11 @@
     <!-- Base application theme. -->
 
 
+    <style name="ProgressBar_Horizontal_pk" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">
+            @android:drawable/progress_indeterminate_horizontal
+        </item>
+        <item name="android:progressDrawable">@drawable/progress_drawable_pk_props</item>
+    </style>
 </resources>

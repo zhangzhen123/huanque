@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clayout"
+    android:layout_width="130dp"
+    android:layout_height="129dp"
+    android:layout_marginTop="@dimen/dimen_8">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/anchorPicture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:actualImageScaleType="focusCrop"
+        app:failureImage="@mipmap/logo_placeholder_medium"
+        app:failureImageScaleType="fitCenter"
+        app:layout_constraintDimensionRatio="1:1"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="fitCenter"
+        app:roundedCornerRadius="8dp" />
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/bg_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        app:actualImageScaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:roundedCornerRadius="8dp" />
+
+    <TextView
+        android:id="@+id/anchor_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:ellipsize="end"
+        android:maxEms="8"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:text="无名" />
+
+
+    <TextView
+        android:id="@+id/user_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/llLiving"
+        android:layout_width="@dimen/dimen_20"
+        android:layout_height="13dp"
+        android:layout_marginEnd="@dimen/dimen_6"
+        android:layout_marginRight="@dimen/dimen_6"
+        android:layout_marginTop="@dimen/dimen_6"
+        android:background="@drawable/bg_solid_btn1"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="12dp"
+            android:layout_height="11dp"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="json/living.json"
+            app:lottie_loop="true" />
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--新版pk-->
+    <color name="pk_color_01">#EC4F87</color>
+    <color name="pk_color_02">#9C4FEC</color>
+    <color name="pk_color_03">#18D7F6</color>
+    <color name="pk_color_bg_01">#B33B66</color>
+    <color name="pk_color_bg_02">#6A2D9F</color>
+    <color name="pk_color_bg_03">#14A0B7</color>
+    <!--新版流光-->
+    <color name="simple_gift_font_01">#FFD630</color>
+    <color name="simple_gift_font_02">#00D4BA</color>
+    <color name="simple_gift_font_03">#368EFF</color>
+    <color name="simple_gift_font_04">#EA6D00</color>
+    <color name="simple_gift_font_05">#F00D83</color>
+    <color name="simple_gift_font_stroke_01">#FEFFBB</color>
+    <color name="simple_gift_font_stroke_02">#B0FFF8</color>
+    <color name="simple_gift_font_stroke_03">#AEF5FF</color>
+    <color name="simple_gift_font_stroke_04">#FFCDA2</color>
+    <color name="simple_gift_font_stroke_05">#FFD8EC</color>
 
+    <!--直播间背景颜色-->
+    <color name="live_bg_color">#212126</color>
+    <!--  侧滑背景色-->
+    <color name="right_drawer_bg">#B3000000</color>
 </resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/live_layer_anim_height"
+    android:layout_height="@dimen/live_layer_anim_height"
+    >
+
+    <ImageView
+        android:id="@+id/luckBackroundImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/luckUser"
+        android:layout_width="200dp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingTop="35dp"
+        android:text="恭喜xx喜中萌豆"
+        android:textColor="@color/black_333"
+        android:textSize="15sp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/luckText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/luckUser"
+        android:layout_centerHorizontal="true"
+        android:text="1000"
+        android:textColor="#fc0b65"
+        android:textSize="18sp" />
+
+</RelativeLayout>

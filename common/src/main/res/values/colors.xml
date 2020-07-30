@@ -85,4 +85,7 @@
     <!--高亮按钮颜色-->
     <color name="textColor_alert_button_destructive">#ff3b30</color>
     <color name="color_quebi">#FF7B00</color>
+
+    <!-- 直播间背景颜色 -->
+    <color name="live_room_bg">#46415e</color>
 </resources>

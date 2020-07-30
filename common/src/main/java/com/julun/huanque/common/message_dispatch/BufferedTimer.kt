@@ -31,7 +31,6 @@ class BufferedTimer {
     constructor() {
         handler = Handler()
 //        EventDispatcherCenter.registerEventHandler(this)
-        EventBus.getDefault().register(this)
     }
 
     // 初始化带返回值的匿名方法块
@@ -166,7 +165,6 @@ class BufferedTimer {
         handler!!.removeCallbacksAndMessages(null)
         handler = null
 //        EventDispatcherCenter.unRegisterEventHandler(this)
-        EventBus.getDefault().unregister(this)
     }
 
 }

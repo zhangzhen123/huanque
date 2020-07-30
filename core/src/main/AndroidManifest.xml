@@ -81,5 +81,12 @@
         <activity
             android:name=".ui.share.InviteShareActivity"
             android:theme="@style/CustomToolBarThemeTran" />
+        <activity
+            android:name=".ui.live.PlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/LiveTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden|stateAlwaysHidden" />
     </application>
 </manifest>

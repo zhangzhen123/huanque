@@ -17,4 +17,25 @@
     <string name="recharge_help">充值获得的鹊币显示为充值获得，其余方式获得的鹊币显示为平台赠送，使用鹊币时优先扣除平台赠送鹊币。</string>
     <string name="withdraw_tips">1. 提现方式需要通过实名认证，否则无法提现。\n2. 除新人专享，其余的提现均收取1%手续费。\n3. 新人专享1元秒到账，每人仅有1次机会。
         \n4. 20元提现秒到账，每日仅限提现1次。\n5. 50元、100元、300元、500元每周仅限提现一次。\n6. 50元以上提现需要1–3个工作日审核，周末和节假日顺延，请耐心等待，谢谢您的理解！</string>
+    <string name="balance_not_enough">余额不足</string>
+    <string name="mystery_count_down">神秘人使用倒计时</string>
+
+    <!--PK道具说明-->
+    <string name="pk_prop_address">/rules/pkyhPropRules.html</string>
+    <!--pk玩法优化相关-->
+    <string name="pk_props_award_fail">未获得奖励积分</string>
+    <string name="pk_gift_task_success">礼物任务(成功)</string>
+    <string name="pk_gift_task__fail">礼物任务(失败)</string>
+    <string name="pk_score_task_success">PK积分任务(成功)</string>
+    <string name="pk_score_task__fail">PK积分任务(失败)</string>
+
+    <string name="attention_switch_pk">PK只能在竖屏模式进行哦～</string>
+    <string name="attention_switch_connect">连麦只能在竖屏模式进行哦～</string>
+
+    <string name="pk_props_grab_success">道具争夺(胜利)</string>
+    <string name="pk_props_grab_fail">道具争夺(失败)</string>
+
+    <string name="pk_props_grab_none">无人抢到道具</string>
+
+    <string name="guide_to_send">别光看，一起来聊聊呀~</string>
 </resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
+        android:id="@+id/enter_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|center"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/dimen_10"
+        android:paddingRight="@dimen/dimen_10"
+        android:paddingStart="@dimen/dimen_10"
+        android:textSize="@dimen/normal_size" />
+
+    <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
+        android:id="@+id/enter_bg_svga"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|center"
+        android:scaleType="fitCenter" />
+</merge>

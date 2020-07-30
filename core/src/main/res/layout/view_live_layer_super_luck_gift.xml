@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/live_layer_anim_height"
+    android:layout_height="@dimen/live_layer_anim_height"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/luckBackroundImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/bg_super_luck" />
+
+    <TextView
+        android:id="@+id/luckUser"
+        android:layout_width="200dp"
+        android:gravity="center"
+        android:paddingTop="35dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        tools:text="恭喜xx在赠送“幸运黄瓜”喜中1000萌豆"
+        android:textColor="@color/black_333"
+        android:textSize="15sp" />
+    <TextView
+        android:id="@+id/luckText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/luckUser"
+        android:layout_centerHorizontal="true"
+        android:text="1000"
+        android:textColor="@color/colorPrimary_lib"
+        android:textSize="18sp" />
+
+</RelativeLayout>

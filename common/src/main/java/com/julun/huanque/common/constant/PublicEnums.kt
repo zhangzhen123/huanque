@@ -38,6 +38,68 @@ object AnimEventItemTypes {
     val SVGA: String = "Svga"
 
 }
+//公聊消息的点击触发
+object TextTouch {
+    //打开深海游戏
+    val OpenDeepSeaGame = "OpenDeepSeaGame"
+
+    //打开游戏面板
+    val OpenGameView = "OpenGameView"
+
+    //切换直播间
+    val OpenLiveRoom = "OpenLiveRoom"
+
+    //打开h5
+    val OpenUrlView = "OpenUrlView"
+
+    //打开卡片
+    val OpenUserCard = "OpenUserCard"
+
+    //打开送礼面板
+    val OpenSendGiftView = "OpenSendGiftView"
+
+    //打开分享
+    val OpenShareView = "OpenShareView"
+
+    //打开豪车工厂
+    val OpenFactoryCarView = "OpenFactoryCarViewV2"
+
+    //打开锦鲤池
+    val OpenWishView = "OpenWishView"
+
+    //打开携手闯情关 since4.19.0
+    val OpenPassLevelView = "OpenPassLevelView"
+
+    //打开幸运转盘
+    const val OPEN_BIG_WHEEL = "OpenBigWheel"
+
+    //打开PK段位赛 since 4.23.0
+    const val OPEN_PK_RANK = "OpenStagePk"
+
+    //跳转目标直播间并打开星球霸主
+    const val OpenLiveRoomAndPlanet = "OpenLiveRoomAndPlanet"
+
+    //打开礼物面板并切换到背包
+    const val OPEN_BAG = "OpenBag"
+
+    val Empty = ""
+}
+object EnterType {
+    const val MINI = "Mini" //普通入场
+    const val SKILL = "Skill" //特效入场
+}
+object StopType {
+    const val NORMALSTOP = "NormalStop"
+    const val FORCESTOP = "ForceStop"
+}
+/**
+ * 直播间用户列表变化时通知类型
+ */
+object UserChangeType {
+    val New = "New"
+    val Del = "Del"
+    val Mod = "Mod"
+}
 
 /** 消息平台  */
 object MessageCfgPlatform {
@@ -46,6 +108,117 @@ object MessageCfgPlatform {
     val ANDROID = "ANDROID"
 }
 
+/**
+ * 屏幕类型
+ */
+object ScreenType {
+    //横屏
+    const val HP = "HP"
+
+    //竖屏
+    const val SP = "SP"
+}
+
+//游戏类型
+object GameType {
+    //深海秘境
+    val DeepSea = "DeepSea"
+
+    //选票
+    val XuanPiao = "XuanPiao"
+
+    //世界杯竞猜
+    val WorldCupGuess = "WorldCupGuess"
+
+    //豪车工厂
+    val FactoryCar = "FactoryCar"
+
+    //星球霸主
+    const val Planet = "Planet"
+
+    //游戏类型
+    const val GAME = "Game"
+
+    //锦鲤
+    const val TYPE_GAME_KOI = 1
+
+    //猜猜
+    const val TYPE_GAME_GUESS = 2
+
+    //翻牌
+    const val TYPE_GAME_CARDS = 3
+
+    //抽奖
+    const val TYPE_GAME_LOTTO = 4
+
+    //首充
+    const val TYPE_FIRST_RECHARGE = 5
+
+    //PK道具
+    const val TYPE_PK_PROP = 6
+
+    //宝箱
+    const val TYPE_GAME_TREASURE_BOX = 7
+
+    //主题房宝箱
+    const val TYPE_GAME_THEME_TREASURE_BOX = 8
+}
+object ClickType {
+    //打开公聊
+    const val CHAT_INPUT_BOX = "CHAT_INPUT_BOX"
+    //打开私聊
+    const val PRIVATE_MESSAGE = "PRIVATE_MESSAGE"
+    //打开送礼
+    const val GIFT = "GIFT"
+    //关闭直播间
+    const val CLOSE = "CLOSE"
+    //打开游戏面板
+    const val GAME = "GAME"
+    //豪车工厂
+    const val LUXURY_CAR = "LUXURY_CAR"
+    //星球霸主
+    const val PLANTE = "PLANTE"
+    //推流设置页面
+    const val PUBLISH_SETTING = "PUBLISH_SETTING"
+    //主播更多设置
+    const val ANCHOR_MORE_SETTING = "ANCHOR_MORE_SETTING"
+    //用户更多设置
+    const val USER_MORE_SETTING = "USER_MORE_SETTING"
+    //打开粉丝团
+    const val FANS = "FANS"
+    //横竖屏切换
+    const val SWITCH_SCREEN = "SWITCH_SCREEN"
+    //屏蔽功能
+    const val SHIELD = "SHIELD"
+
+    //主播端功能
+    //摄像头切换
+    const val SWITH_CAMERA = "SWITH_CAMERA"
+    //闪光灯
+    const val FLASH_LIGHT = "FLASH_LIGHT"
+    //镜像
+    const val MIRROR = "MIRROR"
+    //声音开关
+    const val SOUND = "SOUND"
+    //主播更多设置
+    const val ANHOR_MORE_SETTING = "ANHOR_MORE_SETTING"
+
+    //打开聊天输入框  发言
+    const val SEND_MESSAGE = "SEND_MESSAGE"
+}
+object MenuActionType {
+    const val MOECOINTASK = "MoeCoinTask"//萌币任务
+    const val KINGWAR = "KingWar"//王者之战
+    const val LUCKYROTATE = "LuckyRotate"//幸运转盘
+    const val MOECOINMARKET = "MoeCoinMarket"//萌币商城
+    const val FACTORYCAR = "FactoryCar"//豪车工厂
+    const val TURNCARD = "TurnCard"//翻牌游戏
+    const val TACTGAMEYY = "TActGameYY"//邀友活动
+
+    const val PASSLEVEL = "PassLevel"//携手闯关
+    const val STAGEPK = "StagePk"//PK段位赛
+    const val CHATMODE = "ChatMode"//聊天模式
+}
 object LoginType {
     //游客
     val VISITOR = "VISITOR"
@@ -63,6 +236,20 @@ object LoginType {
     val THIRD_BINDED = "THIRD_BINDED"
 }
 
+/**
+ * 直播间打开时附带的操作
+ */
+object LiveOperaType{
+    const val OPEN_GIFT="open_gift"//打开礼物面板并附带giftId 默认0代表只打开 -1代表不生效
+    const val OPEN_SHARE="open_share"//打开分享
+    const val STAR_GAME="starGame"//打开星球游戏
+    //打开粉丝团
+    const val OPEN_FANS = "OPEN_FANS"
+    //打开守护
+    const val OPEN_GUARD = "OPEN_GUARD"
+    //打开首充
+    const val OPEN_FIRST_RECHARGE = "OPEN_FIRST_RECHARGE"
+}
 /**
  * 分享常量类
  */

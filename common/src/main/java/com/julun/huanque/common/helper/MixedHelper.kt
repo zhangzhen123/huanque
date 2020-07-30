@@ -253,47 +253,6 @@ object MixedHelper {
         return map
     }
 
-    /**
-     * 获取颜色
-     */
-    @ColorInt
-    fun getColor(@ColorRes cId: Int): Int {
-        return try {
-            ContextCompat.getColor(CommonInit.getInstance().getApp(), cId)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Color.WHITE
-        }
-    }
-
-    /**
-     * 颜色进行初始化 解析失败。返回Color.WHITE
-     * @param colorStr string类型的色值
-     */
-    fun formatColor(colorStr: String): Int {
-        return try {
-            Color.parseColor(colorStr)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Color.WHITE
-        }
-    }
-
-    /**
-     * 配置一个字符串的色值，再配置一个异常的色值，如果都是异常，那么就使用默认的白色
-     */
-    @ColorInt
-    fun formatColor(colorStr: String, @ColorRes errorColor: Int): Int {
-        if (colorStr.isEmpty()) {
-            return getColor(errorColor)
-        }
-        return try {
-            Color.parseColor(colorStr)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            getColor(errorColor)
-        }
-    }
 
     /**
      * 获取Context对应的Activity

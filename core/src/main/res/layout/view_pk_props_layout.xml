@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pk_props_ing_layout"
+        android:layout_width="83dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_3"
+        android:layout_marginLeft="@dimen/dimen_3">
+
+        <ProgressBar
+            android:id="@+id/pb_pk_task_time"
+            style="@style/ProgressBar_Horizontal_pk"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/percent70translucentBlack"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_pk_task_title"
+            app:layout_constraintEnd_toEndOf="@+id/tv_pk_task_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_pk_task_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_pk_task_title"
+            tools:progress="50" />
+
+        <TextView
+            android:id="@+id/tv_pk_task_title"
+            android:layout_width="0dp"
+            android:layout_height="14dp"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:paddingLeft="@dimen/dimen_3"
+            android:textColor="@color/white"
+            android:textSize="8sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="礼物任务（30s）" />
+
+
+        <View
+            android:id="@+id/bg_task_center"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:background="@color/percent50translucentBlack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_pk_task_title" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_pk_props_gift"
+            android:layout_width="34dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="@dimen/dimen_3"
+            android:layout_marginLeft="@dimen/dimen_3"
+            app:layout_constraintBottom_toBottomOf="@+id/bg_task_center"
+            app:layout_constraintStart_toStartOf="@+id/bg_task_center"
+            app:layout_constraintTop_toTopOf="@+id/bg_task_center" />
+
+        <TextView
+            android:id="@+id/tv_pk_props_gift"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_1"
+            android:layout_marginRight="@dimen/dimen_1"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:textColor="@color/white"
+            android:textSize="8sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/sdv_pk_props_gift"
+            app:layout_constraintStart_toEndOf="@+id/sdv_pk_props_gift"
+            app:layout_constraintTop_toTopOf="@+id/sdv_pk_props_gift"
+            tools:text="礼物名称\n(0/2)" />
+
+
+
+        <TextView
+            android:id="@+id/tv_pk_props_award"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:padding="@dimen/dimen_2"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/bg_task_center"
+            app:layout_constraintEnd_toEndOf="@+id/bg_task_center"
+            app:layout_constraintStart_toStartOf="@+id/bg_task_center"
+            app:layout_constraintTop_toTopOf="@+id/bg_task_center"
+            tools:text="任务额外奖励" />
+
+
+        <TextView
+            android:id="@+id/tv_pk_task_bottom"
+            android:layout_width="0dp"
+            android:layout_height="14dp"
+            android:layout_marginTop="@dimen/dimen_1"
+            android:background="@drawable/shape_pk_props"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:paddingLeft="@dimen/dimen_3"
+            android:textColor="@color/white"
+            android:textSize="8sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bg_task_center"
+            tools:text="可获得1.5倍PK积分" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/process_pk_props"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:layout_marginTop="@dimen/dimen_1"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bg_task_center">
+
+            <View
+                android:layout_width="14dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/pk_process_props_color_01"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="14dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/pk_process_props_color_02"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/pk_props_process_01"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/pk_process_props_color_01"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/pk_props_process_02"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/pk_props_process_02"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/pk_process_props_color_02"
+                android:gravity="center_vertical|end"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/pk_props_process_01"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.julun.huanque.common.widgets.NumberAnimTextView
+                android:id="@+id/pk_props_process_text01"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="3dp"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="950000" />
+
+            <com.julun.huanque.common.widgets.NumberAnimTextView
+                android:id="@+id/pk_props_process_text02"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="3dp"
+                android:gravity="center_vertical|end"
+                android:maxLines="1"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="850000" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</merge>

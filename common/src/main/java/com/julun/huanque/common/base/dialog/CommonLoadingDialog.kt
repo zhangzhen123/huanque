@@ -95,8 +95,8 @@ class CommonLoadingDialog : AppCompatDialogFragment() {
         val window = dialog?.window ?: return
         val params = window.attributes
         params.gravity = Gravity.CENTER
-//        params.width = DensityUtils.dp2px(80f)
-//        params.height =DensityUtils.dp2px(60f)
+//        params.width = DensityHelper.dp2px(80f)
+//        params.height =DensityHelper.dp2px(60f)
         params.width = ViewGroup.LayoutParams.WRAP_CONTENT
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT
         window.attributes = params

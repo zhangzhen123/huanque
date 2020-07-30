@@ -205,6 +205,12 @@ val tfDinAltB: Typeface by lazy {
     Typeface.createFromAsset(CommonInit.getInstance().getContext().assets, "fonts/DIN Alternate Bold.ttf")
 }
 
+val fugazOneTypeFace: Typeface by lazy {
+    Typeface.createFromAsset(CommonInit.getInstance().getContext().assets, "fonts/FugazOne-Regular.ttf")
+}
+val tfDinCdb: Typeface by lazy {
+    Typeface.createFromAsset(CommonInit.getInstance().getContext().assets, "fonts/DIN Condensed Bold.ttf")
+}
 //给文本设置自定义字体
 fun TextView.setTFDinCdc2() {
     this.typeface = tfDinCdc2
@@ -212,4 +218,12 @@ fun TextView.setTFDinCdc2() {
 
 fun TextView.setTFDinAltB() {
     this.typeface = tfDinAltB
+}
+
+fun TextView.setTFFugazOne() {
+    this.typeface = fugazOneTypeFace
+}
+
+fun TextView.setTFDINCondensedBold() {
+    this.typeface = tfDinCdb
 }

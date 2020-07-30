@@ -1,4 +1,5 @@
 package com.julun.huanque.common.bean
+import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TplBeanExtraContext
 import com.julun.huanque.common.constant.MessageDisplayType
@@ -21,7 +22,11 @@ class StyleParam(var styleType: String = "", var preffix: String = "", var color
                  var fontWeight: String = "", var underLineColor: String? = null
 )
 
-
+//直播间消息实体类
+class ChatMessageBean(var content: Any, var showType: Int) : MultiItemEntity {
+    override val itemType: Int
+        get() = showType
+}
 open class TplBean(
     var textParams: HashMap<String, String> = hashMapOf(),
     var context: TplBeanExtraContext? = null,

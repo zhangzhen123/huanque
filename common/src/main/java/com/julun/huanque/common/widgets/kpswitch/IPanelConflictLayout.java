@@ -50,7 +50,7 @@ public interface IPanelConflictLayout {
     /**
      * @param isIgnoreRecommendHeight Ignore guaranteeing the panel height equal to the keyboard
      *                                height.
-     * @attr ref com.julun.lingmeng.lmcore.kpswitch.R.styleable#KPSwitchPanelLayout_ignore_recommend_height
+     * @attr ref com.julun.huanque.core.kpswitch.R.styleable#KPSwitchPanelLayout_ignore_recommend_height
      * @see KPSwitchPanelLayoutHandler#resetToRecommendPanelHeight
      * @see KeyboardUtil#getValidPanelHeight(android.content.Context)
      */

@@ -14,7 +14,7 @@ import org.jay.launchstarter.Task
 //
 //    override fun run() {
 //        //初始化MSA服务
-//        LingMengService.getService(IMSAService::class.java)?.initSDK(mContext)
+//        huanqueService.getService(IMSAService::class.java)?.initSDK(mContext)
 //    }
 //}
 
@@ -33,7 +33,7 @@ import org.jay.launchstarter.Task
 //            Log.i("channel", "buglug: $channel")
 //            strategy.appChannel = channel
 //        }
-//        strategy.appVersion = String.format("%d.%d.%d", com.julun.lingmeng.common.BuildConfig.MAJOR_VERSION, com.julun.lingmeng.common.BuildConfig.MINOR_VERSION, com.julun.lingmeng.common.BuildConfig.PATCH_VERSION)
+//        strategy.appVersion = String.format("%d.%d.%d", com.julun.huanque.common.BuildConfig.MAJOR_VERSION, com.julun.huanque.common.BuildConfig.MINOR_VERSION, com.julun.huanque.common.BuildConfig.PATCH_VERSION)
 //        //                CrashReport.initCrashReport(applicationContext, strategy)
 //        CrashReport.initCrashReport(applicationContext, AppInitUtils.getBuglyId(), false, strategy)
 //
@@ -93,7 +93,7 @@ class JPushTask : Task() {
 //
 //    override fun run() {
 //        //初始化实名认证SDK
-//        LingMengService.getService(IRealNameService::class.java)?.initSDK(mContext.applicationContext)
+//        huanqueService.getService(IRealNameService::class.java)?.initSDK(mContext.applicationContext)
 //    }
 //}
 

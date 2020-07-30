@@ -61,7 +61,7 @@ class JPushCustomReceiver : BroadcastReceiver() {
 
     //send msg to MainActivity
     private fun processCustomMessage(context: Context, bundle: Bundle) {
-        //		new ToastUtils(LingMengApp.Companion.getNewActivity ())
+        //		new ToastUtils(huanqueApp.Companion.getNewActivity ())
         val message = bundle.getString(JPushInterface.EXTRA_MESSAGE)
         val extras = bundle.getString(JPushInterface.EXTRA_EXTRA)
 

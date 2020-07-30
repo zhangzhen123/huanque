@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="34dp"
+    android:orientation="horizontal"
+    android:paddingLeft="10dp">
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:paddingLeft="10dp">-->
+
+    <RelativeLayout
+        android:id="@+id/authorContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:background="@drawable/bg_live_header_author"
+        android:paddingRight="5dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/authorPhotoImage"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            app:placeholderImage="@mipmap/logo_placeholder_small"
+            app:roundAsCircle="true" />
+
+        <!--<com.facebook.drawee.view.SimpleDraweeView-->
+        <!--android:id="@+id/subscribeAnchorImage"-->
+        <!--android:layout_width="34dp"-->
+        <!--android:layout_height="34dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_gravity="center"-->
+        <!--app:placeholderImage="@drawable/logo_placeholder"-->
+        <!--app:roundedCornerRadius="16dp" />-->
+
+        <TextView
+            android:id="@+id/authorNicknameText"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@+id/authorPhotoImage"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:lines="1"
+            android:text="喵喵喵直播间"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/programIdText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/authorNicknameText"
+            android:layout_alignBottom="@+id/authorPhotoImage"
+            android:layout_marginBottom="2dp"
+            android:layout_toRightOf="@+id/authorPhotoImage"
+            android:includeFontPadding="false"
+            android:textColor="@color/white"
+            android:textSize="9sp"
+            tools:text="123456" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="4dp"
+            android:layout_toRightOf="@+id/authorNicknameText">
+
+            <ImageView
+                android:id="@+id/subscribeAnchor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/lm_icon_subscribe" />
+
+            <!-- 粉丝团事件 -->
+<!--            <ImageView-->
+<!--                android:id="@+id/ivFansJoin"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@mipmap/lm_icon_fans_join"-->
+<!--                android:visibility="gone" />-->
+
+<!--            <com.airbnb.lottie.LottieAnimationView-->
+<!--                android:id="@+id/lavFansEvent"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="23dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:visibility="gone"-->
+<!--                app:lottie_autoPlay="true"-->
+<!--                app:lottie_fileName="json/join_fans.json"-->
+<!--                app:lottie_imageAssetsFolder="image/join_fans"-->
+<!--                app:lottie_loop="true" />-->
+        </FrameLayout>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/flRoyalRootView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivRoyalIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_7"
+            android:layout_marginRight="@dimen/dimen_7"
+            android:src="@mipmap/lm_core_icon_royal_sign" />
+
+        <TextView
+            android:id="@+id/tvRoyalContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:includeFontPadding="false"
+            android:text="0"
+            android:textColor="#ffd66f"
+            android:textSize="@dimen/sp_08"
+            tools:text="9999" />
+
+        <ImageView
+            android:id="@+id/ivGuardIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_7"
+            android:layout_marginRight="@dimen/dimen_7"
+            android:src="@mipmap/lm_core_icon_guard_sign"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvGuardContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:includeFontPadding="false"
+            android:text="0"
+            android:textColor="#ffd66f"
+            android:textSize="@dimen/sp_08"
+            android:visibility="gone"
+            tools:text="9999" />
+    </FrameLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="3dp">
+
+        <ImageView
+            android:id="@+id/exitImage"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/selector_live_action_exit" />
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/count_container_001"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_alignParentEnd="true"-->
+        <!--            android:layout_alignParentRight="true"-->
+        <!--            android:layout_centerVertical="true"-->
+        <!--            android:gravity="center"-->
+        <!--            android:paddingLeft="8dp"-->
+        <!--            android:paddingRight="8dp">-->
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/tv_user_count"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="32dp"-->
+        <!--                android:background="@drawable/live_room_count"-->
+        <!--                android:gravity="center"-->
+        <!--                android:maxLines="1"-->
+        <!--                android:minWidth="32dp"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textSize="@dimen/small2_size"-->
+        <!--                android:visibility="visible"-->
+        <!--                tools:text="1" />-->
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/tv_important_user_count"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:background="@mipmap/important_user_icon"-->
+        <!--                android:gravity="center"-->
+        <!--                android:maxLines="1"-->
+        <!--                android:textColor="#FFDE8200"-->
+        <!--                android:textSize="10sp"-->
+        <!--                android:visibility="gone" />-->
+        <!--        </LinearLayout>-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/onlineUserListView"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_toLeftOf="@+id/exitImage"
+            android:layout_centerVertical="true"
+            android:cacheColorHint="@color/transparent"
+            android:fadingEdge="none"
+            android:listSelector="@color/transparent"
+            android:overScrollMode="never" />
+    </RelativeLayout>
+
+</LinearLayout>
+
