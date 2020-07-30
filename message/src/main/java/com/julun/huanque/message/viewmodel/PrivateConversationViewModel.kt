@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alibaba.android.arouter.launcher.ARouter.logger
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.ChatUser
@@ -13,7 +14,9 @@ import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.SendMsgForm
+import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.FingerGuessingResult
 import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.MessageFailType
 import com.julun.huanque.common.constant.ParamConstant
@@ -52,6 +55,9 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //消息列表
     val messageListData: MutableLiveData<MutableList<Message>> by lazy { MutableLiveData<MutableList<Message>>() }
+
+    //增加消息
+    val addMessageData: MutableLiveData<Message> by lazy { MutableLiveData<Message>() }
 
     //message有变化
     val messageChangeState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -162,17 +168,15 @@ class PrivateConversationViewModel : BaseViewModel() {
      * 接收到当前消息，直接显示
      */
     fun addMessage(message: Message) {
-        //        var messageId = 0
-        //        messageListData.value?.forEach {
-        //            if (it.messageId == message.messageId) {
-        //                //列表当中存在该消息，标识为重试消息
-        //                it.sentStatus = message.sentStatus
-        //                messageId = it.messageId
-        //            }
-        //        }
-        //        if (messageId == 0) {
-        messageListData.value?.add(message)
-        messageChangeState.postValue(true)
+        val content = message.content
+        if (content is CustomMessage && content.type == MessageCustomBeanType.Expression_Animation) {
+            //动画消息
+            messageListData.value?.add(message)
+            messageChangeState.postValue(true)
+        } else {
+            addMessageData.value = message
+        }
+
         RongIMClient.getInstance().setMessageReceivedStatus(message.messageId, Message.ReceivedStatus(1))
         //        }
         EventBus.getDefault().post(EventMessageBean(message.targetId ?: ""))
@@ -286,6 +290,9 @@ class PrivateConversationViewModel : BaseViewModel() {
                             //发送失败
                             localMsg?.messageId = message.messageId
                             sendMessageFail(localMsg ?: return@send, MessageFailType.RONG_CLOUD)
+                        } else {
+                            localMsg?.sentStatus = message.sentStatus
+                            msgData.value = localMsg
                         }
                     }
                 } else {
@@ -299,6 +306,9 @@ class PrivateConversationViewModel : BaseViewModel() {
                             //发送失败
                             localMsg?.messageId = message.messageId
                             sendMessageFail(localMsg ?: return@sendCustomMessage, MessageFailType.RONG_CLOUD)
+                        } else {
+                            localMsg?.sentStatus = message.sentStatus
+                            msgData.value = localMsg
                         }
                     }
                 }
@@ -350,6 +360,9 @@ class PrivateConversationViewModel : BaseViewModel() {
                         //发送失败
                         localMsg.messageId = message.messageId
                         sendMessageFail(localMsg, MessageFailType.RONG_CLOUD)
+                    } else {
+                        localMsg.sentStatus = message.sentStatus
+                        msgData.value = localMsg
                     }
                 }
             }, {
@@ -368,10 +381,15 @@ class PrivateConversationViewModel : BaseViewModel() {
                 BalanceUtils.saveBalance(result.beans)
                 msgFeeData.value = result.consumeBeans
                 RongCloudManager.sendCustomMessage(localMsg) { result, message ->
+
                     if (!result) {
                         //发送失败
                         localMsg.messageId = message.messageId
                         sendMessageFail(localMsg, MessageFailType.RONG_CLOUD)
+                    } else {
+                        //发送成功
+                        localMsg.sentStatus = message.sentStatus
+                        msgData.value = localMsg
                     }
                 }
             }, {
@@ -403,6 +421,35 @@ class PrivateConversationViewModel : BaseViewModel() {
                 }
             }
 
+        }
+    }
+
+    /**
+     * 计算动画结果
+     */
+    fun calcuteAnimationResult(name: String): String {
+        when (name) {
+            "[猜拳]" -> {
+                return when (java.util.Random().nextInt(3) + 1) {
+                    1 -> {
+                        FingerGuessingResult.PAPER
+                    }
+                    2 -> {
+                        FingerGuessingResult.ROCK
+                    }
+                    else -> {
+                        FingerGuessingResult.SCISSORS
+                    }
+                }
+            }
+            "[骰子]" -> {
+                return "${java.util.Random().nextInt(6) + 1}"
+//                logger.info("Message 骰子结果 $result")
+            }
+            else -> {
+//                logger.info("Message 未兼容该表情")
+                return ""
+            }
         }
     }
 

@@ -88,6 +88,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         AgoraManager.mHandler.addHandler(this)
         if (mType == ConmmunicationUserType.CALLING) {
             checkPermissions()
+        } else {
+            timer()
         }
         //语音通话开始消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallAcceptProcessor {
@@ -257,7 +259,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     permission.granted -> {
                         logger.info("获取权限成功")
                         if (mType == ConmmunicationUserType.CALLING) {
-                            calling()
+                            timer()
                             playAudio(true)
                         } else if (mType == ConmmunicationUserType.CALLED) {
                             mVoiceChatViewModel?.acceptVoice()
@@ -554,15 +556,20 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     private var mDisposable: Disposable? = null
 
     /**
-     * 发起呼叫
+     * 主叫或者被叫 的等待定时挂断方法
      */
-    private fun calling() {
+    private fun timer() {
 //        mVoiceChatViewModel?.createConmmunication(mVoiceChatViewModel?.targetUserBean?.value?.userId ?: 0)
         //超时计算
-        mDisposable = Observable.timer(10, TimeUnit.SECONDS)
+        mDisposable = Observable.timer(30, TimeUnit.SECONDS)
             .bindUntilEvent(this, ActivityEvent.DESTROY)
             .subscribe({
-                mVoiceChatViewModel?.calcelVoice(CancelType.Timeout)
+                if (mType == ConmmunicationUserType.CALLING) {
+                    mVoiceChatViewModel?.calcelVoice(CancelType.Timeout)
+                } else {
+                    mVoiceChatViewModel?.refuseVoice()
+                }
+
             }, {})
     }
 

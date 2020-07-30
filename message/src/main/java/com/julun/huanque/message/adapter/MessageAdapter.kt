@@ -36,6 +36,7 @@ import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.WebpAnimatorListener
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
@@ -194,15 +195,16 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
                     if (expressionAnimationBean != null) {
                         val started = map?.get(ParamConstant.MSG_ANIMATION_STARTED) as? Boolean
+                        val position = helper.layoutPosition
                         when (EmojiSpanBuilder.getPrivilegeResource(context, expressionAnimationBean.name)) {
                             R.drawable.icon_shaizi -> {
                                 //骰子动效
-                                showShaiziAnimation(item, helper.getView(R.id.sdv_image), expressionAnimationBean.result, started ?: false)
+                                showShaiziAnimation(item, helper.getView(R.id.sdv_image), expressionAnimationBean.result, started ?: false, position)
 
                             }
                             R.drawable.icon_caiquan -> {
                                 //猜拳动效
-                                showGuessAnimation(item, helper.getView(R.id.sdv_image), expressionAnimationBean.result, started ?: false)
+                                showGuessAnimation(item, helper.getView(R.id.sdv_image), expressionAnimationBean.result, started ?: false, position)
                             }
                             else -> {
                             }
@@ -521,7 +523,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         //消息回复间隔
         val replayTime = msgReplayTime(item, position)
 
-        if (item.senderUserId == SessionUtils.getSessionId()) {
+        if (item.senderUserId == "${SessionUtils.getUserId()}") {
             //本人消息，费用退回，显示
             if (replayTime > DAY || (replayTime == 0L && (System.currentTimeMillis() - item.sentTime) > DAY)) {
                 //回复时间超过一天,或者超过24小时内没有回复(消息费用退回)
@@ -652,7 +654,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
      * @param result 动画结果
      * @param started 是否播放过动画
      */
-    private fun showShaiziAnimation(msg: Message, view: SimpleDraweeView, result: String, started: Boolean) {
+    private fun showShaiziAnimation(msg: Message, view: SimpleDraweeView, result: String, started: Boolean, position: Int) {
         val resultPic = when (result) {
             "2" -> {
                 R.drawable.shaizi_2
@@ -679,18 +681,20 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             ImageUtils.showAnimator(
                 view,
                 "asset://${CommonInit.getInstance().getApp().assets}/webp/shaizi.webp",
-                4, object : WebpAnimatorListener {
+                16, object : WebpAnimatorListener {
                     override fun onStart() {
                     }
 
                     override fun onError() {
-                        ImageUtils.loadImageLocal(view, resultPic)
                         setAnimationStarted(msg)
+                        ImageUtils.loadImageLocal(view, resultPic)
+//                        updateSingleMessage(msg, position)
                     }
 
                     override fun onEnd() {
-                        ImageUtils.loadImageLocal(view, resultPic)
                         setAnimationStarted(msg)
+                        ImageUtils.loadImageLocal(view, resultPic)
+//                        updateSingleMessage(msg, position)
                     }
                 }
             )
@@ -701,9 +705,24 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     }
 
     /**
+     * 数据发生变化
+     */
+    private fun updateSingleMessage(msg: Message, position: Int) {
+        logger("Message 数据发生变化 position = $position")
+//        notifyItemChanged(position)
+        data.forEachIndexed { index, message ->
+            if (message === msg) {
+                //找到对应的Message
+                notifyItemChanged(index)
+                return
+            }
+        }
+    }
+
+    /**
      * 显示猜拳动画
      */
-    private fun showGuessAnimation(msg: Message, view: SimpleDraweeView, result: String, started: Boolean) {
+    private fun showGuessAnimation(msg: Message, view: SimpleDraweeView, result: String, started: Boolean, position: Int) {
         val resultList = arrayListOf<Int>(R.drawable.pic_guessing_scissors, R.drawable.pic_guessing_rock, R.drawable.pic_guessing_paper)
         val resultPic = when (result) {
             FingerGuessingResult.ROCK -> {
@@ -733,13 +752,18 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 }, {
                     ImageUtils.loadImageLocal(view, resultPic)
                     setAnimationStarted(msg)
+                    logger("Message 猜拳 结果1")
+//                    updateSingleMessage(msg, position)
                 }, {
                     ImageUtils.loadImageLocal(view, resultPic)
                     setAnimationStarted(msg)
+                    logger("Message 猜拳 结果2")
+//                    updateSingleMessage(msg, position)
                 })
         } else {
             //直接显示结果
             ImageUtils.loadImageLocal(view, resultPic)
+            logger("Message 猜拳 结果3")
         }
     }
 
@@ -758,6 +782,39 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    /**
+     * 更新发送状态
+     */
+    fun updateSentStatus(msg: Message) {
+        var position = -1
+        data.forEachIndexed { index, message ->
+            if (msg === message) {
+                position = index
+                return@forEachIndexed
+            }
+        }
+        getViewByPosition(position, R.id.iv_send_fail)
+        val ivSendFail = getViewByPosition(position, R.id.iv_send_fail) ?: return
+        val sendProgress = getViewByPosition(position, R.id.send_progress) ?: return
+        when (msg.sentStatus) {
+            Message.SentStatus.FAILED -> {
+                //发送失败
+                ivSendFail.show()
+                sendProgress.hide()
+            }
+            Message.SentStatus.SENDING -> {
+                //发送中
+                ivSendFail.hide()
+                sendProgress.show()
+            }
+            Message.SentStatus.SENT -> {
+                //已发送
+                ivSendFail.hide()
+                sendProgress.hide()
+            }
         }
     }
 
