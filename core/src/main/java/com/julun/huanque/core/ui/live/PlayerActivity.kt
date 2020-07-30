@@ -39,6 +39,7 @@ import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
+import com.julun.huanque.core.ui.live.fragment.UserCardFragment
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
 import com.julun.huanque.core.ui.live.manager.PlayerViewManager
 import com.julun.huanque.core.viewmodel.*
@@ -321,6 +322,13 @@ class PlayerActivity : BaseActivity() {
             } else {
                 //隐藏红点
                 actionView.showGameRedPoint(false)
+            }
+        })
+
+        viewModel.userInfoView.observe(this, Observer {
+            if (it != null) {
+                //显示用户名片
+                UserCardFragment.newInstance(it.userId).show(supportFragmentManager, "UserCardFragment")
             }
         })
 

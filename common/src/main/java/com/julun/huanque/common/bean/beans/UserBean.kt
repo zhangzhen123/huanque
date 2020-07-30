@@ -65,7 +65,7 @@ class SocialListBean(
 /**
  * 关注结果使用的Bean
  */
-class FollowResultBean(var type: String, var userId: Long, var follow: String, var formerFollow: String)
+class FollowResultBean(var type: String = "", var userId: Long = 0L, var follow: String = "", var formerFollow: String = "")
 
 /**
  * 亲密特权

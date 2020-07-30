@@ -4,26 +4,35 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.viewmodel.UserCardViewModel
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_user_card.*
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.padding
@@ -52,28 +61,130 @@ class UserCardFragment : BaseDialogFragment() {
 
     override fun initViews() {
         mUserCardViewModel.mUserId = arguments?.getLong(ParamConstant.UserId) ?: 0
+        state_pager_view.showLoading()
+        state_pager_view.show()
+        initViewModel()
+
+        mUserCardViewModel.queryUserInfo()
+        initListener()
+    }
+
+    /**
+     * 初始化ViewModel
+     */
+    private fun initViewModel() {
+
+        mUserCardViewModel?.loadState?.observe(this, Observer {
+            it ?: return@Observer
+            when (it.state) {
+                NetStateType.LOADING -> {
+                    //加载中
+                    state_pager_view.showLoading("加载中~！")
+                }
+                NetStateType.SUCCESS -> {
+                    //成功
+                    state_pager_view.hide()
+                }
+                NetStateType.IDLE -> {
+                    //闲置，什么都不做
+                }
+                else -> {
+                    //都是异常
+                    state_pager_view.showError(errorTxt = "网络异常~！", btnClick = View.OnClickListener {
+                        mUserCardViewModel.queryUserInfo()
+                    })
+                }
+            }
+        })
 
         mUserCardViewModel.userInfoData.observe(this, Observer {
             showViewByData(it ?: return@Observer)
         })
 
-        mUserCardViewModel.queryUserInfo()
+        mUserCardViewModel.followStatusData.observe(this, Observer {
+            if (it != null) {
+                mUserCardViewModel.userInfoData.value?.isFollowed = it.follow != FollowStatus.False
+                if (it.follow != FollowStatus.False) {
+                    //关注状态
+                    tv_attention.text = "已关注"
+                } else {
+                    //取消关注状态
+                    tv_attention.text = "关注"
+                }
+            }
+        })
     }
+
+    /**
+     * 初始化监听
+     */
+    private fun initListener() {
+        tv_attention.onClickNew {
+            if (mUserCardViewModel.userInfoData.value?.isFollowed == true) {
+                //已关注,取消关注
+                mUserCardViewModel.unFollow()
+            } else {
+                //未关注，关注
+                mUserCardViewModel.follow()
+            }
+        }
+
+        tv_private_chat.onClickNew {
+            //私信
+            val userInfo = mUserCardViewModel.userInfoData.value ?: return@onClickNew
+            val bundle = Bundle()
+            bundle.putLong(ParamConstant.TARGET_USER_ID, mUserCardViewModel.mUserId)
+            bundle.putString(ParamConstant.NICKNAME, userInfo.nickname)
+            ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
+                .navigation(requireActivity())
+        }
+        tv_at.onClickNew {
+            //@ 功能
+        }
+        tv_home_page.onClickNew {
+            //主页
+            RNPageActivity.start(
+                requireActivity(),
+                RnConstant.PERSONAL_HOMEPAGE,
+                Bundle().apply { putLong("userId", mUserCardViewModel.mUserId) })
+        }
+
+        tv_report.onClickNew {
+            //举报
+            val extra = Bundle()
+            extra.putLong(ParamConstant.TARGET_USER_ID, mUserCardViewModel.mUserId)
+
+            ARouter.getInstance().build(ARouterConstant.REPORT_ACTIVITY).with(extra).navigation()
+        }
+
+        view_caifu_level.onClickNew {
+            //打开财富等级说明页
+            WebActivity.startWeb(requireActivity(), "www.baidu.com")
+        }
+        view_guizu_level.onClickNew {
+            //打开贵族等级说明页
+            WebActivity.startWeb(requireActivity(), "www.baidu.com")
+        }
+        view_zhubo_level.onClickNew {
+            //打开主播等级说明页
+            WebActivity.startWeb(requireActivity(), "www.baidu.com")
+        }
+        ll_leyuan.onClickNew {
+            //打开游戏
+        }
+    }
+
 
     /**
      * 根据数据显示视图
      */
     private fun showViewByData(data: UserInfoInRoom) {
+        state_pager_view.showSuccess()
         val sex = data.sex
         ImageHelper.setDefaultHeaderPic(sdv_header, sex)
         ImageUtils.loadImage(sdv_header, data.headPic, 80f, 80f)
         tv_nickname.text = data.nickname
         tv_id.text = "欢鹊ID：${mUserCardViewModel.mUserId}"
-        when (sex) {
-            Sex.MALE -> {
-                //男
-            }
-        }
 
         var sexDrawable: Drawable? = null
         //性别
@@ -126,6 +237,17 @@ class UserCardFragment : BaseDialogFragment() {
         //显示标签
         showTags(data.userTags)
 
+        if (data.isFollowed) {
+            tv_attention.text = "已关注"
+        } else {
+            tv_attention.text = "关注"
+        }
+
+        if (data.operateList.isEmpty()) {
+            tv_manage.hide()
+        } else {
+            tv_manage.show()
+        }
     }
 
 
@@ -198,7 +320,7 @@ class UserCardFragment : BaseDialogFragment() {
             tv_medal.hide()
             stv_medal.hide()
         } else {
-            //显示
+            //todo 展示勋章 显示
             tv_medal.show()
             stv_medal.show()
         }
@@ -247,25 +369,15 @@ class UserCardFragment : BaseDialogFragment() {
             //没有标签，隐藏该区域
             tv_tag.hide()
             linefeed_ll.hide()
-
         } else {
             //有标签，显示
             tv_tag.show()
             linefeed_ll.show()
-            val list = mutableListOf<String>()
-            list.add("看到设法")
-            list.add("看到")
-            list.add("看到l了看见对方三个")
-            list.add("看到l了看见对方三个")
-            list.add("看到l了看")
-            list.add("个")
-            list.add("看到l了看见对方三个")
-            list.add("看到l了看")
             val tempWidth = ScreenUtils.getScreenWidth() - 2 * dp2px(20)
             //行数
             var line = 1
             var currentWidth = 0
-            list.forEach { tag ->
+            tagList.forEach { tag ->
                 val tv = TextView(context)
                     .apply {
                         text = tag
