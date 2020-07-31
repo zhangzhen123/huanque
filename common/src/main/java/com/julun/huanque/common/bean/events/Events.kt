@@ -75,3 +75,8 @@ class VoiceSignEvent()
  * 融云连接上的事件
  */
 class RongConnectEvent(var state: String)
+
+/**
+ * 动画播放完后的回调
+ */
+class AnimatorEvent()

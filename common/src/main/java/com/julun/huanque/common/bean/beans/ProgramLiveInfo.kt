@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import com.alibaba.fastjson.annotation.JSONField
+import com.julun.huanque.common.basic.RootListData
 import java.io.Serializable
 
 /**
@@ -14,11 +15,14 @@ open class ProgramLiveInfo : Serializable {
     var coverPic: String = ""
 
     /** 是否直播中 **/
-    var isLiving: String = ""
+    @JSONField(name = "isLiving")
+    var isLiving: Boolean = false
 //    /** 主播昵称 **/
 //    var nickname: String = ""
     /** 在线人数 **/
-    var onlineUserNum: Int? = null
+    var onlineUserNum: Long = 0
+
+    var heatValue: Long = 0
 
     /** 节目ID **/
     var programId: Int = 0
@@ -33,8 +37,10 @@ open class ProgramLiveInfo : Serializable {
     var headPic: String = ""
 
     /** 是否PC 推流(可选项：True、False) **/
-    var isPcLive: String = ""
+    @JSONField(name = "isPcLive")
+    var isPcLive: Boolean = false
 
+    var city:String =""
     /** 角标图片或文字 **/
     var tagContentTpl: String = ""
 
@@ -75,13 +81,74 @@ class ProgramLiveIndexInfo : ProgramLiveInfo() {
     var lastShowTime: String = ""
 }
 
-
 /**
- * 新人礼包tag类
+ * 关注标签所有
  */
-class AwardTag(var tag: Int = 1)
+class AuthorFollowBean : Serializable {
+    /** 节目id  **/
+    var programId: Int = 0
 
-class SingleGame(var gameCode: String = "", var pic: String = "", var gameUrl: String = "", var extJsonCfg: String? = null) : Serializable
+    /** 主播id  **/
+    var anchorId: Long = 0
+
+    /** 主播等级 默认-1代表不需要显示**/
+    var anchorLevel: Int = -1
+
+    /** 封面 **/
+    var anchorPic: String = ""
+
+    /** 开播状态 **/
+    @JSONField(name = "isLiving")
+    var isLiving: Boolean = false
+
+    /** pc直播平台 **/
+    @JSONField(name = "isPcLive")
+    var isPcLive: Boolean = false
+
+    /** 节目名称 **/
+    var programName: String = ""
+
+    /** 剩余时间 **/
+    var surplusDay: Int = 0
+
+    /** 最后直播时间 **/
+    var lastShowTime: String = ""
+
+    /** 观众人数 **/
+    var onlineUserNum: Int = 0
+
+    /** 最后直播格式化时间 **/
+    var lastStopTime: String = ""
+
+    //4.15新增参数
+    /** 粉丝团亲密度 **/
+    var intimate: Long = 0L
+
+    /**
+     * 是否是守护  本地添加属性
+     */
+    var guard = false
+
+    /**
+     * 4.30.0新增推送开关
+     */
+    var pushOpen: Boolean = false
+
+    override fun equals(other: Any?): Boolean {
+        if (other is AuthorFollowBean) {
+            return programId == other.programId
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return programId
+    }
+}
+
+
+class SingleGame(var gameCode: String = "", var pic: String = "", var gameUrl: String = "", var extJsonCfg: String? = null) :
+    Serializable
 /**
  * 直播间显示控件
  */
@@ -105,94 +172,6 @@ class RecommendInfo : Serializable {
 
     //播放数据
     var playInfo: PlayInfo? = null
-}
-
-
-/**
- * 动态
- */
-open class DynamicInfo : Serializable {
-    /** 节目id **/
-    var programId: Int = 0
-
-    /** 帖子id **/
-    var postId: Long = 0
-
-    /** 头像 **/
-    var headPic: String = ""
-
-    /** 昵称 **/
-    var nickname: String = ""
-
-    /** 描述 **/
-    var content: String = ""
-
-    /** 用户等级 **/
-    var anchorLevel: Int = 0
-
-    /** 图片 **/
-    var pic: List<String?> = ArrayList()
-
-    /** 发布时间 **/
-    var createTime: String = ""
-
-    /** 审核状态 待审核(W)、通过(P)、审核不通过(R)**/
-    var status: String = ""
-
-    /** 违规描述 **/
-    var remark: String = ""
-
-    /** 分享数量 **/
-    var shareNum: Long = 0
-
-    /**评论数量**/
-    var commentNum: Long = 0
-
-    /** 点赞数量 **/
-    var praiseNum: Long = 0
-
-    /** 是否点赞 **/
-    var praiseStatus: Boolean = false
-
-    /** 是否正在直播 **/
-    var isLiving: Boolean = false
-
-    //用户ID
-    var userId: Long = 0
-
-    //4.28新增参数
-    /** 关注状态 **/
-    var followStatus: Boolean = false
-
-    /** 帖子类型 Post -> 动态帖子，Video -> 视频帖子 **/
-    var type: String = ""
-
-    /** 封面尺寸，宽高以英文逗号分隔 **/
-    var picSize: String = ""
-
-    /** 视频地址 type=Video时有值 **/
-    var videoUrl: String = ""
-
-    /** 封面宽高比例 **/
-    var videoScale: Float = 0f
-
-    /** 性别：男(Male)、女(Female) **/
-    var sex: String = ""
-
-    //本地字段
-    /** 存放一个对象 **/
-    var obj: Any? = null
-
-    override fun equals(other: Any?): Boolean {
-        if (other is DynamicInfo) {
-            return postId == other.postId
-        }
-        return false
-    }
-
-    override fun hashCode(): Int {
-        return postId.hashCode()
-    }
 }
 
 
@@ -270,7 +249,7 @@ open class SingleComment() : Parcelable {
  * 单个评论,一级
  */
 class FirstLevelComment : SingleComment(), Serializable {
-    var leafComment: RootListLiveData<SingleComment> = RootListLiveData<SingleComment>()
+    var leafComment: RootListData<SingleComment> = RootListData<SingleComment>()
 }
 
 
@@ -278,25 +257,25 @@ class FirstLevelComment : SingleComment(), Serializable {
  * 刷新回调
  */
 data class RefreshResult(
-        //是否刷新用户中心
-        var refreshUserCenter: Boolean = false,
-        //是否删除主播视频
-        var deleteAnchorVideo: Boolean = false,
-        var objectId: Long = 0
+    //是否刷新用户中心
+    var refreshUserCenter: Boolean = false,
+    //是否删除主播视频
+    var deleteAnchorVideo: Boolean = false,
+    var objectId: Long = 0
 ) : Serializable
 
 /**
  * 猜你喜欢结果
  */
 data class GuessULikeBean(
-        var coverPic: String = "",
-        var hasULike: Boolean = false,
-        var headPic: String = "",
-        var nickname: String = "",
-        var programId: Int = 0,
-        var isShow: Boolean = false,
-        //播放数据
-        var playInfo: PlayInfo? = null
+    var coverPic: String = "",
+    var hasULike: Boolean = false,
+    var headPic: String = "",
+    var nickname: String = "",
+    var programId: Int = 0,
+    var isShow: Boolean = false,
+    //播放数据
+    var playInfo: PlayInfo? = null
 ) : Serializable
 
 /**
@@ -312,25 +291,25 @@ data class HomeHitBean(
  * 首页红包提示弹窗
  */
 data class RedPacketBean(
-        var actionShowTitle: String = "",
-        @JSONField(name = "isShow")
-        var isShow: Boolean = false,
-        var logoPic: String = "",
-        var subTitle: String = "",
-        var title: String = "",
-        var programId: Int = 0,
-        var redId: Int = 0
+    var actionShowTitle: String = "",
+    @JSONField(name = "isShow")
+    var isShow: Boolean = false,
+    var logoPic: String = "",
+    var subTitle: String = "",
+    var title: String = "",
+    var programId: Int = 0,
+    var redId: Int = 0
 ) : Serializable
 
 /**
  * 附近的人
  */
 data class NearbyData(
-        var delaySeconds: Long = 0,
-        var keepSeconds: Long = 0,
-        var onlineUserNum: Int = 0,
-        var programId: Int = 0,
-        var userPics: List<String> = listOf()
+    var delaySeconds: Long = 0,
+    var keepSeconds: Long = 0,
+    var onlineUserNum: Int = 0,
+    var programId: Int = 0,
+    var userPics: List<String> = listOf()
 )
 
 /**
@@ -347,45 +326,48 @@ data class KeyValue(var key: String, var value: String?)
  * @update 2019/11/15
  */
 data class AgreementData(
-        var agreementCode: String = "",
-        var sign: Boolean = false,
-        //4.21 新增参数
-        /** 协议ID **/
-        var agreenebtId: Int? = null,
-        /** 协议url **/
-        var contentValue: String? = null,
-        /** 协议标题 **/
-        var title: String? = null) : Serializable
+    var agreementCode: String = "",
+    var sign: Boolean = false,
+    //4.21 新增参数
+    /** 协议ID **/
+    var agreenebtId: Int? = null,
+    /** 协议url **/
+    var contentValue: String? = null,
+    /** 协议标题 **/
+    var title: String? = null
+) : Serializable
 
 /**
  * 更新位置信息使用的Bean
  */
 data class UpdateLocationBean(
-        var showLocation: Boolean = false
+    var showLocation: Boolean = false
 ) : Serializable {}
 
 /**
  * 更新砸蛋模式，返回的需要刷新的tip和礼物ID
  */
 data class SingleTipsUpdate(
-        var giftId: Int = 0,
-        var tips: String = "") : Serializable
+    var giftId: Int = 0,
+    var tips: String = ""
+) : Serializable
 
 /**
  * 更新砸蛋模式，返回的数据
  */
 data class EggUpdateBean(
-        var luckyHitEgg: Boolean = false
-        , var refreshGifts: List<SingleTipsUpdate> = mutableListOf()) : Serializable
+    var luckyHitEgg: Boolean = false
+    , var refreshGifts: List<SingleTipsUpdate> = mutableListOf()
+) : Serializable
 
 data class OrdinaryActivitiesBean(
-        var rechargeWheelVO: RechargeWheelVO? = null
+    var rechargeWheelVO: RechargeWheelVO? = null
 )
 
 data class RechargeWheelVO(
-        var canRotate: Boolean = false,
-        var url: String = "",
-        var actPic: String = ""
+    var canRotate: Boolean = false,
+    var url: String = "",
+    var actPic: String = ""
 )
 
 data class AdolescentBean(
@@ -396,7 +378,7 @@ data class AdolescentBean(
 ) : Serializable
 
 data class AdolescentProgramBean(
-        var videoCover: String = "",
-        var videoName: String = "",
-        var videoUrl: String = ""
+    var videoCover: String = "",
+    var videoName: String = "",
+    var videoUrl: String = ""
 ) : Serializable

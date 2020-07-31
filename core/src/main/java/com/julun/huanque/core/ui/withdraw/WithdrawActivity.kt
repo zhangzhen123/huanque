@@ -69,10 +69,10 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
 
         initViewModel()
 
-        gridView.adapter = mAdapter
+
         gridView.layoutManager = GridLayoutManager(this, 3)
         gridView.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(8f)))
-
+        gridView.adapter = mAdapter
         account_money.setTFDinAltB()
 
         mViewModel.queryInfo(queryType = QueryType.INIT)

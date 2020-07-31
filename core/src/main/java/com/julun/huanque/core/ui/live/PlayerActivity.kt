@@ -129,17 +129,6 @@ class PlayerActivity : BaseActivity() {
 
     //直播心跳间隔时间   2分钟（改为一分钟一次） 主播端需每1分钟调用一次，如果超过3分钟没有调用，直播自动停播
     private var delaySeconds = 30 * 1000L
-
-    /**这里直接取定义好的dimen，因为view.height时有可能还没初始化好**/
-    // 屏幕高度
-    private val SCREEN_WIDTH: Int by lazy { ScreenUtils.getScreenWidth() }
-
-    // 顶部栏高度
-    private val HEADER_HEIGHT: Int by lazy { resources.getDimensionPixelSize(R.dimen.live_header_height) }
-
-    // 底部栏高度
-    private val ACTION_HEIGHT: Int by lazy { resources.getDimensionPixelSize(R.dimen.live_action_view_height) }
-
     //当前的模糊背景封面地址
     private var currentLiveBgUrl: String? = null
 
@@ -810,17 +799,17 @@ class PlayerActivity : BaseActivity() {
 
     //加入聊天室成功   初始化页面
     private fun loginSuccessAndInitView(data: UserEnterRoomRespDto) {
-        if (data.pking) {
-            val push = if (isAnchor) (BooleanType.TRUE) else {
-                BooleanType.TRUE
-            }
-            pKViewModel.getPkInfo(PKInfoForm().apply {
-                programId = this@PlayerActivity.programId
-                setIsPush(push)
-            })
-        } else {
-            pKViewModel.pkState.postValue(3)
-        }
+//        if (data.pking) {
+//            val push = if (isAnchor) (BooleanType.TRUE) else {
+//                BooleanType.TRUE
+//            }
+//            pKViewModel.getPkInfo(PKInfoForm().apply {
+//                programId = this@PlayerActivity.programId
+//                setIsPush(push)
+//            })
+//        } else {
+//            pKViewModel.pkState.postValue(3)
+//        }
         resetView()
         //重置过页面之后，调用刷新未读数方法
         privatePoint(EventMessageBean())
@@ -1089,7 +1078,7 @@ class PlayerActivity : BaseActivity() {
                 fragmentTransaction.show(anchorIsNotOnlineFragment!!)
             } else {
                 val params = anchor_no_online.layoutParams
-                params.height = SCREEN_WIDTH * 3 / 4
+                params.height = PlayerViewManager.LIVE_HEIGHT
                 anchor_no_online.requestLayout()
                 fragmentTransaction.replace(R.id.anchor_no_online, anchorIsNotOnlineFragment!!)
             }
@@ -1236,7 +1225,7 @@ class PlayerActivity : BaseActivity() {
                 //获取直播的类型
                 isAppShow = !data.isPcLive
                 viewModel.baseData.value?.isPcLive = data.isPcLive
-                mConfigViewModel?.screenTypeData?.value = ScreenType.SP
+                mConfigViewModel.screenTypeData.value = ScreenType.SP
                 if (!liveViewManager.isHorizontal && !isAnchor) {
                     surface_view?.scrollEnable = true
                 }

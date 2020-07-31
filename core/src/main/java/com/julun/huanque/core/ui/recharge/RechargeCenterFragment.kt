@@ -87,8 +87,9 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
         }
         initViewModel()
 
-        gridView.adapter = mAdapter
+
         gridView.layoutManager = GridLayoutManager(context, 3)
+        gridView.adapter = mAdapter
         gridView.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(15f)))
 
         //设置hint的字体大小

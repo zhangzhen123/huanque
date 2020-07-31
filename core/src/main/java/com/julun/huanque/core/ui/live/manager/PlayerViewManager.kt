@@ -60,14 +60,48 @@ import java.util.concurrent.TimeUnit
 class PlayerViewManager(val context: PlayerActivity) {
 
 
+    companion object {
+        //屏幕宽度 固定常量
+        val SCREEN_WIDTH = ScreenUtils.getScreenWidth()
+
+        //屏幕高度 固定常量
+        val SCREEN_HEIGHT = ScreenUtils.getScreenHeight()
+
+        // 视频高度(屏幕高度的四分之三)
+        val LIVE_HEIGHT: Int by lazy { SCREEN_WIDTH * 3 / 4 }
+
+        // 手机横屏直播时视频高度(屏幕高度的四分之三)
+        val LIVE_HEIGHT_NARROW: Int by lazy { SCREEN_WIDTH * 9 / 16 }
+
+        // 状态栏高度
+        val STATUS_TOP: Int by lazy { StatusBarUtil.getStatusBarHeight(CommonInit.getInstance().getContext()) }
+
+        // 底部栏高度
+        val ACTION_HEIGHT: Int by lazy {
+            CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.live_action_view_height)
+        }
+
+        // 顶部栏高度
+        val HEADER_HEIGHT: Int by lazy {
+            CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.live_header_height)
+        }
+        val PK_RROCESS_HEIGHT: Int by lazy {
+            CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.pk_process_high)
+        }
+
+        // 公聊区宽度
+        val PUBLIC_CHAT_CLIENT_WIDTH =
+            (SCREEN_WIDTH - CommonInit.getInstance()
+                .getContext().resources.getDimensionPixelSize(R.dimen.pk_width) - DensityHelper.dp2px(8f))
+
+    }
+
     private val logger = ULog.getLogger(this.javaClass.name)
 
 
     private val viewModel: PlayerViewModel by context.viewModels()
 
     //    private var conversationViewModel: ConversationViewModel by context.viewModels()
-    //新版PK
-    private val pKViewModel: PKViewModel by context.viewModels()
 
     //    private val mBasePlayerViewModel: BasePlayerViewModel by context.viewModels()
     private val anchorNoLiveViewModel: AnchorNoLiveViewModel by context.viewModels()
@@ -82,41 +116,17 @@ class PlayerViewManager(val context: PlayerActivity) {
     //播放器相关的viewmodel
     private val mVideoViewModel: VideoViewModel by context.viewModels()
 
-    private val liveFollowListViewModel: LiveFollowListViewModel by context.viewModels()
+//    private val liveFollowListViewModel: LiveFollowListViewModel by context.viewModels()
 
     //道具相关ViewModel
     private val propViewModel: PropViewModel by context.viewModels()
 
-
-    //屏幕宽度 固定常量
-    private val SCREEN_WIDTH = ScreenUtils.getScreenWidth()
-
-    //屏幕高度 固定常量
-    private val SCREEN_HEIGHT = ScreenUtils.getScreenHeight()
+    //屏幕高度 包含虚拟键
     private var screenHeight = ScreenUtils.getScreenHeightHasVirtualKey()
-
-    // 状态栏高度
-    private val STATUS_TOP: Int by lazy { StatusBarUtil.getStatusBarHeight(context) }
 
     // 屏幕高度
     private var screenWidth = ScreenUtils.getScreenWidth()
 
-    // 视频高度(屏幕高度的四分之三)
-    private val LIVE_HEIGHT: Int by lazy { SCREEN_WIDTH * 3 / 4 }
-
-    // 手机横屏直播时视频高度(屏幕高度的四分之三)
-    private val LIVE_HEIGHT_NARROW: Int by lazy { SCREEN_WIDTH * 9 / 16 }
-
-    // 底部栏高度
-    private val ACTION_HEIGHT: Int by lazy { context.resources.getDimensionPixelSize(R.dimen.live_action_view_height) }
-
-    // 顶部栏高度
-    private val HEADER_HEIGHT: Int by lazy { context.resources.getDimensionPixelSize(R.dimen.live_header_height) }
-    private val PK_RROCESS_HEIGHT: Int by lazy { context.resources.getDimensionPixelSize(R.dimen.pk_process_high) }
-
-    // 公聊区宽度
-    private val PUBCHAT_CLIENT_WIDTH =
-        (screenWidth - context.resources.getDimensionPixelSize(R.dimen.pk_width) - DensityHelper.dp2px(8f))
 
     // 公聊区高度
 //    private var public_chat_height: Int = 0
@@ -256,12 +266,6 @@ class PlayerViewManager(val context: PlayerActivity) {
             openScoreActivity()
         })
 
-        viewModel.headerInfoData.observe(context, Observer {
-            if (it != null) {
-                //显示头条数据
-                context.liveRunwayView.showHeaderInfo(it)
-            }
-        })
 
         viewModel.actionBeanData.observe(context, Observer {
             if (it != null) {
@@ -1222,7 +1226,7 @@ class PlayerViewManager(val context: PlayerActivity) {
                 noNeedPublicView = false
                 publicView.show()
                 pbLp.height = SCREEN_WIDTH / 2
-                pbLp.width = PUBCHAT_CLIENT_WIDTH
+                pbLp.width = PUBLIC_CHAT_CLIENT_WIDTH
                 pbLp.bottomMargin = DensityHelper.dp2px(4.5f)
             } else {
                 noNeedPublicView = true
@@ -1368,7 +1372,7 @@ class PlayerViewManager(val context: PlayerActivity) {
             //显示view，高度从0变到height值
             val pmViewLp = publicMessageView.layoutParams as ConstraintLayout.LayoutParams
             pmViewLp.bottomMargin = ACTION_HEIGHT
-            pmViewLp.width = PUBCHAT_CLIENT_WIDTH
+            pmViewLp.width = PUBLIC_CHAT_CLIENT_WIDTH
             if (viewModel.chatModeState.value == true) {
                 switchChatMode(true)
             } else {
@@ -1555,7 +1559,7 @@ class PlayerViewManager(val context: PlayerActivity) {
      * 请求获取关注列表 根据[isPull]判断是否下拉刷新
      */
     fun getFollowList(isPull: Boolean) {
-        liveFollowListViewModel.requestFollowLivingList(programId, isPull)
+//        liveFollowListViewModel.requestFollowLivingList(programId, isPull)
     }
 
     /**
@@ -1828,18 +1832,6 @@ class PlayerViewManager(val context: PlayerActivity) {
     var isRefreshFirstRecharge: Boolean = false
 
 
-    /**
-     * PK开始
-     */
-    private fun pkStart(data: PKStartEvent) {
-        viewModel.loginSuccessData.value?.pking = true
-        connectMicroViewModel.notarizePKShowState.value = null
-        if (data.pkInfo != null) {
-            //
-            pKViewModel.setPkStart(data.pkInfo ?: return)
-        }
-    }
-
     //    private var mMoreBubble: BubbleDialog? = null
     private var mMoreBubbleDispose: Disposable? = null
 
@@ -1849,7 +1841,7 @@ class PlayerViewManager(val context: PlayerActivity) {
      */
     fun resetStatus() {
         //登录成功刷新关注列表
-        getFollowList(true)
+//        getFollowList(true)
         refreshBalance()
         mDialogManager.resetStatus()
     }

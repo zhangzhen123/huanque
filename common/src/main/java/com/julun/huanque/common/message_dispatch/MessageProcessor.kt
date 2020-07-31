@@ -863,24 +863,6 @@ object MessageProcessor {
 
 
     /**
-     * 玩家当前奖池赠送鲤鱼数量变化消息
-     * @author WanZhiYuan
-     * @version 4.15
-     */
-    interface WishingPoolCountChangeMessageProcessor : EventMessageProcessor<WishKoiResult> {
-        override fun getEventType() = EventMessageType.WishingPoolUserCarpCountChangeMessage
-    }
-
-    /**
-     * 直播间许愿池入口变化消息
-     * @author WanZhiYuan
-     * @version 4.15
-     */
-    interface WishingPoolChangeMessageProcessor : EventMessageProcessor<WishKoiResult> {
-        override fun getEventType() = EventMessageType.WishingPoolChangeMessage
-    }
-
-    /**
      * 猜字谜消息
      * @author WanZhiYuan
      * @version 4.15
@@ -1390,11 +1372,6 @@ enum class EventMessageType(val klass: Class<*>) {
     //聊天室封禁消息
     BlockChatRoom(VoidResult::class.java),
 
-    //锦鲤池礼物变化消息(有可能会很频繁)
-    WishingPoolUserCarpCountChangeMessage(WishKoiResult::class.java),
-
-    //锦鲤池状态(显示隐藏入口)
-    WishingPoolChangeMessage(WishKoiResult::class.java),
 
     //气泡消息
     RiddleChange(BubbleResult::class.java),

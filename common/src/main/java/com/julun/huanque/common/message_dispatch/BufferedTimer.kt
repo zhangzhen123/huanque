@@ -1,8 +1,11 @@
 package com.julun.huanque.common.message_dispatch
 
 import android.os.Handler
+import com.julun.huanque.common.bean.events.AnimatorEvent
 import com.julun.huanque.common.utils.ULog
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 缓存定时器
@@ -30,7 +33,7 @@ class BufferedTimer {
 
     constructor() {
         handler = Handler()
-//        EventDispatcherCenter.registerEventHandler(this)
+        EventBus.getDefault().register(this)
     }
 
     // 初始化带返回值的匿名方法块
@@ -150,21 +153,21 @@ class BufferedTimer {
 
     }
 
-//    var needWaitMessage = false
-//    @Subscribe(threadMode = ThreadMode.POSTING)
-//    fun startNewAnimator(event: AnimatorEvent) {
-//        if (needWaitMessage) {
-//            logger.info("收到动画播放完成后的回调")
-//            callRefreshViewWhenNotPauseState()
-//        }
-//    }
+    var needWaitMessage = false
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    fun startNewAnimator(event: AnimatorEvent) {
+        if (needWaitMessage) {
+            logger.info("收到动画播放完成后的回调")
+            callRefreshViewWhenNotPauseState()
+        }
+    }
 
     fun destory() {
         timerState = TIMER_STATE_DESTORY
         queue.clear()
         handler!!.removeCallbacksAndMessages(null)
         handler = null
-//        EventDispatcherCenter.unRegisterEventHandler(this)
+        EventBus.getDefault().unregister(this)
     }
 
 }

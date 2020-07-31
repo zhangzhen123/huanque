@@ -154,6 +154,8 @@ class PlayerViewModel : BaseViewModel() {
     //跳转到贡献榜
     val scoreView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //打开广场直播
+    val squareView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     //显示私聊页面
     val privateMessageView: MutableLiveData<PrivateMessageBean> by lazy { MutableLiveData<PrivateMessageBean>() }
 
@@ -264,12 +266,6 @@ class PlayerViewModel : BaseViewModel() {
     //锦鲤池的runwayCache
     val runwayCache: MutableLiveData<RunwayCache> by lazy { MutableLiveData<RunwayCache>() }
 
-    //玩家当前奖池赠送鲤鱼数量变化
-    val wishGiftCountChange: MutableLiveData<WishKoiResult> by lazy { MutableLiveData<WishKoiResult>() }
-
-    //刷新锦鲤池面板
-    val wishKoiRefresh: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
     //是否展示粉丝打卡气泡
     val isShowFansBubbleLayout: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -279,8 +275,6 @@ class PlayerViewModel : BaseViewModel() {
     //一元礼包
     val oneYuanInfo: MutableLiveData<OneYuanInfo> by lazy { MutableLiveData<OneYuanInfo>() }
 
-    //主播头条数据
-    val headerInfoData: MutableLiveData<HeaderInfo> by lazy { MutableLiveData<HeaderInfo>() }
 
     //回归礼包
     val backGiftPackList: MutableLiveData<ArrayList<ReturnGiftBean>> by lazy { MutableLiveData<ArrayList<ReturnGiftBean>>() }

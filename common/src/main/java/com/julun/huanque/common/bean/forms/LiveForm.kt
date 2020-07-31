@@ -1,11 +1,11 @@
 package com.julun.huanque.common.bean.forms
+
 import com.julun.huanque.common.constant.BooleanType
 import java.io.Serializable
 
 
-
-
 open class ProgramIdForm(var programId: Int = 0) : SessionForm()
+
 //查询玩家列表
 class QueryRoomUserForm(val programId: Int, val offset: Int) : SessionForm()
 
@@ -42,35 +42,38 @@ class RecommendProgramForm(var programId: Int? = null) : SessionForm()
 
 class ShareProgramForm(var programId: Int? = null) : SessionForm()
 
-open class ConsumeForm(programId: Int,
+open class ConsumeForm(
+    programId: Int,
 
-                       /** 数量  */
-                       var count: Int = -1,
-                       /** 物品id  */
-                       var giftId: Int = -1) : ProgramIdForm(programId)
+    /** 数量  */
+    var count: Int = -1,
+    /** 物品id  */
+    var giftId: Int = -1
+) : ProgramIdForm(programId)
 
 
-class NewSendGiftForm(programId: Int
-                      , count: Int = -1, giftId: Int = -1,
-                      /**
-                       * 跑道参数，只有金额超过配置的跑道阀值，下面的参数才有意义才需要填写
-                       */
-                      // 是否上跑道, T上跑道，F不上跑道，为空视为不上跑道
-                      var canUpRunway: String = "", // 跑道追加的寄语内容
-                      var runwayContent: String = "", // WEB视图提示前台是打掉当前跑道消息，但提交时后台已经被其他人打掉了。
+class NewSendGiftForm(
+    programId: Int
+    , count: Int = -1, giftId: Int = -1,
+    /**
+     * 跑道参数，只有金额超过配置的跑道阀值，下面的参数才有意义才需要填写
+     */
+    // 是否上跑道, T上跑道，F不上跑道，为空视为不上跑道
+    var canUpRunway: String = "", // 跑道追加的寄语内容
+    var runwayContent: String = "", // WEB视图提示前台是打掉当前跑道消息，但提交时后台已经被其他人打掉了。
     // 此时需要提醒客户端，当前跑道已经被别人打掉
     // 取值说明：T打掉当前跑道，F无法打掉当前跑道
-                      var canDefeatRunway: String = "",
+    var canDefeatRunway: String = "",
     //boolean ture表示使用折扣券
-                      var discountFirst: String? = null,
-                      /**
-                       * 送给嘉宾时传入的嘉宾programid
-                       * @author WanZhiYuan
-                       * @since 4.31
-                       * @date 2020/05/08
-                       */
-                      var acceptProgramId: Int? = null)
-    : ConsumeForm(programId, count, giftId) {
+    var discountFirst: String? = null,
+    /**
+     * 送给嘉宾时传入的嘉宾programid
+     * @author WanZhiYuan
+     * @since 4.31
+     * @date 2020/05/08
+     */
+    var acceptProgramId: Int? = null
+) : ConsumeForm(programId, count, giftId) {
 
     /** 赠送对象类型  默认是用户  */
 
@@ -81,7 +84,8 @@ class MallBuyForm(
     /** 物品id  */
     var goodId: Int = -1
     /**守护的节目编号 */
-    , var programId: Int = -1) : SessionForm()
+    , var programId: Int = -1
+) : SessionForm()
 
 
 /**
@@ -119,7 +123,7 @@ class UserServiceForm(
 ) : Serializable
 
 
-class AliveForm(var programId: Int = -1,var themeSessionId:Int?=null) : Serializable
+class AliveForm(var programId: Int = -1, var themeSessionId: Int? = null) : Serializable
 
 class QureyRankResultForm(
     var RankingsId: Int = -1,
@@ -185,7 +189,7 @@ class SaveReportProgramForm(
  *
  * type 可选 danmu , broadcast
  */
-class DanmuForm(var programId: Int, var content: String, var dmlevel: Int,var acceptProgramId:Int?=null) : SessionForm()
+class DanmuForm(var programId: Int, var content: String, var dmlevel: Int, var acceptProgramId: Int? = null) : SessionForm()
 
 class RechargeChannelQueryForm(var programId: Int, var message: String, var type: String = "danmu") : SessionForm()
 
@@ -209,37 +213,6 @@ class ScoreRankResultForm(
 
 
 /**
- * 宝箱信息Form
- */
-class BoxForm(var programId: Int, var boxId: Int,acceptProgramId:Int?=null) : Serializable
-
-/**
- * 粉丝列表Form
- */
-class FansListForm(var offset: Int? = null, var type: String? = null, var programId: Int? = null, var thisWeek: String? = null,
-                   var bubbleMark: String? = null) : Serializable
-
-/**
- * 小主回馈Form
- */
-class FeedbackForm(var offset: Int? = null, var programId: Int? = null) : Serializable
-
-/**
- * 粉丝特权form
- */
-class FansPrivilegeForm(var programId: Int? = null) : Serializable
-
-/**
- * 锦鲤form
- */
-class WishKoiForm(var offset: Int? = null) : Serializable
-
-/**
- * 空表单
- */
-class VoidForm
-
-/**
  * 直播间侧滑关注列表
  */
 class LiveFollowForm(var offset: Int = 0, var programId: Int = 0)
@@ -251,11 +224,6 @@ class LiveFollowForm(var offset: Int = 0, var programId: Int = 0)
  * @param typeCode 分类
  */
 class SwitchForm(var fromType: String? = null, var programId: Int, var typeCode: String = "")
-
-/*
-* 翻牌游戏
-*/
-class FlipCardForm(var offset: Int? = null, var programId: Int? = null, var recordId: Int? = null, var type: String? = null)
 
 /**
  * 查询某一关卡的信息 [level]要查的关卡  [programId]直播间id
@@ -306,22 +274,23 @@ data class OnLineForm(
     var offset: Int? = null
 )
 
-/**
- * 三重礼包 第三重 宝箱的请求form
- */
-data class BoxReturnForm(var boxType: String = "") : Serializable
-
-/**
- * 特权中心form
- */
-data class PrerogativeForm(var userId: Int? = null) : Serializable
-
-/**
- * 抽奖详情form
- */
-data class LottoForm(var logId: Long = 0, var programId: Int = 0) : Serializable
 
 /**
  * 验证动态码form
  */
 data class VerifyCodeForm(var authToken: String = "", var code: String = "") : Serializable
+
+
+/**
+ * 请求直播列表 typeCode	string	否	节目分类代码(取热门列表返回的typeList中的typeCode，PC端取首页返回的programType中的typeCode,查询推荐节目 typeCode=Recom)
+offset	int	否	分页索引(起始值0)(取值范围：0-2147483647)
+limit	int	否	每页显示条数(取值范围：2-50)
+programId	int	否	当前直播间ID PC端直播间查询推荐节目用到此字段
+ */
+data class ProgramListForm(
+    var offset: Int? = null,
+    var programId: Int? = null,
+    var limit: Int? = null,
+    var typeCode: String? = null
+
+)

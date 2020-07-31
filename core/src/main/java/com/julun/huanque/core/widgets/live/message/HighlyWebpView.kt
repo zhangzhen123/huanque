@@ -2,6 +2,7 @@ package com.julun.huanque.core.widgets.live.message
 
 import android.content.Context
 import android.util.AttributeSet
+import com.julun.huanque.common.bean.events.AnimatorEvent
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.widgets.live.WebpGifView
@@ -29,18 +30,14 @@ class HighlyWebpView constructor(context: Context?, attrs: AttributeSet?) : Webp
 
             override fun onError() {
                 logger.info("加载出错了")
-//                EventDispatcherCenter.postData(AnimatorEvent())
-                //todo
-//                EventBus.getDefault().post(AnimatorEvent())
+                EventBus.getDefault().post(AnimatorEvent())
 
             }
 
             override fun onEnd() {
                 logger.info("加载动画完成")
                 this@HighlyWebpView.hide()
-//                EventDispatcherCenter.postData(AnimatorEvent())
-                //todo
-//                EventBus.getDefault().post(AnimatorEvent())
+                EventBus.getDefault().post(AnimatorEvent())
             }
 
             override fun onRelease() {
