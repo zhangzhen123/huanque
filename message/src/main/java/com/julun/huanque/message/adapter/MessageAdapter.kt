@@ -53,6 +53,7 @@ import org.jetbrains.anko.textColor
 import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
+import kotlin.math.min
 
 
 /**
@@ -169,7 +170,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             when (content.type) {
                 MessageCustomBeanType.Gift -> {
                     showMessageView(helper, GIFT_VIEW, helper.itemViewType)
-                    showGiftView(helper, content.context)
+                    showGiftView(helper, content.context, helper.itemViewType == MINE)
                 }
                 MessageCustomBeanType.Expression_Privilege -> {
                     //特权表情
@@ -341,7 +342,11 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 sdv_header.show()
                 rl_content?.show()
                 tv_content.show()
-                tv_content.backgroundResource = R.drawable.bg_chat_mine
+                if (itemType == OTHER) {
+                    tv_content.backgroundResource = R.drawable.bg_chat_other
+                } else {
+                    tv_content.backgroundResource = R.drawable.bg_chat_mine
+                }
 
                 tv_pic_content.hide()
                 sdv_image.hide()
@@ -386,14 +391,23 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
     /**
      * 显示礼物视图的数据
+     * @param mine 是否是送礼本人
      */
-    private fun showGiftView(helper: BaseViewHolder, str: String) {
+    private fun showGiftView(helper: BaseViewHolder, str: String, mine: Boolean) {
         try {
             val chatGift = JsonUtil.deserializeAsObject<ChatGift>(str, ChatGift::class.java)
             ImageUtils.loadImage(helper.getView(R.id.sdv_image), chatGift.selPic, 100f, 100f)
             val draweeView = helper.getView<SimpleDraweeSpanTextView>(R.id.tv_pic_content)
+            draweeView.textSize = 14f
+            draweeView.textColor = GlobalUtils.getColor(R.color.black_666)
+
             val bi = chatGift.beans * max(chatGift.giftCount, 1)
-            val str = "送你一${chatGift.giftName}#$bi"
+            val str = if (mine) {
+                "送TA一${chatGift.giftName}#$bi"
+            } else {
+                "送你一${chatGift.giftName}#$bi"
+            }
+
 
             val draweeSpanStringBuilder = DraweeSpanStringBuilder(str)
             val draweeHierarchy = GenericDraweeHierarchyBuilder.newInstance(context.resources)
@@ -519,7 +533,8 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             tv.hide()
             return
         }
-
+        tv.textSize = 10f
+        tv.textColor = GlobalUtils.getColor(R.color.black_999)
 
         //消息回复间隔
         val replayTime = msgReplayTime(item, position)
