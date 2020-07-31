@@ -147,8 +147,9 @@ class PrivateConversationActivity : BaseActivity() {
     override fun isRegisterEventBus() = true
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-
-        header_view.backgroundColor = GlobalUtils.getColor(R.color.color_gray_three)
+        val bgColor = GlobalUtils.getColor(R.color.color_gray_three)
+        StatusBarUtil.setColor(this, bgColor)
+        header_view.backgroundColor = bgColor
         header_view.imageOperation.imageResource = R.mipmap.icon_conversation_setting
         header_view.imageOperation.show()
         initViewModel()

@@ -114,17 +114,25 @@ class VoiceChatViewModel : BaseViewModel() {
     /**
      * 被叫直接拒绝或者加入频道失败，调用该接口 挂断通话
      */
-    fun refuseVoice(otherCallId: Long? = null) {
+    fun refuseVoice() {
         viewModelScope.launch {
             request({
-                val refuseId = otherCallId ?: callId
-                socialService.netcallRefuse(NetcallIdForm(refuseId)).dataConvert()
-                if (otherCallId == null) {
-                    //挂断当前语音
-                    currentVoiceState.value = VOICE_CLOSE
-                    voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.MINE_REFUSE)
-                }
+                socialService.netcallRefuse(NetcallIdForm(callId)).dataConvert()
+                //挂断当前语音
+                currentVoiceState.value = VOICE_CLOSE
+                voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.MINE_REFUSE)
             })
+        }
+    }
+
+    /**
+     * 被叫忙
+     */
+    fun busy(callId: Long) {
+        viewModelScope.launch {
+            request({
+                socialService.voiceBusy(NetcallIdForm(callId)).dataConvert()
+            }, {})
         }
     }
 

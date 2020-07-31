@@ -42,6 +42,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 /**
@@ -355,6 +356,15 @@ class PrivateConversationViewModel : BaseViewModel() {
                 val result = socialService.sendDice(SendMsgForm(targetId, content)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
                 msgFeeData.value = result.consumeBeans
+                try {
+                    val cMessage = localMsg.content as? CustomMessage
+
+                    val user = JsonUtil.deserializeAsObject<RoomUserChatExtra>(cMessage?.extra ?: "", RoomUserChatExtra::class.java)
+                    user.targetUserObj?.fee = result.consumeBeans
+                    (localMsg.content as? CustomMessage)?.extra = JsonUtil.seriazileAsString(user)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 RongCloudManager.sendCustomMessage(localMsg) { result, message ->
                     if (!result) {
                         //发送失败
@@ -380,6 +390,16 @@ class PrivateConversationViewModel : BaseViewModel() {
                 val result = socialService.sendFinger(SendMsgForm(targetId, content)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
                 msgFeeData.value = result.consumeBeans
+                try {
+                    val cMessage = localMsg.content as? CustomMessage
+
+                    val user = JsonUtil.deserializeAsObject<RoomUserChatExtra>(cMessage?.extra ?: "", RoomUserChatExtra::class.java)
+                    user.targetUserObj?.fee = result.consumeBeans
+                    (localMsg.content as? CustomMessage)?.extra = JsonUtil.seriazileAsString(user)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
                 RongCloudManager.sendCustomMessage(localMsg) { result, message ->
 
                     if (!result) {

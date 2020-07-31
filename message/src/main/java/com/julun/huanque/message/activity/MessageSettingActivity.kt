@@ -52,8 +52,7 @@ class MessageSettingActivity : BaseActivity() {
         //折叠陌生人消息
         val folderMsg = SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)
         iv_fold_stranger_msg.isSelected = folderMsg
-        //todo 先不做判断
-//        showPriceSetView(SessionUtils.getSex() == Sex.FEMALE)
+        showPriceSetView(SessionUtils.getSex() == Sex.FEMALE)
     }
 
     override fun onResume() {

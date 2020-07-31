@@ -589,7 +589,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
     override fun onUserOffline(uid: Int, reason: Int) {
-        //用户掉线
+        //用户掉线 挂断通话
+        mVoiceChatViewModel?.hangUpVoice()
     }
 
     override fun onRemoteVideoStats(stats: IRtcEngineEventHandler.RemoteVideoStats?) {
@@ -684,8 +685,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
         if (netCallBean != null) {
             val callId = netCallBean.callId
-            //取消通话
-            mVoiceChatViewModel?.refuseVoice(callId)
+            //被叫忙
+            mVoiceChatViewModel?.busy(callId)
         }
     }
 

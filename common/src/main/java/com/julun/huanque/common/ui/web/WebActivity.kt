@@ -56,7 +56,7 @@ class WebActivity : BaseActivity() {
         fun startWeb(mActivity: Activity, url: String) {
             val extra = Bundle()
             extra.putString(BusiConstant.WEB_URL, url)
-            extra.putBoolean(IntentParamKey.EXTRA_FLAG_GO_HOME.name, true)
+//            extra.putBoolean(IntentParamKey.EXTRA_FLAG_GO_HOME.name, true)
             val intent = Intent(mActivity, WebActivity::class.java)
             intent.putExtras(extra)
             mActivity.startActivity(intent)
@@ -300,7 +300,7 @@ class WebActivity : BaseActivity() {
         }
         ULog.i("当前的url:$url")
         //这个是否返回首页不太一样 默认就是返回
-        goHome = intent.getBooleanExtra(IntentParamKey.EXTRA_FLAG_GO_HOME.name, true)
+//        goHome = intent.getBooleanExtra(IntentParamKey.EXTRA_FLAG_GO_HOME.name, true)
         tvTitle.text = "羚萌直播"
 //        tvTitle.onClick {   startActivity(Intent(this@WebActivity, MainActivity::class.java)) }
         ivBack.onClickNew { onBackPressed() }

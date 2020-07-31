@@ -161,6 +161,7 @@
                 android:layout_height="44dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bg_caifu"
+                android:visibility="gone"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/view_guizu_level"
@@ -172,6 +173,7 @@
                 android:layout_height="34dp"
                 android:layout_marginLeft="6dp"
                 android:src="@mipmap/icon_caifu_level"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/view_caifu_level"
                 app:layout_constraintLeft_toLeftOf="@id/view_caifu_level"
                 app:layout_constraintTop_toTopOf="@id/view_caifu_level" />
@@ -185,6 +187,7 @@
                 android:text="财富等级"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_10"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/tv_caifu_level"
                 app:layout_constraintLeft_toRightOf="@id/iv_caifu"
                 app:layout_constraintRight_toRightOf="@id/view_caifu_level"
@@ -198,6 +201,7 @@
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/view_caifu_level"
                 app:layout_constraintLeft_toLeftOf="@id/tv_caifu_title"
                 app:layout_constraintRight_toRightOf="@id/tv_caifu_title"
@@ -212,6 +216,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bg_guizu"
+                android:visibility="gone"
                 app:layout_constraintLeft_toRightOf="@id/view_caifu_level"
                 app:layout_constraintRight_toLeftOf="@+id/view_zhubo_level"
                 app:layout_constraintTop_toBottomOf="@id/tv_sign" />
@@ -222,6 +227,7 @@
                 android:layout_height="34dp"
                 android:layout_marginLeft="6dp"
                 android:src="@mipmap/icon_guizu_level"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/view_guizu_level"
                 app:layout_constraintLeft_toLeftOf="@id/view_guizu_level"
                 app:layout_constraintTop_toTopOf="@id/view_guizu_level" />
@@ -235,6 +241,7 @@
                 android:text="贵族等级"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_10"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/tv_guizu_level"
                 app:layout_constraintLeft_toRightOf="@id/iv_guizu"
                 app:layout_constraintRight_toRightOf="@id/view_guizu_level"
@@ -248,6 +255,7 @@
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/view_guizu_level"
                 app:layout_constraintLeft_toLeftOf="@id/tv_guizu_title"
                 app:layout_constraintRight_toRightOf="@id/tv_guizu_title"
@@ -262,6 +270,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bg_zhubo"
+                android:visibility="gone"
                 app:layout_constraintLeft_toRightOf="@id/view_guizu_level"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_sign" />
@@ -272,6 +281,7 @@
                 android:layout_height="34dp"
                 android:layout_marginLeft="6dp"
                 android:src="@mipmap/icon_zhubo_level"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/view_zhubo_level"
                 app:layout_constraintLeft_toLeftOf="@id/view_zhubo_level"
                 app:layout_constraintTop_toTopOf="@id/view_zhubo_level" />
@@ -285,6 +295,7 @@
                 android:text="主播等级"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_10"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/tv_zhubo_level"
                 app:layout_constraintLeft_toRightOf="@id/iv_zhubo"
                 app:layout_constraintRight_toRightOf="@id/view_zhubo_level"
@@ -298,6 +309,7 @@
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/view_zhubo_level"
                 app:layout_constraintLeft_toLeftOf="@id/tv_zhubo_title"
                 app:layout_constraintRight_toRightOf="@id/tv_zhubo_title"
@@ -392,6 +404,7 @@
                 android:text="标签"
                 android:textColor="@color/black_333"
                 android:textSize="@dimen/sp_14"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ll_leyuan" />
 
@@ -403,9 +416,22 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:maxHeight="65dp"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_tag" />
+
+
+            <com.julun.huanque.common.widgets.statepage.StatePageView
+                android:id="@+id/state_pager_view"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:background="@color/black"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

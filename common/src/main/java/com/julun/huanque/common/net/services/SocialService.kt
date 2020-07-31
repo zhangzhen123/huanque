@@ -151,4 +151,10 @@ interface SocialService {
      */
     @POST("social/friend/chat/sendFinger")
     suspend fun sendFinger(@Body form: SendMsgForm): Root<SendMsgBean>
+
+    /**
+     * 被叫占线
+     */
+    @POST("social/friend/netcall/busy")
+    suspend fun voiceBusy(@Body form : NetcallIdForm) : Root<VoidResult>
 }

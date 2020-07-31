@@ -318,11 +318,13 @@ object TimeUtils {
             calendar.set(Calendar.SECOND, 0)
             calendar.set(Calendar.MILLISECOND, 0)
             if (calendar.before(inputTime)) {
+                //今天的日期
                 val sdf = SimpleDateFormat("HH:mm")
                 return sdf.format(currenTimeZone)
             }
             calendar.add(Calendar.DAY_OF_MONTH, -1)
             if (calendar.before(inputTime)) {
+                //昨天的日期
                 val sdf = SimpleDateFormat("HH:mm")
                 return "昨天 " + sdf.format(currenTimeZone)
             }
