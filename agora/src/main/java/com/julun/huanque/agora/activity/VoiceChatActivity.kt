@@ -685,8 +685,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
         if (netCallBean != null) {
             val callId = netCallBean.callId
-            //取消通话
-            mVoiceChatViewModel?.refuseVoice(callId)
+            //被叫忙
+            mVoiceChatViewModel?.busy(callId)
         }
     }
 
