@@ -1,17 +1,12 @@
 package com.julun.huanque.message.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.alibaba.fastjson.JSONObject
-import com.julun.huanque.common.bean.BaseData
-import com.julun.huanque.common.bean.beans.RootListLiveData
-import com.julun.huanque.common.bean.beans.SysMsgContent
+import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.utils.JsonUtil
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
-import io.rong.message.TextMessage
 
 
 /**
@@ -21,7 +16,7 @@ import io.rong.message.TextMessage
  */
 class SysMsgViewModel : BaseViewModel() {
 
-    val getSysMsgList: MutableLiveData<RootListLiveData<Message>> by lazy { MutableLiveData<RootListLiveData<Message>>() }
+    val getSysMsgList: MutableLiveData<RootListData<Message>> by lazy { MutableLiveData<RootListData<Message>>() }
     val getNewSysMsg: MutableLiveData<Message> by lazy { MutableLiveData<Message>() }
     val refreshErrorStats: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val loadMoreErrorStats: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -43,7 +38,7 @@ class SysMsgViewModel : BaseViewModel() {
                         if(messages.isNotEmpty() && messages[0].content is CustomSimulateMessage){
                             messages.removeAt(0)
                         }
-                        getSysMsgList.value = RootListLiveData<Message>().apply {
+                        getSysMsgList.value = RootListData<Message>().apply {
                             if (lastMessageId == -1) {
                                 isPull = true
                             }

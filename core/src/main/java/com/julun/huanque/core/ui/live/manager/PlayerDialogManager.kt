@@ -17,6 +17,7 @@ import com.julun.huanque.common.viewmodel.VideoChangeViewModel
 import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
+import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.viewmodel.*
 import java.lang.ClassCastException
 
@@ -123,6 +124,13 @@ class PlayerDialogManager(val context: PlayerActivity) {
         anchorNoLiveViewModel.showRecommendProgram.observe(context, Observer {
             if (it == true) {
 //                openDialog(RecommendProgramInfoDialog::class.java, reuse = false)
+            }
+        })
+
+        playerViewModel.squareView.observe(context, Observer {
+            if (it==true) {
+//                openGiftView()
+                openDialog(LiveSquareDialogFragment::class.java)
             }
         })
     }

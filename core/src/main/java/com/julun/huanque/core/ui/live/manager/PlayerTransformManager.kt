@@ -5,10 +5,8 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.constant.ConnectMicroOperate
-import com.julun.huanque.common.constant.LiveBgType
-import com.julun.huanque.common.constant.PKAction
-import com.julun.huanque.common.constant.PKType
+import com.julun.huanque.common.bean.forms.PKInfoForm
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.sortList
@@ -84,6 +82,18 @@ class PlayerTransformManager(val act: PlayerActivity) {
                     addVideoPlayer(list)
                     doWithMic(it.roomMicInfo?.joinList, GuardAgainst.Multi)
                 }
+                if (it.pking) {
+                    val push = if (mPlayerViewModel.isAnchor) (BooleanType.TRUE) else {
+                        BooleanType.TRUE
+                    }
+                    pKViewModel.getPkInfo(PKInfoForm().apply {
+                        programId = mPlayerViewModel.programId
+                        setIsPush(push)
+                    })
+                } else {
+                    pKViewModel.pkState.postValue(3)
+                }
+
 
             }
         })

@@ -272,7 +272,7 @@ class UserEnterRoomRespBase : Serializable {
     var lastShowTimeDiffText: String = ""
     var anchorLevel: Int = 0
 
-//    var visitorSession: Session? = null
+    //    var visitorSession: Session? = null
     var micing: Boolean = false//是否有连麦
     var roomMicInfo: MicInfo? = null
 
@@ -389,6 +389,7 @@ class UserEnterRoomRespDto : Serializable {
     //4.27新增字段
     /** 动作 **/
     var action: String? = null
+
     /**游戏列表数据**/
     var gameList: MutableList<SingleGame> = mutableListOf()
 }
@@ -1640,257 +1641,6 @@ data class BannerStatusBean(var showPopup: Boolean = false, var adCode: String =
 data class SingleBannerCheckResult(var adCode: String = "", var showPopup: Boolean = false) :
     Serializable
 
-//豪车工厂初始化数据
-data class LuxuryCarFactoryBasic(
-    var beans: Long = 0,
-    var items: java.util.ArrayList<SingleCarBean>? = null,
-    var myCarBgPic: String = "",
-    var myCarLevel: Int = 0,
-    var myCarLevelUpText: String = "",
-    var smallTips: java.util.ArrayList<String>? = null,
-    var isTopLevel: Boolean = false,
-    var exchangeRecord: java.util.ArrayList<String>? = null,
-    var bigManUrl: String = "",
-    var tipUrl: String = "",
-    var showAuto: Boolean = false
-) : Serializable
-
-//豪车工厂顶部 单辆车的数据
-data class SingleCarBean(
-    var beans: Long = 0,
-    var carName: String = "",
-    var carPic: String = "",
-    var level: Int = 0
-) : Serializable
-
-//车升级的结果
-data class CarLevelUpResult(
-    var beans: Long = 0,
-    var isTopLevel: Boolean = false,
-    var myCarBgPic: String = "",
-    var myCarLevel: Int = 0,
-    var myCarLevelUpText: String = "",
-    var result: String = "",
-    var webpAnimatUrl: String = "",
-    var myLevelUpCard: CarCard? = null
-) : Serializable
-
-//升级卡
-data class CarCard(
-    var cardName: String = "",
-    var cardPic: String = "",
-    var count: Int = 0
-) : Serializable
-
-//车兑换的结果
-data class CarExchangeResult(
-    var aboutBeans: Long = 0,
-    var exchangeRecord: java.util.ArrayList<String>? = null,
-    var myCarBgPic: String = "",
-    var exchangeCarName: String = "",
-    var myCarLevel: Int = 0,
-    var myCarLevelUpText: String = "",
-    var prods: java.util.ArrayList<CarExchangeGood>? = null
-) : Serializable
-
-//车兑换的单个物品
-data class CarExchangeGood(
-    var awardCount: Int = 0,
-    var beans: Long = 0,
-    var prodId: Int = 0,
-    var prodName: String = "",
-    var prodPic: String = "",
-    var prodType: String = ""
-) : Serializable
-
-//自动升级的单个车数据
-data class CarAutoSingleChoose(
-    var carName: String = "",
-    var carPic: String = "",
-    var level: Int = 0,
-    var status: String = "",
-    var sel: Boolean = false,
-    var reason: String = ""
-) : Serializable
-
-data class CarSingleCard(
-    var cardName: String = "",
-    var count: Int = 0,
-    var cardPic: String = ""
-) : Serializable
-
-/**
- * 锦鲤许愿池相关信息
- * @createDate 2019/07/15
- * @createAuthor WanZhiYuan
- * @iterativeVersion 4.16
- */
-data class WishKoiResult(
-    /** 萌豆中奖信息 **/
-    var awardList: ArrayList<WishKoiInfo>? = null,
-    /** 底部信息栏 礼物、萌豆 **/
-    var bottomInfo: WishKoiInfo? = null,
-    /** 上一轮锦鲤玩家 **/
-    var koiInfo: WishKoiInfo? = null,
-    /** 当前许愿池信息 **/
-    var wishingInfo: WishKoiInfo? = null,
-    /** 消息 变化后的鲤鱼数量文本文案  例如：本轮您已送出鲤鱼#XYCS#*9999，送出越多中奖几率越高 **/
-    var wishingPoolUserCarpCount: String? = null,
-    /** 消息  直播间许愿池入口变化消息 H 隐藏许愿池入口、S 显示许愿池入口、 F  刷新活动页面版信息 **/
-    var wishingPoolShow: String? = null,
-    /** 当前许愿池Id 如果前后ID不同 取最新ID的数量信息  **/
-    var wishingPoolId: Int = 0,
-    /**  当前许愿池投入的数量  许愿池ID 相同 本参数相比上一次的参数较小，直接舍去 **/
-    var wishingPoolMyCount: Int = 0
-) : Serializable
-
-/**
- * 锦鲤许愿池相关信息
- * @createDate 2019/07/15
- * @createAuthor WanZhiYuan
- * @iterativeVersion 4.16
- * @iterativeDate 2019/09/23
- * @iterativeAuthor WanZhiYuan
- * @iterativeVersion 4.18
- * @iterativeDetail 新增字段
- */
-data class WishKoiInfo(
-    /** 获奖萌豆 **/
-    var awardBeans: String = "",
-    /** 送礼文案描述 **/
-    var awardText: String = "",
-    /** 中奖的数量模板 **/
-    var count: Long = 0,
-    /** 礼物图片 **/
-    var giftPic: String = "",
-    /** 昵称 **/
-    var nickname: String = "",
-    /** 用户可用萌豆数 **/
-    var beans: Long = 0,
-    /** 礼物模板 **/
-    var countTpl: ArrayList<WishKoiInfo>? = null,
-    /** 礼物数量名称 **/
-    var countName: String = "",
-    /** 礼物数量 **/
-    var countValue: Int = 0,
-    /** 礼物价格 **/
-    var giftBeans: Long = 0,
-    /** 礼物id **/
-    var giftId: Int = 0,
-    /** 礼物名称 **/
-    var giftName: String = "",
-    /** 礼物图片 **/
-    var pic: String = "",
-    /** 当前跑道的最大礼物萌豆数 **/
-    var runwayMaxBeans: Long = 0,
-    /** 上跑道需要的最少萌豆数 **/
-    var runwayMinBean: Long = 0,
-    /** 跑道表白需要的最少萌豆数 **/
-    var runwayMinLoveBean: Long = 0,
-    /** 头像 **/
-    var headPic: String = "",
-    /** 用户id **/
-    var userId: Long = 0,
-    /** 奖池当前萌豆 **/
-    var currenPoolBeans: Long = 0,
-    /** 奖池最大萌豆 **/
-    var maxPoolBeans: Long = 0,
-    /** 奖池 玩家提示文案 **/
-    var userTakeText: String = "",
-    /** w奖池 玩家累积数量 **/
-    var userTakeNum: Int = 0,
-    /** 奖池ID **/
-    var wishId: Int = 0,
-    /** 奖池 提示文案 **/
-    var wishText: String = "",
-    /** 奖池状态 **/
-    var wishType: String = "",
-    /** 实际上跑道的价格 **/
-    var realRunwayBeans: Long = 0,
-    /** webp图片 **/
-    var fallsPic: String = "",
-    //4.18新增字段
-    /** 幸运直播间奖励 **/
-    var awardName: String = "",
-    /** 直播间ID **/
-    var programId: Int = 0,
-    /** 直播间名称 **/
-    var programName: String = "",
-    /** 直播状态 **/
-    var isLiving: Boolean? = null,
-    /** 主播头像 **/
-    var anchorHeadPic: String = "",
-    /** 主播Id **/
-    var anchorId: Int = 0
-) : Serializable
-
-/**
- * 锦鲤许愿池列表item info
- * @createDate 2019/07/16
- * @createAuthor WanZhiYuan
- * @iterativeVersion 4.16
- * @iterativeDate 2019/09/20
- * @iterativeAuthor WanZhiYuan
- * @iterativeVersion 4.18
- * @iterativeDetail 锦鲤许愿池列表item + 幸运锦鲤列表item
- */
-data class WishKoiUserInfo(
-    /** 中奖玩家送出的锦鲤数量 **/
-    var count: Long = 0,
-    var userId: Long = 0,
-    /** 玩家昵称 **/
-    var nickname: String = "",
-    /** 玩家头像 **/
-    var headPic: String = "",
-    /** 中奖萌豆 **/
-    var awardBeans: String = "",
-    var createTime: String = "",
-    var countTpl: Long = 0,
-    /** 礼物图片 **/
-    var giftPic: String = "",
-    var awardSource: String = "",
-    //4.18新增字段
-    /** 幸运直播间奖励（可能没有奖励）**/
-    var awardName: String = "",
-    /** 直播间ID **/
-    var programId: Int = 0,
-    /** 直播间名称 **/
-    var programName: String = ""
-) : Serializable
-
-/**
- * 锦鲤许愿池幸运主播info
- * @createDate 2019/09/20
- * @createAuthor WanZhiYuan
- * @iterativeVersion 4.18
- */
-data class WishKoiLuckAnchorInfo(
-    /** 上周幸运主播第一名 **/
-    var lastLuckyProgram: WishKoiLuckAnchorItemBean? = null,
-    /** 本周幸运主播榜单列表 **/
-    var rankList: ArrayList<WishKoiLuckAnchorItemBean>? = null
-) : Serializable
-
-/**
- * 锦鲤许愿池幸幸运主播列表item info
- * @createDate 2019/09/20
- * @createAuthor WanZhiYuan
- * @iterativeVersion 4.18
- */
-data class WishKoiLuckAnchorItemBean(
-    /** 主播头像 **/
-    var headPic: String = "",
-    /** 主播昵称 **/
-    var nickname: String = "",
-    /** 节目ID **/
-    var programId: Int = 0,
-    /** 榜单积分 **/
-    var score: Int = 0,
-    /** 主播的羚萌ID **/
-    var userId: Int = 0,
-    /** 是否开播：True、False **/
-    var isLiving: Boolean? = null
-) : Serializable
 
 /**
  * 主页的Bean
@@ -1963,7 +1713,7 @@ data class HomePageBean(
 data class LiveFollowListData(
     var dataType: Int = -1,
     var isPull: Boolean = false,
-    var list: List<LiveFollowBean> = arrayListOf(),
+    var list: MutableList<LiveFollowBean> = mutableListOf(),
     var hasMore: Boolean = false
 )
 
@@ -1972,7 +1722,8 @@ data class LiveFollowBean(
     var coverPic: String = "",
     var onlineUserNum: Int = 0,
     var programId: Int = 0,
-    var programName: String = ""
+    var programName: String = "",
+    var living: Boolean = false
 )
 
 //上下切换列表bean

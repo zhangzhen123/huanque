@@ -63,30 +63,8 @@ class PKViewModel : BaseViewModel() {
         pkState.postValue(state)
         pkStarting.value = start
         pkNum.value = start.detailList?.size
-
-        //统一后台处理关闭 本地不要手动倒计时关闭了
-        //需要手动结束
-//        if (start.seconds == -2 && start.closeSeconds != null && start.closeSeconds!! > 0) {
-//            //
-//            //需要手动结束
-//            //
-//            closeDispose = Observable.timer(start.closeSeconds!!.toLong(), TimeUnit.SECONDS)
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe({
-//                        logger.info("开始手动关闭pk以及流")
-//                        val list = arrayListOf<Int>()
-//                        start.detailList?.forEach {
-//                            if (it.programId != null)
-//                                list.add(it.programId!!)
-//                        }
-//                        pkClose.value = list
-//                    })
-//        }
     }
 
-    //    fun cancelShutdownPk(){
-//        closeDispose?.dispose()
-//    }
     fun closeCountDown() {
         if (disposable != null) {
             disposable!!.dispose()

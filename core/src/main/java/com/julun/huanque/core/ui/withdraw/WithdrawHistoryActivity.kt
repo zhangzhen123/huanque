@@ -78,8 +78,10 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
 
         initViewModel()
 
-        mRecyclerView.adapter = mAdapter
+
         mRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        mRecyclerView.adapter = mAdapter
         mViewModel.queryInfo(queryType = QueryType.INIT)
     }
 

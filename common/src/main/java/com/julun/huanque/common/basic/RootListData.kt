@@ -9,7 +9,7 @@ package com.julun.huanque.common.basic
  **/
 open class RootListData<T>(
     var isPull: Boolean = false,
-    var list: List<T> = arrayListOf(),
+    var list: MutableList<T> = mutableListOf(),
     var hasMore: Boolean = false,
     var extDataJson: String? = null
 )

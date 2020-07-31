@@ -15,6 +15,7 @@ import com.julun.huanque.common.utils.svga.SVGAHelper
 import com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
 import com.julun.huanque.common.bean.beans.AnimEventBean
 import com.julun.huanque.common.bean.beans.AnimModel
+import com.julun.huanque.common.bean.events.AnimatorEvent
 import com.julun.huanque.common.constant.AnimEventItemTypes
 import com.julun.huanque.common.constant.AnimationTypes
 import com.julun.huanque.common.helper.StringHelper
@@ -65,8 +66,7 @@ class SuperAnimationView(context: Context, attrs: AttributeSet?) : RelativeLayou
 
         svgaPlayerView.callback = object : SVGACallback {
             override fun onFinished() {
-                //todo
-//                EventBus.getDefault().post(AnimatorEvent())
+                EventBus.getDefault().post(AnimatorEvent())
             }
 
             override fun onPause() {
@@ -268,8 +268,7 @@ class SuperAnimationView(context: Context, attrs: AttributeSet?) : RelativeLayou
             }
 
             override fun onError() {
-                //todo
-//                EventBus.getDefault().post(AnimatorEvent())
+                EventBus.getDefault().post(AnimatorEvent())
             }
         }
         SVGAHelper.startParse(url, callback)

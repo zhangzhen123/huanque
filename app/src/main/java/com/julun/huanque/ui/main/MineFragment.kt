@@ -64,6 +64,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val lt = llTitleRootView.layoutParams as ConstraintLayout.LayoutParams
         lt.topMargin = StatusBarUtil.getStatusBarHeight(requireContext())
+
+        rv_tabs_info.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         rv_tabs_info.adapter = infoTabAdapter
         infoTabAdapter.setOnItemClickListener { adapter, view, position ->
             val tempData = adapter.getItem(position) as? UserDataTab
@@ -71,10 +73,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 ContactsActivity.newInstance(requireActivity(), tempData?.userDataTabType ?: "")
             }
         }
-        rv_tabs_info.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
-        rvUserTools.adapter = toolsAdapter
         rvUserTools.layoutManager = GridLayoutManager(context, 4)
+        rvUserTools.adapter = toolsAdapter
         tvQueBi.setTFDinAltB()
         tvLingQian.setTFDinAltB()
         initViewModel()

@@ -14,6 +14,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.HeaderInfo
@@ -43,7 +44,6 @@ import kotlinx.android.synthetic.main.view_runway_simple.view.*
 import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.textColor
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
@@ -96,8 +96,8 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
     private fun initViewModel() {
         activity = context as? PlayerActivity
         activity?.let { act ->
-            playerViewModel = ViewModelProviders.of(act).get(PlayerViewModel::class.java)
-            svgaViewModel = ViewModelProviders.of(act).get(SVGAViewModel::class.java)
+            playerViewModel = ViewModelProvider(act).get(PlayerViewModel::class.java)
+            svgaViewModel = ViewModelProvider(act).get(SVGAViewModel::class.java)
 
             svgaViewModel.animationFinish.observe(act, androidx.lifecycle.Observer {
                 if (it == true) {
@@ -134,9 +134,8 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
 //            weekStarAnimPlay()
         }
 
-        tv_header_info.onClickNew {
-//            huanqueService.getService(IStatistics::class.java)?.onUniversal(DataExtras.EXTRA_FRONT_PAGE)
-            //todo
+        tv_live_square.onClickNew {
+            playerViewModel?.squareView?.value=true
 
         }
 
@@ -165,93 +164,6 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
         //跳转到通知的另一个直播间
         currentWeekStar?.context?.programId?.let {
             playerViewModel?.checkoutRoom?.value = it
-        }
-    }
-
-    /**
-     * 主播头条倒计时
-     */
-    private var mHeaderInfoDisposable: Disposable? = null
-
-    /**
-     * 显示主播头条数据
-     */
-    fun showHeaderInfo(info: HeaderInfo) {
-        if (playerViewModel?.isThemeRoom == true) {
-            //取消已有的定时器
-            mHeaderInfoDisposable?.dispose()
-            tv_header_info.isSelected = false
-            tv_header_info.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-            tv_header_info.text = "节目单"
-            return
-        }
-        try {
-            val statusStr = info.extData.RoomData["${playerViewModel?.programId}"] ?: return
-            //主播头条状态
-            var status = statusStr.startsWith("1")
-            //结果相关
-            val resultArray = info.result.split("_")
-            var rank = 0
-            if (resultArray.size >= 3) {
-                //热度
-                val hotIntegration = resultArray[2].toInt()
-                //排名
-                if (hotIntegration != 0) {
-                    rank = resultArray[1].toInt()
-                }
-            }
-            val time = info.ttl
-            if (time > 0) {
-                mHeaderInfoDisposable?.dispose()
-                mHeaderInfoDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
-                    .take((time + 1).toLong())
-                    .bindToLifecycle(this)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        val totalTime = time - it
-                        if (totalTime == 0L) {
-                            status = false
-                        }
-                        showViewByHeaderInfo(status, rank, totalTime)
-                    }, {
-                        ULog.i("DXC C")
-                        it.printStackTrace()
-                    }, { ULog.i("DXC E") })
-            }
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    /**
-     * 根据数据显示主播头条榜视图
-     * @param status 头条榜状态
-     * @param rank 排名
-     * @param totalTime 剩余时间
-     */
-    private fun showViewByHeaderInfo(status: Boolean, rank: Int, totalTime: Long) {
-        if (rank > 0 && status) {
-            //需要显示排名
-            val textSb = StringBuffer()
-            textSb.append("NO.")
-            if (rank > 10) {
-                textSb.append("10+")
-            } else {
-                textSb.append("$rank")
-            }
-            if (totalTime <= 10) {
-                tv_header_info.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-                textSb.append(" $totalTime").append("s")
-                tv_header_info.isSelected = true
-            } else {
-                tv_header_info.isSelected = false
-            }
-            tv_header_info.text = textSb.toString()
-        } else {
-            //不显示排名
-            tv_header_info.isSelected = false
-            tv_header_info.text = resources.getString(R.string.header_info)
         }
     }
 
