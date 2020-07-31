@@ -589,7 +589,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
     override fun onUserOffline(uid: Int, reason: Int) {
-        //用户掉线
+        //用户掉线 挂断通话
+        mVoiceChatViewModel?.hangUpVoice()
     }
 
     override fun onRemoteVideoStats(stats: IRtcEngineEventHandler.RemoteVideoStats?) {

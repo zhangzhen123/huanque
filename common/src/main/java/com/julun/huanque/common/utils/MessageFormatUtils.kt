@@ -66,7 +66,10 @@ object MessageFormatUtils {
         return null
     }
 
-    fun renderImage(sdstv: DraweeSpanTextView, result: FriendBean) {
+    /**
+     * @param fromListlist 是否是消息列表
+     */
+    fun renderImage(sdstv: DraweeSpanTextView, result: FriendBean, fromListlist: Boolean = false) {
         val list = arrayListOf<TIBean>()
         val text = TIBean()
         text.type = TIBean.TEXT
@@ -76,19 +79,37 @@ object MessageFormatUtils {
         when (result.relationChangeType) {
             MessageConstants.FRIEDN -> {
                 //成为好友
-                text.text = "和你成了鹊友"
+                if (fromListlist) {
+                    text.text = "${result.friendNickname} 和你成了鹊友"
+                } else {
+                    text.text = "和你成了鹊友"
+                }
             }
             MessageConstants.FRIEDN_FOLLOW -> {
                 //关注
-                text.text = "关注了你"
+                if (fromListlist) {
+
+                    text.text = "${result.friendNickname} 关注了你"
+                } else {
+                    text.text = "关注了你"
+                }
             }
             MessageConstants.FRIEDN_INTIMATE -> {
                 //成为密友
-                text.text = "和你成为了密友"
+                if (fromListlist) {
+                    text.text = "${result.friendNickname} 和你成为了密友"
+
+                } else {
+                    text.text = "和你成为了密友"
+                }
             }
             else -> {
                 //亲密度等级提升
-                text.text = "和你升级为了"
+                if (fromListlist) {
+                    text.text = "${result.friendNickname} 和你升级为了"
+                } else {
+                    text.text = "和你升级为了"
+                }
                 val image = TIBean()
                 image.type = TIBean.IMAGE
                 image.imgRes = ImageHelper.getIntimateLevelPic(result.intimateLevel)

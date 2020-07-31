@@ -106,7 +106,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
 
                 ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_stranger)
                 helper.setText(R.id.tv_nickname, "陌生人消息")
-                    .setText(R.id.tv_time, TimeUtils.formatDetailTime(time))
+                    .setText(R.id.tv_time, TimeUtils.formatMessageTime(time))
 
                 val nickname = info[LocalConversation.NICKNAME]
                 val tvContent = helper.getView<TextView>(R.id.tv_content)
@@ -139,7 +139,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                     }
                     SystemTargetId.friendNoticeSender -> {
                         val msgConent: FriendContent? = MessageFormatUtils.parseJsonFromTextMessage(FriendContent::class.java, msg.content)
-                        MessageFormatUtils.renderImage(helper.getView(R.id.tv_content), msgConent?.context ?: return)
+                        MessageFormatUtils.renderImage(helper.getView(R.id.tv_content), msgConent?.context ?: return, true)
                     }
                     else -> {
                         helper.setText(R.id.tv_content, EmojiSpanBuilder.buildEmotionSpannable(context, msg.content))
@@ -204,7 +204,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 tvUnread.hide()
             }
 
-            helper.setText(R.id.tv_time, TimeUtils.formatDetailTime(item.conversation.sentTime))
+            helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.conversation.sentTime))
         }
 
         //存在会话消息，显示常规的布局

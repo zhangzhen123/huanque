@@ -134,7 +134,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
                     ContactsTabType.Intimate, ContactsTabType.Friend -> {
                         //点击私信
                         activity?.let { act ->
-                            PrivateConversationActivity.newInstance(act, 20000041)
+                            PrivateConversationActivity.newInstance(act, tempData.userId,tempData.nickname,tempData.meetStatus)
                         }
                     }
                     ContactsTabType.Follow, ContactsTabType.Fan -> {

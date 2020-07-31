@@ -293,7 +293,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         if (ForceUtils.isIndexNotOutOfBounds(previousPosition, data)) {
             val previousData = data[previousPosition]
             if (Math.abs(item.sentTime - previousData.sentTime) < 2 * 60 * 1000) {
-                //两条消息间隔在5分钟以内
+                //两条消息间隔在2分钟以内
                 helper.setGone(R.id.view_top, false)
                 helper.setGone(R.id.group, true)
             } else {
@@ -433,7 +433,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     /**
      * 显示模拟的语音消息
      */
-    private fun showVoiceView(tv: TextView, qbTv: TextView, str: String) {
+    private fun showVoiceView(tv: TextView, qbTv: SimpleDraweeSpanTextView, str: String) {
 
         try {
             val voiceBean = JsonUtil.deserializeAsObject<VoiceConmmunicationSimulate>(str, VoiceConmmunicationSimulate::class.java)
@@ -441,7 +441,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             when (voiceBean.type) {
                 VoiceResultType.CONMMUNICATION_FINISH -> {
                     //已接通，正常结束
-                    showStr = "聊天时长 ${TimeUtils.countDownTimeFormat1(voiceBean.duration)}"
+                    showStr = "通话时长 ${TimeUtils.countDownTimeFormat1(voiceBean.duration)}"
                 }
                 VoiceResultType.RECEIVE_REFUSE -> {
                     //对方已拒绝
@@ -467,10 +467,11 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             }
             tv.text = showStr
 
-            if (voiceBean.totalBeans > 0 && voiceBean.billUserId != SessionUtils.getUserId()) {
+            if (voiceBean.totalBeans > 0) {
                 //本人是收费方
                 qbTv.text = "${voiceBean.totalBeans}"
                 qbTv.show()
+                showFee(qbTv, voiceBean.totalBeans, false)
             } else {
                 qbTv.hide()
             }
@@ -490,7 +491,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 //            return
 //        }
         val content = item.content
-        if (content !is TextMessage && content !is ImageMessage) {
+        if (content !is TextMessage && content !is ImageMessage && content !is CustomMessage) {
             tv.hide()
             return
         }

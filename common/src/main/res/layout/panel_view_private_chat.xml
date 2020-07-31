@@ -88,7 +88,7 @@
         android:layout_height="38dp"
         android:layout_marginLeft="10dp"
         android:background="@drawable/bg_panel_icon"
-        android:src="@mipmap/icon_panel_heart"
+        android:src="@mipmap/icon_emoji_normal"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
         app:layout_constraintLeft_toLeftOf="@id/view_bottom"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />
@@ -98,7 +98,7 @@
         android:layout_width="48dp"
         android:layout_height="38dp"
         android:background="@drawable/bg_panel_icon"
-        android:src="@mipmap/icon_panel_heart"
+        android:src="@mipmap/icon_emoji_intimate"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
         app:layout_constraintLeft_toRightOf="@id/iv_emoji"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />
@@ -109,7 +109,7 @@
         android:layout_width="48dp"
         android:layout_height="38dp"
         android:background="@drawable/bg_panel_icon"
-        android:src="@mipmap/icon_panel_heart"
+        android:src="@mipmap/icon_emoji_animation"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
         app:layout_constraintLeft_toRightOf="@id/iv_prerogative"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />

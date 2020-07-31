@@ -138,6 +138,10 @@ class MessageFragment : BaseFragment() {
             val data = mAdapter.data
             if (ForceUtils.isIndexNotOutOfBounds(realPosition, data)) {
                 val tId = data[realPosition].conversation.targetId
+                if(tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender){
+                    //系统消息和鹊友通知不显示弹窗
+                    return@setOnItemLongClickListener false
+                }
                 MyAlertDialog(
                     activity ?: return@setOnItemLongClickListener true
                 ).showAlertWithOKAndCancel(
