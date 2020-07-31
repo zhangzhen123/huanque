@@ -6,6 +6,9 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.Spannable
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
@@ -16,6 +19,13 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
+import com.effective.android.panel.PanelSwitchHelper
+import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
+import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener
+import com.effective.android.panel.interfaces.listener.OnPanelChangeListener
+import com.effective.android.panel.interfaces.listener.OnViewClickListener
+import com.effective.android.panel.view.panel.IPanelView
+import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -28,14 +38,20 @@ import com.julun.huanque.common.bean.forms.UserEnterRoomForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.reportCrash
+import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
-import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.isVisible
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.viewmodel.ConnectMicroViewModel
 import com.julun.huanque.common.viewmodel.JoinChatRoomViewModel
 import com.julun.huanque.common.viewmodel.VideoChangeViewModel
 import com.julun.huanque.common.viewmodel.VideoViewModel
+import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
+import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
@@ -54,6 +70,7 @@ import kotlinx.android.synthetic.main.view_live_header.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.imageResource
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
@@ -512,6 +529,95 @@ class PlayerActivity : BaseActivity() {
 
     }
 
+    private var mHelper: PanelSwitchHelper? = null
+
+    override fun onStart() {
+        super.onStart()
+        if (mHelper == null) {
+            mHelper = PanelSwitchHelper.Builder(this) //可选
+                .addKeyboardStateListener {
+                    onKeyboardChange { visible, height ->
+                        //可选实现，监听输入法变化
+                        if (visible) {
+                            emojiImage.imageResource = R.mipmap.chat_key_input
+                        } else {
+                            emojiImage.imageResource = R.mipmap.chat_emoji_input
+                        }
+                    }
+                }
+                .addEditTextFocusChangeListener {
+                    onFocusChange { _, hasFocus ->
+                        //可选实现，监听输入框焦点变化
+                        if (hasFocus) {
+//                            scrollToBottom()
+                        }
+                    }
+                }
+                .addPanelChangeListener {
+                    onKeyboard {
+                        //可选实现，输入法显示回调
+                        logger.info("唤起系统输入法")
+                        liveViewManager.hideHeaderForAnimation()
+//                        iv_emoji.isSelected = false
+//                        scrollToBottom()
+                    }
+                    onNone {
+                        logger.info("隐藏所有面板")
+                        ll_input.hide()
+                        actionView.show()
+                        //可选实现，默认状态回调
+                        liveViewManager.showHeaderForAnimation()
+                        //显示头部
+//                        iv_emoji.isSelected = false
+                    }
+                    onPanel { view ->
+                        liveViewManager.hideHeaderForAnimation()
+                        //可选实现，面板显示回调
+//                        if (view is PanelView) {
+//                            iv_emoji.isSelected = view.id == R.id.panel_emotion
+//                            scrollToBottom()
+//                        }
+                    }
+                    onPanelSizeChange { panelView, _, _, _, width, height ->
+                        //可选实现，输入法动态调整时引起的面板高度变化动态回调
+                        if (panelView is PanelView) {
+                            when (panelView.id) {
+//                            R.id.panel_emotion -> {
+//                                val pagerView = findViewById<EmotionPagerView>(R.id.view_pager)
+//                                val viewPagerSize: Int = height - DensityHelper.dpToPx(30)
+//                                pagerView.buildEmotionViews(
+//                                    findViewById<PageIndicatorView>(R.id.pageIndicatorView),
+//                                    edit_text,
+//                                    Emotions.getEmotions(),
+//                                    width,
+//                                    viewPagerSize
+//                                )
+//                            }
+                            }
+                        }
+                    }
+                }
+                .logTrack(false)
+                .build()                     //可选，默认false，是否默认打开输入法
+//
+//            recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                    super.onScrolled(recyclerView, dx, dy)
+//                    val layoutManager = recyclerView.layoutManager
+//                    if (layoutManager is LinearLayoutManager) {
+//                        val childCount = recyclerView.childCount
+//                        if (childCount > 0) {
+//                            val lastChildView = recyclerView.getChildAt(childCount - 1)
+//                            val bottom = lastChildView.bottom
+//                            val listHeight: Int = recyclerview.height - recyclerview.paddingBottom
+//                            unfilledHeight = listHeight - bottom
+//                        }
+//                    }
+//                }
+//            })
+        }
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privatePoint(event: EventMessageBean) {
@@ -810,6 +916,7 @@ class PlayerActivity : BaseActivity() {
         publicMessageView.clearMessages()
         //清空私聊红点
         actionView.togglePrivateRedPointView(0)
+        initInput()
 
         // 注册融云交互事件 因为有些消息回调需要roomData所以必须在成功回调后注册事件监听
         registerMessageEventProcessor()
@@ -943,6 +1050,61 @@ class PlayerActivity : BaseActivity() {
         val temp = ChatUtils.createRoomUserChat(viewModel.roomData, viewModel.baseData.value, isAnchor)
         viewModel.roomUserChatExtra = temp
         RongCloudManager.startMessageConsumerWithCurrentUserObj(temp)
+    }
+
+
+    /**
+     * 初始化输入框相关
+     */
+    private fun initInput() {
+        panel_emotion.mListener = object : EmojiInputListener {
+            override fun onClick(type: String, emotion: Emotion) {
+                val start: Int = edit_text.selectionStart
+                val editable: Editable = edit_text.editableText
+                val emotionSpannable: Spannable = EmojiSpanBuilder.buildEmotionSpannable(this@PlayerActivity, emotion.text)
+                editable.insert(start, emotionSpannable)
+            }
+
+            override fun onLongClick(type: String, view: View, emotion: Emotion) {
+            }
+
+            override fun onActionUp() {
+            }
+
+            override fun onClickDelete() {
+                //点击了删除事件
+                deleteInputEmoji()
+            }
+
+            override fun showPrivilegeFragment(code: String) {
+            }
+        }
+
+        sendBtn.onClickNew {
+            //点击发送
+            val message = edit_text.text.toString()
+            if (message.isEmpty()) {
+                ToastUtils.show("输入不能为空")
+                return@onClickNew
+            }
+            viewModel.sendMessage(message)
+        }
+
+
+        viewModel.mMessageSending.observe(this, Observer {
+            if (it == true) {
+                sendBtn.isEnabled = false
+            }
+        })
+    }
+
+    // 删除光标所在前一位(不考虑切换到emoji时的光标位置，直接删除最后一位)
+    private fun deleteInputEmoji() {
+        val keyCode = KeyEvent.KEYCODE_DEL
+        val keyEventDown = KeyEvent(KeyEvent.ACTION_DOWN, keyCode)
+        val keyEventUp = KeyEvent(KeyEvent.ACTION_UP, keyCode)
+        edit_text.onKeyDown(keyCode, keyEventDown)
+        edit_text.onKeyUp(keyCode, keyEventUp)
     }
 
     /**
@@ -1504,6 +1666,7 @@ class PlayerActivity : BaseActivity() {
         live_room_back.setOnClickListener {
             finish()
         }
+
     }
 
     // 返回按键，聊天视图回到原点
@@ -1524,7 +1687,7 @@ class PlayerActivity : BaseActivity() {
 
 
     private fun showOriView() {
-        if (chatInputView.isVisible()) {
+        if (ll_input.isVisible()) {
             liveViewManager.showHeaderAndHideChatView()
         }
     }
@@ -1735,6 +1898,11 @@ class PlayerActivity : BaseActivity() {
 
     //增加返回键回到主页
     override fun onBackPressed() {
+        //用户按下返回键的时候，如果显示面板，则需要隐藏
+        if (mHelper != null && mHelper?.hookSystemBackByPanelSwitcher() == true) {
+            return
+        }
+
         if (mConfigViewModel?.horizonState?.value == true) {
             //当前处于横屏状态，切换到竖屏
             viewModel.actionBeanData.value = BottomActionBean(ClickType.SWITCH_SCREEN, ScreenType.SP)

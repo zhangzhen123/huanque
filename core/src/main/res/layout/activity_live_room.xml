@@ -37,39 +37,140 @@
             android:layout_height="match_parent"
             android:layout_gravity="bottom|end" />
         <!--聊天布局-->
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <com.effective.android.panel.view.PanelSwitchLayout
             android:id="@+id/chat_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:animationSpeed="standard"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+            <!-- 内容区域 -->
+            <!-- linear_edit_view 指定一个 EditText 用于输入 ，必须项-->
+            <!-- linear_auto_reset_enable 指定是否 LinearContentContainer 是否能够接受 Touch 事件自动隐藏面板-->
+            <!-- linear_auto_reset_area 指定是否 LinearContentContainer 只接受某个 View 区域的 Touch 事件来自定隐藏面板-->
+            <com.julun.huanque.common.widgets.CusContentContainer
+                android:id="@+id/content_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:cus_edit_view="@id/edit_text"
+                tools:layout_height="500dp">
 
-            <View
-                android:id="@+id/app_bottom_shadow"
-                android:layout_width="0px"
+                <com.julun.huanque.core.widgets.live.message.PublicChatMessageView
+                    android:id="@+id/publicMessageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="217dp"
+                    app:layout_constraintBottom_toTopOf="@+id/ll_input"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+                <View
+                    android:id="@+id/app_bottom_shadow"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/bottom_shadow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+
+                <LinearLayout
+                    android:id="@+id/ll_input"
+                    android:layout_width="0px"
+                    android:layout_height="44dp"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <EditText
+                        android:id="@+id/edit_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:gravity="center_vertical|left"
+                        android:hint="聊一聊吧..."
+                        android:imeOptions="actionSend"
+                        android:includeFontPadding="false"
+                        android:inputType="text"
+                        android:lines="1"
+                        android:maxLength="30"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:textColor="#f0333333"
+                        android:textColorHint="#b9b9b9"
+                        android:textSize="@dimen/normal_size" />
+
+                    <ImageView
+                        android:id="@+id/emojiImage"
+                        android:layout_width="21dp"
+                        android:layout_height="21dp"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:src="@mipmap/chat_emoji_input" />
+
+
+                    <View
+                        android:id="@+id/divide_002"
+                        android:layout_width="0.5dp"
+                        android:layout_height="24dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/divide_color" />
+
+                    <Button
+                        android:id="@+id/sendBtn"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="50dp"
+                        android:layout_height="23dp"
+                        android:layout_marginEnd="13dp"
+                        android:layout_marginRight="13dp"
+                        android:background="@drawable/selector_btn_solid"
+                        android:text="发送"
+                        android:textColor="@color/selector_btn_text_color_common"
+                        android:textSize="@dimen/sp_14" />
+
+                </LinearLayout>
+            </com.julun.huanque.common.widgets.CusContentContainer>
+
+            <!-- 面板区域，仅能包含PanelView-->
+            <com.effective.android.panel.view.panel.PanelContainer
+                android:id="@+id/panel_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@mipmap/bottom_shadow"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
-            <!--android:background="@mipmap/bottom_shadow"-->
-            <com.julun.huanque.core.widgets.live.chat.ChatInputBoxView
-                android:id="@+id/chatInputView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                android:background="@color/color_gray_three">
 
-            <com.julun.huanque.core.widgets.live.message.PublicChatMessageView
-                android:id="@+id/publicMessageView"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/chatInputView"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                <!-- 每一项面板 -->
+                <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
+                <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
+                <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
+                <!--            <com.effective.android.panel.view.panel.PanelView-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="match_parent"-->
+                <!--                app:panel_layout="@layout/panel_emotion_layout"-->
+                <!--                app:panel_trigger="@id/iv_emoji" />-->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.julun.huanque.common.widgets.emotion.PuclicChatPanelView
+                    android:id="@+id/panel_emotion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cus_panel_trigger="@id/emojiImage" />
+
+            </com.effective.android.panel.view.panel.PanelContainer>
+        </com.effective.android.panel.view.PanelSwitchLayout>
+
         <!--可滑动布局-->
         <com.julun.huanque.core.widgets.live.slide.SlideViewContainer
             android:id="@+id/surface_view"
@@ -158,12 +259,12 @@
             <!--android:visibility="invisible" />-->
 
 
-<!--            <include-->
-<!--                android:id="@id/right_drawer"-->
-<!--                layout="@layout/view_layout_right_drawer"-->
-<!--                android:layout_width="@dimen/right_drawer_width"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent" />-->
+            <!--            <include-->
+            <!--                android:id="@id/right_drawer"-->
+            <!--                layout="@layout/view_layout_right_drawer"-->
+            <!--                android:layout_width="@dimen/right_drawer_width"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent" />-->
         </com.julun.huanque.core.widgets.live.slide.SlideViewContainer>
 
 

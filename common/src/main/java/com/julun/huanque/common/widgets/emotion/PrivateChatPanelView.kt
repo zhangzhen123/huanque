@@ -130,13 +130,6 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
                 //未设置数据,设置数据
                 val list = mutableListOf<Emotion>()
                 list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
-                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
-                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
-                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
-                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
-                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
-                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
-                list.addAll(Emotions.getEmotions(EmojiType.PREROGATIVE))
                 mPrivilegeAdapter.setList(list)
             }
             showRecyclerView(iv_prerogative, recyclerView_prerogative)

@@ -598,6 +598,29 @@ object RongCloudManager {
 
     }
 
+    /**
+     * 直播间发送公聊
+     */
+    fun sendPublicTextMessage(message: String, programId: String, callback: (Boolean) -> Unit = { }) {
+        val chatMessage: TextMessage = TextMessage.obtain(message)
+        currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
+        chatMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
+
+        var conversationType = Conversation.ConversationType.CHATROOM
+        RongIMClient.getInstance().sendMessage(conversationType, programId, chatMessage, null, null, object : IRongCallback.ISendMessageCallback {
+            override fun onAttached(p0: Message?) {
+            }
+
+            override fun onSuccess(p0: Message?) {
+                callback(true)
+            }
+
+            override fun onError(p0: Message?, p1: ErrorCode?) {
+                callback(false)
+            }
+
+        })
+    }
 
     /**
      * 私聊重发消息使用
