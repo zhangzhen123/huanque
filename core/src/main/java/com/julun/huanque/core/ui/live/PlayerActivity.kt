@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -16,6 +17,7 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
@@ -39,6 +41,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.interfaces.EmojiInputListener
+import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
@@ -147,6 +150,7 @@ class PlayerActivity : BaseActivity() {
 
     //直播心跳间隔时间   2分钟（改为一分钟一次） 主播端需每1分钟调用一次，如果超过3分钟没有调用，直播自动停播
     private var delaySeconds = 30 * 1000L
+
     //当前的模糊背景封面地址
     private var currentLiveBgUrl: String? = null
 
@@ -1046,6 +1050,12 @@ class PlayerActivity : BaseActivity() {
      * 初始化输入框相关
      */
     private fun initInput() {
+
+
+        viewModel.mMessageSending.observe(this, Observer {
+            judgeSendEnable()
+        })
+
         panel_emotion.mListener = object : EmojiInputListener {
             override fun onClick(type: String, emotion: Emotion) {
                 val start: Int = edit_text.selectionStart
@@ -1077,13 +1087,21 @@ class PlayerActivity : BaseActivity() {
                 return@onClickNew
             }
             viewModel.sendMessage(message)
+            edit_text.setText("")
         }
 
 
-        viewModel.mMessageSending.observe(this, Observer {
-            if (it == true) {
-                sendBtn.isEnabled = false
+        edit_text.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                judgeSendEnable()
             }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
         })
     }
 
@@ -1094,6 +1112,15 @@ class PlayerActivity : BaseActivity() {
         val keyEventUp = KeyEvent(KeyEvent.ACTION_UP, keyCode)
         edit_text.onKeyDown(keyCode, keyEventDown)
         edit_text.onKeyUp(keyCode, keyEventUp)
+    }
+
+    /**
+     * 判断赠送按钮是否可用
+     */
+    private fun judgeSendEnable() {
+        val sending = viewModel.mMessageSending.value ?: false
+        //内容不为空，未处于发送状态(显示可用状态，其余显示不可用状态)
+        sendBtn.isEnabled = edit_text.text.toString().isNotEmpty() && !sending
     }
 
     /**
@@ -1640,10 +1667,14 @@ class PlayerActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         initListener()
-        chat_layout.setOnTouchListener { _, _ ->
-            liveViewManager.showHeaderAndHideChatView()
-            false
+        publicMessageView.mEventListener = object : EventListener {
+            override fun onDispatch(ev: MotionEvent?) {
+                if (ev?.action == MotionEvent.ACTION_DOWN) {
+                    mHelper?.hookSystemBackByPanelSwitcher()
+                }
+            }
         }
+
         surface_view.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 if (liveViewManager.isHorizontal) {

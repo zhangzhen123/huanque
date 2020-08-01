@@ -19,6 +19,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.GlobalDataPool
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.SessionUtils
@@ -26,6 +27,7 @@ import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
+import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
@@ -163,6 +165,7 @@ class PlayerViewModel : BaseViewModel() {
 
     //打开广场直播
     val squareView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //显示私聊页面
     val privateMessageView: MutableLiveData<PrivateMessageBean> by lazy { MutableLiveData<PrivateMessageBean>() }
 
@@ -652,6 +655,16 @@ class PlayerViewModel : BaseViewModel() {
                     }
                     ValidateResult.ONLY -> {
                         //仅自己可见
+                        val newMessage = result.newContent ?: msg
+                        RongCloudManager.addUnRealMessage(
+                            newMessage,
+                            MessageProcessor.TextMessageType.PUBLIC_MESSAGE,
+                            null,
+                            "$programId",
+                            Conversation.ConversationType.CHATROOM
+                        )
+                        mMessageSending.value = false
+                        mLastSendTime = SystemClock.elapsedRealtime()
                     }
                     ValidateResult.RESEND -> {
                         //替换文案发送

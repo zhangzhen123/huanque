@@ -608,14 +608,17 @@ object RongCloudManager {
 
         var conversationType = Conversation.ConversationType.CHATROOM
         RongIMClient.getInstance().sendMessage(conversationType, programId, chatMessage, null, null, object : IRongCallback.ISendMessageCallback {
-            override fun onAttached(p0: Message?) {
+            override fun onAttached(message: Message?) {
             }
 
-            override fun onSuccess(p0: Message?) {
+            override fun onSuccess(message: Message?) {
+                if (message != null) {
+                    switchThread(message)
+                }
                 callback(true)
             }
 
-            override fun onError(p0: Message?, p1: ErrorCode?) {
+            override fun onError(message: Message?, p1: ErrorCode?) {
                 callback(false)
             }
 
