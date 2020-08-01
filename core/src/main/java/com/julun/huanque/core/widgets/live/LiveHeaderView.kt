@@ -103,7 +103,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
                 }
             })
             playerViewModel?.baseData?.observe(activity, androidx.lifecycle.Observer {
-                    royalButtonAnimation()
+                royalButtonAnimation()
             })
             playerViewModel
         }
@@ -154,12 +154,18 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     private fun initViews() {
-        onlineUserListView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        onlineUserListView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            context,
+            androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,
+            false
+        )
         onlineUserListView.adapter = userListAdapter
         authorContainer.onClickNew {
             // 主播个人信息界面
-            playerViewModel?.userInfoView?.value = UserInfoBean(userId = programId, isAnchor = true, royalLevel = 0, userPortrait = anchorInfo?.headPic
-                    ?: "", programName = authorNicknameText.text.toString())
+            playerViewModel?.userInfoView?.value = UserInfoBean(
+                userId = programId, isAnchor = true, royalLevel = 0, userPortrait = anchorInfo?.headPic
+                    ?: "", programName = authorNicknameText.text.toString()
+            )
 
         }
         // 关注
@@ -171,7 +177,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             }
         }
         exitImage.onClickNew {
-            playerViewModel?.finishState?.value=true
+            playerViewModel?.finishState?.value = true
         }
 //        count_container_001.onClickNew {
 //            //            playerActivity.openOnlineView()
@@ -448,70 +454,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         userListAdapter.replaceData(roomUsers)
     }
 
-    // 刷新榜单
-//    private fun doRefreshTopView() {
-//        if (topList.isNotEmpty() && topList.size > 0) {
-//            top1NicknameText.visibility = View.VISIBLE
-//            top1ScoreText.visibility = View.VISIBLE
-//            top1EmptyTipText.visibility = View.GONE
-//            top1NicknameText.text = topList[0].nickName
-//            top1ScoreText.text = topList[0].score.toInt().toString()
-//        } else {
-//            top1NicknameText.visibility = View.GONE
-//            top1ScoreText.visibility = View.GONE
-//            top1EmptyTipText.visibility = View.VISIBLE
-//        }
-//
-//        if (topList.isNotEmpty() && topList.size > 1) {
-//            top2NicknameText.text = topList[1].nickName
-//            top2ScoreText.text = topList[1].score.toInt().toString()
-//            top2NicknameText.visibility = View.VISIBLE
-//            top2ScoreText.visibility = View.VISIBLE
-//            top2EmptyTipText.visibility = View.GONE
-//        } else {
-//            top2NicknameText.visibility = View.GONE
-//            top2ScoreText.visibility = View.GONE
-//            top2EmptyTipText.visibility = View.VISIBLE
-//        }
-//    }
-
-    /**
-     * 接收榜单数据变化通知(榜单没有删除类型DELETE)
-     */
-//    fun handleTop2Change(resultList: List<UserInfoForLmRoom>) {
-//        Single.just(resultList).compose(RunOnMainSchedulerTransformer()).subscribe { items ->
-//            items.forEach {
-//                when (it.type) {
-//                    UserChangeType.New -> topList.add(it)
-//                    UserChangeType.Mod -> replaceExistTopItem(it)
-//                }
-//            }
-//
-//            topList = orderWithScore(topList)
-//            if (topList.size > TOP_MAX_LIMIT) {
-//                topList = topList.subList(0, TOP_MAX_LIMIT)
-//            }
-//            doRefreshTopView()
-//        }
-//    }
-
-    // 替换列表中的用户对象
-    private fun replaceExistTopItem(newObj: UserInfoForLmRoom) {
-        var existed = false
-        for (index in 0..topList.size - 1) {
-            if (topList[index].userId == newObj.userId) {
-                topList[index] = newObj
-                existed = true
-                break
-            }
-        }
-        // 不存在有可能是2名以后的被裁剪了，
-        // 这里就当新用户了
-        if (!existed) {
-            topList.add(newObj)
-        }
-    }
-
     // 当前新增用户是否在列表中，不在则添加
     private fun addRoomUser(newObj: UserInfoForLmRoom) {
         val newUserId = newObj.userId
@@ -547,12 +489,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             roomUsers = orderWithScore(roomUsers)
             isReduceUserCount()
         }
-//        tv_user_count.text = formatCount(data.totalCount)
-//        setImportantCount(data.royalCount)
         doRefreshRoomUserList()
-//        }
-//        playerViewModel?.updateRoyalCount?.value = RoyalMessageBean(royalCount = data.honorCount, guardCount = data.guardCount)
-
     }
 
     private fun replaceExistUserItem(newObj: UserInfoForLmRoom) {

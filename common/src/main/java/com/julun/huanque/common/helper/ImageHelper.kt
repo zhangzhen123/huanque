@@ -8,7 +8,6 @@ import com.julun.huanque.common.bean.StyleParam
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.MeetStatus
 import com.julun.huanque.common.constant.Sex
-import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
 
@@ -262,18 +261,18 @@ object ImageHelper {
 
     fun getRankResId(index: Int = -1): Int {
         var resId = 0
-//        when (index) {
-//            0 -> resId = R.mipmap.rank_1
-//            1 -> resId = R.mipmap.rank_2
-//            2 -> resId = R.mipmap.rank_3
-//            else -> {
-//                if (index < 0) {
-//                    resId = R.mipmap.rank_1
-//                } else if (index > 2) {
-//                    resId = R.mipmap.rank_3
-//                }
-//            }
-//        }
+        when (index) {
+            0 -> resId = R.mipmap.icon_rank_1
+            1 -> resId = R.mipmap.icon_rank_2
+            2 -> resId = R.mipmap.icon_rank_3
+            else -> {
+                if (index < 0) {
+                    resId = R.mipmap.icon_rank_1
+                } else if (index > 2) {
+                    resId = R.mipmap.icon_rank_3
+                }
+            }
+        }
         return resId
     }
 
@@ -281,15 +280,15 @@ object ImageHelper {
      * 获取本地的诸如 emoj,用户等级,主播等级和贵族等级的图片资源id
      */
     fun getLocalImageResId(paramValue: String?, styleParam: StyleParam): Int {
-        return if (MessageUtil.PREFFIX_USER_LEVEL == styleParam.preffix) {
+        return if (MessageUtil.PREFIX_USER_LEVEL == styleParam.preffix) {
             if (paramValue?.toInt() == -1) -1 else
                 getUserLevelImg(levelString = paramValue)
-        } else if (MessageUtil.PREFFIX_ROYAL_LEVEL == styleParam.preffix) {
+        } else if (MessageUtil.PREFIX_ROYAL_LEVEL == styleParam.preffix) {
             if (paramValue?.toInt() == -1) -1 else
                 getRoyalLevelImgLong(levelString = paramValue)
-        } else if (MessageUtil.PREFFIX_ANCHOR_LEVEL == styleParam.preffix) {
+        } else if (MessageUtil.PREFIX_ANCHOR_LEVEL == styleParam.preffix) {
             getAnchorLevelResId(paramValue!!.toInt())
-        } else if (MessageUtil.PREFFIX_EMOJI == styleParam.preffix) {
+        } else if (MessageUtil.PREFIX_EMOJI == styleParam.preffix) {
             EmojiUtil.EmojiResArray["$paramValue".toInt()]
         } else {
             ULog.i("图片类型不明,既不是用户等级,又不是贵族等级,还不是emoji表情")

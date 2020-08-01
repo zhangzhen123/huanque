@@ -18,6 +18,7 @@ import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
+import com.julun.huanque.core.ui.live.dialog.ScoreDialogFragment
 import com.julun.huanque.core.viewmodel.*
 import java.lang.ClassCastException
 
@@ -128,10 +129,14 @@ class PlayerDialogManager(val context: PlayerActivity) {
         })
 
         playerViewModel.squareView.observe(context, Observer {
-            if (it==true) {
-//                openGiftView()
+            if (it == true) {
                 openDialog(LiveSquareDialogFragment::class.java)
             }
+        })
+
+
+        playerViewModel.scoreView.observe(context, Observer {
+            openDialog(ScoreDialogFragment::class.java, builder = { ScoreDialogFragment.newInstance(playerViewModel.programId) })
         })
     }
 
@@ -173,12 +178,14 @@ class PlayerDialogManager(val context: PlayerActivity) {
 //        }
 //        playerViewModel.refreshGift.value = true
     }
+
     //显示用户更多设置布局
     fun showUserMoreSetting() {
 //        mDialogManager.openDialog(clazz = UserMoreActionFragment::class.java, builder = {
 //            UserMoreActionFragment.newInstance(viewModel.programId)
 //        })
     }
+
     /**
      * 打开顶部弹窗
      */

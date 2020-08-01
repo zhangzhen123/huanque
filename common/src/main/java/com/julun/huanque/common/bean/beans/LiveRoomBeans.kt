@@ -734,7 +734,7 @@ class RankingsResult : Serializable {
     var badgesPic: List<String> = ArrayList<String>()
 
     /** 比分 **/
-    var score: Double = 0.0
+    var score: Long = 0L
     //4.15新增字段
     /** 贵族勋章地址 **/
     var royalPic: String = ""

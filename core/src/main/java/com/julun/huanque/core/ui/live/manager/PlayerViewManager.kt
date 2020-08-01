@@ -262,9 +262,6 @@ class PlayerViewManager(val context: PlayerActivity) {
             }
         })
 
-        viewModel.scoreView.observe(context, Observer {
-            openScoreActivity()
-        })
 
 
         viewModel.actionBeanData.observe(context, Observer {
@@ -780,15 +777,6 @@ class PlayerViewManager(val context: PlayerActivity) {
 //        context.lifecycle.addObserver(lifecycleObserver)
     }
 
-    //打开贡献列表
-    fun openScoreActivity() {
-//        showOrHideContentView(hide = true, needAnimator = false)
-//        val intent = Intent(context, ScoreActivity::class.java)
-//        intent.putExtra(IntentParamKey.PROGRAM_ID.name, programId)
-//        intent.putExtra(IntentParamKey.IS_THEME_ROOM.name, viewModel.isThemeRoom)
-//        context.startActivityForResult(intent, ACTIVITY_DIALOG_CODE)
-//        huanqueService.getService(IStatistics::class.java)?.onLiveRoom(DataExtras.EXTRA_RANK_INLET)
-    }
 
     /**
      * 礼物面板数量变化

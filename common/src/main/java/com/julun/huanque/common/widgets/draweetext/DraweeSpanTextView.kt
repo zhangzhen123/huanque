@@ -134,13 +134,13 @@ class DraweeSpanTextView @JvmOverloads constructor(
 //                            val imageMargin = sp(5f)
                             // 这里有一个特例 ,原定计划是所有的图片(其实是指各个等级的图标,不能为0,但是emoji是可以有 0 开始的...所以需要特殊处理)
                             if ((MessageUtil.KEY_LOCAL == styleParam.source && StringHelper.isNotEmpty(paramValue) && paramValue!!.toInt() >= 0)
-                                    || styleParam.preffix == MessageUtil.PREFFIX_EMOJI) {
+                                    || styleParam.preffix == MessageUtil.PREFIX_EMOJI) {
                                 val resId: Int = ImageHelper.getLocalImageResId(paramValue, styleParam)
                                 //改用固定高度
                                 var specifiedWidth = dip(15)
                                 var specifiedHeight = specifiedWidth
 
-                                if (styleParam.preffix == MessageUtil.PREFFIX_USER_LEVEL) {
+                                if (styleParam.preffix == MessageUtil.PREFIX_USER_LEVEL) {
                                     specifiedHeight = dip(15)
                                     specifiedWidth = dip(29)
                                 }
