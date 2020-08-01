@@ -138,7 +138,7 @@ class MessageFragment : BaseFragment() {
             val data = mAdapter.data
             if (ForceUtils.isIndexNotOutOfBounds(realPosition, data)) {
                 val tId = data[realPosition].conversation.targetId
-                if(tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender){
+                if (tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender) {
                     //系统消息和鹊友通知不显示弹窗
                     return@setOnItemLongClickListener false
                 }
@@ -222,8 +222,8 @@ class MessageFragment : BaseFragment() {
 
         tv_message_unread.onClickNew {
             activity?.let { act ->
-//                PrivateConversationActivity.newInstance(act, 20000143)
-                PrivateConversationActivity.newInstance(act, 10)
+                PrivateConversationActivity.newInstance(act, 20000439)
+//                PrivateConversationActivity.newInstance(act, 10)
             }
         }
 
