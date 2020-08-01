@@ -70,4 +70,30 @@ interface LiveRoomService {
      */
     @POST("live/room/rank/week")
     suspend fun queryScoreByWeek(@Body from: ScoreRankResultForm): Root<RootListData<RankingsResult>>
+
+
+    /*************************************** 用户在线列表 *************************************************/
+    /**
+     * 查询直播间贵族用户列表
+     */
+    @POST("live/room/info/listRoomRoyalUser")
+    suspend fun queryRoyalList(@Body form: OnLineForm): Root<OnlineListData<OnlineUserInfo>>
+
+    /**
+     * 查询直播间普通用户列表
+     */
+    @POST("live/room/info/listRoomUser")
+    suspend fun queryNormalList(@Body form: OnLineForm): Root<OnlineListData<OnlineUserInfo>>
+
+    /**
+     * 查询直播间守护用户列表
+     */
+    @POST("live/room/info/listRoomGuardUser")
+    suspend fun queryGuardList(@Body form: OnLineForm): Root<OnlineListData<OnlineUserInfo>>
+
+    /**
+     * 查询直播间管理用户列表
+     */
+    @POST("live/room/info/listRoomMangerUser")
+    suspend fun queryManagerList(@Body form: OnLineForm): Root<OnlineListData<OnlineUserInfo>>
 }

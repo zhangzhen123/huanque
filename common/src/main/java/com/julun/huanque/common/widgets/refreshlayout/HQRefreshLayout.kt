@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by dong on 2018/3/29.
  */
-class huanqueRefreshLayout(context: Context, attrs: AttributeSet?) : SuperSwipeRefreshLayout(context, attrs) {
+class HuanQueRefreshLayout(context: Context, attrs: AttributeSet?) : SuperSwipeRefreshLayout(context, attrs) {
     private var svga: SVGAPlayerView? = null
     private var isStart = false
     private var disposable: Disposable? = null

@@ -5,9 +5,11 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.basic.TabBean
 import com.julun.huanque.common.bean.beans.MicOperateBean
 import com.julun.huanque.common.bean.beans.PKCreateEvent
 import com.julun.huanque.common.bean.beans.RunwayCache
+import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.manager.OrderDialogManager
 import com.julun.huanque.common.suger.show
@@ -18,6 +20,7 @@ import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
+import com.julun.huanque.core.ui.live.dialog.OnlineDialogFragment
 import com.julun.huanque.core.ui.live.dialog.ScoreDialogFragment
 import com.julun.huanque.core.viewmodel.*
 import java.lang.ClassCastException
@@ -137,6 +140,18 @@ class PlayerDialogManager(val context: PlayerActivity) {
 
         playerViewModel.scoreView.observe(context, Observer {
             openDialog(ScoreDialogFragment::class.java, builder = { ScoreDialogFragment.newInstance(playerViewModel.programId) })
+        })
+
+        playerViewModel.openOnlineDialog.observe(context, Observer { TabTag ->
+
+            openDialog(OnlineDialogFragment::class.java, builder = {
+                OnlineDialogFragment.newInstance(
+                    arrayListOf(
+                        TabBean(TabTags.TAB_TAG_ONLINE, "在线列表", select = TabTag == TabTags.TAB_TAG_ONLINE),
+                        TabBean(TabTags.TAB_TAG_ROYAL, "贵族席位", select = TabTag == TabTags.TAB_TAG_ROYAL)
+                    )
+                )
+            })
         })
     }
 

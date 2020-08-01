@@ -187,16 +187,6 @@ data class RoomUserInfo(
     }
 }
 
-class OnlineData<T>(
-    isPull: Boolean = false,
-    hasMore: Boolean = false,
-    extDataJson: String? = null
-) :
-    RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
-    var royalUserList: List<T> = arrayListOf()
-    var royalLevelUrl: String = ""
-    var onlineUserNum: Int = 0
-}
 
 class RoomBanner : ShareObject() {
     var adCode: String = ""
@@ -2258,7 +2248,7 @@ data class PkRankAnchorRankInfo(
  * @since 4.24
  */
 data class OnlineUserInfo(
-    var userId: Long= -1,
+    var userId: Long= -1L,
     //头像
     var headPic: String = "",
     var userLevel: Int = -1,
@@ -2290,7 +2280,7 @@ data class OnlineUserInfo(
  * 在线用户信息
  * @author WanZhiYuan
  */
-class NewOnlineData<T>(
+class OnlineListData<T>(
     isPull: Boolean = false,
     hasMore: Boolean = false,
     extDataJson: String? = null

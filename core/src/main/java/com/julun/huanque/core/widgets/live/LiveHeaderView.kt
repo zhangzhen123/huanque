@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.constant.UserChangeType
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
@@ -86,7 +87,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         val activity = context as? PlayerActivity
         activity?.let {
             playerViewModel = ViewModelProvider(activity).get(PlayerViewModel::class.java)
-            //todo
             playerViewModel?.updateRoyalCount?.observe(activity, androidx.lifecycle.Observer {
                 it ?: return@Observer
                 val royalCount = it.royalCount ?: 0
@@ -103,7 +103,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
                 }
             })
             playerViewModel?.baseData?.observe(activity, androidx.lifecycle.Observer {
-                royalButtonAnimation()
+//                royalButtonAnimation()
             })
             playerViewModel
         }
@@ -178,6 +178,9 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
         exitImage.onClickNew {
             playerViewModel?.finishState?.value = true
+        }
+        flRoyalRootView.onClickNew {
+            playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ONLINE
         }
 //        count_container_001.onClickNew {
 //            //            playerActivity.openOnlineView()
