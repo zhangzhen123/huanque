@@ -39,7 +39,7 @@ class PlayerBannerViewModel : BaseViewModel() {
     /**
      * 检测banner状态
      */
-    fun checkBanner(bannerCodes: String, programId: Int) {
+    fun checkBanner(bannerCodes: String, programId: Long) {
         if (checkBannering) {
             return
         }

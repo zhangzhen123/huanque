@@ -11,7 +11,7 @@ import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseFragment
@@ -37,6 +37,7 @@ import com.julun.huanque.common.widgets.live.WebpGifView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
+import com.julun.huanque.core.ui.live.manager.PlayerViewManager
 import com.julun.huanque.core.viewmodel.*
 import com.julun.huanque.core.widgets.live.HighlyAnimationView
 import com.julun.huanque.core.widgets.live.banner.BannerListener
@@ -91,7 +92,7 @@ class AnimationFragment : BaseFragment() {
 
 
     //节目id
-    private var programId: Int = 0
+    private var programId: Long = 0L
 
     // 屏幕高度
     private val SCREEN_HEIGHT: Int by lazy {
@@ -102,22 +103,13 @@ class AnimationFragment : BaseFragment() {
         }
     }
 
-    // 顶部栏高度
-    private val HEADER_HEIGHT: Int by lazy { resources.getDimensionPixelSize(R.dimen.live_header_height) }
-
-    // 屏幕宽度
-    private val SCREEN_WIDTH: Int by lazy { ScreenUtils.getScreenWidth() }
-
-    // 视频高度(屏幕高度的四分之三)
-    private val LIVE_HEIGHT: Int by lazy { SCREEN_WIDTH * 3 / 4 }
-
     //视频以下的高度
-    private val BOTTOM_LIVE: Int by lazy { SCREEN_HEIGHT - HEADER_HEIGHT - LIVE_HEIGHT }
-    private val CONTAINER_001_TOP: Int by lazy {
-        (HEADER_HEIGHT + LIVE_HEIGHT - DensityHelper.dp2px(43f))
+    private val bottomLiveHeight: Int by lazy { SCREEN_HEIGHT - PlayerViewManager.HEADER_HEIGHT - PlayerViewManager.LIVE_HEIGHT }
+    private val container001Top: Int by lazy {
+        (PlayerViewManager.HEADER_HEIGHT + PlayerViewManager.LIVE_HEIGHT - DensityHelper.dp2px(43f))
     }
 
-    private val ANCHOR_ANI_WIDTH: Int = SCREEN_WIDTH * 9 / 16
+    private val ANCHOR_ANI_WIDTH: Int = PlayerViewManager.SCREEN_WIDTH * 9 / 16
 
     //直播答题倒计时动画
     private var questionAnimator: ValueAnimator? = null
@@ -127,10 +119,10 @@ class AnimationFragment : BaseFragment() {
 
     companion object {
         val PROGRAM_ID = "programId"
-        fun newInstance(programId: Int): AnimationFragment {
+        fun newInstance(programId: Long): AnimationFragment {
             val fragment = AnimationFragment()
             val bundle = Bundle()
-            bundle.putInt(PROGRAM_ID, programId)
+            bundle.putLong(PROGRAM_ID, programId)
             fragment.arguments = bundle
             return fragment
         }
@@ -140,16 +132,7 @@ class AnimationFragment : BaseFragment() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         logger.info("我加载了几次++++++$activity")
 
-//        Observable.timer(5, TimeUnit.SECONDS)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .bindUntilEvent(this, FragmentEvent.DESTROY)
-//                .subscribe {
-//                    val data = PkPropUseWarnEvent(14851,"SmallBlood","Mu烟～","lm/config/goods/BloodMidle3x.png","距离Mu烟～主播PK结束还有30s，本场获得的SmallBlood还未使用，请尽快使用哦~")
-//                    val dialog = PKPropNotifyDialog.newInstance(data, programId)
-//                    dialog?.show(childFragmentManager, "PKPropNotifyDialog")
-//                }
-
-        programId = arguments?.getInt(PROGRAM_ID, 0) ?: 0
+        programId = arguments?.getLong(PROGRAM_ID, 0L) ?: 0L
         bannerWebView.programId = "$programId"
         mHighlyAnimation = rootView.findViewById(R.id.highlyAnimation)
         enterAnimatorView = rootView.findViewById(R.id.user_enter_view)
@@ -246,9 +229,9 @@ class AnimationFragment : BaseFragment() {
                         context?.let {
                             if (it is PlayerActivity) {
                                 try {
-                                    val roomId = roomBean?.touchValue?.toInt() ?: 0
+                                    val roomId = roomBean.touchValue.toLongOrNull()
                                     //房间切换
-                                    ViewModelProviders.of(it).get(PlayerViewModel::class.java).checkoutRoom.postValue(roomId)
+                                    ViewModelProvider(it).get(PlayerViewModel::class.java).checkoutRoom.postValue(roomId)
                                 } catch (e: NumberFormatException) {
                                     e.printStackTrace()
                                 }
@@ -310,8 +293,8 @@ class AnimationFragment : BaseFragment() {
             if (playerViewModel.isAnchor == true) {
                 anchor_horizontal_container.show()
                 val ahcLP = anchor_horizontal_container.layoutParams
-                ahcLP.width = SCREEN_WIDTH
-                uecLp.width = SCREEN_WIDTH
+                ahcLP.width = PlayerViewManager.SCREEN_WIDTH
+                uecLp.width = PlayerViewManager.SCREEN_WIDTH
             } else {
                 user_enter_container.hide()
                 anchor_horizontal_container.hide()
@@ -326,7 +309,7 @@ class AnimationFragment : BaseFragment() {
 //        setAnchorShieldViews(isHorizontal, playerViewModel.shieldSetting.value ?: return)
     }
 
-    fun updateProgramId(pId: Int) {
+    fun updateProgramId(pId: Long) {
         programId = pId
         bannerWebView.programId = "$programId"
     }
@@ -384,7 +367,7 @@ class AnimationFragment : BaseFragment() {
 
         playerViewModel.baseData.observe(this, Observer {
             if (it != null) {
-                barrage_view.anchorId = it.anchorId
+                barrage_view.anchorId = it.programId
             }
         })
 
@@ -542,8 +525,8 @@ class AnimationFragment : BaseFragment() {
 
     private fun initViewHeight() {
         val coLp = container_001.layoutParams as FrameLayout.LayoutParams
-        coLp.topMargin = CONTAINER_001_TOP
-        logger.info("CONTAINER_001_TOP:" + CONTAINER_001_TOP)
+        coLp.topMargin = container001Top
+        logger.info("CONTAINER_001_TOP:" + container001Top)
         setUserEnterLayout()
         //送礼特效高度
         showGiftEffectNormal()
@@ -553,8 +536,8 @@ class AnimationFragment : BaseFragment() {
 
 
         val extendHigh = resources.getDimensionPixelSize(R.dimen.pk_extend_high)
-        pkMicView.layoutParams.height = LIVE_HEIGHT + extendHigh
-        logger.info("pkMicView h=${LIVE_HEIGHT + extendHigh}")
+        pkMicView.layoutParams.height = PlayerViewManager.LIVE_HEIGHT + extendHigh
+        logger.info("pkMicView h=${PlayerViewManager.LIVE_HEIGHT + extendHigh}")
 
         val pkProcessHigh = resources.getDimensionPixelSize(R.dimen.pk_process_high)
 
@@ -563,18 +546,18 @@ class AnimationFragment : BaseFragment() {
 
         //退出聊天模式布局
         (tv_exit_chat_mode.layoutParams as? FrameLayout.LayoutParams)?.topMargin =
-            LIVE_HEIGHT + pkProcessHigh + HEADER_HEIGHT + DensityHelper.dp2px(1f) - DensityHelper.dp2px(40f)
+            PlayerViewManager.LIVE_HEIGHT + pkProcessHigh + PlayerViewManager.HEADER_HEIGHT + DensityHelper.dp2px(1f) - DensityHelper.dp2px(40f)
 
     }
 
     private fun setUserEnterLayout() {
         val ueLp = (user_enter_view?.layoutParams as? FrameLayout.LayoutParams) ?: return
         if (!isHorizontal) {
-            ueLp.topMargin = CONTAINER_001_TOP + DensityHelper.dp2px(36f)
-            ueLp.width = SCREEN_WIDTH
+            ueLp.topMargin = container001Top + DensityHelper.dp2px(36f)
+            ueLp.width = PlayerViewManager.SCREEN_WIDTH
         } else {
             ueLp.topMargin = DensityHelper.dp2px(150f)
-            ueLp.width = SCREEN_WIDTH
+            ueLp.width = PlayerViewManager.SCREEN_WIDTH
         }
 
     }
@@ -590,7 +573,7 @@ class AnimationFragment : BaseFragment() {
         if (isHorizontal) {
             sgLp.bottomMargin = 0
         } else {
-            val bottom = BOTTOM_LIVE - DensityHelper.dp2px(40f) - DensityHelper.dp2px(120f)
+            val bottom = bottomLiveHeight - DensityHelper.dp2px(40f) - DensityHelper.dp2px(120f)
             sgLp.bottomMargin = bottom
         }
         simpleGift.requestLayout()
@@ -605,7 +588,7 @@ class AnimationFragment : BaseFragment() {
             if (bottom > 0)
                 sgLp.bottomMargin = bottom
         } else {
-            if (BOTTOM_LIVE < giftHigh + DensityHelper.dp2px(40f)) {
+            if (bottomLiveHeight < giftHigh + DensityHelper.dp2px(40f)) {
                 val bottom = giftHigh + DensityHelper.dp2px(5f) - DensityHelper.dp2px(120f)
                 sgLp.bottomMargin = bottom
             }
@@ -619,9 +602,9 @@ class AnimationFragment : BaseFragment() {
     fun changeShowTypeLayout(isAppShow: Boolean) {
         val coLp = container_001.layoutParams as FrameLayout.LayoutParams
         if (isAppShow) {
-            coLp.topMargin = CONTAINER_001_TOP + DensityHelper.dp2px(10f)
+            coLp.topMargin = container001Top + DensityHelper.dp2px(10f)
         } else {
-            coLp.topMargin = CONTAINER_001_TOP
+            coLp.topMargin = container001Top
         }
     }
 

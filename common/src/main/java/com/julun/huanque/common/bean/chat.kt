@@ -107,7 +107,7 @@ data class ChatInfoDetail(
     //是否直播中
     var living: Boolean = false,
     //直播间ID
-    var programId: Int = 0,
+    var programId: Long = 0,
     //是否可以私聊
     var canPrivateChat: Boolean = false,
     //私聊字数

@@ -27,7 +27,7 @@ class LiveFollowListViewModel : BaseViewModel() {
 
     var offset = 0
 
-    fun requestFollowLivingList(programId: Int, isPull: Boolean) {
+    fun requestFollowLivingList(programId: Long, isPull: Boolean) {
 
         if (isPull) {
             offset = 0

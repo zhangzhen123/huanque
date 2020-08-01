@@ -25,7 +25,7 @@ open class ProgramLiveInfo : Serializable {
     var heatValue: Long = 0
 
     /** 节目ID **/
-    var programId: Int = 0
+    var programId: Long = 0
 
     /** 节目名称 **/
     var programName: String = ""
@@ -86,10 +86,7 @@ class ProgramLiveIndexInfo : ProgramLiveInfo() {
  */
 class AuthorFollowBean : Serializable {
     /** 节目id  **/
-    var programId: Int = 0
-
-    /** 主播id  **/
-    var anchorId: Long = 0
+    var programId: Long = 0
 
     /** 主播等级 默认-1代表不需要显示**/
     var anchorLevel: Int = -1
@@ -98,12 +95,10 @@ class AuthorFollowBean : Serializable {
     var anchorPic: String = ""
 
     /** 开播状态 **/
-    @JSONField(name = "isLiving")
-    var isLiving: Boolean = false
+    var livingStatus: Boolean = false
 
     /** pc直播平台 **/
-    @JSONField(name = "isPcLive")
-    var isPcLive: Boolean = false
+    var pcLiveStatus: Boolean = false
 
     /** 节目名称 **/
     var programName: String = ""
@@ -142,7 +137,7 @@ class AuthorFollowBean : Serializable {
     }
 
     override fun hashCode(): Int {
-        return programId
+        return programId.hashCode()
     }
 }
 
@@ -165,7 +160,7 @@ class RecommendInfo : Serializable {
     var defaultPlaySeconds: Int = 8
     var headPic: String = ""
     var nickname: String = ""
-    var programId: Int = 0
+    var programId: Long = 0
 
     /**新增的标签**/
     var bodyTagContentTpl: String = ""
@@ -272,7 +267,7 @@ data class GuessULikeBean(
     var hasULike: Boolean = false,
     var headPic: String = "",
     var nickname: String = "",
-    var programId: Int = 0,
+    var programId: Long = 0,
     var isShow: Boolean = false,
     //播放数据
     var playInfo: PlayInfo? = null
@@ -297,7 +292,7 @@ data class RedPacketBean(
     var logoPic: String = "",
     var subTitle: String = "",
     var title: String = "",
-    var programId: Int = 0,
+    var programId: Long = 0,
     var redId: Int = 0
 ) : Serializable
 
@@ -308,7 +303,7 @@ data class NearbyData(
     var delaySeconds: Long = 0,
     var keepSeconds: Long = 0,
     var onlineUserNum: Int = 0,
-    var programId: Int = 0,
+    var programId: Long = 0,
     var userPics: List<String> = listOf()
 )
 

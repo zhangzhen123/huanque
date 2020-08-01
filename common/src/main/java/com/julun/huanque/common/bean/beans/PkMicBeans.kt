@@ -61,7 +61,7 @@ class PKInfoBean : Serializable {
 
     //用于控制是否显示PK道具入口
     var openPropWindow: Boolean = false
-    var programId: Int = 0//直播间ID
+    var programId: Long = 0//直播间ID
 
     //4.30新增字段
     //平民总分
@@ -78,7 +78,7 @@ class PKInfoBean : Serializable {
 data class PkStage(
     var continueWinCnt: Int = 0,
     var icon: String = "",
-    var programId: Int = 0,
+    var programId: Long = 0,
     var stagePkLevel: Int = 0
 )
 
@@ -114,7 +114,7 @@ mvpHeadPic mvp头像
 closeTtl 结果展示倒计时
  */
 data class PkStageDetail(
-    var programId: Int = 0,
+    var programId: Long = 0,
     var result: String = "",
     var stagePkLevel: Int = 0,
     var stageName: String = "",
@@ -149,7 +149,7 @@ data class PkStageDetail(
 
 data class PkPropInfo(
     var nickname: String = "",
-    var programId: Int = 0,
+    var programId: Long = 0,
     var propName: String = "",
     var propPic: String = "",
     var propType: String = "",
@@ -223,7 +223,7 @@ class PkCreateInfo {
     var status = ""
     var giftMode = ""
     var duration: Int = 0
-    var programId: Int = 0
+    var programId: Long = 0
 }
 
 class MyPk {
@@ -231,7 +231,7 @@ class MyPk {
     var anchorId: Int = 0
     var status: String = ""
     var giftId: Int = 0
-    var programId: Int = 0
+    var programId: Long = 0
     var nickname: String = ""
     var picId: String = ""
     var goodsName: String = ""
@@ -244,7 +244,7 @@ class Participator(var anchorId: Int = 0,
                    var headPic: String = "",
                    var giftPic: String? = null,
                    var status: String = "",
-                   var programId: Int = 0,
+                   var programId: Long = 0,
                    var score: Int = 0) {
     //目的是去重 以anchorId为准
     override fun hashCode(): Int {

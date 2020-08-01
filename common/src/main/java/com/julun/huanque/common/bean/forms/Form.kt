@@ -75,7 +75,7 @@ class SettingForm(
 class LiveRemindForm(
     var offset: Int? = null,
     var pushOpen: String? = null,
-    var programId: Int? = null
+    var programId: Long? = null
 )
 
 class FindNewsForm {

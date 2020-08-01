@@ -87,7 +87,7 @@ class ConnectMicroViewModel : BaseViewModel() {
     /**
      * 查询主播连麦信息
      */
-    fun queryMicInfo(programId: Int) {
+    fun queryMicInfo(programId: Long) {
 
         service.queryMicInfo(ProgramIdForm(programId))
             .handleResponse(makeSubscriber {
@@ -133,7 +133,7 @@ class ConnectMicroViewModel : BaseViewModel() {
     /**
      * 挂断连麦
      */
-    fun micFinish(programId: Int) {
+    fun micFinish(programId: Long) {
         service.micFinish(ProgramIdForm(programId))
             .handleResponse(makeSubscriber {
             })

@@ -51,14 +51,14 @@ class PlayerViewModel : BaseViewModel() {
     }
 
     //直播间ID
-    var programId = 0
+    var programId = 0L
 
     val roomData: UserEnterRoomRespDto?
         get() = loginSuccessData.value
 
 
     //切换房间
-    val checkoutRoom: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
+    val checkoutRoom: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
 
     //关闭弹窗
     val closeDialog: MutableLiveData<Class<out DialogFragment>> by lazy { MutableLiveData<Class<out DialogFragment>>() }
@@ -183,7 +183,7 @@ class PlayerViewModel : BaseViewModel() {
 
 
     //主播直播间ID
-    val anchorProgramId: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
+    val anchorProgramId: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
 
     //推流设置相关
     //反转
@@ -410,7 +410,7 @@ class PlayerViewModel : BaseViewModel() {
 
     //处理直播间背景在pk时的切换 0初始样式 1 二人pk 2 三人pk 3斗地主
     val bgChange: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
-    fun getLivRoomBase(programId: Int) {
+    fun getLivRoomBase(programId: Long) {
         logger("getLivRoomBase")
         viewModelScope.launch {
             request({
@@ -448,7 +448,7 @@ class PlayerViewModel : BaseViewModel() {
      * @param typeCode 分类
      *
      */
-    fun querySwitchList(programId: Int) {
+    fun querySwitchList(programId: Long) {
         if (!needRefreshSwitchList) {
             needRefreshSwitchList = true
             return
@@ -501,7 +501,7 @@ class PlayerViewModel : BaseViewModel() {
         }
     }
 
-    fun leave(programId: Int) {
+    fun leave(programId: Long) {
         logger("leave")
     }
 
@@ -549,7 +549,7 @@ class PlayerViewModel : BaseViewModel() {
                 val info = tplBean.userInfo
 //                if ((info?.userLevel ?: 0) > 0) {
                 info?.let {
-                    val userInfo = UserInfoBean(info.userId, baseData.value?.anchorId == info.userId, info.royalLevel, "")
+                    val userInfo = UserInfoBean(info.userId, baseData.value?.programId == info.userId, info.royalLevel, "")
                     userInfoView.value = userInfo
                 }
 //                }

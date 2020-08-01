@@ -240,9 +240,9 @@ class CommonInit {
     }
 
 //    //从直播间触发登录的时候使用
-//    private var programId: Int? = null
+//    private var programId: Long? = null
 //
-//    fun setProgramId(programId: Int?) {
+//    fun setProgramId(programId: Long?) {
 //        this.programId = programId
 //    }
 //

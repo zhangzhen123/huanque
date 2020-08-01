@@ -54,7 +54,7 @@ class LiveSquareViewModel : BaseViewModel() {
     }
 
     private var offsetHot = 0
-    fun requestHotList(queryType: QueryType, programId: Int) {
+    fun requestHotList(queryType: QueryType, programId: Long) {
 
         viewModelScope.launch {
             if (queryType == QueryType.REFRESH) {

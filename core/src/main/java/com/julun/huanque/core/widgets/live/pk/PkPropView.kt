@@ -71,12 +71,12 @@ class PkPropView : LinearLayout {
     /**
      * 道具所属的直播间
      */
-    private var currentProgramId=0
+    private var currentProgramId=0L
 
     /**
      * [propInfo]道具信息  [localProgramId]当前用户所在的直播间
      */
-    fun setPropData(propInfo: PkPropInfo,localProgramId:Int) {
+    fun setPropData(propInfo: PkPropInfo,localProgramId:Long) {
         currentProgramId=propInfo.programId
         sdv_pk_prop_img.loadImage(propInfo.propPic, 40f, 40f)
         //xxx持有
@@ -156,6 +156,6 @@ class PkPropView : LinearLayout {
     }
 
     interface Listener {
-        fun callback(programId: Int)
+        fun callback(programId: Long)
     }
 }

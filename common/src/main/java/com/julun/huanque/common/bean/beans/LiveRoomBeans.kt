@@ -122,7 +122,7 @@ data class UserInfoForLmRoom(
     var nickName: String = ""
     , var picId: String = ""
     , var identityId: Int = -1
-    , var programId: Int? = null
+    , var programId: Long? = null
 //                             , var score: Double = 0.toDouble()
     , var introduce: String? = null
     , var guard: String? = null
@@ -161,7 +161,7 @@ data class GuardInfo(
 )
 
 data class RoomUserInfo(
-    var userId: Int = -1,
+    var userId: Long= -1,
     var headPic: String = "",//头像
     var userLevel: Int = -1,
     var royalLevel: Int = -1,
@@ -248,12 +248,12 @@ class LiveAdConfig : Serializable {
 }
 
 class UserEnterRoomRespBase : Serializable {
-    var anchorId: Long = 0//主播id
+//    var anchorId: Long = 0//主播id
     var prePic: String = ""//封面图
     var headPic: String = ""//头像图
     var living: String = ""//是否在直播中
     var programName: String = ""//主播昵称
-    var programId: Int = 0//节目id
+    var programId: Long = 0//节目id
 
     //主播靓号
     var prettyId: Long? = null
@@ -428,7 +428,7 @@ data class EnterExt(
 data class ThemeRoomVO(
     var showGuides: Boolean = false,
     //当前上场的主播id
-    var programId: Int = 0,
+    var programId: Long = 0,
     var programName: String = "",
     var headPic: String = ""
 )
@@ -476,9 +476,6 @@ open class AnchorBasicInfo : ProgramAnchor(), Serializable {
     /** 用户头像 **/
     var headPic: String = ""
 
-    /** 主播id **/
-    var anchorId: Long = 0
-
     /** 主播等级 **/
     var anchorLevel: Int = 0
 
@@ -486,7 +483,7 @@ open class AnchorBasicInfo : ProgramAnchor(), Serializable {
 
 open class ProgramAnchor : Serializable {
     /** 节目id **/
-    var programId: Int = 0
+    var programId: Long = 0
 }
 
 /**
@@ -533,7 +530,7 @@ class UserInfo {
  * 开播数据
  */
 class GuardAgainst(
-    var programId: Int? = 0,
+    var programId: Long? = 0,
     var streamId: String? = "",
     var prePic: String = "",
     //推流地址,当sdkProvider为Agora时有值
@@ -710,16 +707,16 @@ class SingleBadge : Serializable {
 }
 
 class IntimateVO {
-    var userId: Int = 0
+    var userId: Long= 0
     var living: Boolean = false
     var headPic: String = ""
-    var programId: Int = 0
+    var programId: Long = 0
 
 }
 
 class RankingsResult : Serializable {
     /** 用户id **/
-    var userId: Int = 0
+    var userId: Long= 0
 
     /** 用户昵称 **/
     var nickname: String = ""
@@ -750,7 +747,7 @@ class RankingsResult : Serializable {
     }
 
     override fun hashCode(): Int {
-        return userId
+        return userId.hashCode()
     }
 }
 
@@ -988,7 +985,7 @@ data class RoyalCardBean(
     var subTitle: String = "",
     var title: String = "",
     var royalCardBgPic: String = "",
-    var userId: Int = 0
+    var userId: Long= 0
 ) : Serializable
 
 data class GiftChange(
@@ -1002,7 +999,7 @@ data class CountItem(
 )
 
 //显示私聊的bean
-data class PrivateMessageBean(var userId: Int = -1, var nickName: String = "") : Serializable
+data class PrivateMessageBean(var userId: Long= -1, var nickName: String = "") : Serializable
 
 //页面跳转的Bean
 data class JumpActivityBean(
@@ -1078,7 +1075,7 @@ open class EggHitSumResultSerial(
  */
 class PackageResult : Serializable {
     /** 节目id **/
-    var programId: Int = 0
+    var programId: Long = 0
 
     /** 节目名称 **/
     var programName: String = ""
@@ -1121,7 +1118,7 @@ class LiveBean : Serializable {
 
     // 主播图片url
     var anchorPicId: String = ""
-    var programId: Int = 0
+    var programId: Long = 0
     var isAppShow: Boolean = false//是不是手机直播
 
     //    var anchorName: String = ""
@@ -1407,9 +1404,9 @@ class FansListInfo(
     var increase: Boolean? = null,
     //4.21新增字段
     /** 节目id **/
-    var programId: Int = 0,
+    var programId: Long = 0,
     /** 用户id **/
-    var userId: Int = 0,
+    var userId: Long= 0,
 
     //自定义字段
     /** 成员人数 **/
@@ -1417,10 +1414,10 @@ class FansListInfo(
 ) : Serializable {
 
     override fun hashCode(): Int {
-        if (this.userId != 0) {
+        if (this.userId != 0L) {
             return this.userId.hashCode()
         }
-        if (this.programId != 0) {
+        if (this.programId != 0L) {
             return this.programId.hashCode()
         }
         return super.hashCode()
@@ -1428,10 +1425,10 @@ class FansListInfo(
 
     override fun equals(other: Any?): Boolean {
         if (other is FansListInfo) {
-            if (other.userId != 0 && this.userId != 0) {
+            if (other.userId != 0L && this.userId != 0L) {
                 return other.userId == this.userId
             }
-            if (other.programId != 0 && this.programId != 0) {
+            if (other.programId != 0L&& this.programId != 0L) {
                 return other.programId == this.programId
             }
         }
@@ -1544,7 +1541,7 @@ class Remarks : Serializable {
 //    var headPic: String = ""
 //    var anchorId:Int=0;
 //    /** 节目id **/
-//    var programId: Int = 0
+//    var programId: Long = 0
 //    //流id
 //    var streamID:String=""
 //    //是不是主主播
@@ -1661,7 +1658,7 @@ data class HomePageBean(
     /** 个性签名 */
     var mySign: String = "",
     /** 房间号 */
-    var programId: Int = 0,
+    var programId: Long = 0,
     /**主题房*/
     var themeRoom: Boolean = false,
     /** 主播等级 */
@@ -1721,7 +1718,7 @@ data class LiveFollowListData(
 data class LiveFollowBean(
     var coverPic: String = "",
     var onlineUserNum: Int = 0,
-    var programId: Int = 0,
+    var programId: Long = 0,
     var programName: String = "",
     var living: Boolean = false
 )
@@ -1729,7 +1726,7 @@ data class LiveFollowBean(
 //上下切换列表bean
 data class SwitchBean(
     var coverPic: String = "",
-    var programId: Int = 0
+    var programId: Long = 0
 ) {
     override fun hashCode(): Int {
         return programId.hashCode()
@@ -1770,7 +1767,7 @@ data class WordPuzzleAward(
  * 横竖屏切换实体类
  */
 data class SwitchScreen(
-    var programId: Int = 0,
+    var programId: Long = 0,
     var cutoverScreenType: String = ""
 ) : Serializable
 
@@ -1855,7 +1852,7 @@ data class FlipCardExplainItemInfo(
 data class FlipCardMoreItemInfo(
     var headPic: String = "",
     var nickname: String = "",
-    var programId: Int = 0,
+    var programId: Long = 0,
     var turnTime: Int = 0,
     var living: Boolean = false
 ) : Serializable
@@ -1873,7 +1870,7 @@ data class FlipCardHistoryItemInfo(
     var hasSend: Boolean = false,
     var anchorName: String = "",
     var nickname: String = "",
-    var programId: Int = 0,
+    var programId: Long = 0,
     /** 翻牌奖励记录id **/
     var recordId: Int = 0,
     var userId: Long = 0,
@@ -1959,7 +1956,7 @@ data class DiscountItemInfo(
  */
 //拯救周星动画消息
 data class PkMicSalvationInfo(
-    var startProgramId: Int = 0,
+    var startprogramId: Long = 0,
     var programName: String = "",
     var remindSeconds: Int = 0,
     var programPic: String = "",
@@ -1973,7 +1970,7 @@ data class PkMicSalvationStartInfo(
     var participatedNums: Int = 0,
     var giftPopSeconds: Long = 0,
     var maxParticipateNums: Int = 0,
-    var programId: Int = 0,
+    var programId: Long = 0,
     var programName: String = "",
     var progressPassedSeconds: Int = 0,
     var progressSeconds: Int = 0
@@ -2031,11 +2028,11 @@ data class PkRankLastChampionInfo(
     /** 昵称 **/
     var nickname: String = "",
     /** 直播间ID 没有该字段表示虚位以待 **/
-    var programId: Int? = null,
+    var programId: Long? = null,
     /** 赛季名称 **/
     var seasonName: String = "",
     /**  用户ID **/
-    var userId: Int = 0
+    var userId: Long= 0
 )
 
 /**
@@ -2107,7 +2104,7 @@ data class PkRankRecordListInfo(
  */
 data class PkRankRecordInfo(
     /** 对手的直播间ID **/
-    var programId: Int = 0,
+    var programId: Long = 0,
     /** 对手是否开播 **/
     var isLiving: Boolean = false,
     /** 对手昵称 **/
@@ -2176,7 +2173,7 @@ data class PkRankUserInfo(
     /** 贡献值 **/
     var score: Long = 0,
     /** 用户ID **/
-    var userId: Int = 0
+    var userId: Long= 0
 )
 
 /**
@@ -2186,7 +2183,7 @@ data class PkRankUserInfo(
  */
 data class PkRankUserMvpListInfo(
     /** 用户ID **/
-    var userId: Int = 0,
+    var userId: Long= 0,
     /** 用户昵称 **/
     var nickname: String = "",
     /** 下一个勋章已有的Mvp次数 **/
@@ -2242,7 +2239,7 @@ data class PkRankAnchorRankInfo(
     /** 昵称 **/
     var nickname: String = "",
     /** 直播间ID **/
-    var programId: Int = 0,
+    var programId: Long = 0,
     /** 段位分 **/
     var score: Long = 0,
     /** 段位Icon **/
@@ -2252,7 +2249,7 @@ data class PkRankAnchorRankInfo(
     /** 段位名称 **/
     var stageName: String = "",
     /** 用户ID **/
-    var userId: Int = 0
+    var userId: Long= 0
 )
 
 /**
@@ -2261,7 +2258,7 @@ data class PkRankAnchorRankInfo(
  * @since 4.24
  */
 data class OnlineUserInfo(
-    var userId: Int = -1,
+    var userId: Long= -1,
     //头像
     var headPic: String = "",
     var userLevel: Int = -1,
@@ -2342,11 +2339,11 @@ class NewOnlineData<T>(
  * 消息使用的播放对象
  */
 data class PlayInfoBean(
-    var programId: Int = 0,
+    var programId: Long = 0,
     //当前主题房场次
-    var themeSessionId: Int = 0,
+    var themeSessionId: Long = 0,
     //当前上场的主播id
-    var themeShowingProgramId: Int = 0,
+    var themeShowingprogramId: Long = 0,
     var programName: String = "",
     var headPic: String = "",
     @JSONField(name = "isPcLive")
@@ -2738,7 +2735,7 @@ data class PlanetAnchorInfo(
     var nickname: String = "",
     var programName: String = "",
     //直播间ID
-    var programId: Int = 0
+    var programId: Long = 0
 ) : Serializable
 
 /**
@@ -2824,7 +2821,7 @@ data class AwardAssistantBean(
  */
 data class GuestInfo(
     var programName: String = "",
-    var programId: Int = 0,
+    var programId: Long = 0,
     var headPic: String = "",
     var host: Boolean = false
 ) : Serializable {
@@ -2841,13 +2838,13 @@ data class GuestInfo(
 }
 
 data class ThemeSessionFinishBean(
-    var programId: Int = 0,//这里指的是主题房id
+    var programId: Long = 0,//这里指的是主题房id
     var themeSessionId: Int = 0
 )
 
 //通用的只含programId字段的类
 data class ProgramRoomBean(
-    var programId: Int = 0//
+    var programId: Long = 0//
 )
 
 //宝箱可领取消息
@@ -2875,7 +2872,7 @@ data class ThemeProgram(
     @JSONField(name = "isLiving")
     var isLiving: Boolean = false,
     var nickname: String = "",
-    var programId: Int = 0,
+    var programId: Long = 0,
     var showTime: String = "",
     var showTimeTtl: Long = 0,
     var showType: String = ""
@@ -2907,7 +2904,7 @@ data class LiveRemindBeans(
     //在线人数
     var onlineUserNum: Int = 0,
     //节目id
-    var programId: Int = 0,
+    var programId: Long = 0,
     //节目名称
     var programName: String = ""
 ) : Serializable {

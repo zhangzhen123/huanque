@@ -81,7 +81,7 @@ data class HomeTaskBar(
 //    var headPic: String = "",
 //    var nickname: String = "",
 //    var picList: List<String> = listOf(),
-//    var userId: Int = 0
+//    var userId: Long= 0
 //)
 
 data class HomeRecomItem(

@@ -24,7 +24,7 @@ enum class IntentParamKey {
     ,
     RETURN_AFTER_JUMP //
     ,
-    PROGRAM_ID, STREAMID, USER_ID, ANCHOR_ID, ANCHOR_INFO //主播的信息
+    PROGRAM_ID, STREAM_ID, USER_ID, ANCHOR_ID, ANCHOR_INFO //主播的信息
     ,
     LIVE_INFO //直播的信息
     ,

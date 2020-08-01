@@ -12,7 +12,7 @@ package com.julun.huanque.common.bean.forms
 class MobileLoginForm(
     var mobile: String = "",
     var code: String = "",
-    var programId: Int? = null,
+    var programId: Long? = null,
     var shuMeiDeviceId: String? = null
 )
 
@@ -61,4 +61,4 @@ class AgreementResultForm(var result: String = "True", var agreementCode: String
 
 class UpdateHeadForm(var headPic: String)
 
-class UserOnlineHeartForm(var programId: Int?=null,var onlineId:String?=null)
+class UserOnlineHeartForm(var programId: Long?=null,var onlineId:String?=null)

@@ -42,15 +42,15 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     // 榜单前2位
     private val TOP_MAX_LIMIT = 2
     private val USER_MAX_COUNT = 30
-    private var programId: Int = 0
+    private var programId: Long = 0
 
     //    private var anchorInfo: AnchorInfoInRoom? = null
     //主播基础信息
     private var anchorInfo: AnchorBasicInfo? = null
 
     // 主播id
-    private var anchorId: Long = 0
-    private var userId: Long = 0
+//    private var anchorId: Long = 0
+//    private var userId: Long = 0
 
     // 是否关注
     private var isSubscribed: Boolean = false
@@ -158,7 +158,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         onlineUserListView.adapter = userListAdapter
         authorContainer.onClickNew {
             // 主播个人信息界面
-            playerViewModel?.userInfoView?.value = UserInfoBean(userId = userId, isAnchor = true, royalLevel = 0, userPortrait = anchorInfo?.headPic
+            playerViewModel?.userInfoView?.value = UserInfoBean(userId = programId, isAnchor = true, royalLevel = 0, userPortrait = anchorInfo?.headPic
                     ?: "", programName = authorNicknameText.text.toString())
 
         }
@@ -238,8 +238,8 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
      */
     fun initBaseData(dto: UserEnterRoomRespBase) {
         programId = dto.programId
-        anchorId = dto.anchorId
-        userId = dto.anchorId
+//        anchorId = dto.anchorId
+//        userId = dto.anchorId
         ImageUtils.loadImage(authorPhotoImage, dto.headPic, 30f, 30f)
 
         // 直播间名称
@@ -259,7 +259,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
      * 初始化头部UI
      */
     private fun prepare(info: AnchorBasicInfo, prettyId: Long?) {
-        userId = info.anchorId
+//        userId = info.anchorId
         // 直播间名称
         authorNicknameText.text = info.programName
         //头像
@@ -421,7 +421,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     private fun orderUsersAndDelAnchor(userList: MutableList<UserInfoForLmRoom>): MutableList<UserInfoForLmRoom> {
         val orderUsers = orderWithScore(userList)
         for (user in orderUsers) {
-            if (user.userId == anchorId) {
+            if (user.userId == programId) {
                 orderUsers.remove(user)
                 break
             }
@@ -515,7 +515,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     // 当前新增用户是否在列表中，不在则添加
     private fun addRoomUser(newObj: UserInfoForLmRoom) {
         val newUserId = newObj.userId
-        if (newUserId != anchorId) {
+        if (newUserId != programId) {
             var bool = false
             for ((userId) in roomUsers) {
                 if (userId == newUserId) {

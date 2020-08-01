@@ -73,6 +73,15 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
         authorList.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(5)))
         authorList.isNestedScrollingEnabled = false
 
+        authorAdapter.setOnItemClickListener { _, _, position ->
+            val item = authorAdapter.getItemOrNull(position)
+            if (item != null) {
+                logger.info("跳转直播间${item.programId}")
+                playViewModel.checkoutRoom.value = item.programId
+            }
+        }
+
+
         mViewModel.requestFollowList(true)
         mViewModel.requestHotList(QueryType.INIT, playViewModel.programId)
     }
@@ -87,7 +96,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
         mViewModel.hotDataList.observe(this, Observer {
             if (it.state == NetStateType.SUCCESS) {
                 renderHotData(it.getT())
-            }else if(it.state == NetStateType.ERROR){
+            } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show(it.error?.busiMessage)
             }
         })
@@ -130,7 +139,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
 
         if (listData.isPull) {
             authorAdapter.setList(listData.list)
-            if(listData.list.isNotEmpty()){
+            if (listData.list.isNotEmpty()) {
                 headerLayout.hotTitle.show()
             }
         } else {
@@ -203,7 +212,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                     holder.getView(R.id.anchorPicture)
                         ?: return, item.anchorPic, 55f, 55f
                 )
-                if (item.isLiving) {
+                if (item.livingStatus) {
                     holder.setGone(R.id.fl_living, true)
                 } else {
                     holder.setGone(R.id.fl_living, false)
