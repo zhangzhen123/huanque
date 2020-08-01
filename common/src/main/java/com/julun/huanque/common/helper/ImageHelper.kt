@@ -10,6 +10,7 @@ import com.julun.huanque.common.constant.MeetStatus
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
+import com.julun.huanque.common.widgets.emotion.Emotions
 import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
 
 object ImageHelper {
@@ -290,7 +291,16 @@ object ImageHelper {
         } else if (MessageUtil.PREFFIX_ANCHOR_LEVEL == styleParam.preffix) {
             getAnchorLevelResId(paramValue!!.toInt())
         } else if (MessageUtil.PREFFIX_EMOJI == styleParam.preffix) {
-            EmojiUtil.EmojiResArray["$paramValue".toInt()]
+//            EmojiUtil.EmojiResArray["$paramValue".toInt()]
+            try {
+                val paramName = styleParam.el
+                val name = "[${paramName.substring(paramName.indexOf("$") + 2, paramName.length - 1)}]"
+                Emotions.getDrawableResByName(name)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                -1
+            }
+
         } else {
             ULog.i("图片类型不明,既不是用户等级,又不是贵族等级,还不是emoji表情")
             -1
@@ -363,7 +373,6 @@ object ImageHelper {
     }
 
 
-
     private fun copyImageParams(params: BaseParams, bean: TIBean): BaseParams {
         if (params is TextParam) {
             params.textColor = bean.textColor
@@ -403,8 +412,6 @@ object ImageHelper {
         //设置占位图
         hierarchy.setPlaceholderImage(defaultHeader)
     }
-
-
 
 
     /**

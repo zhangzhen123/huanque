@@ -532,9 +532,9 @@ class PlayerActivity : BaseActivity() {
                     onKeyboardChange { visible, height ->
                         //可选实现，监听输入法变化
                         if (visible) {
-                            emojiImage.imageResource = R.mipmap.chat_key_input
-                        } else {
                             emojiImage.imageResource = R.mipmap.chat_emoji_input
+                        } else {
+                            emojiImage.imageResource = R.mipmap.chat_key_input
                         }
                     }
                 }

@@ -646,7 +646,7 @@ class PlayerViewModel : BaseViewModel() {
         mMessageSending.value = true
         viewModelScope.launch {
             request({
-                val result = liveService.sendPubMessage(ValidateForm(msg, programId.toLong())).data
+                val result = liveService.sendPubMessage(ValidateForm(msg, programId.toLong())).dataConvert()
 
                 when (result?.resultCode) {
                     ValidateResult.PASS -> {
