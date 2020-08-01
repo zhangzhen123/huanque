@@ -29,7 +29,7 @@ object UserHeartManager {
     //最大重试次数
     private const val MAX_RQ = 3
     private val service: AppService by lazy { Requests.create(AppService::class.java) }
-    private var currentProgramId: Int? = null
+    private var currentProgramId: Long? = null
     private var onlineId: String? = null
     var disposable: Disposable? = null
     private fun startHeartbeat() {

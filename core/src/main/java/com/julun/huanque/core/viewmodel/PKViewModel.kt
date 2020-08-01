@@ -146,7 +146,7 @@ class PKViewModel : BaseViewModel() {
             })
     }
 
-    fun userProp(programId: Int) {
+    fun userProp(programId: Long) {
         Requests.create(PkMicService::class.java)
             .useProp(ProgramIdForm(programId))
             .handleResponse(makeSubscriber<VoidResult> {

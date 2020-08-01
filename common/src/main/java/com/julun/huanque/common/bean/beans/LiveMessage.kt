@@ -55,7 +55,7 @@ data class RoomUserChangeEvent(
         var royalCount: Int = 0,
         var visitCount: Int = 0,
         var totalCount: Int = 0,
-        var programId: Int = 0,
+        var programId: Long = 0,
         /** 贵族数量 **/
         var honorCount: Int = 0,
         /** 守护数量 **/
@@ -95,7 +95,7 @@ open class SwitchPublishBaseData(
         var sdkProvider: String = "",
         var type: String = "",
         //直播间ID
-        var programId: Int = 0) : Serializable
+        var programId: Long = 0) : Serializable
 
 /**
  * 单个主播PK信息
@@ -135,8 +135,8 @@ class PKResultEvent(var detailList: ArrayList<PKResultUser>? = null, var pkType:
 class MonthPKResultEvent(var top: String? = "", var type: String? = "")
 
 /**PK结果用户*/
-class PKResultUser(var nickname: String? = "", var headPic: String = "", var result: String = "", var programId: Int = 0,
-                   var score: Long = 0, var userId: Int = 0) : Serializable
+class PKResultUser(var nickname: String? = "", var headPic: String = "", var result: String = "", var programId: Long = 0,
+                   var score: Long = 0, var userId: Long= 0) : Serializable
 
 /**
  * pk额外参数 用于动态改变ui
@@ -183,19 +183,19 @@ data class PKCreateEvent(
         var nickname: String = "",
         var action: String = "",
         var pkId: Int = 0,
-        var userId: Int = 0,
+        var userId: Long= 0,
         var userIds: List<Long> = listOf(),
         var detailList: List<PKUser> = listOf(),
         var countDown: Int = 0,
         /** 节目id **/
-        var programId: Int = 0
+        var programId: Long = 0
 ) : Serializable
 
 /**
  * pk礼物任务
  */
 data class PkTaskEvent(
-        var programId: Int = 0,
+        var programId: Long = 0,
         var taskInfo: PkGiftTaskInfo? = null
 )
 
@@ -203,7 +203,7 @@ data class PkTaskEvent(
  * pk积分任务
  */
 data class PkScoreEvent(
-        var programId: Int = 0,
+        var programId: Long = 0,
         var taskInfo: PkScoreTaskInfo? = null
 )
 
@@ -211,7 +211,7 @@ data class PkScoreEvent(
  * pk道具任务
  */
 data class PkPropEvent(
-        var programIds: List<Int> = listOf(),
+        var programIds: List<Long> = listOf(),
         var propInfo: PkPropInfo? = null
 )
 
@@ -223,7 +223,7 @@ data class PkPropUseWarnEvent(
 ) : Serializable
 
 data class PkPropUseWarnInfo(
-        var programId: Int = 0,
+        var programId: Long = 0,
         var propName: String = "",
         var programName: String = "",
         var propIcon: String = "",
@@ -248,7 +248,7 @@ data class RoyalUpLevelEvent(
         var royalName: String = "",
         /**上神勋章剩余修改次数*/
         var changeCount: Int = 0,
-        var userId: Int = 0,
+        var userId: Long= 0,
         var userIds: List<Int> = listOf(),
         var grantInfo: List<GrantInfo>? = null
 //        /** 是否展示引导贵族月卡弹窗 **/
@@ -282,7 +282,7 @@ data class UserExpChangeEvent(
         var newExp: Long = 0,
         var cacheStartTime: Long = 0,
         var totalBeans: Long = 0,
-        var userId: Int = 0,
+        var userId: Long= 0,
         /* var isWeekStar: String = "",*/
         var giftBeans: Long = 0,
         var times: Int = 0,
@@ -325,7 +325,7 @@ data class AnchorLevelProgressEvent(
         var needExpValue: Long = 0,
         var currExpValue: Long = 0,
         //升级成功
-        var sendUserId: Int = 0, //升级中奖的用户
+        var senduserId: Long= 0, //升级中奖的用户
         var awardValue: Int = 0,    //奖励萌豆
         var sendNickname: String = ""     //提示的用户名
 )
@@ -347,7 +347,7 @@ class RedPacketData {
 }
 
 /** 动画消息 **/
-class AnimEventCfg(val userId: Int = 0, nickname: String = "") {
+class AnimEventCfg(val userId: Long= 0, nickname: String = "") {
     var platform = "WEB"        //暂不处理,所有平台都使用这个
     var msgType = "ANIMATION"
     var display = "PUBLIC_CHAT"
@@ -377,7 +377,7 @@ data class BarrageEvent(
         var userLevel: Int = 0,
         var royalLevel: Int = 0,
         var nickname: String = "",
-        var userId: Int = 0,
+        var userId: Long= 0,
         var headPic: String = "",
         var royalPic: String = "",
         var content: String = "",
@@ -391,7 +391,7 @@ data class BarrageEvent(
 /** 踢出直播间事件 **/
 data class KickUserEvent(
         var time: String = "",
-        var targetUserId: Int = 0,
+        var targetuserId: Long= 0,
         var targetNickname: String = "",
         var nickname: String = "",
         var userId: String = ""
@@ -411,7 +411,7 @@ data class BlockUserEvent(
 )
 
 /** 开播事件 **/
-class OpenShowEvent(var programId: Int = 0,
+class OpenShowEvent(var programId: Long = 0,
                     var playUrl: String = "",
                     var playInfo: PlayInfo? = null) {
     @JSONField(name = "isPcLive")
@@ -419,7 +419,7 @@ class OpenShowEvent(var programId: Int = 0,
 }
 
 /** 关播事件 **/
-class CloseShowEvent(var programId: Int = 0, var stopType: String = "")
+class CloseShowEvent(var programId: Long = 0, var stopType: String = "")
 
 
 class AnimModel() {
@@ -478,7 +478,7 @@ data class MicAnchor(var status: String = "",
 
 }
 
-data class MicOperateBean(var seconds: Int = 0, var action: String = "", var micId: Long = 0, var userId: Int = 0, var userIds: ArrayList<Int> = arrayListOf()
+data class MicOperateBean(var seconds: Int = 0, var action: String = "", var micId: Long = 0, var userId: Long= 0, var userIds: ArrayList<Int> = arrayListOf()
                           , var detailList: ArrayList<MicAnchor> = arrayListOf()) : Serializable
 
 
@@ -496,7 +496,7 @@ data class MicInfo(
 )
 
 //跑道最多显示 15 分钟.... cacheId 客户端是否缓存 , cacheStartTime 开始缓存的时间 (不处理),   cacheValue  是否能替换跑道的价格
-class TplBeanExtraContext(var programId: Int = 0, var cacheIt: Boolean = false, var cacheStartTime: Long = 0L, var cacheValue: Long = 0, var seconds: Long = 0L
+class TplBeanExtraContext(var programId: Long = 0, var cacheIt: Boolean = false, var cacheStartTime: Long = 0L, var cacheValue: Long = 0, var seconds: Long = 0L
                           , var canBeInterrupted: Boolean = false, var extendType: String = "", var royalLevelValue: Int = 0,
         //豪车工厂的价格
                           var factoryCarPrizeCount: Int = 0,
@@ -504,7 +504,7 @@ class TplBeanExtraContext(var programId: Int = 0, var cacheIt: Boolean = false, 
         //点击卡片时用到
                           var userId: Long = 0,
         //调整直播间时用到
-                          var roomId: Int = 0,
+                          var roomId: Long = 0,
         //礼盒价值
                           var giftBeans: Long = 0,
         //礼盒类型
@@ -660,7 +660,7 @@ open class YearResult : Serializable {
     var status: Int? = null// 0、海选淘汰赛 1、晋级赛 2、总决赛
     var type: Int = 0// 0、宠爱值榜 1、积分榜 2、王牌巅峰之战榜
     //自定义参数，不是服务端传的
-    var programId: Int = 0
+    var programId: Long = 0
 }
 
 /**
@@ -811,7 +811,7 @@ class NewYearBannerResult : Serializable {
     var ttl: Long = 0
     var result: String = ""
     //自定义参数，不是服务端传的
-    var programId: Int = 0
+    var programId: Long = 0
 
     override fun toString(): String {
         return "NewYearBannerResult(display=$display,ttl=$ttl, result=$result, programId=$programId)"
@@ -842,7 +842,7 @@ class FinishAchievementBean : Serializable {
 
 class ChatFollow(var follow: Boolean = false, var anchorUrl: String)
 //宝箱类型消息类
-class TreasureBoxBean(var programName: String = "", var programId: Int = 0)
+class TreasureBoxBean(var programName: String = "", var programId: Long = 0)
 
 //公聊引导加入粉丝团类型
 class FansBean(var anchorUrl: String = "", var isJoin: Boolean = false, var nickname: String? = null, var programName: String? = null)
@@ -913,7 +913,7 @@ class OpenMonthCardMessage : Serializable {
  */
 class PlanetBatteryChangeBean : Serializable {
     //直播间ID
-    var programId: Int = 0
+    var programId: Long = 0
     //左侧炮台
     var batteryUser1: Int = -1
     //右侧炮台

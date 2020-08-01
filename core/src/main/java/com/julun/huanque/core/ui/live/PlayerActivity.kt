@@ -108,8 +108,8 @@ class PlayerActivity : BaseActivity() {
     private val joinViewModel: JoinChatRoomViewModel by viewModels()
     //viewModels--------------------------------------------------------------
 
-    private var programId: Int by Delegates.observable(0) { _, _, newValue ->
-        if (newValue != 0) {
+    private var programId: Long by Delegates.observable(0L) { _, _, newValue ->
+        if (newValue != 0L) {
             liveViewManager.setProgramId(newValue)
             viewModel.programId = newValue
             return@observable
@@ -177,7 +177,7 @@ class PlayerActivity : BaseActivity() {
         fun newInstance(
             activity: Activity,
             isAnchor: Boolean = false,
-            programId: Int?,
+            programId: Long?,
             streamId: String?,
             prePic: String? = null,
             against: GuardAgainst? = null
@@ -186,10 +186,10 @@ class PlayerActivity : BaseActivity() {
             val bundle = Bundle()
             intent.putExtra(UserType.Anchor, isAnchor)
             programId?.let {
-                bundle.putInt(IntentParamKey.PROGRAM_ID.name, it)
+                bundle.putLong(IntentParamKey.PROGRAM_ID.name, it)
             }
             streamId?.let {
-                bundle.putString(IntentParamKey.STREAMID.name, it)
+                bundle.putString(IntentParamKey.STREAM_ID.name, it)
             }
             prePic?.let {
                 bundle.putString(IntentParamKey.IMAGE.name, it)
@@ -215,9 +215,9 @@ class PlayerActivity : BaseActivity() {
         if (savedInstanceState == null) {
             //重置token失效连接次数
             RongCloudManager.tokenIncorrectCount = 0
-            programId = intent.getIntExtra(IntentParamKey.PROGRAM_ID.name, 0)
+            programId = intent.getLongExtra(IntentParamKey.PROGRAM_ID.name, 0L)
             isAnchor = intent.getBooleanExtra(UserType.Anchor, false)
-            streamId = intent.getStringExtra(IntentParamKey.STREAMID.name)
+            streamId = intent.getStringExtra(IntentParamKey.STREAM_ID.name)
 //            isFromSquare = intent.getBooleanExtra(FromPager.FROM_SQUARE, false)
             //gift=-1代表无效
             val gift = intent.getIntExtra(IntentParamKey.OPEN_GIFT.name, -1)
@@ -233,7 +233,7 @@ class PlayerActivity : BaseActivity() {
             }
             liveViewManager.isAnchorSelf = isAnchor
             viewModel.isAnchor = isAnchor
-            if (programId == 0 && !isAnchor) {
+            if (programId == 0L && !isAnchor) {
                 reportCrash("进入房间时 programId为0了")
                 ToastUtils.showErrorMessage("竟然出错了，再试一下吧！")
                 super.finish()
@@ -680,7 +680,7 @@ class PlayerActivity : BaseActivity() {
     }
 
 
-    private fun setAnchorProgramId(programId: Int) {
+    private fun setAnchorProgramId(programId: Long) {
         this.programId = programId
         initChatByAnchor()
     }
@@ -1819,9 +1819,9 @@ class PlayerActivity : BaseActivity() {
         //每次回来重置显隐 防止异常回来没有触发显示
         liveViewManager.showOrHideContentView(hide = false, needAnimator = false)
         //这段代码主要是处理 从推送过来的消息 如果正在看直播并且房间号 不一样点击时也可切换房间
-        val program = intent.getIntExtra(IntentParamKey.PROGRAM_ID.name, 0)
+        val program = intent.getLongExtra(IntentParamKey.PROGRAM_ID.name, 0L)
 
-        if (program != 0) {
+        if (program != 0L) {
             //直播间切换
             checkoutRoom(program)
         } else {
@@ -1853,7 +1853,7 @@ class PlayerActivity : BaseActivity() {
     /**
      * 切换房间
      */
-    private fun checkoutRoom(program: Int) {
+    private fun checkoutRoom(program: Long) {
         if (this@PlayerActivity.programId == program) {
             if (viewModel.loginSuccessData.value != null) {
                 //就在当前直播间，直接打开对应功能
@@ -1861,7 +1861,7 @@ class PlayerActivity : BaseActivity() {
             }
         }
         //如果当前是主播推流 禁止一切切换房间
-        if (!isAnchor && program != 0 && this@PlayerActivity.programId != program) {
+        if (!isAnchor && program != 0L && this@PlayerActivity.programId != program) {
             viewModel.anchorProgramId.value = program
             //通过viewModel设置ProgramId会有延迟，不能保证实时更新ProgramId
             this@PlayerActivity.programId = program

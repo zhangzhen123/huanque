@@ -44,7 +44,7 @@ class LiveRemindViewModel : BaseViewModel() {
         }
     }
 
-    fun updatePush(push: String, programId: Int) {
+    fun updatePush(push: String, programId: Long) {
         viewModelScope.launch {
             request({
                 Requests.create(LiveRemindService::class.java)

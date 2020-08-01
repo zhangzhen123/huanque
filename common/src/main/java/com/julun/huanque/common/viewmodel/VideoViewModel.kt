@@ -13,9 +13,9 @@ class VideoViewModel : BaseViewModel() {
     //是否是声网推流
     var agora = false
     //直播间ID
-    var programId = 0
+    var programId = 0L
     //切换房间
-    val checkoutRoom: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
+    val checkoutRoom: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
     //登录状态
     val loginState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     //进入直播间之前的基础信息
@@ -25,7 +25,7 @@ class VideoViewModel : BaseViewModel() {
     //value为true时 关闭页面
     val finishState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     //主播直播间ID
-    val anchorProgramId: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
+    val anchorProgramId: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
 
     //打开相应功能的简单设置（合并一些只需要传Boolean值的设置）
     val actionBeanData: MutableLiveData<BottomActionBean> by lazy { MutableLiveData<BottomActionBean>() }

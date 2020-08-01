@@ -32,14 +32,14 @@ class RoomMicCreateForm(var joinNum: Int, var programIds: String) : Serializable
 class RoomMicIdForm(var micId: Long) : Serializable
 
 //查询pk信息的form
-class PkGuessQueryForm(var programId: Int) : Serializable
+class PkGuessQueryForm(var programId: Long) : Serializable
 
 //PK竞猜的form
-class PkGuessForm(var guessType: String, var mecoins: Long, var programId: Int) : Serializable
+class PkGuessForm(var guessType: String, var mecoins: Long, var programId: Long) : Serializable
 
 //PK信息使用的表单
 class PKInfoForm {
-    var programId: Int = 0
+    var programId: Long = 0
     private var isPush: String = BooleanType.FALSE
 
     fun getIsPush() = isPush

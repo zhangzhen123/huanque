@@ -267,7 +267,7 @@ object JPushUtil {
                 startOpenLink(context, keyValue.value)
             }
             LIVE -> {
-                val programId: Int? = keyValue.value?.toIntOrNull()
+                val programId: Long? = keyValue.value?.toLongOrNull()
                 ULog.i(TAG, "开始跳转到房间:$programId")
                 if (programId != null) {
                     startOpenLive(context, programId)
@@ -340,7 +340,7 @@ object JPushUtil {
     }
 
 
-    fun startOpenLive(context: Context, programId: Int) {
+    fun startOpenLive(context: Context, programId: Long) {
 //        appService.accessPushLog(ProgramIdForm(programId)).success {}
         //无论请求成功与否,都打开直播间
 //        val intent = Intent(context, PlayerActivity::class.java)

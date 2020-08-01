@@ -130,7 +130,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 
     // 公聊区高度
 //    private var public_chat_height: Int = 0
-    private var programId: Int = 0
+    private var programId: Long = 0
 
     var isAppShow: Boolean = false
 
@@ -161,7 +161,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 //                        viewModel.guideToJoinFans()
                     }
                     MessageRecyclerView.ACTION_GRAB_BOX -> {
-                        val programId = extra as? Int
+                        val programId = extra as? Long
                         if (programId != null) {
                             viewModel.checkoutRoom.value = programId
                         }
@@ -501,7 +501,7 @@ class PlayerViewManager(val context: PlayerActivity) {
     /**
      * 设置ProgramId
      */
-    fun setProgramId(programId: Int) {
+    fun setProgramId(programId: Long) {
         this.programId = programId
     }
 
@@ -1137,7 +1137,7 @@ class PlayerViewManager(val context: PlayerActivity) {
     /**
      * 显示私聊弹窗
      */
-    fun openPrivateDialog(userId: Int = -1) {
+    fun openPrivateDialog(userId: Long= -1) {
 //        showNotLoginAlert {
         //todo
 //        if (mOrientationViewModel.horizonState.value == true) {

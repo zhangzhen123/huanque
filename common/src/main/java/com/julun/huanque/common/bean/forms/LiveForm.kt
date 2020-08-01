@@ -4,19 +4,19 @@ import com.julun.huanque.common.constant.BooleanType
 import java.io.Serializable
 
 
-open class ProgramIdForm(var programId: Int = 0) : SessionForm()
+open class ProgramIdForm(var programId: Long = 0) : SessionForm()
 
 //查询玩家列表
-class QueryRoomUserForm(val programId: Int, val offset: Int) : SessionForm()
+class QueryRoomUserForm(val programId: Long, val offset: Int) : SessionForm()
 
 //查询房管
-class QueryManagerForm(val programId: Int, val offset: Int) : SessionForm()
+class QueryManagerForm(val programId: Long, val offset: Int) : SessionForm()
 
 //查询守护
-class QueryGuardForm(val programId: Int, val offset: Int) : SessionForm()
+class QueryGuardForm(val programId: Long, val offset: Int) : SessionForm()
 
 //获取直播间次要信息Form   dataType 不传值为查询所有数据，传值表示查询单个数据
-class EnterExForm(var programId: Int? = null, var dataType: String? = null) : Serializable {
+class EnterExForm(var programId: Long? = null, var dataType: String? = null) : Serializable {
     companion object {
         //dataType 取值
         //私信体验相关
@@ -36,14 +36,14 @@ class EnterExForm(var programId: Int? = null, var dataType: String? = null) : Se
     }
 }
 
-class UserEnterRoomForm(programId: Int, var positionIndex: Int? = null, var fromType: String? = null) : ProgramIdForm(programId)
+class UserEnterRoomForm(programId: Long, var positionIndex: Int? = null, var fromType: String? = null) : ProgramIdForm(programId)
 
-class RecommendProgramForm(var programId: Int? = null) : SessionForm()
+class RecommendProgramForm(var programId: Long? = null) : SessionForm()
 
-class ShareProgramForm(var programId: Int? = null) : SessionForm()
+class ShareProgramForm(var programId: Long? = null) : SessionForm()
 
 open class ConsumeForm(
-    programId: Int,
+    programId: Long,
 
     /** 数量  */
     var count: Int = -1,
@@ -53,7 +53,7 @@ open class ConsumeForm(
 
 
 class NewSendGiftForm(
-    programId: Int
+    programId: Long
     , count: Int = -1, giftId: Int = -1,
     /**
      * 跑道参数，只有金额超过配置的跑道阀值，下面的参数才有意义才需要填写
@@ -72,7 +72,7 @@ class NewSendGiftForm(
      * @since 4.31
      * @date 2020/05/08
      */
-    var acceptProgramId: Int? = null
+    var acceptprogramId: Long? = null
 ) : ConsumeForm(programId, count, giftId) {
 
     /** 赠送对象类型  默认是用户  */
@@ -84,7 +84,7 @@ class MallBuyForm(
     /** 物品id  */
     var goodId: Int = -1
     /**守护的节目编号 */
-    , var programId: Int = -1
+    , var programId: Long = -1
 ) : SessionForm()
 
 
@@ -93,7 +93,7 @@ class MallBuyForm(
  */
 class AnchorProgramForm(
     /** 节目ID 必传 **/
-    var programId: Int = -1,
+    var programId: Long = -1,
     /** 封禁时间：单位（s）必传 **/
     var seconds: Int = -1,
     /** 截图：多个以逗号隔开 **/
@@ -106,16 +106,16 @@ class AnchorProgramForm(
     var reason: String = ""
 ) : Serializable
 
-class LiveGiftForm(var programId: Int? = null) : SessionForm()
+class LiveGiftForm(var programId: Long? = null) : SessionForm()
 
 
 class UserServiceForm(
     var serviceCode: String = "",
-    var programId: Int = -1,
-    var userId: Int = -1,
+    var programId: Long = -1,
+    var userId: Long= -1,
     var nickname: String = "",
     //New
-    var targetUserId: Int = -1,
+    var targetuserId: Long= -1,
     /** 禁言时间 **/
     var seconds: Int = -1,
     /** 理由 **/
@@ -123,12 +123,12 @@ class UserServiceForm(
 ) : Serializable
 
 
-class AliveForm(var programId: Int = -1, var themeSessionId: Int? = null) : Serializable
+class AliveForm(var programId: Long = -1, var themeSessionId: Int? = null) : Serializable
 
 class QureyRankResultForm(
     var RankingsId: Int = -1,
     var recordId: Int? = null,
-    var programId: Int? = null,
+    var programId: Long? = null,
     var preCycle: Boolean = false,
     var offset: Int = 0,
     var limit: Int = 20
@@ -142,15 +142,15 @@ class WarnAuthorForm(var programId: Long, var warnMsg: String) : SessionForm()
 
 class StartLivingForm(var programId: Long) : SessionForm()
 
-class NewLiveHeartForm(var programId: Int) : SessionForm()
+class NewLiveHeartForm(var programId: Long) : SessionForm()
 
 class NewStopLiveForm(var programId: Long) : SessionForm()
 
 class TipOffUserForm(
     // 举报用户
-    var targetUserId: Int = 0,
+    var targetuserId: Long= 0,
     // 节目编号
-    var programId: Int = 0,
+    var programId: Long = 0,
     //举报类型值 -> BusiConstant.ReportType
     var reportTypeValue: String = ""
 ) : Serializable
@@ -165,9 +165,9 @@ pics	string	否	图片，多张用,隔开
  */
 class SaveReportForm(
     // 举报用户
-    var targetUserId: Int = 0,
+    var targetuserId: Long= 0,
     // 节目编号
-    var programId: Int? = null,
+    var programId: Long? = null,
     //举报类型值 -> BusiConstant.ReportType
     var reportTypeValue: String = "",
     var reason: String? = null,
@@ -177,7 +177,7 @@ class SaveReportForm(
 //举报节目的表单
 class SaveReportProgramForm(
     // 节目编号
-    var programId: Int = 0,
+    var programId: Long = 0,
     //举报类型值 -> BusiConstant.ReportType
     var reportTypeValue: String = "",
     var reason: String? = null,
@@ -189,24 +189,24 @@ class SaveReportProgramForm(
  *
  * type 可选 danmu , broadcast
  */
-class DanmuForm(var programId: Int, var content: String, var dmlevel: Int, var acceptProgramId: Int? = null) : SessionForm()
+class DanmuForm(var programId: Long, var content: String, var dmlevel: Int, var acceptprogramId: Long? = null) : SessionForm()
 
-class RechargeChannelQueryForm(var programId: Int, var message: String, var type: String = "danmu") : SessionForm()
+class RechargeChannelQueryForm(var programId: Long, var message: String, var type: String = "danmu") : SessionForm()
 
 /**
  * 红包
  */
 class UserAndProgramForm(
     var redPacketId: Int = -1,
-    var userId: Int = -1,
-    var programId: Int = -1
+    var userId: Long= -1,
+    var programId: Long = -1
 ) : SessionForm()
 
 /**
  * 贡献榜请求body
  */
 class ScoreRankResultForm(
-    var programId: Int? = null,
+    var programId: Long? = null,
     //数据索引位置，从0开始
     var offset: Int = 0
 ) : Serializable
@@ -215,7 +215,7 @@ class ScoreRankResultForm(
 /**
  * 直播间侧滑关注列表
  */
-class LiveFollowForm(var offset: Int = 0, var programId: Int = 0)
+class LiveFollowForm(var offset: Int = 0, var programId: Long = 0)
 
 /**
  * 上下切换表单
@@ -223,22 +223,22 @@ class LiveFollowForm(var offset: Int = 0, var programId: Int = 0)
  * @param programId
  * @param typeCode 分类
  */
-class SwitchForm(var fromType: String? = null, var programId: Int, var typeCode: String = "")
+class SwitchForm(var fromType: String? = null, var programId: Long, var typeCode: String = "")
 
 /**
  * 查询某一关卡的信息 [level]要查的关卡  [programId]直播间id
  */
-class PassLevelForm(var level: Int? = null, var programId: Int)
+class PassLevelForm(var level: Int? = null, var programId: Long)
 
 /**
  * 一键送礼[level]当前的关卡  [programId]直播间id [gifts]礼物信息 id:count [passLevel]是不是一键送礼True,False
  */
-class OneKeySendGiftForm(var level: Int, var programId: Int, var gifts: String, var passLevel: String)
+class OneKeySendGiftForm(var level: Int, var programId: Long, var gifts: String, var passLevel: String)
 
 /**
  * 横竖屏切换的Form
  */
-class SwitchScreenForm(var programId: Int, var screenType: String) : Serializable
+class SwitchScreenForm(var programId: Long, var screenType: String) : Serializable
 
 /**
  * [dateType]时间维度(可选项：Today、Yesterday)
@@ -255,14 +255,14 @@ data class DiscountForm(
 )
 
 data class ReportRescueForm(
-    var salvationId: Int, var programId: Int
+    var salvationId: Int, var programId: Long
 )
 
 /**
  * PK段位赛
  */
 data class PkRankForm(
-    var programId: Int? = null,
+    var programId: Long? = null,
     var offset: Int? = null
 )
 
@@ -270,7 +270,7 @@ data class PkRankForm(
  * 在线列表
  */
 data class OnLineForm(
-    var programId: Int? = null,
+    var programId: Long? = null,
     var offset: Int? = null
 )
 
@@ -289,7 +289,7 @@ programId	int	否	当前直播间ID PC端直播间查询推荐节目用到此字
  */
 data class ProgramListForm(
     var offset: Int? = null,
-    var programId: Int? = null,
+    var programId: Long? = null,
     var limit: Int? = null,
     var typeCode: String? = null
 

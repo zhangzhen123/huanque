@@ -90,7 +90,7 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         LayoutInflater.from(context).inflate(R.layout.view_pk_mic, this)
         initViewModel()
         val listener = object : PkPropView.Listener {
-            override fun callback(programId: Int) {
+            override fun callback(programId: Long) {
                 if (playerViewModel.programId == programId) {
                     pKViewModel.userProp(programId)
                 }
@@ -1553,7 +1553,7 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     /**
      * 播放道具加倍特效
      */
-    private fun playSpeedAnimation(ttl: Long, programId: Int) {
+    private fun playSpeedAnimation(ttl: Long, programId: Long) {
         //默认的游标设置不可见
         imageView4.visibility = View.INVISIBLE
         val curProgramId = playerViewModel.programId
