@@ -244,7 +244,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             }
             .bindUntilEvent(this, ActivityEvent.DESTROY)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ tv_call_duration.text = it }, {})
+            .subscribe({ tv_call_duration.text = "通话时长：$it" }, {})
     }
 
     /**
@@ -458,6 +458,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         AgoraManager.mRtcEngine?.setClientRole(Constants.CLIENT_ROLE_BROADCASTER)
         AgoraManager.mRtcEngine?.enableAudio()
         AgoraManager.mRtcEngine?.setDefaultAudioRoutetoSpeakerphone(false)
+        //默认开启声音
+        AgoraManager.mRtcEngine?.adjustRecordingSignalVolume(100)
         //默认听筒
         // Allows a user to join a channel.
         val result = AgoraManager.mRtcEngine?.joinChannel(

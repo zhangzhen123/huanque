@@ -25,11 +25,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dp"
         android:includeFontPadding="false"
-        tools:text="有些话说不出口，我来帮你告诉ta"
         android:textColor="@color/black_666"
         android:textSize="@dimen/sp_12"
         app:layout_constraintBottom_toBottomOf="@id/tv_title"
-        app:layout_constraintLeft_toRightOf="@id/tv_title" />
+        app:layout_constraintLeft_toRightOf="@id/tv_title"
+        tools:text="有些话说不出口，我来帮你告诉ta" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
@@ -94,12 +94,13 @@
         android:layout_height="@dimen/dimen_30"
         android:layout_marginEnd="@dimen/dimen_20"
         android:layout_marginRight="@dimen/dimen_20"
-        android:background="@drawable/bg_solid_btn2"
+        android:background="@drawable/sel_send_gift"
         android:gravity="center"
         android:paddingLeft="@dimen/dimen_6"
         android:paddingRight="@dimen/dimen_6"
         android:text="赠送"
-        android:textColor="@color/black_333"
+        android:enabled="false"
+        android:textColor="@color/col_verification_code"
         android:textSize="@dimen/sp_16"
         app:layout_constraintBottom_toBottomOf="@+id/tv_balance"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,9 +109,9 @@
 
     <com.julun.huanque.common.widgets.statepage.StatePageView
         android:id="@+id/state_pager_view"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"
-        android:layout_width="match_parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

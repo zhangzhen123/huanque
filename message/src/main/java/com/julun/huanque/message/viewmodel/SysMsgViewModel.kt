@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.manager.RongCloudManager
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
@@ -35,8 +36,13 @@ class SysMsgViewModel : BaseViewModel() {
                      * @param messages 获取的消息列表
                      */
                     override fun onSuccess(messages: MutableList<Message>) {
-                        if(messages.isNotEmpty() && messages[0].content is CustomSimulateMessage){
-                            messages.removeAt(0)
+                        if (messages.isNotEmpty()) {
+                            val msg = messages[messages.size - 1]
+                            if (msg.content is CustomSimulateMessage) {
+                                //插入的消息
+                                messages.remove(msg)
+                                RongIMClient.getInstance().deleteMessages(intArrayOf(msg.messageId))
+                            }
                         }
                         getSysMsgList.value = RootListData<Message>().apply {
                             if (lastMessageId == -1) {
@@ -68,7 +74,7 @@ class SysMsgViewModel : BaseViewModel() {
     }
 
     fun queryNewMessage(tgetId: String) {
-        if(targetId != tgetId){
+        if (targetId != tgetId) {
             return
         }
         RongIMClient.getInstance()
@@ -79,6 +85,7 @@ class SysMsgViewModel : BaseViewModel() {
                     }
                     getNewSysMsg.value = p0.latestMessage as? Message
                 }
+
                 override fun onError(p0: RongIMClient.ErrorCode?) {
                 }
             })

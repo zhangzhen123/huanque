@@ -85,7 +85,7 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
         })
         mViewModel.sendResult.observe(viewLifecycleOwner, Observer {
             //
-            tv_send.isEnabled = true
+//            tv_send.isEnabled = true
             it ?: return@Observer
             logger.info("赠送返回=${it.state}")
             if (it.state == NetStateType.SUCCESS) {
@@ -183,7 +183,7 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
 //        val giftId: Int = currentSelectGift?.chatGiftId ?: return
 
         mViewModel.sendGift(targetId, currentSelectGift ?: return)
-        tv_send.isEnabled = false
+//        tv_send.isEnabled = false
     }
 
     //设置一个公共的缓存池 提高效率
@@ -207,6 +207,7 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
                     adapter.notifyDataSetChanged()
                     currentGiftAdapter?.notifyDataSetChanged()
                     currentGiftAdapter = adapter
+                    tv_send.isEnabled = true
                 }
 
             }
