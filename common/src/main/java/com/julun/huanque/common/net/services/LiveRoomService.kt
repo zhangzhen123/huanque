@@ -2,16 +2,8 @@ package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidResult
-import com.julun.huanque.common.bean.beans.CouponItemInfo
-import com.julun.huanque.common.bean.beans.SwitchBean
-import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
-import com.julun.huanque.common.bean.beans.UserEnterRoomRespDto
-import com.julun.huanque.common.bean.forms.AnchorProgramForm
-import com.julun.huanque.common.bean.beans.UserInfoInRoom
-import com.julun.huanque.common.bean.forms.ProgramIdForm
-import com.julun.huanque.common.bean.forms.SwitchForm
-import com.julun.huanque.common.bean.forms.UserEnterRoomForm
-import com.julun.huanque.common.bean.forms.UserProgramForm
+import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.*
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Url
@@ -49,6 +41,12 @@ interface LiveRoomService {
     @POST("live/room/info/switchList")
     suspend fun switchList(@Body form: SwitchForm): Root<ArrayList<SwitchBean>>
 
+    /**
+     * 获取用户名片
+     */
     @POST("live/room/user/info")
-    suspend fun userInfo(@Body form : UserProgramForm): Root<UserInfoInRoom>
+    suspend fun userInfo(@Body form: UserProgramForm): Root<UserInfoInRoom>
+
+    @POST("live/room/consume/sendPubMessage")
+    suspend fun sendPubMessage(@Body form: ValidateForm): Root<ValidateSpamResult>
 }

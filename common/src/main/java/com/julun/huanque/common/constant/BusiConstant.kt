@@ -229,6 +229,7 @@ object AnchorSearch {
     //连麦的type以及回传数据的key
     val CONNECT_MICRO = "CONNECT_MICRO"
 }
+
 /**
  * 红包类型
  */
@@ -255,6 +256,7 @@ object WeekType {
     //抽奖
     const val DrawAct = "DrawAct"
 }
+
 //SVGA内置动画
 object RunWaySVGAType {
     //SVGA动画  暂时只支持飞机和飞艇
@@ -267,6 +269,7 @@ object RunWaySVGAType {
     //加载动画
     val LOADING = "svga/loading.svga"
 }
+
 /**
  * 消息中心消息类型
  */
@@ -618,8 +621,10 @@ object MessageFailType {
 object FingerGuessingResult {
     //石头
     const val ROCK = "rock"
+
     //布
     const val PAPER = "paper"
+
     //剪刀
     const val SCISSORS = "scissors"
 }
@@ -658,6 +663,7 @@ object LiveBgType {
     const val PK_THREE = 2//三人PK
     const val PK_LANDLORD = 3//斗地主
 }
+
 /**
  * 礼物任务状态：Doing：进行中Finished：已完成Fail：任务失败
  */
@@ -711,4 +717,21 @@ object MessageBanner {
 
     //活动隐藏
     const val PopupHide = "PopupHide"
+}
+
+/**
+ * 敏感词校验结果
+ */
+object ValidateResult {
+    //通过
+    val PASS = "Pass"
+
+    //仅自己可见
+    val ONLY = "Only"
+
+    //发送替换后的文本(非法字符等)
+    val RESEND = "Resend"
+
+    //暂时未使用
+    val ALERT = "Alert"
 }

@@ -109,4 +109,7 @@ class UserProgramForm(
     var targetUserId: Long = -1
 ) : Serializable
 
-
+/**
+ * 敏感词过滤form
+ */
+class ValidateForm(var content: String = "", var programId: Long = 0)

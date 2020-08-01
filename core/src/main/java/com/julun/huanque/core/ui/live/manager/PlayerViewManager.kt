@@ -835,7 +835,7 @@ class PlayerViewManager(val context: PlayerActivity) {
     // 动画显示header头，隐藏软键盘和聊天框，显示底部组件
     fun showHeaderForAnimation(
         callbackStart: () -> Unit = {
-            val chatInputView = context.chatInputView
+//            val chatInputView = context.ll_input
             val publicMessageView = context.publicMessageView
             //todo
 //        chatInputView.hideEmojiViewAndKeyboard()
@@ -882,7 +882,7 @@ class PlayerViewManager(val context: PlayerActivity) {
     fun hideHeaderForAnimation(callback: () -> Unit = {}) {
 
         val surfaceView = context.surface_view
-        val chatInputView = context.chatInputView
+//        val chatInputView = context.ll_input
         val liveHeader = context.liveHeader
         //聊天的输入窗口弹起的时候,无论如何,先关掉跑道组件
 //        liveRunwayView.hide()
@@ -894,7 +894,7 @@ class PlayerViewManager(val context: PlayerActivity) {
             override fun onAnimationStart(animation: Animator?) {
                 //直接隐藏根布局 就不需要一个一个单独隐藏了
                 surfaceView.hide()
-                chatInputView.show()
+//                chatInputView.show()
 //                vaBottomBar.displayedChild = BOTTOM_CHATVIEW_INDEX
                 switchChatViewVisible(true)
                 //todo
@@ -914,7 +914,7 @@ class PlayerViewManager(val context: PlayerActivity) {
      */
     fun showHeaderAndHideChatView(): Boolean {
 
-        val chatInputView = context.chatInputView
+        val chatInputView = context.ll_input
         val publicMessageView = context.publicMessageView
         //如果跑道正在播放中,则再显示出来
 //        if (liveRunwayView.isMessagePlay) {
@@ -1085,7 +1085,11 @@ class PlayerViewManager(val context: PlayerActivity) {
     fun openChatInputBox(defaultContent: String, innerActionType: String) {
         //closeDialogIfExists()
         mDialogManager.hideAllDialog()
-        //todo
+        context.ll_input.show()
+        context.actionView.hide()
+        context.edit_text.requestFocus()
+
+        //todo 显示公聊
 //            val publicMessageView = context.publicMessageView
 //            val chatInputView = context.chatInputView
 //            chatInputView.textMessageType = MessageProcessor.TextMessageType.PUBLIC_MESSAGE

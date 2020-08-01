@@ -160,7 +160,7 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
             else -> {
             }
         }
-//        playerViewModel?.actionBeanData?.value = bean
+        playerViewModel?.actionBeanData?.value = bean
     }
 
     /**

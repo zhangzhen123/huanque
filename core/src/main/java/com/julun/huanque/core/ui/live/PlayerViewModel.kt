@@ -1,27 +1,24 @@
 package com.julun.huanque.core.ui.live
 
+import android.os.SystemClock
+import android.text.TextUtils
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.forms.UserEnterRoomForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.ClickType
-import com.julun.huanque.common.constant.GameType
-import com.julun.huanque.common.constant.TextTouch
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.core.net.UserService
 import com.julun.huanque.common.bean.beans.SingleGame
-import com.julun.huanque.common.bean.forms.AnchorProgramForm
-import com.julun.huanque.common.bean.forms.ProgramIdForm
-import com.julun.huanque.common.bean.forms.SwitchForm
-import com.julun.huanque.common.constant.PKType
+import com.julun.huanque.common.bean.forms.*
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.GlobalDataPool
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.SessionUtils
@@ -30,6 +27,7 @@ import com.julun.huanque.core.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 /**
  *
@@ -41,6 +39,15 @@ import kotlinx.coroutines.launch
  *
  */
 class PlayerViewModel : BaseViewModel() {
+
+    //发送消息间隔(1秒)
+    private val mSendMessageSpace = 1000L
+
+    //上一次发送时间
+    private var mLastSendTime = 0L
+
+    //消息发送中标识
+    val mMessageSending: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     private val liveService: LiveRoomService by lazy {
         Requests.create(LiveRoomService::class.java)
@@ -622,6 +629,52 @@ class PlayerViewModel : BaseViewModel() {
             else -> {
                 logger("注意 ！！该点击事件没有执行")
             }
+        }
+    }
+
+    /**
+     * 发送消息
+     */
+    fun sendMessage(msg: String) {
+        if (SystemClock.elapsedRealtime() - mLastSendTime < mSendMessageSpace) {
+            ToastUtils.show("发言太快了，歇会儿吧。")
+            return
+        }
+        mMessageSending.value = true
+        viewModelScope.launch {
+            request({
+                val result = liveService.sendPubMessage(ValidateForm(msg, programId.toLong())).data
+
+                when (result?.resultCode) {
+                    ValidateResult.PASS -> {
+                        //验证通过
+                        realSendMessage(msg)
+                    }
+                    ValidateResult.ONLY -> {
+                        //仅自己可见
+                    }
+                    ValidateResult.RESEND -> {
+                        //替换文案发送
+                        result?.newContent?.let {
+                            realSendMessage(it)
+                        }
+                    }
+                    else -> {
+                    }
+                }
+
+            }, { mMessageSending.value = false })
+        }
+
+    }
+
+    /**
+     * 调用融云，发送消息
+     */
+    private fun realSendMessage(content: String) {
+        RongCloudManager.sendPublicTextMessage(content, "$programId") {
+            mMessageSending.value = false
+            mLastSendTime = SystemClock.elapsedRealtime()
         }
     }
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <!--普通表情-->
+    <com.julun.huanque.common.widgets.EventRecyclerView
+        android:id="@+id/recyclerView_emoji"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <View
+        android:id="@+id/view_bottom"
+        android:layout_width="0px"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+
+
+
+    <ImageView
+        android:id="@+id/iv_delete"
+        android:layout_width="64dp"
+        android:layout_height="48dp"
+        android:src="@mipmap/icon_emoji_delete"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintRight_toRightOf="@id/view_bottom"
+        app:layout_constraintTop_toTopOf="@id/view_bottom" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="24dp"
+        android:background="@color/enabled"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintRight_toLeftOf="@id/iv_delete"
+        app:layout_constraintTop_toTopOf="@id/view_bottom" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
