@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.live
 
+import android.animation.ValueAnimator
 import android.os.SystemClock
 import android.text.TextUtils
 import androidx.fragment.app.DialogFragment
@@ -634,6 +635,19 @@ class PlayerViewModel : BaseViewModel() {
             }
         }
     }
+
+    private var timeAnimator: ValueAnimator? = null
+
+    fun timeInternal(duration: Long) {
+        timeAnimator?.cancel()
+        timeAnimator = ValueAnimator.ofFloat(0f, 1.0f)
+        timeAnimator?.duration = duration
+        timeAnimator?.addUpdateListener {
+            liansongTime.value = it.animatedValue as Float
+        }
+        timeAnimator?.start()
+    }
+
 
     /**
      * 发送消息

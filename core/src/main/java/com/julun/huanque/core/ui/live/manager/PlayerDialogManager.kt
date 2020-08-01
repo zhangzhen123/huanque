@@ -18,6 +18,7 @@ import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
+import com.julun.huanque.core.ui.live.fragment.SendGiftFragment
 import com.julun.huanque.core.viewmodel.*
 import java.lang.ClassCastException
 
@@ -64,7 +65,7 @@ class PlayerDialogManager(val context: PlayerActivity) {
     private val dialogsCache = hashMapOf<String, DialogFragment?>()
 
     // 礼物面板
-//    var giftFragment: SendGiftFragment? = null
+    var giftFragment: SendGiftFragment? = null
 
 
     init {
@@ -128,7 +129,7 @@ class PlayerDialogManager(val context: PlayerActivity) {
         })
 
         playerViewModel.squareView.observe(context, Observer {
-            if (it==true) {
+            if (it == true) {
 //                openGiftView()
                 openDialog(LiveSquareDialogFragment::class.java)
             }
@@ -138,14 +139,12 @@ class PlayerDialogManager(val context: PlayerActivity) {
     /**
      * 打开礼物弹窗
      */
-    fun openGiftDialog(currentRunwayCache: RunwayCache? = null) {
-//        if (giftFragment == null) {
-//            giftFragment = SendGiftFragment.newInstance(mViewModel?.programId
-//                    ?: return, mViewModel?.baseData?.value?.anchorId
-//                    ?: return, currentRunwayCache)
-//            dialogsCache[getFragmentKey(SendGiftFragment::class.java)] = giftFragment
-//        }
-//        giftFragment?.show(context, "SendGiftFragment")
+    fun openGiftDialog() {
+        if (giftFragment == null) {
+            giftFragment = SendGiftFragment.newInstance(programId = playerViewModel.programId)
+            dialogsCache[getFragmentKey(SendGiftFragment::class.java)] = giftFragment
+        }
+        giftFragment?.show(context, "SendGiftFragment")
     }
 
     /**
@@ -153,10 +152,10 @@ class PlayerDialogManager(val context: PlayerActivity) {
      * @param isReset 再次打开是否重置弹窗
      */
     fun closeGiftDialog(isReset: Boolean) {
-//        giftFragment?.dismiss()
-//        if (isReset) {
-//            giftFragment = null
-//        }
+        giftFragment?.dismiss()
+        if (isReset) {
+            giftFragment = null
+        }
     }
 
     /**
@@ -173,12 +172,14 @@ class PlayerDialogManager(val context: PlayerActivity) {
 //        }
 //        playerViewModel.refreshGift.value = true
     }
+
     //显示用户更多设置布局
     fun showUserMoreSetting() {
 //        mDialogManager.openDialog(clazz = UserMoreActionFragment::class.java, builder = {
 //            UserMoreActionFragment.newInstance(viewModel.programId)
 //        })
     }
+
     /**
      * 打开顶部弹窗
      */

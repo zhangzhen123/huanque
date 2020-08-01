@@ -330,4 +330,20 @@
         <attr name="android:scaleType" />
     </declare-styleable>
 
+    <declare-styleable name="CircleBarView">
+        <attr name="circlebar_progress_color" format="color" />
+        <attr name="bg_color" format="color" />
+        <attr name="outsides_color" format="color" />
+        <attr name="bar_width" format="dimension" />
+        <attr name="start_angle" format="float" />
+        <attr name="sweep_angle" format="float" />
+    </declare-styleable>
+
+
+    <!-- 自定义双值进度条 -->
+    <declare-styleable name="TwoValueProgressView">
+        <attr name="progress_first_color" format="reference" />
+        <attr name="progress_second_color" format="reference" />
+    </declare-styleable>
+
 </resources>

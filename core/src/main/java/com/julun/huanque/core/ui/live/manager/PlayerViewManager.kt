@@ -288,7 +288,7 @@ class PlayerViewManager(val context: PlayerActivity) {
                     }
                     ClickType.GIFT -> {
                         //打开送礼弹窗
-                        mDialogManager.openGiftDialog(currentRunwayCache)
+                        mDialogManager.openGiftDialog()
                     }
                     ClickType.CLOSE -> {
                         //关闭直播间
@@ -583,9 +583,6 @@ class PlayerViewManager(val context: PlayerActivity) {
                         // 而该监听会通知所有的新的跑道缓存值
                         //此处的处理是为了达到缓存值的同步
                         currentRunwayCache = if (messageContext.seconds > 0) runwayCache else null
-//todo
-//                        EventBus.getDefault().postSticky(RefreshRunwayPriceChangeEvent(runwayCache))
-//                        viewModel.runwayCache.value = runwayCache
                     }
                 }
             }
@@ -1137,7 +1134,7 @@ class PlayerViewManager(val context: PlayerActivity) {
     /**
      * 显示私聊弹窗
      */
-    fun openPrivateDialog(userId: Long= -1) {
+    fun openPrivateDialog(userId: Long = -1) {
 //        showNotLoginAlert {
         //todo
 //        if (mOrientationViewModel.horizonState.value == true) {

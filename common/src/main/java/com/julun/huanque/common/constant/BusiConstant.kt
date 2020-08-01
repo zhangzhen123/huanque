@@ -735,3 +735,12 @@ object ValidateResult {
     //暂时未使用
     val ALERT = "Alert"
 }
+
+/**直播间标签类型**/
+object ProgramTagType {
+    //文本标签  颜色渐变
+    val TEXT = "text:"
+
+    //图片标签   直接显示图片
+    val IMG = "img:"
+}

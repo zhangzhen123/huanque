@@ -85,6 +85,9 @@ object ParamConstant {
     //标记tag正在播放
     const val IS_AUDIO_PLAY = "isAudioPlay"
 
+    //直播间ID
+    const val PROGRAM_ID = "PROGRAM_ID"
+
 
     const val TARGET_USER_ID = "TargetUserId"
 

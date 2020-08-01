@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.alibaba.fastjson.annotation.JSONField
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.TplBean
+import com.julun.huanque.common.bean.forms.NewSendGiftForm
 import com.julun.huanque.common.database.table.Session
 import java.io.Serializable
 
@@ -790,6 +791,7 @@ data class NotEnoughBalanceBean(
 data class SendGiftResult(
     var beans: Long = 0,
     var bagCntMap: HashMap<String, Int>? = null,
+    var form: NewSendGiftForm? = null,
     var bagCount: Int = 0,
 //                          var form: NewSendGiftForm? = null,
     var level: Int = 0, var ttl: Int = 0,

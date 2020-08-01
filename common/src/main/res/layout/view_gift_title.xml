@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/col_gift_title"
+        android:textSize="@dimen/pop_win_button_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="测试" />
+
+    <View
+        android:id="@+id/view_dot"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:background="@drawable/tab_red_dot"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/tv"
+        app:layout_constraintLeft_toRightOf="@id/tv"
+        app:layout_constraintRight_toRightOf="@id/tv"
+        app:layout_constraintTop_toTopOf="@id/tv" />
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="6dp"
+        android:layout_height="2dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/sel_gift_title_line"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
