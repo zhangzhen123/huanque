@@ -338,14 +338,6 @@ class PlayerActivity : BaseActivity() {
             }
         })
 
-        viewModel.userInfoView.observe(this, Observer {
-            if (it != null) {
-                //显示用户名片
-                UserCardFragment.newInstance(it.userId).show(supportFragmentManager, "UserCardFragment")
-            }
-        })
-
-
         viewModel.finishState.observe(this, Observer {
             if (it == true) {
                 finish()

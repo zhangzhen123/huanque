@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.graphics.Color
 import android.os.Handler
@@ -15,25 +14,22 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.utils.ImageUtils
-import com.julun.huanque.common.utils.ScreenUtils
+import androidx.lifecycle.ViewModelProviders
 import com.julun.huanque.common.bean.beans.BarrageEvent
-import com.julun.huanque.common.bean.beans.UserInfoBean
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.message_dispatch.EventMessageType
-
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
+import com.julun.huanque.core.BusiConstantCore
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
-import com.julun.huanque.core.BusiConstantCore
-
 import kotlinx.android.synthetic.main.view_barrage_layout.view.*
-import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.rightPadding
 import java.util.*

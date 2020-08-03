@@ -22,6 +22,7 @@ import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.dialog.OnlineDialogFragment
 import com.julun.huanque.core.ui.live.dialog.ScoreDialogFragment
 import com.julun.huanque.core.ui.live.fragment.SendGiftFragment
+import com.julun.huanque.core.ui.live.fragment.UserCardFragment
 import com.julun.huanque.core.viewmodel.*
 
 /**
@@ -151,6 +152,16 @@ class PlayerDialogManager(val context: PlayerActivity) {
                     )
                 )
             })
+        })
+
+
+        playerViewModel.userInfoView.observe(context, Observer { info->
+            if (info != null) {
+                //显示用户名片
+                openDialog(UserCardFragment::class.java,builder = {
+                    UserCardFragment.newInstance(info.userId)
+                })
+            }
         })
     }
 
