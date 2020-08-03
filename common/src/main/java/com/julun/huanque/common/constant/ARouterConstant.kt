@@ -69,6 +69,9 @@ object ARouterConstant {
     //邀友分享
     const val INVITE_SHARE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/InviteShareActivity"
 
+    //提现页面
+    const val WITHDRAW_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/WithdrawActivity"
+
     /** 实名认证 start **/
     private const val REAL_NAME = "realname"
 

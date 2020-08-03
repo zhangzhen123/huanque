@@ -12,10 +12,7 @@ import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.ParamConstant
-import com.julun.huanque.common.constant.PhoneLoginType
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
@@ -183,7 +180,7 @@ class TestActivity : BaseActivity() {
         }
 
         tv_invite.onClickNew {
-            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name, "Invite").navigation()
+            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name, ShareFromModule.Invite).navigation()
         }
 
         btn_usercard.onClickNew {

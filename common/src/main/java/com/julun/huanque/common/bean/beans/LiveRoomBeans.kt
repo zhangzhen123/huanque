@@ -242,7 +242,8 @@ class UserEnterRoomRespBase : Serializable {
     //    var anchorId: Long = 0//主播id
     var prePic: String = ""//封面图
     var headPic: String = ""//头像图
-    var living: String = ""//是否在直播中
+    @JSONField(name = "isLiving")
+    var isLiving: Boolean = false//是否在直播中
     var programName: String = ""//主播昵称
     var programId: Long = 0//节目id
 
@@ -2240,7 +2241,7 @@ data class PkRankAnchorRankInfo(
  * @since 4.24
  */
 data class OnlineUserInfo(
-    var userId: Long = -1,
+    var userId: Long = -1L,
     //头像
     var headPic: String = "",
     var userLevel: Int = -1,
@@ -2315,6 +2316,9 @@ class OnlineListData<T>(
 
     //守护商品id
     var goodsId: Int? = null
+
+    var heatTips: String = ""
+    var royalTips: String = ""
 }
 
 /**

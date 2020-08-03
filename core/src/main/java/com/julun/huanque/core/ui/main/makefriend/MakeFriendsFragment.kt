@@ -182,7 +182,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
                     }
                     HeadModule.HotLive -> {
-                        requireActivity().startActivity<PlayerActivity>(IntentParamKey.PROGRAM_ID.name to 10007L)
+                        requireActivity().startActivity<PlayerActivity>(IntentParamKey.PROGRAM_ID.name to 10007L
+                        ,IntentParamKey.IMAGE.name to "user/head/b0295e5d-5c2d-45a8-928f-5333c880f489.jpg")
 
                     }
                     HeadModule.PlumFlower -> {

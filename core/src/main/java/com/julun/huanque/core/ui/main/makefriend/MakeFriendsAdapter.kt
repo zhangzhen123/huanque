@@ -45,7 +45,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
         addItemType(HomeItemBean.NORMAL, R.layout.item_mkf_normal)
         addItemType(HomeItemBean.GUIDE_TO_ADD_TAG, R.layout.item_mkf_guide_to_add_tag)
         addItemType(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, R.layout.item_mkf_guide_to_complete_info)
-        mPhotoViewPool.setMaxRecycledViews(0, 10)
+        mPhotoViewPool.setMaxRecycledViews(0, 20)
 
         addChildClickViewIds(
             R.id.iv_audio_play, R.id.btn_action,

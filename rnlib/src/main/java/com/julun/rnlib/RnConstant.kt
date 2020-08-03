@@ -38,6 +38,9 @@ object RnConstant {
     const val REAL_NAME_AUTH_PAGE:String="RealNameAuthPage"
     //分享邀友功能
     const val SHARE_INVITE_PAGE:String="ShareInvitePage"
+    //跳转零钱页面
+    const val WITHDRAWAL_PAGE:String="WithdrawalPage"
+
 
 
 

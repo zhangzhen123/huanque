@@ -16,10 +16,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.bean.beans.ShareObject
-import com.julun.huanque.common.bean.beans.SharePoster
-import com.julun.huanque.common.bean.beans.SharePosterInfo
-import com.julun.huanque.common.bean.beans.ShareType
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
 import com.julun.huanque.common.net.NAction
@@ -54,7 +51,8 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
     private var currentSelectView: View? = null
     private var currentSelect: SharePoster? = null
 
-    private var applyModule: String=""
+    private var applyModule: String = ""
+    private var programInfo: LiveBean? = null
     private val wxService: LoginAndShareService? by lazy {
         ARouter.getInstance().build(ARouterConstant.LOGIN_SHARE_SERVICE).navigation() as? LoginAndShareService
     }
@@ -63,7 +61,9 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
 
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        applyModule= intent.getStringExtra(IntentParamKey.TYPE.name)?:applyModule
+        overridePendingTransition(R.anim.slide_in_from_bottom, 0)
+        applyModule = intent.getStringExtra(IntentParamKey.TYPE.name) ?: applyModule
+        programInfo = intent.getSerializableExtra(IntentParamKey.LIVE_INFO.name) as? LiveBean
         rv_share_contents.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         rv_share_contents.adapter = sharePosterAdapter
         rv_share_contents.addItemDecoration(HorizontalItemDecoration(dp2px(8)))
@@ -99,6 +99,11 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
             val item = shareAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
             saveViewToImageFile(item.type)
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0, R.anim.slide_out_to_bottom)
     }
 
     private fun saveViewToImageFile(type: String) {

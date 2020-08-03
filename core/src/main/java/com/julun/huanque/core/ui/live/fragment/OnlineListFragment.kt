@@ -231,8 +231,8 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 mRoyalUrl = data.royalLevelUrl
 
                 setHeadViews(data)
+                tv_head_tips.text= data.royalTips
                 if(data.royaling){
-                    tv_head_tips.text="xx贵族剩余x天，别忘了续费哦"
                     tv_head_action.text="立即续费"
                     tv_head_action.onClickNew {
                         //todo
@@ -240,7 +240,6 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                     }
 
                 }else{
-                    tv_head_tips.text="开通欢鹊贵族，享受尊贵特权"
                     tv_head_action.text="立即开通"
                     tv_head_action.onClickNew {
                         //todo
@@ -255,7 +254,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 setHeadViews(data)
             }
             else -> {
-                tv_head_tips.text="直播间热度榜第x，差x+1名xxx热度"
+                tv_head_tips.text=data.heatTips
                 tv_head_action.hide()
                 //观众 or 管理
                 userNum = if (mPageTag == TabTags.TAB_TAG_MANAGER) {

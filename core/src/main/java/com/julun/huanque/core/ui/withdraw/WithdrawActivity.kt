@@ -5,6 +5,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -37,6 +38,7 @@ import org.jetbrains.anko.startActivity
  *@Description: 提现页面
  *
  */
+@Route(path = ARouterConstant.WITHDRAW_ACTIVITY)
 class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
 
     private val userBindViewModel: UserBindViewModel by viewModels()
