@@ -44,12 +44,11 @@ class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_
         }
         //过滤空礼物
         if (item.giftId == SendGiftFragment.EMPTY_GIFT) {
-            vh.setGone(R.id.gift_name, false)
-                .setGone(R.id.gift_icon, false)
-                .setGone(R.id.gift_price, false)
-                .setGone(R.id.ll_tag, false)
-                .setGone(R.id.process_info, false)
-                .setGone(R.id.giftBagInfo, false)
+            vh.setGone(R.id.gift_name, true)
+                .setGone(R.id.gift_icon, true)
+                .setGone(R.id.gift_price, true)
+                .setGone(R.id.ll_tag, true)
+                .setGone(R.id.giftBagInfo, true)
             return
         }
         //tips
@@ -112,40 +111,6 @@ class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_
             giftBagInfo.text = str
         } else {
             giftBagInfo.hide()
-        }
-        if (item.processInfo != null) {
-            val pro = "${item.processInfo!!.nowCount}/${item.processInfo!!.needCount}"
-            vh.setText(R.id.process_info, pro).setGone(R.id.process_info, true)
-        } else {
-            vh.setGone(R.id.process_info, false)
-        }
-
-        //设置折扣券
-        vh.setGone(R.id.clGiftDiscountRootView, false)
-        if (item.discount != null) {
-            //表示现在该礼物有折扣
-            //配置富文本，删除线 -> StrikethroughSpan
-            val content = "${item.discountBean} ${item.beans}"
-            val spannable = SpannableString(content)
-            spannable.setSpan(StrikethroughSpan(), "${item.discountBean}".length + 1, content.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            spannable.setSpan(
-                AbsoluteSizeSpan(sp2px(6f), false),
-                "${item.discountBean}".length + 1,
-                content.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            //.setTypeface(typeFaceTwo, R.id.ivGiftDiscountDiscountRatio)
-            vh.setVisible(R.id.clGiftDiscountRootView, true)
-                .setText(R.id.ivGiftDiscountDiscountRatio, "${item.discount!! / 10}折券")
-                .setText(R.id.gift_price, spannable)
-
-//            item.discountCount?.let {
-//                if (it >= 99) {
-//                    vh.setTypeface(typeFaceTwo, R.id.tvGiftDiscountDiscountCount).setText(R.id.tvGiftDiscountDiscountCount, "99")
-//                } else {
-//                    vh.setTypeface(typeFaceTwo, R.id.tvGiftDiscountDiscountCount).setText(R.id.tvGiftDiscountDiscountCount, "${item.discountCount}")
-//                }
-//            }
         }
     }
 

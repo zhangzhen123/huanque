@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.alibaba.fastjson.annotation.JSONField
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.TplBean
-import com.julun.huanque.common.bean.forms.NewSendGiftForm
+import com.julun.huanque.common.bean.forms.ConsumeForm
 import com.julun.huanque.common.database.table.Session
 import java.io.Serializable
 
@@ -780,12 +780,18 @@ data class NotEnoughBalanceBean(
 
 //赠送礼物的结果bean
 data class SendGiftResult(
-    var beans: Long = 0,
-    var bagCntMap: HashMap<String, Int>? = null,
-    var form: NewSendGiftForm? = null,
+    //背包数量
     var bagCount: Int = 0,
+    //最新余额
+    var beans: Long = 0,
+    //当前等级
+    var level: Int = 0,
+
+    var bagCntMap: HashMap<String, Int>? = null,
+    var form: ConsumeForm? = null,
 //                          var form: NewSendGiftForm? = null,
-    var level: Int = 0, var ttl: Int = 0,
+
+    var ttl: Int = 0,
 
     var processInfo: ProcessInfo? = null,
     var giftChange: GiftChange? = null,
@@ -794,32 +800,14 @@ data class SendGiftResult(
     var popMsg: String = "",
     // 提示消息，值不为空，需显示
     var alertMsg: String = "",
-    // 道具类型 ，值为SpeakCard时，需将发言入口炫彩按钮解锁
-    var propsType: String = "",
-    // 道具使用剩余秒数，只有propsType不为空时，该属性才有值
-    var propsTtl: Long = 0,
-    // 道具扩展参数，如果为经验加倍卡，该值为经验倍数，只有propsType不为空时，该属性才有值
-    var propsValue: String = "",
     //礼盒奖励礼物列表
     var feedbackList: ArrayList<BoxGainGift>? = null,
     //背包变动标识
     var bagChange: Boolean = false,
     //4.17新增字段
-    /** 折后价格  since 4.17.0  */
-    var discountBean: Int? = null,
-    /** 折扣券图片  */
-    var discountPic: String? = null,
-    /** 折扣 */
-    var discount: Int? = null,
-    /** 折扣券数量 */
-    var discountCount: Int? = null,
     //4.21新增 author WanZhiYuan
-    /** 本次刮奖获得萌豆 */
-    var awardBean: Long? = null,
     /** 最大可获得萌豆 */
-    var maxBean: Long? = null,
-    /** 是否是刮刮卡 */
-    var scratchCard: Boolean? = null
+    var maxBean: Long? = null
 ) : EggHitSumResult()
 
 //礼盒奖励礼物
@@ -1053,14 +1041,16 @@ data class MicroSettingInfo(var micRuleUrl: String = "")
 data class PublishUrl(var pushUrl: String = "")
 
 open class EggHitSumResult(
+    //奖励萌豆
     var prizeBeans: Long = 0,
-    var prizeList: List<ArrayList<AwardGood?>> = listOf()
+    //奖励列表
+    var prizeList: List<AwardGood> = listOf()
 )
 
 //新增序列化EggHitSumResult实体类
 open class EggHitSumResultSerial(
     var prizeBeans: Long = 0,
-    var prizeList: List<ArrayList<AwardGood?>> = listOf()
+    var prizeList: List<AwardGood> = listOf()
 ) : Serializable
 
 /**

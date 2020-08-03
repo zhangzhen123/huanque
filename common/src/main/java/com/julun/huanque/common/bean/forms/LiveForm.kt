@@ -42,42 +42,29 @@ class RecommendProgramForm(var programId: Long? = null) : SessionForm()
 
 class ShareProgramForm(var programId: Long? = null) : SessionForm()
 
-open class ConsumeForm(
+class ConsumeForm(
     programId: Long,
-
     /** 数量  */
     var count: Int = -1,
     /** 物品id  */
-    var giftId: Int = -1
+    var giftId: Int = -1,
+    //是否从背包赠送
+    var fromBag: String
 ) : ProgramIdForm(programId)
 
-
-class NewSendGiftForm(
-    programId: Long
-    , count: Int = -1, giftId: Int = -1,
-    /**
-     * 跑道参数，只有金额超过配置的跑道阀值，下面的参数才有意义才需要填写
-     */
-    // 是否上跑道, T上跑道，F不上跑道，为空视为不上跑道
-    var canUpRunway: String = "", // 跑道追加的寄语内容
-    var runwayContent: String = "", // WEB视图提示前台是打掉当前跑道消息，但提交时后台已经被其他人打掉了。
-    // 此时需要提醒客户端，当前跑道已经被别人打掉
-    // 取值说明：T打掉当前跑道，F无法打掉当前跑道
-    var canDefeatRunway: String = "",
-    //boolean ture表示使用折扣券
-    var discountFirst: String? = null,
-    /**
-     * 送给嘉宾时传入的嘉宾programid
-     * @author WanZhiYuan
-     * @since 4.31
-     * @date 2020/05/08
-     */
-    var acceptprogramId: Long? = null
-) : ConsumeForm(programId, count, giftId) {
-
-    /** 赠送对象类型  默认是用户  */
-
-}
+///**
+// * 送礼form
+// */
+//class NewSendGiftForm(
+//    programId: Long
+//    , count: Int = -1
+//    , giftId: Int = -1,
+//    fromBag: String
+//) : ConsumeForm(programId, count, giftId) {
+//
+//    /** 赠送对象类型  默认是用户  */
+//
+//}
 
 
 class MallBuyForm(
@@ -112,10 +99,10 @@ class LiveGiftForm(var programId: Long? = null) : SessionForm()
 class UserServiceForm(
     var serviceCode: String = "",
     var programId: Long = -1,
-    var userId: Long= -1,
+    var userId: Long = -1,
     var nickname: String = "",
     //New
-    var targetuserId: Long= -1,
+    var targetuserId: Long = -1,
     /** 禁言时间 **/
     var seconds: Int = -1,
     /** 理由 **/
@@ -148,7 +135,7 @@ class NewStopLiveForm(var programId: Long) : SessionForm()
 
 class TipOffUserForm(
     // 举报用户
-    var targetuserId: Long= 0,
+    var targetuserId: Long = 0,
     // 节目编号
     var programId: Long = 0,
     //举报类型值 -> BusiConstant.ReportType
@@ -165,7 +152,7 @@ pics	string	否	图片，多张用,隔开
  */
 class SaveReportForm(
     // 举报用户
-    var targetuserId: Long= 0,
+    var targetuserId: Long = 0,
     // 节目编号
     var programId: Long? = null,
     //举报类型值 -> BusiConstant.ReportType
@@ -198,7 +185,7 @@ class RechargeChannelQueryForm(var programId: Long, var message: String, var typ
  */
 class UserAndProgramForm(
     var redPacketId: Int = -1,
-    var userId: Long= -1,
+    var userId: Long = -1,
     var programId: Long = -1
 ) : SessionForm()
 

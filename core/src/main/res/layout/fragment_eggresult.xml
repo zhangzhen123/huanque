@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent">
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:src="@mipmap/bg_egg_result"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="948:1158"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_content"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="@id/iv"
+        app:layout_constraintDimensionRatio="315:287"
+        app:layout_constraintLeft_toLeftOf="@id/iv"
+        app:layout_constraintRight_toRightOf="@id/iv" />
+
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/iv_bg"-->
+    <!--        android:layout_width="0px"-->
+    <!--        android:layout_height="0px"-->
+    <!--        android:layout_marginTop="228px"-->
+    <!--        android:src="@mipmap/bg_get_mengdou"-->
+    <!--        app:layout_constraintDimensionRatio="553:67"-->
+    <!--        app:layout_constraintLeft_toLeftOf="@id/iv"-->
+    <!--        app:layout_constraintRight_toRightOf="@id/iv"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/iv" />-->
+
+    <TextView
+        android:id="@+id/tv_mengdou"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        android:gravity="center"
+        android:textColor="#FF5757"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@+id/iv"
+        app:layout_constraintRight_toRightOf="@+id/iv"
+        app:layout_constraintTop_toTopOf="@+id/view_content"
+        tools:text="总计30000鹊币" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_prize"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/tv_certain"
+        app:layout_constraintLeft_toLeftOf="@id/view_content"
+        app:layout_constraintRight_toRightOf="@id/view_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_mengdou" />
+
+
+    <TextView
+        android:id="@+id/tv_certain"
+        android:layout_width="133dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="30dp"
+        android:background="@mipmap/egg_certain"
+        android:gravity="center"
+        android:shadowColor="#e82926"
+        android:shadowDy="2"
+        android:shadowRadius="1"
+        android:textColor="#fbfffe"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv"
+        app:layout_constraintLeft_toLeftOf="@id/iv"
+        app:layout_constraintRight_toRightOf="@id/iv" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

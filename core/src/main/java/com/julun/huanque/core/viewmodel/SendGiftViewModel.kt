@@ -6,10 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.beans.GiftDataDto
 import com.julun.huanque.common.bean.beans.LiveGiftDto
 import com.julun.huanque.common.bean.beans.SendGiftResult
-import com.julun.huanque.common.bean.forms.LiveGiftForm
-import com.julun.huanque.common.bean.forms.NewSendGiftForm
-import com.julun.huanque.common.bean.forms.ProgramIdForm
-import com.julun.huanque.common.bean.forms.SessionForm
+import com.julun.huanque.common.bean.forms.*
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.net.Requests
@@ -52,9 +49,6 @@ class SendGiftViewModel : BaseViewModel() {
         Requests.create(UserService::class.java)
     }
 
-    //上一次送礼Form
-    private var tempForm: NewSendGiftForm? = null
-
     /**
      * 加载所有礼物列表
      */
@@ -87,7 +81,7 @@ class SendGiftViewModel : BaseViewModel() {
     }
 
     //赠送礼物
-    fun sendGift(form: NewSendGiftForm) {
+    fun sendGift(form: ConsumeForm) {
         viewModelScope.launch {
             request({
                 val result = liveRoomService.sendGift(form).dataConvert(intArrayOf(ErrorCodes.BALANCE_NOT_ENOUGH))

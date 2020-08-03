@@ -117,5 +117,5 @@ interface LiveRoomService {
      * 赠送礼物
      */
     @POST("live/room/consume/sendGift")
-    suspend fun sendGift(@Body form: NewSendGiftForm): Root<SendGiftResult>
+    suspend fun sendGift(@Body form: ConsumeForm): Root<SendGiftResult>
 }

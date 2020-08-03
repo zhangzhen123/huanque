@@ -40,6 +40,7 @@ class RechargeFragmentViewModel : BaseViewModel() {
                 }
                 val info = service.queryChannelRule(form)
                     .dataConvert()
+                BalanceUtils.saveBalance(info.beans)
                 emit(ReactiveData(NetStateType.SUCCESS, info))
             }, error = { e ->
                 logger("报错了：$e")

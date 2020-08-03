@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/gift_select_count_height">
+    android:layout_height="30dp">
 
     <TextView
         android:id="@+id/num_txt"
@@ -12,7 +12,7 @@
         android:layout_marginLeft="7dp"
         android:gravity="center"
         android:text="数量"
-        android:textColor="@color/primary_color"
+        android:textColor="@color/color_golden_three"
         android:textSize="13sp" />
 
     <TextView
@@ -33,6 +33,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        android:background="#343434" />
+        android:background="#0DFFFFFF" />
 
 </RelativeLayout>
