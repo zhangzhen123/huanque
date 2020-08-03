@@ -82,7 +82,7 @@ class SimpleGiftEffectsContainerView @JvmOverloads constructor(context: Context,
 
     // 接收送礼通知消息
     fun handleSendGiftNotification(newGift: SendGiftEvent) {
-//        logger.info("收到一条送礼通知 $newGift")
+        logger.info("收到一条送礼通知 $newGift")
         //先塞进队列 排序
         queueGiftEffects.offer(newGift)
         queueGiftEffects.sortList(Comparator { e1: SendGiftEvent, e2: SendGiftEvent ->
@@ -103,10 +103,10 @@ class SimpleGiftEffectsContainerView @JvmOverloads constructor(context: Context,
             result
         })
         if (giftAnimView1.isPlaySame(newGift)) {
-//            logger.info("giftAnimView1正在播 立即执行$newGift")
+            logger.info("giftAnimView1正在播 立即执行$newGift")
             checkAndPick(giftAnimView1, giftAnimView2)
         } else if (giftAnimView2.isPlaySame(newGift)) {
-//            logger.info("giftAnimView2正在播 立即执行$newGift")
+            logger.info("giftAnimView2正在播 立即执行$newGift")
             checkAndPick(giftAnimView2, giftAnimView1)
         }
         startTask()

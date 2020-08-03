@@ -82,7 +82,7 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
     fun setOtherAnimationView(otherAnimationView: SimpleGiftEffectsView, parentView: SimpleGiftEffectsContainerView) {
         this.otherWeakView = WeakReference<SimpleGiftEffectsView>(otherAnimationView)
         this.parentWeakView = WeakReference<SimpleGiftEffectsContainerView>(parentView)
-        lastGift = SendGiftEvent()
+        lastGift = SendGiftEvent(giftId = -100)//giftId = -100为了防止后台不返回giftId而导致与默认初始值相同 导致无法判断该事件唯一性
     }
 
     init {
@@ -397,11 +397,11 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
                     STATE_ENABLE
                 // 队列中还有数据，继续动画
                 val result = parentWeakView?.get()?.checkAndPick(this@SimpleGiftEffectsView, otherWeakView?.get())
-//                if(result==null){
-//                    logger.info("队列中没有合适消息了 不再执行")
-//                }else{
-//                    logger.info("队列中找到合适消息继续执行：$result")
-//                }
+                if(result==null){
+                    logger.info("队列中没有合适消息了 不再执行")
+                }else{
+                    logger.info("队列中找到合适消息继续执行：$result")
+                }
             }
         })
         anim.start()
@@ -478,7 +478,7 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
     }
 
     fun resetLastGiftObj() {
-        lastGift = SendGiftEvent()
+        lastGift = SendGiftEvent(giftId = -100)//giftId = -100为了防止后台不返回giftId而导致与默认初始值相同 导致无法判断该事件唯一性
     }
 
     fun destoryResource() {
