@@ -58,6 +58,7 @@ import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
+import com.julun.huanque.core.ui.live.fragment.LivePlayerFragment
 import com.julun.huanque.core.ui.live.fragment.UserCardFragment
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
 import com.julun.huanque.core.ui.live.manager.PlayerViewManager
@@ -416,22 +417,25 @@ class PlayerActivity : BaseActivity() {
 
         viewModel.baseData.observe(this, Observer {
             it ?: return@Observer
-
             liveViewManager.resetSlideViewLocation()
             if (viewModel.needRefreshSwitchList) {
                 viewModel.querySwitchList(programId)
             } else {
                 liveViewManager.preUpAndDownData()
             }
+            if (it.isLiving) {
+                cur_live_bg.hide()
+            } else {
+                cur_live_bg.show()
+            }
 
-            cur_live_bg.hide()
 //            conversationListViewModel?.anchorData = it
             //每次进入直播间 请求数据后 首先判断直播类型
             isAppShow = !it.isPcLive
             mConfigViewModel?.screenTypeData?.value = it.screenType
             //当基础信息返回成功，同时开始拉流和融云相关操作
             anchorNoLiveViewModel.baseData.value = it
-            addPlayFragment(it.living, LiveBean().apply {
+            addPlayFragment(it.isLiving, LiveBean().apply {
                 programPoster = it.prePic
                 programId = it.programId
                 playinfo = it.playInfo
@@ -1130,13 +1134,13 @@ class PlayerActivity : BaseActivity() {
      *
      */
 
-    private fun addPlayFragment(isLive: String = "True", liveModel: LiveBean? = null) {
+    private fun addPlayFragment(isLive: Boolean = true, liveModel: LiveBean? = null) {
 
         if (isAnchor) {
             return
         }
         val baseData: UserEnterRoomRespBase = viewModel.baseData.value ?: return
-        isLiving = isLive == BooleanType.TRUE
+        isLiving = isLive
         //每次添加前改变视频布局
         liveViewManager.changeShowTypeLayout2()
         if (isLiving) {
@@ -1159,6 +1163,7 @@ class PlayerActivity : BaseActivity() {
             if (livePlayFragment == null) {
                 //todo
 //                livePlayFragment = AgoraPlayerFragment()
+                livePlayFragment = LivePlayerFragment()
             }
 
             mVideoViewModel.playerData.value = liveModel
@@ -1428,7 +1433,7 @@ class PlayerActivity : BaseActivity() {
                 }
                 if (data.programId == programId) {
                     val baseData: UserEnterRoomRespBase = viewModel.baseData.value ?: return
-                    addPlayFragment(BooleanType.TRUE, LiveBean().apply {
+                    addPlayFragment(true, LiveBean().apply {
                         programPoster = baseData.prePic
                         programId = data.programId
                         playinfo = data.playInfo
@@ -1465,7 +1470,7 @@ class PlayerActivity : BaseActivity() {
                     mVideoViewModel?.logout?.postValue(true)
                     viewModel.baseData.value?.lastShowTimeDiffText = "刚刚"
 //                    surface_view?.scrollEnable = false
-                    addPlayFragment(BooleanType.FALSE)
+                    addPlayFragment(false)
                 }
             }
         })

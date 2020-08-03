@@ -7,6 +7,7 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
@@ -42,11 +43,11 @@ class AnchorIsNotOnlineFragment : BaseFragment() {
             it?.let {
                 if (it.lastShowTimeDiffText.isNotEmpty()) {
                     tv_provious.show()
-                    tv_provious.text = "上次直播：${it.lastShowTimeDiffText}"
+                    tv_provious.text = "上次直播${it.lastShowTimeDiffText}"
                 } else {
                     tv_provious.hide()
                 }
-
+                authorPhotoImage.loadImage(it.headPic,60f,60f)
             }
         })
 

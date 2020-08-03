@@ -16,7 +16,7 @@
     <string name="watch_history_title">历史记录</string>
     <string name="is_playing">正在直播</string>
     <string name="not_playing">未开播</string>
-    <string name="anchor_not_playing">主播暂未开播</string>
+    <string name="anchor_not_playing">主播还未开播哦</string>
     <string name="theme_room_not_playing">主题房暂未开播</string>
     <string name="live_end">直播结束</string>
     <string name="recommend_more_anchor">为您推荐更多精彩直播</string>

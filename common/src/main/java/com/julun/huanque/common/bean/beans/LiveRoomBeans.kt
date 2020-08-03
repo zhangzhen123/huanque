@@ -162,7 +162,7 @@ data class GuardInfo(
 )
 
 data class RoomUserInfo(
-    var userId: Long= -1,
+    var userId: Long = -1,
     var headPic: String = "",//头像
     var userLevel: Int = -1,
     var royalLevel: Int = -1,
@@ -239,10 +239,11 @@ class LiveAdConfig : Serializable {
 }
 
 class UserEnterRoomRespBase : Serializable {
-//    var anchorId: Long = 0//主播id
+    //    var anchorId: Long = 0//主播id
     var prePic: String = ""//封面图
     var headPic: String = ""//头像图
-    var living: String = ""//是否在直播中
+    @JSONField(name = "isLiving")
+    var isLiving: Boolean = false//是否在直播中
     var programName: String = ""//主播昵称
     var programId: Long = 0//节目id
 
@@ -698,7 +699,7 @@ class SingleBadge : Serializable {
 }
 
 class IntimateVO {
-    var userId: Long= 0
+    var userId: Long = 0
     var living: Boolean = false
     var headPic: String = ""
     var programId: Long = 0
@@ -707,7 +708,7 @@ class IntimateVO {
 
 class RankingsResult : Serializable {
     /** 用户id **/
-    var userId: Long= 0
+    var userId: Long = 0
 
     /** 用户昵称 **/
     var nickname: String = ""
@@ -977,7 +978,7 @@ data class RoyalCardBean(
     var subTitle: String = "",
     var title: String = "",
     var royalCardBgPic: String = "",
-    var userId: Long= 0
+    var userId: Long = 0
 ) : Serializable
 
 data class GiftChange(
@@ -991,7 +992,7 @@ data class CountItem(
 )
 
 //显示私聊的bean
-data class PrivateMessageBean(var userId: Long= -1, var nickName: String = "") : Serializable
+data class PrivateMessageBean(var userId: Long = -1, var nickName: String = "") : Serializable
 
 //页面跳转的Bean
 data class JumpActivityBean(
@@ -1398,7 +1399,7 @@ class FansListInfo(
     /** 节目id **/
     var programId: Long = 0,
     /** 用户id **/
-    var userId: Long= 0,
+    var userId: Long = 0,
 
     //自定义字段
     /** 成员人数 **/
@@ -1420,7 +1421,7 @@ class FansListInfo(
             if (other.userId != 0L && this.userId != 0L) {
                 return other.userId == this.userId
             }
-            if (other.programId != 0L&& this.programId != 0L) {
+            if (other.programId != 0L && this.programId != 0L) {
                 return other.programId == this.programId
             }
         }
@@ -2024,7 +2025,7 @@ data class PkRankLastChampionInfo(
     /** 赛季名称 **/
     var seasonName: String = "",
     /**  用户ID **/
-    var userId: Long= 0
+    var userId: Long = 0
 )
 
 /**
@@ -2165,7 +2166,7 @@ data class PkRankUserInfo(
     /** 贡献值 **/
     var score: Long = 0,
     /** 用户ID **/
-    var userId: Long= 0
+    var userId: Long = 0
 )
 
 /**
@@ -2175,7 +2176,7 @@ data class PkRankUserInfo(
  */
 data class PkRankUserMvpListInfo(
     /** 用户ID **/
-    var userId: Long= 0,
+    var userId: Long = 0,
     /** 用户昵称 **/
     var nickname: String = "",
     /** 下一个勋章已有的Mvp次数 **/
@@ -2241,7 +2242,7 @@ data class PkRankAnchorRankInfo(
     /** 段位名称 **/
     var stageName: String = "",
     /** 用户ID **/
-    var userId: Long= 0
+    var userId: Long = 0
 )
 
 /**
@@ -2250,7 +2251,7 @@ data class PkRankAnchorRankInfo(
  * @since 4.24
  */
 data class OnlineUserInfo(
-    var userId: Long= -1L,
+    var userId: Long = -1L,
     //头像
     var headPic: String = "",
     var userLevel: Int = -1,
@@ -2325,6 +2326,9 @@ class OnlineListData<T>(
 
     //守护商品id
     var goodsId: Int? = null
+
+    var heatTips: String = ""
+    var royalTips: String = ""
 }
 
 /**
