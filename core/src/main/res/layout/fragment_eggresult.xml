@@ -12,9 +12,10 @@
         android:layout_height="0px"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
+        android:layout_marginBottom="50dp"
         android:src="@mipmap/bg_egg_result"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="948:1158"
+        app:layout_constraintDimensionRatio="945:1158"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -48,28 +49,53 @@
         android:gravity="center"
         android:textColor="#FF5757"
         android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@+id/iv"
         app:layout_constraintRight_toRightOf="@+id/iv"
         app:layout_constraintTop_toTopOf="@+id/view_content"
         tools:text="总计30000鹊币" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_prize"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0px"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:overScrollMode="never"
+        android:layout_height="0px"
         app:layout_constraintBottom_toTopOf="@+id/tv_certain"
         app:layout_constraintLeft_toLeftOf="@id/view_content"
         app:layout_constraintRight_toRightOf="@id/view_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_mengdou" />
+        app:layout_constraintTop_toBottomOf="@id/tv_mengdou">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_prize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.33" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.67" />
 
 
     <TextView
         android:id="@+id/tv_certain"
-        android:layout_width="133dp"
-        android:layout_height="40dp"
+        android:layout_width="0px"
+        android:layout_height="0px"
         android:layout_marginBottom="30dp"
         android:background="@mipmap/egg_certain"
         android:gravity="center"
@@ -79,7 +105,8 @@
         android:textColor="#fbfffe"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="@id/iv"
-        app:layout_constraintLeft_toLeftOf="@id/iv"
-        app:layout_constraintRight_toRightOf="@id/iv" />
+        app:layout_constraintDimensionRatio="399:120"
+        app:layout_constraintLeft_toRightOf="@id/guideline_left"
+        app:layout_constraintRight_toRightOf="@id/guideline_right" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

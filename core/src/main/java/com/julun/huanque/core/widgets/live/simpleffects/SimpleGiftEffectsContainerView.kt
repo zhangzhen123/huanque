@@ -132,7 +132,7 @@ class SimpleGiftEffectsContainerView @JvmOverloads constructor(context: Context,
         if (queueGiftEffects.isEmpty()) return null
         var validItem: SendGiftEvent? = null
 //        logger.info("queueGiftEffects:$queueGiftEffects")
-        logger.info("queueGiftEffects size:${queueGiftEffects.size}")
+//        logger.info("queueGiftEffects size:${queueGiftEffects.size}")
         val lastIndex = queueGiftEffects.size - 1
         for (i in 0..lastIndex) {
             val it = queueGiftEffects[i]

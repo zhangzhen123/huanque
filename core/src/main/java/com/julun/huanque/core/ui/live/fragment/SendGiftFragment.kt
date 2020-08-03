@@ -20,14 +20,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.ConsumeForm
 import com.julun.huanque.common.bean.forms.RechargeRuleQueryForm
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.ErrorCodes
-import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
@@ -317,7 +315,7 @@ class SendGiftFragment : BaseDialogFragment() {
             result?.let {
                 //显示送礼成功相关
                 sendGiftSuccess(it, it.form ?: return@Observer)
-                playerViewModel?.timeInternal(it.ttl * 1000L)
+                playerViewModel.timeInternal(it.ttl * 1000L)
                 //显示砸蛋结果数据
                 if (it.prizeBeans > 0 && it.prizeList.isNotEmpty()) {
                     showResult(it)
@@ -1057,44 +1055,55 @@ class SendGiftFragment : BaseDialogFragment() {
                 return@OnClickListener
             }
 
-            // 隐藏数量选择框
-            hideCountListView()
-//            if (selectCountListView?.visibility != View.GONE) {
-//                selectCountListView?.visibility = View.GONE
-//            }
-            try {
-                val fromBag = if (selectedGift?.bagCount ?: 0 > 0) {
-                    BusiConstant.True
-                } else {
-                    BusiConstant.False
+            selectedGift?.let { gift ->
+                // 隐藏数量选择框
+                hideCountListView()
+
+                try {
+                    val count = sendCountLabel!!.text.toString().toInt()
+
+                    if (gift.bag && count > gift.bagCount) {
+                        //背包赠送,并且背包数量不足用户选择的数量
+                        MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
+                            "是否一次性送出${gift.bagCount}个${gift.giftName}？",
+                            MyAlertDialog.MyDialogCallback(onRight = {
+                                realSendGift(gift, gift.bagCount)
+                            }, onCancel = {
+                            }), "提示", "ALL IN", noText = "再想想"
+                        )
+                        return@OnClickListener
+                    }
+                    realSendGift(gift, count)
+                } catch (e: NumberFormatException) {
+                    e.printStackTrace()
                 }
-                val count = sendCountLabel!!.text.toString().toInt()
-                val form = ConsumeForm(
-                    giftId = selectedGift?.giftId ?: return@OnClickListener,
-                    count = count,
-                    programId = this.programId,
-                    fromBag = fromBag
-                )
 
-//                //配置使用折扣券开关
-//                if (selectedGift?.discount != null && playerViewModel?.changeDiscountTicketStatus?.value != null) {
-//                    if (playerViewModel?.changeDiscountTicketStatus?.value == true) {
-//                        form.discountFirst = "True"
-//                    } else {
-//                        form.discountFirst = "False"
-//                    }
-//                }
-                sendPagerAdapter = lastPagerAdapter
-                sendRequesting = true
-                curGiftIsSending = selectedGift
-                sendActionBtn?.text = "..."
-                viewModel?.sendGift(form)
-            } catch (e: NumberFormatException) {
-                e.printStackTrace()
             }
-
-
         }
+    }
+
+    /**
+     * 实际赠送礼物的方法
+     */
+    private fun realSendGift(gift: LiveGiftDto, count: Int) {
+        val fromBag = if (gift.bag) {
+            BusiConstant.True
+        } else {
+            BusiConstant.False
+        }
+
+        val form = ConsumeForm(
+            giftId = gift.giftId,
+            count = count,
+            programId = this.programId,
+            fromBag = fromBag,
+            prodType = gift.prodType
+        )
+        sendPagerAdapter = lastPagerAdapter
+        sendRequesting = true
+        curGiftIsSending = gift
+        sendActionBtn?.text = "..."
+        viewModel?.sendGift(form)
     }
 
     private fun sendGiftSuccess(data: SendGiftResult, form: ConsumeForm) {
@@ -1105,15 +1114,31 @@ class SendGiftFragment : BaseDialogFragment() {
         val wealth = data.beans
         balanceLabel?.text = "$wealth"
         goodsCfgData?.beans = wealth
-        // 刷新个人中心余额
-//        goodsCfgData?.gifts?.filter { it.giftId == form.giftId }?.forEach {
-//            it.bagCount = newBagCount
-//        }
 
-        refreshGiftItemBySelect(data)
-        sendPagerAdapter?.notifyDataSetChanged()
+        if (form.fromBag == BusiConstant.True) {
+            // 刷新背包逻辑
+            mBagData.forEach {
+                if (it.giftId == form.giftId) {
+                    val count = data.bagCount
+                    it.bagCount = count
+                    if (count <= 0) {
+                        it.couldSend = false
+                        setSelectGiftFunction(selectedGift)
+                    }
+                    mBagViewPagerAdapter.notifyDataSetChanged()
+                    return@forEach
+                }
+            }
+        }
+//        refreshGiftItemBySelect(data)
+//        sendPagerAdapter?.notifyDataSetChanged()
 //        playerActivity?.markDeepSeaNeedRefresh()
-        showLiansong(data.level /*selectedGift?.pic ?: ""*/)
+
+        if (selectedGift?.bag == true && (selectedGift?.bagCount ?: 0) <= 0) {
+            hideLiansong()
+        } else {
+            showLiansong(data.level /*selectedGift?.pic ?: ""*/)
+        }
         //手动改变经验属性
         if (goodsCfgData != null && curGiftIsSending != null) {
             val addExp = curGiftIsSending!!.userExp * form.count
@@ -1140,12 +1165,14 @@ class SendGiftFragment : BaseDialogFragment() {
 
     private fun hideLiansong() {
         if (send_gift_container == null || liansong.visibility == View.GONE) return
-//        val llp2 = line_2.layoutParams as RelativeLayout.LayoutParams
         liansong.hide()
-        sendCountLayout.show()
+
         sendActionBtn.show()
-//        llp2.rightMargin = dip(0)
-//        line_2.requestLayout()
+        if (sendActionBtn.isEnabled) {
+            sendCountLayout.show()
+        } else {
+            sendCountLayout.hide()
+        }
     }
 
     /**
@@ -1173,10 +1200,6 @@ class SendGiftFragment : BaseDialogFragment() {
         if (!lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             return
         }
-//        val boxDialog: BoxGrantDialog = BoxGrantDialog.newInstance(list)
-//        activity?.let {
-//            boxDialog.show(it.supportFragmentManager, "BoxGrantDialog")
-//        }
     }
 
     /**
@@ -1439,7 +1462,7 @@ class SendGiftFragment : BaseDialogFragment() {
                 if (currentGift.giftId != selectedGift?.giftId) {
                     hideLiansong()
                 }
-                if (selectedGift == null || (selectedGift?.giftId != null && selectedGift?.giftId != currentGift.giftId)) {
+                if (selectedGift == null || (selectedGift?.giftId != null && (selectedGift?.giftId != currentGift.giftId || selectedGift?.bag != currentGift.bag))) {
                     setSelectGiftFunction(currentGift)
                     selectedCurrentGift(true, itemView)
 
@@ -1468,7 +1491,7 @@ class SendGiftFragment : BaseDialogFragment() {
             emptyText.layoutParams = ViewGroup.LayoutParams(ScreenUtils.getScreenWidth(), ViewGroup.LayoutParams.MATCH_PARENT)
             mAdapter.setEmptyView(emptyText)
         }
-        mAdapter.setNewData(giftList)
+        mAdapter?.setList(giftList)
     }
 
     //背包使用的Adapter

@@ -35,13 +35,11 @@ import com.julun.huanque.core.ui.live.fragment.SendGiftFragment
 class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_cmp_gift) {
     // 当前选中的礼物
     companion object {
+        //选中的礼物
         var selectedGift: LiveGiftDto? = null
     }
 
     override fun convert(vh: BaseViewHolder, item: LiveGiftDto) {
-        if (vh == null || item == null) {
-            return
-        }
         //过滤空礼物
         if (item.giftId == SendGiftFragment.EMPTY_GIFT) {
             vh.setGone(R.id.gift_name, true)
@@ -55,7 +53,7 @@ class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_
         val rootView = vh.itemView
         val llTag = vh.getView<LinearLayout>(R.id.ll_tag)
         val ivFunction = vh.getView<ImageView>(R.id.iv_function)
-        if (item.giftId == selectedGift?.giftId) {
+        if (item.giftId == selectedGift?.giftId && item.bag == selectedGift?.bag) {
             rootView.backgroundDrawable = GlobalUtils.getDrawable(R.drawable.shape_gift_selected_bg)
             //有设置数据
             llTag.hide()
@@ -106,7 +104,8 @@ class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_
             giftPic.clearAnimation()
         }
         val str: String = StringHelper.paddingNumberWithEmptyCharEven(item.bagCount, 4)
-        if (item.bagCount > 0) {
+        if (item.bag) {
+            //处于背包当中，显示数量
             giftBagInfo.show()
             giftBagInfo.text = str
         } else {

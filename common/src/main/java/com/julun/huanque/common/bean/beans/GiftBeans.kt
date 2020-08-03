@@ -33,8 +33,14 @@ class LiveGiftDto {
 
     var typeCode: String = ""//Normal Super
 
+    //物品类型（礼物还是道具）
+    var prodType: String = ""
+
     //用户经验
     var userExp: Long = 0
+
+    //是否是背包礼物
+    var bag: Boolean = false
 
 
     /*以下字段待确认*/

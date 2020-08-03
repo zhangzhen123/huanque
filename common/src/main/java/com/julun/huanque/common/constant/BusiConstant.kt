@@ -744,3 +744,14 @@ object ProgramTagType {
     //图片标签   直接显示图片
     val IMG = "img:"
 }
+
+/**
+ * 送礼面板物品类型
+ */
+object ProdType {
+    //礼物
+    const val Gift = "Gift"
+
+    //道具
+    const val Goods = "Goods"
+}
