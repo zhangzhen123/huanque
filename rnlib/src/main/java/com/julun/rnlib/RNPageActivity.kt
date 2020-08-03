@@ -494,8 +494,12 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
                 }
                 RnConstant.SHARE_INVITE_PAGE->{
-                    ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name,"Invite").navigation()
+                    ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name,ShareFromModule.Invite).navigation()
                 }
+                RnConstant.WITHDRAWAL_PAGE->{
+                    ARouter.getInstance().build(ARouterConstant.WITHDRAW_ACTIVITY).navigation()
+                }
+
             }
 
         }

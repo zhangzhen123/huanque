@@ -446,3 +446,13 @@ object WeiBoShareType {
     //网页
     const val WbWeb = "WbWeb"
 }
+
+/**
+ * 分享的模块分类
+ */
+object ShareFromModule{
+//    适用模块，Invite：邀友，Program：直播间，Magpie：养鹊(可选项：Invite、Program、Magpie)
+    const val Invite = "Invite"
+    const val Program = "Program"
+    const val Magpie = "Magpie"
+}

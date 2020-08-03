@@ -80,7 +80,7 @@
             android:theme="@style/CustomToolBarTheme" />
         <activity
             android:name=".ui.share.InviteShareActivity"
-            android:theme="@style/CustomToolBarThemeTran" />
+            android:theme="@style/ShareTheme" />
         <activity
             android:name=".ui.live.PlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
