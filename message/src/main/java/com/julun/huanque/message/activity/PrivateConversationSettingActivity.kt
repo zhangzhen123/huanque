@@ -139,22 +139,23 @@ class PrivateConversationSettingActivity : BaseActivity() {
         }
 
         view_blacklist.onClickNew {
-            //拉黑
+            //取消黑名单
+            if (mPrivateConversationSettingViewModel?.blackStatus?.value == true) {
+                mPrivateConversationSettingViewModel?.recover()
+                return@onClickNew
+            }
+
             MyAlertDialog(
                 this
             ).showAlertWithOKAndCancel(
                 "加入黑名单，你们将相互不能给对方发送消息",
                 MyAlertDialog.MyDialogCallback(onRight = {
-                    //取消黑名单
-                    if (mPrivateConversationSettingViewModel?.blackStatus?.value == true) {
-                        mPrivateConversationSettingViewModel?.recover()
-                    }
-                }, onCancel = {
                     //拉黑
                     if (mPrivateConversationSettingViewModel?.blackStatus?.value == false) {
                         mPrivateConversationSettingViewModel?.black()
                     }
-                }), "加入黑名单", "允许", "不允许"
+
+                }), "加入黑名单", "确定", "取消"
             )
         }
 

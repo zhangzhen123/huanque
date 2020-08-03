@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.julun.huanque.common.widgets.CircleBarView
+        android:id="@+id/cbvGiftCircleView"
+        android:layout_width="53dp"
+        android:layout_height="53dp"
+        android:layout_gravity="center_horizontal"
+        android:clickable="false"
+        app:bar_width="4dp"
+        app:bg_color="#FFFEE1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:outsides_color="#ff0000"
+        app:circlebar_progress_color="#000000"
+        app:start_angle="270"
+        app:sweep_angle="360" />
+
+    <ImageView
+        android:id="@+id/ivBtnSendGifts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/btn_image_continuous_violet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--<com.facebook.drawee.view.SimpleDraweeView-->
+        <!--android:id="@+id/sdvGiftIcon"-->
+        <!--android:layout_width="41dp"-->
+        <!--android:layout_height="41dp"-->
+        <!--android:clickable="false"-->
+        <!--app:actualImageScaleType="fitCenter"-->
+        <!--app:failureImage="@drawable/logo_placeholder_small"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:placeholderImage="@drawable/logo_placeholder_small" />-->
+
+</merge>

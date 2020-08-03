@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@mipmap/send_gift_unenable_btn" android:state_enabled="false"/>
+    <item android:drawable="@mipmap/send_gift_checked_btn" android:state_selected="true" />
+    <item android:drawable="@mipmap/send_gift_un_checked_btn" />
+</selector>

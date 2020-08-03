@@ -3,6 +3,7 @@ package com.julun.huanque.core.widgets.live.message
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING
 import com.julun.huanque.common.bean.TplBean
+import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -27,7 +29,7 @@ import org.jetbrains.anko.textColor
  */
 class PublicChatMessageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
     private val logger = ULog.getLogger("PublicChatMessageView")
-
+    var mEventListener: EventListener? = null
     val messageRecyclerView: MessageRecyclerView by lazy {
         MessageRecyclerView(context, null)
     }
@@ -97,6 +99,11 @@ class PublicChatMessageView @JvmOverloads constructor(context: Context, attrs: A
             newMessageNotice.hide()
             messageRecyclerView.scrollToBottomQuickly()//此方法不会触发scroll监听
         }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        mEventListener?.onDispatch(ev)
+        return super.dispatchTouchEvent(ev)
     }
 
     private fun checkIsInBottom() {

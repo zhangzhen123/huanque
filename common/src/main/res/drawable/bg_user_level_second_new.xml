@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <corners android:radius="3dp"/>
+            <size
+                android:width="180dp"
+                android:height="2dp"/>
+            <solid android:color="#4CFFBA30"/>
+        </shape>
+    </item>
+<!--    <item>-->
+<!--        <bitmap xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--            android:dither="true"-->
+<!--            android:src="@mipmap/bg_user_level_second_img"-->
+<!--            android:tileMode="repeat" />-->
+<!--    </item>-->
+</layer-list>
+

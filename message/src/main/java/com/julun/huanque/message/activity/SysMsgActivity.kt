@@ -26,6 +26,8 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.FriendsAdapter
 import com.julun.huanque.message.adapter.SysMsgAdapter
 import com.julun.huanque.message.viewmodel.SysMsgViewModel
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
@@ -101,17 +103,30 @@ class SysMsgActivity : BaseActivity() {
             when (view?.id) {
                 R.id.llSysRootView -> {
                     val item = view.getTag(R.id.msg_bean_id) as? SysMsgBean
-                    customAction(item?.touchType?:return@onAdapterChildClickNew)
+                    customAction(item?.touchType ?: return@onAdapterChildClickNew)
                 }
                 R.id.clFriendsRootView -> {
                     val item = view.getTag(R.id.msg_bean_id) as? FriendBean
                     //打开他人主页
-                    customAction(MessageConstants.ACTION_MAIN_PAGE)
+                    try {
+                        RNPageActivity.start(
+                            this,
+                            RnConstant.PERSONAL_HOMEPAGE,
+                            Bundle().apply { putLong("userId", item?.userId?.toLong() ?: return@onAdapterChildClickNew) })
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
                 R.id.tvMessage -> {
                     val item = view.getTag(R.id.msg_bean_id) as? FriendBean
                     //打开私聊
-                    customAction(MessageConstants.ACTION_MESSAGE)
+                    item ?: return@onAdapterChildClickNew
+                    try {
+                        PrivateConversationActivity.newInstance(this, item.userId.toLong(), item.friendNickname)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
                 }
             }
         }
@@ -187,7 +202,7 @@ class SysMsgActivity : BaseActivity() {
         }
     }
 
-    private fun customAction(touchType:String) {
+    private fun customAction(touchType: String) {
         when (touchType) {
             MessageConstants.ACTION_URL -> {
                 //H5

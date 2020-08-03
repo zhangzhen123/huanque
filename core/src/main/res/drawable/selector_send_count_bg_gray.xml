@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><!-- 上左下3边框，背景选中变化 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <shape>
+            <corners android:bottomLeftRadius="60dp" android:topLeftRadius="60dp" />
+            <solid android:color="#14FFFFFF" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners android:bottomLeftRadius="60dp" android:topLeftRadius="60dp" />
+            <solid android:color="#14FFFFFF" />
+        </shape>
+    </item>
+</selector>

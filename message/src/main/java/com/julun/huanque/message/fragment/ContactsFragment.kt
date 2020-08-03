@@ -134,7 +134,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
                     ContactsTabType.Intimate, ContactsTabType.Friend -> {
                         //点击私信
                         activity?.let { act ->
-                            PrivateConversationActivity.newInstance(act, tempData.userId,tempData.nickname,tempData.meetStatus)
+                            PrivateConversationActivity.newInstance(act, tempData.userId, tempData.nickname, tempData.meetStatus)
                         }
                     }
                     ContactsTabType.Follow, ContactsTabType.Fan -> {
@@ -167,7 +167,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
      */
     private fun initViewModel() {
         mActivityViewModel.socialListData.observe(this, Observer {
-            if (it != null && mViewModel.mType == it.userDataTabType) {
+            if (it != null && mViewModel.mType == it.userDataTabType && it.linkList.size > 0) {
                 mAdapter.setList(it.linkList)
                 mViewModel.offset = it.linkList.size
                 if (mViewModel.offset == 0) {

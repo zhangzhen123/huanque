@@ -321,12 +321,12 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.msgFeeData?.observe(this, Observer {
             if (it != null) {
-                if (it > 0 || SessionUtils.getSex() == Sex.FEMALE) {
-                    //不免费
-                    tv_free.hide()
+                if (it == 0L && (SessionUtils.getSex() == Sex.MALE || (SessionUtils.getSex() == Sex.FEMALE && mPrivateConversationViewModel?.chatInfoData?.value?.sex == Sex.FEMALE))) {
+                    //免费(男性  或者  自己和对方都是女性  显示标识)
+                    tv_free.show()
                 } else {
                     //免费
-                    tv_free.show()
+                    tv_free.hide()
                 }
             }
         })

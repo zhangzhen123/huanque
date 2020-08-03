@@ -8,7 +8,6 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.basic.TabBean
 import com.julun.huanque.common.bean.beans.MicOperateBean
 import com.julun.huanque.common.bean.beans.PKCreateEvent
-import com.julun.huanque.common.bean.beans.RunwayCache
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.manager.OrderDialogManager
@@ -22,8 +21,8 @@ import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.dialog.OnlineDialogFragment
 import com.julun.huanque.core.ui.live.dialog.ScoreDialogFragment
+import com.julun.huanque.core.ui.live.fragment.SendGiftFragment
 import com.julun.huanque.core.viewmodel.*
-import java.lang.ClassCastException
 
 /**
  * 随着直播间弹窗越来越多,逻辑和视图层耦合太严重，分离和解耦大量dialog逻辑和展示，统一功能相同的弹窗
@@ -68,7 +67,7 @@ class PlayerDialogManager(val context: PlayerActivity) {
     private val dialogsCache = hashMapOf<String, DialogFragment?>()
 
     // 礼物面板
-//    var giftFragment: SendGiftFragment? = null
+    private var giftFragment: SendGiftFragment? = null
 
 
     init {
@@ -158,14 +157,12 @@ class PlayerDialogManager(val context: PlayerActivity) {
     /**
      * 打开礼物弹窗
      */
-    fun openGiftDialog(currentRunwayCache: RunwayCache? = null) {
-//        if (giftFragment == null) {
-//            giftFragment = SendGiftFragment.newInstance(mViewModel?.programId
-//                    ?: return, mViewModel?.baseData?.value?.anchorId
-//                    ?: return, currentRunwayCache)
-//            dialogsCache[getFragmentKey(SendGiftFragment::class.java)] = giftFragment
-//        }
-//        giftFragment?.show(context, "SendGiftFragment")
+    fun openGiftDialog() {
+        if (giftFragment == null) {
+            giftFragment = SendGiftFragment.newInstance(programId = playerViewModel.programId)
+            dialogsCache[getFragmentKey(SendGiftFragment::class.java)] = giftFragment
+        }
+        giftFragment?.show(context, "SendGiftFragment")
     }
 
     /**
@@ -173,10 +170,10 @@ class PlayerDialogManager(val context: PlayerActivity) {
      * @param isReset 再次打开是否重置弹窗
      */
     fun closeGiftDialog(isReset: Boolean) {
-//        giftFragment?.dismiss()
-//        if (isReset) {
-//            giftFragment = null
-//        }
+        giftFragment?.dismiss()
+        if (isReset) {
+            giftFragment = null
+        }
     }
 
     /**

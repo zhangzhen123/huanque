@@ -9,33 +9,53 @@ import java.io.Serializable
  */
 
 class LiveGiftDto {
-    var giftId: Int? = null
-
-    /** 物品名称  */
-    var giftName: String? = null
-    var bagCount: Int = 0       //背包数量
 
     /** 价格  */
     var beans: Long = 0
-    var realRunwayBeans: Long = 0
 
-    /** 图标  */
-    var pic: String? = null
-    var tagContent: String? = null
+    //是否可以赠送
+    var couldSend: Boolean = true
 
     //可选数量列表
-    var countItems: List<GoodsOptionCount> = listOf()
+    var countItemList: List<GoodsOptionCount> = listOf()
+
+    //礼物ID
+    var giftId: Int = -1
+
+    //礼物名称
+    var giftName: String? = null
+
+    //礼物图片
+    var pic: String = ""
+
+    //礼物选中图片
+    var selPic: String = ""
+
+    var typeCode: String = ""//Normal Super
+
+    //用户经验
+    var userExp: Long = 0
+
+
+    /*以下字段待确认*/
+
+    var bagCount: Int = 0       //背包数量
+
+
+    var realRunwayBeans: Long = 0
+
+
+    var tagContent: String? = null
+
 
     //守护卡类型
     var tips: String? = null
 
-    var typeCode: String = ""//Normal Super
 
     //是否有表白功能
     var showLove: Boolean = true
     var popMsg: String? = null
     var processInfo: ProcessInfo? = null
-    var userExp: Long = 0
 
     //是否匿名礼物
     var anonymous: Boolean = false
@@ -56,17 +76,12 @@ class LiveGiftDto {
     /** 折后价格  since 4.17.0  */
     var discountBean: Int? = null
 
-    /** 折扣券图片  */
-    var discountPic: String? = null
-
     /** 折扣 */
     var discount: Int? = null
 
     /** 折扣券数量 */
     var discountCount: Int? = null
 
-    //是否可以赠送
-    var couldSend: Boolean = true
 
 }
 
@@ -92,7 +107,7 @@ data class GiftDataDto(
     var beans: Long = 0,
     //背包tab 红点标识位
     var bagChange: Boolean = false,
-    var groupInfo: List<GroupInfo> = listOf(),
+    var giftGroupInfoList: List<GroupInfo> = listOf(),
     var needExp: Long = 0,//下一级的经验总值
     var runwayMaxBeans: Long = 0,
     var runwayMinBean: Long = 0,
@@ -119,7 +134,7 @@ data class GiftDataDto(
 )
 
 data class GroupInfo(
-    var gifts: MutableList<LiveGiftDto> = mutableListOf(),
+    var giftList: MutableList<LiveGiftDto> = mutableListOf(),
     var typeCode: String = "",
     var typeName: String = "",
     var version: Int = 0

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/gift_select_count_height">
+
+    <TextView
+        android:id="@+id/num_txt"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="7dp"
+        android:gravity="center"
+        android:text="数量"
+        android:textColor="@color/primary_color"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/num_desc"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/num_txt"
+        android:gravity="center"
+        android:text="说明"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <View
+        android:id="@+id/fgx_view"
+        android:layout_width="match_parent"
+        android:layout_height="0.7px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:background="#343434" />
+
+</RelativeLayout>

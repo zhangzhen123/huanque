@@ -36,6 +36,23 @@
     <!--失效、禁用（不做警示性）辅助说明文字-->
     <color name="text_enable">#C5C5C5</color>
 
+    <color name="send_gift_divide">#0dffffff</color>
+    <color name="level_progress_bg">#26ffffff</color>
+
+    <!-- 连送按钮色值 -->
+    <color name="gift_1_outside">#DDB82A</color>
+    <color name="gift_2_outside">#2EE7C0</color>
+    <color name="gift_3_outside">#1CC5E1</color>
+    <color name="gift_4_outside">#FDCE11</color>
+    <color name="gift_5_outside">#DA369C</color>
+
+    <color name="gift_1_bg">#4B261C</color>
+    <color name="gift_2_bg">#104963</color>
+    <color name="gift_3_bg">#16305B</color>
+    <color name="gift_4_bg">#582900</color>
+    <color name="gift_5_bg">#28063B</color>
+    <color name="gift_progress">#E6FFFFFF</color>
+
 
     <!--黑色透明度-->
     <color name="percent15translucentBlack">#26000000</color>

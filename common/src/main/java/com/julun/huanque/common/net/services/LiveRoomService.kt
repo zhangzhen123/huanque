@@ -48,6 +48,9 @@ interface LiveRoomService {
     @POST("live/room/user/info")
     suspend fun userInfo(@Body form: UserProgramForm): Root<UserInfoInRoom>
 
+    /**
+     * 发送公聊消息
+     */
     @POST("live/room/consume/sendPubMessage")
     suspend fun sendPubMessage(@Body form: ValidateForm): Root<ValidateSpamResult>
 
@@ -96,4 +99,23 @@ interface LiveRoomService {
      */
     @POST("live/room/info/listRoomMangerUser")
     suspend fun queryManagerList(@Body form: OnLineForm): Root<OnlineListData<OnlineUserInfo>>
+
+    /**
+     * 获取礼物数据
+     */
+    @POST("live/room/consume/giftsInfo")
+    suspend fun giftsInfo(@Body form: LiveGiftForm): Root<GiftDataDto>
+
+
+    /**
+     * 查询背包数据
+     */
+    @POST("live/room/consume/bag")
+    suspend fun bag(@Body form: ProgramIdForm = ProgramIdForm()): Root<MutableList<LiveGiftDto>>
+
+    /**
+     * 赠送礼物
+     */
+    @POST("live/room/consume/sendGift")
+    suspend fun sendGift(@Body form: NewSendGiftForm): Root<SendGiftResult>
 }
