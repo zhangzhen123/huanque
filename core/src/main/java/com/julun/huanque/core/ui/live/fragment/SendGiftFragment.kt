@@ -4,34 +4,34 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.content.res.Configuration
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ListView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.forms.NewSendGiftForm
+import com.julun.huanque.common.bean.forms.ConsumeForm
 import com.julun.huanque.common.bean.forms.RechargeRuleQueryForm
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
-import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.CircleBarView
 import com.julun.huanque.common.widgets.GiftTitleView
@@ -39,11 +39,17 @@ import com.julun.huanque.common.widgets.happybubble.BubbleDialog
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.GiftAdapter
+import com.julun.huanque.core.adapter.GiftCountAdapter
 import com.julun.huanque.core.adapter.SimplePagerAdapter
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.EggSettingViewModel
 import com.julun.huanque.core.viewmodel.PropViewModel
 import com.julun.huanque.core.viewmodel.SendGiftViewModel
+import com.trello.rxlifecycle4.android.FragmentEvent
+import com.trello.rxlifecycle4.kotlin.bindUntilEvent
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observable.*
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.dialog_gift.*
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -51,9 +57,11 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.CommonPagerTitleView
-import org.jetbrains.anko.*
-import kotlin.properties.Delegates
-import kotlin.reflect.KProperty
+import org.jetbrains.anko.configuration
+import org.jetbrains.anko.forEachChild
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.textColor
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -66,26 +74,16 @@ class SendGiftFragment : BaseDialogFragment() {
     //背包的typeName
     private val BAG_TYPE_NAME = "背包"
     private var viewModel: SendGiftViewModel? = null
-    private var playerViewModel: PlayerViewModel? = null
-    private var propViewModel: PropViewModel? = null
-    private var mEggSettingViewModel: EggSettingViewModel? = null
+    private val playerViewModel: PlayerViewModel by activityViewModels()
+    private val propViewModel: PropViewModel by activityViewModels()
+    private val mEggSettingViewModel: EggSettingViewModel by activityViewModels()
 
 
     // 每页显示10个礼物
     private val pageLimit = 8
 
-    // 当前选中礼物的数量listview
-    private var mSelectCountListView: ListView? = null
-
     // 礼物数量容器
     private var mSendCountLayout: LinearLayout? = null
-
-    // 礼物数量框
-//    private var mSendCountLabel: TextView? = null
-    // 赠送礼物按钮
-//    private var dotter: LinearLayout? = null
-    //    private var notificationSwitch: SwitchButton? = null
-    private var mNotificationText: TextView? = null
 
     // 当前选中的礼物
     private var selectedGift: LiveGiftDto? = null
@@ -114,50 +112,15 @@ class SendGiftFragment : BaseDialogFragment() {
 
     private var expRatio: Double = 1.0 //当前的经验倍数 默认1.0
 
-    //todo 砸蛋弹窗
-//    private var resultFragment: EggResultFragment? = null
-
-
-//    //图鉴弹窗
-//    private var mHandbookFragment: HandbookFragment? = null
-
-    //礼物价值足够，且愿意在跑道显示
-    val ENOUGH_SHOW = "T"
-
-    //礼物价值足够，不愿意在跑道显示
-    val ENOUGH_NOT_SHOW = "F"
-
-    //礼物价值不够，不足以在跑道显示
-    val NOT_ENOUGH = "N"
-
-    //匿名砸蛋贵族地址
-    private val ANONYMOUS_URL = "http://192.168.96.207:9203/activity/rules/anonymousRule.html"
+    private var resultFragment: EggResultFragment? = null
 
     private var tabList: ArrayList<TabItemInfo> = arrayListOf()//记录大tab标签的
     private var currentPagePosition: Int = 0//记录当前的需要主动刷新全局数据后 主动切换到指定位置
     private var currentSelectCount: Int = 0//记录当前的选中数目
     private var currentExpRefreshTime: Long = 0
 
-    //是否需要上跑道
-    private var useLoveSpeechWhenSendGift: Boolean by Delegates.observable(false) { _, oldValue, newValue ->
-        if (oldValue != newValue) {
-            showOrHideSpecialNotice(true)
-        }
-    }
-
-    private var cachedMessage: String = ""
-
-
     // 本次应付金额
-    private var tmpShouldFee: Long by Delegates.observable(0L) { property: KProperty<*>, oldValue: Long, newValue: Long ->
-        useLoveSpeechWhenSendGift = goodsCfgData != null && newValue >= (goodsCfgData?.runwayMinLoveBean
-            ?: 0)
-        if (useLoveSpeechWhenSendGift && StringHelper.isNotEmpty(cachedMessage)) {
-            will_on_run_way_tip?.text = cachedMessage
-        } else {
-            will_on_run_way_tip?.text = "是否上跑道"
-        }
-    }
+    private var tmpShouldFee: Long = 0
 
     // 当前跑道价值
     private var runwayCurrentValue: Long = 0
@@ -184,11 +147,6 @@ class SendGiftFragment : BaseDialogFragment() {
         this.programId = arguments?.getLong(ParamConstant.PROGRAM_ID) ?: 0
     }
 
-//    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-//        val rootView = getRootView(inflater, container, R.layout.dialog_gift)
-//        return rootView
-//    }
-
 
     override fun getLayoutId(): Int {
         return R.layout.dialog_gift
@@ -204,41 +162,67 @@ class SendGiftFragment : BaseDialogFragment() {
 
     override fun initViews() {
 
-        setSelectGiftFunction(null)
-        notificationSwitchImage.isEnabled = false
-//        lifecycle.addObserver(GenericLifecycleObserver { _, event ->
-//            when (event) {
-//                Lifecycle.Event.ON_RESUME -> {
-//                    lastPagerAdapter?.notifyDataSetChanged()
-//                    currentGiftAdapter?.notifyDataSetChanged()
-//                }
-//            }
-//        })
-        mSelectCountListView = selectCountListView
+//        setSelectGiftFunction(null)
         mSendCountLayout = sendCountLayout
 //        mSendCountLabel = sendCountLabel
 //        notificationSwitch = rootContainer!!.notificationSwitch_old
-        mNotificationText = notificationText
         initViewModel()
-
+        initListener()
         giftViewPager?.adapter = viewPagerAdapter
         giftViewPager?.addOnPageChangeListener(viewPagerChangeListener)
 
-//        selectCountListView?.adapter = selectCountAdapter
+        selectCountListView.layoutManager = LinearLayoutManager(context)
+        selectCountListView?.adapter = selectCountAdapter
         //背包
         bagViewPager?.adapter = mBagViewPagerAdapter
         bagViewPager?.addOnPageChangeListener(mBagViewPagerChangeListener)
         // 数量选择列表
-        selectCountListView?.setOnItemClickListener { adapterView, view, i, l ->
-            if (!ForceUtils.isIndexNotOutOfBounds(i, optionCountList)) {
+        selectCountAdapter.setOnItemClickListener { adapter, view, position ->
+            if (!ForceUtils.isIndexNotOutOfBounds(position, optionCountList)) {
                 return@setOnItemClickListener
             }
-            currentSelectCount = optionCountList[i].countValue
+            currentSelectCount = optionCountList[position].countValue
             sendCountLabel?.text = currentSelectCount.toString()
             selectCountListView?.visibility = View.GONE
 
             val shouldFee = selectedGift!!.realRunwayBeans * currentSelectCount
             refreshProcessDataPreview(selectedGift?.userExp ?: 0L, currentSelectCount)
+        }
+        // 数量选择视图默认为禁用样式
+        changeCountViewToDisable()
+        tmpShouldFee = 0
+
+        doLoadGiftData()
+
+    }
+
+    private fun initListener() {
+
+        gtv_package.onClickNew {
+            //点击背包
+            if (gtv_package.isSelected) {
+                return@onClickNew
+            }
+            if (goodsCfgData?.bagChange == true || mBagData.isEmpty()) {
+                //刷新背包数据
+                viewModel?.getBagData(programId)
+                goodsCfgData?.bagChange = false
+            }
+            selPackage(true)
+            //选中背包tab
+            tabList.forEachIndexed { index, tab ->
+                if (tab.typeCode == BAG_TYPE_CODE) {
+                    //背包
+                    magic_indicator.onPageSelected(index)
+                }
+            }
+            giftViewPager.inVisiable()
+            showDotter(dotter, false)
+            bagViewPager.show()
+            showDotter(dotter_bag, true)
+        }
+        tv_privilege.onClickNew {
+            WebActivity.startWeb(requireActivity(), "www.baidu.com")
         }
         // 礼物数量容器控制 数量listview显示隐藏
         sendCountLayout?.onTouch { view, motionEvent ->
@@ -287,20 +271,6 @@ class SendGiftFragment : BaseDialogFragment() {
                 hideLiansong()
             }
         })
-
-
-//        top_tips_layout.onTouch { v, event ->
-//            dismiss()
-//            false
-//        }
-        // 上跑道开关事件
-//        notificationSwitch!!.setOnCheckedChangeListener { compoundButton, b -> handleGiveupToRunway() }
-        // 数量选择视图默认为禁用样式
-        changeCountViewToDisable()
-        tmpShouldFee = 0
-
-        doLoadGiftData()
-
     }
 
     private fun refreshPackage() {
@@ -329,11 +299,6 @@ class SendGiftFragment : BaseDialogFragment() {
      */
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(SendGiftViewModel::class.java)
-        activity?.let { act ->
-            playerViewModel = ViewModelProviders.of(act).get(PlayerViewModel::class.java)
-            propViewModel = ViewModelProviders.of(act).get(PropViewModel::class.java)
-            mEggSettingViewModel = ViewModelProviders.of(act).get(EggSettingViewModel::class.java)
-        }
         viewModel?.data?.observe(this, Observer {
             refreshGiftView(it ?: return@Observer)
         })
@@ -414,6 +379,7 @@ class SendGiftFragment : BaseDialogFragment() {
 
 //        viewModel.sendFinal.observe(this, Observer { sendFinal() })
         playerViewModel?.balance?.observe(this, Observer {
+            logger.info("Player balance = $it")
             setBalanceLabelValue(it ?: return@Observer)
         })
 
@@ -455,23 +421,6 @@ class SendGiftFragment : BaseDialogFragment() {
             }
         })
 
-        propViewModel?.expRatioState?.observe(this, Observer {
-            if (it != null && it != 0.0) {
-                expRatio = it
-            } else {
-                expRatio = 1.0
-            }
-            logger.info("expRatioState:$it")
-            showExpTime()
-            //
-            refreshProcessDataPreview(
-                selectedGift?.userExp
-                    ?: return@Observer, currentSelectCount
-            )
-        })
-        propViewModel?.expTime?.observe(this, Observer {
-            exp_time.text = TimeUtils.countDownTimeFormat(it)
-        })
         playerViewModel?.openGiftViewWithSelect?.observe(this, Observer {
             if (it != null) {
                 showSelectGiftWithId(it)
@@ -711,21 +660,13 @@ class SendGiftFragment : BaseDialogFragment() {
      *   @param giftDataDto 礼物数据
      */
     private fun refreshGiftView(giftDataDto: GiftDataDto) {
-        if (balanceLabel == null || notificationText == null || loadingText == null) {
-            reportCrash("SendGiftFragment当前的生命周期$currentLife 此时根view:${view} :${balanceLabel}--${notificationText}--${loadingText}--${dotter}")
+        if (balanceLabel == null || loadingText == null) {
+            reportCrash("SendGiftFragment当前的生命周期$currentLife 此时根view:${view} :${balanceLabel}----${loadingText}--${dotter}")
             return
-        }
-        if (playerViewModel?.isThemeRoom == true) {
-            gtv_handbook.hide()
-        } else {
-            gtv_handbook.show()
         }
         mEggSettingViewModel?.eggLuckyState?.value = giftDataDto.luckyHitEgg
         mEggSettingViewModel?.anonymousState?.value = giftDataDto.anonymousHitEgg
         mEggSettingViewModel?.discountStatus?.value = giftDataDto.discountFirst
-
-        propViewModel?.startExpStateCountDown(giftDataDto.expRatioTtl)
-        propViewModel?.expRatioState?.value = giftDataDto.expRatio
 
         viewPagerAdapter.clear()
         dotter.removeAllViews()
@@ -741,9 +682,9 @@ class SendGiftFragment : BaseDialogFragment() {
             if (giftDataDto.needExp != 0L)
                 process = (giftDataDto.userExp * 100 / giftDataDto.needExp).toInt()
             user_progress.setProcess(process)
-            progress_title.textColor = GlobalUtils.getColor(R.color.black_999)
-            progress_title.textSize = 10f
-            progress_title.text = "升级需${StringHelper.formatUserScore(expShort)}"
+
+            iv_express_lack.text = "距离${giftDataDto.userLevel + 1}级还差${StringHelper.formatUserScore(expShort)}鹊币"
+
             tv_current_level.text = "LV.${giftDataDto.userLevel}"
             tv_next_level.text = "LV.${giftDataDto.userLevel + 1}"
             send_gift_container.post {
@@ -807,6 +748,20 @@ class SendGiftFragment : BaseDialogFragment() {
 //        if (currentUser != null && currentUser.royalLevel > 0) {
         //以后台字段showTab为准
         currentPagePosition = getCurrentTabPosition(giftDataDto.showTab)
+
+        if (playerViewModel?.openGiftViewWithSelect?.value == null) {
+            //需要默认选中第一个礼物
+            goodsCfgData?.giftGroupInfoList?.forEach { groupInfo ->
+                if (groupInfo.typeCode == giftDataDto.showTab) {
+                    //找到对应的tab
+                    val giftList = groupInfo.giftList
+                    if (giftList.isNotEmpty() && ForceUtils.isIndexNotOutOfBounds(0, giftList)) {
+                        playerViewModel?.openGiftViewWithSelect?.value = giftList[0].giftId
+                    }
+                    return@forEach
+                }
+            }
+        }
 //        }
         // 默认高亮第一页下标点点图标
         if (viewPagerData.isNotEmpty()) {
@@ -888,7 +843,6 @@ class SendGiftFragment : BaseDialogFragment() {
 
     private fun refreshProcessDataPreview(userExp: Long, count: Int) {
         goodsCfgData?.let { giftData ->
-            showExpTime()
             val previewNum = userExp * count * expRatio
             var process = 0
             var secProcess = 0
@@ -900,20 +854,8 @@ class SendGiftFragment : BaseDialogFragment() {
 
             tv_current_level.text = "LV.${giftData.userLevel}"
             tv_next_level.text = "LV.${giftData.userLevel + 1}"
-            progress_title.textColor = ContextCompat.getColor(CommonInit.getInstance().getApp(), R.color.colorAccent_lib)
-            progress_title.textSize = 12f
-            progress_title.text = "+${previewNum.toLong()}"
             user_progress.setProcess(process)
             user_progress.setSecondProcess(secProcess)
-        }
-    }
-
-    private fun showExpTime() {
-        if (expRatio == 1.0) {
-            exp_layout.hide()
-        } else {
-            exp_layout.show()
-            exp_ratio.text = "$expRatio"
         }
     }
 
@@ -931,7 +873,7 @@ class SendGiftFragment : BaseDialogFragment() {
      * 再次加载时刷新跑道值
      */
     override fun reCoverView() {
-        setOrientationLayout()
+//        setOrientationLayout()
         //手动再次添加生命周期监听
         initViewModel()
         //每次打开重新初始化 存在请求未完成 而界面关闭 导致状态一直没变
@@ -941,60 +883,13 @@ class SendGiftFragment : BaseDialogFragment() {
     //记录当前的屏幕方向
     var currentOrientation = -1
 
-    /**
-     * 兼容横屏
-     */
-    private fun setOrientationLayout() {
-        val orientation = context?.configuration?.orientation ?: return
-
-        val rLp = runWayLayout.layoutParams as LinearLayout.LayoutParams
-        val sLp = send_layout.layoutParams as LinearLayout.LayoutParams
-        val gpLp = giftViewPager.layoutParams
-        val bagLp = bagViewPager.layoutParams
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            bottom_layout.orientation = LinearLayout.HORIZONTAL
-            send_layout.background = null
-            rLp.width = dp2px(268f)
-            sLp.width = ViewGroup.LayoutParams.MATCH_PARENT
-            gpLp.height = dp2px(91f)
-            bagLp.height = dp2px(91f)
-        } else {
-            bottom_layout.orientation = LinearLayout.VERTICAL
-            send_layout.backgroundColor = Color.parseColor("#14000000")
-            rLp.width = ViewGroup.LayoutParams.MATCH_PARENT
-            sLp.width = ViewGroup.LayoutParams.MATCH_PARENT
-            gpLp.height = dp2px(182f)
-            bagLp.height = dp2px(182f)
-        }
-        if (orientation != currentOrientation) {
-            logger.info("刷新礼物面板的布局方式")
-            viewPagerAdapter.notifyDataSetChanged()
-            mBagViewPagerAdapter.notifyDataSetChanged()
-//            giftViewPager.forEach {
-//                val rv=it as? RecyclerView
-//                if(rv!=null){
-//                    rv.adapter?.notifyDataSetChanged()
-//                }
-//            }
-        }
-        currentOrientation = orientation
-    }
-
 
     // 加载礼物数量列表
     private fun doCountListLoadData() {
         if (selectCountListView?.visibility != View.GONE) {
             selectCountListView?.visibility = View.GONE
         } else {
-            // 动态计算listview高度，不然会重绘计算高度，多次执行getView
-            // 上次数量相同就不重新计算高度了
-            //去掉这个高度计算 没有必要 反而会让内容显示不全
-//            if (selectCountAdapter.count != optionCountList.size) {
-//                var lp = selectCountListView!!.layoutParams
-//                lp.height = dip(10)+optionCountList.size * (LingMengApp.getApp().resources.getDimensionPixelOffset(R.dimen.gift_select_count_height))
-//                selectCountListView!!.layoutParams = lp
-//            }
-//            selectCountAdapter.reAddAll(optionCountList)
+            selectCountAdapter.setList(optionCountList)
             selectCountListView?.visibility = View.VISIBLE
         }
     }
@@ -1168,12 +1063,19 @@ class SendGiftFragment : BaseDialogFragment() {
 //                selectCountListView?.visibility = View.GONE
 //            }
             try {
+                val fromBag = if (selectedGift?.bagCount ?: 0 > 0) {
+                    BusiConstant.True
+                } else {
+                    BusiConstant.False
+                }
                 val count = sendCountLabel!!.text.toString().toInt()
-                val form = NewSendGiftForm(
+                val form = ConsumeForm(
                     giftId = selectedGift?.giftId ?: return@OnClickListener,
                     count = count,
-                    programId = this.programId
+                    programId = this.programId,
+                    fromBag = fromBag
                 )
+
 //                //配置使用折扣券开关
 //                if (selectedGift?.discount != null && playerViewModel?.changeDiscountTicketStatus?.value != null) {
 //                    if (playerViewModel?.changeDiscountTicketStatus?.value == true) {
@@ -1182,9 +1084,6 @@ class SendGiftFragment : BaseDialogFragment() {
 //                        form.discountFirst = "False"
 //                    }
 //                }
-                if (useLoveSpeechWhenSendGift && StringHelper.isNotEmpty(cachedMessage)) {
-                    form.runwayContent = cachedMessage
-                }
                 sendPagerAdapter = lastPagerAdapter
                 sendRequesting = true
                 curGiftIsSending = selectedGift
@@ -1198,7 +1097,7 @@ class SendGiftFragment : BaseDialogFragment() {
         }
     }
 
-    private fun sendGiftSuccess(data: SendGiftResult, form: NewSendGiftForm) {
+    private fun sendGiftSuccess(data: SendGiftResult, form: ConsumeForm) {
         //异常收集
         if (balanceLabel == null || sendActionBtn == null) {
             reportCrash("当前的fragment生命周期:$currentLife goodsCfgData是不是空:${goodsCfgData == null}")
@@ -1235,7 +1134,6 @@ class SendGiftFragment : BaseDialogFragment() {
 //        val llp2 = line_2.layoutParams as RelativeLayout.LayoutParams
         sendCountLayout.visibility = View.INVISIBLE
         sendActionBtn.visibility = View.INVISIBLE
-        showOrHideSpecialNotice(false)
 //        llp2.rightMargin = dip(80)
 //        line_2.requestLayout()
     }
@@ -1246,7 +1144,6 @@ class SendGiftFragment : BaseDialogFragment() {
         liansong.hide()
         sendCountLayout.show()
         sendActionBtn.show()
-        showOrHideSpecialNotice(true)
 //        llp2.rightMargin = dip(0)
 //        line_2.requestLayout()
     }
@@ -1258,21 +1155,15 @@ class SendGiftFragment : BaseDialogFragment() {
         if (!lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             return
         }
-        val orientation = context?.configuration?.orientation ?: return
-//        val resultSerial = EggHitSumResultSerial(result.prizeBeans, result.prizeList)
-//        if (resultFragment == null) {
-//            resultFragment = EggResultFragment.newInstance(resultSerial)
-//        } else {
-//            resultFragment?.result = resultSerial
-//        }
-//        activity?.let {
-//            resultFragment?.show(it.supportFragmentManager, "EggResultFragment")
-//        }
-//
-//        Observable.timer(500L, TimeUnit.MILLISECONDS)
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .bindUntilEvent(this, FragmentEvent.DESTROY)
-//            .subscribe { resetData() }
+        playerViewModel.eggResultData.value = result
+        resultFragment = resultFragment ?: EggResultFragment()
+
+        resultFragment?.show(childFragmentManager, "EggResultFragment")
+
+        timer(500L, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .bindUntilEvent(this, FragmentEvent.DESTROY)
+            .subscribe { resetData() }
     }
 
     /**
@@ -1447,20 +1338,8 @@ class SendGiftFragment : BaseDialogFragment() {
     }
 
 
-//    // 选中礼物可选数量adapter
-//    private val selectCountAdapter: SimpleAdapter<GoodsOptionCount> by lazy {
-//        object : SimpleAdapter<GoodsOptionCount>(CommonInit.getInstance().getApp(), R.layout.item_cmp_gift_price) {
-//            override fun convert(vh: ListViewHolder, item: GoodsOptionCount, position: Int) {
-//                logger.info("selectcount ${item.countName}")
-//                vh.setText(R.id.num_txt, item.countValue.toString()).setText(R.id.num_desc, item.countName)
-//                if (position == count - 1) {
-//                    vh.fuckOff(R.id.fgx_view)
-//                } else {
-//                    vh.showMe(R.id.fgx_view)
-//                }
-//            }
-//        }
-//    }
+    // 选中礼物可选数量adapter
+    private val selectCountAdapter = GiftCountAdapter()
 
     // 选中礼物
     fun selectedCurrentGift(isByUser: Boolean = true, currentItemView: View?) {
@@ -1525,33 +1404,6 @@ class SendGiftFragment : BaseDialogFragment() {
         mEggSettingViewModel?.mSelectGiftData?.value = dto
     }
 
-    /**
-     * 控制表白入口的显示与隐藏
-     */
-    private fun showOrHideSpecialNotice(show: Boolean) {
-        if (selectedGift?.showLove == false) {
-            //特定礼物，没有添加表白功能
-            addSpecialNotice.hide()
-            return
-        }
-        if (show) {
-            goodsCfgData?.let { cfgData ->
-                //当前礼物价值是否达到表白条件
-                val enableLove = tmpShouldFee >= cfgData.runwayMinLoveBean
-                if (enableLove) {
-                    //达到表白条件
-                    addSpecialNotice.show()
-                } else {
-                    addSpecialNotice.hide()
-                }
-                return
-            }
-            addSpecialNotice.hide()
-        } else {
-            addSpecialNotice.hide()
-        }
-    }
-
 
     /**
      * 显示ViewPager数据
@@ -1590,8 +1442,6 @@ class SendGiftFragment : BaseDialogFragment() {
                 if (selectedGift == null || (selectedGift?.giftId != null && selectedGift?.giftId != currentGift.giftId)) {
                     setSelectGiftFunction(currentGift)
                     selectedCurrentGift(true, itemView)
-                    //刷新表白入口的显示与隐藏
-                    showOrHideSpecialNotice(true)
 
                     adapter.notifyDataSetChanged()
 

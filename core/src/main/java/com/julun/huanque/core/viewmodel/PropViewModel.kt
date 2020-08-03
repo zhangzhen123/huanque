@@ -23,10 +23,6 @@ class PropViewModel : BaseViewModel() {
     val mysteriousState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     //炫彩发言状态
     val colorfulState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-    //经验卡倒计时剩余时间
-    val expTime: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
-    //经验卡状态 没值/0代表失效
-    val expRatioState: MutableLiveData<Double> by lazy { MutableLiveData<Double>() }
 
     /**
      * 开始神秘人倒计时
@@ -44,20 +40,6 @@ class PropViewModel : BaseViewModel() {
                         mysteriousState.postValue(null)
                     }
                 }, { it.printStackTrace() })
-    }
-
-    var expRatioTtl = 0L//当前的经验总时间
-    fun startExpStateCountDown(count: Long) {
-        if (count <= 0) return
-        expRatioTtl = count
-        myExpDisposable?.dispose()
-        myExpDisposable = Observable.interval(1, TimeUnit.SECONDS).subscribe {
-            expTime.postValue(expRatioTtl--)
-            if (expRatioTtl <= 0L) {
-                expRatioState.postValue(null)
-                myExpDisposable?.dispose()
-            }
-        }
     }
 
     /**

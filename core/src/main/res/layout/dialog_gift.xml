@@ -11,11 +11,10 @@
         android:id="@+id/rootView"
         android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:background="@mipmap/bg_gift_panel"
+        android:background="@drawable/bg_gift_panel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/headerView"
@@ -38,7 +37,7 @@
                 android:id="@+id/view_line"
                 android:layout_width="1px"
                 android:layout_height="12dp"
-                android:layout_marginRight="100dp"
+                android:layout_marginRight="60dp"
                 android:background="#1aFFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -46,24 +45,12 @@
 
 
             <com.julun.huanque.common.widgets.GiftTitleView
-                android:id="@+id/gtv_handbook"
-                android:layout_width="50dp"
-                android:layout_height="0px"
-                app:dot="false"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/view_line"
-                app:layout_constraintRight_toLeftOf="@id/gtv_package"
-                app:layout_constraintTop_toTopOf="parent"
-                app:text="@string/handbook" />
-
-            <com.julun.huanque.common.widgets.GiftTitleView
                 android:id="@+id/gtv_package"
                 android:layout_width="50dp"
                 android:layout_height="0px"
                 app:dot="false"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/gtv_handbook"
+                app:layout_constraintLeft_toRightOf="@id/view_line"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:showLine="true"
@@ -85,9 +72,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/progress_layout"
             android:layout_width="0px"
-            android:layout_height="28dp"
-            android:layout_marginStart="@dimen/dimen_15"
-            android:layout_marginLeft="@dimen/dimen_15"
+            android:layout_height="38dp"
+            android:layout_marginLeft="@dimen/dimen_19"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="gone"
@@ -108,29 +94,29 @@
                 tools:text="LV.1" />
 
             <TextView
-                android:id="@+id/progress_title"
-                android:layout_width="90dp"
+                android:id="@+id/tv_privilege"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/dimen_7"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:maxLines="1"
-                android:textColor="@color/black_999"
+                android:text="查看特权"
+                android:textColor="@color/color_golden_three"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="升级需9999999999" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_next_level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="17dp"
                 android:textColor="@color/black_666"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/progress_title"
+                app:layout_constraintRight_toLeftOf="@id/tv_privilege"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="LV.2" />
 
@@ -139,8 +125,8 @@
                 android:id="@+id/user_progress"
                 android:layout_width="0dp"
                 android:layout_height="2dp"
-                android:layout_marginLeft="@dimen/dimen_10"
-                android:layout_marginRight="@dimen/dimen_10"
+                android:layout_marginLeft="@dimen/dimen_14"
+                android:layout_marginRight="@dimen/dimen_14"
                 android:background="@drawable/bg_user_level_bg"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_weight="2"
@@ -150,56 +136,19 @@
                 app:progress_first_color="@drawable/bg_user_level_first"
                 app:progress_second_color="@drawable/bg_user_level_second_new" />
 
-            <LinearLayout
-                android:id="@+id/exp_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="12dp"
-                android:layout_marginBottom="1px"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/user_progress"
-                app:layout_constraintLeft_toLeftOf="@+id/user_progress"
-                tools:visibility="visible">
+            <TextView
+                android:id="@+id/iv_express_lack"
+                android:layout_width="32dp"
+                android:layout_height="16dp"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_999"
+                android:textSize="@dimen/sp_08"
+                app:layout_constraintBottom_toTopOf="@id/user_progress"
+                app:layout_constraintLeft_toLeftOf="@id/user_progress"
+                app:layout_constraintRight_toRightOf="@id/user_progress"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="肯德基和" />
 
-                <TextView
-                    android:id="@+id/exp_ratio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:maxLines="1"
-                    android:text="1.0"
-                    android:textColor="@color/colorAccent_lib"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:id="@+id/exp_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:maxLines="1"
-                    android:text="倍经验加成"
-                    android:textColor="@color/colorAccent_lib"
-                    android:textSize="8sp" />
-
-                <TextView
-                    android:id="@+id/exp_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="8dp"
-                    android:layout_marginLeft="@dimen/dimen_2"
-                    android:background="@drawable/shape_exp_time"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:maxLines="1"
-                    android:paddingLeft="@dimen/dimen_4"
-                    android:paddingRight="@dimen/dimen_4"
-                    android:text="00:00:00"
-                    android:textColor="@color/divide_color"
-                    android:textSize="6sp" />
-
-            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.viewpager.widget.ViewPager
@@ -207,6 +156,7 @@
             android:layout_width="0px"
             android:layout_height="187dp"
             android:layout_gravity="center"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/progress_layout" />
@@ -271,73 +221,6 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/giftViewPager">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/runWayLayout"
-                android:layout_width="match_parent"
-                android:layout_height="26dp">
-
-                <TextView
-                    android:id="@+id/addSpecialNotice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:drawableRight="@drawable/sel_special_forward"
-                    android:drawablePadding="4dp"
-                    android:enabled="false"
-                    android:gravity="center"
-                    android:text="添加表白"
-                    android:textColor="@color/col_special_notice"
-                    android:textSize="12sp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="visible" />
-
-
-                <ImageView
-                    android:id="@+id/notificationSwitchImage"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:src="@drawable/sel_runway_check"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/will_on_run_way_tip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="9dp"
-                    android:includeFontPadding="false"
-                    android:text="是否上跑道"
-                    android:textColor="@color/black_999"
-                    android:textSize="10sp"
-                    app:layout_constraintLeft_toRightOf="@id/notificationSwitchImage"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <TextView
-                    android:id="@+id/notificationText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginTop="2dp"
-                    android:includeFontPadding="false"
-                    android:text="超过100000金币才能上跑道~"
-                    android:textColor="@color/black_999"
-                    android:textSize="8sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="@id/will_on_run_way_tip"
-                    app:layout_constraintTop_toBottomOf="@id/will_on_run_way_tip" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <RelativeLayout
                 android:id="@+id/send_layout"
                 android:layout_width="match_parent"
@@ -346,13 +229,13 @@
 
                 <LinearLayout
                     android:id="@+id/sendCountLayout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="72dp"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/sendActionBtn"
                     android:layout_alignBottom="@+id/sendActionBtn"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="53dp"
+                    android:layout_marginRight="63dp"
                     android:background="@drawable/selector_send_count_bg_gray"
                     android:gravity="center"
                     android:orientation="horizontal"
@@ -390,8 +273,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="6dp"
-                    android:layout_marginRight="6dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginRight="15dp"
                     android:background="@drawable/sel_send_btn_bg"
                     android:gravity="center"
                     android:text="赠送"
@@ -416,14 +299,14 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:padding="2dp"
-                        android:src="@mipmap/meng_bean" />
+                        android:src="@mipmap/icon_que_bi_small" />
 
                     <TextView
                         android:id="@+id/balanceLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="9dp"
+                        android:layout_marginLeft="4dp"
                         android:layout_toRightOf="@+id/mengdou_icon"
                         android:drawableRight="@mipmap/forward_grey_small"
                         android:drawablePadding="2dp"
@@ -432,9 +315,6 @@
                         android:text="0"
                         android:textColor="@color/divide_color"
                         android:textSize="12sp" />
-
-
-
 
 
                 </RelativeLayout>
@@ -467,12 +347,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/selectCountListView"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/dimen_5"
-        android:layout_marginBottom="@dimen/dimen_40"
+        android:layout_marginRight="@dimen/dimen_15"
+        android:layout_marginBottom="@dimen/dimen_44"
         android:background="@drawable/bg_gift_select_count"
         android:divider="@null"
         android:listSelector="@color/transparent"
@@ -481,63 +361,6 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
-
-
-    <LinearLayout
-        android:id="@+id/llGuestRoot"
-        android:layout_width="@dimen/dimen_145"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/dimen_2"
-        android:layout_marginBottom="@dimen/dimen_2"
-        android:background="@mipmap/lm_core_bg_gift_guest"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/rootView"
-        app:layout_constraintRight_toRightOf="@+id/rootView"
-        tools:visibility="visible">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_8"
-            android:text="赠："
-            android:textColor="#ffededed"
-            android:textSize="12sp" />
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/sdvGuestHead"
-            android:layout_width="@dimen/dimen_20"
-            android:layout_height="@dimen/dimen_20"
-            app:actualImageScaleType="fitCenter"
-            app:failureImageScaleType="fitCenter"
-            app:placeholderImage="@mipmap/logo_placeholder_small"
-            app:roundAsCircle="true"
-            app:roundingBorderColor="#b3ffffff"
-            app:roundingBorderWidth="@dimen/dimen_1"
-            tools:visibility="visible" />
-
-        <TextView
-            android:id="@+id/tvGuestNickname"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#ededed"
-            android:textSize="@dimen/sp_12"
-            tools:text="纽崔莱恩" />
-
-        <ImageView
-            android:id="@+id/ivGuestImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dimen_12"
-            android:src="@mipmap/lm_core_icon_triangle"
-            tools:rotation="180" />
-    </LinearLayout>
-
 
 
 </com.julun.huanque.common.widgets.EventConstraintLayout>

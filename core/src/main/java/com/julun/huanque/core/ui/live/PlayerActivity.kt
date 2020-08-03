@@ -284,6 +284,8 @@ class PlayerActivity : BaseActivity() {
      * 初始化ViewModel 并且订阅数据
      */
     private fun initViewModel() {
+        //获取余额
+        viewModel.balance.observe(this, Observer { })
 
         mConfigViewModel?.horizonState?.observe(this, Observer {
             val horizon = it ?: return@Observer

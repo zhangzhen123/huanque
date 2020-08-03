@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.os.SystemClock
 import android.text.TextUtils
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
@@ -23,6 +24,7 @@ import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
@@ -151,7 +153,7 @@ class PlayerViewModel : BaseViewModel() {
     //显示幸运转盘
     val luckyPanView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-    //从萌新礼包打开礼物面板，选中某个礼物
+    //默认选中某款礼物
     val openGiftViewWithSelect: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     //显示用户信息弹窗
@@ -191,6 +193,9 @@ class PlayerViewModel : BaseViewModel() {
 
     //游戏数据
     val gameListData: MutableLiveData<MutableList<SingleGame>> by lazy { MutableLiveData<MutableList<SingleGame>>() }
+
+    //魔法礼物赠送奖励列表
+    val eggResultData: MutableLiveData<EggHitSumResult> by lazy { MutableLiveData<EggHitSumResult>() }
 
 
     //主播直播间ID
@@ -380,7 +385,7 @@ class PlayerViewModel : BaseViewModel() {
     var mReturnCanReceive = false
 
     //余额数据
-    val balance: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+    val balance: LiveData<Long> by lazy { BalanceUtils.getBalance() }
 
     //余额使用的Disposable
     private var mBalanceDisposable: Disposable? = null

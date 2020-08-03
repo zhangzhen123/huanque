@@ -43,65 +43,6 @@
         app:actualImageScaleType="fitCenter"
         app:failureImage="@mipmap/logo_placeholder_medium" />
 
-    <!-- 折扣券样式 -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clGiftDiscountRootView"
-        android:layout_width="66dp"
-        android:layout_height="54dp"
-        android:layout_above="@+id/gift_name"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <ImageView
-            android:id="@+id/ivGiftDiscountDiscountImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/lm_core_bg_gift_discount_coupon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <TextView
-            android:id="@+id/ivGiftDiscountDiscountRatio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_4"
-            android:textColor="@color/color_red_two"
-            android:textSize="8sp"
-            app:layout_constraintBottom_toBottomOf="@+id/ivGiftDiscountDiscountImage"
-            app:layout_constraintLeft_toLeftOf="@+id/ivGiftDiscountDiscountImage"
-            app:layout_constraintTop_toTopOf="@+id/ivGiftDiscountDiscountImage"
-            tools:text="50%" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dimen_3"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/ivGiftDiscountDiscountImage"
-            app:layout_constraintRight_toRightOf="@+id/ivGiftDiscountDiscountImage"
-            app:layout_constraintTop_toTopOf="@+id/ivGiftDiscountDiscountImage">
-
-            <TextView
-                android:id="@+id/tvGiftDiscountDiscountCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dimen_1"
-                android:textColor="@color/white"
-                android:textSize="6sp"
-                tools:text="22" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="张"
-                android:textColor="@color/white"
-                android:textSize="6sp" />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/leftTipImage"
         android:layout_width="12dp"
@@ -120,8 +61,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="3dp"
         android:layout_marginRight="3dp"
-        android:gravity="right"
         android:divider="@drawable/divider_tag"
+        android:gravity="right"
         android:orientation="vertical"
         android:showDividers="middle" />
 
@@ -130,26 +71,11 @@
         android:layout_width="12dp"
         android:layout_height="11dp"
         android:layout_alignParentRight="true"
-        android:src="@mipmap/icon_gift_setting"
         android:layout_marginTop="3dp"
         android:layout_marginRight="3dp"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/process_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/gift_name"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp"
-        android:background="@mipmap/gift_process_bg"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:paddingLeft="@dimen/dimen_5"
-        android:paddingRight="@dimen/dimen_5"
-        android:textColor="#653208"
-        android:textSize="8sp"
+        android:src="@mipmap/icon_gift_setting"
         android:visibility="gone" />
+
 
     <TextView
         android:id="@+id/giftBagInfo"

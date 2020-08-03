@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.alibaba.fastjson.annotation.JSONField
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.TplBean
-import com.julun.huanque.common.bean.forms.NewSendGiftForm
+import com.julun.huanque.common.bean.forms.ConsumeForm
 import com.julun.huanque.common.database.table.Session
 import java.io.Serializable
 
@@ -162,7 +162,7 @@ data class GuardInfo(
 )
 
 data class RoomUserInfo(
-    var userId: Long= -1,
+    var userId: Long = -1,
     var headPic: String = "",//头像
     var userLevel: Int = -1,
     var royalLevel: Int = -1,
@@ -249,7 +249,7 @@ class LiveAdConfig : Serializable {
 }
 
 class UserEnterRoomRespBase : Serializable {
-//    var anchorId: Long = 0//主播id
+    //    var anchorId: Long = 0//主播id
     var prePic: String = ""//封面图
     var headPic: String = ""//头像图
     var living: String = ""//是否在直播中
@@ -708,7 +708,7 @@ class SingleBadge : Serializable {
 }
 
 class IntimateVO {
-    var userId: Long= 0
+    var userId: Long = 0
     var living: Boolean = false
     var headPic: String = ""
     var programId: Long = 0
@@ -717,7 +717,7 @@ class IntimateVO {
 
 class RankingsResult : Serializable {
     /** 用户id **/
-    var userId: Long= 0
+    var userId: Long = 0
 
     /** 用户昵称 **/
     var nickname: String = ""
@@ -789,12 +789,18 @@ data class NotEnoughBalanceBean(
 
 //赠送礼物的结果bean
 data class SendGiftResult(
-    var beans: Long = 0,
-    var bagCntMap: HashMap<String, Int>? = null,
-    var form: NewSendGiftForm? = null,
+    //背包数量
     var bagCount: Int = 0,
+    //最新余额
+    var beans: Long = 0,
+    //当前等级
+    var level: Int = 0,
+
+    var bagCntMap: HashMap<String, Int>? = null,
+    var form: ConsumeForm? = null,
 //                          var form: NewSendGiftForm? = null,
-    var level: Int = 0, var ttl: Int = 0,
+
+    var ttl: Int = 0,
 
     var processInfo: ProcessInfo? = null,
     var giftChange: GiftChange? = null,
@@ -803,32 +809,14 @@ data class SendGiftResult(
     var popMsg: String = "",
     // 提示消息，值不为空，需显示
     var alertMsg: String = "",
-    // 道具类型 ，值为SpeakCard时，需将发言入口炫彩按钮解锁
-    var propsType: String = "",
-    // 道具使用剩余秒数，只有propsType不为空时，该属性才有值
-    var propsTtl: Long = 0,
-    // 道具扩展参数，如果为经验加倍卡，该值为经验倍数，只有propsType不为空时，该属性才有值
-    var propsValue: String = "",
     //礼盒奖励礼物列表
     var feedbackList: ArrayList<BoxGainGift>? = null,
     //背包变动标识
     var bagChange: Boolean = false,
     //4.17新增字段
-    /** 折后价格  since 4.17.0  */
-    var discountBean: Int? = null,
-    /** 折扣券图片  */
-    var discountPic: String? = null,
-    /** 折扣 */
-    var discount: Int? = null,
-    /** 折扣券数量 */
-    var discountCount: Int? = null,
     //4.21新增 author WanZhiYuan
-    /** 本次刮奖获得萌豆 */
-    var awardBean: Long? = null,
     /** 最大可获得萌豆 */
-    var maxBean: Long? = null,
-    /** 是否是刮刮卡 */
-    var scratchCard: Boolean? = null
+    var maxBean: Long? = null
 ) : EggHitSumResult()
 
 //礼盒奖励礼物
@@ -987,7 +975,7 @@ data class RoyalCardBean(
     var subTitle: String = "",
     var title: String = "",
     var royalCardBgPic: String = "",
-    var userId: Long= 0
+    var userId: Long = 0
 ) : Serializable
 
 data class GiftChange(
@@ -1001,7 +989,7 @@ data class CountItem(
 )
 
 //显示私聊的bean
-data class PrivateMessageBean(var userId: Long= -1, var nickName: String = "") : Serializable
+data class PrivateMessageBean(var userId: Long = -1, var nickName: String = "") : Serializable
 
 //页面跳转的Bean
 data class JumpActivityBean(
@@ -1062,14 +1050,16 @@ data class MicroSettingInfo(var micRuleUrl: String = "")
 data class PublishUrl(var pushUrl: String = "")
 
 open class EggHitSumResult(
+    //奖励萌豆
     var prizeBeans: Long = 0,
-    var prizeList: List<ArrayList<AwardGood?>> = listOf()
+    //奖励列表
+    var prizeList: List<AwardGood> = listOf()
 )
 
 //新增序列化EggHitSumResult实体类
 open class EggHitSumResultSerial(
     var prizeBeans: Long = 0,
-    var prizeList: List<ArrayList<AwardGood?>> = listOf()
+    var prizeList: List<AwardGood> = listOf()
 ) : Serializable
 
 /**
@@ -1408,7 +1398,7 @@ class FansListInfo(
     /** 节目id **/
     var programId: Long = 0,
     /** 用户id **/
-    var userId: Long= 0,
+    var userId: Long = 0,
 
     //自定义字段
     /** 成员人数 **/
@@ -1430,7 +1420,7 @@ class FansListInfo(
             if (other.userId != 0L && this.userId != 0L) {
                 return other.userId == this.userId
             }
-            if (other.programId != 0L&& this.programId != 0L) {
+            if (other.programId != 0L && this.programId != 0L) {
                 return other.programId == this.programId
             }
         }
@@ -2034,7 +2024,7 @@ data class PkRankLastChampionInfo(
     /** 赛季名称 **/
     var seasonName: String = "",
     /**  用户ID **/
-    var userId: Long= 0
+    var userId: Long = 0
 )
 
 /**
@@ -2175,7 +2165,7 @@ data class PkRankUserInfo(
     /** 贡献值 **/
     var score: Long = 0,
     /** 用户ID **/
-    var userId: Long= 0
+    var userId: Long = 0
 )
 
 /**
@@ -2185,7 +2175,7 @@ data class PkRankUserInfo(
  */
 data class PkRankUserMvpListInfo(
     /** 用户ID **/
-    var userId: Long= 0,
+    var userId: Long = 0,
     /** 用户昵称 **/
     var nickname: String = "",
     /** 下一个勋章已有的Mvp次数 **/
@@ -2251,7 +2241,7 @@ data class PkRankAnchorRankInfo(
     /** 段位名称 **/
     var stageName: String = "",
     /** 用户ID **/
-    var userId: Long= 0
+    var userId: Long = 0
 )
 
 /**
@@ -2260,7 +2250,7 @@ data class PkRankAnchorRankInfo(
  * @since 4.24
  */
 data class OnlineUserInfo(
-    var userId: Long= -1,
+    var userId: Long = -1,
     //头像
     var headPic: String = "",
     var userLevel: Int = -1,
