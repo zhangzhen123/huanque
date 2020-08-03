@@ -49,7 +49,9 @@ class ConsumeForm(
     /** 物品id  */
     var giftId: Int = -1,
     //是否从背包赠送
-    var fromBag: String
+    var fromBag: String,
+    //物品类型
+    var prodType: String = ""
 ) : ProgramIdForm(programId)
 
 ///**

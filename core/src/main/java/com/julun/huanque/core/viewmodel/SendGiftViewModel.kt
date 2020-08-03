@@ -75,6 +75,9 @@ class SendGiftViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = liveRoomService.bag(ProgramIdForm(programId)).dataConvert()
+                result.forEach {
+                    it.bag = true
+                }
                 bagData.value = result
             })
         }
