@@ -1,6 +1,5 @@
 package com.julun.huanque.core.ui.live.fragment
 
-import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
@@ -27,11 +25,9 @@ import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.MixedHelper
-import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ImageUtils
-import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration
 import com.julun.huanque.common.widgets.refreshlayout.RefreshListener
@@ -50,12 +46,12 @@ import java.lang.ref.SoftReference
 class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
 
     private val mPlayerViewModel: PlayerViewModel by activityViewModels()
-    private var mHeadAdapter: OnlineHeadAdapter? = null
+    private val mHeadAdapter: OnlineHeadAdapter by lazy { OnlineHeadAdapter() }
     private var mCurrGuardData: OnlineListData<OnlineUserInfo>? = null
 
     private val mHeadView: View by lazy {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.layout_online_royal_head, null)
-        val listView = mHeadView.findViewById<RecyclerView>(R.id.rvHeadList)
+        val listView = view.findViewById<RecyclerView>(R.id.rvHeadList)
         listView?.layoutManager = GridLayoutManager(activity, 4)
         listView?.addItemDecoration(GridLayoutSpaceItemDecoration(dp2px(12f)))
         view
@@ -90,11 +86,10 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
         if (adapter.headerLayoutCount > 0) {
             adapter.removeAllHeaderView()
         }
-        if (mPageTag == TabTags.TAB_TAG_ROYAL) {
-            mHeadAdapter = OnlineHeadAdapter()
-        }
+
         rvList.layoutManager = LinearLayoutManager(context)
         rvList.adapter = adapter
+        adapter.headerWithEmptyEnable = true
         prepareViewModel()
     }
 
@@ -174,7 +169,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
     private fun prepareViewModel() {
         mViewModel.listResult.observe(this, Observer {
             if (it.state == NetStateType.SUCCESS) {
-                refreshData(it.getT())
+                renderData(it.getT())
             } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show("网络出现了问题~")
                 if (it.getT().isPull) {
@@ -225,124 +220,8 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
         }
     }
 
-    private fun setHeadViews(data: OnlineListData<OnlineUserInfo>, hideHead: Boolean = false) {
-        if (mPageTag != TabTags.TAB_TAG_ROYAL && mPageTag != TabTags.TAB_TAG_GUARD) {
-            //不是贵族或者守护弹窗就不需要头布局
-            if (adapter.headerLayoutCount > 0) {
-                adapter.removeAllHeaderView()
-            }
-            return
-        }
-        if (hideHead) {
-            if (adapter.headerLayoutCount > 0) {
-                adapter.removeAllHeaderView()
-            }
-            return
-        }
-        if (adapter.headerLayoutCount <= 0) {
-            adapter.addHeaderView(mHeadView)
-        }
-        val headTitle = mHeadView.findViewById<View>(R.id.tvHeadTitle)
-        val listView = mHeadView.findViewById<RecyclerView>(R.id.rvHeadList)
-        val headBottom = mHeadView.findViewById<View>(R.id.tvHeadBottom)
 
-        val picture = mHeadView.findViewById<SimpleDraweeView>(R.id.sdvPicture)
-        var isLoadPicture = false
-        when (mPageTag) {
-            TabTags.TAB_TAG_ROYAL -> {
-                //贵族头布局配置
-                if (data.isPull) {
-                    //刷新页面如果没有贵宾和贵族数据，那么就展示贵族特权图片
-                    if (data.royalHonorList?.isEmpty() == true && data.list.isEmpty()) {
-                        headTitle?.hide()
-                        listView?.hide()
-                        headBottom?.hide()
-                        picture?.show()
-                        isLoadPicture = true
-                    } else {
-                        headTitle?.show()
-                        listView?.show()
-                        headBottom?.show()
-                        picture?.hide()
-                    }
-                } else {
-                    //加载更多贵宾数据去重并刷新
-                    data.royalHonorList = mHeadAdapter?.data?.mergeNoDuplicateNew(
-                        data.royalHonorList
-                            ?: arrayListOf()
-                    )
-                        ?: arrayListOf()
-                }
-                when {
-                    data.royalHonorList?.isEmpty() == true -> {
-                        //没有贵宾数据，伪造凑够至少一排，一排四个的规则
-                        for (i in 0 until 4) {
-                            if (data.royalHonorList is ArrayList) {
-                                (data.royalHonorList as? ArrayList<OnlineUserInfo>)?.add(OnlineUserInfo())
-                            }
-                        }
-                    }
-                    (data.royalHonorList?.size ?: 0) % 4 != 0 -> {
-                        //需要补齐一排四个的规则
-                        val count = (data.royalHonorList?.size ?: 0) % 4
-                        for (i in count until 4) {
-                            if (data.royalHonorList is ArrayList) {
-                                (data.royalHonorList as? ArrayList<OnlineUserInfo>)?.add(OnlineUserInfo())
-                            }
-                        }
-                    }
-                    //剩下的表示刚刚好每一排四个item，直接展示就行了
-                }
-            }
-            TabTags.TAB_TAG_GUARD -> {
-                //守护头布局配置
-                if (data.list.isNotEmpty()) {
-                    if (adapter.headerLayoutCount > 0) {
-                        adapter.removeAllHeaderView()
-                    }
-                    return
-                }
-                headTitle?.hide()
-                listView?.hide()
-                headBottom?.hide()
-                picture?.show()
-                isLoadPicture = true
-            }
-        }
-        if (isLoadPicture) {
-            //加载图片
-            var imageUrl = if (mPageTag == TabTags.TAB_TAG_ROYAL) {
-                //贵族特权图片地址
-                data.privilegeUrl ?: ""
-            } else {
-                //守护特权图片地址
-                data.guardUrl ?: ""
-            }
-            if (!TextUtils.isEmpty(imageUrl)) {
-                //加载图片前清理之前缓存的图片资源，因为这个图片有可能后端更换了，但是地址并没有变
-                val imagePipeline = Fresco.getImagePipeline()
-                val uri = Uri.parse(StringHelper.getOssImgUrl(imageUrl))
-                val inMemoryCache = imagePipeline.isInBitmapMemoryCache(uri)
-                if (inMemoryCache) {
-                    imagePipeline?.evictFromCache(uri)
-                }
-                ImageUtils.loadImageWithWidth(
-                    picture
-                        ?: return, imageUrl, ScreenUtils.getScreenWidth()
-                )
-            }
-        } else {
-            //展示贵宾列表
-            listView?.adapter = mHeadAdapter
-            mHeadAdapter?.setList(data.royalHonorList ?: arrayListOf())
-            if (data.isPull && data.list.isEmpty()) {
-                //普通列表为空那就把贵族列表title去除
-                headBottom?.hide()
-            }
-        }
-    }
-
-    private fun refreshData(data: OnlineListData<OnlineUserInfo>) {
+    private fun renderData(data: OnlineListData<OnlineUserInfo>) {
 
         var userNum: Int?
         when (mPageTag) {
@@ -352,6 +231,22 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 mRoyalUrl = data.royalLevelUrl
 
                 setHeadViews(data)
+                if(data.royaling){
+                    tv_head_tips.text="xx贵族剩余x天，别忘了续费哦"
+                    tv_head_action.text="立即续费"
+                    tv_head_action.onClickNew {
+                        //todo
+                        logger.info("立即续费")
+                    }
+
+                }else{
+                    tv_head_tips.text="开通欢鹊贵族，享受尊贵特权"
+                    tv_head_action.text="立即开通"
+                    tv_head_action.onClickNew {
+                        //todo
+                        logger.info("立即开通")
+                    }
+                }
             }
             TabTags.TAB_TAG_GUARD -> {
                 //守护
@@ -360,6 +255,8 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 setHeadViews(data)
             }
             else -> {
+                tv_head_tips.text="直播间热度榜第x，差x+1名xxx热度"
+                tv_head_action.hide()
                 //观众 or 管理
                 userNum = if (mPageTag == TabTags.TAB_TAG_MANAGER) {
                     data.managerCount
@@ -387,6 +284,110 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
         }
     }
 
+    private fun setHeadViews(data: OnlineListData<OnlineUserInfo>, hideHead: Boolean = false) {
+        if (hideHead) {
+            if (adapter.headerLayoutCount > 0) {
+                adapter.removeAllHeaderView()
+            }
+            return
+        }
+        if (adapter.headerLayoutCount <= 0) {
+            adapter.addHeaderView(mHeadView)
+        }
+        val headTitle = mHeadView.findViewById<View>(R.id.tvHeadTitle)
+        val listView = mHeadView.findViewById<RecyclerView>(R.id.rvHeadList)
+        val headBottom = mHeadView.findViewById<View>(R.id.tvHeadBottom)
+
+        val picture = mHeadView.findViewById<SimpleDraweeView>(R.id.sdvPicture)
+//        var isLoadPicture = false
+        when (mPageTag) {
+            TabTags.TAB_TAG_ROYAL -> {
+                //贵族头布局配置
+                if (data.isPull) {
+                    //刷新页面如果没有贵宾和贵族数据，那么就展示贵族特权图片
+//                    if (data.royalHonorList?.isEmpty() == true && data.list.isEmpty()) {
+//                        headTitle?.hide()
+//                        listView?.hide()
+//                        headBottom?.hide()
+//                        picture?.show()
+////                        isLoadPicture = true
+//                    } else {
+//                        headTitle?.show()
+//                        listView?.show()
+//                        headBottom?.show()
+//                        picture?.hide()
+//                    }
+                } else {
+                    //加载更多贵宾数据去重并刷新
+                    data.royalHonorList = mHeadAdapter?.data?.mergeNoDuplicateNew(
+                        data.royalHonorList
+                    ) as MutableList
+                }
+                when {
+                    data.royalHonorList.isNullOrEmpty() -> {
+                        //没有贵宾数据，伪造凑够至少一排，一排四个的规则
+                        for (i in 0 until 4) {
+                            data.royalHonorList.add(OnlineUserInfo())
+                        }
+                    }
+                    (data.royalHonorList.size) % 4 != 0 -> {
+                        //需要补齐一排四个的规则
+                        val count = data.royalHonorList.size % 4
+                        for (i in count until 4) {
+                            data.royalHonorList.add(OnlineUserInfo())
+                        }
+                    }
+                    //剩下的表示刚刚好每一排四个item，直接展示就行了
+                }
+            }
+            TabTags.TAB_TAG_GUARD -> {
+                //守护头布局配置
+                if (data.list.isNotEmpty()) {
+                    if (adapter.headerLayoutCount > 0) {
+                        adapter.removeAllHeaderView()
+                    }
+                    return
+                }
+                headTitle?.hide()
+                listView?.hide()
+                headBottom?.hide()
+                picture?.show()
+//                isLoadPicture = true
+            }
+        }
+/*        if (isLoadPicture) {
+            //加载图片
+            var imageUrl = if (mPageTag == TabTags.TAB_TAG_ROYAL) {
+                //贵族特权图片地址
+                data.privilegeUrl ?: ""
+            } else {
+                //守护特权图片地址
+                data.guardUrl ?: ""
+            }
+            if (!TextUtils.isEmpty(imageUrl)) {
+                //加载图片前清理之前缓存的图片资源，因为这个图片有可能后端更换了，但是地址并没有变
+                val imagePipeline = Fresco.getImagePipeline()
+                val uri = Uri.parse(StringHelper.getOssImgUrl(imageUrl))
+                val inMemoryCache = imagePipeline.isInBitmapMemoryCache(uri)
+                if (inMemoryCache) {
+                    imagePipeline?.evictFromCache(uri)
+                }
+                ImageUtils.loadImageWithWidth(
+                    picture
+                        ?: return, imageUrl, ScreenUtils.getScreenWidth()
+                )
+            }
+        } else {*/
+        //展示贵宾列表
+        listView?.adapter = mHeadAdapter
+        mHeadAdapter?.setList(data.royalHonorList)
+//        if (data.isPull && data.list.isEmpty()) {
+//            //普通列表为空那就把贵族列表title去除
+//            headBottom?.hide()
+//        }
+//        }
+    }
+
 
     private fun loadData(type: QueryType) {
         mViewModel.queryList(
@@ -398,7 +399,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
     /**
      * 普通布局
      */
-    private val adapter = object : BaseQuickAdapter<OnlineUserInfo, BaseViewHolder>(R.layout.item_online_list),LoadMoreModule {
+    private val adapter = object : BaseQuickAdapter<OnlineUserInfo, BaseViewHolder>(R.layout.item_online_list), LoadMoreModule {
 
         private var adapters: LruCache<Int, SoftReference<OnlineBadgeAdapter>>? = null
         private val MAX_SIZE = 100
@@ -419,9 +420,9 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
             getView(holder.adapterPosition).let {
                 rvBadgeList.adapter = it
                 if (item.badgesPic.isEmpty()) {
-                    it.replaceData(arrayListOf())
+                    it.setList(arrayListOf())
                 } else {
-                    it.replaceData(item.badgesPic)
+                    it.setList(item.badgesPic)
                 }
             }
         }
@@ -452,18 +453,18 @@ class OnlineHeadAdapter : BaseQuickAdapter<OnlineUserInfo, BaseViewHolder>(R.lay
 
         if (item.userId == -1L) {
             holder.setText(R.id.tvHeadNickname, "虚位以待")
-                .setGone(R.id.ivHeadBorder, false)
+                .setGone(R.id.ivHeadBorder, true).setTextColorRes(R.id.tvHeadNickname, R.color.black_999)
             ImageUtils.loadImageLocal(holder.getView(R.id.sdvHeadImage), R.mipmap.important_placeholder)
         } else {
             holder.setText(R.id.tvHeadNickname, item.nickname)
-                .setVisible(R.id.ivHeadBorder, true)
+                .setVisible(R.id.ivHeadBorder, true).setTextColorRes(R.id.tvHeadNickname, R.color.black_333)
             ImageUtils.loadImage(holder.getView(R.id.sdvHeadImage), item.headPic, 46f, 46f)
         }
         if (item.royalLevel != -1) {
             holder.setVisible(R.id.ivHeadRoyal, true)
                 .setImageResource(R.id.ivHeadRoyal, ImageHelper.getRoyalLevelImgRound(item.royalLevel))
         } else {
-            holder.setGone(R.id.ivHeadRoyal, false)
+            holder.setGone(R.id.ivHeadRoyal, true)
         }
     }
 }

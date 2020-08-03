@@ -48,7 +48,7 @@ class OnlineDialogFragment : BaseDialogFragment() {
 
     private lateinit var mTabs: ArrayList<TabBean>
 
-
+    private lateinit var mCommonNavigator: CommonNavigator
     companion object {
         /**
          */
@@ -124,6 +124,7 @@ class OnlineDialogFragment : BaseDialogFragment() {
                     }
                 }
             }
+            mCommonNavigator.notifyDataSetChanged()
 //            }
         })
 //        mPlayerViewModel?.goGuardAndShowBubbleDialog?.observe(this, Observer {
@@ -148,11 +149,11 @@ class OnlineDialogFragment : BaseDialogFragment() {
      * 初始化指示器
      */
     private fun initMagicIndicator(position: Int = 0) {
-        val mavigator = CommonNavigator(activity)
-        mavigator.scrollPivotX = 0.65f
-        mavigator.isAdjustMode = true
+        mCommonNavigator = CommonNavigator(activity)
+        mCommonNavigator.scrollPivotX = 0.65f
+        mCommonNavigator.isAdjustMode = true
         adapter.let {
-            mavigator.adapter = object : CommonNavigatorAdapter() {
+            mCommonNavigator.adapter = object : CommonNavigatorAdapter() {
                 override fun getCount(): Int {
                     return it.count
                 }
@@ -162,9 +163,9 @@ class OnlineDialogFragment : BaseDialogFragment() {
                         return null
                     }
                     val simplePagerTitleView = ColorFlipPagerTitleView(context)
-                    simplePagerTitleView.textSizeDimen = R.dimen.sp_14
+                    simplePagerTitleView.textSizeDimen = R.dimen.sp_16
                     simplePagerTitleView.text = mTabs[index].title
-                    simplePagerTitleView.selectedColor = GlobalUtils.getColor(R.color.white)
+                    simplePagerTitleView.selectedColor = GlobalUtils.getColor(R.color.black_333)
                     simplePagerTitleView.normalColor = GlobalUtils.getColor(R.color.black_999)
                     simplePagerTitleView.setOnClickListener { vpOnlinePager.currentItem = index }
                     return simplePagerTitleView
@@ -184,10 +185,11 @@ class OnlineDialogFragment : BaseDialogFragment() {
             }
         }
 
-        miOnlineIndicator.navigator = mavigator
-        mavigator.onPageSelected(position)
-        vpOnlinePager.currentItem = position
+        miOnlineIndicator.navigator = mCommonNavigator
+//        mCommonNavigator.onPageSelected(position)
         ViewPagerHelper.bind(miOnlineIndicator, vpOnlinePager)
+
+        vpOnlinePager.currentItem = position
     }
 
     private val adapter: FragmentPagerAdapter by lazy {

@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -103,7 +104,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
                 }
             })
             playerViewModel?.baseData?.observe(activity, androidx.lifecycle.Observer {
-//                royalButtonAnimation()
+                royalButtonAnimation()
             })
             playerViewModel
         }
@@ -180,7 +181,11 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             playerViewModel?.finishState?.value = true
         }
         flRoyalRootView.onClickNew {
-            playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ONLINE
+            if(ivRoyalIcon.isVisible){
+                playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ROYAL
+            }else{
+                playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ONLINE
+            }
         }
 //        count_container_001.onClickNew {
 //            //            playerActivity.openOnlineView()
@@ -238,8 +243,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //            playerViewModel?.openOnlineDialog?.value = DialogTypes.DIALOG_ROYAL
 //        }
 
-        //启动贵族弹窗入口动画
-//        royalButtonAnimation()
     }
 
     /**
@@ -285,39 +288,8 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     fun initData(roomData: UserEnterRoomRespDto) {
 //        logger.info("liveHeader ：${JsonUtil.seriazileAsString(roomData)}")
-
         isSubscribed = roomData.follow
-//        isFansJoin = roomData.groupMember
-//        isFansClockIn = roomData.fansClockIn
-//        if (isSubscribed || isAnchor) {
-//            // 关注：隐藏关注图标，显示主播级别图标
-//            subscribeAnchor.visibility = View.GONE
-//        } else {
-//            // 取消关注：显示关注图标，隐藏主播级别图标
-//            subscribeAnchor.visibility = View.VISIBLE
-//        }
         changeFansViews(roomData.groupMember, roomData.fansClockIn)
-//        if (isAnchor) {
-//            lavFansEvent.hide()
-//            ivFansJoin.hide()
-//            // 关注：隐藏关注图标，显示主播级别图标
-//            subscribeAnchor.hide()
-//        } else {
-//            if (!isSubscribed) {
-//                subscribeAnchor.show()
-//                ivFansJoin.hide()
-//                lavFansEvent.hide()
-//            } else {
-//                subscribeAnchor.hide()
-//                lavFansEvent.hide()
-//                ivFansJoin.hide()
-//                if (!roomData.groupMember && playerViewModel?.isThemeRoom != true) {
-//                    ivFansJoin.show()
-//                } else if (!roomData.fansClockIn) {
-//                    lavFansEvent.show()
-//                }
-//            }
-//        }
 
         if (isAnchor) {
             //主播身份
@@ -371,26 +343,13 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
         if (isAnchor) {
             subscribeAnchor.hide()
-//            lavFansEvent.hide()
-//            ivFansJoin.hide()
             return
         }
         changeFansViews(isFansJoin, isFansClockIn)
         if (!bool) {
             subscribeAnchor.show()
-//            lavFansEvent.hide()
-//            ivFansJoin.hide()
         } else {
             subscribeAnchor.hide()
-//            lavFansEvent.hide()
-//            ivFansJoin.hide()
-//            if (!isFansJoin && playerViewModel?.isThemeRoom != true) {
-//                ivFansJoin.show()
-//            } else {
-//                if (!isFansClockIn) {
-//                    lavFansEvent.show()
-//                }
-//            }
         }
 
     }
@@ -418,12 +377,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //            }
 //        }
     }
-
-
-    fun refreshAnchorLevelImage(level: Int) {
-//        anchorLevelImage.imageResource = ImageUtils.getAnchorLevelResId(level)
-    }
-
     /**
      * 将在线用户按照score进行排序，并且删除主播
      */

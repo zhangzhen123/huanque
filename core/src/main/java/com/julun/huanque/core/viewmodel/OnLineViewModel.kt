@@ -95,13 +95,15 @@ class OnLineViewModel : BaseViewModel() {
                         service.queryNormalList(OnLineForm(programId, offset)).dataConvert()
                     }
                 }
+                //todo test
+//                result.list.add(OnlineUserInfo())
                 offset += result.list.size
                 result.isPull = type != QueryType.LOAD_MORE
                 listResult.value = result.convertRtData()
 
             }, error = {
                 listResult.value = it.convertListError(OnlineListData(isPull = type != QueryType.LOAD_MORE))
-            })
+            },needLoadState = type==QueryType.INIT)
         }
     }
 

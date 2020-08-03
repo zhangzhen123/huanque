@@ -2286,7 +2286,7 @@ class OnlineListData<T>(
     extDataJson: String? = null
 ) :
     RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
-    var royalHonorList: List<T>? = null
+    var royalHonorList: MutableList<T> = mutableListOf()
 
     //贵族说明
     var royalLevelUrl: String? = null
@@ -2298,7 +2298,7 @@ class OnlineListData<T>(
     var royalCount: Int? = null
 
     //当前用户是否是贵族
-    var royaling: Boolean? = null
+    var royaling: Boolean = false
 
     //当前守护人数
     var guardCount: Int? = null
@@ -2307,7 +2307,7 @@ class OnlineListData<T>(
     var surplusDay: Int? = null
 
     //是否是守护
-    var guarding: Boolean? = null
+    var guarding: Boolean = false
 
     //守护特权图片
     var guardUrl: String? = null
