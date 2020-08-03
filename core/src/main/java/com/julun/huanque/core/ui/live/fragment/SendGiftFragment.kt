@@ -1133,7 +1133,12 @@ class SendGiftFragment : BaseDialogFragment() {
 //        refreshGiftItemBySelect(data)
 //        sendPagerAdapter?.notifyDataSetChanged()
 //        playerActivity?.markDeepSeaNeedRefresh()
-        showLiansong(data.level /*selectedGift?.pic ?: ""*/)
+
+        if (selectedGift?.bag == true && (selectedGift?.bagCount ?: 0) <= 0) {
+            hideLiansong()
+        } else {
+            showLiansong(data.level /*selectedGift?.pic ?: ""*/)
+        }
         //手动改变经验属性
         if (goodsCfgData != null && curGiftIsSending != null) {
             val addExp = curGiftIsSending!!.userExp * form.count
