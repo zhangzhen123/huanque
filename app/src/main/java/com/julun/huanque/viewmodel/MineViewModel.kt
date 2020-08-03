@@ -42,8 +42,6 @@ class MineViewModel : BaseViewModel() {
                 logger("报错了：$e")
 //                emit(ReactiveData(NetStateType.ERROR, error = e.coverError()))
                 emit(e.convertError())
-            }, final = {
-                logger("最终返回")
             }, needLoadState = it == QueryType.INIT)
 
 

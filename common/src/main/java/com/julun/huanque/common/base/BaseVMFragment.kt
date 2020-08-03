@@ -67,4 +67,8 @@ abstract class BaseVMFragment<VM : BaseViewModel> : BaseFragment() {
         }
     }
 
+    open fun refreshView(){
+
+    }
+
 }

@@ -1,4 +1,5 @@
 package com.julun.huanque.common.bean
+
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TplBeanExtraContext
@@ -17,9 +18,10 @@ import java.util.regex.Pattern
  */
 
 //fontWeight:
-class StyleParam(var styleType: String = "", var preffix: String = "", var color: String? = null,
-                 var bgColor: String = "", var radius: Int = -1, var el: String = "", var source: String = "",
-                 var fontWeight: String = "", var underLineColor: String? = null
+class StyleParam(
+    var styleType: String = "", var preffix: String = "", var color: String? = null,
+    var bgColor: String = "", var radius: Int = -1, var el: String = "", var source: String = "",
+    var fontWeight: String = "", var underLineColor: String? = null
 )
 
 //直播间消息实体类
@@ -27,29 +29,31 @@ class ChatMessageBean(var content: Any, var showType: Int) : MultiItemEntity {
     override val itemType: Int
         get() = showType
 }
+
 open class TplBean(
     var textParams: HashMap<String, String> = hashMapOf(),
     var context: TplBeanExtraContext? = null,
     var textTpl: String = "",
     var textTouch: String? = null,
     var styleParamMap: MutableMap<String, StyleParam> = mutableMapOf(), //styleParams字符串转换为map
-    var textStyles:String="",
+    var textStyles: String = "",
     var display: String = "",
     var userInfo: RoomUserChatExtra? = null,
-        //是否隐藏背景  true的时候隐藏，其它时候显示(处理系统消息可能不需要背景)
+    //是否隐藏背景  true的时候隐藏，其它时候显示(处理系统消息可能不需要背景)
     var notShowBackColor: Boolean = false,
-        //本地属性
+    //本地属性
     var useBold: Boolean = false,
-        //本地字段，暂时丢弃，没有问题，后期删除
+    //本地字段，暂时丢弃，没有问题，后期删除
     var useBg: Boolean = false,//是否需要背景
     var realTxt: String = "",
     var paramIndexInRealText: MutableMap<String, MutableList<Int>> = mutableMapOf(),
     val randomGeneratedId: String = StringHelper.uuid(),
-        //私聊消息的标识位
+    //私聊消息的标识位
     var privateMessage: Boolean = false,
     var finalProcessed: Boolean = false,
-        //周星类型
-    open var beanType: String = "") {
+    //周星类型
+    open var beanType: String = ""
+) {
 
 
     /**
@@ -72,14 +76,14 @@ open class TplBean(
         if (finalProcessed) return this
 
         //处理styleParamMap  不走默认json解析器时这里styleParamMap不会有值只能手动设置
-        if(styleParamMap.isEmpty()&&textStyles.isNotEmpty()){
-            val textStyleList= JsonUtil.deserializeAsObjectList(textStyles, StyleParam::class.java)
+        if (styleParamMap.isEmpty() && textStyles.isNotEmpty()) {
+            val textStyleList = JsonUtil.deserializeAsObjectList(textStyles, StyleParam::class.java)
             textStyleList?.let {
                 styleParamMap.putAll(textStyleList.map { it.el to it })
             }
         }
         //不再使用 清空掉
-        textStyles=""
+        textStyles = ""
 
         //emoji图标
         val pattern = Pattern.compile("\\[[a-zA-Z0-9\u4E00-\u9FA5]*\\]")
@@ -98,7 +102,15 @@ open class TplBean(
         while (emojiMatch.find()) {
             val group = emojiMatch.group()
             val replace = group.replace("[", "\${").replace("]", "}")
-            styleParamMap.put(replace, StyleParam(el = replace, styleType = MessageUtil.KEY_IMG, preffix = MessageUtil.PREFFIX_EMOJI, source = MessageUtil.KEY_LOCAL))
+            styleParamMap.put(
+                replace,
+                StyleParam(
+                    el = replace,
+                    styleType = MessageUtil.KEY_IMG,
+                    preffix = MessageUtil.PREFIX_EMOJI,
+                    source = MessageUtil.KEY_LOCAL
+                )
+            )
             val indexOf = EmojiUtil.EmojiTextArray.indexOf(group)
             textTpl = textTpl.replace(group, replace)
             textParams.put(replace, "$indexOf")
@@ -154,7 +166,15 @@ open class TplBean(
                 val goodsIconKey = "\${extra.user.goodsIconKey$i}"
                 textTpl = "$goodsIconKey$textTpl"
                 textParams.put(goodsIconKey, "$s")
-                styleParamMap.put(goodsIconKey, StyleParam(el = guardIconKey, styleType = MessageUtil.KEY_IMG, source = MessageUtil.KEY_REMOTE, preffix = MessageUtil.PREFFIX_USER_LEVEL))
+                styleParamMap.put(
+                    goodsIconKey,
+                    StyleParam(
+                        el = guardIconKey,
+                        styleType = MessageUtil.KEY_IMG,
+                        source = MessageUtil.KEY_REMOTE,
+                        preffix = MessageUtil.PREFIX_USER_LEVEL
+                    )
+                )
             }
 //            //5.房管图标 官方图标
 //            if (it.roomManagerPic.isNotBlank()) {
@@ -171,7 +191,15 @@ open class TplBean(
             if (anchorLevel >= 0) {//主播
                 textTpl = "$anchorLevelKey$textTpl"
                 textParams.put(anchorLevelKey, "$anchorLevel")
-                styleParamMap.put(anchorLevelKey, StyleParam(el = anchorLevelKey, styleType = MessageUtil.KEY_IMG, source = MessageUtil.KEY_LOCAL, preffix = MessageUtil.PREFFIX_ANCHOR_LEVEL))
+                styleParamMap.put(
+                    anchorLevelKey,
+                    StyleParam(
+                        el = anchorLevelKey,
+                        styleType = MessageUtil.KEY_IMG,
+                        source = MessageUtil.KEY_LOCAL,
+                        preffix = MessageUtil.PREFIX_ANCHOR_LEVEL
+                    )
+                )
 
             } else {//普通用户
 //                val guard = it.roomGuardPic
@@ -186,19 +214,43 @@ open class TplBean(
                 if (royalPic.isNotEmpty()) {
                     textTpl = "$royalIconKey$textTpl"
                     textParams.put(royalIconKey, royalPic)
-                    styleParamMap.put(royalIconKey, StyleParam(el = royalIconKey, styleType = MessageUtil.KEY_IMG, source = MessageUtil.KEY_REMOTE, preffix = MessageUtil.PREFFIX_ROYAL_LEVEL))
-                }else if (royalLevel > -1&&royalLevel<9) {
+                    styleParamMap.put(
+                        royalIconKey,
+                        StyleParam(
+                            el = royalIconKey,
+                            styleType = MessageUtil.KEY_IMG,
+                            source = MessageUtil.KEY_REMOTE,
+                            preffix = MessageUtil.PREFIX_ROYAL_LEVEL
+                        )
+                    )
+                } else if (royalLevel > -1 && royalLevel < 9) {
                     //兼容老版本发言消息
                     textTpl = "$royalIconKey$textTpl"
                     textParams.put(royalIconKey, "$royalLevel")
-                    styleParamMap.put(royalIconKey, StyleParam(el = royalIconKey, styleType = MessageUtil.KEY_IMG, source = MessageUtil.KEY_LOCAL, preffix = MessageUtil.PREFFIX_ROYAL_LEVEL))
+                    styleParamMap.put(
+                        royalIconKey,
+                        StyleParam(
+                            el = royalIconKey,
+                            styleType = MessageUtil.KEY_IMG,
+                            source = MessageUtil.KEY_LOCAL,
+                            preffix = MessageUtil.PREFIX_ROYAL_LEVEL
+                        )
+                    )
                 }
                 if (it.displayType?.contains(MessageDisplayType.MYSTERY) != true || it.userLevel < 1) {
                     //不是神秘人
                     textTpl = "$levelIconKey$textTpl"
                     textParams.put(levelIconKey, "${it.userLevel}")
                 }
-                styleParamMap.put(levelIconKey, StyleParam(el = levelIconKey, styleType = MessageUtil.KEY_IMG, source = MessageUtil.KEY_LOCAL, preffix = MessageUtil.PREFFIX_USER_LEVEL))
+                styleParamMap.put(
+                    levelIconKey,
+                    StyleParam(
+                        el = levelIconKey,
+                        styleType = MessageUtil.KEY_IMG,
+                        source = MessageUtil.KEY_LOCAL,
+                        preffix = MessageUtil.PREFIX_USER_LEVEL
+                    )
+                )
 
             }
 
@@ -239,7 +291,7 @@ open class TplBean(
 //                return@forEach
             }
 
-            if (styleParam.preffix == MessageUtil.PREFFIX_ROYAL_LEVEL) {
+            if (styleParam.preffix == MessageUtil.PREFIX_ROYAL_LEVEL) {
                 val paramValue: String? = textParams[it]
                 if (StringHelper.isEmpty(paramValue) || "0" == paramValue) {//0或者没有填写,都是错误的,需要过滤掉
                     textTpl = textTpl.replace(it, "")
@@ -256,7 +308,7 @@ open class TplBean(
             }
 
             //除了ｅｍｏｊｉ之外所有的图片左右加空格
-            if (styleParam.styleType == MessageUtil.KEY_IMG && styleParam.preffix != MessageUtil.PREFFIX_EMOJI) {
+            if (styleParam.styleType == MessageUtil.KEY_IMG && styleParam.preffix != MessageUtil.PREFIX_EMOJI) {
                 textTpl = textTpl.replace(it, "$it$oneEmptyChar")// "　"
             }
         }
@@ -266,7 +318,7 @@ open class TplBean(
 
 
         paramKeySorted.forEach {//按照textTpl里变量出现的顺序来替换和记录下标
-            paramKey ->
+                paramKey ->
             run {
                 var position = realTxt.indexOf(paramKey)
                 if (position == -1) {//chuxian出现这种情况是不应该,上传个错误日志
@@ -291,7 +343,10 @@ open class TplBean(
                 val styleParam = styleParamMap[paramKey]
                 if (MessageUtil.KEY_IMG == styleParam?.styleType) {
                     // 这里有一个特例 ,原定计划是所有的图片(其实是指各个等级的图标,不能为0,但是emoji是可以有 0 开始的...所以需要特殊处理)
-                    if ((styleParam.source != MessageUtil.KEY_LOCAL || styleParam.preffix == MessageUtil.PREFFIX_EMOJI) || (StringHelper.isNotEmpty(paramValue) && paramValue!!.toInt() > 0)) {
+                    if ((styleParam.source != MessageUtil.KEY_LOCAL || styleParam.preffix == MessageUtil.PREFIX_EMOJI) || (StringHelper.isNotEmpty(
+                            paramValue
+                        ) && paramValue!!.toInt() > 0)
+                    ) {
                         replace = imagePlaceHolderChar
                     } else {
                         replace = ""
@@ -314,8 +369,10 @@ open class TplBean(
     @Synchronized
     fun specialExtra(): TplBean {
         realTxt = textTpl
-        styleParamMap[MessageUtil.KEY_ALL] = StyleParam(styleType = MessageUtil.KEY_BASIC, color = userInfo?.textColor
-                ?: "#FFFFFF")
+        styleParamMap[MessageUtil.KEY_ALL] = StyleParam(
+            styleType = MessageUtil.KEY_BASIC, color = userInfo?.textColor
+                ?: "#FFFFFF"
+        )
         return this
 
     }
@@ -325,8 +382,10 @@ open class TplBean(
 object MessageUtil {
     //同一个图片最多尝试下载的次数
     val IMAGE_TRY_ERROR_TIMES: Int = 3
+
     //加载出错的url,几次超过一定的次数,不再加载
     var errorImageUrlMap: MutableMap<String, Int> = mutableMapOf()
+
     //已经加载过的图片的
 //    var charRecordImageDownloaded:MutableMap<String,Boolean> = mutableMapOf()
     //加载之后未能加载到图片的地址....
@@ -334,25 +393,32 @@ object MessageUtil {
     val pattern = Pattern.compile("\\[[a-zA-Z0-9\u4E00-\u9FA5]*\\]")
     fun decodeMessageContent(data: String): TplBean = JsonUtil.deserializeAsObject<TplBean>(data, TplBean::class.java)
 
-    val KEY_ALL = "ALL"
-    val KEY_BASIC = "basic"
-    val KEY_IMG = "img"
+    const val KEY_ALL = "ALL"
+    const val KEY_BASIC = "basic"
+    const val KEY_IMG = "img"
+
     //本地图片
-    val KEY_LOCAL = "local"
+    const val KEY_LOCAL = "local"
+
     //网络图片
-    val KEY_REMOTE = "remote"
-    val KEY_ALL_SMALL = "all"
+    const val KEY_REMOTE = "remote"
+    const val KEY_ALL_SMALL = "all"
+
     //表情
-    val PREFFIX_EMOJI = "emoji"
+    const val PREFIX_EMOJI = "emoji"
+
     //用户等级
-    val PREFFIX_USER_LEVEL = "user-level"
+    const val PREFIX_USER_LEVEL = "user-level"
+
     //贵族等级
-    val PREFFIX_ROYAL_LEVEL = "royal-level"
+    const val PREFIX_ROYAL_LEVEL = "royal-level"
+
     //主播等级
-    val PREFFIX_ANCHOR_LEVEL = "anchor-level"
+    const val PREFIX_ANCHOR_LEVEL = "anchor-level"
 
     //聊天默认背景颜色
-    val MESSAGE_BG = "#33000000"
+    const val MESSAGE_BG = "#33000000"
+
     //默认背景颜色圆角大小
-    val MESSAGE_BG_RADIUS = 3
+    const val MESSAGE_BG_RADIUS = 3
 }

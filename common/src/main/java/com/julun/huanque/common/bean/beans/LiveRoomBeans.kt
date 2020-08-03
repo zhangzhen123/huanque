@@ -188,16 +188,6 @@ data class RoomUserInfo(
     }
 }
 
-class OnlineData<T>(
-    isPull: Boolean = false,
-    hasMore: Boolean = false,
-    extDataJson: String? = null
-) :
-    RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
-    var royalUserList: List<T> = arrayListOf()
-    var royalLevelUrl: String = ""
-    var onlineUserNum: Int = 0
-}
 
 class RoomBanner : ShareObject() {
     var adCode: String = ""
@@ -735,7 +725,7 @@ class RankingsResult : Serializable {
     var badgesPic: List<String> = ArrayList<String>()
 
     /** 比分 **/
-    var score: Double = 0.0
+    var score: Long = 0L
     //4.15新增字段
     /** 贵族勋章地址 **/
     var royalPic: String = ""
@@ -2282,13 +2272,13 @@ data class OnlineUserInfo(
  * 在线用户信息
  * @author WanZhiYuan
  */
-class NewOnlineData<T>(
+class OnlineListData<T>(
     isPull: Boolean = false,
     hasMore: Boolean = false,
     extDataJson: String? = null
 ) :
     RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
-    var royalHonorList: List<T>? = null
+    var royalHonorList: MutableList<T> = mutableListOf()
 
     //贵族说明
     var royalLevelUrl: String? = null
@@ -2300,7 +2290,7 @@ class NewOnlineData<T>(
     var royalCount: Int? = null
 
     //当前用户是否是贵族
-    var royaling: Boolean? = null
+    var royaling: Boolean = false
 
     //当前守护人数
     var guardCount: Int? = null
@@ -2309,7 +2299,7 @@ class NewOnlineData<T>(
     var surplusDay: Int? = null
 
     //是否是守护
-    var guarding: Boolean? = null
+    var guarding: Boolean = false
 
     //守护特权图片
     var guardUrl: String? = null

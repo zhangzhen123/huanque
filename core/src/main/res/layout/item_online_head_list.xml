@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dimen_75"
+    android:layout_height="wrap_content">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdvHeadImage"
+        android:layout_width="@dimen/dimen_46"
+        android:layout_height="@dimen/dimen_46"
+        app:failureImage="@mipmap/logo_placeholder_small"
+        app:failureImageScaleType="fitCenter"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@mipmap/logo_placeholder_small"
+        app:placeholderImageScaleType="fitCenter"
+        app:roundAsCircle="true" />
+
+    <ImageView
+        android:id="@+id/ivHeadBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_online_head_border"
+        app:layout_constraintBottom_toBottomOf="@+id/sdvHeadImage"
+        app:layout_constraintLeft_toLeftOf="@+id/sdvHeadImage"
+        app:layout_constraintRight_toRightOf="@+id/sdvHeadImage"
+        app:layout_constraintTop_toTopOf="@+id/sdvHeadImage" />
+
+    <ImageView
+        android:id="@+id/ivHeadRoyal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_35"
+        app:layout_constraintLeft_toLeftOf="@+id/sdvHeadImage"
+        app:layout_constraintRight_toRightOf="@+id/sdvHeadImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvHeadNickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_12"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sdvHeadImage"
+        tools:text="尼古拉斯赵四" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

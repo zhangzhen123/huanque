@@ -219,6 +219,20 @@ object MenuActionType {
     const val STAGEPK = "StagePk"//PK段位赛
     const val CHATMODE = "ChatMode"//聊天模式
 }
+/**
+ * 页面标识位
+ * @author  WanZhiYuan
+ */
+object TabTags {
+    //在线
+    const val TAB_TAG_ONLINE = "online"
+    //贵族
+    const val TAB_TAG_ROYAL = "royal"
+    //守护
+    const val TAB_TAG_GUARD = "guard"
+    //管理
+    const val TAB_TAG_MANAGER = "manager"
+}
 object LoginType {
     //游客
     val VISITOR = "VISITOR"

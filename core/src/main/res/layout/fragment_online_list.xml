@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clRootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/header_tips"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_29"
+        android:background="#FFFAEE"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_head_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/dimen_15"
+            android:gravity="center"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_12"
+            tools:text="直播间热度榜第一，差上一名123热度。" />
+
+        <TextView
+            android:id="@+id/tv_head_action"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dimen_15"
+            android:gravity="center"
+            android:textColor="#FFA202"
+            android:textSize="@dimen/sp_12"
+            tools:text="开通贵族>" />
+
+    </RelativeLayout>
+
+    <com.julun.huanque.common.widgets.refreshlayout.HuanQueRefreshLayout
+        android:id="@+id/lmrlRefreshView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_tips">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.julun.huanque.common.widgets.refreshlayout.HuanQueRefreshLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

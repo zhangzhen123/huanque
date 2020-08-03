@@ -1,6 +1,7 @@
 package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.*
@@ -52,6 +53,52 @@ interface LiveRoomService {
      */
     @POST("live/room/consume/sendPubMessage")
     suspend fun sendPubMessage(@Body form: ValidateForm): Root<ValidateSpamResult>
+
+
+    /*************************************** 贡献榜 *********************************************/
+    /**
+     * 本月(默认每次查询10条)
+     */
+    @POST("live/room/rank/month")
+    suspend fun queryScoreByMonth(@Body from: ScoreRankResultForm): Root<RootListData<RankingsResult>>
+
+    /**
+     * 本场(默认每次查询10条)
+     */
+    @POST("live/room/rank/show")
+    suspend fun queryScoreByThis(@Body from: ScoreRankResultForm): Root<RootListData<RankingsResult>>
+
+    /**
+     * 本周(默认每次查询10条)
+     */
+    @POST("live/room/rank/week")
+    suspend fun queryScoreByWeek(@Body from: ScoreRankResultForm): Root<RootListData<RankingsResult>>
+
+
+    /*************************************** 用户在线列表 *************************************************/
+    /**
+     * 查询直播间贵族用户列表
+     */
+    @POST("live/room/info/listRoomRoyalUser")
+    suspend fun queryRoyalList(@Body form: OnLineForm): Root<OnlineListData<OnlineUserInfo>>
+
+    /**
+     * 查询直播间普通用户列表
+     */
+    @POST("live/room/info/listRoomUser")
+    suspend fun queryNormalList(@Body form: OnLineForm): Root<OnlineListData<OnlineUserInfo>>
+
+    /**
+     * 查询直播间守护用户列表
+     */
+    @POST("live/room/info/listRoomGuardUser")
+    suspend fun queryGuardList(@Body form: OnLineForm): Root<OnlineListData<OnlineUserInfo>>
+
+    /**
+     * 查询直播间管理用户列表
+     */
+    @POST("live/room/info/listRoomMangerUser")
+    suspend fun queryManagerList(@Body form: OnLineForm): Root<OnlineListData<OnlineUserInfo>>
 
     /**
      * 获取礼物数据

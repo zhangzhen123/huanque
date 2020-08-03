@@ -5,11 +5,13 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.constant.UserChangeType
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
@@ -86,7 +88,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         val activity = context as? PlayerActivity
         activity?.let {
             playerViewModel = ViewModelProvider(activity).get(PlayerViewModel::class.java)
-            //todo
             playerViewModel?.updateRoyalCount?.observe(activity, androidx.lifecycle.Observer {
                 it ?: return@Observer
                 val royalCount = it.royalCount ?: 0
@@ -103,7 +104,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
                 }
             })
             playerViewModel?.baseData?.observe(activity, androidx.lifecycle.Observer {
-                    royalButtonAnimation()
+                royalButtonAnimation()
             })
             playerViewModel
         }
@@ -154,12 +155,18 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     private fun initViews() {
-        onlineUserListView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        onlineUserListView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            context,
+            androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,
+            false
+        )
         onlineUserListView.adapter = userListAdapter
         authorContainer.onClickNew {
             // 主播个人信息界面
-            playerViewModel?.userInfoView?.value = UserInfoBean(userId = programId, isAnchor = true, royalLevel = 0, userPortrait = anchorInfo?.headPic
-                    ?: "", programName = authorNicknameText.text.toString())
+            playerViewModel?.userInfoView?.value = UserInfoBean(
+                userId = programId, isAnchor = true, royalLevel = 0, userPortrait = anchorInfo?.headPic
+                    ?: "", programName = authorNicknameText.text.toString()
+            )
 
         }
         // 关注
@@ -171,7 +178,14 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             }
         }
         exitImage.onClickNew {
-            playerViewModel?.finishState?.value=true
+            playerViewModel?.finishState?.value = true
+        }
+        flRoyalRootView.onClickNew {
+            if(ivRoyalIcon.isVisible){
+                playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ROYAL
+            }else{
+                playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ONLINE
+            }
         }
 //        count_container_001.onClickNew {
 //            //            playerActivity.openOnlineView()
@@ -229,8 +243,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //            playerViewModel?.openOnlineDialog?.value = DialogTypes.DIALOG_ROYAL
 //        }
 
-        //启动贵族弹窗入口动画
-//        royalButtonAnimation()
     }
 
     /**
@@ -276,39 +288,8 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     fun initData(roomData: UserEnterRoomRespDto) {
 //        logger.info("liveHeader ：${JsonUtil.seriazileAsString(roomData)}")
-
         isSubscribed = roomData.follow
-//        isFansJoin = roomData.groupMember
-//        isFansClockIn = roomData.fansClockIn
-//        if (isSubscribed || isAnchor) {
-//            // 关注：隐藏关注图标，显示主播级别图标
-//            subscribeAnchor.visibility = View.GONE
-//        } else {
-//            // 取消关注：显示关注图标，隐藏主播级别图标
-//            subscribeAnchor.visibility = View.VISIBLE
-//        }
         changeFansViews(roomData.groupMember, roomData.fansClockIn)
-//        if (isAnchor) {
-//            lavFansEvent.hide()
-//            ivFansJoin.hide()
-//            // 关注：隐藏关注图标，显示主播级别图标
-//            subscribeAnchor.hide()
-//        } else {
-//            if (!isSubscribed) {
-//                subscribeAnchor.show()
-//                ivFansJoin.hide()
-//                lavFansEvent.hide()
-//            } else {
-//                subscribeAnchor.hide()
-//                lavFansEvent.hide()
-//                ivFansJoin.hide()
-//                if (!roomData.groupMember && playerViewModel?.isThemeRoom != true) {
-//                    ivFansJoin.show()
-//                } else if (!roomData.fansClockIn) {
-//                    lavFansEvent.show()
-//                }
-//            }
-//        }
 
         if (isAnchor) {
             //主播身份
@@ -362,26 +343,13 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
         if (isAnchor) {
             subscribeAnchor.hide()
-//            lavFansEvent.hide()
-//            ivFansJoin.hide()
             return
         }
         changeFansViews(isFansJoin, isFansClockIn)
         if (!bool) {
             subscribeAnchor.show()
-//            lavFansEvent.hide()
-//            ivFansJoin.hide()
         } else {
             subscribeAnchor.hide()
-//            lavFansEvent.hide()
-//            ivFansJoin.hide()
-//            if (!isFansJoin && playerViewModel?.isThemeRoom != true) {
-//                ivFansJoin.show()
-//            } else {
-//                if (!isFansClockIn) {
-//                    lavFansEvent.show()
-//                }
-//            }
         }
 
     }
@@ -409,12 +377,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //            }
 //        }
     }
-
-
-    fun refreshAnchorLevelImage(level: Int) {
-//        anchorLevelImage.imageResource = ImageUtils.getAnchorLevelResId(level)
-    }
-
     /**
      * 将在线用户按照score进行排序，并且删除主播
      */
@@ -446,70 +408,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     // 刷新在线用户, 主线程执行
     private fun doRefreshRoomUserList() {
         userListAdapter.replaceData(roomUsers)
-    }
-
-    // 刷新榜单
-//    private fun doRefreshTopView() {
-//        if (topList.isNotEmpty() && topList.size > 0) {
-//            top1NicknameText.visibility = View.VISIBLE
-//            top1ScoreText.visibility = View.VISIBLE
-//            top1EmptyTipText.visibility = View.GONE
-//            top1NicknameText.text = topList[0].nickName
-//            top1ScoreText.text = topList[0].score.toInt().toString()
-//        } else {
-//            top1NicknameText.visibility = View.GONE
-//            top1ScoreText.visibility = View.GONE
-//            top1EmptyTipText.visibility = View.VISIBLE
-//        }
-//
-//        if (topList.isNotEmpty() && topList.size > 1) {
-//            top2NicknameText.text = topList[1].nickName
-//            top2ScoreText.text = topList[1].score.toInt().toString()
-//            top2NicknameText.visibility = View.VISIBLE
-//            top2ScoreText.visibility = View.VISIBLE
-//            top2EmptyTipText.visibility = View.GONE
-//        } else {
-//            top2NicknameText.visibility = View.GONE
-//            top2ScoreText.visibility = View.GONE
-//            top2EmptyTipText.visibility = View.VISIBLE
-//        }
-//    }
-
-    /**
-     * 接收榜单数据变化通知(榜单没有删除类型DELETE)
-     */
-//    fun handleTop2Change(resultList: List<UserInfoForLmRoom>) {
-//        Single.just(resultList).compose(RunOnMainSchedulerTransformer()).subscribe { items ->
-//            items.forEach {
-//                when (it.type) {
-//                    UserChangeType.New -> topList.add(it)
-//                    UserChangeType.Mod -> replaceExistTopItem(it)
-//                }
-//            }
-//
-//            topList = orderWithScore(topList)
-//            if (topList.size > TOP_MAX_LIMIT) {
-//                topList = topList.subList(0, TOP_MAX_LIMIT)
-//            }
-//            doRefreshTopView()
-//        }
-//    }
-
-    // 替换列表中的用户对象
-    private fun replaceExistTopItem(newObj: UserInfoForLmRoom) {
-        var existed = false
-        for (index in 0..topList.size - 1) {
-            if (topList[index].userId == newObj.userId) {
-                topList[index] = newObj
-                existed = true
-                break
-            }
-        }
-        // 不存在有可能是2名以后的被裁剪了，
-        // 这里就当新用户了
-        if (!existed) {
-            topList.add(newObj)
-        }
     }
 
     // 当前新增用户是否在列表中，不在则添加
@@ -547,12 +445,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             roomUsers = orderWithScore(roomUsers)
             isReduceUserCount()
         }
-//        tv_user_count.text = formatCount(data.totalCount)
-//        setImportantCount(data.royalCount)
         doRefreshRoomUserList()
-//        }
-//        playerViewModel?.updateRoyalCount?.value = RoyalMessageBean(royalCount = data.honorCount, guardCount = data.guardCount)
-
     }
 
     private fun replaceExistUserItem(newObj: UserInfoForLmRoom) {

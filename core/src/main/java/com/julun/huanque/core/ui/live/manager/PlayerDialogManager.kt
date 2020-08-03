@@ -5,9 +5,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.basic.TabBean
 import com.julun.huanque.common.bean.beans.MicOperateBean
 import com.julun.huanque.common.bean.beans.PKCreateEvent
-import com.julun.huanque.common.bean.beans.RunwayCache
+import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.manager.OrderDialogManager
 import com.julun.huanque.common.suger.show
@@ -18,9 +19,10 @@ import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
+import com.julun.huanque.core.ui.live.dialog.OnlineDialogFragment
+import com.julun.huanque.core.ui.live.dialog.ScoreDialogFragment
 import com.julun.huanque.core.ui.live.fragment.SendGiftFragment
 import com.julun.huanque.core.viewmodel.*
-import java.lang.ClassCastException
 
 /**
  * 随着直播间弹窗越来越多,逻辑和视图层耦合太严重，分离和解耦大量dialog逻辑和展示，统一功能相同的弹窗
@@ -65,7 +67,7 @@ class PlayerDialogManager(val context: PlayerActivity) {
     private val dialogsCache = hashMapOf<String, DialogFragment?>()
 
     // 礼物面板
-    var giftFragment: SendGiftFragment? = null
+    private var giftFragment: SendGiftFragment? = null
 
 
     init {
@@ -130,9 +132,25 @@ class PlayerDialogManager(val context: PlayerActivity) {
 
         playerViewModel.squareView.observe(context, Observer {
             if (it == true) {
-//                openGiftView()
                 openDialog(LiveSquareDialogFragment::class.java)
             }
+        })
+
+
+        playerViewModel.scoreView.observe(context, Observer {
+            openDialog(ScoreDialogFragment::class.java, builder = { ScoreDialogFragment.newInstance(playerViewModel.programId) })
+        })
+
+        playerViewModel.openOnlineDialog.observe(context, Observer { TabTag ->
+
+            openDialog(OnlineDialogFragment::class.java, builder = {
+                OnlineDialogFragment.newInstance(
+                    arrayListOf(
+                        TabBean(TabTags.TAB_TAG_ONLINE, "在线列表", select = TabTag == TabTags.TAB_TAG_ONLINE),
+                        TabBean(TabTags.TAB_TAG_ROYAL, "贵族席位", select = TabTag == TabTags.TAB_TAG_ROYAL)
+                    )
+                )
+            })
         })
     }
 
