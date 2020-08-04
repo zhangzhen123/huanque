@@ -28,7 +28,7 @@ data class ChatUser(
     var stranger: Boolean = false,
     //聊天背景
     var backPic: String = ""
-) : Serializable{
+) : Serializable {
 
 
     override fun toString(): String {
@@ -254,3 +254,4 @@ data class MessageHeaderBean(
     var messageCount: Int = 0,
     var time: Long = 0L
 )
+

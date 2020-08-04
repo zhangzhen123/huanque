@@ -164,4 +164,16 @@ interface SocialService {
      */
     @POST("social/friend/chat/userInfo")
     suspend fun userInfo(@Body form: FriendIdForm): Root<ChatUser>
+
+    /**
+     * 获取语音通话的结果
+     */
+    @POST("social/friend/netcall/result")
+    suspend fun netcallResult(@Body form: NetcallIdForm): Root<NetcallResultBean>
+
+    /**
+     * 标记语音收费已经显示过
+     */
+    @POST("social/friend/netcall/markFeeRemind")
+    fun markFeeRemind(@Body form: EmptyForm = EmptyForm()): Observable<Root<VoidResult>>
 }

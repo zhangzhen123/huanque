@@ -1,6 +1,7 @@
 package com.julun.huanque.viewmodel
 
 import android.os.Bundle
+import android.os.Message
 import androidx.lifecycle.*
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
@@ -13,6 +14,7 @@ import com.julun.huanque.common.bean.beans.UserLevelInfo
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm
 import com.julun.huanque.common.bean.forms.SaveLocationForm
+import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.*
@@ -20,10 +22,14 @@ import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class MainViewModel : BaseViewModel() {
     //    val userInfo: LiveData<UserDetailInfo> = liveData {
@@ -187,11 +193,87 @@ class MainViewModel : BaseViewModel() {
     }
 
     /**
+     * 刷新语音通话结果
+     */
+    fun netcallResult(msgId: Int) {
+        RongIMClient.getInstance().getMessage(msgId, object : RongIMClient.ResultCallback<io.rong.imlib.model.Message>() {
+            override fun onSuccess(msg: io.rong.imlib.model.Message?) {
+                val content = msg?.content
+                if (content is CustomSimulateMessage && content.type == MessageCustomBeanType.Voice_Conmmunication_Simulate) {
+                    //该ID对应的消息是模拟插入的语音消息，进行刷新操作
+                    getCallResult(msg)
+                } else {
+                    //该消息ID不是插入的语音消息，直接删除
+                    GlobalUtils.removeSingleRefreshMessageId(msgId)
+                }
+
+            }
+
+            override fun onError(code: RongIMClient.ErrorCode?) {
+                logger("netcallResult code = ${code}")
+            }
+        })
+    }
+
+    private fun getCallResult(msg: io.rong.imlib.model.Message) {
+        val content = msg.content
+        if (content is CustomSimulateMessage && content.type == MessageCustomBeanType.Voice_Conmmunication_Simulate) {
+            try {
+                val bean = JsonUtil.deserializeAsObject<VoiceConmmunicationSimulate>(content.context, VoiceConmmunicationSimulate::class.java)
+                bean.sentTime = msg.sentTime
+
+                viewModelScope.launch {
+                    request({
+                        val result = socialService.netcallResult(NetcallIdForm(bean.callId)).dataConvert()
+                        bean.billUserId = result.billUserId
+                        bean.duration = result.duration
+                        bean.totalBeans = result.totalBeans
+                        bean.needRefresh = false
+
+                        val chatExtra = JsonUtil.deserializeAsObject<RoomUserChatExtra>(content.extra, RoomUserChatExtra::class.java)
+
+                        RongCloudManager.sendSimulateMessage(
+                            msg.targetId, msg.senderUserId, chatExtra,
+                            Conversation.ConversationType.PRIVATE,
+                            MessageCustomBeanType.Voice_Conmmunication_Simulate,
+                            bean
+                        )
+                        RongIMClient.getInstance().deleteMessages(intArrayOf(msg.messageId))
+                        GlobalUtils.removeSingleRefreshMessageId(msg.messageId)
+                    })
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    /**
      * 获取未读数
      */
     fun getUnreadCount() {
         RongCloudManager.queryPMessage {
             unreadMsgCount.postValue(it)
+        }
+    }
+
+
+    /**
+     * 刷新某些语音消息
+     */
+    fun refreshMessage() {
+        //如果有语音消息有问题，需要重新处理
+        val oriSet = GlobalUtils.getNeedRefreshMessageIdSet()
+        //需要刷新一些消息
+        try {
+            val iterator = oriSet.iterator()
+            if (iterator.hasNext()) {
+                val msgId = oriSet.iterator().next().toInt()
+                netcallResult(msgId)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

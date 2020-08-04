@@ -62,7 +62,7 @@ class HomeListData<T> : RootListData<T>() {
     var modules: List<HeadModule> = arrayListOf()
     var remind: HomeRemind = HomeRemind()
     var taskBar: HomeTaskBar = HomeTaskBar()
-    var offset:Int?=null
+    var offset: Int? = null
 }
 
 data class HomeRemind(
@@ -72,8 +72,8 @@ data class HomeRemind(
 )
 
 data class HomeTaskBar(
-    var desc:String="",
-    var type:String="",
+    var desc: String = "",
+    var type: String = "",
     var label: String = "",
     var myCash: String = ""
 )
@@ -102,21 +102,25 @@ data class HomeRecomItem(
 
     //去重需要的重写
     override fun equals(other: Any?): Boolean {
-        if(other is HomeRecomItem){
-            return this.userId==other.userId
+        if (other is HomeRecomItem) {
+            return this.userId == other.userId
         }
-      return false
+        return false
     }
+
     override fun hashCode(): Int {
         return userId.toInt()
     }
+
     var introduceVoiceLength: Int = 0
-    set(value) {
-        field=value
-        currentPlayProcess=value
-    }
+        set(value) {
+            field = value
+            currentPlayProcess = value
+        }
+
     //本地字段 保留音频播放状态
     var isPlay: Boolean = false
+
     //本地字段 保存当前的播放进度
     var currentPlayProcess: Int = 0
 
@@ -129,7 +133,7 @@ data class HomeRecomItem(
 /**
  * 邀请语音消息
  */
-data class NetCallReceiveBean(var callId: Long = 0, var userIds: LongArray = longArrayOf(),var callUserId : Long = 0) : Serializable
+data class NetCallReceiveBean(var callId: Long = 0, var userIds: LongArray = longArrayOf(), var callUserId: Long = 0) : Serializable
 
 /**
  * 语音通话开始消息
@@ -141,6 +145,19 @@ data class NetCallAcceptBean(
     var userIds: LongArray = longArrayOf()
 ) :
     Serializable
+
+/**
+ * 语音结果
+ */
+data class NetcallResultBean(
+    var callId: Long = 0,
+    //付费用户ID
+    var billUserId: Long = 0,
+    //通话时长(单位秒)
+    var duration: Long = 0,
+    //通话总鹊币
+    var totalBeans: Long = 0
+) : Serializable
 
 /**
  * 通话挂断消息
