@@ -3,6 +3,7 @@ package com.julun.huanque.common.net.services
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.VoidForm
 import com.julun.huanque.common.basic.VoidResult
+import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.EmptyForm
 import com.julun.huanque.common.bean.forms.FriendIdForm
@@ -156,5 +157,11 @@ interface SocialService {
      * 被叫占线
      */
     @POST("social/friend/netcall/busy")
-    suspend fun voiceBusy(@Body form : NetcallIdForm) : Root<VoidResult>
+    suspend fun voiceBusy(@Body form: NetcallIdForm): Root<VoidResult>
+
+    /**
+     * 获取用户基本信息及关系
+     */
+    @POST("social/friend/chat/userInfo")
+    suspend fun userInfo(@Body form: FriendIdForm): Root<ChatUser>
 }

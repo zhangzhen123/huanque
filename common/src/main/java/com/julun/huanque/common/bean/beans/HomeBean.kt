@@ -129,7 +129,7 @@ data class HomeRecomItem(
 /**
  * 邀请语音消息
  */
-data class NetCallReceiveBean(var callId: Long = 0, var userIds: LongArray = longArrayOf()) : Serializable
+data class NetCallReceiveBean(var callId: Long = 0, var userIds: LongArray = longArrayOf(),var callUserId : Long = 0) : Serializable
 
 /**
  * 语音通话开始消息

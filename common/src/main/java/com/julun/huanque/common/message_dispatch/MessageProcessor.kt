@@ -1151,7 +1151,7 @@ object MessageProcessor {
     /**
      * 主叫取消会话消息
      */
-    interface NetCallCancelProcessor : EventMessageProcessor<VoidResult> {
+    interface NetCallCancelProcessor : EventMessageProcessor<NetCallReceiveBean> {
         override fun getEventType() = EventMessageType.NetCallCancel
     }
 
@@ -1165,7 +1165,7 @@ object MessageProcessor {
     /**
      * 被叫拒绝通话消息
      */
-    interface NetCallRefuseProcessor : EventMessageProcessor<VoidResult> {
+    interface NetCallRefuseProcessor : EventMessageProcessor<NetCallReceiveBean> {
         override fun getEventType() = EventMessageType.NetCallRefuse
     }
 
@@ -1174,6 +1174,12 @@ object MessageProcessor {
      */
     interface NetCallDisconnectProcessor : EventMessageProcessor<VoidResult> {
         override fun getEventType() = EventMessageType.NetCallDisconnect
+    }
+    /**
+     * 对方忙消息
+     */
+    interface NetCallBusyProcessor : EventMessageProcessor<NetCallReceiveBean> {
+        override fun getEventType() = EventMessageType.NetCallBusy
     }
 
     /**
@@ -1507,16 +1513,19 @@ enum class EventMessageType(val klass: Class<*>) {
     NetCallAccept(NetCallAcceptBean::class.java),
 
     //主叫取消会话消息
-    NetCallCancel(VoidResult::class.java),
+    NetCallCancel(NetCallReceiveBean::class.java),
 
     //挂断消息
     NetCallHangUp(NetCallHangUpBean::class.java),
 
     //被叫拒绝通话
-    NetCallRefuse(VoidResult::class.java),
+    NetCallRefuse(NetCallReceiveBean::class.java),
 
     //通话断开消息(服务端断开)
     NetCallDisconnect(VoidResult::class.java),
+
+    //对方忙消息
+    NetCallBusy(NetCallReceiveBean::class.java),
 
     //余额不足提醒消息
     NetCallBalanceRemind(NetCallBalanceRemindBean::class.java),

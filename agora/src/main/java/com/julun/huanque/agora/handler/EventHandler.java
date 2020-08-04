@@ -35,4 +35,8 @@ public interface EventHandler {
 
     void onError(int err);
 
+    void onConnectionStateChanged(int state, int reason);
+
+    void onConnectionLost();
+
 }

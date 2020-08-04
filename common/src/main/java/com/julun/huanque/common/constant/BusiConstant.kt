@@ -48,6 +48,9 @@ object SPParamKey {
 
     //折叠陌生人消息
     const val FOLD_STRANGER_MSG = "FOLD_STRANGER_MSG"
+
+    //正在语音通话中标识
+    const val VOICE_ON_LINE = "VOICE_ON_LINE"
 }
 
 /**
@@ -475,7 +478,7 @@ object VoiceResultType {
     //对方忙
     const val RECEIVE_BUSY = "RECEIVE_BUSY"
 
-    //已取消
+    //主叫取消通话
     const val CANCEL = "CANCEL"
 
 }

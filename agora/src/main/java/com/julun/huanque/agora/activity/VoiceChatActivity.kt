@@ -60,6 +60,11 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     override fun getLayoutId() = R.layout.act_voice_chat
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
+    }
+
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         StatusBarUtil.setTransparent(this)
@@ -95,6 +100,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallAcceptProcessor {
             override fun process(data: NetCallAcceptBean) {
                 //接通消息
+                if (data.callId != mVoiceChatViewModel?.callId) {
+                    //不是当前语音通话的消息
+                    return
+                }
                 //开始计时
                 recordCallDuration()
                 if (mType == ConmmunicationUserType.CALLING) {
@@ -110,6 +119,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             override fun process(data: NetCallAcceptBean) {
                 //接通消息
                 //开始计时
+                if (data.callId != mVoiceChatViewModel?.callId) {
+                    //不是当前语音通话的消息
+                    return
+                }
                 recordCallDuration()
                 if (mType == ConmmunicationUserType.CALLING) {
                     //主叫  加入channel
@@ -120,7 +133,11 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         })
         //主叫取消会话消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallCancelProcessor {
-            override fun process(data: VoidResult) {
+            override fun process(data: NetCallReceiveBean) {
+                if (data.callId != mVoiceChatViewModel?.callId) {
+                    //不是当前语音通话的消息
+                    return
+                }
                 mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }
@@ -128,6 +145,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         //挂断消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallHangUpProcessor {
             override fun process(data: NetCallHangUpBean) {
+                if (data.callId != mVoiceChatViewModel?.callId) {
+                    //不是当前语音通话的消息
+                    return
+                }
                 if (data.hangUpId != SessionUtils.getUserId()) {
                     //非本人挂断
                     mVoiceChatViewModel?.voiceBeanData?.value =
@@ -144,7 +165,11 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         })
         //被叫拒绝消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallRefuseProcessor {
-            override fun process(data: VoidResult) {
+            override fun process(data: NetCallReceiveBean) {
+                if (data.callId != mVoiceChatViewModel?.callId) {
+                    //不是当前语音通话的消息
+                    return
+                }
                 mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_REFUSE)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }
@@ -162,6 +187,20 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             override fun process(data: NetCallBalanceRemindBean) {
                 showBalanceNotEnoughView(data)
             }
+        })
+
+        //对方忙
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallBusyProcessor {
+            override fun process(data: NetCallReceiveBean) {
+                if (data.callId != mVoiceChatViewModel?.callId) {
+                    //不是当前语音通话的消息
+                    return
+                }
+                mVoiceChatViewModel?.voiceBeanData?.value =
+                    VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_BUSY)
+                mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
+            }
+
         })
 
     }
@@ -379,7 +418,11 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
         mVoiceChatViewModel?.voiceBeanData?.observe(this, Observer {
             if (it != null) {
-                sendSimulateMessage(it)
+                sendSimulateMessage(
+                    it,
+                    mVoiceChatViewModel?.targetUserBean?.value ?: return@Observer,
+                    mVoiceChatViewModel?.netcallBeanData?.value?.relationInfo ?: return@Observer
+                )
             }
         })
     }
@@ -398,16 +441,16 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 when (index) {
                     0L -> {
                         tv_call_duration.text = if (calling) {
-                            "正在呼叫对方，等待接通."
+                            "正在呼叫对方，等待接通.  "
                         } else {
-                            "正在邀请您语音通话."
+                            "正在邀请您语音通话.  "
                         }
                     }
                     1L -> {
                         tv_call_duration.text = if (calling) {
                             "正在呼叫对方，等待接通.."
                         } else {
-                            "正在邀请您语音通话.."
+                            "正在邀请您语音通话.. "
                         }
                     }
                     else -> {
@@ -493,8 +536,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     /**
      * 发送模拟消息
      */
-    private fun sendSimulateMessage(bean: VoiceConmmunicationSimulate) {
-        val targetChatInfo = mVoiceChatViewModel?.targetUserBean?.value ?: return
+    private fun sendSimulateMessage(bean: VoiceConmmunicationSimulate, targetChatInfo: ChatUser, relationInfo: RelationInfo) {
         val targetUser = TargetUserObj()
 
         val createUserId = mVoiceChatViewModel?.createUserId ?: return
@@ -542,6 +584,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             }
         }
 
+        chatExtra.targetUserObj?.intimateLevel = relationInfo.intimateLevel
+        chatExtra.targetUserObj?.stranger = relationInfo.stranger
 
 
         RongCloudManager.sendSimulateMessage(
@@ -563,13 +607,13 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     private fun timer() {
 //        mVoiceChatViewModel?.createConmmunication(mVoiceChatViewModel?.targetUserBean?.value?.userId ?: 0)
         //超时计算
-        mDisposable = Observable.timer(30, TimeUnit.SECONDS)
+        mDisposable = Observable.timer(10, TimeUnit.SECONDS)
             .bindUntilEvent(this, ActivityEvent.DESTROY)
             .subscribe({
                 if (mType == ConmmunicationUserType.CALLING) {
                     mVoiceChatViewModel?.calcelVoice(CancelType.Timeout)
                 } else {
-                    mVoiceChatViewModel?.refuseVoice()
+                    mVoiceChatViewModel?.refuseVoice(true)
                 }
 
             }, {})
@@ -592,6 +636,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     override fun onUserOffline(uid: Int, reason: Int) {
         //用户掉线 挂断通话
+        logger.info("AGORA Message 用户掉线")
         mVoiceChatViewModel?.hangUpVoice()
     }
 
@@ -621,10 +666,33 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
     override fun onLeaveChannel(stats: IRtcEngineEventHandler.RtcStats?) {
+        logger.info("AGORA Message onLeaveChannel stats = $stats")
+    }
+
+    override fun onConnectionStateChanged(state: Int, reason: Int) {
+        if (reason == Constants.CONNECTION_CHANGED_BANNED_BY_SERVER) {
+            //被服务端踢出（重连失败）
+            mVoiceChatViewModel?.hangUpVoice()
+        }
+        logger.info("AGORA Message onConnectionStateChanged state = $state,reason = $reason")
+    }
+
+    /**
+     * 网络连接中断，且 SDK 无法在 10 秒内连接服务器回调。
+     */
+    override fun onConnectionLost() {
+        logger.info("AGORA Message onConnectionLost")
+        val bean = VoiceConmmunicationSimulate(
+            VoiceResultType.CONMMUNICATION_FINISH,
+            mVoiceChatViewModel?.duration ?: 0,
+            totalBeans = 0
+        )
+        mVoiceChatViewModel?.voiceBeanData?.postValue(bean)
+        mVoiceChatViewModel?.currentVoiceState?.postValue(VoiceChatViewModel.VOICE_CLOSE)
     }
 
     override fun onError(err: Int) {
-        logger.info("$TAG onError err = $err")
+        logger.info("AGORA Message onError err = $err")
     }
 
 
@@ -666,6 +734,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     override fun onViewDestroy() {
         super.onViewDestroy()
+        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         leaveChannel()
         mPlayer?.stop()
         mPlayer = null
@@ -684,12 +753,16 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         //接收到新的语音通话邀请
-        val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
-        if (netCallBean != null) {
-            val callId = netCallBean.callId
-            //被叫忙
-            mVoiceChatViewModel?.busy(callId)
-        }
+//        val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
+//        if (netCallBean != null) {
+//            val callId = netCallBean.callId
+//            //被叫忙
+//            mVoiceChatViewModel?.busy(callId)
+//            sendSimulateMessage(
+//                VoiceConmmunicationSimulate(VoiceResultType.MINE_REFUSE, 0, netCallBean.callerInfo.userId, 0, 0),
+//                netCallBean.callerInfo, netCallBean.relationInfo
+//            )
+//        }
     }
 
 }

@@ -471,7 +471,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 }
                 VoiceResultType.CANCEL -> {
                     //主叫取消通话
-                    showStr = "已取消"
+                    showStr = "对方已取消"
                 }
                 VoiceResultType.MINE_REFUSE -> {
                     showStr = "已拒绝"
