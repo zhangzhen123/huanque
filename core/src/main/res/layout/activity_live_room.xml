@@ -1,64 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.effective.android.panel.view.PanelSwitchLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    app:animationSpeed="standard"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent">
-    <!-- 内容区域 -->
-    <!-- linear_edit_view 指定一个 EditText 用于输入 ，必须项-->
-    <!-- linear_auto_reset_enable 指定是否 LinearContentContainer 是否能够接受 Touch 事件自动隐藏面板-->
-    <!-- linear_auto_reset_area 指定是否 LinearContentContainer 只接受某个 View 区域的 Touch 事件来自定隐藏面板-->
-    <com.effective.android.panel.view.content.FrameContentContainer
-        android:id="@+id/content_view"
+    android:layout_height="match_parent">
+
+
+    <com.julun.huanque.core.widgets.live.slide.ScrollVerticalContainer
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:frame_edit_view="@id/edit_text">
-
-        <com.julun.huanque.core.widgets.live.slide.ScrollVerticalContainer
-            android:id="@+id/main_content"
+        android:background="@color/live_bg_color">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/cur_live_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/live_bg_color">
+            android:visibility="gone"
+            app:actualImageScaleType="centerCrop" />
+        <FrameLayout
+            android:id="@+id/playerPanel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/live_header_height" />
 
-            <FrameLayout
-                android:id="@+id/playerPanel"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/live_header_height" />
+        <ViewStub
+            android:id="@+id/viewStub"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/frame_danmu" />
 
-            <ViewStub
-                android:id="@+id/viewStub"
+        <FrameLayout
+            android:id="@+id/anchor_no_online"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/live_header_height" />
+
+        <com.julun.huanque.core.widgets.live.SuperAnimationView
+            android:id="@+id/highly_anim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|end" />
+        <!--聊天布局-->
+
+        <com.effective.android.panel.view.PanelSwitchLayout
+            android:id="@+id/chat_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:animationSpeed="standard"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+            <!-- 内容区域 -->
+            <!-- linear_edit_view 指定一个 EditText 用于输入 ，必须项-->
+            <!-- linear_auto_reset_enable 指定是否 LinearContentContainer 是否能够接受 Touch 事件自动隐藏面板-->
+            <!-- linear_auto_reset_area 指定是否 LinearContentContainer 只接受某个 View 区域的 Touch 事件来自定隐藏面板-->
+            <com.julun.huanque.common.widgets.CusContentContainer
+                android:id="@+id/content_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout="@layout/frame_danmu" />
-
-            <FrameLayout
-                android:id="@+id/anchor_no_online"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/live_header_height" />
-
-            <com.julun.huanque.core.widgets.live.SuperAnimationView
-                android:id="@+id/highly_anim"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom|end" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/chat_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:orientation="vertical"
+                app:cus_edit_view="@id/edit_text"
+                tools:layout_height="500dp">
 
                 <com.julun.huanque.core.widgets.live.message.PublicChatMessageView
                     android:id="@+id/publicMessageView"
@@ -144,169 +148,158 @@
                         android:textSize="@dimen/sp_14" />
 
                 </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.julun.huanque.common.widgets.CusContentContainer>
 
-
-            <!--可滑动布局-->
-            <com.julun.huanque.core.widgets.live.slide.SlideViewContainer
-                android:id="@+id/surface_view"
+            <!-- 面板区域，仅能包含PanelView-->
+            <com.effective.android.panel.view.panel.PanelContainer
+                android:id="@+id/panel_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:background="@color/color_gray_three">
 
-                <!--<ImageView-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="233dp"-->
-                <!--android:background="@mipmap/live_button_bg"-->
-                <!--app:layout_constraintBottom_toBottomOf="parent"-->
-                <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                <!--app:layout_constraintRight_toRightOf="parent" />-->
-                <com.julun.huanque.core.widgets.live.LiveHeaderView
-                    android:id="@+id/liveHeader"
-                    android:layout_width="0dp"
-                    android:layout_height="34dp"
-                    android:layout_marginTop="7dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <com.julun.huanque.core.widgets.live.LiveRunwayView
-                    android:id="@+id/liveRunwayView"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/liveHeader" />
-
-                <com.julun.huanque.core.widgets.live.LiveRoomBottomActionView
-                    android:id="@+id/actionView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent" />
-
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/horizontalGuideline02"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.5"
-                    tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="252dp" />
-
-                <FrameLayout
-                    android:id="@+id/animation_container"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <com.julun.huanque.core.widgets.live.GuideToSendMessageView
-                    android:id="@+id/guideToSendMessageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_5"
-                    android:layout_marginRight="@dimen/dimen_5"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/actionView"
-                    app:layout_constraintStart_toStartOf="parent" />
-                <!--<com.julun.huanque.core.widgets.bezierview.PeriscopeLayout-->
-                <!--android:id="@+id/periscope"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="0dp"-->
-                <!--android:visibility="gone"-->
-                <!--app:layout_constraintBottom_toTopOf="@+id/actionView"-->
-                <!--app:layout_constraintHorizontal_bias="0.0"-->
-                <!--app:layout_constraintLeft_toLeftOf="@+id/verticalGuideline03"-->
-                <!--app:layout_constraintRight_toRightOf="parent"-->
-                <!--app:layout_constraintTop_toTopOf="@+id/horizontalGuideline02"-->
-                <!--app:layout_constraintVertical_bias="1.0" />-->
-                <!--<ImageView-->
-                <!--android:id="@+id/ivFansBubbleRemind"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:clickable="false"-->
-                <!--android:src="@mipmap/lm_icon_fans_remind"-->
-                <!--android:visibility="invisible" />-->
-
-
-                <!--            <include-->
-                <!--                android:id="@id/right_drawer"-->
-                <!--                layout="@layout/view_layout_right_drawer"-->
-                <!--                android:layout_width="@dimen/right_drawer_width"-->
+                <!-- 每一项面板 -->
+                <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
+                <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
+                <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
+                <!--            <com.effective.android.panel.view.panel.PanelView-->
+                <!--                android:layout_width="match_parent"-->
                 <!--                android:layout_height="match_parent"-->
-                <!--                app:layout_constraintEnd_toEndOf="parent" />-->
-            </com.julun.huanque.core.widgets.live.slide.SlideViewContainer>
+                <!--                app:panel_layout="@layout/panel_emotion_layout"-->
+                <!--                app:panel_trigger="@id/iv_emoji" />-->
+
+                <com.julun.huanque.common.widgets.emotion.PuclicChatPanelView
+                    android:id="@+id/panel_emotion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cus_panel_trigger="@id/emojiImage" />
+
+            </com.effective.android.panel.view.panel.PanelContainer>
+        </com.effective.android.panel.view.PanelSwitchLayout>
+
+        <!--可滑动布局-->
+        <com.julun.huanque.core.widgets.live.slide.SlideViewContainer
+            android:id="@+id/surface_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/cur_live_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <com.julun.huanque.core.widgets.live.LiveHeaderView
+                android:id="@+id/liveHeader"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_marginTop="7dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.julun.huanque.core.widgets.live.LiveRunwayView
+                android:id="@+id/liveRunwayView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/liveHeader" />
+
+            <com.julun.huanque.core.widgets.live.LiveRoomBottomActionView
+                android:id="@+id/actionView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/horizontalGuideline02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="252dp" />
+
+            <FrameLayout
+                android:id="@+id/animation_container"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.julun.huanque.core.widgets.live.GuideToSendMessageView
+                android:id="@+id/guideToSendMessageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_marginRight="@dimen/dimen_5"
                 android:visibility="gone"
-                app:actualImageScaleType="centerCrop" />
-        </com.julun.huanque.core.widgets.live.slide.ScrollVerticalContainer>
+                app:layout_constraintBottom_toTopOf="@+id/actionView"
+                app:layout_constraintStart_toStartOf="parent" />
+            <!--<com.julun.huanque.core.widgets.bezierview.PeriscopeLayout-->
+            <!--android:id="@+id/periscope"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:visibility="gone"-->
+            <!--app:layout_constraintBottom_toTopOf="@+id/actionView"-->
+            <!--app:layout_constraintHorizontal_bias="0.0"-->
+            <!--app:layout_constraintLeft_toLeftOf="@+id/verticalGuideline03"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="@+id/horizontalGuideline02"-->
+            <!--app:layout_constraintVertical_bias="1.0" />-->
+            <!--<ImageView-->
+            <!--android:id="@+id/ivFansBubbleRemind"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:clickable="false"-->
+            <!--android:src="@mipmap/lm_icon_fans_remind"-->
+            <!--android:visibility="invisible" />-->
 
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/up_stair_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:actualImageScaleType="centerCrop" />
+            <!--            <include-->
+            <!--                android:id="@id/right_drawer"-->
+            <!--                layout="@layout/view_layout_right_drawer"-->
+            <!--                android:layout_width="@dimen/right_drawer_width"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent" />-->
+        </com.julun.huanque.core.widgets.live.slide.SlideViewContainer>
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/down_stair_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:actualImageScaleType="centerCrop" />
 
-        <!--加载布局 只保留关闭按钮-->
-        <ImageView
-            android:id="@+id/live_room_back"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/selector_live_action_exit"
-            android:visibility="gone" />
 
-        <ViewStub
-            android:id="@+id/liveGestureGuideView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout="@layout/player_gesture_guide" />
-    </com.effective.android.panel.view.content.FrameContentContainer>
 
-    <!-- 面板区域，仅能包含PanelView-->
-    <com.effective.android.panel.view.panel.PanelContainer
-        android:id="@+id/panel_container"
+    </com.julun.huanque.core.widgets.live.slide.ScrollVerticalContainer>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/up_stair_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/color_gray_three">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:actualImageScaleType="centerCrop" />
 
-        <!-- 每一项面板 -->
-        <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
-        <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
-        <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
-        <!--            <com.effective.android.panel.view.panel.PanelView-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="match_parent"-->
-        <!--                app:panel_layout="@layout/panel_emotion_layout"-->
-        <!--                app:panel_trigger="@id/iv_emoji" />-->
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/down_stair_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:actualImageScaleType="centerCrop" />
 
-        <com.julun.huanque.common.widgets.emotion.PuclicChatPanelView
-            android:id="@+id/panel_emotion"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:cus_panel_trigger="@id/emojiImage" />
+    <!--加载布局 只保留关闭按钮-->
+    <ImageView
+        android:id="@+id/live_room_back"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="top|end"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/selector_live_action_exit"
+        android:visibility="gone" />
 
-    </com.effective.android.panel.view.panel.PanelContainer>
-</com.effective.android.panel.view.PanelSwitchLayout>
+    <ViewStub
+        android:id="@+id/liveGestureGuideView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/player_gesture_guide" />
+
+</FrameLayout>
