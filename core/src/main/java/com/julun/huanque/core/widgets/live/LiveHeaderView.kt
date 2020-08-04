@@ -217,10 +217,9 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
                 logger.info("当前的位置不合法 位置：$position datas总数:${userListAdapter.itemCount}")
                 reportCrash("当前的位置不合法 位置：$position datas总数:${userListAdapter.itemCount}")
             } else {
-                val user = userListAdapter.getItem(position)
+                val user = userListAdapter.getItemOrNull(position)
                 user?.let {
-//                    playerViewModel?.userInfoView?.value = UserInfoBean(it.userId, false, it.royalLevel, it.picId)
-//                    playerActivity.openUserInfoView(it.userId, false)
+                    playerViewModel?.userInfoView?.value = UserInfoBean(it.userId, false, it.royalLevel, it.picId)
                 }
 
             }
