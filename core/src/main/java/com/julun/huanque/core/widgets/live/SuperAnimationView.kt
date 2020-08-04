@@ -1,4 +1,4 @@
-package com.julun.huanque.core.widgets
+package com.julun.huanque.core.widgets.live
 
 import android.content.Context
 import android.util.AttributeSet

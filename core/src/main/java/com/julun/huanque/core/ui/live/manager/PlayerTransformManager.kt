@@ -632,7 +632,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
                 this.showInfo = !refreshView
                 this.playInfo = anchor.playInfo
 //                this.landlord = anchor.landlord
-//                this.pkType = pkInfo.pkType
+                this.pkType = pkInfo.pkType
             })
         }
         when (pkInfo.pkType) {

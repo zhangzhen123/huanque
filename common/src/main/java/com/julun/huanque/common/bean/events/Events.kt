@@ -80,3 +80,9 @@ class RongConnectEvent(var state: String)
  * 动画播放完后的回调
  */
 class AnimatorEvent()
+
+/**
+ * 视频页面进入与关闭的Event
+ * @param start true 表示进入视频播放页面，false 表示退出视频播放页面
+ */
+class VideoPlayerEvent(var start: Boolean) : Serializable
