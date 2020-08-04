@@ -145,20 +145,27 @@ class PlayerDialogManager(val context: PlayerActivity) {
         playerViewModel.openOnlineDialog.observe(context, Observer { TabTag ->
 
             openDialog(OnlineDialogFragment::class.java, builder = {
+
+                val royalCount = playerViewModel.roomData?.royalCount ?: 0
+                val onlineUserNum = playerViewModel.roomData?.onlineUserNum ?: 0
+                val royalTitle = "贵族席位(${royalCount})"
+
+                val onlineUserTitle = "在线用户(${onlineUserNum})"
+
                 OnlineDialogFragment.newInstance(
                     arrayListOf(
-                        TabBean(TabTags.TAB_TAG_ONLINE, "在线列表", select = TabTag == TabTags.TAB_TAG_ONLINE),
-                        TabBean(TabTags.TAB_TAG_ROYAL, "贵族席位", select = TabTag == TabTags.TAB_TAG_ROYAL)
+                        TabBean(TabTags.TAB_TAG_ONLINE, onlineUserTitle, royalCount < 0),
+                        TabBean(TabTags.TAB_TAG_ROYAL, royalTitle, royalCount > 0)
                     )
                 )
             })
         })
 
 
-        playerViewModel.userInfoView.observe(context, Observer { info->
+        playerViewModel.userInfoView.observe(context, Observer { info ->
             if (info != null) {
                 //显示用户名片
-                openDialog(UserCardFragment::class.java,builder = {
+                openDialog(UserCardFragment::class.java, builder = {
                     UserCardFragment.newInstance(info.userId)
                 })
             }
