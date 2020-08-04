@@ -21,6 +21,7 @@ import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
@@ -30,6 +31,7 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.ui.main.home.HomeFragment
@@ -372,7 +374,15 @@ class MainActivity : BaseActivity() {
         MessageProcessor.clearProcessors(true)
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallReceiveProcessor {
             override fun process(data: NetCallReceiveBean) {
-                mMainViewModel?.getVoiceCallInfo(data.callId)
+                val onLine = SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)
+                if (onLine) {
+                    //正在通话中
+                    mMainViewModel?.busy(data.callId)
+                    mMainViewModel?.insertMessage(data.callUserId)
+                } else {
+                    mMainViewModel?.getVoiceCallInfo(data.callId)
+                }
+
             }
         })
 

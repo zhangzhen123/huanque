@@ -30,6 +30,7 @@ import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.live.fragment.dialog.CardManagerDialogFragment
 import com.julun.huanque.core.viewmodel.UserCardViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -90,9 +91,11 @@ class UserCardFragment : BaseDialogFragment() {
                 }
                 else -> {
                     //都是异常
-                    state_pager_view.showError(errorTxt = "网络异常~！", btnClick = View.OnClickListener {
-                        mUserCardViewModel.queryUserInfo()
-                    })
+                    state_pager_view.showError(
+                        errorTxt = "网络异常~！",
+                        btnClick = View.OnClickListener {
+                            mUserCardViewModel.queryUserInfo()
+                        })
                 }
             }
         })
@@ -172,6 +175,15 @@ class UserCardFragment : BaseDialogFragment() {
         ll_leyuan.onClickNew {
             //打开游戏
         }
+        tv_manage.onClickNew {
+            //打开管理弹窗
+            val dialog = CardManagerDialogFragment.newInstance(
+                programId = mUserCardViewModel.programId,
+                targetUserId = mUserCardViewModel.mUserId,
+                nickname = mUserCardViewModel.userInfoData.value?.nickname ?: ""
+            )
+            dialog.show(childFragmentManager, "CardManagerDialogFragment")
+        }
     }
 
 
@@ -243,7 +255,7 @@ class UserCardFragment : BaseDialogFragment() {
             tv_attention.text = "关注"
         }
 
-        if (data.operateList.isEmpty()) {
+        if (!data.hasOperate) {
             tv_manage.hide()
         } else {
             tv_manage.show()
@@ -353,7 +365,10 @@ class UserCardFragment : BaseDialogFragment() {
             }
             //添加箭头
             val iv_arrow = ImageView(activity)
-            val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
             lp.gravity = Gravity.CENTER_VERTICAL
             iv_arrow.layoutParams = lp
             iv_arrow.setImageResource(R.mipmap.icon_arrow_msg_setting)
@@ -387,7 +402,8 @@ class UserCardFragment : BaseDialogFragment() {
                         gravity = Gravity.CENTER
                     }
                 tv.setPadding(dp2px(15), 0, dp2px(15), 0)
-                val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp2px(30f))
+                val params =
+                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp2px(30f))
                 params.rightMargin = dp2px(15f)
                 params.topMargin = dp2px(5f)
 

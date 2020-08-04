@@ -164,6 +164,12 @@
                 android:layout_height="wrap_content"
                 android:text="用户卡片" />
 
+            <Button
+                android:id="@+id/btn_manager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="管理弹窗" />
+
         </LinearLayout>
 
     </ScrollView>

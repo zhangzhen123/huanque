@@ -11,11 +11,9 @@ public class AgoraEventHandler extends IRtcEngineEventHandler {
         mHandler.add(handler);
     }
 
-
     public void removeHandler(EventHandler handler) {
         mHandler.remove(handler);
     }
-
 
     /**
      * 移除所有的handler,SDK release的时候使用
@@ -149,6 +147,28 @@ public class AgoraEventHandler extends IRtcEngineEventHandler {
     public void onLastmileProbeResult(LastmileProbeResult result) {
         for (EventHandler handler : mHandler) {
             handler.onLastmileProbeResult(result);
+        }
+    }
+
+    /**
+     * 网络异常回调
+     * @param state
+     * @param reason
+     */
+    @Override
+    public void onConnectionStateChanged(int state, int reason) {
+        for (EventHandler handler : mHandler) {
+            handler.onConnectionStateChanged(state, reason);
+        }
+    }
+
+    /**
+     * 网络连接中断，且 SDK 无法在 10 秒内连接服务器回调。
+     */
+    @Override
+    public void onConnectionLost(){
+        for (EventHandler handler : mHandler) {
+            handler.onConnectionLost();
         }
     }
 

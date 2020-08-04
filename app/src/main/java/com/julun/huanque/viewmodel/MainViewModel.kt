@@ -3,21 +3,26 @@ package com.julun.huanque.viewmodel
 import android.os.Bundle
 import androidx.lifecycle.*
 import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.common.bean.beans.RoomUserChatExtra
+import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.forms.SessionForm
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.core.net.UserService
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
+import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm
 import com.julun.huanque.common.bean.forms.SaveLocationForm
+import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.ConmmunicationUserType
-import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.SessionUtils
 import io.rong.imlib.RongIMClient
+import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.launch
 
 class MainViewModel : BaseViewModel() {
@@ -114,6 +119,63 @@ class MainViewModel : BaseViewModel() {
     }
 
     /**
+     * 获取对方数据以及亲密度数据
+     */
+    fun insertMessage(userId: Long) {
+        viewModelScope.launch {
+            request({
+                val result = socialService.userInfo(FriendIdForm(userId)).dataConvert()
+                //插入模拟消息
+                val targetUser = TargetUserObj()
+
+                val chatExtra = RoomUserChatExtra()
+
+                val sId = "$userId"
+                targetUser.apply {
+                    headPic = SessionUtils.getHeaderPic()
+                    nickname = SessionUtils.getNickName()
+                    meetStatus = result.meetStatus
+                    this.userId = SessionUtils.getUserId()
+                    sex = SessionUtils.getSex()
+                    intimateLevel = result.intimateLevel
+                    stranger = result.stranger
+                }
+
+                chatExtra.apply {
+                    headPic = result.headPic
+                    senderId = result.userId
+                    nickname = result.nickname
+                    sex = result.sex
+                    targetUserObj = targetUser
+                    userAbcd = AppHelper.getMD5(sId)
+                }
+
+                val bean = VoiceConmmunicationSimulate(type = VoiceResultType.MINE_REFUSE)
+
+                RongCloudManager.sendSimulateMessage(
+                    "$userId",
+                    sId,
+                    chatExtra,
+                    Conversation.ConversationType.PRIVATE,
+                    MessageCustomBeanType.Voice_Conmmunication_Simulate,
+                    bean
+                )
+            }, {})
+        }
+    }
+
+    /**
+     * 被叫忙
+     */
+    fun busy(callId: Long) {
+        viewModelScope.launch {
+            request({
+                socialService.voiceBusy(NetcallIdForm(callId)).dataConvert()
+            }, {})
+        }
+    }
+
+    /**
      * 保存定位地址
      */
     fun saveLocation(form: SaveLocationForm) {
@@ -127,7 +189,7 @@ class MainViewModel : BaseViewModel() {
     /**
      * 获取未读数
      */
-    fun getUnreadCount(){
+    fun getUnreadCount() {
         RongCloudManager.queryPMessage {
             unreadMsgCount.postValue(it)
         }

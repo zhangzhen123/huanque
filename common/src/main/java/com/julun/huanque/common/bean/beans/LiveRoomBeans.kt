@@ -7,7 +7,6 @@ import com.alibaba.fastjson.annotation.JSONField
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.forms.ConsumeForm
-import com.julun.huanque.common.database.table.Session
 import java.io.Serializable
 
 class UserLevelMap : Serializable {
@@ -242,6 +241,7 @@ class UserEnterRoomRespBase : Serializable {
     //    var anchorId: Long = 0//主播id
     var prePic: String = ""//封面图
     var headPic: String = ""//头像图
+
     @JSONField(name = "isLiving")
     var isLiving: Boolean = false//是否在直播中
     var programName: String = ""//主播昵称
@@ -576,7 +576,9 @@ class UserInfoInRoom : Serializable {
     var city: String = ""
 
     /** 有操作权限的会存到operateList **/
-    var operateList: ArrayList<ManagerInfo> = ArrayList<ManagerInfo>()
+//    var operateList: ArrayList<ManagerInfo> = ArrayList<ManagerInfo>()
+    //是否有管理功能
+    var hasOperate: Boolean = false
 
     /** 用户昵称 **/
     var nickname: String = ""
@@ -1012,8 +1014,33 @@ data class GoToUrl(var needLogin: Boolean = false, var url: String = "")
 data class ManagerInfo(
     var itemKey: String = "",
     var itemName: String = "",
-    var itemValue: String = ""
-) : Serializable
+    var itemValue: String = "",
+
+    //本地字段
+    //设备标识
+    var deviceUuid: String = "",
+    //权限类型
+    var mangeType: String = "",
+    //权限类型标题
+    var mangeTypeDesc: String = ""
+) : Option()
+
+/**
+ * 管理权限信息
+ * @alter WanZhiYuan
+ * @since 1.0.0
+ * @date 2020/08/04
+ */
+data class ManagerOptionInfo(
+    //权限时间或详细信息列表
+    var manageOptions: ArrayList<ManagerInfo> = arrayListOf(),
+    //权限类型
+    var mangeType: String = "",
+    //权限类型标题
+    var mangeTypeDesc: String = ""
+) : Option()
+
+open class Option() : Serializable
 
 /**
  * 查询余额的返回对象

@@ -7,8 +7,10 @@ import com.julun.huanque.R
 import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 
 /**
  *@创建者   dong
@@ -19,6 +21,7 @@ class WelcomeActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_welcome
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         val registerUser = SessionUtils.getIsRegUser()
         val intent = if (registerUser && SessionUtils.getRegComplete()) {
             RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)

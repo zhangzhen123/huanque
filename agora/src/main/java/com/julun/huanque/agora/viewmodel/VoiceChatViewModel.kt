@@ -113,14 +113,19 @@ class VoiceChatViewModel : BaseViewModel() {
 
     /**
      * 被叫直接拒绝或者加入频道失败，调用该接口 挂断通话
+     * @param timeOut 是否已超时
      */
-    fun refuseVoice() {
+    fun refuseVoice(timeOut: Boolean = false) {
         viewModelScope.launch {
             request({
                 socialService.netcallRefuse(NetcallIdForm(callId)).dataConvert()
                 //挂断当前语音
                 currentVoiceState.value = VOICE_CLOSE
-                voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.MINE_REFUSE)
+                if (timeOut) {
+                    voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
+                } else {
+                    voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.MINE_REFUSE)
+                }
             })
         }
     }
@@ -167,8 +172,13 @@ class VoiceChatViewModel : BaseViewModel() {
                     billUserId = result.billUserId,
                     totalBeans = result.totalBeans
                 )
-                currentVoiceState.value = VOICE_CLOSE
-            })
+            }, {
+                voiceBeanData.value = VoiceConmmunicationSimulate(
+                    VoiceResultType.CONMMUNICATION_FINISH,
+                    duration,
+                    totalBeans = 0
+                )
+            }, { currentVoiceState.value = VOICE_CLOSE })
         }
     }
 

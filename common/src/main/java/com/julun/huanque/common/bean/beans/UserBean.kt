@@ -133,6 +133,16 @@ class ConversationBasicBean(
 )
 
 /**
+ * 两人之间的关系
+ */
+class RelationInfo(
+    //亲密度等级
+    var intimateLevel: Int = 0,
+    //陌生人标识
+    var stranger: Boolean = false
+) : Serializable
+
+/**
  * 会话详情bean
  */
 class NetcallBean(
@@ -141,10 +151,14 @@ class NetcallBean(
     var callerInfo: ChatUser = ChatUser(),
     //接收人数据
     var receiverInfo: ChatUser = ChatUser(),
+    //关系数据
+    var relationInfo: RelationInfo = RelationInfo(),
     var channelId: String = "",
     var token: String = "",
     //价格（如果大于0，标识位付费方）
-    var beans: Long = 0
+    var beans: Long = 0,
+    //是否显示过确认弹窗
+    var unconfirmed: Boolean = false
 ) : Serializable
 
 /**
