@@ -156,7 +156,9 @@ class NetcallBean(
     var channelId: String = "",
     var token: String = "",
     //价格（如果大于0，标识位付费方）
-    var beans: Long = 0
+    var beans: Long = 0,
+    //是否显示过确认弹窗
+    var unconfirmed: Boolean = false
 ) : Serializable
 
 /**

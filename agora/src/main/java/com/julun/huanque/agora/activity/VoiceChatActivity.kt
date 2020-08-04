@@ -15,12 +15,14 @@ import com.julun.huanque.agora.R
 import com.julun.huanque.agora.handler.EventHandler
 import com.julun.huanque.agora.viewmodel.VoiceChatViewModel
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
@@ -391,6 +393,19 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
         mVoiceChatViewModel?.netcallBeanData?.observe(this, Observer { netCallBean ->
             if (netCallBean != null) {
+                if (netCallBean.unconfirmed) {
+                    //未确认付费，需要显示弹窗
+                    CommonInit.getInstance().getCurrentActivity()?.let { act ->
+                        MyAlertDialog(act).showAlertWithOKAndCancel(
+                            "语音通话${netCallBean.beans}鹊币/分钟",
+                            MyAlertDialog.MyDialogCallback(onRight = {
+                                SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
+                            }, onCancel = {
+                                SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_FEE_DIALOG_SHOW, true)
+                            }), "语音通话费用", "发起通话"
+                        )
+                    }
+                }
                 var backPic = ""
                 if (mType == ConmmunicationUserType.CALLING) {
                     //主叫
