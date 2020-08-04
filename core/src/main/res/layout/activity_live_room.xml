@@ -45,7 +45,7 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/live_header_height" />
 
-            <com.julun.huanque.core.widgets.SuperAnimationView
+            <com.julun.huanque.core.widgets.live.SuperAnimationView
                 android:id="@+id/highly_anim"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -170,7 +170,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
 
-                <com.julun.huanque.core.widgets.LiveRunwayView
+                <com.julun.huanque.core.widgets.live.LiveRunwayView
                     android:id="@+id/liveRunwayView"
                     android:layout_width="0dp"
                     android:layout_height="50dp"

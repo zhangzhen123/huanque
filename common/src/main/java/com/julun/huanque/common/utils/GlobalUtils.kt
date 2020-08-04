@@ -15,6 +15,8 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import com.julun.huanque.common.R
+import com.julun.huanque.common.bean.beans.PlayInfo
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserInfo
 import com.julun.huanque.common.bean.message.CustomMessage
@@ -327,8 +329,22 @@ object GlobalUtils {
      * 移除单个需要刷新的消息ID
      */
     fun removeSingleRefreshMessageId(msgId: Int) {
-        val idSet = GlobalUtils.getNeedRefreshMessageIdSet()
+        val idSet = getNeedRefreshMessageIdSet()
         idSet.remove("$msgId")
         SharedPreferencesUtils.commitStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, idSet)
+    }
+
+    /**
+     * 获取播放地址
+     */
+    fun getPlayUrl(info: PlayInfo): String {
+        val type = info.type
+        return if (type == PlayInfo.Url) {
+            //URL格式
+            info.rtmp
+        } else {
+            val string = getString(R.string.stream_template)
+            String.format(string, info.domain, info.streamKey)
+        }
     }
 }

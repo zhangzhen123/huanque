@@ -76,7 +76,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     // 榜单用户列表
     private var topList: MutableList<UserInfoForLmRoom> = Collections.synchronizedList(mutableListOf())
 
-    //    private val playerActivity: PlayerActivity by lazy { context as PlayerActivity }
     private var playerViewModel: PlayerViewModel? = null
 
 //    override fun onAttachedToWindow() {
@@ -88,7 +87,8 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         val activity = context as? PlayerActivity
         activity?.let {
             playerViewModel = ViewModelProvider(activity).get(PlayerViewModel::class.java)
-            playerViewModel?.updateRoyalCount?.observe(activity, androidx.lifecycle.Observer {
+
+            playerViewModel?.loginSuccessData?.observe(activity, androidx.lifecycle.Observer {
                 it ?: return@Observer
                 val royalCount = it.royalCount ?: 0
                 val guardCount = it.guardCount ?: 0
@@ -106,7 +106,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             playerViewModel?.baseData?.observe(activity, androidx.lifecycle.Observer {
                 royalButtonAnimation()
             })
-            playerViewModel
         }
     }
 
@@ -181,11 +180,12 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             playerViewModel?.finishState?.value = true
         }
         flRoyalRootView.onClickNew {
-            if(ivRoyalIcon.isVisible){
-                playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ROYAL
-            }else{
-                playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ONLINE
-            }
+//            if(ivRoyalIcon.isVisible){
+//                playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ROYAL
+//            }else{
+//                playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ONLINE
+//            }
+            playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ONLINE
         }
 //        count_container_001.onClickNew {
 //            //            playerActivity.openOnlineView()
@@ -406,7 +406,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     // 刷新在线用户, 主线程执行
     private fun doRefreshRoomUserList() {
-        userListAdapter.replaceData(roomUsers)
+        userListAdapter.setList(roomUsers)
     }
 
     // 当前新增用户是否在列表中，不在则添加
@@ -445,6 +445,11 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             isReduceUserCount()
         }
         doRefreshRoomUserList()
+        //更新roomData数据
+        val roomData=playerViewModel?.roomData?:return
+        roomData.onlineUserNum=data.totalCount
+        roomData.royalCount=data.royalCount
+        roomData.guardCount=data.guardCount
     }
 
     private fun replaceExistUserItem(newObj: UserInfoForLmRoom) {

@@ -1,4 +1,4 @@
-package com.julun.huanque.core.widgets
+package com.julun.huanque.core.widgets.live
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -15,9 +15,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.julun.huanque.common.bean.TplBean
-import com.julun.huanque.common.bean.beans.HeaderInfo
 import com.julun.huanque.common.bean.beans.TplBeanExtraContext
 import com.julun.huanque.common.constant.RunWaySVGAType
 import com.julun.huanque.common.constant.WeekType
@@ -35,17 +33,12 @@ import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 
 import com.julun.huanque.core.viewmodel.SVGAViewModel
-import com.trello.rxlifecycle4.kotlin.bindToLifecycle
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.Disposable
 
 import kotlinx.android.synthetic.main.view_runway_simple.view.*
 import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 
@@ -411,7 +404,8 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
             val translationXIn201 =
                 ObjectAnimator.ofFloat(runway_icon, View.TRANSLATION_X, 0f, -dip(PLANE_FADE_DISTANCE).toFloat())
             val alpha = ObjectAnimator.ofFloat(runway_icon, View.ALPHA, 1f, 0f)
-            alpha.startDelay = PLANE_FADE_DELAY_DURATION
+            alpha.startDelay =
+                PLANE_FADE_DELAY_DURATION
             val enter = AnimatorSet()
             enter.duration = SLIDE_IN_DURATION
             enter.interpolator = AccelerateDecelerateInterpolator()
@@ -431,7 +425,8 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
 
             })
             val disappear = AnimatorSet()
-            disappear.duration = PLANE_FADE_DURATION
+            disappear.duration =
+                PLANE_FADE_DURATION
             disappear.interpolator = LinearInterpolator()
             disappear.playTogether(translationXIn201, alpha)
             disappear.addListener(object : AnimatorListenerAdapter() {

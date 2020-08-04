@@ -4,6 +4,7 @@ import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.basic.VoidForm
 import com.julun.huanque.common.bean.forms.*
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -118,4 +119,20 @@ interface LiveRoomService {
      */
     @POST("live/room/consume/sendGift")
     suspend fun sendGift(@Body form: ConsumeForm): Root<SendGiftResult>
+
+    
+    //===================================== 管理相关接口 start ======================================
+    /**
+     * 查询管理权限
+     */
+    @POST("live/room/user/getManage")
+    suspend fun getManage(@Body from: CardManagerForm): Root<ArrayList<ManagerOptionInfo>>
+
+    /**
+     * 保存管理操作
+     */
+    @POST("live/room/user/saveManage")
+    suspend fun saveManage(@Body from: CardManagerForm): Root<VoidResult>
+
+    //===================================== 管理相关接口 end ========================================
 }

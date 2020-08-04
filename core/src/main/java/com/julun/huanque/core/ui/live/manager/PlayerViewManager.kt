@@ -37,7 +37,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.*
-import com.julun.huanque.core.widgets.LiveRunwayView
+import com.julun.huanque.core.widgets.live.LiveRunwayView
 import com.julun.huanque.core.widgets.live.message.MessageRecyclerView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -1231,7 +1231,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 //            context.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
             //取消全屏
             context.window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            //是否是横屏
+            //是否是主播端横屏
             val screenType = mOrientationViewModel.screenTypeData.value
             //添加是不是手机直播的的转换 主播模式同手机直播 黑色状态栏
             val verticalFullScreen = (screenType != ScreenType.HP) && isAppShow && videoPlayerViewModel.isSingleAnchor()

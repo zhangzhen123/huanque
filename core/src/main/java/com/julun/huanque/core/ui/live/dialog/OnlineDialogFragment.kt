@@ -18,7 +18,6 @@ import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.TabBean
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.TabTags
-import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
@@ -94,33 +93,33 @@ class OnlineDialogFragment : BaseDialogFragment() {
 //                if (it.containsKey(tab.type)) {
                 when (tab.type) {
                     TabTags.TAB_TAG_ROYAL -> {
-                        if (it[tab.type].isNullOrEmpty()) {
-                            tab.title = "贵族席位"
-                        } else {
-                            tab.title = "贵族席位(${it[tab.type]})"
-                        }
+//                        if (it[tab.type].isNullOrEmpty()) {
+//                            tab.title = "贵族席位"
+//                        } else {
+                            tab.title = "贵族席位(${it[tab.type]?:0})"
+//                        }
 
                     }
                     TabTags.TAB_TAG_GUARD -> {
-                        if (it[tab.type].isNullOrEmpty()) {
-                            tab.title = "守护"
-                        } else {
-                            tab.title = "守护(${it[tab.type]})"
-                        }
+//                        if (it[tab.type].isNullOrEmpty()) {
+//                            tab.title = "守护"
+//                        } else {
+                            tab.title = "守护(${it[tab.type]?:0})"
+//                        }
                     }
                     TabTags.TAB_TAG_MANAGER -> {
-                        if (it[tab.type].isNullOrEmpty()) {
-                            tab.title = "房管"
-                        } else {
-                            tab.title = "房管(${it[tab.type]})"
-                        }
+//                        if (it[tab.type].isNullOrEmpty()) {
+//                            tab.title = "房管"
+//                        } else {
+                            tab.title = "房管(${it[tab.type]?:0})"
+//                        }
                     }
-                    else -> {
-                        if (it[tab.type].isNullOrEmpty()) {
-                            tab.title = "在线用户"
-                        } else {
-                            tab.title = "在线用户(${it[tab.type]})"
-                        }
+                    TabTags.TAB_TAG_ONLINE-> {
+//                        if (it[tab.type].isNullOrEmpty()) {
+//                            tab.title = "在线用户"
+//                        } else {
+                            tab.title = "在线用户(${it[tab.type]?:0})"
+//                        }
                     }
                 }
             }

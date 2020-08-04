@@ -194,7 +194,7 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginLeft="6dp"
-        android:src="@mipmap/icon_live_zoom"
+        android:src="@mipmap/icon_live_zoom_out"
         android:visibility="gone" />
 
 </LinearLayout>

@@ -318,7 +318,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
 //                    }
                 } else {
                     //加载更多贵宾数据去重并刷新
-                    data.royalHonorList = mHeadAdapter?.data?.mergeNoDuplicateNew(
+                    data.royalHonorList = mHeadAdapter.data.mergeNoDuplicateNew(
                         data.royalHonorList
                     ) as MutableList
                 }

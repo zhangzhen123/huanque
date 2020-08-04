@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/iv_watermark"
+        android:layout_width="25dp"
+        android:layout_height="11dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="right"/>
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/posterImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:actualImageScaleType="focusCrop"
+        app:placeholderImage="@color/live_bg_color" />
+
+    <LinearLayout
+        android:id="@+id/anchor_info"
+        android:layout_width="@dimen/dimen_85"
+        android:layout_height="@dimen/dimen_28"
+        android:layout_gravity="right|bottom"
+        android:layout_marginRight="@dimen/dimen_4"
+        android:layout_marginBottom="@dimen/dimen_4"
+        android:background="@drawable/bg_shape_black_p20"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/anchor_header_image"
+            android:layout_width="@dimen/dimen_24"
+            android:layout_height="@dimen/dimen_24"
+            android:layout_marginLeft="@dimen/dimen_2"
+            app:failureImage="@mipmap/logo_placeholder_small"
+            app:failureImageScaleType="fitCenter"
+            app:placeholderImage="@mipmap/logo_placeholder_small"
+            app:placeholderImageScaleType="fitCenter"
+            app:roundAsCircle="true" />
+
+        <TextView
+            android:id="@+id/anchor_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_5"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/sp_11"
+            tools:text="主播昵称"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/goto_room"
+            android:layout_width="22dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/dimen_2"
+            android:src="@mipmap/icon_forward_grey_01" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/anchor_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <com.julun.huanque.common.widgets.bounceview.BounceView
+            android:layout_width="50dp"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_5"
+            android:text="@string/video_loading"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</FrameLayout>

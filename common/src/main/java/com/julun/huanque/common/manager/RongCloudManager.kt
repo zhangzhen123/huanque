@@ -283,15 +283,9 @@ object RongCloudManager {
                     switchThread(message)
                     if (customBean is VoiceConmmunicationSimulate && customBean.needRefresh) {
                         //需要在网络回复的时候刷新消息
-                        val defaultValue = HashSet<String>()
-                        var oriSet = SharedPreferencesUtils.getStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, defaultValue)
-                        if (oriSet == null) {
-                            oriSet = HashSet<String>()
-                        }
-                        if (oriSet is HashSet<String>) {
-                            oriSet.add("${message.messageId}")
-                            SharedPreferencesUtils.commitStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, oriSet)
-                        }
+                        val oriSet = GlobalUtils.getNeedRefreshMessageIdSet()
+                        oriSet.add("${message.messageId}")
+                        SharedPreferencesUtils.commitStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, oriSet)
                     }
                 }
             }

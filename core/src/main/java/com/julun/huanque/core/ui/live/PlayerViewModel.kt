@@ -2,7 +2,6 @@ package com.julun.huanque.core.ui.live
 
 import android.animation.ValueAnimator
 import android.os.SystemClock
-import android.text.TextUtils
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,29 +9,32 @@ import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.ProgramIdForm
+import com.julun.huanque.common.bean.forms.SwitchForm
+import com.julun.huanque.common.bean.forms.UserEnterRoomForm
+import com.julun.huanque.common.bean.forms.ValidateForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.net.services.LiveRoomService
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.core.net.UserService
-import com.julun.huanque.common.bean.beans.SingleGame
-import com.julun.huanque.common.bean.forms.*
-import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.constant.ClickType
+import com.julun.huanque.common.constant.GameType
+import com.julun.huanque.common.constant.TextTouch
+import com.julun.huanque.common.constant.ValidateResult
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.GlobalDataPool
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
+import com.julun.huanque.common.net.Requests
+import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.BalanceUtils
-import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
+import com.julun.huanque.core.net.UserService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.launch
-import kotlin.properties.Delegates
 
 /**
  *
@@ -220,9 +222,6 @@ class PlayerViewModel : BaseViewModel() {
     //显示星球霸主标识位
     var mShowPlanet = false
 
-    //出题按钮是否可用
-    val questionEnable: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
     //清屏标志位
     val clearScreen: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -301,9 +300,6 @@ class PlayerViewModel : BaseViewModel() {
     //是否展示一元首充tips
     val oneYuanTips: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-    //接收打开卡牌通知刷新翻牌配置
-    val refreshCardsConfig: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
 
     //猜字谜奖励
     val wordAwardData: MutableLiveData<WordPuzzleAward> by lazy { MutableLiveData<WordPuzzleAward>() }
@@ -346,9 +342,6 @@ class PlayerViewModel : BaseViewModel() {
 
     //打开节目单界面 true代表自动弹出需要排序  false代表用户手动打开
     val openThemeProgram: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-    //贵族数量变更
-    val updateRoyalCount: MutableLiveData<RoyalMessageBean> by lazy { MutableLiveData<RoyalMessageBean>() }
 
     //体验守护
     val experienceGuard: MutableLiveData<ExperienceGuard> by lazy { MutableLiveData<ExperienceGuard>() }
@@ -400,9 +393,6 @@ class PlayerViewModel : BaseViewModel() {
     //关注来源 埋点用
     var subscribeSource: String? = null
 
-    //直播间当前所属类型 埋点用
-    var roomTypeCode: String? = null
-
     //打开携手闯关
     val openPassLevel: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
@@ -415,7 +405,7 @@ class PlayerViewModel : BaseViewModel() {
     //公聊设置的用户数据
     var roomUserChatExtra: RoomUserChatExtra? = null
 
-    private var loginStateDispoosable: Disposable? = null
+    private var loginStateDisposable: Disposable? = null
 
 
     private val compositeDisposable: CompositeDisposable by lazy { CompositeDisposable() }
@@ -500,7 +490,6 @@ class PlayerViewModel : BaseViewModel() {
                 loginSuccessData.value = result
                 gameListData.value = result.gameList
                 getAdConfig.value = result.poppuAds
-                updateRoyalCount.value = RoyalMessageBean(royalCount = result.honorCount, guardCount = result.guardCount)
             }, error = {
                 it.printStackTrace()
                 errorState.value = 3
@@ -687,7 +676,7 @@ class PlayerViewModel : BaseViewModel() {
                     }
                     ValidateResult.RESEND -> {
                         //替换文案发送
-                        result?.newContent?.let {
+                        result.newContent?.let {
                             realSendMessage(it)
                         }
                     }

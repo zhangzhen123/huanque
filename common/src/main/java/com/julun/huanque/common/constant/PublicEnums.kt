@@ -38,6 +38,7 @@ object AnimEventItemTypes {
     val SVGA: String = "Svga"
 
 }
+
 //公聊消息的点击触发
 object TextTouch {
     //打开深海游戏
@@ -84,14 +85,17 @@ object TextTouch {
 
     val Empty = ""
 }
+
 object EnterType {
     const val MINI = "Mini" //普通入场
     const val SKILL = "Skill" //特效入场
 }
+
 object StopType {
     const val NORMALSTOP = "NormalStop"
     const val FORCESTOP = "ForceStop"
 }
+
 /**
  * 直播间用户列表变化时通知类型
  */
@@ -163,49 +167,67 @@ object GameType {
     //主题房宝箱
     const val TYPE_GAME_THEME_TREASURE_BOX = 8
 }
+
 object ClickType {
     //打开公聊
     const val CHAT_INPUT_BOX = "CHAT_INPUT_BOX"
+
     //打开私聊
     const val PRIVATE_MESSAGE = "PRIVATE_MESSAGE"
+
     //打开送礼
     const val GIFT = "GIFT"
+
     //关闭直播间
     const val CLOSE = "CLOSE"
+
     //打开游戏面板
     const val GAME = "GAME"
+
     //豪车工厂
     const val LUXURY_CAR = "LUXURY_CAR"
+
     //星球霸主
     const val PLANTE = "PLANTE"
+
     //推流设置页面
     const val PUBLISH_SETTING = "PUBLISH_SETTING"
+
     //主播更多设置
     const val ANCHOR_MORE_SETTING = "ANCHOR_MORE_SETTING"
+
     //用户更多设置
     const val USER_MORE_SETTING = "USER_MORE_SETTING"
+
     //打开粉丝团
     const val FANS = "FANS"
+
     //横竖屏切换
     const val SWITCH_SCREEN = "SWITCH_SCREEN"
+
     //屏蔽功能
     const val SHIELD = "SHIELD"
 
     //主播端功能
     //摄像头切换
     const val SWITH_CAMERA = "SWITH_CAMERA"
+
     //闪光灯
     const val FLASH_LIGHT = "FLASH_LIGHT"
+
     //镜像
     const val MIRROR = "MIRROR"
+
     //声音开关
     const val SOUND = "SOUND"
+
     //主播更多设置
     const val ANHOR_MORE_SETTING = "ANHOR_MORE_SETTING"
 
     //打开聊天输入框  发言
     const val SEND_MESSAGE = "SEND_MESSAGE"
 }
+
 object MenuActionType {
     const val MOECOINTASK = "MoeCoinTask"//萌币任务
     const val KINGWAR = "KingWar"//王者之战
@@ -253,17 +275,21 @@ object LoginType {
 /**
  * 直播间打开时附带的操作
  */
-object LiveOperaType{
-    const val OPEN_GIFT="open_gift"//打开礼物面板并附带giftId 默认0代表只打开 -1代表不生效
-    const val OPEN_SHARE="open_share"//打开分享
-    const val STAR_GAME="starGame"//打开星球游戏
+object LiveOperaType {
+    const val OPEN_GIFT = "open_gift"//打开礼物面板并附带giftId 默认0代表只打开 -1代表不生效
+    const val OPEN_SHARE = "open_share"//打开分享
+    const val STAR_GAME = "starGame"//打开星球游戏
+
     //打开粉丝团
     const val OPEN_FANS = "OPEN_FANS"
+
     //打开守护
     const val OPEN_GUARD = "OPEN_GUARD"
+
     //打开首充
     const val OPEN_FIRST_RECHARGE = "OPEN_FIRST_RECHARGE"
 }
+
 /**
  * 分享常量类
  */
@@ -395,11 +421,11 @@ object ShareTypeEnum {
 
 /**
  * 	分享到对话:
-    SendMessageToWX.Req.WXSceneSession
-    分享到朋友圈:
-    SendMessageToWX.Req.WXSceneTimeline
-    分享到收藏:
-    SendMessageToWX.Req.WXSceneFavorite
+SendMessageToWX.Req.WXSceneSession
+分享到朋友圈:
+SendMessageToWX.Req.WXSceneTimeline
+分享到收藏:
+SendMessageToWX.Req.WXSceneFavorite
 
  */
 object ShareWayEnum {
@@ -430,19 +456,23 @@ object WeiXinShareType {
     //视频类型分享
     const val WXVideo = "WXVideo"
 }
+
 object WeiBoShareType {
     //文字类型分享
     const val WbText = "WbText"
 
     //图片类型分享
     const val WbImage = "WbImage"
+
     //多图分享
     const val WbMultiImage = "WbMultiImage"
+
     //音乐类型分享
     const val WbMusic = "WbMusic"
 
     //视频类型分享
     const val WbVideo = "WbVideo"
+
     //网页
     const val WbWeb = "WbWeb"
 }
@@ -455,4 +485,47 @@ object ShareFromModule{
     const val Invite = "Invite"
     const val Program = "Program"
     const val Magpie = "Magpie"
+}
+
+/**
+ * 用户和主播权限字段
+ */
+object CardManagerOperate {
+    //用户
+    /** 踢除 **/
+    val MANAGER_CONTENT_KICK: String = "kickUser"
+
+    /** 屏蔽 **/
+    val PAGE_NAME_SHIELD: String = "shieldUser"
+
+    /** 禁言 **/
+    val PAGE_NAME_GAG: String = "gagUser"
+
+    /** 全平台禁言 **/
+    val PAGE_NAME_PLATFORM_GAG: String = "platformGagUser"
+
+    /** 全站封禁 **/
+    val PAGE_NAME_PLATFORM_BLOCK: String = "blockUser"
+
+    /** 取消房管 **/
+    val PAGE_NAME_CANCEL_MANAGER: String = "cancelRoomManager"
+
+    /** 提升房管 **/
+    val PAGE_NAME_UP_MANAGER: String = "upToRoomManager"
+
+    //主播
+    /** 封禁 **/
+    val PAGE_NAME_BLOCK_PROGRAM: String = "blockProgram"
+
+    /** 监控 **/
+    val PAGE_NAME_MONITOR_PROGRAM: String = "monitorProgram"
+
+    /** 警告 **/
+    val PAGE_NAME_WARN_ANCHOR: String = "warnAnchor"
+
+    /** 巡查提醒 **/
+    val PAGE_NAME_REMIND_ANCHOR: String = "remindAnchor"
+
+    /** 取消监控 **/
+    val PAGE_NAME_UNMONITOR_PROGRAM: String = "unMonitorProgram"
 }

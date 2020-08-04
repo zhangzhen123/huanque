@@ -452,7 +452,9 @@ data class MicAnchor(var status: String = "",
                      var showInfo: Boolean = false,
                      var pushUrl: String = "",
                      var sdkParams: SdkParam? = null,
-                     var sdkProvider: String = "") : AnchorBasicInfo() {
+                     var sdkProvider: String = "",
+    //pk类型
+                     var pkType: String? = null) : AnchorBasicInfo() {
     @JSONField(name = "isCreator")
     var isCreator: Boolean = false
 //        @JSONField(name = "isCreator")

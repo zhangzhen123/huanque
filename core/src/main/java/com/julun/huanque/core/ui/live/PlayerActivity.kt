@@ -58,12 +58,12 @@ import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
-import com.julun.huanque.core.ui.live.fragment.LivePlayerFragment
 import com.julun.huanque.core.ui.live.fragment.UserCardFragment
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
 import com.julun.huanque.core.ui.live.manager.PlayerViewManager
 import com.julun.huanque.core.viewmodel.*
 import com.julun.huanque.core.widgets.live.slide.SlideViewContainer
+import com.julun.lingmeng.lmcore.controllers.live.player.LivePlayerFragment
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -429,6 +429,8 @@ class PlayerActivity : BaseActivity() {
             mConfigViewModel?.screenTypeData?.value = it.screenType
             //当基础信息返回成功，同时开始拉流和融云相关操作
             anchorNoLiveViewModel.baseData.value = it
+            //todo test
+            it.playInfo?.rtmp="rtmp://aliyun-rtmp.51lm.tv/lingmeng/25318"
             addPlayFragment(it.isLiving, LiveBean().apply {
                 programPoster = it.prePic
                 programId = it.programId
@@ -1134,6 +1136,7 @@ class PlayerActivity : BaseActivity() {
             return
         }
         val baseData: UserEnterRoomRespBase = viewModel.baseData.value ?: return
+
         isLiving = isLive
         //每次添加前改变视频布局
         liveViewManager.changeShowTypeLayout2()
@@ -1141,22 +1144,7 @@ class PlayerActivity : BaseActivity() {
             anchorNoLiveViewModel.showRecommendProgram.value = null
             anchorNoLiveViewModel.recommendProgram.value = null
             // 正在直播中，加载视频直播组件
-//            //每次添加前改变视频布局
-//            liveViewManager.changeShowTypeLayout2()
-//            val liveModel = LiveBean()
-//            liveModel.living = isLiving
-//            liveModel.isAppShow = isAppShow
-//            liveModel.programId = programId
-//            liveModel.anchorName = baseData.programName ?: ""
-//            val picId = baseData.prePic
-//            if (picId?.isNotEmpty() == true) {
-//                liveModel.programPoster = picId
-//            }
-//            liveModel.programId = programId
-//            liveModel.playinfo = baseData.playInfo
             if (livePlayFragment == null) {
-                //todo
-//                livePlayFragment = AgoraPlayerFragment()
                 livePlayFragment = LivePlayerFragment()
             }
 
