@@ -1,6 +1,5 @@
 package com.julun.huanque.common.bean.forms
 
-import com.julun.huanque.common.constant.BooleanType
 import java.io.Serializable
 
 
@@ -36,7 +35,11 @@ class EnterExForm(var programId: Long? = null, var dataType: String? = null) : S
     }
 }
 
-class UserEnterRoomForm(programId: Long, var positionIndex: Int? = null, var fromType: String? = null) : ProgramIdForm(programId)
+class UserEnterRoomForm(
+    programId: Long,
+    var positionIndex: Int? = null,
+    var fromType: String? = null
+) : ProgramIdForm(programId)
 
 class RecommendProgramForm(var programId: Long? = null) : SessionForm()
 
@@ -178,9 +181,18 @@ class SaveReportProgramForm(
  *
  * type 可选 danmu , broadcast
  */
-class DanmuForm(var programId: Long, var content: String, var dmlevel: Int, var acceptprogramId: Long? = null) : SessionForm()
+class DanmuForm(
+    var programId: Long,
+    var content: String,
+    var dmlevel: Int,
+    var acceptprogramId: Long? = null
+) : SessionForm()
 
-class RechargeChannelQueryForm(var programId: Long, var message: String, var type: String = "danmu") : SessionForm()
+class RechargeChannelQueryForm(
+    var programId: Long,
+    var message: String,
+    var type: String = "danmu"
+) : SessionForm()
 
 /**
  * 红包
@@ -222,7 +234,12 @@ class PassLevelForm(var level: Int? = null, var programId: Long)
 /**
  * 一键送礼[level]当前的关卡  [programId]直播间id [gifts]礼物信息 id:count [passLevel]是不是一键送礼True,False
  */
-class OneKeySendGiftForm(var level: Int, var programId: Long, var gifts: String, var passLevel: String)
+class OneKeySendGiftForm(
+    var level: Int,
+    var programId: Long,
+    var gifts: String,
+    var passLevel: String
+)
 
 /**
  * 横竖屏切换的Form
@@ -282,4 +299,12 @@ data class ProgramListForm(
     var limit: Int? = null,
     var typeCode: String? = null
 
+)
+
+/**
+ * 管理form
+ */
+data class CardManagerForm(
+    var programId: Long = 0, var targetUserId: Long = 0, var mangeType: String? = null,
+    var itemValue: String? = null, var deviceUuid: String? = null
 )
