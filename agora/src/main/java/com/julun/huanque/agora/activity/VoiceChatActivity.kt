@@ -395,6 +395,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             if (netCallBean != null) {
                 if (netCallBean.unconfirmed) {
                     //未确认付费，需要显示弹窗
+                    mVoiceChatViewModel?.markFeeRemind()
+
                     CommonInit.getInstance().getCurrentActivity()?.let { act ->
                         MyAlertDialog(act).showAlertWithOKAndCancel(
                             "语音通话${netCallBean.beans}鹊币/分钟",
@@ -700,7 +702,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         val bean = VoiceConmmunicationSimulate(
             VoiceResultType.CONMMUNICATION_FINISH,
             mVoiceChatViewModel?.duration ?: 0,
-            totalBeans = 0
+            totalBeans = 0, needRefresh = true, callId = mVoiceChatViewModel?.callId ?: 0
         )
         mVoiceChatViewModel?.voiceBeanData?.postValue(bean)
         mVoiceChatViewModel?.currentVoiceState?.postValue(VoiceChatViewModel.VOICE_CLOSE)

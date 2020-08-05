@@ -15,10 +15,14 @@ import java.io.Serializable
  * @param createUserID 创建者ID
  * @param billUserId 付费的用户ID
  * @param totalBeans 总共花费的金额
+ * @param needRefresh 该消息在网络回复的时候需要刷新
+ * @param callId 聊天ID，异常断开的时候需要该参数
+ * @param sentTime 消息的发送时间
  */
 data class VoiceConmmunicationSimulate(
     var type: String = "", var duration: Long = 0, var createUserID: Long = 0,
-    var billUserId: Long = 0, var totalBeans: Long = 0
+    var billUserId: Long = 0, var totalBeans: Long = 0, var needRefresh: Boolean = false,
+    var callId: Long = 0, var sentTime: Long = 0
 )
 
 /**

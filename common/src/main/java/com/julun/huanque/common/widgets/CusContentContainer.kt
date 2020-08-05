@@ -6,12 +6,14 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.alibaba.android.arouter.launcher.ARouter.logger
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.view.content.ContentContainerImpl
 import com.effective.android.panel.view.content.IContentContainer
 import com.effective.android.panel.view.content.IInputAction
 import com.effective.android.panel.view.content.IResetAction
 import com.julun.huanque.common.R
+import com.julun.huanque.common.utils.ULog
 
 /**
  * 实现IContentContainer接口，可参考
@@ -55,13 +57,16 @@ class CusContentContainer @JvmOverloads constructor(context: Context?, attrs: At
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         val onTouchTrue = super.dispatchTouchEvent(ev)
         val hookResult = getResetActionImpl().hookDispatchTouchEvent(ev, onTouchTrue)
+//        ULog.i("Player event CusContentContainer dispatchTouchEvent = ${ev?.action}")
         return hookResult or onTouchTrue
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        val onTouchBySelf = super.onTouchEvent(event)
-        val hookResult = getResetActionImpl().hookOnTouchEvent(event)
-        return onTouchBySelf or hookResult
+//        val onTouchBySelf = super.onTouchEvent(event)
+//        val hookResult = getResetActionImpl().hookOnTouchEvent(event)
+//        val result = onTouchBySelf or hookResult
+//        ULog.i("Player event CusContentContainer onTouchEvent = ${event?.action} onTouchBySelf = $onTouchBySelf,hookResult = $hookResult")
+        return super.onTouchEvent(event)
     }
 
     override fun getInputActionImpl(): IInputAction = contentContainer.getInputActionImpl()

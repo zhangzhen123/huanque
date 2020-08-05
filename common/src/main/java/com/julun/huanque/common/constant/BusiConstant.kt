@@ -51,6 +51,9 @@ object SPParamKey {
 
     //正在语音通话中标识
     const val VOICE_ON_LINE = "VOICE_ON_LINE"
+
+    //异常消息列表
+    const val EXCEPTION_MESSAGE_LIST = "EXCEPTION_MESSAGE_LIST"
 }
 
 /**

@@ -189,13 +189,15 @@ open class HuanQueApp : Application() {
                     toast.show()
                 }
 //                ToastUtils.show(R.string.attention_restart)
-                //重启重启 延迟是为了commit执行完
-                Observable.timer(200, TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        val nextIntent = Intent(this@HuanQueApp, MainActivity::class.java)
-                        ProcessPhoenix.triggerRebirth(this@HuanQueApp, nextIntent)
-                    }
+                if(!BuildConfig.DEBUG){
+                    //重启重启 延迟是为了commit执行完
+                    Observable.timer(200, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            val nextIntent = Intent(this@HuanQueApp, MainActivity::class.java)
+                            ProcessPhoenix.triggerRebirth(this@HuanQueApp, nextIntent)
+                        }
+                }
             }
 
         })

@@ -13,10 +13,8 @@ import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.MessageCustomBeanType
-import com.julun.huanque.common.constant.MessageFailType
-import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
@@ -41,6 +39,7 @@ import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import org.greenrobot.eventbus.EventBus
 import java.util.*
+import kotlin.collections.HashSet
 
 
 /**
@@ -267,6 +266,12 @@ object RongCloudManager {
             type = customType
             context = JsonUtil.seriazileAsString(customBean)
         }
+        var sentTime = System.currentTimeMillis()
+        if (customBean is VoiceConmmunicationSimulate) {
+            if (customBean.sentTime > 0) {
+                sentTime = customBean.sentTime
+            }
+        }
 
         if (extra != null) {
             messageContent.extra = JsonUtil.seriazileAsString(extra)
@@ -276,6 +281,12 @@ object RongCloudManager {
             override fun onSuccess(message: Message?) {
                 if (message != null) {
                     switchThread(message)
+                    if (customBean is VoiceConmmunicationSimulate && customBean.needRefresh) {
+                        //需要在网络回复的时候刷新消息
+                        val oriSet = GlobalUtils.getNeedRefreshMessageIdSet()
+                        oriSet.add("${message.messageId}")
+                        SharedPreferencesUtils.commitStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, oriSet)
+                    }
                 }
             }
 
@@ -287,10 +298,10 @@ object RongCloudManager {
             //插入接收消息
             val receivedStatus = Message.ReceivedStatus(0x1)
             RongIMClient.getInstance()
-                .insertIncomingMessage(conversationType, targetId, senderId, receivedStatus, messageContent, callback)
+                .insertIncomingMessage(conversationType, targetId, senderId, receivedStatus, messageContent, sentTime, callback)
         } else {
             //插入发送消息
-            RongIMClient.getInstance().insertOutgoingMessage(conversationType, targetId, Message.SentStatus.SENT, messageContent, callback)
+            RongIMClient.getInstance().insertOutgoingMessage(conversationType, targetId, Message.SentStatus.SENT, messageContent, sentTime, callback)
         }
     }
 

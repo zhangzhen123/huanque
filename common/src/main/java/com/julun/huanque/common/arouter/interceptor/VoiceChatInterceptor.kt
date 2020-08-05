@@ -30,6 +30,7 @@ import com.julun.huanque.common.net.RequestCaller
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.handleResponse
+import com.julun.huanque.common.suger.whatEver
 import com.julun.huanque.common.utils.IntimateUtil
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
@@ -133,9 +134,17 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
     }
 
     /**
+     * 标记收费标识已经显示过
+     */
+    private fun markFeeRemind() {
+        socialService.markFeeRemind().whatEver()
+    }
+
+    /**
      * 显示价格弹窗
      */
     private fun showFeeDialog(price: String) {
+        markFeeRemind()
         CommonInit.getInstance().getCurrentActivity()?.let { act ->
             MyAlertDialog(act).showAlertWithOKAndCancel(
                 "语音通话${price}鹊币/分钟",

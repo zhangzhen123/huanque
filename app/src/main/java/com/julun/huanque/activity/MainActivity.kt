@@ -43,6 +43,7 @@ import com.julun.maplib.LocationService
 import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.lang.Exception
 
 
 @Route(path = ARouterConstant.MAIN_ACTIVITY)
@@ -169,10 +170,6 @@ class MainActivity : BaseActivity() {
         UserHeartManager.stopBeat()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        logger.info("onSaveInstanceState=${outState}")
-        super.onSaveInstanceState(outState)
-    }
 
     private fun initViewModel() {
         mMainViewModel.indexData.observe(this, Observer {
@@ -416,6 +413,7 @@ class MainActivity : BaseActivity() {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，查询未读数
             mMainViewModel.getUnreadCount()
+            mMainViewModel.refreshMessage()
         }
     }
 }

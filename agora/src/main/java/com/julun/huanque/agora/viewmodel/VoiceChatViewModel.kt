@@ -17,6 +17,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.suger.whatEver
 import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
 
@@ -180,6 +181,13 @@ class VoiceChatViewModel : BaseViewModel() {
                 )
             }, { currentVoiceState.value = VOICE_CLOSE })
         }
+    }
+
+    /**
+     * 标记付费弹窗已经显示过
+     */
+    fun markFeeRemind() {
+        socialService.markFeeRemind().whatEver()
     }
 
 }

@@ -21,6 +21,7 @@ import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserInfo
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.init.CommonInit
 import io.rong.message.ImageMessage
@@ -309,6 +310,28 @@ object GlobalUtils {
             }
         }
         return count
+    }
+
+    /**
+     * 获取需要刷新的消息ID
+     */
+    fun getNeedRefreshMessageIdSet(): HashSet<String> {
+        val defaultSet = HashSet<String>()
+        val oriSet = SharedPreferencesUtils.getStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, defaultSet)
+        return if (oriSet is HashSet<String>) {
+            oriSet
+        } else {
+            defaultSet
+        }
+    }
+
+    /**
+     * 移除单个需要刷新的消息ID
+     */
+    fun removeSingleRefreshMessageId(msgId: Int) {
+        val idSet = getNeedRefreshMessageIdSet()
+        idSet.remove("$msgId")
+        SharedPreferencesUtils.commitStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, idSet)
     }
 
     /**
