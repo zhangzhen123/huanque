@@ -48,4 +48,18 @@ object ActivitiesManager {
     fun removeActivities(activity: Activity) {
         activities.remove(activity)
     }
+
+    /**
+     * 移除特定的Activity
+     */
+    fun removeActivity(className: String) {
+        var act: Activity? = null
+        activities.forEach {
+            if (it.localClassName == className) {
+                act = it
+                return@forEach
+            }
+        }
+        act?.finish()
+    }
 }

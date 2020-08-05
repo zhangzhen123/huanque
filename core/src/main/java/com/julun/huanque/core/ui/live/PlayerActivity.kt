@@ -42,6 +42,7 @@ import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventListener
+import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
@@ -73,6 +74,7 @@ import kotlinx.android.synthetic.main.frame_danmu.*
 import kotlinx.android.synthetic.main.view_live_header.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.imageResource
 import java.util.concurrent.TimeUnit
@@ -213,6 +215,10 @@ class PlayerActivity : BaseActivity() {
         if (ScreenUtils.isSoftInputShow(this)) {
             ScreenUtils.hideSoftInput(this)
         }
+
+        //移除activity栈里面的私聊页面
+        ActivitiesManager.removeActivity("com.julun.huanque.message.activity.PrivateConversationActivity")
+
         if (savedInstanceState == null) {
             //重置token失效连接次数
             RongCloudManager.tokenIncorrectCount = 0
@@ -369,7 +375,7 @@ class PlayerActivity : BaseActivity() {
 //                    ToastUtils.show(R.string.no_private_in_mystery)
 //                    return@Observer
 //                }
-                liveViewManager.openPrivateDialog(it.userId)
+                liveViewManager.openPrivateDialog()
 //                mBasePlayerViewModel?.cancelPrivateExperienceDisposable()
             }
         })
@@ -430,7 +436,7 @@ class PlayerActivity : BaseActivity() {
             //当基础信息返回成功，同时开始拉流和融云相关操作
             anchorNoLiveViewModel.baseData.value = it
             //todo test
-            it.playInfo?.rtmp="rtmp://aliyun-rtmp.51lm.tv/lingmeng/25318"
+            it.playInfo?.rtmp = "rtmp://aliyun-rtmp.51lm.tv/lingmeng/25318"
             addPlayFragment(it.isLiving, LiveBean().apply {
                 programPoster = it.prePic
                 programId = it.programId

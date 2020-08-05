@@ -78,6 +78,9 @@ object ParamConstant {
     //消息发送失败原因
     const val MSG_FAIL_REASON = "MSG_FAIL_REASON"
 
+    //是否在直播页面使用
+    const val PLAYER = "PLAYER"
+
 
     //UUID
     const val UUID = "UUID"

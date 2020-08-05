@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
+import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.MessageCustomBeanType
+import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
@@ -50,11 +52,17 @@ class MessageViewModel : BaseViewModel() {
     //查询未读消息的标识位
     val queryUnreadCountFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //主播数据（直播间显示私聊弹窗，会有该数据）
+    var anchorData: UserEnterRoomRespBase? = null
+
     //折叠陌生人消息标识位
     var foldStrangerMsg = false
 
-    //陌生人标识
+    //陌生人页面标识
     var mStranger = false
+
+    //直播间内标识位
+    var player = false
 
     /**
      * 删除会话
@@ -108,12 +116,13 @@ class MessageViewModel : BaseViewModel() {
     fun getConversationList() {
         RongIMClient.getInstance().getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(p0: List<Conversation>?) {
-                if (!mStranger) {
+                if (!mStranger && !player) {
                     dealWithStableConversation(p0)
                 }
                 if (p0 == null || p0.isEmpty()) {
                     return
                 }
+
                 showConversation(p0)
 
             }
@@ -151,6 +160,20 @@ class MessageViewModel : BaseViewModel() {
     fun sortConversation(conList: MutableList<LocalConversation>): MutableList<LocalConversation> {
         try {
             Collections.sort(conList, Comparator { o1, o2 ->
+
+                anchorData?.let { anchorInfo ->
+                    if (o1.conversation.targetId == "${anchorInfo.programId}") {
+                        return@Comparator -1
+                    } else if (o1.showUserInfo?.userId == anchorInfo.programId) {
+                        return@Comparator -1
+                    }
+
+                    if (o2.conversation.targetId == "${anchorInfo.programId}") {
+                        return@Comparator 1
+                    } else if (o2.showUserInfo?.userId == anchorInfo.programId) {
+                        return@Comparator 1
+                    }
+                }
                 val time1 = if (o1.conversation.sentTime != 0L) {
                     o1.conversation.sentTime
                 } else {
@@ -361,7 +384,9 @@ class MessageViewModel : BaseViewModel() {
                     if (foldStrangerMsg) {
                         //折叠陌生人消息
                         allList.forEach {
-                            if (it.showUserInfo?.stranger == false || it.conversation.targetId == SystemTargetId.systemNoticeSender || it.conversation.targetId == SystemTargetId.friendNoticeSender) {
+                            if (it.conversation.targetId == "${anchorData?.programId}" || it.showUserInfo?.stranger == false ||
+                                it.conversation.targetId == SystemTargetId.systemNoticeSender || it.conversation.targetId == SystemTargetId.friendNoticeSender
+                            ) {
                                 realList.add(it)
                             } else {
                                 if (strangerLastestTime < it.conversation.sentTime) {
@@ -447,8 +472,68 @@ class MessageViewModel : BaseViewModel() {
      * 刷新会话列表
      */
     private fun refreshConversationList(list: MutableList<LocalConversation>) {
+        if (player) {
+            anchorData?.let {
+                doWithPlayer(list, it)
+            }
+        }
+
         val sortResult = sortConversation(list)
         conversationListData.postValue(sortResult)
+    }
+
+
+    /**
+     * 直播间内做一些处理 直播间内，不显示 系统通知，鹊友消息，陌生人消息
+     * 插入模拟主播会话
+     */
+    private fun doWithPlayer(list: MutableList<LocalConversation>, anchorInfo: UserEnterRoomRespBase) {
+        //直播间内，不显示 系统通知，鹊友消息，陌生人消息
+        val deleteList = mutableListOf<LocalConversation>()
+        list.forEach {
+            val conversation = it.conversation
+            val condition = conversation.targetId?.isNotEmpty() != true ||
+                    conversation.targetId == SystemTargetId.systemNoticeSender ||
+                    conversation.targetId == SystemTargetId.friendNoticeSender
+            if (condition) {
+                deleteList.add(it)
+            }
+        }
+        deleteList.forEach {
+            list.remove(it)
+        }
+
+        //模拟插入会话
+
+        //是否包含当前主播的会话
+        var hasAnchor = false
+        list.forEach {
+            if (it.conversation.targetId == "${anchorInfo.programId}" || "${anchorInfo.programId}" == "${it.showUserInfo?.userId}") {
+                //会话列表包含当前主播会话
+                hasAnchor = true
+            }
+        }
+
+        if (!hasAnchor) {
+            //需要模拟主播聊天会话
+            val tempLMC = LocalConversation()
+                .apply {
+                    showUserInfo = ChatUser(
+                        anchorInfo.headPic,
+                        "",
+                        anchorInfo.programName,
+                        anchorInfo.programId,
+                        Sex.FEMALE,
+                        SessionUtils.getUserId(),
+                        0,
+                        "",
+                        false
+                    )
+                    conversation.targetId = "${anchorInfo.programId}"
+                }
+            //添加模拟聊天
+            list.add(tempLMC)
+        }
     }
 
     /**

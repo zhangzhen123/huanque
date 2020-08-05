@@ -41,6 +41,7 @@ object ARouterConstant {
 
     const val APP_COMMON_SERVICE = "/$APP$SERVICE/AppCommonService"
     const val LOGIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/LoginActivity"
+
     //环境切换
     const val ENVIRONMENT_CONFIGURATION_ACTIVITY = "/$APP$PREFIX_ACTIVITY/EnvironmentConfigurationActivity"
 
@@ -51,6 +52,9 @@ object ARouterConstant {
 
     //message模块
     const val PRIVATE_CONVERSATION_ACTIVITY = "/$MESSAGE$PREFIX_ACTIVITY/PrivateConversationActivity"
+
+    //会话列表页面
+    const val MessageFragment = "/$MESSAGE$PREFIX_FRAGMENT/MessageFragment"
 
     //亲密特权弹窗
     const val SINGLE_INTIMATE_PRIVILEGE_FRAGMENT = "/$MESSAGE$PREFIX_FRAGMENT/SingleIntimateprivilegeFragment"
@@ -63,6 +67,7 @@ object ARouterConstant {
 
     //H5页面
     const val WEB_ACTIVITY = "/$COMMON$PREFIX_ACTIVITY/WebActivity"
+
     //语音签名界面
     const val VOICE_SIGN_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/VoiceSignActivity"
 

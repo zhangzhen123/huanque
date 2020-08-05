@@ -13,6 +13,7 @@ import com.julun.huanque.common.suger.sortList
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.viewmodel.ConnectMicroViewModel
+import com.julun.huanque.common.viewmodel.PlayerMessageViewModel
 import com.julun.huanque.common.viewmodel.VideoChangeViewModel
 import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
@@ -38,6 +39,9 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
     //播放器使用的ViewModel
     private val mVideoViewModel: VideoViewModel by act.viewModels()
+
+    //私聊使用的ViewModel
+    private val mPlayerMessageViewModel: PlayerMessageViewModel by act.viewModels()
 
 //    private val liveFollowListViewModel: LiveFollowListViewModel by act.viewModels()
 
@@ -68,6 +72,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
         mPlayerViewModel.baseData.observe(act, Observer {
             mVideoViewModel.baseData.value = it
+            mPlayerMessageViewModel.anchorData.value = it
 //            liveFollowListViewModel.requestFollowLivingList(mPlayerViewModel.programId, true)
         })
 
@@ -674,6 +679,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
             }
         }
     }
+
     fun dealWithPkCreate(data: PKCreateEvent) {
         if (!data.userIds.contains(SessionUtils.getUserId())) {
             //用户列表不包含自己，表示消息发送错误

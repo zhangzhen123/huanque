@@ -36,12 +36,18 @@ class SysMsgViewModel : BaseViewModel() {
                      * @param messages 获取的消息列表
                      */
                     override fun onSuccess(messages: MutableList<Message>) {
-                        if (messages.isNotEmpty()) {
-                            val msg = messages[messages.size - 1]
+                        var cMessage: Message? = null
+                        messages.forEach { msg ->
                             if (msg.content is CustomSimulateMessage) {
                                 //插入的消息
-                                messages.remove(msg)
-                                RongIMClient.getInstance().deleteMessages(intArrayOf(msg.messageId))
+                                cMessage = msg
+                                return@forEach
+                            }
+                        }
+                        cMessage?.let {
+                            messages.remove(it)
+                            if (messages.size > 1) {
+                                RongIMClient.getInstance().deleteMessages(intArrayOf(it.messageId))
                             }
                         }
                         getSysMsgList.value = RootListData<Message>().apply {
