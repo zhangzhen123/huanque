@@ -2,6 +2,7 @@ package com.julun.huanque.common.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
+import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 
 /**
@@ -13,4 +14,8 @@ class PlayerMessageViewModel : BaseViewModel() {
 
     //直播间内，主播基础数据
     val anchorData: MutableLiveData<UserEnterRoomRespBase> by lazy { MutableLiveData<UserEnterRoomRespBase>() }
+
+    //打开私聊详情
+    val privateConversationData: MutableLiveData<OpenPrivateChatRoomEvent> by lazy { MutableLiveData<OpenPrivateChatRoomEvent>() }
+
 }

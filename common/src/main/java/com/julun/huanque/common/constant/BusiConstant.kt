@@ -761,3 +761,36 @@ object ProdType {
     //道具
     const val Goods = "Goods"
 }
+
+/**
+ * 进入直播间的来源
+ */
+object PlayerFrom {
+    //首页
+    const val Home = "Home"
+
+    //广场
+    const val Social = "Social"
+
+    //关注列表
+    const val Follow = "Follow"
+
+    //守护列表
+    const val Guard = "Guard"
+
+    //管理列表
+    const val Manager = "Manager"
+
+    //看过列表
+    const val Watched = "Watched"
+
+    //玩家卡片
+    const val ViewerCard = "ViewerCard"
+
+    //悬浮窗
+    const val FloatWindow = "FloatWindow"
+
+    //传送门
+    const val SendRoom = "SendRoom"
+
+}

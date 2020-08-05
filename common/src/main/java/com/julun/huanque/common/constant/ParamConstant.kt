@@ -91,6 +91,9 @@ object ParamConstant {
     //直播间ID
     const val PROGRAM_ID = "PROGRAM_ID"
 
+    //播放地址
+    const val PLAY_INFO = "PLAY_INFO"
+
 
     const val TARGET_USER_ID = "TargetUserId"
 

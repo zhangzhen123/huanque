@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
@@ -17,16 +17,10 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
-import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
-import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener
-import com.effective.android.panel.interfaces.listener.OnPanelChangeListener
-import com.effective.android.panel.interfaces.listener.OnViewClickListener
-import com.effective.android.panel.view.panel.IPanelView
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseFragment
@@ -34,6 +28,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
+import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
 import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.forms.PKInfoForm
 import com.julun.huanque.common.bean.forms.UserEnterRoomForm
@@ -50,16 +45,15 @@ import com.julun.huanque.common.suger.isVisible
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
-import com.julun.huanque.common.viewmodel.ConnectMicroViewModel
-import com.julun.huanque.common.viewmodel.JoinChatRoomViewModel
-import com.julun.huanque.common.viewmodel.VideoChangeViewModel
-import com.julun.huanque.common.viewmodel.VideoViewModel
+import com.julun.huanque.common.utils.permission.PermissionUtils
+import com.julun.huanque.common.viewmodel.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.core.R
+import com.julun.huanque.core.manager.FloatingManager
+import com.julun.huanque.core.service.FloatingService
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
-import com.julun.huanque.core.ui.live.fragment.UserCardFragment
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
 import com.julun.huanque.core.ui.live.manager.PlayerViewManager
 import com.julun.huanque.core.viewmodel.*
@@ -74,7 +68,6 @@ import kotlinx.android.synthetic.main.frame_danmu.*
 import kotlinx.android.synthetic.main.view_live_header.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.imageResource
 import java.util.concurrent.TimeUnit
@@ -91,6 +84,9 @@ class PlayerActivity : BaseActivity() {
     private val playerBannerViewModel: PlayerBannerViewModel by viewModels()
     private val videoPlayerViewModel: VideoChangeViewModel by viewModels()
     private val mVideoViewModel: VideoViewModel by viewModels()
+
+    //消息使用的ViewModel
+    private val playerMessageViewModel: PlayerMessageViewModel by viewModels()
 
     //    private var mBasePlayerViewModel: BasePlayerViewModel? = null
     //新版PK
@@ -126,6 +122,9 @@ class PlayerActivity : BaseActivity() {
         }
     }
     private var streamId: String? = null
+
+    //来源
+    private var mFrom = ""
 
     override fun getLayoutId(): Int = R.layout.activity_live_room
 
@@ -178,12 +177,9 @@ class PlayerActivity : BaseActivity() {
          * @param isAnchor 是不是主播进入
          */
         fun newInstance(
-            activity: Activity,
-            isAnchor: Boolean = false,
-            programId: Long?,
-            streamId: String?,
-            prePic: String? = null,
-            against: GuardAgainst? = null
+            activity: Activity, isAnchor: Boolean = false, programId: Long? = null,
+            streamId: String? = null, prePic: String? = null, against: GuardAgainst? = null,
+            from: String = ""
         ) {
             val intent = Intent(activity, PlayerActivity::class.java)
             val bundle = Bundle()
@@ -200,6 +196,7 @@ class PlayerActivity : BaseActivity() {
             against?.let {
                 bundle.putSerializable(AnchorData, it)
             }
+            bundle.putString(ParamConstant.FROM, from)
             intent.putExtras(bundle)
             activity.startActivity(intent)
         }
@@ -225,6 +222,7 @@ class PlayerActivity : BaseActivity() {
             programId = intent.getLongExtra(IntentParamKey.PROGRAM_ID.name, 0L)
             isAnchor = intent.getBooleanExtra(UserType.Anchor, false)
             streamId = intent.getStringExtra(IntentParamKey.STREAM_ID.name)
+            mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
 //            isFromSquare = intent.getBooleanExtra(FromPager.FROM_SQUARE, false)
             //gift=-1代表无效
             val gift = intent.getIntExtra(IntentParamKey.OPEN_GIFT.name, -1)
@@ -526,6 +524,49 @@ class PlayerActivity : BaseActivity() {
             }
         })
 
+        playerMessageViewModel.privateConversationData.observe(this, Observer {
+            if (it != null) {
+                //需要打开私聊页面,先判断悬浮窗权限是否存在
+                checkOverlayPermissions()
+
+            }
+        })
+
+    }
+
+    private val PERMISSIONALERT_WINDOW_CODE = 123
+
+    /**
+     * 检测悬浮窗权限
+     */
+    private fun checkOverlayPermissions() {
+        if (PermissionUtils.checkFloatPermission(this)) {
+            openPrivateConversation()
+        } else {
+            //没有悬浮窗权限,添加该权限
+            MyAlertDialog(this).showAlertWithOKAndCancel(
+                "悬浮窗权限未开启，请到设置中授予欢鹊悬浮窗权限",
+                MyAlertDialog.MyDialogCallback(onRight = {
+                    val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
+                    intent.data = Uri.parse("package:$packageName")
+                    startActivityForResult(intent, PERMISSIONALERT_WINDOW_CODE)
+                }), "设置提醒", "去设置"
+            )
+        }
+    }
+
+    /**
+     * 打开私聊页面
+     */
+    private fun openPrivateConversation() {
+        val userInfo = playerMessageViewModel.privateConversationData.value ?: return
+        val bundle = Bundle()
+        bundle.putLong(ParamConstant.TARGET_USER_ID, userInfo.userId)
+        bundle.putString(ParamConstant.NICKNAME, userInfo.nickname)
+        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
+            .navigation()
+        val baseData = viewModel.baseData.value ?: return
+        FloatingManager.showFloatingView(GlobalUtils.getPlayUrl(baseData.playInfo ?: return), viewModel.programId)
     }
 
     private var mHelper: PanelSwitchHelper? = null
@@ -623,6 +664,15 @@ class PlayerActivity : BaseActivity() {
         liveViewManager.getUnReadMessageCount()
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun privateShow(event: OpenPrivateChatRoomEvent) {
+        //打开私聊列表
+        val bean = BottomActionBean()
+        bean.type = ClickType.PRIVATE_MESSAGE
+        bean.actionValue = PrivateMessageBean()
+        viewModel.actionBeanData.value = bean
+    }
+
     /**
      * 统一的eventBus处理入口方法
      */
@@ -675,7 +725,7 @@ class PlayerActivity : BaseActivity() {
 //                GIODataPool.fromType = null
 //                val positionIndex = GIODataPool.positionIndex
 //                GIODataPool.positionIndex = null
-                form = UserEnterRoomForm(programId)
+                form = UserEnterRoomForm(programId, fromType = mFrom)
                 viewModel.enterLivRoom(form)
             }
         } else {
@@ -1615,6 +1665,11 @@ class PlayerActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PERMISSIONALERT_WINDOW_CODE) {
+            if (PermissionUtils.checkFloatPermission(this)) {
+                openPrivateConversation()
+            }
+        }
     }
 
     // 心跳检查
@@ -1711,6 +1766,7 @@ class PlayerActivity : BaseActivity() {
     @SuppressLint("CheckResult")
     override fun onResume() {
         super.onResume()
+        FloatingManager.hideFloatingView()
 
         //处理支付刷新
 //        if (refreshPay) {
@@ -1732,6 +1788,8 @@ class PlayerActivity : BaseActivity() {
         exitLiveRoom()
         super.onDestroy()
         viewModel.runwayCache.value = null
+        val baseData = viewModel.baseData.value ?: return
+        FloatingManager.showFloatingView(GlobalUtils.getPlayUrl(baseData.playInfo ?: return), viewModel.programId)
     }
 
     private var closable = false

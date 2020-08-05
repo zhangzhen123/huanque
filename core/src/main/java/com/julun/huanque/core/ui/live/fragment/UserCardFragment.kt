@@ -15,11 +15,11 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.bean.beans.BottomActionBean
+import com.julun.huanque.common.bean.beans.PrivateMessageBean
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.FollowStatus
-import com.julun.huanque.common.constant.ParamConstant
-import com.julun.huanque.common.constant.Sex
+import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -35,6 +35,7 @@ import com.julun.huanque.core.viewmodel.UserCardViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_user_card.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.padding
 import org.jetbrains.anko.textColor
@@ -135,11 +136,8 @@ class UserCardFragment : BaseDialogFragment() {
         tv_private_chat.onClickNew {
             //私信
             val userInfo = mUserCardViewModel.userInfoData.value ?: return@onClickNew
-            val bundle = Bundle()
-            bundle.putLong(ParamConstant.TARGET_USER_ID, mUserCardViewModel.mUserId)
-            bundle.putString(ParamConstant.NICKNAME, userInfo.nickname)
-            ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
-                .navigation(requireActivity())
+            //发送粘性消息
+            EventBus.getDefault().postSticky(OpenPrivateChatRoomEvent(mUserCardViewModel.mUserId, userInfo.nickname))
         }
         tv_at.onClickNew {
             //@ 功能
