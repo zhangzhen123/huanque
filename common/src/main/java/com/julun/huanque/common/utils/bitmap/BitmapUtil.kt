@@ -1,8 +1,11 @@
 package com.julun.huanque.common.utils.bitmap
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.text.TextUtils
+import android.util.Base64
 import android.view.View
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -29,6 +32,7 @@ object BitmapUtil {
         }
         return byteArray!!
     }
+
     /**
      * bitmap转化成指定大小的byte[]
      */
@@ -65,6 +69,7 @@ object BitmapUtil {
         }
         return byteArray!!
     }
+
     /**
      * Bitmap转换成byte[]并且进行压缩,压缩到不大于maxkb
      *
@@ -98,5 +103,53 @@ object BitmapUtil {
         v.layout(0, 0, w, h)
         v.draw(c)
         return bmp
+    }
+
+    /**
+     * bitmap转base64字符串
+     */
+    open fun bitmapToBase64(bitmap: Bitmap?): String? {
+        var var1: String? = null
+        var var2: ByteArrayOutputStream? = null
+        try {
+            if (bitmap != null) {
+                var2 = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, var2)
+                var2.flush()
+                var2.close()
+                val var3 = var2.toByteArray()
+                var1 = Base64.encodeToString(var3, 0)
+            }
+        } catch (var11: IOException) {
+            var11.printStackTrace()
+        } finally {
+            try {
+                if (var2 != null) {
+                    var2.flush()
+                    var2.close()
+                }
+            } catch (var10: java.lang.Exception) {
+            }
+        }
+        return var1
+    }
+
+    /**
+     * base64字符串转bitmap
+     */
+    fun base64ToBitmap(baseStr: String): Bitmap? {
+        var var0 = baseStr
+        return if (TextUtils.isEmpty(var0)) {
+            null
+        } else {
+            var0 = var0.replace(' ', '+')
+            try {
+                val var1 = Base64.decode(var0, 0)
+                BitmapFactory.decodeByteArray(var1, 0, var1.size)
+            } catch (var2: Exception) {
+                var2.printStackTrace()
+                null
+            }
+        }
     }
 }

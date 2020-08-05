@@ -3,17 +3,17 @@ package com.julun.huanque.core.ui.share
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
-import com.julun.huanque.common.bean.beans.LiveBean
-import com.julun.huanque.common.bean.beans.MicAnchor
-import com.julun.huanque.common.bean.beans.SharePosterInfo
-import com.julun.huanque.common.bean.beans.ShareType
+import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.SharePosterImageForm
 import com.julun.huanque.common.bean.forms.SharePosterQueryForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.ShareFromModule
 import com.julun.huanque.common.constant.ShareTypeEnum
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.ShareService
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.bitmap.BitmapUtil
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.activity_invite_share.*
 import kotlinx.coroutines.launch
@@ -66,13 +66,10 @@ class InviteShareViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val form = when (applyModule) {
-                    ShareFromModule.Program -> {
-                        SharePosterQueryForm(applyModule, programInfo?.programId)
-                    }
                     ShareFromModule.Invite -> {
                         SharePosterQueryForm(applyModule)
                     }
-                    else->{
+                    else -> {
                         SharePosterQueryForm(applyModule)
                     }
                 }
@@ -81,12 +78,8 @@ class InviteShareViewModel : BaseViewModel() {
                 if (result.inviteCode.isNotEmpty()) {
                     result.posterList.forEach {
                         it.inviteCode = result.inviteCode
-                        if (it.applyModule == ShareFromModule.Program) {
-                            it.authorName = programInfo?.programName ?: ""
-                        }
                     }
                 }
-
                 sharePosters.value = result.convertRtData()
             }, error = { e ->
                 logger("报错了：$e")
@@ -95,4 +88,32 @@ class InviteShareViewModel : BaseViewModel() {
 
         }
     }
+
+    fun queryLiveQrCode() {
+        viewModelScope.launch {
+            request({
+                val url=programInfo?.headPic?:return@request
+                val form = SharePosterImageForm(StringHelper.getOssImgUrl(url))
+                val result = service.programShare(form).dataConvert()
+                val bitmap = BitmapUtil.base64ToBitmap(result.replace("data:image/png;base64,",""))
+                val info = SharePosterInfo(
+                    posterList = mutableListOf<SharePoster>(
+                        SharePoster(
+                            applyModule = ShareFromModule.Program,
+                            posterPic = programInfo?.prePic ?: ""
+                        ).apply {
+                            authorName = programInfo?.programName ?: ""
+                            qrBitmap = bitmap
+                        }
+                    )
+                )
+                sharePosters.value = info.convertRtData()
+            }, error = { e ->
+                logger("报错了：$e")
+                sharePosters.value = e.convertError()
+            })
+
+        }
+    }
+
 }

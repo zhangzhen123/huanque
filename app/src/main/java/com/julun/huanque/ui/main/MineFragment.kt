@@ -165,6 +165,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 MineToolType.InviteFriend -> {
                     RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
                 }
+                MineToolType.ToAnchor -> {
+                    RNPageActivity.start(requireActivity(), RnConstant.ANCHOR_CERT_PAGE)
+                }
             }
         }
         ivSetting.onClickNew {

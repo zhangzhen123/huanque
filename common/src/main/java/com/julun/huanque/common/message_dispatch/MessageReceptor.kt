@@ -24,7 +24,7 @@ object MessageReceptor {
 
     const val EVENT_CLEAR = -1L
 
-//    const val EVENT_WAIT_MESSAGE = -2f  //代表去等待分发消息的到来
+    const val EVENT_WAIT_MESSAGE = -2L  //代表去等待分发消息的到来
 
     // 动画消息去除间隔时间，单位毫秒
     private const val ANIMATION_LAYER_DURATION = 50L
@@ -106,7 +106,12 @@ object MessageReceptor {
                 if (messageType != null) {
                     val eventData: Any? = eventModel.eventData
                     if (eventData != null) {
-                        MessageProcessor.processEventMessage(eventData, messageType.name)
+                        if (EventMessageType.ANIMATION == messageType) {
+                            MessageProcessor.processEventMessage(eventData, messageType.name)
+                            return@initWithRefreshViewBlock EVENT_WAIT_MESSAGE
+                        } else {
+                            MessageProcessor.processEventMessage(eventData, messageType.name)
+                        }
                     }
                 }
 

@@ -377,7 +377,6 @@ class PlayerActivity : BaseActivity() {
 //                mBasePlayerViewModel?.cancelPrivateExperienceDisposable()
             }
         })
-        viewModel.getAnchor.observe(this, Observer { viewModel.anchor.value = isAnchor })
         viewModel.loginSuccessData.observe(this, Observer { dto ->
             //用户进入直播间成功
 

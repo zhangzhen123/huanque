@@ -105,6 +105,8 @@ data class SharePoster(
     var inviteCode: String = ""
     //本地字段
     var authorName:String=""
+    //
+    var qrBitmap:Bitmap?=null
     override val itemType: Int
         get() = when (applyModule) {
             ShareFromModule.Invite -> 1

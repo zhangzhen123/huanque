@@ -146,9 +146,9 @@ class BufferedTimer {
             } else if (nextTaskDelaySeconds == MessageReceptor.EVENT_CLEAR) {
                 // 暂停定时器了
                 timerState = TIMER_STATE_PAUSE
-            }/* else if (nextTaskDelaySeconds == MessageReceptor.EVENT_WAIT_MESSAGE) {
+            } else if (nextTaskDelaySeconds == MessageReceptor.EVENT_WAIT_MESSAGE) {
                 needWaitMessage = true
-            }*/
+            }
         }, 0)
 
     }

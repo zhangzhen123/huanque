@@ -591,6 +591,8 @@ object MineToolType {
     const val VisitHistory = "VisitHistory"
     const val ChatBubble = "ChatBubble"
     const val InviteFriend = "InviteFriend"
+    const val ToMaster ="ToMaster"
+    const val ToAnchor ="ToAnchor"
 }
 
 /**

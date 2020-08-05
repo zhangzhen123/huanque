@@ -329,7 +329,18 @@ class PlayerViewManager(val context: PlayerActivity) {
                     }
                     ClickType.USER_MORE_SETTING -> {
                         //用户更多页面
-                        mDialogManager.showUserMoreSetting()
+//                        mDialogManager.showUserMoreSetting()
+                        //打开分享
+                        val baseData=viewModel.roomBaseData?:return@Observer
+                        ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY)
+                            .withString(IntentParamKey.TYPE.name, ShareFromModule.Program).withSerializable(
+                            IntentParamKey.LIVE_INFO.name,
+                            MicAnchor(prePic = baseData.prePic).apply {
+                                programName = baseData.programName
+                                programId = baseData.programId
+                                headPic = baseData.headPic
+                            }
+                        ).navigation()
                     }
                     ClickType.ANCHOR_MORE_SETTING -> {
                         //主播更多页面
