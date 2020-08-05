@@ -13,7 +13,12 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.facebook.common.references.CloseableReference
+import com.facebook.datasource.DataSource
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
+import com.facebook.imagepipeline.core.ImagePipeline
+import com.facebook.imagepipeline.image.CloseableImage
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -75,14 +80,21 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
         rv_share_types.adapter = shareAdapter
         rv_share_types.addItemDecoration(HorizontalItemDecoration(dp2px(13)))
         initViewModel()
-
-        mViewModel.querySharePoster(applyModule)
-        mViewModel.queryShareType()
-        when(applyModule){
-            ShareFromModule.Program->{
-                ll_copy.inVisible()
+        when (applyModule) {
+            ShareFromModule.Program -> {
+                mViewModel.queryLiveQrCode()
             }
-            ShareFromModule.Invite->{
+            ShareFromModule.Invite -> {
+                mViewModel.querySharePoster(applyModule)
+            }
+        }
+
+        mViewModel.queryShareType()
+        when (applyModule) {
+            ShareFromModule.Program -> {
+                ll_copy.hide()
+            }
+            ShareFromModule.Invite -> {
                 ll_copy.show()
             }
         }
@@ -97,17 +109,17 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
             GlobalUtils.copyToSharePlate(this, currentCode)
         }
         sharePosterAdapter.setOnItemClickListener { _, view, position ->
-            val item=sharePosterAdapter.getItemOrNull(position)?:return@setOnItemClickListener
-            when(item.itemType){
-                1->{
-                    if (currentSelect !=item ) {
+            val item = sharePosterAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
+            when (item.itemType) {
+                1 -> {
+                    if (currentSelect != item) {
                         currentSelectView = view
                         currentSelect = item
                         sharePosterAdapter.notifyDataSetChanged()
                     }
 
                 }
-                2->{
+                2 -> {
                     logger.info("分享直播间 没有选中")
                 }
             }
@@ -197,11 +209,13 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
     private fun renderViewData(posterInfo: SharePosterInfo) {
         sharePosterAdapter.setNewInstance(posterInfo.posterList)
         currentCode = posterInfo.inviteCode
-        tv_invite_code.text = posterInfo.inviteCode
-        if(applyModule==ShareFromModule.Program){
+
+        if (applyModule == ShareFromModule.Program) {
             rv_share_contents.post {
-                currentSelectView=shareAdapter.getViewByPosition(0,R.id.live_share_container)
+                currentSelectView = sharePosterAdapter.getViewByPosition(0, R.id.live_share_container)
             }
+        } else if (applyModule == ShareFromModule.Invite) {
+            tv_invite_code.text = posterInfo.inviteCode
         }
     }
 
@@ -253,7 +267,6 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         sdvSharePic.loadImage(item.posterPic, 250f, 450f)
                         sdvQrCode.loadImage(item.qrCode, 60f, 60f)
                         sdvUserPic.loadImage(SessionUtils.getHeaderPic(), 45f, 45f)
-
                         holder.setText(R.id.tv_user_name, SessionUtils.getNickName())
 
                         if (item.inviteCode.isNotEmpty()) {
@@ -269,7 +282,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         val sdvSharePic = holder.getView<SimpleDraweeView>(R.id.sdv_share_pic)
                         val sdvQrCode = holder.getView<SimpleDraweeView>(R.id.sdv_qr_code)
                         sdvSharePic.loadImage(item.posterPic, 235f, 235f)
-                        sdvQrCode.loadImage(item.qrCode, 55f, 55f)
+                        sdvQrCode.setImageBitmap(item.qrBitmap)
                         holder.setText(R.id.tv_user_name, item.authorName)
                     }
                 }

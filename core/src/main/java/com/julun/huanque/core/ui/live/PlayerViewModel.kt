@@ -67,6 +67,9 @@ class PlayerViewModel : BaseViewModel() {
     //直播间ID
     var programId = 0L
 
+    val roomBaseData: UserEnterRoomRespBase?
+        get() = baseData.value
+
     val roomData: UserEnterRoomRespDto?
         get() = loginSuccessData.value
 
@@ -176,12 +179,6 @@ class PlayerViewModel : BaseViewModel() {
 
     //跳转H5页面
     val gotoWeb: MutableLiveData<GoToUrl> by lazy { MutableLiveData<GoToUrl>() }
-
-    //获取身份（是否是主播 其他布局使用）
-    val getAnchor: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-    //返回身份（其他布局获取身份数据）  true为主播，false为普通用户
-    val anchor: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //加入直播间成功
     val loginSuccessData: MutableLiveData<UserEnterRoomRespDto> by lazy { MutableLiveData<UserEnterRoomRespDto>() }

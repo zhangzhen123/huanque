@@ -10,11 +10,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_share_contents"
         android:layout_width="wrap_content"
-        android:layout_height="450dp" />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="174dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_15"
         android:background="@drawable/bg_shape_top_white1"
         android:orientation="vertical">
@@ -27,7 +27,8 @@
             android:layout_marginTop="@dimen/dimen_15"
             android:layout_marginEnd="@dimen/dimen_15"
             android:gravity="center_vertical"
-            android:visibility="invisible"
+            android:visibility="gone"
+            tools:visibility="visible"
             android:orientation="horizontal">
 
             <TextView
@@ -80,7 +81,7 @@
         <TextView
             android:id="@+id/tv_cancel_share"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/dimen_46"
             android:gravity="center"
             android:text="取消分享"
             android:textColor="@color/black_333"

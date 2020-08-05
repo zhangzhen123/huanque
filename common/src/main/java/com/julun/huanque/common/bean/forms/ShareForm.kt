@@ -31,8 +31,12 @@ class ShareForm : SessionForm {
 /**
  * 	适用模块，Invite：邀友(可选项：Invite)
  */
-class SharePosterQueryForm(var applyModule:String,var programId:Long?=null)
+class SharePosterQueryForm(var applyModule:String)
 
+/**
+ * 传个图片地址 生成一个二维码返回
+ */
+class SharePosterImageForm(var headPic:String)
 
 enum class ShareWay {
     WXFriends,

@@ -182,12 +182,14 @@ class TestActivity : BaseActivity() {
         }
 
         tv_invite.onClickNew {
-            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name, ShareFromModule.Program).withSerializable(
-                IntentParamKey.LIVE_INFO.name,MicAnchor(prePic = "user/head/b0295e5d-5c2d-45a8-928f-5333c880f489.jpg").apply {
-                    programName="主播昵称"
-                    programId=10007
-                }
-            ).navigation()
+//            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name, ShareFromModule.Program).withSerializable(
+//                IntentParamKey.LIVE_INFO.name,MicAnchor(prePic = "user/head/b0295e5d-5c2d-45a8-928f-5333c880f489.jpg").apply {
+//                    programName="主播昵称"
+//                    programId=10007
+//                    headPic="user/head/b0295e5d-5c2d-45a8-928f-5333c880f489.jpg"
+//                }
+//            ).navigation()
+            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name, ShareFromModule.Invite).navigation()
         }
 
         btn_usercard.onClickNew {
