@@ -192,11 +192,13 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         when (state.state) {
             NetStateType.SUCCESS -> {
                 state_pager_view.showSuccess()
+                refreshView.show()
             }
             NetStateType.LOADING -> {
                 state_pager_view.showLoading()
             }
             NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
+                refreshView.hide()
                 state_pager_view.showError(showBtn = true, btnClick = View.OnClickListener {
                     mViewModel.queryInfo()
                 })

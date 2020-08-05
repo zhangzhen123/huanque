@@ -392,7 +392,7 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
                 this@SimpleGiftEffectsView.visibility = View.GONE
                 lucky_small_tips.hide()
                 lucky_big_tips.hide()
-                giftCountText.inVisiable()
+                giftCountText.inVisible()
                 animViewSate =
                     STATE_ENABLE
                 // 队列中还有数据，继续动画

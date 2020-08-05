@@ -1294,14 +1294,14 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private fun showPropView(propInfo: PkPropInfo) {
         logger.info("展示PK道具=$propInfo")
         pk_props_layout.show()
-        pk_prop_01.inVisiable()
-        pk_prop_02.inVisiable()
+        pk_prop_01.inVisible()
+        pk_prop_02.inVisible()
         when (currentPkType) {
             TWO_PK -> {
                 pk_prop_03.hide()
             }
             THREE_PK -> {
-                pk_prop_03.inVisiable()
+                pk_prop_03.inVisible()
             }
         }
         currentPKData?.detailList?.forEachIndexed { index, pkUser ->

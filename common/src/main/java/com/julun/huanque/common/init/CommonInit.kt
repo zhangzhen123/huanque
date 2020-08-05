@@ -138,7 +138,7 @@ class CommonInit {
             }
 
             override fun onActivityStarted(activity: Activity) {
-                logger("onActivityStopped:$activity")
+                logger("onActivityStarted:$activity")
                 setCurrentActivity(activity)
             }
 

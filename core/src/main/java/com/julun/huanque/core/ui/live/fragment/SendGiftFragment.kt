@@ -46,7 +46,6 @@ import com.julun.huanque.core.viewmodel.SendGiftViewModel
 import com.trello.rxlifecycle4.android.FragmentEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observable.*
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.dialog_gift.*
@@ -214,7 +213,7 @@ class SendGiftFragment : BaseDialogFragment() {
                     magic_indicator.onPageSelected(index)
                 }
             }
-            giftViewPager.inVisiable()
+            giftViewPager.inVisible()
             showDotter(dotter, false)
             bagViewPager.show()
             showDotter(dotter_bag, true)
@@ -534,7 +533,7 @@ class SendGiftFragment : BaseDialogFragment() {
                     }
                     giftViewPager.show()
                     showDotter(dotter, true)
-                    bagViewPager.inVisiable()
+                    bagViewPager.inVisible()
                     showDotter(dotter_bag, false)
                     magic_indicator.onPageSelected(index)
                     val position = getCurrentTabPosition(curTab.typeCode)

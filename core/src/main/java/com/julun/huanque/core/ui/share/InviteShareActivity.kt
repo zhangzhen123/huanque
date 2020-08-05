@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
@@ -52,7 +53,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
     private var currentSelect: SharePoster? = null
 
     private var applyModule: String = ""
-    private var programInfo: LiveBean? = null
+    private var programInfo: MicAnchor? = null
     private val wxService: LoginAndShareService? by lazy {
         ARouter.getInstance().build(ARouterConstant.LOGIN_SHARE_SERVICE).navigation() as? LoginAndShareService
     }
@@ -63,7 +64,9 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         overridePendingTransition(R.anim.slide_in_from_bottom, 0)
         applyModule = intent.getStringExtra(IntentParamKey.TYPE.name) ?: applyModule
-        programInfo = intent.getSerializableExtra(IntentParamKey.LIVE_INFO.name) as? LiveBean
+        programInfo = intent.getSerializableExtra(IntentParamKey.LIVE_INFO.name) as? MicAnchor
+
+        mViewModel.programInfo = programInfo
         rv_share_contents.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         rv_share_contents.adapter = sharePosterAdapter
         rv_share_contents.addItemDecoration(HorizontalItemDecoration(dp2px(8)))
@@ -75,6 +78,14 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
 
         mViewModel.querySharePoster(applyModule)
         mViewModel.queryShareType()
+        when(applyModule){
+            ShareFromModule.Program->{
+                ll_copy.inVisible()
+            }
+            ShareFromModule.Invite->{
+                ll_copy.show()
+            }
+        }
     }
 
     override fun initEvents(rootView: View) {
@@ -86,10 +97,19 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
             GlobalUtils.copyToSharePlate(this, currentCode)
         }
         sharePosterAdapter.setOnItemClickListener { _, view, position ->
-            if (currentSelect != sharePosterAdapter.getItemOrNull(position)) {
-                currentSelectView = view
-                currentSelect = sharePosterAdapter.getItemOrNull(position)
-                sharePosterAdapter.notifyDataSetChanged()
+            val item=sharePosterAdapter.getItemOrNull(position)?:return@setOnItemClickListener
+            when(item.itemType){
+                1->{
+                    if (currentSelect !=item ) {
+                        currentSelectView = view
+                        currentSelect = item
+                        sharePosterAdapter.notifyDataSetChanged()
+                    }
+
+                }
+                2->{
+                    logger.info("分享直播间 没有选中")
+                }
             }
 
         }
@@ -178,6 +198,11 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
         sharePosterAdapter.setNewInstance(posterInfo.posterList)
         currentCode = posterInfo.inviteCode
         tv_invite_code.text = posterInfo.inviteCode
+        if(applyModule==ShareFromModule.Program){
+            rv_share_contents.post {
+                currentSelectView=shareAdapter.getViewByPosition(0,R.id.live_share_container)
+            }
+        }
     }
 
     private fun requestRWPermission(action: NAction) {
@@ -209,28 +234,45 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
             wxService?.weiBoShareResult(data)
     }
 
-    private val sharePosterAdapter: BaseQuickAdapter<SharePoster, BaseViewHolder> by lazy {
-        object : BaseQuickAdapter<SharePoster, BaseViewHolder>(R.layout.item_invite_share) {
+    private val sharePosterAdapter: BaseMultiItemQuickAdapter<SharePoster, BaseViewHolder> by lazy {
+        object : BaseMultiItemQuickAdapter<SharePoster, BaseViewHolder>() {
+            init {
+                addItemType(1, R.layout.item_invite_share)
+                addItemType(2, R.layout.item_live_share)
+                addItemType(3, R.layout.item_live_share)
+            }
 
             override fun convert(holder: BaseViewHolder, item: SharePoster) {
-                val sdvSharePic = holder.getView<SimpleDraweeView>(R.id.sdv_share_pic)
-                val sdvQrCode = holder.getView<SimpleDraweeView>(R.id.sdv_qr_code)
-                val sdvUserPic = holder.getView<SimpleDraweeView>(R.id.sdv_user_pic)
 
-                sdvSharePic.loadImage(item.posterPic, 250f, 450f)
-                sdvQrCode.loadImage(item.qrCode, 60f, 60f)
-                sdvUserPic.loadImage(SessionUtils.getHeaderPic(), 45f, 45f)
+                when (holder.itemViewType) {
+                    1 -> {
+                        val sdvSharePic = holder.getView<SimpleDraweeView>(R.id.sdv_share_pic)
+                        val sdvQrCode = holder.getView<SimpleDraweeView>(R.id.sdv_qr_code)
+                        val sdvUserPic = holder.getView<SimpleDraweeView>(R.id.sdv_user_pic)
 
-                holder.setText(R.id.tv_user_name, SessionUtils.getNickName())
+                        sdvSharePic.loadImage(item.posterPic, 250f, 450f)
+                        sdvQrCode.loadImage(item.qrCode, 60f, 60f)
+                        sdvUserPic.loadImage(SessionUtils.getHeaderPic(), 45f, 45f)
 
-                if (item.inviteCode.isNotEmpty()) {
-                    holder.setGone(R.id.tv_invite_code, false).setText(R.id.tv_invite_code, "邀请码${item.inviteCode}")
-                } else {
-                    holder.setGone(R.id.tv_invite_code, true)
+                        holder.setText(R.id.tv_user_name, SessionUtils.getNickName())
+
+                        if (item.inviteCode.isNotEmpty()) {
+                            holder.setGone(R.id.tv_invite_code, false).setText(R.id.tv_invite_code, "邀请码${item.inviteCode}")
+                        } else {
+                            holder.setGone(R.id.tv_invite_code, true)
+                        }
+                        val ivCheck = holder.getView<ImageView>(R.id.iv_check)
+
+                        ivCheck.isSelected = currentSelect?.posterId == item.posterId
+                    }
+                    2 -> {
+                        val sdvSharePic = holder.getView<SimpleDraweeView>(R.id.sdv_share_pic)
+                        val sdvQrCode = holder.getView<SimpleDraweeView>(R.id.sdv_qr_code)
+                        sdvSharePic.loadImage(item.posterPic, 235f, 235f)
+                        sdvQrCode.loadImage(item.qrCode, 55f, 55f)
+                        holder.setText(R.id.tv_user_name, item.authorName)
+                    }
                 }
-                val ivCheck = holder.getView<ImageView>(R.id.iv_check)
-
-                ivCheck.isSelected = currentSelect?.posterId == item.posterId
 
 
             }

@@ -11,7 +11,7 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import com.julun.huanque.common.utils.ULog
-import com.julun.huanque.common.suger.inVisiable
+import com.julun.huanque.common.suger.inVisible
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.math.abs
@@ -260,7 +260,7 @@ class ScratchMaskView(context: Context?, attrs: AttributeSet?) : View(context, a
         mAlphaAnimator?.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {}
             override fun onAnimationEnd(animation: Animator?) {
-                this@ScratchMaskView.inVisiable()
+                this@ScratchMaskView.inVisible()
             }
 
             override fun onAnimationCancel(animation: Animator?) {}

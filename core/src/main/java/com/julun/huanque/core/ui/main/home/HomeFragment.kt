@@ -64,7 +64,7 @@ class HomeFragment : BaseFragment() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         //
-
+        logger.info("initViews")
         //设置头部边距
         home_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         initViewModel()

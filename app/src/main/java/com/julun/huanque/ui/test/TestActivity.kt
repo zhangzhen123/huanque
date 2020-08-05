@@ -12,6 +12,7 @@ import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
+import com.julun.huanque.common.bean.beans.MicAnchor
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.logger
@@ -23,7 +24,7 @@ import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.VideoUtils
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.ui.live.fragment.UserCardFragment
-import com.julun.huanque.core.ui.live.fragment.dialog.CardManagerDialogFragment
+import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
@@ -181,7 +182,12 @@ class TestActivity : BaseActivity() {
         }
 
         tv_invite.onClickNew {
-            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name, ShareFromModule.Invite).navigation()
+            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name, ShareFromModule.Program).withSerializable(
+                IntentParamKey.LIVE_INFO.name,MicAnchor(prePic = "user/head/b0295e5d-5c2d-45a8-928f-5333c880f489.jpg").apply {
+                    programName="主播昵称"
+                    programId=10007
+                }
+            ).navigation()
         }
 
         btn_usercard.onClickNew {
@@ -195,7 +201,10 @@ class TestActivity : BaseActivity() {
             dialog.show(supportFragmentManager, "CardManagerDialogFragment")
         }
     }
-
+    override fun onSaveInstanceState(outState: Bundle) {
+        logger.info("onSaveInstanceState=${outState}")
+        super.onSaveInstanceState(outState)
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         logger("onActivityResult")
