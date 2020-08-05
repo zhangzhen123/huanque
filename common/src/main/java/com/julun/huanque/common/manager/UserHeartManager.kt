@@ -68,7 +68,7 @@ object UserHeartManager {
             }
 
 
-        }
+        }, specifiedCodes = intArrayOf(401, -1)
         )
     }
 

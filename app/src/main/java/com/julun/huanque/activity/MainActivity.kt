@@ -4,10 +4,9 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.location.BDAbstractLocationListener
@@ -42,14 +41,14 @@ import com.julun.huanque.ui.main.MineFragment
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.maplib.LocationService
 import kotlinx.android.synthetic.main.main_activity.*
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+
 
 @Route(path = ARouterConstant.MAIN_ACTIVITY)
 class MainActivity : BaseActivity() {
 
-    private val mHomeFragment = HomeFragment.newInstance()
+    private val mHomeFragment: HomeFragment by lazy { HomeFragment.newInstance() }
     private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
 
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
@@ -65,9 +64,9 @@ class MainActivity : BaseActivity() {
     }
 
 
-    private var mMainViewModel: MainViewModel? = null
+    private val mMainViewModel: MainViewModel by viewModels()
 
-    private var mMessageViewModel: MessageViewModel? = null
+    private val mMessageViewModel: MessageViewModel by viewModels()
 
     private var firstTime = 0L
 
@@ -82,7 +81,7 @@ class MainActivity : BaseActivity() {
                 logger.info("location=${location.addrStr}")
                 //获得一次结果，就结束定位
                 stopLocation()
-                mMainViewModel?.saveLocation(
+                mMainViewModel.saveLocation(
                     SaveLocationForm(
                         "${location.latitude}",
                         "${location.longitude}",
@@ -98,6 +97,10 @@ class MainActivity : BaseActivity() {
     override fun isRegisterEventBus(): Boolean = true
 
     override fun getLayoutId() = R.layout.main_activity
+    override fun onCreate(savedInstanceState: Bundle?) {
+        //防止重建的缓存自动恢复
+        super.onCreate(null)
+    }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         if (SessionUtils.getIsRegUser() && SessionUtils.getSessionId().isNotEmpty()) {
@@ -109,21 +112,20 @@ class MainActivity : BaseActivity() {
 
         CommonInit.getInstance().setMainActivity(this)
         logger.info("DXC  userID = ${SessionUtils.getUserId()}，header = ${SessionUtils.getHeaderPic()}")
-        setContentView(R.layout.main_activity)
         initViewModel()
-        mMainViewModel?.indexData?.value = 0
+        mMainViewModel.indexData.value = 0
 
 
         mLocationService = LocationService(this.applicationContext)
         mLocationService.registerListener(mLocationListener)
-        mLocationService.setLocationOption(mLocationService?.defaultLocationClientOption.apply {
-            //                            this?.setScanSpan(0)
-//                            this?.setIgnoreKillProcess(false)
+        mLocationService.setLocationOption(mLocationService.defaultLocationClientOption.apply {
+            //                            this.setScanSpan(0)
+//                            this.setIgnoreKillProcess(false)
         })
 
         registerMessage()
         //查询未读数
-        mMainViewModel?.getUnreadCount()
+        mMainViewModel.getUnreadCount()
     }
 
     /**
@@ -167,17 +169,20 @@ class MainActivity : BaseActivity() {
         UserHeartManager.stopBeat()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        logger.info("onSaveInstanceState=${outState}")
+        super.onSaveInstanceState(outState)
+    }
+
     private fun initViewModel() {
-        mMainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        mMessageViewModel = ViewModelProvider(this).get(MessageViewModel::class.java)
-        mMainViewModel?.indexData?.observe(this, Observer {
+        mMainViewModel.indexData.observe(this, Observer {
             if (it != null) {
                 goToTab(it)
             }
         })
-        mMainViewModel?.unreadMsgCount?.observe(this, Observer {
+        mMainViewModel.unreadMsgCount.observe(this, Observer {
             if (it != null) {
-                mMessageViewModel?.unreadMsgCount?.value = it
+                mMessageViewModel.unreadMsgCount.value = it
                 tv_unread_count.text = if (it <= 99) {
                     "$it"
                 } else {
@@ -186,10 +191,10 @@ class MainActivity : BaseActivity() {
                 showUnreadCount()
             }
         })
-        mMessageViewModel?.queryUnreadCountFlag?.observe(this, Observer {
+        mMessageViewModel.queryUnreadCountFlag.observe(this, Observer {
             if (it == true) {
-                mMainViewModel?.getUnreadCount()
-                mMessageViewModel?.queryUnreadCountFlag?.value = false
+                mMainViewModel.getUnreadCount()
+                mMessageViewModel.queryUnreadCountFlag.value = false
             }
         })
     }
@@ -281,7 +286,7 @@ class MainActivity : BaseActivity() {
             transaction.hide(oldFragment)
         }
         if (!newFragment.isAdded) {
-            transaction.add(R.id.container, newFragment, "$index")
+            transaction.add(R.id.container, newFragment, newFragment.javaClass.name)
         }
         transaction.show(newFragment).commitAllowingStateLoss()
         //使用此方式在主线程中立即执行事务队列所有事务，同步当前的状态,确保来回快速切换的时候事务不会堆积在队列中异步执行， 避免卡顿问题
@@ -327,7 +332,7 @@ class MainActivity : BaseActivity() {
      * 显示未读数
      */
     private fun showUnreadCount() {
-        val unreadCount = mMainViewModel?.unreadMsgCount?.value ?: 0
+        val unreadCount = mMainViewModel.unreadMsgCount.value ?: 0
         if (!item_message.isSelected && unreadCount > 0) {
             //未选中消息模块，同时未读数大于0(显示)
             tv_unread_count.show()
@@ -347,7 +352,7 @@ class MainActivity : BaseActivity() {
      */
     private fun exit() {
         if (!mHomeFragment.isVisible) {
-            mMainViewModel?.indexData?.value = 0
+            mMainViewModel.indexData.value = 0
             return
         }
         val secondTime = System.currentTimeMillis()
@@ -377,10 +382,10 @@ class MainActivity : BaseActivity() {
                 val onLine = SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)
                 if (onLine) {
                     //正在通话中
-                    mMainViewModel?.busy(data.callId)
-                    mMainViewModel?.insertMessage(data.callUserId)
+                    mMainViewModel.busy(data.callId)
+                    mMainViewModel.insertMessage(data.callUserId)
                 } else {
-                    mMainViewModel?.getVoiceCallInfo(data.callId)
+                    mMainViewModel.getVoiceCallInfo(data.callId)
                 }
 
             }
@@ -393,6 +398,9 @@ class MainActivity : BaseActivity() {
         logger.info("登录事件:${event.result}")
         if (event.result) {
             goToTab(MAIN_FRAGMENT_INDEX)
+            //重新去定位地址
+            mLocationService.registerListener(mLocationListener)
+            mLocationService.start()
         }
 
     }
@@ -400,14 +408,14 @@ class MainActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateMessageReceive(bean: EventMessageBean) {
         //接收到私聊消息
-        mMainViewModel?.getUnreadCount()
+        mMainViewModel.getUnreadCount()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun connectSuccess(event: RongConnectEvent) {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，查询未读数
-            mMainViewModel?.getUnreadCount()
+            mMainViewModel.getUnreadCount()
         }
     }
 }

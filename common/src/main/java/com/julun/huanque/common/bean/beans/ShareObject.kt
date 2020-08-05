@@ -1,6 +1,8 @@
 package com.julun.huanque.common.bean.beans
 
 import android.graphics.Bitmap
+import com.chad.library.adapter.base.entity.MultiItemEntity
+import com.julun.huanque.common.constant.ShareFromModule
 import java.io.Serializable
 
 /**
@@ -17,6 +19,7 @@ open class ShareObject : Serializable {
 
     //大图分享
     var shareImage: Bitmap? = null
+
     //多图分享
     var imageList: MutableList<String> = mutableListOf()
     var videoUrl: String = ""
@@ -90,6 +93,7 @@ data class SharePosterInfo(
     var posterList: MutableList<SharePoster> = mutableListOf()
 )
 
+
 data class SharePoster(
     var applyModule: String = "",
     var paramsStyle: String = "",
@@ -97,8 +101,17 @@ data class SharePoster(
     var posterPic: String = "",//背景图片
     var posterTitle: String = "",
     var qrCode: String = ""//二维码图片
-) {
+) : MultiItemEntity {
     var inviteCode: String = ""
+    //本地字段
+    var authorName:String=""
+    override val itemType: Int
+        get() = when (applyModule) {
+            ShareFromModule.Invite -> 1
+            ShareFromModule.Program -> 2
+            ShareFromModule.Magpie -> 3
+            else -> 1
+        }
 }
 
 class ShareType {

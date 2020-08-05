@@ -95,7 +95,7 @@ class EnvironmentConfigurationActivity : BaseActivity() {
     private fun switchEnvironment(url: String = "") {
         val isSuccess = MMKV.defaultMMKV().encode(MMKVConstant.URL, url)
         if (isSuccess) {
-            val nextIntent = Intent(this, MainActivity::class.java)
+            val nextIntent = Intent(this, WelcomeActivity::class.java)
             ProcessPhoenix.triggerRebirth(this, nextIntent)
         }
     }

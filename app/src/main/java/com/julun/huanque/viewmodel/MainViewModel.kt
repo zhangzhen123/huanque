@@ -3,6 +3,7 @@ package com.julun.huanque.viewmodel
 import android.os.Bundle
 import androidx.lifecycle.*
 import com.alibaba.android.arouter.launcher.ARouter
+import com.baidu.location.BDLocation
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.forms.SessionForm
@@ -100,7 +101,6 @@ class MainViewModel : BaseViewModel() {
             logger("最终返回的")
         }.withSpecifiedCodes(1, 2, 3))
     }
-
 
     /**
      * 获取语音会话详情

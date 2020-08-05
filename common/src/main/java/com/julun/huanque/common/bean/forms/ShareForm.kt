@@ -31,7 +31,7 @@ class ShareForm : SessionForm {
 /**
  * 	适用模块，Invite：邀友(可选项：Invite)
  */
-class SharePosterQueryForm(var applyModule:String)
+class SharePosterQueryForm(var applyModule:String,var programId:Long?=null)
 
 
 enum class ShareWay {

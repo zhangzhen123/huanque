@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.live.fragment.dialog
+package com.julun.huanque.core.ui.live.dialog
 
 import android.os.Bundle
 import android.view.Gravity
@@ -95,12 +95,13 @@ class CardManagerDialogFragment : BaseDialogFragment() {
                 }
                 is ManagerOptionInfo -> {
                     if (item.manageOptions.isNotEmpty()) {
-                        val dialog = newInstance(
-                            bean = item,
-                            programId = programId,
-                            targetUserId = targetId,
-                            nickname = nickname
-                        )
+                        val dialog =
+                            newInstance(
+                                bean = item,
+                                programId = programId,
+                                targetUserId = targetId,
+                                nickname = nickname
+                            )
                         dialog.show(childFragmentManager, "CardManagerDialogFragment")
                     } else {
                         showAlertDialog(ManagerInfo().apply {

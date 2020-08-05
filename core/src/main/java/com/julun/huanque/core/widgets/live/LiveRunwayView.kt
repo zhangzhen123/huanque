@@ -31,9 +31,7 @@ import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
-
 import com.julun.huanque.core.viewmodel.SVGAViewModel
-
 import kotlinx.android.synthetic.main.view_runway_simple.view.*
 import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.backgroundResource

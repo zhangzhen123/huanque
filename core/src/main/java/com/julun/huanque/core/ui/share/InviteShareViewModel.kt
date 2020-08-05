@@ -3,15 +3,19 @@ package com.julun.huanque.core.ui.share
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
+import com.julun.huanque.common.bean.beans.LiveBean
+import com.julun.huanque.common.bean.beans.MicAnchor
 import com.julun.huanque.common.bean.beans.SharePosterInfo
 import com.julun.huanque.common.bean.beans.ShareType
 import com.julun.huanque.common.bean.forms.SharePosterQueryForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.ShareFromModule
 import com.julun.huanque.common.constant.ShareTypeEnum
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.ShareService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.core.R
+import kotlinx.android.synthetic.main.activity_invite_share.*
 import kotlinx.coroutines.launch
 
 /**
@@ -32,7 +36,7 @@ class InviteShareViewModel : BaseViewModel() {
 
     val shares: MutableLiveData<ReactiveData<MutableList<ShareType>>> by lazy { MutableLiveData<ReactiveData<MutableList<ShareType>>>() }
 
-
+    var programInfo: MicAnchor? = null
     fun queryShareType() {
         shares.value = mutableListOf<ShareType>().apply {
             add(ShareType().apply {
@@ -61,10 +65,25 @@ class InviteShareViewModel : BaseViewModel() {
     fun querySharePoster(applyModule: String) {
         viewModelScope.launch {
             request({
-                val result = service.sharePoster(SharePosterQueryForm(applyModule)).dataConvert()
+                val form = when (applyModule) {
+                    ShareFromModule.Program -> {
+                        SharePosterQueryForm(applyModule, programInfo?.programId)
+                    }
+                    ShareFromModule.Invite -> {
+                        SharePosterQueryForm(applyModule)
+                    }
+                    else->{
+                        SharePosterQueryForm(applyModule)
+                    }
+                }
+
+                val result = service.sharePoster(form).dataConvert()
                 if (result.inviteCode.isNotEmpty()) {
                     result.posterList.forEach {
                         it.inviteCode = result.inviteCode
+                        if (it.applyModule == ShareFromModule.Program) {
+                            it.authorName = programInfo?.programName ?: ""
+                        }
                     }
                 }
 

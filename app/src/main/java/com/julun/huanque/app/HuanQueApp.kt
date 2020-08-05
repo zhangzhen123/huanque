@@ -47,6 +47,9 @@ open class HuanQueApp : Application() {
     override fun onCreate() {
         super.onCreate()
         install()
+        if (ProcessPhoenix.isPhoenixProcess(this)) {
+            return
+        }
         MMKV.initialize(this)
         val baseUrl = if (BuildConfig.DEBUG) {
             val url = MMKV.defaultMMKV().decodeString(MMKVConstant.URL)

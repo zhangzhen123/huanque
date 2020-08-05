@@ -21,6 +21,7 @@ class WelcomeActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_welcome
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        logger.info("WelcomeActivity initViews")
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         val registerUser = SessionUtils.getIsRegUser()
         val intent = if (registerUser && SessionUtils.getRegComplete()) {

@@ -45,7 +45,7 @@ fun <T: View> View.hideAsRealType():T  {
     return this as T
 }
 //不显示,但是占位
-fun View.inVisiable(): View {
+fun View.inVisible(): View {
     this.visibility = View.INVISIBLE
     return this
 }

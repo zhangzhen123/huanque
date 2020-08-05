@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="275dp"
+    android:layout_height="339dp"
+    android:id="@+id/live_share_container"
+    android:background="@drawable/bg_shape_white1">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_share_pic"
+        android:layout_width="235dp"
+        android:layout_height="235dp"
+        android:layout_marginTop="@dimen/dimen_20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start|center_vertical"
+        android:maxWidth="@dimen/dimen_104"
+        android:maxLines="1"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv002"
+        app:layout_constraintStart_toStartOf="@+id/sdv_share_pic"
+        app:layout_constraintTop_toTopOf="@+id/sdv_qr_code"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="主播昵称XXX" />
+
+    <TextView
+        android:id="@+id/tv002"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="分享给好友"
+        android:textColor="@color/black_333"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sdv_qr_code"
+        app:layout_constraintStart_toStartOf="@+id/sdv_share_pic"
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
+
+    <TextView
+        android:id="@+id/tv003"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:gravity="center"
+        android:text="正在欢鹊直播"
+        android:textColor="@color/black_333"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
+        app:layout_constraintStart_toEndOf="@+id/tv_user_name" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_qr_code"
+        android:layout_width="@dimen/dimen_55"
+        android:layout_height="@dimen/dimen_55"
+        android:layout_marginEnd="@dimen/dimen_10"
+        android:layout_marginBottom="@dimen/dimen_10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:roundAsCircle="true" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
