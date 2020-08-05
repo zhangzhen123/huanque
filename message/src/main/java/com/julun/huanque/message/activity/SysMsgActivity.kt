@@ -112,7 +112,7 @@ class SysMsgActivity : BaseActivity() {
                         RNPageActivity.start(
                             this,
                             RnConstant.PERSONAL_HOMEPAGE,
-                            Bundle().apply { putLong("userId", item?.userId?.toLong() ?: return@onAdapterChildClickNew) })
+                            Bundle().apply { putLong("userId", item?.friendId?.toLong() ?: return@onAdapterChildClickNew) })
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -122,7 +122,7 @@ class SysMsgActivity : BaseActivity() {
                     //打开私聊
                     item ?: return@onAdapterChildClickNew
                     try {
-                        PrivateConversationActivity.newInstance(this, item.userId.toLong(), item.friendNickname)
+                        PrivateConversationActivity.newInstance(this, item.friendId.toLong(), item.friendNickname)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

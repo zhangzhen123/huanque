@@ -7,6 +7,8 @@ import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.events.*
@@ -14,9 +16,12 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.viewmodel.PlayerMessageViewModel
 import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.*
 import com.julun.huanque.message.adapter.ConversationListAdapter
@@ -28,6 +33,7 @@ import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_message.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.topPadding
 
@@ -36,9 +42,12 @@ import org.jetbrains.anko.topPadding
  *@创建时间 2020/6/29 19:19
  *@描述  消息
  */
+@Route(path = ARouterConstant.MessageFragment)
 class MessageFragment : BaseFragment() {
 
     private val mMessageViewModel: MessageViewModel by activityViewModels<MessageViewModel>()
+
+    private val mPlayerMessageViewModel: PlayerMessageViewModel by activityViewModels<PlayerMessageViewModel>()
 
     private var mAdapter = ConversationListAdapter()
 
@@ -57,13 +66,14 @@ class MessageFragment : BaseFragment() {
     override fun isRegisterEventBus() = true
 
     override fun getLayoutId() = R.layout.fragment_message
+
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        //设置头部边距
-        msg_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         initViewModel()
         initRecyclerView()
+//        initEvents()
         mMessageViewModel.foldStrangerMsg = SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)
         mMessageViewModel.mStranger = arguments?.getBoolean(ParamConstant.STRANGER, false) ?: false
+        mMessageViewModel.player = arguments?.getBoolean(ParamConstant.PLAYER, false) ?: false
         if (mMessageViewModel.mStranger) {
             view_top.hide()
             iv_setting.hide()
@@ -71,6 +81,23 @@ class MessageFragment : BaseFragment() {
             tv_message_unread.hide()
         }
 
+        if (mMessageViewModel.player) {
+            //直播间内使用
+            view_top.hide()
+            iv_setting.hide()
+            iv_contacts.hide()
+            tv_message_unread.hide()
+
+            view_top_player.show()
+            tv_title_player.show()
+            iv_contacts_player.show()
+            view_bg.backgroundColor = GlobalUtils.getColor(R.color.color_gray_three)
+        }
+
+        if (!mMessageViewModel.mStranger && !mMessageViewModel.player) {
+            //设置头部边距
+            msg_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
+        }
         mMessageViewModel.getConversationList()
         mMessageViewModel.getBlockedConversationList()
     }
@@ -203,6 +230,13 @@ class MessageFragment : BaseFragment() {
                 mAdapter.notifyDataSetChanged()
             }
         })
+
+        mPlayerMessageViewModel.anchorData.observe(this, Observer {
+            if (it != null) {
+                mMessageViewModel.anchorData = it
+                mAdapter.curAnchorId = "${it.programId}"
+            }
+        })
     }
 
     override fun initEvents(rootView: View) {
@@ -214,6 +248,13 @@ class MessageFragment : BaseFragment() {
             }
         }
         iv_contacts.onClickNew {
+            //联系人
+            activity?.let { act ->
+                ContactsActivity.newInstance(act, ContactsTabType.Intimate)
+            }
+        }
+
+        iv_contacts_player.onClickNew {
             //联系人
             activity?.let { act ->
                 ContactsActivity.newInstance(act, ContactsTabType.Intimate)

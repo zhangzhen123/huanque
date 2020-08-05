@@ -78,8 +78,8 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
             }
             R.id.privateMessageLayout -> {
                 if (!ClickListenerUtils.isDoubleClick) {
-//                    bean.type = ClickType.PRIVATE_MESSAGE
-//                    bean.actionValue = PrivateMessageBean()
+                    bean.type = ClickType.PRIVATE_MESSAGE
+                    bean.actionValue = PrivateMessageBean()
 //                    playerViewModel?.privateMessageView?.value = PrivateMessageBean()
                 }
             }

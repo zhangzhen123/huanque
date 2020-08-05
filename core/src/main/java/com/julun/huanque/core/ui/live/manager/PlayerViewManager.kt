@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.fastjson.JSONObject
 import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.ChatMessageBean
 import com.julun.huanque.common.bean.MessageUtil
@@ -37,6 +38,7 @@ import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
+import com.julun.huanque.core.ui.live.fragment.PrivateFragment
 import com.julun.huanque.core.viewmodel.*
 import com.julun.huanque.core.widgets.live.LiveRunwayView
 import com.julun.huanque.core.widgets.live.message.MessageRecyclerView
@@ -311,6 +313,12 @@ class PlayerViewManager(val context: PlayerActivity) {
 //                            gameFragment
 //                        }, reuse = true)
                     }
+
+                    ClickType.PRIVATE_MESSAGE -> {
+                        //打开私聊
+                        openPrivateDialog()
+                    }
+
 
                     ClickType.PUBLISH_SETTING -> {
                         //推流设置页面
@@ -1134,22 +1142,8 @@ class PlayerViewManager(val context: PlayerActivity) {
     /**
      * 显示私聊弹窗
      */
-    fun openPrivateDialog(userId: Long = -1) {
-//        showNotLoginAlert {
-        //todo
-//        if (mOrientationViewModel.horizonState.value == true) {
-//            //横屏确定PK切回竖屏
-//            viewModel.actionBeanData.value = BottomActionBean(ClickType.SWITCH_SCREEN, ScreenType.SP)
-//        }
-//        if (userId > 0) {
-//            //显示聊天页面
-//            conversationViewModel?.getUserFromNet("$userId")
-//            conversationViewModel?.openChatState?.value = true
-//        } else {
-//            conversationViewModel?.openListState?.value = true
-//        }
-//        mDialogManager.openDialog(PrivateFragment::class.java, reuse = true)
-//        }
+    fun openPrivateDialog() {
+        mDialogManager.openDialog(PrivateFragment::class.java, reuse = true)
     }
 
     // 关注、取消关注后，修改直播间数据

@@ -1,5 +1,6 @@
 package com.julun.huanque.message.adapter
 
+import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -21,6 +22,7 @@ import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.message.R
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
+import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.imageResource
 
 /**
@@ -33,11 +35,27 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
     //免打扰列表
     var blockList = mutableListOf<String>()
 
+    //主播Id
+    var curAnchorId = ""
+
     init {
         addChildClickViewIds(R.id.sdv_header)
     }
 
     override fun convert(helper: BaseViewHolder, item: LocalConversation) {
+
+        val targetId = item.conversation.targetId
+        val con = helper.getView<View>(R.id.con)
+        try {
+            con.backgroundColor = if (curAnchorId == targetId) {
+                Color.parseColor("#fcfbf9")
+            } else {
+                Color.WHITE
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         val msg = item.conversation.latestMessage
         //头像
         val sdvHeader = helper.getView<SimpleDraweeView>(R.id.sdv_header)
@@ -45,7 +63,6 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
         val ivHuanyu = helper.getView<ImageView>(R.id.iv_huanyu)
         //官方图标
         val ivPic = helper.getView<ImageView>(R.id.iv_pic)
-        val targetId = item.conversation.targetId
 
         if (item.showUserInfo != null) {
             //存在用户信息
@@ -188,6 +205,9 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             else -> {
                 if (targetId?.isNotEmpty() == true) {
                     helper.setText(R.id.tv_content, "")
+                }
+                if (targetId == curAnchorId) {
+                    helper.setText(R.id.tv_content, "hi，我是${item.showUserInfo?.nickname}，快来和我聊天吧！")
                 }
             }
         }
