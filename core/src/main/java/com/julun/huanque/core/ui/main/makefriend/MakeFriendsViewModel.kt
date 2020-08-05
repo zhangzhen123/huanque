@@ -34,14 +34,15 @@ class MakeFriendsViewModel : BaseViewModel() {
         const val GUIDE_INDEX_01 = 14
 
         //添加资料完善引导的位置
-        const val GUIDE_INDEX_02 = 29
+        //todo
+        const val GUIDE_INDEX_02 = 19
     }
 
     private val service: HomeService by lazy {
         Requests.create(HomeService::class.java)
     }
     private var offset: Int? = 0
-    private var curRemind: HomeRemind? = null
+    var curRemind: HomeRemind? = null
     private var needGuide1 = true
     private var needGuide2 = true
 
@@ -110,6 +111,7 @@ class MakeFriendsViewModel : BaseViewModel() {
         }
 
     }
+
 
 }
 

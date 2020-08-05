@@ -17,7 +17,12 @@ class EventMessageBean(var targetId: String = "", var stranger: Boolean = false)
  * @param birthday 生日
  * @param headerPic 头像
  */
-class ImformationCompleteBean(var sextype: String = "", var nickname: String = "", var birthday: String = "", var headerPic: String = "")
+class ImformationCompleteBean(
+    var sextype: String = "",
+    var nickname: String = "",
+    var birthday: String = "",
+    var headerPic: String = ""
+)
 
 /**
  * 支付结果
@@ -59,7 +64,16 @@ class FoldStrangerMessageEvent()
  * @param userId 变化的用户ID
  * @param stranger 陌生人状态
  */
-class UserInfoChangeEvent(val userId: Long, val stranger: Boolean)
+class UserInfoChangeEvent(val userId: Long = 0L, val stranger: Boolean = false)
+
+
+class UserInfoEditEvent(
+    val userId: Long = 0L,
+    val stranger: Boolean? = null,
+    val nickname: String? = null,
+    val headPic: String? = null,
+    val picList: ArrayList<String>? = null
+)
 
 /**
  * 实名认证结果的广播
