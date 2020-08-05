@@ -5,6 +5,9 @@ object RnConstant {
 
     const val INITIAL_PROPERTIES:String="initialProperties"
 
+    /**
+     * RN页面标识
+     */
     //个人主页
     const val PERSONAL_HOMEPAGE:String="PersonalHomePage"
     //我的主页
@@ -15,6 +18,8 @@ object RnConstant {
     const val INVITE_FRIENDS_PAGE:String="InviteFriendsPage"
     //官方认证
     const val OFFICIAL_CERT_PAGE:String="OfficialCertPage"
+    //主播认证
+    const val ANCHOR_CERT_PAGE:String="AnchorCertPage"
 
 
     //Action事件码
@@ -23,7 +28,9 @@ object RnConstant {
     //我的信息修改变化
     const val MY_PROFILE_CHANGE:String="MyProfileChange"
 
-
+    /**
+     * 原生页面标识
+     */
     //私信
     const val PRIVATE_MESSAGE_PAGE:String="PrivateMessagePage"
     //语音界面
