@@ -62,8 +62,8 @@ class RechargeCenterViewModel : BaseViewModel() {
                 if (value is String) {
                     result.alipayOrderInfo = value
                 } else if (value is Map<*, *>) {
-                    result.wxOrderInfo = JsonUtil.deserializeAsObject(JsonUtil.seriazileAsString(value), OrderInfo::class.java)
-                    result.oppoOrderInfo = JsonUtil.deserializeAsObject(JsonUtil.seriazileAsString(value), OppoPayInfo::class.java)
+                    result.wxOrderInfo = JsonUtil.deserializeAsObject(JsonUtil.serializeAsString(value), OrderInfo::class.java)
+                    result.oppoOrderInfo = JsonUtil.deserializeAsObject(JsonUtil.serializeAsString(value), OppoPayInfo::class.java)
                 }
                 result.payType = pay.payType
                 payValue.value = result

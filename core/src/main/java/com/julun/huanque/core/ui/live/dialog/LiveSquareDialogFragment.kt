@@ -88,7 +88,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
 
     private fun initViewModel() {
         mViewModel.followList.observe(this, Observer {
-            if (it.state == NetStateType.SUCCESS) {
+            if (it.isSuccess()) {
                 renderFollowData(it.getT())
             }
         })

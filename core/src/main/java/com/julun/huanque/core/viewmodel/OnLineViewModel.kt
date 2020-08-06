@@ -26,7 +26,6 @@ class OnLineViewModel : BaseViewModel() {
 
     val listResult: MutableLiveData<ReactiveData<OnlineListData<OnlineUserInfo>>> by lazy { MutableLiveData<ReactiveData<OnlineListData<OnlineUserInfo>>>() }
     val guardSuccess: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-    val errorStatus: MutableLiveData<ResponseError> by lazy { MutableLiveData<ResponseError>() }
 
     var offset = 0
 

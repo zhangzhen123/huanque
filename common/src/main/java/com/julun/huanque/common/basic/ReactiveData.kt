@@ -19,5 +19,8 @@ open class ReactiveData<T>(
     fun getT(): T {
         return data ?: throw Exception("只有在成功状态才有数据 请检测调用时机")
     }
+    fun isSuccess():Boolean{
+        return state==NetStateType.SUCCESS
+    }
 }
 

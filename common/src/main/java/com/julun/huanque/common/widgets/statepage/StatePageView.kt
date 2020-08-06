@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
 import com.julun.huanque.common.R
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.onClick
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ULog
 import kotlinx.android.synthetic.main.layout_empty_data.view.*
@@ -49,6 +50,8 @@ class StatePageView : FrameLayout {
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_state, this)
         setBackgroundResource(R.color.default_bg)
+        //屏蔽掉点击事件穿透
+        this.onClick {  }
     }
 
     fun showLoading(loadingTxt: String = "") {

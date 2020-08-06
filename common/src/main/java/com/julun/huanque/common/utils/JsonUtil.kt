@@ -5,11 +5,9 @@ package com.julun.huanque.common.utils
  */
 
 import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.JSONObject
 import com.alibaba.fastjson.TypeReference
 import com.alibaba.fastjson.parser.deserializer.ExtraProcessor
 import com.alibaba.fastjson.serializer.SerializerFeature
-import com.julun.huanque.common.bean.BaseData
 import java.lang.reflect.Type
 
 
@@ -45,11 +43,11 @@ object JsonUtil {
 
         /**
          * java-object as json-string
-         * @param object
+         * @param obj
          * *
          * @return
          */
-        fun seriazileAsString(obj: Any?, vararg features: SerializerFeature): String {
+        fun serializeAsString(obj: Any?, vararg features: SerializerFeature): String {
             if (obj == null) {
                 return ""
             }
@@ -75,7 +73,7 @@ object JsonUtil {
                 return null
             }
             try {
-                return JSON.parseObject<T>(jsonString, clazz, styleParamProcessor)
+                return JSON.parseObject<T>(jsonString, clazz/*, styleParamProcessor*/)
             } catch (ex: Exception) {
                 throw Exception("Could not write JSON: " + ex.message, ex)
             }
@@ -91,15 +89,15 @@ object JsonUtil {
      * *
      * @return
      */
-    fun seriazileAsString(obj: Any?): String {
-        return FJU.seriazileAsString(obj, *STANDARD_FEATURES)
+    fun serializeAsString(obj: Any?): String {
+        return FJU.serializeAsString(obj, *STANDARD_FEATURES)
     }
 
     /**
      * 标准的序列化接口
      */
-    fun seriazileAsStringWithStandard(obj: Any): String {
-        return FJU.seriazileAsString(obj, *STANDARD_FEATURES)
+    fun serializeAsStringWithStandard(obj: Any): String {
+        return FJU.serializeAsString(obj, *STANDARD_FEATURES)
     }
 
     fun <T> deserializeAsObject(jsonString: String, clazz: Type): T {

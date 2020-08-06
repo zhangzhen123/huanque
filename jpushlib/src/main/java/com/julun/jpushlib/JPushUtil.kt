@@ -273,7 +273,7 @@ object JPushUtil {
                     startOpenLive(context, programId)
                 } else {
                     shouldOpenMain(context)
-                    reportCrash("推送进入直播间的时候未能获取房间号 获取的数据 =>: $jsonString  ,抽取数据 ${JsonUtil.seriazileAsString(keyValue)} ")
+                    reportCrash("推送进入直播间的时候未能获取房间号 获取的数据 =>: $jsonString  ,抽取数据 ${JsonUtil.serializeAsString(keyValue)} ")
                 }
             }
             else -> {

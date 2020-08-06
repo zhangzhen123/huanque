@@ -14,7 +14,7 @@ class FastJsonRequestBodyConverter<T> : Converter<T, RequestBody> {
 
     @Throws(IOException::class)
     override fun convert(value: T): RequestBody {
-        val content:String = JsonUtil.seriazileAsString(value)
+        val content:String = JsonUtil.serializeAsString(value)
         return RequestBody.create(MEDIA_TYPE, content)
     }
 

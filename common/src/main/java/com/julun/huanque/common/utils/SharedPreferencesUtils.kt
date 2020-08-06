@@ -107,7 +107,7 @@ object SharedPreferencesUtils {
 
 
     fun commitObject(key: String, source:Any) {
-        val editor = editor.putString(key, JsonUtil.seriazileAsString(source))
+        val editor = editor.putString(key, JsonUtil.serializeAsString(source))
         commit(editor)
     }
 

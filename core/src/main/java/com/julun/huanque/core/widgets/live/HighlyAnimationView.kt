@@ -162,7 +162,7 @@ class HighlyAnimationView @JvmOverloads constructor(context: Context, attrs: Att
     private fun showAnim() {
 
         if (lastAnim == null || StringHelper.isEmpty(lastAnim?.animType.toString())) {
-            reportCrash("需要播放高阶动画的时候,发现要播放的动画为null或者播放的动画类型为null , 数据: ${JsonUtil.seriazileAsString(lastAnim)}")
+            reportCrash("需要播放高阶动画的时候,发现要播放的动画为null或者播放的动画类型为null , 数据: ${JsonUtil.serializeAsString(lastAnim)}")
             return
         }
         showTime=3000L

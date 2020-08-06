@@ -3,11 +3,7 @@ package com.julun.huanque.message.viewmodel
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alibaba.android.arouter.launcher.ARouter.logger
-import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
@@ -21,7 +17,6 @@ import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.MessageFailType
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.database.HuanQueDatabase
-import com.julun.huanque.common.database.table.Balance
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
@@ -30,7 +25,6 @@ import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import io.rong.imlib.IRongCallback
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
@@ -328,7 +322,7 @@ class PrivateConversationViewModel : BaseViewModel() {
             msg.extra,
             ParamConstant.MSG_FAIL_TYPE, type
         )
-        msgData.value = msg.apply { extra = JsonUtil.seriazileAsString(hashMap) }
+        msgData.value = msg.apply { extra = JsonUtil.serializeAsString(hashMap) }
     }
 
     /**
@@ -361,7 +355,7 @@ class PrivateConversationViewModel : BaseViewModel() {
 
                     val user = JsonUtil.deserializeAsObject<RoomUserChatExtra>(cMessage?.extra ?: "", RoomUserChatExtra::class.java)
                     user.targetUserObj?.fee = result.consumeBeans
-                    (localMsg.content as? CustomMessage)?.extra = JsonUtil.seriazileAsString(user)
+                    (localMsg.content as? CustomMessage)?.extra = JsonUtil.serializeAsString(user)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -395,7 +389,7 @@ class PrivateConversationViewModel : BaseViewModel() {
 
                     val user = JsonUtil.deserializeAsObject<RoomUserChatExtra>(cMessage?.extra ?: "", RoomUserChatExtra::class.java)
                     user.targetUserObj?.fee = result.consumeBeans
-                    (localMsg.content as? CustomMessage)?.extra = JsonUtil.seriazileAsString(user)
+                    (localMsg.content as? CustomMessage)?.extra = JsonUtil.serializeAsString(user)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

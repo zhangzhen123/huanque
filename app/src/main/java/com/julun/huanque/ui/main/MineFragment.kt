@@ -84,7 +84,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     private fun initViewModel() {
         mViewModel.userInfo.observe(this, Observer {
             refreshView.isRefreshing = false
-            if (it.state == NetStateType.SUCCESS) {
+            if (it.isSuccess()) {
                 loadData(it.getT())
             }
         })

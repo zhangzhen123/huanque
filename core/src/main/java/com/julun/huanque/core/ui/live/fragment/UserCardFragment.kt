@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.drawee.view.SimpleDraweeView
@@ -47,7 +48,7 @@ import org.jetbrains.anko.textColor
  */
 class UserCardFragment : BaseDialogFragment() {
 
-    private val mUserCardViewModel: UserCardViewModel by activityViewModels<UserCardViewModel>()
+    private val mUserCardViewModel: UserCardViewModel by viewModels<UserCardViewModel>()
 
     companion object {
         fun newInstance(userId: Long): UserCardFragment {
@@ -76,7 +77,7 @@ class UserCardFragment : BaseDialogFragment() {
      */
     private fun initViewModel() {
 
-        mUserCardViewModel?.loadState?.observe(this, Observer {
+        mUserCardViewModel.loadState?.observe(this, Observer {
             it ?: return@Observer
             when (it.state) {
                 NetStateType.LOADING -> {
