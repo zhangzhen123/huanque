@@ -12,6 +12,7 @@ import com.alibaba.android.arouter.facade.annotation.Interceptor
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback
 import com.alibaba.android.arouter.facade.template.IInterceptor
 import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.common.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -162,18 +163,11 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
      * 余额不足,显示余额不足弹窗
      */
     private fun balanceNotEnoughDialog() {
-        CommonInit.getInstance().getCurrentActivity()?.let { act ->
-            MyAlertDialog(act).showAlertWithOK(
-                "您的鹊币余额不足",
-                MyAlertDialog.MyDialogCallback(onRight = {
-                    //跳转充值页面
-                    (act as? BaseActivity)?.lifecycleScope?.launch {
-                        logger.info("threadName = ${Thread.currentThread().name}")
-                        ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
-                    }
-
-                }), "余额不足", "去充值"
-            )
+        val act = CommonInit.getInstance().getCurrentActivity() as? AppCompatActivity
+        if (act != null) {
+//            ToastUtils.show("余额不足")
+            val dialogFragment = ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment).navigation() as? BaseDialogFragment
+            dialogFragment?.show(act.supportFragmentManager, "BalanceNotEnoughFragment")
         }
     }
 

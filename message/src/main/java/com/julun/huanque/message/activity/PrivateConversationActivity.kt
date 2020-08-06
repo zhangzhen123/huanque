@@ -26,6 +26,7 @@ import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
@@ -51,10 +52,7 @@ import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
-import com.julun.huanque.message.fragment.ChatSendGiftFragment
-import com.julun.huanque.message.fragment.CopyDialogFragment
-import com.julun.huanque.message.fragment.IntimateDetailFragment
-import com.julun.huanque.message.fragment.SingleIntimateprivilegeFragment
+import com.julun.huanque.message.fragment.*
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import com.julun.rnlib.RNPageActivity
@@ -133,6 +131,9 @@ class PrivateConversationActivity : BaseActivity() {
     private var mLinearLayoutManager: LinearLayoutManager? = null
 
     private var mChatSendGiftFragment: ChatSendGiftFragment? = null
+
+    //余额不足弹窗
+    private var mBalanceNotFoundFragment: BaseDialogFragment? = null
 
     /**
      * 欢遇弹窗
@@ -335,6 +336,15 @@ class PrivateConversationActivity : BaseActivity() {
                 }
             }
         })
+
+        mPrivateConversationViewModel?.balanceNotEnoughFlag?.observe(this, Observer {
+            if (it == true) {
+//                ToastUtils.show("余额不足")
+                mBalanceNotFoundFragment = mBalanceNotFoundFragment ?: ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment)
+                    .navigation() as? BaseDialogFragment
+                mBalanceNotFoundFragment?.show(supportFragmentManager, "BalanceNotEnoughFragment")
+            }
+        })
     }
 
     /**
@@ -402,7 +412,7 @@ class PrivateConversationActivity : BaseActivity() {
                 SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
             if (msgFee != null && msgFee > 0 && !dialogShow) {
                 //消息需要付费
-                showMessageFeeDialog(true, msgFee)
+                showMessageFeeDialog(false, msgFee)
                 return@onClickNew
             }
             checkPicPermissions()
@@ -980,8 +990,8 @@ class PrivateConversationActivity : BaseActivity() {
                         //本人发送消息
                         RNPageActivity.start(
                             this,
-                            RnConstant.PERSONAL_HOMEPAGE,
-                            Bundle().apply { putLong("userId", SessionUtils.getUserId()) })
+                            RnConstant.MINE_HOMEPAGE
+                        )
                     } else {
                         //对方发送消息
                         try {

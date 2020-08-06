@@ -198,6 +198,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
+                ToastUtils.show("对方忙")
                 mVoiceChatViewModel?.voiceBeanData?.value =
                     VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_BUSY)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE

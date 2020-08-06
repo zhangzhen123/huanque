@@ -17,10 +17,7 @@ import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
-import com.julun.huanque.common.utils.ForceUtils
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.viewmodel.PlayerMessageViewModel
 import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.*
@@ -36,6 +33,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.topPadding
+import kotlin.math.log
 
 /**
  *@创建者   dong
@@ -158,10 +156,19 @@ class MessageFragment : BaseFragment() {
                 val longId = targetId.toLong()
                 if (view.id == R.id.sdv_header) {
                     //跳转他人主页
-                    RNPageActivity.start(
-                        requireActivity(),
-                        RnConstant.PERSONAL_HOMEPAGE,
-                        Bundle().apply { putLong("userId", longId) })
+                    if (longId == SessionUtils.getUserId()) {
+                        //本人主页
+                        RNPageActivity.start(
+                            requireActivity(),
+                            RnConstant.MINE_HOMEPAGE
+                        )
+                    } else {
+                        //他人主页
+                        RNPageActivity.start(
+                            requireActivity(),
+                            RnConstant.PERSONAL_HOMEPAGE,
+                            Bundle().apply { putLong("userId", longId) })
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -271,7 +278,7 @@ class MessageFragment : BaseFragment() {
 
         tv_message_unread.onClickNew {
             activity?.let { act ->
-                PrivateConversationActivity.newInstance(act, 20000439)
+                PrivateConversationActivity.newInstance(act, 20000514)
 //                PrivateConversationActivity.newInstance(act, 10)
             }
         }

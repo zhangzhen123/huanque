@@ -40,6 +40,7 @@ import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
+import com.julun.huanque.core.ui.live.fragment.BalanceNotEnoughFragment
 import com.julun.huanque.core.ui.live.fragment.PrivateFragment
 import com.julun.huanque.core.viewmodel.AnchorNoLiveViewModel
 import com.julun.huanque.core.viewmodel.OrientationViewModel
@@ -264,7 +265,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 //                        }
 //                    }
 //                } else {
-//                    showNotEnoughBalanceAlert(it ?: return@Observer)
+                showNotEnoughBalanceAlert(it ?: return@Observer)
 //                }
             }
         })
@@ -669,19 +670,12 @@ class PlayerViewManager(val context: PlayerActivity) {
 
     // 余额不够
     fun showNotEnoughBalanceAlert(bean: NotEnoughBalanceBean) {
-        ToastUtils.show(R.string.balance_not_enough)
-        //这个不能复用 每次的值都不一样 最好不要复用
-        if (RechargeRuleQueryForm.DANMU == bean.content)
-            showHeaderAndHideChatView()
-        if (context.isThisActivityForeground()) {
-            //todo
+//        ToastUtils.show(R.string.balance_not_enough)
 //            if (!mDialogManager.isFragmentShow(RechargeDialogFragment::class.java)) {
-//                mDialogManager.openDialog(RechargeDialogFragment::class.java, builder = {
-//                    RechargeDialogFragment.newInstance(bean.beans)
-//                })
+        mDialogManager.openDialog(BalanceNotEnoughFragment::class.java, builder = { BalanceNotEnoughFragment.newInstance(true) }, reuse = true)
 //
 //            }
-        }
+
     }
 
     //计算高度 需要网络回调roomdata

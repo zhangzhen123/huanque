@@ -56,6 +56,7 @@ object ARouterConstant {
     //会话列表页面
     const val MessageFragment = "/$MESSAGE$PREFIX_FRAGMENT/MessageFragment"
 
+
     //亲密特权弹窗
     const val SINGLE_INTIMATE_PRIVILEGE_FRAGMENT = "/$MESSAGE$PREFIX_FRAGMENT/SingleIntimateprivilegeFragment"
 
@@ -65,8 +66,9 @@ object ARouterConstant {
     //充值页面
     const val RECHARGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/RechargeCenterActivity"
 
-    //H5页面
-    const val WEB_ACTIVITY = "/$COMMON$PREFIX_ACTIVITY/WebActivity"
+    //余额不足弹窗
+    const val BalanceNotEnoughFragment = "/$CORE$PREFIX_FRAGMENT/BalanceNotEnoughFragment"
+
 
     //语音签名界面
     const val VOICE_SIGN_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/VoiceSignActivity"
@@ -90,4 +92,7 @@ object ARouterConstant {
 
     //微信支付 微信授权 微博授权 微信分享 微博分享服务
     const val LOGIN_SHARE_SERVICE = "/$APP$SERVICE/LoginAndShareService"
+
+    //H5页面
+    const val WEB_ACTIVITY = "/$COMMON$PREFIX_ACTIVITY/WebActivity"
 }

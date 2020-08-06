@@ -570,7 +570,7 @@
     <string name="receive_immediately">立即领取</string>
     <string name="rule_award">奖励规则</string>
     <string name="title_header_info">羚萌头条榜</string>
-    <string name="stream_template">rtmp://%1$s-rtmp.51lm.tv%2$s</string>
+    <string name="stream_template">rtmp://%1$s-rtmp.ihuanque.com%2$s</string>
     <string name="address_header_info">/newheadline</string>
     <string name="address_header_info_rule">/newheadline/rule</string>
     <string name="chat_mode_attention">开启聊天模式，畅快聊天无顾虑</string>

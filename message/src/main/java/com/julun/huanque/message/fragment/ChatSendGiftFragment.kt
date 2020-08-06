@@ -97,7 +97,7 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
                 //dodo
                 if (it.error?.busiCode == 1001) {
                     //余额不足
-                    showBalanceNotEnough()
+                    mPrivateConversationViewModel.balanceNotEnoughFlag.value = true
                 } else {
                     ToastUtils.show(it.error?.busiMessage ?: return@Observer)
                 }
@@ -256,25 +256,6 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
             }
             holder.setText(R.id.tv_gift_name, item.giftName).setText(R.id.tv_gift_price, "${item.beans}鹊币")
 
-        }
-    }
-
-    /**
-     * 显示余额不足弹窗
-     */
-    private fun showBalanceNotEnough() {
-        activity?.let { act ->
-            MyAlertDialog(act).showAlertWithOK(
-                "您的鹊币余额不足",
-                MyAlertDialog.MyDialogCallback(onRight = {
-                    //跳转充值页面
-                    (act as? BaseActivity)?.lifecycleScope?.launch {
-                        SVGAHelper.logger.info("threadName = ${Thread.currentThread().name}")
-                        ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
-                    }
-
-                }), "余额不足", "去充值"
-            )
         }
     }
 }

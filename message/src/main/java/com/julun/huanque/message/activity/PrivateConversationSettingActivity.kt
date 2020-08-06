@@ -33,6 +33,7 @@ import com.luck.picture.lib.config.PictureMimeType
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.act_private_conversation_setting.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.imageResource
 
 /**
  *@创建者   dong
@@ -90,6 +91,9 @@ class PrivateConversationSettingActivity : BaseActivity() {
                 } else {
                     tv_notification_status.show()
                 }
+                iv_pic.show()
+                iv_pic.imageResource = ImageHelper.getIntimateLevelPic(it.intimateLevel)
+
 
                 //欢遇状态
                 val meetResource = ImageHelper.getMeetStatusResource(it.meetStatus)
@@ -139,24 +143,35 @@ class PrivateConversationSettingActivity : BaseActivity() {
         }
 
         view_blacklist.onClickNew {
-            //取消黑名单
             if (mPrivateConversationSettingViewModel?.blackStatus?.value == true) {
-                mPrivateConversationSettingViewModel?.recover()
+                //解除黑名单
+                MyAlertDialog(
+                    this
+                ).showAlertWithOKAndCancel(
+                    "将对方移除黑名单",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        //拉黑
+                        if (mPrivateConversationSettingViewModel?.blackStatus?.value == true) {
+                            mPrivateConversationSettingViewModel?.recover()
+                        }
+
+                    }), "移除黑名单", "确定", "取消"
+                )
                 return@onClickNew
+            } else {
+                MyAlertDialog(
+                    this
+                ).showAlertWithOKAndCancel(
+                    "加入黑名单，你们将相互不能给对方发送消息",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        //拉黑
+                        if (mPrivateConversationSettingViewModel?.blackStatus?.value == false) {
+                            mPrivateConversationSettingViewModel?.black()
+                        }
+
+                    }), "加入黑名单", "确定", "取消"
+                )
             }
-
-            MyAlertDialog(
-                this
-            ).showAlertWithOKAndCancel(
-                "加入黑名单，你们将相互不能给对方发送消息",
-                MyAlertDialog.MyDialogCallback(onRight = {
-                    //拉黑
-                    if (mPrivateConversationSettingViewModel?.blackStatus?.value == false) {
-                        mPrivateConversationSettingViewModel?.black()
-                    }
-
-                }), "加入黑名单", "确定", "取消"
-            )
         }
 
         view_set_bg.onClickNew {

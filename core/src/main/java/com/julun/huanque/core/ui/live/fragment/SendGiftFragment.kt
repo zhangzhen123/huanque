@@ -72,7 +72,6 @@ class SendGiftFragment : BaseDialogFragment() {
     private val BAG_TYPE_NAME = "背包"
     private var viewModel: SendGiftViewModel? = null
     private val playerViewModel: PlayerViewModel by activityViewModels()
-    private val propViewModel: PropViewModel by activityViewModels()
     private val mEggSettingViewModel: EggSettingViewModel by activityViewModels()
 
 
