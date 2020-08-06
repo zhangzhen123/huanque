@@ -27,10 +27,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
-import com.julun.huanque.common.utils.BalanceUtils
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.JsonUtil
-import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -314,6 +311,9 @@ class PrivateConversationViewModel : BaseViewModel() {
                     }
                 }
             }, {
+                if(it !is ResponseError){
+                    ToastUtils.show("网络不可用，发送失败")
+                }
                 sendMessageFail(localMsg ?: return@request, MessageFailType.WEB)
             })
         }

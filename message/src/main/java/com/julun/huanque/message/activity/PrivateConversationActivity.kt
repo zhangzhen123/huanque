@@ -74,7 +74,6 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
-import kotlinx.android.synthetic.main.item_header_conversions.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundColor
@@ -390,7 +389,7 @@ class PrivateConversationActivity : BaseActivity() {
             val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
             if (msgFee != null && msgFee > 0 && !dialogShow) {
                 //消息需要付费
-                showMessageFeeDialog(true, msgFee)
+                showMessageFeeDialog(false, msgFee)
                 return@onClickNew
             }
             checkPicPermissions()
@@ -941,8 +940,8 @@ class PrivateConversationActivity : BaseActivity() {
                         //本人发送消息
                         RNPageActivity.start(
                             this,
-                            RnConstant.PERSONAL_HOMEPAGE,
-                            Bundle().apply { putLong("userId", SessionUtils.getUserId()) })
+                            RnConstant.MINE_HOMEPAGE
+                        )
                     } else {
                         //对方发送消息
                         try {

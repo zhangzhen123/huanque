@@ -471,7 +471,12 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 }
                 VoiceResultType.CANCEL -> {
                     //主叫取消通话
-                    showStr = "对方已取消"
+                    if (voiceBean.createUserID == SessionUtils.getUserId()) {
+                        //本人挂断
+                        showStr = "已取消"
+                    } else {
+                        showStr = "对方已取消"
+                    }
                 }
                 VoiceResultType.MINE_REFUSE -> {
                     showStr = "已拒绝"

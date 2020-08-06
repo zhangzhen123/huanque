@@ -1,5 +1,6 @@
 package com.julun.huanque.message.fragment
 
+import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -17,6 +18,8 @@ import com.julun.huanque.common.utils.IntimateUtil
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.PrivilegeAdapter
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_meet_detail.*
 
 /**
@@ -41,6 +44,21 @@ class IntimateDetailFragment : BaseDialogFragment() {
         initRecyclerView()
         iv_rule.onClickNew {
             WebActivity.startWeb(requireActivity(), "www.baidu.com")
+        }
+
+        sdv_other.onClickNew {
+            //打开他们主页
+            RNPageActivity.start(
+                requireActivity(),
+                RnConstant.PERSONAL_HOMEPAGE,
+                Bundle().apply { putLong("userId", mViewModel.basicBean?.value?.usr?.userId ?: return@onClickNew) })
+        }
+
+        sdv_mine.onClickNew {
+            RNPageActivity.start(
+                requireActivity(),
+                RnConstant.MINE_HOMEPAGE
+            )
         }
     }
 

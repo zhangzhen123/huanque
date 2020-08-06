@@ -274,7 +274,6 @@ data class ChatDetailBean(
     var nickname: String = "",
     //签名
     var mySign: String = "签名不足以表达我自己，找我私聊吧~",
-
     var remindSign: String = ""
 ) :
     Serializable
