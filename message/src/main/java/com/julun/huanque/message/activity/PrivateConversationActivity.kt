@@ -465,6 +465,10 @@ class PrivateConversationActivity : BaseActivity() {
             showXiaoQueView(false)
         }
 
+        iv_share.onClickNew {
+            //传送门
+        }
+
         panel_emotion.mListener = object : EmojiInputListener {
             override fun onClick(type: String, emotion: Emotion) {
                 //单击

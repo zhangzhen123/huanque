@@ -13,8 +13,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.PlayerFrom
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.FloatingManager
@@ -77,6 +79,7 @@ class FloatingService : Service(), View.OnClickListener {
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        SharedPreferencesUtils.commitBoolean(SPParamKey.FLOATING_FLAG, true)
         mVertical = intent?.getBooleanExtra(ParamConstant.FLOATING_VERTICAL, false) ?: false
         if (mVertical) {
             layoutParams.width = dip(130)
@@ -196,6 +199,7 @@ class FloatingService : Service(), View.OnClickListener {
 
     override fun onDestroy() {
         // 移除浮动框
+        SharedPreferencesUtils.commitBoolean(SPParamKey.FLOATING_FLAG, false)
         if (windowManager != null && display != null) {
             videView?.stop()
             windowManager?.removeView(display)

@@ -54,6 +54,9 @@ object SPParamKey {
 
     //异常消息列表
     const val EXCEPTION_MESSAGE_LIST = "EXCEPTION_MESSAGE_LIST"
+
+    //悬浮窗显示标识
+    const val FLOATING_FLAG = "FLOATING_FLAG"
 }
 
 /**
@@ -591,8 +594,8 @@ object MineToolType {
     const val VisitHistory = "VisitHistory"
     const val ChatBubble = "ChatBubble"
     const val InviteFriend = "InviteFriend"
-    const val ToMaster ="ToMaster"
-    const val ToAnchor ="ToAnchor"
+    const val ToMaster = "ToMaster"
+    const val ToAnchor = "ToAnchor"
 }
 
 /**
