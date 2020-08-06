@@ -12,6 +12,7 @@ import com.alibaba.android.arouter.facade.annotation.Interceptor
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback
 import com.alibaba.android.arouter.facade.template.IInterceptor
 import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.common.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -164,6 +165,7 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
     private fun balanceNotEnoughDialog() {
         val act = CommonInit.getInstance().getCurrentActivity() as? AppCompatActivity
         if (act != null) {
+//            ToastUtils.show("余额不足")
             val dialogFragment = ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment).navigation() as? BaseDialogFragment
             dialogFragment?.show(act.supportFragmentManager, "BalanceNotEnoughFragment")
         }

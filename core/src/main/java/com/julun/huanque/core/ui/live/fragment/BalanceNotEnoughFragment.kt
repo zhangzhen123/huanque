@@ -1,5 +1,6 @@
-package com.julun.huanque.message.fragment
+package com.julun.huanque.core.ui.live.fragment
 
+import android.os.Bundle
 import android.view.Gravity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -8,7 +9,7 @@ import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.message.R
+import com.julun.huanque.core.R
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_balance_not_enough.*
@@ -20,6 +21,18 @@ import kotlinx.android.synthetic.main.fragment_balance_not_enough.*
  */
 @Route(path = ARouterConstant.BalanceNotEnoughFragment)
 class BalanceNotEnoughFragment : BaseDialogFragment() {
+
+    companion object {
+        fun newInstance(player: Boolean): BalanceNotEnoughFragment {
+            val fragment = BalanceNotEnoughFragment()
+            val bundle = Bundle()
+            bundle.putBoolean(ParamConstant.PLAYER, player)
+            fragment.arguments = bundle
+            return fragment
+        }
+
+    }
+
     override fun getLayoutId() = R.layout.fragment_balance_not_enough
 
     override fun needEnterAnimation() = false

@@ -26,6 +26,7 @@ import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.TargetUserObj
@@ -126,7 +127,7 @@ class PrivateConversationActivity : BaseActivity() {
     private var mChatSendGiftFragment: ChatSendGiftFragment? = null
 
     //余额不足弹窗
-    private var mBalanceNotFoundFragment: BalanceNotEnoughFragment? = null
+    private var mBalanceNotFoundFragment: BaseDialogFragment? = null
 
     /**
      * 欢遇弹窗
@@ -330,7 +331,9 @@ class PrivateConversationActivity : BaseActivity() {
 
         mPrivateConversationViewModel?.balanceNotEnoughFlag?.observe(this, Observer {
             if (it == true) {
-                mBalanceNotFoundFragment = mBalanceNotFoundFragment ?: BalanceNotEnoughFragment()
+//                ToastUtils.show("余额不足")
+                mBalanceNotFoundFragment = mBalanceNotFoundFragment ?: ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment)
+                    .navigation() as? BaseDialogFragment
                 mBalanceNotFoundFragment?.show(supportFragmentManager, "BalanceNotEnoughFragment")
             }
         })
