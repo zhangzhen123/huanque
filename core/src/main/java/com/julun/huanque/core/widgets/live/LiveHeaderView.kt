@@ -13,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.constant.UserChangeType
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
@@ -87,25 +88,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         val activity = context as? PlayerActivity
         activity?.let {
             playerViewModel = ViewModelProvider(activity).get(PlayerViewModel::class.java)
-
-            playerViewModel?.loginSuccessData?.observe(activity, androidx.lifecycle.Observer {
-                it ?: return@Observer
-                val royalCount = it.royalCount ?: 0
-                val guardCount = it.guardCount ?: 0
-                when {
-                    royalCount < 0 -> tvRoyalContent.text = "0"
-                    royalCount > 9999 -> tvRoyalContent.text = "9999"
-                    else -> tvRoyalContent.text = "$royalCount"
-                }
-                when {
-                    guardCount < 0 -> tvGuardContent.text = "0"
-                    guardCount > 9999 -> tvGuardContent.text = "9999"
-                    else -> tvGuardContent.text = "$guardCount"
-                }
-            })
-            playerViewModel?.baseData?.observe(activity, androidx.lifecycle.Observer {
-                royalButtonAnimation()
-            })
         }
     }
 
@@ -256,14 +238,8 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         // 直播间名称
         authorNicknameText.text = dto.programName
         // 直播间ID
-        if (dto.prettyId != null) {
-            programIdText.text = "${GlobalUtils.getString(R.string.live_room_pretty_id)}${dto.prettyId}"
-            programIdText.textColor = GlobalUtils.getColor(R.color.primary_color)
-        } else {
-            programIdText.textColor = GlobalUtils.getColor(R.color.white)
-            programIdText.text = "${context.getString(R.string.live_room_id)}${dto.programId}"
-        }
 
+        royalButtonAnimation()
     }
 
     /**
@@ -276,17 +252,12 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         //头像
         ImageUtils.loadImage(authorPhotoImage, info.headPic, 30f, 30f)
         // 直播间ID
-        if (prettyId != null) {
-            programIdText.text = "${GlobalUtils.getString(R.string.live_room_pretty_id)}$prettyId"
-            programIdText.textColor = GlobalUtils.getColor(R.color.primary_color)
-        } else {
-            programIdText.text = "${context.getString(R.string.live_room_id)}${info.programId}"
-            programIdText.textColor = GlobalUtils.getColor(R.color.white)
-        }
+
     }
 
     fun initData(roomData: UserEnterRoomRespDto) {
 //        logger.info("liveHeader ：${JsonUtil.seriazileAsString(roomData)}")
+        hotText.text ="${StringHelper.formatNum(roomData.heatValue)}"
         isSubscribed = roomData.follow
         changeFansViews(roomData.groupMember, roomData.fansClockIn)
 
@@ -296,7 +267,18 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
         isSubscribed = roomData.follow
 
-
+        val royalCount = roomData.royalCount ?: 0
+        val guardCount = roomData.guardCount ?: 0
+        when {
+            royalCount < 0 -> tvRoyalContent.text = "0"
+            royalCount > 9999 -> tvRoyalContent.text = "9999"
+            else -> tvRoyalContent.text = "$royalCount"
+        }
+        when {
+            guardCount < 0 -> tvGuardContent.text = "0"
+            guardCount > 9999 -> tvGuardContent.text = "9999"
+            else -> tvGuardContent.text = "$guardCount"
+        }
         //直播间用户数量
 //        tv_user_count.text = formatCount(roomData.regUserCount + roomData.visitorCount)
 //        tv_user_count.text = formatCount(roomData.onlineUserNum)

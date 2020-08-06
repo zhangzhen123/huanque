@@ -109,6 +109,13 @@ object ErrorCodes {
 
     //PK相关异常，需要toast
     const val PK_ERROR2 = 1014
+
+    //资料完成度100%且封面相册超过3张才能认证主播
+    const val NOT_INFO_COMPLETE = 1128
+    //完成微信绑定才能认证主播
+    const val NOT_BIND_WECHAT = 1129
+    //完成实名认证才能认证主播
+    const val NOT_REAL_NAME = 1130
 }
 
 /**

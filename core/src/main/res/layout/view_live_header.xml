@@ -53,12 +53,13 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/programIdText"
+            android:id="@+id/hotText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/authorNicknameText"
             android:layout_alignBottom="@+id/authorPhotoImage"
             android:layout_marginBottom="2dp"
+            android:drawableStart="@mipmap/icon_hot_small"
             android:layout_toRightOf="@+id/authorPhotoImage"
             android:includeFontPadding="false"
             android:textColor="@color/white"

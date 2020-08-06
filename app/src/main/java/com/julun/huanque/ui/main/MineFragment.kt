@@ -1,6 +1,5 @@
 package com.julun.huanque.ui.main
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +40,6 @@ import kotlinx.android.synthetic.main.fragment_mine.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
-import java.math.RoundingMode
 
 /**
  *@创建者   dong
@@ -55,7 +53,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     }
 
     private val mIRealNameService: IRealNameService by lazy {
-        ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation() as IRealNameService
+        ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+            .navigation() as IRealNameService
     }
 
     override fun getLayoutId() = R.layout.fragment_mine
@@ -86,6 +85,26 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             refreshView.isRefreshing = false
             if (it.isSuccess()) {
                 loadData(it.getT())
+            }
+        })
+        mViewModel.checkAuthorResult.observe(this, Observer {
+            if (it.isSuccess()) {
+                RNPageActivity.start(requireActivity(), RnConstant.ANCHOR_CERT_PAGE)
+            } else if (it.state == NetStateType.ERROR) {
+                val error = it.error ?: return@Observer
+                ToastUtils.show(error.busiMessage)
+                when (error.busiCode) {
+                    ErrorCodes.NOT_INFO_COMPLETE -> {
+                        RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+                    }
+                    ErrorCodes.NOT_BIND_WECHAT -> {
+                        //todo 跳转到账号与安全
+                    }
+                    ErrorCodes.NOT_REAL_NAME -> {
+                        ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY)
+                            .navigation()
+                    }
+                }
             }
         })
     }
@@ -166,7 +185,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
                 }
                 MineToolType.ToAnchor -> {
-                    RNPageActivity.start(requireActivity(), RnConstant.ANCHOR_CERT_PAGE)
+                    mViewModel.checkToAnchor()
                 }
             }
         }

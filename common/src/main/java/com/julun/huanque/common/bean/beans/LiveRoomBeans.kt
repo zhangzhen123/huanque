@@ -384,6 +384,8 @@ class UserEnterRoomRespDto : Serializable {
 
     /**游戏列表数据**/
     var gameList: MutableList<SingleGame> = mutableListOf()
+
+    var heatValue:Long=0L
 }
 
 /**
