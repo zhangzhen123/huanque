@@ -86,7 +86,12 @@ object MessageProcessor {
                 if ((targetId == SystemTargetId.systemNoticeSender || targetId == SystemTargetId.friendNoticeSender) && msg.content is CustomSimulateMessage) {
                     //模拟插入的系统消息或者好友通知(不做通知处理)
                 } else {
-                    EventBus.getDefault().post(EventMessageBean(msg.targetId ?: "", GlobalUtils.getStrangerType(msg)))
+                    EventBus.getDefault().post(
+                        EventMessageBean(
+                            msg.targetId ?: "",
+                            GlobalUtils.getStrangerType(msg)
+                        )
+                    )
                 }
             }
             privateTextProcessor?.processMessage(msg)
@@ -283,7 +288,10 @@ object MessageProcessor {
             return JsonUtil.deserializeAsObject(data, eventCode.klass)
         }
         val deserializeAsObject: EventMessageContent<T> =
-            JsonUtil.deserializeAsObject(data, ReflectUtil.type(EventMessageContent::class.java, eventCode.klass))
+            JsonUtil.deserializeAsObject(
+                data,
+                ReflectUtil.type(EventMessageContent::class.java, eventCode.klass)
+            )
         val context: T? = deserializeAsObject.context
         return context
     }
@@ -673,34 +681,6 @@ object MessageProcessor {
      */
     interface StopLivingMessageProcessor : EventMessageProcessor<CloseShowEvent> {
         override fun getEventType() = EventMessageType.StopLiving
-    }
-
-    /**
-     * 踢人
-     */
-    interface KickUserMessageProcessor : EventMessageProcessor<KickUserEvent> {
-        override fun getEventType() = EventMessageType.KickUser
-    }
-
-    /**
-     * 封禁
-     */
-    interface BlockUserMessageProcessor : EventMessageProcessor<BlockUserEvent> {
-        override fun getEventType() = EventMessageType.BlockUser
-    }
-
-    /**
-     * 提醒
-     */
-    interface RemindAnchorMessageProcessor : EventMessageProcessor<WarningEvent> {
-        override fun getEventType() = EventMessageType.RemindAnchor
-    }
-
-    /**
-     * 警告
-     */
-    interface WarnAnchorMessageProcessor : EventMessageProcessor<WarningEvent> {
-        override fun getEventType() = EventMessageType.WarnAnchor
     }
 
     interface RefreshUserMessageProcessor : EventMessageProcessor<VoidResult> {
@@ -1175,6 +1155,7 @@ object MessageProcessor {
     interface NetCallDisconnectProcessor : EventMessageProcessor<VoidResult> {
         override fun getEventType() = EventMessageType.NetCallDisconnect
     }
+
     /**
      * 对方忙消息
      */
@@ -1193,7 +1174,31 @@ object MessageProcessor {
         override fun getEventType() = EventMessageType.IntimateChange
     }
 
+    /**
+     * 踢人消息
+     */
+    interface KickUserProcessor : EventMessageProcessor<OperatorMessageBean> {
+        override fun getEventType() = EventMessageType.KickUser
+    }
+    /**
+     * 禁言消息
+     */
+    interface MuteUserProcessor : EventMessageProcessor<OperatorMessageBean> {
+        override fun getEventType() = EventMessageType.MuteUser
+    }
+    /**
+     * 封禁账户消息
+     */
+    interface BanUserProcessor : EventMessageProcessor<OperatorMessageBean> {
+        override fun getEventType() = EventMessageType.BanUser
+    }
 
+    /**
+     * 直播封禁（用户不允许进入任何直播间）
+     */
+    interface BanUserLivingProcessor : EventMessageProcessor<OperatorMessageBean> {
+        override fun getEventType() = EventMessageType.BanUserLiving
+    }
 }
 
 enum class EventMessageType(val klass: Class<*>) {
@@ -1288,21 +1293,11 @@ enum class EventMessageType(val klass: Class<*>) {
     /** 端午节礼物 **/
     BOAT_PROGRESS(BoatProgressEventBean::class.java),
 
-    /**踢人**/
-    KickUser(KickUserEvent::class.java),
-
-    /**封禁**/
-    BlockUser(BlockUserEvent::class.java),
-
     //答题开始通知
     QuestionStart(VoidResult::class.java),
 
     YuRenJie2018TTL(YuRenJieEvent::class.java),
     RoomTotalScoreChange(ContributionEvent::class.java),
-
-
-    WarnAnchor(WarningEvent::class.java),
-    RemindAnchor(WarningEvent::class.java),
 
     RefreshUser(VoidResult::class.java),
 
@@ -1531,5 +1526,23 @@ enum class EventMessageType(val klass: Class<*>) {
     NetCallBalanceRemind(NetCallBalanceRemindBean::class.java),
 
     //亲密度变化消息
-    IntimateChange(IntimateBean::class.java)
+    IntimateChange(IntimateBean::class.java),
+
+    //踢人消息
+    KickUser(OperatorMessageBean::class.java),
+
+    //禁言消息
+    MuteUser(OperatorMessageBean::class.java),
+
+    //封禁账户消息
+    BanUser(OperatorMessageBean::class.java),
+
+    //直播封禁（用户不允许进入任何直播间）
+    BanUserLiving(OperatorMessageBean::class.java)
+//    //设备封禁消息
+//    BanUserDevice(OperatorMessageBean::class.java),
+//    //设为房管消息
+//    UpToRoomManager(OperatorMessageBean::class.java),
+//    //取消房管消息
+//    CancelRoomManager(OperatorMessageBean::class.java),
 }

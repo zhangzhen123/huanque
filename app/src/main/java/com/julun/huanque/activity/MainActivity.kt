@@ -17,6 +17,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.bean.events.LoginOutEvent
 import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.ARouterConstant
@@ -34,10 +35,10 @@ import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.manager.FloatingManager
-import com.julun.huanque.core.service.FloatingService
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
+import com.julun.huanque.support.LoginManager
 import com.julun.huanque.ui.main.LeYuanFragment
 import com.julun.huanque.ui.main.MineFragment
 import com.julun.huanque.viewmodel.MainViewModel
@@ -45,7 +46,6 @@ import com.julun.maplib.LocationService
 import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.lang.Exception
 
 
 @Route(path = ARouterConstant.MAIN_ACTIVITY)
@@ -143,7 +143,10 @@ class MainActivity : BaseActivity() {
         super.onStart()
         val rxPermissions = RxPermissions(this)
         rxPermissions
-            .requestEachCombined(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+            .requestEachCombined(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
             .subscribe { permission ->
                 //不管有没有给权限 都不影响百度定位 只不过不给权限会不太准确
                 mLocationService.start()
@@ -416,6 +419,18 @@ class MainActivity : BaseActivity() {
             //融云连接成功，查询未读数
             mMainViewModel.getUnreadCount()
             mMainViewModel.refreshMessage()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun loginOut(event: LoginOutEvent) {
+        //登录通知
+        LoginManager.doLoginOut {
+            if (it) {
+                //退出登录成功
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 

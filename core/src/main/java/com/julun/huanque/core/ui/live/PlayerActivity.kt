@@ -30,6 +30,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
+import com.julun.huanque.common.bean.events.LoginOutEvent
 import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
 import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.forms.PKInfoForm
@@ -53,7 +54,6 @@ import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.FloatingManager
-import com.julun.huanque.core.service.FloatingService
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
@@ -68,6 +68,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_live_room.*
 import kotlinx.android.synthetic.main.frame_danmu.*
 import kotlinx.android.synthetic.main.view_live_header.*
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundResource
@@ -1551,52 +1552,6 @@ class PlayerActivity : BaseActivity() {
             }
         })
 
-        // 踢人
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.KickUserMessageProcessor {
-            override fun process(data: KickUserEvent) {
-                val message = "您已被${data.nickname}踢出直播间${data.time}"
-                logger.info(message)
-                finish()
-//                EventBus.getDefault().post(TickOutEvent(message))
-            }
-        })
-        // 封禁
-        MessageProcessor.registerEventProcessor(object :
-            MessageProcessor.BlockUserMessageProcessor {
-            override fun process(data: BlockUserEvent) {
-                val message = "您已被${data.nickname}封禁${data.time}"
-                logger.info(message)
-                if (isAnchor) {
-                    //不处理 等待下播消息
-                } else {
-                    finish()
-//                    EventBus.getDefault().post(TickOutEvent(message))
-                }
-            }
-        })
-        // 提醒
-        MessageProcessor.registerEventProcessor(object :
-            MessageProcessor.RemindAnchorMessageProcessor {
-            override fun process(data: WarningEvent) {
-                val message = data.reason
-                logger.info("提醒：$message")
-//                liveViewManager.mDialogManager.openDialog(clazz = RemindDialogFragment::class.java, builder = {
-//                    RemindDialogFragment.newInstance(message)
-//                })
-            }
-        })
-        //警告
-        MessageProcessor.registerEventProcessor(object :
-            MessageProcessor.WarnAnchorMessageProcessor {
-            override fun process(data: WarningEvent) {
-                val message = data.reason
-                if (message.isNotBlank()) {
-//                    liveViewManager.mDialogManager.openDialog(clazz = WarningDialogFragment::class.java, builder = {
-//                        WarningDialogFragment.newInstance(message)
-//                    })
-                }
-            }
-        })
         MessageProcessor.registerEventProcessor(object : MessageProcessor.PKFinishMessageProcess {
             override fun process(data: PKFinishEvent) {
                 logger.info("PKFinishMessage:${data.programIds.size}")
@@ -1677,7 +1632,34 @@ class PlayerActivity : BaseActivity() {
 //
 //        })
 
-
+        //踢人消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.KickUserProcessor {
+            override fun process(data: OperatorMessageBean) {
+                ToastUtils.show("${data.nickname}把${data.targetNickname}踢出直播间${data.time}")
+                finish()
+            }
+        })
+        //禁言消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.MuteUserProcessor {
+            override fun process(data: OperatorMessageBean) {
+                ToastUtils.show("${data.nickname}给了${data.targetNickname}一个${data.time}禁言套餐")
+            }
+        })
+        //封禁账户消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserProcessor {
+            override fun process(data: OperatorMessageBean) {
+                ToastUtils.show("${data.nickname}把${data.targetNickname}账号封禁了${data.time}")
+                EventBus.getDefault().post(LoginOutEvent())
+                finish()
+            }
+        })
+        //直播封禁（用户不允许进入任何直播间）
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserLivingProcessor {
+            override fun process(data: OperatorMessageBean) {
+                ToastUtils.show("${data.nickname}禁止${data.targetNickname}${data.time}进入任何直播间")
+                finish()
+            }
+        })
     }
 
 
