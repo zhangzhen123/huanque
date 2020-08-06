@@ -51,10 +51,7 @@ import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
-import com.julun.huanque.message.fragment.ChatSendGiftFragment
-import com.julun.huanque.message.fragment.CopyDialogFragment
-import com.julun.huanque.message.fragment.IntimateDetailFragment
-import com.julun.huanque.message.fragment.SingleIntimateprivilegeFragment
+import com.julun.huanque.message.fragment.*
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import com.julun.rnlib.RNPageActivity
@@ -127,6 +124,9 @@ class PrivateConversationActivity : BaseActivity() {
     private var mLinearLayoutManager: LinearLayoutManager? = null
 
     private var mChatSendGiftFragment: ChatSendGiftFragment? = null
+
+    //余额不足弹窗
+    private var mBalanceNotFoundFragment: BalanceNotEnoughFragment? = null
 
     /**
      * 欢遇弹窗
@@ -325,6 +325,13 @@ class PrivateConversationActivity : BaseActivity() {
                     //免费
                     tv_free.hide()
                 }
+            }
+        })
+
+        mPrivateConversationViewModel?.balanceNotEnoughFlag?.observe(this, Observer {
+            if (it == true) {
+                mBalanceNotFoundFragment = mBalanceNotFoundFragment ?: BalanceNotEnoughFragment()
+                mBalanceNotFoundFragment?.show(supportFragmentManager, "BalanceNotEnoughFragment")
             }
         })
     }

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingDefaultResource">
+
+    <ImageView
+        android:id="@+id/iv_header"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:src="@mipmap/bg_header_balance_not_enough"
+        app:layout_constraintDimensionRatio="973:300"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:src="@mipmap/icon_balance_close"
+        app:layout_constraintBottom_toBottomOf="@id/iv_header"
+        app:layout_constraintRight_toRightOf="@id/iv_header"
+        app:layout_constraintTop_toTopOf="@id/iv_header" />
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@drawable/bg_balance_not_enough_bottom"
+        app:layout_constraintBottom_toBottomOf="@id/view_last"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_header" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="余额不足"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_header" />
+
+    <View
+        android:id="@+id/view_recharge"
+        android:layout_width="0px"
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_balance_not_enough_item"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+
+    <ImageView
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/icon_balance_quebi"
+        app:layout_constraintBottom_toBottomOf="@id/view_recharge"
+        app:layout_constraintLeft_toLeftOf="@id/view_recharge"
+        app:layout_constraintTop_toTopOf="@id/view_recharge" />
+
+    <TextView
+        android:id="@+id/tv_recharge_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="59dp"
+        android:text="立即充值"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toTopOf="@+id/tv_recharge_content"
+        app:layout_constraintLeft_toLeftOf="@id/view_recharge"
+        app:layout_constraintTop_toTopOf="@id/view_recharge"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_recharge_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="聊天要趁热，别让Ta被人撩走"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@id/view_recharge"
+        app:layout_constraintLeft_toLeftOf="@id/tv_recharge_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_recharge_title" />
+
+    <TextView
+        android:id="@+id/tv_recharge_action"
+        android:layout_width="52dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_balance_action"
+        android:gravity="center"
+        android:text="去充值"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@id/view_recharge"
+        app:layout_constraintRight_toRightOf="@id/view_recharge"
+        app:layout_constraintTop_toTopOf="@id/view_recharge" />
+
+    <View
+        android:id="@+id/view_invite"
+        android:layout_width="0px"
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_balance_not_enough_item"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_recharge" />
+
+
+    <ImageView
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/icon_balance_red_package"
+        app:layout_constraintBottom_toBottomOf="@id/view_invite"
+        app:layout_constraintLeft_toLeftOf="@id/view_invite"
+        app:layout_constraintTop_toTopOf="@id/view_invite" />
+
+    <TextView
+        android:id="@+id/tv_invite_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="59dp"
+        android:text="邀请好友"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toTopOf="@+id/tv_invite_content"
+        app:layout_constraintLeft_toLeftOf="@id/view_invite"
+        app:layout_constraintTop_toTopOf="@id/view_invite"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_invite_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="立即得现金，能用钱解决都不是事"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@id/view_invite"
+        app:layout_constraintLeft_toLeftOf="@id/tv_invite_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_invite_title" />
+
+    <TextView
+        android:id="@+id/tv_invite_action"
+        android:layout_width="52dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_balance_action"
+        android:gravity="center"
+        android:text="去邀请"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@id/view_invite"
+        app:layout_constraintRight_toRightOf="@id/view_invite"
+        app:layout_constraintTop_toTopOf="@id/view_invite" />
+
+    <View
+        android:id="@+id/view_task"
+        android:layout_width="0px"
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_balance_not_enough_item"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_invite" />
+
+
+    <ImageView
+        android:id="@+id/iv_task"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/icon_balance_task"
+        app:layout_constraintBottom_toBottomOf="@id/view_task"
+        app:layout_constraintLeft_toLeftOf="@id/view_task"
+        app:layout_constraintTop_toTopOf="@id/view_task" />
+
+    <TextView
+        android:id="@+id/tv_task_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="59dp"
+        android:text="完成任务"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toTopOf="@+id/tv_task_content"
+        app:layout_constraintLeft_toLeftOf="@id/view_task"
+        app:layout_constraintTop_toTopOf="@id/view_task"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_task_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="即可获得免费聊天券"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@id/view_task"
+        app:layout_constraintLeft_toLeftOf="@id/tv_task_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_task_title" />
+
+    <TextView
+        android:id="@+id/tv_task_action"
+        android:layout_width="52dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_balance_action"
+        android:gravity="center"
+        android:text="去完成"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@id/view_task"
+        app:layout_constraintRight_toRightOf="@id/view_task"
+        app:layout_constraintTop_toTopOf="@id/view_task" />
+
+    <View
+        android:id="@+id/view_last"
+        android:layout_width="1px"
+        android:layout_height="1px"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="@id/view_task"
+        app:layout_constraintTop_toBottomOf="@id/view_task" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

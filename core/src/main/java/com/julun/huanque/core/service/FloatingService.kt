@@ -196,7 +196,7 @@ class FloatingService : Service(), View.OnClickListener {
 
     override fun onDestroy() {
         // 移除浮动框
-        if (windowManager != null) {
+        if (windowManager != null && display != null) {
             videView?.stop()
             windowManager?.removeView(display)
         }

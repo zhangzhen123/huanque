@@ -13,10 +13,7 @@ import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.SendMsgForm
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.FingerGuessingResult
-import com.julun.huanque.common.constant.MessageCustomBeanType
-import com.julun.huanque.common.constant.MessageFailType
-import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
@@ -84,6 +81,9 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //消息状态变化变化使用
     val msgData: MutableLiveData<Message> by lazy { MutableLiveData<Message>() }
+
+    //显示余额不足弹窗标识位
+    val balanceNotEnoughFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //操作类型
     var operationType = ""
@@ -272,7 +272,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun sendMsg(targetId: Long, content: String, targetUser: TargetUserObj, type: String = "", localMsg: Message? = null) {
         viewModelScope.launch {
             request({
-                val result = socialService.sendMsg(SendMsgForm(targetId, content)).dataConvert()
+                val result = socialService.sendMsg(SendMsgForm(targetId, content)).dataConvert(intArrayOf(ErrorCodes.BALANCE_NOT_ENOUGH))
                 BalanceUtils.saveBalance(result.beans)
                 msgFeeData.value = result.consumeBeans
                 if (type.isEmpty()) {
@@ -306,9 +306,8 @@ class PrivateConversationViewModel : BaseViewModel() {
                     }
                 }
             }, {
-                if(it !is ResponseError){
-                    ToastUtils.show("网络不可用，发送失败")
-                }
+                sendMsgFailInWeb(it)
+
                 sendMessageFail(localMsg ?: return@request, MessageFailType.WEB)
             })
         }
@@ -337,6 +336,17 @@ class PrivateConversationViewModel : BaseViewModel() {
                 msgFeeData.value = result.consumeBeans
                 uploader?.success(Uri.parse(content))
             }, {
+                if (it !is ResponseError) {
+                    ToastUtils.show("网络不可用，发送失败")
+                } else {
+                    when (it.busiCode) {
+                        ErrorCodes.BALANCE_NOT_ENOUGH -> {
+                            balanceNotEnoughFlag.value = true
+                        }
+                        else -> {
+                        }
+                    }
+                }
                 uploader?.error()
             })
         }
@@ -371,6 +381,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     }
                 }
             }, {
+                sendMsgFailInWeb(it)
                 sendMessageFail(localMsg ?: return@request, MessageFailType.WEB)
             })
         }
@@ -408,6 +419,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     }
                 }
             }, {
+                sendMsgFailInWeb(it)
                 sendMessageFail(localMsg ?: return@request, MessageFailType.WEB)
             })
         }
@@ -464,6 +476,23 @@ class PrivateConversationViewModel : BaseViewModel() {
             else -> {
 //                logger.info("Message 未兼容该表情")
                 return ""
+            }
+        }
+    }
+
+    /**
+     * 发送消息过程中，服务端异常
+     */
+    private fun sendMsgFailInWeb(t: Throwable) {
+        if (t !is ResponseError) {
+            ToastUtils.show("网络不可用，发送失败")
+        } else {
+            when (t.busiCode) {
+                ErrorCodes.BALANCE_NOT_ENOUGH -> {
+                    balanceNotEnoughFlag.value = true
+                }
+                else -> {
+                }
             }
         }
     }

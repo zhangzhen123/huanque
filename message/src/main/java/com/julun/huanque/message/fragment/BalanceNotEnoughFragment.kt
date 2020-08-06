@@ -1,0 +1,71 @@
+package com.julun.huanque.message.fragment
+
+import android.view.Gravity
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.message.R
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
+import kotlinx.android.synthetic.main.fragment_balance_not_enough.*
+
+/**
+ *@创建者   dong
+ *@创建时间 2020/8/6 13:49
+ *@描述 余额不足弹窗
+ */
+@Route(path = ARouterConstant.BalanceNotEnoughFragment)
+class BalanceNotEnoughFragment : BaseDialogFragment() {
+    override fun getLayoutId() = R.layout.fragment_balance_not_enough
+
+    override fun needEnterAnimation() = false
+
+    override fun initViews() {
+        initEvents()
+        val player = arguments?.getBoolean(ParamConstant.PLAYER, false)
+        if (player == true) {
+            //直播间内显示
+            tv_recharge_content.text = "送礼要趁热，别让Ta被人撩走"
+            view_task.hide()
+            iv_task.hide()
+            tv_task_title.hide()
+            tv_task_content.hide()
+            tv_task_action.hide()
+        } else {
+            //其他地方显示
+            tv_recharge_content.text = "聊天要趁热，别让Ta被人撩走"
+        }
+    }
+
+    private fun initEvents() {
+        iv_close.onClickNew {
+            dismiss()
+        }
+        tv_recharge_action.onClickNew {
+            //去充值
+            ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
+            dismiss()
+        }
+
+        tv_invite_action.onClickNew {
+            //去邀请
+            RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+            dismiss()
+        }
+
+        tv_task_action.onClickNew {
+            //去完成 进入养鹊乐园
+
+            dismiss()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setDialogSize(Gravity.CENTER, 25)
+    }
+}

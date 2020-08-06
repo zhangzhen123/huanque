@@ -56,6 +56,9 @@ object ARouterConstant {
     //会话列表页面
     const val MessageFragment = "/$MESSAGE$PREFIX_FRAGMENT/MessageFragment"
 
+    //余额不足弹窗
+    const val BalanceNotEnoughFragment = "/$MESSAGE$PREFIX_FRAGMENT/BalanceNotEnoughFragment"
+
     //亲密特权弹窗
     const val SINGLE_INTIMATE_PRIVILEGE_FRAGMENT = "/$MESSAGE$PREFIX_FRAGMENT/SingleIntimateprivilegeFragment"
 
