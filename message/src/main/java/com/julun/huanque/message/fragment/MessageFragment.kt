@@ -128,16 +128,24 @@ class MessageFragment : BaseFragment() {
                     }
                     else -> {
                         //首页IM
-                        activity?.let { act ->
-                            try {
-                                PrivateConversationActivity.newInstance(
-                                    act,
-                                    lmc.conversation.targetId.toLong()
-                                )
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
+                        try {
+                            if (mMessageViewModel.player) {
+                                //直播间内
+                                mPlayerMessageViewModel.privateConversationData.value =
+                                    OpenPrivateChatRoomEvent(lmc.conversation.targetId.toLong(), "")
+                            } else {
+                                //非直播间内
+                                activity?.let { act ->
 
+                                    PrivateConversationActivity.newInstance(
+                                        act,
+                                        lmc.conversation.targetId.toLong()
+                                    )
+
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
                 }

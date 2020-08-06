@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.live.manager
 
+import android.Manifest
 import android.animation.*
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
@@ -13,10 +14,9 @@ import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.fastjson.JSONObject
 import com.facebook.drawee.view.SimpleDraweeView
-import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.ChatMessageBean
 import com.julun.huanque.common.bean.MessageUtil
@@ -33,13 +33,16 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.viewmodel.ConnectMicroViewModel
+import com.julun.huanque.common.viewmodel.PlayerMessageViewModel
 import com.julun.huanque.common.viewmodel.VideoChangeViewModel
 import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.fragment.PrivateFragment
-import com.julun.huanque.core.viewmodel.*
+import com.julun.huanque.core.viewmodel.AnchorNoLiveViewModel
+import com.julun.huanque.core.viewmodel.OrientationViewModel
+import com.julun.huanque.core.viewmodel.PropViewModel
 import com.julun.huanque.core.widgets.live.LiveRunwayView
 import com.julun.huanque.core.widgets.live.message.MessageRecyclerView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -514,6 +517,8 @@ class PlayerViewManager(val context: PlayerActivity) {
 
 
     }
+
+
 
     /**
      * 设置ProgramId

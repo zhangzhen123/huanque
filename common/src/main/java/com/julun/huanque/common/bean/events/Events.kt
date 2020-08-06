@@ -55,6 +55,11 @@ class WeiXinCodeEvent(val code: String)
 class MessageBlockEvent()
 
 /**
+ * 打开私聊页
+ */
+class OpenPrivateChatRoomEvent(var userId: Long, var nickname: String)
+
+/**
  * 折叠陌生人消息变化
  */
 class FoldStrangerMessageEvent()
