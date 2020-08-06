@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
