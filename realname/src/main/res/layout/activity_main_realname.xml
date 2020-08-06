@@ -38,7 +38,7 @@
         android:background="#FFFAEE"
         android:gravity="left|center_vertical"
         android:paddingLeft="@dimen/dimen_15"
-        android:text="根据相关规定，您需通过实名认证才能提现"
+        android:text="请填写您的真实信息，一经通过将无法修改"
         android:textColor="#FFFFBA00"
         android:textSize="@dimen/sp_12"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -91,7 +91,13 @@ import java.util.concurrent.TimeUnit
 class PrivateConversationActivity : BaseActivity() {
     companion object {
 
-        fun newInstance(activity: Activity, targetId: Long, nickname: String = "", meetStatus: String = "", operation: String = "") {
+        fun newInstance(
+            activity: Activity,
+            targetId: Long,
+            nickname: String = "",
+            meetStatus: String = "",
+            operation: String = ""
+        ) {
             val intent = Intent(activity, PrivateConversationActivity::class.java)
             intent.putExtra(ParamConstant.TARGET_USER_ID, targetId)
             intent.putExtra(ParamConstant.NICKNAME, nickname)
@@ -182,7 +188,8 @@ class PrivateConversationActivity : BaseActivity() {
         showTitleView(nickName, meetStatus)
         mPrivateConversationViewModel?.targetIdData?.value = targetID
 
-        mPrivateConversationViewModel?.operationType = intent?.getStringExtra(ParamConstant.OPERATION) ?: ""
+        mPrivateConversationViewModel?.operationType =
+            intent?.getStringExtra(ParamConstant.OPERATION) ?: ""
         //获取基本数据
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
         //获取小鹊语料
@@ -220,7 +227,8 @@ class PrivateConversationActivity : BaseActivity() {
      * 初始化ViewModel
      */
     private fun initViewModel() {
-        mPrivateConversationViewModel = ViewModelProvider(this).get(PrivateConversationViewModel::class.java)
+        mPrivateConversationViewModel =
+            ViewModelProvider(this).get(PrivateConversationViewModel::class.java)
         mIntimateDetailViewModel = ViewModelProvider(this).get(IntimateDetailViewModel::class.java)
 
         mPrivateConversationViewModel?.targetIdData?.observe(this, Observer {
@@ -351,8 +359,13 @@ class PrivateConversationActivity : BaseActivity() {
         }
         header_view.imageOperation.onClickNew {
             //打开会话设置
-            val chatUserBean = mPrivateConversationViewModel?.chatInfoData?.value ?: return@onClickNew
-            PrivateConversationSettingActivity.newInstance(this, chatUserBean.userId, chatUserBean.sex)
+            val chatUserBean =
+                mPrivateConversationViewModel?.chatInfoData?.value ?: return@onClickNew
+            PrivateConversationSettingActivity.newInstance(
+                this,
+                chatUserBean.userId,
+                chatUserBean.sex
+            )
         }
 
         bottom_action.onTouch { v, event ->
@@ -362,7 +375,8 @@ class PrivateConversationActivity : BaseActivity() {
         tv_send.onClickNew {
             //发送按钮
             val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
-            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
+            val dialogShow =
+                SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
             if (msgFee != null && msgFee > 0 && !dialogShow) {
                 //消息需要付费
                 showMessageFeeDialog(true, msgFee)
@@ -384,7 +398,8 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_pic.onClickNew {
             val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
-            val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
+            val dialogShow =
+                SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
             if (msgFee != null && msgFee > 0 && !dialogShow) {
                 //消息需要付费
                 showMessageFeeDialog(true, msgFee)
@@ -394,7 +409,8 @@ class PrivateConversationActivity : BaseActivity() {
         }
         iv_intimate.onClickNew {
             //显示欢遇弹窗
-            mIntimateDetailFragment = mIntimateDetailFragment ?: IntimateDetailFragment.newInstance()
+            mIntimateDetailFragment =
+                mIntimateDetailFragment ?: IntimateDetailFragment.newInstance()
             mIntimateDetailFragment?.show(supportFragmentManager, "IntimateDetailFragment")
         }
 
@@ -463,7 +479,10 @@ class PrivateConversationActivity : BaseActivity() {
                         //普通表情
                         val start: Int = edit_text.selectionStart
                         val editable: Editable = edit_text.editableText
-                        val emotionSpannable: Spannable = EmojiSpanBuilder.buildEmotionSpannable(this@PrivateConversationActivity, emotion.text)
+                        val emotionSpannable: Spannable = EmojiSpanBuilder.buildEmotionSpannable(
+                            this@PrivateConversationActivity,
+                            emotion.text
+                        )
                         editable.insert(start, emotionSpannable)
                     }
                     EmojiType.PREROGATIVE -> {
@@ -473,8 +492,14 @@ class PrivateConversationActivity : BaseActivity() {
                     EmojiType.ANIMATION -> {
                         //动画表情
                         //随机结果
-                        val result = mPrivateConversationViewModel?.calcuteAnimationResult(emotion.text) ?: ""
-                        sendChatMessage(message = emotion.text, animationResult = result, messageType = Message_Animation)
+                        val result =
+                            mPrivateConversationViewModel?.calcuteAnimationResult(emotion.text)
+                                ?: ""
+                        sendChatMessage(
+                            message = emotion.text,
+                            animationResult = result,
+                            messageType = Message_Animation
+                        )
                     }
                 }
             }
@@ -499,7 +524,8 @@ class PrivateConversationActivity : BaseActivity() {
                 val currentLevel = intimate.intimateLevel
                 IntimateUtil.intimatePrivilegeList.forEach {
                     if (it.key == "ZSBQ") {
-                        SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(supportFragmentManager, "SingleIntimateprivilegeFragment")
+                        SingleIntimateprivilegeFragment.newInstance(it, currentLevel)
+                            .show(supportFragmentManager, "SingleIntimateprivilegeFragment")
                         return
                     }
                 }
@@ -568,7 +594,8 @@ class PrivateConversationActivity : BaseActivity() {
      * @param fee 价格
      */
     private fun showMessageFeeDialog(text: Boolean, fee: Long) {
-        val dialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
+        val dialogShow =
+            SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
         if (!dialogShow) {
             //未显示过价格弹窗，显示弹窗
             MyAlertDialog(this).showAlertWithOKAndCancel(
@@ -609,7 +636,8 @@ class PrivateConversationActivity : BaseActivity() {
         var rootView: View? = null
         when (type) {
             EmojiType.NORMAL -> {
-                rootView = LayoutInflater.from(this).inflate(R.layout.fragment_normal_emoji_suspend, null)
+                rootView =
+                    LayoutInflater.from(this).inflate(R.layout.fragment_normal_emoji_suspend, null)
                 mEmojiPopupWindow = PopupWindow(rootView, dip(50), dip(66))
                 val drawable = GlobalUtils.getDrawable(R.drawable.bg_emoji_suspend)
                 mEmojiPopupWindow?.setBackgroundDrawable(drawable)
@@ -617,7 +645,8 @@ class PrivateConversationActivity : BaseActivity() {
                 dy = location[1] - dip(66) + dip(13)
             }
             EmojiType.PREROGATIVE -> {
-                rootView = LayoutInflater.from(this).inflate(R.layout.fragment_privilege_emoji_suspend, null)
+                rootView = LayoutInflater.from(this)
+                    .inflate(R.layout.fragment_privilege_emoji_suspend, null)
                 mEmojiPopupWindow = PopupWindow(rootView, dip(94), dip(116))
                 val drawable = GlobalUtils.getDrawable(R.drawable.bg_expression_privilege_suspend)
                 mEmojiPopupWindow?.setBackgroundDrawable(drawable)
@@ -655,7 +684,8 @@ class PrivateConversationActivity : BaseActivity() {
         localParams[2] = view.width
         localParams[3] = view.height
 
-        CopyDialogFragment.newInstance(content, localParams).show(supportFragmentManager, "CopyDialogFragment")
+        CopyDialogFragment.newInstance(content, localParams)
+            .show(supportFragmentManager, "CopyDialogFragment")
     }
 
     /**
@@ -726,7 +756,8 @@ class PrivateConversationActivity : BaseActivity() {
                     goToPictureSelectPager()
                 } else {
                     //亲密度等级不足
-                    SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(this, "SingleIntimateprivilegeFragment")
+                    SingleIntimateprivilegeFragment.newInstance(it, currentLevel)
+                        .show(this, "SingleIntimateprivilegeFragment")
                 }
                 return
             }
@@ -758,8 +789,12 @@ class PrivateConversationActivity : BaseActivity() {
         if (mPrivateConversationViewModel?.basicBean?.value?.answer == true) {
             val bundle = Bundle()
             bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLING)
-            bundle.putLong(ParamConstant.UserId, mPrivateConversationViewModel?.targetIdData?.value ?: return)
-            ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
+            bundle.putLong(
+                ParamConstant.UserId,
+                mPrivateConversationViewModel?.targetIdData?.value ?: return
+            )
+            ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle)
+                .navigation()
         } else {
             ToastUtils.show("对方关闭了语音通话服务")
         }
@@ -882,7 +917,8 @@ class PrivateConversationActivity : BaseActivity() {
                     override fun getScrollViewId() = R.id.iv_background
                 })
                 .addContentScrollMeasurer(object : ContentScrollMeasurer {
-                    override fun getScrollDistance(defaultDistance: Int) = defaultDistance - unfilledHeight
+                    override fun getScrollDistance(defaultDistance: Int) =
+                        defaultDistance - unfilledHeight
 
                     override fun getScrollViewId() = R.id.recyclerview
                 })
@@ -929,7 +965,13 @@ class PrivateConversationActivity : BaseActivity() {
                     val content = tempData.content
                     if (content is ImageMessage) {
                         //todo 添加本地地址查看
-                        ImageActivity.start(this, 0, medias = listOf(StringHelper.getOssImgUrl("${content.remoteUri}")))
+                        ImageActivity.start(
+                            this,
+                            0,
+                            medias = listOf(StringHelper.getOssImgUrl("${content.remoteUri}")),
+                            userId = tempData.senderUserId.toLongOrNull(),
+                            operate = ImageActivityOperate.REPORT
+                        )
                     }
                 }
                 R.id.sdv_header -> {
@@ -1042,15 +1084,27 @@ class PrivateConversationActivity : BaseActivity() {
                         when (content.type) {
                             MessageCustomBeanType.Expression_Privilege -> {
                                 //特权表情
-                                val extra = JsonUtil.deserializeAsObject<String>(content.context, String::class.java)
+                                val extra = JsonUtil.deserializeAsObject<String>(
+                                    content.context,
+                                    String::class.java
+                                )
                                 sendChatMessage(message = extra, messageType = Message_Privilege)
                             }
                             MessageCustomBeanType.Expression_Animation -> {
                                 //动画表情
-                                val bean = JsonUtil.deserializeAsObject<ExpressionAnimationBean>(content.context, ExpressionAnimationBean::class.java)
+                                val bean = JsonUtil.deserializeAsObject<ExpressionAnimationBean>(
+                                    content.context,
+                                    ExpressionAnimationBean::class.java
+                                )
                                 //重新生成结果
-                                val result = mPrivateConversationViewModel?.calcuteAnimationResult(bean.name) ?: ""
-                                sendChatMessage(message = bean.name, animationResult = result, messageType = Message_Animation)
+                                val result =
+                                    mPrivateConversationViewModel?.calcuteAnimationResult(bean.name)
+                                        ?: ""
+                                sendChatMessage(
+                                    message = bean.name,
+                                    animationResult = result,
+                                    messageType = Message_Animation
+                                )
                             }
                         }
                     }
@@ -1081,7 +1135,10 @@ class PrivateConversationActivity : BaseActivity() {
                             if (!result) {
                                 //发送不成功
                                 msg.messageId = message.messageId
-                                mPrivateConversationViewModel?.sendMessageFail(msg, MessageFailType.RONG_CLOUD)
+                                mPrivateConversationViewModel?.sendMessageFail(
+                                    msg,
+                                    MessageFailType.RONG_CLOUD
+                                )
                             } else {
                                 msg.sentStatus = message.sentStatus
                                 mPrivateConversationViewModel?.msgData?.value = msg
@@ -1093,7 +1150,13 @@ class PrivateConversationActivity : BaseActivity() {
                         if (content.type == MessageCustomBeanType.Expression_Animation) {
                             //动画消息，重置 播放动画标识
                             msg.extra =
-                                JsonUtil.serializeAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, false))
+                                JsonUtil.serializeAsString(
+                                    GlobalUtils.addExtra(
+                                        msg.extra ?: "",
+                                        ParamConstant.MSG_ANIMATION_STARTED,
+                                        false
+                                    )
+                                )
                         }
                         msg.sentStatus = Message.SentStatus.SENDING
                         sendCustomMessage(msg)
@@ -1186,7 +1249,8 @@ class PrivateConversationActivity : BaseActivity() {
         val targetUser = TargetUserObj().apply {
             headPic = targetChatInfo.headPic
             nickname = targetChatInfo.nickname
-            intimateLevel = mPrivateConversationViewModel?.basicBean?.value?.intimate?.intimateLevel ?: 0
+            intimateLevel =
+                mPrivateConversationViewModel?.basicBean?.value?.intimate?.intimateLevel ?: 0
             meetStatus = targetChatInfo.meetStatus
             userId = targetChatInfo.userId
         }
@@ -1198,10 +1262,19 @@ class PrivateConversationActivity : BaseActivity() {
         when (messageType) {
             Message_Text -> {
                 //文本消息
-                val msg = RongCloudManager.obtainTextMessage(message, "${targetChatInfo.userId}", targetUser)
+                val msg = RongCloudManager.obtainTextMessage(
+                    message,
+                    "${targetChatInfo.userId}",
+                    targetUser
+                )
                 msg.sentStatus = Message.SentStatus.SENDING
                 mPrivateConversationViewModel?.addMessage(msg)
-                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser, localMsg = msg)
+                mPrivateConversationViewModel?.sendMsg(
+                    targetChatInfo.userId,
+                    message,
+                    targetUser,
+                    localMsg = msg
+                )
             }
 
             Message_Pic -> {
@@ -1247,7 +1320,13 @@ class PrivateConversationActivity : BaseActivity() {
                 msg.senderUserId = "${SessionUtils.getUserId()}"
                 msg.sentStatus = Message.SentStatus.SENDING
                 mPrivateConversationViewModel?.addMessage(msg)
-                mPrivateConversationViewModel?.sendMsg(targetChatInfo.userId, message, targetUser, Message_Privilege, msg)
+                mPrivateConversationViewModel?.sendMsg(
+                    targetChatInfo.userId,
+                    message,
+                    targetUser,
+                    Message_Privilege,
+                    msg
+                )
             }
             Message_Animation -> {
                 //动画表情
@@ -1265,10 +1344,18 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.addMessage(msg)
                 when (message) {
                     "[猜拳]" -> {
-                        mPrivateConversationViewModel?.sendFinger(targetChatInfo.userId, animationResult, msg)
+                        mPrivateConversationViewModel?.sendFinger(
+                            targetChatInfo.userId,
+                            animationResult,
+                            msg
+                        )
                     }
                     "[骰子]" -> {
-                        mPrivateConversationViewModel?.sendDice(targetChatInfo.userId, animationResult, msg)
+                        mPrivateConversationViewModel?.sendDice(
+                            targetChatInfo.userId,
+                            animationResult,
+                            msg
+                        )
                     }
                     else -> {
                     }
@@ -1309,7 +1396,11 @@ class PrivateConversationActivity : BaseActivity() {
                 Message.SentStatus.SENDING -> {
                     //发送中
                     try {
-                        mPrivateConversationViewModel?.sendPic(upLoader, imageMessage.targetId.toLong(), "$picUrl")
+                        mPrivateConversationViewModel?.sendPic(
+                            upLoader,
+                            imageMessage.targetId.toLong(),
+                            "$picUrl"
+                        )
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -1322,7 +1413,8 @@ class PrivateConversationActivity : BaseActivity() {
                 Message.SentStatus.SENT -> {
                     //发送成功
                     imageMessage.sentStatus = Message.SentStatus.SENT
-                    (imageMessage.content as? ImageMessage)?.remoteUri = (msg.content as? ImageMessage)?.remoteUri
+                    (imageMessage.content as? ImageMessage)?.remoteUri =
+                        (msg.content as? ImageMessage)?.remoteUri
                     mPrivateConversationViewModel?.msgData?.value = imageMessage
                 }
                 else -> {
@@ -1338,7 +1430,10 @@ class PrivateConversationActivity : BaseActivity() {
     private fun checkPicPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions
-            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .requestEachCombined(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
             .subscribe { permission ->
                 when {
                     permission.granted -> {
@@ -1371,8 +1466,12 @@ class PrivateConversationActivity : BaseActivity() {
                         logger.info("获取权限成功")
                         val bundle = Bundle()
                         bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLING)
-                        bundle.putLong(ParamConstant.UserId, mPrivateConversationViewModel?.targetIdData?.value ?: return@subscribe)
-                        ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
+                        bundle.putLong(
+                            ParamConstant.UserId,
+                            mPrivateConversationViewModel?.targetIdData?.value ?: return@subscribe
+                        )
+                        ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY)
+                            .with(bundle).navigation()
                     }
                     permission.shouldShowRequestPermissionRationale -> // Oups permission denied
                         ToastUtils.show("权限无法获取")
@@ -1498,7 +1597,8 @@ class PrivateConversationActivity : BaseActivity() {
      * 显示背景
      */
     private fun showBackground() {
-        val key = GlobalUtils.getBackgroundKey(mPrivateConversationViewModel?.targetIdData?.value ?: 0)
+        val key =
+            GlobalUtils.getBackgroundKey(mPrivateConversationViewModel?.targetIdData?.value ?: 0)
         val picSource = SharedPreferencesUtils.getString(key, "")
         if (picSource.isNotEmpty()) {
             ImageUtils.loadNativeFilePath(
