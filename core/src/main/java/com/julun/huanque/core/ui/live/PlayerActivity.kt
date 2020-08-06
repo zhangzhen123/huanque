@@ -19,6 +19,7 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
@@ -582,17 +583,19 @@ class PlayerActivity : BaseActivity() {
      * 打开私聊页面
      */
     private fun openPrivateConversation() {
-        val userInfo = playerMessageViewModel.privateConversationData.value ?: return
-        val bundle = Bundle()
-        bundle.putLong(ParamConstant.TARGET_USER_ID, userInfo.userId)
-        bundle.putString(ParamConstant.NICKNAME, userInfo.nickname)
-        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
-            .navigation()
-        val baseData = viewModel.baseData.value ?: return
-        FloatingManager.showFloatingView(
-            GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
-            viewModel.programId
-        )
+        lifecycleScope.launchWhenResumed {
+            val userInfo = playerMessageViewModel.privateConversationData.value ?: return@launchWhenResumed
+            val bundle = Bundle()
+            bundle.putLong(ParamConstant.TARGET_USER_ID, userInfo.userId)
+            bundle.putString(ParamConstant.NICKNAME, userInfo.nickname)
+            ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
+                .navigation()
+            val baseData = viewModel.baseData.value ?: return@launchWhenResumed
+            FloatingManager.showFloatingView(
+                GlobalUtils.getPlayUrl(baseData.playInfo ?: return@launchWhenResumed),
+                viewModel.programId
+            )
+        }
     }
 
     private var mHelper: PanelSwitchHelper? = null
