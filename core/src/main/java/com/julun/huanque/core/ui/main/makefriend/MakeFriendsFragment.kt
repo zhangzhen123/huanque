@@ -20,6 +20,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.bean.events.UserInfoEditEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ParamConstant
@@ -182,8 +183,10 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
                     }
                     HeadModule.HotLive -> {
-                        requireActivity().startActivity<PlayerActivity>(IntentParamKey.PROGRAM_ID.name to 10006L
-                        ,IntentParamKey.IMAGE.name to "user/head/b0295e5d-5c2d-45a8-928f-5333c880f489.jpg")
+                        requireActivity().startActivity<PlayerActivity>(
+                            IntentParamKey.PROGRAM_ID.name to 10006L
+                            , IntentParamKey.IMAGE.name to "user/head/b0295e5d-5c2d-45a8-928f-5333c880f489.jpg"
+                        )
 
                     }
                     HeadModule.PlumFlower -> {
@@ -318,10 +321,10 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     /**
      * 暂停音频
      */
-    private fun pauseAudio(){
-        if(currentPlayHomeRecomItem?.isPlay==true){
+    private fun pauseAudio() {
+        if (currentPlayHomeRecomItem?.isPlay == true) {
             audioPlayerManager.pause()
-            currentPlayHomeRecomItem?.isPlay=false
+            currentPlayHomeRecomItem?.isPlay = false
             mAdapter.notifyItemChanged(currentIndex)
         }
     }
@@ -335,15 +338,17 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     override fun onHiddenChanged(hidden: Boolean) {
         logger.info("onHiddenChanged=$hidden")
         super.onHiddenChanged(hidden)
-        if(hidden){
+        if (hidden) {
             pauseAudio()
         }
     }
+
     //父组件调用
-    fun hideTodo(){
+    fun hideTodo() {
         logger.info("hideTodo")
         pauseAudio()
     }
+
     private fun initViewModel() {
         mViewModel.stateList.observe(viewLifecycleOwner, Observer {
             //
@@ -352,7 +357,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 loadData(it.getT())
             } else if (it.state == NetStateType.ERROR) {
                 //dodo
-                val data=it.getT()
+                val data = it.getT()
                 loadFail(data.isPull)
             }
         })
@@ -373,9 +378,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
         if (stateList.hasMore) {
             //如果下拉加载更多时 返回的列表为空 会触发死循环 这里直接设置加载完毕状态
-            if(stateList.list.isEmpty()){
+            if (stateList.list.isEmpty()) {
                 mAdapter.loadMoreModule.loadMoreEnd(false)
-            }else{
+            } else {
                 mAdapter.loadMoreModule.loadMoreComplete()
             }
 
@@ -403,10 +408,11 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         }
 
     }
-    private fun loadFail(isPull:Boolean){
-        if(isPull){
+
+    private fun loadFail(isPull: Boolean) {
+        if (isPull) {
             ToastUtils.show("刷新失败")
-        }else{
+        } else {
             mAdapter.loadMoreModule.loadMoreFail()
         }
     }
@@ -456,5 +462,23 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveEditInfo(event: UserInfoEditEvent) {
+        logger.info("修改信息")
+        if (!event.headPic.isNullOrEmpty()) {
+            SessionUtils.setHeaderPic(event.headPic!!)
+        }
+        if (!event.nickname.isNullOrEmpty()) {
+            SessionUtils.setNickName(event.nickname!!)
+        }
+        mViewModel.curRemind?.let {
+            if (!event.picList.isNullOrEmpty()) {
+                it.picList = event.picList!!
+            }
+
+        }
+        mAdapter.notifyItemRemoved(mAdapter.data.indexOfFirst { it.showType == HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION })
     }
 }
