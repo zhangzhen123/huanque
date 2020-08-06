@@ -57,23 +57,26 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
     override fun getLayoutId() = R.layout.fragment_chat_send_gift
 
     override fun initViews() {
-
+        initViewModel()
         view_pager.adapter = viewPagerAdapter
         view_pager.registerOnPageChangeCallback(viewPagerChangeListener)
 
         tv_send.onClickNew {
             sendGift()
         }
-
+        mViewModel.queryInfo()
     }
 
     override fun onStart() {
         super.onStart()
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT)
-        initViewModel()
-        mViewModel.queryInfo()
+
+
     }
 
+    override fun reCoverView() {
+        initViewModel()
+    }
     private fun initViewModel() {
         mViewModel.giftList.observe(viewLifecycleOwner, Observer {
             //
@@ -200,13 +203,20 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
                     rv.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(12)))
                 }
                 rv.setRecycledViewPool(mGiftViewPool)
-                val adapter = ChatGiftListAdapter(item.gifts)
-                rv.adapter = adapter
-                adapter.setOnItemClickListener { _, _, position ->
-                    currentSelectGift = adapter.getItemOrNull(position)
-                    adapter.notifyDataSetChanged()
+                val giftAdapter:ChatGiftListAdapter
+                if(rv.adapter!=null){
+                    giftAdapter=rv.adapter as ChatGiftListAdapter
+                    giftAdapter.setList(item.gifts)
+                }else{
+                    giftAdapter= ChatGiftListAdapter(item.gifts)
+                    rv.adapter = giftAdapter
+                }
+
+                giftAdapter.setOnItemClickListener { _, _, position ->
+                    currentSelectGift = giftAdapter.getItemOrNull(position)
+                    giftAdapter.notifyDataSetChanged()
                     currentGiftAdapter?.notifyDataSetChanged()
-                    currentGiftAdapter = adapter
+                    currentGiftAdapter = giftAdapter
                     tv_send.isEnabled = true
                 }
 
