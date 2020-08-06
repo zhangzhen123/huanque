@@ -17,11 +17,13 @@ object FloatingManager {
      * @param playInfo 播放地方
      * @param programId 直播间Id
      */
-    fun showFloatingView(playInfo: String, programId: Long) {
+    fun showFloatingView(playInfo: String, programId: Long, vertical: Boolean = false) {
         CommonInit.getInstance().getCurrentActivity()?.let { act ->
             val intent = Intent(act, FloatingService::class.java)
             intent.putExtra(ParamConstant.PROGRAM_ID, programId)
             intent.putExtra(ParamConstant.PLAY_INFO, playInfo)
+            val bol = System.currentTimeMillis() % 2
+            intent.putExtra(ParamConstant.FLOATING_VERTICAL, bol == 0L)
             //使用Intent传值
             act.startService(intent)
         }

@@ -33,6 +33,8 @@ import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
+import com.julun.huanque.core.manager.FloatingManager
+import com.julun.huanque.core.service.FloatingService
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
@@ -416,4 +418,10 @@ class MainActivity : BaseActivity() {
             mMainViewModel.refreshMessage()
         }
     }
+
+    override fun finish() {
+        FloatingManager.hideFloatingView()
+        super.finish()
+    }
+
 }
