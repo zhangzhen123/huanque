@@ -146,7 +146,7 @@ class FloatingService : Service(), View.OnClickListener {
             R.id.view_floating -> {
                 //跳转直播间
                 CommonInit.getInstance().getCurrentActivity()?.let { act ->
-                    PlayerActivity.newInstance(act, programId = mProgramId, from = PlayerFrom.FloatWindow)
+                    PlayerActivity.start(act, programId = mProgramId, from = PlayerFrom.FloatWindow)
                 }
 
             }

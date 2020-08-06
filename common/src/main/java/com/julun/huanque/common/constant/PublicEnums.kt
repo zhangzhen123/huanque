@@ -241,6 +241,7 @@ object MenuActionType {
     const val STAGEPK = "StagePk"//PK段位赛
     const val CHATMODE = "ChatMode"//聊天模式
 }
+
 /**
  * 页面标识位
  * @author  WanZhiYuan
@@ -248,13 +249,17 @@ object MenuActionType {
 object TabTags {
     //在线
     const val TAB_TAG_ONLINE = "online"
+
     //贵族
     const val TAB_TAG_ROYAL = "royal"
+
     //守护
     const val TAB_TAG_GUARD = "guard"
+
     //管理
     const val TAB_TAG_MANAGER = "manager"
 }
+
 object LoginType {
     //游客
     val VISITOR = "VISITOR"
@@ -480,8 +485,8 @@ object WeiBoShareType {
 /**
  * 分享的模块分类
  */
-object ShareFromModule{
-//    适用模块，Invite：邀友，Program：直播间，Magpie：养鹊(可选项：Invite、Program、Magpie)
+object ShareFromModule {
+    //    适用模块，Invite：邀友，Program：直播间，Magpie：养鹊(可选项：Invite、Program、Magpie)
     const val Invite = "Invite"
     const val Program = "Program"
     const val Magpie = "Magpie"
@@ -493,39 +498,44 @@ object ShareFromModule{
 object CardManagerOperate {
     //用户
     /** 踢除 **/
-    val MANAGER_CONTENT_KICK: String = "kickUser"
+    const val MANAGER_CONTENT_KICK: String = "kickUser"
 
     /** 屏蔽 **/
-    val PAGE_NAME_SHIELD: String = "shieldUser"
+    const val PAGE_NAME_SHIELD: String = "shieldUser"
 
     /** 禁言 **/
-    val PAGE_NAME_GAG: String = "gagUser"
+    const val PAGE_NAME_GAG: String = "gagUser"
 
     /** 全平台禁言 **/
-    val PAGE_NAME_PLATFORM_GAG: String = "platformGagUser"
+    const val PAGE_NAME_PLATFORM_GAG: String = "platformGagUser"
 
     /** 全站封禁 **/
-    val PAGE_NAME_PLATFORM_BLOCK: String = "blockUser"
+    const val PAGE_NAME_PLATFORM_BLOCK: String = "blockUser"
 
     /** 取消房管 **/
-    val PAGE_NAME_CANCEL_MANAGER: String = "cancelRoomManager"
+    const val PAGE_NAME_CANCEL_MANAGER: String = "cancelRoomManager"
 
     /** 提升房管 **/
-    val PAGE_NAME_UP_MANAGER: String = "upToRoomManager"
+    const val PAGE_NAME_UP_MANAGER: String = "upToRoomManager"
 
     //主播
     /** 封禁 **/
-    val PAGE_NAME_BLOCK_PROGRAM: String = "blockProgram"
+    const val PAGE_NAME_BLOCK_PROGRAM: String = "blockProgram"
 
     /** 监控 **/
-    val PAGE_NAME_MONITOR_PROGRAM: String = "monitorProgram"
+    const val PAGE_NAME_MONITOR_PROGRAM: String = "monitorProgram"
 
     /** 警告 **/
-    val PAGE_NAME_WARN_ANCHOR: String = "warnAnchor"
+    const val PAGE_NAME_WARN_ANCHOR: String = "warnAnchor"
 
     /** 巡查提醒 **/
-    val PAGE_NAME_REMIND_ANCHOR: String = "remindAnchor"
+    const val PAGE_NAME_REMIND_ANCHOR: String = "remindAnchor"
 
     /** 取消监控 **/
-    val PAGE_NAME_UNMONITOR_PROGRAM: String = "unMonitorProgram"
+    const val PAGE_NAME_UNMONITOR_PROGRAM: String = "unMonitorProgram"
+}
+
+object ImageActivityOperate {
+    const val REPORT: String = "report"
+    const val SAVE: String = "save"
 }

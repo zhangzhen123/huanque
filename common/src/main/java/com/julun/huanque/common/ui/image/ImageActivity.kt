@@ -2,19 +2,24 @@ package com.julun.huanque.common.ui.image
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.R
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ImageActivityOperate
 import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.luck.picture.lib.ImagePreviewActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
+import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import org.jetbrains.anko.textColor
-import org.jetbrains.anko.textColorResource
 import java.io.Serializable
 
 /**
@@ -34,9 +39,16 @@ class ImageActivity : ImagePreviewActivity() {
          * [position]图片所在位置
          * [medias]所有的图片列表
          * 其他
-         *
+         * [userId]用户id
+         *[operate]要做的操作
          */
-        fun start(activity: Activity, position: Int, medias: List<String>, userId: String? = null) {
+        fun start(
+            activity: Activity,
+            position: Int,
+            medias: List<String>,
+            userId: Long? = null,
+            operate: String? = null
+        ) {
             val intent = Intent(activity, ImageActivity::class.java)
             val list = medias.map {
                 val m = LocalMedia()
@@ -46,34 +58,53 @@ class ImageActivity : ImagePreviewActivity() {
             intent.putExtra(PictureConfig.EXTRA_PREVIEW_SELECT_LIST, list as Serializable)
             intent.putExtra(PictureConfig.EXTRA_POSITION, position)
             intent.putExtra(IntentParamKey.ID.name, userId)
+            intent.putExtra(IntentParamKey.OPERATE.name, operate)
             activity.startActivity(intent)
             activity.overridePendingTransition(com.luck.picture.lib.R.anim.a5, 0)
         }
     }
 
-//    private var report: DynamicReportDialogFragment? = null
+    //    private var report: DynamicReportDialogFragment? = null
 //    private var bottomChooseFragment: BottomChooseFragment? = null//主播
 //    private var postId: Long? = null
 //    private var mProgramId: Long? = null
-
+    private var mUserId: Long = 0L
+    private var operate: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
 //        postId = intent.getLongExtra(POST_ID, 0)
-//        mProgramId = intent.getLongExtra(IntentParamKey.PROGRAM_ID.name, 0)
+        mUserId = intent.getLongExtra(IntentParamKey.ID.name, 0)
+        operate = intent.getStringExtra(IntentParamKey.OPERATE.name)?:""
         PictureSelector.create(this).themeStyle(R.style.picture_me_style_multi)
         super.onCreate(savedInstanceState)
         //非主播可以点击
 
         val rightAction = findViewById<TextView>(R.id.right_action)
-        rightAction.text = "举报"
-        rightAction.textColorResource=R.color.black_333
-        rightAction.show()
-        rightAction.onClickNew {
-            //
-            logger("举报他")
+        when (operate) {
+            ImageActivityOperate.REPORT -> {
+                rightAction.text = "举报"
+                rightAction.textColor = Color.parseColor("#FFCC00")
+                rightAction.show()
+                rightAction.onClickNew {
+                    //
+                    logger("举报他")
+                    if (mUserId != 0L) {
+                        val extra = Bundle()
+                        extra.putLong(ParamConstant.TARGET_USER_ID, mUserId)
+                        ARouter.getInstance().build(ARouterConstant.REPORT_ACTIVITY).with(extra)
+                            .navigation()
+                    }
+
+                }
+            }
+
         }
-        //在外部处理压缩地址
+
+        //在外部处理压缩地址 只针对远程图片使用oss的压缩后缀
         images.forEach {
-            it.compressPath = it.path /* todo+ BusiConstant.COMPRESS_SUFFIX_SQUARE*/
+            val isHttp = PictureMimeType.isHttp(it.path)
+            if (isHttp) {
+                it.compressPath = it.path /* todo+ BusiConstant.COMPRESS_SUFFIX_SQUARE*/
+            }
         }
 
     }

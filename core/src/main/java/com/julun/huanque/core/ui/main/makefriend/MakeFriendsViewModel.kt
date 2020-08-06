@@ -34,8 +34,7 @@ class MakeFriendsViewModel : BaseViewModel() {
         const val GUIDE_INDEX_01 = 14
 
         //添加资料完善引导的位置
-        //todo
-        const val GUIDE_INDEX_02 = 19
+        const val GUIDE_INDEX_02 = 29
     }
 
     private val service: HomeService by lazy {

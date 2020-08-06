@@ -44,7 +44,8 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
     private val userBindViewModel: UserBindViewModel by viewModels()
 
     private val wxService: LoginAndShareService? by lazy {
-        ARouter.getInstance().build(ARouterConstant.LOGIN_SHARE_SERVICE).navigation() as? LoginAndShareService
+        ARouter.getInstance().build(ARouterConstant.LOGIN_SHARE_SERVICE)
+            .navigation() as? LoginAndShareService
     }
 
     private val mAdapter: WithdrawAdapter by lazy { WithdrawAdapter() }
@@ -104,7 +105,10 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         btn_ensure.onClickNew {
             startCheckAndApply()
         }
+        tv_rule.onClickNew {
+            //todo
 
+        }
 
     }
 
@@ -212,9 +216,11 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                             okText = "去绑定",
                             title = "未绑定手机提示",
                             callback = MyAlertDialog.MyDialogCallback(onRight = {
-                                ARouter.getInstance().build(ARouterConstant.PHONE_NUM_LOGIN_ACTIVITY).with(Bundle().apply {
-                                    putInt(IntentParamKey.TYPE.name,PhoneLoginType.TYPE_BIND)
-                                }).navigation()
+                                ARouter.getInstance()
+                                    .build(ARouterConstant.PHONE_NUM_LOGIN_ACTIVITY)
+                                    .with(Bundle().apply {
+                                        putInt(IntentParamKey.TYPE.name, PhoneLoginType.TYPE_BIND)
+                                    }).navigation()
                             })
                         )
 
@@ -225,7 +231,8 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                             okText = "去认证",
                             title = "实名认证提示",
                             callback = MyAlertDialog.MyDialogCallback(onRight = {
-                                ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
+                                ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY)
+                                    .navigation()
                             })
                         )
 

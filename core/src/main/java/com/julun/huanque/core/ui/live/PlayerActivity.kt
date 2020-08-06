@@ -116,7 +116,8 @@ class PlayerActivity : BaseActivity() {
 
         val exception = Exception()
         val stackTrace: Array<out StackTraceElement> = exception.stackTrace
-        val firstOrNull: StackTraceElement? = stackTrace.firstOrNull { it.methodName == "exitLiveRoom" }
+        val firstOrNull: StackTraceElement? =
+            stackTrace.firstOrNull { it.methodName == "exitLiveRoom" }
         if (firstOrNull == null) {
             reportCrash("programId被非正常的设置为 0 了", exception)
         }
@@ -174,10 +175,29 @@ class PlayerActivity : BaseActivity() {
 
         /**
          * @param activity 源Activity
+         */
+        fun start(
+            activity: Activity, programId: Long,
+            prePic: String? = null,
+            from: String = ""
+        ) {
+            val intent = Intent(activity, PlayerActivity::class.java)
+            val bundle = Bundle()
+            bundle.putLong(IntentParamKey.PROGRAM_ID.name, programId)
+            prePic?.let {
+                bundle.putString(IntentParamKey.IMAGE.name, it)
+            }
+            bundle.putString(IntentParamKey.SOURCE.name, from)
+            intent.putExtras(bundle)
+            activity.startActivity(intent)
+        }
+
+        /**
+         * @param activity 源Activity
          * @param isAnchor 是不是主播进入
          */
-        fun newInstance(
-            activity: Activity, isAnchor: Boolean = false, programId: Long? = null,
+        fun authorStart(
+            activity: Activity, isAnchor: Boolean = false, programId: Long?=null,
             streamId: String? = null, prePic: String? = null, against: GuardAgainst? = null,
             from: String = ""
         ) {
@@ -196,7 +216,7 @@ class PlayerActivity : BaseActivity() {
             against?.let {
                 bundle.putSerializable(AnchorData, it)
             }
-            bundle.putString(ParamConstant.FROM, from)
+            bundle.putString(IntentParamKey.SOURCE.name, from)
             intent.putExtras(bundle)
             activity.startActivity(intent)
         }
@@ -222,7 +242,7 @@ class PlayerActivity : BaseActivity() {
             programId = intent.getLongExtra(IntentParamKey.PROGRAM_ID.name, 0L)
             isAnchor = intent.getBooleanExtra(UserType.Anchor, false)
             streamId = intent.getStringExtra(IntentParamKey.STREAM_ID.name)
-            mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
+            mFrom = intent.getStringExtra(IntentParamKey.SOURCE.name) ?: ""
 //            isFromSquare = intent.getBooleanExtra(FromPager.FROM_SQUARE, false)
             //gift=-1代表无效
             val gift = intent.getIntExtra(IntentParamKey.OPEN_GIFT.name, -1)
@@ -406,7 +426,9 @@ class PlayerActivity : BaseActivity() {
         viewModel.anchorProgramId.observe(this, Observer {
             setAnchorProgramId(it ?: return@Observer)
         })
-        viewModel.jumpBean.observe(this, Observer { it?.let { jump(it.next, it.intentFlag, it.extra) } })
+        viewModel.jumpBean.observe(
+            this,
+            Observer { it?.let { jump(it.next, it.intentFlag, it.extra) } })
 
 
         viewModel.checkoutRoom.observe(this, Observer { checkoutRoom(it ?: return@Observer) })
@@ -565,7 +587,10 @@ class PlayerActivity : BaseActivity() {
         ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
             .navigation()
         val baseData = viewModel.baseData.value ?: return
-        FloatingManager.showFloatingView(GlobalUtils.getPlayUrl(baseData.playInfo ?: return), viewModel.programId)
+        FloatingManager.showFloatingView(
+            GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
+            viewModel.programId
+        )
     }
 
     private var mHelper: PanelSwitchHelper? = null
@@ -1084,7 +1109,8 @@ class PlayerActivity : BaseActivity() {
 
     private fun initAnimationFragment() {
         if (!supportFragmentManager.isStateSaved) {
-            supportFragmentManager.beginTransaction().replace(R.id.animation_container, animationFragment)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.animation_container, animationFragment)
                 .commitNow()
         }
     }
@@ -1095,7 +1121,8 @@ class PlayerActivity : BaseActivity() {
      */
     private fun startConsumerAfter() {
         // 准备好开始接收融云消息
-        val temp = ChatUtils.createRoomUserChat(viewModel.roomData, viewModel.baseData.value, isAnchor)
+        val temp =
+            ChatUtils.createRoomUserChat(viewModel.roomData, viewModel.baseData.value, isAnchor)
         viewModel.roomUserChatExtra = temp
         RongCloudManager.startMessageConsumerWithCurrentUserObj(temp)
     }
@@ -1115,7 +1142,8 @@ class PlayerActivity : BaseActivity() {
             override fun onClick(type: String, emotion: Emotion) {
                 val start: Int = edit_text.selectionStart
                 val editable: Editable = edit_text.editableText
-                val emotionSpannable: Spannable = EmojiSpanBuilder.buildEmotionSpannable(this@PlayerActivity, emotion.text)
+                val emotionSpannable: Spannable =
+                    EmojiSpanBuilder.buildEmotionSpannable(this@PlayerActivity, emotion.text)
                 editable.insert(start, emotionSpannable)
             }
 
@@ -1376,7 +1404,8 @@ class PlayerActivity : BaseActivity() {
         })
 
         //开通临时守护
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.OpenExperienceGuardProcessor {
+        MessageProcessor.registerEventProcessor(object :
+            MessageProcessor.OpenExperienceGuardProcessor {
             override fun process(data: OpenGuardEvent) = openGuard(data)
         })
 
@@ -1396,7 +1425,8 @@ class PlayerActivity : BaseActivity() {
         })
 
         //超级幸运礼物
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.SuperLuckGiftMessageProcessor {
+        MessageProcessor.registerEventProcessor(object :
+            MessageProcessor.SuperLuckGiftMessageProcessor {
             override fun process(data: SuperLuckGiftEvent) = playAnimation(AnimModel().apply {
                 logger.info("收到幸运动画 ${JsonUtil.serializeAsString(data)}")
                 this.animType = AnimationTypes.SUPER_LUCK_GIFT
@@ -1412,7 +1442,8 @@ class PlayerActivity : BaseActivity() {
         })
 
         //动画礼物
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnimationMessageProcessor {
+        MessageProcessor.registerEventProcessor(object :
+            MessageProcessor.AnimationMessageProcessor {
             override fun process(data: AnimEventBean) = playAnimation(AnimModel().apply {
                 logger.info("收到GIF动画")
                 this.animType = AnimationTypes.GIF
@@ -1422,7 +1453,8 @@ class PlayerActivity : BaseActivity() {
 
 
         // 用户等级升级动画
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.UserLevelChangeMessageProcessor {
+        MessageProcessor.registerEventProcessor(object :
+            MessageProcessor.UserLevelChangeMessageProcessor {
             override fun process(data: UserUpgradeEvent) {
                 logger.info("收到升级动画 ${JsonUtil.serializeAsString(data)}")
                 val localUserId = SessionUtils.getUserId()
@@ -1458,7 +1490,8 @@ class PlayerActivity : BaseActivity() {
             })
         })
         // 开播
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.StartLivingMessageProcessor {
+        MessageProcessor.registerEventProcessor(object :
+            MessageProcessor.StartLivingMessageProcessor {
             override fun process(data: OpenShowEvent) {
 //                logger.info("OpenShowEvent isPcLive:${data.isPcLive}")
                 //获取直播的类型
@@ -1489,7 +1522,8 @@ class PlayerActivity : BaseActivity() {
             }
         })
         // 停播
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.StopLivingMessageProcessor {
+        MessageProcessor.registerEventProcessor(object :
+            MessageProcessor.StopLivingMessageProcessor {
             override fun process(data: CloseShowEvent) {
                 liveViewManager.switchToVertical()
                 //只有非NormalStop才关播
@@ -1522,7 +1556,8 @@ class PlayerActivity : BaseActivity() {
             }
         })
         // 封禁
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.BlockUserMessageProcessor {
+        MessageProcessor.registerEventProcessor(object :
+            MessageProcessor.BlockUserMessageProcessor {
             override fun process(data: BlockUserEvent) {
                 val message = "您已被${data.nickname}封禁${data.time}"
                 logger.info(message)
@@ -1535,7 +1570,8 @@ class PlayerActivity : BaseActivity() {
             }
         })
         // 提醒
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.RemindAnchorMessageProcessor {
+        MessageProcessor.registerEventProcessor(object :
+            MessageProcessor.RemindAnchorMessageProcessor {
             override fun process(data: WarningEvent) {
                 val message = data.reason
                 logger.info("提醒：$message")
@@ -1545,7 +1581,8 @@ class PlayerActivity : BaseActivity() {
             }
         })
         //警告
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.WarnAnchorMessageProcessor {
+        MessageProcessor.registerEventProcessor(object :
+            MessageProcessor.WarnAnchorMessageProcessor {
             override fun process(data: WarningEvent) {
                 val message = data.reason
                 if (message.isNotBlank()) {
@@ -1788,7 +1825,10 @@ class PlayerActivity : BaseActivity() {
         super.onDestroy()
         viewModel.runwayCache.value = null
         val baseData = viewModel.baseData.value ?: return
-        FloatingManager.showFloatingView(GlobalUtils.getPlayUrl(baseData.playInfo ?: return), viewModel.programId)
+        FloatingManager.showFloatingView(
+            GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
+            viewModel.programId
+        )
     }
 
     private var closable = false
@@ -1800,10 +1840,14 @@ class PlayerActivity : BaseActivity() {
         if (isAnchor) {
             //主播
             if (!closable && joinViewModel.joinData.value == true) {
-                MyAlertDialog(this).showAlertWithOKAndCancel("确认结束直播吗?", MyAlertDialog.MyDialogCallback(onRight = {
-                    stopPublish()
+                MyAlertDialog(this).showAlertWithOKAndCancel(
+                    "确认结束直播吗?",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        stopPublish()
 
-                }), title = "提示")
+                    }),
+                    title = "提示"
+                )
             } else {
                 super.finish()
             }
@@ -1891,7 +1935,8 @@ class PlayerActivity : BaseActivity() {
     private fun doWithOpenAction() {
 
 
-        val openOperation = intent?.getSerializableExtra(IntentParamKey.OPEN_OPERATE.name) as? OpenOperateBean
+        val openOperation =
+            intent?.getSerializableExtra(IntentParamKey.OPEN_OPERATE.name) as? OpenOperateBean
         intent?.removeExtra(IntentParamKey.OPEN_OPERATE.name)
         if (openOperation != null) {
             //关闭其他弹窗
@@ -1975,7 +2020,8 @@ class PlayerActivity : BaseActivity() {
 
         if (mConfigViewModel?.horizonState?.value == true) {
             //当前处于横屏状态，切换到竖屏
-            viewModel.actionBeanData.value = BottomActionBean(ClickType.SWITCH_SCREEN, ScreenType.SP)
+            viewModel.actionBeanData.value =
+                BottomActionBean(ClickType.SWITCH_SCREEN, ScreenType.SP)
             return
         }
         finish()
