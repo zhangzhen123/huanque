@@ -29,6 +29,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.IntimateBean
+import com.julun.huanque.common.bean.beans.SendRoomInfo
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
@@ -119,6 +120,9 @@ class PrivateConversationActivity : BaseActivity() {
 
     //动画表情
     private val Message_Animation = "Message_Animation"
+
+    //传送门消息
+    private val Send_Room = "Send_Room"
 
     private var mPrivateConversationViewModel: PrivateConversationViewModel? = null
 
@@ -345,6 +349,12 @@ class PrivateConversationActivity : BaseActivity() {
                 mBalanceNotFoundFragment?.show(supportFragmentManager, "BalanceNotEnoughFragment")
             }
         })
+
+        mPrivateConversationViewModel?.sendRoomIndoData?.observe(this, Observer {
+            if (it != null) {
+                sendChatMessage(messageType = Send_Room)
+            }
+        })
     }
 
     /**
@@ -483,6 +493,19 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_share.onClickNew {
             //传送门
+            val result = judgeIntimate("CSM")
+            if (result) {
+                //有权限
+                val programId = SharedPreferencesUtils.getLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
+                if (programId <= 0) {
+                    //不在直播间内
+                    ToastUtils.show("您当前不在直播间内，无法发送传送门哦")
+                } else {
+                    //在直播间内，调用接口
+                    mPrivateConversationViewModel?.sendRoom(programId)
+                }
+
+            }
         }
 
         panel_emotion.mListener = object : EmojiInputListener {
@@ -755,27 +778,29 @@ class PrivateConversationActivity : BaseActivity() {
     /**
      * 判断当前亲密等级是否可以发送图片
      */
-    private fun judgeIntimateLevelForPic() {
+    private fun judgeIntimate(key: String): Boolean {
         val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate
         if (intimate == null) {
             Toast.makeText(this, "缺少亲密度等级数据", Toast.LENGTH_SHORT).show()
-            return
+            return false
         }
         val currentLevel = intimate.intimateLevel
         IntimateUtil.intimatePrivilegeList.forEach {
-            if (it.key == "FSTP") {
+            if (it.key == key) {
                 val needLevel = it.minLevel
-                if (needLevel <= currentLevel) {
+                return if (needLevel <= currentLevel) {
                     //亲密度允许
-                    goToPictureSelectPager()
+                    true
                 } else {
                     //亲密度等级不足
                     SingleIntimateprivilegeFragment.newInstance(it, currentLevel)
                         .show(this, "SingleIntimateprivilegeFragment")
+                    false
                 }
-                return
+
             }
         }
+        return false
     }
 
 
@@ -964,6 +989,7 @@ class PrivateConversationActivity : BaseActivity() {
         recyclerview.adapter = mAdapter
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
             val tempData = mAdapter.getItem(position)
+            val content = tempData.content
             when (view.id) {
                 R.id.iv_send_fail -> {
                     //重新发送消息
@@ -976,7 +1002,7 @@ class PrivateConversationActivity : BaseActivity() {
                 }
                 R.id.sdv_image -> {
                     //查看图片
-                    val content = tempData.content
+
                     if (content is ImageMessage) {
                         //todo 添加本地地址查看
                         ImageActivity.start(
@@ -1009,11 +1035,29 @@ class PrivateConversationActivity : BaseActivity() {
                     }
                 }
                 R.id.tv_content -> {
-                    val content = tempData.content
                     if (content is CustomSimulateMessage) {
                         if (content.type == MessageCustomBeanType.Voice_Conmmunication_Simulate) {
                             //点击的是语音消息,直接拨打电话
                             iv_phone.performClick()
+                        }
+                    }
+                }
+                R.id.con_send_room -> {
+                    //传送门消息
+                    if (content is CustomMessage && content.type == MessageCustomBeanType.SendRoom) {
+                        try {
+                            val extra = content.context
+                            if (extra.isEmpty()) {
+                                return@setOnItemChildClickListener
+                            }
+                            val info = JsonUtil.deserializeAsObject<SendRoomInfo>(extra, SendRoomInfo::class.java)
+                            val bundle = Bundle()
+                            bundle.putLong(IntentParamKey.PROGRAM_ID.name, info.programId)
+                            bundle.putString(ParamConstant.FROM, PlayerFrom.SendRoom)
+
+                            ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle).navigation()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
                 }
@@ -1240,6 +1284,7 @@ class PrivateConversationActivity : BaseActivity() {
         animationResult: String = "",
         messageType: String = Message_Text
     ) {
+
         if (messageType == Message_Text && (TextUtils.isEmpty(message) || message.isBlank())) {
             //文本消息判断
             ToastUtils.show("输入不能为空")
@@ -1257,6 +1302,12 @@ class PrivateConversationActivity : BaseActivity() {
         if (giftBean != null) {
             mPrivateConversationViewModel?.sendGiftSuccessData?.value = null
         }
+
+        val sendRoomBean = mPrivateConversationViewModel?.sendRoomIndoData?.value
+        if (messageType == Send_Room && sendRoomBean == null) {
+            return
+        }
+        mPrivateConversationViewModel?.sendRoomIndoData?.value = null
 
 
         val targetChatInfo = mPrivateConversationViewModel?.chatInfoData?.value ?: return
@@ -1376,6 +1427,30 @@ class PrivateConversationActivity : BaseActivity() {
                 }
 
             }
+            Send_Room -> {
+                //传送门消息
+                val localMsg = RongCloudManager.obtainCustomMessage(
+                    "${targetChatInfo.userId}",
+                    targetUser,
+                    Conversation.ConversationType.PRIVATE,
+                    MessageCustomBeanType.SendRoom,
+                    sendRoomBean ?: return
+                )
+                localMsg.senderUserId = "${SessionUtils.getUserId()}"
+                localMsg.sentStatus = Message.SentStatus.SENDING
+                mPrivateConversationViewModel?.addMessage(localMsg)
+                //发送融云消息
+                RongCloudManager.sendCustomMessage(localMsg) { result, message ->
+                    if (!result) {
+                        //发送失败
+                        localMsg.messageId = message.messageId
+                        mPrivateConversationViewModel?.sendMessageFail(localMsg, MessageFailType.RONG_CLOUD)
+                    } else {
+                        localMsg.sentStatus = message.sentStatus
+                        mPrivateConversationViewModel?.msgData?.value = localMsg
+                    }
+                }
+            }
             else -> {
 
             }
@@ -1453,7 +1528,10 @@ class PrivateConversationActivity : BaseActivity() {
                     permission.granted -> {
                         logger.info("获取权限成功")
                         //判断亲密特权
-                        judgeIntimateLevelForPic()
+                        val result = judgeIntimate("FSTP")
+                        if (result) {
+                            goToPictureSelectPager()
+                        }
                     }
                     permission.shouldShowRequestPermissionRationale -> // Oups permission denied
                         ToastUtils.show("权限无法获取")

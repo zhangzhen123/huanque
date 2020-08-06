@@ -11,6 +11,7 @@ import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.SendMsgForm
+import com.julun.huanque.common.bean.forms.SendRoomForm
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.*
@@ -84,6 +85,9 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //显示余额不足弹窗标识位
     val balanceNotEnoughFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //传送门结果
+    val sendRoomIndoData: MutableLiveData<SendRoomInfo> by lazy { MutableLiveData<SendRoomInfo>() }
 
     //操作类型
     var operationType = ""
@@ -494,6 +498,19 @@ class PrivateConversationViewModel : BaseViewModel() {
                 else -> {
                 }
             }
+        }
+    }
+
+    /**
+     * 发送传送门
+     */
+    fun sendRoom(programId: Long) {
+        viewModelScope.launch {
+            request({
+                val sendRoomResult = socialService.sendRoom(SendRoomForm(targetIdData.value ?: return@request, programId)).dataConvert()
+                sendRoomIndoData.value = sendRoomResult.sendRoomInfo
+                BalanceUtils.saveBalance(sendRoomResult.beans)
+            })
         }
     }
 

@@ -22,6 +22,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
+import com.julun.huanque.common.bean.beans.SendRoomInfo
 import com.julun.huanque.common.bean.message.ExpressionAnimationBean
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
@@ -66,8 +67,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     var otherUserInfo: ChatUser? = null
 
     init {
-        addChildClickViewIds(R.id.sdv_image)
-        addChildClickViewIds(R.id.tv_content)
+        addChildClickViewIds(R.id.sdv_image,R.id.tv_content,R.id.con_send_room)
         addChildLongClickViewIds(R.id.tv_content)
     }
 
@@ -98,6 +98,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
         //礼物视图
         const val GIFT_VIEW = "GIFT_VIEW"
+
+        //传送门视图
+        const val SEND_ROOM_VIEW = "SEND_ROOM_VIEW"
     }
 
     init {
@@ -211,6 +214,11 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                         }
                     }
                     showTextImageQueBi(helper.getView<SimpleDraweeSpanTextView>(R.id.tv_quebi), item, helper.adapterPosition)
+                }
+                MessageCustomBeanType.SendRoom -> {
+                    //传送门消息
+                    showMessageView(helper, SEND_ROOM_VIEW, helper.itemViewType)
+                    showSendRoomView(helper, content.context)
                 }
                 else -> {
                 }
@@ -335,6 +343,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         //隐藏收益视图
         holder.getView<View>(R.id.tv_quebi).hide()
 
+        val con_send_room = holder.getView<View>(R.id.con_send_room)
+
+
         when (messageType) {
             TEXT_MESSAGE -> {
                 //显示普通文案视图
@@ -349,6 +360,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
                 tv_pic_content.hide()
                 sdv_image.hide()
+                con_send_room.hide()
             }
             PIC_MESSAGE_SYSTEM -> {
                 //显示图片视图
@@ -359,11 +371,13 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
                 sdv_image.hide()
                 tv_pic_content.hide()
+                con_send_room.hide()
             }
             ACTION_VIEW -> {
                 rl_content?.hide()
                 tv_content.hide()
                 sdv_header.hide()
+                con_send_room.hide()
 //                fl_living?.hide()
             }
             PIC_MESSAGE -> {
@@ -373,6 +387,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
                 tv_pic_content.hide()
                 tv_content.hide()
+                con_send_room.hide()
             }
             GIFT_VIEW -> {
                 sdv_header.show()
@@ -381,6 +396,18 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 tv_pic_content.show()
 
                 tv_content.hide()
+                con_send_room.hide()
+            }
+
+            SEND_ROOM_VIEW -> {
+                //传送门视图
+                sdv_header.show()
+                con_send_room.show()
+
+                rl_content?.hide()
+                tv_content.hide()
+                tv_pic_content.hide()
+                sdv_image.hide()
             }
             else -> {
 
@@ -563,36 +590,27 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             }
 
         }
+    }
 
+    /**
+     *
+     * 显示传送门样式
+     */
+    private fun showSendRoomView(helper: BaseViewHolder, str: String) {
 
-//        if (fee > 0 && item.senderUserId != SessionUtils.getSessionId()) {
-//            //对方发送消息
-//            //消息时间
-//            val sendTime = item.sentTime
-//            //离当前消息最近的一次本人发送消息
-//            var mineReplyTime = 0L
-//            //获取离当前消息最近的本人发送消息
-//            for (index in position until data.size) {
-//                val msg = data[index]
-//                val conent = msg.content
-//                if ((conent is TextMessage || conent is ImageMessage) && msg.senderUserId == "${SessionUtils.getUserId()}") {
-//                    //获取到需要的消息
-//                    mineReplyTime = msg.sentTime
-//                    break
-//                }
-//            }
-//
-//            if (mineReplyTime > 0 && mineReplyTime - sendTime < DAY) {
-//                //24小时内回复
-//                tv.show()
-//                tv.text = "$fee"
-//            } else {
-//                //24小时外回复
-//                tv.hide()
-//            }
-//        } else {
-//            tv.hide()
-//        }
+        try {
+            if (str.isEmpty()) {
+                return
+            }
+            val sendRoomBean = JsonUtil.deserializeAsObject<SendRoomInfo>(str, SendRoomInfo::class.java)
+            helper.setText(R.id.tv_title, sendRoomBean.title)
+                .setText(R.id.tv_program_name, sendRoomBean.programName)
+                .setText(R.id.tv_hot, "${sendRoomBean.heatValue}")
+            ImageUtils.loadImage(helper.getView(R.id.sdc_cover), sendRoomBean.coverPic, 150f, 116f)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     /**

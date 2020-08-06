@@ -19,6 +19,7 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
@@ -73,6 +74,7 @@ import org.jetbrains.anko.imageResource
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
+@Route(path = ARouterConstant.PLAYER_ACTIVITY)
 class PlayerActivity : BaseActivity() {
 
     private lateinit var liveViewManager: PlayerViewManager
@@ -197,7 +199,7 @@ class PlayerActivity : BaseActivity() {
          * @param isAnchor 是不是主播进入
          */
         fun authorStart(
-            activity: Activity, isAnchor: Boolean = false, programId: Long?=null,
+            activity: Activity, isAnchor: Boolean = false, programId: Long? = null,
             streamId: String? = null, prePic: String? = null, against: GuardAgainst? = null,
             from: String = ""
         ) {

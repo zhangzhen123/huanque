@@ -79,7 +79,6 @@ class FloatingService : Service(), View.OnClickListener {
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        SharedPreferencesUtils.commitBoolean(SPParamKey.FLOATING_FLAG, true)
         mVertical = intent?.getBooleanExtra(ParamConstant.FLOATING_VERTICAL, false) ?: false
         if (mVertical) {
             layoutParams.width = dip(130)
@@ -95,7 +94,7 @@ class FloatingService : Service(), View.OnClickListener {
 //        videView?.play(playInfo, false)
         videView?.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/28907", false)
         mProgramId = intent?.getLongExtra(ParamConstant.PROGRAM_ID, 0) ?: 0
-
+        SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, mProgramId)
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -199,7 +198,7 @@ class FloatingService : Service(), View.OnClickListener {
 
     override fun onDestroy() {
         // 移除浮动框
-        SharedPreferencesUtils.commitBoolean(SPParamKey.FLOATING_FLAG, false)
+        SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         if (windowManager != null && display != null) {
             videView?.stop()
             windowManager?.removeView(display)

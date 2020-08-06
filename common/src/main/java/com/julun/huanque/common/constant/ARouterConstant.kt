@@ -79,6 +79,9 @@ object ARouterConstant {
     //提现页面
     const val WITHDRAW_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/WithdrawActivity"
 
+    //直播间
+    const val PLAYER_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/PlayerActivity"
+
     /** 实名认证 start **/
     private const val REAL_NAME = "realname"
 
