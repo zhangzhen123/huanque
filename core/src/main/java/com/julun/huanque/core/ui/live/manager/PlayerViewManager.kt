@@ -14,6 +14,7 @@ import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.fastjson.JSONObject
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -331,16 +332,16 @@ class PlayerViewManager(val context: PlayerActivity) {
                         //用户更多页面
 //                        mDialogManager.showUserMoreSetting()
                         //打开分享
-                        val baseData=viewModel.roomBaseData?:return@Observer
+                        val baseData = viewModel.roomBaseData ?: return@Observer
                         ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY)
                             .withString(IntentParamKey.TYPE.name, ShareFromModule.Program).withSerializable(
-                            IntentParamKey.LIVE_INFO.name,
-                            MicAnchor(prePic = baseData.prePic).apply {
-                                programName = baseData.programName
-                                programId = baseData.programId
-                                headPic = baseData.headPic
-                            }
-                        ).navigation()
+                                IntentParamKey.LIVE_INFO.name,
+                                MicAnchor(prePic = baseData.prePic).apply {
+                                    programName = baseData.programName
+                                    programId = baseData.programId
+                                    headPic = baseData.headPic
+                                }
+                            ).navigation()
                     }
                     ClickType.ANCHOR_MORE_SETTING -> {
                         //主播更多页面
@@ -517,7 +518,6 @@ class PlayerViewManager(val context: PlayerActivity) {
 
 
     }
-
 
 
     /**

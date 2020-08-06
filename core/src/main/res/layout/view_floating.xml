@@ -1,35 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/view_floating"
-    android:layout_width="150dp"
-    android:layout_height="200dp">
+    android:layout_width="130dp"
+    android:layout_height="231dp"
+    >
 
     <com.julun.huanque.core.widgets.SingleVideoView
         android:id="@+id/video_view"
-        android:layout_width="0px"
-        android:layout_height="0px"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/tv_close"
+    <ImageView
+        android:id="@+id/iv_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:layout_gravity="right"
+        android:src="@mipmap/icon_floating_close"
         android:text="关闭"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_quiet"
+    <ImageView
+        android:id="@+id/iv_quiet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="静音"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:layout_gravity="right|bottom"
+        android:layout_margin="5dp"
+        android:src="@drawable/sel_floating_voice" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

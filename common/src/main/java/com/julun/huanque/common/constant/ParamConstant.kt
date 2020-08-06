@@ -94,6 +94,9 @@ object ParamConstant {
     //播放地址
     const val PLAY_INFO = "PLAY_INFO"
 
+    //悬浮窗样式(是否是竖直模式)
+    const val FLOATING_VERTICAL = "FLOATING_VERTICAL"
+
 
     const val TARGET_USER_ID = "TargetUserId"
 

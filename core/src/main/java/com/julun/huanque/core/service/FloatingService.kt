@@ -9,15 +9,19 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import android.widget.TextView
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.widgets.SingleVideoView
+import com.julun.huanque.core.widgets.SurfaceVideoViewOutlineProvider
+import org.jetbrains.anko.dip
 
 
 /**
@@ -34,8 +38,11 @@ class FloatingService : Service(), View.OnClickListener {
     private var mProgramId = 0L
     private var display: View? = null
     private var videView: SingleVideoView? = null
-    private var tvClose: TextView? = null
-    private var tvQuiet: TextView? = null
+    private var ivClose: ImageView? = null
+    private var ivQuiet: ImageView? = null
+
+    //是否是竖屏模式
+    private var mVertical = false
 
     private var startTime: Long = 0
     private var endTime: Long = 0
@@ -70,13 +77,22 @@ class FloatingService : Service(), View.OnClickListener {
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        mVertical = intent?.getBooleanExtra(ParamConstant.FLOATING_VERTICAL, false) ?: false
+        if (mVertical) {
+            layoutParams.width = dip(130)
+            layoutParams.height = dip(231)
+        } else {
+            layoutParams.width = dip(213)
+            layoutParams.height = dip(160)
+        }
         if (show) {
             showFloatingWindow()
         }
         val playInfo = intent?.getStringExtra(ParamConstant.PLAY_INFO) ?: ""
 //        videView?.play(playInfo, false)
-        videView?.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/28242", false)
+        videView?.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/28907", false)
         mProgramId = intent?.getLongExtra(ParamConstant.PROGRAM_ID, 0) ?: 0
+
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -90,10 +106,16 @@ class FloatingService : Service(), View.OnClickListener {
             val layoutInflater: LayoutInflater = LayoutInflater.from(this)
             display = layoutInflater.inflate(R.layout.view_floating, null)
             videView = display?.findViewById(R.id.video_view)
-            tvClose = display?.findViewById(R.id.tv_close)
-            tvQuiet = display?.findViewById(R.id.tv_quiet)
-            tvClose?.setOnClickListener(this)
-            tvQuiet?.setOnClickListener(this)
+//            videView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
+//            videView?.clipToOutline = true;
+
+            ivClose = display?.findViewById(R.id.iv_close)
+            ivQuiet = display?.findViewById(R.id.iv_quiet)
+            ivClose?.setOnClickListener(this)
+            ivQuiet?.setOnClickListener(this)
+
+//            display?.setBackgroundColor(0)
+//            display?.getBackground()?.setAlpha(0)
 
             windowManager?.addView(display, layoutParams)
             display?.setOnTouchListener(FloatingOnTouchListener())
@@ -104,11 +126,17 @@ class FloatingService : Service(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.tv_quiet -> {
+            R.id.iv_quiet -> {
                 //静音
-                videView?.soundOff()
+                val quietSelect = ivQuiet?.isSelected ?: false
+                ivQuiet?.isSelected = !quietSelect
+                if (ivQuiet?.isSelected == true) {
+                    videView?.soundOff()
+                } else {
+                    videView?.soundOn()
+                }
             }
-            R.id.tv_close -> {
+            R.id.iv_close -> {
                 //关闭
                 FloatingManager.hideFloatingView()
             }
@@ -146,7 +174,6 @@ class FloatingService : Service(), View.OnClickListener {
                     val nowY = event.getRawY()
                     val movedX = nowX - x
                     val movedY = nowY - y
-                    Log.d("悬浮窗", "movedX = $movedX, movedY =$movedY")
                     x = nowX
                     y = nowY
                     layoutParams?.x = (layoutParams?.x + movedX).toInt()
@@ -158,12 +185,9 @@ class FloatingService : Service(), View.OnClickListener {
                     //当从点击到弹起小于半秒的时候,则判断为点击,如果超过则不响应点击事件
                     if (endTime - startTime > 0.1 * 1000L) {
                         isclick = true
-                        Log.e("tag", "拖动")
                     } else {
                         isclick = false
-                        Log.e("tag", "点击")
                     }
-                    println("执行顺序up")
                 }
             }
             return isclick
