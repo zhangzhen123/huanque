@@ -50,7 +50,8 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
     private var mCurrGuardData: OnlineListData<OnlineUserInfo>? = null
 
     private val mHeadView: View by lazy {
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.layout_online_royal_head, null)
+        val view =
+            LayoutInflater.from(requireContext()).inflate(R.layout.layout_online_royal_head, null)
         val listView = view.findViewById<RecyclerView>(R.id.rvHeadList)
         listView?.layoutManager = GridLayoutManager(activity, 4)
         listView?.addItemDecoration(GridLayoutSpaceItemDecoration(dp2px(12f)))
@@ -222,54 +223,55 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
 
 
     private fun renderData(data: OnlineListData<OnlineUserInfo>) {
+        //只在刷新时更新头部信息
+        if (data.isPull) {
+            val userNum: Int?
+            when (mPageTag) {
+                TabTags.TAB_TAG_ROYAL -> {
+                    //贵族
+                    userNum = data.royalCount
+                    mRoyalUrl = data.royalLevelUrl
 
-        var userNum: Int?
-        when (mPageTag) {
-            TabTags.TAB_TAG_ROYAL -> {
-                //贵族
-                userNum = data.royalCount
-                mRoyalUrl = data.royalLevelUrl
+                    setHeadViews(data)
+                    tv_head_tips.text = data.royalTips
+                    if (data.royaling) {
+                        tv_head_action.text = "立即续费"
+                        tv_head_action.onClickNew {
+                            //todo
+                            logger.info("立即续费")
+                        }
 
-                setHeadViews(data)
-                tv_head_tips.text= data.royalTips
-                if(data.royaling){
-                    tv_head_action.text="立即续费"
-                    tv_head_action.onClickNew {
-                        //todo
-                        logger.info("立即续费")
+                    } else {
+                        tv_head_action.text = "立即开通"
+                        tv_head_action.onClickNew {
+                            //todo
+                            logger.info("立即开通")
+                        }
                     }
-
-                }else{
-                    tv_head_action.text="立即开通"
-                    tv_head_action.onClickNew {
-                        //todo
-                        logger.info("立即开通")
+                }
+                TabTags.TAB_TAG_GUARD -> {
+                    //守护
+                    mCurrGuardData = data
+                    userNum = data.guardCount
+                    setHeadViews(data)
+                }
+                else -> {
+                    tv_head_tips.text = data.heatTips
+                    tv_head_action.hide()
+                    //观众 or 管理
+                    userNum = if (mPageTag == TabTags.TAB_TAG_MANAGER) {
+                        data.managerCount
+                    } else {
+                        data.userCount
                     }
                 }
             }
-            TabTags.TAB_TAG_GUARD -> {
-                //守护
-                mCurrGuardData = data
-                userNum = data.guardCount
-                setHeadViews(data)
-            }
-            else -> {
-                tv_head_tips.text=data.heatTips
-                tv_head_action.hide()
-                //观众 or 管理
-                userNum = if (mPageTag == TabTags.TAB_TAG_MANAGER) {
-                    data.managerCount
-                } else {
-                    data.userCount
-                }
-            }
+
+            var map = mPlayerViewModel.updateOnLineCount.value
+            map = map ?: hashMapOf()
+            map[mPageTag ?: ""] = "$userNum"
+            mPlayerViewModel.updateOnLineCount.value = map
         }
-
-        var map = mPlayerViewModel.updateOnLineCount.value
-        map = map ?: hashMapOf()
-        map[mPageTag ?: ""] = "$userNum"
-        mPlayerViewModel.updateOnLineCount.value = map
-
         if (data.isPull) {
             adapter.setList(data.list)
         } else {
@@ -398,46 +400,56 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
     /**
      * 普通布局
      */
-    private val adapter = object : BaseQuickAdapter<OnlineUserInfo, BaseViewHolder>(R.layout.item_online_list), LoadMoreModule {
+    private val adapter =
+        object : BaseQuickAdapter<OnlineUserInfo, BaseViewHolder>(R.layout.item_online_list),
+            LoadMoreModule {
 
-        private var adapters: LruCache<Int, SoftReference<OnlineBadgeAdapter>>? = null
-        private val MAX_SIZE = 100
+            private var adapters: LruCache<Int, SoftReference<OnlineBadgeAdapter>>? = null
+            private val MAX_SIZE = 100
 
-        override fun convert(holder: BaseViewHolder, item: OnlineUserInfo) {
+            override fun convert(holder: BaseViewHolder, item: OnlineUserInfo) {
 
 
-            holder.setImageResource(R.id.ivItemLevel, ImageHelper.getUserLevelImg(item.userLevel))
-                .setText(R.id.tvItemNickname, item.nickname)
-            ImageUtils.loadImage(holder.getView(R.id.sdvItemHead), item.headPic, 40f, 40f)
-            if (!TextUtils.isEmpty(item.royalPic)) {
-                ImageUtils.loadImageWithHeight_2(holder.getView(R.id.sdvItemRoyal), item.royalPic, dp2px(16f))
-            } else {
-                holder.setGone(R.id.sdvItemRoyal, false)
-            }
-            val rvBadgeList = holder.getView<RecyclerView>(R.id.rvItemList)
-            rvBadgeList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            getView(holder.adapterPosition).let {
-                rvBadgeList.adapter = it
-                if (item.badgesPic.isEmpty()) {
-                    it.setList(arrayListOf())
+                holder.setImageResource(
+                    R.id.ivItemLevel,
+                    ImageHelper.getUserLevelImg(item.userLevel)
+                )
+                    .setText(R.id.tvItemNickname, item.nickname)
+                ImageUtils.loadImage(holder.getView(R.id.sdvItemHead), item.headPic, 40f, 40f)
+                if (!TextUtils.isEmpty(item.royalPic)) {
+                    ImageUtils.loadImageWithHeight_2(
+                        holder.getView(R.id.sdvItemRoyal),
+                        item.royalPic,
+                        dp2px(16f)
+                    )
                 } else {
-                    it.setList(item.badgesPic)
+                    holder.setGone(R.id.sdvItemRoyal, false)
+                }
+                val rvBadgeList = holder.getView<RecyclerView>(R.id.rvItemList)
+                rvBadgeList.layoutManager =
+                    LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                getView(holder.adapterPosition).let {
+                    rvBadgeList.adapter = it
+                    if (item.badgesPic.isEmpty()) {
+                        it.setList(arrayListOf())
+                    } else {
+                        it.setList(item.badgesPic)
+                    }
                 }
             }
-        }
 
-        fun getView(position: Int): OnlineBadgeAdapter {
-            if (adapters == null) {
-                adapters = LruCache(MAX_SIZE)
+            fun getView(position: Int): OnlineBadgeAdapter {
+                if (adapters == null) {
+                    adapters = LruCache(MAX_SIZE)
+                }
+                var adapter: OnlineBadgeAdapter? = adapters?.get(position)?.get()
+                if (adapter == null) {
+                    adapter = OnlineBadgeAdapter()
+                    adapters?.put(position, SoftReference(adapter))
+                }
+                return adapter
             }
-            var adapter: OnlineBadgeAdapter? = adapters?.get(position)?.get()
-            if (adapter == null) {
-                adapter = OnlineBadgeAdapter()
-                adapters?.put(position, SoftReference(adapter))
-            }
-            return adapter
         }
-    }
 
 
 }
@@ -446,22 +458,31 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
 /**
  * 贵宾头布局
  */
-class OnlineHeadAdapter : BaseQuickAdapter<OnlineUserInfo, BaseViewHolder>(R.layout.item_online_head_list) {
+class OnlineHeadAdapter :
+    BaseQuickAdapter<OnlineUserInfo, BaseViewHolder>(R.layout.item_online_head_list) {
 
     override fun convert(holder: BaseViewHolder, item: OnlineUserInfo) {
 
         if (item.userId == -1L) {
             holder.setText(R.id.tvHeadNickname, "虚位以待")
-                .setGone(R.id.ivHeadBorder, true).setTextColorRes(R.id.tvHeadNickname, R.color.black_999)
-            ImageUtils.loadImageLocal(holder.getView(R.id.sdvHeadImage), R.mipmap.important_placeholder)
+                .setGone(R.id.ivHeadBorder, true)
+                .setTextColorRes(R.id.tvHeadNickname, R.color.black_999)
+            ImageUtils.loadImageLocal(
+                holder.getView(R.id.sdvHeadImage),
+                R.mipmap.important_placeholder
+            )
         } else {
             holder.setText(R.id.tvHeadNickname, item.nickname)
-                .setVisible(R.id.ivHeadBorder, true).setTextColorRes(R.id.tvHeadNickname, R.color.black_333)
+                .setVisible(R.id.ivHeadBorder, true)
+                .setTextColorRes(R.id.tvHeadNickname, R.color.black_333)
             ImageUtils.loadImage(holder.getView(R.id.sdvHeadImage), item.headPic, 46f, 46f)
         }
         if (item.royalLevel != -1) {
             holder.setVisible(R.id.ivHeadRoyal, true)
-                .setImageResource(R.id.ivHeadRoyal, ImageHelper.getRoyalLevelImgRound(item.royalLevel))
+                .setImageResource(
+                    R.id.ivHeadRoyal,
+                    ImageHelper.getRoyalLevelImgRound(item.royalLevel)
+                )
         } else {
             holder.setGone(R.id.ivHeadRoyal, true)
         }
@@ -471,7 +492,8 @@ class OnlineHeadAdapter : BaseQuickAdapter<OnlineUserInfo, BaseViewHolder>(R.lay
 /**
  * 在线列表勋章
  */
-class OnlineBadgeAdapter : BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_online_badge_list), LoadMoreModule {
+class OnlineBadgeAdapter :
+    BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_online_badge_list), LoadMoreModule {
 
     override fun convert(holder: BaseViewHolder, item: String) {
 

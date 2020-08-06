@@ -1,15 +1,11 @@
 package com.julun.huanque.core.widgets.live.message
 
 import android.content.Context
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
@@ -17,13 +13,10 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.ChatMessageBean
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
 import com.julun.huanque.core.R
 import org.jetbrains.anko.matchParent
-import java.lang.StringBuilder
 
 
 /**
@@ -148,7 +141,7 @@ class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) : andro
 //                logger.info("新的下标 -->>> $position 解析后的文本：${item.realTxt} 原始文本：${item.textTpl}")
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        logger.info("发生错误了,, $e ${JsonUtil.seriazileAsString(item)}")
+                        logger.info("发生错误了,, $e ${JsonUtil.serializeAsString(item)}")
                     }
                 }
 //                STYLE_FOLLOW -> {

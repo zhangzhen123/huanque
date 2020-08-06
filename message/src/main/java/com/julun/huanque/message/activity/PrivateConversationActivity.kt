@@ -28,7 +28,6 @@ import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.IntimateBean
-import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
@@ -50,7 +49,6 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
-import com.julun.huanque.common.widgets.emotion.Emotions
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
@@ -74,7 +72,6 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
-import kotlinx.android.synthetic.main.item_header_conversions.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundColor
@@ -1096,7 +1093,7 @@ class PrivateConversationActivity : BaseActivity() {
                         if (content.type == MessageCustomBeanType.Expression_Animation) {
                             //动画消息，重置 播放动画标识
                             msg.extra =
-                                JsonUtil.seriazileAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, false))
+                                JsonUtil.serializeAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, false))
                         }
                         msg.sentStatus = Message.SentStatus.SENDING
                         sendCustomMessage(msg)

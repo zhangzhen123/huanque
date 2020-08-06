@@ -1384,7 +1384,7 @@ class PlayerActivity : BaseActivity() {
         //幸运礼物
         MessageProcessor.registerEventProcessor(object : MessageProcessor.LuckGiftMessageProcessor {
             override fun process(data: LuckGiftEvent) = playAnimation(AnimModel().apply {
-                logger.info("收到幸运动画 ${JsonUtil.seriazileAsString(data)}")
+                logger.info("收到幸运动画 ${JsonUtil.serializeAsString(data)}")
                 this.animType = AnimationTypes.LUCKY
                 this.nickname = data.nickname
                 this.extraObject.put("prize", data.luckTotalBeans)
@@ -1398,7 +1398,7 @@ class PlayerActivity : BaseActivity() {
         //超级幸运礼物
         MessageProcessor.registerEventProcessor(object : MessageProcessor.SuperLuckGiftMessageProcessor {
             override fun process(data: SuperLuckGiftEvent) = playAnimation(AnimModel().apply {
-                logger.info("收到幸运动画 ${JsonUtil.seriazileAsString(data)}")
+                logger.info("收到幸运动画 ${JsonUtil.serializeAsString(data)}")
                 this.animType = AnimationTypes.SUPER_LUCK_GIFT
 //                this.nickname = data.nickname
                 this.extraObject.put("prize", data.coin!!)
@@ -1424,7 +1424,7 @@ class PlayerActivity : BaseActivity() {
         // 用户等级升级动画
         MessageProcessor.registerEventProcessor(object : MessageProcessor.UserLevelChangeMessageProcessor {
             override fun process(data: UserUpgradeEvent) {
-                logger.info("收到升级动画 ${JsonUtil.seriazileAsString(data)}")
+                logger.info("收到升级动画 ${JsonUtil.serializeAsString(data)}")
                 val localUserId = SessionUtils.getUserId()
                 //特殊处理
                 if (data.grantInfo != null && data.grantInfo!!.isNotEmpty() && localUserId == data.userId) {
@@ -2078,7 +2078,7 @@ class PlayerActivity : BaseActivity() {
      */
     private fun openGuard(data: OpenGuardEvent) {
         playAnimation(AnimModel().apply {
-            logger.info("收到开通守护动画 ${JsonUtil.seriazileAsString(data)}")
+            logger.info("收到开通守护动画 ${JsonUtil.serializeAsString(data)}")
             this.animType = AnimationTypes.OPEN_GUARD
             this.nickname = data.nickname
 

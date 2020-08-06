@@ -40,7 +40,7 @@ class LiveRemindViewModel : BaseViewModel() {
                 offset += data.list.size
                 data.isPull = it
                 emit(data)
-            })
+            }, needLoadState = true)
         }
     }
 

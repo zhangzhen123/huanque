@@ -39,7 +39,6 @@ import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import org.greenrobot.eventbus.EventBus
 import java.util.*
-import kotlin.collections.HashSet
 
 
 /**
@@ -264,7 +263,7 @@ object RongCloudManager {
     ) {
         val messageContent = CustomSimulateMessage.obtain().apply {
             type = customType
-            context = JsonUtil.seriazileAsString(customBean)
+            context = JsonUtil.serializeAsString(customBean)
         }
         var sentTime = System.currentTimeMillis()
         if (customBean is VoiceConmmunicationSimulate) {
@@ -274,7 +273,7 @@ object RongCloudManager {
         }
 
         if (extra != null) {
-            messageContent.extra = JsonUtil.seriazileAsString(extra)
+            messageContent.extra = JsonUtil.serializeAsString(extra)
         }
 
         val callback = object : RongIMClient.ResultCallback<Message>() {
@@ -339,7 +338,7 @@ object RongCloudManager {
                         //动画表情发送成功，设置数据库数据（设置动画已播放）
                         updateMessageExtra(
                             message.messageId,
-                            JsonUtil.seriazileAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, true))
+                            JsonUtil.serializeAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, true))
                         )
                     }
                 }
@@ -353,7 +352,7 @@ object RongCloudManager {
             override fun onError(message: Message?, errorCode: ErrorCode?) {
                 if (message != null) {
                     updateMessageExtra(
-                        message.messageId, JsonUtil.seriazileAsString(
+                        message.messageId, JsonUtil.serializeAsString(
                             GlobalUtils.addExtra(
                                 message.extra,
                                 ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
@@ -405,12 +404,12 @@ object RongCloudManager {
     ): Message {
         val messageContent = CustomMessage.obtain().apply {
             type = customType
-            context = JsonUtil.seriazileAsString(customBean)
+            context = JsonUtil.serializeAsString(customBean)
         }
 
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
-        messageContent.extra = JsonUtil.seriazileAsString(currentUserObj)
+        messageContent.extra = JsonUtil.serializeAsString(currentUserObj)
 
         return Message.obtain(targetId, conversationType, messageContent).apply { sentTime = System.currentTimeMillis() }
     }
@@ -485,7 +484,7 @@ object RongCloudManager {
                 if (message != null) {
                     callback(message, null, null)
                     updateMessageExtra(
-                        message.messageId, JsonUtil.seriazileAsString(
+                        message.messageId, JsonUtil.serializeAsString(
                             GlobalUtils.addExtra(
                                 message.extra,
                                 ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
@@ -511,7 +510,7 @@ object RongCloudManager {
         val imageMessage = ImageMessage.obtain(localUri, localUri)
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
-        imageMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
+        imageMessage.extra = JsonUtil.serializeAsString(currentUserObj)
 
         return Message.obtain(targetId, type, imageMessage)
     }
@@ -524,7 +523,7 @@ object RongCloudManager {
         val chatMessage: TextMessage = TextMessage.obtain(message)
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
-        chatMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
+        chatMessage.extra = JsonUtil.serializeAsString(currentUserObj)
 
         val msg = Message.obtain(targetId, Conversation.ConversationType.PRIVATE, chatMessage)
         msg.senderUserId = "${SessionUtils.getUserId()}"
@@ -545,7 +544,7 @@ object RongCloudManager {
         val chatMessage: TextMessage = TextMessage.obtain(message)
         currentUserObj?.targetUserObj = targetUserObj
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
-        chatMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
+        chatMessage.extra = JsonUtil.serializeAsString(currentUserObj)
 
         var conversationType = Conversation.ConversationType.CHATROOM
         var targetId: String? = ""
@@ -587,7 +586,7 @@ object RongCloudManager {
 //                        switchThread(message)
                         callback(false, message)
                         updateMessageExtra(
-                            message.messageId, JsonUtil.seriazileAsString(
+                            message.messageId, JsonUtil.serializeAsString(
                                 GlobalUtils.addExtra(
                                     message.extra,
                                     ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
@@ -596,7 +595,7 @@ object RongCloudManager {
                         )
                     }
                     logger.info(
-                        "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
+                        "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.serializeAsString(
                             message
                         )}"
                     )
@@ -615,7 +614,7 @@ object RongCloudManager {
     fun sendPublicTextMessage(message: String, programId: String, callback: (Boolean) -> Unit = { }) {
         val chatMessage: TextMessage = TextMessage.obtain(message)
         currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
-        chatMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
+        chatMessage.extra = JsonUtil.serializeAsString(currentUserObj)
 
         var conversationType = Conversation.ConversationType.CHATROOM
         RongIMClient.getInstance().sendMessage(conversationType, programId, chatMessage, null, null, object : IRongCallback.ISendMessageCallback {
@@ -669,7 +668,7 @@ object RongCloudManager {
                         //                            ChatUtils.deleteSingleMessage(message.messageId)
                         callback(false, message)
                         updateMessageExtra(
-                            message.messageId, JsonUtil.seriazileAsString(
+                            message.messageId, JsonUtil.serializeAsString(
                                 GlobalUtils.addExtra(
                                     message.extra,
                                     ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
@@ -678,7 +677,7 @@ object RongCloudManager {
                         )
                     }
                     logger.info(
-                        "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.seriazileAsString(
+                        "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.serializeAsString(
                             message
                         )}"
                     )
@@ -787,7 +786,7 @@ object RongCloudManager {
                     logger.info("串消息了，当前直播间$roomId, targetId=${message.targetId}")
                     return
                 }
-                logger.info("收到文本消息 ${JsonUtil.seriazileAsString(content)}")
+                logger.info("收到文本消息 ${JsonUtil.serializeAsString(content)}")
                 val bean = TplBean(textTpl = content.content)
 
                 if (message.conversationType == Conversation.ConversationType.PRIVATE) {
@@ -826,7 +825,7 @@ object RongCloudManager {
                 }
             }
             is CommandMessage -> {
-                logger.info("收到CommandMessage消息 ${JsonUtil.seriazileAsString(content)}")
+                logger.info("收到CommandMessage消息 ${JsonUtil.serializeAsString(content)}")
                 // 将数据解析为字典对象
                 val dataString = content.data
                 val baseList = JsonUtil.deserializeAsObjectList(dataString, BaseData::class.java)
@@ -1049,7 +1048,7 @@ object RongCloudManager {
                 sentStatus = Message.SentStatus.SENT
 
                 val chatMessage: TextMessage = TextMessage.obtain(message)
-                chatMessage.extra = JsonUtil.seriazileAsString(currentUserObj)
+                chatMessage.extra = JsonUtil.serializeAsString(currentUserObj)
 
                 content = chatMessage
                 sentTime = System.currentTimeMillis()

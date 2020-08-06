@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.forms.SettingForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -20,14 +21,12 @@ import kotlinx.coroutines.launch
  */
 class MessageSettingViewModel : BaseViewModel() {
 
-    val queryData = MutableLiveData<Boolean>()
 
     /**
      * 获取消息设置信息
      */
-    val settingResult = queryData.switchMap {
+    val settingResult = queryState.switchMap {
         liveData {
-            if (it) {
                 request({
                     val data = Requests.create(SocialService::class.java).settings().dataConvert()
                     emit(data)
@@ -35,8 +34,7 @@ class MessageSettingViewModel : BaseViewModel() {
                     if (e !is ResponseError) {
                         ToastUtils.show("网络异常，请重试~！")
                     }
-                }, final = {}, needLoadState = true)
-            }
+                }, needLoadState = it==QueryType.INIT)
         }
     }
 
@@ -60,7 +58,7 @@ class MessageSettingViewModel : BaseViewModel() {
                         , answer, privateMsgRemind, followRemind
                     )
                 ).dataConvert()
-                queryData.value = true
+                queryState.value = QueryType.REFRESH
             }, error = { e ->
                 if (e !is ResponseError) {
                     ToastUtils.show("网络异常，请重试~！")

@@ -14,6 +14,7 @@ import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.fastjson.JSONObject
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.dialog.MyAlertDialog

@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.MessageSettingBean
 import com.julun.huanque.common.bean.events.FoldStrangerMessageEvent
 import com.julun.huanque.common.constant.ActivityCodes
@@ -47,7 +48,7 @@ class MessageSettingActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         findViewById<TextView>(R.id.tvTitle).text = "消息设置"
         prepareViewModel()
-        mViewModel?.queryData?.value = true
+        mViewModel?.queryInfo()
         commonView.backgroundResource = R.color.transparent
         //折叠陌生人消息
         val folderMsg = SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)
@@ -159,7 +160,7 @@ class MessageSettingActivity : BaseActivity() {
                 }
                 NetStateType.SUCCESS -> {
                     //成功
-                    commonView.hide()
+                    commonView.showSuccess()
                 }
                 NetStateType.IDLE -> {
                     //闲置，什么都不做
@@ -167,7 +168,7 @@ class MessageSettingActivity : BaseActivity() {
                 else -> {
                     //都是异常
                     commonView.showError(errorTxt = "网络异常~！", btnClick = View.OnClickListener {
-                        mViewModel?.queryData?.value = true
+                        mViewModel?.queryInfo()
                     })
                 }
             }
@@ -202,7 +203,7 @@ class MessageSettingActivity : BaseActivity() {
             ActivityCodes.REQUEST_CODE_NORMAL -> {
                 if (resultCode == ActivityCodes.RESPONSE_CODE_REFRESH) {
                     //通知刷新页面
-                    mViewModel?.queryData?.value = true
+                    mViewModel?.queryInfo(QueryType.REFRESH)
                 }
             }
         }

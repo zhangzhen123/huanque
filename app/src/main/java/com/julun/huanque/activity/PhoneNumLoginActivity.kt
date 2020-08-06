@@ -119,7 +119,7 @@ class PhoneNumLoginActivity : BaseActivity() {
         })
 
         bindViewModel.bindPhoneData.observe(this, Observer {
-            if (it.state == NetStateType.SUCCESS) {
+            if (it.isSuccess()) {
                 ToastUtils.show("手机绑定成功!")
                 finish()
             } else {

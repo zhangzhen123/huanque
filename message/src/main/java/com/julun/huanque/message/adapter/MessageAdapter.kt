@@ -53,7 +53,6 @@ import org.jetbrains.anko.textColor
 import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
-import kotlin.math.min
 
 
 /**
@@ -789,7 +788,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
      */
     private fun setAnimationStarted(msg: Message) {
         try {
-            val extra = JsonUtil.seriazileAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, true))
+            val extra = JsonUtil.serializeAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, true))
             msg.extra = extra
 
             if (msg.messageId > 0) {

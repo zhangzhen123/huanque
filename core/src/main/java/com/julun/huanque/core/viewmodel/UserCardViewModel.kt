@@ -44,7 +44,7 @@ class UserCardViewModel : BaseViewModel() {
             request({
                 val result = mLiveService.userInfo(UserProgramForm(targetUserId = 10007, programId = 10007)).dataConvert()
                 userInfoData.value = result
-            }, {})
+            }, needLoadState = true)
         }
     }
 
