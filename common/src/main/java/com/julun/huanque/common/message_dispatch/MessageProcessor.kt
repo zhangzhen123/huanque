@@ -1180,12 +1180,12 @@ object MessageProcessor {
     interface KickUserProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.KickUser
     }
-    /**
-     * 禁言消息
-     */
-    interface MuteUserProcessor : EventMessageProcessor<OperatorMessageBean> {
-        override fun getEventType() = EventMessageType.MuteUser
-    }
+//    /**
+//     * 禁言消息
+//     */
+//    interface MuteUserProcessor : EventMessageProcessor<OperatorMessageBean> {
+//        override fun getEventType() = EventMessageType.MuteUser
+//    }
     /**
      * 封禁账户消息
      */
@@ -1531,14 +1531,13 @@ enum class EventMessageType(val klass: Class<*>) {
     //踢人消息
     KickUser(OperatorMessageBean::class.java),
 
-    //禁言消息
-    MuteUser(OperatorMessageBean::class.java),
-
     //封禁账户消息
     BanUser(OperatorMessageBean::class.java),
 
     //直播封禁（用户不允许进入任何直播间）
     BanUserLiving(OperatorMessageBean::class.java)
+    //禁言消息
+//    MuteUser(OperatorMessageBean::class.java),
 //    //设备封禁消息
 //    BanUserDevice(OperatorMessageBean::class.java),
 //    //设为房管消息

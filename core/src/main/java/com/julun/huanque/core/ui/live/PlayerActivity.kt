@@ -1639,12 +1639,12 @@ class PlayerActivity : BaseActivity() {
                 finish()
             }
         })
-        //禁言消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.MuteUserProcessor {
-            override fun process(data: OperatorMessageBean) {
-                ToastUtils.show("${data.nickname}给了${data.targetNickname}一个${data.time}禁言套餐")
-            }
-        })
+//        //禁言消息
+//        MessageProcessor.registerEventProcessor(object : MessageProcessor.MuteUserProcessor {
+//            override fun process(data: OperatorMessageBean) {
+//                ToastUtils.show("${data.nickname}给了${data.targetNickname}一个${data.time}禁言套餐")
+//            }
+//        })
         //封禁账户消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserProcessor {
             override fun process(data: OperatorMessageBean) {
