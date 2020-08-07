@@ -194,7 +194,6 @@ class TestActivity : BaseActivity() {
 
         btn_usercard.onClickNew {
             //用户卡片
-            UserCardFragment.newInstance(10).show(supportFragmentManager, "UserCardFragment")
         }
 
         btn_manager.onClickNew {

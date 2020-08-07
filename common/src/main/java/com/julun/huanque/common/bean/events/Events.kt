@@ -105,3 +105,11 @@ class AnimatorEvent()
  * @param start true 表示进入视频播放页面，false 表示退出视频播放页面
  */
 class VideoPlayerEvent(var start: Boolean) : Serializable
+
+/**
+ * 退出登录消息
+ * @alter WanZhiYuan
+ * @since 1.0.0
+ * @date 2020/08/06
+ */
+class LoginOutEvent(): Serializable

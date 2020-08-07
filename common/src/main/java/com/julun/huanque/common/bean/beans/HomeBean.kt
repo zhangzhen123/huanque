@@ -187,3 +187,19 @@ data class NetCallBalanceRemindBean(
     //余额是否充足
     var enough: Boolean = false
 ) : Serializable
+
+data class SendRoomInfo(
+    var coverPic: String = "",
+    var heatValue: Long = 0,
+    var programId: Long = 0,
+    var programName: String = "",
+    var title: String = ""
+) : Serializable
+
+/**
+ * 传送门接口返回值
+ */
+data class SendRoomBean(
+    var beans: Long = 0,
+    var sendRoomInfo: SendRoomInfo = SendRoomInfo()
+) : Serializable

@@ -3,12 +3,14 @@ package com.julun.huanque.core.ui.live.fragment
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -18,10 +20,12 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.BottomActionBean
 import com.julun.huanque.common.bean.beans.PrivateMessageBean
+import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -30,11 +34,15 @@ import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
 import com.julun.huanque.core.viewmodel.UserCardViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
+import com.rd.utils.DensityUtils
+import kotlinx.android.synthetic.main.fragment_anchorisnotonline.*
 import kotlinx.android.synthetic.main.fragment_user_card.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundResource
@@ -49,12 +57,18 @@ import org.jetbrains.anko.textColor
 class UserCardFragment : BaseDialogFragment() {
 
     private val mUserCardViewModel: UserCardViewModel by viewModels<UserCardViewModel>()
+    private val mPlayerViewModel: PlayerViewModel by activityViewModels()
 
     companion object {
-        fun newInstance(userId: Long): UserCardFragment {
+        /**
+         * @param userId 用户ID
+         * @param nickname 用户昵称
+         */
+        fun newInstance(userId: Long, nickname: String): UserCardFragment {
             val fragment = UserCardFragment()
             val bundle = Bundle()
             bundle.putLong(ParamConstant.UserId, userId)
+            bundle.putString(ParamConstant.NICKNAME, nickname)
             fragment.arguments = bundle
             return fragment
         }
@@ -64,6 +78,8 @@ class UserCardFragment : BaseDialogFragment() {
 
     override fun initViews() {
         mUserCardViewModel.mUserId = arguments?.getLong(ParamConstant.UserId) ?: 0
+        mUserCardViewModel.mNickname = arguments?.getString(ParamConstant.NICKNAME) ?: ""
+        mUserCardViewModel.programId = mPlayerViewModel.programId
         state_pager_view.showLoading()
         state_pager_view.show()
         initViewModel()
@@ -108,7 +124,7 @@ class UserCardFragment : BaseDialogFragment() {
 
         mUserCardViewModel.followStatusData.observe(this, Observer {
             if (it != null) {
-                mUserCardViewModel.userInfoData.value?.isFollowed = it.follow != FollowStatus.False
+                mUserCardViewModel.userInfoData.value?.follow = it.follow != FollowStatus.False
                 if (it.follow != FollowStatus.False) {
                     //关注状态
                     tv_attention.text = "已关注"
@@ -125,7 +141,11 @@ class UserCardFragment : BaseDialogFragment() {
      */
     private fun initListener() {
         tv_attention.onClickNew {
-            if (mUserCardViewModel.userInfoData.value?.isFollowed == true) {
+            if (mUserCardViewModel.userInfoData.value?.canInteractive != true) {
+                Toast.makeText(context, "无法关注该用户", Toast.LENGTH_SHORT).show()
+                return@onClickNew
+            }
+            if (mUserCardViewModel.userInfoData.value?.follow == true) {
                 //已关注,取消关注
                 mUserCardViewModel.unFollow()
             } else {
@@ -136,15 +156,31 @@ class UserCardFragment : BaseDialogFragment() {
 
         tv_private_chat.onClickNew {
             //私信
+            if (mUserCardViewModel.userInfoData.value?.canInteractive != true) {
+                Toast.makeText(context, "无法私信该用户", Toast.LENGTH_SHORT).show()
+                return@onClickNew
+            }
             val userInfo = mUserCardViewModel.userInfoData.value ?: return@onClickNew
             //发送粘性消息
             EventBus.getDefault().postSticky(OpenPrivateChatRoomEvent(mUserCardViewModel.mUserId, userInfo.nickname))
         }
         tv_at.onClickNew {
             //@ 功能
+            val content = mUserCardViewModel.mNickname
+            val bean = BottomActionBean().apply {
+                type = ClickType.CHAT_INPUT_BOX
+                actionValue = content
+            }
+            mPlayerViewModel.actionBeanData.value = bean
+//            EventBus.getDefault().post(AttentionUserEvent(content))
+            dismiss()
         }
         tv_home_page.onClickNew {
             //主页
+            if (mUserCardViewModel.userInfoData.value?.canInteractive != true) {
+                Toast.makeText(context, "无法查看该用户的主页", Toast.LENGTH_SHORT).show()
+                return@onClickNew
+            }
             RNPageActivity.start(
                 requireActivity(),
                 RnConstant.PERSONAL_HOMEPAGE,
@@ -197,6 +233,12 @@ class UserCardFragment : BaseDialogFragment() {
         tv_nickname.text = data.nickname
         tv_id.text = "欢鹊ID：${mUserCardViewModel.mUserId}"
 
+        if (data.canReport) {
+            tv_report.show()
+        } else {
+            tv_report.hide()
+        }
+
         var sexDrawable: Drawable? = null
         //性别
         when (sex) {
@@ -248,7 +290,7 @@ class UserCardFragment : BaseDialogFragment() {
         //显示标签
         showTags(data.userTags)
 
-        if (data.isFollowed) {
+        if (data.follow) {
             tv_attention.text = "已关注"
         } else {
             tv_attention.text = "关注"
@@ -286,20 +328,18 @@ class UserCardFragment : BaseDialogFragment() {
      * 显示贵族等级
      */
     private fun showRoyalLevel(level: Int) {
-        tv_guizu_level.text = "$level"
         if (level > 0) {
-            //有主播等级，需要显示
-            view_guizu_level.show()
-            iv_guizu.show()
-            tv_guizu_title.show()
-            tv_guizu_level.show()
+            view_guizu_level.isSelected = true
+            tv_guizu_level.text = "$level"
         } else {
-            //隐藏主播等级
-            view_guizu_level.hide()
-            iv_guizu.hide()
-            tv_guizu_title.hide()
-            tv_guizu_level.hide()
+            view_guizu_level.isSelected = false
+            tv_guizu_level.text = "暂无贵族"
         }
+
+        view_guizu_level.show()
+        iv_guizu.show()
+        tv_guizu_title.show()
+        tv_guizu_level.show()
     }
 
     /**
@@ -307,19 +347,11 @@ class UserCardFragment : BaseDialogFragment() {
      */
     private fun showCaiFuLevel(level: Int) {
         tv_caifu_level.text = "$level"
-        if (level > 0) {
-            //有主播等级，需要显示
-            view_caifu_level.show()
-            iv_caifu.show()
-            tv_caifu_title.show()
-            tv_caifu_level.show()
-        } else {
-            //隐藏主播等级
-            view_caifu_level.hide()
-            iv_caifu.hide()
-            tv_caifu_title.hide()
-            tv_caifu_level.hide()
-        }
+        view_caifu_level.isSelected = level > 0
+        view_caifu_level.show()
+        iv_caifu.show()
+        tv_caifu_title.show()
+        tv_caifu_level.show()
     }
 
     /**
@@ -331,9 +363,22 @@ class UserCardFragment : BaseDialogFragment() {
             tv_medal.hide()
             stv_medal.hide()
         } else {
-            //todo 展示勋章 显示
+            val list = arrayListOf<TIBean>()
             tv_medal.show()
             stv_medal.show()
+            badges.forEach {
+                if (!TextUtils.isEmpty(it)) {
+                    val image = TIBean()
+                    image.type = 1
+                    image.url = StringHelper.getOssImgUrl(it)
+                    image.height = dp2px(16)
+                    image.width = dp2px(66)
+                    list.add(image)
+                }
+            }
+
+            val textBean = ImageUtils.renderTextAndImage(list)
+            stv_medal.renderBaseText(textBean ?: return)
         }
     }
 

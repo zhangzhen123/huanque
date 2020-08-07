@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.bean.beans.PrivateMessageBean
+import com.julun.huanque.common.bean.beans.UserInfoBean
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
 import com.julun.huanque.core.R
@@ -39,7 +41,7 @@ class ScoreDialogFragment : BaseDialogFragment() {
     companion object {
         fun newInstance(programId: Long): ScoreDialogFragment {
             val args = Bundle()
-            args.putLong(IntentParamKey.PROGRAM_ID.name,programId)
+            args.putLong(IntentParamKey.PROGRAM_ID.name, programId)
             val fragment = ScoreDialogFragment()
             fragment.arguments = args
             return fragment
@@ -90,8 +92,18 @@ class ScoreDialogFragment : BaseDialogFragment() {
      * 初始化ViewModel相关
      */
     private fun initViewModel() {
-        playerViewModel.privateMessageView.observe(this, Observer {
-            //todo
+        playerViewModel.privateMessageView.observe(this, object : Observer<PrivateMessageBean> {
+            override fun onChanged(t: PrivateMessageBean?) {
+                //todo
+            }
+
+        })
+
+        playerViewModel.scoreDismissFlag.observe(this, Observer {
+            if (it != null) {
+                playerViewModel.scoreDismissFlag.value = null
+                dismiss()
+            }
         })
     }
 

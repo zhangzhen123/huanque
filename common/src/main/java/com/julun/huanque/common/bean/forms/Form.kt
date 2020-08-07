@@ -113,3 +113,8 @@ class UserProgramForm(
  * 敏感词过滤form
  */
 class ValidateForm(var content: String = "", var programId: Long = 0)
+
+/**
+ * 发送传送门的form
+ */
+class SendRoomForm(var friendId: Long, var programId: Long)

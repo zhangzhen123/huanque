@@ -320,19 +320,21 @@ class GrantInfo : Serializable {
 /*用户经验变化通知*/
 data class UserExpChangeEvent(
     var newLevel: Int = 0,
+    var time: Long = 0,
     var needExpValue: Long = 0,
+    var userId: Long = 0,
+    var newExp: Long = 0,
+
+
     var upgrade: Boolean = false,
     var level: Int = 0,
     var giftName: String = "",
-    var newExp: Long = 0,
     var cacheStartTime: Long = 0,
     var totalBeans: Long = 0,
-    var userId: Long = 0,
     /* var isWeekStar: String = "",*/
     var giftBeans: Long = 0,
     var times: Int = 0,
     var giftPic: String = "",
-    var time: Long = 0,
     var cacheIt: Boolean = false
 ) {
     @JSONField(name = "isLuck")
@@ -438,28 +440,6 @@ data class BarrageEvent(
     //神秘人
     var mystery: Boolean = false,
     var royalDmLevel: Int = 0//
-)
-
-/** 踢出直播间事件 **/
-data class KickUserEvent(
-    var time: String = "",
-    var targetuserId: Long = 0,
-    var targetNickname: String = "",
-    var nickname: String = "",
-    var userId: String = ""
-)
-
-/** 提醒 警告主播**/
-data class WarningEvent(
-    var reason: String = ""
-)
-
-/** 封禁直播间事件 **/
-data class BlockUserEvent(
-    var time: String = "",
-    var targetNickname: String = "",
-    var nickname: String = "",
-    var userId: String = ""
 )
 
 /** 开播事件 **/
@@ -1092,4 +1072,16 @@ class PlanetMessageBean : Serializable {
 
     //是否是本直播间
     var local: Boolean = false
+}
+
+/**
+ * 用户管理操作消息
+ * @author WanZhiYuan
+ * @date 2020/08/06
+ * @since 1.0.0
+ */
+class OperatorMessageBean : Serializable {
+    var nickname: String = ""
+    var time: String = ""
+    var targetNickname: String = ""
 }

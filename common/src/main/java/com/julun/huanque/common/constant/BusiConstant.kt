@@ -55,8 +55,8 @@ object SPParamKey {
     //异常消息列表
     const val EXCEPTION_MESSAGE_LIST = "EXCEPTION_MESSAGE_LIST"
 
-    //悬浮窗显示标识
-    const val FLOATING_FLAG = "FLOATING_FLAG"
+    //悬浮窗内的ProgramId
+    const val PROGRAM_ID_IN_FLOATING = "PROGRAM_ID_IN_FLOATING"
 }
 
 /**
@@ -517,6 +517,9 @@ object MessageCustomBeanType {
 
     //模拟好友消息
     const val FRIEND_MESSAGE = "FRIEND_MESSAGE"
+
+    //传送门消息
+    const val SendRoom = "sendRoom"
 }
 
 

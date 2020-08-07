@@ -1086,6 +1086,9 @@ class PlayerViewManager(val context: PlayerActivity) {
         aniSet.start()
     }
 
+    /**
+     * 打开公聊输入框
+     */
     fun openChatInputBox(defaultContent: String, innerActionType: String) {
         //closeDialogIfExists()
         mDialogManager.hideAllDialog()
@@ -1093,36 +1096,21 @@ class PlayerViewManager(val context: PlayerActivity) {
         context.actionView.hide()
         context.edit_text.requestFocus()
 
-        //todo 显示公聊
-//            val publicMessageView = context.publicMessageView
-//            val chatInputView = context.chatInputView
-//            chatInputView.textMessageType = MessageProcessor.TextMessageType.PUBLIC_MESSAGE
-//            val deC = if (innerActionType == ClickType.SEND_MESSAGE) {
-//                //发言功能
-//                defaultContent
-//            } else {
-//                //@功能
-//                if (defaultContent.isNotEmpty()) {
-//                    "@$defaultContent "
-//                } else {
-//                    ""
-//                }
-//            }
-//
-//            if (mOrientationViewModel.horizonState.value == true && !isAnchorSelf) {
-//                //横屏模式
-//                mDialogManager.openInputDialog(deC)
-//            } else {
-//                hideHeaderForAnimation {
-//                    chatInputView.isAnchor = isAnchorSelf
-//                    if (!noNeedPublicView) {
-//                        publicMessageView.show()
-//                    }
-//
-//                    chatInputView.setDefauleContent(deC)
-//                    chatInputView.showKeyboard()
-//                }
-//            }
+        val deC = if (innerActionType == ClickType.SEND_MESSAGE) {
+            //发言功能
+            defaultContent
+        } else {
+            //@功能
+            if (defaultContent.isNotEmpty()) {
+                "@$defaultContent "
+            } else {
+                ""
+            }
+        }
+        context.edit_text.setText(deC)
+        //
+        context.edit_text.setSelection(deC.length)
+
 //
 //            //引导发言取消还没显示的不再显示 已经显示的隐藏掉
 //            viewModel.guideToSpeakDisposable?.dispose()

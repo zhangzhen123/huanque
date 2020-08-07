@@ -164,6 +164,9 @@ class PlayerViewModel : BaseViewModel() {
     //显示用户信息弹窗
     val userInfoView: MutableLiveData<UserInfoBean> by lazy { MutableLiveData<UserInfoBean>() }
 
+    //贡献榜关闭标识
+    val scoreDismissFlag : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
 
 //    //显示在线列表视图
 //    val onlineView: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }

@@ -176,4 +176,7 @@ interface SocialService {
      */
     @POST("social/friend/netcall/markFeeRemind")
     fun markFeeRemind(@Body form: EmptyForm = EmptyForm()): Observable<Root<VoidResult>>
+
+    @POST("social/friend/chat/sendRoom")
+    suspend fun sendRoom(@Body form: SendRoomForm): Root<SendRoomBean>
 }

@@ -52,35 +52,22 @@ class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_
         //tips
         val rootView = vh.itemView
         val llTag = vh.getView<LinearLayout>(R.id.ll_tag)
-        val ivFunction = vh.getView<ImageView>(R.id.iv_function)
-        if (item.giftId == selectedGift?.giftId && item.bag == selectedGift?.bag) {
+        //判断内存地址
+        if (selectedGift === item) {
             rootView.backgroundDrawable = GlobalUtils.getDrawable(R.drawable.shape_gift_selected_bg)
-            //有设置数据
-            llTag.hide()
-            ivFunction.show()
-            if (item.luckyOrHigh || item.anonymous || (item.discountCount ?: 0) > 0) {
-                //幸运礼物 || 匿名礼物 || 有折扣券，显示设置按钮
-                ivFunction.setImageResource(R.mipmap.icon_gift_setting)
-            } else {
-                ivFunction.setImageResource(R.mipmap.icon_gift_explain)
-            }
         } else {
             rootView.backgroundDrawable = GlobalUtils.getDrawable(R.drawable.bg_gift_item_bg)
-            llTag.show()
-            ivFunction.hide()
         }
 
-        if (llTag.visibility == View.VISIBLE) {
-            val tagData = item.tagContent?.split(",")
-            llTag.removeAllViews()
-            tagData?.forEach {
-                val tagView = TagView(context)
-                llTag.addView(tagView)
-                tagView.show()
-                tagView.setAlignRight()
-                tagView.isGiftTag = true
-                tagView.setData(it)
-            }
+        val tagData = item.tagContent?.split(",")
+        llTag.removeAllViews()
+        tagData?.forEach {
+            val tagView = TagView(context)
+            llTag.addView(tagView)
+            tagView.show()
+            tagView.setAlignRight()
+            tagView.isGiftTag = true
+            tagView.setData(it)
         }
         val expTime = item.expTime
         val pText = if (expTime.isEmpty()) {
@@ -96,20 +83,28 @@ class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_
         ImageUtils.loadImage(giftPic, item.pic ?: "", 78f, 69f)
 
         val giftBagInfo = vh.getView<TextView>(R.id.giftBagInfo)
-        if (item.giftId == selectedGift?.giftId) {
+        //判断地址
+        if (item === selectedGift) {
             giftBagInfo.isSelected = true
             playAnim(giftPic)
         } else {
             giftBagInfo.isSelected = false
             giftPic.clearAnimation()
         }
+        val viewDot = vh.getView<View>(R.id.view_dot)
         val str: String = StringHelper.paddingNumberWithEmptyCharEven(item.bagCount, 4)
         if (item.bag) {
             //处于背包当中，显示数量
             giftBagInfo.show()
             giftBagInfo.text = str
+            if (item.changeMark) {
+                viewDot.show()
+            } else {
+                viewDot.hide()
+            }
         } else {
             giftBagInfo.hide()
+            viewDot.hide()
         }
     }
 
