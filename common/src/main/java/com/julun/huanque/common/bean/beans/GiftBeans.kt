@@ -42,6 +42,9 @@ class LiveGiftDto {
     //是否是背包礼物
     var bag: Boolean = false
 
+    //是否数量有变化
+    var changeMark: Boolean = false
+
 
     /*以下字段待确认*/
 

@@ -63,6 +63,9 @@ class EggResultFragment : BaseDialogFragment() {
      * 显示默认视图
      */
     private fun setDefaultView() {
+        if (mAdapter.itemCount > 0) {
+            recyclerView_prize.scrollToPosition(0)
+        }
         tv_mengdou.hide()
         mAdapter.setList(null)
     }

@@ -169,7 +169,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         // 用户经验变化
         MessageProcessor.registerEventProcessor(object : MessageProcessor.UserExpChangeMessageProcessor {
             override fun process(data: UserExpChangeEvent) {
-//                mPlayerViewModel.userExpChangeEvent.value = data
+                mPlayerViewModel.userExpChangeEvent.value = data
             }
         })
 

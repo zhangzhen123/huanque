@@ -320,19 +320,21 @@ class GrantInfo : Serializable {
 /*用户经验变化通知*/
 data class UserExpChangeEvent(
     var newLevel: Int = 0,
+    var time: Long = 0,
     var needExpValue: Long = 0,
+    var userId: Long = 0,
+    var newExp: Long = 0,
+
+
     var upgrade: Boolean = false,
     var level: Int = 0,
     var giftName: String = "",
-    var newExp: Long = 0,
     var cacheStartTime: Long = 0,
     var totalBeans: Long = 0,
-    var userId: Long = 0,
     /* var isWeekStar: String = "",*/
     var giftBeans: Long = 0,
     var times: Int = 0,
     var giftPic: String = "",
-    var time: Long = 0,
     var cacheIt: Boolean = false
 ) {
     @JSONField(name = "isLuck")

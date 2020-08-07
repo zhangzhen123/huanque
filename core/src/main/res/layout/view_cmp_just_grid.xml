@@ -5,6 +5,7 @@
     android:cacheColorHint="@color/transparent"
     android:fadingEdge="none"
     android:listSelector="@color/transparent"
+    android:overScrollMode="never"
     android:verticalSpacing="4dp"
     android:numColumns="4"
     android:scrollbars="none"

@@ -46,9 +46,12 @@ import com.julun.huanque.core.viewmodel.SendGiftViewModel
 import com.trello.rxlifecycle4.android.FragmentEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observable.*
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_gift.*
+import kotlinx.android.synthetic.main.fragment_anchorisnotonline.*
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
@@ -312,6 +315,15 @@ class SendGiftFragment : BaseDialogFragment() {
         viewModel?.sendGiftSuccess?.observe(this, Observer { result ->
             result?.let {
                 //显示送礼成功相关
+                if (it.bagChange) {
+                    if (it.form?.fromBag == BusiConstant.True) {
+                        //从背包送出,直接刷新背包
+                        viewModel?.getBagData(programId)
+                    } else {
+                        viewModel?.bagChangeState?.value = true
+                    }
+                }
+
                 sendGiftSuccess(it, it.form ?: return@Observer)
                 playerViewModel.timeInternal(it.ttl * 1000L)
                 //显示砸蛋结果数据
@@ -533,6 +545,7 @@ class SendGiftFragment : BaseDialogFragment() {
                     giftViewPager.show()
                     showDotter(dotter, true)
                     bagViewPager.inVisible()
+                    refreshBag()
                     showDotter(dotter_bag, false)
                     magic_indicator.onPageSelected(index)
                     val position = getCurrentTabPosition(curTab.typeCode)
@@ -663,6 +676,8 @@ class SendGiftFragment : BaseDialogFragment() {
         mEggSettingViewModel?.eggLuckyState?.value = giftDataDto.luckyHitEgg
         mEggSettingViewModel?.anonymousState?.value = giftDataDto.anonymousHitEgg
         mEggSettingViewModel?.discountStatus?.value = giftDataDto.discountFirst
+
+
 
         viewPagerAdapter.clear()
         dotter.removeAllViews()
@@ -848,6 +863,10 @@ class SendGiftFragment : BaseDialogFragment() {
                 secProcess = ((giftData.userExp + previewNum) * 100 / giftData.needExp).toInt()
             }
 
+            val expShort = giftData.needExp - giftData.userExp
+
+            iv_express_lack.text = "距离${giftData.userLevel + 1}级还差${StringHelper.formatUserScore(expShort)}鹊币"
+
             tv_current_level.text = "LV.${giftData.userLevel}"
             tv_next_level.text = "LV.${giftData.userLevel + 1}"
             user_progress.setProcess(process)
@@ -860,9 +879,26 @@ class SendGiftFragment : BaseDialogFragment() {
         loadingText?.visibility = View.GONE
     }
 
-
-    //保存当前的跑道的缓存信息
-    private var currentRunwayCache: RunwayCache? = null
+    /**
+     * 刷新背包数据
+     */
+    private fun refreshBag() {
+        if (viewModel?.bagNeedRefresh == true) {
+            val bagList = viewModel?.bagData?.value ?: return
+            val removeList = mutableListOf<LiveGiftDto>()
+            bagList.forEach {
+                it.changeMark = false
+                if (it.bagCount <= 0) {
+                    removeList.add(it)
+                }
+            }
+            removeList.forEach {
+                bagList.remove(it)
+            }
+            viewModel?.bagData?.value = bagList
+            viewModel?.bagNeedRefresh = false
+        }
+    }
 
 
     /**
@@ -1116,21 +1152,20 @@ class SendGiftFragment : BaseDialogFragment() {
         if (form.fromBag == BusiConstant.True) {
             // 刷新背包逻辑
             mBagData.forEach {
-                if (it.giftId == form.giftId) {
+                if (it.giftId == form.giftId && it.prodType == form.prodType) {
                     val count = data.bagCount
                     it.bagCount = count
                     if (count <= 0) {
                         it.couldSend = false
                         setSelectGiftFunction(selectedGift)
+                        viewModel?.bagNeedRefresh = true
                     }
                     mBagViewPagerAdapter.notifyDataSetChanged()
                     return@forEach
                 }
             }
         }
-//        refreshGiftItemBySelect(data)
-//        sendPagerAdapter?.notifyDataSetChanged()
-//        playerActivity?.markDeepSeaNeedRefresh()
+        //bagCntMap
 
         if (selectedGift?.bag == true && (selectedGift?.bagCount ?: 0) <= 0) {
             hideLiansong()
@@ -1201,36 +1236,37 @@ class SendGiftFragment : BaseDialogFragment() {
     }
 
     /**
-     * 显示砸蛋之后的礼物数量
+     * 刷新赠送魔法礼物之后的背包数量
      */
     @SuppressLint("CheckResult")
     private fun refreshNewGiftCount(result: SendGiftResult) {
-//        Observable.just(result)
-//            .flatMap<GiftAdapter> {
-//                val countMap = it.bagCntMap
-//                val adapterList = ArrayList<GiftAdapter>()
-//                //获取有变化的礼物ID
-//                val changeGiftIds = countMap?.keys
-//                    ?: return@flatMap Observable.fromIterable(adapterList)
-//                val count = giftViewPager.childCount
-//                (0 until count).forEach {
-//                    val adapter = (giftViewPager.getChildAt(it) as? RecyclerView)?.adapter as? GiftAdapter
-//                    adapter?.data?.forEach { dto ->
-//                        if (changeGiftIds.contains("${dto.giftId}")) {
-//                            //该礼物有变化
-//                            dto.bagCount = countMap["${dto.giftId}"] ?: 0
-//                            adapterList.add(adapter)
-//                        }
-//
-//                    }
-//
-//                }
-//                Observable.fromIterable(adapterList)
-//            }
-//            .subscribeOn(Schedulers.computation())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .bindUntilEvent(this, FragmentEvent.DESTROY)
-//            .subscribe { it?.notifyDataSetChanged() }
+        Observable.just(result)
+            .flatMap<GiftAdapter> {
+                val countMap = it.bagCntMap
+                val adapterList = ArrayList<GiftAdapter>()
+                //获取有变化的礼物ID
+                val changeGiftIds = countMap?.keys
+                    ?: return@flatMap Observable.fromIterable(adapterList)
+                val count = bagViewPager.childCount
+                (0 until count).forEach {
+                    val adapter = (bagViewPager.getChildAt(it) as? RecyclerView)?.adapter as? GiftAdapter
+                    adapter?.data?.forEach { dto ->
+                        val changeKey = "${dto.prodType}${dto.giftId}"
+                        if (changeGiftIds.contains(changeKey)) {
+                            //该礼物有变化
+                            dto.bagCount = countMap[changeKey] ?: 0
+                            adapterList.add(adapter)
+                        }
+
+                    }
+
+                }
+                Observable.fromIterable(adapterList)
+            }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .bindUntilEvent(this, FragmentEvent.DESTROY)
+            .subscribe { it?.notifyDataSetChanged() }
     }
 
     /**
@@ -1479,13 +1515,7 @@ class SendGiftFragment : BaseDialogFragment() {
         }
         if (bag) {
             //显示空页面
-            val emptyText = TextView(context)
-                .apply {
-                    gravity = Gravity.CENTER
-                    text = GlobalUtils.getString(R.string.empty_bag)
-                    textColor = GlobalUtils.getColor(R.color.black_666)
-                    textSize = 12f
-                }
+            val emptyText = LayoutInflater.from(context).inflate(R.layout.empty_gift_bag, null)
             emptyText.layoutParams = ViewGroup.LayoutParams(ScreenUtils.getScreenWidth(), ViewGroup.LayoutParams.MATCH_PARENT)
             mAdapter.setEmptyView(emptyText)
         }
