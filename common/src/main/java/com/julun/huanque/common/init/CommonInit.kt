@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.TextView
+import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.R
 import com.julun.huanque.common.manager.ActivitiesManager
@@ -43,8 +44,10 @@ class CommonInit {
             return singleton!!
         }
 
-    }
 
+    }
+    //这里记录fresco配置 给其他第三方用
+    var frescoConfig: ImagePipelineConfig?=null
     private var urlTest = "http://office.katule.cn:9205/"
 
     //保存的全局application

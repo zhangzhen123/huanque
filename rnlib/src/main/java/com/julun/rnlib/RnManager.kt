@@ -10,13 +10,15 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.LifecycleState
+import com.facebook.react.shell.MainPackageConfig
 import com.facebook.react.shell.MainReactPackage
 import com.horcrux.svg.SvgPackage
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.net.interceptors.HeaderInfoHelper
 import com.julun.huanque.common.suger.logger
 import com.julun.rnlib.reactpackage.AppMessageReactPackage
-import com.julun.rnlib.reactpackage.OpenPageReactPackage
 import com.julun.rnlib.reactpackage.GlobalReactPackage
+import com.julun.rnlib.reactpackage.OpenPageReactPackage
 import com.julun.rnlib.reactpackage.UploadReactPackage
 import com.luck.picture.lib.config.PictureConfig
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage
@@ -45,12 +47,14 @@ object RnManager {
      */
     fun createReactInstanceManager(application: Application): ReactInstanceManager {
         logger("createReactInstanceManager 初始化")
+        val configBuilder: MainPackageConfig.Builder = MainPackageConfig.Builder()
+        val config=configBuilder.setFrescoConfig(CommonInit.getInstance().frescoConfig).build()
         if (mReactInstanceManager == null) {
             mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(application)
                 .setBundleAssetName("index.android.bundle")
                 .setJSMainModulePath("index")
-                .addPackage(MainReactPackage()) // 背景色渐变：需放到application中
+                .addPackage(MainReactPackage(config)) // 背景色渐变：需放到application中
                 .addPackage(LinearGradientPackage()) // 请求头数据：需放到application中
                 .addPackage(GlobalReactPackage())
                 .addPackage(UploadReactPackage())

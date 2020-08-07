@@ -100,8 +100,8 @@ class FrescoTask : Task() {
                     throwable?.printStackTrace()
                     println("fresco 缓存错误.... cacheErrorCategory -> $cacheErrorCategory class $clazz ")
                 }
-                .setBaseDirectoryName(frescoCacheDir.name)
-                .setBaseDirectoryPathSupplier({ frescoCacheDir })
+//                .setBaseDirectoryName(frescoCacheDir.name)
+                .setBaseDirectoryPathSupplier { frescoCacheDir }
 
 
         //总体的配置
@@ -113,7 +113,7 @@ class FrescoTask : Task() {
                 .experiment().setDecodeCancellationEnabled(true)
 //                .experiment().setNativeCodeDisabled(true) //是否使用底层去加载
                 .build()
-
+        CommonInit.getInstance().frescoConfig=config
         Fresco.initialize(mContext, config)
     }
 }
