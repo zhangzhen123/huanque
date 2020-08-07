@@ -1,4 +1,4 @@
-package com.julun.lingmeng.lmcore.controllers.live.player
+package com.julun.huanque.core.ui.live.fragment
 
 import android.os.Bundle
 import android.text.TextUtils

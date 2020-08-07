@@ -2,6 +2,7 @@ package com.luck.picture.lib;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.luck.picture.lib.adapter.SimpleFragmentAdapter;
@@ -24,6 +26,7 @@ import com.luck.picture.lib.rxbus2.RxBus;
 import com.luck.picture.lib.rxbus2.Subscribe;
 import com.luck.picture.lib.rxbus2.ThreadMode;
 import com.luck.picture.lib.tools.ScreenUtils;
+import com.luck.picture.lib.tools.StatusBarUtil;
 import com.luck.picture.lib.tools.ToastManage;
 import com.luck.picture.lib.tools.VoiceUtils;
 import com.luck.picture.lib.ucrop.UCrop;
@@ -92,11 +95,11 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
             RxBus.getDefault().register(this);
         }
         //全屏化处理
-//        StatusBarUtil.setTransparent(this);
-//        RelativeLayout rl = findViewById(R.id.rl_title);
-//        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) rl.getLayoutParams();
-//        lp.setMargins(0, StatusBarUtil.getStatusBarHeight(this), 0, 0);
-//        StatusBarUtil.setColor(this,Color.BLACK);
+        StatusBarUtil.setTransparent(this);
+        RelativeLayout rl = findViewById(R.id.rl_title);
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) rl.getLayoutParams();
+        lp.setMargins(0, StatusBarUtil.getStatusBarHeight(this), 0, 0);
+        StatusBarUtil.setColor(this,Color.parseColor("#E6000000"));
 
         mHandler = new Handler();
         screenWidth = ScreenUtils.getScreenWidth(this);

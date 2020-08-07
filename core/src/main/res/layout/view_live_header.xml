@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="34dp"
+    android:layout_height="@dimen/top_header_height"
     android:orientation="horizontal"
+    android:gravity="center_vertical"
     android:paddingLeft="10dp">
 
     <!--<LinearLayout-->
@@ -114,7 +115,7 @@
         android:id="@+id/flRoyalRootView"
         android:layout_width="40dp"
         android:layout_marginStart="@dimen/dimen_8"
-        android:layout_height="match_parent">
+        android:layout_height="@dimen/dimen_34">
 
         <ImageView
             android:id="@+id/ivRoyalIcon"
@@ -195,9 +196,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/onlineUserListView"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/exitImage"
+            android:layout_toStartOf="@+id/exitImage"
             android:cacheColorHint="@color/transparent"
             android:fadingEdge="none"
             android:listSelector="@color/transparent"

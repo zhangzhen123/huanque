@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -16,9 +15,9 @@ import com.julun.huanque.common.constant.UserChangeType
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
+import com.julun.huanque.common.widgets.PhotoHeadView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
@@ -29,7 +28,6 @@ import com.nineoldandroids.animation.ObjectAnimator
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.view_live_header.view.*
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.textColor
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.properties.Delegates
@@ -92,11 +90,17 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     private val userListAdapter = object : BaseQuickAdapter<UserInfoForLmRoom, BaseViewHolder>(R.layout.item_live_room_user) {
-        override fun convert(vh: BaseViewHolder, item: UserInfoForLmRoom) {
-            if (vh == null || item == null) {
-                return
-            }
-            val imgView = vh.getView<SimpleDraweeView>(R.id.headerImage)
+        override fun convert(holder: BaseViewHolder, item: UserInfoForLmRoom) {
+            val imgView = holder.getView<PhotoHeadView>(R.id.headerImage)
+            //todo test
+            imgView.setImageCustom(
+                headUrl = item.headPic,
+                frameRes = if (item.smallPic.isNotEmpty()) R.mipmap.icon_test_frame else null,
+                headHeight = 32,
+                headWidth = 32,
+                frameWidth = 40,
+                frameHeight = 48
+            )
             //添加边框
 //            val roundingParams = RoundingParams.fromCornersRadius(5f)
 //            roundingParams.roundAsCircle = true
@@ -108,12 +112,12 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //                imgView.setPadding(context.dip(1), context.dip(1), context.dip(1), context.dip(1))
 //            }
 //            imgView.hierarchy.roundingParams = roundingParams
-            ImageUtils.loadImage(imgView, item.headPic, 32f, 32f)
-            val smpImage: SimpleDraweeView = vh.getView(R.id.identityImage)
+//            ImageUtils.loadImage(imgView, item.headPic, 32f, 32f)
+            val smpImage: SimpleDraweeView = holder.getView(R.id.identityImage)
             // 优先显示 守护 图标
             if (item.smallPic.isNotEmpty()) {
                 smpImage.visibility = View.VISIBLE
-                ImageUtils.loadImageWithHeight_2(smpImage, item.smallPic, dip(12))
+                ImageUtils.loadImageWithHeight_2(smpImage, item.smallPic, dip(16))
             } else {
                 smpImage.visibility = View.GONE
             }
@@ -235,7 +239,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     fun initData(roomData: UserEnterRoomRespDto) {
 //        logger.info("liveHeader ：${JsonUtil.seriazileAsString(roomData)}")
-        hotText.text ="${StringHelper.formatNum(roomData.heatValue)}"
+        hotText.text = "${StringHelper.formatNum(roomData.heatValue)}"
         isSubscribed = roomData.follow
         changeFansViews(roomData.groupMember, roomData.fansClockIn)
 
@@ -336,6 +340,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //            }
 //        }
     }
+
     /**
      * 将在线用户按照score进行排序，并且删除主播
      */
@@ -406,10 +411,10 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
         doRefreshRoomUserList()
         //更新roomData数据
-        val roomData=playerViewModel?.roomData?:return
-        roomData.onlineUserNum=data.totalCount
-        roomData.royalCount=data.royalCount
-        roomData.guardCount=data.guardCount
+        val roomData = playerViewModel?.roomData ?: return
+        roomData.onlineUserNum = data.totalCount
+        roomData.royalCount = data.royalCount
+        roomData.guardCount = data.guardCount
     }
 
     private fun replaceExistUserItem(newObj: UserInfoForLmRoom) {

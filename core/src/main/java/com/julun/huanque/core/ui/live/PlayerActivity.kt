@@ -51,14 +51,13 @@ import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.FloatingManager
-import com.julun.huanque.core.service.FloatingService
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
 import com.julun.huanque.core.ui.live.manager.PlayerViewManager
 import com.julun.huanque.core.viewmodel.*
 import com.julun.huanque.core.widgets.live.slide.SlideViewContainer
-import com.julun.lingmeng.lmcore.controllers.live.player.LivePlayerFragment
+import com.julun.huanque.core.ui.live.fragment.LivePlayerFragment
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable

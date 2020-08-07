@@ -373,13 +373,6 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
                     }
                     val colorInts = arrayListOf<Int>()
                     colors.forEach {
-                        //                    var color: Int?
-//                    try {
-//                        color = Color.parseColor(it)
-//                    } catch (e: Exception) {
-//                        e.printStackTrace()
-//                    }
-//                    if (color != null)
                         val color = GlobalUtils.formatColor(it, R.color.colorPrimary_lib)
                         colorInts.add(color)
                     }

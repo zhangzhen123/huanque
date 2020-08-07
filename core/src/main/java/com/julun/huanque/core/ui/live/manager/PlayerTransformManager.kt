@@ -19,7 +19,6 @@ import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
-import com.julun.huanque.core.viewmodel.LiveFollowListViewModel
 import com.julun.huanque.core.viewmodel.PKViewModel
 
 /**
