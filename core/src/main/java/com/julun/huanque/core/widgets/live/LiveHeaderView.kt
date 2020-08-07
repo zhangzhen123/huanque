@@ -169,27 +169,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //            }
             playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ONLINE
         }
-//        count_container_001.onClickNew {
-//            //            playerActivity.openOnlineView()
-////            playerViewModel?.onlineView?.value = currentCount
-////            playerViewModel?.openOnlineDialog?.value = DialogTypes.DIALOG_USER
-//        }
-        //去除跳转到在线人数页面
-//        userCountText.onClick {
-//            var intent = Intent(playerActivity, OnlineViewsListActivity::class.java)
-//            intent.putExtra(IntentParamKey.PROGRAM_ID.name, programId)
-//            intent.putExtra(IntentParamKey.ANCHOR_ID.name, anchorId)
-//            playerActivity.startActivity(intent)
-//        }
-//        topContainer.onClickNew {
-//            val activity = context as? Activity
-//            activity?.let {
-//                var intent = Intent(it, ScoreActivity::class.java)
-//                intent.putExtra(IntentParamKey.PROGRAM_ID.name, programId)
-//                it.startActivity(intent)
-//            }
-//
-//        }
         //
         userListAdapter.setOnItemClickListener { _, _, position ->
             // 用户个人信息界面
@@ -206,10 +185,9 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
             }
         }
-//        if (!isInEditMode) {
-//            tv_important_user_count.setMyTypeface()
-//            tv_user_count.setMyTypeface()
-//        }
+        if (!isInEditMode) {
+            tv_user_count.setTFDinCdc2()
+        }
 
 //        ivFansJoin.onClickNew {
 //            //粉丝团加入
@@ -274,13 +252,13 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             royalCount > 9999 -> tvRoyalContent.text = "9999"
             else -> tvRoyalContent.text = "$royalCount"
         }
-        when {
-            guardCount < 0 -> tvGuardContent.text = "0"
-            guardCount > 9999 -> tvGuardContent.text = "9999"
-            else -> tvGuardContent.text = "$guardCount"
-        }
+//        when {
+//            guardCount < 0 -> tvGuardContent.text = "0"
+//            guardCount > 9999 -> tvGuardContent.text = "9999"
+//            else -> tvGuardContent.text = "$guardCount"
+//        }
         //直播间用户数量
-//        tv_user_count.text = formatCount(roomData.regUserCount + roomData.visitorCount)
+        tv_user_count.text = formatCount(roomData.onlineUserNum)
 //        tv_user_count.text = formatCount(roomData.onlineUserNum)
         // 停播跳转重进直播间是需要清空数据
         roomUsers.clear()
@@ -492,20 +470,23 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
                     flRoyalRootView.rotationY = -360f
                     ivRoyalIcon.show()
                     tvRoyalContent.show()
-                    ivGuardIcon.hide()
-                    tvGuardContent.hide()
+                    tv_user_count.hide()
+//                    ivGuardIcon.hide()
+//                    tvGuardContent.hide()
                     return
                 }
                 if (ivRoyalIcon.isVisible()) {
                     ivRoyalIcon.hide()
                     tvRoyalContent.hide()
-                    ivGuardIcon.show()
-                    tvGuardContent.show()
+                    tv_user_count.show()
+//                    ivGuardIcon.show()
+//                    tvGuardContent.show()
                 } else {
                     ivRoyalIcon.show()
                     tvRoyalContent.show()
-                    ivGuardIcon.hide()
-                    tvGuardContent.hide()
+//                    ivGuardIcon.hide()
+//                    tvGuardContent.hide()
+                    tv_user_count.hide()
                 }
             }
         })

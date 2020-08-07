@@ -960,7 +960,7 @@ object RongCloudManager {
     }
 
     // 消息接收监听器
-    val messageListener: RongIMClient.OnReceiveMessageListener by lazy {
+    private val messageListener: RongIMClient.OnReceiveMessageListener by lazy {
         RongIMClient.OnReceiveMessageListener { message, left ->
             //            try {
             //                logger.info("接收消息成功当前的线程：${Thread.currentThread()}")
