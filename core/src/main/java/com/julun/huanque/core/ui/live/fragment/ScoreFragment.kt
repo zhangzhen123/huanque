@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.RankingsResult
 import com.julun.huanque.common.bean.beans.TIBean
+import com.julun.huanque.common.bean.beans.UserInfoBean
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.MixedHelper
@@ -29,6 +31,7 @@ import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.ScoreViewModel
 import kotlinx.android.synthetic.main.fragment_score.*
 
@@ -49,6 +52,8 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
     private var rankingsId: Int = 0
 
     private var emptyView: View? = null
+
+    private val mPlayerViewModel: PlayerViewModel by activityViewModels()
 
     companion object {
         fun newInstance(): ScoreFragment {
@@ -119,8 +124,9 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
 
 
     private fun openPlayerInfo(user: RankingsResult) {
-        //todo
-
+        //显示用户名片
+        mPlayerViewModel.userInfoView.value = UserInfoBean(user.userId, nickname = user.nickname)
+        mPlayerViewModel.scoreDismissFlag.value = true
     }
 
     private fun queryRankingsResult(queryType: QueryType) {

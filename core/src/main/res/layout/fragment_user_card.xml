@@ -28,6 +28,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginTop="28dp"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
         app:roundAsCircle="true"
         app:roundingBorderColor="@color/white"
         app:roundingBorderWidth="2dp" />
@@ -58,15 +59,16 @@
         android:text="举报"
         android:textColor="@color/black_999"
         android:textSize="@dimen/sp_12"
+        android:visibility="gone"
         app:layout_constraintRight_toRightOf="@id/view_bg"
         app:layout_constraintTop_toTopOf="@id/view_bg" />
 
-    <ScrollView
+
+    <com.julun.huanque.common.widgets.MaxSizeScrollView
         android:id="@+id/scroll_view"
         android:layout_width="0px"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:maxHeight="240dp"
         android:minHeight="156dp"
         android:overScrollMode="never"
         app:layout_constraintHorizontal_bias="0.0"
@@ -161,7 +163,7 @@
                 android:layout_width="105dp"
                 android:layout_height="44dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_caifu"
+                android:background="@drawable/sel_caifu"
                 android:visibility="gone"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -216,7 +218,7 @@
                 android:layout_height="44dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_guizu"
+                android:background="@drawable/sel_guizu"
                 android:visibility="gone"
                 app:layout_constraintLeft_toRightOf="@id/view_caifu_level"
                 app:layout_constraintRight_toLeftOf="@+id/view_zhubo_level"
@@ -340,7 +342,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_line" />
 
-            <com.facebook.drawee.span.SimpleDraweeSpanTextView
+            <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
                 android:id="@+id/stv_medal"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
@@ -437,7 +439,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
+    </com.julun.huanque.common.widgets.MaxSizeScrollView>
 
     <View
         android:layout_width="0px"

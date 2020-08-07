@@ -572,50 +572,64 @@ class UserInfoInRoom : Serializable {
     //年龄
     var age: Int = 0
 
+    //主播等级
+    var anchorLevel: Int = 0
+
+    //认证标识
+    var authMark: String = ""
+
+    //勋章图标列表(不含房管勋章),已排序
+    var badgesPic: List<String> = ArrayList()
+
+    //互动标识
+    var canInteractive: Boolean = false
+
+    //是否显示举报拉黑
+    var canReport: Boolean = false
+
     //城市
     var city: String = ""
 
-    /** 有操作权限的会存到operateList **/
-//    var operateList: ArrayList<ManagerInfo> = ArrayList<ManagerInfo>()
+    //关注状态
+    var follow: Boolean = false
+
     //是否有管理功能
     var hasOperate: Boolean = false
 
-    /** 用户昵称 **/
-    var nickname: String = ""
-
-    /** 用户头像 **/
+    //用户头像
     var headPic: String = ""
-
-    /** 性别：男(M)、女(F)(可选项：Male、Female、Unknow) **/
-    var sex: String = ""
-
-    /** 个性签名 **/
-    var mySign: String = ""
-
-    /** 用户等级 **/
-    var userLevel: Int = 0
-
-    /** 贵族等级 **/
-    var royalLevel: Int = 0
-
-    /**是否显示加好友**/
-    var showAddFriend: Boolean = false
-
-    /** 勋章图标列表(不含房管勋章),已排序 **/
-    var badgesPic: List<String> = ArrayList()
 
     //小鹊数据
     var magpieList: List<String> = mutableListOf()
 
+    //个性签名
+    var mySign: String = ""
+
+    //用户昵称
+    var nickname: String = ""
+
+    //贵族等级
+    var royalLevel: Int = 0
+
+    //贵族勋章
+    var royalPic: String = ""
+
+    //性别：男(M)、女(F)(可选项：Male、Female、Unknow)
+    var sex: String = ""
+
+    //是否显示AT按钮
+    var showAt: Boolean = false
+
+    //用户等级
+    var userLevel: Int = 0
+
     //标签
     var userTags: List<String> = mutableListOf()
 
-    /** 主播等级 **/
-    var anchorLevel: Int = 0
 
-    /** 是否关注(针对主播) **/
-    @JSONField(name = "isFollowed")
-    var isFollowed: Boolean = false
+    /**是否显示加好友**/
+    var showAddFriend: Boolean = false
+
 
     /** 昵称颜色 **/
     var nickcolor: String = ""
@@ -638,15 +652,8 @@ class UserInfoInRoom : Serializable {
     //是否是神秘人
     var mystery: Boolean = false
 
-    //是否显示举报拉黑
-    var canReport: Boolean = false
-
-    //是否显示AT按钮
-    var showAt: Boolean = false
 
     //4.15新增字段
-    //贵族勋章
-    var royalPic: String = ""
 
     //4.19.0新增字段
     var intimateVO: IntimateVO? = null
@@ -659,14 +666,6 @@ class UserInfoInRoom : Serializable {
 
     //成就相关
     var achievementInfo: UserAchievementInfo? = null
-
-    //4.25新增字段
-    //月卡认证icon
-    var mcIcon: String = ""
-
-    //4.29新增字段
-    //特权相关
-    var privilegeTotalVO: UserPrerogativeCardInfo? = null
 }
 
 class UserAchievementInfo : Serializable {
@@ -998,7 +997,8 @@ data class UserInfoBean(
     var royalLevel: Int = -1,
     var userPortrait: String = "",
     var displayType: List<String>? = null,
-    var programName: String = ""
+    var programName: String = "",
+    var nickname : String = ""
 )
 
 //页面跳转的Bean

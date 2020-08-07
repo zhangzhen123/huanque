@@ -130,7 +130,7 @@ class MessageViewModel : BaseViewModel() {
             override fun onError(p0: RongIMClient.ErrorCode?) {
             }
 
-        })
+        }, Conversation.ConversationType.PRIVATE)
     }
 
     /**

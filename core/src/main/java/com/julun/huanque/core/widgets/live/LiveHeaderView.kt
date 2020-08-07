@@ -164,7 +164,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             // 主播个人信息界面
             playerViewModel?.userInfoView?.value = UserInfoBean(
                 userId = programId, isAnchor = true, royalLevel = 0, userPortrait = anchorInfo?.headPic
-                    ?: "", programName = authorNicknameText.text.toString()
+                    ?: "", nickname = authorNicknameText.text.toString()
             )
 
         }

@@ -33,7 +33,12 @@ class UserCardViewModel : BaseViewModel() {
 
     //用户ID
     var mUserId = 0L
-    var programId = 10007L
+
+    //用户昵称
+    var mNickname = ""
+
+    //当前用户所在的直播间ID
+    var programId = 0L
 
 
     /**
@@ -42,7 +47,7 @@ class UserCardViewModel : BaseViewModel() {
     fun queryUserInfo() {
         viewModelScope.launch {
             request({
-                val result = mLiveService.userInfo(UserProgramForm(targetUserId = 10007, programId = 10007)).dataConvert()
+                val result = mLiveService.userInfo(UserProgramForm(targetUserId = mUserId, programId = programId)).dataConvert()
                 userInfoData.value = result
             }, needLoadState = true)
         }

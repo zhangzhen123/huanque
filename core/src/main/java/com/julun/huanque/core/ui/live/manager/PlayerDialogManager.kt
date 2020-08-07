@@ -166,8 +166,9 @@ class PlayerDialogManager(val context: PlayerActivity) {
             if (info != null) {
                 //显示用户名片
                 openDialog(UserCardFragment::class.java, builder = {
-                    UserCardFragment.newInstance(info.userId)
+                    UserCardFragment.newInstance(info.userId, info.nickname)
                 })
+                playerViewModel.userInfoView.value = null
             }
         })
     }
