@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -77,22 +77,19 @@
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="7dp"
-            android:layout_marginStart="7dp"
-            android:layout_toEndOf="@+id/tv_live_square"
-            android:layout_toRightOf="@+id/tv_live_square">
-
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/tv_live_square">
             <HorizontalScrollView
                 android:id="@+id/runway_container"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/run_way_height"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/shape_runway_1"
+                android:layout_marginStart="@dimen/dimen_6"
                 android:paddingEnd="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingStart="10dp"
+                android:paddingStart="21dp"
                 android:scrollbars="none"
+                tools:visibility="visible"
                 android:visibility="gone">
 
                 <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
@@ -103,21 +100,31 @@
                     android:maxLines="1"
                     tools:text="我是跑道内容。"
                     android:textSize="12sp"
+                    tools:visibility="visible"
                     android:visibility="gone" />
             </HorizontalScrollView>
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/runway_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                tools:visibility="visible"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/dimen_2"
+                android:visibility="gone" />
 
         </FrameLayout>
 
-        <ImageView
-            android:id="@+id/runway_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/runway_layout"
-            android:layout_toStartOf="@+id/runway_layout"
-            android:src="@mipmap/runway_img_001"
-            android:visibility="gone" />
+<!--        <ImageView-->
+<!--            android:id="@+id/runway_icon"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:layout_toLeftOf="@+id/runway_layout"-->
+<!--            android:layout_toStartOf="@+id/runway_layout"-->
+<!--            android:src="@mipmap/runway_img_001"-->
+<!--            tools:visibility="visible"-->
+<!--            android:visibility="gone" />-->
 
         <FrameLayout
             android:id="@+id/week_star_layout"
