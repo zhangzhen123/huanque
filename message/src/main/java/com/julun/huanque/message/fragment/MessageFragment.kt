@@ -97,7 +97,7 @@ class MessageFragment : BaseFragment() {
             msg_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         }
         mMessageViewModel.getConversationList()
-        mMessageViewModel.getBlockedConversationList()
+//        mMessageViewModel.getBlockedConversationList()
     }
 
 
@@ -239,6 +239,7 @@ class MessageFragment : BaseFragment() {
             }
         })
 
+
         mMessageViewModel.blockListData.observe(this, Observer {
             if (it != null) {
                 mAdapter.blockList = it
@@ -250,6 +251,17 @@ class MessageFragment : BaseFragment() {
             if (it != null) {
                 mMessageViewModel.anchorData = it
                 mAdapter.curAnchorId = "${it.programId}"
+            }
+        })
+
+        mPlayerMessageViewModel.unreadCountInPlayer.observe(this, Observer {
+            if (it != null) {
+                val str = if (it > 0) {
+                    "消息($it)"
+                } else {
+                    "消息"
+                }
+                tv_title_player.text = str
             }
         })
     }
@@ -288,10 +300,6 @@ class MessageFragment : BaseFragment() {
         mMessageViewModel.refreshConversation(bean.targetId, bean.stranger)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun blockChange(event: MessageBlockEvent) {
-        mMessageViewModel.getBlockedConversationList()
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun foldMessage(bean: FoldStrangerMessageEvent) {

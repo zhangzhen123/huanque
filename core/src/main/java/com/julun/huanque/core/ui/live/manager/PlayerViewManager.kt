@@ -1532,12 +1532,12 @@ class PlayerViewManager(val context: PlayerActivity) {
         publicView.topPadding = padding
     }
 
-    /**
-     * 获取未读消息数量（私聊）
-     */
-    fun getUnReadMessageCount() {
-        mPlayerMessageViewModel.queryRongPrivateCount()
-    }
+//    /**
+//     * 获取未读消息数量（私聊）
+//     */
+//    fun getUnReadMessageCount() {
+//        mPlayerMessageViewModel.queryRongPrivateCount()
+//    }
 
     /**
      * 请求获取关注列表 根据[isPull]判断是否下拉刷新

@@ -15,10 +15,7 @@ import com.julun.huanque.R
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
-import com.julun.huanque.common.bean.events.EventMessageBean
-import com.julun.huanque.common.bean.events.LoginEvent
-import com.julun.huanque.common.bean.events.LoginOutEvent
-import com.julun.huanque.common.bean.events.RongConnectEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.SPParamKey
@@ -193,12 +190,18 @@ class MainActivity : BaseActivity() {
                 showUnreadCount()
             }
         })
+        mMainViewModel.blockListData.observe(this, Observer {
+            if (it != null) {
+                mMessageViewModel.blockListData.value = it
+            }
+        })
         mMessageViewModel.queryUnreadCountFlag.observe(this, Observer {
             if (it == true) {
                 mMainViewModel.getUnreadCount()
                 mMessageViewModel.queryUnreadCountFlag.value = false
             }
         })
+
     }
 
     override fun initEvents(rootView: View) {
@@ -417,9 +420,16 @@ class MainActivity : BaseActivity() {
     fun connectSuccess(event: RongConnectEvent) {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，查询未读数
+            //查询免打扰列表
+            mMainViewModel.getBlockedConversationList()
             mMainViewModel.getUnreadCount()
             mMainViewModel.refreshMessage()
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun blockChange(event: MessageBlockEvent) {
+        mMainViewModel.getBlockedConversationList()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

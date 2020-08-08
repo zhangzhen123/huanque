@@ -165,21 +165,9 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
 
     /**
      * 显示未读数量
-     * @param actionByExperience 是否由私信体验触发的调用
+     * @param count 数量
      */
-    fun togglePrivateRedPointView(count: Int, actionByExperience: Boolean = false) {
-        if (actionByExperience) {
-            if (mExperience && privateChatBadgeText.visibility == View.VISIBLE) {
-                return
-            } else if (!mExperience) {
-                //私信体验到期,如果是没有数字的红点，需要隐藏
-                val content = privateChatBadgeText.text.toString().trim()
-                if (content.isNotEmpty()) {
-                    //红点里面有文案，直接返回
-                    return
-                }
-            }
-        }
+    fun togglePrivateRedPointView(count: Int) {
         when {
             count == 0 -> privateChatBadgeText.text = "   "
             count < 100 -> privateChatBadgeText.text = "$count"
@@ -424,7 +412,7 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
      */
     fun privateExperience(experience: Boolean) {
         mExperience = experience
-        togglePrivateRedPointView(0, true)
+        togglePrivateRedPointView(0)
     }
 
 

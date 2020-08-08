@@ -41,6 +41,7 @@ class MessageViewModel : BaseViewModel() {
     //会话列表
     val conversationListData: MutableLiveData<MutableList<LocalConversation>> by lazy { MutableLiveData<MutableList<LocalConversation>>() }
 
+    //免打扰列表
     val blockListData: MutableLiveData<MutableList<String>> by lazy { MutableLiveData<MutableList<String>>() }
 
     //有变化的数据  <0  刷新整个列表  >=0 刷新单个条目
@@ -133,25 +134,25 @@ class MessageViewModel : BaseViewModel() {
         }, Conversation.ConversationType.PRIVATE)
     }
 
-    /**
-     * 获取免打扰会话列表
-     */
-    fun getBlockedConversationList() {
-        RongIMClient.getInstance().getBlockedConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
-            override fun onSuccess(list: List<Conversation>?) {
-                val blockedIdList = mutableListOf<String>()
-                list?.forEach {
-                    blockedIdList.add(it.targetId)
-                }
-                blockListData.value = blockedIdList
-            }
-
-            override fun onError(errorCode: RongIMClient.ErrorCode?) {
-                logger("errorCode = $errorCode")
-            }
-
-        }, Conversation.ConversationType.PRIVATE)
-    }
+//    /**
+//     * 获取免打扰会话列表
+//     */
+//    fun getBlockedConversationList() {
+//        RongIMClient.getInstance().getBlockedConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
+//            override fun onSuccess(list: List<Conversation>?) {
+//                val blockedIdList = mutableListOf<String>()
+//                list?.forEach {
+//                    blockedIdList.add(it.targetId)
+//                }
+//                blockListData.value = blockedIdList
+//            }
+//
+//            override fun onError(errorCode: RongIMClient.ErrorCode?) {
+//                logger("errorCode = $errorCode")
+//            }
+//
+//        }, Conversation.ConversationType.PRIVATE)
+//    }
 
 
     /**

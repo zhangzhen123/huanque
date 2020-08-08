@@ -349,6 +349,7 @@ class PlayerActivity : BaseActivity() {
                 //加入直播间成功
                 hasJoinRoom = true
                 joinChatCallback(it)
+                playerMessageViewModel.queryRongPrivateCount()
             } else {
                 viewModel.errorState.value = 2
             }
@@ -567,6 +568,11 @@ class PlayerActivity : BaseActivity() {
                 }
             }
         })
+        playerMessageViewModel.unreadCountInPlayer.observe(this, Observer {
+            if (it != null) {
+                actionView.togglePrivateRedPointView(it)
+            }
+        })
 
     }
 
@@ -720,7 +726,8 @@ class PlayerActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privatePoint(event: EventMessageBean) {
-        liveViewManager.getUnReadMessageCount()
+//        liveViewManager.getUnReadMessageCount()
+        playerMessageViewModel.queryRongPrivateCount(event.targetId)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
