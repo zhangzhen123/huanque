@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -67,7 +69,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
 
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        overridePendingTransition(R.anim.slide_in_from_bottom, 0)
+        overridePendingTransition(0, 0)
         applyModule = intent.getStringExtra(IntentParamKey.TYPE.name) ?: applyModule
         programInfo = intent.getSerializableExtra(IntentParamKey.LIVE_INFO.name) as? MicAnchor
 
@@ -98,11 +100,38 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                 ll_copy.show()
             }
         }
+        playInAnimator()
+    }
+
+    private fun playInAnimator() {
+        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_bottom)
+        animation.duration = 300
+        rv_share_contents.startAnimation(animation)
+        ll_bottom.startAnimation(animation)
+    }
+
+    private fun playOutAnimator() {
+        val animation = AnimationUtils.loadAnimation(this, R.anim.slide_out_to_bottom)
+        animation.duration = 200
+        rv_share_contents.startAnimation(animation)
+        ll_bottom.startAnimation(animation)
+        animation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                finish()
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+            }
+
+        })
     }
 
     override fun initEvents(rootView: View) {
         tv_cancel_share.onClickNew {
-            finish()
+            playOutAnimator()
         }
 
         tv_copy.onClickNew {
@@ -135,7 +164,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(0, R.anim.slide_out_to_bottom)
+        overridePendingTransition(0, 0)
     }
 
     private fun saveViewToImageFile(type: String) {
