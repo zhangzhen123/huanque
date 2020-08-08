@@ -68,7 +68,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             //存在用户信息
             ImageHelper.setDefaultHeaderPic(sdvHeader, item.showUserInfo?.sex ?: "")
             //设置默认头像
-            ImageUtils.loadImage(sdvHeader, item.showUserInfo?.headPic ?: "", 50f, 50f)
+            ImageUtils.loadImage(sdvHeader, item.showUserInfo?.headPic ?: "", 56f, 56f)
             helper.setText(R.id.tv_nickname, item.showUserInfo?.nickname ?: "")
             //欢遇状态
             val meetResource = ImageHelper.getMeetStatusResource(item.showUserInfo?.meetStatus ?: "")
@@ -230,7 +230,16 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.conversation.sentTime))
         }
 
-        //存在会话消息，显示常规的布局
-        helper.setVisible(R.id.tv_time, true)
+        if (curAnchorId == targetId && msg == null) {
+            //当前主播会话
+            //该会话当中没有消息,显示引导文案和私聊文本
+            helper.setGone(R.id.tv_time, true)
+                .setVisible(R.id.tv_chat, true)
+
+        } else {
+            //存在会话消息，显示常规的布局
+            helper.setVisible(R.id.tv_time, true)
+                .setGone(R.id.tv_chat, true)
+        }
     }
 }

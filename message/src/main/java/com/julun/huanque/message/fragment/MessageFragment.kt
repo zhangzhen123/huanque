@@ -97,7 +97,7 @@ class MessageFragment : BaseFragment() {
             msg_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         }
         mMessageViewModel.getConversationList()
-        mMessageViewModel.getBlockedConversationList()
+//        mMessageViewModel.getBlockedConversationList()
     }
 
 
@@ -180,7 +180,7 @@ class MessageFragment : BaseFragment() {
             val data = mAdapter.data
             if (ForceUtils.isIndexNotOutOfBounds(realPosition, data)) {
                 val tId = data[realPosition].conversation.targetId
-                if (tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender) {
+                if (tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender || tId == mAdapter.curAnchorId) {
                     //系统消息和鹊友通知不显示弹窗
                     return@setOnItemLongClickListener false
                 }
@@ -239,6 +239,7 @@ class MessageFragment : BaseFragment() {
             }
         })
 
+
         mMessageViewModel.blockListData.observe(this, Observer {
             if (it != null) {
                 mAdapter.blockList = it
@@ -250,6 +251,17 @@ class MessageFragment : BaseFragment() {
             if (it != null) {
                 mMessageViewModel.anchorData = it
                 mAdapter.curAnchorId = "${it.programId}"
+            }
+        })
+
+        mPlayerMessageViewModel.unreadCountInPlayer.observe(this, Observer {
+            if (it != null) {
+                val str = if (it > 0) {
+                    "消息($it)"
+                } else {
+                    "消息"
+                }
+                tv_title_player.text = str
             }
         })
     }
@@ -271,14 +283,12 @@ class MessageFragment : BaseFragment() {
 
         iv_contacts_player.onClickNew {
             //联系人
-            activity?.let { act ->
-                ContactsActivity.newInstance(act, ContactsTabType.Intimate)
-            }
+            mPlayerMessageViewModel.contactsData.value = true
         }
 
         tv_message_unread.onClickNew {
             activity?.let { act ->
-                PrivateConversationActivity.newInstance(act, 20000514)
+                PrivateConversationActivity.newInstance(act, 20000516)
 //                PrivateConversationActivity.newInstance(act, 10)
             }
         }
@@ -290,10 +300,6 @@ class MessageFragment : BaseFragment() {
         mMessageViewModel.refreshConversation(bean.targetId, bean.stranger)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun blockChange(event: MessageBlockEvent) {
-        mMessageViewModel.getBlockedConversationList()
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun foldMessage(bean: FoldStrangerMessageEvent) {

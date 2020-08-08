@@ -119,6 +119,9 @@ class PlayerViewManager(val context: PlayerActivity) {
 
     //连麦ViewModel
     private val connectMicroViewModel: ConnectMicroViewModel by context.viewModels()
+
+    //消息页面ViewModel
+    private val mPlayerMessageViewModel: PlayerMessageViewModel by context.viewModels()
     //ZEGO推流相关
 //    private lateinit var mZegoPublishViewModel: ZegoPublishViewModel by context.viewModels()
 
@@ -405,6 +408,10 @@ class PlayerViewManager(val context: PlayerActivity) {
                 }
 //                viewModel.actionBeanData.value = null
             }
+        })
+
+        viewModel.bagChangeFlag.observe(context, Observer {
+            context.actionView.showGiftRedDot(it == true)
         })
 
         viewModel.gotoWeb.observe(context, Observer {
@@ -1535,13 +1542,12 @@ class PlayerViewManager(val context: PlayerActivity) {
         publicView.topPadding = padding
     }
 
-    /**
-     * 获取未读消息数量（私聊）
-     */
-    fun getUnReadMessageCount() {
-        //todo
-//        conversationViewModel?.queryRongPrivateCount()
-    }
+//    /**
+//     * 获取未读消息数量（私聊）
+//     */
+//    fun getUnReadMessageCount() {
+//        mPlayerMessageViewModel.queryRongPrivateCount()
+//    }
 
     /**
      * 请求获取关注列表 根据[isPull]判断是否下拉刷新

@@ -305,6 +305,7 @@ class SendGiftFragment : BaseDialogFragment() {
             showBagData(it ?: return@Observer)
         })
         viewModel?.bagChangeState?.observe(this, Observer {
+            playerViewModel.bagChangeFlag.value = it
             if (it == true) {
                 gtv_package?.showDot(true)
                 goodsCfgData?.bagChange = true

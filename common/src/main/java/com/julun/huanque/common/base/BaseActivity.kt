@@ -2,6 +2,7 @@ package com.julun.huanque.common.base
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import com.alibaba.android.arouter.launcher.ARouter
@@ -34,6 +35,7 @@ abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
     private lateinit var mOrderDialogManager: OrderDialogManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         activityDestroyed = false
         super.onCreate(savedInstanceState)
         mOrderDialogManager = OrderDialogManager(this)

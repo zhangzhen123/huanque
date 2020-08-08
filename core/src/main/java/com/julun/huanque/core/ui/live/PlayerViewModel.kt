@@ -158,7 +158,7 @@ class PlayerViewModel : BaseViewModel() {
     val userInfoView: MutableLiveData<UserInfoBean> by lazy { MutableLiveData<UserInfoBean>() }
 
     //贡献榜关闭标识
-    val scoreDismissFlag : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val scoreDismissFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
 
 //    //显示在线列表视图
@@ -178,6 +178,9 @@ class PlayerViewModel : BaseViewModel() {
 
     //加入直播间成功
     val loginSuccessData: MutableLiveData<UserEnterRoomRespDto> by lazy { MutableLiveData<UserEnterRoomRespDto>() }
+
+    //背包有新礼物标识
+    val bagChangeFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
 
     //私信体验相关数据
@@ -398,6 +401,9 @@ class PlayerViewModel : BaseViewModel() {
     //公聊设置的用户数据
     var roomUserChatExtra: RoomUserChatExtra? = null
 
+    //需要申请权限的跳转类型
+    var mPermissionJumpType = ""
+
     private var loginStateDisposable: Disposable? = null
 
 
@@ -489,6 +495,8 @@ class PlayerViewModel : BaseViewModel() {
                 loginSuccessData.value = result
                 gameListData.value = result.gameList
                 getAdConfig.value = result.poppuAds
+                bagChangeFlag.value = result.user?.bagChange ?: false
+
             }, error = {
                 it.printStackTrace()
                 errorState.value = 3

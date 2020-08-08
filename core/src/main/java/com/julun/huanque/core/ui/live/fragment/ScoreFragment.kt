@@ -272,7 +272,7 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
     override fun showLoadState(state: NetState) {
         when (state.state) {
             NetStateType.SUCCESS -> {
-                scoreAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext()))
+//                scoreAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext()))
             }
             NetStateType.LOADING -> {
                 scoreAdapter.setEmptyView(MixedHelper.getLoadingView(requireContext()))

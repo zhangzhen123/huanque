@@ -16,8 +16,8 @@
         android:layout_marginStart="@dimen/dimen_10"
         android:background="@drawable/bg_shape_black_p20"
         android:drawableStart="@mipmap/icon_live_public_chat"
-        android:gravity="center"
         android:drawablePadding="@dimen/dimen_4"
+        android:gravity="center"
         android:paddingStart="@dimen/dimen_8"
         android:paddingEnd="@dimen/dimen_16"
         android:text="聊一聊吧"
@@ -90,6 +90,14 @@
             android:textSize="6sp"
             android:visibility="gone"
             tools:visibility="visible" />
+
+        <View
+            android:id="@+id/view_gift"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:background="@drawable/bg_live_red_point" />
 
     </RelativeLayout>
 

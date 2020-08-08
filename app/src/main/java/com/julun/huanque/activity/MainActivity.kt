@@ -15,10 +15,7 @@ import com.julun.huanque.R
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
-import com.julun.huanque.common.bean.events.EventMessageBean
-import com.julun.huanque.common.bean.events.LoginEvent
-import com.julun.huanque.common.bean.events.LoginOutEvent
-import com.julun.huanque.common.bean.events.RongConnectEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.SPParamKey
@@ -43,6 +40,7 @@ import com.julun.huanque.ui.main.LeYuanFragment
 import com.julun.huanque.ui.main.MineFragment
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.maplib.LocationService
+import io.rong.imlib.RongIMClient
 import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -128,7 +126,10 @@ class MainActivity : BaseActivity() {
 
         registerMessage()
         //查询未读数
-        mMainViewModel.getUnreadCount()
+        if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
+            //融云已经连接
+            mMainViewModel.getUnreadCount()
+        }
     }
 
     /**
@@ -193,12 +194,18 @@ class MainActivity : BaseActivity() {
                 showUnreadCount()
             }
         })
+        mMainViewModel.blockListData.observe(this, Observer {
+            if (it != null) {
+                mMessageViewModel.blockListData.value = it
+            }
+        })
         mMessageViewModel.queryUnreadCountFlag.observe(this, Observer {
             if (it == true) {
                 mMainViewModel.getUnreadCount()
                 mMessageViewModel.queryUnreadCountFlag.value = false
             }
         })
+
     }
 
     override fun initEvents(rootView: View) {
@@ -417,9 +424,16 @@ class MainActivity : BaseActivity() {
     fun connectSuccess(event: RongConnectEvent) {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，查询未读数
+            //查询免打扰列表
+            mMainViewModel.getBlockedConversationList()
             mMainViewModel.getUnreadCount()
             mMainViewModel.refreshMessage()
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun blockChange(event: MessageBlockEvent) {
+        mMainViewModel.getBlockedConversationList()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -348,6 +348,7 @@ class PlayerActivity : BaseActivity() {
                 //加入直播间成功
                 hasJoinRoom = true
                 joinChatCallback(it)
+                playerMessageViewModel.queryRongPrivateCount()
             } else {
                 viewModel.errorState.value = 2
             }
@@ -553,8 +554,24 @@ class PlayerActivity : BaseActivity() {
         playerMessageViewModel.privateConversationData.observe(this, Observer {
             if (it != null) {
                 //需要打开私聊页面,先判断悬浮窗权限是否存在
-                checkOverlayPermissions()
+                if (checkOverlayPermissions(PermissionJumpType.PrivateChat)) {
+                    openPrivateConversation()
+                }
 
+            }
+        })
+
+        playerMessageViewModel.contactsData.observe(this, Observer {
+            if (it == true) {
+                //打开联系人页面
+                if (checkOverlayPermissions(PermissionJumpType.Contacts)) {
+                    openContacts()
+                }
+            }
+        })
+        playerMessageViewModel.unreadCountInPlayer.observe(this, Observer {
+            if (it != null) {
+                actionView.togglePrivateRedPointView(it)
             }
         })
 
@@ -565,19 +582,21 @@ class PlayerActivity : BaseActivity() {
     /**
      * 检测悬浮窗权限
      */
-    private fun checkOverlayPermissions() {
-        if (PermissionUtils.checkFloatPermission(this)) {
-            openPrivateConversation()
+    private fun checkOverlayPermissions(type: String): Boolean {
+        return if (PermissionUtils.checkFloatPermission(this)) {
+            true
         } else {
             //没有悬浮窗权限,添加该权限
+            viewModel.mPermissionJumpType = type
             MyAlertDialog(this).showAlertWithOKAndCancel(
                 "悬浮窗权限未开启，请到设置中授予欢鹊悬浮窗权限",
                 MyAlertDialog.MyDialogCallback(onRight = {
                     val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
                     intent.data = Uri.parse("package:$packageName")
                     startActivityForResult(intent, PERMISSIONALERT_WINDOW_CODE)
-                }), "设置提醒", "去设置"
+                }, onCancel = { viewModel.mPermissionJumpType = "" }), "设置提醒", "去设置"
             )
+            false
         }
     }
 
@@ -593,6 +612,22 @@ class PlayerActivity : BaseActivity() {
             ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
                 .navigation()
             val baseData = viewModel.baseData.value ?: return@launchWhenResumed
+            FloatingManager.showFloatingView(
+                GlobalUtils.getPlayUrl(baseData.playInfo ?: return@launchWhenResumed),
+                viewModel.programId
+            )
+        }
+    }
+
+    /**
+     * 打开联系人页面
+     */
+    private fun openContacts() {
+        lifecycleScope.launchWhenResumed {
+            val baseData = viewModel.baseData.value ?: return@launchWhenResumed
+            val bundler = Bundle()
+            bundler.putString(ParamConstant.DEFAULT_TYPE, ContactsTabType.Intimate)
+            ARouter.getInstance().build(ARouterConstant.ContactsActivity).with(bundler).navigation()
             FloatingManager.showFloatingView(
                 GlobalUtils.getPlayUrl(baseData.playInfo ?: return@launchWhenResumed),
                 viewModel.programId
@@ -692,7 +727,8 @@ class PlayerActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privatePoint(event: EventMessageBean) {
-        liveViewManager.getUnReadMessageCount()
+//        liveViewManager.getUnReadMessageCount()
+        playerMessageViewModel.queryRongPrivateCount(event.targetId)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -1692,7 +1728,16 @@ class PlayerActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PERMISSIONALERT_WINDOW_CODE) {
             if (PermissionUtils.checkFloatPermission(this)) {
-                openPrivateConversation()
+                when (viewModel.mPermissionJumpType) {
+                    PermissionJumpType.Contacts -> {
+                        openContacts()
+                    }
+                    PermissionJumpType.PrivateChat -> {
+                        openPrivateConversation()
+                    }
+                    else -> {
+                    }
+                }
             }
         }
     }

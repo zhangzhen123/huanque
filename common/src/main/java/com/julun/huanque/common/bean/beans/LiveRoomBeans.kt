@@ -387,7 +387,7 @@ class UserEnterRoomRespDto : Serializable {
     /**游戏列表数据**/
     var gameList: MutableList<SingleGame> = mutableListOf()
 
-    var heatValue:Long=0L
+    var heatValue: Long = 0L
 }
 
 /**
@@ -491,6 +491,9 @@ class UserInfo {
     var royalLevel: Int = 0
     var userId: Long = 0
     var userLevel: Int = 0
+
+    //背包红点显示标识位
+    var bagChange: Boolean = false
 
     //勋章图标
     var badgesPic: List<String> = arrayListOf()
@@ -886,7 +889,7 @@ data class UserInfoBean(
     var userPortrait: String = "",
     var displayType: List<String>? = null,
     var programName: String = "",
-    var nickname : String = ""
+    var nickname: String = ""
 )
 
 //页面跳转的Bean

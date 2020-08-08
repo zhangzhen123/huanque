@@ -31,6 +31,8 @@ object BusiConstant {
     //False
     const val False = "False"
     var ACTIVITY_DIALOG_CODE = 603   //关闭透明activity弹窗返回的通知
+    //免打扰列表
+    var blockList = mutableListOf<String>()
 }
 
 /**
@@ -808,4 +810,14 @@ object PlayerFrom {
     //传送门
     const val SendRoom = "SendRoom"
 
+}
+
+/**
+ * 需要悬浮窗权限的跳转类型
+ */
+object PermissionJumpType{
+    //私聊详情
+    const val PrivateChat = "PrivateChat"
+    //联系人页面
+    const val Contacts = "Contacts"
 }

@@ -81,7 +81,7 @@ class SendGiftViewModel : BaseViewModel() {
                 var hasDot = false
                 result.forEach {
                     it.bag = true
-                    if(it.changeMark){
+                    if (it.changeMark) {
                         hasDot = true
                     }
                 }
@@ -89,6 +89,7 @@ class SendGiftViewModel : BaseViewModel() {
 
                 bagData.value = result
 
+                bagChangeState.value = false
             })
         }
     }
