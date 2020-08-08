@@ -1841,6 +1841,9 @@ class PlayerActivity : BaseActivity() {
                 super.finish()
             }
         } else {
+            if(viewModel.checkGuideFollow()){
+                return
+            }
             //上下划手势引导
             if (StorageHelper.getLiveFirstGestureGuideStatus()) {
                 liveViewManager.showGestureGuideView()

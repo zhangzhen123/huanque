@@ -47,6 +47,8 @@ class PlayerViewModel : BaseViewModel() {
     //上一次发送时间
     private var mLastSendTime = 0L
 
+
+    private var startLookTime = 0L
     //消息发送中标识
     val mMessageSending: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -418,6 +420,7 @@ class PlayerViewModel : BaseViewModel() {
                 }
                 val result = liveService.getLivRoomBase(form).dataConvert(intArrayOf(1201, 1202))
                 baseData.value = result
+                startLookTime=System.currentTimeMillis()
             }, error = {
                 errorState.value = 1
                 if (it is ResponseError) {
@@ -696,5 +699,14 @@ class PlayerViewModel : BaseViewModel() {
         }
     }
 
+
+    fun checkGuideFollow():Boolean{
+        val currentTime=System.currentTimeMillis()
+        if((currentTime-startLookTime)>60*1000&&roomData?.follow!=true){
+            guideToFollow.value=1
+            return true
+        }
+        return false
+    }
 
 }

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_84"
+        android:layout_marginBottom="@dimen/dimen_2"
+        android:layout_marginRight="@dimen/dimen_5"
+        android:layout_marginLeft="@dimen/dimen_5"
+        android:background="@drawable/bg_shape_white1">
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/headPicImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:layout_marginLeft="@dimen/dimen_10"
+            android:visibility="visible"
+            app:actualImageScaleType="fitCenter"
+            app:failureImage="@mipmap/logo_placeholder_small"
+            app:failureImageScaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImage="@mipmap/logo_placeholder_small"
+            app:placeholderImageScaleType="fitCenter"
+            app:roundAsCircle="true" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:layout_marginLeft="@dimen/dimen_10"
+            android:gravity="start|center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/text1"
+            app:layout_constraintEnd_toStartOf="@+id/follow_anchor"
+            app:layout_constraintStart_toEndOf="@+id/headPicImage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed">
+
+            <TextView
+                android:id="@+id/nameText"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:drawablePadding="3dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:lines="1"
+                android:minHeight="16dp"
+                android:textColor="@color/black_333"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="YC雅雅哈尼族" />
+
+            <ImageView
+                android:id="@+id/anchor_level_icon"
+                android:layout_width="32dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="@dimen/dimen_5"
+                android:layout_marginLeft="@dimen/dimen_5" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:lines="1"
+            android:minHeight="16dp"
+            android:text="关注我，下次开播不错过"
+            android:textColor="@color/black_666"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout3"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+
+        <TextView
+            android:id="@+id/follow_anchor"
+            android:layout_width="76dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="@dimen/dimen_15"
+            android:background="@drawable/bg_solid_btn2"
+            android:gravity="center"
+            android:text="关注主播"
+            android:textColor="@color/black_333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
