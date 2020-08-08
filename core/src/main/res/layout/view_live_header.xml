@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/top_header_height"
-    android:orientation="horizontal"
     android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingLeft="10dp">
 
     <!--<LinearLayout-->
@@ -60,8 +60,8 @@
             android:layout_alignLeft="@+id/authorNicknameText"
             android:layout_alignBottom="@+id/authorPhotoImage"
             android:layout_marginBottom="2dp"
-            android:drawableStart="@mipmap/icon_hot_small"
             android:layout_toRightOf="@+id/authorPhotoImage"
+            android:drawableStart="@mipmap/icon_hot_small"
             android:includeFontPadding="false"
             android:textColor="@color/white"
             android:textSize="9sp"
@@ -114,16 +114,16 @@
     <FrameLayout
         android:id="@+id/flRoyalRootView"
         android:layout_width="40dp"
-        android:layout_marginStart="@dimen/dimen_8"
-        android:layout_height="@dimen/dimen_34">
+        android:layout_height="@dimen/dimen_34"
+        android:layout_marginStart="@dimen/dimen_8">
 
         <ImageView
             android:id="@+id/ivRoyalIcon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            tools:visibility="gone"
-            android:src="@mipmap/lm_core_icon_royal_sign" />
+            android:src="@mipmap/lm_core_icon_royal_sign"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvRoyalContent"
@@ -134,46 +134,46 @@
             android:text="0"
             android:textColor="#ffd66f"
             android:textSize="@dimen/sp_08"
+            android:visibility="gone"
             tools:text="9999" />
+
         <TextView
             android:id="@+id/tv_user_count"
             android:layout_width="wrap_content"
-            android:minWidth="@dimen/dimen_30"
             android:layout_height="30dp"
             android:layout_gravity="center"
+            android:background="@drawable/bg_shape_black_p30"
+            android:gravity="center"
             android:includeFontPadding="true"
-            android:textColor="@color/white"
+            android:maxLines="1"
+            android:minWidth="@dimen/dimen_30"
             android:paddingStart="@dimen/dimen_3"
             android:paddingEnd="@dimen/dimen_3"
-            android:gravity="center"
-            android:maxLines="1"
-            android:visibility="gone"
-            tools:visibility="visible"
-            android:background="@drawable/bg_shape_black_p30"
+            android:textColor="@color/white"
             android:textSize="@dimen/sp_16"
             tools:text="9999" />
 
-<!--        <ImageView-->
-<!--            android:id="@+id/ivGuardIcon"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="@dimen/dimen_7"-->
-<!--            android:layout_marginRight="@dimen/dimen_7"-->
-<!--            android:src="@mipmap/lm_core_icon_guard_sign"-->
-<!--            tools:visibility="visible"-->
-<!--            android:visibility="gone" />-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/ivGuardIcon"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginLeft="@dimen/dimen_7"-->
+        <!--            android:layout_marginRight="@dimen/dimen_7"-->
+        <!--            android:src="@mipmap/lm_core_icon_guard_sign"-->
+        <!--            tools:visibility="visible"-->
+        <!--            android:visibility="gone" />-->
 
-<!--        <TextView-->
-<!--            android:id="@+id/tvGuardContent"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center|bottom"-->
-<!--            android:includeFontPadding="false"-->
-<!--            android:text="0"-->
-<!--            android:textColor="#ffd66f"-->
-<!--            android:textSize="@dimen/sp_08"-->
-<!--            android:visibility="gone"-->
-<!--            tools:text="9999" />-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvGuardContent"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center|bottom"-->
+        <!--            android:includeFontPadding="false"-->
+        <!--            android:text="0"-->
+        <!--            android:textColor="#ffd66f"-->
+        <!--            android:textSize="@dimen/sp_08"-->
+        <!--            android:visibility="gone"-->
+        <!--            tools:text="9999" />-->
     </FrameLayout>
 
 
@@ -185,11 +185,9 @@
         <ImageView
             android:id="@+id/exitImage"
             android:layout_width="43dp"
-            android:layout_height="36dp"
+            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="6dp"
             android:scaleType="centerInside"
             android:src="@mipmap/icon_close_white_01" />
 

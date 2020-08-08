@@ -29,6 +29,7 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.widgets.PhotoHeadView
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
@@ -202,28 +203,30 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
                     holder.setVisible(R.id.rankText, true).setGone(R.id.rankImage, false)
                         .setText(R.id.rankText, (position + 1).toString())
                 }
-                //添加边框
-                val roundingParams = RoundingParams.fromCornersRadius(5f)
-                roundingParams.roundAsCircle = true
-                if (position < 3) {
-                    val color =
-                        when (position) {
-                            0 -> Color.parseColor("#FFE471")
-                            1 -> Color.parseColor("#E3EDFD")
-                            2 -> Color.parseColor("#FCD2A3")
-                            else -> Color.TRANSPARENT
-                        }
-                    roundingParams.setBorder(
-                        color,
-                        dp2px(1).toFloat()
-                    )
-
-                } else {
-                    roundingParams.setBorder(Color.TRANSPARENT, 0f)
-//                    holder.getView<SimpleDraweeView>(R.id.headImage).setPadding(dp2px(1), dp2px(1), dp2px(1), dp2px(1))
-                }
-                holder.getView<SimpleDraweeView>(R.id.headImage).hierarchy.roundingParams = roundingParams
-                ImageUtils.loadImage(holder.getView(R.id.headImage), item.headPic, 50f, 50f)
+                val head = holder.getView<PhotoHeadView>(R.id.headImage)
+//                //添加边框
+//                val roundingParams = RoundingParams.fromCornersRadius(5f)
+//                roundingParams.roundAsCircle = true
+//                if (position < 3) {
+//                    val color =
+//                        when (position) {
+//                            0 -> Color.parseColor("#FFE471")
+//                            1 -> Color.parseColor("#E3EDFD")
+//                            2 -> Color.parseColor("#FCD2A3")
+//                            else -> Color.TRANSPARENT
+//                        }
+//                    roundingParams.setBorder(
+//                        color,
+//                        dp2px(1).toFloat()
+//                    )
+//
+//                } else {
+//                    roundingParams.setBorder(Color.TRANSPARENT, 0f)
+////                    holder.getView<SimpleDraweeView>(R.id.headImage).setPadding(dp2px(1), dp2px(1), dp2px(1), dp2px(1))
+//                }
+//                holder.getView<SimpleDraweeView>(R.id.headImage).hierarchy.roundingParams = roundingParams
+//                ImageUtils.loadImage(head, item.headPic, 50f, 50f)
+                head.setImage(headUrl = item.headPic, headSize = 46, frameUrl = item.headFrame, frameWidth = 58, frameHeight = 74)
             }
 
             /**

@@ -377,3 +377,46 @@ data class AdolescentProgramBean(
     var videoName: String = "",
     var videoUrl: String = ""
 ) : Serializable
+
+
+/**
+ * 节目关注列表
+ * @author WanZhiYuan
+ * @date 2020/07/15
+ * @since 1.0.0
+ */
+data class LiveRemindBeans(
+    //主播id
+    var anchorId: Int = 0,
+    //主播头像
+    var anchorPic: String = "",
+    //直播中
+    var livingStatus: Boolean = false,
+    //PC直播中
+    var pcLiveStatus: Boolean = false,
+    //开启通知
+    var pushOpen: Boolean = false,
+    //最后直播时间
+    var lastShowTime: String = "",
+    //签名
+    var mySign: String = "",
+    //昵称
+    var nickname: String = "",
+    //在线人数
+    var onlineUserNum: Int = 0,
+    //节目id
+    var programId: Long = 0,
+    //节目名称
+    var programName: String = ""
+) : Serializable {
+    override fun equals(other: Any?): Boolean {
+        if (other is LiveRemindBeans) {
+            return other.programId == this.programId
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return programId.hashCode()
+    }
+}

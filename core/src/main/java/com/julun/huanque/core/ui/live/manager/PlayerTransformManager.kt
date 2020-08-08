@@ -73,6 +73,10 @@ class PlayerTransformManager(val act: PlayerActivity) {
             mVideoViewModel.baseData.value = it
             mPlayerMessageViewModel.anchorData.value = it
 //            liveFollowListViewModel.requestFollowLivingList(mPlayerViewModel.programId, true)
+            //不再直播的
+            if(!it.isLiving){
+                mPlayerViewModel.squareView.value = true
+            }
         })
 
         mPlayerViewModel.loginSuccessData.observe(act, Observer { dto ->
@@ -223,14 +227,14 @@ class PlayerTransformManager(val act: PlayerActivity) {
             }
         })
 
-        /**
-         * 最高分用户变更事件
-         */
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PlanetCasualTopRefreshProcessor {
-            override fun process(data: TopUserInfo) {
-//                mPlanetViewModel.mTopUserInRelaxation.value = data
-            }
-        })
+//        /**
+//         * 最高分用户变更事件
+//         */
+//        MessageProcessor.registerEventProcessor(object : MessageProcessor.PlanetCasualTopRefreshProcessor {
+//            override fun process(data: TopUserInfo) {
+////                mPlanetViewModel.mTopUserInRelaxation.value = data
+//            }
+//        })
 
         /**
          * 直播间Banner变化消息

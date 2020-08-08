@@ -117,9 +117,9 @@ data class UserInfoForLmRoom(
     , var smallPic: String = ""
     , var royalLevel: Int = 0
     , var type: String? = null
-    ,
+    ,var headFrame :String = ""
     //下面为原有字段  删除
-    var nickName: String = ""
+    ,var nickName: String = ""
     , var picId: String = ""
     , var identityId: Int = -1
     , var programId: Long? = null
@@ -252,6 +252,8 @@ class UserEnterRoomRespBase : Serializable {
 
     @JSONField(name = "isPcLive")
     var isPcLive: Boolean = false//获取直播间基本信息 增加pushPlatformType	推流平台类型(可选项：iOS、Android、Assistant)
+    @JSONField(name = "isLandscape")
+    var isLandscape: Boolean = false
 
     //播放地址
     var playUrl: String = ""
@@ -569,7 +571,6 @@ class RunWayMessage : Serializable {
 }
 
 class UserInfoInRoom : Serializable {
-    var userInfo: UserInfoForLmRoom? = null
 
     //年龄
     var age: Int = 0
@@ -734,6 +735,7 @@ class RankingsResult : Serializable {
     /** 贵族勋章地址 **/
     var royalPic: String = ""
 
+    var headFrame:String = ""
     override fun equals(other: Any?): Boolean {
         if (other is RankingsResult) {
             return userId == other.userId
@@ -754,14 +756,6 @@ class AwardGood : Serializable {
     var count: Int = 0
     var pic: String = ""
     var prizeName: String = ""
-}
-
-class BoxResult : Serializable {
-    var prizeCount: Int = 0
-    var playMusic: Boolean = false
-    var awardGoods: List<AwardGood>? = null
-    var addExpValue: Long = 0
-    var deepSeaKey: AwardGood? = null//新增中钥匙奖励
 }
 
 
@@ -821,109 +815,6 @@ data class BoxGainGift(
     var goodsPic: String = ""
 ) : Serializable
 
-//回归收到的奖励礼物
-data class ReturnAwardGiftBean(
-    var name: String = "",
-    var count: Int = 0,
-    var pic: String = "",
-    var useInfo: String = "",
-    //本地使用
-    var boxType: String = ""
-) : Serializable
-
-//回归奖励礼物
-data class ReturnGiftBean(
-    //需要取消
-    var skipType: String = "",
-    var nameAndNum: String = "",
-    var pic: String = "",
-    var expireDate: String = "",
-    var skipValue: String = ""
-) : Serializable
-
-//直播间查询的回顾礼包数据
-data class ReturnBeanInPlayer(
-    //剩余时间
-    var ttl: Long = 0,
-    //礼物列表
-    var packDetailList: ArrayList<ReturnGiftBean> = ArrayList(),
-    //是否有可领取福利
-    var canReceive: Boolean = false,
-    //是否当天首次请求
-    var firstLogin: Boolean = false
-) : Serializable
-
-//回归礼包使用的bean(第一重礼包礼物)
-data class FirstGiftBean(
-    //奖励数量
-    var awardCnt: Int = 0,
-    //奖励名称
-    var awardName: String = "",
-    //栏目标题
-    var tabName: String = "",
-    //领取状态
-    var awardStatus: String = "",
-    //对应的CODE
-    var code: String = "",
-    //图片
-    var pic: String = "",
-    //使用说明
-    var useInfo: String = ""
-) : Serializable
-
-//第二重礼包礼物数据
-data class SecondGiftBean(
-    var awardCode: String = "",
-    //数量
-    var count: Int = 0,
-    //奖励名称
-    var name: String = "",
-    var pic: String = "",
-    //使用说明
-    var useInfo: String = ""
-) : Serializable
-
-//第二重礼包数据
-data class SecondActivityBean(
-    //奖励列表
-    var awards: MutableList<SecondGiftBean> = mutableListOf(),
-    //是否抽取了折扣券
-    var drawDiscount: Boolean = false,
-    //是否购买
-    var hasBuy: Boolean = false,
-    //原价
-    var money: Int = 0,
-    //实际价格
-    var realMoney: Int = 0,
-    //充值模板
-    var tplId: Int = 0
-) : Serializable
-
-//回归礼包使用的bean(第三重礼包礼物)
-data class ThirdBoxBean(
-    //宝箱名称
-    var boxName: String = "",
-    var boxId: String = "",
-    //需要观看时长
-    var min: Int = 0,
-    //奖励状态
-    var awardStatus: String = ""
-) : Serializable
-
-
-//回归礼包接口返回的总对象
-data class ReturnBean(
-    //当前观看时间
-    var nowMin: Int = 0,
-    //第一重礼包是否处于可领取状态
-    var oneWaitReceive: Boolean = false,
-    //第一重礼包
-    var oneList: MutableList<FirstGiftBean> = mutableListOf(),
-    //第二重礼包
-    var welfareTwoVO: SecondActivityBean? = null,
-    //第三重礼包
-    var threeList: MutableList<ThirdBoxBean> = mutableListOf()
-) : Serializable
 
 /**
  * 图鉴数据
@@ -975,11 +866,6 @@ data class RoyalCardBean(
 data class GiftChange(
     var giftId: Int = 0,
     var vo: LiveGiftDto? = null
-)
-
-data class CountItem(
-    var countName: String = "",
-    var countValue: Int = 0
 )
 
 //显示私聊的bean
@@ -1045,12 +931,6 @@ data class ManagerOptionInfo(
 open class Option() : Serializable
 
 /**
- * 查询余额的返回对象
- */
-data class BeansResult(var beans: Long = 0, var danMuCard: Int = 0, var lightGunCardNum: Int = 0) :
-    Serializable
-
-/**
  * 连麦信息返回对象
  */
 data class QueryMicInfo(
@@ -1064,10 +944,6 @@ data class QueryMicInfo(
  */
 data class MicroSettingInfo(var micRuleUrl: String = "")
 
-/**
- * 获取直播间推流URL
- */
-data class PublishUrl(var pushUrl: String = "")
 
 open class EggHitSumResult(
     //奖励萌豆
@@ -1076,11 +952,6 @@ open class EggHitSumResult(
     var prizeList: List<AwardGood> = listOf()
 )
 
-//新增序列化EggHitSumResult实体类
-open class EggHitSumResultSerial(
-    var prizeBeans: Long = 0,
-    var prizeList: List<AwardGood> = listOf()
-) : Serializable
 
 /**
  * 背包列表数据
@@ -1294,254 +1165,6 @@ data class Coupon(
     var hasCouponIcon: String = ""
 ) : Serializable
 
-/**
- * 粉丝榜单
- * @iterativeAuthor WanZhiYuan
- * @updateDate 2019/10/09
- * @iterativeVersion 4.20
- * @updateDetail 粉丝团2.0更新字段
- * @date 2019/11/18
- * @since 4.21
- * @detail 新增字段
- */
-class FansRankInfo(
-    /** 是否已经打卡 **/
-    var clockIn: Boolean = false,
-    /** 粉丝团展示 头部信息 **/
-    var fansGroupInfoVO: FansRankHeadInfo? = null,
-    /** 粉丝团列表 **/
-    var fansInfos: ArrayList<FansListInfo>? = null,
-    /** 粉丝团名称 **/
-    var groupName: String = "",
-    /** 本人粉丝信息 **/
-    var self: UserFansInfo? = null,
-    /** 粉丝牌子是否激活 **/
-    var signActive: Boolean = false,
-    /** 是否登录 **/
-    var login: Boolean = false,
-    /** 成员人数 **/
-    var groupSize: Int = 0,
-    /** 粉丝勋章地址 **/
-    var fansPic: String = "",
-    /** 加入粉丝团花费 **/
-    var price: Long = 0,
-    /**免费倒计时**/
-    var deadline: Long = 0,
-    //4.19新增参数
-    /**亲密度获取情况**/
-    var intimateList: ArrayList<Intimate>? = null,
-    /**特权信息**/
-    var privilegeList: ArrayList<Privilege>? = null,
-    /**是否粉丝团成员**/
-    var groupMember: Boolean = false,
-    /**用户昵称**/
-    var nickname: String = "",
-    /**用户头像**/
-    var headPic: String = "",
-    /**亲密度**/
-    var intimate: String = "",
-    /**粉丝等级**/
-    var fansLevel: Int = 0,
-    /**下个粉丝等级**/
-    var nextFansLevel: Int = 0,
-    /**当前等级增加亲密度**/
-    var nowLevelAddIntimate: Long = 0,
-    /**升级亲密度差值**/
-    var diffIntimate: Long = 0,
-    //4.20新增字段
-    /**当前是否获取了新特权**/
-    var gainNewPrivilege: Boolean? = null,
-    //4.21新增字段
-    /**是否还有更多数据**/
-    var hasMore: Boolean = false,
-
-    //自定义参数
-    /**
-     * @see BusiConstant.FansTabName
-     * 页面类型常量类型
-     */
-    var tabType: String = ""
-) : Serializable
-
-/**
- * 粉丝团头部信息
- * @iterativeAuthor WanZhiYuan
- * @iterativeDate 2019/09/29
- * @iterativeVersion 4.19
- */
-class FansRankHeadInfo(
-    /** 头像 **/
-    var headPic: String = "",
-    /** 昵称 **/
-    var nickname: String = "",
-    /** 粉丝勋章地址 **/
-    var fansPic: String = "",
-    /** 显示小主回馈图标 **/
-    var showStock: Boolean? = null,
-    //4.19 新增参数
-    /** 周榜排名 **/
-    var weekRank: Long = -1,
-    /** 粉丝团类型 Common 普通团、Thirty 30人团 and Fifty 50人团**/
-    var fansGroupType: String = ""
-) : Serializable
-
-/**
- * 粉丝团列表信息
- * @date 2019/11/18
- * @since 4.21
- * @detail 新增字段
- */
-class FansListInfo(
-    /** 粉丝牌子是否激活 **/
-    var signActive: Boolean = false,
-    /** 粉丝团名称 **/
-    var groupName: String = "",
-    /** 亲密度 **/
-    var intimate: String = "",
-    /** 头像 **/
-    var headPic: String = "",
-    /** 昵称 **/
-    var nickname: String = "",
-    /** 粉丝等级 **/
-    var fansLevel: Int = 0,
-    /** 排名 **/
-    var rank: String = "",
-    /** 粉丝勋章地址 **/
-    var fansPic: String = "",
-    /** 亲密度色值 **/
-    var color: String = "",
-
-    //4.17新增字段
-    /** 显示对应浮动箭头 **/
-    var increase: Boolean? = null,
-    //4.21新增字段
-    /** 节目id **/
-    var programId: Long = 0,
-    /** 用户id **/
-    var userId: Long = 0,
-
-    //自定义字段
-    /** 成员人数 **/
-    var fansMember: String = ""
-) : Serializable {
-
-    override fun hashCode(): Int {
-        if (this.userId != 0L) {
-            return this.userId.hashCode()
-        }
-        if (this.programId != 0L) {
-            return this.programId.hashCode()
-        }
-        return super.hashCode()
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (other is FansListInfo) {
-            if (other.userId != 0L && this.userId != 0L) {
-                return other.userId == this.userId
-            }
-            if (other.programId != 0L && this.programId != 0L) {
-                return other.programId == this.programId
-            }
-        }
-        return false
-    }
-}
-
-/**
- * 当前粉丝信息
- */
-class UserFansInfo(
-    /** 是否是该粉丝团成员 **/
-    var groupMember: Boolean = false,
-    /** 头像 **/
-    var headPic: String = "",
-    /** 亲密度 **/
-    var intimate: String = "",
-    /** 昵称 **/
-    var nickname: String = "",
-    /** 排名 **/
-    var rank: String = "",
-    /** 粉丝等级 **/
-    var fansLevel: Int = 0,
-    /** 粉丝牌是否点亮 **/
-    var signActive: Boolean = false,
-    /** 粉丝牌名称 **/
-    var groupName: String = "",
-    /** 粉丝勋章地址 **/
-    var fansPic: String = "",
-    /** 亲密度色值 **/
-    var color: String = "",
-
-    //4.17新增字段
-    /** 显示对应浮动箭头 **/
-    var increase: Boolean? = null
-) : Serializable
-
-/**
- * 粉丝团特权信息
- * @createAuthor WanZhiYuan
- * @createDate 2019/10/10
- * @iterativeVersion 4.19
- */
-class FansPrivilegeInfo : Serializable {
-    /** 说明框背景色 **/
-    var color: String = ""
-
-    /** 当前粉丝团类型(可选项：Common、Thirty、Fifty) **/
-    var fansGroupType: String = ""
-
-    /** 粉丝团类型与特权关系 **/
-    var fansGroupTypes: ArrayList<FansPrivilegeItemInfo>? = null
-
-    /** 粉丝团特权详情 **/
-    var privilegeTypes: ArrayList<FansPrivilegeItemInfo>? = null
-}
-
-/**
- * 粉丝团特权item信息
- * @createAuthor WanZhiYuan
- * @createDate 2019/10/11
- * @iterativeVersion 4.19
- */
-class FansPrivilegeItemInfo : Serializable {
-    /** 当前粉丝团类型(可选项：Common、Thirty、Fifty) **/
-    var fansGroupType: String = ""
-
-    /** tab标签名称 **/
-    var groupTypeDesc: String = ""
-
-    /** 粉丝团类型对应开放特权 **/
-    var privileges: ArrayList<String>? = null
-
-    //特权说明相关信息
-    /** 特权类型 **/
-    var code: String = ""
-
-    /** 特权名称 **/
-    var desc: String = ""
-
-    /** 特权说明和文字颜色 **/
-    var remarks: ArrayList<Remarks>? = null
-
-    //自定义参数
-    //是否标记高亮显示
-    var isLight: Boolean = false
-
-    //是否拥有此特权
-    var isOwner: Boolean? = null
-}
-
-class JoinFansResult {
-    var salvationInfo: PkMicSalvationStartInfo? = null
-    var isFree: Boolean? = null
-    var price: Long? = null
-}
-
-class Remarks : Serializable {
-    var color: String = ""
-    var remark: String = ""
-}
 
 /**
  *  主播信息
@@ -1577,67 +1200,6 @@ data class MenuActionItem(
     var miniUserName: String? = null
 )
 
-/**
- * 粉丝特权相关实体类
- */
-data class FansPrerogative(
-    //升级亲密度差值
-    var diffIntimate: Int = 0,
-    //粉丝团名称
-    var fansGroupName: String = "",
-    //当前粉丝等级
-    var fansLevel: Int = 0,
-    //下一粉丝等级
-    var nextFansLevel: Int = 0,
-    //用户头像
-    var headPic: String = "",
-    //亲密度
-    var intimate: String = "",
-    //今日亲密度获取情况
-    var intimateList: MutableList<Intimate> = mutableListOf(),
-    //用户昵称
-    var nickname: String = "",
-    //当前等级增加亲密度
-    var nowLevelAddIntimate: Int = 0,
-    //特权信息
-    var privilegeList: MutableList<Privilege> = mutableListOf(),
-    //粉丝牌子图片
-    var fansSignPic: String = "",
-    //粉丝牌子是否佩戴
-    var active: Boolean = false
-) : Serializable
-
-/**
- * 亲密度相关实体类
- * @iterativeAuthor WanZhiYuan
- * @updateDate 2019/10/09
- * @iterativeVersion 4.19
- * @updateDetail 继承特权实例
- */
-data class Intimate(
-    //是否已完成
-    var achieved: Boolean = false,
-    //完成情况
-    var achievedInfo: String = "",
-    //颜色是否高亮
-    var fontColor: Boolean = false,
-    //4.19新增字段
-    var intimateType: String = ""
-) : Privilege()
-
-/**
- * 特权信息实体类
- * @iterativeAuthor WanZhiYuan
- * @updateDate 2019/10/12
- * @iterativeVersion 4.19
- * @updateDetail 特权实例作为亲密度的父类使用
- */
-open class Privilege(
-    //描述
-    var description: String = "",
-    //图片
-    var pic: String = ""
-) : Serializable
 
 /**
  * banner校验的bean
@@ -1650,73 +1212,6 @@ data class BannerStatusBean(var showPopup: Boolean = false, var adCode: String =
 data class SingleBannerCheckResult(var adCode: String = "", var showPopup: Boolean = false) :
     Serializable
 
-
-/**
- * 主页的Bean
- */
-data class HomePageBean(
-    /** 是否可以私聊 */
-    var canPrivateChat: Boolean = false,
-    /** 是否可以举报拉黑 */
-    var canReport: Boolean = false,
-    /** 用户昵称 */
-    var nickname: String = "",
-    /** 昵称颜色 */
-    var nickcolor: String = "",
-    /** 用户头像 */
-    var headPic: String = "",
-    /** 性别：男(M)、女(F) */
-    var sex: String = "",
-    /** 个性签名 */
-    var mySign: String = "",
-    /** 房间号 */
-    var programId: Long = 0,
-    /**主题房*/
-    var themeRoom: Boolean = false,
-    /** 主播等级 */
-    var anchorLevel: Int = 0,
-    /** 是否已被关注 */
-    @JSONField(name = "isFollowed")
-    var isFollowed: Boolean = false,
-    /** 勋章图标列表(不含房管勋章),已排序 */
-    var badgesPic: MutableList<String> = mutableListOf(),
-    /** 是否显示私聊 */
-    var showPrivateChat: Boolean = false,
-    /** 背景图（照片墙） */
-    var bgImgs: MutableList<String> = mutableListOf(),
-    /** 粉丝数 */
-    var fansCount: String = "",
-    /** 视频数 */
-    var videoCount: Long = 0,
-    /** 动态数 */
-    var postCount: Long = 0,
-    //成就数目
-    var achievementCount: Int = 0,
-    /** 用户等级 */
-    var userLevel: Int = 0,
-    /** 是否直播中 */
-    var isLiving: Boolean = false,
-    /** 贵族等级 */
-    var royalLevel: Int = 0,
-    /**主播靓号**/
-    var prettyId: Long? = null,
-    /** 靓号 */
-    var prettyNum: String = "",
-    /** 靓号等级  1、小主号(红色靓号)  2、绿色靓号   3、蓝色靓号  4、紫色靓号' */
-    var prettyNumLevel: Int = 0,
-    /** 是否展示加好友 */
-    var showAddFriend: Boolean = false,
-    /** 是否神秘人 */
-    var mystery: Boolean = false,
-    /** 用户类型 */
-    var userType: String = "",
-    /**位置*/
-    var city: String = "",
-    /**贵族等级地址*/
-    var royalPic: String = "",
-    //主播勋章
-    var anchorBadges: List<SingleBadge> = listOf()
-) : Serializable
 
 //直播间关注列表
 data class LiveFollowListData(
@@ -1892,28 +1387,7 @@ data class FlipCardHistoryItemInfo(
     var commentType: String = ""
 ) : Serializable
 
-/**
- * 小主回馈Item相关信息
- * @createDate 2019/08/20
- * @createAuthor WanZhiYuan
- * @iterativeVersion 4.17
- */
-data class FansFeedbackItemInfo(
-    /** 库存数量 **/
-    var count: Int = 0,
-    /** 库存名称 **/
-    var name: String = "",
-    /** 库存图标 **/
-    var pic: String = "",
-    /** 回馈数量 **/
-    var awardCount: Int = 0,
-    /** 回馈礼物名称 **/
-    var awardName: String = "",
-    /** 回馈时间 **/
-    var createTime: String = "",
-    /** 回馈玩家昵称 **/
-    var userInfo: String = ""
-) : Serializable
+
 
 /**
  * 直播间 底部导航栏  点击使用的Bean
@@ -2284,7 +1758,9 @@ data class OnlineUserInfo(
     var score: Double = 0.toDouble(),
     //4.15新增字段
     //贵族勋章地址
-    var royalPic: String = ""
+    var royalPic: String = "",
+    var headFrame:String = ""
+
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is RoomUserInfo) {
@@ -2712,100 +2188,6 @@ data class PlayerDataChanged(
     var danmuCardNum: Int = 0
 ) : Serializable
 
-/**
- * 幸运星球开始的BEAN
- */
-data class LuckyStartBean(
-    //血量
-    var luckyPlanetBlood: Long = 0,
-    //倒计时时间
-    var luckyPlanetTime: Long = 0,
-    //本直播间显示文案
-    var releaseLuckyPlanetRoomText: String = "",
-    //星球开启 弹窗文案
-    var releaseLuckyPlanetUserText: String = ""
-) : Serializable
-
-/**
- * 休闲模式中奖记录
- */
-data class RelaxationAwardBean(
-    //日期
-    var dateStr: String = "",
-    //萌币数量
-    var moeCoins: Int = 0,
-    //中奖分数
-    var score: Long = 0,
-    //爆能枪卡次数
-    var energyCardTimes: Int = 0
-) : Serializable
-
-/**
- * 星球霸主使用的主播信息对象
- */
-data class PlanetAnchorInfo(
-    var anchorId: Int = 0,
-    var headPic: String = "",
-    var isLiving: Boolean = false,
-    var nickname: String = "",
-    var programName: String = "",
-    //直播间ID
-    var programId: Long = 0
-) : Serializable
-
-/**
- * 攻击模式 中奖记录
- */
-data class AttackAwardRecord(
-    var awardCount: Int = 0,
-    var prodId: Int = 0,
-    var prodName: String = "",
-    var prodPic: String = "",
-    var prodType: String = ""
-) : Serializable
-
-/**
- * 攻击模式中奖记录
- */
-data class AttackAwardBean(
-    //幸运模式 还是 攻击模式
-    var mode: String = "",
-    //中奖萌豆（霸道值）
-    var anchorInfo: PlanetAnchorInfo? = null,
-    var awardBeans: Long = 0L,
-    //消费的武器名称
-    var goodsName: String = "",
-    //武器图片
-    var goodsPic: String = "",
-    var date: String = "",
-    //奖励列表
-    var awardList: MutableList<AttackAwardRecord> = mutableListOf(),
-    //本地地段
-    var style: String = NORMAL
-) : Serializable {
-    companion object {
-        //默认样式
-        const val NORMAL = "NORMAL"
-
-        //详情样式
-        const val DETAIL = "DETAIL"
-    }
-}
-
-/**
- * 显示星球资源使用的Bean
- */
-data class ShowStarBean(
-    //使用的资源
-    var drawableResource: LevelListDrawable,
-    //位置数据
-    var tyle: String,
-    //帧数
-    var frameCount: Int,
-    //动画时间
-    var animaDuration: Long
-) : Serializable
-
 //单个中奖助手
 data class SingleAwardAssistant(
     //奖励范围
@@ -2892,46 +2274,4 @@ data class ThemeProgram(
     var showTimeTtl: Long = 0,
     var showType: String = ""
 )
-
-/**
- * 节目关注列表
- * @author WanZhiYuan
- * @date 2020/07/15
- * @since 1.0.0
- */
-data class LiveRemindBeans(
-    //主播id
-    var anchorId: Int = 0,
-    //主播头像
-    var anchorPic: String = "",
-    //直播中
-    var livingStatus: Boolean = false,
-    //PC直播中
-    var pcLiveStatus: Boolean = false,
-    //开启通知
-    var pushOpen: Boolean = false,
-    //最后直播时间
-    var lastShowTime: String = "",
-    //签名
-    var mySign: String = "",
-    //昵称
-    var nickname: String = "",
-    //在线人数
-    var onlineUserNum: Int = 0,
-    //节目id
-    var programId: Long = 0,
-    //节目名称
-    var programName: String = ""
-) : Serializable {
-    override fun equals(other: Any?): Boolean {
-        if (other is LiveRemindBeans) {
-            return other.programId == this.programId
-        }
-        return false
-    }
-
-    override fun hashCode(): Int {
-        return programId.hashCode()
-    }
-}
 

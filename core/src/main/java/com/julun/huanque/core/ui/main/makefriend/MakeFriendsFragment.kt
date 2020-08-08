@@ -165,8 +165,14 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 list: MutableList<PhotoBean>
             ) {
                 logger.info("index=$index position=$position ")
-                val item=mAdapter.getItemOrNull(index)?.content as? HomeRecomItem
-                ImageActivity.start(requireActivity(), position, list.map { StringHelper.getOssImgUrl(it.url) },item?.userId,ImageActivityOperate.REPORT)
+                val item = mAdapter.getItemOrNull(index)?.content as? HomeRecomItem
+                ImageActivity.start(
+                    requireActivity(),
+                    position,
+                    list.map { StringHelper.getOssImgUrl(it.url) },
+                    item?.userId,
+                    ImageActivityOperate.REPORT
+                )
             }
 
             override fun onHeadClick(item: HeadModule?) {
@@ -182,11 +188,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
                     }
                     HeadModule.HotLive -> {
-                        requireActivity().startActivity<PlayerActivity>(
-                            IntentParamKey.PROGRAM_ID.name to 10006L
-                            , IntentParamKey.IMAGE.name to "user/head/b0295e5d-5c2d-45a8-928f-5333c880f489.jpg"
-                        ,IntentParamKey.SOURCE.name to PlayerFrom.Home
-                        )
+                        requireActivity().startActivity<PlayerActivity>(IntentParamKey.SOURCE.name to PlayerFrom.Home)
 
                     }
                     HeadModule.PlumFlower -> {
@@ -207,7 +209,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@setOnItemChildClickListener
                     if (bean.anchor && bean.living) {
                         logger.info("点击围观--$position")
-                        PlayerActivity.start(requireActivity(),programId = bean.userId,from = PlayerFrom.Home)
+                        PlayerActivity.start(requireActivity(), programId = bean.userId, from = PlayerFrom.Home)
                     } else {
                         logger.info("点击了私信--$position")
                         val bundle = Bundle()

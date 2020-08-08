@@ -3,7 +3,7 @@ package com.julun.huanque.common.bean.forms
 import java.io.Serializable
 
 
-open class ProgramIdForm(var programId: Long = 0) : SessionForm()
+open class ProgramIdForm(var programId: Long? = null) : SessionForm()
 
 //查询玩家列表
 class QueryRoomUserForm(val programId: Long, val offset: Int) : SessionForm()

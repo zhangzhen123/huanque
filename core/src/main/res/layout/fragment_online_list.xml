@@ -36,7 +36,13 @@
 
     </RelativeLayout>
 
-    <com.julun.huanque.common.widgets.refreshlayout.HuanQueRefreshLayout
+    <!--    <com.julun.huanque.common.widgets.refreshlayout.HuanQueRefreshLayout-->
+    <!--        android:id="@+id/lmrlRefreshView"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/header_tips">-->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/lmrlRefreshView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -47,6 +53,7 @@
             android:id="@+id/rvList"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </com.julun.huanque.common.widgets.refreshlayout.HuanQueRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <!--    </com.julun.huanque.common.widgets.refreshlayout.HuanQueRefreshLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

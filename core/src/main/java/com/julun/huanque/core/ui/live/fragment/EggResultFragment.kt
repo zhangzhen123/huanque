@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.EggHitSumResult
-import com.julun.huanque.common.bean.beans.EggHitSumResultSerial
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew

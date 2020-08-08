@@ -25,6 +25,7 @@ class SendGiftEvent(
     var toNickname: String = "",
     var giftName: String = ""
     , var headPic: String = ""
+    , var headFrame: String = ""
     , var timeStr: String = ""
     , var luckBeans: Int = 0
     , var luckAnima: String = ""
@@ -450,6 +451,9 @@ class OpenShowEvent(
 ) {
     @JSONField(name = "isPcLive")
     var isPcLive: Boolean = false
+
+    @JSONField(name = "isLandscape")
+    var isLandscape: Boolean = false
 }
 
 /** 关播事件 **/

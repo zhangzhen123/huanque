@@ -80,7 +80,10 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                 playViewModel.checkoutRoom.value = item.programId
             }
         }
-
+        mRefreshLayout.setOnRefreshListener {
+            mViewModel.requestFollowList(true)
+            mViewModel.requestHotList(QueryType.REFRESH, playViewModel.programId)
+        }
 
         mViewModel.requestFollowList(true)
         mViewModel.requestHotList(QueryType.INIT, playViewModel.programId)
@@ -99,6 +102,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show(it.error?.busiMessage)
             }
+            mRefreshLayout.isRefreshing=false
         })
     }
 

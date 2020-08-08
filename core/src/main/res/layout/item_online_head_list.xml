@@ -5,28 +5,15 @@
     android:layout_width="@dimen/dimen_75"
     android:layout_height="wrap_content">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.julun.huanque.common.widgets.PhotoHeadView
         android:id="@+id/sdvHeadImage"
-        android:layout_width="@dimen/dimen_46"
-        android:layout_height="@dimen/dimen_46"
-        app:failureImage="@mipmap/logo_placeholder_small"
+        android:layout_width="@dimen/dimen_58"
+        android:layout_height="@dimen/dimen_74"
         app:failureImageScaleType="fitCenter"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:placeholderImage="@mipmap/logo_placeholder_small"
-        app:placeholderImageScaleType="fitCenter"
         app:roundAsCircle="true" />
-
-    <ImageView
-        android:id="@+id/ivHeadBorder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/icon_online_head_border"
-        app:layout_constraintBottom_toBottomOf="@+id/sdvHeadImage"
-        app:layout_constraintLeft_toLeftOf="@+id/sdvHeadImage"
-        app:layout_constraintRight_toRightOf="@+id/sdvHeadImage"
-        app:layout_constraintTop_toTopOf="@+id/sdvHeadImage" />
 
     <ImageView
         android:id="@+id/ivHeadRoyal"
@@ -41,7 +28,6 @@
         android:id="@+id/tvHeadNickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_12"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
