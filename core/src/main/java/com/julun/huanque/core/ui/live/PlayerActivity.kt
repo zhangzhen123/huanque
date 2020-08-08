@@ -348,6 +348,7 @@ class PlayerActivity : BaseActivity() {
                 //加入直播间成功
                 hasJoinRoom = true
                 joinChatCallback(it)
+                playerMessageViewModel.getBlockedConversationList()
                 playerMessageViewModel.queryRongPrivateCount()
             } else {
                 viewModel.errorState.value = 2

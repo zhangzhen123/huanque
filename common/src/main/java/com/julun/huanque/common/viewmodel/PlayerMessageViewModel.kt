@@ -45,10 +45,18 @@ class PlayerMessageViewModel : BaseViewModel() {
     //免打扰列表
     val blockListData: MutableLiveData<MutableList<String>> by lazy { MutableLiveData<MutableList<String>>() }
 
+    //获取免打扰列表成功之后，需要获取未读数的标识位
+    var needQuerUnreadCount = false
+
     /**
      * 获取融云未读消息(直播间使用)
      */
     fun queryRongPrivateCount(targetId: String = "") {
+        if(blockListData.value == null){
+            //未获取到免打扰列表
+            needQuerUnreadCount = true
+            return
+        }
         if (unreadList.contains(targetId)) {
             realUnreadCount()
             return
@@ -59,7 +67,7 @@ class PlayerMessageViewModel : BaseViewModel() {
                     return
                 }
                 unreadList.clear()
-                val blockList = BusiConstant.blockList
+                val blockList = blockListData.value ?: return
                 list.forEach {
                     val targetID = it.targetId
                     if (targetID == null || targetID == SystemTargetId.friendNoticeSender || targetID == SystemTargetId.systemNoticeSender) {
@@ -197,7 +205,6 @@ class PlayerMessageViewModel : BaseViewModel() {
     }
 
 
-
     /**
      * 获取免打扰会话列表
      */
@@ -209,7 +216,10 @@ class PlayerMessageViewModel : BaseViewModel() {
                     blockedIdList.add(it.targetId)
                 }
                 blockListData.value = blockedIdList
-                BusiConstant.blockList = blockedIdList
+                if(needQuerUnreadCount){
+                    needQuerUnreadCount = false
+                    queryRongPrivateCount()
+                }
             }
 
             override fun onError(errorCode: RongIMClient.ErrorCode?) {

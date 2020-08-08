@@ -345,6 +345,9 @@ class MessageFragment : BaseFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun blockChange(event: MessageBlockEvent) {
+        //先清空免打扰列表，再重新获取
+        mPlayerMessageViewModel.blockListData.value = null
+        mPlayerMessageViewModel.unreadList.clear()
         mPlayerMessageViewModel.getBlockedConversationList()
     }
 

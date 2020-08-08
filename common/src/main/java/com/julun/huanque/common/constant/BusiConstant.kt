@@ -31,8 +31,6 @@ object BusiConstant {
     //False
     const val False = "False"
     var ACTIVITY_DIALOG_CODE = 603   //关闭透明activity弹窗返回的通知
-    //免打扰列表
-    var blockList = mutableListOf<String>()
 }
 
 /**
