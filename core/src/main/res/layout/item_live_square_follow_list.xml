@@ -40,15 +40,15 @@
 
     <TextView
         android:id="@+id/anchorNickname"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_7"
         android:ellipsize="end"
         android:includeFontPadding="false"
-        android:maxEms="8"
         android:singleLine="true"
         android:textColor="@color/black_333"
         android:textSize="13sp"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/anchorPicture"

@@ -48,6 +48,7 @@ class OnlineDialogFragment : BaseDialogFragment() {
     private lateinit var mTabs: ArrayList<TabBean>
 
     private lateinit var mCommonNavigator: CommonNavigator
+
     companion object {
         /**
          */
@@ -93,33 +94,24 @@ class OnlineDialogFragment : BaseDialogFragment() {
 //                if (it.containsKey(tab.type)) {
                 when (tab.type) {
                     TabTags.TAB_TAG_ROYAL -> {
-//                        if (it[tab.type].isNullOrEmpty()) {
-//                            tab.title = "贵族席位"
-//                        } else {
-                            tab.title = "贵族席位(${it[tab.type]?:0})"
-//                        }
-
+                        if (!it[tab.type].isNullOrEmpty()) {
+                            tab.title = "贵族席位(${it[tab.type]})"
+                        }
                     }
                     TabTags.TAB_TAG_GUARD -> {
-//                        if (it[tab.type].isNullOrEmpty()) {
-//                            tab.title = "守护"
-//                        } else {
-                            tab.title = "守护(${it[tab.type]?:0})"
-//                        }
+                        if (!it[tab.type].isNullOrEmpty()) {
+                            tab.title = "守护(${it[tab.type]})"
+                        }
                     }
                     TabTags.TAB_TAG_MANAGER -> {
-//                        if (it[tab.type].isNullOrEmpty()) {
-//                            tab.title = "房管"
-//                        } else {
-                            tab.title = "房管(${it[tab.type]?:0})"
-//                        }
+                        if (!it[tab.type].isNullOrEmpty()) {
+                            tab.title = "房管(${it[tab.type]})"
+                        }
                     }
-                    TabTags.TAB_TAG_ONLINE-> {
-//                        if (it[tab.type].isNullOrEmpty()) {
-//                            tab.title = "在线用户"
-//                        } else {
-                            tab.title = "在线用户(${it[tab.type]?:0})"
-//                        }
+                    TabTags.TAB_TAG_ONLINE -> {
+                        if (!it[tab.type].isNullOrEmpty()) {
+                            tab.title = "在线用户(${it[tab.type]})"
+                        }
                     }
                 }
             }

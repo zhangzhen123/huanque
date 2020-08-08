@@ -162,7 +162,9 @@ class PlayerActivity : BaseActivity() {
     private var currentLiveBgUrl: String? = null
 
 //    private var donNotGoHome: Boolean = true
-
+    /**
+     * 代表是否是手机全屏直播还是半屏3/4直播
+      */
     private var isAppShow: Boolean by Delegates.observable(false) { _, _, newValue ->
         liveViewManager.isAppShow = newValue
         viewModel.isAppShow = newValue
@@ -256,18 +258,15 @@ class PlayerActivity : BaseActivity() {
                 }
                 viewModel.actionBeanData.value = BottomActionBean(ClickType.GIFT)
             }
-            val openShare = intent.getBooleanExtra(IntentParamKey.OPEN_SHARE.name, false)
-            if (openShare) {
-                viewModel.shareView.value = true
-            }
             liveViewManager.isAnchorSelf = isAnchor
             viewModel.isAnchor = isAnchor
-            if (programId == 0L && !isAnchor) {
-                reportCrash("进入房间时 programId为0了")
-                ToastUtils.showErrorMessage("竟然出错了，再试一下吧！")
-                super.finish()
-                return
-            }
+            //不传programId会触发后台随机返回programId
+//            if (programId == 0L && !isAnchor) {
+//                reportCrash("进入房间时 programId为0了")
+//                ToastUtils.showErrorMessage("竟然出错了，再试一下吧！")
+//                super.finish()
+//                return
+//            }
 //            initViewModel()
 //            donNotGoHome = intent.getBooleanExtra(IntentParamKey.EXTRA_FLAG_DO_NOT_GO_HOME.name, true)
             initAnimationFragment()
@@ -278,7 +277,7 @@ class PlayerActivity : BaseActivity() {
             if (isAnchor) {
                 //获取开播传递过来的数据
                 val extraData = intent?.getSerializableExtra(AnchorData)
-                mVideoViewModel?.guardAgainstData?.value = extraData as? GuardAgainst
+                mVideoViewModel.guardAgainstData.value = extraData as? GuardAgainst
 
                 liveHeader.isAnchor = true
                 liveRunwayView.isAnchor = true
@@ -316,7 +315,7 @@ class PlayerActivity : BaseActivity() {
         //获取余额
         viewModel.balance.observe(this, Observer { })
 
-        mConfigViewModel?.horizonState?.observe(this, Observer {
+        mConfigViewModel.horizonState.observe(this, Observer {
             val horizon = it ?: return@Observer
             actionView.setHorizontal(horizon)
 //            liveViewManager?.closeGuardView()
@@ -342,7 +341,7 @@ class PlayerActivity : BaseActivity() {
             }
         })
 
-        mConfigViewModel?.screenTypeData?.observe(this, Observer { })
+        mConfigViewModel.screenTypeData.observe(this, Observer { })
 
         joinViewModel.joinData.observe(this, Observer {
             if (it == true) {
@@ -441,6 +440,8 @@ class PlayerActivity : BaseActivity() {
 
         viewModel.baseData.observe(this, Observer {
             it ?: return@Observer
+            //basic接口新增不传programId时 随机返回一个新的programId 这里更新programId
+            programId=it.programId
             liveViewManager.resetSlideViewLocation()
             if (viewModel.needRefreshSwitchList) {
                 viewModel.querySwitchList(programId)
@@ -455,8 +456,8 @@ class PlayerActivity : BaseActivity() {
 
 //            conversationListViewModel?.anchorData = it
             //每次进入直播间 请求数据后 首先判断直播类型
-            isAppShow = !it.isPcLive
-            mConfigViewModel?.screenTypeData?.value = it.screenType
+            isAppShow = !it.isLandscape
+            mConfigViewModel.screenTypeData.value = it.screenType
             //当基础信息返回成功，同时开始拉流和融云相关操作
             anchorNoLiveViewModel.baseData.value = it
             //todo test
@@ -1141,7 +1142,7 @@ class PlayerActivity : BaseActivity() {
 
 
 
-        data?.adList?.let {
+        data.adList.let {
             //直播间banner数据
             playerBannerViewModel.roomBannerData.value = it
         }
@@ -1537,8 +1538,9 @@ class PlayerActivity : BaseActivity() {
             override fun process(data: OpenShowEvent) {
 //                logger.info("OpenShowEvent isPcLive:${data.isPcLive}")
                 //获取直播的类型
-                isAppShow = !data.isPcLive
+                isAppShow = !data.isLandscape
                 viewModel.baseData.value?.isPcLive = data.isPcLive
+                viewModel.baseData.value?.isLandscape = data.isLandscape
                 mConfigViewModel.screenTypeData.value = ScreenType.SP
                 if (!liveViewManager.isHorizontal && !isAnchor) {
                     surface_view?.scrollEnable = true
@@ -1884,6 +1886,9 @@ class PlayerActivity : BaseActivity() {
                 super.finish()
             }
         } else {
+            if(viewModel.checkGuideFollow()){
+                return
+            }
             //上下划手势引导
             if (StorageHelper.getLiveFirstGestureGuideStatus()) {
                 liveViewManager.showGestureGuideView()

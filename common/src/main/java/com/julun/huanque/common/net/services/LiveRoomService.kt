@@ -24,19 +24,6 @@ interface LiveRoomService {
     @POST("live/room/info/enter")
     suspend fun enterLivRoom(@Body form: UserEnterRoomForm): Root<UserEnterRoomRespDto>
 
-
-    /**
-     * 关注节目
-     */
-    @POST("live/room/anchor/follow")
-    suspend fun queryFollow(@Body form: ProgramIdForm): Root<VoidResult>
-
-    /**
-     * 取消关注节目
-     */
-    @POST("live/room/anchor/unFollow")
-    suspend fun queryUnFollow(@Body form: ProgramIdForm): Root<VoidResult>
-
     /**
      * 获取直播间上下切换列表
      */

@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="40dp"
     android:layout_height="48dp"
-    android:layout_gravity="center"
-    android:layout_marginLeft="3dp"
-    android:layout_marginRight="3dp">
+    android:layout_gravity="center">
 
     <com.julun.huanque.common.widgets.PhotoHeadView
         android:id="@+id/headerImage"

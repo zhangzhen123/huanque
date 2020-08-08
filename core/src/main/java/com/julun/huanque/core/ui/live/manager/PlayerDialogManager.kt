@@ -18,6 +18,7 @@ import com.julun.huanque.common.viewmodel.VideoChangeViewModel
 import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
+import com.julun.huanque.core.ui.live.dialog.GuideFollowFragment
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.dialog.OnlineDialogFragment
 import com.julun.huanque.core.ui.live.dialog.ScoreDialogFragment
@@ -169,6 +170,12 @@ class PlayerDialogManager(val context: PlayerActivity) {
                     UserCardFragment.newInstance(info.userId, info.nickname)
                 })
                 playerViewModel.userInfoView.value = null
+            }
+        })
+
+        playerViewModel.guideToFollow.observe(context, Observer { info ->
+            if (info != null) {
+                openDialog(GuideFollowFragment::class.java,reuse = true)
             }
         })
     }

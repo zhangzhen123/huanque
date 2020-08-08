@@ -6,27 +6,21 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.forms.ProgramIdForm
-import com.julun.huanque.common.bean.forms.SwitchForm
-import com.julun.huanque.common.bean.forms.UserEnterRoomForm
-import com.julun.huanque.common.bean.forms.ValidateForm
+import com.julun.huanque.common.bean.forms.*
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.ClickType
-import com.julun.huanque.common.constant.GameType
-import com.julun.huanque.common.constant.TextTouch
-import com.julun.huanque.common.constant.ValidateResult
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.GlobalDataPool
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
-import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.net.services.SocialService
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
@@ -53,6 +47,8 @@ class PlayerViewModel : BaseViewModel() {
     //上一次发送时间
     private var mLastSendTime = 0L
 
+
+    private var startLookTime = 0L
     //消息发送中标识
     val mMessageSending: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -64,6 +60,7 @@ class PlayerViewModel : BaseViewModel() {
         Requests.create(UserService::class.java)
     }
 
+    private val mSocialService: SocialService by lazy { Requests.create(SocialService::class.java) }
     //直播间ID
     var programId = 0L
 
@@ -109,10 +106,6 @@ class PlayerViewModel : BaseViewModel() {
 
     //value为true时  重置礼物Fragment
     val needRefreshAll: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-    //刷新关注数据
-    val modifySubscribe: MutableLiveData<Boolean?> by lazy { MutableLiveData<Boolean?>() }
-
 
     //添加主播不在线fragment
 //    val notOnLineFragment: MutableLiveData<RecommendPrograms> by lazy { MutableLiveData<RecommendPrograms>() }
@@ -294,8 +287,6 @@ class PlayerViewModel : BaseViewModel() {
     val oneYuanInfo: MutableLiveData<OneYuanInfo> by lazy { MutableLiveData<OneYuanInfo>() }
 
 
-    //回归礼包
-    val backGiftPackList: MutableLiveData<ArrayList<ReturnGiftBean>> by lazy { MutableLiveData<ArrayList<ReturnGiftBean>>() }
 
     //是否是一元首充
     val firstOneYuanRecharge: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -405,6 +396,8 @@ class PlayerViewModel : BaseViewModel() {
     //刷新礼物背包
     val refreshGiftPackage: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //关注状态
+    val followStatusData: MutableLiveData<ReactiveData<FollowResultBean>> by lazy { MutableLiveData<ReactiveData<FollowResultBean>>() }
     //公聊设置的用户数据
     var roomUserChatExtra: RoomUserChatExtra? = null
 
@@ -426,8 +419,14 @@ class PlayerViewModel : BaseViewModel() {
         logger("getLivRoomBase")
         viewModelScope.launch {
             request({
-                val result = liveService.getLivRoomBase(ProgramIdForm(programId)).dataConvert(intArrayOf(1201, 1202))
+                val form=if(programId==0L){
+                    ProgramIdForm()
+                }else{
+                    ProgramIdForm(programId)
+                }
+                val result = liveService.getLivRoomBase(form).dataConvert(intArrayOf(1201, 1202))
                 baseData.value = result
+                startLookTime=System.currentTimeMillis()
             }, error = {
                 errorState.value = 1
                 if (it is ResponseError) {
@@ -523,33 +522,34 @@ class PlayerViewModel : BaseViewModel() {
     }
 
     /**
-     * 关注主播
+     * 关注
      */
     fun follow() {
         viewModelScope.launch {
             request({
-                liveService.queryFollow(ProgramIdForm(programId)).dataConvert()
-                modifySubscribe.value = true
-            }, error = {
-                modifySubscribe.value = null
+                val follow = mSocialService.follow(FriendIdForm(programId)).dataConvert()
+                val followBean = FollowResultBean(follow = follow.follow)
+                followStatusData.value = followBean.convertRtData()
+            }, {
+                followStatusData.value = it.convertError()
             })
         }
     }
 
     /**
-     * 取消关注主播
+     * 取消关注
      */
     fun unFollow() {
         viewModelScope.launch {
             request({
-                liveService.queryUnFollow(ProgramIdForm(programId)).dataConvert()
-                modifySubscribe.value = false
-            }, error = {
-                modifySubscribe.value = null
+                mSocialService.unFollow(FriendIdForm(programId)).dataConvert()
+                val followBean = FollowResultBean(follow = FollowStatus.False)
+                followStatusData.value = followBean.convertRtData()
+            }, {
+                followStatusData.value = it.convertError()
             })
         }
     }
-
     /**
      * 统一处理点击事件
      *
@@ -706,4 +706,15 @@ class PlayerViewModel : BaseViewModel() {
             mLastSendTime = SystemClock.elapsedRealtime()
         }
     }
+
+
+    fun checkGuideFollow():Boolean{
+        val currentTime=System.currentTimeMillis()
+        if((currentTime-startLookTime)>60*1000&&roomData?.follow!=true){
+            guideToFollow.value=1
+            return true
+        }
+        return false
+    }
+
 }

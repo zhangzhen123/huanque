@@ -23,13 +23,9 @@ import kotlinx.coroutines.launch
 class UserCardViewModel : BaseViewModel() {
 
     private val mLiveService: LiveRoomService by lazy { Requests.create(LiveRoomService::class.java) }
-    private val mSocialService: SocialService by lazy { Requests.create(SocialService::class.java) }
 
     //用户数据
     val userInfoData: MutableLiveData<UserInfoInRoom> by lazy { MutableLiveData<UserInfoInRoom>() }
-
-    //关注状态
-    val followStatusData: MutableLiveData<FollowResultBean> by lazy { MutableLiveData<FollowResultBean>() }
 
     //用户ID
     var mUserId = 0L
@@ -53,32 +49,5 @@ class UserCardViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * 关注
-     */
-    fun follow() {
-        viewModelScope.launch {
-            request({
-                val follow = mSocialService.follow(FriendIdForm(mUserId)).dataConvert()
-                val followBean = FollowResultBean(follow = follow.follow)
-                followStatusData.value = followBean
-            }, {
-            })
-        }
-    }
-
-    /**
-     * 取消关注
-     */
-    fun unFollow() {
-        viewModelScope.launch {
-            request({
-                mSocialService.unFollow(FriendIdForm(mUserId)).dataConvert()
-                val followBean = FollowResultBean(follow = FollowStatus.False)
-                followStatusData.value = followBean
-            }, {
-            })
-        }
-    }
 
 }

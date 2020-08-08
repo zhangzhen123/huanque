@@ -1018,47 +1018,47 @@ object MessageProcessor {
         override fun getEventType() = EventMessageType.CallBackPackFinish
     }
 
-    /**
-     * 炮台变更事件
-     */
-    interface PlanetBatteryChangeProcessor : EventMessageProcessor<PlanetBatteryChangeBean> {
-        override fun getEventType() = EventMessageType.PlanetBatteryChange
-    }
-
-    /**
-     * 获得爆能枪卡事件
-     */
-    interface PlanetCasualCardGetProcessor : EventMessageProcessor<PlanetCasualCardGetBean> {
-        override fun getEventType() = EventMessageType.PlanetCasualCardGet
-    }
-
-    /**
-     * 休闲模式  最高分用户变更事件
-     */
-    interface PlanetCasualTopRefreshProcessor : EventMessageProcessor<TopUserInfo> {
-        override fun getEventType() = EventMessageType.PlanetCasualTopRefresh
-    }
-
-    /**
-     * 主播开启幸运星球模式
-     */
-    interface ReleaseLuckcyPlanetProcessor : EventMessageProcessor<LuckyStartBean> {
-        override fun getEventType() = EventMessageType.ReleaseLuckcyPlanet
-    }
-
-    /**
-     * 幸运星球消失
-     */
-    interface LuckyPlanetDisappearProcessor : EventMessageProcessor<LuckyPlanetDisappearBean> {
-        override fun getEventType() = EventMessageType.LuckyPlanetDisappear
-    }
-
-    /**
-     * 攻击模式 霸主信息变更
-     */
-    interface PlanetScoreChangeProcessor : EventMessageProcessor<PlanetScoreChangeBean> {
-        override fun getEventType() = EventMessageType.PlanetScoreChange
-    }
+//    /**
+//     * 炮台变更事件
+//     */
+//    interface PlanetBatteryChangeProcessor : EventMessageProcessor<PlanetBatteryChangeBean> {
+//        override fun getEventType() = EventMessageType.PlanetBatteryChange
+//    }
+//
+//    /**
+//     * 获得爆能枪卡事件
+//     */
+//    interface PlanetCasualCardGetProcessor : EventMessageProcessor<PlanetCasualCardGetBean> {
+//        override fun getEventType() = EventMessageType.PlanetCasualCardGet
+//    }
+//
+//    /**
+//     * 休闲模式  最高分用户变更事件
+//     */
+//    interface PlanetCasualTopRefreshProcessor : EventMessageProcessor<TopUserInfo> {
+//        override fun getEventType() = EventMessageType.PlanetCasualTopRefresh
+//    }
+//
+//    /**
+//     * 主播开启幸运星球模式
+//     */
+//    interface ReleaseLuckcyPlanetProcessor : EventMessageProcessor<LuckyStartBean> {
+//        override fun getEventType() = EventMessageType.ReleaseLuckcyPlanet
+//    }
+//
+//    /**
+//     * 幸运星球消失
+//     */
+//    interface LuckyPlanetDisappearProcessor : EventMessageProcessor<LuckyPlanetDisappearBean> {
+//        override fun getEventType() = EventMessageType.LuckyPlanetDisappear
+//    }
+//
+//    /**
+//     * 攻击模式 霸主信息变更
+//     */
+//    interface PlanetScoreChangeProcessor : EventMessageProcessor<PlanetScoreChangeBean> {
+//        override fun getEventType() = EventMessageType.PlanetScoreChange
+//    }
 
     /**
      * 直播间Banner变化消息
@@ -1453,23 +1453,23 @@ enum class EventMessageType(val klass: Class<*>) {
     //三重礼包可以领取消息
     CallBackPackFinish(VoidResult::class.java),
 
-    //炮台变更事件
-    PlanetBatteryChange(PlanetBatteryChangeBean::class.java),
-
-    //休闲模式，获得爆能枪卡事件
-    PlanetCasualCardGet(PlanetCasualCardGetBean::class.java),
-
-    //休闲模式，最高分用户变更事件
-    PlanetCasualTopRefresh(TopUserInfo::class.java),
-
-    //主播开启幸运星球标识位
-    ReleaseLuckcyPlanet(LuckyStartBean::class.java),
-
-    //幸运星球消失消息
-    LuckyPlanetDisappear(LuckyPlanetDisappearBean::class.java),
-
-    //霸主信息变更消息
-    PlanetScoreChange(PlanetScoreChangeBean::class.java),
+//    //炮台变更事件
+//    PlanetBatteryChange(PlanetBatteryChangeBean::class.java),
+//
+//    //休闲模式，获得爆能枪卡事件
+//    PlanetCasualCardGet(PlanetCasualCardGetBean::class.java),
+//
+//    //休闲模式，最高分用户变更事件
+//    PlanetCasualTopRefresh(TopUserInfo::class.java),
+//
+//    //主播开启幸运星球标识位
+//    ReleaseLuckcyPlanet(LuckyStartBean::class.java),
+//
+//    //幸运星球消失消息
+//    LuckyPlanetDisappear(LuckyPlanetDisappearBean::class.java),
+//
+//    //霸主信息变更消息
+//    PlanetScoreChange(PlanetScoreChangeBean::class.java),
 
     //直播间banner变化消息(开启幸运星球)
     RoomBannerChange(RoomBannerChangeBean::class.java),

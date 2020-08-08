@@ -131,17 +131,20 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
     }
 
     override fun initEvents(rootView: View) {
-        lmrlRefreshView.onRefreshListener = object : RefreshListener {
-            override fun onRefresh() {
-                //下拉刷新
-                loadData(QueryType.REFRESH)
-            }
+//        lmrlRefreshView.onRefreshListener = object : RefreshListener {
+//            override fun onRefresh() {
+//                //下拉刷新
+//                loadData(QueryType.REFRESH)
+//            }
+//        }
+        lmrlRefreshView.setOnRefreshListener {
+            loadData(QueryType.REFRESH)
         }
         adapter.loadMoreModule.setOnLoadMoreListener {
             //加载更多
             loadData(QueryType.LOAD_MORE)
         }
-        mHeadAdapter?.onAdapterClickNew { adapter, _, position ->
+        mHeadAdapter.onAdapterClickNew { adapter, _, position ->
             //点击贵宾席位item
             val item = adapter?.getItem(position)
             item ?: return@onAdapterClickNew
@@ -181,8 +184,8 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                     adapter.loadMoreModule.loadMoreFail()
                 }
             }
-            lmrlRefreshView.setRefreshFinish()
-
+//            lmrlRefreshView.setRefreshFinish()
+            lmrlRefreshView.isRefreshing=false
         })
         mViewModel.guardSuccess.observe(this, Observer {
             it ?: return@Observer
@@ -383,7 +386,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
         } else {*/
         //展示贵宾列表
         listView?.adapter = mHeadAdapter
-        mHeadAdapter?.setList(data.royalHonorList)
+        mHeadAdapter.setList(data.royalHonorList)
 //        if (data.isPull && data.list.isEmpty()) {
 //            //普通列表为空那就把贵族列表title去除
 //            headBottom?.hide()
@@ -415,12 +418,10 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 R.id.ivItemLevel,
                 ImageHelper.getUserLevelImg(item.userLevel)
             ).setText(R.id.tvItemNickname, item.nickname)
-            //todo test
-            holder.getView<PhotoHeadView>(R.id.sdvItemHead).setImageCustom(
+            holder.getView<PhotoHeadView>(R.id.sdvItemHead).setImage(
                 headUrl = item.headPic,
-                frameRes = R.mipmap.icon_test_frame,
-                headHeight = 46,
-                headWidth = 46,
+                frameUrl = item.headFrame,
+                headSize = 46,
                 frameHeight = 74,
                 frameWidth = 58
             )
@@ -471,19 +472,26 @@ class OnlineHeadAdapter :
 
     override fun convert(holder: BaseViewHolder, item: OnlineUserInfo) {
 
+        val headView = holder.getView<PhotoHeadView>(R.id.sdvHeadImage)
         if (item.userId == -1L) {
             holder.setText(R.id.tvHeadNickname, "虚位以待")
-                .setGone(R.id.ivHeadBorder, true)
                 .setTextColorRes(R.id.tvHeadNickname, R.color.black_999)
-            ImageUtils.loadImageLocal(
-                holder.getView(R.id.sdvHeadImage),
-                R.mipmap.important_placeholder
-            )
+//            ImageUtils.loadImageLocal(
+//                holder.getView(R.id.sdvHeadImage),
+//                R.mipmap.important_placeholder
+//            )
+            headView.setImageCustom(headRes = R.mipmap.important_placeholder)
         } else {
             holder.setText(R.id.tvHeadNickname, item.nickname)
-                .setVisible(R.id.ivHeadBorder, true)
                 .setTextColorRes(R.id.tvHeadNickname, R.color.black_333)
-            ImageUtils.loadImage(holder.getView(R.id.sdvHeadImage), item.headPic, 46f, 46f)
+//            ImageUtils.loadImage(holder.getView(R.id.sdvHeadImage), item.headPic, 46f, 46f)
+            headView.setImage(
+                headUrl = item.headPic,
+                headSize = 46,
+                frameUrl = item.headFrame,
+                frameHeight = 74,
+                frameWidth = 58
+            )
         }
         if (item.royalLevel != -1) {
             holder.setVisible(R.id.ivHeadRoyal, true)

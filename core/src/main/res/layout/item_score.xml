@@ -27,18 +27,13 @@
 
     </FrameLayout>
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.julun.huanque.common.widgets.PhotoHeadView
         android:id="@+id/headImage"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
+        android:layout_width="58dp"
+        android:layout_height="74dp"
         android:layout_centerVertical="true"
         android:layout_marginStart="5dp"
-        android:layout_toEndOf="@+id/leftContainer"
-        app:failureImage="@mipmap/logo_placeholder_small"
-        app:failureImageScaleType="fitCenter"
-        app:placeholderImage="@mipmap/logo_placeholder_small"
-        app:placeholderImageScaleType="fitCenter"
-        app:roundAsCircle="true" />
+        android:layout_toEndOf="@+id/leftContainer" />
 
     <!--<ImageView-->
     <!--android:id="@+id/userLevelImage"-->

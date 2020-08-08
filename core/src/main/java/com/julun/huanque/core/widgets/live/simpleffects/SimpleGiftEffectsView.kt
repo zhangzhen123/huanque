@@ -208,10 +208,10 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
         ImageUtils.loadImage(giftImage, lastGift!!.giftPic, 46f, 46f)
         giftCountText.text = "${lastGift!!.times} "
 
-        ImageUtils.loadImage(sdv_sender, newGift.headPic, 40f, 40f)
+//        ImageUtils.loadImage(sdv_sender, newGift.headPic, 40f, 40f)
+        sdv_sender.setImage(headUrl = newGift.headPic,headSize = 40,frameUrl = newGift.headFrame,frameWidth = 52,frameHeight = 66)
         //设置文字颜色
-        val effectLevel = newGift.level
-        when (effectLevel) {
+        when (newGift.level) {
             1 -> {
                 setTextColor(R.color.simple_gift_font_01, R.color.simple_gift_font_stroke_01)
             }

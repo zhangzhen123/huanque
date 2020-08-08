@@ -51,6 +51,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_live_room.*
+import kotlinx.android.synthetic.main.fragment_user_card.*
 import kotlinx.android.synthetic.main.player_gesture_guide.*
 import kotlinx.android.synthetic.main.view_live_header.*
 import org.jetbrains.anko.dip
@@ -224,8 +225,13 @@ class PlayerViewManager(val context: PlayerActivity) {
             screenSwitch(it)
         })
 
-        viewModel.modifySubscribe.observe(context, Observer {
-            modifySubscribe(it)
+
+        viewModel.followStatusData.observe(context, Observer {
+            context.liveHeader.setSubscribeEnable(true)
+            if (it != null&&it.isSuccess()) {
+                modifySubscribe(it.getT().follow == FollowStatus.True)
+            }
+
         })
 
         viewModel.openOtherAction.observe(context, Observer {

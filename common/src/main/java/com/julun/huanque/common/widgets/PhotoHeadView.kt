@@ -49,17 +49,20 @@ class PhotoHeadView : FrameLayout {
      * [headUrl]头像地址
      * [frameUrl]相框地址
      * [headSize]头像大小
-     * [frameSize]相框大小
+     * [frameWidth]相框大小
      *
      */
-    fun setImage(headUrl: String, frameUrl: String, headSize: Int = 46, frameSize: Int = 66) {
+    fun setImage(
+        headUrl: String, frameUrl: String, headSize: Int = 46, frameWidth: Int = 58,
+        frameHeight: Int = 74
+    ) {
         setImageCustom(
             headUrl = headUrl,
             frameUrl = frameUrl,
             headWidth = headSize,
             headHeight = headSize,
-            frameWidth = frameSize,
-            frameHeight = frameSize
+            frameWidth = frameWidth,
+            frameHeight = frameHeight
         )
 
     }

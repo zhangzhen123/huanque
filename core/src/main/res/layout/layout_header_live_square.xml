@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <TextView
@@ -12,13 +13,16 @@
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_14"
         android:textStyle="bold"
+        tools:visibility="visible"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/followList"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_76"
+        android:layout_height="@dimen/dimen_80"
+        android:layout_marginTop="@dimen/dimen_15"
         android:layout_marginBottom="@dimen/dimen_13"
+        tools:visibility="visible"
         android:visibility="gone" />
 
     <TextView
@@ -30,5 +34,6 @@
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_14"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible"/>
 </LinearLayout>

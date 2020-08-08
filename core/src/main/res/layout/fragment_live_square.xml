@@ -17,13 +17,20 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/authorList"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/mRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/dimen_10"
-        android:layout_marginRight="@dimen/dimen_10"
-        android:layout_marginTop="@dimen/dimen_15" />
+        android:layout_marginTop="@dimen/dimen_15"
+        android:layout_marginRight="@dimen/dimen_10">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/authorList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <com.julun.huanque.common.widgets.statepage.StatePageView
         android:id="@+id/state_pager_view"
