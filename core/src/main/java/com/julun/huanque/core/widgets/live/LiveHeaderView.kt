@@ -92,10 +92,9 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val userListAdapter = object : BaseQuickAdapter<UserInfoForLmRoom, BaseViewHolder>(R.layout.item_live_room_user) {
         override fun convert(holder: BaseViewHolder, item: UserInfoForLmRoom) {
             val imgView = holder.getView<PhotoHeadView>(R.id.headerImage)
-            //todo test
-            imgView.setImageCustom(
+            imgView.setImageSymmetry(
                 headUrl = item.headPic,
-                frameRes = if (item.smallPic.isNotEmpty()) R.mipmap.icon_test_frame else null,
+                frameUrl = item.headFrame,
                 headHeight = 32,
                 headWidth = 32,
                 frameWidth = 40,
@@ -161,6 +160,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
                 playerViewModel?.subscribeSource = "直播间左上角"
                 playerViewModel?.follow()
             }
+            subscribeAnchor.isEnabled=false
         }
         exitImage.onClickNew {
             playerViewModel?.finishState?.value = true
@@ -219,9 +219,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
         // 直播间名称
         authorNicknameText.text = dto.programName
-        // 直播间ID
-
-        royalButtonAnimation()
     }
 
     /**
@@ -274,6 +271,11 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         roomUsers = orderUsersAndDelAnchor(roomData.onlineUsers)
         isReduceUserCount()
         doRefreshRoomUserList()
+        if(roomData.royalCount>0){
+            royalButtonAnimation()
+        }else{
+            stopAniWithOriginal()
+        }
     }
 
     private var dispose: Disposable? = null
@@ -298,7 +300,9 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
         }
     }
-
+    fun setSubscribeEnable(bool: Boolean){
+        subscribeAnchor.isEnabled=bool
+    }
     // 关注成功：显示主播等级图标，隐藏关注图标
     // 取消关注：隐藏主播等级图标，显示关注图标
     fun subscribeSuccess(bool: Boolean) {
@@ -415,6 +419,11 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         roomData.onlineUserNum = data.totalCount
         roomData.royalCount = data.royalCount
         roomData.guardCount = data.guardCount
+        if(roomData.royalCount>0){
+            royalButtonAnimation()
+        }else{
+            stopAniWithOriginal()
+        }
     }
 
     private fun replaceExistUserItem(newObj: UserInfoForLmRoom) {
@@ -473,9 +482,9 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
                 //回复原状
                 if (mIsResetView && stopRoyalAni) {
                     flRoyalRootView.rotationY = -360f
-                    ivRoyalIcon.show()
-                    tvRoyalContent.show()
-                    tv_user_count.hide()
+                    ivRoyalIcon.hide()
+                    tvRoyalContent.hide()
+                    tv_user_count.show()
 //                    ivGuardIcon.hide()
 //                    tvGuardContent.hide()
                     return

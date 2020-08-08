@@ -122,10 +122,11 @@ class UserCardFragment : BaseDialogFragment() {
             showViewByData(it ?: return@Observer)
         })
 
-        mUserCardViewModel.followStatusData.observe(this, Observer {
-            if (it != null) {
-                mUserCardViewModel.userInfoData.value?.follow = it.follow != FollowStatus.False
-                if (it.follow != FollowStatus.False) {
+        mPlayerViewModel.followStatusData.observe(this, Observer {
+
+            if (it != null&&it.isSuccess()) {
+                mUserCardViewModel.userInfoData.value?.follow = it.getT().follow != FollowStatus.False
+                if (it.getT().follow != FollowStatus.False) {
                     //关注状态
                     tv_attention.text = "已关注"
                 } else {
@@ -133,6 +134,8 @@ class UserCardFragment : BaseDialogFragment() {
                     tv_attention.text = "关注"
                 }
             }
+
+            tv_attention.isEnabled=true
         })
     }
 
@@ -147,11 +150,12 @@ class UserCardFragment : BaseDialogFragment() {
             }
             if (mUserCardViewModel.userInfoData.value?.follow == true) {
                 //已关注,取消关注
-                mUserCardViewModel.unFollow()
+                mPlayerViewModel.unFollow()
             } else {
                 //未关注，关注
-                mUserCardViewModel.follow()
+                mPlayerViewModel.follow()
             }
+            tv_attention.isEnabled=false
         }
 
         tv_private_chat.onClickNew {
