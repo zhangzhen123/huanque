@@ -41,9 +41,6 @@ class MessageViewModel : BaseViewModel() {
     //会话列表
     val conversationListData: MutableLiveData<MutableList<LocalConversation>> by lazy { MutableLiveData<MutableList<LocalConversation>>() }
 
-    //免打扰列表
-    val blockListData: MutableLiveData<MutableList<String>> by lazy { MutableLiveData<MutableList<String>>() }
-
     //有变化的数据  <0  刷新整个列表  >=0 刷新单个条目
     val changePosition: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 

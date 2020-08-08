@@ -26,6 +26,7 @@ import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import com.luck.picture.lib.tools.StatusBarUtil
+import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_message.*
 import org.greenrobot.eventbus.Subscribe
@@ -96,8 +97,13 @@ class MessageFragment : BaseFragment() {
             //设置头部边距
             msg_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         }
-        mMessageViewModel.getConversationList()
-//        mMessageViewModel.getBlockedConversationList()
+        if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
+            //融云已经连接
+            //查询会话列表和免打扰列表
+            mPlayerMessageViewModel.getBlockedConversationList()
+            mMessageViewModel.getConversationList()
+        }
+
     }
 
 
@@ -240,7 +246,7 @@ class MessageFragment : BaseFragment() {
         })
 
 
-        mMessageViewModel.blockListData.observe(this, Observer {
+        mPlayerMessageViewModel.blockListData.observe(this, Observer {
             if (it != null) {
                 mAdapter.blockList = it
                 mAdapter.notifyDataSetChanged()
@@ -332,10 +338,15 @@ class MessageFragment : BaseFragment() {
     fun connectSuccess(event: RongConnectEvent) {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，加载数据
+            mPlayerMessageViewModel.getBlockedConversationList()
             mMessageViewModel.getConversationList()
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun blockChange(event: MessageBlockEvent) {
+        mPlayerMessageViewModel.getBlockedConversationList()
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

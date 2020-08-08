@@ -128,7 +128,6 @@ class MainActivity : BaseActivity() {
         //查询未读数
         if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
             //融云已经连接
-            mMainViewModel.getBlockedConversationList()
             mMainViewModel.getUnreadCount()
         }
     }
@@ -195,11 +194,7 @@ class MainActivity : BaseActivity() {
                 showUnreadCount()
             }
         })
-        mMainViewModel.blockListData.observe(this, Observer {
-            if (it != null) {
-                mMessageViewModel.blockListData.value = it
-            }
-        })
+
         mMessageViewModel.queryUnreadCountFlag.observe(this, Observer {
             if (it == true) {
                 mMainViewModel.getUnreadCount()
@@ -426,15 +421,9 @@ class MainActivity : BaseActivity() {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，查询未读数
             //查询免打扰列表
-            mMainViewModel.getBlockedConversationList()
             mMainViewModel.getUnreadCount()
             mMainViewModel.refreshMessage()
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun blockChange(event: MessageBlockEvent) {
-        mMainViewModel.getBlockedConversationList()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

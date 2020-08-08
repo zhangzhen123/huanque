@@ -11,6 +11,7 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.constant.SystemTargetId
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
@@ -40,6 +41,9 @@ class PlayerMessageViewModel : BaseViewModel() {
 
     //参与未读数计算的会话ID列表
     var unreadList = mutableListOf<String>()
+
+    //免打扰列表
+    val blockListData: MutableLiveData<MutableList<String>> by lazy { MutableLiveData<MutableList<String>>() }
 
     /**
      * 获取融云未读消息(直播间使用)
@@ -190,6 +194,29 @@ class PlayerMessageViewModel : BaseViewModel() {
 
         }
         return currentUser
+    }
+
+
+
+    /**
+     * 获取免打扰会话列表
+     */
+    fun getBlockedConversationList() {
+        RongIMClient.getInstance().getBlockedConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
+            override fun onSuccess(list: List<Conversation>?) {
+                val blockedIdList = mutableListOf<String>()
+                list?.forEach {
+                    blockedIdList.add(it.targetId)
+                }
+                blockListData.value = blockedIdList
+                BusiConstant.blockList = blockedIdList
+            }
+
+            override fun onError(errorCode: RongIMClient.ErrorCode?) {
+                logger("errorCode = $errorCode")
+            }
+
+        }, Conversation.ConversationType.PRIVATE)
     }
 
 }
