@@ -128,6 +128,7 @@ class MainActivity : BaseActivity() {
         //查询未读数
         if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
             //融云已经连接
+            mMainViewModel.getBlockedConversationList()
             mMainViewModel.getUnreadCount()
         }
     }

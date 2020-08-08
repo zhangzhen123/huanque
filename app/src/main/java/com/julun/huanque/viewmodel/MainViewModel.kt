@@ -60,6 +60,7 @@ class MainViewModel : BaseViewModel() {
     //参与未读数计算的会话ID列表
     var unreadList = mutableListOf<String>()
 
+
     //协程请求示例
     val userInfo: LiveData<UserDetailInfo> = getInfo.switchMap {
         liveData<UserDetailInfo> {
@@ -263,62 +264,19 @@ class MainViewModel : BaseViewModel() {
      * 获取未读数
      */
     fun getUnreadCount() {
-//        if (unreadList.contains(targetId)) {
-//            realUnreadCount()
-//            return
-//        }
-        RongIMClient.getInstance().getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
-            override fun onSuccess(list: List<Conversation>?) {
-                if (list?.isNotEmpty() != true) {
-                    return
-                }
-                unreadList.clear()
-                val blockList = BusiConstant.blockList
-                list.forEach {
-                    val targetID = it.targetId ?: return@forEach
-                    if (blockList.contains(targetID)) {
-                        //不处理免打扰消息
-                        return@forEach
-                    }
-                    unreadList.add(targetID)
-                }
-                //获取未读数
-                realUnreadCount()
+
+        val typeList = arrayOf(Conversation.ConversationType.PRIVATE)
+        RongIMClient.getInstance().getUnreadCount(typeList, false, object : RongIMClient.ResultCallback<Int>() {
+            override fun onSuccess(p0: Int?) {
+                unreadMsgCount.value = p0 ?: 0
             }
 
             override fun onError(p0: RongIMClient.ErrorCode?) {
             }
 
-        }, Conversation.ConversationType.PRIVATE)
+        })
     }
 
-    /**
-     * 真正获取未读消息的方法
-     */
-    private fun realUnreadCount() {
-        var tempUnreadCount = 0
-        var tempQueryCount = 0
-        val totalQueryCount = unreadList.size
-        unreadList.forEach {
-            RongIMClient.getInstance().getUnreadCount(Conversation.ConversationType.PRIVATE, it, object : RongIMClient.ResultCallback<Int>() {
-                override fun onSuccess(unreadCount: Int?) {
-                    tempUnreadCount += unreadCount ?: 0
-                    tempQueryCount++
-                    if (tempQueryCount == totalQueryCount) {
-                        unreadMsgCount.value = tempUnreadCount
-                    }
-                }
-
-                override fun onError(p0: RongIMClient.ErrorCode?) {
-                    tempQueryCount++
-                    if (tempQueryCount == totalQueryCount) {
-                        unreadMsgCount.value = tempUnreadCount
-                    }
-                }
-            })
-        }
-
-    }
 
     /**
      * 获取免打扰会话列表
