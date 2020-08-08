@@ -291,8 +291,6 @@ class PlayerViewModel : BaseViewModel() {
     val oneYuanInfo: MutableLiveData<OneYuanInfo> by lazy { MutableLiveData<OneYuanInfo>() }
 
 
-    //回归礼包
-    val backGiftPackList: MutableLiveData<ArrayList<ReturnGiftBean>> by lazy { MutableLiveData<ArrayList<ReturnGiftBean>>() }
 
     //是否是一元首充
     val firstOneYuanRecharge: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -420,7 +418,12 @@ class PlayerViewModel : BaseViewModel() {
         logger("getLivRoomBase")
         viewModelScope.launch {
             request({
-                val result = liveService.getLivRoomBase(ProgramIdForm(programId)).dataConvert(intArrayOf(1201, 1202))
+                val form=if(programId==0L){
+                    ProgramIdForm()
+                }else{
+                    ProgramIdForm(programId)
+                }
+                val result = liveService.getLivRoomBase(form).dataConvert(intArrayOf(1201, 1202))
                 baseData.value = result
             }, error = {
                 errorState.value = 1
