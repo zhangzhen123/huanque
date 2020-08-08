@@ -186,6 +186,9 @@ class PlayerViewModel : BaseViewModel() {
     //加入直播间成功
     val loginSuccessData: MutableLiveData<UserEnterRoomRespDto> by lazy { MutableLiveData<UserEnterRoomRespDto>() }
 
+    //背包有新礼物标识
+    val bagChangeFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
 
     //私信体验相关数据
     val mEnterExtSmsData: MutableLiveData<ExperienceSms> by lazy { MutableLiveData<ExperienceSms>() }
@@ -493,6 +496,8 @@ class PlayerViewModel : BaseViewModel() {
                 loginSuccessData.value = result
                 gameListData.value = result.gameList
                 getAdConfig.value = result.poppuAds
+                bagChangeFlag.value = result.user?.bagChange ?: false
+
             }, error = {
                 it.printStackTrace()
                 errorState.value = 3

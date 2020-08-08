@@ -404,6 +404,10 @@ class PlayerViewManager(val context: PlayerActivity) {
             }
         })
 
+        viewModel.bagChangeFlag.observe(context, Observer {
+            context.actionView.showGiftRedDot(it == true)
+        })
+
         viewModel.gotoWeb.observe(context, Observer {
             goToWeb(it ?: return@Observer)
         })

@@ -351,6 +351,17 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
         return rl_more
     }
 
+    /**
+     * 显示礼物红点
+     */
+    fun showGiftRedDot(show: Boolean) {
+        if (show) {
+            view_gift.show()
+        } else {
+            view_gift.hide()
+        }
+    }
+
     init {
         initViewModel()
         LayoutInflater.from(context).inflate(R.layout.view_live_bottom_action, this)
