@@ -49,6 +49,7 @@ class PlayerViewModel : BaseViewModel() {
 
 
     private var startLookTime = 0L
+
     //消息发送中标识
     val mMessageSending: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -61,6 +62,7 @@ class PlayerViewModel : BaseViewModel() {
     }
 
     private val mSocialService: SocialService by lazy { Requests.create(SocialService::class.java) }
+
     //直播间ID
     var programId = 0L
 
@@ -100,6 +102,9 @@ class PlayerViewModel : BaseViewModel() {
 
     //value为true时 关闭页面
     val finishState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //确定退出标识位（关注弹窗使用）
+    var finishCertain = false
 
     //显示TopDialog
     val topDialog: MutableLiveData<TopDialogBean> by lazy { MutableLiveData<TopDialogBean>() }
@@ -287,7 +292,6 @@ class PlayerViewModel : BaseViewModel() {
     val oneYuanInfo: MutableLiveData<OneYuanInfo> by lazy { MutableLiveData<OneYuanInfo>() }
 
 
-
     //是否是一元首充
     val firstOneYuanRecharge: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -398,6 +402,7 @@ class PlayerViewModel : BaseViewModel() {
 
     //关注状态
     val followStatusData: MutableLiveData<ReactiveData<FollowResultBean>> by lazy { MutableLiveData<ReactiveData<FollowResultBean>>() }
+
     //公聊设置的用户数据
     var roomUserChatExtra: RoomUserChatExtra? = null
 
@@ -419,14 +424,14 @@ class PlayerViewModel : BaseViewModel() {
         logger("getLivRoomBase")
         viewModelScope.launch {
             request({
-                val form=if(programId==0L){
+                val form = if (programId == 0L) {
                     ProgramIdForm()
-                }else{
+                } else {
                     ProgramIdForm(programId)
                 }
                 val result = liveService.getLivRoomBase(form).dataConvert(intArrayOf(1201, 1202))
                 baseData.value = result
-                startLookTime=System.currentTimeMillis()
+                startLookTime = System.currentTimeMillis()
             }, error = {
                 errorState.value = 1
                 if (it is ResponseError) {
@@ -550,6 +555,7 @@ class PlayerViewModel : BaseViewModel() {
             })
         }
     }
+
     /**
      * 统一处理点击事件
      *
@@ -708,10 +714,10 @@ class PlayerViewModel : BaseViewModel() {
     }
 
 
-    fun checkGuideFollow():Boolean{
-        val currentTime=System.currentTimeMillis()
-        if((currentTime-startLookTime)>60*1000&&roomData?.follow!=true){
-            guideToFollow.value=1
+    fun checkGuideFollow(): Boolean {
+        val currentTime = System.currentTimeMillis()
+        if ((currentTime - startLookTime) > 60 * 1000 && roomData?.follow != true) {
+            guideToFollow.value = 1
             return true
         }
         return false

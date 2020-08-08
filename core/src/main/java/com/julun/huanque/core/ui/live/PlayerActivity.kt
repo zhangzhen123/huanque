@@ -164,7 +164,7 @@ class PlayerActivity : BaseActivity() {
 //    private var donNotGoHome: Boolean = true
     /**
      * 代表是否是手机全屏直播还是半屏3/4直播
-      */
+     */
     private var isAppShow: Boolean by Delegates.observable(false) { _, _, newValue ->
         liveViewManager.isAppShow = newValue
         viewModel.isAppShow = newValue
@@ -441,7 +441,7 @@ class PlayerActivity : BaseActivity() {
         viewModel.baseData.observe(this, Observer {
             it ?: return@Observer
             //basic接口新增不传programId时 随机返回一个新的programId 这里更新programId
-            programId=it.programId
+            programId = it.programId
             liveViewManager.resetSlideViewLocation()
             if (viewModel.needRefreshSwitchList) {
                 viewModel.querySwitchList(programId)
@@ -1886,12 +1886,12 @@ class PlayerActivity : BaseActivity() {
                 super.finish()
             }
         } else {
-            if(viewModel.checkGuideFollow()){
-                return
-            }
             //上下划手势引导
             if (StorageHelper.getLiveFirstGestureGuideStatus()) {
                 liveViewManager.showGestureGuideView()
+                return
+            }
+            if (!viewModel.finishCertain && viewModel.checkGuideFollow()) {
                 return
             }
             viewModel.leave(programId)

@@ -19,6 +19,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.AuthorFollowBean
 import com.julun.huanque.common.bean.beans.ProgramLiveInfo
+import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -27,6 +28,7 @@ import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.LiveSquareViewModel
 import kotlinx.android.synthetic.main.fragment_live_square.*
@@ -51,6 +53,14 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
 
         headerLayout.followList.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         headerLayout.followList.adapter = followAdapter
+        followAdapter.setOnItemClickListener { adapter, view, position ->
+            val data = adapter.getItem(position) as? AuthorFollowBean
+            //Social
+            if (data != null) {
+                PlayerActivity.start(requireActivity(), data.programId, from = PlayerFrom.Social)
+            }
+
+        }
 
         authorList.layoutManager = GridLayoutManager(requireContext(), 2)
         initViewModel()
@@ -102,7 +112,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show(it.error?.busiMessage)
             }
-            mRefreshLayout.isRefreshing=false
+            mRefreshLayout.isRefreshing = false
         })
     }
 

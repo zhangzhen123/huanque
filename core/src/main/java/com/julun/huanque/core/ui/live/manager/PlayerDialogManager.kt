@@ -5,6 +5,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.TabBean
 import com.julun.huanque.common.bean.beans.MicOperateBean
 import com.julun.huanque.common.bean.beans.PKCreateEvent
@@ -175,7 +176,15 @@ class PlayerDialogManager(val context: PlayerActivity) {
 
         playerViewModel.guideToFollow.observe(context, Observer { info ->
             if (info != null) {
-                openDialog(GuideFollowFragment::class.java,reuse = true)
+//                openDialog(GuideFollowFragment::class.java,reuse = true)
+                MyAlertDialog(context).showAlertWithOKAndCancel("看了这么久了，关注一下吧", MyAlertDialog.MyDialogCallback(onCancel = {
+                    playerViewModel.finishCertain = true
+                    playerViewModel.finishState.value = true
+                }, onRight = {
+                    playerViewModel.finishCertain = true
+                    playerViewModel.follow()
+                    playerViewModel.finishState.value = true
+                }), "关注提醒", okText = "关注并退出")
             }
         })
     }

@@ -225,11 +225,11 @@ class MyAlertDialog : AppBaseDialog {
     override fun initEvents() {
         cancelText!!.setOnClickListener(this)
         rightText!!.setOnClickListener(this)
-        this.setOnCancelListener {
-            if (this.callback != null) {
-                this.callback!!.onCancel()
-            }
-        }
+//        this.setOnCancelListener {
+//            if (this.callback != null) {
+//                this.callback!!.onCancel()
+//            }
+//        }
     }
 
     override fun onClick(v: View) {
