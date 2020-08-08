@@ -9,9 +9,11 @@ import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.message.ImageMessage
@@ -65,39 +67,43 @@ class PlayerMessageViewModel : BaseViewModel() {
                         return@forEach
                     }
 
-                    var currentUser: ChatUser? = null
+                    if (SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)) {
+                        //开启折叠消息，需要过滤陌生人消息
+                        var currentUser: ChatUser? = null
 
-                    when (val lastMessage = it.latestMessage) {
-                        is ImageMessage -> {
-                            lastMessage.extra?.let {
-                                currentUser = getMessageUserInfo(it)
+                        when (val lastMessage = it.latestMessage) {
+                            is ImageMessage -> {
+                                lastMessage.extra?.let {
+                                    currentUser = getMessageUserInfo(it)
+                                }
                             }
-                        }
 
-                        is CustomMessage -> {
-                            lastMessage.extra?.let {
-                                currentUser = getMessageUserInfo(it)
+                            is CustomMessage -> {
+                                lastMessage.extra?.let {
+                                    currentUser = getMessageUserInfo(it)
+                                }
                             }
-                        }
 
-                        is CustomSimulateMessage -> {
-                            lastMessage.extra?.let {
-                                currentUser = getMessageUserInfo(it)
+                            is CustomSimulateMessage -> {
+                                lastMessage.extra?.let {
+                                    currentUser = getMessageUserInfo(it)
+                                }
+                            }
+                            is TextMessage -> {
+                                //文本消息
+                                lastMessage.extra?.let {
+                                    currentUser = getMessageUserInfo(it)
+                                }
+                            }
+                            else -> {
                             }
                         }
-                        is TextMessage -> {
-                            //文本消息
-                            lastMessage.extra?.let {
-                                currentUser = getMessageUserInfo(it)
-                            }
-                        }
-                        else -> {
+                        if (currentUser?.stranger == true) {
+                            //陌生人，过滤
+                            return@forEach
                         }
                     }
-                    if (currentUser?.stranger != true) {
-                        //不是陌生人
-                        unreadList.add(targetID)
-                    }
+                    unreadList.add(targetID)
                 }
                 //获取未读数
                 realUnreadCount()

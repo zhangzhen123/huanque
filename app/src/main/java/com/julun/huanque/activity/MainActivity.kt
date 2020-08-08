@@ -40,6 +40,7 @@ import com.julun.huanque.ui.main.LeYuanFragment
 import com.julun.huanque.ui.main.MineFragment
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.maplib.LocationService
+import io.rong.imlib.RongIMClient
 import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -125,7 +126,10 @@ class MainActivity : BaseActivity() {
 
         registerMessage()
         //查询未读数
-        mMainViewModel.getUnreadCount()
+        if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
+            //融云已经连接
+            mMainViewModel.getUnreadCount()
+        }
     }
 
     /**

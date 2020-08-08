@@ -5,6 +5,7 @@ import android.os.Message
 import androidx.lifecycle.*
 import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.location.BDLocation
+import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.forms.SessionForm
@@ -15,6 +16,7 @@ import com.julun.huanque.common.bean.beans.UserLevelInfo
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm
 import com.julun.huanque.common.bean.forms.SaveLocationForm
+import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -29,6 +31,8 @@ import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
+import io.rong.message.ImageMessage
+import io.rong.message.TextMessage
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -52,6 +56,9 @@ class MainViewModel : BaseViewModel() {
 
     //免打扰列表
     val blockListData: MutableLiveData<MutableList<String>> by lazy { MutableLiveData<MutableList<String>>() }
+
+    //参与未读数计算的会话ID列表
+    var unreadList = mutableListOf<String>()
 
     //协程请求示例
     val userInfo: LiveData<UserDetailInfo> = getInfo.switchMap {
@@ -256,9 +263,61 @@ class MainViewModel : BaseViewModel() {
      * 获取未读数
      */
     fun getUnreadCount() {
-        RongCloudManager.queryPMessage {
-            unreadMsgCount.postValue(it)
+//        if (unreadList.contains(targetId)) {
+//            realUnreadCount()
+//            return
+//        }
+        RongIMClient.getInstance().getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
+            override fun onSuccess(list: List<Conversation>?) {
+                if (list?.isNotEmpty() != true) {
+                    return
+                }
+                unreadList.clear()
+                val blockList = BusiConstant.blockList
+                list.forEach {
+                    val targetID = it.targetId ?: return@forEach
+                    if (blockList.contains(targetID)) {
+                        //不处理免打扰消息
+                        return@forEach
+                    }
+                    unreadList.add(targetID)
+                }
+                //获取未读数
+                realUnreadCount()
+            }
+
+            override fun onError(p0: RongIMClient.ErrorCode?) {
+            }
+
+        }, Conversation.ConversationType.PRIVATE)
+    }
+
+    /**
+     * 真正获取未读消息的方法
+     */
+    private fun realUnreadCount() {
+        var tempUnreadCount = 0
+        var tempQueryCount = 0
+        val totalQueryCount = unreadList.size
+        unreadList.forEach {
+            RongIMClient.getInstance().getUnreadCount(Conversation.ConversationType.PRIVATE, it, object : RongIMClient.ResultCallback<Int>() {
+                override fun onSuccess(unreadCount: Int?) {
+                    tempUnreadCount += unreadCount ?: 0
+                    tempQueryCount++
+                    if (tempQueryCount == totalQueryCount) {
+                        unreadMsgCount.value = tempUnreadCount
+                    }
+                }
+
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                    tempQueryCount++
+                    if (tempQueryCount == totalQueryCount) {
+                        unreadMsgCount.value = tempUnreadCount
+                    }
+                }
+            })
         }
+
     }
 
     /**
