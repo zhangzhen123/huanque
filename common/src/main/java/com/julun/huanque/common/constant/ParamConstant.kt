@@ -81,6 +81,9 @@ object ParamConstant {
     //是否在直播页面使用
     const val PLAYER = "PLAYER"
 
+    //默认类型
+    const val DEFAULT_TYPE = "DEFAULT_TYPE"
+
 
     //UUID
     const val UUID = "UUID"

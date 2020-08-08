@@ -12,10 +12,13 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.UserDataTab
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.FollowStatus
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
@@ -38,12 +41,12 @@ import org.jetbrains.anko.textSizeDimen
  *@创建时间 2020/7/2 17:52
  *@描述 联系人页面
  */
+@Route(path = ARouterConstant.ContactsActivity)
 class ContactsActivity : BaseActivity() {
     companion object {
-        const val DEFAULT_TYPE = "DEFAULT_TYPE"
         fun newInstance(activity: Activity, defaultType: String) {
             val intent = Intent(activity, ContactsActivity::class.java)
-            intent.putExtra(DEFAULT_TYPE, defaultType)
+            intent.putExtra(ParamConstant.DEFAULT_TYPE, defaultType)
             activity.startActivity(intent)
         }
     }
@@ -61,7 +64,7 @@ class ContactsActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_contacts
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        mDefaultType = intent?.getStringExtra(DEFAULT_TYPE) ?: ""
+        mDefaultType = intent?.getStringExtra(ParamConstant.DEFAULT_TYPE) ?: ""
         findViewById<TextView>(R.id.tvTitle).text = "联系人"
         initViewModel()
         mActivityViewModel?.getContacts()

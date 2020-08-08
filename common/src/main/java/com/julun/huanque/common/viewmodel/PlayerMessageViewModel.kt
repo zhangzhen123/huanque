@@ -18,4 +18,18 @@ class PlayerMessageViewModel : BaseViewModel() {
     //打开私聊详情
     val privateConversationData: MutableLiveData<OpenPrivateChatRoomEvent> by lazy { MutableLiveData<OpenPrivateChatRoomEvent>() }
 
+    //打开联系人
+    val contactsData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //直播间内的消息未读数
+    val unreadCountInPlayer: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+
+
+    /**
+     * 获取融云未读消息
+     */
+    fun queryRongPrivateCount() {
+
+    }
+
 }

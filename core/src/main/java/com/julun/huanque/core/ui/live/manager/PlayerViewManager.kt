@@ -118,6 +118,9 @@ class PlayerViewManager(val context: PlayerActivity) {
 
     //连麦ViewModel
     private val connectMicroViewModel: ConnectMicroViewModel by context.viewModels()
+
+    //消息页面ViewModel
+    private val mPlayerMessageViewModel: PlayerMessageViewModel by context.viewModels()
     //ZEGO推流相关
 //    private lateinit var mZegoPublishViewModel: ZegoPublishViewModel by context.viewModels()
 
@@ -1533,8 +1536,7 @@ class PlayerViewManager(val context: PlayerActivity) {
      * 获取未读消息数量（私聊）
      */
     fun getUnReadMessageCount() {
-        //todo
-//        conversationViewModel?.queryRongPrivateCount()
+        mPlayerMessageViewModel.queryRongPrivateCount()
     }
 
     /**

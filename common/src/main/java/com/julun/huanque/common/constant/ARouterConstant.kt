@@ -56,6 +56,9 @@ object ARouterConstant {
     //会话列表页面
     const val MessageFragment = "/$MESSAGE$PREFIX_FRAGMENT/MessageFragment"
 
+    //联系人页面
+    const val ContactsActivity = "/$MESSAGE$PREFIX_ACTIVITY/ContactsActivity"
+
 
     //亲密特权弹窗
     const val SINGLE_INTIMATE_PRIVILEGE_FRAGMENT = "/$MESSAGE$PREFIX_FRAGMENT/SingleIntimateprivilegeFragment"

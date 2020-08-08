@@ -802,3 +802,13 @@ object PlayerFrom {
     const val SendRoom = "SendRoom"
 
 }
+
+/**
+ * 需要悬浮窗权限的跳转类型
+ */
+object PermissionJumpType{
+    //私聊详情
+    const val PrivateChat = "PrivateChat"
+    //联系人页面
+    const val Contacts = "Contacts"
+}

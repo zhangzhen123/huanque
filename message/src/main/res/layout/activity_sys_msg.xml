@@ -13,6 +13,7 @@
         android:background="@color/white"
         android:gravity="center"
         android:text="系统消息"
+        android:textStyle="bold"
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_16"
         app:layout_constraintBottom_toBottomOf="@+id/ivback"

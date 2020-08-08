@@ -165,7 +165,7 @@ class PlayerViewModel : BaseViewModel() {
     val userInfoView: MutableLiveData<UserInfoBean> by lazy { MutableLiveData<UserInfoBean>() }
 
     //贡献榜关闭标识
-    val scoreDismissFlag : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val scoreDismissFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
 
 //    //显示在线列表视图
@@ -404,6 +404,9 @@ class PlayerViewModel : BaseViewModel() {
 
     //公聊设置的用户数据
     var roomUserChatExtra: RoomUserChatExtra? = null
+
+    //需要申请权限的跳转类型
+    var mPermissionJumpType = ""
 
     private var loginStateDisposable: Disposable? = null
 

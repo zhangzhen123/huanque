@@ -523,7 +523,7 @@ class MessageViewModel : BaseViewModel() {
                         "",
                         anchorInfo.programName,
                         anchorInfo.programId,
-                        Sex.FEMALE,
+                        "",
                         SessionUtils.getUserId(),
                         0,
                         "",
