@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.julun.huanque.common.suger.logger
 import kotlin.math.abs
 
 /**
@@ -20,6 +21,7 @@ class ImageRecyclerView(context: Context, attributeSet: AttributeSet?) : Recycle
     init {
         addOnScrollListener(object : OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                logger("onScrollStateChanged=$newState")
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == SCROLL_STATE_IDLE) {
                     Fresco.getImagePipeline().resume()
@@ -27,6 +29,7 @@ class ImageRecyclerView(context: Context, attributeSet: AttributeSet?) : Recycle
             }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                logger("onScrolled=$dy")
                 super.onScrolled(recyclerView, dx, dy)
                 //根据纵向一次滚动的Y轴偏移量来判断这一次滚动的速度是多大，定一个中间值来判断这一次的速度是快还是慢
                 if (abs(dy) < 80) {

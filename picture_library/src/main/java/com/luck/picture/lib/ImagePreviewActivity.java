@@ -1,6 +1,7 @@
 package com.luck.picture.lib;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.permissions.RxPermissions;
 import com.luck.picture.lib.tools.PictureFileUtils;
 import com.luck.picture.lib.tools.ScreenUtils;
+import com.luck.picture.lib.tools.StatusBarUtil;
 import com.luck.picture.lib.tools.ToastManage;
 import com.luck.picture.lib.widget.PreviewViewPager;
 import com.luck.picture.lib.widget.bigimageview.BigImageView;
@@ -81,10 +83,10 @@ public class ImagePreviewActivity extends PictureBaseActivity implements View.On
             }
         });
         //全屏化处理
-//        StatusBarUtil.setTransparent(this);
-//        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) rl.getLayoutParams();
-//        lp.setMargins(0, StatusBarUtil.getStatusBarHeight(this), 0, 0);
-//        StatusBarUtil.setColor(this,Color.BLACK);
+        StatusBarUtil.setTransparent(this);
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) rl.getLayoutParams();
+        lp.setMargins(0, StatusBarUtil.getStatusBarHeight(this), 0, 0);
+        StatusBarUtil.setColor(this, Color.parseColor("#E6000000"));
 
         inflater = LayoutInflater.from(this);
         tv_title = (TextView) findViewById(R.id.picture_title);

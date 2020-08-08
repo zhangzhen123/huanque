@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -13,11 +12,12 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.constant.UserChangeType
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
+import com.julun.huanque.common.widgets.PhotoHeadView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
@@ -28,7 +28,6 @@ import com.nineoldandroids.animation.ObjectAnimator
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.view_live_header.view.*
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.textColor
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.properties.Delegates
@@ -87,34 +86,21 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         val activity = context as? PlayerActivity
         activity?.let {
             playerViewModel = ViewModelProvider(activity).get(PlayerViewModel::class.java)
-
-            playerViewModel?.loginSuccessData?.observe(activity, androidx.lifecycle.Observer {
-                it ?: return@Observer
-                val royalCount = it.royalCount ?: 0
-                val guardCount = it.guardCount ?: 0
-                when {
-                    royalCount < 0 -> tvRoyalContent.text = "0"
-                    royalCount > 9999 -> tvRoyalContent.text = "9999"
-                    else -> tvRoyalContent.text = "$royalCount"
-                }
-                when {
-                    guardCount < 0 -> tvGuardContent.text = "0"
-                    guardCount > 9999 -> tvGuardContent.text = "9999"
-                    else -> tvGuardContent.text = "$guardCount"
-                }
-            })
-            playerViewModel?.baseData?.observe(activity, androidx.lifecycle.Observer {
-                royalButtonAnimation()
-            })
         }
     }
 
     private val userListAdapter = object : BaseQuickAdapter<UserInfoForLmRoom, BaseViewHolder>(R.layout.item_live_room_user) {
-        override fun convert(vh: BaseViewHolder, item: UserInfoForLmRoom) {
-            if (vh == null || item == null) {
-                return
-            }
-            val imgView = vh.getView<SimpleDraweeView>(R.id.headerImage)
+        override fun convert(holder: BaseViewHolder, item: UserInfoForLmRoom) {
+            val imgView = holder.getView<PhotoHeadView>(R.id.headerImage)
+            //todo test
+            imgView.setImageCustom(
+                headUrl = item.headPic,
+                frameRes = if (item.smallPic.isNotEmpty()) R.mipmap.icon_test_frame else null,
+                headHeight = 32,
+                headWidth = 32,
+                frameWidth = 40,
+                frameHeight = 48
+            )
             //添加边框
 //            val roundingParams = RoundingParams.fromCornersRadius(5f)
 //            roundingParams.roundAsCircle = true
@@ -126,12 +112,12 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //                imgView.setPadding(context.dip(1), context.dip(1), context.dip(1), context.dip(1))
 //            }
 //            imgView.hierarchy.roundingParams = roundingParams
-            ImageUtils.loadImage(imgView, item.headPic, 32f, 32f)
-            val smpImage: SimpleDraweeView = vh.getView(R.id.identityImage)
+//            ImageUtils.loadImage(imgView, item.headPic, 32f, 32f)
+            val smpImage: SimpleDraweeView = holder.getView(R.id.identityImage)
             // 优先显示 守护 图标
             if (item.smallPic.isNotEmpty()) {
                 smpImage.visibility = View.VISIBLE
-                ImageUtils.loadImageWithHeight_2(smpImage, item.smallPic, dip(12))
+                ImageUtils.loadImageWithHeight_2(smpImage, item.smallPic, dip(16))
             } else {
                 smpImage.visibility = View.GONE
             }
@@ -187,27 +173,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //            }
             playerViewModel?.openOnlineDialog?.value = TabTags.TAB_TAG_ONLINE
         }
-//        count_container_001.onClickNew {
-//            //            playerActivity.openOnlineView()
-////            playerViewModel?.onlineView?.value = currentCount
-////            playerViewModel?.openOnlineDialog?.value = DialogTypes.DIALOG_USER
-//        }
-        //去除跳转到在线人数页面
-//        userCountText.onClick {
-//            var intent = Intent(playerActivity, OnlineViewsListActivity::class.java)
-//            intent.putExtra(IntentParamKey.PROGRAM_ID.name, programId)
-//            intent.putExtra(IntentParamKey.ANCHOR_ID.name, anchorId)
-//            playerActivity.startActivity(intent)
-//        }
-//        topContainer.onClickNew {
-//            val activity = context as? Activity
-//            activity?.let {
-//                var intent = Intent(it, ScoreActivity::class.java)
-//                intent.putExtra(IntentParamKey.PROGRAM_ID.name, programId)
-//                it.startActivity(intent)
-//            }
-//
-//        }
         //
         userListAdapter.setOnItemClickListener { _, _, position ->
             // 用户个人信息界面
@@ -224,10 +189,9 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
             }
         }
-//        if (!isInEditMode) {
-//            tv_important_user_count.setMyTypeface()
-//            tv_user_count.setMyTypeface()
-//        }
+        if (!isInEditMode) {
+            tv_user_count.setTFDinCdc2()
+        }
 
 //        ivFansJoin.onClickNew {
 //            //粉丝团加入
@@ -256,14 +220,8 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         // 直播间名称
         authorNicknameText.text = dto.programName
         // 直播间ID
-        if (dto.prettyId != null) {
-            programIdText.text = "${GlobalUtils.getString(R.string.live_room_pretty_id)}${dto.prettyId}"
-            programIdText.textColor = GlobalUtils.getColor(R.color.primary_color)
-        } else {
-            programIdText.textColor = GlobalUtils.getColor(R.color.white)
-            programIdText.text = "${context.getString(R.string.live_room_id)}${dto.programId}"
-        }
 
+        royalButtonAnimation()
     }
 
     /**
@@ -276,17 +234,12 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         //头像
         ImageUtils.loadImage(authorPhotoImage, info.headPic, 30f, 30f)
         // 直播间ID
-        if (prettyId != null) {
-            programIdText.text = "${GlobalUtils.getString(R.string.live_room_pretty_id)}$prettyId"
-            programIdText.textColor = GlobalUtils.getColor(R.color.primary_color)
-        } else {
-            programIdText.text = "${context.getString(R.string.live_room_id)}${info.programId}"
-            programIdText.textColor = GlobalUtils.getColor(R.color.white)
-        }
+
     }
 
     fun initData(roomData: UserEnterRoomRespDto) {
 //        logger.info("liveHeader ：${JsonUtil.seriazileAsString(roomData)}")
+        hotText.text = "${StringHelper.formatNum(roomData.heatValue)}"
         isSubscribed = roomData.follow
         changeFansViews(roomData.groupMember, roomData.fansClockIn)
 
@@ -296,9 +249,20 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
         isSubscribed = roomData.follow
 
-
+        val royalCount = roomData.royalCount ?: 0
+        val guardCount = roomData.guardCount ?: 0
+        when {
+            royalCount < 0 -> tvRoyalContent.text = "0"
+            royalCount > 9999 -> tvRoyalContent.text = "9999"
+            else -> tvRoyalContent.text = "$royalCount"
+        }
+//        when {
+//            guardCount < 0 -> tvGuardContent.text = "0"
+//            guardCount > 9999 -> tvGuardContent.text = "9999"
+//            else -> tvGuardContent.text = "$guardCount"
+//        }
         //直播间用户数量
-//        tv_user_count.text = formatCount(roomData.regUserCount + roomData.visitorCount)
+        tv_user_count.text = formatCount(roomData.onlineUserNum)
 //        tv_user_count.text = formatCount(roomData.onlineUserNum)
         // 停播跳转重进直播间是需要清空数据
         roomUsers.clear()
@@ -376,6 +340,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 //            }
 //        }
     }
+
     /**
      * 将在线用户按照score进行排序，并且删除主播
      */
@@ -446,10 +411,10 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
         doRefreshRoomUserList()
         //更新roomData数据
-        val roomData=playerViewModel?.roomData?:return
-        roomData.onlineUserNum=data.totalCount
-        roomData.royalCount=data.royalCount
-        roomData.guardCount=data.guardCount
+        val roomData = playerViewModel?.roomData ?: return
+        roomData.onlineUserNum = data.totalCount
+        roomData.royalCount = data.royalCount
+        roomData.guardCount = data.guardCount
     }
 
     private fun replaceExistUserItem(newObj: UserInfoForLmRoom) {
@@ -510,20 +475,23 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
                     flRoyalRootView.rotationY = -360f
                     ivRoyalIcon.show()
                     tvRoyalContent.show()
-                    ivGuardIcon.hide()
-                    tvGuardContent.hide()
+                    tv_user_count.hide()
+//                    ivGuardIcon.hide()
+//                    tvGuardContent.hide()
                     return
                 }
                 if (ivRoyalIcon.isVisible()) {
                     ivRoyalIcon.hide()
                     tvRoyalContent.hide()
-                    ivGuardIcon.show()
-                    tvGuardContent.show()
+                    tv_user_count.show()
+//                    ivGuardIcon.show()
+//                    tvGuardContent.show()
                 } else {
                     ivRoyalIcon.show()
                     tvRoyalContent.show()
-                    ivGuardIcon.hide()
-                    tvGuardContent.hide()
+//                    ivGuardIcon.hide()
+//                    tvGuardContent.hide()
+                    tv_user_count.hide()
                 }
             }
         })

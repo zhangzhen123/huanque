@@ -146,6 +146,11 @@ interface UserService {
     @POST("user/acct/data/saveLocation")
     suspend fun saveLocation(@Body form: SaveLocationForm): Root<VoidResult>
 
+    /**
+     * 成为主播的条件检查
+     */
+    @POST("user/acct/info/checkToAnchor")
+    suspend fun checkToAnchor(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
 
 
 }

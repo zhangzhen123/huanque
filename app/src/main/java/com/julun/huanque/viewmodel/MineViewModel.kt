@@ -1,20 +1,17 @@
 package com.julun.huanque.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.*
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.suger.convertError
-import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.core.net.UserService
+import kotlinx.coroutines.launch
 
 /**
  *
@@ -30,6 +27,7 @@ class MineViewModel : BaseViewModel() {
     private val userService: UserService by lazy {
         Requests.create(UserService::class.java)
     }
+    val checkAuthorResult: MutableLiveData<ReactiveData<Boolean>> by lazy { MutableLiveData<ReactiveData<Boolean>>() }
 
     //协程请求示例
     val userInfo: LiveData<ReactiveData<UserDetailInfo>> = queryState.switchMap {
@@ -49,5 +47,17 @@ class MineViewModel : BaseViewModel() {
 
     }
 
+    fun checkToAnchor() {
+        viewModelScope.launch {
+            request({
+                userService.checkToAnchor().dataConvert(intArrayOf(ErrorCodes.NOT_INFO_COMPLETE,ErrorCodes.NOT_BIND_WECHAT,ErrorCodes.NOT_REAL_NAME))
+                checkAuthorResult.value=true.convertRtData()
+            }, error = {
+                checkAuthorResult.value=it.convertError()
+            })
+        }
+
+
+    }
 
 }

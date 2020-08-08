@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.julun.huanque.common.widgets.ImageRecyclerView
             android:id="@+id/mRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

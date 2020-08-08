@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="34dp"
+    android:layout_height="@dimen/top_header_height"
     android:orientation="horizontal"
+    android:gravity="center_vertical"
     android:paddingLeft="10dp">
 
     <!--<LinearLayout-->
@@ -53,12 +54,13 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/programIdText"
+            android:id="@+id/hotText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/authorNicknameText"
             android:layout_alignBottom="@+id/authorPhotoImage"
             android:layout_marginBottom="2dp"
+            android:drawableStart="@mipmap/icon_hot_small"
             android:layout_toRightOf="@+id/authorPhotoImage"
             android:includeFontPadding="false"
             android:textColor="@color/white"
@@ -111,15 +113,16 @@
 
     <FrameLayout
         android:id="@+id/flRoyalRootView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="40dp"
+        android:layout_marginStart="@dimen/dimen_8"
+        android:layout_height="@dimen/dimen_34">
 
         <ImageView
             android:id="@+id/ivRoyalIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_7"
-            android:layout_marginRight="@dimen/dimen_7"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            tools:visibility="gone"
             android:src="@mipmap/lm_core_icon_royal_sign" />
 
         <TextView
@@ -132,34 +135,52 @@
             android:textColor="#ffd66f"
             android:textSize="@dimen/sp_08"
             tools:text="9999" />
-
-        <ImageView
-            android:id="@+id/ivGuardIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_7"
-            android:layout_marginRight="@dimen/dimen_7"
-            android:src="@mipmap/lm_core_icon_guard_sign"
-            android:visibility="gone" />
-
         <TextView
-            android:id="@+id/tvGuardContent"
+            android:id="@+id/tv_user_count"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
-            android:includeFontPadding="false"
-            android:text="0"
-            android:textColor="#ffd66f"
-            android:textSize="@dimen/sp_08"
+            android:minWidth="@dimen/dimen_30"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:includeFontPadding="true"
+            android:textColor="@color/white"
+            android:paddingStart="@dimen/dimen_3"
+            android:paddingEnd="@dimen/dimen_3"
+            android:gravity="center"
+            android:maxLines="1"
             android:visibility="gone"
+            tools:visibility="visible"
+            android:background="@drawable/bg_shape_black_p30"
+            android:textSize="@dimen/sp_16"
             tools:text="9999" />
+
+<!--        <ImageView-->
+<!--            android:id="@+id/ivGuardIcon"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="@dimen/dimen_7"-->
+<!--            android:layout_marginRight="@dimen/dimen_7"-->
+<!--            android:src="@mipmap/lm_core_icon_guard_sign"-->
+<!--            tools:visibility="visible"-->
+<!--            android:visibility="gone" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvGuardContent"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center|bottom"-->
+<!--            android:includeFontPadding="false"-->
+<!--            android:text="0"-->
+<!--            android:textColor="#ffd66f"-->
+<!--            android:textSize="@dimen/sp_08"-->
+<!--            android:visibility="gone"-->
+<!--            tools:text="9999" />-->
     </FrameLayout>
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="3dp">
+        android:layout_marginStart="8dp">
 
         <ImageView
             android:id="@+id/exitImage"
@@ -171,48 +192,13 @@
             android:layout_marginLeft="6dp"
             android:scaleType="centerInside"
             android:src="@mipmap/icon_close_white_01" />
-        <!--        <LinearLayout-->
-        <!--            android:id="@+id/count_container_001"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            android:layout_alignParentEnd="true"-->
-        <!--            android:layout_alignParentRight="true"-->
-        <!--            android:layout_centerVertical="true"-->
-        <!--            android:gravity="center"-->
-        <!--            android:paddingLeft="8dp"-->
-        <!--            android:paddingRight="8dp">-->
-
-        <!--            <TextView-->
-        <!--                android:id="@+id/tv_user_count"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="32dp"-->
-        <!--                android:background="@drawable/live_room_count"-->
-        <!--                android:gravity="center"-->
-        <!--                android:maxLines="1"-->
-        <!--                android:minWidth="32dp"-->
-        <!--                android:textColor="@color/white"-->
-        <!--                android:textSize="@dimen/small2_size"-->
-        <!--                android:visibility="visible"-->
-        <!--                tools:text="1" />-->
-
-        <!--            <TextView-->
-        <!--                android:id="@+id/tv_important_user_count"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:background="@mipmap/important_user_icon"-->
-        <!--                android:gravity="center"-->
-        <!--                android:maxLines="1"-->
-        <!--                android:textColor="#FFDE8200"-->
-        <!--                android:textSize="10sp"-->
-        <!--                android:visibility="gone" />-->
-        <!--        </LinearLayout>-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/onlineUserListView"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/exitImage"
+            android:layout_toStartOf="@+id/exitImage"
             android:cacheColorHint="@color/transparent"
             android:fadingEdge="none"
             android:listSelector="@color/transparent"

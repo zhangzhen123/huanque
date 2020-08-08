@@ -108,10 +108,10 @@
 
     <!-- 直播间 start -->
 
-    <!-- 直播间顶部高度 7+34+50-->
-    <dimen name="live_header_height">91dp</dimen>
+    <!-- 直播间顶部预留高度-->
+    <dimen name="live_header_height">82dp</dimen>
     <!--最顶部的view高度-->
-    <dimen name="top_header_height">52dp</dimen>
+    <dimen name="top_header_height">48dp</dimen>
     <!--最新跑道高度-->
     <dimen name="run_way_height">20dp</dimen>
     <!-- 直播间底部按钮栏高度 -->

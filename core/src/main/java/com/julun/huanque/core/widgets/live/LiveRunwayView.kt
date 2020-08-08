@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -17,14 +18,11 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.TplBeanExtraContext
-import com.julun.huanque.common.constant.RunWaySVGAType
 import com.julun.huanque.common.constant.WeekType
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.suger.DefaultAnimatorListener
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ULog
@@ -53,7 +51,8 @@ import kotlin.properties.Delegates
  * @iterativeVersion 4.20
  * @iterativeDetail 迭代详情：增加热度体系
  **/
-class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
+class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+    FrameLayout(context, attrs) {
     private val logger = ULog.getLogger("LiveRunwayView")
     var isAnchor: Boolean by Delegates.observable(false) { _, _, newValue ->
         //        if (newValue) {
@@ -126,7 +125,7 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
 
         tv_live_square.onClickNew {
-            playerViewModel?.squareView?.value=true
+            playerViewModel?.squareView?.value = true
 
         }
 
@@ -175,7 +174,11 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     //    private val MEASURED_HEIGHT by lazy { this.measuredHeight }      //组件自身的高度
     //    private val MEASURED_WIDTH by lazy { this.measuredWidth }      //组件自身的宽度
-    private val realContentLength by lazy { ScreenUtils.getScreenWidth() - DensityHelper.dp2px(REAL_CONTENT_MARGIN) }//实际显示内容的区域宽度 100+10
+    private val realContentLength by lazy {
+        ScreenUtils.getScreenWidth() - DensityHelper.dp2px(
+            REAL_CONTENT_MARGIN
+        )
+    }//实际显示内容的区域宽度 100+10
 
     /**
      * 当前跑道消息是否已经过期 true代表还有效 false代表失效了
@@ -224,7 +227,12 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
         currentRunwayMessage = null
         cachedRunwayMessage = null
         currentPlayTimes = 0
-        cachedMessageChangesListener?.onCachedMessageChanges(TplBeanExtraContext(seconds = 0, cacheValue = 0))
+        cachedMessageChangesListener?.onCachedMessageChanges(
+            TplBeanExtraContext(
+                seconds = 0,
+                cacheValue = 0
+            )
+        )
         isMessagePlay = false
         isFirstRun = true
     }
@@ -234,7 +242,11 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
     /**
      * 消息开始处理
      */
-    private fun justRenderMessageAndPlay(tplBean: TplBean, delaySeconds: Int = 0, isCache: Boolean = false) {
+    private fun justRenderMessageAndPlay(
+        tplBean: TplBean,
+        delaySeconds: Int = 0,
+        isCache: Boolean = false
+    ) {
         currentRunwayMessage?.context?.isOld = true//每次播放前都将上一个消息变成老消息 如果有的话
         isMessagePlay = true
 //        val bean = tplBean.preProcess()
@@ -308,38 +320,77 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
     /**
      * 根据礼物价钱设置不同的背景
      */
+    @Deprecated("先不要")
     private fun processDataAndRender(tplBean: TplBean) {
         runwayMessageText.render(tplBean)
-//        runwayMessageText.gravity = Gravity.CENTER_VERTICAL
-
-        //给图文内容也添加点击事件
-//        runwayMessageText.setOnClickListener {
-//            val messageContext = currentRunwayMessage?.context       //此时当前的消息不能为空
-//            if (messageContext != null) {
-////                changeLiveRoomListener?.onChangeLiveRoom(messageContext.programId)
-////                EventDispatcherCenter.postData(ChangeRoomEvent(messageContext.programId))
-//                EventBus.getDefault().post(ChangeRoomEvent(messageContext.programId))
-//            }
-//        }
         val messageContext: TplBeanExtraContext? = tplBean.context
         if (messageContext != null) {
             val giftFeeValue: Long = messageContext.cacheValue
             when {
                 giftFeeValue < 500000 -> {
-                    runway_container.backgroundDrawable = resources.getDrawable(R.drawable.shape_runway_1)
+                    runway_container.backgroundDrawable =
+                        resources.getDrawable(R.drawable.shape_runway_1)
 //                    runway_icon.setImageResource(R.mipmap.runway_img_002)
                     runway_icon.hide()
                 }
                 giftFeeValue < 1000000 -> {
-                    runway_container.backgroundDrawable = resources.getDrawable(R.drawable.shape_runway_2)
+                    runway_container.backgroundDrawable =
+                        resources.getDrawable(R.drawable.shape_runway_2)
                     runway_icon.setImageResource(R.mipmap.runway_img_001)
                     runway_icon.show()
                 }
                 else -> {
-                    runway_container.backgroundDrawable = resources.getDrawable(R.drawable.shape_runway_3)
+                    runway_container.backgroundDrawable =
+                        resources.getDrawable(R.drawable.shape_runway_3)
                     runway_icon.setImageResource(R.mipmap.runway_img_002)
                     runway_icon.show()
                 }
+            }
+
+        }
+    }
+
+    private fun processDataAndRender2(tplBean: TplBean) {
+        runwayMessageText.render(tplBean)
+        runway_icon.show()
+        val messageContext: TplBeanExtraContext? = tplBean.context
+        if (messageContext != null) {
+            runway_icon.loadImage(messageContext.runwayPic, 24f, 24f)
+            try {
+                val bgColor = messageContext.bgColor
+                val colors = bgColor.split("-") as AbstractList
+                if (colors.isNotEmpty()) {
+
+                    var alpha: Float? = null
+
+                    val ls = colors[colors.size - 1]
+                    if (!ls.contains("#"))
+                        alpha = ls.toFloat()
+
+                    if (alpha != null) {
+                        logger.info("透明度：" + (alpha * 255).toInt())
+                        colors.removeAt(colors.size - 1)
+                    }
+                    val colorInts = arrayListOf<Int>()
+                    colors.forEach {
+                        val color = GlobalUtils.formatColor(it, R.color.colorPrimary_lib)
+                        colorInts.add(color)
+                    }
+                    if (colorInts.size > 1) {
+                        val gDrawable = GradientDrawable(
+                            GradientDrawable.Orientation.LEFT_RIGHT,
+                            colorInts.toIntArray()
+                        )
+                        gDrawable.cornerRadius = DensityHelper.dp2pxf(52)
+                        gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
+                        if (alpha != null) {
+                            gDrawable.alpha = (alpha * 255).toInt()
+                        }
+                        runway_container.backgroundDrawable = gDrawable
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
 
         }
@@ -350,15 +401,21 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
      */
     private fun slideOut(start: () -> Unit = {}, end: () -> Unit = {}) {
         val width = ScreenUtils.screenWidthFloat - dip(100)
-        val translationXOut = ObjectAnimator.ofFloat(runway_container, View.TRANSLATION_X, 0f, -width)
-        translationXOut?.addListener(object : DefaultAnimatorListener {
+        val translationXOut01 = ObjectAnimator.ofFloat(runway_container, View.TRANSLATION_X, 0f, -width)
+        val translationXOut02 = ObjectAnimator.ofFloat(
+            runway_icon,
+            View.TRANSLATION_X,
+            0f, -width
+        )
+        translationXOut01?.addListener(object : DefaultAnimatorListener {
             override fun onAnimationEnd(animation: Animator) {
                 runway_container.hide()
                 end()
             }
         })
         start()
-        translationXOut.setDuration(SLIDE_OUT_DURATION).start()
+        translationXOut01.setDuration(SLIDE_OUT_DURATION).start()
+        translationXOut02.setDuration(SLIDE_OUT_DURATION).start()
     }
 
     /**
@@ -373,19 +430,19 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
                 slideIn()
             }
             1 -> {
-                svgaViewModel.resource.value = RunWaySVGAType.AIRSHIP
-                svgaViewModel.startPlay.value = true
-//                slideIn()
+//                svgaViewModel.resource.value = RunWaySVGAType.AIRSHIP
+//                svgaViewModel.startPlay.value = true
+                slideIn()
             }
             2 -> {
-                svgaViewModel.resource.value = RunWaySVGAType.AIRPLANE
-                svgaViewModel.startPlay.value = true
-//                slideIn()
+//                svgaViewModel.resource.value = RunWaySVGAType.AIRPLANE
+//                svgaViewModel.startPlay.value = true
+                slideIn()
             }
         }
     }
 
-    var enterAllset: AnimatorSet? = null
+    private var enterAllSet: AnimatorSet? = null
 
     /**
      *  2.橫幅进场
@@ -394,13 +451,28 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
     private fun slideIn() {
 //        logger.info("跑道飞机一起走")
         //跑道飞机一起走
-        if (enterAllset == null) {
-            enterAllset = AnimatorSet()
-            val translationXIn101 = ObjectAnimator.ofFloat(runway_icon, View.TRANSLATION_X, ScreenUtils.screenWidthFloat, 0f)
-            val translationXIn102 = ObjectAnimator.ofFloat(runway_container, View.TRANSLATION_X, ScreenUtils.screenWidthFloat, 0f)
+        if (enterAllSet == null) {
+            enterAllSet = AnimatorSet()
+            val translationXIn101 = ObjectAnimator.ofFloat(
+                runway_icon,
+                View.TRANSLATION_X,
+                ScreenUtils.screenWidthFloat,
+                0f
+            )
+            val translationXIn102 = ObjectAnimator.ofFloat(
+                runway_container,
+                View.TRANSLATION_X,
+                ScreenUtils.screenWidthFloat,
+                0f
+            )
             //飞机再飞一会同时隐藏
             val translationXIn201 =
-                ObjectAnimator.ofFloat(runway_icon, View.TRANSLATION_X, 0f, -dip(PLANE_FADE_DISTANCE).toFloat())
+                ObjectAnimator.ofFloat(
+                    runway_icon,
+                    View.TRANSLATION_X,
+                    0f,
+                    -dip(PLANE_FADE_DISTANCE).toFloat()
+                )
             val alpha = ObjectAnimator.ofFloat(runway_icon, View.ALPHA, 1f, 0f)
             alpha.startDelay =
                 PLANE_FADE_DELAY_DURATION
@@ -416,8 +488,10 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
                 }
 
                 override fun onAnimationStart(animation: Animator?) {
-                    if (currentRunwayMessage != null)
-                        processDataAndRender(currentRunwayMessage!!)
+                    if (currentRunwayMessage != null) {
+                        //processDataAndRender(currentRunwayMessage!!)
+                        processDataAndRender2(currentRunwayMessage!!)
+                    }
                     runway_container.show()
                 }
 
@@ -434,9 +508,9 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
                 }
             })
 
-            enterAllset?.playSequentially(enter, disappear)
+            enterAllSet?.playSequentially(enter/*, disappear*/)
         }
-        enterAllset?.start()
+        enterAllSet?.start()
     }
 
     /**
@@ -456,11 +530,12 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
         val runwayMessageContext = runwayMessage.context
         if (runwayMessageContext != null) {// context 为空的 消息直接忽略
-            if (runwayMessageContext.cacheIt) {
-                cachedRunwayMessage = runwayMessage
-                //缓存发生变化
-                cachedMessageChangesListener?.onCachedMessageChanges(cachedRunwayMessage!!.context!!)
-            }
+            //todo 不要缓存
+//            if (runwayMessageContext.cacheIt) {
+//                cachedRunwayMessage = runwayMessage
+//                //缓存发生变化
+//                cachedMessageChangesListener?.onCachedMessageChanges(cachedRunwayMessage!!.context!!)
+//            }
 
             if (!isMessagePlay) {
                 justRenderMessageAndPlay(runwayMessage, delaySeconds)
@@ -468,14 +543,14 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
                 //向队列里添加元素
                 messagesQueue.offer(runwayMessage)
                 //增加排序 高价的放在前面
-                messagesQueue.sortWith(Comparator { arg1, arg2 ->
-                    val messageContext1: TplBeanExtraContext? = arg1.context
-                    val messageContext2: TplBeanExtraContext? = arg2.context
-                    val giftFeeValue1: Long = messageContext1?.cacheValue ?: 0
-                    val giftFeeValue2: Long = messageContext2?.cacheValue ?: 0
-
-                    giftFeeValue2.compareTo(giftFeeValue1)
-                })
+//                messagesQueue.sortWith(Comparator { arg1, arg2 ->
+//                    val messageContext1: TplBeanExtraContext? = arg1.context
+//                    val messageContext2: TplBeanExtraContext? = arg2.context
+//                    val giftFeeValue1: Long = messageContext1?.cacheValue ?: 0
+//                    val giftFeeValue2: Long = messageContext2?.cacheValue ?: 0
+//
+//                    giftFeeValue2.compareTo(giftFeeValue1)
+//                })
             }
 
         }
@@ -539,10 +614,10 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
                 if (isClosedNow) return//当界面关闭时不再循环播放
                 val canOnlyPlayOneTime: Boolean? = currentRunwayMessage?.context?.canOnlyPlayOneTime
                 val oneTime = canOnlyPlayOneTime ?: false
-
-                var isOld = currentRunwayMessage?.context?.isOld
-                isOld = isOld ?: false
-                val playOver = isOld || (currentPlayTimes >= MIN_PLAY_TIMES)
+                val runwayPlayTimes =
+                    currentRunwayMessage?.context?.runwayPlayTimes ?: MIN_PLAY_TIMES
+                val isOld = currentRunwayMessage?.context?.isOld ?: false
+                val playOver = isOld || (currentPlayTimes >= runwayPlayTimes)
                         || (oneTime)
 
 //                ULog.i("跑道信息 currentPlayTimes $currentPlayTimes currentCachePlayTimes:" +currentRunwayMessage?.context?.seconds
@@ -552,11 +627,11 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
                         if (currentRunwayMessage?.randomGeneratedId.equals(cachedRunwayMessage?.randomGeneratedId)
                             && cachedRunwayMessage?.context!!.isOld
                         ) {
-                            //                            ULog.i("缓存的消息就是当前消息 而且已经老了 继续播")
+                            ULog.i("缓存的消息就是当前消息 而且已经老了 继续播")
                             animation?.startDelay = 10L
                             animation?.start()
                         } else {
-                            //                            ULog.i("继续播放当前缓存消息")
+                            ULog.i("继续播放当前缓存消息")
                             if (cachedRunwayMessage != null)
                                 justRenderMessageAndPlay(cachedRunwayMessage!!, 0, true)
                         }
@@ -729,7 +804,12 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
             //目的是为了文字控件位置复原
             val resetText0301 = ObjectAnimator.ofFloat(week_star_text, View.TRANSLATION_X, 0f, 0f)
             //左边公告区域从icon后划出，左到右用时0.33秒
-            val translationXIn03 = ObjectAnimator.ofFloat(week_star_container, View.TRANSLATION_X, -dip(138).toFloat(), 0f)
+            val translationXIn03 = ObjectAnimator.ofFloat(
+                week_star_container,
+                View.TRANSLATION_X,
+                -dip(138).toFloat(),
+                0f
+            )
             translationXIn03.duration = 330L
             translationXIn03.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator?) {
@@ -762,14 +842,24 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
                     playWeekMessageAni()
                 }
             })
-            weekStarStartAni?.playSequentially(enter01, rotationY0201, rotationY0202, translationIn03)
+            weekStarStartAni?.playSequentially(
+                enter01,
+                rotationY0201,
+                rotationY0202,
+                translationIn03
+            )
         }
 
         if (weekStarDisappearAni == null) {
             weekStarDisappearAni = AnimatorSet()
             //公告栏内信息滚动完成之后停留0.5秒
             //公告栏收回icon后方消失，用时0.5秒
-            val translationXOut05 = ObjectAnimator.ofFloat(week_star_container, View.TRANSLATION_X, 0f, -dip(138).toFloat())
+            val translationXOut05 = ObjectAnimator.ofFloat(
+                week_star_container,
+                View.TRANSLATION_X,
+                0f,
+                -dip(138).toFloat()
+            )
             translationXOut05.duration = 500L
             translationXOut05.startDelay = 500L
 
@@ -784,7 +874,8 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
 
             weekStarDisappearAni?.interpolator = LinearInterpolator()
 //            weekStarDisappearAni.playTogether(scaleX0601, scaleY0602, alpha0603)
-            weekStarDisappearAni!!.play(scaleX0601).with(scaleY0602).with(alpha0603).after(translationXOut05)
+            weekStarDisappearAni!!.play(scaleX0601).with(scaleY0602).with(alpha0603)
+                .after(translationXOut05)
             weekStarDisappearAni?.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator?) {
                     isWeekStarPlay = false

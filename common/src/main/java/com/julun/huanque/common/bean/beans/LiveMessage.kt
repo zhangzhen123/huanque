@@ -546,13 +546,7 @@ class TplBeanExtraContext(
     var cacheIt: Boolean = false,
     var cacheStartTime: Long = 0L,
     var cacheValue: Long = 0,
-    var seconds: Long = 0L
-    ,
-    var canBeInterrupted: Boolean = false,
-    var extendType: String = "",
-    var royalLevelValue: Int = 0,
-    //豪车工厂的价格
-    var factoryCarPrizeCount: Int = 0,
+    var seconds: Long = 0L,
     var giftPic: String = "",
     //点击卡片时用到
     var userId: Long = 0,
@@ -565,18 +559,7 @@ class TplBeanExtraContext(
     //打开h5需要
     var url: String = "",
     var needLogin: String = "",//T/F
-    /**
-     * 自定义的属性
-     * canOnlyPlayOneTime 是否时直播间初始化的时候带过来   的消息,如果是,则当播放一遍之后,如果有新的消息,可以不用等三遍,直接播放下一跳记录
-     */
-    var canOnlyPlayOneTime: Boolean = false,
-    /**
-     * 自定义属性 当前缓存消息是否是播三次了(本地字段)
-     */
-    var isOld: Boolean = false,
 
-    //本地字段 用于判断去重的
-    var msgId: String = "",
     /**
      * 新版入场特效字段
      */
@@ -595,7 +578,29 @@ class TplBeanExtraContext(
      *
      */
     var remindEndMills: Long? = null,
-    var salvationId: Int? = null
+    var salvationId: Int? = null,
+
+    var bgColor: String = "",
+
+    var runwayPlayTimes: Int = 0,
+
+    var runwayPic: String = "",
+
+
+    /**
+     * --------------------------------------------------------
+     * 一下都是本地字段
+     * 自定义的属性
+     * canOnlyPlayOneTime 是否时直播间初始化的时候带过来   的消息,如果是,则当播放一遍之后,如果有新的消息,可以不用等三遍,直接播放下一跳记录
+     */
+    var canOnlyPlayOneTime: Boolean = false,
+    /**
+     * 自定义属性 当前缓存消息是否是播三次了(本地字段)
+     */
+    var isOld: Boolean = false,
+
+    //本地字段 用于判断去重的
+    var msgId: String = ""
 
 )
 

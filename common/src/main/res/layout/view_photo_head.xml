@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/header_pic"
+        android:layout_width="@dimen/dimen_46"
+        android:layout_height="@dimen/dimen_46"
+        android:layout_gravity="center"
+        app:actualImageScaleType="centerCrop"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:roundAsCircle="true" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/header_photo_frame"
+        android:layout_gravity="center"
+        tools:actualImageResource="@mipmap/icon_test_frame"
+        app:actualImageScaleType="fitCenter"
+        android:layout_width="@dimen/dimen_58"
+        android:layout_height="@dimen/dimen_74" />
+</merge>

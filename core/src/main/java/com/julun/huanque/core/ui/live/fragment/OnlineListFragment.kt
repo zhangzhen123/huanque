@@ -20,6 +20,7 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.OnlineListData
 import com.julun.huanque.common.bean.beans.OnlineUserInfo
+import com.julun.huanque.common.bean.beans.UserInfoBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.TabTags
@@ -29,6 +30,7 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.widgets.PhotoHeadView
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration
 import com.julun.huanque.common.widgets.refreshlayout.RefreshListener
 import com.julun.huanque.core.R
@@ -162,7 +164,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
             val item = adapter?.getItem(position)
             item ?: return@onAdapterClickNew
             if (item is OnlineUserInfo) {
-                //todo
+                mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel)
             }
         }
     }
@@ -197,7 +199,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
 //            }
         })
         if (mPageTag == TabTags.TAB_TAG_GUARD) {
-            mPlayerViewModel?.experienceGuardTime?.observe(this, Observer {
+            mPlayerViewModel.experienceGuardTime.observe(this, Observer {
 //                it ?: return@Observer
 //                if (mPlayerViewModel?.loginSuccessData?.value?.anchor != null) {
 //                    //当前用户身份是主播
@@ -400,56 +402,62 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
     /**
      * 普通布局
      */
-    private val adapter =
-        object : BaseQuickAdapter<OnlineUserInfo, BaseViewHolder>(R.layout.item_online_list),
-            LoadMoreModule {
+    private val adapter = object : BaseQuickAdapter<OnlineUserInfo, BaseViewHolder>(R.layout.item_online_list),
+        LoadMoreModule {
 
-            private var adapters: LruCache<Int, SoftReference<OnlineBadgeAdapter>>? = null
-            private val MAX_SIZE = 100
+        private var adapters: LruCache<Int, SoftReference<OnlineBadgeAdapter>>? = null
+        private val MAX_SIZE = 100
 
-            override fun convert(holder: BaseViewHolder, item: OnlineUserInfo) {
+        override fun convert(holder: BaseViewHolder, item: OnlineUserInfo) {
 
 
-                holder.setImageResource(
-                    R.id.ivItemLevel,
-                    ImageHelper.getUserLevelImg(item.userLevel)
+            holder.setImageResource(
+                R.id.ivItemLevel,
+                ImageHelper.getUserLevelImg(item.userLevel)
+            ).setText(R.id.tvItemNickname, item.nickname)
+            //todo test
+            holder.getView<PhotoHeadView>(R.id.sdvItemHead).setImageCustom(
+                headUrl = item.headPic,
+                frameRes = R.mipmap.icon_test_frame,
+                headHeight = 46,
+                headWidth = 46,
+                frameHeight = 74,
+                frameWidth = 58
+            )
+            if (!TextUtils.isEmpty(item.royalPic)) {
+                ImageUtils.loadImageWithHeight_2(
+                    holder.getView(R.id.sdvItemRoyal),
+                    item.royalPic,
+                    dp2px(16f)
                 )
-                    .setText(R.id.tvItemNickname, item.nickname)
-                ImageUtils.loadImage(holder.getView(R.id.sdvItemHead), item.headPic, 40f, 40f)
-                if (!TextUtils.isEmpty(item.royalPic)) {
-                    ImageUtils.loadImageWithHeight_2(
-                        holder.getView(R.id.sdvItemRoyal),
-                        item.royalPic,
-                        dp2px(16f)
-                    )
-                } else {
-                    holder.setGone(R.id.sdvItemRoyal, false)
-                }
-                val rvBadgeList = holder.getView<RecyclerView>(R.id.rvItemList)
-                rvBadgeList.layoutManager =
-                    LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                getView(holder.adapterPosition).let {
-                    rvBadgeList.adapter = it
-                    if (item.badgesPic.isEmpty()) {
-                        it.setList(arrayListOf())
-                    } else {
-                        it.setList(item.badgesPic)
-                    }
-                }
+            } else {
+                holder.setGone(R.id.sdvItemRoyal, false)
             }
-
-            fun getView(position: Int): OnlineBadgeAdapter {
-                if (adapters == null) {
-                    adapters = LruCache(MAX_SIZE)
+            val rvBadgeList = holder.getView<RecyclerView>(R.id.rvItemList)
+            rvBadgeList.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            getView(holder.adapterPosition).let {
+                rvBadgeList.adapter = it
+                if (item.badgesPic.isEmpty()) {
+                    it.setList(arrayListOf())
+                } else {
+                    it.setList(item.badgesPic)
                 }
-                var adapter: OnlineBadgeAdapter? = adapters?.get(position)?.get()
-                if (adapter == null) {
-                    adapter = OnlineBadgeAdapter()
-                    adapters?.put(position, SoftReference(adapter))
-                }
-                return adapter
             }
         }
+
+        fun getView(position: Int): OnlineBadgeAdapter {
+            if (adapters == null) {
+                adapters = LruCache(MAX_SIZE)
+            }
+            var adapter: OnlineBadgeAdapter? = adapters?.get(position)?.get()
+            if (adapter == null) {
+                adapter = OnlineBadgeAdapter()
+                adapters?.put(position, SoftReference(adapter))
+            }
+            return adapter
+        }
+    }
 
 
 }
