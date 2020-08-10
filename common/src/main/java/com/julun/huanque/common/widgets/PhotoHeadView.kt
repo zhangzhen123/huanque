@@ -92,7 +92,7 @@ class PhotoHeadView : FrameLayout {
     }
 
     /**
-     * 针对宽高相同的
+     *
      * [headUrl]头像地址
      * [frameUrl]相框地址
      *

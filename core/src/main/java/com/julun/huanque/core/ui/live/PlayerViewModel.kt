@@ -16,6 +16,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.GlobalDataPool
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
@@ -422,6 +423,7 @@ class PlayerViewModel : BaseViewModel() {
     val bgChange: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
     fun getLivRoomBase(programId: Long) {
         logger("getLivRoomBase")
+        UserHeartManager.setProgramId(programId)
         viewModelScope.launch {
             request({
                 val form = if (programId == 0L) {
@@ -520,6 +522,7 @@ class PlayerViewModel : BaseViewModel() {
 
     fun leave(programId: Long) {
         logger("leave")
+        UserHeartManager.setProgramId(null)
     }
 
     fun closeAllDelayTime() {

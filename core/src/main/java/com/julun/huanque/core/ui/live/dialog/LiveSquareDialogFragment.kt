@@ -227,9 +227,9 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                         ?: return, item.anchorPic, 55f, 55f
                 )
                 if (item.livingStatus) {
-                    holder.setGone(R.id.fl_living, true)
-                } else {
                     holder.setGone(R.id.fl_living, false)
+                } else {
+                    holder.setGone(R.id.fl_living, true)
                 }
             }
         }

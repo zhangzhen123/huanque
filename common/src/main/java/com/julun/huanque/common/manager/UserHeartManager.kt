@@ -76,4 +76,11 @@ object UserHeartManager {
         onlineId = null
         disposable?.dispose()
     }
+
+    /**
+     * 设置当前直播间id
+     */
+    fun setProgramId(programId: Long?) {
+        currentProgramId = programId
+    }
 }

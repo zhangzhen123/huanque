@@ -17,6 +17,8 @@ object ImageHelper {
 
     //设置用户等级图片
     fun getUserLevelImg(lev: Int? = -1, levelString: String? = ""): Int {
+        //todo test
+        return R.mipmap.user_lv1
         var level = lev
 //        if (level == -1) {
 //            try {
