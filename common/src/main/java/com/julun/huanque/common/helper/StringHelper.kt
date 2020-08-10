@@ -512,12 +512,12 @@ object StringHelper {
      * 格式化数字 大于999
      */
     fun formatNum(num: Long): String {
-        if (num < 1000) {
+        if (num < 10000) {
             return num.toString()
         }
-        if (num < 10000) {
-            return DecimalFormat("#.#").format((num / 1000.0)) + "k"
-        }
+//        if (num < 10000) {
+//            return DecimalFormat("#.#").format((num / 1000.0)) + "k"
+//        }
         return DecimalFormat("#.#").format((num / 10000.0)) + "w"
     }
 

@@ -35,6 +35,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
+import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_make_friend.*
 import kotlinx.android.synthetic.main.sticky_mkf_task.*
 import org.greenrobot.eventbus.Subscribe
@@ -62,6 +63,11 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
     private val audioPlayerManager: AudioPlayerManager by lazy { AudioPlayerManager(requireContext()) }
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        mRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        mRecyclerView.adapter = mAdapter
+        //去除item刷新的默认动画
+        (mRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        mAdapter.setEmptyView(MixedHelper.getLoadingView(requireContext()))
         initViewModel()
         //一秒回调一次
         audioPlayerManager.setSleep(1000)
@@ -113,16 +119,11 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
         })
         tv_balance_h.setTFDinCdc2()
+
     }
 
     override fun initEvents(rootView: View) {
-        mRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        mRecyclerView.adapter = mAdapter
-        //去除item刷新的默认动画
-        (mRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-//        mAdapter.setOnLoadMoreListener({
-//            mViewModel.queryInfo(QueryType.LOAD_MORE)
-//        }, mRecyclerView)
+
         mAdapter.loadMoreModule.setOnLoadMoreListener {
             logger.info("loadMoreModule 加载更多")
             mViewModel.queryInfo(QueryType.LOAD_MORE)
@@ -457,7 +458,10 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
         }
     }
-
+    //
+    fun scrollToTop(){
+        mRecyclerView.smoothScrollToPosition(0)
+    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")

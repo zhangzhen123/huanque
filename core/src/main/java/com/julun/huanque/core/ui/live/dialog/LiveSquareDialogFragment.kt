@@ -3,6 +3,7 @@ package com.julun.huanque.core.ui.live.dialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,8 +22,10 @@ import com.julun.huanque.common.bean.beans.AuthorFollowBean
 import com.julun.huanque.common.bean.beans.ProgramLiveInfo
 import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.helper.MixedHelper
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.setTFDinCdc2
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -33,6 +36,8 @@ import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.LiveSquareViewModel
 import kotlinx.android.synthetic.main.fragment_live_square.*
 import kotlinx.android.synthetic.main.layout_header_live_square.view.*
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
 
@@ -88,6 +93,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             if (item != null) {
                 logger.info("跳转直播间${item.programId}")
                 playViewModel.checkoutRoom.value = item.programId
+                dismiss()
             }
         }
         mRefreshLayout.setOnRefreshListener {
@@ -237,7 +243,18 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
         object : BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>(R.layout.item_live_square_anchor_list), LoadMoreModule {
 
             override fun convert(holder: BaseViewHolder, item: ProgramLiveInfo) {
-                holder.setText(R.id.anchor_nickname, item.programName).setText(R.id.user_count, "${item.heatValue}")
+                holder.setText(R.id.anchor_nickname, item.programName)
+                val textHot=holder.getView<TextView>(R.id.user_count)
+                textHot.setTFDinCdc2()
+                if(item.heatValue<10000){
+                    textHot.text="${item.heatValue}"
+                    holder.setGone(R.id.user_count_w,true)
+                }else{
+                    val format = DecimalFormat("#")
+                    format.roundingMode = RoundingMode.HALF_UP
+                    textHot.text= "${format.format((item.heatValue / 10000.0)) }万"
+                    holder.setGone(R.id.user_count_w,false)
+                }
                 ImageUtils.loadImage(
                     holder.getView(R.id.anchorPicture)
                         ?: return, item.coverPic, 150f, 150f

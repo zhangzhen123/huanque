@@ -42,8 +42,9 @@ class DraweeSpanTextView @JvmOverloads constructor(
     private var data: TplBean? = null
 
     companion object {
-        private val DEFAULT_TEXT_BG_COLOR = "#FFFFFF"
-        private val BOLD = "bold" //加粗标识
+        private const val DEFAULT_TEXT_BG_COLOR = "#FFFFFF"
+        const val BOLD = "bold" //加粗标识
+        const val NORMAL = "normal"
     }
 
     init {
@@ -80,10 +81,10 @@ class DraweeSpanTextView @JvmOverloads constructor(
                         setTextColor(Color.parseColor(styleParam.color))
                     }
 
-                    typeface = if (BOLD == styleParam.fontWeight) {
-                        Typeface.defaultFromStyle(Typeface.BOLD)
-                    } else {
-                        Typeface.defaultFromStyle(Typeface.NORMAL)
+                    if (BOLD == styleParam.fontWeight) {
+                        typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+                    } else if (NORMAL == styleParam.fontWeight) {
+                        typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
                     }
 
                     if (StringHelper.isNotEmpty(styleParam.underLineColor)) {

@@ -47,7 +47,7 @@ class PublicChatMessageView @JvmOverloads constructor(context: Context, attrs: A
 
     init {
         val params = FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        params.leftMargin = dip(7)
+        params.leftMargin = dip(10)
         this.addView(messageRecyclerView, params)
 
         val tvp = FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,dip(24))
