@@ -355,6 +355,16 @@ class PrivateConversationActivity : BaseActivity() {
                 sendChatMessage(messageType = Send_Room)
             }
         })
+        mPrivateConversationViewModel?.sendGiftShowFlag?.observe(this, Observer {
+            val placeParams = view_place.layoutParams
+            if (it == true) {
+                placeParams.height = dip(324)
+            } else {
+                placeParams.height = dip(104)
+            }
+            scrollToBottom()
+            view_place.layoutParams = placeParams
+        })
     }
 
     /**

@@ -303,7 +303,11 @@ class MessageFragment : BaseFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateMessageReceive(bean: EventMessageBean) {
-        mMessageViewModel.refreshConversation(bean.targetId, bean.stranger)
+//        if (bean.onlyRefreshUnReadCount) {
+//            mMessageViewModel.refreshUnreadCount(bean.targetId)
+//        } else {
+            mMessageViewModel.refreshConversation(bean.targetId, bean.stranger)
+//        }
     }
 
 

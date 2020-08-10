@@ -7,8 +7,9 @@ import java.io.Serializable
  * 接收到私聊消息使用
  * @param targetId 目标ID
  * @param stranger 陌生人状态
+ * @param onlyRefreshUnReadCount 忽略陌生人状态（需要从其他地方获取）
  */
-class EventMessageBean(var targetId: String = "", var stranger: Boolean = false) : Serializable
+class EventMessageBean(var targetId: String = "", var stranger: Boolean = false, var onlyRefreshUnReadCount: Boolean = false) : Serializable
 
 /**
  * 信息填写完成事件
@@ -112,4 +113,4 @@ class VideoPlayerEvent(var start: Boolean) : Serializable
  * @since 1.0.0
  * @date 2020/08/06
  */
-class LoginOutEvent(): Serializable
+class LoginOutEvent() : Serializable
