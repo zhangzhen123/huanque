@@ -1,7 +1,9 @@
 package com.julun.huanque.agora.activity
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
@@ -57,6 +59,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     private var mCallingContentDisposable: Disposable? = null
 
+    private var am: AudioManager? = null
+
     //音频播放器
     private var mPlayer: MediaPlayer? = null
 
@@ -65,6 +69,21 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
+        requestAudioFocus()
+
+    }
+
+    /**
+     * 申请音频焦点
+     */
+    private fun requestAudioFocus() {
+        am = getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        val listener = AudioManager.OnAudioFocusChangeListener { }
+        am?.requestAudioFocus(
+            listener,  // Use the music stream.
+            AudioManager.STREAM_VOICE_CALL,  // Request permanent focus.
+            AudioManager.AUDIOFOCUS_GAIN
+        )
     }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -753,9 +772,23 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onViewDestroy() {
         super.onViewDestroy()
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
+        releaseVideoFocus()
         leaveChannel()
         mPlayer?.stop()
         mPlayer = null
+
+    }
+
+    /**
+     * 释放音频焦点
+     */
+    private fun releaseVideoFocus() {
+        val listener = AudioManager.OnAudioFocusChangeListener { }
+        am?.requestAudioFocus(
+            listener,  // Use the music stream.
+            AudioManager.STREAM_VOICE_CALL,  // Request permanent focus.
+            AudioManager.AUDIOFOCUS_GAIN
+        )
     }
 
     override fun onDestroy() {
