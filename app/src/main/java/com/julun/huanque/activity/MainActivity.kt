@@ -41,6 +41,7 @@ import com.julun.huanque.ui.main.MineFragment
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.maplib.LocationService
 import io.rong.imlib.RongIMClient
+import kotlinx.android.synthetic.main.fragment_mine.*
 import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -209,6 +210,8 @@ class MainActivity : BaseActivity() {
             //交友
             if (getCurrentFragment() != mHomeFragment) {
                 tabIconAnimation(MAIN_FRAGMENT_INDEX)
+            }else{
+                mHomeFragment.scrollToTop()
             }
             showFragmentNew(MAIN_FRAGMENT_INDEX)
         }

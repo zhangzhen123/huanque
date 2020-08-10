@@ -13,14 +13,14 @@
         android:id="@+id/sayImage"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
-        android:layout_marginStart="@dimen/dimen_10"
+        android:layout_marginStart="@dimen/dimen_5"
         android:background="@drawable/bg_shape_black_p20"
         android:drawableStart="@mipmap/icon_live_public_chat"
         android:drawablePadding="@dimen/dimen_4"
         android:gravity="center"
         android:paddingStart="@dimen/dimen_8"
         android:paddingEnd="@dimen/dimen_16"
-        android:text="聊一聊吧"
+        android:text="聊一聊吧..."
         android:textColor="#80ffffff" />
 
 

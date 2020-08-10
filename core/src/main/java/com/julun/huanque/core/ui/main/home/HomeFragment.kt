@@ -22,6 +22,7 @@ import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.makefriend.MakeFriendsFragment
 import com.julun.rnlib.RnManager
@@ -214,6 +215,16 @@ class HomeFragment : BaseFragment() {
         }
     }
 
+    /**
+     * 滑动到顶部
+     */
+    fun scrollToTop(){
+        val tempIndex = view_pager.currentItem
+        val tempFragment: androidx.fragment.app.Fragment? = mPagerAdapter.getItem(tempIndex)
+        tempFragment?.let {
+            (tempFragment as? MakeFriendsFragment)?.scrollToTop()
+        }
+    }
     override fun onHiddenChanged(hidden: Boolean) {
         logger.info("onHiddenChanged=$hidden")
         super.onHiddenChanged(hidden)
@@ -249,6 +260,7 @@ class HomeFragment : BaseFragment() {
             override fun getPageTitle(position: Int): CharSequence {
                 return mTabTitles[position]
             }
+
         }
     }
 

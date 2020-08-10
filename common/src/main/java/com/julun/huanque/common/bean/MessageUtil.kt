@@ -8,6 +8,7 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
 import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
 import java.util.*
 import java.util.regex.Matcher
@@ -131,7 +132,7 @@ open class TplBean(
             val toNicknameKey = "\${toNickName}" //目标人姓名
             val anchorLevel: Int = it.anchorLevel//主播等级
             //1.首先设置全局颜色
-            styleParamMap[MessageUtil.KEY_ALL] = StyleParam(styleType = MessageUtil.KEY_BASIC, color = "#FFFFFF")
+            styleParamMap[MessageUtil.KEY_ALL] = StyleParam(styleType = MessageUtil.KEY_BASIC, color = "#FFFFFF",fontWeight = DraweeSpanTextView.BOLD)
             //2.主播的发言处理
             if (anchorLevel > 0 && it.targetUserObj?.nickname !== null && "${it.senderId}" == "${SessionUtils.getUserId()}") {
 
