@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -91,15 +92,23 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     private val userListAdapter = object : BaseQuickAdapter<UserInfoForLmRoom, BaseViewHolder>(R.layout.item_live_room_user) {
         override fun convert(holder: BaseViewHolder, item: UserInfoForLmRoom) {
-            val imgView = holder.getView<PhotoHeadView>(R.id.headerImage)
-            imgView.setImageSymmetry(
-                headUrl = item.headPic,
-                frameUrl = item.headFrame,
-                headHeight = 30,
-                headWidth = 30,
-                frameWidth = 40,
-                frameHeight = 48
-            )
+            val headerImage = holder.getView<PhotoHeadView>(R.id.headerImage)
+            if(item.headFrame.isNotEmpty()){
+                headerImage.setImageCustomByOneFrameSide(
+                    headUrl = item.headPic,
+                    frameUrl = item.headFrame,
+                    headSize = 30,
+                    frameWidth = FrameLayout.LayoutParams.WRAP_CONTENT,
+                    frameHeight = 48
+                )
+
+            }else{
+                headerImage.setImage(
+                    headUrl = item.headPic,
+                    headSize = 30,
+                    frameWidth = 36,
+                    frameHeight = 48)
+            }
             //添加边框
 //            val roundingParams = RoundingParams.fromCornersRadius(5f)
 //            roundingParams.roundAsCircle = true

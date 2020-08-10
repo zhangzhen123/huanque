@@ -11,6 +11,7 @@ import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.loadImageLocal
+import com.julun.huanque.common.utils.ImageUtils
 import kotlinx.android.synthetic.main.view_photo_head.view.*
 
 
@@ -53,7 +54,7 @@ class PhotoHeadView : FrameLayout {
      *
      */
     fun setImage(
-        headUrl: String, frameUrl: String, headSize: Int = 46, frameWidth: Int = 58,
+        headUrl: String, frameUrl: String?=null, headSize: Int = 46, frameWidth: Int = 58,
         frameHeight: Int = 74
     ) {
         setImageCustom(
@@ -112,17 +113,63 @@ class PhotoHeadView : FrameLayout {
         frameLp.height = dp2px(frameHeight)
         requestLayout()
         if (!headUrl.isNullOrEmpty()) {
-            header_pic.loadImage(headUrl, dp2pxf(headWidth), dp2pxf(headWidth))
+            header_pic.loadImage(headUrl, dp2pxf(headWidth), dp2pxf(headHeight))
         } else if (headRes != null) {
             header_pic.loadImageLocal(headRes)
         }
 
         if (!frameUrl.isNullOrEmpty()) {
-            header_photo_frame.loadImage(frameUrl, dp2pxf(headWidth), dp2pxf(headWidth))
+            header_photo_frame.loadImage(frameUrl, dp2pxf(frameWidth), dp2pxf(frameHeight))
         } else if (frameRes != null) {
             header_photo_frame.loadImageLocal(frameRes)
         }
     }
 
+    /**
+     *
+     * [headUrl]头像地址
+     * [frameUrl]相框地址
+     * 针对根据一边大小固定 另一半自适应的情况的方法
+     *
+     */
+    fun setImageCustomByOneFrameSide(
+        headUrl: String? = null, headRes: Int? = null, frameUrl: String? = null, headSize: Int = 46,
+        frameWidth: Int = LayoutParams.WRAP_CONTENT,
+        frameHeight: Int = LayoutParams.WRAP_CONTENT
+    ) {
+        if (frameWidth == LayoutParams.WRAP_CONTENT && frameHeight == LayoutParams.WRAP_CONTENT) {
+            throw Exception("请至少设置一个固定的边大小")
+        }
+
+        val headLp = header_pic.layoutParams as FrameLayout.LayoutParams
+        headLp.width = dp2px(headSize)
+        headLp.height = dp2px(headSize)
+
+        val frameLp = header_photo_frame.layoutParams as FrameLayout.LayoutParams
+        if (frameWidth > 0) {
+            frameLp.width = dp2px(frameWidth)
+        }
+        if (frameHeight > 0) {
+            frameLp.height = dp2px(frameHeight)
+        }
+
+        requestLayout()
+        if (!headUrl.isNullOrEmpty()) {
+            header_pic.loadImage(headUrl, dp2pxf(headSize), dp2pxf(headSize))
+        } else if (headRes != null) {
+            header_pic.loadImageLocal(headRes)
+        }
+
+        if (!frameUrl.isNullOrEmpty()) {
+            if (frameWidth == LayoutParams.WRAP_CONTENT) {
+                ImageUtils.loadImageWithHeight_2(header_photo_frame, frameUrl, dp2px(frameHeight))
+            }
+
+            if (frameHeight == LayoutParams.WRAP_CONTENT) {
+                ImageUtils.loadImageWithWidth(header_photo_frame, frameUrl, dp2px(frameWidth))
+            }
+
+        }
+    }
 
 }
