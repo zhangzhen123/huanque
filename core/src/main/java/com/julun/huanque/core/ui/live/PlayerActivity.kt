@@ -43,10 +43,7 @@ import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.isVisible
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.common.viewmodel.*
@@ -461,8 +458,6 @@ class PlayerActivity : BaseActivity() {
             mConfigViewModel.screenTypeData.value = it.screenType
             //当基础信息返回成功，同时开始拉流和融云相关操作
             anchorNoLiveViewModel.baseData.value = it
-            //todo test
-            it.playInfo?.rtmp = "rtmp://aliyun-rtmp.51lm.tv/lingmeng/25318"
             addPlayFragment(it.isLiving, LiveBean().apply {
                 programPoster = it.prePic
                 programId = it.programId
@@ -1787,16 +1782,10 @@ class PlayerActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         initListener()
-        content_view.onClickNew {
+        chat_layout.onTouch { _,_ ->
             mHelper?.hookSystemBackByPanelSwitcher()
+            false
         }
-//        content_view.mEventListener = object : TouchEventListener {
-//            override fun onTouch(ev: MotionEvent?) {
-//                if (ev?.action == MotionEvent.ACTION_UP) {
-//                    mHelper?.hookSystemBackByPanelSwitcher()
-//                }
-//            }
-//        }
         publicMessageView.mEventListener = object : EventListener {
             override fun onDispatch(ev: MotionEvent?) {
                 if (ev?.action == MotionEvent.ACTION_DOWN) {
