@@ -748,7 +748,7 @@ object RongCloudManager {
         //        logger.info("当前线程：${Thread.currentThread()}")
         //        if (TextUtils.isEmpty(roomId)) return
 
-        if (message.conversationType == Conversation.ConversationType.PUBLIC_SERVICE && message.sentTime < joinChatRoomTime) {
+        if (message.conversationType == Conversation.ConversationType.CHATROOM && message.sentTime < joinChatRoomTime) {
             //需要过滤消息，只返回文本消息
             val conent = message.content
             if (conent !is TextMessage) {
