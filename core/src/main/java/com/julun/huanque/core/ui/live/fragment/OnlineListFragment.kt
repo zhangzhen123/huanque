@@ -185,7 +185,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 }
             }
 //            lmrlRefreshView.setRefreshFinish()
-            lmrlRefreshView.isRefreshing=false
+            lmrlRefreshView.isRefreshing = false
         })
         mViewModel.guardSuccess.observe(this, Observer {
             it ?: return@Observer

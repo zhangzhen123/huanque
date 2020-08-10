@@ -13,6 +13,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:placeholderImage="@mipmap/logo_placeholder"
+        app:placeholderImageScaleType="fitCenter"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.facebook.drawee.view.SimpleDraweeView
@@ -20,7 +22,7 @@
         android:layout_width="@dimen/dimen_45"
         android:layout_height="@dimen/dimen_45"
         android:layout_marginStart="@dimen/dimen_10"
-        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginBottom="@dimen/dimen_15"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:roundAsCircle="true" />

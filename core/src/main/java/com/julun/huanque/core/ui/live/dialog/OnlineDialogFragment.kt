@@ -65,7 +65,7 @@ class OnlineDialogFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 377, gravity = Gravity.BOTTOM)
+        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480, gravity = Gravity.BOTTOM)
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 

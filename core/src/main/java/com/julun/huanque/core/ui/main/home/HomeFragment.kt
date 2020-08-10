@@ -89,7 +89,7 @@ class HomeFragment : BaseFragment() {
             if (it.state == NetStateType.SUCCESS) {
                 mTabTitles.clear()
                 mTabTitles.addAll(it.getT())
-                refreshTabList("交友")
+                refreshTabList("推荐")
             }
 
         })
@@ -238,8 +238,8 @@ class HomeFragment : BaseFragment() {
 
             private fun getFragment(position: Int): Fragment {
                 val fragment: Fragment = when (mTabTitles.getOrNull(position)) {
-                    "交友" -> MakeFriendsFragment.newInstance()
                     "推荐" -> MakeFriendsFragment.newInstance()
+//                    "推荐" -> MakeFriendsFragment.newInstance()
                     else -> MakeFriendsFragment.newInstance()
                 }
                 mFragmentList.put(position, fragment)

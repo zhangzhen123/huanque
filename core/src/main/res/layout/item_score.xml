@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/nickNameText"
         android:layout_marginLeft="@dimen/dimen_15"
-        android:layout_marginTop="@dimen/dimen_13"
+        android:layout_marginTop="@dimen/dimen_10"
         android:layout_toRightOf="@+id/headImage"
         android:adjustViewBounds="true"
         android:gravity="left"

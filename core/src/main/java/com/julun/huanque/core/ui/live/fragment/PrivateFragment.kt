@@ -48,7 +48,7 @@ class PrivateFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.BOTTOM, ViewGroup.LayoutParams.MATCH_PARENT, 350)
+        setDialogSize(Gravity.BOTTOM, ViewGroup.LayoutParams.MATCH_PARENT, 480)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

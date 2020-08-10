@@ -9,6 +9,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_share_contents"
+        android:layout_marginStart="@dimen/dimen_12"
+        android:layout_marginEnd="@dimen/dimen_12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
