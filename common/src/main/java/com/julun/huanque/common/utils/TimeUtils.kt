@@ -51,6 +51,9 @@ fun formatPrivateExperienceTime(time: Long): String {
  */
 object TimeUtils {
     val TIME_FORMAT_YEAR_1 = "yyyy-MM-dd HH:mm"
+    val TIME_FORMAT_YEAR_2 = "yyyy-MM-dd"
+    val TIME_FORMAT_YEAR_3 = "yyyy年MM月dd日 HH:mm"
+
 
     val TIMEFORMAT1: String = "HH:mm:ss"
     val TIMEFORMAT2: String = "mm:ss"
@@ -308,7 +311,7 @@ object TimeUtils {
      * 最近7天以上消息，显示时间：yy-mm-dd hh:mm。例如2018-12-6 11:50，分钟向下取整，忽略秒
      * @param yearPattern 年月日的样式
      */
-    fun formatMessageTime(createTime: Long?, yearPattern: String = "yyyy-MM-dd HH:mm"): String {
+    fun formatMessageTime(createTime: Long?, yearPattern: String = TIME_FORMAT_YEAR_1): String {
         if (createTime == null || createTime <= 0L) {
             return ""
         }
@@ -337,7 +340,7 @@ object TimeUtils {
                 val sdf = SimpleDateFormat("HH:mm")
                 return getWeekDayStr(inputTime.get(Calendar.DAY_OF_WEEK)) + " " + sdf.format(currenTimeZone)
             } else {
-                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm")
+                val sdf = SimpleDateFormat(yearPattern)
                 return sdf.format(currenTimeZone)
             }
         } catch (e: Exception) {
