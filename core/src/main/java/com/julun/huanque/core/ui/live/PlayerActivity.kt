@@ -1786,6 +1786,16 @@ class PlayerActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         initListener()
+        content_view.onClickNew {
+            mHelper?.hookSystemBackByPanelSwitcher()
+        }
+//        content_view.mEventListener = object : TouchEventListener {
+//            override fun onTouch(ev: MotionEvent?) {
+//                if (ev?.action == MotionEvent.ACTION_UP) {
+//                    mHelper?.hookSystemBackByPanelSwitcher()
+//                }
+//            }
+//        }
         publicMessageView.mEventListener = object : EventListener {
             override fun onDispatch(ev: MotionEvent?) {
                 if (ev?.action == MotionEvent.ACTION_DOWN) {
