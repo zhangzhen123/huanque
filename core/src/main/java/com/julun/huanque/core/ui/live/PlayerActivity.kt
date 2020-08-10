@@ -1007,7 +1007,8 @@ class PlayerActivity : BaseActivity() {
      * 登录成功之后重置页面，和数据不挂钩的页面
      */
     private fun resetView() {
-
+        //清空缓存的消息ID
+        RongCloudManager.cacheList.clear()
         // 移除加载层
 //        loadingLayout.hide()
         live_room_back.hide()
@@ -1786,6 +1787,16 @@ class PlayerActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         initListener()
+        content_view.onClickNew {
+            mHelper?.hookSystemBackByPanelSwitcher()
+        }
+//        content_view.mEventListener = object : TouchEventListener {
+//            override fun onTouch(ev: MotionEvent?) {
+//                if (ev?.action == MotionEvent.ACTION_UP) {
+//                    mHelper?.hookSystemBackByPanelSwitcher()
+//                }
+//            }
+//        }
         publicMessageView.mEventListener = object : EventListener {
             override fun onDispatch(ev: MotionEvent?) {
                 if (ev?.action == MotionEvent.ACTION_DOWN) {
