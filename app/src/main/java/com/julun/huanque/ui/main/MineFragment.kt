@@ -112,7 +112,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     private fun loadData(info: UserDetailInfo) {
         headImage.loadImage(info.userBasic.headPic, 60f, 60f)
         tvNickName.text = info.userBasic.nickname
-        tvUserId.text = "欢鹊ID:${info.userBasic.userId}"
+        tvUserId.text = "欢鹊ID: ${info.userBasic.userId}"
         tvQueBi.text = "${info.userBasic.beans}"
         tvLingQian.text = info.userBasic.cash
 

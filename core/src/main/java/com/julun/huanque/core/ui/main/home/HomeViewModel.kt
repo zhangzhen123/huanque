@@ -33,7 +33,7 @@ class HomeViewModel : BaseViewModel() {
             request({
 //                    val user = userService.queryUserDetailInfo(SessionForm()).dataConvert()
 //                    emit(user)
-                val tabTitles: ArrayList<String> = arrayListOf("交友"/*, "推荐"*/)
+                val tabTitles: ArrayList<String> = arrayListOf("推荐"/*, "推荐"*/)
                 emit(tabTitles.convertRtData())
             }, error = { e ->
                 logger("报错了：$e")

@@ -35,7 +35,7 @@ import org.jetbrains.anko.dip
  *
  **/
 class DraweeSpanTextView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : SimpleDraweeSpanTextView(context, attrs, defStyleAttr) {
     val logger = ULog.getLogger("DraweeSpanTextView")
 
@@ -54,7 +54,8 @@ class DraweeSpanTextView @JvmOverloads constructor(
         data = item
         //添加聊天模式标识
         //聊条模式标记位添加的标识 (消息由标识位，并且是主播身份)
-        var chatModeFlag = item.userInfo?.displayType?.contains(MessageDisplayType.CHATMODE) == true/* && SessionUtils.getUserType() == BusiConstant.UserType.Anchor*/
+        var chatModeFlag =
+            item.userInfo?.displayType?.contains(MessageDisplayType.CHATMODE) == true/* && SessionUtils.getUserType() == BusiConstant.UserType.Anchor*/
 
         val realText = if (chatModeFlag) {
             "${item.realTxt}  "
@@ -73,11 +74,18 @@ class DraweeSpanTextView @JvmOverloads constructor(
             val styleParam: StyleParam = it.value
 
             //先处理全局的
-            if (paramKey.toLowerCase() == MessageUtil.KEY_ALL_SMALL) {
+            if (paramKey == MessageUtil.KEY_ALL) {
                 if (MessageUtil.KEY_BASIC == styleParam.styleType) {
                     if (StringHelper.isNotEmpty(styleParam.color)) {
                         setTextColor(Color.parseColor(styleParam.color))
                     }
+
+                    typeface = if (BOLD == styleParam.fontWeight) {
+                        Typeface.defaultFromStyle(Typeface.BOLD)
+                    } else {
+                        Typeface.defaultFromStyle(Typeface.NORMAL)
+                    }
+
                     if (StringHelper.isNotEmpty(styleParam.underLineColor)) {
                         //全局显示下划线
                         //下划线
@@ -134,7 +142,8 @@ class DraweeSpanTextView @JvmOverloads constructor(
 //                            val imageMargin = sp(5f)
                             // 这里有一个特例 ,原定计划是所有的图片(其实是指各个等级的图标,不能为0,但是emoji是可以有 0 开始的...所以需要特殊处理)
                             if ((MessageUtil.KEY_LOCAL == styleParam.source && StringHelper.isNotEmpty(paramValue) && paramValue!!.toInt() >= 0)
-                                    || styleParam.preffix == MessageUtil.PREFIX_EMOJI) {
+                                || styleParam.preffix == MessageUtil.PREFIX_EMOJI
+                            ) {
                                 val resId: Int = ImageHelper.getLocalImageResId(paramValue, styleParam)
                                 //改用固定高度
                                 var specifiedWidth = dip(15)
@@ -185,8 +194,10 @@ class DraweeSpanTextView @JvmOverloads constructor(
         //                        source.setSpan(UnderlineSpan(), index, (index + subTexLength), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         if (StringHelper.isNotEmpty(styleParam.underLineColor)) {
             //下划线
-            source.setSpan(UnderlineSpan(), index, (index + subTexLength),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            source.setSpan(
+                UnderlineSpan(), index, (index + subTexLength),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
         if (styleParam.el.toLowerCase().indexOf("nickname") > -1) {
             logger.info("nickname render")
@@ -195,8 +206,10 @@ class DraweeSpanTextView @JvmOverloads constructor(
             } else {
                 Color.parseColor(styleParam.color)
             }
-            source.setSpan(ForegroundColorSpan(color), index, (index + subTexLength),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
+            source.setSpan(
+                ForegroundColorSpan(color), index, (index + subTexLength),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            ) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
 
             //删除线
 //            source.setSpan(StrikethroughSpan(), index, (index + subTexLength),  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
@@ -220,24 +233,34 @@ class DraweeSpanTextView @JvmOverloads constructor(
 
             //前景色
             when {
-                StringHelper.isNotEmpty(styleParam.color) -> source.setSpan(ForegroundColorSpan(Color.parseColor(styleParam.color)), index, (index + subTexLength),
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
+                StringHelper.isNotEmpty(styleParam.color) -> source.setSpan(
+                    ForegroundColorSpan(Color.parseColor(styleParam.color)), index, (index + subTexLength),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                ) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
                 //如果有全局颜色使用全局颜色
-                StringHelper.isNotEmpty(allColor) -> source.setSpan(ForegroundColorSpan(Color.parseColor(allColor)), index, (index + subTexLength),
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                else -> source.setSpan(ForegroundColorSpan(Color.WHITE), index, (index + subTexLength),
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                StringHelper.isNotEmpty(allColor) -> source.setSpan(
+                    ForegroundColorSpan(Color.parseColor(allColor)), index, (index + subTexLength),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                else -> source.setSpan(
+                    ForegroundColorSpan(Color.WHITE), index, (index + subTexLength),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             }
             //背景色
             if (StringHelper.isNotEmpty(styleParam.bgColor)) {
-                source.setSpan(BackgroundColorSpan(Color.parseColor(styleParam.bgColor)), index, (index + subTexLength),
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                source.setSpan(
+                    BackgroundColorSpan(Color.parseColor(styleParam.bgColor)), index, (index + subTexLength),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             }
         }
 
         if (BOLD == styleParam.fontWeight) {
-            source.setSpan(StyleSpan(Typeface.BOLD), index, (index + subTexLength),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            source.setSpan(
+                StyleSpan(Typeface.BOLD), index, (index + subTexLength),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
     }
 
@@ -263,12 +286,16 @@ class DraweeSpanTextView @JvmOverloads constructor(
 
             //设置颜色 优先使用[TextParam.textColorInt]
             if (it.textColorInt != 0) {
-                builder.setSpan(ForegroundColorSpan(it.textColorInt), it.indexStart, indexEnd,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                builder.setSpan(
+                    ForegroundColorSpan(it.textColorInt), it.indexStart, indexEnd,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             } else if (!StringHelper.isEmpty(it.textColor)) {
                 val color = Color.parseColor(it.textColor)
-                builder.setSpan(ForegroundColorSpan(color), it.indexStart, indexEnd,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                builder.setSpan(
+                    ForegroundColorSpan(color), it.indexStart, indexEnd,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             }
 
             //设置字体大小

@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_4"
-        android:layout_marginLeft="@dimen/dimen_4"
+        android:layout_marginBottom="@dimen/dimen_2"
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_12"
         app:layout_constraintBottom_toBottomOf="@+id/tvCount"

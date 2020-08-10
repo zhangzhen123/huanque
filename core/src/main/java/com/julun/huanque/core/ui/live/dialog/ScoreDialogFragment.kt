@@ -59,7 +59,7 @@ class ScoreDialogFragment : BaseDialogFragment() {
     override fun getLayoutId(): Int = R.layout.dialog_score
     override fun onStart() {
         super.onStart()
-        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 404)
+        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
     }
 
     override fun initViews() {
@@ -124,7 +124,7 @@ class ScoreDialogFragment : BaseDialogFragment() {
 
                 override fun getTitleView(context: Context, index: Int): IPagerTitleView {
                     val simplePagerTitleView = ColorFlipPagerTitleView(context)
-                    simplePagerTitleView.textSizeDimen = R.dimen.text_size_small
+                    simplePagerTitleView.textSizeDimen = R.dimen.text_size_main
                     simplePagerTitleView.text = tabTitles[index]
                     simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_999)
                     simplePagerTitleView.selectedColor = ContextCompat.getColor(context, R.color.black_333)
@@ -136,7 +136,7 @@ class ScoreDialogFragment : BaseDialogFragment() {
                     val indicator = LinePagerIndicator(context)
                     indicator.mode = LinePagerIndicator.MODE_EXACTLY
                     indicator.lineHeight = UIUtil.dip2px(context, 2.0).toFloat()
-                    indicator.lineWidth = UIUtil.dip2px(context, 28.0).toFloat()
+                    indicator.lineWidth = UIUtil.dip2px(context, 20.0).toFloat()
                     indicator.roundRadius = UIUtil.dip2px(context, 3.0).toFloat()
                     indicator.startInterpolator = AccelerateInterpolator()
                     indicator.endInterpolator = DecelerateInterpolator(2.0f)

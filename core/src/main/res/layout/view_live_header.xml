@@ -64,6 +64,7 @@
             android:drawableStart="@mipmap/icon_hot_small"
             android:includeFontPadding="false"
             android:textColor="@color/white"
+            android:drawablePadding="@dimen/dimen_3"
             android:textSize="9sp"
             tools:text="123456" />
 
@@ -115,7 +116,7 @@
         android:id="@+id/flRoyalRootView"
         android:layout_width="40dp"
         android:layout_height="@dimen/dimen_34"
-        android:layout_marginStart="@dimen/dimen_8">
+        android:layout_marginStart="@dimen/dimen_5">
 
         <ImageView
             android:id="@+id/ivRoyalIcon"
@@ -180,7 +181,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="8dp">
+        android:layout_marginStart="5dp">
 
         <ImageView
             android:id="@+id/exitImage"

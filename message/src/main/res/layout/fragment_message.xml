@@ -65,7 +65,7 @@
     <View
         android:id="@+id/view_top_player"
         android:layout_width="0px"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:background="@drawable/bg_message_in_player"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"

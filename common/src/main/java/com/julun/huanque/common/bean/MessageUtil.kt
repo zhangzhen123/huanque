@@ -402,7 +402,6 @@ object MessageUtil {
 
     //网络图片
     const val KEY_REMOTE = "remote"
-    const val KEY_ALL_SMALL = "all"
 
     //表情
     const val PREFIX_EMOJI = "emoji"

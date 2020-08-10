@@ -182,7 +182,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         MessageProcessor.registerEventProcessor(object : MessageProcessor.ContributionProcess {
             override fun process(data: ContributionEvent) {
                 if (!act.isFinishing) {
-//                    mPlayerViewModel.contributionSum.postValue(data.score)
+                    mPlayerViewModel.contributionSum.postValue(data.score)
                 }
             }
         })
