@@ -1007,7 +1007,8 @@ class PlayerActivity : BaseActivity() {
      * 登录成功之后重置页面，和数据不挂钩的页面
      */
     private fun resetView() {
-
+        //清空缓存的消息ID
+        RongCloudManager.cacheList.clear()
         // 移除加载层
 //        loadingLayout.hide()
         live_room_back.hide()

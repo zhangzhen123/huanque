@@ -61,7 +61,10 @@ object RongCloudManager {
     /**
      * 有顺序 而且查询效率高
      */
-    private val cacheList = LinkedHashSet<String>(10050)
+    val cacheList = LinkedHashSet<String>(10050)
+
+    //加入直播间时间
+    var joinChatRoomTime = 0L
 
     /**
      * 记录下来真正进入的聊天室  因为现在设置了融云同时允许进入多个直播间的功能 进入一个新的直播间时 上一个聊天室不会自动退出 只能记录下来统一退出
@@ -744,6 +747,14 @@ object RongCloudManager {
     private fun onReceived(message: Message, left: Int = 0) {
         //        logger.info("当前线程：${Thread.currentThread()}")
         //        if (TextUtils.isEmpty(roomId)) return
+
+        if (message.conversationType == Conversation.ConversationType.PUBLIC_SERVICE && message.sentTime < joinChatRoomTime) {
+            //需要过滤消息，只返回文本消息
+            val conent = message.content
+            if (conent !is TextMessage) {
+                return
+            }
+        }
 
         val content: MessageContent? = message.content
         val isRetrieved = message.receivedStatus.isRetrieved

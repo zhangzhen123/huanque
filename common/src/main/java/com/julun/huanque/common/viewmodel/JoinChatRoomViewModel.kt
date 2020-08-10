@@ -36,6 +36,7 @@ class JoinChatRoomViewModel : BaseViewModel() {
             override fun onSuccess() {
 //                imState = RCIM_STATE_CHATROOMED
                 logger("当前的线程：${Thread.currentThread().name}")
+                RongCloudManager.joinChatRoomTime = System.currentTimeMillis()
                 MessageReceptor.destroyBufferedTimer()
                 MessageReceptor.createBufferedTimer()
                 joinData.value = true
