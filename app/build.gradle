@@ -73,6 +73,31 @@ android {
         ndk {
             abiFilters 'armeabi-v7a'
         }
+
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                def date = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
+                //打包类型  release or debug
+                def type
+                if (variant.buildType.name == 'release') {
+                    //release版本
+                    type = 'release'
+                } else {
+                    //debug版本
+                    type = 'debug'
+                }
+//                print("variant =${variant.productFlavors[0].name}")
+                def sb = new StringBuilder()
+//                sb.append("${variant.productFlavors[0].name}_${type}")
+                sb.append("${type}")
+//                if (rootProject.ext.functionConfig["publish"]) {
+//                    sb.append("_Publish")
+//                }
+                sb.append("_${versionName}_${date}.apk")
+                outputFileName = sb.toString()
+            }
+        }
+
     }
 
     sourceSets{

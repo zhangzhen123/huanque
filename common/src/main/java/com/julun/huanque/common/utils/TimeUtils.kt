@@ -11,6 +11,7 @@ private const val SECOND = 1000L
 const val MINUTE = 60 * SECOND
 private const val HOUR = 60 * MINUTE
 const val DAY = 24 * HOUR
+
 /**
  * 格式化剩余时间  eg:1天10:12:12
  * @param time 毫秒
@@ -49,6 +50,8 @@ fun formatPrivateExperienceTime(time: Long): String {
  * Created by dong on 2018/3/16.
  */
 object TimeUtils {
+    val TIME_FORMAT_YEAR_1 = "yyyy-MM-dd HH:mm"
+
     val TIMEFORMAT1: String = "HH:mm:ss"
     val TIMEFORMAT2: String = "mm:ss"
     val TIMEFORMAT3: String = "ss:SS"
@@ -303,8 +306,9 @@ object TimeUtils {
      * 昨日送达消息，显示时间：昨日 hh:mm。例如昨日11:50，分钟向下取整，忽略秒。
      * 最近2-6天消息，显示时间：星期 hh:mm。例如星期五 11:40，分钟向下取整，忽略秒。
      * 最近7天以上消息，显示时间：yy-mm-dd hh:mm。例如2018-12-6 11:50，分钟向下取整，忽略秒
+     * @param yearPattern 年月日的样式
      */
-    fun formatMessageTime(createTime: Long?): String {
+    fun formatMessageTime(createTime: Long?, yearPattern: String = "yyyy-MM-dd HH:mm"): String {
         if (createTime == null || createTime <= 0L) {
             return ""
         }
@@ -333,7 +337,7 @@ object TimeUtils {
                 val sdf = SimpleDateFormat("HH:mm")
                 return getWeekDayStr(inputTime.get(Calendar.DAY_OF_WEEK)) + " " + sdf.format(currenTimeZone)
             } else {
-                val sdf = SimpleDateFormat("yyyy" + "-" + "MM" + "-" + "dd" + " HH:mm")
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm")
                 return sdf.format(currenTimeZone)
             }
         } catch (e: Exception) {
@@ -638,16 +642,16 @@ object TimeUtils {
      * @param format 格式化时间 -> 必须是此格式(2018-12-6 11:50:00)
      * @param getYear 是否截取年月日 true , false -> 截取时分秒
      */
-    fun getPartOfFormatDate(format:String,getYear:Boolean): String{
+    fun getPartOfFormatDate(format: String, getYear: Boolean): String {
         return try {
             val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val d = formatter.parse(format)
-           return if(getYear){
+            return if (getYear) {
                 SimpleDateFormat("yyyy.MM.dd").format(d)
-            }else{
-               SimpleDateFormat("HH:mm:ss").format(d)
-           }
-        }catch (e:Exception){
+            } else {
+                SimpleDateFormat("HH:mm:ss").format(d)
+            }
+        } catch (e: Exception) {
             ""
         }
     }
