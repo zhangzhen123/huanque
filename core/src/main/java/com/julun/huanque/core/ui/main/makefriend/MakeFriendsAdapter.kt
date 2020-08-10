@@ -86,6 +86,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val authTag = holder.getView<SimpleDraweeView>(R.id.sd_auth_tag)
 
                 if (bean.living) {
+                    ImageUtils.loadGifImageLocal(livingTag,R.mipmap.anim_living)
                     livingTag.show()
                     authTag.hide()
 
@@ -173,15 +174,20 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
                     }
                     bean.introduceVoice.isNotEmpty() -> {
+
                         holder.setGone(R.id.ll_audio, false).setGone(R.id.rv_photos, true).setGone(R.id.rv_tags, true)
                         holder.setText(R.id.tv_audio_time, "${bean.currentPlayProcess}”")
 //                        holder.addOnClickListener(R.id.iv_audio_play)
                         val play = holder.getView<ImageView>(R.id.iv_audio_play)
                         play.isActivated = bean.isPlay
                         if (bean.isPlay) {
+                            if( holder.itemView.getTag(R.id.play_tag_key)!=ParamConstant.IS_AUDIO_PLAY){
+                                ImageUtils.loadGifImageLocal(holder.getView(R.id.sdv_audio_state),R.mipmap.anim_audio_playing)
+                            }
                             holder.itemView.setTag(R.id.play_tag_key, ParamConstant.IS_AUDIO_PLAY)
                         } else {
                             holder.itemView.setTag(R.id.play_tag_key, null)
+                            ImageUtils.loadImageLocal(holder.getView(R.id.sdv_audio_state),R.mipmap.anim_audio_playing)
                         }
                     }
                     bean.tagList.isNotEmpty() -> {
