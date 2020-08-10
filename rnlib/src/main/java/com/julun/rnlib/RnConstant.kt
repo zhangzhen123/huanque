@@ -20,6 +20,12 @@ object RnConstant {
     const val OFFICIAL_CERT_PAGE:String="OfficialCertPage"
     //主播认证
     const val ANCHOR_CERT_PAGE:String="AnchorCertPage"
+    //贵族页面
+    const val RoyalPage:String="RoyalPage"
+    //主播等级
+    const val AnchorLevelPage:String="AnchorLevelPage"
+    //财富等级页面
+    const val WealthLevelPage:String="WealthLevelPage"
 
 
     //Action事件码

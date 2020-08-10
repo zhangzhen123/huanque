@@ -95,8 +95,8 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             imgView.setImageSymmetry(
                 headUrl = item.headPic,
                 frameUrl = item.headFrame,
-                headHeight = 32,
-                headWidth = 32,
+                headHeight = 30,
+                headWidth = 30,
                 frameWidth = 40,
                 frameHeight = 48
             )
