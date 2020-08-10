@@ -294,8 +294,8 @@ class MessageFragment : BaseFragment() {
 
         tv_message_unread.onClickNew {
             activity?.let { act ->
-                PrivateConversationActivity.newInstance(act, 20000516)
-//                PrivateConversationActivity.newInstance(act, 10)
+//                PrivateConversationActivity.newInstance(act, 20000516)
+                PrivateConversationActivity.newInstance(act, 10)
             }
         }
 

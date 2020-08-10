@@ -123,7 +123,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
 
                 ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_stranger)
                 helper.setText(R.id.tv_nickname, "陌生人消息")
-                    .setText(R.id.tv_time, TimeUtils.formatMessageTime(time))
+                    .setText(R.id.tv_time, TimeUtils.formatMessageTime(time, TimeUtils.TIME_FORMAT_YEAR_2))
 
                 val nickname = info[LocalConversation.NICKNAME]
                 val tvContent = helper.getView<TextView>(R.id.tv_content)
@@ -227,7 +227,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 tvUnread.hide()
             }
 
-            helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.conversation.sentTime))
+            helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.conversation.sentTime, TimeUtils.TIME_FORMAT_YEAR_2))
         }
 
         if (curAnchorId == targetId && msg == null) {

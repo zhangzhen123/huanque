@@ -8,9 +8,10 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 /**
  *@创建者   dong
  *@创建时间 2020/7/9 19:10
- *@描述 欢遇详情
+ *@描述 亲密度详情
  */
 class IntimateDetailViewModel : BaseViewModel() {
 
     val basicBean: MutableLiveData<ConversationBasicBean> by lazy { MutableLiveData<ConversationBasicBean>() }
+
 }

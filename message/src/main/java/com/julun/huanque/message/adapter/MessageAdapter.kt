@@ -307,12 +307,12 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             } else {
                 helper.setGone(R.id.view_top, true)
                 helper.setGone(R.id.group, false)
-                helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.sentTime))
+                helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.sentTime,TimeUtils.TIME_FORMAT_YEAR_3))
             }
         } else {
             helper.setGone(R.id.view_top, true)
             helper.setGone(R.id.group, false)
-            helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.sentTime))
+            helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.sentTime,TimeUtils.TIME_FORMAT_YEAR_3))
         }
         val container = helper.getView<ConstraintLayout>(R.id.view_container)
         //如果是最后一条

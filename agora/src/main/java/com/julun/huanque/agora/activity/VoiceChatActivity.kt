@@ -625,7 +625,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     private fun timer() {
 //        mVoiceChatViewModel?.createConmmunication(mVoiceChatViewModel?.targetUserBean?.value?.userId ?: 0)
         //超时计算
-        mDisposable = Observable.timer(10, TimeUnit.SECONDS)
+        mDisposable = Observable.timer(60, TimeUnit.SECONDS)
             .bindUntilEvent(this, ActivityEvent.DESTROY)
             .subscribe({
                 if (mType == ConmmunicationUserType.CALLING) {
