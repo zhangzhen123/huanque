@@ -51,7 +51,7 @@ class IntimateDetailFragment : BaseDialogFragment() {
             RNPageActivity.start(
                 requireActivity(),
                 RnConstant.PERSONAL_HOMEPAGE,
-                Bundle().apply { putLong("userId", mViewModel.basicBean?.value?.usr?.userId ?: return@onClickNew) })
+                Bundle().apply { putLong("userId", mViewModel.basicBean?.value?.friendUser?.userId ?: return@onClickNew) })
         }
 
         sdv_mine.onClickNew {

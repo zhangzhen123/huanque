@@ -61,7 +61,7 @@ class FloatingService : Service(), View.OnClickListener {
         // 设置图片格式，效果为背景透明
         layoutParams?.format = PixelFormat.RGB_565
 //        Log.i("悬浮窗", "Build.VERSION.SDK_INT" + Build.VERSION.SDK_INT)
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // android 8.0及以后使用
             layoutParams?.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
@@ -120,7 +120,6 @@ class FloatingService : Service(), View.OnClickListener {
 
 //            display?.setBackgroundColor(0)
 //            display?.getBackground()?.setAlpha(0)
-
             windowManager?.addView(display, layoutParams)
             display?.setOnTouchListener(FloatingOnTouchListener())
             display?.findViewById<View>(R.id.view_floating)?.setOnClickListener(this)
