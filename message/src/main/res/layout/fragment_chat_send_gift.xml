@@ -4,7 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@drawable/bg_gift_private_chat">
+
+    <View
+        android:id="@+id/view_top"
+        android:layout_width="0px"
+        android:layout_height="40dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_title"
@@ -34,17 +42,19 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginTop="@dimen/dimen_19"
+        android:layout_height="180dp"
+        android:layout_marginTop="28dp"
+        android:overScrollMode="never"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintTop_toBottomOf="@id/view_top" />
 
     <LinearLayout
         android:id="@+id/ll_dot"
         android:layout_width="0px"
-        android:layout_height="@dimen/dimen_22"
+        android:layout_height="@dimen/dimen_26"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -55,7 +65,7 @@
     <TextView
         android:id="@+id/tv_balance"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/dimen_58"
+        android:layout_height="@dimen/dimen_44"
         android:layout_marginStart="22dp"
         android:layout_marginLeft="22dp"
         android:drawableStart="@mipmap/icon_que_bi_cost"
@@ -95,11 +105,11 @@
         android:layout_marginEnd="@dimen/dimen_20"
         android:layout_marginRight="@dimen/dimen_20"
         android:background="@drawable/sel_send_gift"
+        android:enabled="false"
         android:gravity="center"
         android:paddingLeft="@dimen/dimen_6"
         android:paddingRight="@dimen/dimen_6"
         android:text="赠送"
-        android:enabled="false"
         android:textColor="@color/col_verification_code"
         android:textSize="@dimen/sp_16"
         app:layout_constraintBottom_toBottomOf="@+id/tv_balance"

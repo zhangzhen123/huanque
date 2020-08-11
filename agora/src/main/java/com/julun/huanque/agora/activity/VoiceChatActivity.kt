@@ -624,12 +624,17 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         chatExtra.targetUserObj?.intimateLevel = relationInfo.intimateLevel
         chatExtra.targetUserObj?.stranger = relationInfo.stranger
 
+        val conversationType = if(bean.needRefresh){
+            Conversation.ConversationType.GROUP
+        }else{
+            Conversation.ConversationType.PRIVATE
+        }
 
         RongCloudManager.sendSimulateMessage(
             tId,
             sId,
             chatExtra,
-            Conversation.ConversationType.PRIVATE,
+            conversationType,
             MessageCustomBeanType.Voice_Conmmunication_Simulate,
             bean
         )

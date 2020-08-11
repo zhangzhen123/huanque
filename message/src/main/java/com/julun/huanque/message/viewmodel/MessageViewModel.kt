@@ -114,10 +114,11 @@ class MessageViewModel : BaseViewModel() {
     fun getConversationList() {
         RongIMClient.getInstance().getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(p0: List<Conversation>?) {
-                if (!mStranger && !player) {
-                    dealWithStableConversation(p0)
-                }
+//                if (!mStranger && !player) {
+//                    dealWithStableConversation(p0)
+//                }
                 if (p0 == null || p0.isEmpty()) {
+                    conversationListData.value = null
                     return
                 }
 
@@ -201,6 +202,21 @@ class MessageViewModel : BaseViewModel() {
     fun queryRongPrivateCount() {
         queryUnreadCountFlag.postValue(true)
     }
+
+//    /**
+//     * 刷新消息未读数
+//     */
+//    fun refreshUnreadCount(targetId: String) {
+//        var stranger = false
+//        conversationListData.value?.forEachIndexed { index, localConversation ->
+//            if (localConversation.conversation.targetId == targetId) {
+//                stranger = localConversation.showUserInfo?.stranger ?: false
+//                return@forEachIndexed
+//            }
+//        }
+//        refreshConversation(targetId, stranger)
+//    }
+
 
     /**
      * 接收到私聊消息之后刷新单个会话

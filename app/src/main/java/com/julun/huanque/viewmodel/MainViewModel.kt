@@ -1,11 +1,8 @@
 package com.julun.huanque.viewmodel
 
 import android.os.Bundle
-import android.os.Message
 import androidx.lifecycle.*
 import com.alibaba.android.arouter.launcher.ARouter
-import com.baidu.location.BDLocation
-import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.forms.SessionForm
@@ -16,7 +13,6 @@ import com.julun.huanque.common.bean.beans.UserLevelInfo
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm
 import com.julun.huanque.common.bean.forms.SaveLocationForm
-import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -28,11 +24,8 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
-import io.rong.message.ImageMessage
-import io.rong.message.TextMessage
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -283,10 +276,40 @@ class MainViewModel : BaseViewModel() {
             if (iterator.hasNext()) {
                 val msgId = oriSet.iterator().next().toInt()
                 netcallResult(msgId)
+//                refreshCallId(msgId)
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
+
+    /**
+     * 刷新语音会话消息
+     */
+//    private fun refreshCallId(callId: Long) {
+//        viewModelScope.launch {
+//            request({
+//                val result = socialService.netcallResult(NetcallIdForm(callId)).dataConvert()
+//                val
+//                val bean = VoiceConmmunicationSimulate()
+//                bean.billUserId = result.billUserId
+//                bean.duration = result.duration
+//                bean.totalBeans = result.totalBeans
+//                bean.needRefresh = false
+//
+//                val chatExtra = JsonUtil.deserializeAsObject<RoomUserChatExtra>(content.extra, RoomUserChatExtra::class.java)
+//
+//                RongCloudManager.sendSimulateMessage(
+//                    msg.targetId, msg.senderUserId, chatExtra,
+//                    Conversation.ConversationType.PRIVATE,
+//                    MessageCustomBeanType.Voice_Conmmunication_Simulate,
+//                    bean
+//                )
+//                RongIMClient.getInstance().deleteMessages(intArrayOf(msg.messageId))
+//                GlobalUtils.removeSingleRefreshCallId(msg.messageId)
+//            })
+//        }
+//    }
+
 
 }

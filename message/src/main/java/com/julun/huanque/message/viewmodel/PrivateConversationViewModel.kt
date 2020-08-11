@@ -32,8 +32,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
+import kotlin.Exception
 
 /**
  *@创建者   dong
@@ -88,6 +88,9 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //传送门结果
     val sendRoomIndoData: MutableLiveData<SendRoomInfo> by lazy { MutableLiveData<SendRoomInfo>() }
+
+    //送礼弹窗的显示标记位
+    val sendGiftShowFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //操作类型
     var operationType = ""
@@ -214,6 +217,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     if (friendUser.toString() != (userInDb?.toString() ?: "")) {
                         //数据不一致，需要保存用户数据
                         HuanQueDatabase.getInstance().chatUserDao().insert(friendUser)
+                        val tempDAta = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(friendUser.userId)
                         EventBus.getDefault().post(UserInfoChangeEvent(friendUser.userId, friendUser.stranger))
                     }
                 }
@@ -245,7 +249,23 @@ class PrivateConversationViewModel : BaseViewModel() {
                     if (unreadCount > 0) {
                         //未读数大于0，需要设置所有消息已读
                         RongIMClient.getInstance().clearMessagesUnreadStatus(Conversation.ConversationType.PRIVATE, targerId)
-                        EventBus.getDefault().post(EventMessageBean(targerId))
+                        viewModelScope.launch {
+                            withContext(Dispatchers.IO) {
+                                try {
+                                    var stranged = false
+                                    val userData = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(targerId.toLong())
+                                    if (userData == null) {
+                                        val userInfo = GlobalUtils.getUserInfoFromMessage(conversation.latestMessage ?: return@withContext)
+                                        stranged = userInfo?.stranger ?: false
+                                    } else {
+                                        stranged = userData?.stranger ?: false
+                                    }
+                                    EventBus.getDefault().post(EventMessageBean(targerId, stranged))
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            }
+                        }
                     }
                 }
 

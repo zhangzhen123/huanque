@@ -3,6 +3,7 @@ package com.julun.huanque.message.fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
@@ -69,14 +70,15 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
 
     override fun onStart() {
         super.onStart()
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT)
-
-
+        mPrivateConversationViewModel.sendGiftShowFlag.value = true
     }
 
     override fun reCoverView() {
         initViewModel()
     }
+
     private fun initViewModel() {
         mViewModel.giftList.observe(viewLifecycleOwner, Observer {
             //
@@ -189,6 +191,11 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
 //        tv_send.isEnabled = false
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mPrivateConversationViewModel.sendGiftShowFlag.value = false
+    }
+
     //设置一个公共的缓存池 提高效率
     private val mGiftViewPool: RecyclerView.RecycledViewPool by lazy {
         RecyclerView.RecycledViewPool()
@@ -199,16 +206,16 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
                 val rv = holder.getView<RecyclerView>(R.id.rv_chat_gifts)
                 (rv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
                 rv.layoutManager = GridLayoutManager(context, 4)
-                if (rv.itemDecorationCount <= 0) {
-                    rv.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(12)))
-                }
+//                if (rv.itemDecorationCount <= 0) {
+//                    rv.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(12)))
+//                }
                 rv.setRecycledViewPool(mGiftViewPool)
-                val giftAdapter:ChatGiftListAdapter
-                if(rv.adapter!=null){
-                    giftAdapter=rv.adapter as ChatGiftListAdapter
+                val giftAdapter: ChatGiftListAdapter
+                if (rv.adapter != null) {
+                    giftAdapter = rv.adapter as ChatGiftListAdapter
                     giftAdapter.setList(item.gifts)
-                }else{
-                    giftAdapter= ChatGiftListAdapter(item.gifts)
+                } else {
+                    giftAdapter = ChatGiftListAdapter(item.gifts)
                     rv.adapter = giftAdapter
                 }
 
@@ -247,12 +254,13 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
 
         override fun convert(holder: BaseViewHolder, item: ChatGift) {
             val giftImg = holder.getView<SimpleDraweeView>(R.id.sdv_gift)
+            val itemView = holder.itemView
             if (currentSelectGift?.chatGiftId == item.chatGiftId) {
-                giftImg.loadImage(item.selPic, 70f, 70f)
-                giftImg.setBackgroundResource(R.drawable.bg_stroke_btn2)
+                giftImg.loadImage(item.selPic, 66f, 54f)
+                itemView.setBackgroundResource(R.drawable.bg_stroke_btn2)
             } else {
                 giftImg.loadImage(item.pic, 70f, 70f)
-                giftImg.setBackgroundResource(0)
+                itemView.setBackgroundResource(0)
             }
             holder.setText(R.id.tv_gift_name, item.giftName).setText(R.id.tv_gift_price, "${item.beans}鹊币")
 

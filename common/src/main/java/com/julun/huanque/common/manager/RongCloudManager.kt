@@ -269,11 +269,11 @@ object RongCloudManager {
             context = JsonUtil.serializeAsString(customBean)
         }
         var sentTime = System.currentTimeMillis()
-        if (customBean is VoiceConmmunicationSimulate) {
-            if (customBean.sentTime > 0) {
-                sentTime = customBean.sentTime
-            }
-        }
+//        if (customBean is VoiceConmmunicationSimulate) {
+//            if (customBean.sentTime > 0) {
+//                sentTime = customBean.sentTime
+//            }
+//        }
 
         if (extra != null) {
             messageContent.extra = JsonUtil.serializeAsString(extra)
@@ -282,12 +282,12 @@ object RongCloudManager {
         val callback = object : RongIMClient.ResultCallback<Message>() {
             override fun onSuccess(message: Message?) {
                 if (message != null) {
-                    switchThread(message)
+                    if (conversationType != Conversation.ConversationType.GROUP) {
+                        switchThread(message)
+                    }
                     if (customBean is VoiceConmmunicationSimulate && customBean.needRefresh) {
                         //需要在网络回复的时候刷新消息
-                        val oriSet = GlobalUtils.getNeedRefreshMessageIdSet()
-                        oriSet.add("${message.messageId}")
-                        SharedPreferencesUtils.commitStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, oriSet)
+                        GlobalUtils.addSingleRefreshMessageId(message.messageId)
                     }
                 }
             }

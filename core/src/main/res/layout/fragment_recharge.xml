@@ -51,7 +51,7 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="平台赠送：0"
-                    android:textColor="@color/black_333"
+                    android:textColor="@color/black_666"
                     android:textSize="@dimen/sp_14" />
 
             </LinearLayout>
@@ -80,7 +80,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:text="支付方式"
                 android:textColor="@color/black_333"
                 android:textSize="14sp" />

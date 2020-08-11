@@ -7,6 +7,7 @@ import com.alibaba.fastjson.annotation.JSONField
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.forms.ConsumeForm
+import com.julun.huanque.common.utils.SessionUtils
 import java.io.Serializable
 
 class UserLevelMap : Serializable {
@@ -52,7 +53,8 @@ class RunwayCache(
  * userId, nickname, userLevel, royalLevel, roomGuardPic, roomManagerPic, officalManagerPic, badgesPic, nickcolor,textColor
  */
 class RoomUserChatExtra(
-    var userId: Long = -1,
+    //传自己ID，助手端使用
+    var userId: Long = SessionUtils.getUserId(),
     var userAbcd: String = "",
     var nickname: String = "",
     var royalLevel: Int = 0,
@@ -117,9 +119,9 @@ data class UserInfoForLmRoom(
     , var smallPic: String = ""
     , var royalLevel: Int = 0
     , var type: String? = null
-    ,var headFrame :String = ""
+    , var headFrame: String = ""
     //下面为原有字段  删除
-    ,var nickName: String = ""
+    , var nickName: String = ""
     , var picId: String = ""
     , var identityId: Int = -1
     , var programId: Long? = null
@@ -252,6 +254,7 @@ class UserEnterRoomRespBase : Serializable {
 
     @JSONField(name = "isPcLive")
     var isPcLive: Boolean = false//获取直播间基本信息 增加pushPlatformType	推流平台类型(可选项：iOS、Android、Assistant)
+
     @JSONField(name = "isLandscape")
     var isLandscape: Boolean = false
 
@@ -738,7 +741,7 @@ class RankingsResult : Serializable {
     /** 贵族勋章地址 **/
     var royalPic: String = ""
 
-    var headFrame:String = ""
+    var headFrame: String = ""
     override fun equals(other: Any?): Boolean {
         if (other is RankingsResult) {
             return userId == other.userId
@@ -1391,7 +1394,6 @@ data class FlipCardHistoryItemInfo(
 ) : Serializable
 
 
-
 /**
  * 直播间 底部导航栏  点击使用的Bean
  * @param type 操作的类型
@@ -1762,7 +1764,7 @@ data class OnlineUserInfo(
     //4.15新增字段
     //贵族勋章地址
     var royalPic: String = "",
-    var headFrame:String = ""
+    var headFrame: String = ""
 
 ) : Serializable {
     override fun equals(other: Any?): Boolean {

@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -86,6 +87,30 @@ class UserCardFragment : BaseDialogFragment() {
 
         mUserCardViewModel.queryUserInfo()
         initListener()
+        dynamicHeight()
+    }
+
+
+    /**
+     * 动态计算一些的的宽高
+     */
+    private fun dynamicHeight() {
+        val screentWidth = ScreenUtils.getScreenWidth()
+        val headerBorder = screentWidth * 80 / 375 + 1
+        val headerTopMargin = screentWidth * 29 / 375 + 1
+        //修改头像宽高,以及上间距
+        val params = sdv_header.layoutParams as? ConstraintLayout.LayoutParams
+        params?.width = headerBorder
+        params?.height = headerBorder
+        params?.topMargin = headerTopMargin
+        sdv_header.layoutParams = params
+
+
+        //修改背景上间距
+        val bgTopMargin = screentWidth * 61 / 375
+        val bgParams = view_bg.layoutParams as? ConstraintLayout.LayoutParams
+        bgParams?.topMargin = bgTopMargin
+        view_bg.layoutParams = bgParams
     }
 
     /**
@@ -124,7 +149,7 @@ class UserCardFragment : BaseDialogFragment() {
 
         mPlayerViewModel.followStatusData.observe(this, Observer {
 
-            if (it != null&&it.isSuccess()) {
+            if (it != null && it.isSuccess()) {
                 mUserCardViewModel.userInfoData.value?.follow = it.getT().follow != FollowStatus.False
                 if (it.getT().follow != FollowStatus.False) {
                     //关注状态
@@ -135,7 +160,7 @@ class UserCardFragment : BaseDialogFragment() {
                 }
             }
 
-            tv_attention.isEnabled=true
+            tv_attention.isEnabled = true
         })
     }
 
@@ -155,7 +180,7 @@ class UserCardFragment : BaseDialogFragment() {
                 //未关注，关注
                 mPlayerViewModel.follow()
             }
-            tv_attention.isEnabled=false
+            tv_attention.isEnabled = false
         }
 
         tv_private_chat.onClickNew {
@@ -332,13 +357,13 @@ class UserCardFragment : BaseDialogFragment() {
      * 显示贵族等级
      */
     private fun showRoyalLevel(level: Int) {
-        if (level > 0) {
-            view_guizu_level.isSelected = true
-            tv_guizu_level.text = "$level"
-        } else {
-            view_guizu_level.isSelected = false
-            tv_guizu_level.text = "暂无贵族"
-        }
+//        if (level > 0) {
+//            view_guizu_level.isSelected = true
+        tv_guizu_level.text = "$level"
+//        } else {
+//            view_guizu_level.isSelected = false
+//            tv_guizu_level.text = "暂无贵族"
+//        }
 
         view_guizu_level.show()
         iv_guizu.show()

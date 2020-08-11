@@ -70,7 +70,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="10dp"
         android:background="@drawable/bg_chat_mine"
-        android:gravity="center"
+        android:gravity="center_vertical|right"
         android:maxWidth="250dp"
         android:minWidth="40dp"
         android:minHeight="40dp"

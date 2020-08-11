@@ -608,9 +608,11 @@ class PlayerActivity : BaseActivity() {
             ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
                 .navigation()
             val baseData = viewModel.baseData.value ?: return@launchWhenResumed
+
             FloatingManager.showFloatingView(
                 GlobalUtils.getPlayUrl(baseData.playInfo ?: return@launchWhenResumed),
-                viewModel.programId
+                viewModel.programId,
+                !baseData.isLandscape
             )
         }
     }
@@ -626,7 +628,7 @@ class PlayerActivity : BaseActivity() {
             ARouter.getInstance().build(ARouterConstant.ContactsActivity).with(bundler).navigation()
             FloatingManager.showFloatingView(
                 GlobalUtils.getPlayUrl(baseData.playInfo ?: return@launchWhenResumed),
-                viewModel.programId
+                viewModel.programId, !baseData.isLandscape
             )
         }
     }
@@ -1782,7 +1784,7 @@ class PlayerActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         initListener()
-        chat_layout.onTouch { _,_ ->
+        chat_layout.onTouch { _, _ ->
             mHelper?.hookSystemBackByPanelSwitcher()
             false
         }
@@ -1862,7 +1864,8 @@ class PlayerActivity : BaseActivity() {
         val baseData = viewModel.baseData.value ?: return
         FloatingManager.showFloatingView(
             GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
-            viewModel.programId
+            viewModel.programId,
+            !baseData.isLandscape
         )
     }
 

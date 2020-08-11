@@ -16,6 +16,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.julun.huanque.common.R
+import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.PlayInfo
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserInfo
@@ -24,6 +25,7 @@ import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.init.CommonInit
+import io.rong.imlib.model.MessageContent
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.coroutines.Dispatchers
@@ -334,6 +336,17 @@ object GlobalUtils {
         SharedPreferencesUtils.commitStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, idSet)
     }
 
+
+    /**
+     * 添加单个需要刷新的CallId
+     */
+    fun addSingleRefreshMessageId(msgId: Int) {
+        val oriSet = getNeedRefreshMessageIdSet()
+        oriSet.add("$msgId")
+        SharedPreferencesUtils.commitStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, oriSet)
+    }
+
+
     /**
      * 获取播放地址
      */
@@ -347,4 +360,80 @@ object GlobalUtils {
             String.format(string, info.domain, info.streamKey)
         }
     }
+
+    /**
+     * 从消息里面获取用户数据
+     */
+    fun getUserInfoFromMessage(lastMessage: MessageContent): ChatUser? {
+        var extra = ""
+        when (lastMessage) {
+            is ImageMessage -> {
+                lastMessage.extra?.let {
+                    extra = it
+                }
+            }
+
+            is CustomMessage -> {
+                lastMessage.extra?.let {
+                    extra = it
+                }
+            }
+
+            is CustomSimulateMessage -> {
+                lastMessage.extra?.let {
+                    extra = it
+                }
+            }
+            is TextMessage -> {
+                //文本消息
+                lastMessage.extra?.let {
+                    extra = it
+                }
+            }
+        }
+        if (extra.isEmpty()) {
+            return null
+        }
+        var user: RoomUserChatExtra? = null
+        try {
+            user = JsonUtil.deserializeAsObject(extra, RoomUserChatExtra::class.java)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        var currentUser: ChatUser? = null
+        if (user != null) {
+            if (user.senderId == SessionUtils.getUserId()) {
+                //本人发送消息，取targetUserObj
+                currentUser = ChatUser().apply {
+                    headPic = user.targetUserObj?.headPic ?: ""
+                    nickname = user.targetUserObj?.nickname ?: ""
+                    intimateLevel = user.targetUserObj?.intimateLevel ?: 0
+                    //欢遇标识
+                    meetStatus = user.targetUserObj?.meetStatus ?: ""
+                    //用户ID
+                    userId = user.targetUserObj?.userId ?: 0
+                    //用户性别
+                    sex = user.targetUserObj?.sex ?: ""
+                    stranger = user.targetUserObj?.stranger ?: false
+                }
+            } else {
+                //对方发送消息
+                currentUser = ChatUser().apply {
+                    headPic = user.headPic
+                    nickname = user.nickname
+                    intimateLevel = user.targetUserObj?.intimateLevel ?: 0
+                    //欢遇标识
+                    meetStatus = user.targetUserObj?.meetStatus ?: ""
+                    //用户ID
+                    userId = user.senderId
+                    //用户性别
+                    sex = user.sex
+                    stranger = user.targetUserObj?.stranger ?: false
+                }
+            }
+
+        }
+        return currentUser
+    }
+
 }
