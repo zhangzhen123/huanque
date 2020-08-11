@@ -425,8 +425,8 @@ class PrivateConversationActivity : BaseActivity() {
                     tv_send.isEnabled = false
                     return
                 }
-                tv_send.isEnabled = s?.toString().isNotEmpty()
-                if (s.toString()?.length > 60) {
+                tv_send.isEnabled = s.toString().isNotEmpty()
+                if (s.toString().length > 60) {
                     edit_text.setText(s.toString().substring(0, 60))
                     edit_text.setSelection(60)
                     Toast.makeText(this@PrivateConversationActivity, "最多输入60个字哦", Toast.LENGTH_SHORT).show()

@@ -109,7 +109,6 @@
                         android:includeFontPadding="false"
                         android:inputType="text"
                         android:lines="1"
-                        android:maxLength="30"
                         android:maxLines="1"
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"

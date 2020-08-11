@@ -7,7 +7,9 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -448,7 +450,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 }
 
                 ImageUtils.loadImageWithBlur(
-                    sdv_bg, backPic, 1, 1, ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight()
+                    sdv_bg, backPic, 4, 4, ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight()
                 )
             }
         })
@@ -469,6 +471,13 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * @param calling  true ： 拨号状态   false : 带接听状态
      */
     private fun showWaitContent(calling: Boolean) {
+        val totalContent = if (calling) {
+            "正在呼叫对方，等待接通..."
+        } else {
+            "正在邀请您语音通话..."
+        }
+        updataDurationParams(false, totalContent)
+
         mCallingContentDisposable?.dispose()
         mCallingContentDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
             .bindUntilEvent(this, ActivityEvent.DESTROY)
@@ -478,16 +487,16 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 when (index) {
                     0L -> {
                         tv_call_duration.text = if (calling) {
-                            "正在呼叫对方，等待接通.  "
+                            "正在呼叫对方，等待接通."
                         } else {
-                            "正在邀请您语音通话.  "
+                            "正在邀请您语音通话."
                         }
                     }
                     1L -> {
                         tv_call_duration.text = if (calling) {
                             "正在呼叫对方，等待接通.."
                         } else {
-                            "正在邀请您语音通话.. "
+                            "正在邀请您语音通话.."
                         }
                     }
                     else -> {
@@ -504,6 +513,27 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
     /**
+     * 设置时长的布局
+     * @param duration 是否显示通话时长  true 通话时长   false  呼叫状态
+     * @param content 呼叫状态的最长文案
+     */
+    private fun updataDurationParams(duration: Boolean, content: String = "") {
+        val params = tv_call_duration.layoutParams as? ConstraintLayout.LayoutParams
+        if (duration) {
+            //通话样式
+            params?.width = ConstraintLayout.LayoutParams.WRAP_CONTENT
+        } else {
+            //呼叫样式
+            val paint = tv_call_duration.paint
+            val width = paint.measureText(content)
+            params?.width = width.toInt()
+        }
+        tv_call_duration.layoutParams = params
+
+    }
+
+
+    /**
      * 显示页面
      */
     private fun showViewByData(bean: ChatUser) {
@@ -511,10 +541,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         tv_nickname.text = bean.nickname
         val sexImage = when (bean.sex) {
             Sex.MALE -> {
-                R.mipmap.icon_sex_male
+                R.mipmap.icon_voice_male
             }
             Sex.FEMALE -> {
-                R.mipmap.icon_sex_female
+                R.mipmap.icon_voice_female
             }
             else -> {
                 0
@@ -624,9 +654,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         chatExtra.targetUserObj?.intimateLevel = relationInfo.intimateLevel
         chatExtra.targetUserObj?.stranger = relationInfo.stranger
 
-        val conversationType = if(bean.needRefresh){
+        val conversationType = if (bean.needRefresh) {
             Conversation.ConversationType.GROUP
-        }else{
+        } else {
             Conversation.ConversationType.PRIVATE
         }
 

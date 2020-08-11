@@ -15,6 +15,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -1182,10 +1183,18 @@ class PlayerActivity : BaseActivity() {
 
         panel_emotion.mListener = object : EmojiInputListener {
             override fun onClick(type: String, emotion: Emotion) {
+                val currentLength = edit_text.text.length
+                val emojiLength = emotion.text.length
+                if (currentLength + emojiLength > 30) {
+                    Toast.makeText(this@PlayerActivity, "长度超过限制", Toast.LENGTH_SHORT).show()
+                    return
+                }
                 val start: Int = edit_text.selectionStart
                 val editable: Editable = edit_text.editableText
-                val emotionSpannable: Spannable =
-                    EmojiSpanBuilder.buildEmotionSpannable(this@PlayerActivity, emotion.text)
+                val emotionSpannable: Spannable = EmojiSpanBuilder.buildEmotionSpannable(
+                    this@PlayerActivity,
+                    emotion.text
+                )
                 editable.insert(start, emotionSpannable)
             }
 
@@ -1218,6 +1227,16 @@ class PlayerActivity : BaseActivity() {
 
         edit_text.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                if (s == null) {
+                    sendBtn.isEnabled = false
+                    return
+                }
+                if (s.toString().length > 30) {
+                    edit_text.setText(s.toString().substring(0, 30))
+                    edit_text.setSelection(30)
+                    Toast.makeText(this@PlayerActivity, "最多输入30个字哦", Toast.LENGTH_SHORT).show()
+                    return
+                }
                 judgeSendEnable()
             }
 
