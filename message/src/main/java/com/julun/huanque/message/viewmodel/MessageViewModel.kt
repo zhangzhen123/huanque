@@ -114,10 +114,11 @@ class MessageViewModel : BaseViewModel() {
     fun getConversationList() {
         RongIMClient.getInstance().getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(p0: List<Conversation>?) {
-                if (!mStranger && !player) {
-                    dealWithStableConversation(p0)
-                }
+//                if (!mStranger && !player) {
+//                    dealWithStableConversation(p0)
+//                }
                 if (p0 == null || p0.isEmpty()) {
+                    conversationListData.value = null
                     return
                 }
 

@@ -100,8 +100,11 @@ class MessageFragment : BaseFragment() {
         if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
             //融云已经连接
             //查询会话列表和免打扰列表
+            pageView.showLoading()
             mPlayerMessageViewModel.getBlockedConversationList()
             mMessageViewModel.getConversationList()
+        } else {
+            pageView.showEmpty()
         }
 
     }
@@ -113,8 +116,7 @@ class MessageFragment : BaseFragment() {
     private fun initRecyclerView() {
         recyclerview.layoutManager = LinearLayoutManager(context)
         recyclerview.adapter = mAdapter
-        //设置空页面的提示文案
-        view?.findViewById<TextView>(R.id.emptyText)?.text = getString(R.string.no_data)
+
 
         mAdapter.setOnItemClickListener { adapter, view, position ->
             //            val realPosition = position - mAdapter.headerLayoutCount
@@ -201,6 +203,13 @@ class MessageFragment : BaseFragment() {
                             return@MyDialogCallback
                         }
                         mMessageViewModel.removeConversation(tId, Conversation.ConversationType.PRIVATE)
+                        //刷新未读数
+                        if (mMessageViewModel.player) {
+                            //直播间内
+                            mPlayerMessageViewModel.queryRongPrivateCount(tId)
+                        } else {
+                            mMessageViewModel.queryUnreadCountFlag.value = true
+                        }
                     })
                 )
             }
@@ -216,7 +225,14 @@ class MessageFragment : BaseFragment() {
         mMessageViewModel.conversationListData.observe(this, Observer {
             if (it != null) {
 //                mAdapter.setNewData(it)
+                if (it.isEmpty()) {
+                    pageView.showEmpty()
+                } else {
+                    pageView.showSuccess()
+                }
                 mAdapter.setList(it)
+            }else{
+                pageView.showEmpty()
             }
         })
 
@@ -306,7 +322,7 @@ class MessageFragment : BaseFragment() {
 //        if (bean.onlyRefreshUnReadCount) {
 //            mMessageViewModel.refreshUnreadCount(bean.targetId)
 //        } else {
-            mMessageViewModel.refreshConversation(bean.targetId, bean.stranger)
+        mMessageViewModel.refreshConversation(bean.targetId, bean.stranger)
 //        }
     }
 
