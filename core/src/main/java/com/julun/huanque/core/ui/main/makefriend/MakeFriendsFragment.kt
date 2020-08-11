@@ -7,7 +7,6 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.StyleSpan
 import android.view.View
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,12 +34,10 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
-import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_make_friend.*
 import kotlinx.android.synthetic.main.sticky_mkf_task.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.startActivity
 
 
@@ -232,11 +229,17 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     logger.info("点击引导完善资料关闭---$position")
                     mAdapter.removeAt(position)
                 }
+                R.id.ll_balance->{
+                    logger.info("零钱")
+                }
                 R.id.tv_go_make_money -> {
                     //todo 去赚钱
                     logger.info("去赚钱")
                 }
             }
+        }
+        ll_balance_h.onClickNew {
+            logger.info("零钱")
         }
         tv_go_make_money_h.onClickNew {
             //todo 去赚钱
