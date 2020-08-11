@@ -1,6 +1,11 @@
 package com.julun.huanque.core.ui.withdraw
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -105,7 +110,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         btn_ensure.onClickNew {
             startCheckAndApply()
         }
-        tv_rule.onClickNew {
+        tv_helper.onClickNew {
             //todo
 
         }
@@ -273,6 +278,16 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
             } else if (it.state == NetStateType.ERROR) {
                 logger.info("绑定支付宝报错")
 //                ToastUtils.show("${it.error?.busiMessage}")
+                if (it.error?.busiCode == ErrorCodes.HAS_BIND_OTHER) {
+                    alertDialog.showAlertWithOKAndCancel(
+                        message = "该提现账号已绑定其他欢鹊账号，请更换提现账号",
+                        title = "更换账号", okText = "更换",
+                        callback = MyAlertDialog.MyDialogCallback(onRight = {
+                            userBindViewModel.getAliPayAuthInfo()
+                        })
+                    )
+                }
+
             }
         })
         userBindViewModel.bindWinXinData.observe(this, Observer {
@@ -285,6 +300,15 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
             } else if (it.state == NetStateType.ERROR) {
                 logger.info("绑定微信报错")
 //                ToastUtils.show("${it.error?.busiMessage}")
+                if (it.error?.busiCode == ErrorCodes.HAS_BIND_OTHER) {
+                    alertDialog.showAlertWithOKAndCancel(
+                        message = "该提现账号已绑定其他欢鹊账号，请更换提现账号",
+                        title = "更换账号", okText = "更换",
+                        callback = MyAlertDialog.MyDialogCallback(onRight = {
+                            wxService?.weiXinAuth(this)
+                        })
+                    )
+                }
             }
         })
 
@@ -302,6 +326,25 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
      * 刷新数据
      */
     private fun refreshData(info: WithdrawInfo) {
+        if (info.protocolUrl.isNotEmpty()) {
+            val content = StringBuilder()
+            content.append("您在申请零钱提现之前，请您务必审慎阅读、充分理解")
+            val start = content.length//记录开始位置
+            content.append(info.protocolName)
+            val end = content.length
+            val ps = "的全部内容。您有权选择同意或不同意本协议，若您同意本协议，即可进行零钱提现，否则无法提现"
+            content.append(ps)
+            val styleSpan1B = ForegroundColorSpan(Color.parseColor("#FF5757"))
+            val sp = SpannableString(content)
+            sp.setSpan(styleSpan1B, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+            alertDialog.showAlertCustomWithSpannable(sp, MyAlertDialog.MyDialogCallback(onCancel = {
+                finish()
+            }, onRight = {
+                mViewModel.agreeProtocol()
+            }), okText = "同意", noText = "不同意", hasTitle = true, title = "特别说明", cancelable = false)
+        }
+
+
         account_money.text = info.cash
         withdrawMoney.text = "今日奖励：${info.todayCash}元"
         totalMoney.text = "累计提现：${info.withdrawCash}元"

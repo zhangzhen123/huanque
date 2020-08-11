@@ -116,6 +116,9 @@ object ErrorCodes {
     const val NOT_BIND_WECHAT = 1129
     //完成实名认证才能认证主播
     const val NOT_REAL_NAME = 1130
+    //已经绑定其他账号
+    const val HAS_BIND_OTHER = 1016
+
 }
 
 /**

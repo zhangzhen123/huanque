@@ -67,5 +67,15 @@ class WithdrawViewModel : BaseViewModel() {
 
     }
 
+    fun agreeProtocol() {
+        viewModelScope.launch {
+            request({
+                service.agreeProtocol()
+            }, error = {
+            })
+        }
+
+    }
+
 
 }

@@ -31,7 +31,8 @@ import com.julun.huanque.core.R
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
 
-class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolder>(null), LoadMoreModule, PhotosAdapter.OnItemClick {
+class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolder>(null), LoadMoreModule,
+    PhotosAdapter.OnItemClick {
 
     var mOnItemAdapterListener: OnItemAdapterListener? = null
 
@@ -49,7 +50,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
         addChildClickViewIds(
             R.id.iv_audio_play, R.id.btn_action,
-            R.id.tv_go_make_money,
+            R.id.tv_go_make_money, R.id.ll_balance,
             R.id.iv_guide_tag_close, R.id.iv_guide_info_close
         )
     }
@@ -61,6 +62,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
             holder.getView<TextView>(R.id.tv_balance).setTFDinCdc2()
         } else if (viewType == HomeItemBean.NORMAL) {
             holder.getView<TextView>(R.id.tv_audio_time).setTFDinAltB()
+            ImageUtils.loadGifImageLocal(holder.getView<SimpleDraweeView>(R.id.living_tag), R.mipmap.anim_living)
         }
         return holder
     }
@@ -98,7 +100,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         authTag.hide()
                     }
                 }
-                ImageHelper.setDefaultHeaderPic(headPic,bean.sex)
+                ImageHelper.setDefaultHeaderPic(headPic, bean.sex)
 
                 headPic.loadImage(bean.headPic, 66f, 66f)
                 val name = if (bean.nickname.length > 5) {
@@ -109,10 +111,10 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
                 holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_mkf_sign, bean.mySign)
                     .setText(R.id.tv_location, bean.city)
-                if(bean.city.isEmpty()){
-                    holder.setGone(R.id.tv_location,true)
-                }else{
-                    holder.setGone(R.id.tv_location,false)
+                if (bean.city.isEmpty()) {
+                    holder.setGone(R.id.tv_location, true)
+                } else {
+                    holder.setGone(R.id.tv_location, false)
                 }
                 val sex = holder.getView<TextView>(R.id.tv_sex)
                 sex.text = "${bean.age}"
@@ -125,7 +127,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                             sex.setCompoundDrawables(drawable, null, null, null)
                         }
                         sex.textColor = Color.parseColor("#FF9BC5")
-                        sex.backgroundResource=R.drawable.bg_shape_mkf_sex_female
+                        sex.backgroundResource = R.drawable.bg_shape_mkf_sex_female
                     }
                     else -> {
                         val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_sex_male)
@@ -134,7 +136,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                             sex.setCompoundDrawables(drawable, null, null, null)
                         }
                         sex.textColor = Color.parseColor("#58CEFF")
-                        sex.backgroundResource=R.drawable.bg_shape_mkf_sex_male
+                        sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
                     }
                 }
                 if (bean.anchor && bean.living) {
@@ -162,9 +164,9 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                             rv.adapter = mPhotosAdapter
                         }
                         mPhotosAdapter.setList(list)
-                        mPhotosAdapter.currentPosition=holder.layoutPosition
-                        mPhotosAdapter.totalList=rl
-                        mPhotosAdapter.setOnItemClickListener (this)
+                        mPhotosAdapter.currentPosition = holder.layoutPosition
+                        mPhotosAdapter.totalList = rl
+                        mPhotosAdapter.setOnItemClickListener(this)
 //                        mPhotosAdapter.setOnItemClickListener { adapter, _, position ->
 //                            val adp=adapter as PhotosAdapter
 //                            mOnItemAdapterListener?.onPhotoClick(adp.currentPosition, position, adp.totalList)
@@ -173,15 +175,20 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
                     }
                     bean.introduceVoice.isNotEmpty() -> {
+
                         holder.setGone(R.id.ll_audio, false).setGone(R.id.rv_photos, true).setGone(R.id.rv_tags, true)
                         holder.setText(R.id.tv_audio_time, "${bean.currentPlayProcess}”")
 //                        holder.addOnClickListener(R.id.iv_audio_play)
                         val play = holder.getView<ImageView>(R.id.iv_audio_play)
                         play.isActivated = bean.isPlay
                         if (bean.isPlay) {
+                            if (holder.itemView.getTag(R.id.play_tag_key) != ParamConstant.IS_AUDIO_PLAY) {
+                                ImageUtils.loadGifImageLocal(holder.getView(R.id.sdv_audio_state), R.mipmap.anim_audio_playing)
+                            }
                             holder.itemView.setTag(R.id.play_tag_key, ParamConstant.IS_AUDIO_PLAY)
                         } else {
                             holder.itemView.setTag(R.id.play_tag_key, null)
+                            ImageUtils.loadImageLocal(holder.getView(R.id.sdv_audio_state), R.mipmap.anim_audio_playing)
                         }
                     }
                     bean.tagList.isNotEmpty() -> {
@@ -220,7 +227,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 //                val end = content.length
                 val sp = SpannableString(content)
                 sp.setSpan(styleSpan1A, 0, start, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-                tvTask.text=sp
+                tvTask.text = sp
                 rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
                 if (rv.itemDecorationCount <= 0) {
                     rv.addItemDecoration(HorizontalItemDecoration(dp2px(4)))
@@ -289,9 +296,10 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
         fun onHeadClick(item: HeadModule?)
     }
+
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>, position: Int) {
         logger("点击了子adp position=$position")
-        val adp=adapter as PhotosAdapter
+        val adp = adapter as PhotosAdapter
         mOnItemAdapterListener?.onPhotoClick(adp.currentPosition, position, adp.totalList)
     }
 }

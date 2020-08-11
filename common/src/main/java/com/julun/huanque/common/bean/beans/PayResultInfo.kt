@@ -58,7 +58,9 @@ data class WithdrawInfo(
     var todayCash: String = "",
     var tplList: MutableList<WithdrawTpl> = mutableListOf(),
     var typeList: List<WithdrawTypeBean> = listOf(),
-    var withdrawCash: String = ""
+    var withdrawCash: String = "",
+    var protocolName:String ="",
+    var protocolUrl:String = ""
 )
 
 data class WithdrawTpl(

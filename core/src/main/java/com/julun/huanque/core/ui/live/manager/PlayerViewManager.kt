@@ -1345,8 +1345,8 @@ class PlayerViewManager(val context: PlayerActivity) {
                     public_chat_height = viewHeight - LIVE_HEIGHT_NARROW - HEADER_HEIGHT - ACTION_HEIGHT
                     previousHeight = usableHeightPrevious - LIVE_HEIGHT_NARROW - HEADER_HEIGHT - ACTION_HEIGHT
                 } else {
-//                    public_chat_height = public_chat_height * 8 / 10
-//                    previousHeight = previousHeight * 8 / 10
+                    public_chat_height = public_chat_height * 8 / 10
+                    previousHeight = previousHeight * 8 / 10
                 }
             }
             if (appBottomShadow.isVisible()) {

@@ -3,6 +3,7 @@ package com.julun.huanque.core.net
 
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.*
 import retrofit2.http.Body
@@ -38,6 +39,12 @@ interface WithDrawService {
      */
     @POST("cash/withdraw/history")
     suspend fun withdrawHistory(@Body form: WithdrawHistoryForm): Root<RootListData<WithdrawRecord>>
+
+    /**
+     * 同意协议
+     */
+    @POST("cash/withdraw/agreeProtocol")
+    suspend fun agreeProtocol(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
 
 
 }

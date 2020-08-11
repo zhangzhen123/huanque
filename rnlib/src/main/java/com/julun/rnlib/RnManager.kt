@@ -47,14 +47,15 @@ object RnManager {
      */
     fun createReactInstanceManager(application: Application): ReactInstanceManager {
         logger("createReactInstanceManager 初始化")
-        val configBuilder: MainPackageConfig.Builder = MainPackageConfig.Builder()
-        val config=configBuilder.setFrescoConfig(CommonInit.getInstance().frescoConfig).build()
+//        val configBuilder: MainPackageConfig.Builder = MainPackageConfig.Builder()
+//        val config=configBuilder.setFrescoConfig(CommonInit.getInstance().frescoConfig).build()
         if (mReactInstanceManager == null) {
             mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(application)
                 .setBundleAssetName("index.android.bundle")
                 .setJSMainModulePath("index")
-                .addPackage(MainReactPackage(config)) // 背景色渐变：需放到application中
+//                .addPackage(MainReactPackage(config)) // 背景色渐变：需放到application中
+                .addPackage(MyMainReactPackage())
                 .addPackage(LinearGradientPackage()) // 请求头数据：需放到application中
                 .addPackage(GlobalReactPackage())
                 .addPackage(UploadReactPackage())
