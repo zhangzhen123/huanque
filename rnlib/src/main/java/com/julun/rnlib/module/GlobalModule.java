@@ -20,6 +20,7 @@ import com.julun.huanque.common.utils.ToastUtils;
 import com.julun.rnlib.RnManager;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GlobalModule extends ReactContextBaseJavaModule {
     private static final String E_LAYOUT_ERROR = "E_LAYOUT_ERROR";
@@ -69,7 +70,7 @@ public class GlobalModule extends ReactContextBaseJavaModule {
                     IRealNameService service = (IRealNameService) ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation();
                     service.startRealHead(getCurrentActivity(), new RealNameCallback() {
                         @Override
-                        public void onCallback(@NotNull String status, @NotNull String des) {
+                        public void onCallback(@NotNull String status, @NotNull String des, @Nullable Integer percent) {
                             if (status.equals(RealNameConstants.TYPE_SUCCESS)) {
                                 promise.resolve(true);
                             } else {

@@ -70,7 +70,7 @@ class RealNameActivity : BaseActivity() {
                 edtRealname.text.toString(),
                 edtIDCard.text.toString(),
                 object : RealNameCallback {
-                    override fun onCallback(status: String, des: String) {
+                    override fun onCallback(status: String, des: String, percent: Int?) {
                         EventBus.getDefault().post(RPVerifyResult(status))
                         when (status) {
                             RealNameConstants.TYPE_SUCCESS -> {
