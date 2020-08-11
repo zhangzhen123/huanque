@@ -613,6 +613,7 @@ class PlayerActivity : BaseActivity() {
             FloatingManager.showFloatingView(
                 GlobalUtils.getPlayUrl(baseData.playInfo ?: return@launchWhenResumed),
                 viewModel.programId,
+                baseData.prePic,
                 !baseData.isLandscape
             )
         }
@@ -629,7 +630,7 @@ class PlayerActivity : BaseActivity() {
             ARouter.getInstance().build(ARouterConstant.ContactsActivity).with(bundler).navigation()
             FloatingManager.showFloatingView(
                 GlobalUtils.getPlayUrl(baseData.playInfo ?: return@launchWhenResumed),
-                viewModel.programId, !baseData.isLandscape
+                viewModel.programId, baseData.prePic, !baseData.isLandscape
             )
         }
     }
@@ -1884,6 +1885,7 @@ class PlayerActivity : BaseActivity() {
         FloatingManager.showFloatingView(
             GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
             viewModel.programId,
+            baseData.prePic,
             !baseData.isLandscape
         )
     }

@@ -228,7 +228,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 
         viewModel.followStatusData.observe(context, Observer {
             context.liveHeader.setSubscribeEnable(true)
-            if (it != null&&it.isSuccess()) {
+            if (it != null && it.isSuccess()) {
                 modifySubscribe(it.getT().follow == FollowStatus.True)
             }
 
@@ -1123,7 +1123,7 @@ class PlayerViewManager(val context: PlayerActivity) {
         context.edit_text.setText(deC)
         //
         context.edit_text.setSelection(deC.length)
-
+        context.edit_text.requestFocus()
 //
 //            //引导发言取消还没显示的不再显示 已经显示的隐藏掉
 //            viewModel.guideToSpeakDisposable?.dispose()

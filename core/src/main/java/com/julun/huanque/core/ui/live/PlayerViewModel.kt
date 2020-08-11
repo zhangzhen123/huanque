@@ -571,7 +571,7 @@ class PlayerViewModel : BaseViewModel() {
                 val info = tplBean.userInfo
 //                if ((info?.userLevel ?: 0) > 0) {
                 info?.let {
-                    val userInfo = UserInfoBean(info.userId, baseData.value?.programId == info.userId, info.royalLevel, "")
+                    val userInfo = UserInfoBean(info.userId, baseData.value?.programId == info.userId, info.royalLevel, nickname = it.nickname)
                     userInfoView.value = userInfo
                 }
 //                }
@@ -613,7 +613,7 @@ class PlayerViewModel : BaseViewModel() {
                         logger("当前的贵族等级：$royalLevel")
                         val userInfo = UserInfoBean(
                             context.userId, false, royalLevel = royalLevel
-                                ?: -1
+                                ?: -1, nickname = tplBean.userInfo?.nickname ?: ""
                         )
                         userInfoView.value = userInfo
                     }
@@ -719,6 +719,9 @@ class PlayerViewModel : BaseViewModel() {
 
     fun checkGuideFollow(): Boolean {
         val currentTime = System.currentTimeMillis()
+        if (startLookTime == 0L) {
+            return false
+        }
         if ((currentTime - startLookTime) > 60 * 1000 && roomData?.follow != true) {
             guideToFollow.value = 1
             return true

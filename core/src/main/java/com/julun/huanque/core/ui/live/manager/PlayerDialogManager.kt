@@ -184,7 +184,7 @@ class PlayerDialogManager(val context: PlayerActivity) {
                     playerViewModel.finishCertain = true
                     playerViewModel.follow()
                     playerViewModel.finishState.value = true
-                }), "关注提醒", okText = "关注并退出")
+                }), "关注提醒", okText = "关注并退出", noText = "退出")
             }
         })
     }

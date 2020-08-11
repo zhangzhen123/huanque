@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.constant.SPParamKey
@@ -18,6 +19,7 @@ import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.core.R
@@ -60,23 +62,23 @@ class FloatingService : Service(), View.OnClickListener {
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
         // 设置图片格式，效果为背景透明
-        layoutParams?.format = PixelFormat.RGB_565
+        layoutParams.format = PixelFormat.RGB_565
 //        Log.i("悬浮窗", "Build.VERSION.SDK_INT" + Build.VERSION.SDK_INT)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // android 8.0及以后使用
-            layoutParams?.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+            layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
             // android 8.0以前使用
-            layoutParams?.type = WindowManager.LayoutParams.TYPE_PHONE
+            layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE
         }
-        layoutParams?.gravity = Gravity.LEFT or Gravity.TOP
+        layoutParams.gravity = Gravity.LEFT or Gravity.TOP
         //该flags描述的是窗口的模式，是否可以触摸，可以聚焦等
-        layoutParams?.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         // 设置视频的播放窗口大小
-        layoutParams?.width = 400
-        layoutParams?.height = 550
-        layoutParams?.x = 700
-        layoutParams?.y = 0
+        layoutParams.width = 400
+        layoutParams.height = 550
+        layoutParams.x = 700
+        layoutParams.y = 0
     }
 
 
@@ -88,13 +90,16 @@ class FloatingService : Service(), View.OnClickListener {
         } else {
             layoutParams.width = dip(213)
             layoutParams.height = dip(160)
+
         }
         if (show) {
             showFloatingWindow()
         }
+        val coverUrl = intent?.getStringExtra(ParamConstant.PIC) ?: ""
         val playInfo = intent?.getStringExtra(ParamConstant.PLAY_INFO) ?: ""
 //        videView?.play(playInfo, false)
-        videView?.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/28907", false)
+        videView?.showCover(coverUrl)
+        videView?.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/16611", false)
         mProgramId = intent?.getLongExtra(ParamConstant.PROGRAM_ID, 0) ?: 0
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, mProgramId)
         UserHeartManager.setProgramId(mProgramId)
@@ -111,6 +116,7 @@ class FloatingService : Service(), View.OnClickListener {
             val layoutInflater: LayoutInflater = LayoutInflater.from(this)
             display = layoutInflater.inflate(R.layout.view_floating, null)
             videView = display?.findViewById(R.id.video_view)
+//            sdvCover = display?.findViewById(R.id.sdv_cover)
 //            videView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
 //            videView?.clipToOutline = true;
 
