@@ -128,11 +128,11 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         sdv_wealth.loadImage(info.userBasic.userLevelIcon, 50f, 16f)
 
         sdv_royal_level.loadImage(info.userBasic.royalLevelIcon, 50f, 16f)
-        if (info.userBasic.anchorLevel == -1) {
-            cl_author_level.hide()
-        } else {
-            cl_author_level.show()
+        if (info.userBasic.anchorLevel > 0) {
+            sdv_author_level.show()
             sdv_author_level.loadImage(info.userBasic.anchorLevelIcon, 50f, 16f)
+        } else {
+            tv_author_privilege.show()
         }
 
 

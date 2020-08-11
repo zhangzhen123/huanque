@@ -32,6 +32,7 @@ import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
+import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_make_friend.*
@@ -229,8 +230,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     logger.info("点击引导完善资料关闭---$position")
                     mAdapter.removeAt(position)
                 }
-                R.id.ll_balance->{
+                R.id.ll_balance -> {
                     logger.info("零钱")
+                    requireActivity().startActivity<WithdrawActivity>()
                 }
                 R.id.tv_go_make_money -> {
                     //todo 去赚钱
@@ -240,6 +242,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         }
         ll_balance_h.onClickNew {
             logger.info("零钱")
+            requireActivity().startActivity<WithdrawActivity>()
         }
         tv_go_make_money_h.onClickNew {
             //todo 去赚钱
@@ -461,10 +464,12 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
         }
     }
+
     //
-    fun scrollToTop(){
+    fun scrollToTop() {
         mRecyclerView.smoothScrollToPosition(0)
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")
