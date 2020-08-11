@@ -8,7 +8,6 @@ import android.content.ContextWrapper
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
-import android.os.Message
 import android.view.Gravity
 import android.widget.Toast
 import androidx.annotation.ColorInt
@@ -337,6 +336,17 @@ object GlobalUtils {
         SharedPreferencesUtils.commitStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, idSet)
     }
 
+
+    /**
+     * 添加单个需要刷新的CallId
+     */
+    fun addSingleRefreshMessageId(msgId: Int) {
+        val oriSet = getNeedRefreshMessageIdSet()
+        oriSet.add("$msgId")
+        SharedPreferencesUtils.commitStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, oriSet)
+    }
+
+
     /**
      * 获取播放地址
      */
@@ -354,7 +364,7 @@ object GlobalUtils {
     /**
      * 从消息里面获取用户数据
      */
-    fun getUserInfoFromMessage(lastMessage : MessageContent) : ChatUser?{
+    fun getUserInfoFromMessage(lastMessage: MessageContent): ChatUser? {
         var extra = ""
         when (lastMessage) {
             is ImageMessage -> {

@@ -156,7 +156,9 @@ data class NetcallResultBean(
     //通话时长(单位秒)
     var duration: Long = 0,
     //通话总鹊币
-    var totalBeans: Long = 0
+    var totalBeans: Long = 0,
+    //通话结束时间
+    var currentMillis: Long = 0
 ) : Serializable
 
 /**
