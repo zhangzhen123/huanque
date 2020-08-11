@@ -23,5 +23,5 @@ interface RealNameService {
      * 保存认证结果 实名&头像
      */
     @POST("user/acct/data/saveCertificationRes")
-    suspend fun saveCertificationRes(@Body form: RealNameForm): Root<Void>
+    suspend fun saveCertificationRes(@Body form: RealNameForm): Root<RealNameBean>
 }

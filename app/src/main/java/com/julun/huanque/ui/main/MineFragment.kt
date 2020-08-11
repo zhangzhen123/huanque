@@ -143,7 +143,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             tvCertification.show()
             tvCertification.onClickNew {
                 mIRealNameService.startRealHead(requireActivity(), object : RealNameCallback {
-                    override fun onCallback(status: String, des: String) {
+                    override fun onCallback(status: String, des: String, percent: Int?) {
                         if (status == RealNameConstants.TYPE_SUCCESS) {
                             mViewModel.queryInfo(QueryType.REFRESH)
                         } else {
