@@ -37,6 +37,7 @@ import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_mine.*
+import kotlinx.android.synthetic.main.fragment_mine.state_pager_view
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
@@ -107,6 +108,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 }
             }
         })
+
+        mViewModel.balance.observe(this, Observer {
+            if (it != null) {
+                tvQueBi.text = "$it"
+            }
+        })
+
+
     }
 
     private fun loadData(info: UserDetailInfo) {
