@@ -269,15 +269,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="提现即同意"
+            android:text="充值遇到问题？点击联系"
             android:textColor="@color/black_333"
             android:textSize="@dimen/sp_12" />
 
         <TextView
-            android:id="@+id/tv_rule"
+            android:id="@+id/tv_helper"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="《服务条款》"
+            android:text="在线客服"
             android:textColor="#FF5757"
             android:textSize="@dimen/sp_12" />
 
