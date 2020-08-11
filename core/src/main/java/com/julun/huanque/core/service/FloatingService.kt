@@ -15,6 +15,7 @@ import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.SharedPreferencesUtils
@@ -96,7 +97,7 @@ class FloatingService : Service(), View.OnClickListener {
         videView?.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/28907", false)
         mProgramId = intent?.getLongExtra(ParamConstant.PROGRAM_ID, 0) ?: 0
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, mProgramId)
-        logger("Sevice onStartCommand")
+        UserHeartManager.setProgramId(mProgramId)
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -199,8 +200,8 @@ class FloatingService : Service(), View.OnClickListener {
 
     override fun onDestroy() {
         // 移除浮动框
-        logger("Sevice onDestroy")
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
+        UserHeartManager.setProgramId(null)
         if (windowManager != null && display != null) {
             videView?.stop()
             windowManager?.removeView(display)

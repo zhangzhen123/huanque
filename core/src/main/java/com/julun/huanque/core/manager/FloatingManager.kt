@@ -22,8 +22,7 @@ object FloatingManager {
             val intent = Intent(act, FloatingService::class.java)
             intent.putExtra(ParamConstant.PROGRAM_ID, programId)
             intent.putExtra(ParamConstant.PLAY_INFO, playInfo)
-            val bol = System.currentTimeMillis() % 2
-            intent.putExtra(ParamConstant.FLOATING_VERTICAL, bol == 0L)
+            intent.putExtra(ParamConstant.FLOATING_VERTICAL, vertical)
             //使用Intent传值
             act.startService(intent)
         }
