@@ -37,11 +37,11 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/living_tag"
-        android:layout_width="@dimen/dimen_22"
-        android:layout_height="@dimen/dimen_16"
+        android:layout_width="@dimen/dimen_27"
+        android:layout_height="@dimen/dimen_18"
         android:layout_marginBottom="@dimen/dimen_3"
-        app:actualImageResource="@mipmap/anim_living"
         app:layout_constraintBottom_toBottomOf="@+id/header_pic"
+        app:actualImageScaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="@+id/header_pic"
         app:layout_constraintStart_toStartOf="@+id/header_pic" />
 
@@ -185,7 +185,7 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv_audio_state"
             android:layout_width="73dp"
-            android:layout_height="@dimen/dimen_22"
+            android:layout_height="@dimen/dimen_18"
             app:actualImageScaleType="fitCenter"
             android:layout_marginStart="10dp" />
 

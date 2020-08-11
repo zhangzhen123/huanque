@@ -61,6 +61,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
             holder.getView<TextView>(R.id.tv_balance).setTFDinCdc2()
         } else if (viewType == HomeItemBean.NORMAL) {
             holder.getView<TextView>(R.id.tv_audio_time).setTFDinAltB()
+            ImageUtils.loadGifImageLocal(holder.getView<SimpleDraweeView>(R.id.living_tag),R.mipmap.anim_living)
         }
         return holder
     }
@@ -86,7 +87,6 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val authTag = holder.getView<SimpleDraweeView>(R.id.sd_auth_tag)
 
                 if (bean.living) {
-                    ImageUtils.loadGifImageLocal(livingTag,R.mipmap.anim_living)
                     livingTag.show()
                     authTag.hide()
 
