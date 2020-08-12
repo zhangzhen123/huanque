@@ -734,13 +734,10 @@ class PlayerActivity : BaseActivity() {
         playerMessageViewModel.queryRongPrivateCount(event.targetId)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateShow(event: OpenPrivateChatRoomEvent) {
-        //打开私聊列表
-        val bean = BottomActionBean()
-        bean.type = ClickType.PRIVATE_MESSAGE
-        bean.actionValue = PrivateMessageBean()
-        viewModel.actionBeanData.value = bean
+        //打开私信
+        playerMessageViewModel.privateConversationData.value = event
     }
 
     /**

@@ -191,7 +191,7 @@ class UserCardFragment : BaseDialogFragment() {
             }
             val userInfo = mUserCardViewModel.userInfoData.value ?: return@onClickNew
             //发送粘性消息
-            EventBus.getDefault().postSticky(OpenPrivateChatRoomEvent(mUserCardViewModel.mUserId, userInfo.nickname))
+            EventBus.getDefault().post(OpenPrivateChatRoomEvent(mUserCardViewModel.mUserId, userInfo.nickname))
         }
         tv_at.onClickNew {
             //@ 功能

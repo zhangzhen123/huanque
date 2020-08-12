@@ -227,6 +227,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 
 
         viewModel.followStatusData.observe(context, Observer {
+            logger.info("Player 关注状态 status = $it")
             context.liveHeader.setSubscribeEnable(true)
             if (it != null && it.isSuccess()) {
                 modifySubscribe(it.getT().follow == FollowStatus.True)

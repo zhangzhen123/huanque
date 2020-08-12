@@ -96,7 +96,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             val headerImage = holder.getView<PhotoHeadView>(R.id.headerImage)
             if (item.headFrame.isNotEmpty()) {
                 headerImage.setImageCustomByOneFrameSide(
-                    headUrl = item.headPic+BusiConstant.OSS_160,
+                    headUrl = item.headPic + BusiConstant.OSS_160,
                     frameUrl = item.headFrame,
                     headSize = 30,
                     frameWidth = FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -105,7 +105,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
             } else {
                 headerImage.setImage(
-                    headUrl = item.headPic+BusiConstant.OSS_160,
+                    headUrl = item.headPic + BusiConstant.OSS_160,
                     headSize = 30,
                     frameWidth = 36,
                     frameHeight = 48
@@ -248,7 +248,6 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     fun initData(roomData: UserEnterRoomRespDto) {
 //        logger.info("liveHeader ：${JsonUtil.seriazileAsString(roomData)}")
         hotText.text = "${StringHelper.formatNum(roomData.heatValue)}"
-        isSubscribed = roomData.follow
         changeFansViews(roomData.groupMember, roomData.fansClockIn)
 
         if (isAnchor) {
@@ -256,6 +255,12 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             prepare(roomData.anchor ?: return, roomData.prettyId)
         }
         isSubscribed = roomData.follow
+
+        if (!isSubscribed) {
+            subscribeAnchor.show()
+        } else {
+            subscribeAnchor.hide()
+        }
 
         val royalCount = roomData.royalCount ?: 0
         val guardCount = roomData.guardCount ?: 0
@@ -388,7 +393,14 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     // 刷新在线用户, 主线程执行
     private fun doRefreshRoomUserList() {
-        userListAdapter.setList(roomUsers)
+        //最多显示20个用户
+        if (roomUsers.size <= 20) {
+            userListAdapter.setList(roomUsers)
+        } else {
+            val list = mutableListOf<UserInfoForLmRoom>()
+            list.addAll(roomUsers.subList(0, 20))
+            userListAdapter.setList(list)
+        }
     }
 
     // 当前新增用户是否在列表中，不在则添加

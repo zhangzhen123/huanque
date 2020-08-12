@@ -158,7 +158,8 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                         BusiConstant.WEB_URL to mRoyalUrl
                     )
                 } else {
-                    //todo
+                    //打开用户卡片
+                    mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel,nickname = item.nickname)
                 }
             }
         }

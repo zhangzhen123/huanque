@@ -334,7 +334,10 @@ class SendGiftFragment : BaseDialogFragment() {
                 if (it.prizeBeans > 0 && it.prizeList.isNotEmpty()) {
                     showResult(it)
                     //刷新礼物数量
-                    refreshNewGiftCount(it)
+                    if (!it.bagChange) {
+                        //没有新的背包礼物产生，直接更新背包数据
+                        refreshNewGiftCount(it)
+                    }
                 } else {
                     //不是砸蛋的情况下，直接回复默认状态
                     resetData()
@@ -829,6 +832,7 @@ class SendGiftFragment : BaseDialogFragment() {
     private fun showBagData(bagList: MutableList<LiveGiftDto>) {
         mBagData = bagList
         dotter_bag.removeAllViews()
+        bagViewPager.removeAllViews()
         mBagViewPagerAdapter.clear()
         val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lp.setMargins(dp2px(5).toInt(), 0, dp2px(5).toInt(), 0)
