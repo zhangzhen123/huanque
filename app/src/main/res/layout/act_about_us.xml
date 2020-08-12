@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F4F5">
+
+    <com.julun.huanque.common.widgets.HeaderPageView
+        android:id="@+id/header_view"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_top"
+        android:layout_width="0px"
+        android:layout_height="184dp"
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_view" />
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="40dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toBottomOf="@id/view_top"
+        app:layout_constraintLeft_toLeftOf="@id/view_top"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_top" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="欢鹊"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/view_top"
+        app:layout_constraintLeft_toLeftOf="@id/iv_logo"
+        app:layout_constraintRight_toRightOf="@id/iv_logo"
+        app:layout_constraintTop_toBottomOf="@id/iv_logo" />
+
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_name"
+        tools:text="版本号：1.0.1" />
+
+    <View
+        android:id="@+id/view_suggest"
+        android:layout_width="0px"
+        android:layout_height="70dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_top" />
+
+    <TextView
+        android:id="@+id/tv_suggest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="4dp"
+        android:text="意见反馈与建议"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toTopOf="@+id/tv_wx"
+        app:layout_constraintLeft_toLeftOf="@id/view_suggest"
+        app:layout_constraintTop_toTopOf="@id/view_suggest"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_wx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="官方微信：xxxxxxxxxxxxx"
+        android:textColor="#C5C5C5"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@id/view_suggest"
+        app:layout_constraintLeft_toLeftOf="@id/tv_suggest"
+        app:layout_constraintTop_toBottomOf="@id/tv_suggest" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="35dp"
+        android:text="点击复制"
+        app:layout_constraintBottom_toBottomOf="@id/view_suggest"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_suggest" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_arrow_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_suggest"
+        app:layout_constraintRight_toRightOf="@id/view_suggest"
+        app:layout_constraintTop_toTopOf="@id/view_suggest" />
+
+
+    <View
+        android:id="@+id/view_consumer"
+        android:layout_width="0px"
+        android:layout_height="70dp"
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_suggest" />
+
+    <TextView
+        android:id="@+id/tv_consumer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="4dp"
+        android:text="客服热线"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toTopOf="@+id/tv_consumer_num"
+        app:layout_constraintLeft_toLeftOf="@id/view_consumer"
+        app:layout_constraintTop_toTopOf="@id/view_consumer"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_consumer_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="400-xxx-xxxx"
+        android:textColor="#C5C5C5"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@id/view_consumer"
+        app:layout_constraintLeft_toLeftOf="@id/tv_consumer"
+        app:layout_constraintTop_toBottomOf="@id/tv_consumer" />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_arrow_msg_setting"
+        app:layout_constraintBottom_toBottomOf="@id/view_consumer"
+        app:layout_constraintRight_toRightOf="@id/view_consumer"
+        app:layout_constraintTop_toTopOf="@id/view_consumer" />
+
+
+    <View
+        android:id="@+id/view_business_license"
+        android:layout_width="0px"
+        android:layout_height="70dp"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_consumer" />
+
+    <TextView
+        android:id="@+id/tv_business_license"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="4dp"
+        android:text="营业执照"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/view_business_license"
+        app:layout_constraintLeft_toLeftOf="@id/view_business_license"
+        app:layout_constraintTop_toTopOf="@id/view_business_license" />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_arrow_msg_setting"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/view_business_license"
+        app:layout_constraintRight_toRightOf="@id/view_business_license"
+        app:layout_constraintTop_toTopOf="@id/view_business_license" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Copyright©1692020 聚轮网络版权所有"
+
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

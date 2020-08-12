@@ -7,10 +7,14 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.manager.DataCleanManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.support.LoginManager
 import kotlinx.android.synthetic.main.act_setting.*
 import kotlinx.android.synthetic.main.act_setting.header_view
@@ -44,18 +48,42 @@ class SettingActivity : BaseActivity() {
 
         tv_logout.onClickNew {
             //退出登录
-            LoginManager.doLoginOut {
-                if (it) {
-                    //退出登录成功
-                    val intent = Intent(this, LoginActivity::class.java)
-                    startActivity(intent)
-                }
-            }
+            MyAlertDialog(this).showAlertWithOKAndCancel(
+                "退出登录后将无法收到TA的消息了，确定退出吗？",
+                MyAlertDialog.MyDialogCallback(onRight = {
+                    LoginManager.doLoginOut {
+                        if (it) {
+                            //退出登录成功
+                            val intent = Intent(this, LoginActivity::class.java)
+                            startActivity(intent)
+                        }
+                    }
+                }, onCancel = {
+                }), "退出提示", "确定"
+            )
+        }
+
+        view_clear_cache.onClickNew {
+            //清空缓存
+            MyAlertDialog(this).showAlertWithOKAndCancel(
+                "确定清空缓存？",
+                MyAlertDialog.MyDialogCallback(onRight = {
+                    DataCleanManager.clearAllCache(applicationContext)
+                }, onCancel = {
+                }), "清空提示", "确定"
+            )
         }
 
         view_accountandsecurity.onClickNew {
             //账号与安全
             val intent = Intent(this, AccountAndSecurityActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
+        }
+        view_about_us.onClickNew {
+            //关于我们
+            val intent = Intent(this, AboutUsActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
                 startActivity(intent)
             }
