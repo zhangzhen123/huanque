@@ -35,7 +35,7 @@ class BalanceNotEnoughFragment : BaseDialogFragment() {
 
     override fun getLayoutId() = R.layout.fragment_balance_not_enough
 
-    override fun needEnterAnimation() = false
+    override fun needEnterAnimation() = true
 
     override fun initViews() {
         initEvents()
@@ -75,6 +75,10 @@ class BalanceNotEnoughFragment : BaseDialogFragment() {
 
             dismiss()
         }
+    }
+
+    override fun setWindowAnimations() {
+        dialog?.window?.setWindowAnimations(R.style.dialog_bottom_enter_style)
     }
 
     override fun onStart() {
