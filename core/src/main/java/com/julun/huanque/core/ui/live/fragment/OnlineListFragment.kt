@@ -32,7 +32,6 @@ import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.PhotoHeadView
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration
-import com.julun.huanque.common.widgets.refreshlayout.RefreshListener
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.OnLineViewModel
@@ -93,6 +92,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
         rvList.layoutManager = LinearLayoutManager(context)
         rvList.adapter = adapter
         adapter.headerWithEmptyEnable = true
+        MixedHelper.setSwipeRefreshStyle(lmrlRefreshView,requireContext())
         prepareViewModel()
     }
 

@@ -20,16 +20,22 @@ import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
+import com.julun.huanque.common.bean.beans.RechargeAdInfo
 import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.ui.web.WebActivity
+import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.huanque.message.activity.ContactsActivity
@@ -78,6 +84,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         rvUserTools.adapter = toolsAdapter
         tvQueBi.setTFDinAltB()
         tvLingQian.setTFDinAltB()
+        MixedHelper.setSwipeRefreshStyle(refreshView,requireContext())
         initViewModel()
     }
 
@@ -156,15 +163,41 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             ivReal.hide()
         }
 //        sd_wealth.loadImage(info.userBasic.royalLevel)
-        if (info.userBasic.sex == Sex.FEMALE) {
-            ivInviteFriend.hide()
-        } else {
-
-            ivInviteFriend.show()
-        }
+//        if (info.userBasic.sex == Sex.FEMALE) {
+//            ivInviteFriend.hide()
+//        } else {
+//
+//            ivInviteFriend.show()
+//        }
+        loadAd(info.adList)
 
         infoTabAdapter.setNewInstance(info.userDataTabList)
         toolsAdapter.setNewInstance(info.tools)
+    }
+    private fun loadAd(adList: MutableList<RechargeAdInfo>?) {
+        if (adList != null) {
+            if (adList.isEmpty()) {
+                if (bannerAD.isVisible()) {
+                    bannerAD?.setAutoPlayAble(false)
+                    bannerAD?.setAllowUserScrollable(false)
+                    bannerAD?.setData(adList, null)
+                    bannerAD.hide()
+                }
+                return
+            }
+            bannerAD.show()
+            bannerAD?.setAdapter(bannerAdapter)
+            bannerAD?.setDelegate(bannerItemCick)
+            bannerAD?.setData(adList, null)
+            bannerAD?.setAutoPlayAble(adList.size > 1)
+            bannerAD?.viewPager?.pageMargin=dp2px(10)
+            if (adList.size > 1) {
+                bannerAD?.currentItem = 0
+            }
+        } else {
+            bannerAD?.hide()
+        }
+
     }
 
     override fun initEvents(rootView: View) {
@@ -207,7 +240,15 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         rlLingQian.onClickNew {
             requireActivity().startActivity<WithdrawActivity>()
         }
-
+        cl_user_wealth_level.onClickNew {
+            RNPageActivity.start(requireActivity(),RnConstant.WEALTH_LEVEL_PAGE)
+        }
+        cl_royal_level.onClickNew {
+            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
+        }
+        cl_author_level.onClickNew {
+            RNPageActivity.start(requireActivity(),RnConstant.ANCHOR_LEVEL_PAGE)
+        }
         if (BuildConfig.DEBUG) {
             tv_test.show()
             tv_test.onClickNew {
@@ -282,6 +323,42 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 sdvTool.loadImage(item.icon, 34f, 34f)
                 holder.setText(R.id.tvTitle, item.name)
 
+            }
+        }
+    }
+
+
+    private val bannerAdapter by lazy {
+        BGABanner.Adapter<SimpleDraweeView, RechargeAdInfo> { _, itemView, model, _ ->
+            when (model?.resType) {
+                BannerResType.Pic -> {
+                    val screenWidth = ScreenUtils.screenWidthFloat.toInt() - dp2px(15f) * 2
+                    val height = dp2px(72f)
+                    ImageUtils.loadImageInPx(itemView, model.resUrl, screenWidth, height)
+                }
+            }
+
+        }
+    }
+
+    private val bannerItemCick by lazy {
+        BGABanner.Delegate<SimpleDraweeView, RechargeAdInfo> { _, _, model, _ ->
+            when (model?.touchType) {
+                BannerTouchType.Url -> {
+                    val extra = Bundle()
+                    extra.putString(BusiConstant.WEB_URL, model.touchValue)
+                    extra.putBoolean(IntentParamKey.EXTRA_FLAG_GO_HOME.name, false)
+                    jump(WebActivity::class.java, extra = extra)
+                }
+                BannerTouchType.Toast -> {
+                    //弹窗类型
+                    if (model.touchValue == "FirstRecharge") {
+                        //todo
+//                        val rechargeInfo = mFirstRechargeViewModel?.oneYuanInfo?.value
+//                            ?: return@Delegate
+//                        OneYuanDialogFragment.newInstance(rechargeInfo).showPositive(childFragmentManager, "OneYuanDialogFragment")
+                    }
+                }
             }
         }
     }

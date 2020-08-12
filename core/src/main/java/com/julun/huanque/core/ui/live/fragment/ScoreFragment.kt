@@ -1,6 +1,5 @@
 package com.julun.huanque.core.ui.live.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -12,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.facebook.drawee.generic.RoundingParams
-import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -27,7 +24,6 @@ import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.PhotoHeadView
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
@@ -79,6 +75,7 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
     override fun getLayoutId(): Int = R.layout.fragment_score
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initViewModel()
+        MixedHelper.setSwipeRefreshStyle(contributionRefreshView,requireContext())
     }
 
     /**

@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.PhotoBean
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.loadImageLocal
 import com.julun.huanque.common.suger.logger
@@ -21,7 +22,7 @@ class PhotosAdapter : BaseQuickAdapter<PhotoBean, BaseViewHolder>(R.layout.item_
     override fun convert(holder: BaseViewHolder, item: PhotoBean) {
         val imgView=holder.getView<SimpleDraweeView>(R.id.sdv_photo)
         if(item.url.isNotEmpty()){
-            imgView.loadImage(item.url,60f,60f)
+            imgView.loadImage(item.url+BusiConstant.OSS_120,60f,60f)
         }else{
             imgView.loadImageLocal(item.res)
         }

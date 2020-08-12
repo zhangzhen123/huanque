@@ -135,6 +135,7 @@
             android:text="0"
             android:textColor="#ffd66f"
             android:textSize="@dimen/sp_08"
+            android:textStyle="bold"
             android:visibility="gone"
             tools:text="9999" />
 

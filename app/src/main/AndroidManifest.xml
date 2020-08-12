@@ -87,6 +87,9 @@
             android:name=".activity.EnvironmentConfigurationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activity.PrivacyActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

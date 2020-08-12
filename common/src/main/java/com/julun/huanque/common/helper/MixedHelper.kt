@@ -169,7 +169,7 @@ object MixedHelper {
     /**
      * 设置下拉刷新的风格
      */
-    fun setSwipeRefreshStytle(swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout, context: Context) {
+    fun setSwipeRefreshStyle(swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout, context: Context) {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary_lib, android.R.color.holo_green_light)
         swipeRefreshLayout.setProgressViewOffset(
             true,

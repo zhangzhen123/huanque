@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.constant.UserChangeType
 import com.julun.huanque.common.helper.StringHelper
@@ -95,7 +96,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             val headerImage = holder.getView<PhotoHeadView>(R.id.headerImage)
             if (item.headFrame.isNotEmpty()) {
                 headerImage.setImageCustomByOneFrameSide(
-                    headUrl = item.headPic,
+                    headUrl = item.headPic+BusiConstant.OSS_160,
                     frameUrl = item.headFrame,
                     headSize = 30,
                     frameWidth = FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -104,7 +105,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
             } else {
                 headerImage.setImage(
-                    headUrl = item.headPic,
+                    headUrl = item.headPic+BusiConstant.OSS_160,
                     headSize = 30,
                     frameWidth = 36,
                     frameHeight = 48

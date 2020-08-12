@@ -42,7 +42,7 @@ class LiveRemindActivity : BaseActivity() {
         prepareViewModel()
         commonView.backgroundResource = R.color.transparent
 
-        MixedHelper.setSwipeRefreshStytle(rlRefreshView, this)
+        MixedHelper.setSwipeRefreshStyle(rlRefreshView, this)
         rvList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvList.adapter = mAdapter
         mAdapter.loadMoreModule.isEnableLoadMore = true

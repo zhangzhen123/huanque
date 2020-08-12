@@ -117,7 +117,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
         })
         tv_balance_h.setTFDinCdc2()
-
+        MixedHelper.setSwipeRefreshStyle(mRefreshView,requireContext())
     }
 
     override fun initEvents(rootView: View) {
@@ -129,10 +129,10 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         mRefreshView.setOnRefreshListener {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
-        mAdapter.setOnItemClickListener { _, _, position ->
+        mAdapter.onAdapterClickNew { _, _, position ->
             logger.info("点击了第几个index=$position")
 //            pauseAudio()
-            val item = mAdapter.getItem(position) ?: return@setOnItemClickListener
+            val item = mAdapter.getItem(position) ?: return@onAdapterClickNew
             when (item.showType) {
                 HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION -> {
                     logger.info("跳转编辑资料页")
@@ -143,7 +143,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
                 }
                 HomeItemBean.NORMAL -> {
-                    val bean = item.content as? HomeRecomItem ?: return@setOnItemClickListener
+                    val bean = item.content as? HomeRecomItem ?: return@onAdapterClickNew
                     if (bean.userId == SessionUtils.getUserId()) {
                         RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
                     } else {
@@ -235,8 +235,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     requireActivity().startActivity<WithdrawActivity>()
                 }
                 R.id.tv_go_make_money -> {
-                    //todo 去赚钱
                     logger.info("去赚钱")
+                    RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
                 }
             }
         }
@@ -275,6 +275,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val viewHead: View? = linearLayoutManager.findViewByPosition(0)
                 val view: View? = linearLayoutManager.findViewByPosition(1)
+//                logger.info("viewHead=${viewHead?.id}  view=$view ")
                 if (viewHead != null && view != null && viewHead.id == R.id.mkf_header_container) {
                     val top = view.top
 //                    logger.info("top=$top ")

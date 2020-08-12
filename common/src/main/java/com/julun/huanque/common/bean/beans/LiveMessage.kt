@@ -29,11 +29,11 @@ class SendGiftEvent(
     , var timeStr: String = ""
     , var luckBeans: Int = 0
     , var luckAnima: String = ""
-    , var beans: Int = -1
+    , var totalBeans: Int = -1
     , var level: Int = -1//流光等级//新版特效动画参数
     , var times: Int = 0//连送次数
     , var upgrade: Boolean = false//是否升级动画
-    , var curTime: Long = 0L//排序时间戳
+    , var time: Long = 0L//排序时间戳
 ) {
     var generateId: String = "${userId}_$giftId"
         get() = "${userId}_$giftId"
@@ -42,7 +42,7 @@ class SendGiftEvent(
     var isMyself: Int = 0
 
     override fun toString(): String {
-        return "$generateId-$giftName:$beans-$times-$curTime"
+        return "$generateId-$giftName:$totalBeans-$times-$time"
     }
 }
 

@@ -502,14 +502,24 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageView
-                    android:id="@+id/ivInviteFriend"
+                <com.julun.huanque.common.widgets.bgabanner.BGABanner
+                    android:id="@+id/bannerAD"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_75"
+                    android:layout_height="60dp"
                     android:layout_marginLeft="@dimen/dimen_15"
                     android:layout_marginRight="@dimen/dimen_15"
-                    android:scaleType="fitCenter"
-                    android:src="@mipmap/image_invite_friend" />
+                    android:layout_marginBottom="@dimen/dimen_10"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    app:banner_indicatorGravity="bottom|right"
+                    app:banner_isNeedShowIndicatorOnOnlyOnePage="false"
+                    app:banner_pageChangeDuration="1000"
+                    app:banner_pointContainerBackground="@color/transparent"
+                    app:banner_pointContainerLeftRightPadding="5dp"
+                    app:banner_pointDrawable="@drawable/bga_banner_selector_point_home"
+                    app:banner_pointLeftRightMargin="2dp"
+                    app:banner_tipTextSize="12sp" />
+
 
                 <View
                     android:layout_width="match_parent"

@@ -4,6 +4,7 @@ import java.io.Serializable
 import java.math.BigDecimal
 
 data class UserDetailInfo(
+    var adList: MutableList<RechargeAdInfo>? = null,
     var tools: MutableList<UserTool> = mutableListOf(),
     var userBasic: UserBasic = UserBasic(),
     var userDataTabList: MutableList<UserDataTab> = mutableListOf()

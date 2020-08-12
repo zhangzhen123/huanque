@@ -301,15 +301,15 @@ class FillInformationActivity : BaseActivity() {
             .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
             //.cropCompressQuality(90)// 裁剪压缩质量 默认100
             .minimumCompressSize(100)// 小于100kb的图片不压缩
-            .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
+//            .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
             .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
             .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
             .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
             .isDragFrame(false)
-            .circleDimmedLayer(true)// 是否圆形裁剪
-            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
-            .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
-            .rotateEnabled(false) // 裁剪是否可旋转图片
+//            .circleDimmedLayer(true)// 是否圆形裁剪
+//            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+//            .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+//            .rotateEnabled(false) // 裁剪是否可旋转图片
             .scaleEnabled(true)// 裁剪是否可放大缩小图片
             .forResult(PictureConfig.CHOOSE_REQUEST)
 
