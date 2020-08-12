@@ -41,12 +41,18 @@ import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.ui.main.LeYuanFragment
 import com.julun.huanque.ui.main.MineFragment
+import com.julun.huanque.ui.test.TestActivity
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.maplib.LocationService
+import com.trello.rxlifecycle4.android.ActivityEvent
+import com.trello.rxlifecycle4.kotlin.bindUntilEvent
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
 import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.concurrent.TimeUnit
 
 
 @Route(path = ARouterConstant.MAIN_ACTIVITY)
@@ -133,6 +139,11 @@ class MainActivity : BaseActivity() {
             //融云已经连接
             mMainViewModel.getUnreadCount()
         }
+        //延迟获取定位权限
+        Observable.timer(3, TimeUnit.SECONDS)
+            .bindUntilEvent(this, ActivityEvent.DESTROY)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ checkPermission() }, { it.printStackTrace() })
     }
 
     /**
@@ -143,8 +154,37 @@ class MainActivity : BaseActivity() {
         mLocationService.unregisterListener(mLocationListener)
     }
 
-    override fun onStart() {
-        super.onStart()
+//    override fun onStart() {
+//        super.onStart()
+//        val rxPermissions = RxPermissions(this)
+//        rxPermissions
+//            .requestEachCombined(
+//                Manifest.permission.ACCESS_COARSE_LOCATION,
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            )
+//            .subscribe { permission ->
+//                //不管有没有给权限 都不影响百度定位 只不过不给权限会不太准确
+//                mLocationService.start()
+//                when {
+//                    permission.granted -> {
+//                        logger.info("获取权限成功")
+//                    }
+//                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+//                        logger.info("获取定位被拒绝")
+//                    else -> {
+//                        logger.info("获取定位被永久拒绝")
+//                    }
+//                }
+//
+//            }
+//
+//    }
+
+
+    /**
+     * 检查定位权限
+     */
+    private fun checkPermission() {
         val rxPermissions = RxPermissions(this)
         rxPermissions
             .requestEachCombined(
@@ -166,8 +206,8 @@ class MainActivity : BaseActivity() {
                 }
 
             }
-
     }
+
 
     override fun onStop() {
         super.onStop()
@@ -212,7 +252,7 @@ class MainActivity : BaseActivity() {
             //交友
             if (getCurrentFragment() != mHomeFragment) {
                 tabIconAnimation(MAIN_FRAGMENT_INDEX)
-            }else{
+            } else {
                 mHomeFragment.scrollToTop()
             }
             showFragmentNew(MAIN_FRAGMENT_INDEX)

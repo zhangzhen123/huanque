@@ -371,6 +371,21 @@ object MessageConstants {
     //跳转主页
     const val ACTION_MAIN_PAGE = "main_page"
 
+    //跳转官方认证页面 RN
+    const val OfficialCertPage = "OfficialCertPage"
+
+    //跳转主播认证页面 RN
+    const val AnchorCertPage = "AnchorCertPage"
+
+    //跳转我的资料编辑页面
+    const val EditMineHomePage = "EditMineHomePage"
+
+    //跳转贵族页面
+    const val RoyalPage = "RoyalPage"
+
+    //跳转我的主页
+    const val MineHomePage = "MineHomePage"
+
     //跳转私聊
     const val ACTION_MESSAGE = "打开私聊"
 
