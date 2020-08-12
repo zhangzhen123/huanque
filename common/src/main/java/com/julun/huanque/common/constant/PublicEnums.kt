@@ -554,3 +554,20 @@ object ImageActivityOperate {
     const val REPORT: String = "report"
     const val SAVE: String = "save"
 }
+
+/**
+ * 隐私权限list
+ * @author WanZhiYuan
+ */
+object PrivacyEnums {
+    //位置
+    const val PRIVACY_ADDRESS = "address"
+    //通知
+    const val PRIVACY_NOTIFICATION = "notification"
+    //照相机
+    const val PRIVATE_CAMERA = "camera"
+    //文件
+    const val PRIVATE_FLIE = "file"
+    //麦克风
+    const val PRIVACY_MIKE = "mike"
+}
