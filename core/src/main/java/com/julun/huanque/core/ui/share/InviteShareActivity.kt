@@ -7,6 +7,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -174,48 +175,63 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
             ToastUtils.show("你还没有选择要分享的目标")
             return
         }
+        val tv002 = when (applyModule) {
+            ShareFromModule.Program -> {
+                currentSelectView?.findViewById<TextView>(R.id.tv002)
+            }
+            else -> {
+                null
+            }
+        }
+
         val checkView = currentSelectView?.findViewById<View>(R.id.iv_check)
+        //截屏时修改文案
+        tv002?.text = "扫码加为好友"
         //隐藏不必要的view
         checkView?.hide()
-        val bitmap = BitmapUtil.viewConversionBitmap(currentSelectView!!)
-        checkView?.show()
-        when (type) {
-            ShareTypeEnum.FriendCircle -> {
-                wxService?.weiXinShare(this, ShareObject().apply {
-                    this.shareType = WeiXinShareType.WXImage
-                    this.shareWay = ShareWayEnum.WXSceneTimeline
-                    this.shareImage = bitmap
-                })
-            }
-            ShareTypeEnum.WeChat -> {
-                wxService?.weiXinShare(this, ShareObject().apply {
-                    this.shareType = WeiXinShareType.WXImage
-                    this.shareWay = ShareWayEnum.WXSceneSession
-                    this.shareImage = bitmap
-                })
-            }
-            ShareTypeEnum.Sina -> {
-                wxService?.weiBoShare(this, ShareObject().apply {
-                    this.shareType = WeiBoShareType.WbImage
-                    this.shareImage = bitmap
-                })
-            }
-            ShareTypeEnum.SaveImage -> {
-                requestRWPermission {
-                    Observable.just(bitmap).observeOn(Schedulers.io()).map { b ->
-                        FileUtils.saveBitmapToDCIM(b, UUID.randomUUID().toString())
-                    }.observeOn(AndroidSchedulers.mainThread()).subscribe {
-                        if (it == true) {
-                            ToastUtils.show("保存分享图片成功")
+        currentSelectView?.post {
 
-                        }
-                    }
-
-
+            val bitmap = BitmapUtil.viewConversionBitmap(currentSelectView!!)
+            tv002?.text = "分享给好友"
+            checkView?.show()
+            when (type) {
+                ShareTypeEnum.FriendCircle -> {
+                    wxService?.weiXinShare(this, ShareObject().apply {
+                        this.shareType = WeiXinShareType.WXImage
+                        this.shareWay = ShareWayEnum.WXSceneTimeline
+                        this.shareImage = bitmap
+                    })
                 }
+                ShareTypeEnum.WeChat -> {
+                    wxService?.weiXinShare(this, ShareObject().apply {
+                        this.shareType = WeiXinShareType.WXImage
+                        this.shareWay = ShareWayEnum.WXSceneSession
+                        this.shareImage = bitmap
+                    })
+                }
+                ShareTypeEnum.Sina -> {
+                    wxService?.weiBoShare(this, ShareObject().apply {
+                        this.shareType = WeiBoShareType.WbImage
+                        this.shareImage = bitmap
+                    })
+                }
+                ShareTypeEnum.SaveImage -> {
+                    requestRWPermission {
+                        Observable.just(bitmap).observeOn(Schedulers.io()).map { b ->
+                            FileUtils.saveBitmapToDCIM(b, UUID.randomUUID().toString())
+                        }.observeOn(AndroidSchedulers.mainThread()).subscribe {
+                            if (it == true) {
+                                ToastUtils.show("保存分享图片成功")
+
+                            }
+                        }
+
+
+                    }
+                }
+
+
             }
-
-
         }
 
     }

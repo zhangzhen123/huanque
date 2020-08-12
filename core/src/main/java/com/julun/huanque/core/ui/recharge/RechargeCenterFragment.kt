@@ -172,7 +172,9 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
             }
         }
 
-
+        btn_ensure.post{
+            checkPayType(PayType.WXPayApp)
+        }
     }
 
     private fun checkPayType(payType: String) {
@@ -250,6 +252,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
             banner?.setDelegate(bannerItemCick)
             banner?.setData(adList, null)
             banner?.setAutoPlayAble(adList.size > 1)
+            banner?.viewPager?.pageMargin=dp2px(10)
             if (adList.size > 1) {
                 banner?.currentItem = 0
             }
@@ -463,7 +466,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
     }
 
     private fun checkEnsureBtn() {
-        btn_ensure.isEnabled = mSelectItem != null && currentPayType.isNotEmpty()
+//        btn_ensure.isEnabled = mSelectItem != null && currentPayType.isNotEmpty()
     }
 
     override fun showLoadState(state: NetState) {

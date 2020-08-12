@@ -306,10 +306,10 @@ class FillInformationActivity : BaseActivity() {
             .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
             .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
             .isDragFrame(false)
-            .circleDimmedLayer(true)// 是否圆形裁剪
-            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
-            .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
-            .rotateEnabled(false) // 裁剪是否可旋转图片
+//            .circleDimmedLayer(true)// 是否圆形裁剪
+//            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+//            .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+//            .rotateEnabled(false) // 裁剪是否可旋转图片
             .scaleEnabled(true)// 裁剪是否可放大缩小图片
             .forResult(PictureConfig.CHOOSE_REQUEST)
 

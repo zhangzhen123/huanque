@@ -59,13 +59,14 @@
             <com.julun.huanque.common.widgets.bgabanner.BGABanner
                 android:id="@+id/banner"
                 android:layout_width="match_parent"
-                android:layout_height="75dp"
+                android:layout_height="60dp"
                 android:visibility="gone"
+                tools:visibility="visible"
                 app:banner_indicatorGravity="bottom|right"
                 app:banner_isNeedShowIndicatorOnOnlyOnePage="false"
                 app:banner_pageChangeDuration="1000"
                 app:banner_pointContainerBackground="@color/transparent"
-                app:banner_pointContainerLeftRightPadding="0dp"
+                app:banner_pointContainerLeftRightPadding="5dp"
                 app:banner_pointDrawable="@drawable/bga_banner_selector_point_home"
                 app:banner_pointLeftRightMargin="2dp"
                 app:banner_tipTextSize="12sp" />
@@ -172,7 +173,6 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:text="@string/ensure_recharge"
-        android:enabled="false"
         android:textColor="@color/selector_btn_text_color_common"
         android:textSize="16sp" />
 

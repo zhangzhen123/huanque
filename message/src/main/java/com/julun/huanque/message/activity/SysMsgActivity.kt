@@ -221,7 +221,7 @@ class SysMsgActivity : BaseActivity() {
             }
             MessageConstants.RoyalPage -> {
                 //跳转到贵族
-                RNPageActivity.start(this, RnConstant.RoyalPage)
+                RNPageActivity.start(this, RnConstant.ROYAL_PAGE)
             }
             MessageConstants.MineHomePage -> {
                 //跳转到我的主页

@@ -13,6 +13,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.ChatMessageBean
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.draweetext.BeautyBubbleTextView
 import com.julun.huanque.core.R
@@ -46,13 +47,23 @@ class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) : andro
         private const val MAX_LINES: Int = 100       //最大保留条目数
         private const val ITEMS_COUNT_TO_REMOVE = 40 //到达最大条目数的时候，删除的条目数
     }
-
+    init {
+        isVerticalFadingEdgeEnabled=true
+        setFadingEdgeLength(dp2px(30))
+    }
     fun addOtherItem(bean: ChatMessageBean) {
         chatRecordAdapter.addData(bean)
         if (!isUserScroll)
             scrollToBottom()
     }
 
+//    override fun getTopFadingEdgeStrength(): Float {
+//        return super.getTopFadingEdgeStrength()
+//    }
+//
+//    override fun getBottomFadingEdgeStrength(): Float {
+//        return super.getBottomFadingEdgeStrength()
+//    }
     fun changeItemLayout(bean: ChatMessageBean) {
         val updateContent = bean.content
         chatRecordAdapter.data.forEach {

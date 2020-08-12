@@ -89,7 +89,7 @@ class BeautyBubbleTextView : RelativeLayout {
 
                     val colorInts = arrayListOf<Int>()
                     colors.forEach {
-                        val color = GlobalUtils.formatColor(it.replace("#","#66"), R.color.colorPrimary_lib)//默认加上40%透明度
+                        val color = GlobalUtils.formatColor(it.replace("#", "#66"), R.color.colorPrimary_lib)//默认加上40%透明度
                         colorInts.add(color)
                     }
                     logger.info("colors=$colorInts")
@@ -122,6 +122,8 @@ class BeautyBubbleTextView : RelativeLayout {
 
                 sParams.alignEnd(R.id.draweeSpanTv)
                 sParams.sameTop(R.id.draweeSpanTv)
+                sParams.topMargin = -(dp2px(3))
+                sParams.rightMargin = -(dp2px(4))
                 svgaPlayerView.requestLayout()
                 svgaPlayerView.scaleType = ImageView.ScaleType.FIT_CENTER
                 addView(svgaPlayerView, 0, sParams)
@@ -131,6 +133,8 @@ class BeautyBubbleTextView : RelativeLayout {
                 val wParams = LayoutParams(map["w"]?.toIntOrNull() ?: dp2px(10), map["h"]?.toIntOrNull() ?: dp2px(10))
                 wParams.alignEnd(R.id.draweeSpanTv)
                 wParams.sameTop(R.id.draweeSpanTv)
+                wParams.topMargin = -(dp2px(3))
+                wParams.rightMargin = -(dp2px(4))
                 addView(webpGifView, 0, wParams)
                 webpGifView.loadImageInPx(rt, wParams.width, wParams.height)
             }
@@ -145,6 +149,8 @@ class BeautyBubbleTextView : RelativeLayout {
 
                 sParams.alignEnd(R.id.draweeSpanTv)
                 sParams.sameBottom(R.id.draweeSpanTv)
+                sParams.bottomMargin = -(dp2px(3))
+                sParams.rightMargin = -(dp2px(4))
                 svgaPlayerView.requestLayout()
                 svgaPlayerView.scaleType = ImageView.ScaleType.FIT_CENTER
                 addView(svgaPlayerView, 0, sParams)
@@ -154,6 +160,8 @@ class BeautyBubbleTextView : RelativeLayout {
                 val wParams = LayoutParams(map["w"]?.toIntOrNull() ?: dp2px(10), map["h"]?.toIntOrNull() ?: dp2px(10))
                 wParams.alignEnd(R.id.draweeSpanTv)
                 wParams.sameBottom(R.id.draweeSpanTv)
+                wParams.bottomMargin = -(dp2px(3))
+                wParams.rightMargin = -(dp2px(4))
                 addView(webpGifView, 0, wParams)
                 webpGifView.loadImageInPx(rb, wParams.width, wParams.height)
             }
@@ -168,6 +176,8 @@ class BeautyBubbleTextView : RelativeLayout {
 
                 sParams.alignStart(R.id.draweeSpanTv)
                 sParams.sameTop(R.id.draweeSpanTv)
+                sParams.topMargin = -(dp2px(3))
+                sParams.leftMargin = -(dp2px(4))
                 svgaPlayerView.requestLayout()
                 svgaPlayerView.scaleType = ImageView.ScaleType.FIT_CENTER
                 addView(svgaPlayerView, 0, sParams)
@@ -177,6 +187,8 @@ class BeautyBubbleTextView : RelativeLayout {
                 val wParams = LayoutParams(map["w"]?.toIntOrNull() ?: dp2px(10), map["h"]?.toIntOrNull() ?: dp2px(10))
                 wParams.alignStart(R.id.draweeSpanTv)
                 wParams.sameTop(R.id.draweeSpanTv)
+                wParams.topMargin = -(dp2px(3))
+                wParams.leftMargin = -(dp2px(4))
                 addView(webpGifView, 0, wParams)
                 webpGifView.loadImageInPx(lt, wParams.width, wParams.height)
             }
@@ -191,6 +203,8 @@ class BeautyBubbleTextView : RelativeLayout {
 
                 sParams.alignStart(R.id.draweeSpanTv)
                 sParams.sameBottom(R.id.draweeSpanTv)
+                sParams.bottomMargin = -(dp2px(3))
+                sParams.leftMargin = -(dp2px(4))
                 svgaPlayerView.requestLayout()
                 svgaPlayerView.scaleType = ImageView.ScaleType.FIT_CENTER
                 addView(svgaPlayerView, 0, sParams)
@@ -200,6 +214,8 @@ class BeautyBubbleTextView : RelativeLayout {
                 val wParams = LayoutParams(map["w"]?.toIntOrNull() ?: dp2px(10), map["h"]?.toIntOrNull() ?: dp2px(10))
                 wParams.alignStart(R.id.draweeSpanTv)
                 wParams.sameBottom(R.id.draweeSpanTv)
+                wParams.bottomMargin = -(dp2px(3))
+                wParams.leftMargin = -(dp2px(4))
                 addView(webpGifView, 0, wParams)
                 webpGifView.loadImageInPx(lb, wParams.width, wParams.height)
             }
