@@ -361,6 +361,10 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                 wxNickname = type.nickname
             }
         }
+        btn_ensure.post {
+            if(mAdapter.data.size>0)
+            checkItem(0)
+        }
 
     }
 

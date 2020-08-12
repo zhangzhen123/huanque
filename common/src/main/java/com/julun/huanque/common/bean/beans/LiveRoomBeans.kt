@@ -79,8 +79,8 @@ class RoomUserChatExtra(
     var royalSmallPic: String = "",
     //msgType= 1 表示为系统消息
     var msgType: Int = 0,
-    //显示类别 炫彩发言使用
-    var displayType: List<String>? = null
+    //显示气泡
+    var chatBubble: ChatBubble?=null
 )
 
 /**
@@ -525,8 +525,22 @@ class UserInfo {
     //是否免费弹幕(粉丝特权)
     var hasFreeDanMu: Boolean = false
     var danMuCard: Int = 0
+    var charBubble: ChatBubble? = null
 }
 
+/**
+ * 发言的文字背景气泡配置
+ */
+data class ChatBubble(
+    var bdc: String = "",//边框颜色
+    var bgc: String = "",//背景颜色
+    var lb: String = "",//左下
+    var rt: String = "",//右上
+    var lt: String = "",//左上
+    var rb: String = "",//右下
+    var radius:Int = 0//圆角大小
+
+)
 
 /**
  * 开播数据

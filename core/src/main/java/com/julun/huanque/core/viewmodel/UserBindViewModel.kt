@@ -9,6 +9,7 @@ import com.julun.huanque.common.bean.beans.BindResultBean
 import com.julun.huanque.common.bean.forms.BindForm
 import com.julun.huanque.common.bean.forms.BindPhoneForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.convertError
 import com.julun.huanque.common.suger.convertRtData
@@ -51,7 +52,7 @@ class UserBindViewModel : BaseViewModel() {
     fun bindWinXin(code: String) {
         viewModelScope.launch {
             request({
-                val result = userService.bindWeiXin(BindForm(code)).dataConvert(/*intArrayOf(501)*/)
+                val result = userService.bindWeiXin(BindForm(code)).dataConvert(intArrayOf(ErrorCodes.HAS_BIND_OTHER))
                 bindWinXinData.postValue(result.convertRtData())
             }, error = {
                 bindWinXinData.postValue(it.convertError())
@@ -80,7 +81,7 @@ class UserBindViewModel : BaseViewModel() {
     fun bindAliPay(code: String) {
         viewModelScope.launch {
             request({
-                val result = userService.bindAliPay(BindForm(code)).dataConvert()
+                val result = userService.bindAliPay(BindForm(code)).dataConvert(intArrayOf(ErrorCodes.HAS_BIND_OTHER))
                 bindAliData.postValue(result.convertRtData())
             }, error = {
                 bindAliData.postValue(it.convertError())

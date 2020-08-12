@@ -689,4 +689,13 @@ object StringHelper {
     }
 
 
+    fun isPngUrl(url:String):Boolean{
+        return url.contains(".png") || url.contains(".PNG")
+    }
+    fun isWebpUrl(url:String):Boolean{
+        return url.contains(".webp") || url.contains(".WEBP")
+    }
+    fun isSvgaUrl(url:String):Boolean{
+        return url.contains(".svga") || url.contains(".SVGA")
+    }
 }

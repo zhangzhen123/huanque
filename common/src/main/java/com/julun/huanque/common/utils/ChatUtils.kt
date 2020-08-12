@@ -32,7 +32,7 @@ object ChatUtils {
                         anchorLevel = anchorInfo.anchorLevel)
             }
         } else {
-            //主播信息不为空，表示为普通用户
+            //主播信息为空，表示为普通用户
             var anchorLevel: Int = -1
             if (isAnchor && baseData != null) {
                 anchorLevel = baseData.anchorLevel
@@ -42,7 +42,7 @@ object ChatUtils {
                     anchorLevel = anchorLevel,
                     badgesPic = userInfo.badgesPic,
                     royalPic = userInfo.royalPic,
-                    nickcolor = userInfo.nickcolor)
+                    nickcolor = userInfo.nickcolor,chatBubble = userInfo.charBubble)
         }
         return roomUserChat
     }

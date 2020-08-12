@@ -15,7 +15,10 @@ import com.julun.huanque.R
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
-import com.julun.huanque.common.bean.events.*
+import com.julun.huanque.common.bean.events.EventMessageBean
+import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.bean.events.LoginOutEvent
+import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.SPParamKey
@@ -41,7 +44,6 @@ import com.julun.huanque.ui.main.MineFragment
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.maplib.LocationService
 import io.rong.imlib.RongIMClient
-import kotlinx.android.synthetic.main.fragment_mine.*
 import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

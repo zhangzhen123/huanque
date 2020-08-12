@@ -300,8 +300,8 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
         when (mTabPosition) {
             0 -> {
                 account_balance.text = obj.beans.toString()
-                rechargeBeans.text = "充值获得: ${obj.rechargeBeans}"
-                platformBeans.text = "平台赠送: ${obj.platformBeans}"
+                rechargeBeans.text = "充值鹊币: ${obj.rechargeBeans}"
+                platformBeans.text = "赠送鹊币: ${obj.platformBeans}"
             }
             else -> {
                 other_userId.tag = obj.userId

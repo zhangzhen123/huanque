@@ -823,13 +823,8 @@ object RongCloudManager {
                     e.printStackTrace()
                 }
                 if (message.conversationType == Conversation.ConversationType.CHATROOM) {
-                    if (MessageProcessor.publicTextProcessor == null) {
                         //直播间聊天室的消息
                         MessageReceptor.putTextMessageWithData(bean)
-                    } else {
-                        //贵族聊天的消息
-                        MessageProcessor.processPublicTextMessageOnMain(message)
-                    }
                 } else if (message.conversationType == Conversation.ConversationType.PRIVATE) {
                     bean.privateMessage = true
                     MessageProcessor.processPrivateTextMessageOnMain(message)
@@ -1049,7 +1044,6 @@ object RongCloudManager {
     fun addUnRealMessage(
         message: String,
         type: MessageProcessor.TextMessageType,
-        displayT: List<String>? = null,
         targetId: String? = null,
         cType: Conversation.ConversationType = Conversation.ConversationType.PRIVATE
     ) {
@@ -1072,7 +1066,6 @@ object RongCloudManager {
         } else {
             //其它消息
             val bean = TplBean(textTpl = message)
-            currentUserObj?.displayType = displayT
             bean.userInfo = currentUserObj
             MessageProcessor.processTextMessage(arrayListOf(bean), type)
         }

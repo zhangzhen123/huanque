@@ -38,8 +38,8 @@ open class WebpGifView(context: Context?, attrs: AttributeSet?) : SimpleDraweeVi
         mHandler?.removeCallbacks(mRunnable ?: return)
     }
     /**
-     * uri 动图的地址
-     * count 播放次数
+     * [uri] 动图的地址
+     * [count] 播放次数
      */
     fun setURI(uri: String, count: Int) {
         logger.info("当前的uri:$uri")
@@ -57,35 +57,6 @@ open class WebpGifView(context: Context?, attrs: AttributeSet?) : SimpleDraweeVi
                     override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
                         logger.info("onFinalImageSet")
                         if (animatable == null) return
-//                        imageInfo?.let {
-//                            val radio = it.height / it.width.toFloat()
-//                            val viewRadio = this@WebpGifView.height / this@WebpGifView.width.toFloat()
-//                            if (radio > viewRadio) {
-//                                hierarchy.actualImageScaleType = ScalingUtils.ScaleType.CENTER_CROP
-//                            } else {
-//                                hierarchy.actualImageScaleType = ScalingUtils.ScaleType.FIT_END
-//                            }
-//                        }
-
-//                        val ani: Animatable = animatable
-//                        if (ani is AbstractAnimatedDrawable) {
-//                            val dur = ani.duration
-//                            logger.info("播放时间：" + dur)
-//                            //设置播放次数
-//                            val ct = if (count == 0) 1 else count
-//                            val field = AbstractAnimatedDrawable::class.java.getDeclaredField("mLoopCount")
-//                            field.isAccessible = true
-//                            field.set(ani, ct)
-//
-//                            animatable.start()
-//                            callBack?.onStart()
-//
-//                            mHandler = mHandler ?: Handler()
-//                            if (duration != 0) {
-//                                mHandler?.postDelayed(mRunnable, duration * 1000L)
-//                            } else
-//                                mHandler?.postDelayed(mRunnable, (dur * ct).toLong())
-//                        }
                         if (animatable is AnimatedDrawable2) {
                             animatable.animationBackend = LoopCountModifyingBackend(animatable.animationBackend, count)//设置循环次数
                             val dur = animatable.loopDurationMs
@@ -115,6 +86,9 @@ open class WebpGifView(context: Context?, attrs: AttributeSet?) : SimpleDraweeVi
 
     }
 
+    /**
+     * 直播间用的
+     */
     fun setURISpecial(uri: String, count: Int) {
         logger.info("当前的uri:$uri")
         mRunnable = mRunnable ?: Runnable {

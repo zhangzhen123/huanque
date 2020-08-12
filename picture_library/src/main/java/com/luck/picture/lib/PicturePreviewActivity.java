@@ -361,7 +361,7 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
 //                tv_img_num.setVisibility(View.VISIBLE);
 //                tv_img_num.setText(String.valueOf(selectImages.size()));
 //                tv_ok.setText("发送("+selectImages.size()+")");
-                tv_ok.setText("发送");
+                tv_ok.setText("完成");
             }
         } else {
             tv_ok.setEnabled(false);
@@ -371,7 +371,7 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
                         config.selectionMode == PictureConfig.SINGLE ? 1 : config.maxSelectNum));
             } else {
 //                tv_img_num.setVisibility(View.INVISIBLE);
-                tv_ok.setText("发送");
+                tv_ok.setText("完成");
             }
         }
         updateSelector(refresh);

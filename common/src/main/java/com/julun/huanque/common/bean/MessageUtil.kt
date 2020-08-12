@@ -41,11 +41,9 @@ open class TplBean(
     var display: String = "",
     var userInfo: RoomUserChatExtra? = null,
     //是否隐藏背景  true的时候隐藏，其它时候显示(处理系统消息可能不需要背景)
-    var notShowBackColor: Boolean = false,
-    //本地属性
-    var useBold: Boolean = false,
+//    var notShowBackColor: Boolean = false,
     //本地字段，暂时丢弃，没有问题，后期删除
-    var useBg: Boolean = false,//是否需要背景
+//    var useBg: Boolean = false,//是否需要背景
     var realTxt: String = "",
     var paramIndexInRealText: MutableMap<String, MutableList<Int>> = mutableMapOf(),
     val randomGeneratedId: String = StringHelper.uuid(),
@@ -238,11 +236,11 @@ open class TplBean(
                         )
                     )
                 }
-                if (it.displayType?.contains(MessageDisplayType.MYSTERY) != true || it.userLevel < 1) {
+//                if (it.displayType?.contains(MessageDisplayType.MYSTERY) != true || it.userLevel < 1) {
                     //不是神秘人
                     textTpl = "$levelIconKey$textTpl"
                     textParams.put(levelIconKey, "${it.userLevel}")
-                }
+//                }
                 styleParamMap.put(
                     levelIconKey,
                     StyleParam(

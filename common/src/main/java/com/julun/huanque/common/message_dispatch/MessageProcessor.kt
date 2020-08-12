@@ -39,9 +39,6 @@ object MessageProcessor {
     //私聊会话使用
     var privateTextProcessor: PrivateMessageReceiver? = null
 
-    //上神聊天室使用
-    var publicTextProcessor: PublicMessageReceiver? = null
-
     /**
      * 清空全部订阅消息 [total]是否清空全部 true代表把包括全局的事件处理订阅一起清理掉
      */
@@ -63,7 +60,9 @@ object MessageProcessor {
 
     fun processTextMessage(beanList: List<TplBean>, messageType: TextMessageType) {
         try {
-
+            beanList.forEach {
+                it.preProcess()
+            }
             textProcessors.forEach {
                 if (it.getMessageType() == messageType) {
                     it.processMessage(beanList)
@@ -207,19 +206,6 @@ object MessageProcessor {
             processPrivateMessage(messageList)
         }
     }
-
-    //执行公聊消息
-    fun processPublicTextMessageOnMain(msg: Message) {
-        processOnMain {
-            //            logger.info("processText 当前的切换线程:${Thread.currentThread().name}")
-            try {
-                publicTextProcessor?.processMessage(msg)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     //执行事件消息在主线程
     private fun processEventMessageOnMain(data: Any?, eventCode: String) {
         processOnMain {

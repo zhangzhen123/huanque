@@ -154,7 +154,7 @@ class SuperAnimationView(context: Context, attrs: AttributeSet?) : RelativeLayou
         //优先播放webp
         when {
             webpBean.filed1.isNotBlank() -> {
-                var count = webpBean.map["playCount"]?.toInt()
+                var count = webpBean.map["playCount"]?.toIntOrNull()
                 highlyWebpView.show()
                 svgaPlayerView.hide()
                 logger.info("webp动图${webpBean.filed1}")
@@ -165,7 +165,7 @@ class SuperAnimationView(context: Context, attrs: AttributeSet?) : RelativeLayou
                 logger.info("gif动图")
                 highlyWebpView.show()
                 svgaPlayerView.hide()
-                var count = gifBean.map["playCount"]?.toInt()
+                var count = gifBean.map["playCount"]?.toIntOrNull()
                 count = if (count == null) 1 else count
                 highlyWebpView.setURISpecial(StringHelper.getOssImgUrl(gifBean.filed1), count)
             }
@@ -173,7 +173,7 @@ class SuperAnimationView(context: Context, attrs: AttributeSet?) : RelativeLayou
                 logger.info("svga动图")
                 highlyWebpView.hide()
                 svgaPlayerView.show()
-                var count = svgaBean.map["playCount"]?.toInt()
+                var count = svgaBean.map["playCount"]?.toIntOrNull()
                 count = if (count == null) 1 else count
                 svgaPlayerView.loops = count
                 startPlay(StringHelper.getOssImgUrl(svgaBean.filed1))

@@ -14,6 +14,7 @@ import com.julun.huanque.common.bean.ChatMessageBean
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.widgets.draweetext.BubbleTextView
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
 import com.julun.huanque.core.R
 import org.jetbrains.anko.matchParent
@@ -73,7 +74,7 @@ class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) : andro
         //统一到主线程 不再来回切换线程  增与删同步执行
 //        Single.just(messageList).observeOn(AndroidSchedulers.mainThread()).subscribe { items ->
         messageList.forEach {
-            it.useBg = true
+//            it.useBg = true
             chatRecordAdapter.addData(ChatMessageBean(it, NORMAL))
         }
 
@@ -123,13 +124,12 @@ class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) : andro
             when (holder.itemViewType) {
                 NORMAL -> {
                     val tpl = item.content as TplBean
-                    val txtInfo = holder.getView<DraweeSpanTextView>(R.id.chatContent)
+                    val txtInfo = holder.getView<BubbleTextView>(R.id.chatContent)
                     try {
                         if (tpl.privateMessage && tpl.userInfo?.msgType == 1) {
-                            //私聊消息,并且userinfo内部的nickname为空，表示需要特殊显示
-                            txtInfo.render(tpl.specialExtra(), tpl.userInfo?.textColor ?: "#FFFFFF")
+                            txtInfo.render(tpl.specialExtra())
                         } else {
-                            txtInfo.render(tpl.preProcess())
+                            txtInfo.render(tpl)
                         }
                         //针对上神左边界的处理
 //                        val tpllp = txtInfo.layoutParams as RecyclerView.LayoutParams
@@ -286,7 +286,7 @@ class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) : andro
                             val info = tpl.userInfo
                             val userInfo = UserInfoBean(info?.userId
                                     ?: 0, (info?.anchorLevel ?: 0) > 0, info?.royalLevel
-                                    ?: 0, "", info?.displayType)
+                                    ?: 0, "")
                             onChatMessageItemClickListener?.onChatMessageItemClick(userInfo, tpl)
                         }
                     }

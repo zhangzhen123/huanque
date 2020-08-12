@@ -55,8 +55,8 @@ class DraweeSpanTextView @JvmOverloads constructor(
         data = item
         //添加聊天模式标识
         //聊条模式标记位添加的标识 (消息由标识位，并且是主播身份)
-        var chatModeFlag =
-            item.userInfo?.displayType?.contains(MessageDisplayType.CHATMODE) == true/* && SessionUtils.getUserType() == BusiConstant.UserType.Anchor*/
+        val chatModeFlag =false
+//            item.userInfo?.displayType?.contains(MessageDisplayType.CHATMODE) == true/* && SessionUtils.getUserType() == BusiConstant.UserType.Anchor*/
 
         val realText = if (chatModeFlag) {
             "${item.realTxt}  "
@@ -95,38 +95,23 @@ class DraweeSpanTextView @JvmOverloads constructor(
                         paint.isAntiAlias = true
                     }
                     //useBg代表需要设置bg  //notShowBackColor如果特殊地方不需要背景直接不处理
-                    if (item.useBg && !item.notShowBackColor) {
-
-                        when {
-                            item.userInfo?.displayType?.contains(MessageDisplayType.SSCOLORFUL) == true -> {
-                                //上神发言
-//                                backgroundDrawable = ContextCompat.getDrawable(context, R.mipmap.bg_message_ongod)
-                            }
-                            item.userInfo?.displayType?.contains(MessageDisplayType.COLORFUL) == true -> {
-                                //炫彩发言
-//                                setPadding(DensityHelper.dp2px(6f), DensityHelper.dp2px(5f) + DensityHelper.dp2px(4f),
-//                                        DensityHelper.dp2px(8f) + DensityHelper.dp2px(3f), DensityHelper.dp2px(5f) + DensityHelper.dp2px(4f))
-//                                val drawableNobility = DrawableNobility()
-//                                backgroundDrawable = drawableNobility
-                            }
-                            else -> {
-                                //不是任何炫彩发言
-                                //处理背景颜色圆角 如果没有该参数 本地设置默认颜色 圆角
-                                if (styleParam.bgColor.isBlank()) {
-                                    styleParam.bgColor = MessageUtil.MESSAGE_BG
-                                }
-                                if (styleParam.radius == -1) {
-                                    styleParam.radius = MessageUtil.MESSAGE_BG_RADIUS
-                                }
-                                val gDrawable = GradientDrawable()
-                                gDrawable.cornerRadius = dp2pxf(styleParam.radius)
-                                gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
-                                val colorInt: Int = Color.parseColor(styleParam.bgColor)
-                                gDrawable.setColor(colorInt)
-                                backgroundDrawable = gDrawable
-                            }
-                        }
-                    }
+//                    if (item.useBg && !item.notShowBackColor) {
+//
+//                        //不是任何炫彩发言
+//                        //处理背景颜色圆角 如果没有该参数 本地设置默认颜色 圆角
+//                        if (styleParam.bgColor.isBlank()) {
+//                            styleParam.bgColor = MessageUtil.MESSAGE_BG
+//                        }
+//                        if (styleParam.radius == -1) {
+//                            styleParam.radius = MessageUtil.MESSAGE_BG_RADIUS
+//                        }
+//                        val gDrawable = GradientDrawable()
+//                        gDrawable.cornerRadius = dp2pxf(styleParam.radius)
+//                        gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
+//                        val colorInt: Int = Color.parseColor(styleParam.bgColor)
+//                        gDrawable.setColor(colorInt)
+//                        backgroundDrawable = gDrawable
+//                    }
                 }
                 return@forEach
             }

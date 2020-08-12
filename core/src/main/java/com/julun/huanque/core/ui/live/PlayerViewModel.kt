@@ -684,7 +684,6 @@ class PlayerViewModel : BaseViewModel() {
                         RongCloudManager.addUnRealMessage(
                             newMessage,
                             MessageProcessor.TextMessageType.PUBLIC_MESSAGE,
-                            null,
                             "$programId",
                             Conversation.ConversationType.CHATROOM
                         )
