@@ -246,10 +246,10 @@ class LoginActivity : BaseActivity() {
         uiConfigBuilder.setAppPrivacyTwo(GlobalUtils.getString(R.string.register_rule_pravicy), "www.baidu.com")
 
         uiConfigBuilder.setPrivacyState(true)
-        uiConfigBuilder.setAppPrivacyColor(GlobalUtils.getColor(R.color.black_333), GlobalUtils.getColor(R.color.black_999))
+        uiConfigBuilder.setAppPrivacyColor(GlobalUtils.getColor(R.color.black_999), GlobalUtils.getColor(R.color.black_333))
         uiConfigBuilder.setPrivacyText(
-            "登录即为同意", "和", ""
-            , "协议，并使用本机号码登录"
+            "同意", "、", "和"
+            , "并授权获取本机号码"
         )
         uiConfigBuilder.setPrivacyCheckboxHidden(true)
         uiConfigBuilder.setPrivacyTextCenterGravity(true)

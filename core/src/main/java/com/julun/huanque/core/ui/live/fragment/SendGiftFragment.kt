@@ -305,10 +305,13 @@ class SendGiftFragment : BaseDialogFragment() {
             showBagData(it ?: return@Observer)
         })
         viewModel?.bagChangeState?.observe(this, Observer {
-            playerViewModel.bagChangeFlag.value = it
-            if (it == true) {
+            if (it == true && gtv_package?.isSelected != true) {
+                //未选中背包
                 gtv_package?.showDot(true)
                 goodsCfgData?.bagChange = true
+                playerViewModel.bagChangeFlag.value = it
+            } else {
+                playerViewModel.bagChangeFlag.value = false
             }
         })
         viewModel?.hideLoading?.observe(this, Observer { hideLoadingView() })

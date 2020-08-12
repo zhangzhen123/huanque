@@ -93,7 +93,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val userListAdapter = object : BaseQuickAdapter<UserInfoForLmRoom, BaseViewHolder>(R.layout.item_live_room_user) {
         override fun convert(holder: BaseViewHolder, item: UserInfoForLmRoom) {
             val headerImage = holder.getView<PhotoHeadView>(R.id.headerImage)
-            if(item.headFrame.isNotEmpty()){
+            if (item.headFrame.isNotEmpty()) {
                 headerImage.setImageCustomByOneFrameSide(
                     headUrl = item.headPic,
                     frameUrl = item.headFrame,
@@ -102,12 +102,13 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
                     frameHeight = 48
                 )
 
-            }else{
+            } else {
                 headerImage.setImage(
                     headUrl = item.headPic,
                     headSize = 30,
                     frameWidth = 36,
-                    frameHeight = 48)
+                    frameHeight = 48
+                )
             }
             //添加边框
 //            val roundingParams = RoundingParams.fromCornersRadius(5f)
@@ -169,7 +170,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
                 playerViewModel?.subscribeSource = "直播间左上角"
                 playerViewModel?.follow()
             }
-            subscribeAnchor.isEnabled=false
+            subscribeAnchor.isEnabled = false
         }
         exitImage.onClickNew {
             playerViewModel?.finishState?.value = true
@@ -193,7 +194,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             } else {
                 val user = userListAdapter.getItemOrNull(position)
                 user?.let {
-                    playerViewModel?.userInfoView?.value = UserInfoBean(it.userId, false, it.royalLevel, it.picId,nickname = it.nickname)
+                    playerViewModel?.userInfoView?.value = UserInfoBean(it.userId, false, it.royalLevel, it.picId, nickname = it.nickname)
                 }
 
             }
@@ -280,9 +281,9 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         roomUsers = orderUsersAndDelAnchor(roomData.onlineUsers)
         isReduceUserCount()
         doRefreshRoomUserList()
-        if(roomData.royalCount>0){
+        if (roomData.royalCount > 0) {
             royalButtonAnimation()
-        }else{
+        } else {
             stopAniWithOriginal()
         }
     }
@@ -309,9 +310,11 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
         }
     }
-    fun setSubscribeEnable(bool: Boolean){
-        subscribeAnchor.isEnabled=bool
+
+    fun setSubscribeEnable(bool: Boolean) {
+        subscribeAnchor.isEnabled = bool
     }
+
     // 关注成功：显示主播等级图标，隐藏关注图标
     // 取消关注：隐藏主播等级图标，显示关注图标
     fun subscribeSuccess(bool: Boolean) {
@@ -428,11 +431,14 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         roomData.onlineUserNum = data.totalCount
         roomData.royalCount = data.royalCount
         roomData.guardCount = data.guardCount
-        if(roomData.royalCount>0){
+        if (roomData.royalCount > 0) {
             royalButtonAnimation()
-        }else{
+        } else {
             stopAniWithOriginal()
         }
+        //修改贵族和非贵族的数据
+        tv_user_count.text = formatCount(roomData.onlineUserNum)
+        tvRoyalContent.text = formatCount(roomData.royalCount)
     }
 
     private fun replaceExistUserItem(newObj: UserInfoForLmRoom) {
