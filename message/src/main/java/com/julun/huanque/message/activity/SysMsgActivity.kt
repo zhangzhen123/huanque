@@ -18,6 +18,7 @@ import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.FriendsAdapter
@@ -100,7 +101,7 @@ class SysMsgActivity : BaseActivity() {
             when (view?.id) {
                 R.id.llSysRootView -> {
                     val item = view.getTag(R.id.msg_bean_id) as? SysMsgBean
-                    customAction(item?.touchType ?: return@onAdapterChildClickNew)
+                    customAction(item ?: return@onAdapterChildClickNew)
                 }
                 R.id.clFriendsRootView -> {
                     val item = view.getTag(R.id.msg_bean_id) as? FriendBean
@@ -199,18 +200,34 @@ class SysMsgActivity : BaseActivity() {
         }
     }
 
-    private fun customAction(touchType: String) {
+    private fun customAction(sysBean: SysMsgBean) {
+        val touchType = sysBean.touchType
         when (touchType) {
             MessageConstants.ACTION_URL -> {
                 //H5
-                ToastUtils.show("打开H5页")
+                WebActivity.startWeb(this, sysBean.touchValue)
             }
-            MessageConstants.ACTION_MAIN_PAGE -> {
-                ToastUtils.show("打开主页")
+            MessageConstants.OfficialCertPage -> {
+                //跳转官方认证
+                RNPageActivity.start(this, RnConstant.OFFICIAL_CERT_PAGE)
             }
-            MessageConstants.ACTION_MESSAGE -> {
-                ToastUtils.show("打开私聊")
+            MessageConstants.AnchorCertPage -> {
+                //跳转到主播认证
+                RNPageActivity.start(this, RnConstant.ANCHOR_CERT_PAGE)
             }
+            MessageConstants.EditMineHomePage -> {
+                //跳转到我的资料编辑
+                RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+            }
+            MessageConstants.RoyalPage -> {
+                //跳转到贵族
+                RNPageActivity.start(this, RnConstant.RoyalPage)
+            }
+            MessageConstants.MineHomePage -> {
+                //跳转到我的主页
+                RNPageActivity.start(this, RnConstant.MINE_HOMEPAGE)
+            }
+
             MessageConstants.ACTION_None -> {
             }
             else -> {

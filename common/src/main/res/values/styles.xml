@@ -126,6 +126,11 @@
         <item name="android:windowEnterAnimation">@anim/dialog_bottom_enter</item>
         <item name="android:windowExitAnimation">@anim/dialog_bottom_exit</item>
     </style>
+
+    <style name="dialog_bottom_enter_style" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_bottom_enter</item>
+    </style>
+
     <!--回归礼包使用    退出到特定位置的动画-->
     <style name="dialog_return_activity" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/dialog_bottom_enter</item>

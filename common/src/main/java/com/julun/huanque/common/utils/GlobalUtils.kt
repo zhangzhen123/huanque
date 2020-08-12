@@ -263,7 +263,8 @@ object GlobalUtils {
         val myClipboard: ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         myClipboard.setPrimaryClip(ClipData.newPlainText("text", text))
         if (attentionContent.isNotEmpty()) {
-            ToastUtils.showCustom(attentionContent, Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL or Gravity.BOTTOM)
+//            ToastUtils.showCustom(attentionContent, Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL or Gravity.BOTTOM)
+            Toast.makeText(context,attentionContent,Toast.LENGTH_SHORT).show()
         }
     }
 
