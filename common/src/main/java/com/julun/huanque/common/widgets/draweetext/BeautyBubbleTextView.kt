@@ -2,6 +2,7 @@ package com.julun.huanque.common.widgets.draweetext
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.AttributeSet
@@ -39,14 +40,12 @@ import java.util.*
  * 漂亮的气泡文字组件 在[DraweeSpanTextView]的基础上进行的扩展
  *
  */
-class BubbleTextView : RelativeLayout {
+class BeautyBubbleTextView : RelativeLayout {
 
-    private val logger = ULog.getLogger("HeaderPageView")
+    private val logger = ULog.getLogger("BubbleTextView")
 
     constructor(context: Context) : super(context)
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -70,30 +69,44 @@ class BubbleTextView : RelativeLayout {
         //处理背景颜色
         try {
             chatBubble = chatBubble ?: ChatBubble()
-            if (chatBubble.bgc.isEmpty()) {
-                chatBubble.bgc = MessageUtil.MESSAGE_BG
-            }
             if (chatBubble.radius == -1) {
                 chatBubble.radius = MessageUtil.MESSAGE_BG_RADIUS
             }
-            val colors = chatBubble.bgc.split("-") as AbstractList
-            if (colors.isNotEmpty()) {
+            if (chatBubble.bgc.isEmpty()) {
+                logger.info("没有气泡配置")
+                //默认填充背景色
+//                chatBubble.bgc = "${MessageUtil.MESSAGE_BG}-${MessageUtil.MESSAGE_BG}"
+                val gDrawable = GradientDrawable()
+                gDrawable.cornerRadius = dp2pxf(chatBubble.radius)
+                gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
+                val colorInt: Int = Color.parseColor(MessageUtil.MESSAGE_BG)
+                gDrawable.setColor(colorInt)
+                this.backgroundDrawable = gDrawable
+            } else {
+                logger.info("有气泡配置=${chatBubble.bgc}")
+                val colors = chatBubble.bgc.split("-") as AbstractList
+                if (colors.isNotEmpty()) {
 
-                val colorInts = arrayListOf<Int>()
-                colors.forEach {
-                    val color = GlobalUtils.formatColor(it, R.color.colorPrimary_lib)
-                    colorInts.add(color)
-                }
-                if (colorInts.size > 1) {
-                    val gDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colorInts.toIntArray())
-                    gDrawable.cornerRadius = dp2pxf(chatBubble.radius)
-                    if (chatBubble.bdc.isNotEmpty()) {
-                        gDrawable.setStroke(dp2px(1), GlobalUtils.formatColor(chatBubble.bdc, R.color.colorPrimary_lib))
-                        gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
+                    val colorInts = arrayListOf<Int>()
+                    colors.forEach {
+                        val color = GlobalUtils.formatColor(it.replace("#","#66"), R.color.colorPrimary_lib)//默认加上40%透明度
+                        colorInts.add(color)
                     }
-                    this.backgroundDrawable = gDrawable
+                    logger.info("colors=$colorInts")
+                    if (colorInts.size > 1) {
+                        val gDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colorInts.toIntArray())
+                        gDrawable.cornerRadius = dp2pxf(chatBubble.radius)
+                        //默认透明度
+//                        gDrawable.alpha = (0.4 * 255).toInt()
+                        if (chatBubble.bdc.isNotEmpty()) {
+                            gDrawable.setStroke(dp2px(1), GlobalUtils.formatColor(chatBubble.bdc, R.color.colorPrimary_lib))
+                            gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
+                        }
+                        this.backgroundDrawable = gDrawable
+                    }
                 }
             }
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -176,7 +189,7 @@ class BubbleTextView : RelativeLayout {
                 val svgaPlayerView = SVGAPlayerView(context)
                 val sParams = LayoutParams(map["w"]?.toIntOrNull() ?: dp2px(10), map["h"]?.toIntOrNull() ?: dp2px(10))
 
-                sParams.alignEnd(R.id.draweeSpanTv)
+                sParams.alignStart(R.id.draweeSpanTv)
                 sParams.sameBottom(R.id.draweeSpanTv)
                 svgaPlayerView.requestLayout()
                 svgaPlayerView.scaleType = ImageView.ScaleType.FIT_CENTER
@@ -185,7 +198,7 @@ class BubbleTextView : RelativeLayout {
             } else {
                 val webpGifView = SimpleDraweeView(context)
                 val wParams = LayoutParams(map["w"]?.toIntOrNull() ?: dp2px(10), map["h"]?.toIntOrNull() ?: dp2px(10))
-                wParams.alignEnd(R.id.draweeSpanTv)
+                wParams.alignStart(R.id.draweeSpanTv)
                 wParams.sameBottom(R.id.draweeSpanTv)
                 addView(webpGifView, 0, wParams)
                 webpGifView.loadImageInPx(lb, wParams.width, wParams.height)

@@ -30,7 +30,10 @@ object BusiConstant {
 
     //False
     const val False = "False"
-    var ACTIVITY_DIALOG_CODE = 603   //关闭透明activity弹窗返回的通知
+    //首页图片方格大小
+    const val OSS_120 = "!120"
+    //所有头像统一裁剪这么大
+    const val OSS_160 = "!160"
 }
 
 /**

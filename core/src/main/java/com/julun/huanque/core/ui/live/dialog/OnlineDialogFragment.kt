@@ -165,7 +165,7 @@ class OnlineDialogFragment : BaseDialogFragment() {
                 override fun getIndicator(context: Context): IPagerIndicator? {
                     val indicator = LinePagerIndicator(context)
                     indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                    indicator.lineHeight = dp2pxf(2)
+                    indicator.lineHeight = dp2pxf(3)
                     indicator.lineWidth = dp2pxf(24)
                     indicator.roundRadius = dp2pxf(2)
                     indicator.startInterpolator = AccelerateInterpolator()

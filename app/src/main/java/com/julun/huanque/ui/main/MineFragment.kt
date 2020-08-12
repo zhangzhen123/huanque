@@ -25,6 +25,7 @@ import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.suger.*
@@ -78,6 +79,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         rvUserTools.adapter = toolsAdapter
         tvQueBi.setTFDinAltB()
         tvLingQian.setTFDinAltB()
+        MixedHelper.setSwipeRefreshStyle(refreshView,requireContext())
         initViewModel()
     }
 

@@ -8,6 +8,10 @@
         android:lineSpacingExtra="4dp"
         android:textStyle="bold"
         tools:textColor="@color/black_999"
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="4dp"
         tools:text="富文本富文本富文本富文本富文本富文本富文本"
         android:textSize="14sp" />
 </merge>

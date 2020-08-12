@@ -14,8 +14,7 @@ import com.julun.huanque.common.bean.ChatMessageBean
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.utils.*
-import com.julun.huanque.common.widgets.draweetext.BubbleTextView
-import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
+import com.julun.huanque.common.widgets.draweetext.BeautyBubbleTextView
 import com.julun.huanque.core.R
 import org.jetbrains.anko.matchParent
 
@@ -124,7 +123,7 @@ class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) : andro
             when (holder.itemViewType) {
                 NORMAL -> {
                     val tpl = item.content as TplBean
-                    val txtInfo = holder.getView<BubbleTextView>(R.id.chatContent)
+                    val txtInfo = holder.getView<BeautyBubbleTextView>(R.id.chatContent)
                     try {
                         if (tpl.privateMessage && tpl.userInfo?.msgType == 1) {
                             txtInfo.render(tpl.specialExtra())

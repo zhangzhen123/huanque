@@ -301,7 +301,7 @@ class FillInformationActivity : BaseActivity() {
             .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
             //.cropCompressQuality(90)// 裁剪压缩质量 默认100
             .minimumCompressSize(100)// 小于100kb的图片不压缩
-            .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
+//            .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
             .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
             .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
             .freeStyleCropEnabled(true)// 裁剪框是否可拖拽

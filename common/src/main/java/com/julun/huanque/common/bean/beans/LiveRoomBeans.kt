@@ -525,7 +525,7 @@ class UserInfo {
     //是否免费弹幕(粉丝特权)
     var hasFreeDanMu: Boolean = false
     var danMuCard: Int = 0
-    var charBubble: ChatBubble? = null
+    var chatBubble: ChatBubble? = null
 }
 
 /**
@@ -538,7 +538,7 @@ data class ChatBubble(
     var rt: String = "",//右上
     var lt: String = "",//左上
     var rb: String = "",//右下
-    var radius:Int = 0//圆角大小
+    var radius:Int = -1//圆角大小
 
 )
 

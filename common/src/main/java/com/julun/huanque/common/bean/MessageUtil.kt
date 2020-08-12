@@ -415,8 +415,8 @@ object MessageUtil {
     const val PREFIX_ANCHOR_LEVEL = "anchor-level"
 
     //聊天默认背景颜色
-    const val MESSAGE_BG = "#33000000"
+    const val MESSAGE_BG = "#59000000"
 
     //默认背景颜色圆角大小
-    const val MESSAGE_BG_RADIUS = 3
+    const val MESSAGE_BG_RADIUS = 5
 }

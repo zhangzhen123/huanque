@@ -42,7 +42,7 @@ object ChatUtils {
                     anchorLevel = anchorLevel,
                     badgesPic = userInfo.badgesPic,
                     royalPic = userInfo.royalPic,
-                    nickcolor = userInfo.nickcolor,chatBubble = userInfo.charBubble)
+                    nickcolor = userInfo.nickcolor,chatBubble = userInfo.chatBubble)
         }
         return roomUserChat
     }

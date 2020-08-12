@@ -10,9 +10,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.FriendBean
-import com.julun.huanque.common.bean.beans.FriendContent
 import com.julun.huanque.common.bean.beans.SysMsgBean
-import com.julun.huanque.common.bean.beans.SysMsgContent
 import com.julun.huanque.common.constant.ActivityCodes
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.MessageConstants
@@ -20,7 +18,6 @@ import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.FriendsAdapter
@@ -53,7 +50,7 @@ class SysMsgActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val targetId = intent.getStringExtra(IntentParamKey.SYS_MSG_ID.name) ?: ""
 
-        MixedHelper.setSwipeRefreshStytle(rlRefreshView, this)
+        MixedHelper.setSwipeRefreshStyle(rlRefreshView, this)
         rvList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         when (targetId) {
             SystemTargetId.systemNoticeSender -> {

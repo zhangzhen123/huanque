@@ -71,7 +71,7 @@ class SimpleGiftEffectsContainerView @JvmOverloads constructor(context: Context,
         //存在更高价值或相等的礼物并且另一个不在播并且是不是自己
         run breaking@{
             queueGiftEffects.forEach {
-                if (it.beans >= lastGift.beans && !thatChild.isPlaySame(it) && lastGift.isMyself == 0) {
+                if (it.totalBeans >= lastGift.totalBeans && !thatChild.isPlaySame(it) && lastGift.isMyself == 0) {
                     has = true
                     return@breaking
                 }
@@ -90,7 +90,7 @@ class SimpleGiftEffectsContainerView @JvmOverloads constructor(context: Context,
             var result = e2.isMyself - e1.isMyself
             //再判断礼物价值
             if (result == 0) {
-                result = e2.beans - e1.beans
+                result = e2.totalBeans - e1.totalBeans
             }
             //如果正在播 优先
             if (result == 0) {
@@ -98,7 +98,7 @@ class SimpleGiftEffectsContainerView @JvmOverloads constructor(context: Context,
             }
             //再判断时间
             if (result == 0) {
-                result = (e1.curTime - e2.curTime).toInt()
+                result = (e1.time - e2.time).toInt()
             }
             result
         })
