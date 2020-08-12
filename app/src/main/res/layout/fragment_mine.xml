@@ -26,10 +26,10 @@
             android:id="@+id/tv_test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_5"
             android:text="测试"
             android:textColor="@color/black_333"
             android:textStyle="bold"
-            android:padding="@dimen/dimen_5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,11 +56,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llTitleRootView">
+        app:layout_constraintTop_toBottomOf="@+id/llTitleRootView"
+        tools:visibility="visible">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"
@@ -182,20 +182,23 @@
                     android:layout_height="@dimen/dimen_26"
                     android:layout_marginStart="@dimen/dimen_15"
                     android:layout_marginLeft="@dimen/dimen_15" />
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_78">
+
                     <View
-                        android:background="@drawable/bg_shape_top_white1"
                         android:layout_width="match_parent"
+                        android:layout_height="40dp"
                         android:layout_gravity="bottom"
-                        android:layout_height="40dp"/>
+                        android:background="@drawable/bg_shape_top_white1" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_75"
-                        android:background="@drawable/bg_user_balance"
                         android:layout_marginStart="@dimen/dimen_10"
                         android:layout_marginEnd="@dimen/dimen_10"
+                        android:background="@drawable/bg_user_balance"
                         android:gravity="center_vertical">
 
                         <RelativeLayout
@@ -302,7 +305,7 @@
                                 tools:text="9999999" />
                         </RelativeLayout>
                     </LinearLayout>
-                    
+
                 </FrameLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -462,12 +465,14 @@
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:maxLines="1"
+                        android:text="查看特权"
                         android:textColor="@color/black_999"
                         android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/sdv_author_level"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toLeftOf="@+id/sdv_author_level"
-                        app:layout_constraintTop_toTopOf="@+id/iv_author_level"
-                        android:text="查看特权" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:visibility="visible" />
 
                     <com.facebook.drawee.view.SimpleDraweeView
                         android:id="@+id/sdv_author_level"
@@ -477,9 +482,11 @@
                         android:layout_marginLeft="@dimen/dimen_6"
                         android:layout_marginEnd="@dimen/dimen_6"
                         android:layout_marginRight="@dimen/dimen_6"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_author_level"
                         app:layout_constraintRight_toLeftOf="@+id/iv_author_forward"
-                        app:layout_constraintTop_toTopOf="@+id/iv_author_level" />
+                        app:layout_constraintTop_toTopOf="@+id/iv_author_level"
+                        tools:visibility="visible" />
 
                     <ImageView
                         android:id="@+id/iv_author_forward"

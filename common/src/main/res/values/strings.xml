@@ -496,7 +496,7 @@
     <string name="agreement_not_agree">不同意</string>
     <string name="agreement_agree">同意</string>
     <string name="agreement_title">用户协议和隐私政策</string>
-    <string name="agreement_content">亲爱的用户：\n感谢您的使用“欢鹊”我们非常重视您的个人信息隐私保护。为了更好的地保障您的个人权益，在使用我们的产品前，请认证阅读《服务协议》和《隐私政策》的全部内容。
+    <string name="agreement_content">亲爱的用户：\n感谢您使用“欢鹊”，我们非常重视您的个人信息和隐私保护。为了更好地保障您的个人权益，在使用我们的产品前，请认真阅读《服务协议》和《隐私政策》的全部内容。
     </string>
     <string name="agreement_conent_clickable">《服务协议》</string>
     <string name="agreement_register_conent_clickable">《隐私政策》</string>

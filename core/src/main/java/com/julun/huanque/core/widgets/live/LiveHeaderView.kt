@@ -193,7 +193,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             } else {
                 val user = userListAdapter.getItemOrNull(position)
                 user?.let {
-                    playerViewModel?.userInfoView?.value = UserInfoBean(it.userId, false, it.royalLevel, it.picId)
+                    playerViewModel?.userInfoView?.value = UserInfoBean(it.userId, false, it.royalLevel, it.picId,nickname = it.nickname)
                 }
 
             }

@@ -168,6 +168,9 @@ class UserCardFragment : BaseDialogFragment() {
      * 初始化监听
      */
     private fun initListener() {
+        sdv_header.onClickNew {
+            tv_home_page.performClick()
+        }
         tv_attention.onClickNew {
             if (mUserCardViewModel.userInfoData.value?.canInteractive != true) {
                 Toast.makeText(context, "无法关注该用户", Toast.LENGTH_SHORT).show()

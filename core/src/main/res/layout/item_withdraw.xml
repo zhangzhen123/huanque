@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:lines="1"
-        android:textSize="12sp"
+        android:textSize="10sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/view_bg_holder"
         app:layout_constraintLeft_toLeftOf="@id/view_bg_holder"

@@ -29,6 +29,9 @@ class MineViewModel : BaseViewModel() {
     }
     val checkAuthorResult: MutableLiveData<ReactiveData<Boolean>> by lazy { MutableLiveData<ReactiveData<Boolean>>() }
 
+    //余额数据
+    val balance: LiveData<Long> by lazy { BalanceUtils.getBalance() }
+
     //协程请求示例
     val userInfo: LiveData<ReactiveData<UserDetailInfo>> = queryState.switchMap {
         liveData {

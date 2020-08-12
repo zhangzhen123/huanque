@@ -277,6 +277,13 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
             }
 
         }
+
+        if (mAdapter.itemCount - mAdapter.headerLayoutCount > 0) {
+            state_pager_view.showSuccess()
+        } else {
+            state_pager_view.showEmpty()
+        }
+
     }
 
     override fun showLoadState(state: NetState) {

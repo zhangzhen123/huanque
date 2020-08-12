@@ -37,6 +37,7 @@ import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_mine.*
+import kotlinx.android.synthetic.main.fragment_mine.state_pager_view
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
@@ -107,6 +108,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 }
             }
         })
+
+        mViewModel.balance.observe(this, Observer {
+            if (it != null) {
+                tvQueBi.text = "$it"
+            }
+        })
+
+
     }
 
     private fun loadData(info: UserDetailInfo) {
@@ -119,11 +128,11 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         sdv_wealth.loadImage(info.userBasic.userLevelIcon, 50f, 16f)
 
         sdv_royal_level.loadImage(info.userBasic.royalLevelIcon, 50f, 16f)
-        if (info.userBasic.anchorLevel == -1) {
-            cl_author_level.hide()
-        } else {
-            cl_author_level.show()
+        if (info.userBasic.anchorLevel > 0) {
+            sdv_author_level.show()
             sdv_author_level.loadImage(info.userBasic.anchorLevelIcon, 50f, 16f)
+        } else {
+            tv_author_privilege.show()
         }
 
 
@@ -134,7 +143,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             tvCertification.show()
             tvCertification.onClickNew {
                 mIRealNameService.startRealHead(requireActivity(), object : RealNameCallback {
-                    override fun onCallback(status: String, des: String) {
+                    override fun onCallback(status: String, des: String, percent: Int?) {
                         if (status == RealNameConstants.TYPE_SUCCESS) {
                             mViewModel.queryInfo(QueryType.REFRESH)
                         } else {

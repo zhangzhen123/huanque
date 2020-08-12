@@ -204,7 +204,6 @@
                     android:background="@drawable/bg_private_input"
                     android:hint="聊点什么吧..."
                     android:imeOptions="actionSearch"
-                    android:maxLength="60"
                     android:minHeight="40dp"
                     android:paddingLeft="15dp"
                     android:paddingTop="9dp"

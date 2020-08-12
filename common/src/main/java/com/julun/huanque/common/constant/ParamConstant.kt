@@ -100,6 +100,9 @@ object ParamConstant {
     //悬浮窗样式(是否是竖直模式)
     const val FLOATING_VERTICAL = "FLOATING_VERTICAL"
 
+    //图片字段
+    const val PIC = "PIC"
+
 
     const val TARGET_USER_ID = "TargetUserId"
 

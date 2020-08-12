@@ -117,12 +117,11 @@ class MessageViewModel : BaseViewModel() {
 //                if (!mStranger && !player) {
 //                    dealWithStableConversation(p0)
 //                }
-                if (p0 == null || p0.isEmpty()) {
+                if ((p0 == null || p0.isEmpty()) && !player) {
                     conversationListData.value = null
                     return
                 }
-
-                showConversation(p0)
+                showConversation(p0 ?: mutableListOf<Conversation>())
 
             }
 

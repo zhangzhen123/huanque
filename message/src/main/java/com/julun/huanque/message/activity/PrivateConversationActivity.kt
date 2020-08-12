@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
@@ -418,13 +419,30 @@ class PrivateConversationActivity : BaseActivity() {
             edit_text.setText("")
         }
 
-        edit_text.textChangedListener {
-            afterTextChanged {
-//                val editable: Editable = edit_text.editableText
-//                edit_text.setText(EmojiSpanBuilder.buildEmotionSpannable(this@PrivateConversationActivity, editable.toString()))
-                tv_send.isEnabled = it.toString().isNotEmpty()
+        edit_text.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if(s == null){
+                    tv_send.isEnabled = false
+                    return
+                }
+                tv_send.isEnabled = s.toString().isNotEmpty()
+                if (s.toString().length > 60) {
+                    edit_text.setText(s.toString().substring(0, 60))
+                    edit_text.setSelection(60)
+                    Toast.makeText(this@PrivateConversationActivity, "最多输入60个字哦", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                logger.info("Message onTextChanged")
+            }
+        })
+
+        edit_text.keyListener
+
 
         iv_pic.onClickNew {
             val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
@@ -524,6 +542,12 @@ class PrivateConversationActivity : BaseActivity() {
                 when (type) {
                     EmojiType.NORMAL -> {
                         //普通表情
+                        val currentLength = edit_text.text.length
+                        val emojiLength = emotion.text.length
+                        if (currentLength + emojiLength > 60) {
+                            Toast.makeText(this@PrivateConversationActivity, "长度超过限制", Toast.LENGTH_SHORT).show()
+                            return
+                        }
                         val start: Int = edit_text.selectionStart
                         val editable: Editable = edit_text.editableText
                         val emotionSpannable: Spannable = EmojiSpanBuilder.buildEmotionSpannable(

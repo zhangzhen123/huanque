@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 class RealNameProvider : IRealNameService {
 
     private var mCallback: RealNameCallback? = null
-    private var mIsRequest: Boolean = false
+    private var mIsRequesting: Boolean = false
     private val logger = ULog.getLogger(RealNameProvider::class.java.simpleName)
 
     private var mTokenJob: Job? = null
@@ -51,11 +51,19 @@ class RealNameProvider : IRealNameService {
         realIdCard: String,
         callback: RealNameCallback
     ) {
+        if (mIsRequesting) {
+            return
+        }
+        mIsRequesting = true
         setRealCallback(callback)
         checkAndGo(activity, RealNameConstants.TYPE_NAME, realName, realIdCard)
     }
 
     override fun startRealHead(activity: Activity, callback: RealNameCallback) {
+        if (mIsRequesting) {
+            return
+        }
+        mIsRequesting = true
         setRealCallback(callback)
         checkAndGo(activity, RealNameConstants.TYPE_HEAD)
     }
@@ -76,9 +84,6 @@ class RealNameProvider : IRealNameService {
         realName: String? = null,
         realIdCard: String? = null
     ) {
-        if (mIsRequest) {
-            return
-        }
         RxPermissions(activity).requestEachCombined(
             Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
             , Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -86,12 +91,14 @@ class RealNameProvider : IRealNameService {
             .subscribe { permission ->
                 when {
                     permission.granted -> {
-                        mIsRequest = true
                         execute(activity, type, realName, realIdCard)
                     }
-                    permission.shouldShowRequestPermissionRationale ->
+                    permission.shouldShowRequestPermissionRationale -> {
                         ToastUtils.show("获取权限失败")
+                        mIsRequesting = false
+                    }
                     else -> {
+                        mIsRequesting = false
                         logger.info("获取权限被永久拒绝")
                         ToastUtils.show(
                             "无法获取到相关权限，请手动到设置中开启\n" +
@@ -113,21 +120,7 @@ class RealNameProvider : IRealNameService {
     ) {
         if (!info.need) {
             //不需要打开扫描页
-            if (info.result) {
-                //认证通过
-                callback(RealNameConstants.TYPE_SUCCESS, "认证成功~！")
-            } else {
-                //认证不通过
-                val src = when (type) {
-                    RealNameConstants.TYPE_HEAD -> {
-                        "头像对比不通过"
-                    }
-                    else -> {
-                        "认证失败,请检查认证材料是否匹配~！"
-                    }
-                }
-                callback(RealNameConstants.TYPE_FAIL, src)
-            }
+            save(type, realName, realIdCard)
             return
         }
         logger.info("打开实名认证认证页")
@@ -136,23 +129,17 @@ class RealNameProvider : IRealNameService {
                 when (auditResult) {
                     RPResult.AUDIT_PASS -> {
                         // 认证通过。建议接入方调用实人认证服务端接口DescribeVerifyResult来获取最终的认证状态，并以此为准进行业务上的判断和处理
-                        callback(RealNameConstants.TYPE_SUCCESS, "认证成功~！")
                         save(type, realName, realIdCard)
                     }
                     RPResult.AUDIT_FAIL -> {
                         // 认证不通过。建议接入方调用实人认证服务端接口DescribeVerifyResult来获取最终的认证状态，并以此为准进行业务上的判断和处理
-                        callback(RealNameConstants.TYPE_FAIL, "认证失败,请检查认证材料是否匹配~！code :$code")
                         save(type, realName, realIdCard)
                     }
                     else -> {
                         // 未认证，RPResult.AUDIT_NOT具体原因可通过code来区分（code取值参见下方表格），通常是用户主动退出或者姓名身份证号实名校验不匹配等原因，导致未完成认证流程
                         if (code == "-1") {
-                            callback(RealNameConstants.TYPE_CANCEL, code)
+                            callback(RealNameConstants.TYPE_CANCEL, "认证取消")
                         } else {
-                            callback(
-                                RealNameConstants.TYPE_FAIL,
-                                "认证失败,请检查认证材料是否匹配~！code :$code"
-                            )
                             save(type, realName, realIdCard)
                         }
                     }
@@ -161,12 +148,11 @@ class RealNameProvider : IRealNameService {
         })
     }
 
-    private fun callback(type: String, message: String) {
+    private fun callback(type: String, message: String, percent: Int? = null) {
         this.mCallback?.let { callback ->
-            callback.onCallback(type, message)
+            callback.onCallback(type, message, percent)
         }
     }
-
 
     private fun execute(
         activity: Activity,
@@ -199,7 +185,7 @@ class RealNameProvider : IRealNameService {
                     callback(RealNameConstants.TYPE_ERROR, "网络异常，请稍后重试！")
                 }
             } finally {
-                mIsRequest = false
+                mIsRequesting = false
             }
         }
     }
@@ -209,17 +195,24 @@ class RealNameProvider : IRealNameService {
         realName: String? = null,
         realIdCard: String? = null
     ) {
+        //认证步骤要从save接口获取接口再返回出去，需要等待
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                Requests.create(RealNameService::class.java).saveCertificationRes(
+                val result = Requests.create(RealNameService::class.java).saveCertificationRes(
                     RealNameForm(
                         authType = type,
                         realName = realName,
                         certNum = realIdCard
                     )
-                )
+                ).dataConvert(intArrayOf(1301))
+                callback(RealNameConstants.TYPE_SUCCESS, "认证成功~！", result.perfection)
             } catch (e: Throwable) {
                 e.printStackTrace()
+                if (e is ResponseError) {
+                    callback(RealNameConstants.TYPE_FAIL, e.busiMessage)
+                } else {
+                    callback(RealNameConstants.TYPE_FAIL, "网络异常，请重试~！")
+                }
             }
         }
     }

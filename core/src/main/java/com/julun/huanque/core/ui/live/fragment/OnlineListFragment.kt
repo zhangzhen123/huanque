@@ -167,7 +167,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
             val item = adapter?.getItem(position)
             item ?: return@onAdapterClickNew
             if (item is OnlineUserInfo) {
-                mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel)
+                mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel,nickname = item.nickname)
             }
         }
     }
