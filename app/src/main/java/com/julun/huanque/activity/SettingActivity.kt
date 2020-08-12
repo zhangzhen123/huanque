@@ -9,15 +9,14 @@ import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.manager.DataCleanManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ForceUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.support.LoginManager
 import kotlinx.android.synthetic.main.act_setting.*
-import kotlinx.android.synthetic.main.act_setting.header_view
 
 /**
  *@创建者   dong
@@ -43,7 +42,8 @@ class SettingActivity : BaseActivity() {
         }
 
         tvChange.onClickNew {
-            ARouter.getInstance().build(ARouterConstant.ENVIRONMENT_CONFIGURATION_ACTIVITY).navigation()
+            ARouter.getInstance().build(ARouterConstant.ENVIRONMENT_CONFIGURATION_ACTIVITY)
+                .navigation()
         }
 
         tv_logout.onClickNew {
@@ -87,6 +87,18 @@ class SettingActivity : BaseActivity() {
             if (ForceUtils.activityMatch(intent)) {
                 startActivity(intent)
             }
+        }
+        view_service.onClickNew {
+            //客服
+            val extra = Bundle()
+            extra.putString(BusiConstant.WEB_URL, "http://q.url.cn/s/raPDfcm?_type=wpa")
+            var intent = Intent(this, WebActivity::class.java)
+            intent.putExtras(extra)
+            startActivity(intent)
+        }
+        view_privacy.onClickNew {
+            //隐私设置
+            jump(PrivacyActivity::class.java)
         }
     }
 }
