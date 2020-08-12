@@ -4,10 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.support.LoginManager
 import kotlinx.android.synthetic.main.act_setting.*
 import kotlinx.android.synthetic.main.act_setting.header_view
@@ -22,6 +25,10 @@ class SettingActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         header_view.textTitle.text = "设置"
+
+        if (!BuildConfig.DEBUG) {
+            tvChange.hide()
+        }
     }
 
     override fun initEvents(rootView: View) {
@@ -43,6 +50,14 @@ class SettingActivity : BaseActivity() {
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
                 }
+            }
+        }
+
+        view_accountandsecurity.onClickNew {
+            //账号与安全
+            val intent = Intent(this, AccountAndSecurityActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
             }
         }
     }

@@ -74,11 +74,11 @@ class FloatingService : Service(), View.OnClickListener {
         layoutParams.gravity = Gravity.LEFT or Gravity.TOP
         //该flags描述的是窗口的模式，是否可以触摸，可以聚焦等
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-        // 设置视频的播放窗口大小
-        layoutParams.width = 400
-        layoutParams.height = 550
+//        // 设置视频的播放窗口大小
+//        layoutParams.width = 400
+//        layoutParams.height = 550
         layoutParams.x = 700
-        layoutParams.y = 0
+        layoutParams.y = dip(53)
     }
 
 
@@ -90,8 +90,8 @@ class FloatingService : Service(), View.OnClickListener {
         } else {
             layoutParams.width = dip(213)
             layoutParams.height = dip(160)
-
         }
+
         if (show) {
             showFloatingWindow()
         }

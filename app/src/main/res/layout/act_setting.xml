@@ -1,48 +1,346 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F3F4F5"
+    android:orientation="vertical">
 
     <com.julun.huanque.common.widgets.HeaderPageView
         android:id="@+id/header_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/view_accountandsecurity"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:text="账号与安全"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_accountandsecurity"
+                app:layout_constraintLeft_toLeftOf="@id/view_accountandsecurity"
+                app:layout_constraintTop_toTopOf="@id/view_accountandsecurity" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_arrow_msg_setting"
+                app:layout_constraintBottom_toBottomOf="@id/view_accountandsecurity"
+                app:layout_constraintRight_toRightOf="@id/view_accountandsecurity"
+                app:layout_constraintTop_toTopOf="@id/view_accountandsecurity" />
+
+            <View
+                android:id="@+id/view_message_setting"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_accountandsecurity" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:text="消息设置"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_message_setting"
+                app:layout_constraintLeft_toLeftOf="@id/view_message_setting"
+                app:layout_constraintTop_toTopOf="@id/view_message_setting" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_arrow_msg_setting"
+                app:layout_constraintBottom_toBottomOf="@id/view_message_setting"
+                app:layout_constraintRight_toRightOf="@id/view_message_setting"
+                app:layout_constraintTop_toTopOf="@id/view_message_setting" />
+
+            <View
+                android:id="@+id/view_Privacy"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_message_setting" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:text="隐私设置"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_Privacy"
+                app:layout_constraintLeft_toLeftOf="@id/view_Privacy"
+                app:layout_constraintTop_toTopOf="@id/view_Privacy" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_arrow_msg_setting"
+                app:layout_constraintBottom_toBottomOf="@id/view_Privacy"
+                app:layout_constraintRight_toRightOf="@id/view_Privacy"
+                app:layout_constraintTop_toTopOf="@id/view_Privacy" />
+
+            <View
+                android:id="@+id/view_juvenile"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_Privacy" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:text="青少年模式"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_juvenile"
+                app:layout_constraintLeft_toLeftOf="@id/view_juvenile"
+                app:layout_constraintTop_toTopOf="@id/view_juvenile" />
+
+            <TextView
+                android:id="@+id/tv_juvenile_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="35dp"
+                android:text="未设置"
+                app:layout_constraintBottom_toBottomOf="@id/view_juvenile"
+                app:layout_constraintRight_toRightOf="@id/view_juvenile"
+                app:layout_constraintTop_toTopOf="@id/view_juvenile" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_arrow_msg_setting"
+                app:layout_constraintBottom_toBottomOf="@id/view_juvenile"
+                app:layout_constraintRight_toRightOf="@id/view_juvenile"
+                app:layout_constraintTop_toTopOf="@id/view_juvenile" />
+
+
+            <View
+                android:id="@+id/view_user_agreement"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_juvenile" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:text="用户协议"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_user_agreement"
+                app:layout_constraintLeft_toLeftOf="@id/view_user_agreement"
+                app:layout_constraintTop_toTopOf="@id/view_user_agreement" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_arrow_msg_setting"
+                app:layout_constraintBottom_toBottomOf="@id/view_user_agreement"
+                app:layout_constraintRight_toRightOf="@id/view_user_agreement"
+                app:layout_constraintTop_toTopOf="@id/view_user_agreement" />
+
+
+            <View
+                android:id="@+id/view_user_autonomy_agreement"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_user_agreement" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:text="用户自律公约"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_user_autonomy_agreement"
+                app:layout_constraintLeft_toLeftOf="@id/view_user_autonomy_agreement"
+                app:layout_constraintTop_toTopOf="@id/view_user_autonomy_agreement" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_arrow_msg_setting"
+                app:layout_constraintBottom_toBottomOf="@id/view_user_autonomy_agreement"
+                app:layout_constraintRight_toRightOf="@id/view_user_autonomy_agreement"
+                app:layout_constraintTop_toTopOf="@id/view_user_autonomy_agreement" />
+
+            <View
+                android:id="@+id/view_privacy_agreement"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_user_autonomy_agreement" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:text="隐私政策"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_privacy_agreement"
+                app:layout_constraintLeft_toLeftOf="@id/view_privacy_agreement"
+                app:layout_constraintTop_toTopOf="@id/view_privacy_agreement" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_arrow_msg_setting"
+                app:layout_constraintBottom_toBottomOf="@id/view_privacy_agreement"
+                app:layout_constraintRight_toRightOf="@id/view_privacy_agreement"
+                app:layout_constraintTop_toTopOf="@id/view_privacy_agreement" />
+
+            <View
+                android:id="@+id/view_about_us"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_privacy_agreement" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:text="关于我们"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_about_us"
+                app:layout_constraintLeft_toLeftOf="@id/view_about_us"
+                app:layout_constraintTop_toTopOf="@id/view_about_us" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_arrow_msg_setting"
+                app:layout_constraintBottom_toBottomOf="@id/view_about_us"
+                app:layout_constraintRight_toRightOf="@id/view_about_us"
+                app:layout_constraintTop_toTopOf="@id/view_about_us" />
+
+            <View
+                android:id="@+id/view_clear_cache"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_about_us" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:text="清空缓存"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_clear_cache"
+                app:layout_constraintLeft_toLeftOf="@id/view_clear_cache"
+                app:layout_constraintTop_toTopOf="@id/view_clear_cache" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_arrow_msg_setting"
+                app:layout_constraintBottom_toBottomOf="@id/view_clear_cache"
+                app:layout_constraintRight_toRightOf="@id/view_clear_cache"
+                app:layout_constraintTop_toTopOf="@id/view_clear_cache" />
+
+
+            <TextView
+                android:id="@+id/tv_logout"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="退出登录"
+                android:textColor="@color/black_333"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_clear_cache" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="1px"
+                android:layout_marginTop="20dp"
+                app:layout_constraintLeft_toLeftOf="@id/tv_logout"
+                app:layout_constraintTop_toBottomOf="@id/tv_logout" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
     <TextView
         android:id="@+id/tvChange"
-        android:layout_width="0px"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="20dp"
-        android:background="@color/black_999"
+        android:background="@color/white"
         android:gravity="center"
         android:text="切换环境"
         android:textColor="@color/black_333"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_logout"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/tv_logout"
-        android:layout_width="0px"
-        android:layout_height="50dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="50dp"
-        android:background="@color/black_999"
-        android:gravity="center"
-        android:text="退出登录"
-        android:textColor="@color/black_333"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
