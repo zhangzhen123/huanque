@@ -64,24 +64,26 @@ class VoiceSignActivity : BaseVMActivity<VoiceSignViewModel>() {
         when (newValue) {
             0 -> {
                 iv_main_btn.loadImageLocal(R.mipmap.icon_record_voice)
-                tv_right_btn.hide()
-                tv_left_btn.hide()
+                ll_right_btn.hide()
+                ll_left_btn.hide()
                 tv_tips.show()
                 tv_tips.text = "长按录制"
                 tv_time.hide()
             }
             1 -> {
-                ImageUtils.loadGifImageLocal(iv_main_btn, R.mipmap.anim_voice_play)
+//                ImageUtils.loadGifImageLocal(iv_main_btn, R.mipmap.anim_voice_play)
+                iv_main_btn.loadImageLocal(R.mipmap.icon_voice_doing)
             }
             2 -> {
                 iv_main_btn.loadImageLocal(R.mipmap.icon_record_play)
-                tv_right_btn.show()
-                tv_left_btn.show()
+                ll_right_btn.show()
+                ll_left_btn.show()
                 tv_tips.show()
                 tv_tips.text = "点按播放"
             }
             3 -> {
-                ImageUtils.loadGifImageLocal(iv_main_btn, R.mipmap.anim_voice_play)
+//                ImageUtils.loadGifImageLocal(iv_main_btn, R.mipmap.anim_voice_play)
+                iv_main_btn.loadImageLocal(R.mipmap.icon_voice_doing)
                 tv_tips.hide()
             }
         }
@@ -211,7 +213,7 @@ class VoiceSignActivity : BaseVMActivity<VoiceSignViewModel>() {
             }
         })
 
-        tv_left_btn.onClickNew {
+        ll_left_btn.onClickNew {
             recordState = 0
             audioPlayerManager.stop()
             mWavFile = null
@@ -220,7 +222,7 @@ class VoiceSignActivity : BaseVMActivity<VoiceSignViewModel>() {
         tv_change.onClickNew {
             changePointText()
         }
-        tv_right_btn.onClickNew {
+        ll_right_btn.onClickNew {
             startUploadVoiceFile()
         }
     }

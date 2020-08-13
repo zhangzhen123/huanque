@@ -234,7 +234,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     logger.info("零钱")
                     requireActivity().startActivity<WithdrawActivity>()
                 }
-                R.id.tv_go_make_money -> {
+                R.id.ll_task -> {
                     logger.info("去赚钱")
                     RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
                 }
@@ -244,9 +244,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             logger.info("零钱")
             requireActivity().startActivity<WithdrawActivity>()
         }
-        tv_go_make_money_h.onClickNew {
-            //todo 去赚钱
+        ll_task_h.onClickNew {
             logger.info("去赚钱")
+            RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
         }
         mRecyclerView.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewDetachedFromWindow(view: View) {

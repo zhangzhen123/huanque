@@ -50,7 +50,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
         addChildClickViewIds(
             R.id.iv_audio_play, R.id.btn_action,
-            R.id.tv_go_make_money, R.id.ll_balance,
+            R.id.ll_task, R.id.ll_balance,
             R.id.iv_guide_tag_close, R.id.iv_guide_info_close
         )
     }

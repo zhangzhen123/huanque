@@ -540,7 +540,11 @@ data class ChatBubble(
     var rb: String = "",//右下
     var radius:Int = -1//圆角大小
 
-)
+){
+    override fun toString(): String {
+        return "ChatBubble(bdc='$bdc', bgc='$bgc', lb='$lb', rt='$rt', lt='$lt', rb='$rb', radius=$radius)"
+    }
+}
 
 /**
  * 开播数据

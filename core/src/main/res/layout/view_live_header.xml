@@ -79,7 +79,7 @@
                 android:id="@+id/subscribeAnchor"
                 android:layout_width="@dimen/dimen_34"
                 android:layout_height="@dimen/dimen_22"
-                android:background="@drawable/bg_solid_btn4"
+                android:background="@drawable/bg_solid_btn10"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:text="@string/tab_follow_title"

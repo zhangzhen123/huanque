@@ -60,8 +60,14 @@ class BeautyBubbleTextView : RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.layout_bubble_drawee_span_text, this)
     }
 
+    /**
+     * 有些地方需要自定义文本边距的 这里调节处理
+     */
+    fun setTextPadding(left:Int,top:Int, right:Int, bottom:Int){
+        draweeSpanTv.setPadding(left,top,right,bottom)
+    }
     fun render(tplBean: TplBean) {
-        logger.info("tpl=$tplBean")
+        logger.info("chatBubble=${tplBean.userInfo?.chatBubble}")
         //渲染文字
         draweeSpanTv.render(tplBean)
 

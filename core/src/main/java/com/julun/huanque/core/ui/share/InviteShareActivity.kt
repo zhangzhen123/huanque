@@ -132,7 +132,8 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
 
     override fun initEvents(rootView: View) {
         tv_cancel_share.onClickNew {
-            playOutAnimator()
+//            playOutAnimator()
+            finish()
         }
 
         tv_copy.onClickNew {
