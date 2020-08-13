@@ -145,7 +145,8 @@ class MessageFragment : BaseFragment() {
 
                                     PrivateConversationActivity.newInstance(
                                         act,
-                                        lmc.conversation.targetId.toLong()
+                                        lmc.conversation.targetId.toLong(),
+                                        lmc.showUserInfo?.nickname ?: ""
                                     )
 
                                 }
@@ -231,7 +232,7 @@ class MessageFragment : BaseFragment() {
                     pageView.showSuccess()
                 }
                 mAdapter.setList(it)
-            }else{
+            } else {
                 pageView.showEmpty()
             }
         })

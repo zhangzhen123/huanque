@@ -91,7 +91,7 @@ object ImageHelper {
     }
 
     //设置用户贵族等级图片
-    fun getRoyalLevelImgRound(lev: Int? = -1, levelString: String? = ""): Int {
+    fun getRoyalLevelImgRound(royalLevel: Int): Int {
 //        var level = lev
 //        if (level == -1) {
 //            try {
@@ -100,26 +100,20 @@ object ImageHelper {
 //                reportCrash("要取用的贵族等级 <$lev 或者 $levelString> 不正确,必须是 1~8的数字", e)
 //            }
 //        }
-//        var resId: Int = 0
-//        when (level) {
-//            null, -1, 0, 1 -> resId = R.mipmap.royal_lv1
-//            2 -> resId = R.mipmap.royal_lv2
-//            3 -> resId = R.mipmap.royal_lv3
-//            4 -> resId = R.mipmap.royal_lv4
-//            5 -> resId = R.mipmap.royal_lv5
-//            6 -> resId = R.mipmap.royal_lv6
-//            7 -> resId = R.mipmap.royal_lv7
-//            8 -> resId = R.mipmap.royal_lv8
-//            9 -> resId = R.mipmap.royal_lv9
-//            else -> {
-//                if (level < -1) {
-//                    resId = R.mipmap.royal_lv1
-//                } else if (level > 9) {
-//                    resId = R.mipmap.royal_lv9
-//                }
-//            }
-//        }
-        return 0
+        var resId: Int = 0
+        when (royalLevel) {
+            1 -> resId = R.mipmap.bg_royal_header_1
+            2 -> resId = R.mipmap.bg_royal_header_2
+            3 -> resId = R.mipmap.bg_royal_header_3
+            4 -> resId = R.mipmap.bg_royal_header_4
+            5 -> resId = R.mipmap.bg_royal_header_5
+            6 -> resId = R.mipmap.bg_royal_header_6
+            7 -> resId = R.mipmap.bg_royal_header_7
+            else -> {
+                0
+            }
+        }
+        return resId
     }
 
     /**
