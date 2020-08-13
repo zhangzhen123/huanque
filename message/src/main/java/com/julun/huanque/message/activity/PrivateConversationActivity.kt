@@ -345,8 +345,9 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.balanceNotEnoughFlag?.observe(this, Observer {
             if (it == true) {
 //                ToastUtils.show("余额不足")
-                mBalanceNotFoundFragment = mBalanceNotFoundFragment ?: ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment)
-                    .navigation() as? BaseDialogFragment
+                mBalanceNotFoundFragment =
+                    mBalanceNotFoundFragment ?: ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment)
+                        .navigation() as? BaseDialogFragment
                 mBalanceNotFoundFragment?.show(supportFragmentManager, "BalanceNotEnoughFragment")
             }
         })
@@ -421,7 +422,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         edit_text.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if(s == null){
+                if (s == null) {
                     tv_send.isEnabled = false
                     return
                 }
@@ -1044,7 +1045,8 @@ class PrivateConversationActivity : BaseActivity() {
                             0,
                             medias = listOf(StringHelper.getOssImgUrl("${content.remoteUri}")),
                             userId = tempData.senderUserId.toLongOrNull(),
-                            operate = ImageActivityOperate.REPORT
+                            operate = ImageActivityOperate.REPORT,
+                            from = ImageActivityFrom.CHAT
                         )
                     }
                 }

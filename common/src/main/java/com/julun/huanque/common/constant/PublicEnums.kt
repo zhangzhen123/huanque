@@ -554,7 +554,11 @@ object ImageActivityOperate {
     const val REPORT: String = "report"
     const val SAVE: String = "save"
 }
-
+object ImageActivityFrom {
+    const val CHAT: String = "chat"
+    const val HOME: String = "home"
+    const val OTHER: String = "other"
+}
 /**
  * 隐私权限list
  * @author WanZhiYuan

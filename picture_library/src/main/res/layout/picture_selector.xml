@@ -51,7 +51,7 @@
                 android:paddingLeft="20dp"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="选择"
+                android:text="完成"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/selector_publish_bg"
                 android:textColor="@color/sel_text_ensure"

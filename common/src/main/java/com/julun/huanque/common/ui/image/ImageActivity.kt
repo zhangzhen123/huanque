@@ -4,13 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.R
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.ImageActivityOperate
-import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -47,7 +46,8 @@ class ImageActivity : ImagePreviewActivity() {
             position: Int,
             medias: List<String>,
             userId: Long? = null,
-            operate: String? = null
+            operate: String? = null,
+            from: String? = null
         ) {
             val intent = Intent(activity, ImageActivity::class.java)
             val list = medias.map {
@@ -59,6 +59,7 @@ class ImageActivity : ImagePreviewActivity() {
             intent.putExtra(PictureConfig.EXTRA_POSITION, position)
             intent.putExtra(IntentParamKey.ID.name, userId)
             intent.putExtra(IntentParamKey.OPERATE.name, operate)
+            intent.putExtra(IntentParamKey.SOURCE.name, from)
             activity.startActivity(intent)
             activity.overridePendingTransition(com.luck.picture.lib.R.anim.a5, 0)
         }
@@ -70,15 +71,19 @@ class ImageActivity : ImagePreviewActivity() {
 //    private var mProgramId: Long? = null
     private var mUserId: Long = 0L
     private var operate: String = ""
+    private var from: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
 //        postId = intent.getLongExtra(POST_ID, 0)
         mUserId = intent.getLongExtra(IntentParamKey.ID.name, 0)
-        operate = intent.getStringExtra(IntentParamKey.OPERATE.name)?:""
+        operate = intent.getStringExtra(IntentParamKey.OPERATE.name) ?: ""
+        from = intent.getStringExtra(IntentParamKey.SOURCE.name) ?: ""
         PictureSelector.create(this).themeStyle(R.style.picture_me_style_multi)
         super.onCreate(savedInstanceState)
         //非主播可以点击
 
         val rightAction = findViewById<TextView>(R.id.right_action)
+        val leftBack = findViewById<View>(R.id.left_back)
+        val title = findViewById<TextView>(R.id.picture_title)
         when (operate) {
             ImageActivityOperate.REPORT -> {
                 rightAction.text = "举报"
@@ -95,6 +100,20 @@ class ImageActivity : ImagePreviewActivity() {
                     }
 
                 }
+            }
+
+        }
+        when (from) {
+            ImageActivityFrom.CHAT -> {
+                leftBack.hide()
+                title.hide()
+            }
+            ImageActivityFrom.HOME -> {
+
+            }
+
+            ImageActivityFrom.OTHER -> {
+
             }
 
         }
