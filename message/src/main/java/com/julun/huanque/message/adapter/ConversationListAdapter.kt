@@ -11,6 +11,7 @@ import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.bean.beans.FriendContent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.helper.ImageHelper
@@ -68,7 +69,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             //存在用户信息
             ImageHelper.setDefaultHeaderPic(sdvHeader, item.showUserInfo?.sex ?: "")
             //设置默认头像
-            ImageUtils.loadImage(sdvHeader, item.showUserInfo?.headPic ?: "", 56f, 56f)
+            ImageUtils.loadImage(sdvHeader, "${item.showUserInfo?.headPic ?: ""}${BusiConstant.OSS_160}", 56f, 56f)
             helper.setText(R.id.tv_nickname, item.showUserInfo?.nickname ?: "")
             //欢遇状态
             val meetResource = ImageHelper.getMeetStatusResource(item.showUserInfo?.meetStatus ?: "")

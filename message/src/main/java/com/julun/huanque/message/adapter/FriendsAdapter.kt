@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.beans.FriendBean
 import com.julun.huanque.common.bean.beans.FriendContent
 import com.julun.huanque.common.bean.beans.TIBean
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.MessageConstants
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.JsonUtil
@@ -47,7 +48,7 @@ class FriendsAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.item_f
             rootView.setTag(R.id.msg_bean_id, itemInfo)
             messageView.setTag(R.id.msg_bean_id, itemInfo)
 
-            ImageUtils.loadImage(holder.getView(R.id.ivHead),itemInfo?.friendHeadPic?:"",56f,56f)
+            ImageUtils.loadImage(holder.getView(R.id.ivHead),"${itemInfo?.friendHeadPic?:""}${BusiConstant.OSS_160}",56f,56f)
 
             holder.setText(R.id.tvNickname,itemInfo?.friendNickname?:"")
                 .setText(R.id.tvDate,TimeUtils.formatMessageTime(time, TimeUtils.TIME_FORMAT_YEAR_3))

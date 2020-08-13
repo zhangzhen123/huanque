@@ -13,6 +13,7 @@ import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.SendMsgForm
 import com.julun.huanque.common.bean.forms.SendRoomForm
 import com.julun.huanque.common.bean.message.CustomMessage
+import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.database.HuanQueDatabase
@@ -132,18 +133,23 @@ class PrivateConversationViewModel : BaseViewModel() {
         RongIMClient.getInstance().getHistoryMessages(Conversation.ConversationType.PRIVATE, "$targetId"
             , oldestId, 20, object : RongIMClient.ResultCallback<MutableList<Message>>() {
                 override fun onSuccess(p0: MutableList<Message>?) {
-                    if (p0 == null) {
-                        return
+                    val queryMessageList = mutableListOf<Message>()
+                    if (p0 != null) {
+                        queryMessageList.addAll(p0)
                     }
-                    p0.reverse()
+                    queryMessageList.reverse()
+                    if (queryMessageList.size < 20) {
+                        //消息全部获取结束，添加提示消息
+                        queryMessageList.add(obtainRiskMessage())
+                    }
                     val list = messageListData.value
                     if (list != null) {
-                        list.addAll(0, p0)
+                        list.addAll(0, queryMessageList)
                         messageChangeState.postValue(true)
                     } else {
                         messageListData.value = p0
                     }
-                    if (p0.size < 20) {
+                    if (queryMessageList.size < 20) {
                         noMoreState.postValue(true)
                     }
                     if (first) {
@@ -155,6 +161,17 @@ class PrivateConversationViewModel : BaseViewModel() {
 
                 }
             })
+    }
+
+    /**
+     * 生成风险提示消息
+     */
+    private fun obtainRiskMessage(): Message {
+        val cusSimulateMessage = CustomSimulateMessage.obtain().apply {
+            type = MessageCustomBeanType.PrivateChatRiskWarning
+            context = JsonUtil.serializeAsString("欢鹊提倡文明聊天，发布色情、欺骗、违法违规等内容，将被系统永久封禁账号。")
+        }
+        return Message.obtain("", Conversation.ConversationType.PRIVATE, cusSimulateMessage).apply { senderUserId = "system" }
     }
 
     /**

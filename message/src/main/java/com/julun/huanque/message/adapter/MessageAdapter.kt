@@ -27,10 +27,7 @@ import com.julun.huanque.common.bean.message.ExpressionAnimationBean
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
-import com.julun.huanque.common.constant.FingerGuessingResult
-import com.julun.huanque.common.constant.MessageCustomBeanType
-import com.julun.huanque.common.constant.ParamConstant
-import com.julun.huanque.common.constant.VoiceResultType
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.init.CommonInit
@@ -108,10 +105,16 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
             override fun getItemType(data: List<Message>, position: Int): Int {
                 val t = data.getOrNull(position)
-                return if (t?.senderUserId == "${SessionUtils.getUserId()}") {
-                    MINE
-                } else {
-                    OTHER
+                return when (t?.senderUserId) {
+                    "${SessionUtils.getUserId()}" -> {
+                        MINE
+                    }
+                    "system" -> {
+                        SYSTEM
+                    }
+                    else -> {
+                        OTHER
+                    }
                 }
             }
         })
@@ -129,6 +132,19 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         }
         //EmojiSpanBuilder.buildEmotionSpannable(binding.getRoot().getContext(), chatInfo.message)
         val content = item.content
+
+        if (helper.itemViewType == SYSTEM) {
+            //系统消息
+            if (content is CustomSimulateMessage) {
+                val msgContext = content.context
+                if (msgContext.isNotEmpty()) {
+                    val showContent = JsonUtil.deserializeAsObject<String>(content.context, String::class.java)
+                    helper.setText(R.id.tv_content, showContent)
+                }
+            }
+            return
+        }
+
         //其它的普通聊天消息
         if (helper.itemViewType == OTHER) {
             //头像和直播状态
@@ -136,7 +152,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
             ImageHelper.setDefaultHeaderPic(sdv_header, otherUserInfo?.headPic ?: "")
 
-            ImageUtils.loadImage(sdv_header, otherUserInfo?.headPic ?: "", 40f, 40f)
+            ImageUtils.loadImage(sdv_header, "${otherUserInfo?.headPic ?: ""}${BusiConstant.OSS_160}", 40f, 40f)
         } else {
             if (helper.itemViewType == MINE) {
 

@@ -15,6 +15,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.MessageBlockEvent
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.hide
@@ -81,7 +82,7 @@ class PrivateConversationSettingActivity : BaseActivity() {
         })
         mPrivateConversationSettingViewModel?.chatDetailData?.observe(this, Observer {
             if (it != null) {
-                ImageUtils.loadImage(sdv_header, it.headPic, 60f, 60f)
+                ImageUtils.loadImage(sdv_header, "${it.headPic}${BusiConstant.OSS_160}", 60f, 60f)
                 tv_nickname.text = it.nickname
                 tv_introduce.text = it.mySign
 
