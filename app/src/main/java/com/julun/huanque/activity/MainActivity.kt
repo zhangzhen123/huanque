@@ -14,14 +14,13 @@ import com.baidu.location.BDLocation
 import com.julun.huanque.R
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
-import com.julun.huanque.common.bean.events.EventMessageBean
-import com.julun.huanque.common.bean.events.LoginEvent
-import com.julun.huanque.common.bean.events.LoginOutEvent
-import com.julun.huanque.common.bean.events.RongConnectEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.RNMessageConst
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
@@ -51,6 +50,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
 import kotlinx.android.synthetic.main.main_activity.*
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
@@ -442,6 +442,26 @@ class MainActivity : BaseActivity() {
                     mMainViewModel.getVoiceCallInfo(data.callId)
                 }
 
+            }
+        })
+
+        //亲密度变化消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.IntimateChangeProcessor {
+            override fun process(data: IntimateBean) {
+                //发送消息，私信列表接收
+                EventBus.getDefault().post(data)
+                val userMap = hashMapOf<String, Any>()
+                data.userIds.forEach { userId ->
+                    if (userId != SessionUtils.getUserId()) {
+                        //获取到对方的ID
+                        userMap.put("friendId", userId)
+                        userMap.put("intimateLevel", data.intimateLevel)
+                        return@forEach
+                    }
+                }
+                val event = SendRNEvent(RNMessageConst.IntimateFriendChange, userMap)
+                //发送消息，通知RN
+                EventBus.getDefault().post(event)
             }
         })
 
