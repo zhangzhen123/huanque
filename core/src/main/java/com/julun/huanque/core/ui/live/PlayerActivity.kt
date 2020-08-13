@@ -14,7 +14,9 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -65,6 +67,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_live_room.*
 import kotlinx.android.synthetic.main.frame_danmu.*
+import kotlinx.android.synthetic.main.item_mkf_normal.*
 import kotlinx.android.synthetic.main.view_live_header.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -731,13 +734,10 @@ class PlayerActivity : BaseActivity() {
         playerMessageViewModel.queryRongPrivateCount(event.targetId)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateShow(event: OpenPrivateChatRoomEvent) {
-        //打开私聊列表
-        val bean = BottomActionBean()
-        bean.type = ClickType.PRIVATE_MESSAGE
-        bean.actionValue = PrivateMessageBean()
-        viewModel.actionBeanData.value = bean
+        //打开私信
+        playerMessageViewModel.privateConversationData.value = event
     }
 
     /**
@@ -1181,7 +1181,12 @@ class PlayerActivity : BaseActivity() {
         viewModel.mMessageSending.observe(this, Observer {
             judgeSendEnable()
         })
-
+        ll_input.onClickNew {
+            //屏蔽事件
+        }
+        panel_emotion.onClickNew {
+            //屏蔽事件
+        }
         panel_emotion.mListener = object : EmojiInputListener {
             override fun onClick(type: String, emotion: Emotion) {
                 val currentLength = edit_text.text.length
@@ -1247,6 +1252,14 @@ class PlayerActivity : BaseActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
 
+        })
+
+        edit_text.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                sendBtn.performClick()
+                return@OnEditorActionListener true
+            }
+            return@OnEditorActionListener false
         })
     }
 

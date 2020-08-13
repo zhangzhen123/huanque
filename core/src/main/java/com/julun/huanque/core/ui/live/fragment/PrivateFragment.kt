@@ -26,11 +26,7 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class PrivateFragment : BaseDialogFragment() {
 
-    private val mPlayerMessageViewModel: PlayerMessageViewModel by activityViewModels()
-
     override fun getLayoutId() = R.layout.fragment_private
-
-    override fun isRegisterEventBus() = true
 
     override fun initViews() {
         val bundle = Bundle()
@@ -49,12 +45,5 @@ class PrivateFragment : BaseDialogFragment() {
     override fun onStart() {
         super.onStart()
         setDialogSize(Gravity.BOTTOM, ViewGroup.LayoutParams.MATCH_PARENT, 480)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun privateShow(event: OpenPrivateChatRoomEvent) {
-        //打开私聊列表
-        EventBus.getDefault().removeStickyEvent(event)
-        mPlayerMessageViewModel.privateConversationData.value = event
     }
 }

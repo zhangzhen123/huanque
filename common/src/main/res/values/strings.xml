@@ -562,7 +562,7 @@
     <string name="phone_number_fast_login">手机快捷登录</string>
     <string name="last_login">上次登录</string>
     <string name="owner_phone_number_fast_login">本机号码一键登录</string>
-    <string name="others_phone_login">其他手机号码登录 >></string>
+    <string name="others_phone_login">其他手机号码登录 ></string>
 
     <string name="anchor_badge_cuount">荣耀勋章\n获得%1$d枚</string>
     <string name="anchor_invite_speak">主播邀请你陪Ta聊天</string>

@@ -64,6 +64,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             //Social
             if (data != null) {
                 PlayerActivity.start(requireActivity(), data.programId, from = PlayerFrom.Social)
+                dismiss()
             }
 
         }

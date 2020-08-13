@@ -32,10 +32,7 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.web.WebActivity
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.ImageUtils
-import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
@@ -194,7 +191,7 @@ class UserCardFragment : BaseDialogFragment() {
             }
             val userInfo = mUserCardViewModel.userInfoData.value ?: return@onClickNew
             //发送粘性消息
-            EventBus.getDefault().postSticky(OpenPrivateChatRoomEvent(mUserCardViewModel.mUserId, userInfo.nickname))
+            EventBus.getDefault().post(OpenPrivateChatRoomEvent(mUserCardViewModel.mUserId, userInfo.nickname))
         }
         tv_at.onClickNew {
             //@ 功能
@@ -213,10 +210,20 @@ class UserCardFragment : BaseDialogFragment() {
                 Toast.makeText(context, "无法查看该用户的主页", Toast.LENGTH_SHORT).show()
                 return@onClickNew
             }
-            RNPageActivity.start(
-                requireActivity(),
-                RnConstant.PERSONAL_HOMEPAGE,
-                Bundle().apply { putLong("userId", mUserCardViewModel.mUserId) })
+            val userId = mUserCardViewModel.mUserId
+            if (userId == SessionUtils.getUserId()) {
+                //跳转我的主页
+                RNPageActivity.start(
+                    requireActivity(),
+                    RnConstant.MINE_HOMEPAGE
+                )
+            } else {
+                //跳转他人主页
+                RNPageActivity.start(
+                    requireActivity(),
+                    RnConstant.PERSONAL_HOMEPAGE,
+                    Bundle().apply { putLong("userId", mUserCardViewModel.mUserId) })
+            }
         }
 
         tv_report.onClickNew {
