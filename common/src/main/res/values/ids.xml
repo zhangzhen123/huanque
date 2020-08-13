@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <item name="banner_indicatorId" type="id" />
-
-
-    <!-- 漂亮气泡文字相关-->
-    <item name="bb_svga_lt_id" type="id"/>
-    <item name="bb_svga_lb_id" type="id"/>
-    <item name="bb_svga_rt_id" type="id"/>
-    <item name="bb_svga_rb_id" type="id"/>
-    <item name="bb_sdv_lt_id" type="id"/>
-    <item name="bb_sdv_lb_id" type="id"/>
-    <item name="bb_sdv_rt_id" type="id"/>
-    <item name="bb_sdv_rb_id" type="id"/>
 </resources>
