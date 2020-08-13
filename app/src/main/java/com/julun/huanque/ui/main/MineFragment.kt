@@ -25,7 +25,9 @@ import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
 import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.bean.events.PayResultEvent
 import com.julun.huanque.common.bean.events.RHVerifyResult
+import com.julun.huanque.common.bean.events.WithdrawSuccessEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
@@ -304,6 +306,25 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         }
     }
 
+    /**
+     * 提现成功 刷新
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveWithdrawSuccess(event: WithdrawSuccessEvent) {
+        logger("收到提现结果：${event.cash}")
+        mViewModel.queryInfo(QueryType.REFRESH)
+    }
+
+    /**
+     * 接收支付结果
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receivePayResult(result: PayResultEvent) {
+        logger.info("收到支付结果：${result.payResult} type=${result.payType}" )
+        if (result.payResult == PayResult.PAY_SUCCESS) {
+            mViewModel.queryInfo(QueryType.REFRESH)
+        }
+    }
     private val infoTabAdapter: BaseQuickAdapter<UserDataTab, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<UserDataTab, BaseViewHolder>(R.layout.item_tab_user_info) {
             override fun onCreateDefViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

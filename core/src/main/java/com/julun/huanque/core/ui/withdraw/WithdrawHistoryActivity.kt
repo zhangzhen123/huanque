@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -15,10 +16,10 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.WithdrawRecord
-import com.julun.huanque.common.constant.WithdrawStatus
-import com.julun.huanque.common.constant.WithdrawType
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.activity_withdraw_history.*
 import kotlinx.android.synthetic.main.activity_withdraw_history.mRecyclerView
@@ -49,7 +50,7 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
                     .setText(R.id.tv_draw_money, "${item.money}元")
                 val state = holder.getView<TextView>(R.id.tv_draw_state)
                 when (item.status) {
-                    WithdrawStatus.Processing-> {
+                    WithdrawStatus.Processing -> {
                         state.text = "打款中"
                         state.textColor = Color.parseColor("#FE5F63")
                     }
@@ -100,6 +101,7 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
 
     private fun initViewModel() {
         mViewModel.historyData.observe(this, Observer {
+            mRefreshView.isRefreshing = false
             if (it.state == NetStateType.SUCCESS) {
                 val data = it.getT()
                 refreshData(data)
@@ -141,7 +143,24 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
     override fun showLoadState(state: NetState) {
         when (state.state) {
             NetStateType.SUCCESS -> {
-                mAdapter.setEmptyView(MixedHelper.getEmptyView(this))
+                mAdapter.setEmptyView(
+                    MixedHelper.getErrorView(
+                        this,
+                        msg = "暂未提现，快去赚钱吧~",
+                        btnTex = "去赚钱",
+                        showImage = false,
+                        onClick = View.OnClickListener {
+                            if(SessionUtils.getSex() == Sex.MALE){
+                                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                                    .withInt(IntentParamKey.TARGET_INDEX.name, 1).navigation()
+                                finish()
+                            }else{
+                                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                                    .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+                                finish()
+                            }
+                        })
+                )
             }
             NetStateType.LOADING -> {
                 mAdapter.setEmptyView(MixedHelper.getLoadingView(this))

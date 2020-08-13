@@ -8,13 +8,11 @@ import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import com.julun.huanque.common.R
-import com.julun.huanque.common.utils.ULog
-import com.julun.huanque.core.animtors.evaluators.HsvEvaluator
+import com.julun.huanque.common.widgets.evaluate.HsvEvaluator
 import org.jetbrains.anko.*
 import kotlin.properties.Delegates
 import kotlin.reflect.KProperty

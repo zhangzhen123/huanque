@@ -129,3 +129,8 @@ class LoginOutEvent() : Serializable
  * 给Rn发消息
  */
 class SendRNEvent(val action: String, var map: HashMap<String, Any>? = null)
+
+/**
+ * 提现成功
+ */
+class WithdrawSuccessEvent(val cash:String)

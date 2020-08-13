@@ -9,6 +9,7 @@ import com.julun.huanque.common.bean.forms.WithdrawApplyForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.WithdrawErrorCode
+import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.core.net.WithDrawService
@@ -59,6 +60,7 @@ class WithdrawViewModel : BaseViewModel() {
                         ErrorCodes.CASH_NOT_ENOUGH
                     )
                 )
+                StorageHelper.setWithdrawType(type)
                 withdrawResult.value = result.convertRtData()
             }, error = {
                 withdrawResult.value = it.convertError()

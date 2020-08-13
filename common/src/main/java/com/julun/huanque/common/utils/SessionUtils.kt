@@ -1,6 +1,7 @@
 package com.julun.huanque.common.utils
 
 import com.julun.huanque.common.database.table.Session
+import com.julun.huanque.common.helper.StorageHelper
 
 /**
  * 重要的信息和启动配参放在这里 不重要的参数放在[com.julun.huanque.common.helper.StorageHelper]中 以提高初始化效率
@@ -86,6 +87,8 @@ object SessionUtils {
         setRegComplete(false)
         setRongImToken("")
         setIsRegUser(false)
+        //去除提现方式保存
+        StorageHelper.setWithdrawType("")
     }
 
 

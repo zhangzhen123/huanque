@@ -1,4 +1,4 @@
-package com.julun.huanque.core.animtors.evaluators
+package com.julun.huanque.common.widgets.evaluate
 
 import android.animation.TypeEvaluator
 import android.graphics.Color

@@ -108,8 +108,12 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 } else {
                     bean.nickname
                 }
-
-                holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_mkf_sign, bean.mySign)
+                val sign = if (bean.mySign.length > 15) {
+                    "${bean.mySign}..."
+                } else {
+                    bean.mySign
+                }
+                holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_mkf_sign, sign)
                     .setText(R.id.tv_location, bean.city)
                 if (bean.city.isEmpty()) {
                     holder.setGone(R.id.tv_location, true)
