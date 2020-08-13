@@ -73,6 +73,8 @@ class VoiceSignActivity : BaseVMActivity<VoiceSignViewModel>() {
             1 -> {
 //                ImageUtils.loadGifImageLocal(iv_main_btn, R.mipmap.anim_voice_play)
                 iv_main_btn.loadImageLocal(R.mipmap.icon_voice_doing)
+                tv_tips.show()
+                tv_tips.text = "录制中..."
             }
             2 -> {
                 iv_main_btn.loadImageLocal(R.mipmap.icon_record_play)
@@ -84,7 +86,8 @@ class VoiceSignActivity : BaseVMActivity<VoiceSignViewModel>() {
             3 -> {
 //                ImageUtils.loadGifImageLocal(iv_main_btn, R.mipmap.anim_voice_play)
                 iv_main_btn.loadImageLocal(R.mipmap.icon_voice_doing)
-                tv_tips.hide()
+                tv_tips.show()
+                tv_tips.text = "播放中..."
             }
         }
     }
