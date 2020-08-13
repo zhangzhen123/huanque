@@ -25,10 +25,10 @@ import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
 import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.bean.events.RHVerifyResult
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
-import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ImageUtils
@@ -43,7 +43,6 @@ import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_mine.*
-import kotlinx.android.synthetic.main.fragment_mine.state_pager_view
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
@@ -84,7 +83,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         rvUserTools.adapter = toolsAdapter
         tvQueBi.setTFDinAltB()
         tvLingQian.setTFDinAltB()
-        MixedHelper.setSwipeRefreshStyle(refreshView,requireContext())
+        MixedHelper.setSwipeRefreshStyle(refreshView, requireContext())
         initViewModel()
     }
 
@@ -149,15 +148,16 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         } else {
             tvCertification.show()
             tvCertification.onClickNew {
-                mIRealNameService.startRealHead(requireActivity(), object : RealNameCallback {
-                    override fun onCallback(status: String, des: String, percent: Int?) {
-                        if (status == RealNameConstants.TYPE_SUCCESS) {
-                            mViewModel.queryInfo(QueryType.REFRESH)
-                        } else {
-                            ToastUtils.show("认证失败，请稍后重试")
-                        }
-                    }
-                })
+                ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
+//                mIRealNameService.startRealHead(requireActivity(), object : RealNameCallback {
+//                    override fun onCallback(status: String, des: String, percent: Int?) {
+//                        if (status == RealNameConstants.TYPE_SUCCESS) {
+//                            mViewModel.queryInfo(QueryType.REFRESH)
+//                        } else {
+//                            ToastUtils.show("认证失败，请稍后重试")
+//                        }
+//                    }
+//                })
 
             }
             ivReal.hide()
@@ -174,6 +174,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         infoTabAdapter.setNewInstance(info.userDataTabList)
         toolsAdapter.setNewInstance(info.tools)
     }
+
     private fun loadAd(adList: MutableList<RechargeAdInfo>?) {
         if (adList != null) {
             if (adList.isEmpty()) {
@@ -190,7 +191,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             bannerAD?.setDelegate(bannerItemCick)
             bannerAD?.setData(adList, null)
             bannerAD?.setAutoPlayAble(adList.size > 1)
-            bannerAD?.viewPager?.pageMargin=dp2px(10)
+            bannerAD?.viewPager?.pageMargin = dp2px(10)
             if (adList.size > 1) {
                 bannerAD?.currentItem = 0
             }
@@ -241,13 +242,13 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             requireActivity().startActivity<WithdrawActivity>()
         }
         cl_user_wealth_level.onClickNew {
-            RNPageActivity.start(requireActivity(),RnConstant.WEALTH_LEVEL_PAGE)
+            RNPageActivity.start(requireActivity(), RnConstant.WEALTH_LEVEL_PAGE)
         }
         cl_royal_level.onClickNew {
-            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
+            RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE)
         }
         cl_author_level.onClickNew {
-            RNPageActivity.start(requireActivity(),RnConstant.ANCHOR_LEVEL_PAGE)
+            RNPageActivity.start(requireActivity(), RnConstant.ANCHOR_LEVEL_PAGE)
         }
         if (BuildConfig.DEBUG) {
             tv_test.show()
@@ -290,7 +291,17 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         if (event.result) {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
+    }
 
+    /**
+     * 真人头像认证结果返回
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveRH(event: RHVerifyResult) {
+        logger("收到真人头像认证结果：${event.result}")
+        if (event.result == RealNameConstants.TYPE_SUCCESS) {
+            mViewModel.queryInfo(QueryType.REFRESH)
+        }
     }
 
     private val infoTabAdapter: BaseQuickAdapter<UserDataTab, BaseViewHolder> by lazy {

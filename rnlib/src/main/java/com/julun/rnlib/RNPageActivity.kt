@@ -17,7 +17,7 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
 import com.julun.huanque.common.base.dialog.LoadingDialog
-import com.julun.huanque.common.bean.events.AliAuthCodeEvent
+import com.julun.huanque.common.bean.events.RHVerifyResult
 import com.julun.huanque.common.bean.events.RPVerifyResult
 import com.julun.huanque.common.bean.events.SendRNEvent
 import com.julun.huanque.common.bean.events.VoiceSignEvent
@@ -47,7 +47,11 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
          * 通过fragment去加载一个rn页面 入口
          * [moduleName]需要打开的rn模块
          */
-        fun start(activity: ComponentActivity, moduleName: String, initialProperties: Bundle? = null) {
+        fun start(
+            activity: ComponentActivity,
+            moduleName: String,
+            initialProperties: Bundle? = null
+        ) {
             val intent = Intent(activity, RNPageActivity::class.java)
             intent.putExtra(RnConstant.MODULE_NAME, moduleName)
             intent.putExtra(RnConstant.INITIAL_PROPERTIES, initialProperties)
@@ -72,7 +76,11 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             mReactInstanceManager = RnManager.createReactInstanceManager(application)
             fun mustRun() {
                 // 这个"App1"名字一定要和我们在index.js中注册的名字保持一致AppRegistry.registerComponent()
-                mReactRootView.startReactApplication(mReactInstanceManager, moduleName, initialProperties)
+                mReactRootView.startReactApplication(
+                    mReactInstanceManager,
+                    moduleName,
+                    initialProperties
+                )
                 mDoubleTapReloadRecognizer = DoubleTapReloadRecognizer()
 
                 setContentView(mReactRootView)
@@ -199,7 +207,10 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 if (!mLoadingDialog.isShowing) {
                     mLoadingDialog.showDialog()
                 }
-                OssUpLoadManager.uploadFiles(pathList, OssUpLoadManager.COVER_POSITION) { code, list ->
+                OssUpLoadManager.uploadFiles(
+                    pathList,
+                    OssUpLoadManager.COVER_POSITION
+                ) { code, list ->
                     if (code == OssUpLoadManager.CODE_SUCCESS) {
                         logger("上传oss成功结果的：$list")
                         val writeArrayList = Arguments.createArray()
@@ -211,7 +222,10 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         currentImagePath = ""
                     } else {
                         ToastUtils.show("上传失败，请稍后重试")
-                        RnManager.promiseMap[RnManager.uploadPhotos]?.reject("-1", "图片上传功能 上传失败，请稍后重试 通知rn回调")
+                        RnManager.promiseMap[RnManager.uploadPhotos]?.reject(
+                            "-1",
+                            "图片上传功能 上传失败，请稍后重试 通知rn回调"
+                        )
                     }
                     if (mLoadingDialog.isShowing) {
                         mLoadingDialog.dismiss()
@@ -230,7 +244,11 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
 
     }
 
-    private fun startUploadVideo(position: String, imagePosition: String, selectList: List<LocalMedia>) {
+    private fun startUploadVideo(
+        position: String,
+        imagePosition: String,
+        selectList: List<LocalMedia>
+    ) {
         try {
             if (!NetUtils.isNetConnected()) {
                 ToastUtils.show(this.resources.getString(R.string.upload_no_network))
@@ -243,7 +261,10 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 //视频要求 大于15秒
                 if (currentMinTime * 1000L > media.duration) {
                     ToastUtils.show(resources.getString(R.string.video_duration_is_out))
-                    RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 选择的视频时长不符合要求 通知rn回调")
+                    RnManager.promiseMap[RnManager.uploadVideo]?.reject(
+                        "-1",
+                        "视频上传功能 选择的视频时长不符合要求 通知rn回调"
+                    )
                     return
                 }
                 //大于100M的不给上传
@@ -251,37 +272,53 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 logger("当前视频的大小：${size}kb")
                 if (currentMaxSize < size) {
                     ToastUtils.show(resources.getString(R.string.video_size_is_out))
-                    RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 选择的视频大小不符合要求 通知rn回调")
+                    RnManager.promiseMap[RnManager.uploadVideo]?.reject(
+                        "-1",
+                        "视频上传功能 选择的视频大小不符合要求 通知rn回调"
+                    )
                     return
                 }
                 if (!mLoadingDialog.isShowing) {
                     mLoadingDialog.showDialog()
                 }
-                OssUpLoadManager.uploadVideo(media.path, position, imagePosition, object : OssUpLoadManager.VideoUploadCallback {
-                    override fun onProgress(currentSize: Long, totalSize: Long) {
-                        logger("视频上传进度条：$currentSize / $totalSize")
-                    }
-
-                    override fun onResult(code: Int, videoPath: String, imgPath: String, width: Int, height: Int) {
-                        if (mLoadingDialog.isShowing) {
-                            mLoadingDialog.dismiss()
-                        }
-                        if (code == OssUpLoadManager.CODE_SUCCESS) {
-                            logger("视频上传成功 ：${Thread.currentThread()}")
-                            val map = Arguments.createMap()
-                            map.putString("videoURL", videoPath)
-                            map.putString("imageURL", imgPath)
-                            map.putInt("size", size.toInt())
-                            map.putInt("time", (media.duration / 1000).toInt())
-                            RnManager.promiseMap[RnManager.uploadVideo]?.resolve(map)
-                            currentRootPath = ""
-                            currentImagePath = ""
-                        } else {
-                            RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 上传失败 通知rn回调")
+                OssUpLoadManager.uploadVideo(
+                    media.path,
+                    position,
+                    imagePosition,
+                    object : OssUpLoadManager.VideoUploadCallback {
+                        override fun onProgress(currentSize: Long, totalSize: Long) {
+                            logger("视频上传进度条：$currentSize / $totalSize")
                         }
 
-                    }
-                })
+                        override fun onResult(
+                            code: Int,
+                            videoPath: String,
+                            imgPath: String,
+                            width: Int,
+                            height: Int
+                        ) {
+                            if (mLoadingDialog.isShowing) {
+                                mLoadingDialog.dismiss()
+                            }
+                            if (code == OssUpLoadManager.CODE_SUCCESS) {
+                                logger("视频上传成功 ：${Thread.currentThread()}")
+                                val map = Arguments.createMap()
+                                map.putString("videoURL", videoPath)
+                                map.putString("imageURL", imgPath)
+                                map.putInt("size", size.toInt())
+                                map.putInt("time", (media.duration / 1000).toInt())
+                                RnManager.promiseMap[RnManager.uploadVideo]?.resolve(map)
+                                currentRootPath = ""
+                                currentImagePath = ""
+                            } else {
+                                RnManager.promiseMap[RnManager.uploadVideo]?.reject(
+                                    "-1",
+                                    "视频上传功能 上传失败 通知rn回调"
+                                )
+                            }
+
+                        }
+                    })
 
             } else {
                 RnManager.promiseMap[RnManager.uploadVideo]?.reject("-1", "视频上传功能 没有选择 通知rn回调")
@@ -296,7 +333,10 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     private fun checkPhotoPermissions(max: Int, type: Int) {
         val rxPermissions = RxPermissions(this)
         rxPermissions
-            .requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .requestEachCombined(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
             .subscribe { permission ->
                 when {
                     permission.granted -> {
@@ -441,7 +481,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         bundle.putLong(ParamConstant.TARGET_USER_ID, userId)
                         //                        bundle.putString(ParamConstant.NICKNAME, nickname);
 //                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
-                        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
+                        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY)
+                            .with(bundle)
                             .navigation(this)
                     }
                 }
@@ -457,11 +498,15 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                                         val userId = id.toLong()
                                         val bundle = Bundle()
                                         bundle.putLong(ParamConstant.UserId, userId)
-                                        bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLING)
+                                        bundle.putString(
+                                            ParamConstant.TYPE,
+                                            ConmmunicationUserType.CALLING
+                                        )
                                         //                        bundle.putString(ParamConstant.NICKNAME, nickname);
 //                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
 //                                        bundle.putString(ParamConstant.OPERATION, OperationType.CALL_PHONE)
-                                        ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle)
+                                        ARouter.getInstance()
+                                            .build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle)
                                             .navigation(this)
                                     }
                                     permission.shouldShowRequestPermissionRationale -> // Oups permission denied
@@ -486,7 +531,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         //                        bundle.putString(ParamConstant.NICKNAME, nickname);
 //                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
                         bundle.putString(ParamConstant.OPERATION, OperationType.OPEN_GIFT)
-                        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
+                        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY)
+                            .with(bundle)
                             .navigation(this)
                     }
                 }
@@ -500,14 +546,22 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         val extra = Bundle()
                         extra.putLong(ParamConstant.TARGET_USER_ID, userId)
                         extra.putInt(ParamConstant.REPORT_TYPE, 0)
-                        ARouter.getInstance().build(ARouterConstant.REPORT_ACTIVITY).with(extra).navigation()
+                        ARouter.getInstance().build(ARouterConstant.REPORT_ACTIVITY).with(extra)
+                            .navigation()
                     }
                 }
                 RnConstant.REAL_NAME_AUTH_PAGE -> {
                     if (params?.hasKey("text") == true) {
                         ToastUtils.show(params.getString("text"))
                     }
-                    ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
+                    ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY)
+                        .navigation()
+                }
+                RnConstant.REAL_HEAD_AUTH_PAGE -> {
+                    if (params?.hasKey("text") == true) {
+                        ToastUtils.show(params.getString("text"))
+                    }
+                    ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
                 }
                 RnConstant.SHARE_INVITE_PAGE -> {
                     ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY)
@@ -518,11 +572,13 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 }
                 RnConstant.LIVE_ROOM_PAGE -> {
                     if (params?.hasKey("programId") == true) {
-                        val id = params.getString("programId")?.toLongOrNull() ?: return@runOnUiThread
+                        val id =
+                            params.getString("programId")?.toLongOrNull() ?: return@runOnUiThread
                         val bundle = Bundle()
                         bundle.putLong(IntentParamKey.PROGRAM_ID.name, id)
                         bundle.putString(ParamConstant.FROM, PlayerFrom.RN)
-                        ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle).navigation()
+                        ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle)
+                            .navigation()
                     }
 
                 }
@@ -533,8 +589,9 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
                 }
 
-                RnConstant.HQ_PARADISE_PAGE ->{
-                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name,1).navigation()
+                RnConstant.HQ_PARADISE_PAGE -> {
+                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                        .withInt(IntentParamKey.TARGET_INDEX.name, 1).navigation()
                 }
 
 
@@ -567,6 +624,19 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             RnManager.promiseMap[RnConstant.REAL_NAME_AUTH_PAGE]?.resolve(true)
         } else {
             RnManager.promiseMap[RnConstant.REAL_NAME_AUTH_PAGE]?.resolve(false)
+        }
+    }
+
+    /**
+     * 真人头像认证结果返回
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveRH(event: RHVerifyResult) {
+        logger("收到真人头像认证结果：${event.result}")
+        if (event.result == RealNameConstants.TYPE_SUCCESS) {
+            RnManager.promiseMap[RnConstant.REAL_HEAD_AUTH_PAGE]?.resolve(true)
+        } else {
+            RnManager.promiseMap[RnConstant.REAL_HEAD_AUTH_PAGE]?.resolve(false)
         }
     }
 

@@ -9,7 +9,11 @@ import java.io.Serializable
  * @param stranger 陌生人状态
  * @param onlyRefreshUnReadCount 忽略陌生人状态（需要从其他地方获取）
  */
-class EventMessageBean(var targetId: String = "", var stranger: Boolean = false, var onlyRefreshUnReadCount: Boolean = false) :
+class EventMessageBean(
+    var targetId: String = "",
+    var stranger: Boolean = false,
+    var onlyRefreshUnReadCount: Boolean = false
+) :
     Serializable
 
 /**
@@ -86,6 +90,11 @@ class UserInfoEditEvent(
  * 实名认证结果的广播
  */
 class RPVerifyResult(val result: String)
+
+/**
+ * 头像认证结果的广播
+ */
+class RHVerifyResult(val result: String)
 
 /**
  * 语音签名修改成功的广播

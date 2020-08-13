@@ -52,6 +52,8 @@ object RnConstant {
     const val REPORT_USER_PAGE:String="ReportUserPage"
     //实名认证
     const val REAL_NAME_AUTH_PAGE:String="RealNameAuthPage"
+    //真人头像
+    const val REAL_HEAD_AUTH_PAGE:String="RealHeadAuthPage"
     //分享邀友功能
     const val SHARE_INVITE_PAGE:String="ShareInvitePage"
     //跳转零钱页面
@@ -62,9 +64,4 @@ object RnConstant {
     const val RECHARGE_PAGE:String="RechargePage"
     //欢鹊乐园
     const val HQ_PARADISE_PAGE:String="HQParadisePage"
-
-
-
-
-
 }
