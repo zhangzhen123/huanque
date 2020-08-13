@@ -17,34 +17,32 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_15"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:text="录制一段声音"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_14" />
 
-        <LinearLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_15"
+            android:layout_marginTop="@dimen/dimen_5"
+            android:layout_marginEnd="@dimen/dimen_15"
+            android:text="做个自我介绍，表明交友意向，唱歌、朗诵等，最多30秒。"
+            android:textColor="@color/black_666"
+            android:textSize="@dimen/sp_14" />
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_450"
+            android:layout_height="@dimen/dimen_345"
             android:layout_marginLeft="@dimen/dimen_15"
             android:layout_marginTop="@dimen/dimen_10"
             android:layout_marginRight="@dimen/dimen_15"
-            android:background="@drawable/bg_shape_sign_voice_text"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_15"
-                android:layout_marginTop="@dimen/dimen_15"
-                android:text="录制一段声音"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_15" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_15"
-                android:layout_marginTop="@dimen/dimen_5"
-                android:layout_marginEnd="@dimen/dimen_15"
-                android:text="做个自我介绍，表明交友意向，唱歌、朗诵等，最多30秒。"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_14" />
+            android:background="@drawable/bg_shape_sign_voice_text">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -56,23 +54,6 @@
                 android:textSize="@dimen/sp_18"
                 android:textStyle="bold" />
 
-
-            <TextView
-                android:id="@+id/tv_points"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_15"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:layout_marginEnd="@dimen/dimen_15"
-                android:layout_marginBottom="@dimen/dimen_50"
-                android:lineSpacingExtra="@dimen/dimen_5"
-                tools:text="你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_16" />
-            <View
-                android:layout_width="@dimen/dimen_1"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
             <TextView
                 android:id="@+id/tv_change"
                 android:layout_width="wrap_content"
@@ -80,7 +61,6 @@
                 android:layout_gravity="end"
                 android:layout_marginTop="@dimen/dimen_13"
                 android:layout_marginEnd="@dimen/dimen_15"
-                android:layout_marginBottom="@dimen/dimen_15"
                 android:background="@drawable/bg_shape_white2"
                 android:drawableStart="@mipmap/icon_change_01"
                 android:gravity="center"
@@ -91,7 +71,19 @@
                 android:textSize="@dimen/sp_12"
                 android:textStyle="bold" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/tv_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_15"
+                android:layout_marginTop="@dimen/dimen_50"
+                android:layout_marginEnd="@dimen/dimen_15"
+                android:layout_marginBottom="@dimen/dimen_50"
+                android:lineSpacingExtra="@dimen/dimen_5"
+                android:text="你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。你有没有空，想约你做一场春秋大梦。"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+        </FrameLayout>
 
         <View
             android:layout_width="@dimen/dimen_1"
@@ -122,8 +114,8 @@
                 android:layout_height="@dimen/dimen_70"
                 android:layout_marginBottom="@dimen/dimen_15"
                 android:background="@drawable/bg_solid_btn4"
-                app:actualImageScaleType="centerInside"
                 app:actualImageResource="@mipmap/icon_record_voice"
+                app:actualImageScaleType="centerInside"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
