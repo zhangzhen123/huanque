@@ -122,7 +122,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     }
 
     private val useDeveloperSupport: Boolean
-         get() = mReactInstanceManager != null && mDeveloperSupport
+        get() = mReactInstanceManager != null && mDeveloperSupport
 
     override fun onPause() {
         super.onPause()
@@ -321,11 +321,19 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         if (type == PictureConfig.TYPE_IMAGE) {
             PictureSelector.create(this)
                 .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
-                .theme(R.style.picture_me_style_multi)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
-                .minSelectNum(1)// 最小选择数量
-                .maxSelectNum(max)
+                .apply {
+                    // 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+                    if(max==1){
+                        theme( R.style.picture_me_style_single)
+                        selectionMode(PictureConfig.SINGLE)
+                    }else{
+                        minSelectNum(1)// 最小选择数量
+                        maxSelectNum(max)
+                        theme( R.style.picture_me_style_multi)
+                        selectionMode(PictureConfig.MULTIPLE)
+                    }
+                }
                 .imageSpanCount(4)// 每行显示个数
-                .selectionMode(PictureConfig.MULTIPLE)
                 .previewImage(true)// 是否可预览图片
                 .isCamera(true)// 是否显示拍照按钮
                 .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
@@ -349,9 +357,9 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         } else if (type == PictureConfig.TYPE_VIDEO) {
             //只传单视频
             PictureSelector.create(this).openGallery(PictureMimeType.ofVideo())
-                .theme(com.julun.huanque.common.R.style.picture_me_style_multi)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
-                .maxSelectNum(1)// 最大图片选择数量
-                .minSelectNum(1)// 最小选择数量
+                .theme(com.julun.huanque.common.R.style.picture_me_style_single)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+//                .maxSelectNum(1)// 最大图片选择数量
+//                .minSelectNum(1)// 最小选择数量
                 .imageSpanCount(4)// 每行显示个数
                 .selectionMode(PictureConfig.SINGLE)
                 .previewVideo(true)// 是否可预览视频
@@ -497,10 +505,11 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 RnConstant.REAL_NAME_AUTH_PAGE -> {
                     ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
                 }
-                RnConstant.SHARE_INVITE_PAGE->{
-                    ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name,ShareFromModule.Invite).navigation()
+                RnConstant.SHARE_INVITE_PAGE -> {
+                    ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY)
+                        .withString(IntentParamKey.TYPE.name, ShareFromModule.Invite).navigation()
                 }
-                RnConstant.WITHDRAWAL_PAGE->{
+                RnConstant.WITHDRAWAL_PAGE -> {
                     ARouter.getInstance().build(ARouterConstant.WITHDRAW_ACTIVITY).navigation()
                 }
 
