@@ -90,6 +90,8 @@ object ARouterConstant {
 
     //实名认证首页
     const val REAL_NAME_MAIN_ACTIVITY = "/$REAL_NAME$PREFIX_ACTIVITY/RealNameActivity"
+    //头像认证授权页
+    const val REAL_HEAD_ACTIVITY = "/$REAL_NAME$PREFIX_ACTIVITY/RealHeadActivity"
 
     //实名认证服务
     const val REALNAME_SERVICE = "/$REAL_NAME$SERVICE/RealNameService"

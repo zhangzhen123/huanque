@@ -63,30 +63,28 @@ public class GlobalModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void avatarAuth(final Promise promise) {
-        try {
-            getCurrentActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    IRealNameService service = (IRealNameService) ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation();
-                    service.startRealHead(getCurrentActivity(), new RealNameCallback() {
-                        @Override
-                        public void onCallback(@NotNull String status, @NotNull String des, @Nullable Integer percent) {
-                            if (status.equals(RealNameConstants.TYPE_SUCCESS)) {
-                                promise.resolve(true);
-                            } else {
-                                ToastUtils.INSTANCE.show(des);
-                                promise.resolve(false);
-                            }
-                        }
-                    });
-
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            promise.reject(e);
-        }
-
+//        try {
+//            getCurrentActivity().runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    IRealNameService service = (IRealNameService) ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation();
+//                    service.startRealHead(getCurrentActivity(), new RealNameCallback() {
+//                        @Override
+//                        public void onCallback(@NotNull String status, @NotNull String des, @Nullable Integer percent) {
+//                            if (status.equals(RealNameConstants.TYPE_SUCCESS)) {
+//                                promise.resolve(true);
+//                            } else {
+//                                ToastUtils.INSTANCE.show(des);
+//                                promise.resolve(false);
+//                            }
+//                        }
+//                    });
+//                }
+//            });
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            promise.reject(e);
+//        }
     }
 }

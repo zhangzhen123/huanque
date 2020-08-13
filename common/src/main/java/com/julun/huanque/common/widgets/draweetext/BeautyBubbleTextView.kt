@@ -43,6 +43,15 @@ class BeautyBubbleTextView : RelativeLayout {
 
     private val logger = ULog.getLogger("BubbleTextView")
 
+    var svgaPlayerViewRt: SVGAPlayerView? = null
+    var webpGifViewRt: SimpleDraweeView? = null
+    var svgaPlayerViewRb: SVGAPlayerView? = null
+    var webpGifViewRb: SimpleDraweeView? = null
+    var svgaPlayerViewLt: SVGAPlayerView? = null
+    var webpGifViewLt: SimpleDraweeView? = null
+    var svgaPlayerViewLb: SVGAPlayerView? = null
+    var webpGifViewLb: SimpleDraweeView? = null
+
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
@@ -78,7 +87,7 @@ class BeautyBubbleTextView : RelativeLayout {
 //            if (chatBubble.radius == -1) {
 //                chatBubble.radius = MessageUtil.MESSAGE_BG_RADIUS
 //            }
-            if (chatBubble==null||chatBubble.bgc.isEmpty()) {
+            if (chatBubble == null || chatBubble.bgc.isEmpty()) {
                 logger.info("没有气泡配置")
                 //默认填充背景色
 //                chatBubble.bgc = "${MessageUtil.MESSAGE_BG}-${MessageUtil.MESSAGE_BG}"
@@ -101,7 +110,7 @@ class BeautyBubbleTextView : RelativeLayout {
                     logger.info("colors=$colorInts")
                     if (colorInts.size > 1) {
                         val gDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colorInts.toIntArray())
-                        val radius=if(chatBubble.radius==-1) MessageUtil.MESSAGE_BG_RADIUS else chatBubble.radius
+                        val radius = if (chatBubble.radius == -1) MessageUtil.MESSAGE_BG_RADIUS else chatBubble.radius
                         gDrawable.cornerRadius = dp2pxf(radius)
                         //默认透明度
 //                        gDrawable.alpha = (0.4 * 255).toInt()
@@ -118,21 +127,13 @@ class BeautyBubbleTextView : RelativeLayout {
             e.printStackTrace()
         }
         if (chatBubble == null) {
-            var svgaPlayerViewRt = findViewById<SVGAPlayerView>(R.id.bb_svga_rt_id)
             svgaPlayerViewRt?.hide()
-            var webpGifViewRt = findViewById<SimpleDraweeView>(R.id.bb_sdv_rt_id)
             webpGifViewRt?.hide()
-            var svgaPlayerViewRb = findViewById<SVGAPlayerView>(R.id.bb_svga_rb_id)
             svgaPlayerViewRb?.hide()
-            var webpGifViewRb = findViewById<SimpleDraweeView>(R.id.bb_sdv_rb_id)
             webpGifViewRb?.hide()
-            var svgaPlayerViewLt = findViewById<SVGAPlayerView>(R.id.bb_svga_lt_id)
             svgaPlayerViewLt?.hide()
-            var webpGifViewLt = findViewById<SimpleDraweeView>(R.id.bb_sdv_lt_id)
             webpGifViewLt?.hide()
-            var svgaPlayerViewLb = findViewById<SVGAPlayerView>(R.id.bb_svga_lb_id)
             svgaPlayerViewLb?.hide()
-            var webpGifViewLb = findViewById<SimpleDraweeView>(R.id.bb_sdv_lb_id)
             webpGifViewLb?.hide()
 
             return
@@ -144,9 +145,9 @@ class BeautyBubbleTextView : RelativeLayout {
         if (rt.isNotEmpty()) {
             val map = parseParams(rt)
             if (StringHelper.isSvgaUrl(rt)) {
-                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_rt_id)
-                if (svgaPlayerView == null) {
-                    svgaPlayerView = SVGAPlayerView(context)
+//                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_rt_id)
+                if (svgaPlayerViewRt == null) {
+                    svgaPlayerViewRt = SVGAPlayerView(context)
                     val sParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 12), dp2px(map["h"]?.toIntOrNull() ?: 12))
 
                     sParams.alignEnd(R.id.draweeSpanTv)
@@ -154,36 +155,36 @@ class BeautyBubbleTextView : RelativeLayout {
                     sParams.topMargin = -(dp2px(5))
                     sParams.rightMargin = -(dp2px(5))
 
-                    svgaPlayerView.scaleType = ImageView.ScaleType.FIT_CENTER
-                    svgaPlayerView.id = R.id.bb_svga_rt_id
-                    addView(svgaPlayerView, sParams)
+                    svgaPlayerViewRt!!.scaleType = ImageView.ScaleType.FIT_CENTER
+//                    svgaPlayerView.id = R.id.bb_svga_rt_id
+                    addView(svgaPlayerViewRt, sParams)
                 } else {
-                    val sParams = svgaPlayerView.layoutParams as LayoutParams
+                    val sParams = svgaPlayerViewRt!!.layoutParams as LayoutParams
                     sParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
                     sParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
-                    svgaPlayerView.show()
-                    svgaPlayerView.requestLayout()
+                    svgaPlayerViewRt!!.show()
+                    svgaPlayerViewRt!!.requestLayout()
                 }
-                startPlaySvga(rt, svgaPlayerView)
+                startPlaySvga(rt, svgaPlayerViewRt!!)
             } else {
-                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_rt_id)
-                if (webpGifView == null) {
-                    webpGifView = SimpleDraweeView(context)
+//                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_rt_id)
+                if (webpGifViewRt == null) {
+                    webpGifViewRt = SimpleDraweeView(context)
                     val wParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 10), dp2px(map["h"]?.toIntOrNull() ?: 10))
                     wParams.alignEnd(R.id.draweeSpanTv)
                     wParams.sameTop(R.id.draweeSpanTv)
                     wParams.topMargin = -(dp2px(5))
                     wParams.rightMargin = -(dp2px(5))
-                    webpGifView.id = R.id.bb_sdv_rt_id
-                    addView(webpGifView, wParams)
-                    webpGifView.loadImageInPx(rt, wParams.width, wParams.height)
+//                    webpGifView.id = R.id.bb_sdv_rt_id
+                    addView(webpGifViewRt, wParams)
+                    webpGifViewRt!!.loadImageInPx(rt, wParams.width, wParams.height)
                 } else {
-                    val wParams = webpGifView.layoutParams as LayoutParams
+                    val wParams = webpGifViewRt!!.layoutParams as LayoutParams
                     wParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
                     wParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
-                    webpGifView.show()
-                    webpGifView.requestLayout()
-                    webpGifView.loadImageInPx(rt, wParams.width, wParams.height)
+                    webpGifViewRt!!.show()
+                    webpGifViewRt!!.requestLayout()
+                    webpGifViewRt!!.loadImageInPx(rt, wParams.width, wParams.height)
                 }
 
             }
@@ -193,47 +194,47 @@ class BeautyBubbleTextView : RelativeLayout {
         if (rb.isNotEmpty()) {
             val map = parseParams(rb)
             if (StringHelper.isSvgaUrl(rb)) {
-                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_rb_id)
-                if (svgaPlayerView == null) {
-                    svgaPlayerView = SVGAPlayerView(context)
+//                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_rb_id)
+                if (svgaPlayerViewRb == null) {
+                    svgaPlayerViewRb = SVGAPlayerView(context)
                     val sParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 10), dp2px(map["h"]?.toIntOrNull() ?: 10))
 
                     sParams.alignEnd(R.id.draweeSpanTv)
                     sParams.sameBottom(R.id.draweeSpanTv)
                     sParams.bottomMargin = -(dp2px(5))
                     sParams.rightMargin = -(dp2px(5))
-                    svgaPlayerView.requestLayout()
-                    svgaPlayerView.scaleType = ImageView.ScaleType.FIT_CENTER
-                    svgaPlayerView.id = R.id.bb_svga_rb_id
-                    addView(svgaPlayerView, sParams)
+                    svgaPlayerViewRb!!.requestLayout()
+                    svgaPlayerViewRb!!.scaleType = ImageView.ScaleType.FIT_CENTER
+//                    svgaPlayerView.id = R.id.bb_svga_rb_id
+                    addView(svgaPlayerViewRb, sParams)
                 } else {
-                    val sParams = svgaPlayerView.layoutParams as LayoutParams
+                    val sParams = svgaPlayerViewRb!!.layoutParams as LayoutParams
                     sParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
                     sParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
-                    svgaPlayerView.show()
-                    svgaPlayerView.requestLayout()
+                    svgaPlayerViewRb!!.show()
+                    svgaPlayerViewRb!!.requestLayout()
                 }
 
-                startPlaySvga(rb, svgaPlayerView)
+                startPlaySvga(rb, svgaPlayerViewRb!!)
             } else {
-                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_rb_id)
-                if (webpGifView == null) {
-                    webpGifView = SimpleDraweeView(context)
+//                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_rb_id)
+                if (webpGifViewRb == null) {
+                    webpGifViewRb = SimpleDraweeView(context)
                     val wParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 10), dp2px(map["h"]?.toIntOrNull() ?: 10))
                     wParams.alignEnd(R.id.draweeSpanTv)
                     wParams.sameBottom(R.id.draweeSpanTv)
                     wParams.bottomMargin = -(dp2px(5))
                     wParams.rightMargin = -(dp2px(5))
-                    webpGifView.id = R.id.bb_sdv_rb_id
-                    addView(webpGifView, wParams)
-                    webpGifView.loadImageInPx(rb, wParams.width, wParams.height)
+//                    webpGifView.id = R.id.bb_sdv_rb_id
+                    addView(webpGifViewRb, wParams)
+                    webpGifViewRb!!.loadImageInPx(rb, wParams.width, wParams.height)
                 } else {
-                    val wParams = webpGifView.layoutParams as LayoutParams
+                    val wParams = webpGifViewRb!!.layoutParams as LayoutParams
                     wParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
                     wParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
-                    webpGifView.show()
-                    webpGifView.requestLayout()
-                    webpGifView.loadImageInPx(rt, wParams.width, wParams.height)
+                    webpGifViewRb!!.show()
+                    webpGifViewRb!!.requestLayout()
+                    webpGifViewRb!!.loadImageInPx(rt, wParams.width, wParams.height)
                 }
 
             }
@@ -243,46 +244,46 @@ class BeautyBubbleTextView : RelativeLayout {
         if (lt.isNotEmpty()) {
             val map = parseParams(lt)
             if (StringHelper.isSvgaUrl(lt)) {
-                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_lt_id)
-                if (svgaPlayerView == null) {
-                    svgaPlayerView = SVGAPlayerView(context)
+//                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_lt_id)
+                if (svgaPlayerViewLt == null) {
+                    svgaPlayerViewLt = SVGAPlayerView(context)
                     val sParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 10), dp2px(map["h"]?.toIntOrNull() ?: 10))
                     sParams.alignStart(R.id.draweeSpanTv)
                     sParams.sameTop(R.id.draweeSpanTv)
                     sParams.topMargin = -(dp2px(5))
                     sParams.leftMargin = -(dp2px(5))
-                    svgaPlayerView.requestLayout()
-                    svgaPlayerView.scaleType = ImageView.ScaleType.FIT_CENTER
-                    svgaPlayerView.id = R.id.bb_svga_lt_id
-                    addView(svgaPlayerView, sParams)
+                    svgaPlayerViewLt!!.requestLayout()
+                    svgaPlayerViewLt!!.scaleType = ImageView.ScaleType.FIT_CENTER
+//                    svgaPlayerViewLt.id = R.id.bb_svga_lt_id
+                    addView(svgaPlayerViewLt, sParams)
                 } else {
-                    val sParams = svgaPlayerView.layoutParams as LayoutParams
+                    val sParams = svgaPlayerViewLt!!.layoutParams as LayoutParams
                     sParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
                     sParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
-                    svgaPlayerView.show()
-                    svgaPlayerView.requestLayout()
+                    svgaPlayerViewLt?.show()
+                    svgaPlayerViewLt?.requestLayout()
                 }
 
-                startPlaySvga(lt, svgaPlayerView)
+                startPlaySvga(lt, svgaPlayerViewLt!!)
             } else {
-                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_lt_id)
-                if (webpGifView == null) {
-                    webpGifView = SimpleDraweeView(context)
+//                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_lt_id)
+                if (webpGifViewLt == null) {
+                    webpGifViewLt = SimpleDraweeView(context)
                     val wParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 10), dp2px(map["h"]?.toIntOrNull() ?: 10))
                     wParams.alignStart(R.id.draweeSpanTv)
                     wParams.sameTop(R.id.draweeSpanTv)
                     wParams.topMargin = -(dp2px(5))
                     wParams.leftMargin = -(dp2px(5))
-                    webpGifView.id = R.id.bb_sdv_lt_id
-                    addView(webpGifView, wParams)
-                    webpGifView.loadImageInPx(lt, wParams.width, wParams.height)
+//                    webpGifViewLt.id = R.id.bb_sdv_lt_id
+                    addView(webpGifViewLt, wParams)
+                    webpGifViewLt!!.loadImageInPx(lt, wParams.width, wParams.height)
                 } else {
-                    val wParams = webpGifView.layoutParams as LayoutParams
+                    val wParams = webpGifViewLt!!.layoutParams as LayoutParams
                     wParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
                     wParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
-                    webpGifView.show()
-                    webpGifView.requestLayout()
-                    webpGifView.loadImageInPx(rt, wParams.width, wParams.height)
+                    webpGifViewLt!!.show()
+                    webpGifViewLt!!.requestLayout()
+                    webpGifViewLt!!.loadImageInPx(rt, wParams.width, wParams.height)
                 }
 
             }
@@ -292,47 +293,47 @@ class BeautyBubbleTextView : RelativeLayout {
         if (lb.isNotEmpty()) {
             val map = parseParams(lb)
             if (StringHelper.isSvgaUrl(lb)) {
-                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_lb_id)
-                if (svgaPlayerView == null) {
-                    svgaPlayerView = SVGAPlayerView(context)
+//                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_lb_id)
+                if (svgaPlayerViewLb == null) {
+                    svgaPlayerViewLb = SVGAPlayerView(context)
                     val sParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 10), dp2px(map["h"]?.toIntOrNull() ?: 10))
 
                     sParams.alignStart(R.id.draweeSpanTv)
                     sParams.sameBottom(R.id.draweeSpanTv)
                     sParams.bottomMargin = -(dp2px(5))
                     sParams.leftMargin = -(dp2px(5))
-                    svgaPlayerView.requestLayout()
-                    svgaPlayerView.scaleType = ImageView.ScaleType.FIT_CENTER
-                    svgaPlayerView.id = R.id.bb_svga_lb_id
-                    addView(svgaPlayerView, sParams)
+                    svgaPlayerViewLb!!.requestLayout()
+                    svgaPlayerViewLb!!.scaleType = ImageView.ScaleType.FIT_CENTER
+//                    svgaPlayerViewLb.id = R.id.bb_svga_lb_id
+                    addView(svgaPlayerViewLb, sParams)
                 } else {
-                    val sParams = svgaPlayerView.layoutParams as LayoutParams
+                    val sParams = svgaPlayerViewLb!!.layoutParams as LayoutParams
                     sParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
                     sParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
-                    svgaPlayerView.show()
-                    svgaPlayerView.requestLayout()
+                    svgaPlayerViewLb!!.show()
+                    svgaPlayerViewLb!!.requestLayout()
                 }
 
-                startPlaySvga(lb, svgaPlayerView)
+                startPlaySvga(lb, svgaPlayerViewLb!!)
             } else {
-                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_lb_id)
-                if (webpGifView == null) {
-                    webpGifView = SimpleDraweeView(context)
+//                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_lb_id)
+                if (webpGifViewLb == null) {
+                    webpGifViewLb = SimpleDraweeView(context)
                     val wParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 10), dp2px(map["h"]?.toIntOrNull() ?: 10))
                     wParams.alignStart(R.id.draweeSpanTv)
                     wParams.sameBottom(R.id.draweeSpanTv)
                     wParams.bottomMargin = -(dp2px(5))
                     wParams.leftMargin = -(dp2px(5))
-                    webpGifView.id = R.id.bb_sdv_lb_id
-                    addView(webpGifView, wParams)
-                    webpGifView.loadImageInPx(lb, wParams.width, wParams.height)
+//                    webpGifView.id = R.id.bb_sdv_lb_id
+                    addView(webpGifViewLb, wParams)
+                    webpGifViewLb!!.loadImageInPx(lb, wParams.width, wParams.height)
                 } else {
-                    val wParams = webpGifView.layoutParams as LayoutParams
+                    val wParams = webpGifViewLb!!.layoutParams as LayoutParams
                     wParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
                     wParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
-                    webpGifView.show()
-                    webpGifView.requestLayout()
-                    webpGifView.loadImageInPx(rt, wParams.width, wParams.height)
+                    webpGifViewLb!!.show()
+                    webpGifViewLb!!.requestLayout()
+                    webpGifViewLb!!.loadImageInPx(rt, wParams.width, wParams.height)
                 }
 
             }

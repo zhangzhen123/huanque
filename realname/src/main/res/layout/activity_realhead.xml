@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/clRealRootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/ivback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/dimen_10"
+        android:scaleType="fitStart"
+        android:src="@mipmap/icon_back_black_01"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="真人照片认证"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toBottomOf="@+id/ivback"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ivback" />
+
+    <TextView
+        android:id="@+id/tvDeclareTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_15"
+        android:layout_marginTop="62dp"
+        android:text="授权声明"
+        android:textColor="#4A4A4A"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvDeclareDesc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginRight="@dimen/dimen_35"
+        android:lineSpacingExtra="@dimen/dimen_3"
+        android:text="为了保障您的合法权益，为您提供更好的安全保障，让交友更真实。您可以通过人脸识别来完成真人认证，该信息将仅用于验证您的身份真实性（该生物识别信息技术由技术合作方阿里云计算有限公司提供），官方将对照片保密。 "
+        android:textColor="#787878"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintLeft_toLeftOf="@+id/tvDeclareTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDeclareTitle" />
+
+    <TextView
+        android:id="@+id/tvRequire"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_15"
+        android:text="认证要求"
+        android:textColor="#4A4A4A"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintLeft_toLeftOf="@+id/tvDeclareDesc"
+        app:layout_constraintTop_toBottomOf="@+id/tvDeclareDesc" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:lineSpacingExtra="@dimen/dimen_3"
+        android:text="1、认证照片需与头像为同一人 \n2、认证过程中请确保您的面部在指定框内 \n3、按提示在指定时间内完成指定动作"
+        android:textColor="#FF787878"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintLeft_toLeftOf="@+id/tvRequire"
+        app:layout_constraintTop_toBottomOf="@+id/tvRequire" />
+
+    <Button
+        android:id="@+id/btnCommit"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_40"
+        android:layout_marginLeft="@dimen/dimen_15"
+        android:layout_marginRight="@dimen/dimen_15"
+        android:layout_marginBottom="@dimen/dimen_15"
+        android:background="@drawable/hq_realname_bg_sel_btn"
+        android:enabled="true"
+        android:gravity="center"
+        android:text="同意"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
