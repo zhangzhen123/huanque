@@ -16,13 +16,11 @@ import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
-import com.julun.huanque.common.bean.events.EventMessageBean
-import com.julun.huanque.common.bean.events.LoginEvent
-import com.julun.huanque.common.bean.events.LoginOutEvent
-import com.julun.huanque.common.bean.events.RongConnectEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.RNMessageConst
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
@@ -452,7 +450,18 @@ class MainActivity : BaseActivity() {
             override fun process(data: IntimateBean) {
                 //发送消息，私信列表接收
                 EventBus.getDefault().post(data)
-//                EventBus.getDefault().post()
+                val userMap = hashMapOf<String, Any>()
+                data.userIds.forEach { userId ->
+                    if (userId != SessionUtils.getUserId()) {
+                        //获取到对方的ID
+                        userMap.put("friendId", userId)
+                        userMap.put("intimateLevel", data.intimateLevel)
+                        return@forEach
+                    }
+                }
+                val event = SendRNEvent(RNMessageConst.IntimateFriendChange, userMap)
+                //发送消息，通知RN
+                EventBus.getDefault().post(event)
             }
         })
 
