@@ -89,7 +89,7 @@ class RechargeCenterActivity : BaseActivity() {
         }
 
 
-        val attention = "<font color='#999999'>充值遇到问题？点击联系</font><font color='#FF5757'>在线客服</font>"
+        val attention = "<font color='#333333'>充值遇到问题？点击联系</font><font color='#FF5757'>在线客服</font>"
         recharge_problem.text = Html.fromHtml(attention)
 
     }

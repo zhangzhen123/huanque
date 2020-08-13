@@ -44,6 +44,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.internal.operators.observable.ObservableTake
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.act_voice_chat.*
+import org.jetbrains.anko.imageResource
 import java.util.concurrent.TimeUnit
 
 /**
@@ -300,6 +301,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 记录通话时长
      */
     private fun recordCallDuration() {
+        updataDurationParams(true)
         ObservableTake.interval(0, 1, TimeUnit.SECONDS)
             .map {
                 mVoiceChatViewModel?.duration = it
@@ -362,6 +364,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     }
                     VoiceChatViewModel.VOICE_WAIT_ACCEPT -> {
                         //待接听状态
+                        tv_voice_cancel.text = "挂断"
                         ll_quiet.hide()
                         ll_close.show()
                         ll_hands_free.hide()
@@ -371,6 +374,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     }
                     VoiceChatViewModel.VOICE_ACCEPT -> {
                         //接听状态
+                        tv_voice_cancel.text = "挂断"
                         ll_quiet.show()
                         ll_close.show()
                         ll_hands_free.show()
@@ -551,8 +555,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             }
         }
         if (sexImage > 0) {
-            tv_nickname.setCompoundDrawablesWithIntrinsicBounds(0, 0, sexImage, 0)
-            tv_nickname.compoundDrawablePadding = 4
+            iv_sex.imageResource = sexImage
         }
     }
 
@@ -798,7 +801,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 .bindUntilEvent(this, ActivityEvent.DESTROY)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    tv_surplus_time.text = it
+                    tv_surplus_time.text = "${it}秒"
                 }, { it.printStackTrace() })
         }
     }

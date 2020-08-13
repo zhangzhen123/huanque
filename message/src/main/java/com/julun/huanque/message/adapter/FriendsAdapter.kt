@@ -50,7 +50,7 @@ class FriendsAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.item_f
             ImageUtils.loadImage(holder.getView(R.id.ivHead),itemInfo?.friendHeadPic?:"",56f,56f)
 
             holder.setText(R.id.tvNickname,itemInfo?.friendNickname?:"")
-                .setText(R.id.tvDate,TimeUtils.formatMessageTime(time))
+                .setText(R.id.tvDate,TimeUtils.formatMessageTime(time, TimeUtils.TIME_FORMAT_YEAR_3))
 
 
             MessageFormatUtils.renderImage(holder.getView(R.id.tvDesc),itemInfo?:return)

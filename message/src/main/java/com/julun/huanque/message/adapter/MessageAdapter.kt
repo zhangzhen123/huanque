@@ -67,7 +67,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     var otherUserInfo: ChatUser? = null
 
     init {
-        addChildClickViewIds(R.id.sdv_image,R.id.tv_content,R.id.con_send_room)
+        addChildClickViewIds(R.id.sdv_image, R.id.tv_content, R.id.con_send_room)
         addChildLongClickViewIds(R.id.tv_content)
     }
 
@@ -177,9 +177,11 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 MessageCustomBeanType.Expression_Privilege -> {
                     //特权表情
                     showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
+                    val sdvImage = helper.getView<SimpleDraweeView>(R.id.sdv_image)
 //                    showGiftView(helper, content.context)
+                    sdvImage.backgroundResource = R.drawable.bg_gift_pic
                     val imageResource = EmojiSpanBuilder.getPrivilegeResource(context, content.context)
-                    ImageUtils.loadImageLocal(helper.getView(R.id.sdv_image), imageResource)
+                    ImageUtils.loadImageLocal(sdvImage, imageResource)
                     showTextImageQueBi(helper.getView<SimpleDraweeSpanTextView>(R.id.tv_quebi), item, helper.adapterPosition)
                 }
                 MessageCustomBeanType.Expression_Animation -> {
@@ -196,18 +198,20 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                         e.printStackTrace()
                     }
                     showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
+                    val sdvImage = helper.getView<SimpleDraweeView>(R.id.sdv_image)
+                    sdvImage.background = null
                     if (expressionAnimationBean != null) {
                         val started = map?.get(ParamConstant.MSG_ANIMATION_STARTED) as? Boolean
                         val position = helper.layoutPosition
                         when (EmojiSpanBuilder.getPrivilegeResource(context, expressionAnimationBean.name)) {
                             R.drawable.icon_shaizi -> {
                                 //骰子动效
-                                showShaiziAnimation(item, helper.getView(R.id.sdv_image), expressionAnimationBean.result, started ?: false, position)
+                                showShaiziAnimation(item, sdvImage, expressionAnimationBean.result, started ?: false, position)
 
                             }
                             R.drawable.icon_caiquan -> {
                                 //猜拳动效
-                                showGuessAnimation(item, helper.getView(R.id.sdv_image), expressionAnimationBean.result, started ?: false, position)
+                                showGuessAnimation(item, sdvImage, expressionAnimationBean.result, started ?: false, position)
                             }
                             else -> {
                             }
@@ -307,12 +311,12 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             } else {
                 helper.setGone(R.id.view_top, true)
                 helper.setGone(R.id.group, false)
-                helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.sentTime,TimeUtils.TIME_FORMAT_YEAR_3))
+                helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.sentTime, TimeUtils.TIME_FORMAT_YEAR_3))
             }
         } else {
             helper.setGone(R.id.view_top, true)
             helper.setGone(R.id.group, false)
-            helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.sentTime,TimeUtils.TIME_FORMAT_YEAR_3))
+            helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.sentTime, TimeUtils.TIME_FORMAT_YEAR_3))
         }
         val container = helper.getView<ConstraintLayout>(R.id.view_container)
         //如果是最后一条
