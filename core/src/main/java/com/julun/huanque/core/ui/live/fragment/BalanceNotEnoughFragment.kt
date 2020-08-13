@@ -58,19 +58,19 @@ class BalanceNotEnoughFragment : BaseDialogFragment() {
         iv_close.onClickNew {
             dismiss()
         }
-        tv_recharge_action.onClickNew {
+        view_recharge.onClickNew {
             //去充值
             ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
             dismiss()
         }
 
-        tv_invite_action.onClickNew {
+        view_invite.onClickNew {
             //去邀请
             RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
             dismiss()
         }
 
-        tv_task_action.onClickNew {
+        view_task.onClickNew {
             //去完成 进入养鹊乐园
 
             dismiss()
