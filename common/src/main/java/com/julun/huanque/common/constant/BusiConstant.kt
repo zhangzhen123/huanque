@@ -526,6 +526,9 @@ object MessageCustomBeanType {
 
     //传送门消息
     const val SendRoom = "sendRoom"
+
+    //创建会话风险提示
+    const val PrivateChatRiskWarning = "PrivateChatRiskWarning"
 }
 
 

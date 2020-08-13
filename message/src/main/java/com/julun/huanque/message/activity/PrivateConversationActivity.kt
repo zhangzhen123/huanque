@@ -1287,7 +1287,7 @@ class PrivateConversationActivity : BaseActivity() {
         messageType: String = Message_Text
     ) {
 
-        if (messageType == Message_Text && (TextUtils.isEmpty(message) || message.isBlank())) {
+        if (messageType == Message_Text && (TextUtils.isEmpty(message) || message.isBlank() || message.trim().isEmpty())) {
             //文本消息判断
             ToastUtils.show("输入不能为空")
             return

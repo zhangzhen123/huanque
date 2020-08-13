@@ -1222,12 +1222,12 @@ class PlayerActivity : BaseActivity() {
         sendBtn.onClickNew {
             //点击发送
             val message = edit_text.text.toString()
-            if (message.isEmpty()) {
+            edit_text.setText("")
+            if (message.isEmpty() || message.trim().isEmpty()) {
                 ToastUtils.show("输入不能为空")
                 return@onClickNew
             }
             viewModel.sendMessage(message)
-            edit_text.setText("")
         }
 
 

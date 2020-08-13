@@ -1,5 +1,6 @@
 package com.julun.huanque.activity
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,8 @@ import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
+import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 
 /**
  *@创建者   dong
@@ -23,6 +26,22 @@ class WelcomeActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         logger.info("WelcomeActivity initViews")
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
+
+
+        checkPermissions()
+    }
+
+    private fun checkPermissions() {
+        val rxPermissions = RxPermissions(this)
+        rxPermissions
+            .requestEachCombined(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .subscribe { permission ->
+                //申请存储权限，无论成功还是失败，直接跳转
+                startActivity()
+            }
+    }
+
+    private fun startActivity() {
         val registerUser = SessionUtils.getIsRegUser()
         val intent = if (registerUser && SessionUtils.getRegComplete()) {
             RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
