@@ -43,9 +43,7 @@ import com.rd.utils.DensityUtils
 import kotlinx.android.synthetic.main.fragment_anchorisnotonline.*
 import kotlinx.android.synthetic.main.fragment_user_card.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.padding
-import org.jetbrains.anko.textColor
+import org.jetbrains.anko.*
 
 /**
  *@创建者   dong
@@ -120,7 +118,7 @@ class UserCardFragment : BaseDialogFragment() {
             when (it.state) {
                 NetStateType.LOADING -> {
                     //加载中
-                    state_pager_view.showLoading("加载中~！")
+                    state_pager_view.showLoading("加载中...")
                 }
                 NetStateType.SUCCESS -> {
                     //成功

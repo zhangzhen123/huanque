@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
         android:id="@+id/draweeSpanTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_5"
         android:lineSpacingExtra="4dp"
+        android:paddingLeft="6dp"
+        android:paddingTop="@dimen/dimen_5"
+        android:paddingBottom="@dimen/dimen_5"
+        android:includeFontPadding="false"
+        android:paddingRight="8dp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        tools:textColor="@color/black_999"
-        android:layout_marginStart="@dimen/dimen_4"
-        android:layout_marginEnd="@dimen/dimen_4"
-        android:layout_marginTop="@dimen/dimen_3"
-        android:layout_marginBottom="@dimen/dimen_3"
-        android:paddingLeft="4dp"
-        android:paddingTop="1dp"
-        android:paddingRight="4dp"
-        android:paddingBottom="1dp"
         tools:text="富文本富文本富文本富文本富文本富文本富文本"
-        android:textSize="14sp" />
+        tools:textColor="@color/black_999" />
 </merge>
