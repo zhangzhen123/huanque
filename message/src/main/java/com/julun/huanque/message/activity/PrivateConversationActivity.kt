@@ -890,40 +890,6 @@ class PrivateConversationActivity : BaseActivity() {
                 }
             }
         }
-
-        //亲密度变化消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.IntimateChangeProcessor {
-            override fun process(data: IntimateBean) {
-                val userIds = data.userIds
-                val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: 0
-                if (userIds.contains(SessionUtils.getUserId()) && userIds.contains(targetId)) {
-                    //当前两个人亲密度发生变化
-                    //更新数据库标识
-                    var updateDataBase = false
-                    val basicData = mPrivateConversationViewModel?.basicBean?.value
-                    basicData?.intimate?.apply {
-                        if (data.intimateLevel != intimateLevel) {
-                            //亲密度等级发生变化，需要更新数据库
-                            updateDataBase = true
-                        }
-                        intimateLevel = data.intimateLevel
-                        nextIntimateLevel = data.nextIntimateLevel
-                        intimateNum = data.intimateNum
-                        nextIntimateNum = data.nextIntimateNum
-                    }
-                    mPrivateConversationViewModel?.basicBean?.value = basicData
-                    if (updateDataBase) {
-                        //需要更新数据库
-                        val stranger = data.stranger[targetId] ?: false
-                        mPrivateConversationViewModel?.updateIntimate(data.intimateLevel, stranger)
-                    }
-                    if (data.msgFree) {
-                        //消息免费
-                        mPrivateConversationViewModel?.msgFeeData?.value = 0L
-                    }
-                }
-            }
-        })
     }
 
     override fun onStart() {
@@ -1718,6 +1684,41 @@ class PrivateConversationActivity : BaseActivity() {
             //当前会话，陌生人状态变化
             mPrivateConversationViewModel?.basicBean?.value?.stranger = event.stranger
 //            RongCloudManager.strangerChange(event.stranger)
+        }
+    }
+
+    /**
+     * 亲密度变化消息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun intimateChange(data: IntimateBean) {
+        val userIds = data.userIds
+        val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: 0
+        if (userIds.contains(SessionUtils.getUserId()) && userIds.contains(targetId)) {
+            //当前两个人亲密度发生变化
+            //更新数据库标识
+            var updateDataBase = false
+            val basicData = mPrivateConversationViewModel?.basicBean?.value
+            basicData?.intimate?.apply {
+                if (data.intimateLevel != intimateLevel) {
+                    //亲密度等级发生变化，需要更新数据库
+                    updateDataBase = true
+                }
+                intimateLevel = data.intimateLevel
+                nextIntimateLevel = data.nextIntimateLevel
+                intimateNum = data.intimateNum
+                nextIntimateNum = data.nextIntimateNum
+            }
+            mPrivateConversationViewModel?.basicBean?.value = basicData
+            if (updateDataBase) {
+                //需要更新数据库
+                val stranger = data.stranger[targetId] ?: false
+                mPrivateConversationViewModel?.updateIntimate(data.intimateLevel, stranger)
+            }
+            if (data.msgFree) {
+                //消息免费
+                mPrivateConversationViewModel?.msgFeeData?.value = 0L
+            }
         }
     }
 

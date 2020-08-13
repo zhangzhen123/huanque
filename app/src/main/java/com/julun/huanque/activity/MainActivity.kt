@@ -14,6 +14,7 @@ import com.baidu.location.BDLocation
 import com.julun.huanque.R
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.LoginEvent
@@ -50,6 +51,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
 import kotlinx.android.synthetic.main.main_activity.*
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
@@ -438,6 +440,15 @@ class MainActivity : BaseActivity() {
                     mMainViewModel.getVoiceCallInfo(data.callId)
                 }
 
+            }
+        })
+
+        //亲密度变化消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.IntimateChangeProcessor {
+            override fun process(data: IntimateBean) {
+                //发送消息，私信列表接收
+                EventBus.getDefault().post(data)
+//                EventBus.getDefault().post()
             }
         })
 
