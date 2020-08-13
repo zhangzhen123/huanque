@@ -61,10 +61,9 @@
         android:id="@+id/sdv_qr_code"
         android:layout_width="@dimen/dimen_55"
         android:layout_height="@dimen/dimen_55"
-        android:layout_marginEnd="@dimen/dimen_10"
-        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginEnd="@dimen/dimen_20"
+        android:layout_marginBottom="@dimen/dimen_20"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:roundAsCircle="true" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,8 +3,7 @@
 <com.julun.huanque.common.widgets.draweetext.BeautyBubbleTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/chatContent"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="5dp" />
+    android:layout_height="wrap_content" />
 
 
     <!--</LinearLayout>-->
