@@ -45,6 +45,7 @@
         android:lines="1"
         android:textSize="10sp"
         android:visibility="gone"
+        android:textColor="@color/black_999"
         app:layout_constraintBottom_toBottomOf="@id/view_bg_holder"
         app:layout_constraintLeft_toLeftOf="@id/view_bg_holder"
         app:layout_constraintRight_toRightOf="@id/view_bg_holder"

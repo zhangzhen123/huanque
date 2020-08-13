@@ -59,15 +59,17 @@ data class WithdrawInfo(
     var tplList: MutableList<WithdrawTpl> = mutableListOf(),
     var typeList: List<WithdrawTypeBean> = listOf(),
     var withdrawCash: String = "",
-    var protocolName:String ="",
-    var protocolUrl:String = ""
+    var protocolName: String = "",
+    var protocolUrl: String = ""
 )
 
 data class WithdrawTpl(
     var money: String = "",
     var quick: Boolean = false,
     var remark: String = "",
-    var tplId: Int = 0
+    var tplId: Int = 0,
+    //实际到账金额
+    var realMoney: String = ""
 )
 
 data class WithdrawTypeBean(

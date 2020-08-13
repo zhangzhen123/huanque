@@ -40,7 +40,8 @@ class WithdrawAdapter : BaseQuickAdapter<WithdrawTpl, BaseViewHolder>(R.layout.i
     }
 
     override fun convert(helper: BaseViewHolder, item: WithdrawTpl) {
-        helper.getView<View>(R.id.view_bg_holder).isSelected = selectedPosition == helper.adapterPosition
+        val selected = selectedPosition == helper.adapterPosition
+        helper.getView<View>(R.id.view_bg_holder).isSelected = selected
         val withdrawNum = helper.getView<TextView>(R.id.withdraw_num)
         val withdrawTitle = helper.getView<TextView>(R.id.withdraw_title)
         val withdrawTips = helper.getView<TextView>(R.id.withdraw_tips)
@@ -58,7 +59,14 @@ class WithdrawAdapter : BaseQuickAdapter<WithdrawTpl, BaseViewHolder>(R.layout.i
             withdrawTitle.show()
             withdrawTitle.text = item.remark
         } else {
-            withdrawTitle.hide()
+            val realMoney = item.realMoney
+            if (selected && realMoney.isNotEmpty()) {
+                withdrawTitle.show()
+                withdrawTitle.text = "实际到账$realMoney"
+            } else {
+                withdrawTitle.hide()
+            }
         }
+
     }
 }
