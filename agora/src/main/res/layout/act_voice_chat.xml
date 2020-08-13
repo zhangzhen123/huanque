@@ -65,6 +65,15 @@
         app:layout_constraintTop_toBottomOf="@id/sdv_header"
         tools:text="了肯定是甲方" />
 
+    <ImageView
+        android:id="@+id/iv_sex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/tv_nickname"
+        app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+        app:layout_constraintLeft_toRightOf="@id/tv_nickname"
+        android:layout_marginLeft="3dp"/>
+
     <TextView
         android:id="@+id/tv_call_duration"
         android:layout_width="wrap_content"
@@ -123,11 +132,12 @@
             android:src="@mipmap/icon_voice_close" />
 
         <TextView
+            android:id="@+id/tv_voice_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="14dp"
-            android:text="挂断"
+            android:text="取消"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_16" />
 

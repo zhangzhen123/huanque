@@ -97,9 +97,9 @@ class FloatingService : Service(), View.OnClickListener {
         }
         val coverUrl = intent?.getStringExtra(ParamConstant.PIC) ?: ""
         val playInfo = intent?.getStringExtra(ParamConstant.PLAY_INFO) ?: ""
-//        videView?.play(playInfo, false)
+        videView?.play(playInfo, false)
         videView?.showCover(coverUrl)
-        videView?.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/16611", false)
+//        videView?.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/16611", false)
         mProgramId = intent?.getLongExtra(ParamConstant.PROGRAM_ID, 0) ?: 0
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, mProgramId)
         UserHeartManager.setProgramId(mProgramId)
