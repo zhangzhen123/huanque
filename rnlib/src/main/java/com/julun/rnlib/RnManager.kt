@@ -10,10 +10,8 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.LifecycleState
-import com.facebook.react.shell.MainPackageConfig
-import com.facebook.react.shell.MainReactPackage
+import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import com.horcrux.svg.SvgPackage
-import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.net.interceptors.HeaderInfoHelper
 import com.julun.huanque.common.suger.logger
 import com.julun.rnlib.reactpackage.AppMessageReactPackage
@@ -138,5 +136,13 @@ object RnManager {
 //
 //        }
         promiseMap.clear()
+    }
+
+
+    fun sendEvent(eventName: String, params: HashMap<String,Any>?) {
+        val map = Arguments.makeNativeMap(params)
+        val reactContext = mReactInstanceManager?.currentReactContext ?: return
+        reactContext.getJSModule(RCTDeviceEventEmitter::class.java)
+            .emit(eventName, map)
     }
 }

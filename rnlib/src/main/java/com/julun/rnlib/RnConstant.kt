@@ -26,6 +26,9 @@ object RnConstant {
     const val ANCHOR_LEVEL_PAGE:String="AnchorLevelPage"
     //财富等级页面
     const val WEALTH_LEVEL_PAGE:String="WealthLevelPage"
+    //聊主学院
+    const val CHAT_COLLEGE_PAGE:String="ChatCollegePage"
+
 
 
     //Action事件码
@@ -53,6 +56,13 @@ object RnConstant {
     const val SHARE_INVITE_PAGE:String="ShareInvitePage"
     //跳转零钱页面
     const val WITHDRAWAL_PAGE:String="WithdrawalPage"
+    //跳转直播间页面
+    const val LIVE_ROOM_PAGE:String="LiveRoomPage"
+    //充值页面
+    const val RECHARGE_PAGE:String="RechargePage"
+    //欢鹊乐园
+    const val HQ_PARADISE_PAGE:String="HQParadisePage"
+
 
 
 

@@ -10,6 +10,7 @@ import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.events.SendRNEvent
 import com.julun.huanque.common.bean.forms.*
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.*
@@ -30,6 +31,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 /**
  *
@@ -538,6 +540,7 @@ class PlayerViewModel : BaseViewModel() {
                 val follow = mSocialService.follow(FriendIdForm(programId)).dataConvert()
                 val followBean = FollowResultBean(follow = follow.follow)
                 followStatusData.value = followBean.convertRtData()
+                EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to programId ,"isFollowed" to true)))
             }, {
                 followStatusData.value = it.convertError()
             })
@@ -553,6 +556,7 @@ class PlayerViewModel : BaseViewModel() {
                 mSocialService.unFollow(FriendIdForm(programId)).dataConvert()
                 val followBean = FollowResultBean(follow = FollowStatus.False)
                 followStatusData.value = followBean.convertRtData()
+                EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to programId ,"isFollowed" to false)))
             }, {
                 followStatusData.value = it.convertError()
             })

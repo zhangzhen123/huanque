@@ -19,6 +19,7 @@ import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.bean.events.AliAuthCodeEvent
 import com.julun.huanque.common.bean.events.RPVerifyResult
+import com.julun.huanque.common.bean.events.SendRNEvent
 import com.julun.huanque.common.bean.events.VoiceSignEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
@@ -323,13 +324,13 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                 .apply {
                     // 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
-                    if(max==1){
-                        theme( R.style.picture_me_style_single)
+                    if (max == 1) {
+                        theme(R.style.picture_me_style_single)
                         selectionMode(PictureConfig.SINGLE)
-                    }else{
+                    } else {
                         minSelectNum(1)// 最小选择数量
                         maxSelectNum(max)
-                        theme( R.style.picture_me_style_multi)
+                        theme(R.style.picture_me_style_multi)
                         selectionMode(PictureConfig.MULTIPLE)
                     }
                 }
@@ -503,6 +504,9 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     }
                 }
                 RnConstant.REAL_NAME_AUTH_PAGE -> {
+                    if (params?.hasKey("text") == true) {
+                        ToastUtils.show(params.getString("text"))
+                    }
                     ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
                 }
                 RnConstant.SHARE_INVITE_PAGE -> {
@@ -512,6 +516,27 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 RnConstant.WITHDRAWAL_PAGE -> {
                     ARouter.getInstance().build(ARouterConstant.WITHDRAW_ACTIVITY).navigation()
                 }
+                RnConstant.LIVE_ROOM_PAGE -> {
+                    if (params?.hasKey("programId") == true) {
+                        val id = params.getString("programId")?.toLongOrNull() ?: return@runOnUiThread
+                        val bundle = Bundle()
+                        bundle.putLong(IntentParamKey.PROGRAM_ID.name, id)
+                        bundle.putString(ParamConstant.FROM, PlayerFrom.RN)
+                        ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle).navigation()
+                    }
+
+                }
+                RnConstant.RECHARGE_PAGE -> {
+                    if (params?.hasKey("text") == true) {
+                        ToastUtils.show(params.getString("text"))
+                    }
+                    ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
+                }
+
+                RnConstant.HQ_PARADISE_PAGE ->{
+                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name,1).navigation()
+                }
+
 
             }
 
@@ -543,5 +568,14 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         } else {
             RnManager.promiseMap[RnConstant.REAL_NAME_AUTH_PAGE]?.resolve(false)
         }
+    }
+
+    /**
+     * 原生主动发送变更消息给RN
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveRNEvent(event: SendRNEvent) {
+        logger("收到发给rn的消息：${event.action}")
+        RnManager.sendEvent(event.action, event.map)
     }
 }
