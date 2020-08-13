@@ -1185,6 +1185,12 @@ object MessageProcessor {
     interface BanUserLivingProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.BanUserLiving
     }
+
+    //直播间热度变化
+    interface RoomHeatChangeProcessor : EventMessageProcessor<RoomHeatChangeBean> {
+        override fun getEventType() = EventMessageType.RoomHeatChange
+
+    }
 }
 
 enum class EventMessageType(val klass: Class<*>) {
@@ -1521,7 +1527,9 @@ enum class EventMessageType(val klass: Class<*>) {
     BanUser(OperatorMessageBean::class.java),
 
     //直播封禁（用户不允许进入任何直播间）
-    BanUserLiving(OperatorMessageBean::class.java)
+    BanUserLiving(OperatorMessageBean::class.java),
+    //直播间热度变动消息
+    RoomHeatChange(RoomHeatChangeBean::class.java)
     //禁言消息
 //    MuteUser(OperatorMessageBean::class.java),
 //    //设备封禁消息

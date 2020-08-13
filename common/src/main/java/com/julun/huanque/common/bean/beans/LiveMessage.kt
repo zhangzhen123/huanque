@@ -1089,3 +1089,6 @@ class OperatorMessageBean : Serializable {
     var time: String = ""
     var targetNickname: String = ""
 }
+
+//欢鹊热度变动消息
+class RoomHeatChangeBean(var heatValue: Long = 0)
