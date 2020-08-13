@@ -234,7 +234,7 @@ class LoginActivity : BaseActivity() {
         val phoneNumWidthPx = widthPx - DensityHelper.dp2px(38) * 2
         val viewWidth = DensityHelper.px2dp(phoneNumWidthPx.toFloat())
         uiConfigBuilder.setLogBtnText(GlobalUtils.getString(R.string.owner_phone_number_fast_login))
-        uiConfigBuilder.setLogBtnTextColor(Color.WHITE)
+        uiConfigBuilder.setLogBtnTextColor(GlobalUtils.getColor(R.color.black_333))
         uiConfigBuilder.setLogBtnImgPath("bg_phone_number_fast_login")
         uiConfigBuilder.setLogBtnHeight(50)
         uiConfigBuilder.setLogBtnWidth(viewWidth)
