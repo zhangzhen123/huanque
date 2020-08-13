@@ -12,15 +12,12 @@ import com.julun.huanque.common.bean.events.UserInfoChangeEvent;
 import com.julun.huanque.common.bean.events.UserInfoEditEvent;
 import com.julun.huanque.common.constant.BusiConstant;
 import com.julun.huanque.common.utils.GlobalUtils;
-import com.julun.huanque.common.utils.JsonUtil;
-import com.julun.huanque.common.utils.SessionUtils;
 import com.julun.huanque.common.utils.ULog;
 import com.julun.rnlib.RnConstant;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class AppMessageModule extends ReactContextBaseJavaModule {
 

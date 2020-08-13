@@ -22,6 +22,7 @@ import com.julun.huanque.common.bean.events.LoginOutEvent
 import com.julun.huanque.common.bean.events.RongConnectEvent
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
@@ -125,7 +126,8 @@ class MainActivity : BaseActivity() {
         CommonInit.getInstance().setMainActivity(this)
         logger.info("DXC  userID = ${SessionUtils.getUserId()}，header = ${SessionUtils.getHeaderPic()}")
         initViewModel()
-        mMainViewModel.indexData.value = 0
+        val targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, 0) ?: 0
+        mMainViewModel.indexData.value = targetIndex
 
 
         mLocationService = LocationService(this.applicationContext)
@@ -420,6 +422,8 @@ class MainActivity : BaseActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        val targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, 0) ?: 0
+        mMainViewModel.indexData.value = targetIndex
         if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
         } else {
             SessionUtils.clearSession()

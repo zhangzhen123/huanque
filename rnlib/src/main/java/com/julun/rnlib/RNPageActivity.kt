@@ -19,6 +19,7 @@ import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.bean.events.AliAuthCodeEvent
 import com.julun.huanque.common.bean.events.RPVerifyResult
+import com.julun.huanque.common.bean.events.SendRNEvent
 import com.julun.huanque.common.bean.events.VoiceSignEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
@@ -122,7 +123,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     }
 
     private val useDeveloperSupport: Boolean
-         get() = mReactInstanceManager != null && mDeveloperSupport
+        get() = mReactInstanceManager != null && mDeveloperSupport
 
     override fun onPause() {
         super.onPause()
@@ -321,11 +322,19 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         if (type == PictureConfig.TYPE_IMAGE) {
             PictureSelector.create(this)
                 .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
-                .theme(R.style.picture_me_style_multi)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
-                .minSelectNum(1)// 最小选择数量
-                .maxSelectNum(max)
+                .apply {
+                    // 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+                    if (max == 1) {
+                        theme(R.style.picture_me_style_single)
+                        selectionMode(PictureConfig.SINGLE)
+                    } else {
+                        minSelectNum(1)// 最小选择数量
+                        maxSelectNum(max)
+                        theme(R.style.picture_me_style_multi)
+                        selectionMode(PictureConfig.MULTIPLE)
+                    }
+                }
                 .imageSpanCount(4)// 每行显示个数
-                .selectionMode(PictureConfig.MULTIPLE)
                 .previewImage(true)// 是否可预览图片
                 .isCamera(true)// 是否显示拍照按钮
                 .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
@@ -349,9 +358,9 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         } else if (type == PictureConfig.TYPE_VIDEO) {
             //只传单视频
             PictureSelector.create(this).openGallery(PictureMimeType.ofVideo())
-                .theme(com.julun.huanque.common.R.style.picture_me_style_multi)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
-                .maxSelectNum(1)// 最大图片选择数量
-                .minSelectNum(1)// 最小选择数量
+                .theme(com.julun.huanque.common.R.style.picture_me_style_single)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+//                .maxSelectNum(1)// 最大图片选择数量
+//                .minSelectNum(1)// 最小选择数量
                 .imageSpanCount(4)// 每行显示个数
                 .selectionMode(PictureConfig.SINGLE)
                 .previewVideo(true)// 是否可预览视频
@@ -495,14 +504,39 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     }
                 }
                 RnConstant.REAL_NAME_AUTH_PAGE -> {
+                    if (params?.hasKey("text") == true) {
+                        ToastUtils.show(params.getString("text"))
+                    }
                     ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
                 }
-                RnConstant.SHARE_INVITE_PAGE->{
-                    ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name,ShareFromModule.Invite).navigation()
+                RnConstant.SHARE_INVITE_PAGE -> {
+                    ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY)
+                        .withString(IntentParamKey.TYPE.name, ShareFromModule.Invite).navigation()
                 }
-                RnConstant.WITHDRAWAL_PAGE->{
+                RnConstant.WITHDRAWAL_PAGE -> {
                     ARouter.getInstance().build(ARouterConstant.WITHDRAW_ACTIVITY).navigation()
                 }
+                RnConstant.LIVE_ROOM_PAGE -> {
+                    if (params?.hasKey("programId") == true) {
+                        val id = params.getString("programId")?.toLongOrNull() ?: return@runOnUiThread
+                        val bundle = Bundle()
+                        bundle.putLong(IntentParamKey.PROGRAM_ID.name, id)
+                        bundle.putString(ParamConstant.FROM, PlayerFrom.RN)
+                        ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle).navigation()
+                    }
+
+                }
+                RnConstant.RECHARGE_PAGE -> {
+                    if (params?.hasKey("text") == true) {
+                        ToastUtils.show(params.getString("text"))
+                    }
+                    ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
+                }
+
+                RnConstant.HQ_PARADISE_PAGE ->{
+                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name,1).navigation()
+                }
+
 
             }
 
@@ -534,5 +568,14 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         } else {
             RnManager.promiseMap[RnConstant.REAL_NAME_AUTH_PAGE]?.resolve(false)
         }
+    }
+
+    /**
+     * 原生主动发送变更消息给RN
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveRNEvent(event: SendRNEvent) {
+        logger("收到发给rn的消息：${event.action}")
+        RnManager.sendEvent(event.action, event.map)
     }
 }

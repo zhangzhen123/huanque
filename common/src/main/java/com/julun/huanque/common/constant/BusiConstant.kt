@@ -814,6 +814,7 @@ object PlayerFrom {
     //传送门
     const val SendRoom = "SendRoom"
 
+    const val RN = "RN"
 }
 
 /**
@@ -824,4 +825,15 @@ object PermissionJumpType{
     const val PrivateChat = "PrivateChat"
     //联系人页面
     const val Contacts = "Contacts"
+}
+
+object RNMessageConst{
+
+    /**
+     * 给RN发送的消息类型
+     */
+    //密友关系发送变化param：{friendId: number,intimateLevel:number}
+    const val IntimateFriendChange:String="IntimateFriendChange"
+    //关注用户变化param:{userId: number, isFollowed: boolean}
+    const val FollowUserChange:String="FollowUserChange"
 }

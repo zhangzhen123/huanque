@@ -9,7 +9,8 @@ import java.io.Serializable
  * @param stranger 陌生人状态
  * @param onlyRefreshUnReadCount 忽略陌生人状态（需要从其他地方获取）
  */
-class EventMessageBean(var targetId: String = "", var stranger: Boolean = false, var onlyRefreshUnReadCount: Boolean = false) : Serializable
+class EventMessageBean(var targetId: String = "", var stranger: Boolean = false, var onlyRefreshUnReadCount: Boolean = false) :
+    Serializable
 
 /**
  * 信息填写完成事件
@@ -114,3 +115,8 @@ class VideoPlayerEvent(var start: Boolean) : Serializable
  * @date 2020/08/06
  */
 class LoginOutEvent() : Serializable
+
+/**
+ * 给Rn发消息
+ */
+class SendRNEvent(val action: String, var map: HashMap<String, Any>? = null)
