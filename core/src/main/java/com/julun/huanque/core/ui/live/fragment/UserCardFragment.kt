@@ -43,7 +43,10 @@ import com.rd.utils.DensityUtils
 import kotlinx.android.synthetic.main.fragment_anchorisnotonline.*
 import kotlinx.android.synthetic.main.fragment_user_card.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.*
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.padding
+import org.jetbrains.anko.textColor
 
 /**
  *@创建者   dong
@@ -76,8 +79,10 @@ class UserCardFragment : BaseDialogFragment() {
         mUserCardViewModel.mUserId = arguments?.getLong(ParamConstant.UserId) ?: 0
         mUserCardViewModel.mNickname = arguments?.getString(ParamConstant.NICKNAME) ?: ""
         mUserCardViewModel.programId = mPlayerViewModel.programId
-        state_pager_view.showLoading()
-        state_pager_view.show()
+//        state_pager_view.showLoading()
+//        state_pager_view.show()
+        showDefaultView()
+
         initViewModel()
 
         mUserCardViewModel.queryUserInfo()
@@ -109,6 +114,17 @@ class UserCardFragment : BaseDialogFragment() {
     }
 
     /**
+     * 显示默认布局
+     */
+    private fun showDefaultView() {
+        tv_nickname.text = mUserCardViewModel.mNickname
+        tv_id.text = "欢鹊ID：${mUserCardViewModel.mUserId}"
+        tv_sex.hide()
+        tv_location.hide()
+        iv_royal.setImageDrawable(null)
+    }
+
+    /**
      * 初始化ViewModel
      */
     private fun initViewModel() {
@@ -116,25 +132,25 @@ class UserCardFragment : BaseDialogFragment() {
         mUserCardViewModel.loadState?.observe(this, Observer {
             it ?: return@Observer
             when (it.state) {
-                NetStateType.LOADING -> {
-                    //加载中
-                    state_pager_view.showLoading("加载中...")
-                }
-                NetStateType.SUCCESS -> {
-                    //成功
-                    state_pager_view.hide()
-                }
-                NetStateType.IDLE -> {
-                    //闲置，什么都不做
-                }
-                else -> {
-                    //都是异常
-                    state_pager_view.showError(
-                        errorTxt = "网络异常~！",
-                        btnClick = View.OnClickListener {
-                            mUserCardViewModel.queryUserInfo()
-                        })
-                }
+//                NetStateType.LOADING -> {
+//                    //加载中
+//                    state_pager_view.showLoading("加载中~！")
+//                }
+//                NetStateType.SUCCESS -> {
+//                    //成功
+//                    state_pager_view.hide()
+//                }
+//                NetStateType.IDLE -> {
+//                    //闲置，什么都不做
+//                }
+//                else -> {
+//                    //都是异常
+//                    state_pager_view.showError(
+//                        errorTxt = "网络异常~！",
+//                        btnClick = View.OnClickListener {
+//                            mUserCardViewModel.queryUserInfo()
+//                        })
+//                }
             }
         })
 
@@ -263,7 +279,9 @@ class UserCardFragment : BaseDialogFragment() {
      * 根据数据显示视图
      */
     private fun showViewByData(data: UserInfoInRoom) {
-        state_pager_view.showSuccess()
+//        state_pager_view.showSuccess()
+        tv_sex.show()
+        tv_location.show()
         val sex = data.sex
         ImageHelper.setDefaultHeaderPic(sdv_header, sex)
         ImageUtils.loadImage(sdv_header, data.headPic, 80f, 80f)
@@ -326,6 +344,14 @@ class UserCardFragment : BaseDialogFragment() {
         showXiaoQue(data.magpieList)
         //显示标签
         showTags(data.userTags)
+
+        //获取贵族等级图片
+        val royalResource = ImageHelper.getRoyalLevelImgRound(data.royalLevel)
+        if (royalResource > 0) {
+            iv_royal.imageResource = royalResource
+        } else {
+            iv_royal.setImageDrawable(null)
+        }
 
         if (data.follow) {
             tv_attention.text = "已关注"
