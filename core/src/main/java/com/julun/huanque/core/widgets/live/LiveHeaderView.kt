@@ -317,6 +317,14 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
     }
 
+    /**
+     * 更新热度数据
+     */
+    fun updateHeatValue(heatNum : Long) {
+        hotText.text = "${StringHelper.formatNum(heatNum)}"
+    }
+
+
     fun setSubscribeEnable(bool: Boolean) {
         subscribeAnchor.isEnabled = bool
     }

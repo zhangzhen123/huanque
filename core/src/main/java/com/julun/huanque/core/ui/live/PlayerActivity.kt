@@ -1629,6 +1629,12 @@ class PlayerActivity : BaseActivity() {
             }
         })
 
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.RoomHeatChangeProcessor {
+            override fun process(data: RoomHeatChangeBean) {
+                liveHeader.updateHeatValue(data.heatValue)
+            }
+
+        })
 
         // 周星通知
         MessageProcessor.registerTxtProcessor(object : MessageProcessor.WeekStarMessageReceiver {
