@@ -80,18 +80,16 @@ object MessageProcessor {
      */
     private fun processPrivateMessage(msg: Message) {
         try {
-            if (privateTextProcessor == null) {
-                val targetId = msg.targetId
-                if ((targetId == SystemTargetId.systemNoticeSender || targetId == SystemTargetId.friendNoticeSender) && msg.content is CustomSimulateMessage) {
-                    //模拟插入的系统消息或者好友通知(不做通知处理)
-                } else {
-                    EventBus.getDefault().post(
-                        EventMessageBean(
-                            msg.targetId ?: "",
-                            GlobalUtils.getStrangerType(msg)
-                        )
+            val targetId = msg.targetId
+            if ((targetId == SystemTargetId.systemNoticeSender || targetId == SystemTargetId.friendNoticeSender) && msg.content is CustomSimulateMessage) {
+                //模拟插入的系统消息或者好友通知(不做通知处理)
+            } else {
+                EventBus.getDefault().post(
+                    EventMessageBean(
+                        msg.targetId ?: "",
+                        GlobalUtils.getStrangerType(msg)
                     )
-                }
+                )
             }
             privateTextProcessor?.processMessage(msg)
         } catch (e: Exception) {
@@ -206,6 +204,7 @@ object MessageProcessor {
             processPrivateMessage(messageList)
         }
     }
+
     //执行事件消息在主线程
     private fun processEventMessageOnMain(data: Any?, eventCode: String) {
         processOnMain {
@@ -1528,6 +1527,7 @@ enum class EventMessageType(val klass: Class<*>) {
 
     //直播封禁（用户不允许进入任何直播间）
     BanUserLiving(OperatorMessageBean::class.java),
+
     //直播间热度变动消息
     RoomHeatChange(RoomHeatChangeBean::class.java)
     //禁言消息

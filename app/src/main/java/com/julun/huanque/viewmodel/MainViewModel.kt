@@ -10,6 +10,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.core.net.UserService
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserLevelInfo
+import com.julun.huanque.common.bean.events.UnreadCountEvent
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm
 import com.julun.huanque.common.bean.forms.SaveLocationForm
@@ -27,6 +28,7 @@ import com.julun.huanque.common.utils.SessionUtils
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import java.lang.Exception
 
 class MainViewModel : BaseViewModel() {
@@ -189,11 +191,11 @@ class MainViewModel : BaseViewModel() {
      * 获取未读数
      */
     fun getUnreadCount() {
-
         val typeList = arrayOf(Conversation.ConversationType.PRIVATE)
         RongIMClient.getInstance().getUnreadCount(typeList, false, object : RongIMClient.ResultCallback<Int>() {
             override fun onSuccess(p0: Int?) {
                 unreadMsgCount.value = p0 ?: 0
+                EventBus.getDefault().post(UnreadCountEvent(p0 ?: 0, false))
             }
 
             override fun onError(p0: RongIMClient.ErrorCode?) {

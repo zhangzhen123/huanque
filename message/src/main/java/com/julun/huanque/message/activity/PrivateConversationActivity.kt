@@ -34,6 +34,8 @@ import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.SendRoomInfo
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
+import com.julun.huanque.common.bean.events.QueryUnreadCountEvent
+import com.julun.huanque.common.bean.events.UnreadCountEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.message.ExpressionAnimationBean
 import com.julun.huanque.common.bean.message.CustomMessage
@@ -73,6 +75,7 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundColor
@@ -104,7 +107,8 @@ class PrivateConversationActivity : BaseActivity() {
             nickname: String = "",
             meetStatus: String = "",
             operation: String = "",
-            headerPic: String = ""
+            headerPic: String = "",
+            fromPlayer: Boolean = false
         ) {
             val intent = Intent(activity, PrivateConversationActivity::class.java)
             intent.putExtra(ParamConstant.TARGET_USER_ID, targetId)
@@ -112,6 +116,7 @@ class PrivateConversationActivity : BaseActivity() {
             intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
             intent.putExtra(ParamConstant.OPERATION, operation)
             intent.putExtra(ParamConstant.HeaderPic, headerPic)
+            intent.putExtra(ParamConstant.FROM, fromPlayer)
             activity.startActivity(intent)
         }
     }
@@ -175,6 +180,8 @@ class PrivateConversationActivity : BaseActivity() {
 
         initBasic(intent)
         registerMessageEventProcessor()
+        mPrivateConversationViewModel?.fromPlayer = intent?.getBooleanExtra(ParamConstant.FROM, false) ?: false
+        EventBus.getDefault().post(QueryUnreadCountEvent(mPrivateConversationViewModel?.fromPlayer ?: false))
     }
 
     /**
@@ -1752,6 +1759,25 @@ class PrivateConversationActivity : BaseActivity() {
             )
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun unReadCount(bean: UnreadCountEvent) {
+        if (bean.player == mPrivateConversationViewModel?.fromPlayer) {
+            val count = bean.unreadCount
+            if (count <= 0) {
+                tv_unread_count.hide()
+            } else {
+                tv_unread_count.show()
+            }
+            if (count < 100) {
+                tv_unread_count.text = "$count"
+            } else {
+                tv_unread_count.text = "99+"
+            }
+        }
+        EventBus.getDefault().removeStickyEvent(bean)
+    }
+
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)

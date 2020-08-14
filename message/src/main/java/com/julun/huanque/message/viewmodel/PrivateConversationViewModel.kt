@@ -56,7 +56,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     val messageChangeState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //没有更多了
-    var noMoreState : Boolean = false
+    var noMoreState: Boolean = false
 
     //首次获取历史记录成功标识位
     val firstSuccessState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -108,6 +108,9 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //是否允许显示小鹊(默认允许)
     var enableShowXiaoQue = true
+
+    //是否从直播页面跳转过来
+    var fromPlayer = false
 
     //小鹊冷却倒计时
     private var mCoolingDisposable: Disposable? = null

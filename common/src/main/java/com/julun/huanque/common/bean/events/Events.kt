@@ -133,6 +133,19 @@ class SendRNEvent(val action: String, var map: HashMap<String, Any>? = null)
 /**
  * 提现成功
  */
-class WithdrawSuccessEvent(val cash:String)
+class WithdrawSuccessEvent(val cash: String)
 
 class BindPhoneSuccessEvent()
+
+/**
+ * 查询消息未读数的事件
+ * @param player 是否获取直播间中的未读数 true 为直播间  false  未首页
+ */
+class QueryUnreadCountEvent(var player: Boolean)
+
+/**
+ * 消息未读数事件
+ * @param unreadCount 消息未读数
+ * @param player 是否是直播间
+ */
+class UnreadCountEvent(var unreadCount: Int,var  player: Boolean)

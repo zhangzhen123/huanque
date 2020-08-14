@@ -32,10 +32,7 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.events.EventMessageBean
-import com.julun.huanque.common.bean.events.LoginOutEvent
-import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
-import com.julun.huanque.common.bean.events.RongConnectEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.PKInfoForm
 import com.julun.huanque.common.bean.forms.UserEnterRoomForm
 import com.julun.huanque.common.constant.*
@@ -609,6 +606,7 @@ class PlayerActivity : BaseActivity() {
             val bundle = Bundle()
             bundle.putLong(ParamConstant.TARGET_USER_ID, userInfo.userId)
             bundle.putString(ParamConstant.NICKNAME, userInfo.nickname)
+            bundle.putBoolean(ParamConstant.FROM, true)
             ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
                 .navigation()
             val baseData = viewModel.baseData.value ?: return@launchWhenResumed
@@ -1945,7 +1943,7 @@ class PlayerActivity : BaseActivity() {
                     baseData.prePic,
                     !baseData.isLandscape
                 )
-            }else{
+            } else {
                 viewModel.leaveProgram()
             }
             super.finish()
@@ -2220,4 +2218,12 @@ class PlayerActivity : BaseActivity() {
             }
         })
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun queryUnreadMsgCount(event: QueryUnreadCountEvent) {
+        if (event.player) {
+            EventBus.getDefault().postSticky(UnreadCountEvent(playerMessageViewModel.unreadCountInPlayer.value ?: 0, true))
+        }
+    }
+
 }
