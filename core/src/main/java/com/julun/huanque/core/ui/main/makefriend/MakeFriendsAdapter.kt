@@ -70,7 +70,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
     override fun convert(holder: BaseViewHolder, item: HomeItemBean) {
 
-        logger("itemViewType:" + holder.itemViewType)
+//        logger("itemViewType:" + holder.itemViewType)
         when (holder.itemViewType) {
             HomeItemBean.NORMAL -> {
                 val bean = item.content as HomeRecomItem

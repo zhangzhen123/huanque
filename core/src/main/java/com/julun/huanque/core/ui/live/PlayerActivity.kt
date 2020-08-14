@@ -609,6 +609,7 @@ class PlayerActivity : BaseActivity() {
             val bundle = Bundle()
             bundle.putLong(ParamConstant.TARGET_USER_ID, userInfo.userId)
             bundle.putString(ParamConstant.NICKNAME, userInfo.nickname)
+            bundle.putString(ParamConstant.HeaderPic, userInfo.headPic)
             ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
                 .navigation()
             val baseData = viewModel.baseData.value ?: return@launchWhenResumed

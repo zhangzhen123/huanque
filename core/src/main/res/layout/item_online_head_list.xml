@@ -15,14 +15,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:roundAsCircle="true" />
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/ivHeadRoyal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_35"
-        app:layout_constraintLeft_toLeftOf="@+id/sdvHeadImage"
-        app:layout_constraintRight_toRightOf="@+id/sdvHeadImage"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="@dimen/dimen_2"
+        app:layout_constraintBottom_toBottomOf="@+id/sdvHeadImage"
+        app:layout_constraintRight_toRightOf="@+id/sdvHeadImage" />
 
     <TextView
         android:id="@+id/tvHeadNickname"

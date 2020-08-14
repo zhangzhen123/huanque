@@ -68,7 +68,7 @@
         android:lineSpacingExtra="5dp"
         android:maxLines="2"
         android:minHeight="20dp"
-        android:textSize="11sp"
+        android:textSize="14sp"
         tools:text="勋章列表" />
 
 
