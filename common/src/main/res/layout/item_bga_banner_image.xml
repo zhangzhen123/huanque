@@ -5,10 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
+    android:background="@color/black_333"
     app:actualImageScaleType="fitXY"
-    app:failureImage="@mipmap/logo_placeholder"
     app:failureImageScaleType="fitXY"
-    app:placeholderImage="@mipmap/logo_placeholder"
     app:placeholderImageScaleType="fitXY"
     app:viewAspectRatio="1.33"
     />

@@ -122,6 +122,15 @@ class UserCardFragment : BaseDialogFragment() {
         tv_sex.hide()
         tv_location.hide()
         iv_royal.setImageDrawable(null)
+        if (mUserCardViewModel.mUserId == SessionUtils.getUserId()) {
+            tv_attention.isEnabled = false
+            tv_private_chat.isEnabled = false
+            tv_at.isEnabled = false
+        }else{
+            tv_attention.isEnabled = true
+            tv_private_chat.isEnabled = true
+            tv_at.isEnabled = true
+        }
     }
 
     /**

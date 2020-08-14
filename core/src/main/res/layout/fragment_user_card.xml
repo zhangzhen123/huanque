@@ -456,6 +456,7 @@
     </com.julun.huanque.common.widgets.MaxSizeScrollView>
 
     <View
+        android:id="@+id/view_bottom_divider"
         android:layout_width="0px"
         android:layout_height="1dp"
         android:background="@drawable/divider_main"
@@ -469,7 +470,7 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="关注"
-        android:textColor="@color/black_666"
+        android:textColor="@color/col_action"
         android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/tv_private_chat"
@@ -491,7 +492,7 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="私信"
-        android:textColor="@color/black_666"
+        android:textColor="@color/col_action"
         android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toRightOf="@id/tv_attention"
         app:layout_constraintRight_toLeftOf="@+id/tv_at"
@@ -514,7 +515,7 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="\@ta"
-        android:textColor="@color/black_666"
+        android:textColor="@color/col_action"
         android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toRightOf="@id/tv_private_chat"
         app:layout_constraintRight_toLeftOf="@+id/tv_home_page"
@@ -537,7 +538,7 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="主页"
-        android:textColor="@color/black_666"
+        android:textColor="@color/col_action"
         android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toRightOf="@id/tv_at"
         app:layout_constraintRight_toRightOf="parent"

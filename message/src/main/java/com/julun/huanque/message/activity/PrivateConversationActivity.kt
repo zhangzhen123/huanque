@@ -29,6 +29,7 @@ import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
+import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.SendRoomInfo
 import com.julun.huanque.common.bean.beans.TargetUserObj
@@ -91,18 +92,26 @@ import java.util.concurrent.TimeUnit
 class PrivateConversationActivity : BaseActivity() {
     companion object {
 
+        /**
+         * @param targetId 会话ID
+         * @param nickname 对方昵称
+         * @param meetStatus 欢遇标识
+         * @param headerPic 头像
+         */
         fun newInstance(
             activity: Activity,
             targetId: Long,
             nickname: String = "",
             meetStatus: String = "",
-            operation: String = ""
+            operation: String = "",
+            headerPic: String = ""
         ) {
             val intent = Intent(activity, PrivateConversationActivity::class.java)
             intent.putExtra(ParamConstant.TARGET_USER_ID, targetId)
             intent.putExtra(ParamConstant.NICKNAME, nickname)
             intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
             intent.putExtra(ParamConstant.OPERATION, operation)
+            intent.putExtra(ParamConstant.HeaderPic, headerPic)
             activity.startActivity(intent)
         }
     }
@@ -191,6 +200,8 @@ class PrivateConversationActivity : BaseActivity() {
         val targetID = intent?.getLongExtra(ParamConstant.TARGET_USER_ID, 0)
         val nickName = intent?.getStringExtra(ParamConstant.NICKNAME) ?: ""
         val meetStatus = intent?.getStringExtra(ParamConstant.MEET_STATUS) ?: ""
+        val header = intent?.getStringExtra(ParamConstant.HeaderPic) ?: ""
+        mAdapter.otherUserInfo = ChatUser(header)
         showTitleView(nickName, meetStatus)
         mPrivateConversationViewModel?.targetIdData?.value = targetID
 
@@ -266,6 +277,7 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.addMessageData?.observe(this, Observer {
             if (it != null) {
                 mAdapter.addData(it)
+                mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
                 scrollToBottom(true)
                 showXiaoQueAuto()
                 mPrivateConversationViewModel?.addMessageData?.value = null
@@ -275,17 +287,13 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.messageChangeState?.observe(this, Observer {
             if (it == true) {
                 mAdapter.notifyDataSetChanged()
+                mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
                 scrollToBottom()
                 mPrivateConversationViewModel?.messageChangeState?.value = null
                 showXiaoQueAuto()
             }
         })
 
-        mPrivateConversationViewModel?.noMoreState?.observe(this, Observer {
-            if (it == true) {
-                mAdapter.upFetchModule.isUpFetchEnable = false
-            }
-        })
 
         mPrivateConversationViewModel?.firstSuccessState?.observe(this, Observer {
             if (it == true) {
@@ -537,7 +545,7 @@ class PrivateConversationActivity : BaseActivity() {
             }
         }
 
-        panel_emotion.mListener = object : EmojiInputListener {
+        panel_emotion.setListener(object : EmojiInputListener {
             override fun onClick(type: String, emotion: Emotion) {
                 //单击
                 when (type) {
@@ -602,7 +610,7 @@ class PrivateConversationActivity : BaseActivity() {
                     }
                 }
             }
-        }
+        })
     }
 
     // 删除光标所在前一位(不考虑切换到emoji时的光标位置，直接删除最后一位)
@@ -1088,6 +1096,10 @@ class PrivateConversationActivity : BaseActivity() {
         mAdapter.upFetchModule.startUpFetchPosition = 2
         mAdapter.upFetchModule.setOnUpFetchListener {
             val currLast = mAdapter.getItemOrNull(0)
+            if (currLast?.senderUserId == "system") {
+                //系统提示
+                return@setOnUpFetchListener
+            }
             mPrivateConversationViewModel?.getMessageList(
                 currLast?.messageId ?: return@setOnUpFetchListener
             )

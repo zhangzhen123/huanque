@@ -146,7 +146,8 @@ class MessageFragment : BaseFragment() {
                                     PrivateConversationActivity.newInstance(
                                         act,
                                         lmc.conversation.targetId.toLong(),
-                                        lmc.showUserInfo?.nickname ?: ""
+                                        lmc.showUserInfo?.nickname ?: "",
+                                        headerPic = lmc.showUserInfo?.headPic ?: ""
                                     )
 
                                 }

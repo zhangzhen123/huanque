@@ -12,7 +12,7 @@ import com.julun.huanque.common.R
 import com.julun.huanque.common.constant.EmojiType
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.suger.onClickNew
-import kotlinx.android.synthetic.main.panel_view_private_chat.view.*
+import kotlinx.android.synthetic.main.panel_view_public_chat.view.*
 
 /**
  *@创建者   dong

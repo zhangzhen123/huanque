@@ -103,6 +103,9 @@ object ParamConstant {
     //图片字段
     const val PIC = "PIC"
 
+    //头像
+    const val HeaderPic = "HeaderPic"
+
 
     const val TARGET_USER_ID = "TargetUserId"
 
