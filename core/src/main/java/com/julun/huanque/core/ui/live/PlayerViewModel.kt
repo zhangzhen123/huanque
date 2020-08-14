@@ -547,6 +547,20 @@ class PlayerViewModel : BaseViewModel() {
         }
     }
 
+
+    /**
+     * 离开直播间
+     */
+    fun leaveProgram(){
+        viewModelScope.launch {
+            request({
+                liveService.leave(ProgramIdForm(programId)).dataConvert()
+            },{})
+        }
+
+    }
+
+
     /**
      * 取消关注
      */

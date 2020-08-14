@@ -478,6 +478,7 @@ class PrivateConversationActivity : BaseActivity() {
         }
 
         iv_gift.onClickNew {
+            mHelper?.hookSystemBackByPanelSwitcher()
             mChatSendGiftFragment = mChatSendGiftFragment ?: ChatSendGiftFragment()
 
             mChatSendGiftFragment?.show(this, "ChatSendGiftFragment")
@@ -1301,7 +1302,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         if (messageType == Message_Text && (TextUtils.isEmpty(message) || message.isBlank() || message.trim().isEmpty())) {
             //文本消息判断
-            ToastUtils.show("输入不能为空")
+            ToastUtils.show("不能发送空白消息哦")
             return
         }
         if (messageType == Message_Pic && pic.isEmpty()) {

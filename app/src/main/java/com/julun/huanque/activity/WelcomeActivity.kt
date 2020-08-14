@@ -26,6 +26,7 @@ class WelcomeActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         logger.info("WelcomeActivity initViews")
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
+        SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
 
 
         checkPermissions()
