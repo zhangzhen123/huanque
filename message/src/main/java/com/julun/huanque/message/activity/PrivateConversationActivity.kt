@@ -310,7 +310,6 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.chatInfoData?.observe(this, Observer {
             if (it != null) {
-                showTitleView(it.nickname, it.meetStatus)
                 mAdapter.otherUserInfo = it
                 mAdapter.notifyDataSetChanged()
             }
@@ -333,6 +332,7 @@ class PrivateConversationActivity : BaseActivity() {
                 //刷新特权表情
                 refreshPrivilegeEmoji(it.intimate)
             }
+            showTitleView(it.friendUser.nickname, it.meetStatus)
             mIntimateDetailViewModel?.basicBean?.value = it
         })
 
@@ -489,6 +489,14 @@ class PrivateConversationActivity : BaseActivity() {
             mChatSendGiftFragment = mChatSendGiftFragment ?: ChatSendGiftFragment()
 
             mChatSendGiftFragment?.show(this, "ChatSendGiftFragment")
+            Observable.timer(200, TimeUnit.MILLISECONDS)
+                .bindUntilEvent(this, ActivityEvent.DESTROY)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    smoothScrollToBottom()
+                }, {})
+
+
         }
 
         iv_xiaoque.onClickNew {
@@ -1264,6 +1272,16 @@ class PrivateConversationActivity : BaseActivity() {
         }
 
     }
+
+    /**
+     * 平滑滑动
+     */
+    private fun smoothScrollToBottom() {
+        if (mAdapter.itemCount > 0) {
+            recyclerview?.smoothScrollToPosition(mAdapter.itemCount - 1)
+        }
+    }
+
 
     /**
      * 显示小鹊提示视图

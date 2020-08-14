@@ -126,7 +126,7 @@ class UserCardFragment : BaseDialogFragment() {
             tv_attention.isEnabled = false
             tv_private_chat.isEnabled = false
             tv_at.isEnabled = false
-        }else{
+        } else {
             tv_attention.isEnabled = true
             tv_private_chat.isEnabled = true
             tv_at.isEnabled = true
@@ -400,13 +400,13 @@ class UserCardFragment : BaseDialogFragment() {
      * 显示贵族等级
      */
     private fun showRoyalLevel(level: Int) {
-//        if (level > 0) {
-//            view_guizu_level.isSelected = true
-        tv_guizu_level.text = "$level"
-//        } else {
-//            view_guizu_level.isSelected = false
+        if (level > 0) {
+            view_guizu_level.isSelected = true
+            tv_guizu_level.text = "$level"
+        } else {
+            view_guizu_level.isSelected = false
 //            tv_guizu_level.text = "暂无贵族"
-//        }
+        }
 
         view_guizu_level.show()
         iv_guizu.show()
