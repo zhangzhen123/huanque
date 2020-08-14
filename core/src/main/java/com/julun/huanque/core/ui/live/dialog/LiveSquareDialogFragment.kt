@@ -259,7 +259,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                 }
                 ImageUtils.loadImage(
                     holder.getView(R.id.anchorPicture)
-                        ?: return, item.coverPic, 150f, 150f
+                        ?: return, item.coverPic+BusiConstant.OSS_350, 150f, 150f
                 )
                 if (item.city.isEmpty()) {
                     holder.setGone(R.id.anchor_city, true)

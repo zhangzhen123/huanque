@@ -399,10 +399,10 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             //只传单视频
             PictureSelector.create(this).openGallery(PictureMimeType.ofVideo())
                 .theme(com.julun.huanque.common.R.style.picture_me_style_single)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
-//                .maxSelectNum(1)// 最大图片选择数量
-//                .minSelectNum(1)// 最小选择数量
+                .maxSelectNum(1)// 最大图片选择数量
+                .minSelectNum(1)// 最小选择数量
                 .imageSpanCount(4)// 每行显示个数
-                .selectionMode(PictureConfig.SINGLE)
+                .selectionMode(PictureConfig.MULTIPLE)
                 .previewVideo(true)// 是否可预览视频
                 .isCamera(true)// 是否显示拍照按钮
                 //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径

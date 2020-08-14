@@ -20,6 +20,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
@@ -102,7 +103,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 }
                 ImageHelper.setDefaultHeaderPic(headPic, bean.sex)
 
-                headPic.loadImage(bean.headPic, 66f, 66f)
+                headPic.loadImage(bean.headPic+ BusiConstant.OSS_160, 66f, 66f)
                 val name = if (bean.nickname.length > 5) {
                     "${bean.nickname.substring(0, 5)}…"
                 } else {

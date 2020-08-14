@@ -1,5 +1,6 @@
 package com.julun.huanque.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -127,7 +128,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     }
 
     private fun loadData(info: UserDetailInfo) {
-        headImage.loadImage(info.userBasic.headPic, 60f, 60f)
+        headImage.loadImage(info.userBasic.headPic+ BusiConstant.OSS_160, 60f, 60f)
         tvNickName.text = info.userBasic.nickname
         tvUserId.text = "欢鹊ID: ${info.userBasic.userId}"
         tvQueBi.text = "${info.userBasic.beans}"
@@ -260,6 +261,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         } else {
             tv_test.hide()
         }
+        tvService.onClickNew {
+            val extra = Bundle()
+            extra.putString(BusiConstant.WEB_URL, "http://q.url.cn/s/raPDfcm?_type=wpa")
+            var intent = Intent(requireActivity(), WebActivity::class.java)
+            intent.putExtras(extra)
+            startActivity(intent)
+        }
+
 
     }
 

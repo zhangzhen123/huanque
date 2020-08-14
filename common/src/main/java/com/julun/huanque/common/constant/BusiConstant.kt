@@ -34,6 +34,8 @@ object BusiConstant {
     const val OSS_120 = "!120"
     //所有头像统一裁剪这么大
     const val OSS_160 = "!160"
+    //广场封面大小
+    const val OSS_350 = "!350"
 }
 
 /**

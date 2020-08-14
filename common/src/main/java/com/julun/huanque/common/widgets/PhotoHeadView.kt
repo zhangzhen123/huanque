@@ -7,10 +7,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.julun.huanque.common.R
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.dp2pxf
-import com.julun.huanque.common.suger.loadImage
-import com.julun.huanque.common.suger.loadImageLocal
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import kotlinx.android.synthetic.main.view_photo_head.view.*
 
@@ -54,7 +51,7 @@ class PhotoHeadView : FrameLayout {
      *
      */
     fun setImage(
-        headUrl: String, frameUrl: String?=null, headSize: Int = 46, frameWidth: Int = 58,
+        headUrl: String, frameUrl: String? = null, headSize: Int = 46, frameWidth: Int = 58,
         frameHeight: Int = 74
     ) {
         setImageCustom(
@@ -119,9 +116,13 @@ class PhotoHeadView : FrameLayout {
         }
 
         if (!frameUrl.isNullOrEmpty()) {
+            header_photo_frame.show()
             header_photo_frame.loadImage(frameUrl, dp2pxf(frameWidth), dp2pxf(frameHeight))
         } else if (frameRes != null) {
+            header_photo_frame.show()
             header_photo_frame.loadImageLocal(frameRes)
+        } else {
+            header_photo_frame.hide()
         }
     }
 
@@ -161,6 +162,7 @@ class PhotoHeadView : FrameLayout {
         }
 
         if (!frameUrl.isNullOrEmpty()) {
+            header_photo_frame.show()
             if (frameWidth == LayoutParams.WRAP_CONTENT) {
                 ImageUtils.loadImageWithHeight_2(header_photo_frame, frameUrl, dp2px(frameHeight))
             }
@@ -169,6 +171,8 @@ class PhotoHeadView : FrameLayout {
                 ImageUtils.loadImageWithWidth(header_photo_frame, frameUrl, dp2px(frameWidth))
             }
 
+        } else {
+            header_photo_frame.hide()
         }
     }
 

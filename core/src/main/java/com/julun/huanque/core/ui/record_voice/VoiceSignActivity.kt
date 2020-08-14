@@ -311,6 +311,7 @@ class VoiceSignActivity : BaseVMActivity<VoiceSignViewModel>() {
             return
         }
         val rd = points?.random()
+        tv_point_title.text = "${rd?.voiceTitle}"
         tv_points.text = "${rd?.voiceContent}"
     }
 

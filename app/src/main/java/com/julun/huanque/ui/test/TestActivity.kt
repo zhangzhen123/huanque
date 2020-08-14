@@ -94,7 +94,7 @@ class TestActivity : BaseActivity() {
             finish()
         }
         goto_photo.onClickNew {
-            goToPictureSelectPager(6, PictureConfig.TYPE_IMAGE)
+            goToPictureSelectPager(1, PictureConfig.TYPE_VIDEO)
         }
         set_push.onClickNew {
             val userId = SessionUtils.getUserId().toString()
@@ -238,7 +238,9 @@ class TestActivity : BaseActivity() {
 
                 }
             } else if (requestCode == 1002) {
+
                 val selectList = PictureSelector.obtainMultipleResult(data)
+                logger("收到视频=${selectList} ")
                 val media = selectList[0]
                 val bitmap = VideoUtils.getVideoFirstFrame(File(media.path))
 //                val bitmap = VideoUtils.getVideoThumbnail(media.path)
@@ -288,7 +290,7 @@ class TestActivity : BaseActivity() {
                 .maxSelectNum(1)// 最大图片选择数量
                 .minSelectNum(1)// 最小选择数量
                 .imageSpanCount(4)// 每行显示个数
-                .selectionMode(PictureConfig.SINGLE)
+                .selectionMode(PictureConfig.MULTIPLE)
                 .previewVideo(true)// 是否可预览视频
                 .isCamera(true)// 是否显示拍照按钮
                 //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径

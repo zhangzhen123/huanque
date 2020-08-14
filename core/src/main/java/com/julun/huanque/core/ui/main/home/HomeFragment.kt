@@ -13,20 +13,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
-import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.makefriend.MakeFriendsFragment
 import com.julun.rnlib.RnManager
-import com.luck.picture.lib.tools.ScreenUtils
 import com.luck.picture.lib.tools.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_main.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
@@ -222,7 +215,7 @@ class HomeFragment : BaseFragment() {
         val tempIndex = view_pager.currentItem
         val tempFragment: androidx.fragment.app.Fragment? = mPagerAdapter.getItem(tempIndex)
         tempFragment?.let {
-            (tempFragment as? MakeFriendsFragment)?.scrollToTop()
+            (tempFragment as? MakeFriendsFragment)?.scrollToTopAndRefresh()
         }
     }
     override fun onHiddenChanged(hidden: Boolean) {

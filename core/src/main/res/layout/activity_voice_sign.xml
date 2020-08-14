@@ -32,7 +32,7 @@
             android:layout_marginStart="@dimen/dimen_15"
             android:layout_marginTop="@dimen/dimen_5"
             android:layout_marginEnd="@dimen/dimen_15"
-            android:text="做个自我介绍，表明交友意向，唱歌、朗诵等，最多30秒。"
+            android:text="做个自我介绍、表明交友意向、唱歌、朗诵等，最多30秒"
             android:textColor="@color/black_666"
             android:textSize="@dimen/sp_14" />
 
@@ -45,6 +45,7 @@
             android:background="@drawable/bg_shape_sign_voice_text">
 
             <TextView
+                android:id="@+id/tv_point_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_15"

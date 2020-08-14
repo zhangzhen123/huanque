@@ -19,6 +19,7 @@ import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.RankingsResult
 import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.bean.beans.UserInfoBean
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.MixedHelper
@@ -223,7 +224,7 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
 //                }
 //                holder.getView<SimpleDraweeView>(R.id.headImage).hierarchy.roundingParams = roundingParams
 //                ImageUtils.loadImage(head, item.headPic, 50f, 50f)
-                head.setImage(headUrl = item.headPic, headSize = 46, frameUrl = item.headFrame, frameWidth = 58, frameHeight = 74)
+                head.setImage(headUrl = item.headPic+ BusiConstant.OSS_120, headSize = 46, frameUrl = item.headFrame, frameWidth = 58, frameHeight = 74)
             }
 
             /**
