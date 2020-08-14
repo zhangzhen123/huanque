@@ -76,7 +76,7 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
     override fun getLayoutId(): Int = R.layout.fragment_score
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initViewModel()
-        MixedHelper.setSwipeRefreshStyle(contributionRefreshView,requireContext())
+        MixedHelper.setSwipeRefreshStyle(contributionRefreshView)
     }
 
     /**

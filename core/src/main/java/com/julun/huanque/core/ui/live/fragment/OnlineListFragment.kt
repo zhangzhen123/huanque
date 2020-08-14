@@ -92,7 +92,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
         rvList.layoutManager = LinearLayoutManager(context)
         rvList.adapter = adapter
         adapter.headerWithEmptyEnable = true
-        MixedHelper.setSwipeRefreshStyle(lmrlRefreshView,requireContext())
+        MixedHelper.setSwipeRefreshStyle(lmrlRefreshView)
         prepareViewModel()
     }
 

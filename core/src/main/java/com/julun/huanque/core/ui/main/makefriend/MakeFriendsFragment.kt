@@ -117,7 +117,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
         })
         tv_balance_h.setTFDinCdc2()
-        MixedHelper.setSwipeRefreshStyle(mRefreshView,requireContext())
+        MixedHelper.setSwipeRefreshStyle(mRefreshView)
     }
 
     override fun initEvents(rootView: View) {

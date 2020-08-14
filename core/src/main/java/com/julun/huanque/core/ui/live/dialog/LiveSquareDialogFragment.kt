@@ -102,7 +102,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             mViewModel.requestFollowList(true)
             mViewModel.requestHotList(QueryType.REFRESH, playViewModel.programId)
         }
-
+        MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
         mViewModel.requestFollowList(true)
         mViewModel.requestHotList(QueryType.INIT, playViewModel.programId)
     }
