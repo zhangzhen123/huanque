@@ -263,7 +263,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="8dp"
-                        android:src="@mipmap/forward_grey_small" />
+                        android:src="@mipmap/icon_forward_white_01" />
 
                 </LinearLayout>
 
@@ -310,7 +310,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="4dp"
                         android:layout_toRightOf="@+id/mengdou_icon"
-                        android:drawableRight="@mipmap/forward_grey_small"
+                        android:drawableRight="@mipmap/icon_forward_white_01"
                         android:drawablePadding="2dp"
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"

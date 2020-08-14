@@ -158,7 +158,7 @@ class SuperAnimationView(context: Context, attrs: AttributeSet?) : RelativeLayou
                 highlyWebpView.show()
                 svgaPlayerView.hide()
                 logger.info("webp动图${webpBean.filed1}")
-                count = if (count == null) 1 else count
+                count = count ?: 1
                 highlyWebpView.setURISpecial(StringHelper.getOssImgUrl(webpBean.filed1), count)
             }
             gifBean.filed1.isNotBlank() -> {
@@ -166,7 +166,7 @@ class SuperAnimationView(context: Context, attrs: AttributeSet?) : RelativeLayou
                 highlyWebpView.show()
                 svgaPlayerView.hide()
                 var count = gifBean.map["playCount"]?.toIntOrNull()
-                count = if (count == null) 1 else count
+                count = count ?: 1
                 highlyWebpView.setURISpecial(StringHelper.getOssImgUrl(gifBean.filed1), count)
             }
             svgaBean.filed1.isNotBlank() -> {
@@ -174,7 +174,7 @@ class SuperAnimationView(context: Context, attrs: AttributeSet?) : RelativeLayou
                 highlyWebpView.hide()
                 svgaPlayerView.show()
                 var count = svgaBean.map["playCount"]?.toIntOrNull()
-                count = if (count == null) 1 else count
+                count = count ?: 1
                 svgaPlayerView.loops = count
                 startPlay(StringHelper.getOssImgUrl(svgaBean.filed1))
             }
@@ -207,8 +207,8 @@ class SuperAnimationView(context: Context, attrs: AttributeSet?) : RelativeLayou
      */
     private fun viewWithGIF(animModel: AnimModel) {
 
-        var gifUrl = StringHelper.getOssImgUrl(animModel.extraObject["GIF"].toString())
-        var width = if (animModel.extraObject["width"] != null)
+        val gifUrl = StringHelper.getOssImgUrl(animModel.extraObject["GIF"].toString())
+        val width = if (animModel.extraObject["width"] != null)
             context.dip(animModel.extraObject["width"].toString().toInt()) else 0
         val lp = this.layoutParams as ViewGroup.LayoutParams
         // 超过屏幕就整个宽度了
@@ -222,32 +222,32 @@ class SuperAnimationView(context: Context, attrs: AttributeSet?) : RelativeLayou
         val other = animModel.extraObject["OTHERS"].toString()
         val others = getOthersParams(other)
 
-        if (others != null && "svga" == others!!.type) {
-            highlyWebpView?.hide()
-            svgaPlayerView?.show()
+        if (others != null && "svga" == others.type) {
+            highlyWebpView.hide()
+            svgaPlayerView.show()
             logger.info("svga动图")
             var count = others.map["playCount"]?.toInt()
             count = if (count == null) 1 else count
-            svgaPlayerView?.loops = count
+            svgaPlayerView.loops = count
             startPlay(StringHelper.getOssImgUrl(others.filed1))
         } else {
-            highlyWebpView?.show()
-            svgaPlayerView?.hide()
-            if (others != null && "webp" == others!!.type) {
+            highlyWebpView.show()
+            svgaPlayerView.hide()
+            if (others != null && "webp" == others.type) {
                 logger.info("webp动图")
                 var count = others.map["playCount"]?.toInt()
-                count = if (count == null) 1 else count
-                highlyWebpView?.setURISpecial(StringHelper.getOssImgUrl(others.filed1), count)
+                count = count ?: 1
+                highlyWebpView.setURISpecial(StringHelper.getOssImgUrl(others.filed1), count)
             } else if (others != null && "gif" == others!!.type) {
                 logger.info("gif动图")
 //                var duration = others.map["playSeconds"]?.toInt()
                 var count = others.map["playCount"]?.toInt()
-                count = if (count == null) 1 else count
-                highlyWebpView?.setURISpecial(StringHelper.getOssImgUrl(others.filed1), count)
+                count = count ?: 1
+                highlyWebpView.setURISpecial(StringHelper.getOssImgUrl(others.filed1), count)
             } else {
                 logger.info("老接口gif动图")
 //                val dur = animModel.extraObject["playSeconds"].toString().toInt()
-                highlyWebpView?.setURISpecial(gifUrl, 0)
+                highlyWebpView.setURISpecial(gifUrl, 0)
             }
         }
     }

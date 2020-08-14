@@ -420,7 +420,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 ImageHelper.getUserLevelImg(item.userLevel)
             ).setText(R.id.tvItemNickname, item.nickname)
             holder.getView<PhotoHeadView>(R.id.sdvItemHead).setImage(
-                headUrl = item.headPic+BusiConstant.OSS_120,
+                headUrl = item.headPic+BusiConstant.OSS_160,
                 frameUrl = item.headFrame,
                 headSize = 46,
                 frameHeight = 74,
@@ -487,7 +487,7 @@ class OnlineHeadAdapter :
                 .setTextColorRes(R.id.tvHeadNickname, R.color.black_333)
 //            ImageUtils.loadImage(holder.getView(R.id.sdvHeadImage), item.headPic, 46f, 46f)
             headView.setImage(
-                headUrl = item.headPic+BusiConstant.OSS_120,
+                headUrl = item.headPic+BusiConstant.OSS_160,
                 headSize = 46,
                 frameUrl = item.headFrame,
                 frameHeight = 74,

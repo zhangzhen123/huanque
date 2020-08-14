@@ -232,7 +232,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                 holder.setText(R.id.anchorNickname, item.programName)
                 ImageUtils.loadImage(
                     holder.getView(R.id.anchorPicture)
-                        ?: return, item.anchorPic, 55f, 55f
+                        ?: return, item.anchorPic+BusiConstant.OSS_160, 55f, 55f
                 )
                 if (item.livingStatus) {
                     holder.setGone(R.id.fl_living, false)

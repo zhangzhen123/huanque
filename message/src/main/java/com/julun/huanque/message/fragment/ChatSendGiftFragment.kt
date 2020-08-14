@@ -206,9 +206,9 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
                 val rv = holder.getView<RecyclerView>(R.id.rv_chat_gifts)
                 (rv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
                 rv.layoutManager = GridLayoutManager(context, 4)
-//                if (rv.itemDecorationCount <= 0) {
-//                    rv.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(12)))
-//                }
+                if (rv.itemDecorationCount <= 0) {
+                    rv.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(1)))
+                }
                 rv.setRecycledViewPool(mGiftViewPool)
                 val giftAdapter: ChatGiftListAdapter
                 if (rv.adapter != null) {

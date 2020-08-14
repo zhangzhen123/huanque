@@ -1,5 +1,6 @@
 package com.julun.huanque.core.adapter
 
+import android.graphics.Color
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.StrikethroughSpan
@@ -61,13 +62,19 @@ class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_
 
         val tagData = item.tagContent?.split(",")
         llTag.removeAllViews()
-        tagData?.forEach {
-            val tagView = TagView(context)
-            llTag.addView(tagView)
-            tagView.show()
-            tagView.setAlignRight()
-            tagView.isGiftTag = true
-            tagView.setData(it)
+        if(tagData.isNullOrEmpty()){
+            llTag.hide()
+        }else{
+            llTag.show()
+            tagData.forEach {
+                val tagView = TagView(context)
+                llTag.addView(tagView)
+                tagView.show()
+                tagView.setAlignRight()
+                tagView.isGiftTag = true
+                tagView.setData(it)
+            }
+
         }
         val expTime = item.expTime
         val pText = if (expTime.isEmpty()) {

@@ -147,10 +147,10 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
         if (info.userBasic.headRealPeople) {
             tvCertification.hide()
-            ivReal.showContextMenu()
+            ivReal.show()
         } else {
             tvCertification.show()
-            tvCertification.onClickNew {
+            headImage.onClickNew {
                 ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
 //                mIRealNameService.startRealHead(requireActivity(), object : RealNameCallback {
 //                    override fun onCallback(status: String, des: String, percent: Int?) {

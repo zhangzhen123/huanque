@@ -224,7 +224,7 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
 //                }
 //                holder.getView<SimpleDraweeView>(R.id.headImage).hierarchy.roundingParams = roundingParams
 //                ImageUtils.loadImage(head, item.headPic, 50f, 50f)
-                head.setImage(headUrl = item.headPic+ BusiConstant.OSS_120, headSize = 46, frameUrl = item.headFrame, frameWidth = 58, frameHeight = 74)
+                head.setImage(headUrl = item.headPic+ BusiConstant.OSS_160, headSize = 46, frameUrl = item.headFrame, frameWidth = 58, frameHeight = 74)
             }
 
             /**

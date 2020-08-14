@@ -40,6 +40,7 @@
         android:layout_marginBottom="17dp"
         android:text="安全等级：?"
         android:textColor="#4A4A4A"
+        android:textStyle="bold"
         android:textSize="@dimen/sp_16"
         app:layout_constraintBottom_toBottomOf="@id/view_top"
         app:layout_constraintLeft_toLeftOf="@id/iv_security"

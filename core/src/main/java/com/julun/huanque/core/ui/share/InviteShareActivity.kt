@@ -313,7 +313,12 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         sdvSharePic.loadImage(item.posterPic, 250f, 450f)
                         sdvQrCode.loadImage(item.qrCode, 60f, 60f)
                         sdvUserPic.loadImage(SessionUtils.getHeaderPic(), 45f, 45f)
-                        holder.setText(R.id.tv_user_name, SessionUtils.getNickName())
+                        val name = if (SessionUtils.getNickName().length > 5) {
+                            "${SessionUtils.getNickName().substring(0, 4)}..."
+                        } else {
+                            SessionUtils.getNickName()
+                        }
+                        holder.setText(R.id.tv_user_name, name)
 
                         if (item.inviteCode.isNotEmpty()) {
                             holder.setGone(R.id.tv_invite_code, false).setText(R.id.tv_invite_code, "邀请码${item.inviteCode}")
@@ -329,7 +334,12 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         val sdvQrCode = holder.getView<SimpleDraweeView>(R.id.sdv_qr_code)
                         sdvSharePic.loadImage(item.posterPic, 235f, 235f)
                         sdvQrCode.setImageBitmap(item.qrBitmap)
-                        holder.setText(R.id.tv_user_name, item.authorName)
+                        val name = if (item.authorName.length > 5) {
+                            "${item.authorName.substring(0, 4)}..."
+                        } else {
+                            item.authorName
+                        }
+                        holder.setText(R.id.tv_user_name, name)
                     }
                 }
 
