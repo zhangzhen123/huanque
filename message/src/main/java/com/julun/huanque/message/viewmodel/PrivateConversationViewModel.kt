@@ -21,6 +21,7 @@ import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.*
 import io.reactivex.rxjava3.core.Observable
@@ -55,7 +56,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     val messageChangeState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //没有更多了
-    val noMoreState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    var noMoreState : Boolean = false
 
     //首次获取历史记录成功标识位
     val firstSuccessState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -140,17 +141,15 @@ class PrivateConversationViewModel : BaseViewModel() {
                     queryMessageList.reverse()
                     if (queryMessageList.size < 20) {
                         //消息全部获取结束，添加提示消息
-                        queryMessageList.add(obtainRiskMessage())
+                        queryMessageList.add(0, obtainRiskMessage())
                     }
+                    noMoreState = (p0?.size ?: 0) < 20
                     val list = messageListData.value
                     if (list != null) {
                         list.addAll(0, queryMessageList)
                         messageChangeState.postValue(true)
                     } else {
-                        messageListData.value = p0
-                    }
-                    if (queryMessageList.size < 20) {
-                        noMoreState.postValue(true)
+                        messageListData.value = queryMessageList
                     }
                     if (first) {
                         firstSuccessState.postValue(true)

@@ -14,6 +14,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -42,6 +43,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.dip
 import org.jetbrains.anko.textColor
 
 /**
@@ -226,8 +228,9 @@ class LoginActivity : BaseActivity() {
         uiConfigBuilder.setSloganTextColor(Color.WHITE)
 
         //设置动画
-        uiConfigBuilder.setNeedStartAnim(false)
-        uiConfigBuilder.setNeedCloseAnim(false)
+        uiConfigBuilder.setNeedStartAnim(true)
+        uiConfigBuilder.setNeedCloseAnim(true)
+
 
 
         //设置登录按钮
@@ -276,16 +279,17 @@ class LoginActivity : BaseActivity() {
         }
 
 
-//        // 关闭按钮
-//        val closeButton = ImageView(this)
-//
-//        val mLayoutParams1 = RelativeLayout.LayoutParams(DensityHelper.dp2px(21), DensityHelper.dp2px(21))
-//        mLayoutParams1.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE)
-//        mLayoutParams1.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
+        // 关闭按钮
+        val closeButton = ImageView(this)
+
+        val mLayoutParams1 = RelativeLayout.LayoutParams(DensityHelper.dp2px(40), DensityHelper.dp2px(40))
+        mLayoutParams1.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE)
+        mLayoutParams1.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
+        closeButton.setPadding(dip(8))
 //        mLayoutParams1.setMargins(DensityHelper.dp2px(10), DensityHelper.dp2px(10), 0, 0)
-//        closeButton.layoutParams = mLayoutParams1
-//        closeButton.setImageResource(R.mipmap.close_phone_fast_login)
-//        uiConfigBuilder.addCustomView(closeButton, true, null)
+        closeButton.layoutParams = mLayoutParams1
+        closeButton.setImageResource(R.mipmap.icon_back_black_01)
+        uiConfigBuilder.addCustomView(closeButton, true, null)
 
         //设置web导航栏
         uiConfigBuilder.setPrivacyNavColor(Color.WHITE)
