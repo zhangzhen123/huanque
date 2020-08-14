@@ -11,7 +11,7 @@ import com.julun.huanque.common.bean.forms.WithdrawHistoryForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.core.net.WithDrawService
+import com.julun.huanque.core.net.WithdrawService
 
 /**
  *
@@ -25,7 +25,7 @@ import com.julun.huanque.core.net.WithDrawService
 class WithdrawHistoryViewModel : BaseViewModel() {
 
 
-    private val service: WithDrawService by lazy { Requests.create(WithDrawService::class.java) }
+    private val service: WithdrawService by lazy { Requests.create(WithdrawService::class.java) }
 
     private var lastId: Long? = null
 

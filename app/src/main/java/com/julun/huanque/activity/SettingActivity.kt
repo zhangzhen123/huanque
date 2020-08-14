@@ -9,13 +9,12 @@ import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.manager.DataCleanManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.support.LoginManager
+import com.julun.huanque.ui.safe.AccountAndSecurityActivity
 import kotlinx.android.synthetic.main.act_setting.*
 
 /**

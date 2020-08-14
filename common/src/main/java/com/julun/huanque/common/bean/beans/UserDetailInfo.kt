@@ -22,13 +22,13 @@ data class UserBasic(
     var royalBjExp: Long = 0L,
     var royalExp: Long = 0L,
     var royalLevel: Int = 0,
-    var royalLevelIcon: String = "",
+    var royalPic: String = "",
     var sex: String = "",
     var userExp: Long = 0L,
     var userId: Long = 0L,
     var userLevel: Int = 0,
     var userLevelIcon: String = "",
-    var anchorLevelIcon: String = "",
+    var anchorLevelPic: String = "",
     var userType: String = ""
 )
 

@@ -12,7 +12,7 @@ import com.julun.huanque.common.constant.WithdrawErrorCode
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.core.net.WithDrawService
+import com.julun.huanque.core.net.WithdrawService
 import kotlinx.coroutines.launch
 
 /**
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 class WithdrawViewModel : BaseViewModel() {
 
 
-    private val service: WithDrawService by lazy { Requests.create(WithDrawService::class.java) }
+    private val service: WithdrawService by lazy { Requests.create(WithdrawService::class.java) }
 
     val withdrawResult: MutableLiveData<ReactiveData<ApplyWithdrawResult>> by lazy { MutableLiveData<ReactiveData<ApplyWithdrawResult>>() }
 

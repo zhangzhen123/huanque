@@ -15,7 +15,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.core.R
 
 class PhotosAdapter : BaseQuickAdapter<PhotoBean, BaseViewHolder>(R.layout.item_photo) {
-    var mOnItemClick:OnItemClick?=null
+    private var mOnItemClick:OnItemClick?=null
     fun setOnItemClickListener(listener:OnItemClick){
         mOnItemClick=listener
     }

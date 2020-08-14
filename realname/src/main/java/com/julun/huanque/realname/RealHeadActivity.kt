@@ -12,7 +12,7 @@ import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ToastUtils
-import kotlinx.android.synthetic.main.activity_main_realname.*
+import kotlinx.android.synthetic.main.activity_realhead.*
 import org.greenrobot.eventbus.EventBus
 
 /**

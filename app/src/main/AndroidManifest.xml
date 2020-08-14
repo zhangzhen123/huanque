@@ -50,7 +50,7 @@
             android:name=".activity.FillInformationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AccountAndSecurityActivity"
+            android:name=".ui.safe.AccountAndSecurityActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AboutUsActivity"

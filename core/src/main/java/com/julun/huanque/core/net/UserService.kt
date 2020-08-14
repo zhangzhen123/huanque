@@ -152,5 +152,12 @@ interface UserService {
     @POST("user/acct/info/checkToAnchor")
     suspend fun checkToAnchor(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
 
+    /**
+     * 账号与安全
+     */
+    @POST("user/app/security")
+    suspend fun security(@Body form: EmptyForm = EmptyForm()): Root<UserSecurityInfo>
+
+
 
 }

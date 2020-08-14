@@ -83,7 +83,10 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
         mRecyclerView.layoutManager = LinearLayoutManager(this)
 
         mRecyclerView.adapter = mAdapter
+        MixedHelper.setSwipeRefreshStyle(mRefreshView)
+
         mViewModel.queryInfo(queryType = QueryType.INIT)
+
     }
 
     override fun initEvents(rootView: View) {

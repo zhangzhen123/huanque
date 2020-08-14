@@ -19,7 +19,7 @@ import retrofit2.http.POST
  *
  */
 
-interface WithDrawService {
+interface WithdrawService {
 
 
     /**

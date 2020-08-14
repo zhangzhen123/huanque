@@ -11,6 +11,7 @@ import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.bean.events.BindPhoneSuccessEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.PhoneLoginType
@@ -30,6 +31,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.act_phone_num.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import org.jetbrains.anko.textColor
 import java.util.concurrent.TimeUnit
@@ -121,6 +123,7 @@ class PhoneNumLoginActivity : BaseActivity() {
         bindViewModel.bindPhoneData.observe(this, Observer {
             if (it.isSuccess()) {
                 ToastUtils.show("手机绑定成功!")
+                EventBus.getDefault().post(BindPhoneSuccessEvent())
                 finish()
             } else {
                 ToastUtils.show(it.error?.busiMessage)

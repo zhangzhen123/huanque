@@ -110,7 +110,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                     bean.nickname
                 }
                 val sign = if (bean.mySign.length > 15) {
-                    "${bean.mySign}..."
+                    "${bean.mySign.substring(0,14)}..."
                 } else {
                     bean.mySign
                 }

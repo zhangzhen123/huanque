@@ -3,21 +3,14 @@ package com.julun.huanque.core.ui.record_voice
 import androidx.lifecycle.*
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
-import com.julun.huanque.common.bean.beans.ApplyWithdrawResult
 import com.julun.huanque.common.bean.beans.InfoPerfection
 import com.julun.huanque.common.bean.beans.VoiceSignPointBean
-import com.julun.huanque.common.bean.beans.WithdrawInfo
 import com.julun.huanque.common.bean.forms.UpdateVoiceForm
-import com.julun.huanque.common.bean.forms.WithdrawApplyForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.ErrorCodes
-import com.julun.huanque.common.constant.WithdrawErrorCode
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.core.net.UserService
-import com.julun.huanque.core.net.WithDrawService
 import kotlinx.coroutines.launch
-import retrofit2.http.Field
 
 /**
  *

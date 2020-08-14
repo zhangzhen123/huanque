@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import com.julun.huanque.common.R
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.SessionUtils
@@ -181,12 +182,12 @@ object MixedHelper {
     /**
      * 设置下拉刷新的风格
      */
-    fun setSwipeRefreshStyle(swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout, context: Context) {
+    fun setSwipeRefreshStyle(swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout) {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary_lib, android.R.color.holo_green_light)
         swipeRefreshLayout.setProgressViewOffset(
             true,
-            -context.dip(20),
-            context.resources.getDimensionPixelOffset(R.dimen.progress_view_end)
+            -dp2px(20),
+            CommonInit.getInstance().getContext().resources.getDimensionPixelOffset(R.dimen.progress_view_end)
         )
     }
 

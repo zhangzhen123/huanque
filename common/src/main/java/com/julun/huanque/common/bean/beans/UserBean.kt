@@ -173,3 +173,10 @@ data class AliAuthInfo(
 data class BindResultBean(
     var nickname: String = ""
 )
+
+data class UserSecurityInfo(
+    var bindAliPay: Boolean = false,
+    var bindWeChat: Boolean = false,
+    var mobile: String = "",
+    var security: Boolean = false
+)

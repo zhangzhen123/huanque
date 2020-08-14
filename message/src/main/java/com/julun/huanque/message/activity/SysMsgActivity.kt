@@ -51,7 +51,7 @@ class SysMsgActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val targetId = intent.getStringExtra(IntentParamKey.SYS_MSG_ID.name) ?: ""
 
-        MixedHelper.setSwipeRefreshStyle(rlRefreshView, this)
+        MixedHelper.setSwipeRefreshStyle(rlRefreshView)
         rvList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         when (targetId) {
             SystemTargetId.systemNoticeSender -> {

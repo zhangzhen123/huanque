@@ -752,12 +752,12 @@ class SendGiftFragment : BaseDialogFragment() {
         }
         initMagicIndicator(tabList)
 //       = goodsCfgData?.gifts?.sliceBySubLength(pageLimit) ?: return
-        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        lp.setMargins(dp2px(5).toInt(), 0, dp2px(5).toInt(), 0)
+        val lp = LinearLayout.LayoutParams(dp2px(5), dp2px(5))
+        lp.setMargins(dp2px(4).toInt(), 0, dp2px(4).toInt(), 0)
 //        viewPagerAdapter.notifyDataSetChanged()
         viewPagerData.forEachIndexed { index, list ->
             viewPagerAdapter.addItem(list)
-            dotter.addView(getDotImg(index), lp)
+            dotter.addView(getDotImg(index),lp)
         }
         viewPagerAdapter.notifyDataSetChanged()
         giftViewPager?.offscreenPageLimit = viewPagerData.size
@@ -943,7 +943,7 @@ class SendGiftFragment : BaseDialogFragment() {
 
     // viewPager分页圆点
     private fun getDotImg(position: Int): ImageView {
-        val dotImg = mLayoutInflater!!.inflate(R.layout.view_face_group_dot, null).findViewById<ImageView>(R.id.face_dot) as ImageView
+        val dotImg = mLayoutInflater.inflate(R.layout.view_face_group_dot, null).findViewById<ImageView>(R.id.face_dot) as ImageView
         dotImg.id = position
         dotImg.imageResource = R.drawable.selector_gift_dot
         return dotImg
