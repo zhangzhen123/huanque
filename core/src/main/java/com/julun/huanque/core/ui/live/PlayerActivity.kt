@@ -1192,7 +1192,7 @@ class PlayerActivity : BaseActivity() {
                 val currentLength = edit_text.text.length
                 val emojiLength = emotion.text.length
                 if (currentLength + emojiLength > 30) {
-                    Toast.makeText(this@PlayerActivity, "长度超过限制", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PlayerActivity, "输入长度超限", Toast.LENGTH_SHORT).show()
                     return
                 }
                 val start: Int = edit_text.selectionStart
@@ -1240,7 +1240,7 @@ class PlayerActivity : BaseActivity() {
                 if (s.toString().length > 30) {
                     edit_text.setText(s.toString().substring(0, 30))
                     edit_text.setSelection(30)
-                    Toast.makeText(this@PlayerActivity, "最多输入30个字哦", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PlayerActivity, "输入长度超限", Toast.LENGTH_SHORT).show()
                     return
                 }
                 judgeSendEnable()

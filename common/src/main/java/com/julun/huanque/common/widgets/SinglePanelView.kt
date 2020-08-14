@@ -1,6 +1,9 @@
 package com.julun.huanque.common.widgets
 
 import android.content.Context
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -14,7 +17,9 @@ import com.julun.huanque.common.adapter.PrerogativeEmojiAdapter
 import com.julun.huanque.common.constant.EmojiType
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.common.widgets.emotion.Emotions
 import kotlinx.android.synthetic.main.panel_single_emoji.view.*
@@ -37,7 +42,12 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
     init {
         context?.let { con ->
             LayoutInflater.from(con).inflate(R.layout.panel_single_emoji, this)
+            if (type == EmojiType.PREROGATIVE) {
+                view_shade.show()
+                tv_privilege_attetnion.show()
+            }
             initRecyclerView()
+            initListener()
         }
     }
 
@@ -74,6 +84,17 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
     }
 
     /**
+     * 设置监听
+     */
+    private fun initListener() {
+        tv_privilege_attetnion.onClickNew {
+            //弹窗说明弹窗
+            mListener?.showPrivilegeFragment("ZSBQ")
+        }
+    }
+
+
+    /**
      * 设置专属表情所需要等级
      * @param needLevel 解锁专属表情所需等级
      * @param currentLevel 当前两人的亲密度等级
@@ -93,6 +114,19 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
             //需要显示特权表情遮罩
             view_shade.show()
             tv_privilege_attetnion.show()
+
+            val str = "亲密度等级$mNeedLevel，立即解锁"
+            val spannableString = SpannableString(str)
+            val colorText = "立即解锁"
+            val index = str.indexOf(colorText)
+            spannableString.setSpan(
+                ForegroundColorSpan(GlobalUtils.getColor(R.color.send_private_chat)),
+                index,
+                index + colorText.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+            tv_privilege_attetnion.text = spannableString
+
         } else {
             view_shade.hide()
             tv_privilege_attetnion.hide()
