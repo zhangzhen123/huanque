@@ -496,10 +496,7 @@ class OnlineHeadAdapter :
         }
         if (item.royalLevel != -1) {
             holder.setVisible(R.id.ivHeadRoyal, true)
-                .setImageResource(
-                    R.id.ivHeadRoyal,
-                    ImageHelper.getRoyalLevelImgRound(item.royalLevel)
-                )
+            ImageUtils.loadImage(holder.getView(R.id.ivHeadRoyal), item.royalSmallPic, 16f, 16f)
         } else {
             holder.setGone(R.id.ivHeadRoyal, true)
         }

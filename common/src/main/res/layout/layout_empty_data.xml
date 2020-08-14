@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout6"
     android:gravity="center"
     android:orientation="vertical"
@@ -23,10 +24,15 @@
         android:textSize="@dimen/small1_size" />
 
     <TextView
-        android:id="@+id/tv_empty_other"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_20"
+        android:id="@+id/tv_button"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:textSize="@dimen/size_16"
+        android:gravity="center"
+        android:background="@drawable/bg_solid_btn2"
+        tools:text="知道了"
+        tools:visibility="visible"
         android:visibility="gone" />
 
 </LinearLayout>

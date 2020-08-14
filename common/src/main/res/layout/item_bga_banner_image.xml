@@ -6,7 +6,7 @@
     android:clickable="true"
     app:actualImageScaleType="fitXY"
     app:failureImage="@drawable/logo_placeholder_bg_m"
-    app:failureImageScaleType="fitCenter"
+    app:failureImageScaleType="centerCrop"
     app:placeholderImage="@drawable/logo_placeholder_bg_m"
-    app:placeholderImageScaleType="fitCenter"
+    app:placeholderImageScaleType="centerCrop"
     app:viewAspectRatio="1.33" />
