@@ -1,5 +1,6 @@
 package com.julun.huanque.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +26,9 @@ import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
 import com.julun.huanque.common.bean.events.LoginEvent
+import com.julun.huanque.common.bean.events.PayResultEvent
 import com.julun.huanque.common.bean.events.RHVerifyResult
+import com.julun.huanque.common.bean.events.WithdrawSuccessEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
@@ -125,7 +128,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     }
 
     private fun loadData(info: UserDetailInfo) {
-        headImage.loadImage(info.userBasic.headPic, 60f, 60f)
+        headImage.loadImage(info.userBasic.headPic+ BusiConstant.OSS_160, 60f, 60f)
         tvNickName.text = info.userBasic.nickname
         tvUserId.text = "欢鹊ID: ${info.userBasic.userId}"
         tvQueBi.text = "${info.userBasic.beans}"
@@ -258,6 +261,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         } else {
             tv_test.hide()
         }
+        tvService.onClickNew {
+            val extra = Bundle()
+            extra.putString(BusiConstant.WEB_URL, "http://q.url.cn/s/raPDfcm?_type=wpa")
+            var intent = Intent(requireActivity(), WebActivity::class.java)
+            intent.putExtras(extra)
+            startActivity(intent)
+        }
+
 
     }
 
@@ -304,6 +315,25 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         }
     }
 
+    /**
+     * 提现成功 刷新
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveWithdrawSuccess(event: WithdrawSuccessEvent) {
+        logger("收到提现结果：${event.cash}")
+        mViewModel.queryInfo(QueryType.REFRESH)
+    }
+
+    /**
+     * 接收支付结果
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receivePayResult(result: PayResultEvent) {
+        logger.info("收到支付结果：${result.payResult} type=${result.payType}" )
+        if (result.payResult == PayResult.PAY_SUCCESS) {
+            mViewModel.queryInfo(QueryType.REFRESH)
+        }
+    }
     private val infoTabAdapter: BaseQuickAdapter<UserDataTab, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<UserDataTab, BaseViewHolder>(R.layout.item_tab_user_info) {
             override fun onCreateDefViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

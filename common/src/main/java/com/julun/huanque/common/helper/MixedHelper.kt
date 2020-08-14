@@ -14,6 +14,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
@@ -107,13 +108,19 @@ object MixedHelper {
     /**
      * 获取网络错误页
      */
-    fun getErrorView(ctx: Context, msg: String = "",btnTex:String="", onClick: View.OnClickListener = View.OnClickListener { }): View {
+    fun getErrorView(
+        ctx: Context,
+        msg: String = "",
+        btnTex: String = "",
+        showImage: Boolean = true,
+        onClick: View.OnClickListener = View.OnClickListener { }
+    ): View {
 
         val mErrorView: View = LayoutInflater.from(ctx).inflate(R.layout.layout_network_unable, null)
         mErrorView.setBackgroundResource(R.color.transparent)
-        val text: TextView = mErrorView.findViewById(R.id.no_network_Text) as TextView
-
-        val btn: TextView = mErrorView.findViewById(R.id.tv_error_reload) as TextView
+        val image: ImageView = mErrorView.findViewById(R.id.no_network_image)
+        val text: TextView = mErrorView.findViewById(R.id.no_network_Text)
+        val btn: TextView = mErrorView.findViewById(R.id.tv_error_reload)
 
         if (!TextUtils.isEmpty(msg)) {
             text.text = msg
@@ -127,6 +134,11 @@ object MixedHelper {
         }
         val reload: TextView = mErrorView.findViewById(R.id.tv_error_reload) as TextView
         reload.setOnClickListener(onClick)
+        if (showImage) {
+            image.show()
+        } else {
+            image.hide()
+        }
         return mErrorView
     }
 

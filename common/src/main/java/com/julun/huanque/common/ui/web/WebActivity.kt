@@ -256,18 +256,18 @@ class WebActivity : BaseActivity() {
             "n" -> {
                 //样式一
                 rlTitleRootView.backgroundResource = R.color.transparent
-                ivBack.imageResource = R.mipmap.icon_back_black_01
-                ivClose.imageResource = R.mipmap.icon_close_black_01
-                ivOperation.imageResource = R.mipmap.icon_more_black_01
+                ivBack.imageResource = R.mipmap.icon_back_white_01
+                ivClose.imageResource = R.mipmap.icon_close_white_01
+                ivOperation.imageResource = R.mipmap.icon_more_white_01
                 tvTitle.hide()
                 params?.below(-1)
             }
             else -> {
                 //默认样式
                 rlTitleRootView.backgroundResource = R.color.white
-                ivBack.imageResource = R.mipmap.icon_back_white_01
-                ivClose.imageResource = R.mipmap.icon_close_white_01
-                ivOperation.imageResource = R.mipmap.icon_more_white_01
+                ivBack.imageResource = R.mipmap.icon_back_black_01
+                ivClose.imageResource = R.mipmap.icon_close_black_01
+                ivOperation.imageResource = R.mipmap.icon_more_black_01
                 tvTitle.show()
 //                ivClose.hide()
                 params?.below(R.id.rlTitleRootView)

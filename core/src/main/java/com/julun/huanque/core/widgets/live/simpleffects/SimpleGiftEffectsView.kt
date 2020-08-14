@@ -14,6 +14,7 @@ import android.widget.FrameLayout
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.julun.huanque.common.bean.beans.SendGiftEvent
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
@@ -209,7 +210,7 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
         giftCountText.text = "${lastGift!!.times} "
 
 //        ImageUtils.loadImage(sdv_sender, newGift.headPic, 40f, 40f)
-        sdv_sender.setImage(headUrl = newGift.headPic,headSize = 40,frameUrl = newGift.headFrame,frameWidth = 52,frameHeight = 66)
+        sdv_sender.setImage(headUrl = newGift.headPic+ BusiConstant.OSS_160,headSize = 40,frameUrl = newGift.headFrame,frameWidth = 52,frameHeight = 66)
         //设置文字颜色
         when (newGift.level) {
             1 -> {

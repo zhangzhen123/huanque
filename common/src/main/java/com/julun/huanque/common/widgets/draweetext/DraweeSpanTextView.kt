@@ -132,17 +132,19 @@ class DraweeSpanTextView @JvmOverloads constructor(
                             ) {
                                 val resId: Int = ImageHelper.getLocalImageResId(paramValue, styleParam)
                                 //改用固定高度
-                                var specifiedWidth = dip(15)
+                                var specifiedWidth = dip(16)
                                 var specifiedHeight = specifiedWidth
 
                                 if (styleParam.preffix == MessageUtil.PREFIX_USER_LEVEL) {
-                                    specifiedHeight = dip(15)
+                                    specifiedHeight = dip(16)
                                     specifiedWidth = dip(29)
                                 }
+
                                 builder.setImageSpan(context, resId, index, index, specifiedWidth, specifiedHeight)
 
                             } else if (MessageUtil.KEY_REMOTE == styleParam.source) {
-                                builder.setImageSpan(context, StringHelper.getOssImgUrl(paramValue!!), index, dip(15), dip(15))
+                                val specifiedHeight = dip(16)
+                                builder.setImageSpan(context, StringHelper.getOssImgUrl(paramValue!!), index, specifiedHeight, specifiedHeight)
                             }
 
                         }

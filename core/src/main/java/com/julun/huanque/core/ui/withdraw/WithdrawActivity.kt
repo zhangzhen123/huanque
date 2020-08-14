@@ -21,7 +21,9 @@ import com.julun.huanque.common.bean.beans.WithdrawInfo
 import com.julun.huanque.common.bean.beans.WithdrawTpl
 import com.julun.huanque.common.bean.events.AliAuthCodeEvent
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
+import com.julun.huanque.common.bean.events.WithdrawSuccessEvent
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ToastUtils
@@ -30,6 +32,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.AliPayManager
 import com.julun.huanque.core.viewmodel.UserBindViewModel
 import kotlinx.android.synthetic.main.activity_withdraw.*
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
@@ -127,9 +130,18 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
             return
         }
         val message = if (currentWithdrawType == WithdrawType.AliWithdraw) {
-            "确定提现至你的支付宝账号（${aliNickname}）吗？"
+            if (aliNickname.isNotEmpty()) {
+                "确定提现至已授权的支付宝账号（${aliNickname}）吗？"
+            } else {
+                "确定提现至已授权的支付宝账号吗？"
+            }
+
         } else {
-            "确定提现至你的微信账号（${wxNickname}）吗？"
+            if (wxNickname.isNotEmpty()) {
+                "确定提现至已授权的微信账号（${wxNickname}）吗？"
+            } else {
+                "确定提现至已授权的微信账号吗？"
+            }
         }
         alertDialog.showAlertWithOKAndCancel(
             message = message,
@@ -147,6 +159,26 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         val itemInfo = mAdapter.getItemOrNull(position) ?: return
         mSelectItem = itemInfo
         mAdapter.setSelection(position)
+    }
+
+    private fun autoSelectWdType() {
+        //都授权时 使用上次提现的方式
+        if (wxAuthorized && aliAuthorized) {
+            val sType=StorageHelper.getWithdrawType()
+            if(sType.isNotEmpty()){
+                currentWithdrawType=sType
+            }
+        } else {
+            if (wxAuthorized) {
+                currentWithdrawType = WithdrawType.WXWithdraw
+            } else if (aliAuthorized) {
+                currentWithdrawType = WithdrawType.AliWithdraw
+            }
+        }
+        if(currentWithdrawType.isNotEmpty()){
+            btn_ensure.isEnabled = true
+            wdViewSelect()
+        }
     }
 
     private fun checkPayType(withdrawType: String) {
@@ -187,6 +219,10 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         }
         currentWithdrawType = withdrawType
         btn_ensure.isEnabled = true
+        wdViewSelect()
+    }
+
+    private fun wdViewSelect() {
         when (currentWithdrawType) {
             WithdrawType.WXWithdraw -> {
                 view_bg_wx.isSelected = true
@@ -198,6 +234,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                 view_bg_ali.isSelected = true
             }
         }
+
     }
 
     private fun initViewModel() {
@@ -213,6 +250,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                 val data = it.getT()
                 ToastUtils.show(data.msg)
                 account_money.text = data.cash
+                EventBus.getDefault().post(WithdrawSuccessEvent(data.cash))
             } else if (it.state == NetStateType.ERROR) {
                 when (it.error?.busiCode) {
                     WithdrawErrorCode.NO_BIND_PHONE -> {
@@ -332,7 +370,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
             val start = content.length//记录开始位置
             content.append(info.protocolName)
             val end = content.length
-            val ps = "的全部内容。您有权选择同意或不同意本协议，若您同意本协议，即可进行零钱提现，否则无法提现"
+            val ps = "的全部内容。您有权选择同意或不同意本协议，若您同意本协议，即可进行零钱提现，否则无法提现。"
             content.append(ps)
             val styleSpan1B = ForegroundColorSpan(Color.parseColor("#FF5757"))
             val sp = SpannableString(content)
@@ -362,8 +400,9 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
             }
         }
         btn_ensure.post {
-            if(mAdapter.data.size>0)
-            checkItem(0)
+            if (mAdapter.data.size > 0)
+                checkItem(0)
+            autoSelectWdType()
         }
 
     }

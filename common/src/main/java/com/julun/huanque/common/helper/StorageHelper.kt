@@ -24,6 +24,8 @@ object StorageHelper {
     private const val NOTIFY_REFRESH_DATE = "notify_refresh_date"
 
     private const val NEED_GUIDE_TO_SPEAK = "NEED_GUIDE_TO_SPEAK"
+    //提现方式
+    private const val WITHDRAW_TYPE = "WITHDRAW_TYPE"
     /**
      * 保存ad
      */
@@ -69,4 +71,10 @@ object StorageHelper {
     }
 
     fun getNeedGuideToSpeakStatus() = SharedPreferencesUtils.getBoolean(NEED_GUIDE_TO_SPEAK, true)
+
+
+    fun setWithdrawType(date: String) {
+        SharedPreferencesUtils.commitString(WITHDRAW_TYPE, date)
+    }
+    fun getWithdrawType() = SharedPreferencesUtils.getString(WITHDRAW_TYPE, "")
 }

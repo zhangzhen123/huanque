@@ -467,8 +467,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     }
 
     //
-    fun scrollToTop() {
+    fun scrollToTopAndRefresh() {
         mRecyclerView.smoothScrollToPosition(0)
+        mViewModel.queryInfo(QueryType.REFRESH)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

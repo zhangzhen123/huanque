@@ -44,7 +44,7 @@ class ReportActivity : BaseReportActivity() {
 
     override fun startPublish() {
 
-        val curType = reportTypeAdapter.getItem(currentSelect)
+        val curType = reportTypeAdapter.getItemOrNull(currentSelect)
         if (curType == null) {
             ToastUtils.show("请选择举报类型")
             return

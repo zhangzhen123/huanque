@@ -144,6 +144,7 @@ object AudioRecordManager {
 
                 Observable.just(wavFile).observeOn(AndroidSchedulers.mainThread()).subscribe {
                     mRecordCallBack?.finish(wavFile, totalTime)
+                    totalTime=0
                 }
             } catch (e: IOException) {
                 e.printStackTrace()

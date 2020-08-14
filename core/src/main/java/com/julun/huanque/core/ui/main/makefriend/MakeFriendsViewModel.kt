@@ -91,12 +91,18 @@ class MakeFriendsViewModel : BaseViewModel() {
                     }
 
                 }
-                if (totalList.size >= GUIDE_INDEX_02 && curRemind != null) {
+                if (totalList.size >= GUIDE_INDEX_02 && curRemind?.coverRemind == true) {
                     if (needGuide2) {
                         needGuide2 = false
                         logger("添加完善引导")
-                        val index = GUIDE_INDEX_02 - (totalList.size - list.size)
-                        list.add(index, HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, curRemind!!))
+                        if(curRemind?.tagRemind==false){
+                            val index = GUIDE_INDEX_01 - (totalList.size - list.size)
+                            list.add(index, HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, curRemind!!))
+                        }else{
+                            val index = GUIDE_INDEX_02 - (totalList.size - list.size)
+                            list.add(index, HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, curRemind!!))
+                        }
+
                     }
                 }
                 val rList = RootListData(isPull = type != QueryType.LOAD_MORE, list = list, hasMore = homeListData.hasMore)

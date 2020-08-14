@@ -88,14 +88,14 @@ class SettingActivity : BaseActivity() {
                 startActivity(intent)
             }
         }
-        view_service.onClickNew {
-            //客服
-            val extra = Bundle()
-            extra.putString(BusiConstant.WEB_URL, "http://q.url.cn/s/raPDfcm?_type=wpa")
-            var intent = Intent(this, WebActivity::class.java)
-            intent.putExtras(extra)
-            startActivity(intent)
-        }
+//        view_service.onClickNew {
+//            //客服
+//            val extra = Bundle()
+//            extra.putString(BusiConstant.WEB_URL, "http://q.url.cn/s/raPDfcm?_type=wpa")
+//            var intent = Intent(this, WebActivity::class.java)
+//            intent.putExtras(extra)
+//            startActivity(intent)
+//        }
         view_privacy.onClickNew {
             //隐私设置
             jump(PrivacyActivity::class.java)

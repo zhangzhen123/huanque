@@ -57,7 +57,7 @@ class RechargeCenterViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = service.createAppPay(pay).dataConvert(intArrayOf(ErrorCodes.MONTH_TICKETS_NOT_ENOUGH))
-                //todo 这里处理可变类型的解析不再放在jsonUtils统一处理 因为只此一处使用 没必要每次都判断
+                //这里处理可变类型的解析不再放在jsonUtils统一处理 因为只此一处使用 没必要每次都判断
                 val value=result.content
                 if (value is String) {
                     result.alipayOrderInfo = value
