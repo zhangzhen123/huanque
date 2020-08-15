@@ -223,6 +223,10 @@ class PlayerViewManager(val context: PlayerActivity) {
 
         viewModel.followStatusData.observe(context, Observer {
             logger.info("Player 关注状态 status = $it")
+            if (it?.getT()?.userId != viewModel.programId) {
+                //不是主播的关注数据
+                return@Observer
+            }
             context.liveHeader.setSubscribeEnable(true)
             if (it != null && it.isSuccess()) {
                 modifySubscribe(it.getT().follow == FollowStatus.True)
@@ -1244,23 +1248,23 @@ class PlayerViewManager(val context: PlayerActivity) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //                    StatusBarUtil.setColor(context, ContextCompat.getColor(context, R.color.black))
                     StatusBarUtil.setTransparent(context)
-                    surfaceView.topPadding=STATUS_TOP
-                }else{
-                    surfaceView.topPadding=0
+                    surfaceView.topPadding = STATUS_TOP
+                } else {
+                    surfaceView.topPadding = 0
                 }
 //                bubbleView.topMargin = 0
 //                playerPanel.setPadding(0, 0, 0, 0)
             } else {
                 if (isInPk) {
-                    val topMarginPk = HEADER_HEIGHT + PK_PROCESS_HEIGHT +STATUS_TOP- context.dip(4)
+                    val topMarginPk = HEADER_HEIGHT + PK_PROCESS_HEIGHT + STATUS_TOP - context.dip(4)
                     ppLp.topMargin = topMarginPk
                     anoLp.topMargin = topMarginPk
 //                    trLp?.topMargin = topMarginPk
                     publicView.topPadding = PK_PROCESS_HEIGHT
 //                    bubbleView.topMargin = PK_RROCESS_HEIGHT
                 } else {
-                    ppLp.topMargin = HEADER_HEIGHT+STATUS_TOP
-                    anoLp.topMargin = HEADER_HEIGHT+STATUS_TOP
+                    ppLp.topMargin = HEADER_HEIGHT + STATUS_TOP
+                    anoLp.topMargin = HEADER_HEIGHT + STATUS_TOP
 //                    trLp?.topMargin = HEADER_HEIGHT
                     publicView.topPadding = 0
 //                    bubbleView.topMargin = 0
@@ -1279,9 +1283,9 @@ class PlayerViewManager(val context: PlayerActivity) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //                    StatusBarUtil.setColor(context, ContextCompat.getColor(context, R.color.black))
                     StatusBarUtil.setTransparent(context)
-                    surfaceView.topPadding=STATUS_TOP
-                }else{
-                    surfaceView.topPadding=0
+                    surfaceView.topPadding = STATUS_TOP
+                } else {
+                    surfaceView.topPadding = 0
                 }
             }
             //改变公聊高度
@@ -1497,7 +1501,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 //            //登录状态变化 保留登录面板
 //            mDialogManager.closeGiftDialog(true)
 //        } else {
-            mDialogManager.refreshGiftDialog()
+        mDialogManager.refreshGiftDialog()
 //        }
 //
 //        //关闭一元气泡

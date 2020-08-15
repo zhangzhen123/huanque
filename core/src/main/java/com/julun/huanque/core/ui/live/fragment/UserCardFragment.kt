@@ -168,7 +168,10 @@ class UserCardFragment : BaseDialogFragment() {
         })
 
         mPlayerViewModel.followStatusData.observe(this, Observer {
-
+            if (it?.getT()?.userId != mUserCardViewModel.mUserId) {
+                //不是当前用户的关注数据
+                return@Observer
+            }
             if (it != null && it.isSuccess()) {
                 mUserCardViewModel.userInfoData.value?.follow = it.getT().follow != FollowStatus.False
                 if (it.getT().follow != FollowStatus.False) {
@@ -215,7 +218,7 @@ class UserCardFragment : BaseDialogFragment() {
             }
             val userInfo = mUserCardViewModel.userInfoData.value ?: return@onClickNew
             //发送粘性消息
-            EventBus.getDefault().post(OpenPrivateChatRoomEvent(mUserCardViewModel.mUserId, userInfo.nickname,userInfo.headPic))
+            EventBus.getDefault().post(OpenPrivateChatRoomEvent(mUserCardViewModel.mUserId, userInfo.nickname, userInfo.headPic))
         }
         tv_at.onClickNew {
             //@ 功能
@@ -401,13 +404,8 @@ class UserCardFragment : BaseDialogFragment() {
      * 显示贵族等级
      */
     private fun showRoyalLevel(level: Int) {
-        if (level > 0) {
-            view_guizu_level.isSelected = true
-            tv_guizu_level.text = "$level"
-        } else {
-            view_guizu_level.isSelected = false
-//            tv_guizu_level.text = "暂无贵族"
-        }
+        tv_guizu_level.text = "$level"
+        view_guizu_level.isSelected = level > 0
 
         view_guizu_level.show()
         iv_guizu.show()
