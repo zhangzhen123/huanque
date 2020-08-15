@@ -479,7 +479,12 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         val userId = id.toLong()
                         val bundle = Bundle()
                         bundle.putLong(ParamConstant.TARGET_USER_ID, userId)
-                        //                        bundle.putString(ParamConstant.NICKNAME, nickname);
+                        if(params.hasKey("nickname")){
+                            bundle.putString(ParamConstant.NICKNAME, params.getString("nickname"))
+                        }
+                        if(params.hasKey("headPic")){
+                            bundle.putString(ParamConstant.HeaderPic, params.getString("headPic"))
+                        }
 //                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
                         ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY)
                             .with(bundle)
@@ -528,7 +533,12 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         val userId = id.toLong()
                         val bundle = Bundle()
                         bundle.putLong(ParamConstant.TARGET_USER_ID, userId)
-                        //                        bundle.putString(ParamConstant.NICKNAME, nickname);
+                        if(params.hasKey("nickname")){
+                            bundle.putString(ParamConstant.NICKNAME, params.getString("nickname"))
+                        }
+                        if(params.hasKey("headPic")){
+                            bundle.putString(ParamConstant.HeaderPic, params.getString("headPic"))
+                        }
 //                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
                         bundle.putString(ParamConstant.OPERATION, OperationType.OPEN_GIFT)
                         ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY)
@@ -572,8 +582,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 }
                 RnConstant.LIVE_ROOM_PAGE -> {
                     if (params?.hasKey("programId") == true) {
-                        val id =
-                            params.getString("programId")?.toLongOrNull() ?: return@runOnUiThread
+                        val id = params.getDouble("programId").toLong()
                         val bundle = Bundle()
                         bundle.putLong(IntentParamKey.PROGRAM_ID.name, id)
                         bundle.putString(ParamConstant.FROM, PlayerFrom.RN)

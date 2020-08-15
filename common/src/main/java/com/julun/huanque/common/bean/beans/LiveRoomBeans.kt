@@ -1810,7 +1810,7 @@ class OnlineListData<T>(
     var royalHonorList: MutableList<T> = mutableListOf()
 
     //贵族说明
-    var royalLevelUrl: String? = null
+    var royalLevelUrl: String = ""
 
     //贵族特权图片
     var privilegeUrl: String? = null

@@ -29,7 +29,8 @@ data class UserBasic(
     var userLevel: Int = 0,
     var userLevelIcon: String = "",
     var anchorLevelPic: String = "",
-    var userType: String = ""
+    var userType: String = "",
+    var age: Int = 0
 )
 
 data class UserTool(

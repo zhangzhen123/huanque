@@ -7,7 +7,7 @@
 
     <com.julun.huanque.common.widgets.PhotoHeadView
         android:id="@+id/sdvItemHead"
-        android:layout_width="@dimen/dimen_58"
+        android:layout_width="@dimen/dimen_74"
         android:layout_height="@dimen/dimen_74"
         android:layout_marginStart="@dimen/dimen_15"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +34,7 @@
     <ImageView
         android:id="@+id/ivItemLevel"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/dimen_14"
+        android:layout_height="@dimen/dimen_16"
         android:layout_marginTop="@dimen/dimen_9"
         android:layout_marginBottom="@dimen/dimen_8"
         app:layout_constraintBottom_toBottomOf="@+id/sdvItemHead"

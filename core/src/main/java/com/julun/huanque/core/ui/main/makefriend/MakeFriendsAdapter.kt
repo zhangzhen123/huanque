@@ -70,7 +70,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 
     override fun convert(holder: BaseViewHolder, item: HomeItemBean) {
 
-        logger("itemViewType:" + holder.itemViewType)
+//        logger("itemViewType:" + holder.itemViewType)
         when (holder.itemViewType) {
             HomeItemBean.NORMAL -> {
                 val bean = item.content as HomeRecomItem
@@ -246,7 +246,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 }
 
                 mHeaderNavAdapter.setList(headerInfo.moduleList)
-                mHeaderNavAdapter.setOnItemClickListener { _, _, position ->
+                mHeaderNavAdapter.onAdapterClickNew { _, _, position ->
                     mOnItemAdapterListener?.onHeadClick(mHeaderNavAdapter.getItem(position))
                 }
 //                holder.addOnClickListener(R.id.tv_go_make_money)
@@ -259,9 +259,15 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val bean = item.content as? HomeRemind ?: return
                 val rv = holder.getView<RecyclerView>(R.id.rv_add_photos)
                 val logo = holder.getView<SimpleDraweeView>(R.id.sdv_logo)
-                val name = holder.getView<TextView>(R.id.tv_name)
+                val tvName = holder.getView<TextView>(R.id.tv_name)
                 logo.loadImage(SessionUtils.getHeaderPic(), 30f, 30f)
-                name.text = SessionUtils.getNickName()
+
+                val name = if (SessionUtils.getNickName().length > 5) {
+                    "${SessionUtils.getNickName().substring(0, 5)}…"
+                } else {
+                    SessionUtils.getNickName()
+                }
+                tvName.text = name
 //                rv.setRecycledViewPool(mPhotoViewPool)
                 rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 

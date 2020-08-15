@@ -63,7 +63,7 @@ class MessageBlockEvent()
 /**
  * 打开私聊页
  */
-class OpenPrivateChatRoomEvent(var userId: Long, var nickname: String)
+class OpenPrivateChatRoomEvent(var userId: Long, var nickname: String,var headPic: String)
 
 /**
  * 折叠陌生人消息变化

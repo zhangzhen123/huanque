@@ -87,6 +87,7 @@
             android:layout_height="@dimen/dimen_46"
             android:gravity="center"
             android:text="取消分享"
+            android:textStyle="bold"
             android:textColor="@color/black_333"
             android:textSize="@dimen/size_16" />
     </LinearLayout>

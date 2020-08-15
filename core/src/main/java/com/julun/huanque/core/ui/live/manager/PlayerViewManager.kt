@@ -1,6 +1,5 @@
 package com.julun.huanque.core.ui.live.manager
 
-import android.Manifest
 import android.animation.*
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
@@ -12,18 +11,15 @@ import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.fastjson.JSONObject
 import com.facebook.drawee.view.SimpleDraweeView
-import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.ChatMessageBean
 import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.forms.RechargeRuleQueryForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StorageHelper
@@ -51,7 +47,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_live_room.*
-import kotlinx.android.synthetic.main.fragment_user_card.*
 import kotlinx.android.synthetic.main.player_gesture_guide.*
 import kotlinx.android.synthetic.main.view_live_header.*
 import org.jetbrains.anko.dip
@@ -94,7 +89,7 @@ class PlayerViewManager(val context: PlayerActivity) {
         val HEADER_HEIGHT: Int by lazy {
             CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.live_header_height)
         }
-        val PK_RROCESS_HEIGHT: Int by lazy {
+        val PK_PROCESS_HEIGHT: Int by lazy {
             CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.pk_process_high)
         }
 
@@ -1187,7 +1182,7 @@ class PlayerViewManager(val context: PlayerActivity) {
     }
 
     /**
-     * 不能完全全屏的切换
+     * 完全全屏的切换
      */
     fun changeShowTypeLayout2() {
         val surfaceView = context.surface_view
@@ -1243,25 +1238,29 @@ class PlayerViewManager(val context: PlayerActivity) {
             //添加是不是手机直播的的转换 主播模式同手机直播 黑色状态栏
             val verticalFullScreen = (screenType != ScreenType.HP) && isAppShow && videoPlayerViewModel.isSingleAnchor()
             if (verticalFullScreen) {
-                ppLp.height = screenHeight - STATUS_TOP
+                ppLp.height = screenHeight /*- STATUS_TOP*/
                 ppLp.topMargin = 0
                 publicView.topPadding = 0
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    StatusBarUtil.setColor(context, ContextCompat.getColor(context, R.color.black))
+//                    StatusBarUtil.setColor(context, ContextCompat.getColor(context, R.color.black))
+                    StatusBarUtil.setTransparent(context)
+                    surfaceView.topPadding=STATUS_TOP
+                }else{
+                    surfaceView.topPadding=0
                 }
 //                bubbleView.topMargin = 0
 //                playerPanel.setPadding(0, 0, 0, 0)
             } else {
                 if (isInPk) {
-                    val topMarginPk = HEADER_HEIGHT + PK_RROCESS_HEIGHT - context.dip(4)
+                    val topMarginPk = HEADER_HEIGHT + PK_PROCESS_HEIGHT +STATUS_TOP- context.dip(4)
                     ppLp.topMargin = topMarginPk
                     anoLp.topMargin = topMarginPk
 //                    trLp?.topMargin = topMarginPk
-                    publicView.topPadding = PK_RROCESS_HEIGHT
+                    publicView.topPadding = PK_PROCESS_HEIGHT
 //                    bubbleView.topMargin = PK_RROCESS_HEIGHT
                 } else {
-                    ppLp.topMargin = HEADER_HEIGHT
-                    anoLp.topMargin = HEADER_HEIGHT
+                    ppLp.topMargin = HEADER_HEIGHT+STATUS_TOP
+                    anoLp.topMargin = HEADER_HEIGHT+STATUS_TOP
 //                    trLp?.topMargin = HEADER_HEIGHT
                     publicView.topPadding = 0
 //                    bubbleView.topMargin = 0
@@ -1278,7 +1277,11 @@ class PlayerViewManager(val context: PlayerActivity) {
 //                playerPanel.setPadding(0, verticalPaddding, 0, verticalPaddding)
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    StatusBarUtil.setColor(context, ContextCompat.getColor(context, R.color.black))
+//                    StatusBarUtil.setColor(context, ContextCompat.getColor(context, R.color.black))
+                    StatusBarUtil.setTransparent(context)
+                    surfaceView.topPadding=STATUS_TOP
+                }else{
+                    surfaceView.topPadding=0
                 }
             }
             //改变公聊高度

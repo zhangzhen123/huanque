@@ -2,25 +2,16 @@ package com.julun.huanque.common.helper
 
 import android.app.Activity
 import android.app.ActivityManager
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.ContextWrapper
-import android.graphics.Color
 import android.os.Build
 import android.text.TextUtils
 import android.text.format.DateUtils
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import com.julun.huanque.common.R
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.init.CommonInit
@@ -28,10 +19,8 @@ import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.ToastUtils
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.layout_empty_data.view.*
-import org.jetbrains.anko.dip
 
 
 /**
@@ -133,8 +122,7 @@ object MixedHelper {
         } else {
             btn.text = ctx.resources.getString(R.string.reload)
         }
-        val reload: TextView = mErrorView.findViewById(R.id.tv_error_reload) as TextView
-        reload.setOnClickListener(onClick)
+        btn.setOnClickListener(onClick)
         if (showImage) {
             image.show()
         } else {
@@ -146,35 +134,38 @@ object MixedHelper {
 
     fun getEmptyView(
         context: Context,
-        parent: ViewGroup,
         msg: String? = null,
         isImageHide: Boolean = false,
-        resId: Int? = null
+        imgResId: Int? = null,
+        btnTex: String = "",
+        onClick: View.OnClickListener ?=null
+
     ): View {
-        val emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data, parent, false)
+        val emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data, null)
         if (msg != null)
             emptyView.emptyText.text = msg
+
         if (isImageHide) {
             emptyView.no_data_image.hide()
         } else {
             emptyView.no_data_image.show()
 
         }
-        if (resId != null) {
-            emptyView.no_data_image.setImageResource(resId)
+        if (imgResId != null) {
+            emptyView.no_data_image.setImageResource(imgResId)
+        }
+        if (!TextUtils.isEmpty(btnTex)) {
+            emptyView.tv_button.text = btnTex
+        } else {
+            emptyView.tv_button.text = context.resources.getString(R.string.reload)
+        }
+        if(onClick==null){
+            emptyView.tv_button.hide()
+        }else{
+            emptyView.tv_button.show()
+            emptyView.tv_button.setOnClickListener(onClick)
         }
 
-        return emptyView
-    }
-
-
-    fun getEmptyView(context: Context, msg: String? = null, resId: Int? = null): View {
-        val emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data, null)
-        if (msg != null)
-            emptyView.emptyText.text = msg
-        if (resId != null) {
-            emptyView.no_data_image.setImageResource(resId)
-        }
 
         return emptyView
     }

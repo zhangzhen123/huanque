@@ -36,6 +36,8 @@ import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemD
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.OnLineViewModel
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_online_list.*
 import org.jetbrains.anko.startActivity
 import java.lang.ref.SoftReference
@@ -152,12 +154,13 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
             if (item is OnlineUserInfo) {
                 if (item.userId == -1L) {
                     //跳转贵族特权
-                    if (TextUtils.isEmpty(mRoyalUrl)) {
-                        return@onAdapterClickNew
-                    }
-                    activity?.startActivity<WebActivity>(
-                        BusiConstant.WEB_URL to mRoyalUrl
-                    )
+//                    if (TextUtils.isEmpty(mRoyalUrl)) {
+//                        return@onAdapterClickNew
+//                    }
+//                    activity?.startActivity<WebActivity>(
+//                        BusiConstant.WEB_URL to mRoyalUrl
+//                    )
+                    RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
                 } else {
                     //打开用户卡片
                     mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel, nickname = item.nickname)
@@ -242,17 +245,15 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                     setHeadViews(data)
                     tv_head_tips.text = data.royalTips
                     if (data.royaling) {
-                        tv_head_action.text = "立即续费"
+                        tv_head_action.text = "立即续费>"
                         tv_head_action.onClickNew {
-                            //todo
-                            logger.info("立即续费")
+                            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
                         }
 
                     } else {
-                        tv_head_action.text = "立即开通"
+                        tv_head_action.text = "开通贵族>"
                         tv_head_action.onClickNew {
-                            //todo
-                            logger.info("立即开通")
+                            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
                         }
                     }
                 }
@@ -425,7 +426,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 frameUrl = item.headFrame,
                 headSize = 46,
                 frameHeight = 74,
-                frameWidth = 58
+                frameWidth = 74
             )
             if (!TextUtils.isEmpty(item.royalPic)) {
                 ImageUtils.loadImageWithHeight_2(
@@ -494,15 +495,12 @@ class OnlineHeadAdapter :
                 headSize = 46,
                 frameUrl = item.headFrame,
                 frameHeight = 74,
-                frameWidth = 58
+                frameWidth = 74
             )
         }
         if (item.royalLevel != -1) {
             holder.setVisible(R.id.ivHeadRoyal, true)
-                .setImageResource(
-                    R.id.ivHeadRoyal,
-                    ImageHelper.getRoyalLevelImgRound(item.royalLevel)
-                )
+            ImageUtils.loadImage(holder.getView(R.id.ivHeadRoyal), item.royalSmallPic, 16f, 16f)
         } else {
             holder.setGone(R.id.ivHeadRoyal, true)
         }

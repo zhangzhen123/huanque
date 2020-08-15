@@ -36,12 +36,12 @@ class PublicChatMessageView @JvmOverloads constructor(context: Context, attrs: A
     private val newMessageNotice: TextView by lazy {
         TextView(context).apply {
             text = "有新消息"
-            textColor = ContextCompat.getColor(context, R.color.color_red_two)
-            backgroundResource = R.drawable.bg_shape_white2
+            textColor = ContextCompat.getColor(context, R.color.black_333)
+            backgroundResource = R.drawable.bg_shape_message_notice
             gravity = Gravity.CENTER
             setPadding(dip(14), 0,dip(14), 0)
             compoundDrawablePadding = 5
-            setCompoundDrawablesWithIntrinsicBounds(null, null, resources.getDrawable(R.mipmap.icon_arrow_down), null)
+            setCompoundDrawablesWithIntrinsicBounds(null, null, resources.getDrawable(R.mipmap.icon_arrow_down_black_01), null)
         }
     }
 

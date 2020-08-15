@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import com.julun.huanque.R
 import com.julun.huanque.common.bean.beans.ShareObject
 import com.julun.huanque.common.constant.WeiBoShareType
@@ -40,7 +41,7 @@ object WeiBoApiManager {
         wbApi?.registerApp(activity, authInfo)
 
         val message = WeiboMultiMessage()
-
+        var mShareClientOnly = false
         when (shareObj.shareType) {
             WeiBoShareType.WbText -> {
                 val textObject = TextObject()
@@ -81,13 +82,14 @@ object WeiBoApiManager {
                 webObject.actionUrl = shareObj.shareUrl
                 webObject.defaultText = shareObj.shareTitle
                 message.mediaObject = webObject
-
+                mShareClientOnly = true
             }
             WeiBoShareType.WbVideo -> {
                 // 分享视频
                 val videoObject = VideoSourceObject()
                 videoObject.videoPath = Uri.fromFile(File(shareObj.videoUrl))
                 message.videoSourceObject = videoObject
+                mShareClientOnly = true
             }
             WeiBoShareType.WbMultiImage -> {
                 // 分享多图
@@ -100,11 +102,21 @@ object WeiBoApiManager {
 
                 multiImageObject.imageList = list
                 message.multiImageObject = multiImageObject
-
+                //多图分享只能客户端
+                mShareClientOnly = true
             }
         }
+        //Android9.0以上只使用客户端分享
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            mShareClientOnly = true
+            if( wbApi?.isWBAppInstalled==false){
+                ToastUtils.show("请先安装微博客户端再分享")
+                return
+            }
 
-        wbApi?.shareMessage(message, false)
+        }
+
+        wbApi?.shareMessage(message, mShareClientOnly)
 
 
     }
@@ -118,13 +130,13 @@ object WeiBoApiManager {
 
             override fun onCancel() {
                 logger("分享取消")
-                ToastUtils.show("分享取消")
+                ToastUtils.show("微博分享取消")
             }
 
 
             override fun onError(p0: UiError?) {
                 logger("分享错误")
-                ToastUtils.show("分享错误")
+                ToastUtils.show("分享错误 请检查是否安装了微博客户端")
             }
 
         });

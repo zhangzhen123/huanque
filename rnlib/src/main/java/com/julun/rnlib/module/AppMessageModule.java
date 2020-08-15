@@ -12,6 +12,7 @@ import com.julun.huanque.common.bean.events.UserInfoChangeEvent;
 import com.julun.huanque.common.bean.events.UserInfoEditEvent;
 import com.julun.huanque.common.constant.BusiConstant;
 import com.julun.huanque.common.utils.GlobalUtils;
+import com.julun.huanque.common.utils.SessionUtils;
 import com.julun.huanque.common.utils.ULog;
 import com.julun.rnlib.RnConstant;
 
@@ -71,6 +72,7 @@ public class AppMessageModule extends ReactContextBaseJavaModule {
                     String nickname = "";
                     if (params.hasKey("nickname")) {
                         nickname = params.getString("nickname");
+                        SessionUtils.INSTANCE.setNickName(nickname);
                     }
                     String headPic = "";
                     if (params.hasKey("headPic")) {

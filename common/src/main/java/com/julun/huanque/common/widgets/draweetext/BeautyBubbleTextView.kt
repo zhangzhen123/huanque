@@ -7,14 +7,12 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.R
 import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.TplBean
-import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils

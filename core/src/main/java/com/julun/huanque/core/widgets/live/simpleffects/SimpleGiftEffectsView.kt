@@ -210,7 +210,7 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
         giftCountText.text = "${lastGift!!.times} "
 
 //        ImageUtils.loadImage(sdv_sender, newGift.headPic, 40f, 40f)
-        sdv_sender.setImage(headUrl = newGift.headPic+ BusiConstant.OSS_160,headSize = 40,frameUrl = newGift.headFrame,frameWidth = 52,frameHeight = 66)
+        sdv_sender.setImage(headUrl = newGift.headPic+ BusiConstant.OSS_160,headSize = 40,frameUrl = newGift.headFrame,frameWidth =66,frameHeight = 66)
         //设置文字颜色
         when (newGift.level) {
             1 -> {
@@ -275,7 +275,7 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
         //设置连送背景
         when (effectLevel) {
             1 -> {
-                leftLayout.setBackgroundResource(R.mipmap.simple_gift_bg_01)
+                leftLayout.setBackgroundResource(R.mipmap.simple_gift_bg_00)
             }
             2 -> {
                 leftLayout.setBackgroundResource(R.mipmap.simple_gift_bg_02)

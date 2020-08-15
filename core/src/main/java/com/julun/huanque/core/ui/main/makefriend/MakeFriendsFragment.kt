@@ -67,16 +67,17 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         (mRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         mAdapter.setEmptyView(MixedHelper.getLoadingView(requireContext()))
         initViewModel()
-        //一秒回调一次
-        audioPlayerManager.setSleep(1000)
+        //半秒回调一次
+        audioPlayerManager.setSleep(500)
         audioPlayerManager.setMediaPlayFunctionListener(object : MediaPlayFunctionListener {
             override fun prepared() {
                 logger.info("prepared")
             }
 
             override fun start() {
-                logger.info("start 总长=${audioPlayerManager.getDuration() / 1000}")
-                currentPlayHomeRecomItem?.introduceVoiceLength = audioPlayerManager.getDuration() / 1000
+                logger.info("start 总长=${audioPlayerManager.getDuration()}")
+                //不使用实际的值
+//                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
             }
 
             override fun pause() {
@@ -98,6 +99,14 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
             override fun onCompletion(mediaPlayer: MediaPlayer?) {
                 logger.info("onCompletion mediaPlayer=${mediaPlayer.hashCode()}")
+                currentPlayHomeRecomItem?.let {
+                    it.currentPlayProcess = it.introduceVoiceLength
+                    it.isPlay = false
+                    mAdapter.notifyItemChanged(currentIndex)
+                }
+                //播完后恢复原样
+                currentPlayHomeRecomItem = null
+                currentIndex = -1
             }
 
             override fun onBufferingUpdate(mediaPlayer: MediaPlayer?, i: Int) {
@@ -112,6 +121,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 logger.info("onSeekBarProgress progress=${progress / 1000}")
                 currentPlayHomeRecomItem?.let {
                     it.currentPlayProcess = it.introduceVoiceLength - progress / 1000
+                    if (it.currentPlayProcess <= 0) {
+                        it.currentPlayProcess = 0
+                    }
                     mAdapter.notifyItemChanged(currentIndex)
                 }
             }
@@ -201,11 +213,11 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
 
         }
-        mAdapter.setOnItemChildClickListener { _, view, position ->
+        mAdapter.onAdapterChildClickNew { _, view, position ->
             when (view.id) {
                 R.id.btn_action -> {
 
-                    val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@setOnItemChildClickListener
+                    val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@onAdapterChildClickNew
                     if (bean.anchor && bean.living) {
                         logger.info("点击围观--$position")
                         PlayerActivity.start(requireActivity(), programId = bean.userId, from = PlayerFrom.Home)
@@ -213,6 +225,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                         logger.info("点击了私信--$position")
                         val bundle = Bundle()
                         bundle.putLong(ParamConstant.TARGET_USER_ID, bean.userId)
+                        bundle.putString(ParamConstant.NICKNAME, bean.nickname)
+                        bundle.putString(ParamConstant.HeaderPic, bean.headPic)
                         ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
                             .navigation(requireActivity())
                     }

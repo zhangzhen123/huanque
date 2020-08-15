@@ -215,7 +215,7 @@ class UserCardFragment : BaseDialogFragment() {
             }
             val userInfo = mUserCardViewModel.userInfoData.value ?: return@onClickNew
             //发送粘性消息
-            EventBus.getDefault().post(OpenPrivateChatRoomEvent(mUserCardViewModel.mUserId, userInfo.nickname))
+            EventBus.getDefault().post(OpenPrivateChatRoomEvent(mUserCardViewModel.mUserId, userInfo.nickname,userInfo.headPic))
         }
         tv_at.onClickNew {
             //@ 功能
@@ -356,7 +356,7 @@ class UserCardFragment : BaseDialogFragment() {
         showTags(data.userTags)
 
         //获取贵族等级图片
-        val royalResource = ImageHelper.getRoyalLevelImgRound(data.royalLevel)
+        val royalResource = ImageHelper.getRoyalHeadFrameImg(data.royalLevel)
         if (royalResource > 0) {
             iv_royal.imageResource = royalResource
         } else {

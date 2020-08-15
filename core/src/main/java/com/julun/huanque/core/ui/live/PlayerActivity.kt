@@ -302,7 +302,8 @@ class PlayerActivity : BaseActivity() {
     override fun setHeader() {
         //设置状态栏颜色
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.black))
+//            StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.black))
+            StatusBarUtil.setTransparent(this)
         }
     }
 
@@ -607,6 +608,7 @@ class PlayerActivity : BaseActivity() {
             bundle.putLong(ParamConstant.TARGET_USER_ID, userInfo.userId)
             bundle.putString(ParamConstant.NICKNAME, userInfo.nickname)
             bundle.putBoolean(ParamConstant.FROM, true)
+            bundle.putString(ParamConstant.HeaderPic, userInfo.headPic)
             ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
                 .navigation()
             val baseData = viewModel.baseData.value ?: return@launchWhenResumed
@@ -1935,8 +1937,8 @@ class PlayerActivity : BaseActivity() {
             if (goHome) {
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
             }
-            val baseData = viewModel.baseData.value ?: return
-            if (PermissionUtils.checkFloatPermission(this)) {
+            val baseData = viewModel.baseData.value
+            if (PermissionUtils.checkFloatPermission(this)&&baseData!=null) {
                 FloatingManager.showFloatingView(
                     GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
                     viewModel.programId,
@@ -2083,7 +2085,8 @@ class PlayerActivity : BaseActivity() {
         surface_view.visibility = View.INVISIBLE
 //        chatInputView.resetView()
         closeVideoPlayer()
-
+        //去除之前直播间的高级动画
+        highly_anim.clearWebpResource()
         viewModel.getLivRoomBase(programId)
     }
 

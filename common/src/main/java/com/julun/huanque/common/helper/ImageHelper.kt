@@ -101,6 +101,11 @@ object ImageHelper {
 //            }
 //        }
         var resId: Int = 0
+        return resId
+    }
+    //获取头像框
+    fun getRoyalHeadFrameImg(royalLevel: Int): Int {
+        var resId: Int = 0
         when (royalLevel) {
             1 -> resId = R.mipmap.bg_royal_header_1
             2 -> resId = R.mipmap.bg_royal_header_2
@@ -115,7 +120,6 @@ object ImageHelper {
         }
         return resId
     }
-
     /**
      *  获取贵族图标长版(此方法只获取本地图标 由于上神以上规则修改 资源改成远程)
      *  @param lev 贵族等级Int类型

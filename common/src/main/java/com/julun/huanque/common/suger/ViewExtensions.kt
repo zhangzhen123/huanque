@@ -105,7 +105,7 @@ fun <T, K : BaseViewHolder> BaseQuickAdapter<T, K>.onAdapterClickNew(l: (adapter
 /**
  * 防止adapter child连续过快点击造成的重复提交
  */
-fun <T, K : BaseViewHolder> BaseQuickAdapter<T, K>.onAdapterChildClickNew(l: (adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) -> Unit) {
+fun <T, K : BaseViewHolder> BaseQuickAdapter<T, K>.onAdapterChildClickNew(l: (adapter: BaseQuickAdapter<*, *>?, view: View, position: Int) -> Unit) {
     setOnItemChildClickListener(object : NoDoubleAdapterChildClickListener() {
         override fun onNoDoubleAdapterChildClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
             l(adapter, view, position)
