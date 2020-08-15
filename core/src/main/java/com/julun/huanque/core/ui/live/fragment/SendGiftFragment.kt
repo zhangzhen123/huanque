@@ -107,8 +107,6 @@ class SendGiftFragment : BaseDialogFragment() {
 
     private var curGiftIsSending: LiveGiftDto? = null//记录当前正在执行赠送回调的礼物
 
-    private var programId: Long = 0
-
     private var expRatio: Double = 1.0 //当前的经验倍数 默认1.0
 
     private var resultFragment: EggResultFragment? = null
@@ -132,18 +130,7 @@ class SendGiftFragment : BaseDialogFragment() {
 
         //        const val CJBWL_EGG=-59
 //        const val BWL_EGG=-63
-        fun newInstance(programId: Long): SendGiftFragment {
-            val fragment = SendGiftFragment()
-            val bundle = Bundle()
-            bundle.putLong(ParamConstant.PROGRAM_ID, programId)
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        this.programId = arguments?.getLong(ParamConstant.PROGRAM_ID) ?: 0
+        fun newInstance() = SendGiftFragment()
     }
 
 
@@ -204,7 +191,7 @@ class SendGiftFragment : BaseDialogFragment() {
             }
             if (goodsCfgData?.bagChange == true || mBagData.isEmpty()) {
                 //刷新背包数据
-                viewModel?.getBagData(programId)
+                viewModel?.getBagData(playerViewModel.programId)
                 goodsCfgData?.bagChange = false
             }
             selPackage(true)
@@ -278,7 +265,7 @@ class SendGiftFragment : BaseDialogFragment() {
             return
         }
         //直接触发刷新操作
-        viewModel?.getBagData(programId)
+        viewModel?.getBagData(playerViewModel.programId)
     }
 
     /**
@@ -322,7 +309,7 @@ class SendGiftFragment : BaseDialogFragment() {
                 if (it.bagChange) {
                     if (it.form?.fromBag == BusiConstant.True) {
                         //从背包送出,直接刷新背包
-                        viewModel?.getBagData(programId)
+                        viewModel?.getBagData(playerViewModel.programId)
                     } else {
                         viewModel?.bagChangeState?.value = true
                     }
@@ -666,7 +653,7 @@ class SendGiftFragment : BaseDialogFragment() {
         setSelectGiftFunction(null)
         // 初始化查询礼物列表一次
         loadingText.visibility = View.VISIBLE
-        viewModel?.doLoadGiftData(programId)
+        viewModel?.doLoadGiftData(playerViewModel.programId)
     }
 
     private var mDispose: Disposable? = null
@@ -757,7 +744,7 @@ class SendGiftFragment : BaseDialogFragment() {
 //        viewPagerAdapter.notifyDataSetChanged()
         viewPagerData.forEachIndexed { index, list ->
             viewPagerAdapter.addItem(list)
-            dotter.addView(getDotImg(index),lp)
+            dotter.addView(getDotImg(index), lp)
         }
         viewPagerAdapter.notifyDataSetChanged()
         giftViewPager?.offscreenPageLimit = viewPagerData.size
@@ -1104,6 +1091,10 @@ class SendGiftFragment : BaseDialogFragment() {
                 try {
                     val count = sendCountLabel!!.text.toString().toInt()
 
+                    if (count <= 0) {
+                        return@OnClickListener
+                    }
+
                     if (gift.bag && count > gift.bagCount) {
                         //背包赠送,并且背包数量不足用户选择的数量
                         MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
@@ -1137,7 +1128,7 @@ class SendGiftFragment : BaseDialogFragment() {
         val form = ConsumeForm(
             giftId = gift.giftId,
             count = count,
-            programId = this.programId,
+            programId = this.playerViewModel.programId,
             fromBag = fromBag,
             prodType = gift.prodType
         )

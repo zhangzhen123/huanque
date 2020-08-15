@@ -81,6 +81,14 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
                 mListener?.onClick(type, tempData ?: return@setOnItemClickListener)
             }
         }
+        adapter.setOnItemLongClickListener { ad, view, position ->
+            if (position < ad.data.size) {
+                val tempData = ad.getItem(position) as? Emotion
+                mListener?.onLongClick(type, view, tempData ?: return@setOnItemLongClickListener true)
+                view.isSelected = true
+            }
+            return@setOnItemLongClickListener true
+        }
     }
 
     /**

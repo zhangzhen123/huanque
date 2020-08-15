@@ -182,7 +182,7 @@ class PlayerDialogManager(val context: PlayerActivity) {
                     playerViewModel.finishState.value = true
                 }, onRight = {
                     playerViewModel.finishCertain = true
-                    playerViewModel.follow()
+                    playerViewModel.follow(playerViewModel.programId)
                     playerViewModel.finishState.value = true
                 }), "关注提醒", okText = "关注并退出", noText = "退出")
             }
@@ -194,7 +194,7 @@ class PlayerDialogManager(val context: PlayerActivity) {
      */
     fun openGiftDialog() {
         if (giftFragment == null) {
-            giftFragment = SendGiftFragment.newInstance(programId = playerViewModel.programId)
+            giftFragment = SendGiftFragment.newInstance()
             dialogsCache[getFragmentKey(SendGiftFragment::class.java)] = giftFragment
         }
         giftFragment?.show(context, "SendGiftFragment")
@@ -215,15 +215,15 @@ class PlayerDialogManager(val context: PlayerActivity) {
      * 重置礼物弹窗
      */
     fun refreshGiftDialog() {
-//        if (giftFragment == null) {
-//            return
-//        }
-//        if (giftFragment != null && !giftFragment!!.isAdded) {
-//            //如果未打开礼物面板那就重置吧
-//            giftFragment = null
-//            return
-//        }
-//        playerViewModel.refreshGift.value = true
+        if (giftFragment == null) {
+            return
+        }
+        if (giftFragment != null && !giftFragment!!.isAdded) {
+            //如果未打开礼物面板那就重置吧
+            giftFragment = null
+            return
+        }
+        playerViewModel.refreshGift.value = true
     }
 
     //显示用户更多设置布局

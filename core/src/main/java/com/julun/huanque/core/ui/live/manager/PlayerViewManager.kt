@@ -1494,7 +1494,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 //            //登录状态变化 保留登录面板
 //            mDialogManager.closeGiftDialog(true)
 //        } else {
-//            mDialogManager.refreshGiftDialog()
+            mDialogManager.refreshGiftDialog()
 //        }
 //
 //        //关闭一元气泡

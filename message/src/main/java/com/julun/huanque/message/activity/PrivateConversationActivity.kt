@@ -9,10 +9,7 @@ import android.text.Spannable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
@@ -44,6 +41,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
+import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
@@ -559,6 +557,15 @@ class PrivateConversationActivity : BaseActivity() {
                 }
 
             }
+        }
+
+        recyclerview.mEventListener = object  : EventListener{
+            override fun onDispatch(ev: MotionEvent?) {
+                if(ev?.action == MotionEvent.ACTION_DOWN){
+                    mHelper?.hookSystemBackByPanelSwitcher()
+                }
+            }
+
         }
 
         panel_emotion.setListener(object : EmojiInputListener {

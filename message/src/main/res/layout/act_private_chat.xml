@@ -75,7 +75,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 
-            <com.julun.huanque.common.widgets.HookActionUpRecyclerView
+            <com.julun.huanque.common.widgets.EventRecyclerView
                 android:id="@+id/recyclerview"
                 android:layout_width="0px"
                 android:layout_height="0dp"

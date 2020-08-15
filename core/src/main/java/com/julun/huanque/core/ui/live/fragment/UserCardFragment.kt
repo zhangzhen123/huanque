@@ -179,8 +179,9 @@ class UserCardFragment : BaseDialogFragment() {
                     tv_attention.text = "关注"
                 }
             }
-
-            tv_attention.isEnabled = true
+            if (mUserCardViewModel.mUserId != SessionUtils.getUserId()) {
+                tv_attention.isEnabled = true
+            }
         })
     }
 
@@ -198,10 +199,10 @@ class UserCardFragment : BaseDialogFragment() {
             }
             if (mUserCardViewModel.userInfoData.value?.follow == true) {
                 //已关注,取消关注
-                mPlayerViewModel.unFollow()
+                mPlayerViewModel.unFollow(mUserCardViewModel.mUserId)
             } else {
                 //未关注，关注
-                mPlayerViewModel.follow()
+                mPlayerViewModel.follow(mUserCardViewModel.mUserId)
             }
             tv_attention.isEnabled = false
         }

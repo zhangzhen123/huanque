@@ -63,7 +63,7 @@ class MessageSettingViewModel : BaseViewModel() {
                 if (e !is ResponseError) {
                     ToastUtils.show("网络异常，请重试~！")
                 }
-            }, needLoadState = true)
+            })
         }
     }
 }

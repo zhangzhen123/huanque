@@ -518,7 +518,7 @@ object StringHelper {
 //        if (num < 10000) {
 //            return DecimalFormat("#.#").format((num / 1000.0)) + "k"
 //        }
-        return DecimalFormat("#.#").format((num / 10000.0)) + "w"
+        return DecimalFormat("#.0").format((num / 10000.0)) + "w"
     }
 
     /*对贡献榜格式进行处理*/
