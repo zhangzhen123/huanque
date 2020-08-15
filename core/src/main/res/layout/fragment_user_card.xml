@@ -514,7 +514,7 @@
         android:layout_width="0px"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="\@ta"
+        android:text="\@Ta"
         android:textColor="@color/col_action"
         android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toRightOf="@id/tv_private_chat"

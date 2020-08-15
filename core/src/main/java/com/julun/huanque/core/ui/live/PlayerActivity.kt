@@ -32,10 +32,7 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.events.EventMessageBean
-import com.julun.huanque.common.bean.events.LoginOutEvent
-import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
-import com.julun.huanque.common.bean.events.RongConnectEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.PKInfoForm
 import com.julun.huanque.common.bean.forms.UserEnterRoomForm
 import com.julun.huanque.common.constant.*
@@ -609,6 +606,7 @@ class PlayerActivity : BaseActivity() {
             val bundle = Bundle()
             bundle.putLong(ParamConstant.TARGET_USER_ID, userInfo.userId)
             bundle.putString(ParamConstant.NICKNAME, userInfo.nickname)
+            bundle.putBoolean(ParamConstant.FROM, true)
             bundle.putString(ParamConstant.HeaderPic, userInfo.headPic)
             ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
                 .navigation()
@@ -1225,7 +1223,7 @@ class PlayerActivity : BaseActivity() {
             val message = edit_text.text.toString()
             edit_text.setText("")
             if (message.isEmpty() || message.trim().isEmpty()) {
-                ToastUtils.show("输入不能为空")
+                ToastUtils.show("不能发送空白消息哦")
                 return@onClickNew
             }
             viewModel.sendMessage(message)
@@ -1901,13 +1899,6 @@ class PlayerActivity : BaseActivity() {
         exitLiveRoom()
         super.onDestroy()
         viewModel.runwayCache.value = null
-        val baseData = viewModel.baseData.value ?: return
-        FloatingManager.showFloatingView(
-            GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
-            viewModel.programId,
-            baseData.prePic,
-            !baseData.isLandscape
-        )
     }
 
     private var closable = false
@@ -1944,6 +1935,17 @@ class PlayerActivity : BaseActivity() {
             //用户
             if (goHome) {
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
+            }
+            val baseData = viewModel.baseData.value ?: return
+            if (PermissionUtils.checkFloatPermission(this)) {
+                FloatingManager.showFloatingView(
+                    GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
+                    viewModel.programId,
+                    baseData.prePic,
+                    !baseData.isLandscape
+                )
+            } else {
+                viewModel.leaveProgram()
             }
             super.finish()
         }
@@ -2217,4 +2219,12 @@ class PlayerActivity : BaseActivity() {
             }
         })
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun queryUnreadMsgCount(event: QueryUnreadCountEvent) {
+        if (event.player) {
+            EventBus.getDefault().postSticky(UnreadCountEvent(playerMessageViewModel.unreadCountInPlayer.value ?: 0, true))
+        }
+    }
+
 }

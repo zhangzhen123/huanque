@@ -34,6 +34,8 @@ import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.SendRoomInfo
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
+import com.julun.huanque.common.bean.events.QueryUnreadCountEvent
+import com.julun.huanque.common.bean.events.UnreadCountEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.message.ExpressionAnimationBean
 import com.julun.huanque.common.bean.message.CustomMessage
@@ -73,6 +75,7 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundColor
@@ -104,7 +107,8 @@ class PrivateConversationActivity : BaseActivity() {
             nickname: String = "",
             meetStatus: String = "",
             operation: String = "",
-            headerPic: String = ""
+            headerPic: String = "",
+            fromPlayer: Boolean = false
         ) {
             val intent = Intent(activity, PrivateConversationActivity::class.java)
             intent.putExtra(ParamConstant.TARGET_USER_ID, targetId)
@@ -112,6 +116,7 @@ class PrivateConversationActivity : BaseActivity() {
             intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
             intent.putExtra(ParamConstant.OPERATION, operation)
             intent.putExtra(ParamConstant.HeaderPic, headerPic)
+            intent.putExtra(ParamConstant.FROM, fromPlayer)
             activity.startActivity(intent)
         }
     }
@@ -175,6 +180,8 @@ class PrivateConversationActivity : BaseActivity() {
 
         initBasic(intent)
         registerMessageEventProcessor()
+        mPrivateConversationViewModel?.fromPlayer = intent?.getBooleanExtra(ParamConstant.FROM, false) ?: false
+        EventBus.getDefault().post(QueryUnreadCountEvent(mPrivateConversationViewModel?.fromPlayer ?: false))
     }
 
     /**
@@ -303,7 +310,6 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.chatInfoData?.observe(this, Observer {
             if (it != null) {
-                showTitleView(it.nickname, it.meetStatus)
                 mAdapter.otherUserInfo = it
                 mAdapter.notifyDataSetChanged()
             }
@@ -326,6 +332,7 @@ class PrivateConversationActivity : BaseActivity() {
                 //刷新特权表情
                 refreshPrivilegeEmoji(it.intimate)
             }
+            showTitleView(it.friendUser.nickname, it.meetStatus)
             mIntimateDetailViewModel?.basicBean?.value = it
         })
 
@@ -478,9 +485,18 @@ class PrivateConversationActivity : BaseActivity() {
         }
 
         iv_gift.onClickNew {
+            mHelper?.hookSystemBackByPanelSwitcher()
             mChatSendGiftFragment = mChatSendGiftFragment ?: ChatSendGiftFragment()
 
             mChatSendGiftFragment?.show(this, "ChatSendGiftFragment")
+            Observable.timer(200, TimeUnit.MILLISECONDS)
+                .bindUntilEvent(this, ActivityEvent.DESTROY)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    smoothScrollToBottom()
+                }, {})
+
+
         }
 
         iv_xiaoque.onClickNew {
@@ -1258,6 +1274,16 @@ class PrivateConversationActivity : BaseActivity() {
     }
 
     /**
+     * 平滑滑动
+     */
+    private fun smoothScrollToBottom() {
+        if (mAdapter.itemCount > 0) {
+            recyclerview?.smoothScrollToPosition(mAdapter.itemCount - 1)
+        }
+    }
+
+
+    /**
      * 显示小鹊提示视图
      */
     private fun showXiaoQueView(show: Boolean) {
@@ -1301,7 +1327,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         if (messageType == Message_Text && (TextUtils.isEmpty(message) || message.isBlank() || message.trim().isEmpty())) {
             //文本消息判断
-            ToastUtils.show("输入不能为空")
+            ToastUtils.show("不能发送空白消息哦")
             return
         }
         if (messageType == Message_Pic && pic.isEmpty()) {
@@ -1751,6 +1777,25 @@ class PrivateConversationActivity : BaseActivity() {
             )
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun unReadCount(bean: UnreadCountEvent) {
+        if (bean.player == mPrivateConversationViewModel?.fromPlayer) {
+            val count = bean.unreadCount
+            if (count <= 0) {
+                tv_unread_count.hide()
+            } else {
+                tv_unread_count.show()
+            }
+            if (count < 100) {
+                tv_unread_count.text = "$count"
+            } else {
+                tv_unread_count.text = "99+"
+            }
+        }
+        EventBus.getDefault().removeStickyEvent(bean)
+    }
+
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)

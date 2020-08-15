@@ -299,6 +299,7 @@ class VoiceSignActivity : BaseVMActivity<VoiceSignViewModel>() {
                 recordState = 0
                 EventBus.getDefault().post(VoiceSignEvent())
                 ToastUtils.show("修改语音签名成功")
+                finish()
             } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show(it.error?.message)
             }

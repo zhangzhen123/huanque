@@ -486,6 +486,13 @@ class MainActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    fun unreadCount(bean: QueryUnreadCountEvent) {
+        if (!bean.player) {
+            EventBus.getDefault().postSticky(UnreadCountEvent(mMainViewModel.unreadMsgCount.value ?: 0, false))
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun connectSuccess(event: RongConnectEvent) {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，查询未读数

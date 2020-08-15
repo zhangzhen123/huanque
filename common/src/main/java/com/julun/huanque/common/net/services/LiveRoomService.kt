@@ -121,5 +121,11 @@ interface LiveRoomService {
     @POST("live/room/user/saveManage")
     suspend fun saveManage(@Body from: CardManagerForm): Root<VoidResult>
 
+    /**
+     * 离开直播间
+     */
+    @POST("live/room/info/leave")
+    suspend fun leave(@Body form : ProgramIdForm) : Root<VoidResult>
+
     //===================================== 管理相关接口 end ========================================
 }

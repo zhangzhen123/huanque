@@ -131,16 +131,16 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         }
         val message = if (currentWithdrawType == WithdrawType.AliWithdraw) {
             if (aliNickname.isNotEmpty()) {
-                "确定提现至已授权的支付宝账号（${aliNickname}）吗？"
+                "确定提现至你的支付宝账号（${aliNickname}）吗？"
             } else {
-                "确定提现至已授权的支付宝账号吗？"
+                "确定提现至你的的支付宝账号吗？"
             }
 
         } else {
             if (wxNickname.isNotEmpty()) {
-                "确定提现至已授权的微信账号（${wxNickname}）吗？"
+                "确定提现至你的微信账号（${wxNickname}）吗？"
             } else {
-                "确定提现至已授权的微信账号吗？"
+                "确定提现至你的微信账号吗？"
             }
         }
         alertDialog.showAlertWithOKAndCancel(
@@ -165,8 +165,10 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         //都授权时 使用上次提现的方式
         if (wxAuthorized && aliAuthorized) {
             val sType=StorageHelper.getWithdrawType()
-            if(sType.isNotEmpty()){
-                currentWithdrawType=sType
+            currentWithdrawType = if(sType.isNotEmpty()){
+                sType
+            }else{
+                WithdrawType.WXWithdraw
             }
         } else {
             if (wxAuthorized) {

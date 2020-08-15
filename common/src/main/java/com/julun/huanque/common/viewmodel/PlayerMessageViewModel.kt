@@ -5,6 +5,7 @@ import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
 import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
+import com.julun.huanque.common.bean.events.UnreadCountEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -19,6 +20,7 @@ import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
+import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -141,6 +143,7 @@ class PlayerMessageViewModel : BaseViewModel() {
                     tempQueryCount++
                     if (tempQueryCount == totalQueryCount) {
                         unreadCountInPlayer.value = tempUnreadCount
+                        EventBus.getDefault().post(UnreadCountEvent(tempUnreadCount,true))
                     }
                 }
 
@@ -148,6 +151,7 @@ class PlayerMessageViewModel : BaseViewModel() {
                     tempQueryCount++
                     if (tempQueryCount == totalQueryCount) {
                         unreadCountInPlayer.value = tempUnreadCount
+                        EventBus.getDefault().post(UnreadCountEvent(tempUnreadCount,true))
                     }
                 }
             })
