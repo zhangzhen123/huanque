@@ -2085,7 +2085,8 @@ class PlayerActivity : BaseActivity() {
         surface_view.visibility = View.INVISIBLE
 //        chatInputView.resetView()
         closeVideoPlayer()
-
+        //去除之前直播间的高级动画
+        highly_anim.clearWebpResource()
         viewModel.getLivRoomBase(programId)
     }
 
