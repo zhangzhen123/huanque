@@ -47,7 +47,7 @@ class GuideFollowFragment : BaseDialogFragment() {
         initData()
         follow_anchor.onClickNew {
             playerViewModel.subscribeSource = "底部引导"
-            playerViewModel.follow()
+            playerViewModel.follow(playerViewModel.programId)
             dismiss()
         }
     }

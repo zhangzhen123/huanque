@@ -534,13 +534,13 @@ class PlayerViewModel : BaseViewModel() {
     /**
      * 关注
      */
-    fun follow() {
+    fun follow(userId : Long) {
         viewModelScope.launch {
             request({
-                val follow = mSocialService.follow(FriendIdForm(programId)).dataConvert()
+                val follow = mSocialService.follow(FriendIdForm(userId)).dataConvert()
                 val followBean = FollowResultBean(follow = follow.follow)
                 followStatusData.value = followBean.convertRtData()
-                EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to programId ,"isFollowed" to true)))
+                EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
             }, {
                 followStatusData.value = it.convertError()
             })
@@ -551,11 +551,11 @@ class PlayerViewModel : BaseViewModel() {
     /**
      * 离开直播间
      */
-    fun leaveProgram(){
+    fun leaveProgram() {
         viewModelScope.launch {
             request({
                 liveService.leave(ProgramIdForm(programId)).dataConvert()
-            },{})
+            }, {})
         }
 
     }
@@ -564,13 +564,13 @@ class PlayerViewModel : BaseViewModel() {
     /**
      * 取消关注
      */
-    fun unFollow() {
+    fun unFollow(userId: Long) {
         viewModelScope.launch {
             request({
-                mSocialService.unFollow(FriendIdForm(programId)).dataConvert()
+                mSocialService.unFollow(FriendIdForm(userId)).dataConvert()
                 val followBean = FollowResultBean(follow = FollowStatus.False)
                 followStatusData.value = followBean.convertRtData()
-                EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to programId ,"isFollowed" to false)))
+                EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to false)))
             }, {
                 followStatusData.value = it.convertError()
             })

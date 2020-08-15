@@ -169,7 +169,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             // 没关注直接关注，关注了打开主播信息界面
             if (!isSubscribed) {
                 playerViewModel?.subscribeSource = "直播间左上角"
-                playerViewModel?.follow()
+                playerViewModel?.follow(programId)
             }
             subscribeAnchor.isEnabled = false
         }

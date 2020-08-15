@@ -202,6 +202,9 @@ class SysMsgActivity : BaseActivity() {
 
     private fun customAction(sysBean: SysMsgBean) {
         val touchType = sysBean.touchType
+        if(touchType.isEmpty()){
+            return
+        }
         when (touchType) {
             MessageConstants.ACTION_URL -> {
                 //H5
@@ -230,9 +233,9 @@ class SysMsgActivity : BaseActivity() {
 
             MessageConstants.ACTION_None -> {
             }
-            else -> {
-                ToastUtils.show("没有记录的action类型 -> ${touchType}")
-            }
+//            else -> {
+//                ToastUtils.show("没有记录的action类型 -> ${touchType}")
+//            }
         }
     }
 

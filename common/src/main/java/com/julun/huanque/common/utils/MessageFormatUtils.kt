@@ -106,9 +106,9 @@ object MessageFormatUtils {
             else -> {
                 //亲密度等级提升
                 if (fromListlist) {
-                    text.text = "${result.friendNickname} 和你升级为了"
+                    text.text = "${result.friendNickname} 和你升级为"
                 } else {
-                    text.text = "和你升级为了"
+                    text.text = "和你升级为"
                 }
                 val image = TIBean()
                 image.type = TIBean.IMAGE
