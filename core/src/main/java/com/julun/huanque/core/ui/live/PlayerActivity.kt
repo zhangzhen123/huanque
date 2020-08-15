@@ -302,7 +302,8 @@ class PlayerActivity : BaseActivity() {
     override fun setHeader() {
         //设置状态栏颜色
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.black))
+//            StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.black))
+            StatusBarUtil.setTransparent(this)
         }
     }
 
