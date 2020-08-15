@@ -246,7 +246,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 }
 
                 mHeaderNavAdapter.setList(headerInfo.moduleList)
-                mHeaderNavAdapter.setOnItemClickListener { _, _, position ->
+                mHeaderNavAdapter.onAdapterClickNew { _, _, position ->
                     mOnItemAdapterListener?.onHeadClick(mHeaderNavAdapter.getItem(position))
                 }
 //                holder.addOnClickListener(R.id.tv_go_make_money)

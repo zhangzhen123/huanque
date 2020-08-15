@@ -183,6 +183,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     tvSex.setCompoundDrawables(drawable, null, null, null)
                 }
                 tvSex.backgroundResource = com.julun.huanque.core.R.drawable.bg_shape_mine_sex_female
+                tvSex.text="${info.userBasic.age}"
             }
             else -> {
                 val drawable = ContextCompat.getDrawable(requireContext(), com.julun.huanque.core.R.mipmap.icon_sex_male_white)
@@ -191,6 +192,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     tvSex.setCompoundDrawables(drawable, null, null, null)
                 }
                 tvSex.backgroundResource = com.julun.huanque.core.R.drawable.bg_shape_mine_sex_male
+                tvSex.text="${info.userBasic.age}"
             }
         }
 
@@ -251,6 +253,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 }
                 MineToolType.InviteFriend -> {
                     RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+                }
+                MineToolType.ToMaster -> {//聊主学院
+                    RNPageActivity.start(requireActivity(), RnConstant.CHAT_COLLEGE_PAGE)
                 }
                 MineToolType.ToAnchor -> {
                     mViewModel.checkToAnchor()

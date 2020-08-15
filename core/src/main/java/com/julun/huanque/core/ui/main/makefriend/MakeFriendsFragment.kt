@@ -105,8 +105,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     mAdapter.notifyItemChanged(currentIndex)
                 }
                 //播完后恢复原样
-                currentPlayHomeRecomItem=null
-                currentIndex=-1
+                currentPlayHomeRecomItem = null
+                currentIndex = -1
             }
 
             override fun onBufferingUpdate(mediaPlayer: MediaPlayer?, i: Int) {
@@ -121,8 +121,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 logger.info("onSeekBarProgress progress=${progress / 1000}")
                 currentPlayHomeRecomItem?.let {
                     it.currentPlayProcess = it.introduceVoiceLength - progress / 1000
-                    if(it.currentPlayProcess<=0){
-                        it.currentPlayProcess=0
+                    if (it.currentPlayProcess <= 0) {
+                        it.currentPlayProcess = 0
                     }
                     mAdapter.notifyItemChanged(currentIndex)
                 }
@@ -213,11 +213,11 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
 
         }
-        mAdapter.setOnItemChildClickListener { _, view, position ->
+        mAdapter.onAdapterChildClickNew { _, view, position ->
             when (view.id) {
                 R.id.btn_action -> {
 
-                    val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@setOnItemChildClickListener
+                    val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@onAdapterChildClickNew
                     if (bean.anchor && bean.living) {
                         logger.info("点击围观--$position")
                         PlayerActivity.start(requireActivity(), programId = bean.userId, from = PlayerFrom.Home)
