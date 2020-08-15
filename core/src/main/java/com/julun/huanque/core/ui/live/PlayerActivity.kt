@@ -1936,8 +1936,8 @@ class PlayerActivity : BaseActivity() {
             if (goHome) {
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
             }
-            val baseData = viewModel.baseData.value ?: return
-            if (PermissionUtils.checkFloatPermission(this)) {
+            val baseData = viewModel.baseData.value
+            if (PermissionUtils.checkFloatPermission(this)&&baseData!=null) {
                 FloatingManager.showFloatingView(
                     GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
                     viewModel.programId,

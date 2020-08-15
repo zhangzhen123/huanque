@@ -275,7 +275,7 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
         //设置连送背景
         when (effectLevel) {
             1 -> {
-                leftLayout.setBackgroundResource(R.mipmap.simple_gift_bg_01)
+                leftLayout.setBackgroundResource(R.mipmap.simple_gift_bg_00)
             }
             2 -> {
                 leftLayout.setBackgroundResource(R.mipmap.simple_gift_bg_02)
