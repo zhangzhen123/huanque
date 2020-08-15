@@ -582,8 +582,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 }
                 RnConstant.LIVE_ROOM_PAGE -> {
                     if (params?.hasKey("programId") == true) {
-                        val id =
-                            params.getString("programId")?.toLongOrNull() ?: return@runOnUiThread
+                        val id = params.getDouble("programId").toLong()
                         val bundle = Bundle()
                         bundle.putLong(IntentParamKey.PROGRAM_ID.name, id)
                         bundle.putString(ParamConstant.FROM, PlayerFrom.RN)
