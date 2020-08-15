@@ -7,7 +7,7 @@
 
     <com.julun.huanque.common.widgets.PhotoHeadView
         android:id="@+id/sdvItemHead"
-        android:layout_width="@dimen/dimen_58"
+        android:layout_width="@dimen/dimen_74"
         android:layout_height="@dimen/dimen_74"
         android:layout_marginStart="@dimen/dimen_15"
         app:layout_constraintBottom_toBottomOf="parent"

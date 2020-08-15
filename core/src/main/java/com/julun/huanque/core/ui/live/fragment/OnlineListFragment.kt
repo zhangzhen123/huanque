@@ -241,17 +241,15 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                     setHeadViews(data)
                     tv_head_tips.text = data.royalTips
                     if (data.royaling) {
-                        tv_head_action.text = "立即续费"
+                        tv_head_action.text = "立即续费>"
                         tv_head_action.onClickNew {
-                            //todo
-                            logger.info("立即续费")
+                            WebActivity.startWeb(requireActivity(),data.royalLevelUrl)
                         }
 
                     } else {
-                        tv_head_action.text = "立即开通"
+                        tv_head_action.text = "开通贵族>"
                         tv_head_action.onClickNew {
-                            //todo
-                            logger.info("立即开通")
+                            WebActivity.startWeb(requireActivity(),data.royalLevelUrl)
                         }
                     }
                 }
@@ -424,7 +422,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 frameUrl = item.headFrame,
                 headSize = 46,
                 frameHeight = 74,
-                frameWidth = 58
+                frameWidth = 74
             )
             if (!TextUtils.isEmpty(item.royalPic)) {
                 ImageUtils.loadImageWithHeight_2(
@@ -491,7 +489,7 @@ class OnlineHeadAdapter :
                 headSize = 46,
                 frameUrl = item.headFrame,
                 frameHeight = 74,
-                frameWidth = 58
+                frameWidth = 74
             )
         }
         if (item.royalLevel != -1) {
