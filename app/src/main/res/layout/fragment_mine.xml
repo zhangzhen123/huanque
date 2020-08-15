@@ -121,7 +121,7 @@
                         app:layout_constraintEnd_toEndOf="@+id/tvCertification"
                         app:layout_constraintStart_toStartOf="@+id/tvCertification" />
 
-                    <FrameLayout
+                    <LinearLayout
                         android:id="@+id/flNickNameRoot"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -131,6 +131,7 @@
                         app:layout_constraintLeft_toRightOf="@+id/headImage"
                         app:layout_constraintRight_toLeftOf="@+id/ivImage"
                         app:layout_constraintTop_toTopOf="@+id/headImage"
+                        android:gravity="center_vertical"
                         app:layout_constraintVertical_chainStyle="packed">
 
                         <TextView
@@ -146,7 +147,19 @@
                             android:textSize="@dimen/sp_16"
                             android:textStyle="bold"
                             tools:text="1111111111111" />
-                    </FrameLayout>
+                        <TextView
+                            android:id="@+id/tvSex"
+                            tools:text="18"
+                            android:textSize="10sp"
+                            android:background="@drawable/bg_shape_mine_sex_male"
+                            android:layout_width="wrap_content"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:textColor="@color/white"
+                            android:paddingLeft="@dimen/dimen_5"
+                            android:paddingRight="@dimen/dimen_5"
+                            android:layout_height="@dimen/dimen_16"/>
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvUserId"

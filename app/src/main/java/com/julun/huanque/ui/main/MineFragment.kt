@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,6 +49,7 @@ import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_mine.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.startActivity
 
 /**
@@ -172,6 +174,26 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 //
 //            ivInviteFriend.show()
 //        }
+        when (info.userBasic.sex) {//Male、Female、Unknow
+
+            Sex.FEMALE -> {
+                val drawable = ContextCompat.getDrawable(requireContext(), com.julun.huanque.core.R.mipmap.icon_sex_female_white)
+                if (drawable != null) {
+                    drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                    tvSex.setCompoundDrawables(drawable, null, null, null)
+                }
+                tvSex.backgroundResource = com.julun.huanque.core.R.drawable.bg_shape_mine_sex_female
+            }
+            else -> {
+                val drawable = ContextCompat.getDrawable(requireContext(), com.julun.huanque.core.R.mipmap.icon_sex_male_white)
+                if (drawable != null) {
+                    drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                    tvSex.setCompoundDrawables(drawable, null, null, null)
+                }
+                tvSex.backgroundResource = com.julun.huanque.core.R.drawable.bg_shape_mine_sex_male
+            }
+        }
+
         loadAd(info.adList)
 
         infoTabAdapter.setNewInstance(info.userDataTabList)
@@ -191,7 +213,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             }
             bannerAD.show()
             bannerAD?.setAdapter(bannerAdapter)
-            bannerAD?.setDelegate(bannerItemCick)
+            bannerAD?.setDelegate(bannerItemClick)
             bannerAD?.setData(adList, null)
             bannerAD?.setAutoPlayAble(adList.size > 1)
             bannerAD?.viewPager?.pageMargin = dp2px(10)
@@ -382,7 +404,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         }
     }
 
-    private val bannerItemCick by lazy {
+    private val bannerItemClick by lazy {
         BGABanner.Delegate<SimpleDraweeView, RechargeAdInfo> { _, _, model, _ ->
             when (model?.touchType) {
                 BannerTouchType.Url -> {

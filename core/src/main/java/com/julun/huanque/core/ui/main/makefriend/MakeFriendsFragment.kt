@@ -75,8 +75,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
 
             override fun start() {
-                logger.info("start 总长=${audioPlayerManager.getDuration() / 1000}+1")
-                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
+                logger.info("start 总长=${audioPlayerManager.getDuration()}")
+                //不使用实际的值
+//                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
             }
 
             override fun pause() {
@@ -120,6 +121,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 logger.info("onSeekBarProgress progress=${progress / 1000}")
                 currentPlayHomeRecomItem?.let {
                     it.currentPlayProcess = it.introduceVoiceLength - progress / 1000
+                    if(it.currentPlayProcess<=0){
+                        it.currentPlayProcess=0
+                    }
                     mAdapter.notifyItemChanged(currentIndex)
                 }
             }
