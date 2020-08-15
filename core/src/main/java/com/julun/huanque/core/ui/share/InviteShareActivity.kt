@@ -137,7 +137,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
         }
 
         tv_copy.onClickNew {
-            GlobalUtils.copyToSharePlate(this, currentCode)
+            GlobalUtils.copyToSharePlate(this, currentCode,attentionContent = "已复制邀请码")
         }
         sharePosterAdapter.setOnItemClickListener { _, view, position ->
             val item = sharePosterAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
@@ -202,6 +202,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         this.shareWay = ShareWayEnum.WXSceneTimeline
                         this.shareImage = bitmap
                     })
+                    finish()
                 }
                 ShareTypeEnum.WeChat -> {
                     wxService?.weiXinShare(this, ShareObject().apply {
@@ -209,6 +210,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         this.shareWay = ShareWayEnum.WXSceneSession
                         this.shareImage = bitmap
                     })
+                    finish()
                 }
                 ShareTypeEnum.Sina -> {
                     wxService?.weiBoShare(this, ShareObject().apply {
@@ -222,7 +224,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                             FileUtils.saveBitmapToDCIM(b, UUID.randomUUID().toString())
                         }.observeOn(AndroidSchedulers.mainThread()).subscribe {
                             if (it == true) {
-                                ToastUtils.show("保存分享图片成功")
+                                ToastUtils.show("保存成功")
 
                             }
                         }
@@ -262,6 +264,10 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
             }
         } else if (applyModule == ShareFromModule.Invite) {
             tv_invite_code.text = posterInfo.inviteCode
+            rv_share_contents.post {
+                currentSelect = sharePosterAdapter.getItemOrNull(0)
+                sharePosterAdapter.notifyDataSetChanged()
+            }
         }
     }
 
@@ -292,6 +298,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
         super.onActivityResult(requestCode, resultCode, data)
         if (data != null)
             wxService?.weiBoShareResult(data)
+        finish()
     }
 
     private val sharePosterAdapter: BaseMultiItemQuickAdapter<SharePoster, BaseViewHolder> by lazy {

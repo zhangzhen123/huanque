@@ -63,7 +63,7 @@
     <string name="please_wait">请稍后...</string>
     <string name="query_order_info">正在获取订单信息</string>
     <string name="recharge_center">充值中心</string>
-    <string name="plz_choose_recharge_count">请选择充值面额</string>
+    <string name="plz_choose_recharge_count">请选择充值金额</string>
     <string name="net_is_down">网络已断开</string>
     <string name="not_login">您还未登录</string>
     <string name="pay_success">充值成功</string>

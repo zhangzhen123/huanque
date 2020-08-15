@@ -126,6 +126,7 @@ class WechatViewModel : BaseViewModel() {
                 }
                 logger("微信分享成功")
                 ToastUtils.show("微信分享成功")
+                finish.value = true
 //                if (WXApiManager.getShareObject().isFromPage == PageTypes.Dynamic || WXApiManager.getShareObject().isFromPage == PageTypes.DynamicVideo) {
 //                    Requests.create(AppService::class.java).shareToDynamic(ShareDynamicFrom(WXApiManager.getShareObject())).handleResponse(makeSubscriber<VoidResult> {
 //                        logger("动态页分享保存记录成功")

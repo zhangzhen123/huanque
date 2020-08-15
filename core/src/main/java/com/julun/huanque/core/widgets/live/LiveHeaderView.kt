@@ -287,11 +287,11 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         roomUsers = orderUsersAndDelAnchor(roomData.onlineUsers)
         isReduceUserCount()
         doRefreshRoomUserList()
-        if (roomData.royalCount > 0) {
-            royalButtonAnimation()
-        } else {
-            stopAniWithOriginal()
-        }
+//        if (roomData.royalCount > 0) {
+//            royalButtonAnimation()
+//        } else {
+//            stopAniWithOriginal()
+//        }
     }
 
     private var dispose: Disposable? = null
@@ -452,11 +452,11 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
         roomData.onlineUserNum = data.totalCount
         roomData.royalCount = data.royalCount
         roomData.guardCount = data.guardCount
-        if (roomData.royalCount > 0) {
-            royalButtonAnimation()
-        } else {
-            stopAniWithOriginal()
-        }
+//        if (roomData.royalCount > 0) {
+//            royalButtonAnimation()
+//        } else {
+//            stopAniWithOriginal()
+//        }
         //修改贵族和非贵族的数据
         tv_user_count.text = formatCount(roomData.onlineUserNum)
         tvRoyalContent.text = formatCount(roomData.royalCount)
