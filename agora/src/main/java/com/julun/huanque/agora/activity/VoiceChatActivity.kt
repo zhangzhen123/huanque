@@ -3,6 +3,8 @@ package com.julun.huanque.agora.activity
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Paint
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -29,6 +31,7 @@ import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
+import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -100,6 +103,13 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             ToastUtils.show("没有对方数据")
             return
         }
+        waveView.setColor(Color.WHITE)
+        waveView.setInitialRadius(dp2pxf(60))
+        waveView.setMaxRadius(dp2pxf(105))
+        waveView.setDuration(2500)
+        waveView.setSpeed(750)
+        waveView.setStyle(Paint.Style.STROKE);
+        waveView.start()
         mVoiceChatViewModel?.netcallBeanData?.value = netCallBean
 
         if (mType == ConmmunicationUserType.CALLING) {
@@ -809,6 +819,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     override fun onViewDestroy() {
         super.onViewDestroy()
+        waveView.stopImmediately()
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         releaseVideoFocus()
         leaveChannel()

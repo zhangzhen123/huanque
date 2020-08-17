@@ -40,7 +40,7 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
         ImageUtils.loadImage(sdv_header, item.headPic, 56f, 56f)
         val oriNicknamge = item.nickname
         val showNickname = if (oriNicknamge.length > 5) {
-            "${oriNicknamge.substring(0, 4)}..."
+            "${oriNicknamge.substring(0, 5)}..."
         } else {
             oriNicknamge
         }
