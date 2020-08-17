@@ -857,6 +857,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 //        super.onBackPressed()
     }
 
+    private var showToast = true
 
     /**
      * 获取耳机链接状态
@@ -868,26 +869,36 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 //获取当前使用的麦克风，设置媒体播放麦克风
         if (am?.isWiredHeadsetOn == true) {
             logger.info("Voice 有线耳机已连接")
-//            Toast.makeText(this, "有线耳机已连接", Toast.LENGTH_SHORT).show()
+            if (showToast) {
+                Toast.makeText(this, "有线耳机已连接", Toast.LENGTH_SHORT).show()
+            }
             return true
         } else {
             logger.info("Voice 有线耳机未连接")
-//            Toast.makeText(this, "有线耳机未连接", Toast.LENGTH_SHORT).show()
+            if (showToast) {
+                Toast.makeText(this, "有线耳机未连接", Toast.LENGTH_SHORT).show()
+            }
         }
 
         val adapter = BluetoothAdapter.getDefaultAdapter()
 
         if (BluetoothProfile.STATE_CONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
             logger.info("Voice 蓝牙耳机已连接")
-//            Toast.makeText(this, "蓝牙耳机已连接", Toast.LENGTH_SHORT).show()
+            if (showToast) {
+                Toast.makeText(this, "蓝牙耳机已连接", Toast.LENGTH_SHORT).show()
+            }
             return true
         } else if (BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
             logger.info("Voice 蓝牙耳机未连接")
-//            Toast.makeText(this, "蓝牙耳机未连接", Toast.LENGTH_SHORT).show()
+            if (showToast) {
+                Toast.makeText(this, "蓝牙耳机未连接", Toast.LENGTH_SHORT).show()
+            }
             return false
         } else {
             logger.info("Voice 蓝牙耳机未连接")
-//            Toast.makeText(this, "蓝牙耳机未连接", Toast.LENGTH_SHORT).show()
+            if (showToast) {
+                Toast.makeText(this, "蓝牙耳机未连接", Toast.LENGTH_SHORT).show()
+            }
             return false
         }
     }
