@@ -250,7 +250,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 }
                 R.id.ll_task -> {
                     logger.info("去赚钱")
-                    RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+                    gotoMakeMoney()
                 }
             }
         }
@@ -260,7 +260,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         }
         ll_task_h.onClickNew {
             logger.info("去赚钱")
-            RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+            gotoMakeMoney()
         }
         mRecyclerView.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewDetachedFromWindow(view: View) {
@@ -307,6 +307,19 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 }
             }
         })
+
+    }
+
+    private fun gotoMakeMoney() {
+        val type: String = currentHeadInfo?.taskBar?.type?:return
+        when (type) {
+            HomeMakeMoneyType.Invite -> RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+            HomeMakeMoneyType.Game -> {
+                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, 1)
+                    .navigation()
+            }
+            HomeMakeMoneyType.Task -> RNPageActivity.start(requireActivity(), RnConstant.CHAT_COLLEGE_PAGE)
+        }
 
     }
 
@@ -389,7 +402,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
 
     }
-
+    private var currentHeadInfo:HeadNavigateInfo?=null
     private fun loadData(stateList: RootListData<HomeItemBean>) {
 
         if (stateList.isPull) {
@@ -420,6 +433,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         val headerData = stateList.list.getOrNull(0)
         if (headerData?.showType == HomeItemBean.HEADER) {
             val headerInfo = headerData.content as? HeadNavigateInfo ?: return
+            currentHeadInfo=headerInfo
             tv_balance_h.text = headerInfo.taskBar.myCash
             val content = StringBuilder()
             content.append("${headerInfo.taskBar.label}：")
