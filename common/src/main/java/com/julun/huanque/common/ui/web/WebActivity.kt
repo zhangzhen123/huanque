@@ -12,6 +12,7 @@ import com.julun.huanque.common.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.ShareObject
+import com.julun.huanque.common.bean.events.LoginOutEvent
 import com.julun.huanque.common.bean.events.PayResultEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
@@ -180,6 +181,7 @@ class WebActivity : BaseActivity() {
 //                            startActivity(intent)
 //                            ARouter.getInstance().build(ARouterConstant.GUIDE_LOGIN_ACTIVITY).navigation()
 //                        showLoginDialogFragment()
+                        EventBus.getDefault().post(LoginOutEvent())
                     }
                     //打开分享
                     BaseWebView.OPENSHARELAYER -> {
@@ -209,7 +211,8 @@ class WebActivity : BaseActivity() {
                             val type = actionBean.param!!["type"] as String
                             if ("recharge" == type) {
                                 logger.info("是网页支付完成 有没有充不确定")
-                                EventBus.getDefault().post(PayResultEvent(PayResult.IS_PAY, PayType.WXPayH5))
+                                EventBus.getDefault()
+                                    .post(PayResultEvent(PayResult.IS_PAY, PayType.WXPayH5))
                                 finish()
                             }
                         }
