@@ -1,6 +1,5 @@
 package com.julun.huanque.fragment
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -15,10 +14,11 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.constant.XYCode
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.viewmodel.PersonalInformationProtectionViewModel
 import kotlinx.android.synthetic.main.fragment_personal_information_protection.*
 
@@ -39,8 +39,8 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
         val replaceStr = GlobalUtils.getString(R.string.app_name)
         val content = String.format(str, replaceStr, replaceStr)
         style.append(content)
-        updateTextColorAndClick(style, content, GlobalUtils.getString(R.string.agreement_conent_clickable), "")
-        updateTextColorAndClick(style, content, GlobalUtils.getString(R.string.agreement_register_conent_clickable), "")
+        updateTextColorAndClick(style, content, GlobalUtils.getString(R.string.agreement_conent_clickable), Agreement.UserAgreement)
+        updateTextColorAndClick(style, content, GlobalUtils.getString(R.string.agreement_register_conent_clickable), Agreement.PrivacyAgreement)
         tv_content.text = style
         //配置给TextView
         tv_content.movementMethod = LinkMovementMethod.getInstance()
@@ -105,7 +105,7 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
                     //点击事件
-                    ToastUtils.show("获取到点击事件")
+                    WebActivity.startWeb(requireActivity(),address)
 //                    val extra = Bundle()
 //                    extra.putString(BusiConstant.PUSH_URL, LMUtils.getDomainName(address))
 //                    extra.putBoolean(IntentParamKey.EXTRA_FLAG_DO_NOT_GO_HOME.name, true)

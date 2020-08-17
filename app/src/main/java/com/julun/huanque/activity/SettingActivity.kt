@@ -9,9 +9,11 @@ import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.manager.DataCleanManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
@@ -98,6 +100,16 @@ class SettingActivity : BaseActivity() {
         view_privacy.onClickNew {
             //隐私设置
             jump(PrivacyActivity::class.java)
+        }
+
+        view_user_agreement.onClickNew {
+            //用户协议
+            WebActivity.startWeb(this, Agreement.UserAgreement)
+        }
+
+        view_privacy_agreement.onClickNew {
+            //隐私协议
+            WebActivity.startWeb(this,Agreement.PrivacyAgreement)
         }
     }
 }
