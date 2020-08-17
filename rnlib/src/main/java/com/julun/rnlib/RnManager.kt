@@ -20,6 +20,7 @@ import com.julun.rnlib.reactpackage.OpenPageReactPackage
 import com.julun.rnlib.reactpackage.UploadReactPackage
 import com.luck.picture.lib.config.PictureConfig
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage
+import com.reactnativecommunity.webview.RNCWebViewPackage
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage
 import com.swmansion.reanimated.ReanimatedPackage
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage
@@ -66,6 +67,7 @@ object RnManager {
                 .addPackage(ReanimatedPackage())
                 .addPackage(RNCViewPagerPackage())
                 .addPackage(ReactVideoPackage())
+                .addPackage(RNCWebViewPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)
                 .setNativeModuleCallExceptionHandler {

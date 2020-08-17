@@ -49,4 +49,5 @@ dependencies {
     implementation project(':react-native-reanimated')
     implementation project(':react-native-video')
     implementation project(':@react-native-community_viewpager')
+    implementation project(':rnWebView')
 }
