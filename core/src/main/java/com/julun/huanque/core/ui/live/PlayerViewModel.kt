@@ -538,7 +538,7 @@ class PlayerViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val follow = mSocialService.follow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(follow = follow.follow)
+                val followBean = FollowResultBean(follow = follow.follow,userId = userId)
                 followStatusData.value = followBean.convertRtData()
                 EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
             }, {
@@ -568,7 +568,7 @@ class PlayerViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 mSocialService.unFollow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(follow = FollowStatus.False)
+                val followBean = FollowResultBean(follow = FollowStatus.False,userId = userId)
                 followStatusData.value = followBean.convertRtData()
                 EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to false)))
             }, {

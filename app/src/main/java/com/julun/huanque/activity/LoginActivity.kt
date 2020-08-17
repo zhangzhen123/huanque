@@ -27,20 +27,17 @@ import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.manager.ActivitiesManager
-import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.support.LoginManager
 import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.act_login.*
-import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
@@ -116,6 +113,12 @@ class LoginActivity : BaseActivity() {
         }
         view_weixin.onClickNew {
             WXApiManager.doLogin(this)
+        }
+        register_rule.onClickNew {
+            WebActivity.startWeb(this, Agreement.UserAgreement)
+        }
+        tv_register_privacy.onClickNew {
+            WebActivity.startWeb(this,Agreement.PrivacyAgreement)
         }
     }
 
@@ -245,8 +248,8 @@ class LoginActivity : BaseActivity() {
         uiConfigBuilder.setLogBtnBottomOffsetY(127)
 
         //设置隐私协议相关
-        uiConfigBuilder.setAppPrivacyOne(GlobalUtils.getString(R.string.register_rule_02), "www.baidu.com")
-        uiConfigBuilder.setAppPrivacyTwo(GlobalUtils.getString(R.string.register_rule_pravicy), "www.baidu.com")
+        uiConfigBuilder.setAppPrivacyOne(GlobalUtils.getString(R.string.register_rule_02), Agreement.UserAgreement)
+        uiConfigBuilder.setAppPrivacyTwo(GlobalUtils.getString(R.string.register_rule_pravicy), Agreement.PrivacyAgreement)
 
         uiConfigBuilder.setPrivacyState(true)
         uiConfigBuilder.setAppPrivacyColor(GlobalUtils.getColor(R.color.black_999), GlobalUtils.getColor(R.color.black_333))

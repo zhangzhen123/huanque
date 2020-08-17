@@ -1,14 +1,18 @@
 package com.julun.huanque.agora.activity
 
 import android.Manifest
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothProfile
 import android.content.Context
-import android.content.Intent
+import android.graphics.Color
+import android.graphics.Paint
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -29,6 +33,7 @@ import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
+import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -37,6 +42,7 @@ import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.agora.rtc.Constants
+import io.agora.rtc.Constants.AUDIO_ROUTE_HEADSETBLUETOOTH
 import io.agora.rtc.IRtcEngineEventHandler
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -72,15 +78,15 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
+        ll_hands_free.isEnabled = getEarphoneLinkStatus()
         requestAudioFocus()
-
     }
 
     /**
      * 申请音频焦点
      */
     private fun requestAudioFocus() {
-        am = getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
         val listener = AudioManager.OnAudioFocusChangeListener { }
         am?.requestAudioFocus(
             listener,  // Use the music stream.
@@ -100,6 +106,13 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             ToastUtils.show("没有对方数据")
             return
         }
+        waveView.setColor(Color.WHITE)
+        waveView.setInitialRadius(dp2pxf(60))
+        waveView.setMaxRadius(dp2pxf(105))
+        waveView.setDuration(2500)
+        waveView.setSpeed(750)
+        waveView.setStyle(Paint.Style.STROKE);
+        waveView.start()
         mVoiceChatViewModel?.netcallBeanData?.value = netCallBean
 
         if (mType == ConmmunicationUserType.CALLING) {
@@ -766,6 +779,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         mVoiceChatViewModel?.currentVoiceState?.postValue(VoiceChatViewModel.VOICE_CLOSE)
     }
 
+    override fun onAudioRouteChanged(routing: Int) {
+        ll_hands_free.isEnabled = !(routing == Constants.AUDIO_ROUTE_HEADSET || routing == Constants.AUDIO_ROUTE_HEADSETBLUETOOTH)
+    }
+
     override fun onError(err: Int) {
         logger.info("AGORA Message onError err = $err")
     }
@@ -809,6 +826,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     override fun onViewDestroy() {
         super.onViewDestroy()
+        waveView.stopImmediately()
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         releaseVideoFocus()
         leaveChannel()
@@ -839,19 +857,38 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 //        super.onBackPressed()
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        //接收到新的语音通话邀请
-//        val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
-//        if (netCallBean != null) {
-//            val callId = netCallBean.callId
-//            //被叫忙
-//            mVoiceChatViewModel?.busy(callId)
-//            sendSimulateMessage(
-//                VoiceConmmunicationSimulate(VoiceResultType.MINE_REFUSE, 0, netCallBean.callerInfo.userId, 0, 0),
-//                netCallBean.callerInfo, netCallBean.relationInfo
-//            )
-//        }
-    }
 
+    /**
+     * 获取耳机链接状态
+     */
+    private fun getEarphoneLinkStatus(): Boolean {
+        am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        am?.mode = AudioManager.MODE_IN_COMMUNICATION
+//获取当前使用的麦克风，设置媒体播放麦克风
+//获取当前使用的麦克风，设置媒体播放麦克风
+        if (am?.isWiredHeadsetOn == true) {
+            logger.info("Voice 有线耳机已连接")
+//            Toast.makeText(this, "有线耳机已连接", Toast.LENGTH_SHORT).show()
+            return true
+        } else {
+            logger.info("Voice 有线耳机未连接")
+//            Toast.makeText(this, "有线耳机未连接", Toast.LENGTH_SHORT).show()
+        }
+
+        val adapter = BluetoothAdapter.getDefaultAdapter()
+
+        if (BluetoothProfile.STATE_CONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
+            logger.info("Voice 蓝牙耳机已连接")
+//            Toast.makeText(this, "蓝牙耳机已连接", Toast.LENGTH_SHORT).show()
+            return true
+        } else if (BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
+            logger.info("Voice 蓝牙耳机未连接")
+//            Toast.makeText(this, "蓝牙耳机未连接", Toast.LENGTH_SHORT).show()
+            return false
+        } else {
+            logger.info("Voice 蓝牙耳机未连接")
+//            Toast.makeText(this, "蓝牙耳机未连接", Toast.LENGTH_SHORT).show()
+            return false
+        }
+    }
 }

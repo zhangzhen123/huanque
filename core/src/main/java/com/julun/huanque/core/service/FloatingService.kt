@@ -12,11 +12,17 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.bean.forms.ProgramIdForm
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.UserHeartManager
+import com.julun.huanque.common.net.RequestCaller
+import com.julun.huanque.common.net.Requests
+import com.julun.huanque.common.net.services.LiveRoomService
+import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.ImageUtils
@@ -27,6 +33,10 @@ import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.widgets.SingleVideoView
 import com.julun.huanque.core.widgets.SurfaceVideoViewOutlineProvider
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.anko.dip
 
 
@@ -35,7 +45,7 @@ import org.jetbrains.anko.dip
  *@创建时间 2020/8/5 16:39
  *@描述 悬浮窗使用的service
  */
-class FloatingService : Service(), View.OnClickListener {
+class FloatingService : Service(), View.OnClickListener, RequestCaller {
 
     private var windowManager: WindowManager? = null
     private var layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
@@ -208,10 +218,18 @@ class FloatingService : Service(), View.OnClickListener {
         // 移除浮动框
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         UserHeartManager.setProgramId(null)
+        GlobalScope.launch {
+            withContext(Dispatchers.IO){
+                Requests.create(LiveRoomService::class.java).leave(ProgramIdForm(mProgramId)).dataConvert()
+            }
+
+        }
         if (windowManager != null && display != null) {
             videView?.stop()
             windowManager?.removeView(display)
         }
         super.onDestroy()
     }
+
+    override fun getRequestCallerId() = StringHelper.uuid()
 }

@@ -172,4 +172,12 @@ public class AgoraEventHandler extends IRtcEngineEventHandler {
         }
     }
 
+    @Override
+    public void onAudioRouteChanged(int routing) {
+        for (EventHandler handler : mHandler) {
+            handler.onAudioRouteChanged(routing);
+        }
+    }
+
+
 }

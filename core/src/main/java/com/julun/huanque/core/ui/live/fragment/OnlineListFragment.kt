@@ -30,6 +30,7 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.PhotoHeadView
+import com.julun.huanque.common.widgets.ShimmerTextView
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
@@ -160,7 +161,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                     RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
                 } else {
                     //打开用户卡片
-                    mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel,nickname = item.nickname)
+                    mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel, nickname = item.nickname)
                 }
             }
         }
@@ -169,7 +170,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
             val item = adapter?.getItem(position)
             item ?: return@onAdapterClickNew
             if (item is OnlineUserInfo) {
-                mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel,nickname = item.nickname)
+                mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel, nickname = item.nickname)
             }
         }
     }
@@ -425,7 +426,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 ImageHelper.getUserLevelImg(item.userLevel)
             ).setText(R.id.tvItemNickname, item.nickname)
             holder.getView<PhotoHeadView>(R.id.sdvItemHead).setImage(
-                headUrl = item.headPic+BusiConstant.OSS_160,
+                headUrl = item.headPic + BusiConstant.OSS_160,
                 frameUrl = item.headFrame,
                 headSize = 46,
                 frameHeight = 74,
@@ -479,20 +480,22 @@ class OnlineHeadAdapter :
     override fun convert(holder: BaseViewHolder, item: OnlineUserInfo) {
 
         val headView = holder.getView<PhotoHeadView>(R.id.sdvHeadImage)
+        val royalNickname = holder.getView<ShimmerTextView>(R.id.tvHeadNickname)
         if (item.userId == -1L) {
-            holder.setText(R.id.tvHeadNickname, "虚位以待")
-                .setTextColorRes(R.id.tvHeadNickname, R.color.black_999)
+            royalNickname.text = "虚位以待"
+            royalNickname.setAnimation(false)
+            holder.setTextColorRes(R.id.tvHeadNickname, R.color.black_999)
 //            ImageUtils.loadImageLocal(
 //                holder.getView(R.id.sdvHeadImage),
 //                R.mipmap.important_placeholder
 //            )
             headView.setImageCustom(headRes = R.mipmap.important_placeholder)
         } else {
-            holder.setText(R.id.tvHeadNickname, item.nickname)
-                .setTextColorRes(R.id.tvHeadNickname, R.color.black_333)
+            royalNickname.text = item.nickname
+            holder.setTextColorRes(R.id.tvHeadNickname, R.color.black_333)
 //            ImageUtils.loadImage(holder.getView(R.id.sdvHeadImage), item.headPic, 46f, 46f)
             headView.setImage(
-                headUrl = item.headPic+BusiConstant.OSS_160,
+                headUrl = item.headPic + BusiConstant.OSS_160,
                 headSize = 46,
                 frameUrl = item.headFrame,
                 frameHeight = 74,

@@ -13,12 +13,14 @@ import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.events.BindPhoneSuccessEvent
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.PhoneLoginType
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -30,7 +32,10 @@ import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.android.synthetic.main.act_login.*
 import kotlinx.android.synthetic.main.act_phone_num.*
+import kotlinx.android.synthetic.main.act_phone_num.register_rule
+import kotlinx.android.synthetic.main.act_phone_num.tv_register_privacy
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import org.jetbrains.anko.textColor
@@ -239,6 +244,13 @@ class PhoneNumLoginActivity : BaseActivity() {
         //手机号清除按钮
         phone_num_clear.onClickNew {
             phone_num.text.clear()
+        }
+
+        register_rule.onClickNew {
+            WebActivity.startWeb(this, Agreement.UserAgreement)
+        }
+        tv_register_privacy.onClickNew {
+            WebActivity.startWeb(this,Agreement.PrivacyAgreement)
         }
     }
 

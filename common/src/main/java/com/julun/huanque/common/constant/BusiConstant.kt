@@ -842,3 +842,13 @@ object RNMessageConst{
     //关注用户变化param:{userId: number, isFollowed: boolean}
     const val FollowUserChange:String="FollowUserChange"
 }
+
+/**
+ * 隐私协议
+ */
+object Agreement{
+    //用户协议
+    const val UserAgreement = "https://cdn.ihuanque.com/protocol/UserReg.html"
+    //隐私协议
+    const val PrivacyAgreement = "https://cdn.ihuanque.com/protocol/PrivacyProtect.html"
+}

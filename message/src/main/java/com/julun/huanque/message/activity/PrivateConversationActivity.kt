@@ -487,7 +487,7 @@ class PrivateConversationActivity : BaseActivity() {
             mChatSendGiftFragment = mChatSendGiftFragment ?: ChatSendGiftFragment()
 
             mChatSendGiftFragment?.show(this, "ChatSendGiftFragment")
-            Observable.timer(200, TimeUnit.MILLISECONDS)
+            Observable.timer(300, TimeUnit.MILLISECONDS)
                 .bindUntilEvent(this, ActivityEvent.DESTROY)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({

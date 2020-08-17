@@ -37,6 +37,9 @@ public interface EventHandler {
 
     void onConnectionStateChanged(int state, int reason);
 
+    void onAudioRouteChanged(int routing);
+
     void onConnectionLost();
+
 
 }
