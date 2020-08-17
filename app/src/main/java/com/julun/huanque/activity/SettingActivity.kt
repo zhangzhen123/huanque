@@ -15,6 +15,7 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.message.activity.MessageSettingActivity
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
 import kotlinx.android.synthetic.main.act_setting.*
@@ -109,7 +110,15 @@ class SettingActivity : BaseActivity() {
 
         view_privacy_agreement.onClickNew {
             //隐私协议
-            WebActivity.startWeb(this,Agreement.PrivacyAgreement)
+            WebActivity.startWeb(this, Agreement.PrivacyAgreement)
+        }
+
+        view_message_setting.onClickNew {
+            //消息设置
+            val intent = Intent(this, MessageSettingActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
         }
     }
 }
