@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -104,7 +105,7 @@ class MessageFragment : BaseFragment() {
             mPlayerMessageViewModel.getBlockedConversationList()
             mMessageViewModel.getConversationList()
         } else {
-            pageView.showEmpty()
+            showEmptyView()
         }
 
     }
@@ -138,7 +139,7 @@ class MessageFragment : BaseFragment() {
                             if (mMessageViewModel.player) {
                                 //直播间内
                                 mPlayerMessageViewModel.privateConversationData.value =
-                                    OpenPrivateChatRoomEvent(lmc.conversation.targetId.toLong(), "","")
+                                    OpenPrivateChatRoomEvent(lmc.conversation.targetId.toLong(), "", "")
                             } else {
                                 //非直播间内
                                 activity?.let { act ->
@@ -228,13 +229,13 @@ class MessageFragment : BaseFragment() {
             if (it != null) {
 //                mAdapter.setNewData(it)
                 if (it.isEmpty()) {
-                    pageView.showEmpty()
+                    showEmptyView()
                 } else {
                     pageView.showSuccess()
                 }
                 mAdapter.setList(it)
             } else {
-                pageView.showEmpty()
+                showEmptyView()
             }
         })
 
@@ -288,6 +289,18 @@ class MessageFragment : BaseFragment() {
                 tv_title_player.text = str
             }
         })
+    }
+
+    private fun showEmptyView(){
+        pageView.showEmpty(
+            true,
+            R.mipmap.icon_default_empty,
+            emptyTxt = "快去找个有趣的人聊吧~",
+            onClick = View.OnClickListener {
+                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+            },
+            btnTex = "去看看"
+        )
     }
 
     override fun initEvents(rootView: View) {

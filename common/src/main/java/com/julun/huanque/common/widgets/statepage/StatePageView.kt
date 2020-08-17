@@ -90,6 +90,7 @@ class StatePageView : FrameLayout {
         if (onClick == null) {
             tv_button.hide()
         } else {
+            tv_button.show()
             tv_button.text = "$btnTex"
             tv_button.setOnClickListener(onClick)
         }

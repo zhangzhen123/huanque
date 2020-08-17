@@ -35,16 +35,15 @@
         android:id="@+id/tvTips"
         android:layout_width="0dp"
         android:layout_height="@dimen/dimen_30"
-        android:paddingLeft="15dp"
-        android:layout_marginTop="@dimen/dimen_44"
         android:background="#FFFAEE"
         android:gravity="left|center_vertical"
+        android:paddingLeft="15dp"
         android:text="开启开播提醒，精彩直播不再错过"
         android:textColor="#FFC52B"
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/rlRefreshView"
@@ -68,10 +67,9 @@
         android:id="@+id/commonView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/dimen_44"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 </androidx.constraintlayout.widget.ConstraintLayout>

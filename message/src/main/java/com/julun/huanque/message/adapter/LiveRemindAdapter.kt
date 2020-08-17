@@ -6,6 +6,7 @@ import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.beans.LiveRemindBeans
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.message.R
 
@@ -37,8 +38,13 @@ class LiveRemindAdapter :
     }
 
     override fun convert(holder: BaseViewHolder, info: LiveRemindBeans) {
-        ImageUtils.loadImage(holder.getView(R.id.ivHead),info.anchorPic,56f,56f)
-        holder.setText(R.id.tvNickname,info.nickname).setText(R.id.tvSign,info.mySign)
+        ImageUtils.loadImage(holder.getView(R.id.ivHead), info.anchorPic, 56f, 56f)
+        val signContent = if (info.mySign.isEmpty()) {
+            GlobalUtils.getString(R.string.default_sign)
+        } else {
+            info.mySign
+        }
+        holder.setText(R.id.tvNickname, info.nickname).setText(R.id.tvSign, signContent)
         setPushStatus(holder.getView(R.id.ivPush), info.pushOpen)
     }
 

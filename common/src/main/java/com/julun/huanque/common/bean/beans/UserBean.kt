@@ -58,6 +58,8 @@ class SocialListBean(
     var userDataTabType: String = "",
     //列表数据
     var linkList: MutableList<SocialUserInfo> = mutableListOf(),
+    //资料完善度
+    var perfection: Int = 0,
     //是否有更多数据
     var hasMore: Boolean = false
 )

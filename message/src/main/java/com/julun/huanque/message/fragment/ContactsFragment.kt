@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -19,9 +20,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.FollowResultBean
 import com.julun.huanque.common.bean.beans.SocialUserInfo
-import com.julun.huanque.common.constant.ContactsTabType
-import com.julun.huanque.common.constant.FollowStatus
-import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.show
@@ -65,7 +64,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initViewModel()
-        state_pager_view.showEmpty()
+        showEmptyView()
         state_pager_view.show()
         mViewModel.mType = arguments?.getString(ParamConstant.TYPE, "") ?: ""
         mAdapter.type = mViewModel.mType
@@ -215,6 +214,55 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
     }
 
     /**
+     * 显示空布局
+     */
+    private fun showEmptyView() {
+        val emptyContent = when (mViewModel.mType) {
+            ContactsTabType.Fan -> {
+                //粉丝
+                if ((mActivityViewModel.socialListData.value?.perfection ?: 0) >= 100) {
+                    //资料已经完善
+                    "慕名而来的粉丝正在路上"
+                } else {
+                    //资料未完善
+                    "提升资料完善度，可吸引更多粉丝哦~"
+                }
+
+            }
+            ContactsTabType.Follow -> {
+                //关注
+                "暂无关注，快去发现有趣的Ta~"
+            }
+            ContactsTabType.Friend -> {
+                //鹊友
+                "暂无鹊友，快去撩几个吧~"
+            }
+            ContactsTabType.Intimate -> {
+                //密友
+                "暂无密友，快去撩几个吧~"
+            }
+            else -> {
+                ""
+            }
+        }
+        val btnText = if (mViewModel.mType == ContactsTabType.Fan && (mActivityViewModel.socialListData.value?.perfection ?: 0) < 100) {
+            //粉丝页面，资料完善度小于100
+            "去提升"
+        } else {
+            "去看看"
+        }
+        state_pager_view.showEmpty(true, R.mipmap.icon_default_empty, emptyContent, View.OnClickListener {
+            if (mViewModel.mType == ContactsTabType.Fan && (mActivityViewModel.socialListData.value?.perfection ?: 0) < 100) {
+                //跳转编辑资料
+                RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
+            } else {
+                //跳转交友
+                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+            }
+        }, btnText)
+    }
+
+    /**
      * 关注状态变更
      */
     private fun changeFollowData(bean: FollowResultBean) {
@@ -281,7 +329,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         if (mAdapter.itemCount - mAdapter.headerLayoutCount > 0) {
             state_pager_view.showSuccess()
         } else {
-            state_pager_view.showEmpty()
+            showEmptyView()
         }
 
     }
