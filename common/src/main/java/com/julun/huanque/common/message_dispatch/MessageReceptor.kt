@@ -26,8 +26,8 @@ object MessageReceptor {
 
     const val EVENT_WAIT_MESSAGE = -2L  //代表去等待分发消息的到来
 
-    // 动画消息去除间隔时间，单位毫秒
-    private const val ANIMATION_LAYER_DURATION = 50L
+    // 动画消息去除间隔时间，单位秒
+    private const val ANIMATION_LAYER_DURATION = 5L
 
     // 公聊区消息缓冲定时器
     private var publicMessageBuffered: BufferedTimer? = null

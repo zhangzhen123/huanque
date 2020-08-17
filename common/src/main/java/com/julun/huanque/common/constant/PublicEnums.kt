@@ -575,3 +575,9 @@ object PrivacyEnums {
     //麦克风
     const val PRIVACY_MIKE = "mike"
 }
+
+object HomeMakeMoneyType{
+    const val Invite="Invite"
+    const val Game="Game"
+    const val Task="Task"
+}
