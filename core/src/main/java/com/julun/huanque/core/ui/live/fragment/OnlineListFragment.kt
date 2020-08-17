@@ -27,7 +27,6 @@ import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.PhotoHeadView
@@ -38,7 +37,6 @@ import com.julun.huanque.core.viewmodel.OnLineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_online_list.*
-import org.jetbrains.anko.startActivity
 import java.lang.ref.SoftReference
 
 /**
@@ -325,11 +323,17 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
 //                        headBottom?.show()
 //                        picture?.hide()
 //                    }
+                    repeat(4) {
+                        if(data.list.isNotEmpty()){
+                            data.royalHonorList.add(data.list.removeAt(0))
+                        }
+                    }
+
                 } else {
                     //加载更多贵宾数据去重并刷新
-                    data.royalHonorList = mHeadAdapter.data.mergeNoDuplicateNew(
-                        data.royalHonorList
-                    ) as MutableList
+//                    data.royalHonorList = mHeadAdapter.data.mergeNoDuplicateNew(
+//                        data.royalHonorList
+//                    ) as MutableList
                 }
                 when {
                     data.royalHonorList.isNullOrEmpty() -> {

@@ -375,7 +375,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     }
                 }
                 .imageSpanCount(4)// 每行显示个数
-                .previewImage(true)// 是否可预览图片
+                .previewImage(false)// 是否可预览图片
                 .isCamera(true)// 是否显示拍照按钮
                 .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
                 .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
@@ -383,7 +383,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 .enableCrop(true)// 是否裁剪
                 .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
                 .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
-                .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+                .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
                 .isDragFrame(false)
                 .compress(true)// 是否压缩
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步

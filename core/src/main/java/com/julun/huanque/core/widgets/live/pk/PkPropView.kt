@@ -83,7 +83,7 @@ class PkPropView : LinearLayout {
         tv_pk_prop_name.textColor = Color.WHITE
         var name = "${propInfo.nickname}"
         if (name.length > 3) {
-            name = "${name.substring(0, 2)}…"
+            name = "${name.substring(0, 3)}…"
         }
         if(propCdDispose?.isDisposed== false){
             propCdDispose?.dispose()

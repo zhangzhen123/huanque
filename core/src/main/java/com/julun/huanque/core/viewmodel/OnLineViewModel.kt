@@ -94,8 +94,7 @@ class OnLineViewModel : BaseViewModel() {
                         service.queryNormalList(OnLineForm(programId, offset)).dataConvert()
                     }
                 }
-                //todo test
-//                result.list.add(OnlineUserInfo())
+
                 offset += result.list.size
                 result.isPull = type != QueryType.LOAD_MORE
                 listResult.value = result.convertRtData()
