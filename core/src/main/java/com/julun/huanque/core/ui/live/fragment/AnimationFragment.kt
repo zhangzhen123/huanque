@@ -622,15 +622,6 @@ class AnimationFragment : BaseFragment() {
 
             }
         })
-        //主播等级升级动画
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnchorUpLevelProcessor {
-            override fun process(data: AnchorUpgradeEvent) {
-                //代表有接生中奖
-                if (data.awardValue > 0) {
-                    anchor_level_up_view?.showAnim(data)
-                }
-            }
-        })
         //送礼消息的处理 普通礼物
         MessageProcessor.registerEventProcessor(object : MessageProcessor.GiftMessageProcessor {
             override fun process(data: SendGiftEvent) {

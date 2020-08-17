@@ -1552,17 +1552,15 @@ class PlayerActivity : BaseActivity() {
 
         //主播等级升级动画
         MessageProcessor.registerEventProcessor(object : MessageProcessor.AnchorUpLevelProcessor {
-            override fun process(data: AnchorUpgradeEvent) = playAnimation(AnimModel().apply {
-                this.nickname = data.nickname
-                this.animType = AnimationTypes.ANCHOR_UPGRADE
-                this.levelValue = data.newLevel
-                //命中接生奖励
-                if (data.awardValue > 0) {
-                    if (data.sendUserId == SessionUtils.getUserId()) {
-                        liveViewManager.refreshBalance()
-                    }
-                }
-            })
+            override fun process(data: AnchorUpgradeEvent) {
+                //
+//                playAnimation(AnimModel().apply {
+//                    this.nickname = viewModel.roomBaseData?.programName?:""
+//                    this.animType = AnimationTypes.ANCHOR_UPGRADE
+//                    this.levelValue = data.newAnchorLevel
+//                })
+
+            }
         })
         // 开播
         MessageProcessor.registerEventProcessor(object :
@@ -1938,7 +1936,7 @@ class PlayerActivity : BaseActivity() {
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
             }
             val baseData = viewModel.baseData.value
-            if (PermissionUtils.checkFloatPermission(this)&&baseData!=null) {
+            if (PermissionUtils.checkFloatPermission(this) && baseData != null) {
                 FloatingManager.showFloatingView(
                     GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
                     viewModel.programId,

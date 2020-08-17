@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
 import com.julun.huanque.common.R
@@ -51,7 +52,7 @@ class StatePageView : FrameLayout {
         LayoutInflater.from(context).inflate(R.layout.layout_state, this)
         setBackgroundResource(R.color.default_bg)
         //屏蔽掉点击事件穿透
-        this.onClick {  }
+        this.onClick { }
     }
 
     fun showLoading(loadingTxt: String = "") {
@@ -65,15 +66,34 @@ class StatePageView : FrameLayout {
 
     }
 
-    fun showEmpty(@DrawableRes emptyRes: Int = R.mipmap.icon_default_empty, emptyTxt: String = "") {
+    fun showEmpty(
+        isImageHide: Boolean = false,
+        @DrawableRes emptyRes: Int = R.mipmap.icon_default_empty,
+        emptyTxt: String = "",
+        onClick: View.OnClickListener? = null,
+        btnTex: String? = null
+    ) {
         this.show()
         loading_view.hide()
         empty_view.show()
         error_view.hide()
-        no_data_image.imageResource = emptyRes
+        if (isImageHide) {
+            no_data_image.hide()
+        } else {
+            no_data_image.show()
+            no_data_image.imageResource = emptyRes
+        }
+
         if (emptyTxt.isNotEmpty()) {
             emptyText.text = emptyTxt
         }
+        if (onClick == null) {
+            tv_button.hide()
+        } else {
+            tv_button.text = "$btnTex"
+            tv_button.setOnClickListener(onClick)
+        }
+
     }
 
     fun showError(
