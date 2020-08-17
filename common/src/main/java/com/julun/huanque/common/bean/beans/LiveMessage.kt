@@ -356,16 +356,12 @@ class AnimEventItem {
     var resValue: String = ""
 }
 
-//主播升级事件
+//主播等级变化事件
 data class AnchorUpgradeEvent(
-    var nickname: String = "",
-    var userId: Long = 0,
-    var newExpValue: Long = 0,
-    var newLevel: Int = 0, //升级的下一级值
-    //升级成功
-    var sendUserId: Long = 0L, //升级中奖的用户
-    var awardValue: Int = 0,    //奖励萌豆
-    var sendNickname: String = ""     //提示的用户名
+   var newAnchorLevel:Int,
+   var oldAnchorLevel:Int,
+   var newAnchorLevelPic:Int,
+   var programId:Long
 )
 
 data class AnchorLevelProgressEvent(

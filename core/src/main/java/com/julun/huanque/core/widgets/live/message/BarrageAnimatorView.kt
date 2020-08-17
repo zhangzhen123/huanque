@@ -25,7 +25,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
-import com.julun.huanque.core.BusiConstantCore
+import com.julun.huanque.core.constant.BusiConstantCore
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel

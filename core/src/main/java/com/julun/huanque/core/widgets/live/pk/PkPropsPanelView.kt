@@ -244,7 +244,7 @@ class PkPropsPanelView : RelativeLayout {
         pb_pk_task_time.progress=0
         var name = data.nickname
         if (name.length > 5) {
-            name = "${name.substring(0, 4)}…"
+            name = "${name.substring(0, 5)}…"
         }
         if (data.status == PKPropStatus.UnUse) {
             if (success) {

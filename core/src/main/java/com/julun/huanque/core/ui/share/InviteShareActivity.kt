@@ -321,7 +321,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         sdvQrCode.loadImage(item.qrCode, 60f, 60f)
                         sdvUserPic.loadImage(SessionUtils.getHeaderPic(), 45f, 45f)
                         val name = if (SessionUtils.getNickName().length > 5) {
-                            "${SessionUtils.getNickName().substring(0, 4)}..."
+                            "${SessionUtils.getNickName().substring(0, 5)}..."
                         } else {
                             SessionUtils.getNickName()
                         }
@@ -342,7 +342,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         sdvSharePic.loadImage(item.posterPic, 235f, 235f)
                         sdvQrCode.setImageBitmap(item.qrBitmap)
                         val name = if (item.authorName.length > 5) {
-                            "${item.authorName.substring(0, 4)}..."
+                            "${item.authorName.substring(0, 5)}..."
                         } else {
                             item.authorName
                         }

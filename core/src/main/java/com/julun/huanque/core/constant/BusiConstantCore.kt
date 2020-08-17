@@ -1,4 +1,4 @@
-package com.julun.huanque.core
+package com.julun.huanque.core.constant
 
 /**
  *@创建者   董
@@ -18,8 +18,4 @@ object BusiConstantCore {
         const val MysteryCard = "MysteryCard"
     }
 
-    object GiftID {
-        //人气票
-        const val RenQiPiaoID = 93
-    }
 }

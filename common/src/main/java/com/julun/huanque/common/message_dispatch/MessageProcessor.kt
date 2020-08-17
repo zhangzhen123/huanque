@@ -167,7 +167,7 @@ object MessageProcessor {
             //这几种动画排队执行
             EventMessageType.LuckGift.name,
             EventMessageType.UserUpLevel.name,
-            EventMessageType.AnchorUpLevel.name,
+            EventMessageType.AnchorLevelChange.name,
             EventMessageType.SUPER_LUCK_GIFT.name,
             EventMessageType.OpenGuard.name ->/* MessageReceptor.putEventMessage(eventCode, (dataObj["context"] as JSONObject).toJSONString())*/
                 MessageReceptor.putEventMessage(eventCode, dataObj.getJSONObject(EVENT_CONTEXT))
@@ -538,7 +538,7 @@ object MessageProcessor {
      * 主播经验事件的处理
      */
     interface AnchorUpLevelProcessor : EventMessageProcessor<AnchorUpgradeEvent> {
-        override fun getEventType() = EventMessageType.AnchorUpLevel
+        override fun getEventType() = EventMessageType.AnchorLevelChange
     }
 
     /**
@@ -1198,9 +1198,9 @@ enum class EventMessageType(val klass: Class<*>) {
     /** 排行榜 **/
 //        ,
 //        RANKING_SNAPSHOT(RankingEvent::class.java)
-    /** 主播升级 **/
+    /** 主播等级变化 **/
     ,
-    AnchorUpLevel(AnchorUpgradeEvent::class.java)
+    AnchorLevelChange(AnchorUpgradeEvent::class.java)
     /** 用户升级 **/
     ,
     UserUpLevel(UserUpgradeEvent::class.java),

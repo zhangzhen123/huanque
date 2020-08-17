@@ -82,12 +82,6 @@
             <!--tools:visibility="visible"-->
             <!--android:visibility="gone" />-->
         </LinearLayout>
-
-        <!--主播升级动画-->
-        <com.julun.huanque.core.widgets.live.message.AnchorsLevelUpView
-            android:id="@+id/anchor_level_up_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
         <!-- 各种高级动画（中奖、开守护等） -->
         <com.julun.huanque.core.widgets.live.HighlyAnimationView
             android:id="@+id/highlyAnimation"
