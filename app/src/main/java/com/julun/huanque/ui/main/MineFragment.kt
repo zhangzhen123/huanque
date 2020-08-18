@@ -130,7 +130,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     }
 
     private fun loadData(info: UserDetailInfo) {
-        headImage.loadImage(info.userBasic.headPic+ BusiConstant.OSS_160, 60f, 60f)
+        headImage.loadImage(info.userBasic.headPic + BusiConstant.OSS_160, 60f, 60f)
         tvNickName.text = info.userBasic.nickname
         tvUserId.text = "欢鹊ID: ${info.userBasic.userId}"
         tvQueBi.text = "${info.userBasic.beans}"
@@ -183,7 +183,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     tvSex.setCompoundDrawables(drawable, null, null, null)
                 }
                 tvSex.backgroundResource = com.julun.huanque.core.R.drawable.bg_shape_mine_sex_female
-                tvSex.text="${info.userBasic.age}"
+                tvSex.text = "${info.userBasic.age}"
             }
             else -> {
                 val drawable = ContextCompat.getDrawable(requireContext(), com.julun.huanque.core.R.mipmap.icon_sex_male_white)
@@ -192,7 +192,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     tvSex.setCompoundDrawables(drawable, null, null, null)
                 }
                 tvSex.backgroundResource = com.julun.huanque.core.R.drawable.bg_shape_mine_sex_male
-                tvSex.text="${info.userBasic.age}"
+                tvSex.text = "${info.userBasic.age}"
             }
         }
 
@@ -263,7 +263,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             }
         }
         ivSetting.onClickNew {
-            requireActivity().startActivity<SettingActivity>()
+            val royalLevel = mViewModel.userInfo.value?.getT()?.userBasic?.royalLevel ?: 0
+            val act = requireActivity()
+            SettingActivity.newInstance(act, royalLevel)
         }
         rlQueBi.onClickNew {
             requireActivity().startActivity<RechargeCenterActivity>()
@@ -290,7 +292,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         }
         tvService.onClickNew {
             val extra = Bundle()
-            extra.putString(BusiConstant.WEB_URL, "http://q.url.cn/s/raPDfcm?_type=wpa")
+            extra.putString(BusiConstant.WEB_URL, mViewModel.userInfo.value?.getT()?.customerUrl ?: "")
             var intent = Intent(requireActivity(), WebActivity::class.java)
             intent.putExtras(extra)
             startActivity(intent)
@@ -356,11 +358,12 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun receivePayResult(result: PayResultEvent) {
-        logger.info("收到支付结果：${result.payResult} type=${result.payType}" )
+        logger.info("收到支付结果：${result.payResult} type=${result.payType}")
         if (result.payResult == PayResult.PAY_SUCCESS) {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
     }
+
     private val infoTabAdapter: BaseQuickAdapter<UserDataTab, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<UserDataTab, BaseViewHolder>(R.layout.item_tab_user_info) {
             override fun onCreateDefViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

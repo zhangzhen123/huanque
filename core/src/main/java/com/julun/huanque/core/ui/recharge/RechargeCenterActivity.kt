@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.recharge
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
@@ -122,11 +123,12 @@ class RechargeCenterActivity : BaseActivity() {
                 ToastUtils.show("客服信息获取失败~！")
                 return@onClickNew
             }
-            //todo
-//            ARouter.getInstance().build(ARouterConstant.WEB_ACTIVITY)
-//                    .withString(BusiConstant.PUSH_URL, mViewModel?.customerUrl)
-//                    .withBoolean(IntentParamKey.EXTRA_FLAG_DO_NOT_GO_HOME.name, true)
-//                    .navigation()
+
+            val extra = Bundle()
+            extra.putString(BusiConstant.WEB_URL, mHelpUrl)
+            var intent = Intent(this, WebActivity::class.java)
+            intent.putExtras(extra)
+            startActivity(intent)
 
         }
 

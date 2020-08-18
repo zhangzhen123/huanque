@@ -84,6 +84,9 @@ object ParamConstant {
     //默认类型
     const val DEFAULT_TYPE = "DEFAULT_TYPE"
 
+    //贵族等级
+    const val RoyalLevel = "RoyalLevel"
+
 
     //UUID
     const val UUID = "UUID"

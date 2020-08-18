@@ -153,16 +153,56 @@
                 app:layout_constraintRight_toRightOf="@id/view_juvenile"
                 app:layout_constraintTop_toTopOf="@id/view_juvenile" />
 
+            <View
+                android:id="@+id/view_divider"
+                android:layout_width="0px"
+                android:layout_height="5dp"
+                android:background="#F3F4F5"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_juvenile" />
+
+            <View
+                android:id="@+id/view_anchor_agreement"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_divider" />
+
+            <TextView
+                android:id="@+id/tv_anchor_agreement"
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:text="主播管理规范"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_anchor_agreement"
+                app:layout_constraintLeft_toLeftOf="@id/view_anchor_agreement"
+                app:layout_constraintTop_toTopOf="@id/view_anchor_agreement" />
+
+            <ImageView
+                android:id="@+id/iv_anchor_agreement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_arrow_msg_setting"
+                app:layout_constraintBottom_toBottomOf="@id/view_anchor_agreement"
+                app:layout_constraintRight_toRightOf="@id/view_anchor_agreement"
+                app:layout_constraintTop_toTopOf="@id/view_anchor_agreement" />
+
 
             <View
                 android:id="@+id/view_user_agreement"
                 android:layout_width="0px"
                 android:layout_height="54dp"
-                android:layout_marginTop="5dp"
                 android:background="@color/white"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_juvenile" />
+                app:layout_constraintTop_toBottomOf="@id/view_anchor_agreement" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -186,35 +226,35 @@
                 app:layout_constraintTop_toTopOf="@id/view_user_agreement" />
 
 
-<!--            <View-->
-<!--                android:id="@+id/view_user_autonomy_agreement"-->
-<!--                android:layout_width="0px"-->
-<!--                android:layout_height="54dp"-->
-<!--                android:background="@color/white"-->
-<!--                app:layout_constraintLeft_toLeftOf="parent"-->
-<!--                app:layout_constraintRight_toRightOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/view_user_agreement" />-->
+            <!--            <View-->
+            <!--                android:id="@+id/view_user_autonomy_agreement"-->
+            <!--                android:layout_width="0px"-->
+            <!--                android:layout_height="54dp"-->
+            <!--                android:background="@color/white"-->
+            <!--                app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--                app:layout_constraintRight_toRightOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/view_user_agreement" />-->
 
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="0px"-->
-<!--                android:layout_marginLeft="15dp"-->
-<!--                android:gravity="center"-->
-<!--                android:text="用户自律公约"-->
-<!--                android:textColor="@color/black_333"-->
-<!--                android:textSize="@dimen/sp_16"-->
-<!--                app:layout_constraintBottom_toBottomOf="@id/view_user_autonomy_agreement"-->
-<!--                app:layout_constraintLeft_toLeftOf="@id/view_user_autonomy_agreement"-->
-<!--                app:layout_constraintTop_toTopOf="@id/view_user_autonomy_agreement" />-->
+            <!--            <TextView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="0px"-->
+            <!--                android:layout_marginLeft="15dp"-->
+            <!--                android:gravity="center"-->
+            <!--                android:text="用户自律公约"-->
+            <!--                android:textColor="@color/black_333"-->
+            <!--                android:textSize="@dimen/sp_16"-->
+            <!--                app:layout_constraintBottom_toBottomOf="@id/view_user_autonomy_agreement"-->
+            <!--                app:layout_constraintLeft_toLeftOf="@id/view_user_autonomy_agreement"-->
+            <!--                app:layout_constraintTop_toTopOf="@id/view_user_autonomy_agreement" />-->
 
-<!--            <ImageView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginRight="15dp"-->
-<!--                android:src="@mipmap/icon_arrow_msg_setting"-->
-<!--                app:layout_constraintBottom_toBottomOf="@id/view_user_autonomy_agreement"-->
-<!--                app:layout_constraintRight_toRightOf="@id/view_user_autonomy_agreement"-->
-<!--                app:layout_constraintTop_toTopOf="@id/view_user_autonomy_agreement" />-->
+            <!--            <ImageView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginRight="15dp"-->
+            <!--                android:src="@mipmap/icon_arrow_msg_setting"-->
+            <!--                app:layout_constraintBottom_toBottomOf="@id/view_user_autonomy_agreement"-->
+            <!--                app:layout_constraintRight_toRightOf="@id/view_user_autonomy_agreement"-->
+            <!--                app:layout_constraintTop_toTopOf="@id/view_user_autonomy_agreement" />-->
 
             <View
                 android:id="@+id/view_privacy_agreement"
