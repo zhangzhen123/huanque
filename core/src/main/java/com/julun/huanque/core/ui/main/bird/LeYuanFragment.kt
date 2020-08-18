@@ -31,11 +31,12 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         initViewModel()
         iv_bottom_03.onClickNew {
             iv_bottom_03.isEnabled = false
-            mViewModel.buyBird(programId)
+            mViewModel.buyBird()
         }
     }
 
     private fun initViewModel() {
+        mViewModel.programId=programId
         mViewModel.homeInfo.observe(this, Observer {
             if (it.isSuccess()) {
                 renderData(it.getT())
@@ -76,7 +77,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     }
 
     override fun lazyLoadData() {
-        mViewModel.queryHome(programId = programId)
+        mViewModel.queryHome()
     }
 
 }
