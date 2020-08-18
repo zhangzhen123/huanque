@@ -149,3 +149,5 @@ class QueryUnreadCountEvent(var player: Boolean)
  * @param player 是否是直播间
  */
 class UnreadCountEvent(var unreadCount: Int,var  player: Boolean)
+
+class ImagePositionEvent(var position:Int)

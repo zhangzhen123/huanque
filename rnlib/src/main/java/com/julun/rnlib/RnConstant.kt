@@ -69,4 +69,7 @@ object RnConstant {
     //消息页面
     const val MESSAGE_PAGE:String="MessagePage"
 
+    //图片查看
+    const val IMAGE_PAGE:String="PicturePreviewPage"
+
 }
