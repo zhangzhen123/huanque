@@ -10,3 +10,5 @@ package com.julun.huanque.common.bean.forms
  *
  */
 class RecomListForm(var offset: Int? = null)
+
+class BuyBirdForm(var programId: Long? = null,var upgradeLevel:Int )

@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <View
+        android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/bg_bird_air"
@@ -32,7 +33,9 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <View
+        android:id="@+id/view3"
         android:layout_width="@dimen/dimen_63"
         android:layout_height="@dimen/dimen_33"
         android:layout_marginStart="@dimen/dimen_50"
@@ -50,15 +53,109 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_cai_shen"
+        android:layout_width="@dimen/dimen_80"
+        android:layout_height="@dimen/dimen_80"
+        android:layout_marginTop="@dimen/dimen_40"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_cai_shen"
+        android:layout_width="@dimen/dimen_30"
+        android:layout_height="@dimen/dimen_58"
+        android:layout_marginStart="@dimen/dimen_68"
+        android:layout_marginBottom="@dimen/dimen_30"
+        android:src="@mipmap/icon_bird_tag_caishen"
+        app:layout_constraintBottom_toBottomOf="@+id/sdv_cai_shen"
+        app:layout_constraintStart_toStartOf="@+id/sdv_cai_shen" />
+
+
+    <ImageView
+        android:id="@+id/iv_tag_niu_lang"
+        android:layout_width="@dimen/dimen_30"
+        android:layout_height="@dimen/dimen_58"
+        android:layout_marginTop="@dimen/dimen_4"
+        android:src="@mipmap/icon_bird_tag_niulang"
+        app:layout_constraintEnd_toStartOf="@+id/sdv_bird_niu_lang"
+        app:layout_constraintStart_toStartOf="@+id/sdv_bird_niu_lang"
+        app:layout_constraintTop_toTopOf="@+id/sdv_bird_niu_lang" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird_niu_lang"
+        android:layout_width="@dimen/dimen_80"
+        android:layout_height="@dimen/dimen_80"
+        android:layout_marginTop="@dimen/dimen_36"
+        app:layout_constraintEnd_toStartOf="@+id/sdv_cai_shen"
+        app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird_zhi_nv"
+        android:layout_width="@dimen/dimen_80"
+        android:layout_height="@dimen/dimen_80"
+        android:layout_marginStart="@dimen/dimen_55"
+        android:layout_marginTop="@dimen/dimen_55"
+        app:layout_constraintStart_toStartOf="@+id/sdv_cai_shen"
+        app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
+
+    <ImageView
+        android:id="@+id/iv_tag_zhi_nv"
+        android:layout_width="@dimen/dimen_30"
+        android:layout_height="@dimen/dimen_58"
+        android:layout_marginStart="@dimen/dimen_72"
+        android:src="@mipmap/icon_bird_tag_zhinv"
+        app:layout_constraintStart_toStartOf="@+id/sdv_bird_zhi_nv"
+        app:layout_constraintTop_toTopOf="@+id/sdv_bird_zhi_nv" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird_shen_mi"
+        android:layout_width="@dimen/dimen_80"
+        android:layout_height="@dimen/dimen_80"
+        android:layout_marginStart="@dimen/dimen_57"
+        android:layout_marginTop="@dimen/dimen_58"
+        app:layout_constraintStart_toStartOf="@+id/sdv_bird_zhi_nv"
+        app:layout_constraintTop_toTopOf="@+id/sdv_bird_zhi_nv" />
+
+    <ImageView
+        android:id="@+id/iv_tag_shen_mi"
+        android:layout_width="@dimen/dimen_30"
+        android:layout_height="@dimen/dimen_58"
+        android:layout_marginStart="@dimen/dimen_68"
+        android:src="@mipmap/icon_bird_tag_shenmi"
+        app:layout_constraintStart_toStartOf="@+id/sdv_bird_shen_mi"
+        app:layout_constraintTop_toTopOf="@+id/sdv_bird_shen_mi" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird_hong_bao"
+        android:layout_width="@dimen/dimen_80"
+        android:layout_height="@dimen/dimen_80"
+        android:layout_marginStart="@dimen/dimen_22"
+        android:layout_marginTop="@dimen/dimen_3"
+        app:layout_constraintStart_toStartOf="@+id/sdv_bird_niu_lang"
+        app:layout_constraintTop_toBottomOf="@+id/sdv_bird_niu_lang" />
+
+    <ImageView
+        android:id="@+id/iv_tag_hong_bao"
+        android:layout_width="@dimen/dimen_30"
+        android:layout_height="@dimen/dimen_58"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:layout_marginEnd="@dimen/dimen_72"
+        android:src="@mipmap/icon_bird_tag_hongbao"
+        app:layout_constraintEnd_toEndOf="@+id/sdv_bird_hong_bao"
+        app:layout_constraintTop_toTopOf="@+id/sdv_bird_hong_bao" />
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="53dp"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/dimen_26"
         android:layout_marginStart="@dimen/dimen_23"
         android:layout_marginTop="@dimen/dimen_29"
         android:background="@drawable/bg_shape_bird_cash"
         android:gravity="center"
+        android:minWidth="@dimen/dimen_53"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -73,13 +170,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="99999"
             android:textColor="@color/white"
-            android:textSize="9sp" />
+            android:textSize="9sp"
+            tools:text="99.99元" />
 
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="@dimen/dimen_21"
         android:layout_height="@dimen/dimen_26"
         android:layout_marginStart="7dp"
@@ -89,17 +187,111 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
+    <ImageView
+        android:id="@+id/iv_bird_guide"
+        android:layout_width="@dimen/dimen_46"
+        android:layout_height="@dimen/dimen_46"
+        android:layout_marginTop="@dimen/dimen_24"
+        android:layout_marginEnd="@dimen/dimen_7"
+        android:src="@mipmap/icon_bird_guide"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_bird_packet"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#416298"
         android:paddingStart="@dimen/dimen_12"
-        android:paddingTop="@dimen/dimen_40"
+        android:paddingTop="@dimen/dimen_34"
         android:paddingEnd="@dimen/dimen_12"
         android:paddingBottom="@dimen/dimen_86"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bird_tree" />
+
+    <View
+        android:id="@+id/divide"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_5"
+        android:background="#37578A"
+        app:layout_constraintTop_toTopOf="@+id/rv_bird_packet" />
+
+    <LinearLayout
+        android:id="@+id/iv_balance_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="62dp"
+        android:background="@mipmap/bg_bird_balance"
+        android:minWidth="146dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/divide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divide">
+
+        <TextView
+            android:id="@+id/tv_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_27"
+            android:layout_marginStart="@dimen/dimen_5"
+            android:layout_marginTop="@dimen/dimen_9"
+            android:layout_marginEnd="@dimen/dimen_26"
+            android:drawableStart="@mipmap/icon_bird_coin"
+            android:drawablePadding="@dimen/dimen_5"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            tools:text="余额100000000金币" />
+
+        <TextView
+            android:id="@+id/tv_balance_produce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:gravity="center"
+            android:textColor="#FFF35B"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            tools:text="1500000金币/秒" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_shop"
+        android:layout_width="@dimen/dimen_58"
+        android:layout_height="@dimen/dimen_58"
+        android:src="@mipmap/icon_bird_shop"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_balance_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_balance_bg" />
+
+    <ImageView
+        android:id="@+id/iv_task"
+        android:layout_width="@dimen/dimen_58"
+        android:layout_height="@dimen/dimen_58"
+        android:src="@mipmap/icon_bird_task"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_balance_bg"
+        app:layout_constraintEnd_toStartOf="@+id/iv_shop"
+        app:layout_constraintTop_toTopOf="@+id/iv_balance_bg" />
+
+    <TextView
+        android:id="@+id/tv_task_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_14"
+        android:background="@drawable/bg_live_red_point"
+        android:gravity="center"
+        android:paddingStart="@dimen/dimen_3"
+        android:paddingEnd="@dimen/dimen_3"
+        android:textColor="@color/white"
+        android:textSize="9sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/iv_task"
+        app:layout_constraintStart_toEndOf="@+id/iv_task"
+        app:layout_constraintTop_toTopOf="@+id/iv_task"
+        tools:text="领取"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/iv_bottom_01"
@@ -120,12 +312,11 @@
         app:layout_constraintEnd_toStartOf="@+id/iv_bottom_02"
         app:layout_constraintStart_toEndOf="@+id/iv_bottom_01" />
 
-    <ImageView
-        android:id="@+id/iv_bottom_bird"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bottom_bird"
         android:layout_width="@dimen/dimen_86"
         android:layout_height="@dimen/dimen_86"
         android:layout_marginEnd="@dimen/dimen_9"
-        android:src="@mipmap/icon_bird_bottom_bird"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/iv_bottom_03" />
 
@@ -149,6 +340,7 @@
         tools:text="999" />
 
     <TextView
+        android:id="@+id/tv_price_level"
         android:layout_width="@dimen/dimen_53"
         android:layout_height="@dimen/dimen_14"
         android:layout_marginStart="@dimen/dimen_5"
