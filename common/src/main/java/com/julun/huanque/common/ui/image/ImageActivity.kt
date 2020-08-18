@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.TextView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.R
+import com.julun.huanque.common.bean.events.ImagePositionEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.logger
@@ -18,6 +19,7 @@ import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
 import java.io.Serializable
 
@@ -112,7 +114,7 @@ class ImageActivity : ImagePreviewActivity() {
 
             }
 
-            ImageActivityFrom.OTHER -> {
+            ImageActivityFrom.RN -> {
 
             }
 
@@ -128,6 +130,13 @@ class ImageActivity : ImagePreviewActivity() {
 
     }
 
+    override fun finish() {
+        val currentPosition=images.indexOf(currentMedia)
+        if(currentPosition!=-1){
+            EventBus.getDefault().post(ImagePositionEvent(currentPosition))
+        }
+        super.finish()
+    }
 
     override fun onDestroy() {
 

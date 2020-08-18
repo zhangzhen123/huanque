@@ -17,13 +17,11 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
 import com.julun.huanque.common.base.dialog.LoadingDialog
-import com.julun.huanque.common.bean.events.RHVerifyResult
-import com.julun.huanque.common.bean.events.RPVerifyResult
-import com.julun.huanque.common.bean.events.SendRNEvent
-import com.julun.huanque.common.bean.events.VoiceSignEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.FileUtils
 import com.julun.huanque.common.utils.NetUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -614,6 +612,22 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     finish()
                 }
 
+                RnConstant.IMAGE_PAGE ->{
+                    var list= arrayListOf<String>()
+                    var index=0
+                    if (params?.hasKey("index") == true) {
+                        index=params.getInt("index")
+                    }
+                    if (params?.hasKey("list") == true) {
+                        val rrl=params.getArray("list")?:return@runOnUiThread
+                        for (i in 0 until rrl.size()) {
+                            list.add(rrl.getMap(i)?.getString("coverPic")?:"")
+                        }
+                    }
+
+                    ImageActivity.start(this,index,list,from = ImageActivityFrom.RN)
+                }
+
             }
 
         }
@@ -666,5 +680,18 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     fun receiveRNEvent(event: SendRNEvent) {
         logger("收到发给rn的消息：${event.action}")
         RnManager.sendEvent(event.action, event.map)
+    }
+
+
+    /**
+     * 原生主动发送变更消息给RN
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveImagePosition(event: ImagePositionEvent) {
+        logger("收到查看图片的位置的消息：${event.position}")
+        if(event.position!=-1){
+            RnManager.promiseMap[RnConstant.IMAGE_PAGE]?.resolve(event.position)
+        }
+
     }
 }

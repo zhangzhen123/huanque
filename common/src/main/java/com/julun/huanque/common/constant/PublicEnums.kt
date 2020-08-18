@@ -557,7 +557,7 @@ object ImageActivityOperate {
 object ImageActivityFrom {
     const val CHAT: String = "chat"
     const val HOME: String = "home"
-    const val OTHER: String = "other"
+    const val RN: String = "rn"
 }
 /**
  * 隐私权限list
