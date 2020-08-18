@@ -744,6 +744,12 @@ class PlayerActivity : BaseActivity() {
         playerMessageViewModel.privateConversationData.value = event
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun subscribeChange(event: UserInfoChangeEvent) {
+        val followBean = FollowResultBean(follow = event.follow, userId = event.userId)
+        viewModel.followStatusData.value = followBean.convertRtData()
+    }
+
     /**
      * 统一的eventBus处理入口方法
      */

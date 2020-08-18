@@ -63,7 +63,7 @@ class MessageBlockEvent()
 /**
  * 打开私聊页
  */
-class OpenPrivateChatRoomEvent(var userId: Long, var nickname: String,var headPic: String)
+class OpenPrivateChatRoomEvent(var userId: Long, var nickname: String, var headPic: String)
 
 /**
  * 折叠陌生人消息变化
@@ -74,8 +74,11 @@ class FoldStrangerMessageEvent()
  * 用户数据变化通知
  * @param userId 变化的用户ID
  * @param stranger 陌生人状态
+ * @param follow 关注状态
  */
-class UserInfoChangeEvent(val userId: Long = 0L, val stranger: Boolean = false)
+class UserInfoChangeEvent(val userId: Long = 0L, val stranger: Boolean = false,val follow: String = "") : Serializable{
+    constructor(userId: Long = 0L, stranger: Boolean = false) : this(userId,stranger,"")
+}
 
 
 class UserInfoEditEvent(
@@ -148,6 +151,6 @@ class QueryUnreadCountEvent(var player: Boolean)
  * @param unreadCount 消息未读数
  * @param player 是否是直播间
  */
-class UnreadCountEvent(var unreadCount: Int,var  player: Boolean)
+class UnreadCountEvent(var unreadCount: Int, var player: Boolean)
 
-class ImagePositionEvent(var position:Int)
+class ImagePositionEvent(var position: Int)

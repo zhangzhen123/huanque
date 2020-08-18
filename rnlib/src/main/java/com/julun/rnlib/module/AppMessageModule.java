@@ -41,61 +41,68 @@ public class AppMessageModule extends ReactContextBaseJavaModule {
     public void sendAction(String type, ReadableMap params, Promise promise) {
         try {
             switch (type) {
-                case RnConstant.FOLLOW_USER_CHANGE: {
-                    // Boolean follow = params.getBoolean("follow");
-                    int userId = 0;
-                    if (params.hasKey("userId")) {
-                        userId = params.getInt("userId");
-                    }
-                    String stranger = null;
-                    if (params.hasKey("stranger")) {
-                        stranger = params.getString("stranger");
-                    }
-                    if (stranger != null) {
-                        GlobalUtils.INSTANCE.updateStrangerData(userId, stranger.equals(BusiConstant.True));
-                        new UserInfoChangeEvent();
-                        EventBus.getDefault().post(new UserInfoChangeEvent((long) userId, stranger.equals(BusiConstant.True)));
-                    }
-
-                    break;
+            case RnConstant.FOLLOW_USER_CHANGE: {
+                // Boolean follow = params.getBoolean("follow");
+                int userId = 0;
+                if (params.hasKey("userId")) {
+                    userId = params.getInt("userId");
                 }
-                case RnConstant.MY_PROFILE_CHANGE: {
-                    ULog.Companion.i("params=" + params);
-                    int userId = 0;
-                    if (params.hasKey("userId")) {
-                        userId = params.getInt("userId");
-                    }
-                    boolean stranger = false;
-                    if (params.hasKey("stranger")) {
-                        stranger = params.getBoolean("stranger");
-                    }
-                    String nickname = "";
-                    if (params.hasKey("nickname")) {
-                        nickname = params.getString("nickname");
-                        SessionUtils.INSTANCE.setNickName(nickname);
-                    }
-                    String headPic = "";
-                    if (params.hasKey("headPic")) {
-                        headPic = params.getString("headPic");
-                    }
-                    ReadableArray picList = null;
-                    if (params.hasKey("picList")) {
-                        picList = params.getArray("picList");
-                    }
-
-                    ArrayList<String> list = new ArrayList<>();
-                    if (picList != null) {
-                        for (int i = 0; i < picList.size(); i++) {
-                            list.add(picList.getString(i));
-                        }
-
-                    }
-                    EventBus.getDefault().post(new UserInfoEditEvent(userId, stranger, nickname, headPic, list));
-                    break;
+                String stranger = null;
+                if (params.hasKey("stranger")) {
+                    stranger = params.getString("stranger");
                 }
-                default: {
+                String follow = null;
+                if (params.hasKey("follow")) {
+                    follow = params.getString("follow");
+                }
+                if (follow == null) {
+                    follow = "";
+                }
+                if (stranger == null) {
+                    stranger = "";
+                }
+                GlobalUtils.INSTANCE.updateStrangerData(userId, stranger.equals(BusiConstant.True));
+                EventBus.getDefault().post(new UserInfoChangeEvent((long) userId, stranger.equals(BusiConstant.True), follow));
+
+                break;
+            }
+            case RnConstant.MY_PROFILE_CHANGE: {
+                ULog.Companion.i("params=" + params);
+                int userId = 0;
+                if (params.hasKey("userId")) {
+                    userId = params.getInt("userId");
+                }
+                boolean stranger = false;
+                if (params.hasKey("stranger")) {
+                    stranger = params.getBoolean("stranger");
+                }
+                String nickname = "";
+                if (params.hasKey("nickname")) {
+                    nickname = params.getString("nickname");
+                    SessionUtils.INSTANCE.setNickName(nickname);
+                }
+                String headPic = "";
+                if (params.hasKey("headPic")) {
+                    headPic = params.getString("headPic");
+                }
+                ReadableArray picList = null;
+                if (params.hasKey("picList")) {
+                    picList = params.getArray("picList");
+                }
+
+                ArrayList<String> list = new ArrayList<>();
+                if (picList != null) {
+                    for (int i = 0; i < picList.size(); i++) {
+                        list.add(picList.getString(i));
+                    }
 
                 }
+                EventBus.getDefault().post(new UserInfoEditEvent(userId, stranger, nickname, headPic, list));
+                break;
+            }
+            default: {
+
+            }
             }
 
         } catch (Exception e) {
