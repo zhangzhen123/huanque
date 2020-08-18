@@ -335,7 +335,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
         }
         mUserIdForRecharge = obj.userId
 
-        mActivityViewModel.getHelpUrl.value = "${obj.helpUrl}"
+        mActivityViewModel.getHelpUrl.value = "${obj.customerUrl}"
 
 //        var payTypes = ""
 //        if (!TextUtils.isEmpty(obj.payTypes)) {

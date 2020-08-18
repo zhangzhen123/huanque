@@ -4,12 +4,14 @@ import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothProfile
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -73,13 +75,16 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     //音频播放器
     private var mPlayer: MediaPlayer? = null
 
+    private val mAudioListener = AudioManager.OnAudioFocusChangeListener {
+        logger.info("Voice focusChange = $it")
+    }
+
     override fun getLayoutId() = R.layout.act_voice_chat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
         ll_hands_free.isEnabled = getEarphoneLinkStatus()
-        requestAudioFocus()
     }
 
     /**
@@ -87,12 +92,12 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      */
     private fun requestAudioFocus() {
         am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
-        val listener = AudioManager.OnAudioFocusChangeListener { }
-        am?.requestAudioFocus(
-            listener,  // Use the music stream.
-            AudioManager.STREAM_VOICE_CALL,  // Request permanent focus.
-            AudioManager.AUDIOFOCUS_GAIN
+        val result = am?.requestAudioFocus(
+            mAudioListener,  // Use the music stream.
+            AudioManager.STREAM_SYSTEM,  // Request permanent focus.
+            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
         )
+        logger.info("Voice result = $result")
     }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -100,7 +105,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         StatusBarUtil.setTransparent(this)
         initViewModel()
         mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
-
+        sendMediaButton()
+        requestAudioFocus()
         val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
         if (netCallBean == null) {
             ToastUtils.show("没有对方数据")
@@ -253,7 +259,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         } else {
             MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }
         }
-        mPlayer?.start()
+//        mPlayer?.start()
+
+        am?.mode = AudioManager.MODE_NORMAL
+        am?.isSpeakerphoneOn = true;
     }
 
     override fun initEvents(rootView: View) {
@@ -839,11 +848,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 释放音频焦点
      */
     private fun releaseVideoFocus() {
-        val listener = AudioManager.OnAudioFocusChangeListener { }
-        am?.requestAudioFocus(
-            listener,  // Use the music stream.
-            AudioManager.STREAM_VOICE_CALL,  // Request permanent focus.
-            AudioManager.AUDIOFOCUS_GAIN
+        am?.abandonAudioFocus(
+            mAudioListener
         )
     }
 
@@ -857,7 +863,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 //        super.onBackPressed()
     }
 
-    private var showToast = true
+    private var showToast = false
 
     /**
      * 获取耳机链接状态
@@ -865,7 +871,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     private fun getEarphoneLinkStatus(): Boolean {
         am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
         am?.mode = AudioManager.MODE_IN_COMMUNICATION
-//获取当前使用的麦克风，设置媒体播放麦克风
 //获取当前使用的麦克风，设置媒体播放麦克风
         if (am?.isWiredHeadsetOn == true) {
             logger.info("Voice 有线耳机已连接")
@@ -902,4 +907,19 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             return false
         }
     }
+
+    /**
+     * 禁用其他音效
+     */
+    private fun sendMediaButton() {
+        am?.mode = AudioManager.MODE_IN_COMMUNICATION
+        //先判断后台是否再播放音乐
+        if (am?.isMusicActive == true) {
+            val keyEvent = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_CLOSE);
+            val intent = Intent(Intent.ACTION_MEDIA_BUTTON);
+            intent.putExtra(Intent.EXTRA_KEY_EVENT, keyEvent);
+            sendOrderedBroadcast(intent, null);
+        }
+    }
+
 }

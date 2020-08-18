@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.withdraw
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
@@ -26,6 +27,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
@@ -114,8 +116,18 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
             startCheckAndApply()
         }
         tv_helper.onClickNew {
-            //todo
-
+            val extra = Bundle()
+            extra.putString(BusiConstant.WEB_URL, mViewModel.withdrawData.value?.getT()?.customerUrl ?: "")
+            var intent = Intent(this, WebActivity::class.java)
+            intent.putExtras(extra)
+            startActivity(intent)
+        }
+        tv_helper_content.onClickNew {
+            val extra = Bundle()
+            extra.putString(BusiConstant.WEB_URL, mViewModel.withdrawData.value?.getT()?.customerUrl ?: "")
+            var intent = Intent(this, WebActivity::class.java)
+            intent.putExtras(extra)
+            startActivity(intent)
         }
 
     }
@@ -164,10 +176,10 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
     private fun autoSelectWdType() {
         //都授权时 使用上次提现的方式
         if (wxAuthorized && aliAuthorized) {
-            val sType=StorageHelper.getWithdrawType()
-            currentWithdrawType = if(sType.isNotEmpty()){
+            val sType = StorageHelper.getWithdrawType()
+            currentWithdrawType = if (sType.isNotEmpty()) {
                 sType
-            }else{
+            } else {
                 WithdrawType.WXWithdraw
             }
         } else {
@@ -177,7 +189,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
                 currentWithdrawType = WithdrawType.AliWithdraw
             }
         }
-        if(currentWithdrawType.isNotEmpty()){
+        if (currentWithdrawType.isNotEmpty()) {
             btn_ensure.isEnabled = true
             wdViewSelect()
         }

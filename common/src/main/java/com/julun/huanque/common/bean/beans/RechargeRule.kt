@@ -14,7 +14,9 @@ data class RechargeRespDto(
     var platformBeans: Long = 0,
     var rechargeBeans: Long = 0,
     var tplList: MutableList<RechargeTpl> = mutableListOf(),
-    var userId: Long = 0L
+    var userId: Long = 0L,
+    //客服地址
+    var customerUrl: String = ""
 )
 
 data class RechargeTpl(
@@ -23,9 +25,10 @@ data class RechargeTpl(
     var moneyValue: Long = 0,
     var rcvBeans: String = "",
     var tplId: Int = 0,
-    var discountType:String="",
-    var discountTag:String=""
+    var discountType: String = "",
+    var discountTag: String = ""
 )
+
 /**
  * 充值页广告数据
  * @author WanZhiYuan

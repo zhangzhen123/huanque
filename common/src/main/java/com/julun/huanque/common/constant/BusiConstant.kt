@@ -851,4 +851,6 @@ object Agreement{
     const val UserAgreement = "https://cdn.ihuanque.com/protocol/UserReg.html"
     //隐私协议
     const val PrivacyAgreement = "https://cdn.ihuanque.com/protocol/PrivacyProtect.html"
+    //主播管理规范
+    const val AnchorAgreement = "https://cdn.ihuanque.com/protocol/AnchorManage.html"
 }
