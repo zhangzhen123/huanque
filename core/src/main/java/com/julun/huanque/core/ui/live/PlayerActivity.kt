@@ -452,6 +452,10 @@ class PlayerActivity : BaseActivity() {
                 cur_live_bg.hide()
             } else {
                 cur_live_bg.show()
+                if (currentLiveBgUrl?.isNotEmpty() != true) {
+                    currentLiveBgUrl = it.prePic
+                    liveViewManager.loadBlurImage(cur_live_bg, it.prePic)
+                }
             }
 
 //            conversationListViewModel?.anchorData = it

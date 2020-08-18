@@ -413,9 +413,28 @@
                         app:layout_constraintLeft_toRightOf="@+id/iv_royal_level"
                         app:layout_constraintTop_toTopOf="@+id/iv_royal_level" />
 
+                    <TextView
+                        android:id="@+id/tv_royal_privilege"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dimen_6"
+                        android:layout_marginRight="@dimen/dimen_6"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="查看特权"
+                        android:textColor="@color/black_999"
+                        android:textSize="12sp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/sdv_royal_level"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:visibility="visible" />
+
+
                     <com.facebook.drawee.view.SimpleDraweeView
                         android:id="@+id/sdv_royal_level"
-                        android:layout_width="50dp"
+                        android:layout_width="55dp"
                         android:layout_height="@dimen/dimen_16"
                         android:layout_marginStart="@dimen/dimen_6"
                         android:layout_marginLeft="@dimen/dimen_6"
@@ -491,7 +510,7 @@
 
                     <com.facebook.drawee.view.SimpleDraweeView
                         android:id="@+id/sdv_author_level"
-                        android:layout_width="50dp"
+                        android:layout_width="55dp"
                         android:layout_height="@dimen/dimen_16"
                         android:layout_marginStart="@dimen/dimen_6"
                         android:layout_marginLeft="@dimen/dimen_6"

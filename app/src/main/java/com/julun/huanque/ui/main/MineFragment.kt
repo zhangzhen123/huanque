@@ -19,6 +19,7 @@ import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.activity.SettingActivity
 import com.julun.huanque.common.base.BaseVMFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
@@ -136,12 +137,20 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         tvQueBi.text = "${info.userBasic.beans}"
         tvLingQian.text = info.userBasic.cash
 
-        sdv_wealth.loadImage(info.userBasic.userLevelIcon, 50f, 16f)
+        sdv_wealth.loadImage(info.userBasic.userLevelIcon, 55f, 16f)
 
-        sdv_royal_level.loadImage(info.userBasic.royalPic, 50f, 16f)
+        if (info.userBasic.royalLevel > 0) {
+            tv_royal_privilege.hide()
+            sdv_royal_level.show()
+            sdv_royal_level.loadImage(info.userBasic.royalPic, 55f, 16f)
+        } else {
+            tv_royal_privilege.show()
+            sdv_royal_level.hide()
+        }
+
         if (info.userBasic.anchorLevel > 0) {
             sdv_author_level.show()
-            sdv_author_level.loadImage(info.userBasic.anchorLevelPic, 50f, 16f)
+            sdv_author_level.loadImage(info.userBasic.anchorLevelPic, 55f, 16f)
         } else {
             tv_author_privilege.show()
         }
@@ -152,19 +161,6 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             ivReal.show()
         } else {
             tvCertification.show()
-            headImage.onClickNew {
-                ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
-//                mIRealNameService.startRealHead(requireActivity(), object : RealNameCallback {
-//                    override fun onCallback(status: String, des: String, percent: Int?) {
-//                        if (status == RealNameConstants.TYPE_SUCCESS) {
-//                            mViewModel.queryInfo(QueryType.REFRESH)
-//                        } else {
-//                            ToastUtils.show("认证失败，请稍后重试")
-//                        }
-//                    }
-//                })
-
-            }
             ivReal.hide()
         }
 //        sd_wealth.loadImage(info.userBasic.royalLevel)
@@ -231,6 +227,31 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     override fun initEvents(rootView: View) {
         clHeadRoot.onClickNew {
             RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
+        }
+
+        headImage.onClickNew {
+
+            if (mViewModel.userInfo.value?.getT()?.userBasic?.headRealPeople != true) {
+                //未处于头像认证状态
+                MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
+                    "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
+                    }), "真人照片未认证", okText = "去认证", noText = "取消"
+                )
+            }
+//            ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
+
+//                mIRealNameService.startRealHead(requireActivity(), object : RealNameCallback {
+//                    override fun onCallback(status: String, des: String, percent: Int?) {
+//                        if (status == RealNameConstants.TYPE_SUCCESS) {
+//                            mViewModel.queryInfo(QueryType.REFRESH)
+//                        } else {
+//                            ToastUtils.show("认证失败，请稍后重试")
+//                        }
+//                    }
+//                })
+
         }
 
         refreshView.setOnRefreshListener {
