@@ -267,6 +267,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tv_helper_content"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="提现遇到问题？点击联系"

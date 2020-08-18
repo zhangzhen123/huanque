@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_10"
                 android:text="选择举报类型"
-                android:textColor="@color/black_666"
+                android:textColor="@color/black_333"
                 android:textSize="14sp" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -51,7 +51,7 @@
                     android:layout_marginTop="@dimen/dimen_10"
                     android:layout_weight="1"
                     android:text="补充说明(必填)"
-                    android:textColor="@color/black_666"
+                    android:textColor="@color/black_333"
                     android:textSize="14sp" />
 
                 <TextView
@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10"
                     android:text="0/200"
-                    android:textColor="@color/text_enable"
+                    android:textColor="@color/black_666"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -70,13 +70,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_20"
-                android:background="@null"
+                android:background="@drawable/bg_report_input"
                 android:focusableInTouchMode="true"
                 android:gravity="start"
                 android:hint="请输入举报内容"
                 android:maxLength="201"
                 android:minHeight="@dimen/dimen_110"
-                android:textSize="@dimen/size_16" />
+                android:padding="@dimen/dimen_10"
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="wrap_content"

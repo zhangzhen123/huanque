@@ -19,14 +19,21 @@
         app:placeholderImageScaleType="centerCrop"
         app:roundAsCircle="true" />
 
+    <View
+        android:id="@+id/view_pointer"
+        android:layout_width="1px"
+        android:layout_height="1px"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="4dp"
+        app:layout_constraintLeft_toRightOf="@id/sdv_header"
+        app:layout_constraintTop_toBottomOf="@id/sdv_header" />
+
     <ImageView
         android:id="@+id/iv_huanyu"
         android:layout_width="22dp"
         android:layout_height="22dp"
-        android:layout_marginRight="4dp"
-        app:layout_constraintBottom_toBottomOf="@id/sdv_header"
-        app:layout_constraintLeft_toRightOf="@id/sdv_header"
-        app:layout_constraintRight_toRightOf="@id/sdv_header" />
+        app:layout_constraintBottom_toBottomOf="@id/view_pointer"
+        app:layout_constraintRight_toRightOf="@id/view_pointer" />
 
     <TextView
         android:id="@+id/tv_nickname"

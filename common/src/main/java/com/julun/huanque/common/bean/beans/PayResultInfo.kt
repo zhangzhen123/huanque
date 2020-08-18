@@ -60,7 +60,9 @@ data class WithdrawInfo(
     var typeList: List<WithdrawTypeBean> = listOf(),
     var withdrawCash: String = "",
     var protocolName: String = "",
-    var protocolUrl: String = ""
+    var protocolUrl: String = "",
+    //客服地址
+    var customerUrl: String = ""
 )
 
 data class WithdrawTpl(

@@ -1,5 +1,6 @@
 package com.julun.huanque.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -10,11 +11,14 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Agreement
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.manager.DataCleanManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.message.activity.MessageSettingActivity
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
 import kotlinx.android.synthetic.main.act_setting.*
@@ -25,10 +29,31 @@ import kotlinx.android.synthetic.main.act_setting.*
  *@描述 设置页面
  */
 class SettingActivity : BaseActivity() {
+
+    companion object {
+        fun newInstance(act: Activity, royalLevel: Int) {
+            val intent = Intent(act, SettingActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                intent.putExtra(ParamConstant.RoyalLevel, royalLevel)
+                act.startActivity(intent)
+            }
+        }
+    }
+
     override fun getLayoutId() = R.layout.act_setting
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         header_view.textTitle.text = "设置"
+        val royalLevel = intent?.getIntExtra(ParamConstant.RoyalLevel, 0) ?: 0
+        if (royalLevel > 0) {
+            view_anchor_agreement.show()
+            tv_anchor_agreement.show()
+            iv_anchor_agreement.show()
+        } else {
+            view_anchor_agreement.hide()
+            tv_anchor_agreement.hide()
+            iv_anchor_agreement.hide()
+        }
 
         if (!BuildConfig.DEBUG) {
             tvChange.hide()
@@ -109,7 +134,20 @@ class SettingActivity : BaseActivity() {
 
         view_privacy_agreement.onClickNew {
             //隐私协议
-            WebActivity.startWeb(this,Agreement.PrivacyAgreement)
+            WebActivity.startWeb(this, Agreement.PrivacyAgreement)
+        }
+
+        view_message_setting.onClickNew {
+            //消息设置
+            val intent = Intent(this, MessageSettingActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
+        }
+
+        view_anchor_agreement.onClickNew {
+            //主播管理规范
+            WebActivity.startWeb(this, Agreement.AnchorAgreement)
         }
     }
 }

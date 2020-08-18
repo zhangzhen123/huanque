@@ -64,4 +64,12 @@ object RnConstant {
     const val RECHARGE_PAGE:String="RechargePage"
     //欢鹊乐园
     const val HQ_PARADISE_PAGE:String="HQParadisePage"
+    //交友页面
+    const val MAKE_FRIENDS_PAGE:String="MakeFriendsPage"
+    //消息页面
+    const val MESSAGE_PAGE:String="MessagePage"
+
+    //图片查看
+    const val IMAGE_PAGE:String="PicturePreviewPage"
+
 }
