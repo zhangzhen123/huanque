@@ -266,6 +266,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
             tv_invite_code.text = posterInfo.inviteCode
             rv_share_contents.post {
                 currentSelect = sharePosterAdapter.getItemOrNull(0)
+                currentSelectView = sharePosterAdapter.getViewByPosition(0, R.id.item_invite_container)
                 sharePosterAdapter.notifyDataSetChanged()
             }
         }

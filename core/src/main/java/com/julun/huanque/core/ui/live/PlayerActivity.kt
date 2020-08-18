@@ -1534,15 +1534,14 @@ class PlayerActivity : BaseActivity() {
                 logger.info("收到升级动画 ${JsonUtil.serializeAsString(data)}")
                 val localUserId = SessionUtils.getUserId()
                 //特殊处理
-                if (data.grantInfo != null && data.grantInfo!!.isNotEmpty() && localUserId == data.userId) {
-//                    liveViewManager.openUserLevelUpWithGrant(data)
-                } else {
-                    playAnimation(AnimModel().apply {
-                        this.nickname = data.nickname
-                        this.animType = AnimationTypes.USER_UPGRADE
-                        this.levelValue = data.newLevel
-                    })
-                }
+//                if (data.grantInfo != null && data.grantInfo!!.isNotEmpty() && localUserId == data.userId) {
+//                } else {
+//                    playAnimation(AnimModel().apply {
+//                        this.nickname = data.nickname
+//                        this.animType = AnimationTypes.USER_UPGRADE
+//                        this.levelValue = data.newLevel
+//                    })
+//                }
                 // 如果升级的是自己，则刷新个人信息
                 if (localUserId == data.userId) {
                     viewModel.refreshUserInfoData()
