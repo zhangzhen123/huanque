@@ -1,9 +1,9 @@
-package com.julun.huanque.ui.main
+package com.julun.huanque.core.ui.main.bird
 
 import android.os.Bundle
 import android.view.View
-import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseFragment
+import com.julun.huanque.core.R
 
 /**
  *@创建者   dong

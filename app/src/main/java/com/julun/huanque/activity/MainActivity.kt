@@ -39,9 +39,8 @@ import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.support.LoginManager
-import com.julun.huanque.ui.main.LeYuanFragment
+import com.julun.huanque.core.ui.main.bird.LeYuanFragment
 import com.julun.huanque.ui.main.MineFragment
-import com.julun.huanque.ui.test.TestActivity
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.maplib.LocationService
 import com.trello.rxlifecycle4.android.ActivityEvent
