@@ -137,7 +137,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         tvQueBi.text = "${info.userBasic.beans}"
         tvLingQian.text = info.userBasic.cash
 
-        sdv_wealth.loadImage(info.userBasic.userLevelIcon, 55f, 16f)
+        if (info.userBasic.userLevel > 0) {
+            sdv_wealth.show()
+            tv_wealth_privilege.hide()
+            sdv_wealth.loadImage(info.userBasic.userLevelIcon, 55f, 16f)
+        } else {
+            sdv_wealth.hide()
+            tv_wealth_privilege.show()
+        }
 
         if (info.userBasic.royalLevel > 0) {
             tv_royal_privilege.hide()
