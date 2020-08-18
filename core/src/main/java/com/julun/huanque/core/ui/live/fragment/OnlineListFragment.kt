@@ -23,6 +23,7 @@ import com.julun.huanque.common.bean.beans.OnlineUserInfo
 import com.julun.huanque.common.bean.beans.UserInfoBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.MixedHelper
@@ -158,7 +159,9 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
 //                    activity?.startActivity<WebActivity>(
 //                        BusiConstant.WEB_URL to mRoyalUrl
 //                    )
-                    RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
+                    val bundle = Bundle()
+                    bundle.putLong("programId",mPlayerViewModel.programId)
+                    RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
                 } else {
                     //打开用户卡片
                     mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel, nickname = item.nickname)
@@ -245,12 +248,18 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                     if (data.royaling) {
                         tv_head_action.text = "立即续费>"
                         tv_head_action.onClickNew {
+                            val bundle = Bundle()
+                            bundle.putLong("programId",mPlayerViewModel.programId)
+                            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
                             RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
                         }
 
                     } else {
                         tv_head_action.text = "开通贵族>"
                         tv_head_action.onClickNew {
+                            val bundle = Bundle()
+                            bundle.putLong("programId",mPlayerViewModel.programId)
+                            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
                             RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
                         }
                     }

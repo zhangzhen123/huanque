@@ -193,12 +193,14 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
                     }
                     HeadModule.AnonymousVoice -> {
+                        //匿名语音
 
                     }
                     HeadModule.MagpieParadise -> {
 
                     }
                     HeadModule.HotLive -> {
+                        //热门直播
                         requireActivity().startActivity<PlayerActivity>(IntentParamKey.SOURCE.name to PlayerFrom.Home)
 
                     }
@@ -311,7 +313,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     }
 
     private fun gotoMakeMoney() {
-        val type: String = currentHeadInfo?.taskBar?.type?:return
+        val type: String = currentHeadInfo?.taskBar?.type ?: return
         when (type) {
             HomeMakeMoneyType.Invite -> RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
             HomeMakeMoneyType.Game -> {
@@ -402,7 +404,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
 
     }
-    private var currentHeadInfo:HeadNavigateInfo?=null
+
+    private var currentHeadInfo: HeadNavigateInfo? = null
     private fun loadData(stateList: RootListData<HomeItemBean>) {
 
         if (stateList.isPull) {
@@ -433,7 +436,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         val headerData = stateList.list.getOrNull(0)
         if (headerData?.showType == HomeItemBean.HEADER) {
             val headerInfo = headerData.content as? HeadNavigateInfo ?: return
-            currentHeadInfo=headerInfo
+            currentHeadInfo = headerInfo
             tv_balance_h.text = headerInfo.taskBar.myCash
             val content = StringBuilder()
             content.append("${headerInfo.taskBar.label}：")

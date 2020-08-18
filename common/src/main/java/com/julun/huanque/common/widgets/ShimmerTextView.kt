@@ -50,7 +50,6 @@ class ShimmerTextView(context: Context, attrs: AttributeSet?) : AppCompatTextVie
 
     @SuppressLint("DrawAllocation")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        logger("炫彩昵称  onMeasure")
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         mViewWidth = measuredWidth
         val gradientWidth = dp2pxf(20)
@@ -78,7 +77,6 @@ class ShimmerTextView(context: Context, attrs: AttributeSet?) : AppCompatTextVie
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        logger("炫彩昵称 mViewWidth = $mViewWidth,mTranslate = $mTranslate,mGradientMatrix = $mGradientMatrix")
         if (mAnimating && mGradientMatrix != null) {
             mTranslate += 8 //每次移动屏幕的10px
             if (mTranslate > (mViewWidth + 50)) {

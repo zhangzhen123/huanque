@@ -267,7 +267,9 @@ class UserCardFragment : BaseDialogFragment() {
         }
         view_guizu_level.onClickNew {
             //打开贵族等级说明页
-            WebActivity.startWeb(requireActivity(), "www.baidu.com")
+            val bundle = Bundle()
+            bundle.putLong("programId",mPlayerViewModel.programId)
+            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
         }
         view_zhubo_level.onClickNew {
             //打开主播等级说明页
