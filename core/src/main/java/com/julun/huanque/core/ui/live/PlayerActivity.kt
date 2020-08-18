@@ -191,7 +191,7 @@ class PlayerActivity : BaseActivity() {
             prePic?.let {
                 bundle.putString(IntentParamKey.IMAGE.name, it)
             }
-            bundle.putString(IntentParamKey.SOURCE.name, from)
+            bundle.putString(ParamConstant.FROM, from)
             intent.putExtras(bundle)
             activity.startActivity(intent)
         }
@@ -220,7 +220,7 @@ class PlayerActivity : BaseActivity() {
             against?.let {
                 bundle.putSerializable(AnchorData, it)
             }
-            bundle.putString(IntentParamKey.SOURCE.name, from)
+            bundle.putString(ParamConstant.FROM, from)
             intent.putExtras(bundle)
             activity.startActivity(intent)
         }
@@ -246,7 +246,7 @@ class PlayerActivity : BaseActivity() {
             programId = intent.getLongExtra(IntentParamKey.PROGRAM_ID.name, 0L)
             isAnchor = intent.getBooleanExtra(UserType.Anchor, false)
             streamId = intent.getStringExtra(IntentParamKey.STREAM_ID.name)
-            mFrom = intent.getStringExtra(IntentParamKey.SOURCE.name) ?: ""
+            mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
 //            isFromSquare = intent.getBooleanExtra(FromPager.FROM_SQUARE, false)
             //gift=-1代表无效
             val gift = intent.getIntExtra(IntentParamKey.OPEN_GIFT.name, -1)
