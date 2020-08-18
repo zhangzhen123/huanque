@@ -1086,7 +1086,7 @@ class PrivateConversationActivity : BaseActivity() {
                             val info = JsonUtil.deserializeAsObject<SendRoomInfo>(extra, SendRoomInfo::class.java)
                             val bundle = Bundle()
                             bundle.putLong(IntentParamKey.PROGRAM_ID.name, info.programId)
-                            bundle.putString(ParamConstant.FROM, PlayerFrom.SendRoom)
+                            bundle.putString(IntentParamKey.SOURCE.name, PlayerFrom.SendRoom)
 
                             ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle).navigation()
                         } catch (e: Exception) {

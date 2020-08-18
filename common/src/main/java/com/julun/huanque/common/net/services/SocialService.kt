@@ -100,7 +100,7 @@ interface SocialService {
      * 获取小鹊助手语料
      */
     @POST("social/friend/chat/getActiveWord")
-    suspend fun getActiveWord(@Body form: EmptyForm = EmptyForm()): Root<ActiveBean>
+    suspend fun getActiveWord(@Body form: FriendIdForm): Root<ActiveBean>
 
     /**
      * 发送私聊消息

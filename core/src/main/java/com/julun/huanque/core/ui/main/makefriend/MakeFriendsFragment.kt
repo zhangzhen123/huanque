@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.main.makefriend
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -28,6 +29,7 @@ import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
@@ -194,7 +196,11 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     }
                     HeadModule.AnonymousVoice -> {
                         //匿名语音
-
+                        val act = requireActivity()
+                        val intent = Intent(act, AnonymousVoiceActivity::class.java)
+                        if (ForceUtils.activityMatch(intent)) {
+                            act.startActivity(intent)
+                        }
                     }
                     HeadModule.MagpieParadise -> {
 
