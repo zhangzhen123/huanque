@@ -47,4 +47,5 @@ gradle
 !/node_modules/react-native-svg/android
 !/node_modules/react-native-reanimated/android
 !/node_modules/react-native-video/android
+!/node_modules/react-native-webview/android
 

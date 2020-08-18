@@ -601,8 +601,18 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 RnConstant.HQ_PARADISE_PAGE -> {
                     ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
                         .withInt(IntentParamKey.TARGET_INDEX.name, 1).navigation()
+                    finish()
                 }
-
+                RnConstant.MAKE_FRIENDS_PAGE -> {
+                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                        .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+                    finish()
+                }
+                RnConstant.MESSAGE_PAGE -> {
+                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                        .withInt(IntentParamKey.TARGET_INDEX.name, 2).navigation()
+                    finish()
+                }
 
             }
 
