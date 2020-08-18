@@ -247,10 +247,12 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 R.id.iv_guide_tag_close -> {
                     logger.info("点击引导标签关闭---$position")
                     mAdapter.removeAt(position)
+                    mViewModel.guideCloseByUser1=true
                 }
                 R.id.iv_guide_info_close -> {
                     logger.info("点击引导完善资料关闭---$position")
                     mAdapter.removeAt(position)
+                    mViewModel.guideCloseByUser2=true
                 }
                 R.id.ll_balance -> {
                     logger.info("零钱")
