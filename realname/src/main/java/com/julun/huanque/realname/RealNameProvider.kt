@@ -4,10 +4,12 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.security.realidentity.RPEventListener
 import com.alibaba.security.realidentity.RPResult
 import com.alibaba.security.realidentity.RPVerify
 import com.julun.huanque.common.basic.ResponseError
+import com.julun.huanque.common.bean.events.RHVerifyResult
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.RealNameConstants
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
@@ -24,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 /**
  * 实名认证服务
@@ -193,7 +196,8 @@ class RealNameProvider : IRealNameService {
     private fun save(
         type: String,
         realName: String? = null,
-        realIdCard: String? = null
+        realIdCard: String? = null,
+        isNotice: Boolean = false
     ) {
         //认证步骤要从save接口获取接口再返回出去，需要等待
         GlobalScope.launch(Dispatchers.Main) {
@@ -206,13 +210,58 @@ class RealNameProvider : IRealNameService {
                     )
                 ).dataConvert(intArrayOf(1301))
                 callback(RealNameConstants.TYPE_SUCCESS, "认证成功~！", result.perfection)
+                if (isNotice) {
+                    EventBus.getDefault().post(RHVerifyResult(RealNameConstants.TYPE_SUCCESS))
+                    ToastUtils.show("认证成功~！")
+                }
             } catch (e: Throwable) {
                 e.printStackTrace()
                 if (e is ResponseError) {
                     callback(RealNameConstants.TYPE_FAIL, e.busiMessage)
+                    if (isNotice) {
+                        EventBus.getDefault().post(RHVerifyResult(RealNameConstants.TYPE_FAIL))
+                        ToastUtils.show(e.busiMessage)
+                    }
                 } else {
                     callback(RealNameConstants.TYPE_FAIL, "网络异常，请重试~！")
+                    if (isNotice) {
+                        EventBus.getDefault().post(RHVerifyResult(RealNameConstants.TYPE_FAIL))
+                        ToastUtils.show("网络异常，请重试~！")
+                    }
                 }
+            }
+        }
+    }
+
+    override fun checkRealHead() {
+        if (mIsRequesting) {
+            return
+        }
+        mIsRequesting = true
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                val info = Requests.create(RealNameService::class.java)
+                    .getCertificationToken(
+                        RealNameForm(
+                            authType = RealNameConstants.TYPE_HEAD,
+                            realName = null,
+                            certNum = null
+                        )
+                    ).dataConvert()
+                if (info.need) {
+                    ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
+                } else {
+                    save(RealNameConstants.TYPE_HEAD, null, null, true)
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                if (e is ResponseError) {
+                    ToastUtils.show("${e.busiMessage}")
+                } else {
+                    ToastUtils.show("网络异常，请稍后重试！")
+                }
+            } finally {
+                mIsRequesting = false
             }
         }
     }
