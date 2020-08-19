@@ -25,8 +25,8 @@ data class BirdFunctionInfo(
     var cowherd: BirdCowherd = BirdCowherd(),
     var mystical: BirdMystical = BirdMystical(),
     var redpacket: BirdRedPacket = BirdRedPacket(),
-    var wealth: BirdWealth = BirdWealth(),
-    var weaver: BirdWeaver = BirdWeaver()
+    var wealth: BirdWealth = BirdWealth(),//财神
+    var weaver: BirdWeaver = BirdWeaver()//织女
 )
 
 data class UnlockUpgrade(

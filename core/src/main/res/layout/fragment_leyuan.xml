@@ -73,6 +73,14 @@
         app:layout_constraintStart_toStartOf="@+id/sdv_cai_shen" />
 
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird_niu_lang"
+        android:layout_width="@dimen/dimen_80"
+        android:layout_height="@dimen/dimen_80"
+        android:layout_marginTop="@dimen/dimen_36"
+        app:layout_constraintEnd_toStartOf="@+id/sdv_cai_shen"
+        app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
+
     <ImageView
         android:id="@+id/iv_tag_niu_lang"
         android:layout_width="@dimen/dimen_30"
@@ -82,14 +90,6 @@
         app:layout_constraintEnd_toStartOf="@+id/sdv_bird_niu_lang"
         app:layout_constraintStart_toStartOf="@+id/sdv_bird_niu_lang"
         app:layout_constraintTop_toTopOf="@+id/sdv_bird_niu_lang" />
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_bird_niu_lang"
-        android:layout_width="@dimen/dimen_80"
-        android:layout_height="@dimen/dimen_80"
-        android:layout_marginTop="@dimen/dimen_36"
-        app:layout_constraintEnd_toStartOf="@+id/sdv_cai_shen"
-        app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_bird_zhi_nv"

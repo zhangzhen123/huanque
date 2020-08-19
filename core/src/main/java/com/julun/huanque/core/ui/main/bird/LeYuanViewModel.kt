@@ -1,25 +1,21 @@
 package com.julun.huanque.core.ui.main.bird
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
-import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.beans.BirdHomeInfo
+import com.julun.huanque.common.bean.beans.BuyBirdResult
 import com.julun.huanque.common.bean.forms.BuyBirdForm
 import com.julun.huanque.common.bean.forms.ProgramIdForm
-import com.julun.huanque.common.bean.forms.UserOnlineHeartForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.ErrorCodes
-import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.net.services.HomeService
 import com.julun.huanque.common.net.services.LeYuanService
-import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.JsonUtil
-import com.julun.huanque.common.utils.ToastUtils
-import io.reactivex.rxjava3.annotations.NonNull
+import com.julun.huanque.common.suger.convertError
+import com.julun.huanque.common.suger.convertRtData
+import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.request
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.math.BigInteger
 import java.util.concurrent.TimeUnit
@@ -73,6 +69,7 @@ class LeYuanViewModel : BaseViewModel() {
                 buyResult.value = result.convertRtData()
                 totalCoin.value = result.totalCoins
                 coinsPerSec.value = result.coinsPerSec
+                startProcessCoins()
             }, error = {
                 it.printStackTrace()
                 buyResult.value = it.convertError()
@@ -86,12 +83,12 @@ class LeYuanViewModel : BaseViewModel() {
      * 开始每秒产生金币
      */
     private var processDispose: Disposable? = null
-    fun startProcessCoins() {
+    private fun startProcessCoins() {
         processDispose?.dispose()
         processDispose = Observable.interval(1, TimeUnit.SECONDS).subscribe {
             val ps = coinsPerSec.value
             if (ps != null && totalCoin.value != null) {
-                totalCoin.value = totalCoin.value?.add(ps)
+                totalCoin.postValue(totalCoin.value?.add(ps))
             }
 
         }

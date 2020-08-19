@@ -66,7 +66,17 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     }
 
     private fun renderData(info: BirdHomeInfo) {
+        info.functionInfo.let { fInfo->
+            sdv_cai_shen.loadImage(fInfo.wealth.functionIcon,80f,80f)
 
+            sdv_bird_niu_lang.loadImage(fInfo.cowherd.functionIcon,80f,80f)
+
+            sdv_bird_zhi_nv.loadImage(fInfo.weaver.functionIcon,80f,80f)
+
+            sdv_bird_hong_bao.loadImage(fInfo.redpacket.functionIcon,80f,80f)
+
+            sdv_bird_shen_mi.loadImage(fInfo.mystical.functionIcon,80f,80f)
+        }
 
         tv_bird_price.text = "${info.unlockUpgrade.upgradeCoins}"
         tv_price_level.text = "Lv.${info.unlockUpgrade.upgradeLevel}"
