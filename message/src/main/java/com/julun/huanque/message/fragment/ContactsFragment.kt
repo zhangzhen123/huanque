@@ -251,7 +251,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         } else {
             "去看看"
         }
-        state_pager_view.showEmpty(true, R.mipmap.icon_default_empty, emptyContent, View.OnClickListener {
+        state_pager_view.showEmpty(false, R.mipmap.icon_default_empty, emptyContent, View.OnClickListener {
             if (mViewModel.mType == ContactsTabType.Fan && (mActivityViewModel.socialListData.value?.perfection ?: 0) < 100) {
                 //跳转编辑资料
                 RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)

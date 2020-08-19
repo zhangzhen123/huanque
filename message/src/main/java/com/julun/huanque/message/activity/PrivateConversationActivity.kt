@@ -232,8 +232,8 @@ class PrivateConversationActivity : BaseActivity() {
         }
         val meetResource = ImageHelper.getMeetStatusResource(meetStatus)
 
-        if (meetResource > 0) {
-            //有欢遇标识
+        if (SessionUtils.getSex() == Sex.FEMALE && meetResource > 0) {
+            //女性 有欢遇标识
             title.setCompoundDrawablesWithIntrinsicBounds(0, 0, meetResource, 0)
             title.compoundDrawablePadding = 5
         } else {

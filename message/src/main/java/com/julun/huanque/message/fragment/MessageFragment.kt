@@ -293,7 +293,7 @@ class MessageFragment : BaseFragment() {
 
     private fun showEmptyView(){
         pageView.showEmpty(
-            true,
+            false,
             R.mipmap.icon_default_empty,
             emptyTxt = "快去找个有趣的人聊吧~",
             onClick = View.OnClickListener {

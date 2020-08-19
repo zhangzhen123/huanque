@@ -1157,6 +1157,7 @@ object MessageProcessor {
 
     interface IntimateChangeProcessor : EventMessageProcessor<IntimateBean> {
         override fun getEventType() = EventMessageType.IntimateChange
+        override fun isGlobal() = true
     }
 
     /**

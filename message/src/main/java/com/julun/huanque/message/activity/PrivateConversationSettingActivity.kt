@@ -17,6 +17,7 @@ import com.julun.huanque.common.bean.events.MessageBlockEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -98,7 +99,7 @@ class PrivateConversationSettingActivity : BaseActivity() {
 
                 //欢遇状态
                 val meetResource = ImageHelper.getMeetStatusResource(it.meetStatus)
-                if (meetResource > 0) {
+                if (SessionUtils.getSex() == Sex.FEMALE && meetResource > 0) {
                     //显示图标
                     iv_huanyu.show()
                     iv_huanyu.setImageResource(meetResource)

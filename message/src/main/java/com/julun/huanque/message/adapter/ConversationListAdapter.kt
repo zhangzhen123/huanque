@@ -13,6 +13,7 @@ import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.MessageCustomBeanType
+import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
@@ -72,10 +73,9 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             ImageUtils.loadImage(sdvHeader, "${item.showUserInfo?.headPic ?: ""}${BusiConstant.OSS_160}", 56f, 56f)
             helper.setText(R.id.tv_nickname, item.showUserInfo?.nickname ?: "")
             //欢遇状态
-            val meetResource = ImageHelper.getMeetStatusResource("Meet")
-//            val meetResource = ImageHelper.getMeetStatusResource(item.showUserInfo?.meetStatus ?: "")
-            if (meetResource > 0) {
-                //显示图标
+            val meetResource = ImageHelper.getMeetStatusResource(item.showUserInfo?.meetStatus ?: "")
+            if (SessionUtils.getSex() == Sex.FEMALE && meetResource > 0) {
+                //当前用户为女性，并且和对方存在欢遇标识 显示图标
                 ivHuanyu.show()
                 ivHuanyu.setImageResource(meetResource)
             } else {
@@ -125,7 +125,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
 
                 ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_stranger)
                 helper.setText(R.id.tv_nickname, "陌生人消息")
-                    .setText(R.id.tv_time, TimeUtils.formatMessageTime(time, TimeUtils.TIME_FORMAT_YEAR_2))
+                    .setText(R.id.tv_time, TimeUtils.formatMessageListTime(time))
 
                 val nickname = info[LocalConversation.NICKNAME]
                 val tvContent = helper.getView<TextView>(R.id.tv_content)
@@ -229,7 +229,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 tvUnread.hide()
             }
 
-            helper.setText(R.id.tv_time, TimeUtils.formatMessageTime(item.conversation.sentTime, TimeUtils.TIME_FORMAT_YEAR_2))
+            helper.setText(R.id.tv_time, TimeUtils.formatMessageListTime(item.conversation.sentTime))
         }
 
         if (curAnchorId == targetId && msg == null) {

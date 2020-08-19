@@ -51,6 +51,7 @@ import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.FloatingManager
+import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
@@ -1577,6 +1578,7 @@ class PlayerActivity : BaseActivity() {
             override fun process(data: OpenShowEvent) {
 //                logger.info("OpenShowEvent isPcLive:${data.isPcLive}")
                 //获取直播的类型
+                liveViewManager.mDialogManager.hideFragment(LiveSquareDialogFragment::class.java)
                 isAppShow = !data.isLandscape
                 viewModel.baseData.value?.isPcLive = data.isPcLive
                 viewModel.baseData.value?.isLandscape = data.isLandscape
@@ -1608,6 +1610,7 @@ class PlayerActivity : BaseActivity() {
         MessageProcessor.registerEventProcessor(object :
             MessageProcessor.StopLivingMessageProcessor {
             override fun process(data: CloseShowEvent) {
+                viewModel?.squareView?.value = true
                 liveViewManager.switchToVertical()
                 //只有非NormalStop才关播
                 if (isAnchor && data.stopType != StopType.NORMALSTOP) {
