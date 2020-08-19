@@ -77,5 +77,7 @@ object RnConstant {
 
     //图片查看
     const val IMAGE_PAGE:String="PicturePreviewPage"
+    //web页面
+    const val WEBVIEW_PAGE:String="WebViewPage"
 
 }

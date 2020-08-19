@@ -22,8 +22,10 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.ui.image.ImageActivity
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.FileUtils
 import com.julun.huanque.common.utils.NetUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.luck.picture.lib.PictureSelector
@@ -626,6 +628,21 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     }
 
                     ImageActivity.start(this,index,list,from = ImageActivityFrom.RN)
+                }
+
+                RnConstant.WEBVIEW_PAGE->{
+                    //访问webActivity
+                    var url = ""
+                    if (params?.hasKey("url") == true) {
+                        url=params.getString("url") ?: ""
+                    }
+                    if(url.isNotEmpty()){
+                        val extra = Bundle()
+                        extra.putString(BusiConstant.WEB_URL, url)
+                        var intent = Intent(this, WebActivity::class.java)
+                        intent.putExtras(extra)
+                        startActivity(intent)
+                    }
                 }
 
             }

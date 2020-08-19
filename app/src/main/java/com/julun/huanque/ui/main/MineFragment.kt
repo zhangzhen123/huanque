@@ -80,6 +80,11 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             val tempData = adapter.getItem(position) as? UserDataTab
             if (tempData?.userDataTabType != ContactsTabType.Visit) {
                 ContactsActivity.newInstance(requireActivity(), tempData?.userDataTabType ?: "")
+            }else{
+                //访客
+                val bundle = Bundle()
+                bundle.putString("type", "SeenMe")
+                RNPageActivity.start(requireActivity(), RnConstant.VISIT_HISTORY_PAGE, bundle)
             }
         }
 
@@ -281,7 +286,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 }
                 MineToolType.VisitHistory -> {
                     val bundle = Bundle()
-                    bundle.putString("type", "SeenMe")
+                    bundle.putString("type", "HaveSeen")
                     RNPageActivity.start(requireActivity(), RnConstant.VISIT_HISTORY_PAGE, bundle)
                 }
                 MineToolType.InviteFriend -> {
