@@ -123,7 +123,7 @@ class LiveRemindActivity : BaseActivity() {
                     mAdapter.loadMoreModule.loadMoreComplete()
                 }
             } else {
-                commonView.showEmpty(true, R.mipmap.icon_default_empty, "暂未关注主播，快去热门看看吧~", View.OnClickListener {
+                commonView.showEmpty(false, R.mipmap.icon_default_empty, "暂未关注主播，快去热门看看吧~", View.OnClickListener {
                     ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).navigation()
                 }, "去看看")
             }

@@ -351,6 +351,51 @@ object TimeUtils {
     }
 
     /**
+     * 时间戳转化对应的时间输出格式
+     * @param createTime 毫秒
+     * 今天：显示hh:mm
+     * 昨日送达消息，显示时间：昨日
+     * 最近2-6天消息，显示时间：星期几。例如星期五
+     * 最近7天以上消息，显示时间：yy-mm-dd
+     */
+    fun formatMessageListTime(createTime: Long?): String {
+        if (createTime == null || createTime <= 0L) {
+            return ""
+        }
+        try {
+            val inputTime = Calendar.getInstance()
+            inputTime.timeInMillis = createTime
+            val currenTimeZone = inputTime.time
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+            if (calendar.before(inputTime)) {
+                //今天的日期
+                val sdf = SimpleDateFormat("HH:mm")
+                return sdf.format(currenTimeZone)
+            }
+            calendar.add(Calendar.DAY_OF_MONTH, -1)
+            if (calendar.before(inputTime)) {
+                //昨天的日期
+                return "昨天"
+            }
+            calendar.add(Calendar.DAY_OF_MONTH, -5)
+            if (calendar.before(inputTime)) {
+                return getWeekDayStr(inputTime.get(Calendar.DAY_OF_WEEK))
+            } else {
+                val sdf = SimpleDateFormat("yyyy年MM月dd日")
+                return sdf.format(currenTimeZone)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            reportCrash("时间解析错误 + createTime = ${createTime}", e)
+            return ""
+        }
+    }
+
+    /**
      * [time]秒数 时间转化 单位 秒 转换成 HH:mm:ss
      */
     fun countDownTimeFormat(time: Long): String {

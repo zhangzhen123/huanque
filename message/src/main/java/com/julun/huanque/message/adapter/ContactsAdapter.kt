@@ -9,11 +9,13 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.SocialUserInfo
 import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.FollowStatus
+import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.message.R
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.imageResource
@@ -47,7 +49,7 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
 
         val ivMeet = helper.getView<ImageView>(R.id.iv_meet)
         val meetStatus = ImageHelper.getMeetStatusResource(item.meetStatus)
-        if (meetStatus > 0) {
+        if (SessionUtils.getSex() == Sex.FEMALE && meetStatus > 0) {
             ivMeet.imageResource = meetStatus
             ivMeet.show()
         } else {
