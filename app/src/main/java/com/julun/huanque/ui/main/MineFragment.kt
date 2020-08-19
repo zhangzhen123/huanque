@@ -36,14 +36,12 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
-import com.julun.huanque.common.utils.ImageUtils
-import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.common.utils.StatusBarUtil
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.huanque.message.activity.ContactsActivity
+import com.julun.huanque.ui.safe.AccountAndSecurityActivity
 import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -111,7 +109,11 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                         RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
                     }
                     ErrorCodes.NOT_BIND_WECHAT -> {
-                        //todo 跳转到账号与安全
+                        //账号与安全
+                        val intent = Intent(requireActivity(), AccountAndSecurityActivity::class.java)
+                        if (ForceUtils.activityMatch(intent)) {
+                            startActivity(intent)
+                        }
                     }
                     ErrorCodes.NOT_REAL_NAME -> {
                         ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY)

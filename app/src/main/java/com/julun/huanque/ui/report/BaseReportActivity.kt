@@ -167,6 +167,7 @@ abstract class BaseReportActivity : BaseActivity() {
         reportTypeAdapter.setOnItemClickListener { _, _, position ->
             currentSelect = position
             reportTypeAdapter.notifyDataSetChanged()
+            checkBtnEnable()
         }
         adapter.setOnItemClickListener(object : AddPictureAdapter.OnItemClickListener {
             override fun onItemClick(position: Int, v: View) {
@@ -187,6 +188,7 @@ abstract class BaseReportActivity : BaseActivity() {
             //每次删除都要重新判断是否符合发布条件
             override fun onItemDeleteClick(position: Int) {
                 hideSoftInput()
+                checkBtnEnable()
             }
         })
 
@@ -214,10 +216,13 @@ abstract class BaseReportActivity : BaseActivity() {
                 } else {
                     textLimit.text = "${temp?.length}/200"
                 }
+                checkBtnEnable()
             }
         })
     }
-
+    private fun checkBtnEnable(){
+        apply_button.isEnabled = !(input_text.text.toString().isEmpty()||currentSelect==-1||selectList.isEmpty())
+    }
     private fun hideSoftInput() {
 //        KPSwitchConflictUtil.hidePanelAndKeyboard(emojiView)
         ScreenUtils.hideSoftInput(this)
@@ -283,6 +288,7 @@ abstract class BaseReportActivity : BaseActivity() {
                     }
                     adapter.setList(selectList)
                     adapter.notifyDataSetChanged()
+                    checkBtnEnable()
                 }
             }
         } else {
