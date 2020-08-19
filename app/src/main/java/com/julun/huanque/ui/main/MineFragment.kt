@@ -133,7 +133,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     }
 
     private fun loadData(info: UserDetailInfo) {
-        SharedPreferencesUtils.commitString(SPParamKey.CUSTOMER_URL,info.customerUrl)
+        SharedPreferencesUtils.commitString(SPParamKey.CUSTOMER_URL, info.customerUrl)
         headImage.loadImage(info.userBasic.headPic + BusiConstant.OSS_160, 60f, 60f)
         tvNickName.text = info.userBasic.nickname
         tvUserId.text = "欢鹊ID: ${info.userBasic.userId}"
@@ -274,13 +274,15 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     RNPageActivity.start(requireActivity(), RnConstant.OFFICIAL_CERT_PAGE)
                 }
                 MineToolType.RoomSpecial -> {
-
+                    RNPageActivity.start(requireActivity(), RnConstant.MY_CAR_PAGE)
                 }
                 MineToolType.ChatBubble -> {
-
+                    RNPageActivity.start(requireActivity(), RnConstant.CHAT_BUBBLE_PAGE)
                 }
                 MineToolType.VisitHistory -> {
-
+                    val bundle = Bundle()
+                    bundle.putString("type", "SeenMe")
+                    RNPageActivity.start(requireActivity(), RnConstant.VISIT_HISTORY_PAGE, bundle)
                 }
                 MineToolType.InviteFriend -> {
                     RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
