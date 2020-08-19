@@ -184,7 +184,8 @@ class SingleVideoView(context: Context, attrs: AttributeSet?) : ConstraintLayout
      */
     fun showCover(picUrl: String) {
         posterImage.show()
-        ImageUtils.loadImage(posterImage, picUrl)
+//        ImageUtils.loadImage(posterImage, picUrl)
+        ImageUtils.loadImageWithBlur(posterImage,picUrl,3,13)
     }
 
     /**

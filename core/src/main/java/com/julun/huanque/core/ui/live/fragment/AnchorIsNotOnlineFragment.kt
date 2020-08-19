@@ -1,16 +1,14 @@
 package com.julun.huanque.core.ui.live.fragment
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.core.R
-import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.AnchorNoLiveViewModel
 import kotlinx.android.synthetic.main.fragment_anchorisnotonline.*
@@ -43,7 +41,7 @@ class AnchorIsNotOnlineFragment : BaseFragment() {
             it?.let {
                 if (it.lastShowTimeDiffText.isNotEmpty()) {
                     tv_provious.show()
-                    tv_provious.text = "上次直播${it.lastShowTimeDiffText}"
+                    tv_provious.text = "上次直播：${it.lastShowTimeDiffText}"
                 } else {
                     tv_provious.hide()
                 }

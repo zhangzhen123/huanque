@@ -222,7 +222,7 @@ object ImageUtils {
     /**
      * 使用fresco
      * 给imageView设置网络图片  带模糊效果
-     * @param SimpleDraweeView
+     * @param imgView
      * @param url 路径
      * @param iterations 迭代次数，越大越模糊。
      * @param blurRadius 模糊图半径，必须大于0，越大越模糊。
