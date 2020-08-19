@@ -1662,7 +1662,7 @@ class PlayerViewManager(val context: PlayerActivity) {
      *
      */
     fun loadBlurImage(sdw: SimpleDraweeView, url: String?) {
-        ImageUtils.loadImageWithBlur(sdw, url ?: return, 3, 10/*,screenWidth/2,screenHeight/2*/)
+        ImageUtils.loadImageWithBlur(sdw, url ?: return, 3, 13/*,screenWidth/2,screenHeight/2*/)
     }
 
     /**
