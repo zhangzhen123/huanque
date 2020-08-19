@@ -8,8 +8,12 @@ import android.view.View
 import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import kotlinx.android.synthetic.main.act_about_us.*
 
 
@@ -32,7 +36,12 @@ class AboutUsActivity : BaseActivity() {
         }
         view_suggest.onClickNew {
             //意见反馈与建议,复制微信
-            GlobalUtils.copyToSharePlate(this, "逗你玩","复制成功，粘贴到微信与我们联系")
+//            GlobalUtils.copyToSharePlate(this, "逗你玩","复制成功，粘贴到微信与我们联系")
+            val extra = Bundle()
+            extra.putString(BusiConstant.WEB_URL, SharedPreferencesUtils.getString(SPParamKey.CUSTOMER_URL, ""))
+            var intent = Intent(this, WebActivity::class.java)
+            intent.putExtras(extra)
+            startActivity(intent)
         }
         view_consumer.onClickNew {
             //客服热线，跳转拨打电话页面

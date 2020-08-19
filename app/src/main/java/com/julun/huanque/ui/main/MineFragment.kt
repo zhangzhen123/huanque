@@ -36,10 +36,7 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
-import com.julun.huanque.common.utils.ImageUtils
-import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.common.utils.StatusBarUtil
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
@@ -131,6 +128,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     }
 
     private fun loadData(info: UserDetailInfo) {
+        SharedPreferencesUtils.commitString(SPParamKey.CUSTOMER_URL,info.customerUrl)
         headImage.loadImage(info.userBasic.headPic + BusiConstant.OSS_160, 60f, 60f)
         tvNickName.text = info.userBasic.nickname
         tvUserId.text = "欢鹊ID: ${info.userBasic.userId}"
