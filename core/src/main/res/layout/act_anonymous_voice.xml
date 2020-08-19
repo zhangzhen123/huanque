@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_animate"
+        android:id="@+id/iv_animate_first"
         android:layout_width="175dp"
         android:layout_height="175dp"
         android:src="@mipmap/pic_anonymous_animate"
@@ -45,6 +45,18 @@
         app:layout_constraintLeft_toLeftOf="@id/view_circle"
         app:layout_constraintRight_toRightOf="@id/view_circle"
         app:layout_constraintTop_toTopOf="@id/view_circle" />
+
+    <ImageView
+        android:id="@+id/iv_animate_second"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:src="@mipmap/pic_anonymous_animate"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/view_circle"
+        app:layout_constraintLeft_toLeftOf="@id/view_circle"
+        app:layout_constraintRight_toRightOf="@id/view_circle"
+        app:layout_constraintTop_toTopOf="@id/view_circle" />
+
 
     <ImageView
         android:layout_width="30dp"
