@@ -207,7 +207,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     }
                     HeadModule.HotLive -> {
                         //热门直播
-                        requireActivity().startActivity<PlayerActivity>(IntentParamKey.SOURCE.name to PlayerFrom.Home)
+                        requireActivity().startActivity<PlayerActivity>(ParamConstant.FROM to PlayerFrom.Home)
 
                     }
                     HeadModule.PlumFlower -> {
