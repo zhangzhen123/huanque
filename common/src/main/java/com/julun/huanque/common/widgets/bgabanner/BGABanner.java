@@ -7,14 +7,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-
-import androidx.annotation.DrawableRes;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.core.view.ViewCompat;
-import androidx.viewpager.widget.ViewPager;
-
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -28,8 +20,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.julun.huanque.common.R;
+import com.julun.huanque.common.helper.MixedHelper;
 import com.julun.huanque.common.widgets.bgabanner.transformer.BGAPageTransformer;
 import com.julun.huanque.common.widgets.bgabanner.transformer.TransitionEffect;
 
@@ -947,8 +946,9 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
             if (viewParent != null) {
                 ((ViewGroup) viewParent).removeView(view);
             }
-
-            container.addView(view);
+            try {
+                container.addView(view);
+            }catch (Exception e){}
             return view;
         }
 
@@ -1009,5 +1009,35 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
      */
     public interface GuideDelegate {
         void onClickEnterOrSkip();
+    }
+
+    private boolean mRNReLayoutStatus = false;
+
+    /**
+     * RN才需要重新layout,所以需要这个状态来控制
+     * @param status
+     */
+    public void setRNViewPagerStatus(boolean status) {
+        mRNReLayoutStatus = status;
+    }
+
+    //因为RN使用原生ViewPager会有兼容性问题，ReactRootView重写onLayout会导致添加进去的View出现各种问题，需要重新layout才能正常使用
+    //但是在Android原生直接使用就不能重新布局，这样会有空白的问题
+    //解决方案：https://yuweiguocn.github.io/resolve-react-native-addview-invalid/
+    @Override
+    public void requestLayout() {
+        super.requestLayout();
+        if (mRNReLayoutStatus) {
+            reLayout();
+        }
+    }
+
+    public void reLayout() {
+        if (getWidth() > 0 && getHeight() > 0) {
+            int w = MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY);
+            int h = MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY);
+            measure(w, h);
+            layout(getPaddingLeft() + getLeft(), getPaddingTop() + getTop(), getWidth() + getPaddingLeft() + getLeft(), getHeight() + getPaddingTop() + getTop());
+        }
     }
 }
