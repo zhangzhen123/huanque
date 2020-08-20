@@ -1023,6 +1023,7 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
 
     //因为RN使用原生ViewPager会有兼容性问题，ReactRootView重写onLayout会导致添加进去的View出现各种问题，需要重新layout才能正常使用
     //但是在Android原生直接使用就不能重新布局，这样会有空白的问题
+    //解决方案：https://yuweiguocn.github.io/resolve-react-native-addview-invalid/
     @Override
     public void requestLayout() {
         super.requestLayout();
