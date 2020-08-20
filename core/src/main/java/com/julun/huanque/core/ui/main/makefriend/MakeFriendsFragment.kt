@@ -183,8 +183,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     requireActivity(),
                     position,
                     list.map { StringHelper.getOssImgUrl(it.url) },
-                    item?.userId,
-                    ImageActivityOperate.REPORT
+                    item?.userId
                 )
             }
 
