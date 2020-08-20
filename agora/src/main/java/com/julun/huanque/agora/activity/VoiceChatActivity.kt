@@ -84,7 +84,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
-        ll_hands_free.isEnabled = getEarphoneLinkStatus()
+        ll_hands_free.isEnabled = !GlobalUtils.getEarphoneLinkStatus()
     }
 
     /**
@@ -139,6 +139,13 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         } else {
             timer()
         }
+        registerMessage()
+
+    }
+
+
+    private fun registerMessage(){
+        MessageProcessor.clearProcessors(false)
         //语音通话开始消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallAcceptProcessor {
             override fun process(data: NetCallAcceptBean) {
@@ -248,7 +255,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         })
 
     }
-
 
     /**
      * 播放音效
@@ -864,49 +870,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
     private var showToast = false
-
-    /**
-     * 获取耳机链接状态
-     */
-    private fun getEarphoneLinkStatus(): Boolean {
-        am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
-        am?.mode = AudioManager.MODE_IN_COMMUNICATION
-//获取当前使用的麦克风，设置媒体播放麦克风
-        if (am?.isWiredHeadsetOn == true) {
-            logger.info("Voice 有线耳机已连接")
-            if (showToast) {
-                Toast.makeText(this, "有线耳机已连接", Toast.LENGTH_SHORT).show()
-            }
-            return true
-        } else {
-            logger.info("Voice 有线耳机未连接")
-            if (showToast) {
-                Toast.makeText(this, "有线耳机未连接", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        val adapter = BluetoothAdapter.getDefaultAdapter()
-
-        if (BluetoothProfile.STATE_CONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
-            logger.info("Voice 蓝牙耳机已连接")
-            if (showToast) {
-                Toast.makeText(this, "蓝牙耳机已连接", Toast.LENGTH_SHORT).show()
-            }
-            return true
-        } else if (BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
-            logger.info("Voice 蓝牙耳机未连接")
-            if (showToast) {
-                Toast.makeText(this, "蓝牙耳机未连接", Toast.LENGTH_SHORT).show()
-            }
-            return false
-        } else {
-            logger.info("Voice 蓝牙耳机未连接")
-            if (showToast) {
-                Toast.makeText(this, "蓝牙耳机未连接", Toast.LENGTH_SHORT).show()
-            }
-            return false
-        }
-    }
 
     /**
      * 禁用其他音效

@@ -358,10 +358,10 @@ class AnimEventItem {
 
 //主播等级变化事件
 data class AnchorUpgradeEvent(
-   var newAnchorLevel:Int,
-   var oldAnchorLevel:Int,
-   var newAnchorLevelPic:Int,
-   var programId:Long
+    var newAnchorLevel: Int,
+    var oldAnchorLevel: Int,
+    var newAnchorLevelPic: Int,
+    var programId: Long
 )
 
 data class AnchorLevelProgressEvent(
@@ -1086,5 +1086,57 @@ class OperatorMessageBean : Serializable {
     var targetNickname: String = ""
 }
 
-//欢鹊热度变动消息
+/**
+ * 欢鹊热度变动消息
+ */
 class RoomHeatChangeBean(var heatValue: Long = 0)
+
+/**
+ * 用户Id列表bean
+ */
+class UserIdListBean(var userIds: MutableList<Long> = mutableListOf()) : Serializable
+
+/**
+ * 匿名语音匹配成功，用户数据
+ */
+class AnonyUserInfo(
+    //匿名语音剩余次数
+    var surplusTimes: Int = 0,
+    //语音通话token
+    var token: String = ""
+) : Serializable
+
+/**
+ * 匿名语音匹配成功消息
+ */
+class AnonyVoiceSuccess(
+    //通话Id
+    var callId: Long = 0,
+    //剩余时长
+    var duration: Long = 0L,
+    //用户数据
+    var userData: HashMap<String, AnonyUserInfo> = hashMapOf(),
+    //通话频道ID
+    var channelId: String = "",
+    //用户ID列表
+    var userIds: MutableList<Long> = mutableListOf()
+) : Serializable
+
+/**
+ * 匿名语音挂断消息
+ */
+class AnonyVoiceHangUpBean(
+    //通话ID
+    var callId: Long = 0,
+    //用户ID
+    var userId: Long = 0
+) : Serializable
+
+
+/**
+ * 邀请语音会话消息
+ */
+class AnonyVoiceInviteBean(
+    //邀请的用户ID
+    var inviteUserId: Long = 0
+) : Serializable

@@ -244,7 +244,7 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv_animation"
             android:layout_width="0px"
-            android:layout_height="177dp"
+            android:layout_height="167dp"
             android:layout_marginTop="136dp"
             app:actualImageScaleType="fitXY"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -279,14 +279,19 @@
             app:roundingBorderWidth="2dp" />
 
 
-        <View
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/view_left_header"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_marginTop="183dp"
             android:layout_marginRight="40dp"
+            android:alpha="0"
             app:layout_constraintRight_toLeftOf="@id/guideline"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImage="@mipmap/logo_placeholder"
+            app:roundAsCircle="true"
+            app:roundingBorderColor="#C2C0D8"
+            app:roundingBorderWidth="2dp" />
 
         <TextView
             android:id="@+id/tv_open_mine"
@@ -304,16 +309,149 @@
             app:layout_constraintLeft_toLeftOf="@id/view_left_header"
             app:layout_constraintRight_toRightOf="@id/view_left_header"
             app:layout_constraintTop_toBottomOf="@id/view_left_header"
-            tools:visibility="visible" />
+            tools:visibility="invisible" />
 
-        <View
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/con_userinfo_mine"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:alpha="0"
+            app:layout_constraintLeft_toLeftOf="@id/view_left_header"
+            app:layout_constraintRight_toRightOf="@id/view_left_header"
+            app:layout_constraintTop_toBottomOf="@id/view_left_header">
+
+            <TextView
+                android:id="@+id/tv_nickname_mine"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="昵称" />
+
+            <TextView
+                android:id="@+id/tv_sex_mine"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_shape_mkf_sex_female"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textSize="@dimen/sp_10"
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/tv_location_mine"
+                app:layout_constraintTop_toBottomOf="@id/tv_nickname_mine"
+                tools:text="35"
+                tools:textColor="@color/black_333" />
+
+            <TextView
+                android:id="@+id/tv_location_mine"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/bg_shape_mkf_location"
+                android:drawableLeft="@mipmap/icon_location"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="6dp"
+                android:textColor="#82ABD1"
+                android:textSize="@dimen/sp_10"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tv_sex_mine"
+                app:layout_constraintLeft_toRightOf="@id/tv_sex_mine"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_sex_mine"
+                tools:text="柯东湖" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/view_right_header"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="183dp"
+            android:alpha="0"
             app:layout_constraintLeft_toRightOf="@id/guideline"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImage="@mipmap/logo_placeholder"
+            app:roundAsCircle="true"
+            app:roundingBorderColor="#C2C0D8"
+            app:roundingBorderWidth="2dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/con_userinfo_other"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:alpha="0"
+            app:layout_constraintLeft_toLeftOf="@id/view_right_header"
+            app:layout_constraintRight_toRightOf="@id/view_right_header"
+            app:layout_constraintTop_toBottomOf="@id/view_right_header">
+
+            <TextView
+                android:id="@+id/tv_nickname_other"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="昵称" />
+
+            <TextView
+                android:id="@+id/tv_sex_other"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_shape_mkf_sex_female"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textSize="@dimen/sp_10"
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/tv_location_other"
+                app:layout_constraintTop_toBottomOf="@id/tv_nickname_other"
+                tools:text="35"
+                tools:textColor="@color/black_333" />
+
+            <TextView
+                android:id="@+id/tv_location_other"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/bg_shape_mkf_location"
+                android:drawableLeft="@mipmap/icon_location"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="6dp"
+                android:textColor="#82ABD1"
+                android:textSize="@dimen/sp_10"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tv_sex_other"
+                app:layout_constraintLeft_toRightOf="@id/tv_sex_other"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_sex_other"
+                tools:text="柯东湖" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tv_open_other"
@@ -336,14 +474,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="82dp"
+            android:layout_marginTop="340dp"
             android:gravity="center"
             android:text="匿名语音共3分钟，聊得来就公开身份吧！\n不足一分钟挂断会影响后续匹配效率哦！"
             android:textColor="#DAD8F0"
             android:textSize="@dimen/sp_16"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sdv_mine" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/ll_quiet"
@@ -396,7 +534,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="14dp"
-                android:text="取消"
+                android:text="挂断"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16" />
 

@@ -185,4 +185,40 @@ interface SocialService {
      */
     @POST("social/friend/avoice/homeInfo")
     suspend fun avoiceHomeInfo(@Body form: EmptyForm = EmptyForm()): Root<AnonymousBasicInfo>
+
+    /**
+     * 开始匹配
+     */
+    @POST("social/friend/avoice/startMatch")
+    suspend fun startMatch(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
+
+    /**
+     * 取消匹配
+     */
+    @POST("social/friend/avoice/cancelMatch")
+    suspend fun cancelMatch(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
+
+    /**
+     * 挂断匿名语音
+     */
+    @POST("social/friend/avoice/hangUp")
+    suspend fun avoiceHangUp(@Body form: NetcallIdForm): Root<VoidResult>
+
+    /**
+     * 公开身份
+     */
+    @POST("social/friend/avoice/openIdentify")
+    suspend fun openIdentify(@Body form: NetcallIdForm): Root<UserInfoInRoom>
+
+    /**
+     * 匿名语音 检测余额
+     */
+    @POST("social/friend/avoice/checkBeans")
+    suspend fun checkBeans(@Body form: EmptyForm = EmptyForm()): Root<CheckBeansData>
+
+    /**
+     * 揭秘主播身份
+     */
+    @POST("social/friend/avoice/unveilIdentity")
+    suspend fun unveilIdentity(@Body form: NetcallIdForm): Root<UserInfoInRoom>
 }

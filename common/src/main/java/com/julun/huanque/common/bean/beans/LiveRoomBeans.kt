@@ -80,7 +80,7 @@ class RoomUserChatExtra(
     //msgType= 1 表示为系统消息
     var msgType: Int = 0,
     //显示气泡
-    var chatBubble: ChatBubble?=null
+    var chatBubble: ChatBubble? = null
 )
 
 /**
@@ -538,9 +538,9 @@ data class ChatBubble(
     var rt: String = "",//右上
     var lt: String = "",//左上
     var rb: String = "",//右下
-    var radius:Int = -1//圆角大小
+    var radius: Int = -1//圆角大小
 
-){
+) {
     override fun toString(): String {
         return "ChatBubble(bdc='$bdc', bgc='$bgc', lb='$lb', rt='$rt', lt='$lt', rb='$rb', radius=$radius)"
     }
@@ -643,6 +643,9 @@ class UserInfoInRoom : Serializable {
 
     //性别：男(M)、女(F)(可选项：Male、Female、Unknow)
     var sex: String = ""
+
+    //匿名语音使用
+    var userId: Long = 0
 
     //是否显示AT按钮
     var showAt: Boolean = false
