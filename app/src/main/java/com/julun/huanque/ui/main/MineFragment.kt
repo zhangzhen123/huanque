@@ -27,10 +27,7 @@ import com.julun.huanque.common.bean.beans.RechargeAdInfo
 import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
-import com.julun.huanque.common.bean.events.LoginEvent
-import com.julun.huanque.common.bean.events.PayResultEvent
-import com.julun.huanque.common.bean.events.RHVerifyResult
-import com.julun.huanque.common.bean.events.WithdrawSuccessEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
@@ -483,4 +480,10 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             }
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun informationChange(event : UserInfoEditEvent){
+        mViewModel.queryInfo(QueryType.REFRESH)
+    }
+
 }
