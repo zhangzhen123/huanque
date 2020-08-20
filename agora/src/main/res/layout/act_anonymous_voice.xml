@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/bg_anonymous"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.julun.huanque.common.widgets.HeaderPageView
+        android:id="@+id/header_page"
+        android:layout_width="0px"
+        android:layout_height="44dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/con_match"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
+
+        <View
+            android:id="@+id/view_circle"
+            android:layout_width="275dp"
+            android:layout_height="275dp"
+            android:layout_marginTop="104dp"
+            android:background="@mipmap/bg_circle_anonymous"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_animate_first"
+            android:layout_width="175dp"
+            android:layout_height="175dp"
+            android:src="@mipmap/pic_anonymous_animate"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/view_circle"
+            app:layout_constraintLeft_toLeftOf="@id/view_circle"
+            app:layout_constraintRight_toRightOf="@id/view_circle"
+            app:layout_constraintTop_toTopOf="@id/view_circle" />
+
+        <ImageView
+            android:id="@+id/iv_animate_second"
+            android:layout_width="175dp"
+            android:layout_height="175dp"
+            android:src="@mipmap/pic_anonymous_animate"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/view_circle"
+            app:layout_constraintLeft_toLeftOf="@id/view_circle"
+            app:layout_constraintRight_toRightOf="@id/view_circle"
+            app:layout_constraintTop_toTopOf="@id/view_circle" />
+
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginTop="63dp"
+            android:src="@mipmap/bg_anonymous_point_red"
+            app:layout_constraintLeft_toLeftOf="@id/view_circle"
+            app:layout_constraintTop_toTopOf="@id/view_circle" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@mipmap/bg_anonymous_point_yellow"
+            app:layout_constraintBottom_toBottomOf="@id/view_circle"
+            app:layout_constraintLeft_toRightOf="@id/view_circle"
+            app:layout_constraintRight_toRightOf="@id/view_circle"
+            app:layout_constraintTop_toTopOf="@id/view_circle" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="57dp"
+            android:layout_marginBottom="13dp"
+            android:src="@mipmap/bg_anonymous_point_blue"
+            app:layout_constraintBottom_toBottomOf="@id/view_circle"
+            app:layout_constraintLeft_toLeftOf="@id/view_circle" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_header"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:layout_constraintBottom_toBottomOf="@id/view_circle"
+            app:layout_constraintLeft_toLeftOf="@id/view_circle"
+            app:layout_constraintRight_toRightOf="@id/view_circle"
+            app:layout_constraintTop_toTopOf="@id/view_circle"
+            app:roundAsCircle="true"
+            app:roundingBorderColor="@color/white"
+            app:roundingBorderWidth="2dp" />
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_left"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="231dp"
+            android:layout_marginBottom="43dp"
+            android:background="@mipmap/bg_anonymous_shader_header"
+            android:padding="5dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/view_circle"
+            app:layout_constraintRight_toRightOf="@id/view_circle"
+            app:roundAsCircle="true" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_top"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginRight="84dp"
+            android:background="@mipmap/bg_anonymous_shader_header"
+            android:padding="5dp"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="@id/view_circle"
+            app:layout_constraintTop_toTopOf="@id/view_circle"
+            app:roundAsCircle="true" />
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_right"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="45dp"
+            android:layout_marginBottom="43dp"
+            android:background="@mipmap/bg_anonymous_shader_header"
+            android:padding="5dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/view_circle"
+            app:layout_constraintRight_toRightOf="@id/view_circle"
+            app:roundAsCircle="true" />
+
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="欢鹊会为你匹配最合拍的对象"
+            android:textColor="#DAD8F0"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_circle" />
+
+        <TextView
+            android:id="@+id/tv_placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请耐心等待哦..."
+            android:textColor="#DAD8F0"
+            android:textSize="@dimen/sp_16"
+            android:visibility="invisible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_content" />
+
+        <TextView
+            android:id="@+id/tv_waiting_content"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="left|center_vertical"
+            android:textColor="#DAD8F0"
+            android:textSize="@dimen/sp_16"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@id/tv_placeholder"
+            app:layout_constraintRight_toRightOf="@id/tv_placeholder"
+            app:layout_constraintTop_toBottomOf="@id/tv_content"
+            tools:text="请耐心等待哦..." />
+
+        <TextView
+            android:id="@+id/tv_match"
+            android:layout_width="0px"
+            android:layout_height="40dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:layout_marginBottom="67dp"
+            android:background="@drawable/bg_btn_matching"
+            android:gravity="center"
+            android:text="开始匹配"
+            android:textColor="@color/col_btn_anonymous"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:includeFontPadding="false"
+            android:textColor="#DAD8F0"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="看得见啊"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/con_voice"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_animation"
+            android:layout_width="0px"
+            android:layout_height="177dp"
+            android:layout_marginTop="136dp"
+            app:actualImageScaleType="fitXY"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_mine"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="183dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImage="@mipmap/bg_anonymous_header"
+            app:roundAsCircle="true"
+            app:roundingBorderColor="#C2C0D8"
+            app:roundingBorderWidth="2dp" />
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_other"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="183dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImage="@mipmap/bg_anonymous_header"
+            app:roundAsCircle="true"
+            app:roundingBorderColor="#C2C0D8"
+            app:roundingBorderWidth="2dp" />
+
+
+        <View
+            android:id="@+id/view_left_header"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="183dp"
+            android:layout_marginRight="40dp"
+            app:layout_constraintRight_toLeftOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_open_mine"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_anonymous_btn"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="公开我方身份"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@id/view_left_header"
+            app:layout_constraintRight_toRightOf="@id/view_left_header"
+            app:layout_constraintTop_toBottomOf="@id/view_left_header"
+            tools:visibility="visible" />
+
+        <View
+            android:id="@+id/view_right_header"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="183dp"
+            app:layout_constraintLeft_toRightOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_open_other"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_anonymous_btn"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="揭幕对方身份"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@id/view_right_header"
+            app:layout_constraintRight_toRightOf="@id/view_right_header"
+            app:layout_constraintTop_toBottomOf="@id/view_right_header"
+            tools:visibility="visible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="82dp"
+            android:gravity="center"
+            android:text="匿名语音共3分钟，聊得来就公开身份吧！\n不足一分钟挂断会影响后续匹配效率哦！"
+            android:textColor="#DAD8F0"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sdv_mine" />
+
+        <LinearLayout
+            android:id="@+id/ll_quiet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/ll_close"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/sel_quiet" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="14dp"
+                android:text="静音"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/ll_quiet"
+            app:layout_constraintRight_toLeftOf="@id/ll_hands_free"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@mipmap/icon_voice_close" />
+
+            <TextView
+                android:id="@+id/tv_voice_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="14dp"
+                android:text="取消"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_hands_free"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/ll_close"
+            app:layout_constraintRight_toLeftOf="@id/ll_voice_accept"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/sel_hands_fee" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="14dp"
+                android:text="免提"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_voice_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/ll_hands_free"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@mipmap/icon_voice_accept" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="14dp"
+                android:text="接听"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_reminder_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="151dp"
+            android:textColor="#DAD8F0"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="剩余时长 3:00" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

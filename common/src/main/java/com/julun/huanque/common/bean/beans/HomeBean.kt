@@ -205,3 +205,11 @@ data class SendRoomBean(
     var beans: Long = 0,
     var sendRoomInfo: SendRoomInfo = SendRoomInfo()
 ) : Serializable
+
+
+data class AnonymousBasicInfo(
+    //头像数据
+    var headPics: MutableList<String> = mutableListOf(),
+    //剩余次数
+    var surplusTimes: Int = 0
+) : Serializable

@@ -50,6 +50,9 @@ object ARouterConstant {
     //语音页面
     const val VOICE_CHAT_ACTIVITY = "/$AGORA$PREFIX_ACTIVITY/VoiceChatActivity"
 
+    //匿名语音
+    const val ANONYMOUS_VOICE_ACTIVITY = "/$AGORA$PREFIX_ACTIVITY/AnonymousVoiceActivity"
+
     //message模块
     const val PRIVATE_CONVERSATION_ACTIVITY = "/$MESSAGE$PREFIX_ACTIVITY/PrivateConversationActivity"
 
@@ -90,6 +93,7 @@ object ARouterConstant {
 
     //实名认证首页
     const val REAL_NAME_MAIN_ACTIVITY = "/$REAL_NAME$PREFIX_ACTIVITY/RealNameActivity"
+
     //头像认证授权页
     const val REAL_HEAD_ACTIVITY = "/$REAL_NAME$PREFIX_ACTIVITY/RealHeadActivity"
 

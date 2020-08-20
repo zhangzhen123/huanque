@@ -304,7 +304,7 @@ class WebActivity : BaseActivity() {
         ULog.i("当前的url:$url")
         //这个是否返回首页不太一样 默认就是返回
 //        goHome = intent.getBooleanExtra(IntentParamKey.EXTRA_FLAG_GO_HOME.name, true)
-        tvTitle.text = "羚萌直播"
+        tvTitle.text = "欢鹊"
 //        tvTitle.onClick {   startActivity(Intent(this@WebActivity, MainActivity::class.java)) }
         ivBack.onClickNew { onBackPressed() }
         ivClose.onClickNew { super.onBackPressed() }

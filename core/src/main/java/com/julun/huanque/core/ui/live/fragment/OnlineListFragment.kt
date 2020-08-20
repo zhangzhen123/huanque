@@ -251,7 +251,6 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                             val bundle = Bundle()
                             bundle.putLong("programId",mPlayerViewModel.programId)
                             RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
-                            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
                         }
 
                     } else {
@@ -260,7 +259,6 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                             val bundle = Bundle()
                             bundle.putLong("programId",mPlayerViewModel.programId)
                             RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
-                            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
                         }
                     }
                 }

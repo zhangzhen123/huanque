@@ -179,4 +179,10 @@ interface SocialService {
 
     @POST("social/friend/chat/sendRoom")
     suspend fun sendRoom(@Body form: SendRoomForm): Root<SendRoomBean>
+
+    /**
+     * 获取匿名语音基础信息
+     */
+    @POST("social/friend/avoice/homeInfo")
+    suspend fun avoiceHomeInfo(@Body form: EmptyForm = EmptyForm()): Root<AnonymousBasicInfo>
 }
