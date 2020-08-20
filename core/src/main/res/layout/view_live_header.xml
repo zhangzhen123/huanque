@@ -116,7 +116,7 @@
         android:id="@+id/flRoyalRootView"
         android:layout_width="40dp"
         android:layout_height="@dimen/dimen_34"
-        android:layout_marginStart="@dimen/dimen_5">
+        android:layout_marginStart="@dimen/dimen_3">
 
         <ImageView
             android:id="@+id/ivRoyalIcon"
@@ -153,7 +153,7 @@
             android:paddingEnd="@dimen/dimen_3"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_16"
-            tools:text="9999" />
+            tools:text="99" />
 
         <!--        <ImageView-->
         <!--            android:id="@+id/ivGuardIcon"-->
@@ -182,7 +182,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="5dp">
+        android:layout_marginStart="3dp">
 
         <ImageView
             android:id="@+id/exitImage"
