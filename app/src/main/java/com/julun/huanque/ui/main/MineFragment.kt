@@ -80,7 +80,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             val tempData = adapter.getItem(position) as? UserDataTab
             if (tempData?.userDataTabType != ContactsTabType.Visit) {
                 ContactsActivity.newInstance(requireActivity(), tempData?.userDataTabType ?: "")
-            }else{
+            } else {
                 //访客
                 val bundle = Bundle()
                 bundle.putString("type", "SeenMe")
@@ -115,7 +115,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     }
                     ErrorCodes.NOT_BIND_WECHAT -> {
                         //账号与安全
-                        val intent = Intent(requireActivity(), AccountAndSecurityActivity::class.java)
+                        val intent =
+                            Intent(requireActivity(), AccountAndSecurityActivity::class.java)
                         if (ForceUtils.activityMatch(intent)) {
                             startActivity(intent)
                         }
@@ -188,16 +189,23 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         when (info.userBasic.sex) {//Male、Female、Unknow
 
             Sex.FEMALE -> {
-                val drawable = ContextCompat.getDrawable(requireContext(), com.julun.huanque.core.R.mipmap.icon_sex_female_white)
+                val drawable = ContextCompat.getDrawable(
+                    requireContext(),
+                    com.julun.huanque.core.R.mipmap.icon_sex_female_white
+                )
                 if (drawable != null) {
                     drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
                     tvSex.setCompoundDrawables(drawable, null, null, null)
                 }
-                tvSex.backgroundResource = com.julun.huanque.core.R.drawable.bg_shape_mine_sex_female
+                tvSex.backgroundResource =
+                    com.julun.huanque.core.R.drawable.bg_shape_mine_sex_female
                 tvSex.text = "${info.userBasic.age}"
             }
             else -> {
-                val drawable = ContextCompat.getDrawable(requireContext(), com.julun.huanque.core.R.mipmap.icon_sex_male_white)
+                val drawable = ContextCompat.getDrawable(
+                    requireContext(),
+                    com.julun.huanque.core.R.mipmap.icon_sex_male_white
+                )
                 if (drawable != null) {
                     drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
                     tvSex.setCompoundDrawables(drawable, null, null, null)
@@ -251,7 +259,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
                     "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
                     MyAlertDialog.MyDialogCallback(onRight = {
-                        ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
+                        (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                            .navigation() as? IRealNameService)?.checkRealHead()
                     }), "真人照片未认证", okText = "去认证", noText = "取消"
                 )
             }
@@ -330,7 +339,10 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         }
         tvService.onClickNew {
             val extra = Bundle()
-            extra.putString(BusiConstant.WEB_URL, mViewModel.userInfo.value?.getT()?.customerUrl ?: "")
+            extra.putString(
+                BusiConstant.WEB_URL,
+                mViewModel.userInfo.value?.getT()?.customerUrl ?: ""
+            )
             var intent = Intent(requireActivity(), WebActivity::class.java)
             intent.putExtras(extra)
             startActivity(intent)

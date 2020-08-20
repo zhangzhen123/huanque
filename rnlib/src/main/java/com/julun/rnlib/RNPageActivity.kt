@@ -19,13 +19,13 @@ import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.FileUtils
 import com.julun.huanque.common.utils.NetUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.luck.picture.lib.PictureSelector
@@ -479,10 +479,10 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         val userId = id.toLong()
                         val bundle = Bundle()
                         bundle.putLong(ParamConstant.TARGET_USER_ID, userId)
-                        if(params.hasKey("nickname")){
+                        if (params.hasKey("nickname")) {
                             bundle.putString(ParamConstant.NICKNAME, params.getString("nickname"))
                         }
-                        if(params.hasKey("headPic")){
+                        if (params.hasKey("headPic")) {
                             bundle.putString(ParamConstant.HeaderPic, params.getString("headPic"))
                         }
 //                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
@@ -533,10 +533,10 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         val userId = id.toLong()
                         val bundle = Bundle()
                         bundle.putLong(ParamConstant.TARGET_USER_ID, userId)
-                        if(params.hasKey("nickname")){
+                        if (params.hasKey("nickname")) {
                             bundle.putString(ParamConstant.NICKNAME, params.getString("nickname"))
                         }
-                        if(params.hasKey("headPic")){
+                        if (params.hasKey("headPic")) {
                             bundle.putString(ParamConstant.HeaderPic, params.getString("headPic"))
                         }
 //                        intent.putExtra(ParamConstant.MEET_STATUS, meetStatus)
@@ -571,7 +571,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     if (params?.hasKey("text") == true) {
                         ToastUtils.show(params.getString("text"))
                     }
-                    ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
+                    (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                        .navigation() as? IRealNameService)?.checkRealHead()
                 }
                 RnConstant.SHARE_INVITE_PAGE -> {
                     ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY)
@@ -614,29 +615,29 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     finish()
                 }
 
-                RnConstant.IMAGE_PAGE ->{
-                    var list= arrayListOf<String>()
-                    var index=0
+                RnConstant.IMAGE_PAGE -> {
+                    var list = arrayListOf<String>()
+                    var index = 0
                     if (params?.hasKey("index") == true) {
-                        index=params.getInt("index")
+                        index = params.getInt("index")
                     }
                     if (params?.hasKey("list") == true) {
-                        val rrl=params.getArray("list")?:return@runOnUiThread
+                        val rrl = params.getArray("list") ?: return@runOnUiThread
                         for (i in 0 until rrl.size()) {
-                            list.add(rrl.getMap(i)?.getString("coverPic")?:"")
+                            list.add(rrl.getMap(i)?.getString("coverPic") ?: "")
                         }
                     }
 
-                    ImageActivity.start(this,index,list,from = ImageActivityFrom.RN)
+                    ImageActivity.start(this, index, list, from = ImageActivityFrom.RN)
                 }
 
-                RnConstant.WEBVIEW_PAGE->{
+                RnConstant.WEBVIEW_PAGE -> {
                     //访问webActivity
                     var url = ""
                     if (params?.hasKey("url") == true) {
-                        url=params.getString("url") ?: ""
+                        url = params.getString("url") ?: ""
                     }
-                    if(url.isNotEmpty()){
+                    if (url.isNotEmpty()) {
                         val extra = Bundle()
                         extra.putString(BusiConstant.WEB_URL, url)
                         var intent = Intent(this, WebActivity::class.java)
@@ -706,7 +707,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun receiveImagePosition(event: ImagePositionEvent) {
         logger("收到查看图片的位置的消息：${event.position}")
-        if(event.position!=-1){
+        if (event.position != -1) {
             RnManager.promiseMap[RnConstant.IMAGE_PAGE]?.resolve(event.position)
         }
 
