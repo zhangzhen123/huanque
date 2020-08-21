@@ -4,15 +4,11 @@ import androidx.lifecycle.*
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
-import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserSecurityInfo
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.BalanceUtils
-import com.julun.huanque.core.net.UserService
-import kotlinx.coroutines.launch
+import com.julun.huanque.common.net.services.UserService
 
 /**
  *

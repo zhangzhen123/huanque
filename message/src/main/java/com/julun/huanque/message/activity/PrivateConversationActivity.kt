@@ -282,6 +282,7 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.addMessageData?.observe(this, Observer {
             if (it != null) {
                 mAdapter.addData(it)
+                mAdapter.upFetchModule.isUpFetching = false
                 mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
                 scrollToBottom(true)
                 showXiaoQueAuto()
@@ -292,8 +293,9 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.messageChangeState?.observe(this, Observer {
             if (it == true) {
                 mAdapter.notifyDataSetChanged()
+                mAdapter.upFetchModule.isUpFetching = false
                 mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
-                scrollToBottom()
+//                scrollToBottom()
                 mPrivateConversationViewModel?.messageChangeState?.value = null
                 showXiaoQueAuto()
             }

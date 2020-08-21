@@ -75,31 +75,8 @@ class VoiceChatViewModel : BaseViewModel() {
     //创建者ID
     var createUserId = 0L
 
-
-    /**
-     * 创建会话
-     */
-    fun createConmmunication(userId: Long) {
-//        viewModelScope.launch {
-//            request({
-//                val result = socialService.createCommunication(CreateCommunicationForm(userId)).dataConvert()
-//                netcallBeanData.value = result
-//            }, {
-//                if (it is ResponseError) {
-//                    //对方忙
-//                    when (it.busiCode) {
-//                        1403 -> {
-//                            //对方忙
-//                            voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_BUSY)
-//                        }
-//
-//                    }
-//
-//                    currentVoiceState.value = VOICE_CLOSE
-//                }
-//            })
-//        }
-    }
+    //等待关闭状态
+    var waitingClose = false
 
     /**
      * 接受会话
@@ -117,9 +94,14 @@ class VoiceChatViewModel : BaseViewModel() {
      * @param timeOut 是否已超时
      */
     fun refuseVoice(timeOut: Boolean = false) {
+        if (waitingClose) {
+            return
+        }
+        waitingClose = true
         viewModelScope.launch {
             request({
                 socialService.netcallRefuse(NetcallIdForm(callId)).dataConvert()
+            }, {}, {
                 //挂断当前语音
                 currentVoiceState.value = VOICE_CLOSE
                 if (timeOut) {
@@ -146,9 +128,14 @@ class VoiceChatViewModel : BaseViewModel() {
      * 主叫取消通话
      */
     fun calcelVoice(type: String) {
+        if (waitingClose) {
+            return
+        }
+        waitingClose = true
         viewModelScope.launch {
             request({
                 socialService.netcallCancel(NetcallCancelForm(callId, type)).dataConvert()
+            }, {}, {
                 if (type == CancelType.Timeout) {
                     ToastUtils.show("对方无应答")
                     voiceBeanData.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_NOT_ACCEPT)
@@ -164,6 +151,10 @@ class VoiceChatViewModel : BaseViewModel() {
      * 挂断语音通话
      */
     fun hangUpVoice() {
+        if (waitingClose) {
+            return
+        }
+        waitingClose = true
         viewModelScope.launch {
             request({
                 val result = socialService.netcallHangUp(NetcallHangUpForm(callId, duration)).dataConvert()

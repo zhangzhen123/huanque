@@ -144,7 +144,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
 
-    private fun registerMessage(){
+    private fun registerMessage() {
         MessageProcessor.clearProcessors(false)
         //语音通话开始消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallAcceptProcessor {
@@ -188,6 +188,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
+                if(mVoiceChatViewModel?.waitingClose == true){
+                    return
+                }
+                mVoiceChatViewModel?.waitingClose = true
                 mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }
@@ -199,6 +203,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
+                if(mVoiceChatViewModel?.waitingClose == true){
+                    return
+                }
+                mVoiceChatViewModel?.waitingClose = true
                 if (data.hangUpId != SessionUtils.getUserId()) {
                     //非本人挂断
                     mVoiceChatViewModel?.voiceBeanData?.value =
@@ -220,6 +228,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
+                if(mVoiceChatViewModel?.waitingClose == true){
+                    return
+                }
+                mVoiceChatViewModel?.waitingClose = true
                 mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_REFUSE)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }
@@ -227,6 +239,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         //服务端断开消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallDisconnectProcessor {
             override fun process(data: VoidResult) {
+                if(mVoiceChatViewModel?.waitingClose == true){
+                    return
+                }
+                mVoiceChatViewModel?.waitingClose = true
                 mVoiceChatViewModel?.voiceBeanData?.value =
                     VoiceConmmunicationSimulate(VoiceResultType.CONMMUNICATION_FINISH, mVoiceChatViewModel?.duration ?: 0)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
@@ -246,6 +262,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
+                if(mVoiceChatViewModel?.waitingClose == true){
+                    return
+                }
+                mVoiceChatViewModel?.waitingClose = true
                 ToastUtils.show("对方忙")
                 mVoiceChatViewModel?.voiceBeanData?.value =
                     VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_BUSY)
@@ -265,7 +285,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         } else {
             MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }
         }
-//        mPlayer?.start()
+        mPlayer?.start()
 
         am?.mode = AudioManager.MODE_NORMAL
         am?.isSpeakerphoneOn = true;
@@ -422,7 +442,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
                         playAudio(false)
                         //退出频道
-                        leaveChannel()
+//                        leaveChannel()
 //                        ToastUtils.show("通话已结束")
                         mDisposable?.dispose()
                         mDurationDisposable?.dispose()
@@ -716,7 +736,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 if (mType == ConmmunicationUserType.CALLING) {
                     mVoiceChatViewModel?.calcelVoice(CancelType.Timeout)
                 } else {
-                    mVoiceChatViewModel?.refuseVoice(true)
+//                    mVoiceChatViewModel?.refuseVoice(true)
+                    mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
                 }
 
             }, {})

@@ -12,12 +12,14 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.DataCleanManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.message.activity.MessageSettingActivity
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
@@ -58,6 +60,7 @@ class SettingActivity : BaseActivity() {
         if (!BuildConfig.DEBUG) {
             tvChange.hide()
         }
+        calclateCacheSize()
     }
 
     override fun initEvents(rootView: View) {
@@ -91,13 +94,20 @@ class SettingActivity : BaseActivity() {
 
         view_clear_cache.onClickNew {
             //清空缓存
-            MyAlertDialog(this).showAlertWithOKAndCancel(
-                "确定清空缓存？",
-                MyAlertDialog.MyDialogCallback(onRight = {
-                    DataCleanManager.clearAllCache(applicationContext)
-                }, onCancel = {
-                }), "清空提示", "确定"
-            )
+            if (cache_size.visibility == View.VISIBLE) {
+                MyAlertDialog(this).showAlertWithOKAndCancel(
+                    "确定清空缓存？",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        DataCleanManager.clearAllCache(applicationContext)
+                        ToastUtils.show("清空缓存成功")
+                        cache_size.hide()
+                    }, onCancel = {
+                    }), "清空提示", "确定"
+                )
+            } else {
+                ToastUtils.show("当前没有缓存")
+            }
+
         }
 
         view_accountandsecurity.onClickNew {
@@ -148,6 +158,18 @@ class SettingActivity : BaseActivity() {
         view_anchor_agreement.onClickNew {
             //主播管理规范
             WebActivity.startWeb(this, Agreement.AnchorAgreement)
+        }
+    }
+
+    /**
+     * 计算缓存
+     */
+    private fun calclateCacheSize() {
+        val cacheSize: String = DataCleanManager.getTotalCacheSize(CommonInit.getInstance().getApp())
+        if (cacheSize == "0K") {
+            cache_size.hide()
+        } else {
+            cache_size.text = cacheSize
         }
     }
 }

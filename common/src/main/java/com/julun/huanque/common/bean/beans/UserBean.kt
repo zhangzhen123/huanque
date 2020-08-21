@@ -182,3 +182,8 @@ data class UserSecurityInfo(
     var mobile: String = "",
     var security: Boolean = false
 )
+
+/**
+ * 余额使用
+ */
+data class BeansData(var beans: Long = 0) : Serializable

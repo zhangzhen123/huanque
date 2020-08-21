@@ -99,6 +99,10 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
             //弹窗说明弹窗
             mListener?.showPrivilegeFragment("ZSBQ")
         }
+
+        view_shade.onClickNew {
+            //屏蔽事件
+        }
     }
 
 

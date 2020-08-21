@@ -487,6 +487,8 @@ class MainActivity : BaseActivity() {
             //重新去定位地址
             mLocationService.registerListener(mLocationListener)
             mLocationService.start()
+        }else{
+            mMainViewModel.unreadMsgCount.value = 0
         }
 
     }

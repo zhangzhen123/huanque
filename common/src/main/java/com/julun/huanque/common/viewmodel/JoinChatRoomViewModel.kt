@@ -7,7 +7,10 @@ import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.message_dispatch.MessageReceptor
 import com.julun.huanque.common.suger.logger
+import io.rong.imlib.IRongCallback
 import io.rong.imlib.RongIMClient
+import io.rong.imlib.model.Message
+import io.rong.message.TextMessage
 
 /**
  * Created by dong on 2017/12/13.
@@ -15,6 +18,7 @@ import io.rong.imlib.RongIMClient
 class JoinChatRoomViewModel : BaseViewModel() {
     //是否加入直播间的标志
     val joinData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //调用加入直播间方法
     val joinChatRoomFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -36,10 +40,10 @@ class JoinChatRoomViewModel : BaseViewModel() {
             override fun onSuccess() {
 //                imState = RCIM_STATE_CHATROOMED
                 logger("当前的线程：${Thread.currentThread().name}")
-                RongCloudManager.joinChatRoomTime = System.currentTimeMillis()
                 MessageReceptor.destroyBufferedTimer()
                 MessageReceptor.createBufferedTimer()
                 joinData.value = true
+                getHistoryMessage(rId.toString())
             }
 
             override fun onError(errorCode: RongIMClient.ErrorCode?) {
@@ -49,6 +53,31 @@ class JoinChatRoomViewModel : BaseViewModel() {
             }
         })
 
+    }
+
+    /**
+     * 获取缓存的历史消息
+     */
+    private fun getHistoryMessage(targetID: String) {
+        RongIMClient.getInstance().getChatroomHistoryMessages(
+            targetID,
+            System.currentTimeMillis(),
+            50,
+            RongIMClient.TimestampOrder.RC_TIMESTAMP_DESC,
+            object : IRongCallback.IChatRoomHistoryMessageCallback {
+                override fun onSuccess(p0: MutableList<Message>?, p1: Long) {
+                    p0?.forEach { message ->
+                        val conent = message.content
+                        if (conent is TextMessage) {
+                            RongCloudManager.switchThread(message)
+                        }
+                    }
+                }
+
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                }
+
+            })
     }
 
 }

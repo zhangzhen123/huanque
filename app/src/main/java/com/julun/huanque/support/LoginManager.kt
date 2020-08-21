@@ -5,7 +5,6 @@ import com.ishumei.smantifraud.SmAntiFraud
 import com.julun.huanque.BuildConfig
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.events.LoginEvent
-import com.julun.huanque.common.bean.forms.BindForm
 import com.julun.huanque.common.bean.forms.MobileLoginForm
 import com.julun.huanque.common.bean.forms.MobileQuickForm
 import com.julun.huanque.common.bean.forms.WeiXinForm
@@ -21,8 +20,7 @@ import com.julun.huanque.common.utils.LoginStatusUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.ULog
-import com.julun.huanque.core.net.UserService
-import com.julun.huanque.core.manager.AliPayManager
+import com.julun.huanque.common.net.services.UserService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
