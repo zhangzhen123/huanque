@@ -55,7 +55,7 @@ class SysMsgAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.item_sy
             //desc
             holder.setText(R.id.tvBody, itemInfo?.body ?: "")
 
-            if (itemInfo?.touchType?.isNotEmpty() == true && itemInfo?.touchValue?.isNotEmpty()) {
+            if (itemInfo?.touchType?.isNotEmpty() == true) {
                 holder.setVisible(R.id.tvCheckOut, true)
                     .setVisible(R.id.vLine, true)
             } else {

@@ -18,6 +18,12 @@ interface IRealNameService : IProvider {
     )
     //开始头像认证
     fun startRealHead(activity: Activity, callback: RealNameCallback)
+
+    /**
+     * 检查是否要打开头像认证
+     */
+    fun checkRealHead()
+
     //销毁
     fun release()
 }

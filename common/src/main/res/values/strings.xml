@@ -587,4 +587,7 @@
 
     <string name="ensure_withdraw">确认提现</string>
     <string name="default_sign">签名不足以表达我自己，找我私聊吧~</string>
+
+    <string name="wealth_address">level/user/L%1$d.png</string>
+    <string name="anchor_address">level/anchor/L%1$d.png</string>
 </resources>

@@ -90,21 +90,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:text="官方微信：xxxxxxxxxxxxx"
+        android:text="联系在线客服"
         android:textColor="#C5C5C5"
         android:textSize="@dimen/sp_12"
         app:layout_constraintBottom_toBottomOf="@id/view_suggest"
         app:layout_constraintLeft_toLeftOf="@id/tv_suggest"
         app:layout_constraintTop_toBottomOf="@id/tv_suggest" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="35dp"
-        android:text="点击复制"
-        app:layout_constraintBottom_toBottomOf="@id/view_suggest"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/view_suggest" />
 
     <ImageView
         android:layout_width="wrap_content"

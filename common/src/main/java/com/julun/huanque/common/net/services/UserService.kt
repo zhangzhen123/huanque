@@ -1,4 +1,4 @@
-package com.julun.huanque.core.net
+package com.julun.huanque.common.net.services
 
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.basic.Root
@@ -159,5 +159,10 @@ interface UserService {
     suspend fun security(@Body form: EmptyForm = EmptyForm()): Root<UserSecurityInfo>
 
 
+    /**
+     * 获取账户余额
+     */
+    @POST("user/acct/info/beans")
+    suspend fun beans(@Body form: EmptyForm = EmptyForm()) : Root<BeansData>
 
 }

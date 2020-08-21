@@ -30,10 +30,13 @@ object BusiConstant {
 
     //False
     const val False = "False"
+
     //首页图片方格大小
     const val OSS_120 = "!120"
+
     //所有头像统一裁剪这么大
     const val OSS_160 = "!160"
+
     //广场封面大小
     const val OSS_350 = "!350"
 }
@@ -62,6 +65,9 @@ object SPParamKey {
 
     //悬浮窗内的ProgramId
     const val PROGRAM_ID_IN_FLOATING = "PROGRAM_ID_IN_FLOATING"
+    
+    //客服地址
+    const val CUSTOMER_URL = "CUSTOMER_URL"
 }
 
 /**
@@ -117,10 +123,13 @@ object ErrorCodes {
 
     //资料完成度100%且封面相册超过3张才能认证主播
     const val NOT_INFO_COMPLETE = 1128
+
     //完成微信绑定才能认证主播
     const val NOT_BIND_WECHAT = 1129
+
     //完成实名认证才能认证主播
     const val NOT_REAL_NAME = 1130
+
     //已经绑定其他账号
     const val HAS_BIND_OTHER = 1016
 
@@ -825,32 +834,36 @@ object PlayerFrom {
 /**
  * 需要悬浮窗权限的跳转类型
  */
-object PermissionJumpType{
+object PermissionJumpType {
     //私聊详情
     const val PrivateChat = "PrivateChat"
+
     //联系人页面
     const val Contacts = "Contacts"
 }
 
-object RNMessageConst{
+object RNMessageConst {
 
     /**
      * 给RN发送的消息类型
      */
     //密友关系发送变化param：{friendId: number,intimateLevel:number}
-    const val IntimateFriendChange:String="IntimateFriendChange"
+    const val IntimateFriendChange: String = "IntimateFriendChange"
+
     //关注用户变化param:{userId: number, isFollowed: boolean}
-    const val FollowUserChange:String="FollowUserChange"
+    const val FollowUserChange: String = "FollowUserChange"
 }
 
 /**
  * 隐私协议
  */
-object Agreement{
+object Agreement {
     //用户协议
     const val UserAgreement = "https://cdn.ihuanque.com/protocol/UserReg.html"
+
     //隐私协议
     const val PrivacyAgreement = "https://cdn.ihuanque.com/protocol/PrivacyProtect.html"
+
     //主播管理规范
     const val AnchorAgreement = "https://cdn.ihuanque.com/protocol/AnchorManage.html"
 }

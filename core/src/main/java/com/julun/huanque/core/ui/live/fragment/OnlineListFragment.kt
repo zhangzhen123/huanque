@@ -101,7 +101,8 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
     override fun showLoadState(state: NetState) {
         when (state.state) {
             NetStateType.SUCCESS -> {
-                adapter.setEmptyView(MixedHelper.getEmptyView(requireContext()))
+                mHeadView.findViewById<View>(R.id.tvHeadBottom).hide()
+                adapter.removeEmptyView()
             }
             NetStateType.LOADING -> {
                 adapter.setEmptyView(MixedHelper.getLoadingView(requireContext()))
@@ -251,7 +252,6 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                             val bundle = Bundle()
                             bundle.putLong("programId",mPlayerViewModel.programId)
                             RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
-                            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
                         }
 
                     } else {
@@ -260,7 +260,6 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                             val bundle = Bundle()
                             bundle.putLong("programId",mPlayerViewModel.programId)
                             RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
-                            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE)
                         }
                     }
                 }

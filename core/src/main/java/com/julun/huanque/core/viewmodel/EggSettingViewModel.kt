@@ -8,7 +8,7 @@ import com.julun.huanque.common.bean.beans.SingleTipsUpdate
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
-import com.julun.huanque.core.net.UserService
+import com.julun.huanque.common.net.services.UserService
 
 /**
  *@创建者   dong

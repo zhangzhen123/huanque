@@ -26,6 +26,10 @@ class NetcallIdForm(var callId: Long)
 
 class NetcallCancelForm(var callId: Long, var cancelType: String)
 
+/**
+ * 接收匿名邀请的form
+ */
+class InviteUserIdForm(var inviteUserId: Long = 0)
 
 /**
  * 挂断通话的form

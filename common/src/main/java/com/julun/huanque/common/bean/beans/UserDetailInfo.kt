@@ -29,8 +29,6 @@ data class UserBasic(
     var userExp: Long = 0L,
     var userId: Long = 0L,
     var userLevel: Int = 0,
-    var userLevelIcon: String = "",
-    var anchorLevelPic: String = "",
     var userType: String = "",
     var age: Int = 0
 )

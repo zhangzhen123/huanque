@@ -449,7 +449,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
             val bi = chatGift.beans * max(chatGift.giftCount, 1)
             val str = if (mine) {
-                "送TA一${chatGift.giftName}#$bi"
+                "送你一${chatGift.giftName}#$bi"
             } else {
                 "送你一${chatGift.giftName}#$bi"
             }

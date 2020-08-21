@@ -183,8 +183,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     requireActivity(),
                     position,
                     list.map { StringHelper.getOssImgUrl(it.url) },
-                    item?.userId,
-                    ImageActivityOperate.REPORT
+                    item?.userId
                 )
             }
 
@@ -196,11 +195,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     }
                     HeadModule.AnonymousVoice -> {
                         //匿名语音
-                        val act = requireActivity()
-                        val intent = Intent(act, AnonymousVoiceActivity::class.java)
-                        if (ForceUtils.activityMatch(intent)) {
-                            act.startActivity(intent)
-                        }
+                        ARouter.getInstance().build(ARouterConstant.ANONYMOUS_VOICE_ACTIVITY).navigation()
                     }
                     HeadModule.MagpieParadise -> {
 
@@ -247,12 +242,12 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 R.id.iv_guide_tag_close -> {
                     logger.info("点击引导标签关闭---$position")
                     mAdapter.removeAt(position)
-                    mViewModel.guideCloseByUser1=true
+                    mViewModel.guideCloseByUser1 = true
                 }
                 R.id.iv_guide_info_close -> {
                     logger.info("点击引导完善资料关闭---$position")
                     mAdapter.removeAt(position)
-                    mViewModel.guideCloseByUser2=true
+                    mViewModel.guideCloseByUser2 = true
                 }
                 R.id.ll_balance -> {
                     logger.info("零钱")

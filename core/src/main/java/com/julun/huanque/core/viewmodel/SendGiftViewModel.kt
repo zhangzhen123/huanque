@@ -1,6 +1,5 @@
 package com.julun.huanque.core.viewmodel
 
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.beans.GiftDataDto
@@ -15,7 +14,7 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.core.net.UserService
+import com.julun.huanque.common.net.services.UserService
 import kotlinx.coroutines.launch
 
 /**
