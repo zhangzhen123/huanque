@@ -36,7 +36,7 @@ class JoinChatRoomViewModel : BaseViewModel() {
         }
         rId.append(programId)
         // -1: 不拉取任何消息
-        RongIMClient.getInstance().joinChatRoom(rId.toString(), 20, object : RongIMClient.OperationCallback() {
+        RongIMClient.getInstance().joinChatRoom(rId.toString(), -1, object : RongIMClient.OperationCallback() {
             override fun onSuccess() {
 //                imState = RCIM_STATE_CHATROOMED
                 logger("当前的线程：${Thread.currentThread().name}")
@@ -63,7 +63,7 @@ class JoinChatRoomViewModel : BaseViewModel() {
             targetID,
             System.currentTimeMillis(),
             50,
-            RongIMClient.TimestampOrder.RC_TIMESTAMP_DESC,
+            RongIMClient.TimestampOrder.RC_TIMESTAMP_ASC,
             object : IRongCallback.IChatRoomHistoryMessageCallback {
                 override fun onSuccess(p0: MutableList<Message>?, p1: Long) {
                     p0?.forEach { message ->
