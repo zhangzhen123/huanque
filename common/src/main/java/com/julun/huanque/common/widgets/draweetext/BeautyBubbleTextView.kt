@@ -132,8 +132,17 @@ class BeautyBubbleTextView : RelativeLayout {
                         draweeSpanTv.backgroundDrawable = gDrawable
                     }
                 }
-                dlp.topMargin = dp2px(7)
-                dlp.bottomMargin = dp2px(7)
+                if (chatBubble.lt.isNotEmpty() || chatBubble.rt.isNotEmpty()) {
+                    dlp.topMargin = dp2px(7)
+                } else {
+                    dlp.topMargin = dp2px(3)
+                }
+                if (chatBubble.lb.isNotEmpty() || chatBubble.rb.isNotEmpty()) {
+                    dlp.bottomMargin = dp2px(7)
+                } else {
+                    dlp.bottomMargin = dp2px(3)
+                }
+
             }
 
         } catch (e: Exception) {

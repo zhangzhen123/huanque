@@ -54,7 +54,6 @@ class DraweeSpanTextView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        logger.info("onDraw")
         if(hasRainbow){
             //有彩虹屁就不停的更新
             postInvalidateDelayed(16)
