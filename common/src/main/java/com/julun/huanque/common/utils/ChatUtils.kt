@@ -17,7 +17,11 @@ object ChatUtils {
     /**
      * 创建聊天时使用的用户对象
      */
-    fun createRoomUserChat(roomData: UserEnterRoomRespDto? = null, baseData: UserEnterRoomRespBase? = null, isAnchor: Boolean = false): RoomUserChatExtra {
+    fun createRoomUserChat(
+        roomData: UserEnterRoomRespDto? = null,
+        baseData: UserEnterRoomRespBase? = null,
+        isAnchor: Boolean = false
+    ): RoomUserChatExtra {
         val roomUserChat: RoomUserChatExtra
 
         val userInfo = roomData?.user
@@ -25,11 +29,17 @@ object ChatUtils {
             //用户信息为空，表示为主播
             val anchorInfo = roomData?.anchor
             if (anchorInfo == null) {
-                roomUserChat = RoomUserChatExtra(userId = SessionUtils.getUserId(), nickname = SessionUtils.getNickName(), nickcolor = "#FFD630")
+                roomUserChat = RoomUserChatExtra(
+                    userId = SessionUtils.getUserId(),
+                    nickname = SessionUtils.getNickName(),
+                    nickColor = "#FFD630"
+                )
             } else {
-                roomUserChat = RoomUserChatExtra(userId = SessionUtils.getUserId(), nickname = anchorInfo.programName,
-                        nickcolor = "#FFD630",
-                        anchorLevel = anchorInfo.anchorLevel)
+                roomUserChat = RoomUserChatExtra(
+                    userId = SessionUtils.getUserId(), nickname = anchorInfo.programName,
+                    nickColor = "#FFD630",
+                    anchorLevel = anchorInfo.anchorLevel
+                )
             }
         } else {
             //主播信息为空，表示为普通用户
@@ -37,12 +47,16 @@ object ChatUtils {
             if (isAnchor && baseData != null) {
                 anchorLevel = baseData.anchorLevel
             }
-            roomUserChat = RoomUserChatExtra(userId = userInfo.userId, nickname = userInfo.nickname,
-                    royalLevel = userInfo.royalLevel, userLevel = userInfo.userLevel,
-                    anchorLevel = anchorLevel,
-                    badgesPic = userInfo.badgesPic,
-                    royalPic = userInfo.royalPic,
-                    nickcolor = userInfo.nickcolor,chatBubble = userInfo.chatBubble)
+            roomUserChat = RoomUserChatExtra(
+                userId = userInfo.userId, nickname = userInfo.nickname,
+                royalLevel = userInfo.royalLevel, userLevel = userInfo.userLevel,
+                anchorLevel = anchorLevel,
+                badgesPic = userInfo.badgesPic,
+                royalPic = userInfo.royalPic,
+                nickColor = userInfo.nickColor,
+                lightColor = userInfo.lightColor,
+                chatBubble = userInfo.chatBubble
+            )
         }
         return roomUserChat
     }
@@ -51,20 +65,24 @@ object ChatUtils {
      * 创建用户   上神聊天室使用
      */
     fun createRoomUserChat(userInfo: UserInfo): RoomUserChatExtra {
-        return RoomUserChatExtra(userId = userInfo.userId, nickname = userInfo.nickname,
-                royalLevel = userInfo.royalLevel, userLevel = userInfo.userLevel,
-                royalPic = userInfo.royalPic,royalSmallPic = userInfo.royalSmallPic,
-            headPic = userInfo.headPic, anchorLevel = 0, nickcolor = userInfo.nickcolor)
+        return RoomUserChatExtra(
+            userId = userInfo.userId, nickname = userInfo.nickname,
+            royalLevel = userInfo.royalLevel, userLevel = userInfo.userLevel,
+            royalPic = userInfo.royalPic, royalSmallPic = userInfo.royalSmallPic,
+            headPic = userInfo.headPic, anchorLevel = 0, nickColor = userInfo.nickColor
+        )
     }
 
     /**
      * 创建用户   聊天列表使用
      */
     fun createRoomUserChat(cUser: ChatUser): RoomUserChatExtra {
-        return RoomUserChatExtra(userId = cUser.userId, nickname = cUser.nickname
-                /*royalLevel = cUser.royalLevel, userLevel = cUser.userLevel,
-                anchorLevel = cUser.anchorLevel,
-                nickcolor = cUser.nickcolor*/)
+        return RoomUserChatExtra(
+            userId = cUser.userId, nickname = cUser.nickname
+            /*royalLevel = cUser.royalLevel, userLevel = cUser.userLevel,
+            anchorLevel = cUser.anchorLevel,
+            nickcolor = cUser.nickcolor*/
+        )
     }
 
 
