@@ -621,6 +621,10 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     if (params?.hasKey("index") == true) {
                         index = params.getInt("index")
                     }
+                    var userId = 0
+                    if(params?.hasKey("userId")==true){
+                        userId=params.getInt("userId")
+                    }
                     if (params?.hasKey("list") == true) {
                         val rrl = params.getArray("list") ?: return@runOnUiThread
                         for (i in 0 until rrl.size()) {
@@ -628,7 +632,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         }
                     }
 
-                    ImageActivity.start(this, index, list, from = ImageActivityFrom.RN)
+                    ImageActivity.start(this, index, list, from = ImageActivityFrom.RN,operate = ImageActivityOperate.REPORT,userId = userId.toLong())
                 }
 
                 RnConstant.WEBVIEW_PAGE -> {
