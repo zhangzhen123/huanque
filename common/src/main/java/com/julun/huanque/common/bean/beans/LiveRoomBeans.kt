@@ -62,7 +62,8 @@ class RoomUserChatExtra(
     var anchorLevel: Int = -1,
     //添加勋章列表
     var badgesPic: List<String?> = ArrayList(),
-    var nickcolor: String = "",
+    var nickColor: String = "",
+    var lightColor:String = "",
     var textColor: String = "",
     //发送者的ID
     var senderId: Long = 0,
@@ -332,8 +333,6 @@ class UserEnterRoomRespDto : Serializable {
 
     var roomMicInfo: MicInfo? = null
 
-    //活动数据
-//    var extData: ExtData? = null
     //年度盛典红包
     var redPackets: ArrayList<YearRedPackageResult> = ArrayList()
 
@@ -344,9 +343,6 @@ class UserEnterRoomRespDto : Serializable {
 
     //是否显示每日任务标识
     var showTasks: Boolean = false
-
-    //萌新礼包定时器时间 -1 表示不需要设置定时器
-    var newUserPacksTimer: Int? = null
 
     //炫彩发言时间
     var speakTtl: Long = 0
@@ -360,7 +356,6 @@ class UserEnterRoomRespDto : Serializable {
 
     //是否打卡
     var fansClockIn: Boolean = false
-    var wishingShowType: String = ""
 
     //4.18.1新增字段 author:WanZhiYuan
     /** 引导广告信息 **/
@@ -502,8 +497,9 @@ class UserInfo {
     var badgesPic: List<String> = arrayListOf()
 
     //昵称颜色
-    var nickcolor: String = ""
-
+    var nickColor: String = ""
+    //闪光颜色
+    var lightColor: String = ""
     //是否守护
     var roomGuard: Boolean = false
 

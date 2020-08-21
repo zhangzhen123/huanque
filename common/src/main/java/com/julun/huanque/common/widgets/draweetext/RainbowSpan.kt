@@ -1,36 +1,38 @@
 package com.julun.huanque.common.widgets.draweetext
 
 import android.graphics.*
-import android.text.style.ReplacementSpan
+import android.text.TextPaint
+import android.text.style.CharacterStyle
+import android.text.style.UpdateAppearance
 import com.julun.huanque.common.suger.logger
+import kotlin.math.sin
 
-class RainbowSpan: ReplacementSpan() {
+class AnimatedRainbowSpan(private var colors: IntArray= intArrayOf(Color.BLUE, Color.DKGRAY, Color.GREEN)) : CharacterStyle(), UpdateAppearance {
+    private var shader: Shader? = null
+    private val matrix = Matrix()
+    var translateXPercentage = 1f
 
-    private val colors: IntArray= intArrayOf(Color.BLUE,Color.DKGRAY)
-    override fun getSize(paint: Paint, text: CharSequence?, start: Int, end: Int, fm: Paint.FontMetricsInt?): Int {
-        logger("text=${text} start=$start end=$end fm=${fm}")
-        return end
-    }
-
-    override fun draw(
-        canvas: Canvas,
-        text: CharSequence?,
-        start: Int,
-        end: Int,
-        x: Float,
-        top: Int,
-        y: Int,
-        bottom: Int,
-        paint: Paint
-    ) {
+    override fun updateDrawState(paint: TextPaint) {
+        logger("updateDrawState $translateXPercentage")
+        translateXPercentage += 0.03f
+        if(translateXPercentage>=4.3f){
+            translateXPercentage=1.9f
+        }
         paint.style = Paint.Style.FILL
-        val shader: Shader = LinearGradient(
-            0f, 0f, 0f, paint.textSize * colors.size, colors, null,
-            Shader.TileMode.MIRROR
-        )
-        val matrix = Matrix()
+//        val width=paint.measureText(text)
+        val width = paint.textSize * colors.size
+        if (shader == null) {
+            shader = LinearGradient(
+                0f, 0f, 0f, width, colors, null,
+                Shader.TileMode.CLAMP
+            )
+        }
+        matrix.reset()
         matrix.setRotate(90f)
-        shader.setLocalMatrix(matrix)
+        matrix.postTranslate(width * translateXPercentage, 0f)
+        shader!!.setLocalMatrix(matrix)
         paint.shader = shader
     }
+
+
 }
