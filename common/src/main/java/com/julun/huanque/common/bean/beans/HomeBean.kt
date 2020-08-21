@@ -216,7 +216,9 @@ data class AnonymousBasicInfo(
     //剩余次数
     var surplusTimes: Int = 0,
     //匹配时间，如果大于0  继续匹配状态
-    var waitingSeconds : Long = 0
+    var waitingSeconds: Long = 0,
+    //本人头像
+    var myHeadPic: String = ""
 ) : Serializable
 
 /**

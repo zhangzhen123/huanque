@@ -234,9 +234,11 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             if (it != null) {
                 when (it) {
                     AnonymousVoiceViewModel.WAIT -> {
-                        sdv_mine.show()
+                        mDisposable?.dispose()
+                        mPlayer?.stop()
+                        sdv_mine.hide()
                         sdv_mine.rotationY = 0f
-                        tv_open_mine.show()
+                        tv_open_mine.hide()
                         tv_open_mine.rotationY = 0f
 
                         con_userinfo_mine.alpha = 0f
@@ -322,6 +324,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     }
 
     private fun showViewByData(info: AnonymousBasicInfo) {
+        ImageUtils.loadImage(sdv_header, "${info.myHeadPic}${BusiConstant.OSS_160}", 75f, 75f)
         tv_duration.text = "剩余${info.surplusTimes}次"
         info.headPics.forEachIndexed { index, header ->
             when (index) {
@@ -351,7 +354,14 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         }
         ll_close.onClickNew {
             //挂断
-            mAnonymousVoiceViewModel?.hangUp()
+            if (mAnonymousVoiceViewModel?.currentState?.value == AnonymousVoiceViewModel.WAIT_ACCEPT) {
+                //拒绝语音邀请
+                mAnonymousVoiceViewModel?.inviteUserId?.let { id ->
+                    mAnonymousVoiceViewModel?.avoiceReject(id)
+                }
+            } else {
+                mAnonymousVoiceViewModel?.hangUp()
+            }
         }
         ll_voice_accept.onClickNew {
             //接受匿名语音
@@ -625,29 +635,34 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                 repeatMode = RESTART
             }
 
+            alphaAnimate.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+                    val pics = mAnonymousVoiceViewModel?.basicData?.value?.headPics ?: return
+                    val picSize = pics.size
+                    if (picSize > 0) {
+                        //获取随机头像显示
+                        val index = java.util.Random().nextInt(picSize)
+                        if (ForceUtils.isIndexNotOutOfBounds(index, pics)) {
+                            view.loadImage("${pics[index]}${BusiConstant.OSS_120}", 60f, 60f)
+                        }
+                    }
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    view.hide()
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                    view.show()
+                }
+
+            })
+
             playTogether(scaleXAnimate, scaleYAnimate, alphaAnimate)
         }
-        set.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-                val pics = mAnonymousVoiceViewModel?.basicData?.value?.headPics ?: return
-                val picSize = pics.size
-                if (picSize > 0) {
-                    //获取随机头像显示
-                }
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                view.hide()
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-                view.show()
-            }
-
-        })
         set.start()
     }
 
@@ -701,6 +716,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         ll_quiet.show()
         ll_close.show()
         ll_hands_free.show()
+        ll_voice_accept.hide()
         val countDownDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
             .take(communicationTime + 1)
             .observeOn(AndroidSchedulers.mainThread())
@@ -751,6 +767,8 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             }
 
             override fun onAnimationStart(animation: Animator?) {
+                tv_open_mine.alpha = 0f
+                tv_open_other.alpha = 0f
                 tv_open_mine.show()
                 tv_open_other.show()
             }
@@ -968,8 +986,22 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         super.onViewDestroy()
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         leaveChannel()
+        mDisposable?.dispose()
         mPlayer?.stop()
         mPlayer = null
+    }
+
+    override fun onBackPressed() {
+        val currentState = mAnonymousVoiceViewModel?.currentState?.value
+        if (currentState == AnonymousVoiceViewModel.MATCH) {
+            //调用取消匹配接口
+            mAnonymousVoiceViewModel?.cancelMatch()
+        }
+        if (currentState == AnonymousVoiceViewModel.VOICE || currentState == AnonymousVoiceViewModel.WAIT_ACCEPT) {
+            //通话中，或者等待接听状态   禁用返回键
+            return
+        }
+        super.onBackPressed()
     }
 
 }

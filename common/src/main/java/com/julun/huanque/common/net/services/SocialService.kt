@@ -227,4 +227,10 @@ interface SocialService {
      */
     @POST("social/friend/avoice/accept")
     suspend fun avoiceAccept(@Body form: InviteUserIdForm): Root<VoidResult>
+
+    /**
+     *
+     */
+    @POST("social/friend/avoice/reject")
+    suspend fun avoiceReject(@Body form: InviteUserIdForm) : Root<VoidResult>
 }
