@@ -153,7 +153,7 @@
             android:paddingEnd="@dimen/dimen_3"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_16"
-            tools:text="9999" />
+            tools:text="99" />
 
         <!--        <ImageView-->
         <!--            android:id="@+id/ivGuardIcon"-->

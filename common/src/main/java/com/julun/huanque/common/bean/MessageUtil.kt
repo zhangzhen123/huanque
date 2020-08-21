@@ -3,7 +3,6 @@ package com.julun.huanque.common.bean
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TplBeanExtraContext
-import com.julun.huanque.common.constant.MessageDisplayType
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.utils.JsonUtil
@@ -22,7 +21,7 @@ import java.util.regex.Pattern
 class StyleParam(
     var styleType: String = "", var preffix: String = "", var color: String? = null,
     var bgColor: String = "", var radius: Int = -1, var el: String = "", var source: String = "",
-    var fontWeight: String = "", var underLineColor: String? = null
+    var fontWeight: String = "", var underLineColor: String? = null, var lightColor: String = ""
 )
 
 //直播间消息实体类
@@ -130,7 +129,8 @@ open class TplBean(
             val toNicknameKey = "\${toNickName}" //目标人姓名
             val anchorLevel: Int = it.anchorLevel//主播等级
             //1.首先设置全局颜色
-            styleParamMap[MessageUtil.KEY_ALL] = StyleParam(styleType = MessageUtil.KEY_BASIC, color = "#FFFFFF",fontWeight = DraweeSpanTextView.BOLD)
+            styleParamMap[MessageUtil.KEY_ALL] =
+                StyleParam(styleType = MessageUtil.KEY_BASIC, color = "#FFFFFF", fontWeight = DraweeSpanTextView.BOLD)
             //2.主播的发言处理
             if (anchorLevel > 0 && it.targetUserObj?.nickname !== null && "${it.senderId}" == "${SessionUtils.getUserId()}") {
 
@@ -156,8 +156,11 @@ open class TplBean(
 
 
             textParams.put(nicknameKey, tNickName)
-            val nick = if (StringHelper.isEmpty(it.nickcolor)) null else it.nickcolor
-            styleParamMap.put(nicknameKey, StyleParam(el = nicknameKey, color = nick))
+            val nick = if (StringHelper.isEmpty(it.nickColor)) null else it.nickColor
+            styleParamMap[nicknameKey] = StyleParam(el = nicknameKey, color = nick)
+            if(it.lightColor.isNotEmpty()){
+                styleParamMap[nicknameKey] = StyleParam(el = nicknameKey, lightColor = it.lightColor)
+            }
 
             //4.添加勋章
             val goodsList = it.badgesPic
@@ -237,9 +240,9 @@ open class TplBean(
                     )
                 }
 //                if (it.displayType?.contains(MessageDisplayType.MYSTERY) != true || it.userLevel < 1) {
-                    //不是神秘人
-                    textTpl = "$levelIconKey$textTpl"
-                    textParams.put(levelIconKey, "${it.userLevel}")
+                //不是神秘人
+                textTpl = "$levelIconKey$textTpl"
+                textParams.put(levelIconKey, "${it.userLevel}")
 //                }
                 styleParamMap.put(
                     levelIconKey,

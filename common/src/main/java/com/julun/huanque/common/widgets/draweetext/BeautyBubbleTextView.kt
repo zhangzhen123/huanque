@@ -2,12 +2,12 @@ package com.julun.huanque.common.widgets.draweetext
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.facebook.drawee.view.SimpleDraweeView
@@ -86,7 +86,7 @@ class BeautyBubbleTextView : RelativeLayout {
 //            if (chatBubble.radius == -1) {
 //                chatBubble.radius = MessageUtil.MESSAGE_BG_RADIUS
 //            }
-            val dlp=draweeSpanTv.layoutParams as LayoutParams
+            val dlp = draweeSpanTv.layoutParams as LayoutParams
             if (chatBubble == null || chatBubble.bgc.isEmpty()) {
                 logger.info("没有气泡配置")
                 //默认填充背景色
@@ -97,8 +97,8 @@ class BeautyBubbleTextView : RelativeLayout {
                 val colorInt: Int = Color.parseColor(MessageUtil.MESSAGE_BG)
                 gDrawable.setColor(colorInt)
                 draweeSpanTv.backgroundDrawable = gDrawable
-                dlp.topMargin=dp2px(3)
-                dlp.bottomMargin=dp2px(3)
+                dlp.topMargin = dp2px(3)
+                dlp.bottomMargin = dp2px(3)
             } else {
                 logger.info("有气泡配置=${chatBubble.bgc}")
                 val colors = chatBubble.bgc.split("-") as AbstractList
@@ -117,14 +117,32 @@ class BeautyBubbleTextView : RelativeLayout {
                         //默认透明度
 //                        gDrawable.alpha = (0.4 * 255).toInt()
                         if (chatBubble.bdc.isNotEmpty()) {
-                            gDrawable.setStroke(dp2px(1), GlobalUtils.formatColor(chatBubble.bdc, R.color.colorPrimary_lib))
+                            val colorBds = chatBubble.bdc.split("-") as AbstractList
+                            val colorBdInts = arrayListOf<Int>()
+                            colorBds.forEach {
+                                val color = GlobalUtils.formatColor(it, R.color.colorPrimary_lib)
+                                colorBdInts.add(color)
+                            }
+                            if (colorBdInts.isNotEmpty()) {
+                                gDrawable.setStroke(dp2px(1), colorBdInts[0])
+                            }
+
                             gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
                         }
                         draweeSpanTv.backgroundDrawable = gDrawable
                     }
                 }
-                dlp.topMargin=dp2px(7)
-                dlp.bottomMargin=dp2px(7)
+                if (chatBubble.lt.isNotEmpty() || chatBubble.rt.isNotEmpty()) {
+                    dlp.topMargin = dp2px(7)
+                } else {
+                    dlp.topMargin = dp2px(3)
+                }
+                if (chatBubble.lb.isNotEmpty() || chatBubble.rb.isNotEmpty()) {
+                    dlp.bottomMargin = dp2px(7)
+                } else {
+                    dlp.bottomMargin = dp2px(3)
+                }
+
             }
 
         } catch (e: Exception) {

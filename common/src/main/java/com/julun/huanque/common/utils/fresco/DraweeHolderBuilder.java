@@ -35,6 +35,7 @@ public class DraweeHolderBuilder {
         DraweeHolder<GenericDraweeHierarchy> mDraweeHolder = DraweeHolder.create(hierarchy, context);
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(uri)
+                .setAutoPlayAnimations(true)
                 .setOldController(mDraweeHolder.getController())
                 .build();
         mDraweeHolder.setController(controller);
@@ -54,6 +55,7 @@ public class DraweeHolderBuilder {
         DraweeHolder<GenericDraweeHierarchy> mDraweeHolder = DraweeHolder.create(hierarchy, context);
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(uri)
+                .setAutoPlayAnimations(true)
                 .setOldController(mDraweeHolder.getController())
                 .build();
         mDraweeHolder.setController(controller);
@@ -75,6 +77,7 @@ public class DraweeHolderBuilder {
         DraweeHolder<GenericDraweeHierarchy> mDraweeHolder = DraweeHolder.create(hierarchy, context);
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
+                .setAutoPlayAnimations(true)
                 .setOldController(mDraweeHolder.getController())
                 .build();
         mDraweeHolder.setController(controller);
