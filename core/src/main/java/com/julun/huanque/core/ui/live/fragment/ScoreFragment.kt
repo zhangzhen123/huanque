@@ -262,7 +262,7 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
     private fun cancelLoadingView() {
         activity ?: return
         if (emptyView == null) {
-            emptyView = MixedHelper.getEmptyView(requireActivity(), "当前榜上无人，还不速来抢榜")
+            emptyView = MixedHelper.getEmptyView(requireActivity(), "争做第一个上榜的人吧")
             scoreAdapter.setEmptyView(emptyView!!)
         }
     }

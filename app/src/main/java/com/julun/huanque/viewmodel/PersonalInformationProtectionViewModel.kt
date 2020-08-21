@@ -6,7 +6,7 @@ import com.julun.huanque.common.bean.forms.AgreementResultForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.request
-import com.julun.huanque.core.net.UserService
+import com.julun.huanque.common.net.services.UserService
 import kotlinx.coroutines.launch
 
 /**

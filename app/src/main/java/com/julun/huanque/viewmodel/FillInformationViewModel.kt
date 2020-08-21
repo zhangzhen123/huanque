@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.forms.NicknameForm
-import com.julun.huanque.common.bean.forms.UpdateHeadForm
 import com.julun.huanque.common.bean.forms.UpdateInformationForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
@@ -16,7 +15,7 @@ import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.LoginStatusUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.core.net.UserService
+import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.support.LoginManager
 import kotlinx.coroutines.launch
 import java.util.*

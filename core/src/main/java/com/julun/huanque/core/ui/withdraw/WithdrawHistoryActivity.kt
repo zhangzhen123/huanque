@@ -151,7 +151,7 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
                         this,
                         msg = "暂未提现，快去赚钱吧~",
                         btnTex = "去赚钱",
-                        showImage = false,
+                        showImage = true,
                         onClick = View.OnClickListener {
                             if(SessionUtils.getSex() == Sex.MALE){
                                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)

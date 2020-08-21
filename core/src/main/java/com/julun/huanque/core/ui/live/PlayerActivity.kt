@@ -51,6 +51,7 @@ import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.FloatingManager
+import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
@@ -191,7 +192,7 @@ class PlayerActivity : BaseActivity() {
             prePic?.let {
                 bundle.putString(IntentParamKey.IMAGE.name, it)
             }
-            bundle.putString(IntentParamKey.SOURCE.name, from)
+            bundle.putString(ParamConstant.FROM, from)
             intent.putExtras(bundle)
             activity.startActivity(intent)
         }
@@ -220,7 +221,7 @@ class PlayerActivity : BaseActivity() {
             against?.let {
                 bundle.putSerializable(AnchorData, it)
             }
-            bundle.putString(IntentParamKey.SOURCE.name, from)
+            bundle.putString(ParamConstant.FROM, from)
             intent.putExtras(bundle)
             activity.startActivity(intent)
         }
@@ -246,7 +247,7 @@ class PlayerActivity : BaseActivity() {
             programId = intent.getLongExtra(IntentParamKey.PROGRAM_ID.name, 0L)
             isAnchor = intent.getBooleanExtra(UserType.Anchor, false)
             streamId = intent.getStringExtra(IntentParamKey.STREAM_ID.name)
-            mFrom = intent.getStringExtra(IntentParamKey.SOURCE.name) ?: ""
+            mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
 //            isFromSquare = intent.getBooleanExtra(FromPager.FROM_SQUARE, false)
             //gift=-1代表无效
             val gift = intent.getIntExtra(IntentParamKey.OPEN_GIFT.name, -1)
@@ -452,6 +453,10 @@ class PlayerActivity : BaseActivity() {
                 cur_live_bg.hide()
             } else {
                 cur_live_bg.show()
+                if (currentLiveBgUrl?.isNotEmpty() != true) {
+                    currentLiveBgUrl = it.prePic
+                    liveViewManager.loadBlurImage(cur_live_bg, it.prePic)
+                }
             }
 
 //            conversationListViewModel?.anchorData = it
@@ -738,6 +743,12 @@ class PlayerActivity : BaseActivity() {
     fun privateShow(event: OpenPrivateChatRoomEvent) {
         //打开私信
         playerMessageViewModel.privateConversationData.value = event
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun subscribeChange(event: UserInfoChangeEvent) {
+        val followBean = FollowResultBean(follow = event.follow, userId = event.userId)
+        viewModel.followStatusData.value = followBean.convertRtData()
     }
 
     /**
@@ -1567,6 +1578,7 @@ class PlayerActivity : BaseActivity() {
             override fun process(data: OpenShowEvent) {
 //                logger.info("OpenShowEvent isPcLive:${data.isPcLive}")
                 //获取直播的类型
+                liveViewManager.mDialogManager.hideFragment(LiveSquareDialogFragment::class.java)
                 isAppShow = !data.isLandscape
                 viewModel.baseData.value?.isPcLive = data.isPcLive
                 viewModel.baseData.value?.isLandscape = data.isLandscape
@@ -1598,6 +1610,7 @@ class PlayerActivity : BaseActivity() {
         MessageProcessor.registerEventProcessor(object :
             MessageProcessor.StopLivingMessageProcessor {
             override fun process(data: CloseShowEvent) {
+                viewModel?.squareView?.value = true
                 liveViewManager.switchToVertical()
                 //只有非NormalStop才关播
                 if (isAnchor && data.stopType != StopType.NORMALSTOP) {

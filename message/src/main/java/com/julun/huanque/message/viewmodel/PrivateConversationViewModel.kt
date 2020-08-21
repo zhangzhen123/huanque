@@ -300,7 +300,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun getActiveWord() {
         viewModelScope.launch {
             request({
-                val result = socialService.getActiveWord().dataConvert()
+                val result = socialService.getActiveWord(FriendIdForm(targetIdData.value ?: 0)).dataConvert()
                 wordList.clear()
                 wordList.addAll(result.activeList)
                 wordPosition = -1

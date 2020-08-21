@@ -31,10 +31,11 @@ import kotlinx.coroutines.delay
 class MakeFriendsViewModel : BaseViewModel() {
 
     companion object {
-        //添加tag引导的位置
-        const val GUIDE_INDEX_01 = 14
 
         //添加资料完善引导的位置
+        const val GUIDE_INDEX_01 = 14
+
+        //添加tag引导的位置
         const val GUIDE_INDEX_02 = 29
     }
 
@@ -43,8 +44,12 @@ class MakeFriendsViewModel : BaseViewModel() {
     }
     private var offset: Int? = 0
     var curRemind: HomeRemind? = null
-    private var needGuide1 = true
-    private var needGuide2 = true
+    var needGuide1 = true
+    var needGuide2 = true
+
+    //引导是否被玩家主动关闭了 主动关闭的在app杀掉前再也不出现
+    var guideCloseByUser1 = false
+    var guideCloseByUser2 = false
 
     //记录全部的列表
     private var totalList = mutableListOf<HomeRecomItem>()
@@ -74,6 +79,12 @@ class MakeFriendsViewModel : BaseViewModel() {
                     }
                     //记录第一次返回的引导参数
                     curRemind = homeListData.remind
+                    if (!guideCloseByUser1) {
+                        needGuide1 = true
+                    }
+                    if (!guideCloseByUser2) {
+                        needGuide2 = true
+                    }
 
                 } else {
                     resultList.forEach {
@@ -82,27 +93,32 @@ class MakeFriendsViewModel : BaseViewModel() {
                 }
 
                 //处理引导插入
-                if (totalList.size >= GUIDE_INDEX_01 && curRemind?.tagRemind == true) {
-                    if (needGuide1) {
-                        needGuide1 = false
-                        logger("添加tag引导")
-                        val index = GUIDE_INDEX_01 - (totalList.size - list.size)
-                        list.add(index, HomeItemBean(HomeItemBean.GUIDE_TO_ADD_TAG, Any()))
+                if (totalList.size >= GUIDE_INDEX_01) {
+                    if (curRemind?.coverRemind == true) {
+                        if (needGuide2) {
+                            needGuide2 = false
+                            logger("添加完善引导12")
+                            val index = GUIDE_INDEX_01 - (totalList.size - list.size)
+                            list.add(index, HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, curRemind!!))
+                        }
+
+                    } else if (curRemind?.tagRemind == true) {
+                        if (needGuide1) {
+                            needGuide1 = false
+                            logger("添加tag引导11")
+                            val index = GUIDE_INDEX_01 - (totalList.size - list.size)
+                            list.add(index, HomeItemBean(HomeItemBean.GUIDE_TO_ADD_TAG, Any()))
+                        }
+
                     }
 
                 }
                 if (totalList.size >= GUIDE_INDEX_02 && curRemind?.coverRemind == true) {
                     if (needGuide2) {
                         needGuide2 = false
-                        logger("添加完善引导")
-                        if(curRemind?.tagRemind==false){
-                            val index = GUIDE_INDEX_01 - (totalList.size - list.size)
-                            list.add(index, HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, curRemind!!))
-                        }else{
-                            val index = GUIDE_INDEX_02 - (totalList.size - list.size)
-                            list.add(index, HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, curRemind!!))
-                        }
-
+                        logger("添加完善引导22")
+                        val index = GUIDE_INDEX_02 - (totalList.size - list.size)
+                        list.add(index, HomeItemBean(HomeItemBean.GUIDE_TO_ADD_TAG, Any()))
                     }
                 }
                 val rList = RootListData(isPull = type != QueryType.LOAD_MORE, list = list, hasMore = homeListData.hasMore)

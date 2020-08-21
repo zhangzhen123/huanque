@@ -3,6 +3,7 @@ package com.julun.huanque.activity
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.os.Message
 import android.view.View
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
@@ -12,16 +13,15 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.location.BDAbstractLocationListener
 import com.baidu.location.BDLocation
 import com.julun.huanque.R
+import com.julun.huanque.agora.activity.AnonymousVoiceActivity
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.beans.AnonyVoiceInviteBean
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.RNMessageConst
-import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
@@ -30,6 +30,7 @@ import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -464,6 +465,18 @@ class MainActivity : BaseActivity() {
             }
         })
 
+        //邀请匿名语音消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceInviteProcessor {
+            override fun process(data: AnonyVoiceInviteBean) {
+                val intent = Intent(this@MainActivity, AnonymousVoiceActivity::class.java)
+                intent.putExtra(ParamConstant.TYPE, ConmmunicationUserType.CALLED)
+                intent.putExtra(ParamConstant.InviteUserId, data.inviteUserId)
+                if (ForceUtils.activityMatch(intent)) {
+                    startActivity(intent)
+                }
+
+            }
+        })
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -474,6 +487,8 @@ class MainActivity : BaseActivity() {
             //重新去定位地址
             mLocationService.registerListener(mLocationListener)
             mLocationService.start()
+        }else{
+            mMainViewModel.unreadMsgCount.value = 0
         }
 
     }

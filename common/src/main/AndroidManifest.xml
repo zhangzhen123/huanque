@@ -2,6 +2,7 @@
     package="com.julun.huanque.common">
 
     <!-- 融云 Permissions Required -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application>
         <!-- imlib config begin -->

@@ -51,11 +51,18 @@ public class AppMessageModule extends ReactContextBaseJavaModule {
                     if (params.hasKey("stranger")) {
                         stranger = params.getString("stranger");
                     }
-                    if (stranger != null) {
-                        GlobalUtils.INSTANCE.updateStrangerData(userId, stranger.equals(BusiConstant.True));
-                        new UserInfoChangeEvent();
-                        EventBus.getDefault().post(new UserInfoChangeEvent((long) userId, stranger.equals(BusiConstant.True)));
+                    String follow = null;
+                    if (params.hasKey("follow")) {
+                        follow = params.getString("follow");
                     }
+                    if (follow == null) {
+                        follow = "";
+                    }
+                    if (stranger == null) {
+                        stranger = "";
+                    }
+                    GlobalUtils.INSTANCE.updateStrangerData(userId, stranger.equals(BusiConstant.True));
+                    EventBus.getDefault().post(new UserInfoChangeEvent((long) userId, stranger.equals(BusiConstant.True), follow));
 
                     break;
                 }
@@ -86,7 +93,10 @@ public class AppMessageModule extends ReactContextBaseJavaModule {
                     ArrayList<String> list = new ArrayList<>();
                     if (picList != null) {
                         for (int i = 0; i < picList.size(); i++) {
-                            list.add(picList.getString(i));
+                            ReadableMap obj = picList.getMap(i);
+                            if (obj!=null&&obj.hasKey("coverPic")) {
+                                list.add(obj.getString("coverPic"));
+                            }
                         }
 
                     }

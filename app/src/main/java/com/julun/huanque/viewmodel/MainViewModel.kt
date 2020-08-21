@@ -5,11 +5,8 @@ import androidx.lifecycle.*
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
-import com.julun.huanque.common.bean.forms.SessionForm
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.core.net.UserService
-import com.julun.huanque.common.bean.beans.UserDetailInfo
-import com.julun.huanque.common.bean.beans.UserLevelInfo
+import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.bean.events.UnreadCountEvent
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm

@@ -1,31 +1,40 @@
 package com.julun.huanque.ui.test
 
+import android.animation.FloatEvaluator
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.TextUtils
+import android.text.format.DateUtils
 import android.util.Log
+import android.util.Property
 import android.view.View
-import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
-import com.julun.huanque.common.bean.beans.MicAnchor
+import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.DensityHelper
+import com.julun.huanque.common.helper.ImageHelper
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.FileUtils
 import com.julun.huanque.common.utils.MD5Util
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.VideoUtils
-import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
-import com.julun.huanque.core.ui.live.fragment.UserCardFragment
+import com.julun.huanque.common.widgets.draweetext.AnimatedRainbowSpan
 import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
+import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
@@ -36,7 +45,6 @@ import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.android.synthetic.main.activity_test.*
-import kotlinx.android.synthetic.main.activity_test.test_rn
 import org.jetbrains.anko.startActivity
 import java.io.File
 import java.util.*
@@ -202,7 +210,45 @@ class TestActivity : BaseActivity() {
             val dialog = CardManagerDialogFragment()
             dialog.show(supportFragmentManager, "CardManagerDialogFragment")
         }
+        val spannableString = DraweeSpanStringBuilder("1234567一句带彩虹屁的文本还带动效一句带彩虹色的文本还带动效 WWWWAAAA243555")
+        val start=10
+        val end = 20
+        val span= AnimatedRainbowSpan()
+        spannableString.setSpan(span, start, end, 0)
+        spannableString.setImageSpan(this, R.mipmap.intimate_level_1, 3, 3, dp2px(30), dp2px(16))
+        spannableString.setImageSpan(this, R.mipmap.anim_living, 5, 5, dp2px(30), dp2px(16))
+        text_rainbow.setDraweeSpanStringBuilder(spannableString)
+
+        val objectAnimator: ObjectAnimator = ObjectAnimator.ofFloat(
+            span, ANIMATED_COLOR_SPAN_FLOAT_PROPERTY, 0f, 100f
+        )
+        objectAnimator.setEvaluator(FloatEvaluator())
+        objectAnimator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
+            override fun onAnimationUpdate(animation: ValueAnimator?) {
+                text_rainbow.setDraweeSpanStringBuilder(spannableString)
+            }
+        })
+        objectAnimator.setInterpolator(LinearInterpolator())
+        objectAnimator.setDuration(DateUtils.MINUTE_IN_MILLIS * 3)
+        objectAnimator.setRepeatCount(ValueAnimator.INFINITE)
+//        objectAnimator.start()
+
+        spannableString.setDraweeSpanChangedListener { builder ->
+            logger.info("setDraweeSpanChangedListener")
+            text_rainbow.setDraweeSpanStringBuilder(builder) }
     }
+    private val ANIMATED_COLOR_SPAN_FLOAT_PROPERTY: Property<AnimatedRainbowSpan, Float> =
+        object : Property<AnimatedRainbowSpan, Float>(
+            Float::class.java, "ANIMATED_COLOR_SPAN_FLOAT_PROPERTY"
+        ) {
+            override operator fun set(span: AnimatedRainbowSpan, value: Float) {
+                span.translateXPercentage=value
+            }
+
+            override operator fun get(span: AnimatedRainbowSpan): Float {
+                return span.translateXPercentage
+            }
+        }
     override fun onSaveInstanceState(outState: Bundle) {
         logger.info("onSaveInstanceState=${outState}")
         super.onSaveInstanceState(outState)

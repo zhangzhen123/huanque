@@ -87,6 +87,9 @@ object ParamConstant {
     //贵族等级
     const val RoyalLevel = "RoyalLevel"
 
+    //邀请的用户ID
+    const val InviteUserId = "inviteUserId"
+
 
     //UUID
     const val UUID = "UUID"

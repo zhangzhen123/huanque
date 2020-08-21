@@ -205,3 +205,26 @@ data class SendRoomBean(
     var beans: Long = 0,
     var sendRoomInfo: SendRoomInfo = SendRoomInfo()
 ) : Serializable
+
+
+/**
+ * 匿名语音基础数据
+ */
+data class AnonymousBasicInfo(
+    //头像数据
+    var headPics: MutableList<String> = mutableListOf(),
+    //剩余次数
+    var surplusTimes: Int = 0,
+    //匹配时间，如果大于0  继续匹配状态
+    var waitingSeconds : Long = 0
+) : Serializable
+
+/**
+ * 检测余额结果
+ */
+data class CheckBeansData(
+    //揭秘费用
+    var beans: Long = 0,
+    //余额是否足够
+    var hasEnoughBeans: String = ""
+) : Serializable

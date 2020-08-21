@@ -100,7 +100,7 @@ interface SocialService {
      * 获取小鹊助手语料
      */
     @POST("social/friend/chat/getActiveWord")
-    suspend fun getActiveWord(@Body form: EmptyForm = EmptyForm()): Root<ActiveBean>
+    suspend fun getActiveWord(@Body form: FriendIdForm): Root<ActiveBean>
 
     /**
      * 发送私聊消息
@@ -179,4 +179,52 @@ interface SocialService {
 
     @POST("social/friend/chat/sendRoom")
     suspend fun sendRoom(@Body form: SendRoomForm): Root<SendRoomBean>
+
+    /**
+     * 获取匿名语音基础信息
+     */
+    @POST("social/friend/avoice/homeInfo")
+    suspend fun avoiceHomeInfo(@Body form: EmptyForm = EmptyForm()): Root<AnonymousBasicInfo>
+
+    /**
+     * 开始匹配
+     */
+    @POST("social/friend/avoice/startMatch")
+    suspend fun startMatch(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
+
+    /**
+     * 取消匹配
+     */
+    @POST("social/friend/avoice/cancelMatch")
+    suspend fun cancelMatch(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
+
+    /**
+     * 挂断匿名语音
+     */
+    @POST("social/friend/avoice/hangUp")
+    suspend fun avoiceHangUp(@Body form: NetcallIdForm): Root<VoidResult>
+
+    /**
+     * 公开身份
+     */
+    @POST("social/friend/avoice/openIdentify")
+    suspend fun openIdentify(@Body form: NetcallIdForm): Root<UserInfoInRoom>
+
+    /**
+     * 匿名语音 检测余额
+     */
+    @POST("social/friend/avoice/checkBeans")
+    suspend fun checkBeans(@Body form: EmptyForm = EmptyForm()): Root<CheckBeansData>
+
+    /**
+     * 揭秘主播身份
+     */
+    @POST("social/friend/avoice/unveilIdentity")
+    suspend fun unveilIdentity(@Body form: NetcallIdForm): Root<UserInfoInRoom>
+
+    /**
+     * 接受匿名语音
+     */
+    @POST("social/friend/avoice/accept")
+    suspend fun avoiceAccept(@Body form: InviteUserIdForm): Root<VoidResult>
 }

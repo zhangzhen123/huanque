@@ -19,6 +19,7 @@ import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.activity.SettingActivity
 import com.julun.huanque.common.base.BaseVMFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
@@ -26,23 +27,18 @@ import com.julun.huanque.common.bean.beans.RechargeAdInfo
 import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
-import com.julun.huanque.common.bean.events.LoginEvent
-import com.julun.huanque.common.bean.events.PayResultEvent
-import com.julun.huanque.common.bean.events.RHVerifyResult
-import com.julun.huanque.common.bean.events.WithdrawSuccessEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
-import com.julun.huanque.common.utils.ImageUtils
-import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.common.utils.StatusBarUtil
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.huanque.message.activity.ContactsActivity
+import com.julun.huanque.ui.safe.AccountAndSecurityActivity
 import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -81,6 +77,11 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             val tempData = adapter.getItem(position) as? UserDataTab
             if (tempData?.userDataTabType != ContactsTabType.Visit) {
                 ContactsActivity.newInstance(requireActivity(), tempData?.userDataTabType ?: "")
+            } else {
+                //访客
+                val bundle = Bundle()
+                bundle.putString("type", "SeenMe")
+                RNPageActivity.start(requireActivity(), RnConstant.VISIT_HISTORY_PAGE, bundle)
             }
         }
 
@@ -110,7 +111,12 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                         RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
                     }
                     ErrorCodes.NOT_BIND_WECHAT -> {
-                        //todo 跳转到账号与安全
+                        //账号与安全
+                        val intent =
+                            Intent(requireActivity(), AccountAndSecurityActivity::class.java)
+                        if (ForceUtils.activityMatch(intent)) {
+                            startActivity(intent)
+                        }
                     }
                     ErrorCodes.NOT_REAL_NAME -> {
                         ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY)
@@ -129,19 +135,45 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            BalanceUtils.queryLastestBalance()
+        }
+    }
+
     private fun loadData(info: UserDetailInfo) {
+        SharedPreferencesUtils.commitString(SPParamKey.CUSTOMER_URL, info.customerUrl)
         headImage.loadImage(info.userBasic.headPic + BusiConstant.OSS_160, 60f, 60f)
         tvNickName.text = info.userBasic.nickname
         tvUserId.text = "欢鹊ID: ${info.userBasic.userId}"
         tvQueBi.text = "${info.userBasic.beans}"
         tvLingQian.text = info.userBasic.cash
 
-        sdv_wealth.loadImage(info.userBasic.userLevelIcon, 50f, 16f)
+        if (info.userBasic.userLevel > 0) {
+            sdv_wealth.show()
+            tv_wealth_privilege.hide()
+            val wealthAddrss = GlobalUtils.getString(R.string.wealth_address)
+            sdv_wealth.loadImage(String.format(wealthAddrss, info.userBasic.userLevel), 55f, 16f)
+        } else {
+            sdv_wealth.hide()
+            tv_wealth_privilege.show()
+        }
 
-        sdv_royal_level.loadImage(info.userBasic.royalPic, 50f, 16f)
+        if (info.userBasic.royalLevel > 0) {
+            tv_royal_privilege.hide()
+            sdv_royal_level.show()
+            sdv_royal_level.loadImage(info.userBasic.royalPic, 55f, 16f)
+        } else {
+            tv_royal_privilege.show()
+            sdv_royal_level.hide()
+        }
+
         if (info.userBasic.anchorLevel > 0) {
             sdv_author_level.show()
-            sdv_author_level.loadImage(info.userBasic.anchorLevelPic, 50f, 16f)
+            val wealthAddrss = GlobalUtils.getString(R.string.anchor_address)
+            sdv_author_level.loadImage(String.format(wealthAddrss, info.userBasic.anchorLevel), 55f, 16f)
+
         } else {
             tv_author_privilege.show()
         }
@@ -152,19 +184,6 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             ivReal.show()
         } else {
             tvCertification.show()
-            headImage.onClickNew {
-                ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
-//                mIRealNameService.startRealHead(requireActivity(), object : RealNameCallback {
-//                    override fun onCallback(status: String, des: String, percent: Int?) {
-//                        if (status == RealNameConstants.TYPE_SUCCESS) {
-//                            mViewModel.queryInfo(QueryType.REFRESH)
-//                        } else {
-//                            ToastUtils.show("认证失败，请稍后重试")
-//                        }
-//                    }
-//                })
-
-            }
             ivReal.hide()
         }
 //        sd_wealth.loadImage(info.userBasic.royalLevel)
@@ -177,16 +196,23 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         when (info.userBasic.sex) {//Male、Female、Unknow
 
             Sex.FEMALE -> {
-                val drawable = ContextCompat.getDrawable(requireContext(), com.julun.huanque.core.R.mipmap.icon_sex_female_white)
+                val drawable = ContextCompat.getDrawable(
+                    requireContext(),
+                    com.julun.huanque.core.R.mipmap.icon_sex_female_white
+                )
                 if (drawable != null) {
                     drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
                     tvSex.setCompoundDrawables(drawable, null, null, null)
                 }
-                tvSex.backgroundResource = com.julun.huanque.core.R.drawable.bg_shape_mine_sex_female
+                tvSex.backgroundResource =
+                    com.julun.huanque.core.R.drawable.bg_shape_mine_sex_female
                 tvSex.text = "${info.userBasic.age}"
             }
             else -> {
-                val drawable = ContextCompat.getDrawable(requireContext(), com.julun.huanque.core.R.mipmap.icon_sex_male_white)
+                val drawable = ContextCompat.getDrawable(
+                    requireContext(),
+                    com.julun.huanque.core.R.mipmap.icon_sex_male_white
+                )
                 if (drawable != null) {
                     drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
                     tvSex.setCompoundDrawables(drawable, null, null, null)
@@ -233,6 +259,32 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
         }
 
+        headImage.onClickNew {
+
+            if (mViewModel.userInfo.value?.getT()?.userBasic?.headRealPeople != true) {
+                //未处于头像认证状态
+                MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
+                    "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                            .navigation() as? IRealNameService)?.checkRealHead()
+                    }), "真人照片未认证", okText = "去认证", noText = "取消"
+                )
+            }
+//            ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
+
+//                mIRealNameService.startRealHead(requireActivity(), object : RealNameCallback {
+//                    override fun onCallback(status: String, des: String, percent: Int?) {
+//                        if (status == RealNameConstants.TYPE_SUCCESS) {
+//                            mViewModel.queryInfo(QueryType.REFRESH)
+//                        } else {
+//                            ToastUtils.show("认证失败，请稍后重试")
+//                        }
+//                    }
+//                })
+
+        }
+
         refreshView.setOnRefreshListener {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
@@ -243,13 +295,15 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     RNPageActivity.start(requireActivity(), RnConstant.OFFICIAL_CERT_PAGE)
                 }
                 MineToolType.RoomSpecial -> {
-
+                    RNPageActivity.start(requireActivity(), RnConstant.MY_CAR_PAGE)
                 }
                 MineToolType.ChatBubble -> {
-
+                    RNPageActivity.start(requireActivity(), RnConstant.CHAT_BUBBLE_PAGE)
                 }
                 MineToolType.VisitHistory -> {
-
+                    val bundle = Bundle()
+                    bundle.putString("type", "HaveSeen")
+                    RNPageActivity.start(requireActivity(), RnConstant.VISIT_HISTORY_PAGE, bundle)
                 }
                 MineToolType.InviteFriend -> {
                     RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
@@ -292,7 +346,10 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         }
         tvService.onClickNew {
             val extra = Bundle()
-            extra.putString(BusiConstant.WEB_URL, mViewModel.userInfo.value?.getT()?.customerUrl ?: "")
+            extra.putString(
+                BusiConstant.WEB_URL,
+                mViewModel.userInfo.value?.getT()?.customerUrl ?: ""
+            )
             var intent = Intent(requireActivity(), WebActivity::class.java)
             intent.putExtras(extra)
             startActivity(intent)
@@ -375,7 +432,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
             override fun convert(holder: BaseViewHolder, item: UserDataTab) {
                 val tvCount = holder.getView<TextView>(R.id.tvCount)
-                tvCount.text = "${item.count}"
+                val count = item.count
+                if (count >= 10000) {
+                    val iCount = count / 1000
+                    val dCount = iCount / 10.toDouble()
+                    tvCount.text = "${NumberFormatUtils.formatWithdecimal1(dCount)}W"
+                } else {
+                    tvCount.text = "$count"
+                }
                 holder.setText(R.id.tvTitle, item.userTabName)
 
                 if (item.tagCount == 0) {
@@ -433,4 +497,10 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             }
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun informationChange(event: UserInfoEditEvent) {
+        mViewModel.queryInfo(QueryType.REFRESH)
+    }
+
 }

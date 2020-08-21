@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="羚萌直播"
+            android:text="欢鹊"
             android:textColor="@color/black_333"
             android:textSize="18sp"
             android:textStyle="bold" />

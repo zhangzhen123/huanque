@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.main.makefriend
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -28,6 +29,7 @@ import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
@@ -181,8 +183,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     requireActivity(),
                     position,
                     list.map { StringHelper.getOssImgUrl(it.url) },
-                    item?.userId,
-                    ImageActivityOperate.REPORT
+                    item?.userId
                 )
             }
 
@@ -193,13 +194,15 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
                     }
                     HeadModule.AnonymousVoice -> {
-
+                        //匿名语音
+                        ARouter.getInstance().build(ARouterConstant.ANONYMOUS_VOICE_ACTIVITY).navigation()
                     }
                     HeadModule.MagpieParadise -> {
 
                     }
                     HeadModule.HotLive -> {
-                        requireActivity().startActivity<PlayerActivity>(IntentParamKey.SOURCE.name to PlayerFrom.Home)
+                        //热门直播
+                        requireActivity().startActivity<PlayerActivity>(ParamConstant.FROM to PlayerFrom.Home)
 
                     }
                     HeadModule.PlumFlower -> {
@@ -239,10 +242,12 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 R.id.iv_guide_tag_close -> {
                     logger.info("点击引导标签关闭---$position")
                     mAdapter.removeAt(position)
+                    mViewModel.guideCloseByUser1 = true
                 }
                 R.id.iv_guide_info_close -> {
                     logger.info("点击引导完善资料关闭---$position")
                     mAdapter.removeAt(position)
+                    mViewModel.guideCloseByUser2 = true
                 }
                 R.id.ll_balance -> {
                     logger.info("零钱")
@@ -311,7 +316,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     }
 
     private fun gotoMakeMoney() {
-        val type: String = currentHeadInfo?.taskBar?.type?:return
+        val type: String = currentHeadInfo?.taskBar?.type ?: return
         when (type) {
             HomeMakeMoneyType.Invite -> RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
             HomeMakeMoneyType.Game -> {
@@ -402,7 +407,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
 
     }
-    private var currentHeadInfo:HeadNavigateInfo?=null
+
+    private var currentHeadInfo: HeadNavigateInfo? = null
     private fun loadData(stateList: RootListData<HomeItemBean>) {
 
         if (stateList.isPull) {
@@ -433,7 +439,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         val headerData = stateList.list.getOrNull(0)
         if (headerData?.showType == HomeItemBean.HEADER) {
             val headerInfo = headerData.content as? HeadNavigateInfo ?: return
-            currentHeadInfo=headerInfo
+            currentHeadInfo = headerInfo
             tv_balance_h.text = headerInfo.taskBar.myCash
             val content = StringBuilder()
             content.append("${headerInfo.taskBar.label}：")

@@ -33,6 +33,7 @@
         android:includeFontPadding="false"
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/tv_intimate_number"
         app:layout_constraintLeft_toRightOf="@id/sdv_header"
         app:layout_constraintTop_toTopOf="parent"

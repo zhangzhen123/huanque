@@ -232,8 +232,8 @@ class PrivateConversationActivity : BaseActivity() {
         }
         val meetResource = ImageHelper.getMeetStatusResource(meetStatus)
 
-        if (meetResource > 0) {
-            //有欢遇标识
+        if (SessionUtils.getSex() == Sex.FEMALE && meetResource > 0) {
+            //女性 有欢遇标识
             title.setCompoundDrawablesWithIntrinsicBounds(0, 0, meetResource, 0)
             title.compoundDrawablePadding = 5
         } else {
@@ -282,6 +282,7 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.addMessageData?.observe(this, Observer {
             if (it != null) {
                 mAdapter.addData(it)
+                mAdapter.upFetchModule.isUpFetching = false
                 mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
                 scrollToBottom(true)
                 showXiaoQueAuto()
@@ -292,8 +293,9 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.messageChangeState?.observe(this, Observer {
             if (it == true) {
                 mAdapter.notifyDataSetChanged()
+                mAdapter.upFetchModule.isUpFetching = false
                 mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
-                scrollToBottom()
+//                scrollToBottom()
                 mPrivateConversationViewModel?.messageChangeState?.value = null
                 showXiaoQueAuto()
             }
@@ -424,7 +426,7 @@ class PrivateConversationActivity : BaseActivity() {
                 SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
             if (msgFee != null && msgFee > 0 && !dialogShow) {
                 //消息需要付费
-                showMessageFeeDialog(true, msgFee)
+                showMessageFeeDialog(Message_Text, msgFee)
                 return@onClickNew
             }
 
@@ -464,7 +466,7 @@ class PrivateConversationActivity : BaseActivity() {
                 SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
             if (msgFee != null && msgFee > 0 && !dialogShow) {
                 //消息需要付费
-                showMessageFeeDialog(false, msgFee)
+                showMessageFeeDialog(Message_Pic, msgFee)
                 return@onClickNew
             }
             checkPicPermissions()
@@ -555,13 +557,12 @@ class PrivateConversationActivity : BaseActivity() {
                     //在直播间内，调用接口
                     mPrivateConversationViewModel?.sendRoom(programId)
                 }
-
             }
         }
 
-        recyclerview.mEventListener = object  : EventListener{
+        recyclerview.mEventListener = object : EventListener {
             override fun onDispatch(ev: MotionEvent?) {
-                if(ev?.action == MotionEvent.ACTION_DOWN){
+                if (ev?.action == MotionEvent.ACTION_DOWN) {
                     mHelper?.hookSystemBackByPanelSwitcher()
                 }
             }
@@ -590,10 +591,26 @@ class PrivateConversationActivity : BaseActivity() {
                     }
                     EmojiType.PREROGATIVE -> {
                         //特权表情,直接发送
+                        val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
+                        val dialogShow =
+                            SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
+                        if (msgFee != null && msgFee > 0 && !dialogShow) {
+                            //消息需要付费
+                            showMessageFeeDialog(Message_Privilege, msgFee)
+                            return
+                        }
                         sendChatMessage(message = emotion.text, messageType = Message_Privilege)
                     }
                     EmojiType.ANIMATION -> {
                         //动画表情
+                        val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
+                        val dialogShow =
+                            SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
+                        if (msgFee != null && msgFee > 0 && !dialogShow) {
+                            //消息需要付费
+                            showMessageFeeDialog(Message_Animation, msgFee)
+                            return
+                        }
                         //随机结果
                         val result =
                             mPrivateConversationViewModel?.calcuteAnimationResult(emotion.text)
@@ -696,7 +713,7 @@ class PrivateConversationActivity : BaseActivity() {
      * @param text true 标识文字   false   标识图片
      * @param fee 价格
      */
-    private fun showMessageFeeDialog(text: Boolean, fee: Long) {
+    private fun showMessageFeeDialog(messageType: String, fee: Long) {
         val dialogShow =
             SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
         if (!dialogShow) {
@@ -705,20 +722,31 @@ class PrivateConversationActivity : BaseActivity() {
                 "私信消息${fee}鹊币/条",
                 MyAlertDialog.MyDialogCallback(onRight = {
                     SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
-                    if (text) {
-                        tv_send.performClick()
-                    } else {
-                        iv_pic.performClick()
+                    when (messageType) {
+                        Message_Pic -> {
+                            iv_pic.performClick()
+                        }
+                        Message_Text -> {
+                            tv_send.performClick()
+                        }
+                        else -> {
+                        }
                     }
+
                 }, onCancel = {
                     SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
                 }), "私信消息费用", "继续发送"
             )
         } else {
-            if (text) {
-                tv_send.performClick()
-            } else {
-                iv_pic.performClick()
+            when (messageType) {
+                Message_Pic -> {
+                    iv_pic.performClick()
+                }
+                Message_Text -> {
+                    tv_send.performClick()
+                }
+                else -> {
+                }
             }
         }
     }

@@ -1,11 +1,14 @@
 package com.julun.huanque.common.utils
 
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothProfile
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Color
+import android.media.AudioManager
 import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
@@ -15,6 +18,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import com.alibaba.android.arouter.launcher.ARouter.logger
 import com.julun.huanque.common.R
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.PlayInfo
@@ -25,6 +29,7 @@ import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.suger.logger
 import io.rong.imlib.model.MessageContent
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
@@ -435,6 +440,41 @@ object GlobalUtils {
 
         }
         return currentUser
+    }
+
+    fun getEarphoneLinkStatus() : Boolean{
+        val am = CommonInit.getInstance().getCurrentActivity()?.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        am?.mode = AudioManager.MODE_IN_COMMUNICATION
+//获取当前使用的麦克风，设置媒体播放麦克风
+        if (am?.isWiredHeadsetOn == true) {
+            logger("Voice 有线耳机已连接")
+//            if (showToast) {
+//                Toast.makeText(this, "有线耳机已连接", Toast.LENGTH_SHORT).show()
+//            }
+            return true
+        } else {
+            logger("Voice 有线耳机未连接")
+//            if (showToast) {
+//                Toast.makeText(this, "有线耳机未连接", Toast.LENGTH_SHORT).show()
+//            }
+        }
+
+        val adapter = BluetoothAdapter.getDefaultAdapter()
+        val connectionState = adapter.getProfileConnectionState(BluetoothProfile.HEADSET)
+
+        if (BluetoothProfile.STATE_CONNECTED == connectionState) {
+            logger("Voice 蓝牙耳机已连接")
+//            if (showToast) {
+//                Toast.makeText(this, "蓝牙耳机已连接", Toast.LENGTH_SHORT).show()
+//            }
+            return true
+        } else if (BluetoothProfile.STATE_DISCONNECTED == connectionState) {
+            logger("Voice 蓝牙耳机未连接")
+            return false
+        } else {
+            logger("Voice 蓝牙耳机未连接")
+            return false
+        }
     }
 
 }

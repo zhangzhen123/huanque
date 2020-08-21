@@ -1,6 +1,7 @@
 package com.julun.huanque.common.widgets.draweetext
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -40,7 +41,7 @@ class DraweeSpanTextView @JvmOverloads constructor(
     val logger = ULog.getLogger("DraweeSpanTextView")
 
     private var data: TplBean? = null
-
+    private var hasRainbow:Boolean =false
     companion object {
         private const val DEFAULT_TEXT_BG_COLOR = "#FFFFFF"
         const val BOLD = "bold" //加粗标识
@@ -51,6 +52,25 @@ class DraweeSpanTextView @JvmOverloads constructor(
         includeFontPadding = false
     }
 
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        if(hasRainbow){
+            //有彩虹屁就不停的更新
+            postInvalidateDelayed(16)
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        invalidate()
+        super.onDetachedFromWindow()
+    }
+
+    /**
+     * 是否需要彩虹屁
+     */
+    fun setNeedRainbow(need:Boolean){
+        hasRainbow=need
+    }
     fun render(item: TplBean, specifiedColor: String = DEFAULT_TEXT_BG_COLOR, finalColor: String? = null) {//原来的颜色   21ad79
         data = item
         //添加聊天模式标识
@@ -166,7 +186,7 @@ class DraweeSpanTextView @JvmOverloads constructor(
             setTextColor(Color.parseColor(finalColor))
 
 
-        builder.setDraweeSpanChangedListener({ builder -> this.setDraweeSpanStringBuilder(builder) })
+        builder.setDraweeSpanChangedListener { bd -> this.setDraweeSpanStringBuilder(bd) }
         this.setDraweeSpanStringBuilder(builder)
 
 //        this.movementMethod = LinkMovementMethod.getInstance() //开始响应点击事件
@@ -177,7 +197,8 @@ class DraweeSpanTextView @JvmOverloads constructor(
      * 渲染每一块 文本区域
      */
     private fun forEachBasicSpan(index: Int, styleParam: StyleParam, source: SpannableStringBuilder) {
-        val subTexLength: Int = data?.textParams?.get(styleParam.el)?.length ?: return
+        val text=data?.textParams?.get(styleParam.el)
+        val subTexLength: Int = text?.length ?: return
         val allColor: String? = data?.styleParamMap?.get(MessageUtil.KEY_ALL)?.color
         //                        source.setSpan(UnderlineSpan(), index, (index + subTexLength), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         if (StringHelper.isNotEmpty(styleParam.underLineColor)) {
@@ -187,9 +208,9 @@ class DraweeSpanTextView @JvmOverloads constructor(
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
-        if (styleParam.el.toLowerCase().indexOf("nickname") > -1) {
-            logger.info("nickname render")
-            val color = if (styleParam == null || StringHelper.isEmpty(styleParam.color)) {
+        if (styleParam.el.indexOf("\${extra.user.nickName}") > -1) {
+            logger.info("nickName render")
+            val color = if (StringHelper.isEmpty(styleParam.color)) {
                 ContextCompat.getColor(context, R.color.app_main)
             } else {
                 Color.parseColor(styleParam.color)
@@ -198,7 +219,20 @@ class DraweeSpanTextView @JvmOverloads constructor(
                 ForegroundColorSpan(color), index, (index + subTexLength),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             ) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
-
+            if(styleParam.lightColor.isNotEmpty()){
+                val lightColor = if (StringHelper.isEmpty(styleParam.lightColor)) {
+                    ContextCompat.getColor(context, R.color.app_main)
+                } else {
+                    Color.parseColor(styleParam.lightColor)
+                }
+                source.setSpan(
+                    AnimatedRainbowSpan(intArrayOf(color,lightColor,color)), index, (index + subTexLength),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE  )
+                setNeedRainbow(true)
+                postInvalidateDelayed(1)
+            }else{
+                setNeedRainbow(false)
+            }
             //删除线
 //            source.setSpan(StrikethroughSpan(), index, (index + subTexLength),  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
             //下划线

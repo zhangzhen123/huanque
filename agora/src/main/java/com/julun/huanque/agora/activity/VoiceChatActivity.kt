@@ -84,7 +84,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
-        ll_hands_free.isEnabled = getEarphoneLinkStatus()
+        ll_hands_free.isEnabled = !GlobalUtils.getEarphoneLinkStatus()
     }
 
     /**
@@ -139,6 +139,13 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         } else {
             timer()
         }
+        registerMessage()
+
+    }
+
+
+    private fun registerMessage() {
+        MessageProcessor.clearProcessors(false)
         //语音通话开始消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallAcceptProcessor {
             override fun process(data: NetCallAcceptBean) {
@@ -181,6 +188,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
+                if(mVoiceChatViewModel?.waitingClose == true){
+                    return
+                }
+                mVoiceChatViewModel?.waitingClose = true
                 mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }
@@ -192,6 +203,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
+                if(mVoiceChatViewModel?.waitingClose == true){
+                    return
+                }
+                mVoiceChatViewModel?.waitingClose = true
                 if (data.hangUpId != SessionUtils.getUserId()) {
                     //非本人挂断
                     mVoiceChatViewModel?.voiceBeanData?.value =
@@ -213,6 +228,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
+                if(mVoiceChatViewModel?.waitingClose == true){
+                    return
+                }
+                mVoiceChatViewModel?.waitingClose = true
                 mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_REFUSE)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
             }
@@ -220,6 +239,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         //服务端断开消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallDisconnectProcessor {
             override fun process(data: VoidResult) {
+                if(mVoiceChatViewModel?.waitingClose == true){
+                    return
+                }
+                mVoiceChatViewModel?.waitingClose = true
                 mVoiceChatViewModel?.voiceBeanData?.value =
                     VoiceConmmunicationSimulate(VoiceResultType.CONMMUNICATION_FINISH, mVoiceChatViewModel?.duration ?: 0)
                 mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
@@ -239,6 +262,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
+                if(mVoiceChatViewModel?.waitingClose == true){
+                    return
+                }
+                mVoiceChatViewModel?.waitingClose = true
                 ToastUtils.show("对方忙")
                 mVoiceChatViewModel?.voiceBeanData?.value =
                     VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_BUSY)
@@ -249,7 +276,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     }
 
-
     /**
      * 播放音效
      */
@@ -259,7 +285,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         } else {
             MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }
         }
-//        mPlayer?.start()
+        mPlayer?.start()
 
         am?.mode = AudioManager.MODE_NORMAL
         am?.isSpeakerphoneOn = true;
@@ -416,7 +442,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
                         playAudio(false)
                         //退出频道
-                        leaveChannel()
+//                        leaveChannel()
 //                        ToastUtils.show("通话已结束")
                         mDisposable?.dispose()
                         mDurationDisposable?.dispose()
@@ -710,7 +736,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 if (mType == ConmmunicationUserType.CALLING) {
                     mVoiceChatViewModel?.calcelVoice(CancelType.Timeout)
                 } else {
-                    mVoiceChatViewModel?.refuseVoice(true)
+//                    mVoiceChatViewModel?.refuseVoice(true)
+                    mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
                 }
 
             }, {})
@@ -864,49 +891,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
     private var showToast = false
-
-    /**
-     * 获取耳机链接状态
-     */
-    private fun getEarphoneLinkStatus(): Boolean {
-        am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
-        am?.mode = AudioManager.MODE_IN_COMMUNICATION
-//获取当前使用的麦克风，设置媒体播放麦克风
-        if (am?.isWiredHeadsetOn == true) {
-            logger.info("Voice 有线耳机已连接")
-            if (showToast) {
-                Toast.makeText(this, "有线耳机已连接", Toast.LENGTH_SHORT).show()
-            }
-            return true
-        } else {
-            logger.info("Voice 有线耳机未连接")
-            if (showToast) {
-                Toast.makeText(this, "有线耳机未连接", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        val adapter = BluetoothAdapter.getDefaultAdapter()
-
-        if (BluetoothProfile.STATE_CONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
-            logger.info("Voice 蓝牙耳机已连接")
-            if (showToast) {
-                Toast.makeText(this, "蓝牙耳机已连接", Toast.LENGTH_SHORT).show()
-            }
-            return true
-        } else if (BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
-            logger.info("Voice 蓝牙耳机未连接")
-            if (showToast) {
-                Toast.makeText(this, "蓝牙耳机未连接", Toast.LENGTH_SHORT).show()
-            }
-            return false
-        } else {
-            logger.info("Voice 蓝牙耳机未连接")
-            if (showToast) {
-                Toast.makeText(this, "蓝牙耳机未连接", Toast.LENGTH_SHORT).show()
-            }
-            return false
-        }
-    }
 
     /**
      * 禁用其他音效

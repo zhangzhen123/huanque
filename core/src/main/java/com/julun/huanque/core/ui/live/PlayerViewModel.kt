@@ -26,7 +26,7 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
-import com.julun.huanque.core.net.UserService
+import com.julun.huanque.common.net.services.UserService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.model.Conversation

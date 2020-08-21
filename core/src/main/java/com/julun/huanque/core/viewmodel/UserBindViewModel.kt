@@ -15,7 +15,7 @@ import com.julun.huanque.common.suger.convertError
 import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
-import com.julun.huanque.core.net.UserService
+import com.julun.huanque.common.net.services.UserService
 import kotlinx.coroutines.launch
 
 /**

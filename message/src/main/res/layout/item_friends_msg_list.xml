@@ -27,6 +27,7 @@
         android:layout_marginLeft="@dimen/dimen_15"
         android:gravity="left"
         android:textColor="@color/black_333"
+        android:textStyle="bold"
         android:textSize="@dimen/sp_16"
         app:layout_constraintBottom_toTopOf="@+id/tvDesc"
         app:layout_constraintLeft_toRightOf="@+id/ivHead"

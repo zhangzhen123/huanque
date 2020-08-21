@@ -64,8 +64,7 @@
         android:layout_marginEnd="@dimen/dimen_10"
         android:layout_marginBottom="@dimen/dimen_10"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:roundAsCircle="true" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/iv_check"

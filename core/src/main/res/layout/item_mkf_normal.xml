@@ -40,8 +40,8 @@
         android:layout_width="@dimen/dimen_27"
         android:layout_height="@dimen/dimen_18"
         android:layout_marginBottom="@dimen/dimen_3"
-        app:layout_constraintBottom_toBottomOf="@+id/header_pic"
         app:actualImageScaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/header_pic"
         app:layout_constraintEnd_toEndOf="@+id/header_pic"
         app:layout_constraintStart_toStartOf="@+id/header_pic" />
 
@@ -78,13 +78,14 @@
         android:layout_marginLeft="@dimen/dimen_6"
         android:background="@drawable/bg_shape_mkf_sex_male"
         android:drawableLeft="@mipmap/icon_sex_male"
+        android:gravity="center"
         android:paddingLeft="@dimen/dimen_5"
         android:paddingTop="@dimen/dimen_1"
         android:paddingRight="@dimen/dimen_5"
         android:paddingBottom="@dimen/dimen_1"
         android:textColor="#FF9BC5"
         android:textSize="@dimen/sp_10"
-        android:gravity="center"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/tv_mkf_name"
         app:layout_constraintStart_toEndOf="@+id/tv_mkf_name"
         app:layout_constraintTop_toTopOf="@+id/tv_mkf_name"
@@ -97,14 +98,15 @@
         android:layout_marginStart="@dimen/dimen_7"
         android:background="@drawable/bg_shape_mkf_location"
         android:drawableStart="@mipmap/icon_location"
+        android:gravity="center"
+        android:maxLength="4"
         android:paddingLeft="@dimen/dimen_5"
         android:paddingTop="@dimen/dimen_1"
         android:paddingRight="@dimen/dimen_5"
-        android:maxLength="4"
         android:paddingBottom="@dimen/dimen_1"
         android:textColor="#82ABD1"
-        android:gravity="center"
         android:textSize="@dimen/sp_10"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/tv_mkf_name"
         app:layout_constraintStart_toEndOf="@+id/tv_sex"
         app:layout_constraintTop_toTopOf="@+id/tv_mkf_name"
@@ -170,9 +172,9 @@
         android:background="@drawable/bg_shape_mkf_audio"
         android:gravity="center_vertical"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/tv_mkf_name"
-        app:layout_constraintTop_toBottomOf="@+id/header_pic">
+        app:layout_constraintTop_toBottomOf="@+id/header_pic"
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/iv_audio_play"
@@ -185,8 +187,8 @@
             android:id="@+id/sdv_audio_state"
             android:layout_width="73dp"
             android:layout_height="@dimen/dimen_18"
-            app:actualImageScaleType="fitCenter"
-            android:layout_marginStart="10dp" />
+            android:layout_marginStart="10dp"
+            app:actualImageScaleType="fitCenter" />
 
         <View
             android:layout_width="0dp"

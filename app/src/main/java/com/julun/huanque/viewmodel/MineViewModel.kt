@@ -10,7 +10,7 @@ import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.BalanceUtils
-import com.julun.huanque.core.net.UserService
+import com.julun.huanque.common.net.services.UserService
 import kotlinx.coroutines.launch
 
 /**

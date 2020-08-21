@@ -28,6 +28,12 @@ object RnConstant {
     const val WEALTH_LEVEL_PAGE:String="WealthLevelPage"
     //聊主学院
     const val CHAT_COLLEGE_PAGE:String="ChatCollegePage"
+    //访问历史
+    const val VISIT_HISTORY_PAGE:String="VisitHistoryPage"
+    //聊天气泡
+    const val CHAT_BUBBLE_PAGE:String="ChatBubblePage"
+    //我的座驾
+    const val MY_CAR_PAGE:String="MyCarPage"
 
 
 
@@ -71,5 +77,7 @@ object RnConstant {
 
     //图片查看
     const val IMAGE_PAGE:String="PicturePreviewPage"
+    //web页面
+    const val WEBVIEW_PAGE:String="WebViewPage"
 
 }
