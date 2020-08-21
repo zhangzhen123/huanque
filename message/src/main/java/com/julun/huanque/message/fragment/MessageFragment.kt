@@ -98,12 +98,12 @@ class MessageFragment : BaseFragment() {
             //设置头部边距
             msg_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         }
+        pageView.showLoading()
+        mMessageViewModel.getConversationList()
         if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
             //融云已经连接
             //查询会话列表和免打扰列表
-            pageView.showLoading()
             mPlayerMessageViewModel.getBlockedConversationList()
-            mMessageViewModel.getConversationList()
         } else {
             showEmptyView()
         }
@@ -373,6 +373,7 @@ class MessageFragment : BaseFragment() {
     fun connectSuccess(event: RongConnectEvent) {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，加载数据
+            pageView.showLoading()
             mPlayerMessageViewModel.getBlockedConversationList()
             mMessageViewModel.getConversationList()
         }

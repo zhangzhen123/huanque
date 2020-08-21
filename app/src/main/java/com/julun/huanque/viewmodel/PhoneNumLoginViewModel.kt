@@ -23,7 +23,7 @@ import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.LoginStatusUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.svga.SVGAHelper.logger
-import com.julun.huanque.core.net.UserService
+import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.utils.GeeTestHttpUtils
 import kotlinx.coroutines.launch

@@ -1189,8 +1189,46 @@ object MessageProcessor {
     //直播间热度变化
     interface RoomHeatChangeProcessor : EventMessageProcessor<RoomHeatChangeBean> {
         override fun getEventType() = EventMessageType.RoomHeatChange
-
     }
+
+    /**
+     * 匿名语音超时消息
+     */
+    interface AnonyVoiceTimeoutProcessor : EventMessageProcessor<UserIdListBean> {
+        override fun getEventType() = EventMessageType.AnonyVoiceTimeout
+    }
+
+    /**
+     * 匿名语音成功
+     */
+    interface AnonyVoiceConnectProcessor : EventMessageProcessor<AnonyVoiceSuccess> {
+        override fun getEventType() = EventMessageType.AnonyVoiceConnect
+    }
+
+    /**
+     * 匿名语音挂断消息
+     */
+    interface AnonyVoiceHangUpProcessor : EventMessageProcessor<AnonyVoiceHangUpBean> {
+        override fun getEventType() = EventMessageType.AnonyVoiceHangUp
+    }
+
+    /**
+     * 匿名语音 公开身份消息
+     */
+    interface AnonyVoiceOpenProcessor : EventMessageProcessor<UserInfoInRoom> {
+        override fun getEventType() = EventMessageType.AnonyVoiceOpen
+    }
+
+    /**
+     * 匿名语音  邀请消息
+     */
+    interface AnonyVoiceInviteProcessor : EventMessageProcessor<AnonyVoiceInviteBean> {
+        override fun getEventType() = EventMessageType.AnonyVoiceInvite
+
+        override fun isGlobal() = true
+    }
+
+
 }
 
 enum class EventMessageType(val klass: Class<*>) {
@@ -1530,7 +1568,23 @@ enum class EventMessageType(val klass: Class<*>) {
     BanUserLiving(OperatorMessageBean::class.java),
 
     //直播间热度变动消息
-    RoomHeatChange(RoomHeatChangeBean::class.java)
+    RoomHeatChange(RoomHeatChangeBean::class.java),
+
+    //匹配超时消息
+    AnonyVoiceTimeout(UserIdListBean::class.java),
+
+    //匹配成功消息
+    AnonyVoiceConnect(AnonyVoiceSuccess::class.java),
+
+    //匿名语音挂断消息
+    AnonyVoiceHangUp(AnonyVoiceHangUpBean::class.java),
+
+    //公开信息消息
+    AnonyVoiceOpen(UserInfoInRoom::class.java),
+
+    //匿名语音 邀请消息
+    AnonyVoiceInvite(AnonyVoiceInviteBean::class.java)
+
     //禁言消息
 //    MuteUser(OperatorMessageBean::class.java),
 //    //设备封禁消息

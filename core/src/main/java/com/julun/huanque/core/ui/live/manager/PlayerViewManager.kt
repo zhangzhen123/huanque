@@ -223,7 +223,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 
         viewModel.followStatusData.observe(context, Observer {
             logger.info("Player 关注状态 status = $it")
-            if (it?.getT()?.userId != viewModel.programId) {
+            if (it != null && it.isSuccess() && it.getT().userId != viewModel.programId) {
                 //不是主播的关注数据
                 return@Observer
             }

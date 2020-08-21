@@ -135,6 +135,13 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            BalanceUtils.queryLastestBalance()
+        }
+    }
+
     private fun loadData(info: UserDetailInfo) {
         SharedPreferencesUtils.commitString(SPParamKey.CUSTOMER_URL, info.customerUrl)
         headImage.loadImage(info.userBasic.headPic + BusiConstant.OSS_160, 60f, 60f)
@@ -146,7 +153,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         if (info.userBasic.userLevel > 0) {
             sdv_wealth.show()
             tv_wealth_privilege.hide()
-            sdv_wealth.loadImage(info.userBasic.userLevelIcon, 55f, 16f)
+            val wealthAddrss = GlobalUtils.getString(R.string.wealth_address)
+            String.format(wealthAddrss, info.userBasic.userLevel)
+            sdv_wealth.loadImage(String.format(wealthAddrss, info.userBasic.userLevel), 55f, 16f)
         } else {
             sdv_wealth.hide()
             tv_wealth_privilege.show()
@@ -163,7 +172,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
         if (info.userBasic.anchorLevel > 0) {
             sdv_author_level.show()
-            sdv_author_level.loadImage(info.userBasic.anchorLevelPic, 55f, 16f)
+            val wealthAddrss = GlobalUtils.getString(R.string.anchor_address)
+            sdv_author_level.loadImage(String.format(wealthAddrss, info.userBasic.anchorLevel), 55f, 16f)
+
         } else {
             tv_author_privilege.show()
         }
@@ -422,7 +433,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
             override fun convert(holder: BaseViewHolder, item: UserDataTab) {
                 val tvCount = holder.getView<TextView>(R.id.tvCount)
-                tvCount.text = "${item.count}"
+                val count = item.count
+                if (count >= 10000) {
+                    val iCount = count / 1000
+                    val dCount = iCount / 10.toDouble()
+                    tvCount.text = "${NumberFormatUtils.formatWithdecimal1(dCount)}W"
+                } else {
+                    tvCount.text = "$count"
+                }
                 holder.setText(R.id.tvTitle, item.userTabName)
 
                 if (item.tagCount == 0) {
@@ -482,7 +500,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun informationChange(event : UserInfoEditEvent){
+    fun informationChange(event: UserInfoEditEvent) {
         mViewModel.queryInfo(QueryType.REFRESH)
     }
 

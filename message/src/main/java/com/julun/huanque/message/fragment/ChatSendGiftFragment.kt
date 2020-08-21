@@ -27,10 +27,12 @@ import com.julun.huanque.common.bean.beans.ChatGiftInfo
 import com.julun.huanque.common.bean.beans.ChatGroupGift
 import com.julun.huanque.common.bean.beans.ChatSendResult
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.database.table.Balance
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.svga.SVGAHelper
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
@@ -73,6 +75,8 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT)
         mPrivateConversationViewModel.sendGiftShowFlag.value = true
+        //获取余额
+        BalanceUtils.queryLastestBalance()
     }
 
     override fun reCoverView() {
