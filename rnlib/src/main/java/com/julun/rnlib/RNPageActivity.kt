@@ -260,7 +260,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 val media = selectList[0]
                 //视频要求 大于15秒
                 if (currentMinTime * 1000L > media.duration) {
-                    ToastUtils.show(resources.getString(R.string.video_duration_is_out))
+                    ToastUtils.show("请上传时长大于15s且大小不超过100M的视频哦")
                     RnManager.promiseMap[RnManager.uploadVideo]?.reject(
                         "-1",
                         "视频上传功能 选择的视频时长不符合要求 通知rn回调"
@@ -271,7 +271,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 val size = FileUtils.getFileOrFilesSize(media.path, FileUtils.SIZETYPE_KB)//单位kb
                 logger("当前视频的大小：${size}kb")
                 if (currentMaxSize < size) {
-                    ToastUtils.show(resources.getString(R.string.video_size_is_out))
+                    ToastUtils.show("请上传时长大于15s且大小不超过100M的视频哦")
                     RnManager.promiseMap[RnManager.uploadVideo]?.reject(
                         "-1",
                         "视频上传功能 选择的视频大小不符合要求 通知rn回调"

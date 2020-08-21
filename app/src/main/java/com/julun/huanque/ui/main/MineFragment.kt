@@ -154,7 +154,6 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             sdv_wealth.show()
             tv_wealth_privilege.hide()
             val wealthAddrss = GlobalUtils.getString(R.string.wealth_address)
-            String.format(wealthAddrss, info.userBasic.userLevel)
             sdv_wealth.loadImage(String.format(wealthAddrss, info.userBasic.userLevel), 55f, 16f)
         } else {
             sdv_wealth.hide()
