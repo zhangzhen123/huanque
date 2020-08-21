@@ -373,6 +373,7 @@ class MessageFragment : BaseFragment() {
     fun connectSuccess(event: RongConnectEvent) {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，加载数据
+            pageView.showLoading()
             mPlayerMessageViewModel.getBlockedConversationList()
             mMessageViewModel.getConversationList()
         }

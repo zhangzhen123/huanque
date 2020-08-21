@@ -471,6 +471,7 @@ class MainActivity : BaseActivity() {
             override fun process(data: AnonyVoiceInviteBean) {
                 val intent = Intent(this@MainActivity, AnonymousVoiceActivity::class.java)
                 intent.putExtra(ParamConstant.TYPE, ConmmunicationUserType.CALLED)
+                intent.putExtra(ParamConstant.InviteUserId, data.inviteUserId)
                 if (ForceUtils.activityMatch(intent)) {
                     startActivity(intent)
                 }

@@ -221,4 +221,10 @@ interface SocialService {
      */
     @POST("social/friend/avoice/unveilIdentity")
     suspend fun unveilIdentity(@Body form: NetcallIdForm): Root<UserInfoInRoom>
+
+    /**
+     * 接受匿名语音
+     */
+    @POST("social/friend/avoice/accept")
+    suspend fun avoiceAccept(@Body form: InviteUserIdForm): Root<VoidResult>
 }

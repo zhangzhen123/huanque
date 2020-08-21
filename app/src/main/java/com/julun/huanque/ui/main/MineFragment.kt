@@ -441,7 +441,6 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 } else {
                     tvCount.text = "$count"
                 }
-                tvCount.text = "${item.count}"
                 holder.setText(R.id.tvTitle, item.userTabName)
 
                 if (item.tagCount == 0) {

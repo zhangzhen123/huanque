@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.agora.AgoraManager
 import com.julun.huanque.agora.R
 import com.julun.huanque.agora.handler.EventHandler
@@ -129,6 +130,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         if (mType == ConmmunicationUserType.CALLED) {
             //被叫
             mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT_ACCEPT
+            mAnonymousVoiceViewModel?.inviteUserId = intent?.getLongExtra(ParamConstant.InviteUserId, 0) ?: 0L
             //1 播放响铃
             playAudio(true)
             //2 超时计算
@@ -158,6 +160,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             override fun process(data: AnonyVoiceSuccess) {
                 if (data.userIds.contains(SessionUtils.getUserId())) {
                     //当前用户匹配成功
+                    mPlayer?.stop()
                     communicationTime = data.duration
                     val userInfo = data.userData["${SessionUtils.getUserId()}"] ?: return
                     //更新剩余次数
@@ -258,11 +261,13 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                         startMatch()
                     }
                     AnonymousVoiceViewModel.VOICE -> {
-                        matchSuccess()
+                        showMatchSuccessView()
+                        startVoiceCountDown()
                         joinChannel()
                     }
                     AnonymousVoiceViewModel.WAIT_ACCEPT -> {
                         //等待接听状态
+                        showMatchSuccessView()
                         showWaitAccept()
                     }
                     else -> {
@@ -347,6 +352,13 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         ll_close.onClickNew {
             //挂断
             mAnonymousVoiceViewModel?.hangUp()
+        }
+        ll_voice_accept.onClickNew {
+            //接受匿名语音
+            mAnonymousVoiceViewModel?.inviteUserId?.let { id ->
+                mAnonymousVoiceViewModel?.avoiceAccept(id)
+            }
+
         }
         header_page.imageViewBack.onClickNew {
             mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT
@@ -587,7 +599,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     /**
      * 开始头像缩放动画
      */
-    private fun startHeaderAnimation(view: View, set: AnimatorSet) {
+    private fun startHeaderAnimation(view: SimpleDraweeView, set: AnimatorSet) {
         if (set.childAnimations.size > 0) {
             set.start()
             return
@@ -617,6 +629,11 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         }
         set.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
+                val pics = mAnonymousVoiceViewModel?.basicData?.value?.headPics ?: return
+                val picSize = pics.size
+                if (picSize > 0) {
+                    //获取随机头像显示
+                }
             }
 
             override fun onAnimationEnd(animation: Animator?) {
@@ -638,7 +655,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     /**
      * 匹配成功
      */
-    private fun matchSuccess() {
+    private fun showMatchSuccessView() {
         con_match.hide()
         header_page.imageViewBack.hide()
         if (voiceShowAnimatorSet.childAnimations.size <= 0) {
@@ -674,6 +691,13 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
         }
         voiceShowAnimatorSet.start()
+    }
+
+
+    /**
+     * 开始匿名倒计时
+     */
+    private fun startVoiceCountDown() {
         ll_quiet.show()
         ll_close.show()
         ll_hands_free.show()
@@ -739,8 +763,8 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
      * 显示等待接听状态
      */
     private fun showWaitAccept() {
-        con_match.hide()
-        con_voice.show()
+        ll_close.show()
+        ll_voice_accept.show()
     }
 
     /**

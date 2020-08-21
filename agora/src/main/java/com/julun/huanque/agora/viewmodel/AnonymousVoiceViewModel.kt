@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.beans.AnonymousBasicInfo
 import com.julun.huanque.common.bean.beans.CheckBeansData
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
+import com.julun.huanque.common.bean.forms.InviteUserIdForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -61,6 +62,9 @@ class AnonymousVoiceViewModel : BaseViewModel() {
 
     //语音通话ID
     var callId = 0L
+
+    //邀请的用户ID
+    var inviteUserId = 0L
 
 
     fun getBasicData() {
@@ -141,6 +145,17 @@ class AnonymousVoiceViewModel : BaseViewModel() {
             request({
                 val result = socialService.unveilIdentity(NetcallIdForm(callId)).dataConvert()
                 unveilIdentityData.value = result
+            })
+        }
+    }
+
+    /**
+     * 接受匿名语音
+     */
+    fun avoiceAccept(inviteUserId: Long) {
+        viewModelScope.launch {
+            request({
+                val result = socialService.avoiceAccept(InviteUserIdForm(inviteUserId)).dataConvert()
             })
         }
     }
