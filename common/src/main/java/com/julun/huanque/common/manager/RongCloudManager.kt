@@ -251,7 +251,8 @@ object RongCloudManager {
     }
 
     /**
-     * 发送模拟消息
+     * 发送模拟消息]
+     * @param unreadCount 是否需要未读消息
      */
     fun sendSimulateMessage(
         targetId: String,
@@ -259,7 +260,8 @@ object RongCloudManager {
         extra: RoomUserChatExtra?,
         conversationType: Conversation.ConversationType,
         customType: String,
-        customBean: Any
+        customBean: Any,
+        unreadCount : Boolean = false
     ) {
         val messageContent = CustomSimulateMessage.obtain().apply {
             type = customType
@@ -295,7 +297,11 @@ object RongCloudManager {
         }
         if (senderId == targetId) {
             //插入接收消息
-            val receivedStatus = Message.ReceivedStatus(0x1)
+            val receivedStatus = if(unreadCount){
+                Message.ReceivedStatus(0)
+            }else{
+                Message.ReceivedStatus(1)
+            }
             RongIMClient.getInstance()
                 .insertIncomingMessage(conversationType, targetId, senderId, receivedStatus, messageContent, sentTime, callback)
         } else {

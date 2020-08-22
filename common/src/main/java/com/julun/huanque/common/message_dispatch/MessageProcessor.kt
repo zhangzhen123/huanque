@@ -1228,6 +1228,10 @@ object MessageProcessor {
         override fun isGlobal() = true
     }
 
+    interface AnonyVoiceCancelProcessor : EventMessageProcessor<AnonyVoiceCancelBean> {
+        override fun getEventType() = EventMessageType.AnonyVoiceCancel
+    }
+
 
 }
 
@@ -1583,8 +1587,11 @@ enum class EventMessageType(val klass: Class<*>) {
     AnonyVoiceOpen(UserInfoInRoom::class.java),
 
     //匿名语音 邀请消息
-    AnonyVoiceInvite(AnonyVoiceInviteBean::class.java)
+    AnonyVoiceInvite(AnonyVoiceInviteBean::class.java),
 
+    //匿名语音邀请  取消消息
+    AnonyVoiceCancel(AnonyVoiceCancelBean::class.java)
+//inviteUserId
     //禁言消息
 //    MuteUser(OperatorMessageBean::class.java),
 //    //设备封禁消息

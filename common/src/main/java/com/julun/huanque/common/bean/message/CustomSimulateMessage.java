@@ -15,7 +15,7 @@ import io.rong.imlib.model.MessageContent;
  * @创建时间 2020/6/16 11:02
  * @描述 自定义消息  * value 即 ObjectName 是消息的唯一标识不可以重复，开发者命名时不能以 RC 开头，避免和融云内置消息冲突； flag 是用来定义消息的可操作状态。
  */
-@MessageTag(value = "s:privateChatCustomSimulateMessage", flag = MessageTag.ISPERSISTED)
+@MessageTag(value = "s:privateChatCustomSimulateMessage", flag = MessageTag.ISCOUNTED)
 public class CustomSimulateMessage extends MessageContent {
 
     public static final Creator<CustomSimulateMessage> CREATOR = new Creator<CustomSimulateMessage>() {

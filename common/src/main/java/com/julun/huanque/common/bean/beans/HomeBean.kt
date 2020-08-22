@@ -3,6 +3,7 @@ package com.julun.huanque.common.bean.beans
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.julun.huanque.common.basic.RootListData
 import java.io.Serializable
+import java.util.logging.Level
 
 class HomeItemBean(var showType: Int, var content: Any) : MultiItemEntity {
     companion object {
@@ -229,4 +230,35 @@ data class CheckBeansData(
     var beans: Long = 0,
     //余额是否足够
     var hasEnoughBeans: String = ""
+) : Serializable
+
+data class SingleFlowerDayListBean(
+    //勋章列表
+    var badgesPic: MutableList<String> = mutableListOf(),
+    //头像
+    var headPic: String = "",
+    //昵称
+    var nickname: String = "",
+    //排名
+    var ranking: String = "",
+    //贵族等级
+    var royalLevel: Int = 0,
+    //排名
+    var score: Int = 0,
+    //用户Id
+    var userId: Long = 0,
+    //用户等级
+    var userLevel: Int = 0,
+    //用户类型
+    var userType: String = ""
+) : Serializable
+
+/**
+ * 花魁榜单数据
+ */
+data class FlowerDayListBean(
+    //本人信息
+    var rankInfo: SingleFlowerDayListBean = SingleFlowerDayListBean(),
+    //列表信息
+    var rankList: MutableList<SingleFlowerDayListBean> = mutableListOf()
 ) : Serializable

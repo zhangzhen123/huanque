@@ -206,7 +206,13 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
                     }
                     HeadModule.PlumFlower -> {
-
+                        //花魁
+                        activity?.let { act ->
+                            val intent = Intent(act, PlumFlowerActivity::class.java)
+                            if (ForceUtils.activityMatch(intent)) {
+                                act.startActivity(intent)
+                            }
+                        }
                     }
                     else -> {
 

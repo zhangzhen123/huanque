@@ -1138,5 +1138,15 @@ class AnonyVoiceHangUpBean(
  */
 class AnonyVoiceInviteBean(
     //邀请的用户ID
-    var inviteUserId: Long = 0
+    var inviteUserId: Long = 0,
+    //邀请的时间
+    var inviteTime: Long = 0
 ) : Serializable
+
+/**
+ * 匿名语音邀请取消消息
+ */
+class AnonyVoiceCancelBean(
+    //邀请的用户ID
+    var inviteUserId: Long = 0
+)

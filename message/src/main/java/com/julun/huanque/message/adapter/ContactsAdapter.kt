@@ -11,10 +11,12 @@ import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
+import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.message.R
 import org.jetbrains.anko.backgroundResource
@@ -72,6 +74,9 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
         //亲密度变化值
         val tvChangeNumber = helper.getView<TextView>(R.id.tv_change_number)
 
+        val maxWidth = ScreenUtils.getScreenWidth() - dp2px(201)
+        tvIntimateNumber.maxWidth = maxWidth
+
         if (type == ContactsTabType.Intimate) {
             //显示亲密值
             tvIntimateNumber.text = "亲密度${item.num}"
@@ -95,12 +100,7 @@ class ContactsAdapter : BaseQuickAdapter<SocialUserInfo, BaseViewHolder>(R.layou
         } else {
             //显示个性签名
             tvChangeNumber.hide()
-            val content = if (item.mySign.length < 13) {
-                item.mySign
-            } else {
-                "${item.mySign.substring(0, 13)}..."
-            }
-            tvIntimateNumber.text = content
+            tvIntimateNumber.text = item.mySign
         }
         //
         val tvAction = helper.getView<TextView>(R.id.tv_action)

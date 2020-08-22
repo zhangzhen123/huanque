@@ -12,6 +12,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
 
 /**
@@ -54,6 +55,9 @@ class AnonymousVoiceViewModel : BaseViewModel() {
     //结束声音
     val closeSoundFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //匿名语音结束标记位
+    val voiceEndFlag : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //声网token
     var agoraToken = ""
 
@@ -83,6 +87,8 @@ class AnonymousVoiceViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 socialService.startMatch().dataConvert()
+            },{
+                currentState.value = WAIT
             })
         }
     }
@@ -108,8 +114,11 @@ class AnonymousVoiceViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 socialService.avoiceHangUp(NetcallIdForm(callId)).dataConvert()
+            }, {}, {
+                ToastUtils.show("匿名语音已结束")
                 closeSoundFlag.value = true
-            }, {}, { currentState.value = WAIT })
+                voiceEndFlag.value = true
+            })
         }
     }
 
@@ -156,6 +165,11 @@ class AnonymousVoiceViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = socialService.avoiceAccept(InviteUserIdForm(inviteUserId)).dataConvert()
+                currentState.value = VOICE
+            }, {
+                currentState.value = WAIT
+            }, {
+
             })
         }
     }
@@ -164,10 +178,13 @@ class AnonymousVoiceViewModel : BaseViewModel() {
      *
      * 拒绝邀请
      */
-    fun avoiceReject(inviteUserId: Long){
+    fun avoiceReject(inviteUserId: Long) {
         viewModelScope.launch {
             request({
                 socialService.avoiceReject(InviteUserIdForm(inviteUserId)).dataConvert()
+            }, {}, {
+                closeSoundFlag.value = true
+                voiceEndFlag.value = true
             })
         }
     }

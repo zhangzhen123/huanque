@@ -6,6 +6,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator.*
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
@@ -14,6 +15,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginTop
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -44,7 +47,9 @@ import kotlinx.android.synthetic.main.act_anonymous_voice.*
 import kotlinx.android.synthetic.main.act_anonymous_voice.ll_close
 import kotlinx.android.synthetic.main.act_anonymous_voice.ll_hands_free
 import kotlinx.android.synthetic.main.act_anonymous_voice.ll_quiet
+import kotlinx.android.synthetic.main.act_anonymous_voice.ll_voice_accept
 import kotlinx.android.synthetic.main.act_anonymous_voice.sdv_header
+import kotlinx.android.synthetic.main.act_voice_chat.*
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
@@ -103,15 +108,25 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     //音频播放器
     private var mPlayer: MediaPlayer? = null
 
-    private var mType = ""
+    //其他人未加入倒计时
+    private var mOtherNoJoinDisposable : Disposable? = null
+
+    //语音结束关闭标识位
+    private var endClose = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
         ll_hands_free.isEnabled = !GlobalUtils.getEarphoneLinkStatus()
     }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         StatusBarUtil.setTransparent(this)
+
+        val barHeight = StatusBarUtil.getStatusBarHeight(this)
+        val params = header_page.layoutParams as? ConstraintLayout.LayoutParams
+        params?.topMargin = barHeight
+        header_page.layoutParams = params
+
         AgoraManager.mHandler.addHandler(this)
         header_page.textTitle.text = "匿名语音"
         header_page.textTitle.textColor = Color.WHITE
@@ -126,8 +141,17 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         initViewModel()
         registerMessage()
 
-        mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
-        if (mType == ConmmunicationUserType.CALLED) {
+        judgeType(intent)
+        mAnonymousVoiceViewModel?.getBasicData()
+    }
+
+    /**
+     * 跳转类型进行判断
+     */
+    private fun judgeType(intent: Intent?) {
+        val mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
+        val currentType = mAnonymousVoiceViewModel?.currentState?.value
+        if ((currentType == null || currentType == AnonymousVoiceViewModel.WAIT) && mType == ConmmunicationUserType.CALLED) {
             //被叫
             mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT_ACCEPT
             mAnonymousVoiceViewModel?.inviteUserId = intent?.getLongExtra(ParamConstant.InviteUserId, 0) ?: 0L
@@ -137,9 +161,9 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             timer()
         } else {
             //主叫
+            endClose = false
             mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT
         }
-        mAnonymousVoiceViewModel?.getBasicData()
     }
 
 
@@ -181,7 +205,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             override fun process(data: AnonyVoiceHangUpBean) {
                 if (data.callId == mAnonymousVoiceViewModel?.callId && data.userId == SessionUtils.getUserId()) {
                     //当前匿名语音被挂断
-                    mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT
+                    mAnonymousVoiceViewModel?.voiceEndFlag?.value = true
                 }
             }
         })
@@ -192,10 +216,21 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                 showUserInfo(data)
             }
         })
+
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceCancelProcessor {
+            override fun process(data: AnonyVoiceCancelBean) {
+                if (data.inviteUserId == mAnonymousVoiceViewModel?.inviteUserId && mAnonymousVoiceViewModel?.currentState?.value == AnonymousVoiceViewModel.WAIT_ACCEPT) {
+                    //匿名语音取消消息
+                    ToastUtils.show("匿名语音已结束")
+                    mAnonymousVoiceViewModel?.voiceEndFlag?.value = true
+                }
+            }
+        })
+
     }
 
     /**
-     * 主叫或者被叫 的等待定时挂断方法
+     * 被叫 的等待定时挂断方法
      */
     private fun timer() {
         //超时计算
@@ -203,7 +238,9 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             .bindUntilEvent(this, ActivityEvent.DESTROY)
             .subscribe({
                 //挂断
-                mAnonymousVoiceViewModel?.hangUp()
+                ToastUtils.show("匿名语音已结束")
+                mAnonymousVoiceViewModel?.currentState?.postValue(AnonymousVoiceViewModel.WAIT)
+//                mAnonymousVoiceViewModel?.hangUp()
             }, {})
     }
 
@@ -211,6 +248,8 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
      * 播放音效
      */
     private fun playAudio(calling: Boolean) {
+        mPlayer?.stop()
+        mPlayer = null
         mPlayer = if (calling) {
             MediaPlayer.create(this, R.raw.ring)?.apply { isLooping = true }
         } else {
@@ -234,23 +273,9 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             if (it != null) {
                 when (it) {
                     AnonymousVoiceViewModel.WAIT -> {
+                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
                         mDisposable?.dispose()
                         mPlayer?.stop()
-                        sdv_mine.hide()
-                        sdv_mine.rotationY = 0f
-                        tv_open_mine.hide()
-                        tv_open_mine.rotationY = 0f
-
-                        con_userinfo_mine.alpha = 0f
-                        view_left_header.alpha = 0f
-
-                        sdv_other.show()
-                        sdv_other.rotationY = 0f
-                        tv_open_other.show()
-                        tv_open_other.rotationY = 0f
-
-                        con_userinfo_other.alpha = 0f
-                        view_right_header.alpha = 0f
 
                         stopMatch()
                         con_voice.hide()
@@ -260,15 +285,19 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                         voiceCompositeDisposable.clear()
                     }
                     AnonymousVoiceViewModel.MATCH -> {
+                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
                         startMatch()
                     }
                     AnonymousVoiceViewModel.VOICE -> {
+                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
                         showMatchSuccessView()
                         startVoiceCountDown()
                         joinChannel()
+                        otherNoJoinCountDown()
                     }
                     AnonymousVoiceViewModel.WAIT_ACCEPT -> {
                         //等待接听状态
+                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
                         showMatchSuccessView()
                         showWaitAccept()
                     }
@@ -321,10 +350,29 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                 playAudio(false)
             }
         })
+
+        mAnonymousVoiceViewModel?.voiceEndFlag?.observe(this, Observer {
+            if (it == true) {
+                //匿名语音结束标记位
+                if (endClose) {
+                    Observable.timer(1, TimeUnit.SECONDS)
+                        .bindUntilEvent(this, ActivityEvent.DESTROY)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            finish()
+                        }, {})
+
+                } else {
+                    mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT
+                }
+            }
+        })
     }
 
     private fun showViewByData(info: AnonymousBasicInfo) {
         ImageUtils.loadImage(sdv_header, "${info.myHeadPic}${BusiConstant.OSS_160}", 75f, 75f)
+        val count = info.surplusTimes
+        tv_duration.isEnabled = count > 0
         tv_duration.text = "剩余${info.surplusTimes}次"
         info.headPics.forEachIndexed { index, header ->
             when (index) {
@@ -363,6 +411,14 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                 mAnonymousVoiceViewModel?.hangUp()
             }
         }
+
+        ll_quiet.onClickNew {
+            //静音
+            ll_quiet.isSelected = !ll_quiet.isSelected
+            val volume = if (ll_quiet.isSelected) 0 else 100
+            AgoraManager.mRtcEngine?.adjustRecordingSignalVolume(volume)
+        }
+
         ll_voice_accept.onClickNew {
             //接受匿名语音
             mAnonymousVoiceViewModel?.inviteUserId?.let { id ->
@@ -410,6 +466,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         }
     }
 
+
     /**
      * 显示性别相关的视图
      */
@@ -418,12 +475,12 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         //性别
         when (sex) {
             Sex.MALE -> {
-                sexView.backgroundResource = R.drawable.bg_shape_mkf_sex_male
+                sexView.backgroundResource = R.drawable.bg_shape_mkf_sex_male_anonymous
                 sexDrawable = GlobalUtils.getDrawable(R.mipmap.icon_sex_male)
                 sexView.textColor = Color.parseColor("#58CEFF")
             }
             Sex.FEMALE -> {
-                sexView.backgroundResource = R.drawable.bg_shape_mkf_sex_female
+                sexView.backgroundResource = R.drawable.bg_shape_mkf_sex_female_anonymous
                 sexDrawable = GlobalUtils.getDrawable(R.mipmap.icon_sex_female)
                 sexView.textColor = Color.parseColor("#FF9BC5")
             }
@@ -451,6 +508,10 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                         logger.info("获取权限成功")
                         if (mAnonymousVoiceViewModel?.basicData?.value == null) {
                             //未获取到数据
+                            return@subscribe
+                        }
+                        if ((mAnonymousVoiceViewModel?.basicData?.value?.surplusTimes ?: 0 <= 0)) {
+                            //没有可用次数
                             return@subscribe
                         }
                         if (!tv_match.isSelected) {
@@ -569,7 +630,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         set.apply {
             val scaleXAnimate = ObjectAnimator.ofFloat(view, "scaleX", 0.4f, 1.57f)
             val scaleYAnimate = ObjectAnimator.ofFloat(view, "scaleY", 0.4f, 1.57f)
-            val alphaAnimate = ObjectAnimator.ofFloat(view, "alpha", 1f, 1f, 1f, 1f, 0.3f)
+            val alphaAnimate = ObjectAnimator.ofFloat(view, "alpha", 1f, 1f, 1f, 1f, 0f)
 
             scaleXAnimate.apply {
                 duration = 2000
@@ -604,6 +665,18 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             })
         }
         set.start()
+    }
+
+    /**
+     * 对方未加入频道 倒计时
+     */
+    private fun otherNoJoinCountDown() {
+        mOtherNoJoinDisposable = Observable.timer(10, TimeUnit.SECONDS)
+            .bindUntilEvent(this, ActivityEvent.DESTROY)
+            .subscribe({
+                mAnonymousVoiceViewModel?.hangUp()
+            }, {})
+
     }
 
     /**
@@ -671,6 +744,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
      * 匹配成功
      */
     private fun showMatchSuccessView() {
+        resetVoiceView()
         con_match.hide()
         header_page.imageViewBack.hide()
         if (voiceShowAnimatorSet.childAnimations.size <= 0) {
@@ -706,8 +780,43 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
         }
         voiceShowAnimatorSet.start()
+
+        val timerDisposable = Observable.timer(200, TimeUnit.MILLISECONDS)
+            .bindUntilEvent(this, ActivityEvent.DESTROY)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                ImageUtils.loadGifImageLocal(sdv_animation, R.drawable.heat_bounce)
+                showBtn()
+            }, {})
+        voiceCompositeDisposable.add(timerDisposable)
     }
 
+
+    /**
+     * 重置语音相关的视图
+     */
+    private fun resetVoiceView() {
+        sdv_mine.show()
+        sdv_mine.rotationY = 0f
+        tv_open_mine.hide()
+        tv_open_mine.rotationY = 0f
+
+        con_userinfo_mine.alpha = 0f
+        view_left_header.alpha = 0f
+
+        sdv_other.show()
+        sdv_other.rotationY = 0f
+        tv_open_other.hide()
+        tv_open_other.rotationY = 0f
+
+        con_userinfo_other.alpha = 0f
+        view_right_header.alpha = 0f
+
+        ll_quiet.isSelected = false
+        ll_close.isSelected = false
+        ll_hands_free.isSelected = false
+        ll_voice_accept.isSelected = false
+    }
 
     /**
      * 开始匿名倒计时
@@ -728,16 +837,9 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                 leaveChannel()
             })
 
-        val timerDisposable = Observable.timer(200, TimeUnit.MILLISECONDS)
-            .bindUntilEvent(this, ActivityEvent.DESTROY)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                ImageUtils.loadGifImageLocal(sdv_animation, R.drawable.heat_bounce)
-                showBtn()
-            }, {})
 
         voiceCompositeDisposable.add(countDownDisposable)
-        voiceCompositeDisposable.add(timerDisposable)
+
     }
 
     /**
@@ -980,6 +1082,12 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
     private fun leaveChannel() {
         AgoraManager.mRtcEngine?.leaveChannel()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        endClose = false
+        judgeType(intent)
     }
 
     override fun onViewDestroy() {

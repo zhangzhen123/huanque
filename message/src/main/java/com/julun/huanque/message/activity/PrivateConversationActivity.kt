@@ -291,11 +291,19 @@ class PrivateConversationActivity : BaseActivity() {
         })
 
         mPrivateConversationViewModel?.messageChangeState?.observe(this, Observer {
-            if (it == true) {
-                mAdapter.notifyDataSetChanged()
-                mAdapter.upFetchModule.isUpFetching = false
-                mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
-//                scrollToBottom()
+            if (it != null) {
+                val messageList = mPrivateConversationViewModel?.changeMessageList ?: return@Observer
+
+                if (it) {
+                    //添加新消息
+                    mAdapter.addData(messageList)
+                    scrollToBottom()
+                } else {
+                    //添加历史消息
+                    mAdapter.addData(0, messageList)
+                    mAdapter.upFetchModule.isUpFetching = false
+                    mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
+                }
                 mPrivateConversationViewModel?.messageChangeState?.value = null
                 showXiaoQueAuto()
             }
@@ -596,25 +604,48 @@ class PrivateConversationActivity : BaseActivity() {
                             SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
                         if (msgFee != null && msgFee > 0 && !dialogShow) {
                             //消息需要付费
-                            showMessageFeeDialog(Message_Privilege, msgFee)
+                            MyAlertDialog(this@PrivateConversationActivity).showAlertWithOKAndCancel(
+                                "私信消息${msgFee}鹊币/条",
+                                MyAlertDialog.MyDialogCallback(onRight = {
+                                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                                    sendChatMessage(message = emotion.text, messageType = Message_Privilege)
+                                }, onCancel = {
+                                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                                }), "私信消息费用", "继续发送"
+                            )
                             return
                         }
+
                         sendChatMessage(message = emotion.text, messageType = Message_Privilege)
                     }
                     EmojiType.ANIMATION -> {
                         //动画表情
+                        //随机结果
+                        val result =
+                            mPrivateConversationViewModel?.calcuteAnimationResult(emotion.text)
+                                ?: ""
+
                         val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
                         val dialogShow =
                             SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
                         if (msgFee != null && msgFee > 0 && !dialogShow) {
                             //消息需要付费
-                            showMessageFeeDialog(Message_Animation, msgFee)
+                            MyAlertDialog(this@PrivateConversationActivity).showAlertWithOKAndCancel(
+                                "私信消息${msgFee}鹊币/条",
+                                MyAlertDialog.MyDialogCallback(onRight = {
+                                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                                    sendChatMessage(
+                                        message = emotion.text,
+                                        animationResult = result,
+                                        messageType = Message_Animation
+                                    )
+                                }, onCancel = {
+                                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                                }), "私信消息费用", "继续发送"
+                            )
                             return
                         }
-                        //随机结果
-                        val result =
-                            mPrivateConversationViewModel?.calcuteAnimationResult(emotion.text)
-                                ?: ""
+
                         sendChatMessage(
                             message = emotion.text,
                             animationResult = result,

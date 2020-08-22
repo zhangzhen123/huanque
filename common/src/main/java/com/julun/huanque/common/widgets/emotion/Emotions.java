@@ -56,6 +56,13 @@ public class Emotions {
         NORMAL_EMOTIONS.put("[眨眼]", R.drawable.zhayan);
         NORMAL_EMOTIONS.put("[真棒]", R.drawable.zhenbang);
 
+        NORMAL_EMOTIONS.put("[我不看]", R.drawable.wobukan);
+        NORMAL_EMOTIONS.put("[我不听]", R.drawable.wobuting);
+        NORMAL_EMOTIONS.put("[色迷迷]", R.drawable.semimi);
+        NORMAL_EMOTIONS.put("[气呼呼]", R.drawable.qihuhu);
+        NORMAL_EMOTIONS.put("[惊讶]", R.drawable.jingya);
+        NORMAL_EMOTIONS.put("[困了]", R.drawable.kunle);
+
         // 加载特权表情
         PRIVILEGE_EMOTIONS.put("[晚安]", R.drawable.expression_privilege_wanan);
 

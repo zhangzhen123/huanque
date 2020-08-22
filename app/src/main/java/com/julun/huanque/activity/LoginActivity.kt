@@ -35,6 +35,7 @@ import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.act_login.*
@@ -97,6 +98,11 @@ class LoginActivity : BaseActivity() {
                 finish()
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        FloatingManager.hideFloatingView()
     }
 
     override fun initEvents(rootView: View) {

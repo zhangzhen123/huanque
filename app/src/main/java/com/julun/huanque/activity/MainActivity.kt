@@ -3,7 +3,6 @@ package com.julun.huanque.activity
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import android.os.Message
 import android.view.View
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
@@ -42,7 +41,6 @@ import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.ui.main.LeYuanFragment
 import com.julun.huanque.ui.main.MineFragment
-import com.julun.huanque.ui.test.TestActivity
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.maplib.LocationService
 import com.trello.rxlifecycle4.android.ActivityEvent
@@ -55,6 +53,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 
 @Route(path = ARouterConstant.MAIN_ACTIVITY)
@@ -470,6 +469,10 @@ class MainActivity : BaseActivity() {
         MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceInviteProcessor {
             override fun process(data: AnonyVoiceInviteBean) {
                 if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                    return
+                }
+                if (abs(System.currentTimeMillis() - data.inviteTime) > 30 * 1000) {
+                    //邀请消息时间，与本地时间  相差超过30秒，直接忽略
                     return
                 }
                 val intent = Intent(this@MainActivity, AnonymousVoiceActivity::class.java)
