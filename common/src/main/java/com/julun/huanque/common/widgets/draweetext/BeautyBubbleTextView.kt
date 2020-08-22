@@ -378,7 +378,7 @@ class BeautyBubbleTextView : RelativeLayout {
             override fun onError() {
             }
         }
-        SVGAHelper.startParse(url, callback)
+        SVGAHelper.startParse(StringHelper.getOssImgUrl(url), callback)
     }
 
     private fun parseParams(paramString: String): Map<String, String> {
