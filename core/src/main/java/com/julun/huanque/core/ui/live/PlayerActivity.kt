@@ -449,6 +449,7 @@ class PlayerActivity : BaseActivity() {
             } else {
                 liveViewManager.preUpAndDownData()
             }
+            publicMessageView.clearMessages()
             if (it.isLiving) {
                 cur_live_bg.hide()
             } else {

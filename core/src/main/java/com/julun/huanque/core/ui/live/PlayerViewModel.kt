@@ -604,7 +604,7 @@ class PlayerViewModel : BaseViewModel() {
             TextTouch.OpenLiveRoom -> {
                 val messageContext = tplBean.context       //此时当前的消息不能为空
                 if (!isAnchor && messageContext != null) {
-                    checkoutRoom.value = messageContext.roomId
+                    checkoutRoom.value = messageContext.programId
                 }
             }
             TextTouch.OpenSendGiftView -> {
