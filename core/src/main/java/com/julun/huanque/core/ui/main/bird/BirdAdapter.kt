@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.main.bird
 
+import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
@@ -17,7 +18,7 @@ import com.julun.huanque.core.R
  *
  */
 class BirdAdapter : BaseQuickAdapter<UpgradeBirdBean, BaseViewHolder>(R.layout.item_bird) {
-
+    var onItemOnTouchListener: View.OnTouchListener?=null
     override fun convert(holder: BaseViewHolder, item: UpgradeBirdBean) {
         val imgView = holder.getView<SimpleDraweeView>(R.id.sdv_bird)
         if (item.upgradeId != 0) {
@@ -27,7 +28,10 @@ class BirdAdapter : BaseQuickAdapter<UpgradeBirdBean, BaseViewHolder>(R.layout.i
         } else {
             holder.setGone(R.id.black_bird, false).setGone(R.id.tv_level,true).setGone(R.id.sdv_bird, true)
         }
+        if(onItemOnTouchListener!=null){
+            imgView.setOnTouchListener(onItemOnTouchListener)
+        }
+
 
     }
-
 }

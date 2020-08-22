@@ -1,18 +1,18 @@
 package com.julun.huanque.core.ui.main.bird
 
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.bean.beans.BirdHomeInfo
 import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.fragment_leyuan.*
@@ -41,13 +41,58 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             iv_bottom_03.isEnabled = false
             mViewModel.buyBird()
         }
-        val bmLp=bird_mask.layoutParams as FrameLayout.LayoutParams
-        bmLp.width=ScreenUtils.getScreenWidth()/4-dp2px(9)
-
+        ll_redPacket.onClickNew {
+            logger.info("点击了红包")
+        }
+        iv_redPacket.onClickNew {
+            logger.info("点击了红包2")
+        }
         mask_container.onTouch { v, event ->
+            logger.info("mask_container event=${event.action} rawX=${event.rawX} rawY=${event.rawY}")
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+//                    x = event.getRawX()
+//                    y = event.getRawY()
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val nowX = event.getRawX()
+                    val nowY = event.getRawY()
+//                    val movedX = nowX - x
+//                    val movedY = nowY - y
+//                    x = nowX
+//                    y = nowY
+//                    layoutParams?.x = (layoutParams?.x + movedX).toInt()
+//                    layoutParams.y = layoutParams.y + movedY.toInt()
+                    logger.info("nowX=$nowX nowY=$nowY")
+                    bird_mask.x = event.rawX
+                    bird_mask.y = event.rawY
+                }
+                MotionEvent.ACTION_UP -> {
 
+                }
+            }
+
+            true
+        }
+        birdAdapter.onItemOnTouchListener = View.OnTouchListener { v, event ->
+
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                logger.info("event=$event")
+                val view = v as SimpleDraweeView
+                val bmLp = bird_mask.layoutParams as FrameLayout.LayoutParams
+                bmLp.width = view.width
+                bmLp.height = view.height
+                val location = IntArray(2)
+                v.getLocationOnScreen(location)
+//                bird_mask.x=event.rawX
+                bird_mask.x = location[0].toFloat()
+                bird_mask.y = location[1].toFloat()
+                bird_mask.requestLayout()
+                bird_mask.setImageDrawable(view.controller?.hierarchy?.topLevelDrawable)
+            }
             false
         }
+
     }
 
     private fun initViewModel() {

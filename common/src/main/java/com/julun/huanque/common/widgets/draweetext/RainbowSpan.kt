@@ -24,7 +24,7 @@ class AnimatedRainbowSpan(private var colors: IntArray= intArrayOf(Color.BLUE, C
         if (shader == null) {
             shader = LinearGradient(
                 0f, 0f, 0f, width, colors, null,
-                Shader.TileMode.REPEAT
+                Shader.TileMode.MIRROR
             )
         }
         matrix.reset()
