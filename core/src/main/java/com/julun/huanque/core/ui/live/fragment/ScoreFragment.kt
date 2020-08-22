@@ -198,7 +198,7 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
                         .setImageResource(R.id.rankImage, ImageHelper.getRankResId(position))
                 } else {
                     holder.getView<TextView>(R.id.rankText).setTFDINCondensedBold()
-                    holder.setVisible(R.id.rankText, true).setGone(R.id.rankImage, false)
+                    holder.setVisible(R.id.rankText, true).setGone(R.id.rankImage, true)
                         .setText(R.id.rankText, (position + 1).toString())
                 }
                 val head = holder.getView<PhotoHeadView>(R.id.headImage)

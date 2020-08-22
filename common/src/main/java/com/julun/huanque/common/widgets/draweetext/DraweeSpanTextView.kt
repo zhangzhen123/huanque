@@ -41,7 +41,8 @@ class DraweeSpanTextView @JvmOverloads constructor(
     val logger = ULog.getLogger("DraweeSpanTextView")
 
     private var data: TplBean? = null
-    private var hasRainbow:Boolean =false
+    private var hasRainbow: Boolean = false
+
     companion object {
         private const val DEFAULT_TEXT_BG_COLOR = "#FFFFFF"
         const val BOLD = "bold" //加粗标识
@@ -54,7 +55,7 @@ class DraweeSpanTextView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        if(hasRainbow){
+        if (hasRainbow) {
             //有彩虹屁就不停的更新
             postInvalidateDelayed(16)
         }
@@ -68,14 +69,15 @@ class DraweeSpanTextView @JvmOverloads constructor(
     /**
      * 是否需要彩虹屁
      */
-    fun setNeedRainbow(need:Boolean){
-        hasRainbow=need
+    fun setNeedRainbow(need: Boolean) {
+        hasRainbow = need
     }
+
     fun render(item: TplBean, specifiedColor: String = DEFAULT_TEXT_BG_COLOR, finalColor: String? = null) {//原来的颜色   21ad79
         data = item
         //添加聊天模式标识
         //聊条模式标记位添加的标识 (消息由标识位，并且是主播身份)
-        val chatModeFlag =false
+        val chatModeFlag = false
 //            item.userInfo?.displayType?.contains(MessageDisplayType.CHATMODE) == true/* && SessionUtils.getUserType() == BusiConstant.UserType.Anchor*/
 
         val realText = if (chatModeFlag) {
@@ -164,7 +166,13 @@ class DraweeSpanTextView @JvmOverloads constructor(
 
                             } else if (MessageUtil.KEY_REMOTE == styleParam.source) {
                                 val specifiedHeight = dip(16)
-                                builder.setImageSpan(context, StringHelper.getOssImgUrl(paramValue!!), index, specifiedHeight, specifiedHeight)
+                                builder.setImageSpan(
+                                    context,
+                                    StringHelper.getOssImgUrl(paramValue!!),
+                                    index,
+                                    specifiedHeight,
+                                    specifiedHeight
+                                )
                             }
 
                         }
@@ -197,7 +205,7 @@ class DraweeSpanTextView @JvmOverloads constructor(
      * 渲染每一块 文本区域
      */
     private fun forEachBasicSpan(index: Int, styleParam: StyleParam, source: SpannableStringBuilder) {
-        val text=data?.textParams?.get(styleParam.el)
+        val text = data?.textParams?.get(styleParam.el)
         val subTexLength: Int = text?.length ?: return
         val allColor: String? = data?.styleParamMap?.get(MessageUtil.KEY_ALL)?.color
         //                        source.setSpan(UnderlineSpan(), index, (index + subTexLength), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -219,18 +227,32 @@ class DraweeSpanTextView @JvmOverloads constructor(
                 ForegroundColorSpan(color), index, (index + subTexLength),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             ) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
-            if(styleParam.lightColor.isNotEmpty()){
+            if (styleParam.lightColor.isNotEmpty()) {
                 val lightColor = if (StringHelper.isEmpty(styleParam.lightColor)) {
                     ContextCompat.getColor(context, R.color.app_main)
                 } else {
                     Color.parseColor(styleParam.lightColor)
                 }
+                val colorInts = arrayListOf<Int>()
+                val colorSize = if (subTexLength < 3) {
+                    3
+                } else {
+                    subTexLength
+                }
+                repeat(colorSize) {
+                    colorInts.add(color)
+                }
+                val halfIndex = colorSize / 2
+                if (halfIndex < colorInts.size) {
+                    colorInts[halfIndex] = lightColor
+                }
                 source.setSpan(
-                    AnimatedRainbowSpan(intArrayOf(color,lightColor,color)), index, (index + subTexLength),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE  )
+                    AnimatedRainbowSpan(colorInts.toIntArray()), index, (index + subTexLength),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
                 setNeedRainbow(true)
                 postInvalidateDelayed(1)
-            }else{
+            } else {
                 setNeedRainbow(false)
             }
             //删除线
