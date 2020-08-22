@@ -22,7 +22,9 @@
             android:name=".activity.VoiceChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.AnonymousVoiceActivity" />
+        <activity android:name=".activity.AnonymousVoiceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
 
     </application>
 </manifest>

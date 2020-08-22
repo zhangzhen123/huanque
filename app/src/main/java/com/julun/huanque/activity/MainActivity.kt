@@ -469,6 +469,9 @@ class MainActivity : BaseActivity() {
         //邀请匿名语音消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceInviteProcessor {
             override fun process(data: AnonyVoiceInviteBean) {
+                if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                    return
+                }
                 val intent = Intent(this@MainActivity, AnonymousVoiceActivity::class.java)
                 intent.putExtra(ParamConstant.TYPE, ConmmunicationUserType.CALLED)
                 intent.putExtra(ParamConstant.InviteUserId, data.inviteUserId)
@@ -488,7 +491,7 @@ class MainActivity : BaseActivity() {
             //重新去定位地址
             mLocationService.registerListener(mLocationListener)
             mLocationService.start()
-        }else{
+        } else {
             mMainViewModel.unreadMsgCount.value = 0
         }
 

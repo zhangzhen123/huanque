@@ -160,4 +160,15 @@ class AnonymousVoiceViewModel : BaseViewModel() {
         }
     }
 
+    /**
+     *
+     * 拒绝邀请
+     */
+    fun avoiceReject(inviteUserId: Long){
+        viewModelScope.launch {
+            request({
+                socialService.avoiceReject(InviteUserIdForm(inviteUserId)).dataConvert()
+            })
+        }
+    }
 }
