@@ -124,7 +124,7 @@ class BeautyBubbleTextView : RelativeLayout {
                                 colorBdInts.add(color)
                             }
                             if (colorBdInts.isNotEmpty()) {
-                                gDrawable.setStroke(dp2px(1), colorBdInts[0])
+                                gDrawable.setStroke(dp2px(0.7f), colorBdInts[0])
                             }
 
                             gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
