@@ -5,15 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.bean.beans.BirdHomeInfo
 import com.julun.huanque.common.bean.beans.BuyBirdResult
+import com.julun.huanque.common.bean.beans.UpgradeBirdBean
 import com.julun.huanque.common.bean.forms.BuyBirdForm
 import com.julun.huanque.common.bean.forms.ProgramIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LeYuanService
-import com.julun.huanque.common.suger.convertError
-import com.julun.huanque.common.suger.convertRtData
-import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.suger.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.launch
@@ -31,7 +29,9 @@ import java.util.concurrent.TimeUnit
  */
 class LeYuanViewModel : BaseViewModel() {
 
-
+    companion object{
+        const val MAX_BIRDS=12
+    }
     private val service: LeYuanService by lazy {
         Requests.create(LeYuanService::class.java)
     }
@@ -47,6 +47,18 @@ class LeYuanViewModel : BaseViewModel() {
             request({
                 val result = service.birdHome(ProgramIdForm(programId)).dataConvert()
                 currentInfo = result
+                //处理棋盘 没有的 以空白补上
+               val diff= MAX_BIRDS-result.upgradeList.size
+                if(diff>0){
+                    repeat(diff){
+                        result.upgradeList.add(UpgradeBirdBean())
+                    }
+                }
+                result.upgradeList.sortList(kotlin.Comparator { o1, o2 ->
+
+                    val result = o2.upgradePos - o1.upgradePos
+                    result
+                })
                 homeInfo.value = result.convertRtData()
                 totalCoin.value = result.totalCoins
                 coinsPerSec.value = result.coinsPerSec

@@ -5,146 +5,153 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/view2"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/csl_top"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/bg_bird_air"
-        app:layout_constraintBottom_toBottomOf="@+id/bird_tree"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="@dimen/dimen_260"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/scenery_tree_bg"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:src="@mipmap/bg_bird_scene"
-        app:layout_constraintBottom_toBottomOf="@+id/bird_tree"
-        app:layout_constraintDimensionRatio="375:205"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_bird_air"
+            app:layout_constraintBottom_toBottomOf="@+id/bird_tree"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/bird_tree"
-        android:layout_width="match_parent"
-        android:layout_height="255dp"
-        android:layout_marginTop="@dimen/dimen_15"
-        android:src="@mipmap/bg_bird_tree"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/scenery_tree_bg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:src="@mipmap/bg_bird_scene"
+            app:layout_constraintBottom_toBottomOf="@+id/bird_tree"
+            app:layout_constraintDimensionRatio="375:205"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
-
-    <View
-        android:id="@+id/view3"
-        android:layout_width="@dimen/dimen_63"
-        android:layout_height="@dimen/dimen_33"
-        android:layout_marginStart="@dimen/dimen_50"
-        android:layout_marginTop="@dimen/dimen_14"
-        android:background="@mipmap/icon_bird_cloud_01"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:layout_width="@dimen/dimen_36"
-        android:layout_height="@dimen/dimen_22"
-        android:layout_marginTop="@dimen/dimen_57"
-        android:layout_marginEnd="@dimen/dimen_38"
-        android:background="@mipmap/icon_bird_cloud_02"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_cai_shen"
-        android:layout_width="@dimen/dimen_80"
-        android:layout_height="@dimen/dimen_80"
-        android:layout_marginTop="@dimen/dimen_40"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_cai_shen"
-        android:layout_width="@dimen/dimen_30"
-        android:layout_height="@dimen/dimen_58"
-        android:layout_marginStart="@dimen/dimen_68"
-        android:layout_marginBottom="@dimen/dimen_30"
-        android:src="@mipmap/icon_bird_tag_caishen"
-        app:layout_constraintBottom_toBottomOf="@+id/sdv_cai_shen"
-        app:layout_constraintStart_toStartOf="@+id/sdv_cai_shen" />
+        <ImageView
+            android:id="@+id/bird_tree"
+            android:layout_width="match_parent"
+            android:layout_height="255dp"
+            android:layout_marginTop="@dimen/dimen_15"
+            android:src="@mipmap/bg_bird_tree"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_bird_niu_lang"
-        android:layout_width="@dimen/dimen_80"
-        android:layout_height="@dimen/dimen_80"
-        android:layout_marginTop="@dimen/dimen_36"
-        app:layout_constraintEnd_toStartOf="@+id/sdv_cai_shen"
-        app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
+        <View
+            android:id="@+id/view3"
+            android:layout_width="@dimen/dimen_63"
+            android:layout_height="@dimen/dimen_33"
+            android:layout_marginStart="@dimen/dimen_50"
+            android:layout_marginTop="@dimen/dimen_14"
+            android:background="@mipmap/icon_bird_cloud_01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_tag_niu_lang"
-        android:layout_width="@dimen/dimen_30"
-        android:layout_height="@dimen/dimen_58"
-        android:layout_marginTop="@dimen/dimen_4"
-        android:src="@mipmap/icon_bird_tag_niulang"
-        app:layout_constraintEnd_toStartOf="@+id/sdv_bird_niu_lang"
-        app:layout_constraintStart_toStartOf="@+id/sdv_bird_niu_lang"
-        app:layout_constraintTop_toTopOf="@+id/sdv_bird_niu_lang" />
+        <View
+            android:layout_width="@dimen/dimen_36"
+            android:layout_height="@dimen/dimen_22"
+            android:layout_marginTop="@dimen/dimen_57"
+            android:layout_marginEnd="@dimen/dimen_38"
+            android:background="@mipmap/icon_bird_cloud_02"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_bird_zhi_nv"
-        android:layout_width="@dimen/dimen_80"
-        android:layout_height="@dimen/dimen_80"
-        android:layout_marginStart="@dimen/dimen_55"
-        android:layout_marginTop="@dimen/dimen_55"
-        app:layout_constraintStart_toStartOf="@+id/sdv_cai_shen"
-        app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_cai_shen"
+            android:layout_width="@dimen/dimen_80"
+            android:layout_height="@dimen/dimen_80"
+            android:layout_marginTop="@dimen/dimen_40"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_tag_zhi_nv"
-        android:layout_width="@dimen/dimen_30"
-        android:layout_height="@dimen/dimen_58"
-        android:layout_marginStart="@dimen/dimen_72"
-        android:src="@mipmap/icon_bird_tag_zhinv"
-        app:layout_constraintStart_toStartOf="@+id/sdv_bird_zhi_nv"
-        app:layout_constraintTop_toTopOf="@+id/sdv_bird_zhi_nv" />
+        <ImageView
+            android:id="@+id/iv_cai_shen"
+            android:layout_width="@dimen/dimen_30"
+            android:layout_height="@dimen/dimen_58"
+            android:layout_marginStart="@dimen/dimen_68"
+            android:layout_marginBottom="@dimen/dimen_30"
+            android:src="@mipmap/icon_bird_tag_caishen"
+            app:layout_constraintBottom_toBottomOf="@+id/sdv_cai_shen"
+            app:layout_constraintStart_toStartOf="@+id/sdv_cai_shen" />
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_bird_shen_mi"
-        android:layout_width="@dimen/dimen_80"
-        android:layout_height="@dimen/dimen_80"
-        android:layout_marginStart="@dimen/dimen_57"
-        android:layout_marginTop="@dimen/dimen_58"
-        app:layout_constraintStart_toStartOf="@+id/sdv_bird_zhi_nv"
-        app:layout_constraintTop_toTopOf="@+id/sdv_bird_zhi_nv" />
 
-    <ImageView
-        android:id="@+id/iv_tag_shen_mi"
-        android:layout_width="@dimen/dimen_30"
-        android:layout_height="@dimen/dimen_58"
-        android:layout_marginStart="@dimen/dimen_68"
-        android:src="@mipmap/icon_bird_tag_shenmi"
-        app:layout_constraintStart_toStartOf="@+id/sdv_bird_shen_mi"
-        app:layout_constraintTop_toTopOf="@+id/sdv_bird_shen_mi" />
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_bird_niu_lang"
+            android:layout_width="@dimen/dimen_80"
+            android:layout_height="@dimen/dimen_80"
+            android:layout_marginTop="@dimen/dimen_36"
+            app:layout_constraintEnd_toStartOf="@+id/sdv_cai_shen"
+            app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_bird_hong_bao"
-        android:layout_width="@dimen/dimen_80"
-        android:layout_height="@dimen/dimen_80"
-        android:layout_marginStart="@dimen/dimen_22"
-        android:layout_marginTop="@dimen/dimen_3"
-        app:layout_constraintStart_toStartOf="@+id/sdv_bird_niu_lang"
-        app:layout_constraintTop_toBottomOf="@+id/sdv_bird_niu_lang" />
+        <ImageView
+            android:id="@+id/iv_tag_niu_lang"
+            android:layout_width="@dimen/dimen_30"
+            android:layout_height="@dimen/dimen_58"
+            android:layout_marginTop="@dimen/dimen_4"
+            android:src="@mipmap/icon_bird_tag_niulang"
+            app:layout_constraintEnd_toStartOf="@+id/sdv_bird_niu_lang"
+            app:layout_constraintStart_toStartOf="@+id/sdv_bird_niu_lang"
+            app:layout_constraintTop_toTopOf="@+id/sdv_bird_niu_lang" />
 
-    <ImageView
-        android:id="@+id/iv_tag_hong_bao"
-        android:layout_width="@dimen/dimen_30"
-        android:layout_height="@dimen/dimen_58"
-        android:layout_marginTop="@dimen/dimen_10"
-        android:layout_marginEnd="@dimen/dimen_72"
-        android:src="@mipmap/icon_bird_tag_hongbao"
-        app:layout_constraintEnd_toEndOf="@+id/sdv_bird_hong_bao"
-        app:layout_constraintTop_toTopOf="@+id/sdv_bird_hong_bao" />
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_bird_zhi_nv"
+            android:layout_width="@dimen/dimen_80"
+            android:layout_height="@dimen/dimen_80"
+            android:layout_marginStart="@dimen/dimen_55"
+            android:layout_marginTop="@dimen/dimen_55"
+            app:layout_constraintStart_toStartOf="@+id/sdv_cai_shen"
+            app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
+
+        <ImageView
+            android:id="@+id/iv_tag_zhi_nv"
+            android:layout_width="@dimen/dimen_30"
+            android:layout_height="@dimen/dimen_58"
+            android:layout_marginStart="@dimen/dimen_72"
+            android:src="@mipmap/icon_bird_tag_zhinv"
+            app:layout_constraintStart_toStartOf="@+id/sdv_bird_zhi_nv"
+            app:layout_constraintTop_toTopOf="@+id/sdv_bird_zhi_nv" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_bird_shen_mi"
+            android:layout_width="@dimen/dimen_80"
+            android:layout_height="@dimen/dimen_80"
+            android:layout_marginStart="@dimen/dimen_57"
+            android:layout_marginTop="@dimen/dimen_58"
+            app:layout_constraintStart_toStartOf="@+id/sdv_bird_zhi_nv"
+            app:layout_constraintTop_toTopOf="@+id/sdv_bird_zhi_nv" />
+
+        <ImageView
+            android:id="@+id/iv_tag_shen_mi"
+            android:layout_width="@dimen/dimen_30"
+            android:layout_height="@dimen/dimen_58"
+            android:layout_marginStart="@dimen/dimen_68"
+            android:src="@mipmap/icon_bird_tag_shenmi"
+            app:layout_constraintStart_toStartOf="@+id/sdv_bird_shen_mi"
+            app:layout_constraintTop_toTopOf="@+id/sdv_bird_shen_mi" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_bird_hong_bao"
+            android:layout_width="@dimen/dimen_80"
+            android:layout_height="@dimen/dimen_80"
+            android:layout_marginStart="@dimen/dimen_22"
+            android:layout_marginTop="@dimen/dimen_3"
+            app:layout_constraintStart_toStartOf="@+id/sdv_bird_niu_lang"
+            app:layout_constraintTop_toBottomOf="@+id/sdv_bird_niu_lang" />
+
+        <ImageView
+            android:id="@+id/iv_tag_hong_bao"
+            android:layout_width="@dimen/dimen_30"
+            android:layout_height="@dimen/dimen_58"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginEnd="@dimen/dimen_72"
+            android:src="@mipmap/icon_bird_tag_hongbao"
+            app:layout_constraintEnd_toEndOf="@+id/sdv_bird_hong_bao"
+            app:layout_constraintTop_toTopOf="@+id/sdv_bird_hong_bao" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <LinearLayout
@@ -202,12 +209,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#416298"
-        android:paddingStart="@dimen/dimen_12"
+        android:overScrollMode="never"
         android:paddingTop="@dimen/dimen_34"
-        android:paddingEnd="@dimen/dimen_12"
-        android:paddingBottom="@dimen/dimen_86"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bird_tree" />
+        app:layout_constraintTop_toBottomOf="@+id/csl_top"
+        app:layout_goneMarginTop="@dimen/dimen_30" />
 
     <View
         android:id="@+id/divide"
@@ -215,7 +221,16 @@
         android:layout_height="@dimen/dimen_5"
         android:background="#37578A"
         app:layout_constraintTop_toTopOf="@+id/rv_bird_packet" />
-
+    <FrameLayout
+        android:id="@+id/mask_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/bird_mask"
+            android:background="@color/black_999"
+            android:layout_width="@dimen/dimen_80"
+            android:layout_height="@dimen/dimen_89"/>
+    </FrameLayout>
     <LinearLayout
         android:id="@+id/iv_balance_bg"
         android:layout_width="wrap_content"

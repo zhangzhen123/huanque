@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_98">
+
+    <View
+        android:id="@+id/bird_bg"
+        android:layout_width="69dp"
+        android:layout_height="@dimen/dimen_85"
+        android:layout_marginStart="@dimen/dimen_9"
+        android:layout_marginTop="@dimen/dimen_9"
+        android:background="@mipmap/bg_bird_packet"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/bird_bottom_bg"
+        android:layout_width="@dimen/dimen_51"
+        android:layout_height="@dimen/dimen_13"
+        android:layout_marginBottom="@dimen/dimen_6"
+        android:background="@mipmap/bg_bird_bottom"
+        app:layout_constraintBottom_toBottomOf="@+id/bird_bg"
+        app:layout_constraintEnd_toEndOf="@+id/bird_bg"
+        app:layout_constraintStart_toStartOf="@+id/bird_bg" />
+
+    <View
+        android:id="@+id/black_bird"
+        android:layout_width="@dimen/dimen_57"
+        android:layout_height="@dimen/dimen_54"
+        android:layout_marginBottom="@dimen/dimen_11"
+        android:background="@mipmap/bg_bird_black"
+        app:layout_constraintBottom_toBottomOf="@+id/bird_bg"
+        app:layout_constraintEnd_toEndOf="@+id/bird_bg"
+        app:layout_constraintStart_toStartOf="@+id/bird_bg" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:actualImageScaleType="fitCenter"
+        android:layout_marginStart="@dimen/dimen_9"
+        android:layout_marginTop="@dimen/dimen_9" />
+
+    <TextView
+        android:id="@+id/tv_level"
+        android:layout_width="@dimen/dimen_22"
+        android:layout_height="@dimen/dimen_22"
+        android:background="@mipmap/bg_dot_bird_level"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintEnd_toStartOf="@+id/bird_bg"
+        app:layout_constraintStart_toStartOf="@+id/bird_bg"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="99" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

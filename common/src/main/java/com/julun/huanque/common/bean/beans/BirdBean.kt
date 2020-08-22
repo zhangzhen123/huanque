@@ -18,7 +18,7 @@ data class BirdHomeInfo(
     var functionInfo: BirdFunctionInfo = BirdFunctionInfo(),
     var totalCoins: BigInteger = BigInteger.ZERO,
     var unlockUpgrade: UnlockUpgrade = UnlockUpgrade(),
-    var upgradeList: List<UpgradeBirdBean> = listOf()
+    var upgradeList: MutableList<UpgradeBirdBean> = mutableListOf()
 )
 
 data class BirdFunctionInfo(
