@@ -109,7 +109,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     private var mPlayer: MediaPlayer? = null
 
     //其他人未加入倒计时
-    private var mOtherNoJoinDisposable : Disposable? = null
+    private var mOtherNoJoinDisposable: Disposable? = null
 
     //语音结束关闭标识位
     private var endClose = true
@@ -212,6 +212,12 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
         //公开身份消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceOpenProcessor {
+            override fun process(data: UserInfoInRoom) {
+                showUserInfo(data)
+            }
+        })
+        //揭秘身份消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceUnveilProcessor {
             override fun process(data: UserInfoInRoom) {
                 showUserInfo(data)
             }
@@ -990,6 +996,9 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     }
 
     override fun onUserJoined(uid: Int, elapsed: Int) {
+        if (uid.toLong() != SessionUtils.getUserId()) {
+            mOtherNoJoinDisposable?.dispose()
+        }
     }
 
     override fun onLocalVideoStats(stats: IRtcEngineEventHandler.LocalVideoStats?) {

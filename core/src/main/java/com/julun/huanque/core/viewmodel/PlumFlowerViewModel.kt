@@ -27,7 +27,7 @@ class PlumFlowerViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 listData.value = socialService.flowerToday().dataConvert()
-            })
+            }, {}, {}, true)
         }
     }
 
@@ -38,7 +38,7 @@ class PlumFlowerViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 listData.value = socialService.flowerYesterday().dataConvert()
-            })
+            }, {}, {}, true)
         }
     }
 
@@ -49,7 +49,7 @@ class PlumFlowerViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 socialService.flowerFamous().dataConvert()
-            })
+            }, {}, {}, true)
         }
     }
 }

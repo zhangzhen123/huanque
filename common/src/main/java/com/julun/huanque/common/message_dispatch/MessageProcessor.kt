@@ -1220,6 +1220,13 @@ object MessageProcessor {
     }
 
     /**
+     * 匿名语音 揭秘身份消息
+     */
+    interface AnonyVoiceUnveilProcessor : EventMessageProcessor<UserInfoInRoom> {
+        override fun getEventType() = EventMessageType.AnonyVoiceUnveil
+    }
+
+    /**
      * 匿名语音  邀请消息
      */
     interface AnonyVoiceInviteProcessor : EventMessageProcessor<AnonyVoiceInviteBean> {
@@ -1585,6 +1592,9 @@ enum class EventMessageType(val klass: Class<*>) {
 
     //公开信息消息
     AnonyVoiceOpen(UserInfoInRoom::class.java),
+
+    //匿名语音 揭秘身份消息
+    AnonyVoiceUnveil(UserInfoInRoom::class.java),
 
     //匿名语音 邀请消息
     AnonyVoiceInvite(AnonyVoiceInviteBean::class.java),

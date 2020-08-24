@@ -65,7 +65,7 @@ object SPParamKey {
 
     //悬浮窗内的ProgramId
     const val PROGRAM_ID_IN_FLOATING = "PROGRAM_ID_IN_FLOATING"
-    
+
     //客服地址
     const val CUSTOMER_URL = "CUSTOMER_URL"
 }
@@ -827,6 +827,9 @@ object PlayerFrom {
 
     //传送门
     const val SendRoom = "SendRoom"
+
+    //花魁榜
+    const val FlowerRank = "FlowerRank"
 
     const val RN = "RN"
 }

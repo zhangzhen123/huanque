@@ -48,6 +48,7 @@ class PlumFlowerActivity : BaseActivity() {
         framList.add(DayListFragment(DayListFragment.YESTERDAY))
         mPagerAdapter = PlumFlowerFragmentAdapter(framList, supportFragmentManager, this)
         pager.adapter = mPagerAdapter
+        pager.offscreenPageLimit = 3
         initMagicIndicator()
     }
 

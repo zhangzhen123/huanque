@@ -250,7 +250,9 @@ data class SingleFlowerDayListBean(
     //用户等级
     var userLevel: Int = 0,
     //用户类型
-    var userType: String = ""
+    var userType: String = "",
+    //直播状态
+    var living: String = ""
 ) : Serializable
 
 /**
@@ -260,5 +262,7 @@ data class FlowerDayListBean(
     //本人信息
     var rankInfo: SingleFlowerDayListBean = SingleFlowerDayListBean(),
     //列表信息
-    var rankList: MutableList<SingleFlowerDayListBean> = mutableListOf()
+    var rankList: MutableList<SingleFlowerDayListBean> = mutableListOf(),
+    //今日榜的倒计时
+    var ttl: Long = 0
 ) : Serializable
