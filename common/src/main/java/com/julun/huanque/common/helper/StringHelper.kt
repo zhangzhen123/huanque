@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.BuildConfig
 import java.io.Serializable
 import java.io.UnsupportedEncodingException
+import java.math.BigDecimal
+import java.math.BigInteger
 import java.math.RoundingMode
 import java.net.URLEncoder
 import java.text.DecimalFormat
@@ -67,10 +69,12 @@ object StringHelper {
      * 生成uuid
      */
     fun uuid(): String = UUID.randomUUID().toString()
+
     /**
      * 生成uuid 去掉“-”
      */
-    fun uuid2(): String = UUID.randomUUID().toString().replace("-","")
+    fun uuid2(): String = UUID.randomUUID().toString().replace("-", "")
+
     /**
      * 判断字符串是否为空
 
@@ -521,6 +525,42 @@ object StringHelper {
         return DecimalFormat("#.0").format((num / 10000.0)) + "w"
     }
 
+    /**
+     * 格式化大数字整数型
+     */
+    fun formatBigNum(num: BigInteger): String {
+        val number = num.toBigDecimal()
+        return formatBigNum(number)
+    }
+
+    /**
+     * 格式化大数字浮点型
+     */
+    fun formatBigNum(number: BigDecimal): String {
+        val format = DecimalFormat("#.0")
+        format.minimumFractionDigits = 1 //设置小数部分允许的最小位数
+        val numK=BigDecimal("1000")
+        if (number < numK) {
+            return number.toString()
+        }
+        val numM=BigDecimal("1000000")
+        if (number < numM) {
+            return format.format(number.divide(numK)) + "K"
+        }
+        val num1000000000=BigDecimal("1000000000")
+        if (number < num1000000000) {
+            return format.format(number.divide(numM)) + "M"
+        }
+        if (number < BigDecimal("1000000000000")) {
+            return format.format(number.divide(BigDecimal("1000000000"))) + "B"
+        }
+        if (number < BigDecimal("1000000000000000")) {
+            return format.format(number.divide(BigDecimal("1000000000000"))) + "T"
+        }
+        return format.format(number.divide(BigDecimal("1000000000000000"))) + "P"
+
+    }
+
     /*对贡献榜格式进行处理*/
     fun formatCoinsCount(count: Long): String {
         return if (count < 10000) {
@@ -563,10 +603,12 @@ object StringHelper {
         }
     }
 
-    /*文字超过3个加省略号*/
-    fun formatName(name: String): String {
-        return if (name.length > 3) {
-            "${name.substring(0, 3)}…"
+    /**
+     * 限制文字数目
+     */
+    fun limitString(name: String, limit: Int): String {
+        return if (name.length > limit) {
+            "${name.substring(0, limit)}…"
         } else {
             name
         }
@@ -689,13 +731,15 @@ object StringHelper {
     }
 
 
-    fun isPngUrl(url:String):Boolean{
+    fun isPngUrl(url: String): Boolean {
         return url.contains(".png") || url.contains(".PNG")
     }
-    fun isWebpUrl(url:String):Boolean{
+
+    fun isWebpUrl(url: String): Boolean {
         return url.contains(".webp") || url.contains(".WEBP")
     }
-    fun isSvgaUrl(url:String):Boolean{
+
+    fun isSvgaUrl(url: String): Boolean {
         return url.contains(".svga") || url.contains(".SVGA")
     }
 }

@@ -68,6 +68,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+
         <ImageView
             android:id="@+id/iv_cai_shen"
             android:layout_width="@dimen/dimen_30"
@@ -78,7 +80,15 @@
             app:layout_constraintBottom_toBottomOf="@+id/sdv_cai_shen"
             app:layout_constraintStart_toStartOf="@+id/sdv_cai_shen" />
 
-
+        <TextView
+            android:id="@+id/tv_cai_shen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="99"
+            android:background="@mipmap/bg_dot_bird_level"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/sdv_cai_shen"
+            app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv_bird_niu_lang"
             android:layout_width="@dimen/dimen_80"
@@ -95,6 +105,15 @@
             android:src="@mipmap/icon_bird_tag_niulang"
             app:layout_constraintEnd_toStartOf="@+id/sdv_bird_niu_lang"
             app:layout_constraintStart_toStartOf="@+id/sdv_bird_niu_lang"
+            app:layout_constraintTop_toTopOf="@+id/sdv_bird_niu_lang" />
+        <TextView
+            android:id="@+id/tv_niu_lang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="99"
+            android:background="@mipmap/bg_dot_bird_level"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/sdv_bird_niu_lang"
             app:layout_constraintTop_toTopOf="@+id/sdv_bird_niu_lang" />
 
         <com.facebook.drawee.view.SimpleDraweeView
@@ -114,6 +133,16 @@
             android:src="@mipmap/icon_bird_tag_zhinv"
             app:layout_constraintStart_toStartOf="@+id/sdv_bird_zhi_nv"
             app:layout_constraintTop_toTopOf="@+id/sdv_bird_zhi_nv" />
+        <TextView
+            android:id="@+id/tv_zhi_nv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="99"
+            android:background="@mipmap/bg_dot_bird_level"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/sdv_bird_zhi_nv"
+            app:layout_constraintTop_toTopOf="@+id/sdv_bird_zhi_nv" />
+
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv_bird_shen_mi"
@@ -131,6 +160,15 @@
             android:layout_marginStart="@dimen/dimen_68"
             android:src="@mipmap/icon_bird_tag_shenmi"
             app:layout_constraintStart_toStartOf="@+id/sdv_bird_shen_mi"
+            app:layout_constraintTop_toTopOf="@+id/sdv_bird_shen_mi" />
+        <TextView
+            android:id="@+id/tv_shen_mi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="99"
+            android:background="@mipmap/bg_dot_bird_level"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/sdv_bird_shen_mi"
             app:layout_constraintTop_toTopOf="@+id/sdv_bird_shen_mi" />
 
         <com.facebook.drawee.view.SimpleDraweeView
@@ -151,6 +189,16 @@
             android:src="@mipmap/icon_bird_tag_hongbao"
             app:layout_constraintEnd_toEndOf="@+id/sdv_bird_hong_bao"
             app:layout_constraintTop_toTopOf="@+id/sdv_bird_hong_bao" />
+        <TextView
+            android:id="@+id/tv_hong_bao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="99"
+            android:background="@mipmap/bg_dot_bird_level"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/sdv_bird_hong_bao"
+            app:layout_constraintTop_toTopOf="@+id/sdv_bird_hong_bao" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -369,9 +417,13 @@
         android:id="@+id/mask_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/bird_mask"
-            android:background="@color/black_999"
+            android:scaleType="fitCenter"
+            android:layout_width="@dimen/dimen_10"
+            android:layout_height="@dimen/dimen_89"/>
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/bird_mask2"
             android:scaleType="fitCenter"
             android:layout_width="@dimen/dimen_10"
             android:layout_height="@dimen/dimen_89"/>

@@ -22,11 +22,11 @@ data class BirdHomeInfo(
 )
 
 data class BirdFunctionInfo(
-    var cowherd: BirdCowherd = BirdCowherd(),
-    var mystical: BirdMystical = BirdMystical(),
-    var redpacket: BirdRedPacket = BirdRedPacket(),
-    var wealth: BirdWealth = BirdWealth(),//财神
-    var weaver: BirdWeaver = BirdWeaver()//织女
+    var cowherd: FunctionBird = FunctionBird(),
+    var mystical: FunctionBird = FunctionBird(),
+    var redpacket: FunctionBird = FunctionBird(),
+    var wealth: FunctionBird = FunctionBird(),//财神
+    var weaver: FunctionBird = FunctionBird()//织女
 )
 
 data class UnlockUpgrade(
@@ -36,31 +36,10 @@ data class UnlockUpgrade(
     var upgradeName: String = ""
 )
 
-data class BirdCowherd(
-    var functionIcon: String = "",
-    var functionName: String = "",
-    var functionNum: String = ""
-)
-
-data class BirdMystical(
-    var functionIcon: String = "",
-    var functionName: String = "",
-    var functionNum: String = ""
-)
-
-data class BirdRedPacket(
-    var functionIcon: String = "",
-    var functionName: String = "",
-    var functionNum: String = ""
-)
-
-data class BirdWealth(
-    var functionIcon: String = "",
-    var functionName: String = "",
-    var functionNum: String = ""
-)
-
-data class BirdWeaver(
+/**
+ * 功能鹊
+ */
+data class FunctionBird(
     var functionIcon: String = "",
     var functionName: String = "",
     var functionNum: String = ""
@@ -78,8 +57,32 @@ data class UpgradeBirdBean(
     var programCoinsPerSec: BigInteger = BigInteger.ZERO,
     var startSeconds: Long = 0,
     var upgradeIcon: String = "",
-    var upgradeId: Int = 0,
+    var upgradeId: Long? = null,
     var upgradeLevel: Int = 0,
     var upgradeName: String = "",
-    var upgradePos: Int = 0
+    var upgradePos: Int = 0,
+    //本地字段 当正在操作时 会有一个蒙层效果
+    var isActive:Boolean=false
+)
+
+data class CombineResult(
+    var resultType: String = "",
+    var unlockUpgrade: UnlockUpgrade? = null,//合并操作后 棋盘升级
+    var currentUpgrade: UpgradeBirdBean? = null,//合并成功的升级鹊
+    var functionInfo: FunctionBird? = null//合成功能鹊后 刷新整个棋盘
+) {
+    companion object {
+        //MovePos：单向移动
+        //SwapPos：互换位置
+        //Upgrade：合成升级(客户端需移除合并的两只鹊，并插入合成后的升级鹊)
+        //Function：产生功能鹊(客户端需移除合并的两只鹊)
+        const val MovePos = "MovePos"
+        const val SwapPos = "SwapPos"
+        const val Upgrade = "Upgrade"
+        const val Function = "Function"
+    }
+}
+data class RecycleResult(
+    var coinsPerSec: BigInteger = BigInteger.ZERO,
+    var totalCoins: BigInteger = BigInteger.ZERO
 )

@@ -30,6 +30,7 @@
         android:layout_marginTop="@dimen/dimen_10"
         android:textSize="@dimen/size_16"
         android:gravity="center"
+        android:textColor="@color/black_333"
         android:background="@drawable/bg_solid_btn2"
         tools:text="知道了"
         tools:visibility="visible"

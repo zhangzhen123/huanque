@@ -4,9 +4,7 @@ import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.forms.BuyBirdForm
-import com.julun.huanque.common.bean.forms.ProgramIdForm
-import com.julun.huanque.common.bean.forms.RecomListForm
+import com.julun.huanque.common.bean.forms.*
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -32,4 +30,22 @@ interface LeYuanService {
      */
     @POST("social/magpie/buy")
     suspend fun buyBird(@Body form: BuyBirdForm): Root<BuyBirdResult>
+
+    /**
+     * 返回值resultType说明：
+        MovePos：单向移动
+        SwapPos：互换位置
+        Upgrade：合成升级(客户端需移除合并的两只鹊，并插入合成后的升级鹊)
+        Function：产生功能鹊(客户端需移除合并的两只鹊)
+     */
+    @POST("social/magpie/combine")
+    suspend fun combine(@Body form: BirdCombineForm): Root<CombineResult>
+
+    /**
+     * 回收升级鹊同时返回当前金币及每秒收益
+     */
+    @POST("social/magpie/recovery")
+    suspend fun recovery(@Body form: RecycleBirdForm): Root<RecycleResult>
+
+
 }
