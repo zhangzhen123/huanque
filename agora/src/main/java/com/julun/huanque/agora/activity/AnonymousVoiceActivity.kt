@@ -184,7 +184,6 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             override fun process(data: AnonyVoiceSuccess) {
                 if (data.userIds.contains(SessionUtils.getUserId())) {
                     //当前用户匹配成功
-                    mPlayer?.stop()
                     communicationTime = data.duration
                     val userInfo = data.userData["${SessionUtils.getUserId()}"] ?: return
                     //更新剩余次数
@@ -257,7 +256,11 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         mPlayer?.stop()
         mPlayer = null
         mPlayer = if (calling) {
-            MediaPlayer.create(this, R.raw.ring)?.apply { isLooping = true }
+            if (mAnonymousVoiceViewModel?.currentState?.value == AnonymousVoiceViewModel.MATCH) {
+                MediaPlayer.create(this, R.raw.anonymous_match)?.apply { isLooping = true }
+            } else {
+                MediaPlayer.create(this, R.raw.ring)?.apply { isLooping = true }
+            }
         } else {
             MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }
         }
@@ -277,11 +280,12 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         })
         mAnonymousVoiceViewModel?.currentState?.observe(this, Observer {
             if (it != null) {
+                mPlayer?.stop()
+                mPlayer = null
                 when (it) {
                     AnonymousVoiceViewModel.WAIT -> {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
                         mDisposable?.dispose()
-                        mPlayer?.stop()
 
                         stopMatch()
                         con_voice.hide()
@@ -292,6 +296,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                     }
                     AnonymousVoiceViewModel.MATCH -> {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
+                        playAudio(true)
                         startMatch()
                     }
                     AnonymousVoiceViewModel.VOICE -> {
