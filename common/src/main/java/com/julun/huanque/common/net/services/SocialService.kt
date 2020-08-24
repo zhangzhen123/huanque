@@ -250,5 +250,5 @@ interface SocialService {
      * 名人榜
      */
     @POST("social/flower/rank/famous")
-    suspend fun flowerFamous(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
+    suspend fun flowerFamous(@Body form: EmptyForm = EmptyForm()): Root<FamousListBean>
 }

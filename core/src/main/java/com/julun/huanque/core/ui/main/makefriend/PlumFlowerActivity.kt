@@ -45,7 +45,7 @@ class PlumFlowerActivity : BaseActivity() {
         val framList = mutableListOf<Fragment>()
         framList.add(DayListFragment(DayListFragment.YESTERDAY))
         framList.add(DayListFragment(DayListFragment.TODAY))
-        framList.add(DayListFragment(DayListFragment.YESTERDAY))
+        framList.add(FamousListFragment())
         mPagerAdapter = PlumFlowerFragmentAdapter(framList, supportFragmentManager, this)
         pager.adapter = mPagerAdapter
         pager.offscreenPageLimit = 3

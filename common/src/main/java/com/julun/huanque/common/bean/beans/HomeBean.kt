@@ -266,3 +266,39 @@ data class FlowerDayListBean(
     //今日榜的倒计时
     var ttl: Long = 0
 ) : Serializable
+
+/**
+ * 名人用户
+ */
+data class FamousUser(
+    //日期
+    var day: Int = 0,
+    //头像
+    var headPic: String = "",
+    //是否本人
+    var myself: String = "",
+    //昵称
+    var nickname: String = "",
+    //用户ID
+    var userId: Long = 0
+) : Serializable
+
+/**
+ * 名人榜  单个月数据
+ */
+data class SingleFamousMonth(
+    //月份
+    var month: Int = 0,
+    //当月的名人数据
+    var userList: MutableList<FamousUser> = mutableListOf()
+) : Serializable
+
+/**
+ * 名人榜数据
+ */
+data class FamousListBean(
+    //是否上榜
+    var inRank: String = "",
+    //名人榜数据
+    var monthList: MutableList<SingleFamousMonth> = mutableListOf()
+) : Serializable
