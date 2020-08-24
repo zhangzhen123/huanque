@@ -1040,4 +1040,14 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
             layout(getPaddingLeft() + getLeft(), getPaddingTop() + getTop(), getWidth() + getPaddingLeft() + getLeft(), getHeight() + getPaddingTop() + getTop());
         }
     }
+
+
+    /** RN新增方法 **/
+    public void setPointGravity(int pointGravity) {
+        this.mPointGravity = pointGravity;
+    }
+
+    public void setPointTopBottomMargin(int mPointTopBottomMargin) {
+        this.mPointTopBottomMargin = mPointTopBottomMargin;
+    }
 }
