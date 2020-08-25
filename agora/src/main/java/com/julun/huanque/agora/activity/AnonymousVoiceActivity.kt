@@ -372,9 +372,16 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                         .subscribe({
                             finish()
                         }, {})
-
                 } else {
                     mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT
+                }
+            }
+        })
+
+        mAnonymousVoiceViewModel?.followStatusData?.observe(this, Observer {
+            if (it != null) {
+                if (it.userId == mAnonymousVoiceViewModel?.targetUserId) {
+                    iv_follow.hide()
                 }
             }
         })
@@ -453,6 +460,10 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             //揭秘身份
             mAnonymousVoiceViewModel?.checkBeans()
         }
+        iv_follow.onClickNew {
+            //关注按钮
+            mAnonymousVoiceViewModel?.follow(mAnonymousVoiceViewModel?.targetUserId ?: return@onClickNew)
+        }
     }
 
 
@@ -469,11 +480,17 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             showUserInfoAnimaiton(showMineInfoAnimatorSet, tv_open_mine, sdv_mine, con_userinfo_mine, view_left_header)
         } else {
             //显示对方信息
+            mAnonymousVoiceViewModel?.targetUserId = userInfo.userId
             showSexView(tv_sex_other, userInfo.sex, "${userInfo.age}")
             tv_location_other.text = userInfo.city
             tv_nickname_other.text = userInfo.nickname
             view_right_header.loadImage("${userInfo.headPic}${BusiConstant.OSS_160}")
-            showUserInfoAnimaiton(showOtherInfoAnimatorSet, tv_open_other, sdv_other, con_userinfo_other, view_right_header)
+            if (userInfo.follow) {
+                iv_follow.hide()
+            } else {
+                iv_follow.show()
+            }
+            showUserInfoAnimaiton(showOtherInfoAnimatorSet, tv_open_other, sdv_other, con_userinfo_other, con_header)
         }
     }
 
@@ -821,7 +838,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         tv_open_other.rotationY = 0f
 
         con_userinfo_other.alpha = 0f
-        view_right_header.alpha = 0f
+        con_header.alpha = 0f
 
         ll_quiet.isSelected = false
         ll_close.isSelected = false

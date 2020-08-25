@@ -251,7 +251,7 @@ object RongCloudManager {
     }
 
     /**
-     * 发送模拟消息]
+     * 发送模拟消息
      * @param unreadCount 是否需要未读消息
      */
     fun sendSimulateMessage(
@@ -315,7 +315,7 @@ object RongCloudManager {
      */
     fun sendCustomMessage(msg: Message, callback: (Boolean, Message) -> Unit = { result, msg -> }) {
 
-        RongIMClient.getInstance().sendMessage(msg, null, null, object : IRongCallback.ISendMessageCallback {
+        RongIMClient.getInstance().sendMessage(msg, "你有一条新的信息", null, object : IRongCallback.ISendMessageCallback {
             /**
              * 消息发送前回调, 回调时消息已存储数据库
              * @param message 已存库的消息体
@@ -454,7 +454,7 @@ object RongCloudManager {
         }
         targetUserObj ?: return
 
-        RongIMClient.getInstance().sendMediaMessage(localMessage, null, null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
+        RongIMClient.getInstance().sendMediaMessage(localMessage, "你有一条新的信息", null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
             override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
                 if (message != null) {
 //                    switchThread(message)
@@ -562,7 +562,7 @@ object RongCloudManager {
         RongIMClient.getInstance().sendMessage(conversationType,
             targetId,
             chatMessage,
-            null,
+            "你有一条新的信息",
             null,
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
@@ -646,7 +646,7 @@ object RongCloudManager {
      */
     fun send(oMessage: Message, targetId: String, callback: (Boolean, Message) -> Unit = { result, msg -> }): Unit {
         //        EventBus.getDefault().post(EventMessageBean(targetId))
-        RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE, targetId, oMessage.content, null, null,
+        RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE, targetId, oMessage.content, "你有一条新的信息", null,
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
                     if (message != null) {
