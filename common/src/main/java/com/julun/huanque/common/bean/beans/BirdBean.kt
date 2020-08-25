@@ -61,8 +61,11 @@ data class UpgradeBirdBean(
     var upgradeLevel: Int = 0,
     var upgradeName: String = "",
     var upgradePos: Int = 0,
+    var upgradeSaleCoins: BigInteger = BigInteger.ZERO,
     //本地字段 当正在操作时 会有一个蒙层效果
-    var isActive:Boolean=false
+    var isActive:Boolean=false,
+    //创建时间 用于后面每次计算收益
+    var createTime:Long =System.currentTimeMillis()/100
 )
 
 data class CombineResult(

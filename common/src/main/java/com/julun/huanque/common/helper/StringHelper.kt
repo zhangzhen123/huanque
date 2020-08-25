@@ -539,25 +539,27 @@ object StringHelper {
     fun formatBigNum(number: BigDecimal): String {
         val format = DecimalFormat("#.0")
         format.minimumFractionDigits = 1 //设置小数部分允许的最小位数
-        val numK=BigDecimal("1000")
+        val numK = BigDecimal("1000")
         if (number < numK) {
             return number.toString()
         }
-        val numM=BigDecimal("1000000")
+        val numM = BigDecimal("1000000")
         if (number < numM) {
             return format.format(number.divide(numK)) + "K"
         }
-        val num1000000000=BigDecimal("1000000000")
-        if (number < num1000000000) {
+        val numB = BigDecimal("1000000000")
+        if (number < numB) {
             return format.format(number.divide(numM)) + "M"
         }
-        if (number < BigDecimal("1000000000000")) {
-            return format.format(number.divide(BigDecimal("1000000000"))) + "B"
+        val numT = BigDecimal("1000000000000")
+        if (number < numT) {
+            return format.format(number.divide(numB)) + "B"
         }
-        if (number < BigDecimal("1000000000000000")) {
-            return format.format(number.divide(BigDecimal("1000000000000"))) + "T"
+        val numP = BigDecimal("1000000000000000")
+        if (number < numP) {
+            return format.format(number.divide(numT)) + "T"
         }
-        return format.format(number.divide(BigDecimal("1000000000000000"))) + "P"
+        return format.format(number.divide(numP)) + "P"
 
     }
 

@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.main.bird
 
+import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
@@ -12,6 +13,8 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LeYuanService
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.core.R
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.launch
@@ -59,8 +62,11 @@ class LeYuanViewModel : BaseViewModel() {
                 }
 
                 result.upgradeList.forEach {
+
                     if (it.upgradePos < totalList.size) {
+                        it.createTime = (System.currentTimeMillis() + it.upgradePos * 200 + 200) / 100
                         totalList[it.upgradePos] = it
+//                        logger("createTime ${it.upgradePos}---${it.createTime}")
                     }
 
                 }
@@ -68,7 +74,7 @@ class LeYuanViewModel : BaseViewModel() {
                 homeInfo.value = result.convertRtData()
                 totalCoin.value = result.totalCoins
                 coinsPerSec.value = result.coinsPerSec
-                startProcessCoins()
+//                startProcessCoins()
             }, error = {
                 it.printStackTrace()
                 homeInfo.value = it.convertError()
@@ -83,11 +89,10 @@ class LeYuanViewModel : BaseViewModel() {
             request({
                 val level = currentInfo?.unlockUpgrade?.upgradeLevel ?: return@request
                 val result = service.buyBird(BuyBirdForm(programId, level)).dataConvert()
-
                 buyResult.value = result.convertRtData()
                 totalCoin.value = result.totalCoins
                 coinsPerSec.value = result.coinsPerSec
-                startProcessCoins()
+//                startProcessCoins()
             }, error = {
                 it.printStackTrace()
                 buyResult.value = it.convertError()
@@ -137,9 +142,10 @@ class LeYuanViewModel : BaseViewModel() {
                 recycleResult.value = result.convertRtData()
                 totalCoin.value = result.totalCoins
                 coinsPerSec.value = result.coinsPerSec
-                startProcessCoins()
+//                startProcessCoins()
             }, error = {
                 it.printStackTrace()
+                recycleResult.value = it.convertError()
             })
 
         }
@@ -149,16 +155,22 @@ class LeYuanViewModel : BaseViewModel() {
     /**
      * 开始每秒产生金币
      */
-    private var processDispose: Disposable? = null
-    private fun startProcessCoins() {
-        processDispose?.dispose()
-        processDispose = Observable.interval(1, TimeUnit.SECONDS).subscribe {
-            val ps = coinsPerSec.value
-            if (ps != null && totalCoin.value != null) {
-                totalCoin.postValue(totalCoin.value?.add(ps))
-            }
-
+//    private var processDispose: Disposable? = null
+//    private fun startProcessCoins() {
+//        processDispose?.dispose()
+//        processDispose = Observable.interval(1, TimeUnit.SECONDS).subscribe {
+//            val ps = coinsPerSec.value
+//            if (ps != null && totalCoin.value != null) {
+//                totalCoin.postValue(totalCoin.value?.add(ps))
+//            }
+//
+//        }
+//    }
+     fun startProcessCoins(ps: BigInteger) {
+        if (totalCoin.value != null) {
+            totalCoin.postValue(totalCoin.value?.add(ps))
         }
+
     }
 
 }

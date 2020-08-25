@@ -241,14 +241,14 @@ class TestActivity : BaseActivity() {
         }
 
 
-//        test_big_format.text = "num1=${StringHelper.formatBigNum(BigInteger("562"))}\n" +
-//                "num2=${StringHelper.formatBigNum(BigInteger("5621"))}\n" +
-//                "num3=${StringHelper.formatBigNum(BigInteger("4843195"))}\n" +
-//                "num4=${StringHelper.formatBigNum(BigInteger("21773753736"))}\n" +
-//                "num5=${StringHelper.formatBigNum(BigInteger("5621773753736"))}\n" +
-//                "num6=${StringHelper.formatBigNum(BigInteger("105807943509339"))}\n" +
-//                "num7=${StringHelper.formatBigNum(BigInteger("5297181089855920"))}\n" +
-//                "num8=${StringHelper.formatBigNum(BigInteger("938219908377998000"))}\n"
+        test_big_format.text = "num1=${StringHelper.formatBigNum(BigInteger("562"))}\n" +
+                "num2=${StringHelper.formatBigNum(BigInteger("5621"))}\n" +
+                "num3=${StringHelper.formatBigNum(BigInteger("4843195"))}\n" +
+                "num4=${StringHelper.formatBigNum(BigInteger("21773753736"))}\n" +
+                "num5=${StringHelper.formatBigNum(BigInteger("5621773753736"))}\n" +
+                "num6=${StringHelper.formatBigNum(BigInteger("105807943509339"))}\n" +
+                "num7=${StringHelper.formatBigNum(BigInteger("5297181089855920"))}\n" +
+                "num8=${StringHelper.formatBigNum(BigInteger("938219908377998000"))}\n"
     }
 
     private val ANIMATED_COLOR_SPAN_FLOAT_PROPERTY: Property<AnimatedRainbowSpan, Float> =
