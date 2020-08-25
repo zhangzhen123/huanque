@@ -163,7 +163,11 @@ class DayListFragment(val type: String) : BaseFragment() {
                 if (bean.rankList.isNotEmpty()) {
                     statePage.showSuccess()
                 } else {
-                    statePage.showEmpty(emptyTxt = "昨日榜空空如也")
+                    if (type == YESTERDAY) {
+                        statePage.showEmpty(emptyTxt = "昨日榜空空如也")
+                    } else if (type == TODAY) {
+                        statePage.showEmpty(emptyTxt = "今日榜空空如也")
+                    }
                 }
 //                }
             }

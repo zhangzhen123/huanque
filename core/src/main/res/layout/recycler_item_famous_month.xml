@@ -30,6 +30,7 @@
         android:id="@+id/recyclerView_inner"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
+        android:paddingRight="15dp"
         android:layout_marginTop="10dp"
         android:overScrollMode="never"
         android:paddingBottom="24dp"

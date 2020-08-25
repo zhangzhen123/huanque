@@ -18,6 +18,7 @@
         app:roundedCornerRadius="6dp" />
 
     <View
+        android:id="@+id/view_shader"
         android:layout_width="0px"
         android:layout_height="27dp"
         android:background="@drawable/bg_famous_nickname"
@@ -49,6 +50,17 @@
         app:layout_constraintRight_toRightOf="@id/sdv"
         app:layout_constraintTop_toTopOf="@id/sdv"
         tools:text="7" />
+
+    <View
+        android:id="@+id/view_border"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@drawable/bg_famous_myself"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/sdv"
+        app:layout_constraintLeft_toLeftOf="@id/sdv"
+        app:layout_constraintRight_toRightOf="@id/sdv"
+        app:layout_constraintTop_toTopOf="@id/sdv" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

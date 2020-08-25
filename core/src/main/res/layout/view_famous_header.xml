@@ -51,6 +51,17 @@
         app:layout_constraintTop_toTopOf="@id/sdv_first"
         tools:text="7" />
 
+    <View
+        android:id="@+id/view_border_first"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@drawable/bg_famous_myself"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_first"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_first"
+        app:layout_constraintRight_toRightOf="@id/sdv_first"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/sdv_first" />
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_second"
         android:layout_width="95dp"
@@ -97,6 +108,17 @@
         app:layout_constraintRight_toRightOf="@id/sdv_second"
         app:layout_constraintTop_toTopOf="@id/sdv_second"
         tools:text="7" />
+
+    <View
+        android:id="@+id/view_border_second"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@drawable/bg_famous_myself"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_second"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_second"
+        app:layout_constraintRight_toRightOf="@id/sdv_second"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/sdv_second" />
 
 
     <com.facebook.drawee.view.SimpleDraweeView
@@ -145,5 +167,17 @@
         app:layout_constraintRight_toRightOf="@id/sdv_third"
         app:layout_constraintTop_toTopOf="@id/sdv_third"
         tools:text="7" />
+
+    <View
+        android:id="@+id/view_border_third"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@drawable/bg_famous_myself"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_third"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_third"
+        app:layout_constraintRight_toRightOf="@id/sdv_third"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/sdv_third" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

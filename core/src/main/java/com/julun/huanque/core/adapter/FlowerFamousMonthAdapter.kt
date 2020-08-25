@@ -11,8 +11,11 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.FamousUser
 import com.julun.huanque.common.bean.beans.SingleFamousMonth
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.core.R
 
 /**
@@ -54,6 +57,7 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
             val view_shader_first = headerView.findViewById<View>(R.id.view_shader_first)
             val tv_nickname_first = headerView.findViewById<TextView>(R.id.tv_nickname_first)
             val tv_day_first = headerView.findViewById<TextView>(R.id.tv_day_first)
+            val view_border_first = headerView.findViewById<View>(R.id.view_border_first)
 
             if (ForceUtils.isIndexNotOutOfBounds(0, dataList)) {
                 val firstData = dataList[0]
@@ -61,14 +65,27 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
                 view_shader_first.show()
                 tv_nickname_first.show()
                 tv_day_first.show()
-                sdv_first.loadImage(firstData.headPic, 200f, 200f)
+
                 tv_nickname_first.text = firstData.nickname
                 tv_day_first.text = getDayContent(firstData.day)
+                sdv_first.loadImage(firstData.headPic, 200f, 200f)
+                if (firstData.myself == BusiConstant.True) {
+                    //本人
+                    view_border_first.show()
+                    val padding = dp2px(1)
+                    sdv_first.setPadding(padding, padding, padding, padding)
+                    updateViewMargin(view_shader_first, true)
+                } else {
+                    view_border_first.hide()
+                    updateViewMargin(view_shader_first, false)
+                    sdv_first.setPadding(0, 0, 0, 0)
+                }
             } else {
                 sdv_first.hide()
                 view_shader_first.hide()
                 tv_nickname_first.hide()
                 tv_day_first.hide()
+                view_border_first.hide()
             }
 
             //第二个视图
@@ -76,20 +93,34 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
             val view_shader_second = headerView.findViewById<View>(R.id.view_shader_second)
             val tv_nickname_second = headerView.findViewById<TextView>(R.id.tv_nickname_second)
             val tv_day_second = headerView.findViewById<TextView>(R.id.tv_day_second)
+            val view_border_second = headerView.findViewById<View>(R.id.view_border_second)
             if (ForceUtils.isIndexNotOutOfBounds(1, dataList)) {
                 val secondData = dataList[1]
                 sdv_second.show()
                 view_shader_second.show()
                 tv_nickname_second.show()
                 tv_day_second.show()
-                sdv_second.loadImage(secondData.headPic, 95f, 95f)
                 tv_nickname_second.text = secondData.nickname
                 tv_day_second.text = getDayContent(secondData.day)
+                sdv_second.loadImage(secondData.headPic, 95f, 95f)
+
+                if (secondData.myself == BusiConstant.True) {
+                    //本人
+                    view_border_second.show()
+                    val padding = dp2px(1)
+                    sdv_second.setPadding(padding, padding, padding, padding)
+                    updateViewMargin(view_shader_second, true)
+                } else {
+                    updateViewMargin(view_shader_second, false)
+                    view_border_second.hide()
+                    sdv_second.setPadding(0, 0, 0, 0)
+                }
             } else {
                 sdv_second.hide()
                 view_shader_second.hide()
                 tv_nickname_second.hide()
                 tv_day_second.hide()
+                view_border_second.hide()
             }
 
             //第三个视图
@@ -97,6 +128,7 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
             val view_shader_third = headerView.findViewById<View>(R.id.view_shader_third)
             val tv_nickname_third = headerView.findViewById<TextView>(R.id.tv_nickname_third)
             val tv_day_third = headerView.findViewById<TextView>(R.id.tv_day_third)
+            val view_border_third = headerView.findViewById<View>(R.id.view_border_third)
             if (ForceUtils.isIndexNotOutOfBounds(2, dataList)) {
                 val thirdData = dataList[2]
                 sdv_third.show()
@@ -106,11 +138,24 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
                 sdv_third.loadImage(thirdData.headPic, 95f, 95f)
                 tv_nickname_third.text = thirdData.nickname
                 tv_day_third.text = getDayContent(thirdData.day)
+                sdv_third.loadImage(thirdData.headPic, 95f, 95f)
+                if (thirdData.myself == BusiConstant.True) {
+                    //本人
+                    view_border_third.show()
+                    val padding = dp2px(1)
+                    sdv_third.setPadding(padding, padding, padding, padding)
+                    updateViewMargin(view_shader_third, true)
+                } else {
+                    view_border_third.hide()
+                    updateViewMargin(view_shader_third, false)
+                    sdv_third.setPadding(0, 0, 0, 0)
+                }
             } else {
                 sdv_third.hide()
                 view_shader_third.hide()
                 tv_nickname_third.hide()
                 tv_day_third.hide()
+                view_border_third.hide()
             }
         }
 
@@ -126,7 +171,7 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
         val position = holder.adapterPosition
         val view_line = holder.getView<View>(R.id.view_line)
         val lineParams = view_line.layoutParams as? ConstraintLayout.LayoutParams
-        if (position == 0) {
+        if (position - headerLayoutCount == 0) {
             //第一个视图
             lineParams?.topMargin = dp2px(10)
         } else {
@@ -157,5 +202,19 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
         }
     }
 
+    /**
+     * 更新阴影的margin
+     */
+    private fun updateViewMargin(view: View, self: Boolean) {
+        val params = view.layoutParams as? ConstraintLayout.LayoutParams
+        val margin = if (self) {
+            dp2px(2)
+        } else {
+            0
+        }
+        params?.leftMargin = margin
+        params?.rightMargin = margin
+        view.layoutParams = params
+    }
 
 }
