@@ -15,7 +15,7 @@ import kotlin.collections.HashMap
 /** 送礼事件 **/
 class SendGiftEvent(
     //昵称颜色
-    var nickcolor : String = "",
+    var nickColor : String = "",
     var giftId: Int = -1,
     var cacheIt: Boolean = false,
     var count: Int = 0,

@@ -205,8 +205,8 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
 
     private fun replaceAndRefreshView(newGift: SendGiftEvent) {
         this.lastGift = newGift
-        if(newGift.nickcolor.isNotEmpty()){
-            sendNicknameText.textColor = GlobalUtils.formatColor(newGift.nickcolor)
+        if(newGift.nickColor.isNotEmpty()){
+            sendNicknameText.textColor = GlobalUtils.formatColor(newGift.nickColor)
         }else{
             sendNicknameText.textColor = GlobalUtils.getColor(R.color.white)
         }
