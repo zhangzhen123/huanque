@@ -1,8 +1,11 @@
 package com.julun.huanque.core.adapter
 
+import android.app.Activity
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import androidx.activity.ComponentActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +19,10 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.R
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 
 /**
  *@创建者   dong
@@ -24,6 +30,7 @@ import com.julun.huanque.core.R
  *@描述 名人榜  每月的Adapter
  */
 class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHolder>(R.layout.recycler_item_famous_month) {
+
     override fun convert(holder: BaseViewHolder, item: SingleFamousMonth) {
         val tvMonth = holder.getView<TextView>(R.id.tv_month)
         val month = item.month
@@ -80,12 +87,16 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
                     updateViewMargin(view_shader_first, false)
                     sdv_first.setPadding(0, 0, 0, 0)
                 }
+                sdv_first.onClickNew {
+                    jumpByUserId(firstData.userId)
+                }
             } else {
                 sdv_first.hide()
                 view_shader_first.hide()
                 tv_nickname_first.hide()
                 tv_day_first.hide()
                 view_border_first.hide()
+                sdv_first.setOnClickListener(null)
             }
 
             //第二个视图
@@ -115,12 +126,16 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
                     view_border_second.hide()
                     sdv_second.setPadding(0, 0, 0, 0)
                 }
+                sdv_second.onClickNew {
+                    jumpByUserId(secondData.userId)
+                }
             } else {
                 sdv_second.hide()
                 view_shader_second.hide()
                 tv_nickname_second.hide()
                 tv_day_second.hide()
                 view_border_second.hide()
+                sdv_second.setOnClickListener(null)
             }
 
             //第三个视图
@@ -150,12 +165,16 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
                     updateViewMargin(view_shader_third, false)
                     sdv_third.setPadding(0, 0, 0, 0)
                 }
+                sdv_third.onClickNew {
+                    jumpByUserId(thirdData.userId)
+                }
             } else {
                 sdv_third.hide()
                 view_shader_third.hide()
                 tv_nickname_third.hide()
                 tv_day_third.hide()
                 view_border_third.hide()
+                sdv_third.setOnClickListener(null)
             }
         }
 
@@ -166,6 +185,11 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
             }
         }
         adapter.setList(adapterData)
+
+        adapter.setOnItemClickListener { adap, view, position ->
+            val data = adap.getItem(position) as? FamousUser
+            jumpByUserId(data?.userId ?: return@setOnItemClickListener)
+        }
 
         //指示线的适配
         val position = holder.adapterPosition
@@ -192,6 +216,7 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
             iv_circle_bottom.hide()
         }
         view_line.layoutParams = lineParams
+
     }
 
     private fun getDayContent(day: Int): String {
@@ -215,6 +240,21 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
         params?.leftMargin = margin
         params?.rightMargin = margin
         view.layoutParams = params
+    }
+
+    /**
+     * 根据用户ID条状
+     */
+    private fun jumpByUserId(userId: Long) {
+        (context as? ComponentActivity)?.let { act ->
+            if (userId == SessionUtils.getUserId()) {
+                //跳转我的主页
+                RNPageActivity.start(act, RnConstant.MINE_HOMEPAGE)
+            } else {
+                //跳转他人主页
+                RNPageActivity.start(act, RnConstant.PERSONAL_HOMEPAGE, Bundle().apply { putLong("userId", userId) })
+            }
+        }
     }
 
 }
