@@ -37,6 +37,7 @@ class PlumFlowerActivity : BaseActivity() {
 
     private lateinit var mCommonNavigator: CommonNavigator
     private var mPagerAdapter: PlumFlowerFragmentAdapter? = null
+    private var mFlowerIntroductionFragment: FlowerIntroductionFragment? = null
 
     override fun getLayoutId() = R.layout.act_plum_flower
 
@@ -59,6 +60,8 @@ class PlumFlowerActivity : BaseActivity() {
 
         iv_help.onClickNew {
             //显示说明弹窗
+            mFlowerIntroductionFragment = mFlowerIntroductionFragment ?: FlowerIntroductionFragment()
+            mFlowerIntroductionFragment?.show(supportFragmentManager, "FlowerIntroductionFragment")
         }
 
     }
