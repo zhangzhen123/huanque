@@ -25,6 +25,7 @@ import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.PhotoHeadView
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
@@ -32,6 +33,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.ScoreViewModel
 import kotlinx.android.synthetic.main.fragment_score.*
+import org.jetbrains.anko.textColor
 
 /**
  * 直播间贡献榜
@@ -186,9 +188,15 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
         object : BaseQuickAdapter<RankingsResult, BaseViewHolder>(R.layout.item_score), LoadMoreModule {
             override fun convert(holder: BaseViewHolder, item: RankingsResult) {
 
+                val nickNameText = holder.getView<TextView>(R.id.nickNameText)
+                nickNameText.text = item.nickname
+                if (item.nickcolor.isNotEmpty()) {
+                    nickNameText.textColor = GlobalUtils.formatColor(item.nickcolor)
+                } else {
+                    nickNameText.textColor = GlobalUtils.getColor(R.color.black_333)
+                }
                 val position = holder.layoutPosition - headerLayoutCount
-                holder.setText(R.id.nickNameText, item.nickname)
-                    .setText(R.id.contributionText, "${/*StringHelper.formatNumber(*/item.score}鹊币")
+                holder.setText(R.id.contributionText, "${/*StringHelper.formatNumber(*/item.score}鹊币")
                 //勋章
                 renderImage(item, holder.getView<DraweeSpanTextView>(R.id.image_text))
 
@@ -224,7 +232,13 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
 //                }
 //                holder.getView<SimpleDraweeView>(R.id.headImage).hierarchy.roundingParams = roundingParams
 //                ImageUtils.loadImage(head, item.headPic, 50f, 50f)
-                head.setImage(headUrl = item.headPic+ BusiConstant.OSS_160, headSize = 46, frameUrl = item.headFrame, frameWidth = 74, frameHeight = 74)
+                head.setImage(
+                    headUrl = item.headPic + BusiConstant.OSS_160,
+                    headSize = 46,
+                    frameUrl = item.headFrame,
+                    frameWidth = 74,
+                    frameHeight = 74
+                )
             }
 
             /**

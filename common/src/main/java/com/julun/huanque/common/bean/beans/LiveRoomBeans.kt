@@ -63,7 +63,7 @@ class RoomUserChatExtra(
     //添加勋章列表
     var badgesPic: List<String?> = ArrayList(),
     var nickColor: String = "",
-    var lightColor:String = "",
+    var lightColor: String = "",
     var textColor: String = "",
     //发送者的ID
     var senderId: Long = 0,
@@ -498,8 +498,10 @@ class UserInfo {
 
     //昵称颜色
     var nickColor: String = ""
+
     //闪光颜色
     var lightColor: String = ""
+
     //是否守护
     var roomGuard: Boolean = false
 
@@ -759,6 +761,9 @@ class RankingsResult : Serializable {
     var royalPic: String = ""
 
     var headFrame: String = ""
+
+    //昵称颜色
+    var nickcolor: String = ""
     override fun equals(other: Any?): Boolean {
         if (other is RankingsResult) {
             return userId == other.userId
@@ -1781,7 +1786,9 @@ data class OnlineUserInfo(
     //4.15新增字段
     //贵族勋章地址
     var royalPic: String = "",
-    var headFrame: String = ""
+    var headFrame: String = "",
+    //昵称颜色
+    var nickcolor: String = ""
 
 ) : Serializable {
     override fun equals(other: Any?): Boolean {

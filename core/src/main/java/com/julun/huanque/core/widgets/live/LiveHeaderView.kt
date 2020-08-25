@@ -14,6 +14,7 @@ import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.constant.UserChangeType
+import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
@@ -30,6 +31,7 @@ import com.nineoldandroids.animation.ObjectAnimator
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.view_live_header.view.*
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.imageResource
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.properties.Delegates
@@ -230,6 +232,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
 
         // 直播间名称
         authorNicknameText.text = dto.programName
+        iv_anchor_level.imageResource = ImageHelper.getAnchorLevelShortResId(dto.anchorLevel)
     }
 
     /**
@@ -320,7 +323,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     /**
      * 更新热度数据
      */
-    fun updateHeatValue(heatNum : Long) {
+    fun updateHeatValue(heatNum: Long) {
         hotText.text = "${StringHelper.formatNum(heatNum)}"
     }
 

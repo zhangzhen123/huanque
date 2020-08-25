@@ -268,8 +268,8 @@ class UserCardFragment : BaseDialogFragment() {
         view_guizu_level.onClickNew {
             //打开贵族等级说明页
             val bundle = Bundle()
-            bundle.putLong("programId",mPlayerViewModel.programId)
-            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
+            bundle.putLong("programId", mPlayerViewModel.programId)
+            RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE, bundle)
         }
         view_zhubo_level.onClickNew {
             //打开主播等级说明页
@@ -301,6 +301,9 @@ class UserCardFragment : BaseDialogFragment() {
         ImageHelper.setDefaultHeaderPic(sdv_header, sex)
         ImageUtils.loadImage(sdv_header, data.headPic, 80f, 80f)
         tv_nickname.text = data.nickname
+        if (data.nickcolor.isNotEmpty()) {
+            tv_nickname.textColor = GlobalUtils.formatColor(data.nickcolor)
+        }
         tv_id.text = "欢鹊ID：${mUserCardViewModel.mUserId}"
 
         if (data.canReport) {

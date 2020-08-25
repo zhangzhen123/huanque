@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import com.julun.huanque.common.bean.beans.SendGiftEvent
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.svga.SVGAHelper
@@ -204,6 +205,11 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
 
     private fun replaceAndRefreshView(newGift: SendGiftEvent) {
         this.lastGift = newGift
+        if(newGift.nickcolor.isNotEmpty()){
+            sendNicknameText.textColor = GlobalUtils.formatColor(newGift.nickcolor)
+        }else{
+            sendNicknameText.textColor = GlobalUtils.getColor(R.color.white)
+        }
         sendNicknameText.text = lastGift!!.nickname
         giftNameText.text = "送出 ${lastGift!!.giftName}"
         ImageUtils.loadImage(giftImage, lastGift!!.giftPic, 46f, 46f)
