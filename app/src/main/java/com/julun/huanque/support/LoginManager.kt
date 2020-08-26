@@ -207,7 +207,8 @@ object LoginManager {
                 launch(Dispatchers.Main) {
                     loginOutSuccess(success, error)
                 }
-                EventBus.getDefault().post(LoginEvent(false))
+                LoginStatusUtils.logout()
+                EventBus.getDefault().postSticky(LoginEvent(false))
             }.onFailure {
                 it.printStackTrace()
                 launch(Dispatchers.Main) {

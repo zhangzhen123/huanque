@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.R
+import com.julun.huanque.common.bean.events.HideFloatingEvent
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.manager.RongCloudManager
@@ -19,6 +20,7 @@ import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
+import org.greenrobot.eventbus.EventBus
 import org.jay.launchstarter.TaskDispatcher
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.backgroundResource
@@ -46,15 +48,16 @@ class CommonInit {
 
 
     }
+
     //这里记录fresco配置 给其他第三方用
-    var frescoConfig: ImagePipelineConfig?=null
+    var frescoConfig: ImagePipelineConfig? = null
     private var urlTest = "http://office.katule.cn:9205/"
 
     //保存的全局application
     private lateinit var mContext: Application
     var inSDK = true
 
-//    private var libraryListener: CommonListener? = null
+    //    private var libraryListener: CommonListener? = null
 //
 //    fun setCommonListener(listener: CommonListener) {
 //        this.libraryListener = listener
@@ -63,6 +66,9 @@ class CommonInit {
 //    fun getCommonListener() = libraryListener
     //当前处于活动状态的Activity
     private var mActivityReference: WeakReference<Activity>? = null
+
+    //当前显示页面数量
+    private var mActCount = 0
 
 
     //判断app是否在前台
@@ -142,6 +148,7 @@ class CommonInit {
 
             override fun onActivityStarted(activity: Activity) {
                 logger("onActivityStarted:$activity")
+                mActCount++
                 setCurrentActivity(activity)
             }
 
@@ -154,6 +161,11 @@ class CommonInit {
 
             override fun onActivityStopped(activity: Activity) {
                 logger("onActivityStopped:$activity")
+                mActCount--
+                if (mActCount == 0) {
+                    //从前台退到后台
+                    EventBus.getDefault().post(HideFloatingEvent())
+                }
             }
 
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
@@ -169,8 +181,6 @@ class CommonInit {
 //        PartyLibraryInit.getInstance().initComponent(application)
         initTask(application)
     }
-
-
 
 
     /**

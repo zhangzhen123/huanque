@@ -512,7 +512,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         mViewModel.queryInfo(QueryType.REFRESH)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")
         if (event.result) {
