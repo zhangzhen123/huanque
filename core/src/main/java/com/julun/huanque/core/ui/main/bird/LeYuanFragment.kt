@@ -4,10 +4,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.graphics.RectF
-import android.media.AudioAttributes
-import android.media.AudioManager
-import android.media.SoundPool
-import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -39,12 +35,17 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_leyuan.*
 import org.jetbrains.anko.sdk23.listeners.onTouch
+import java.math.BigInteger
 import java.util.concurrent.TimeUnit
 
 /**
- *@创建者   dong
- *@创建时间 2020/6/29 18:06
- *@描述 乐园Fragment
+ *
+ *@Anchor: zhangzhen
+ *
+ *@Date: 2020/8/26 19:51
+ *
+ *@Description: LeYuanFragment
+ *
  */
 class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     companion object {
@@ -145,8 +146,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                     if (currentCombineItem?.upgradeId != null) {
 
                         val itemView = rv_bird_packet.findChildViewUnder(event.x, event.y)
-                        switchRecycleState(false)
                         if (itemView != null) {
+                            switchRecycleState(false)
                             val viewHolder = rv_bird_packet.getChildViewHolder(itemView) as? BaseViewHolder
                             if (viewHolder != null) {
                                 currentTargetItem = birdAdapter.getItemOrNull(viewHolder.adapterPosition)
@@ -180,6 +181,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                                 }
                                 bird_mask.hide()
                             } else {
+                                switchRecycleState(false)
                                 playBackAnim(currentXY, originXY)
                             }
 
@@ -246,6 +248,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         mViewModel.recycleResult.observe(this, Observer {
             if (it.isSuccess()) {
                 SoundPoolManager.instance.play(BIRD_COIN)
+                playRecycleBirdCoin(currentCombineItem?.upgradeSaleCoins)
                 val currentIndex = birdAdapter.data.indexOf(currentCombineItem)
                 if (currentIndex != -1) {
                     birdAdapter.setData(currentIndex, UpgradeBirdBean(upgradePos = currentIndex))
@@ -270,6 +273,31 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
     }
 
+    /**
+     * 播放出售金币飘出动画
+     */
+    private fun playRecycleBirdCoin(coin:BigInteger?){
+        if(coin==null){
+            return
+        }
+        tv_recycler_coin.text="$coin"
+        val aniText1 = ObjectAnimator.ofFloat(tv_recycler_coin, View.TRANSLATION_Y, 0f, -dp2pxf(40))
+        aniText1.interpolator = AccelerateDecelerateInterpolator()
+        aniText1.duration = 200
+        //目的是继续显示
+        val aniText2 = ObjectAnimator.ofFloat(tv_recycler_coin, View.TRANSLATION_Y, -dp2pxf(40), -dp2pxf(45))
+        aniText2.startDelay = 100
+        aniText2.duration = 300
+        val set = AnimatorSet()
+        set.playSequentially(aniText1, aniText2)
+        set.addListener(onEnd = {
+//                    logger("数字执行完成  开始隐藏")
+            tv_recycler_coin?.hide()
+            switchRecycleState(false)
+        })
+        tv_recycler_coin.show()
+        set.start()
+    }
     /**
      * 播放金币变化动画
      */

@@ -399,12 +399,25 @@
         android:gravity="center"
         android:maxLines="1"
         android:text="立即回收"
-        android:visibility="gone"
         android:textColor="@color/black_666"
         android:textSize="@dimen/sp_16"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_bird_price"
         app:layout_constraintEnd_toEndOf="@+id/iv_bottom_03"
         app:layout_constraintStart_toEndOf="@+id/tv_price_level" />
+
+    <TextView
+        android:id="@+id/tv_recycler_coin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/tv_bird_price"
+        app:layout_constraintEnd_toEndOf="@+id/tv_bird_price"
+        app:layout_constraintStart_toStartOf="@+id/tv_bird_price"
+        tools:text="+10000" />
 
     <TextView
         android:id="@+id/tv_bird_price"
@@ -449,9 +462,9 @@
 
     <FrameLayout
         android:id="@+id/mask_container"
-        tools:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:visibility="gone">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/bird_mask"
