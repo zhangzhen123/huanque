@@ -50,6 +50,7 @@ import com.julun.huanque.common.viewmodel.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.core.R
+import com.julun.huanque.core.manager.AliplayerManager
 import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
@@ -248,6 +249,9 @@ class PlayerActivity : BaseActivity() {
             isAnchor = intent.getBooleanExtra(UserType.Anchor, false)
             streamId = intent.getStringExtra(IntentParamKey.STREAM_ID.name)
             mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
+            if(mFrom != PlayerFrom.FloatWindow){
+                AliplayerManager.stop()
+            }
 //            isFromSquare = intent.getBooleanExtra(FromPager.FROM_SQUARE, false)
             //gift=-1代表无效
             val gift = intent.getIntExtra(IntentParamKey.OPEN_GIFT.name, -1)
@@ -1957,6 +1961,7 @@ class PlayerActivity : BaseActivity() {
                     !baseData.isLandscape
                 )
             } else {
+                AliplayerManager.stop()
                 viewModel.leaveProgram()
             }
             super.finish()
