@@ -443,9 +443,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 holder.setText(R.id.tvTitle, item.userTabName)
 
                 if (item.tagCount == 0) {
-                    holder.setGone(R.id.tv_tag, true).setText(R.id.tv_tag, "${item.tagCount}")
+                    holder.setGone(R.id.tv_tag, true)
                 } else {
-                    holder.setGone(R.id.tv_tag, false)
+                    holder.setGone(R.id.tv_tag, false).setText(R.id.tv_tag, "${item.tagCount}")
                 }
             }
         }
