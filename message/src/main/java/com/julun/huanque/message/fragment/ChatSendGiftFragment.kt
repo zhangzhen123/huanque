@@ -87,7 +87,7 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
         mViewModel.giftList.observe(viewLifecycleOwner, Observer {
             //
             if (it.state == NetStateType.SUCCESS) {
-                loadData(it.getT())
+                loadData(it.requireT())
             } else if (it.state == NetStateType.ERROR) {
                 //dodo
             }

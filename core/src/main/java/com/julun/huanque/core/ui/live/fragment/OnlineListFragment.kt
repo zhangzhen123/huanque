@@ -183,12 +183,10 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
     private fun prepareViewModel() {
         mViewModel.listResult.observe(this, Observer {
             if (it.state == NetStateType.SUCCESS) {
-                renderData(it.getT())
+                renderData(it.requireT())
             } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show("网络出现了问题~")
-                if (it.getT().isPull) {
-
-                } else {
+                if (!it.isRefresh()) {
                     adapter.loadMoreModule.loadMoreFail()
                 }
             }

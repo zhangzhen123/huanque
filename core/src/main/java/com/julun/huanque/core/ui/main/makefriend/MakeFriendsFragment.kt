@@ -82,6 +82,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 //                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
             }
 
+            override fun resume() {
+                logger.info("resume")
+            }
             override fun pause() {
                 logger.info("pause")
             }
@@ -90,9 +93,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 logger.info("stop")
             }
 
-            override fun reset() {
-                logger.info("reset")
-            }
+
         })
         audioPlayerManager.setMediaPlayInfoListener(object : MediaPlayInfoListener {
             override fun onError(mp: MediaPlayer?, what: Int, extra: Int) {
@@ -403,11 +404,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             //
             mRefreshView.isRefreshing = false
             if (it.state == NetStateType.SUCCESS) {
-                loadData(it.getT())
+                loadData(it.requireT())
             } else if (it.state == NetStateType.ERROR) {
-                //dodo
-                val data = it.getT()
-                loadFail(data.isPull)
+                loadFail(it.isRefresh())
             }
         })
 

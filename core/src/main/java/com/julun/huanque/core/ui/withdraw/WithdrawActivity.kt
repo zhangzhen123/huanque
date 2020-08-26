@@ -254,14 +254,13 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
     private fun initViewModel() {
         mViewModel.withdrawData.observe(this, Observer {
             if (it.state == NetStateType.SUCCESS) {
-                val data = it.getT()
-                refreshData(data)
+                refreshData(it.requireT())
             }
         })
         mViewModel.withdrawResult.observe(this, Observer {
             btn_ensure.isEnabled = true
             if (it.state == NetStateType.SUCCESS) {
-                val data = it.getT()
+                val data = it.requireT()
                 ToastUtils.show(data.msg)
                 account_money.text = data.cash
                 EventBus.getDefault().post(WithdrawSuccessEvent(data.cash))
@@ -312,7 +311,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         userBindViewModel.aliPayAuth.observe(this, Observer {
             btn_ensure.isEnabled = true
             if (it.state == NetStateType.SUCCESS) {
-                val data = it.getT()
+                val data = it.requireT()
                 logger.info("获取后台支付宝授权信息成功 开始发起授权")
                 AliPayManager.aliAuth(this, data.authInfo)
             } else if (it.state == NetStateType.ERROR) {
@@ -323,7 +322,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         userBindViewModel.bindAliData.observe(this, Observer {
             btn_ensure.isEnabled = true
             if (it.state == NetStateType.SUCCESS) {
-                val data = it.getT()
+                val data = it.requireT()
                 ToastUtils.show("绑定支付宝成功")
                 refreshAliBindTag(true)
                 aliNickname = data.nickname
@@ -345,7 +344,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
         userBindViewModel.bindWinXinData.observe(this, Observer {
             btn_ensure.isEnabled = true
             if (it.state == NetStateType.SUCCESS) {
-                val data = it.getT()
+                val data = it.requireT()
                 ToastUtils.show("绑定微信成功")
                 refreshWxBindTag(true)
                 wxNickname = data.nickname

@@ -241,13 +241,13 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
 
     private fun initViewModel() {
         mViewModel.sharePosters.observe(this, Observer {
-            if (it.state == NetStateType.SUCCESS) {
-                renderViewData(it.getT())
+            if (it.isSuccess()) {
+                renderViewData(it.requireT())
             }
         })
         mViewModel.shares.observe(this, Observer {
-            if (it.state == NetStateType.SUCCESS) {
-                shareAdapter.setNewInstance(it.getT())
+            if (it.isSuccess()) {
+                shareAdapter.setNewInstance(it.requireT())
             }
         })
 

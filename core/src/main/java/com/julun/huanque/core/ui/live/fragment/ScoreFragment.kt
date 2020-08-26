@@ -89,9 +89,9 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
         if (!mViewModel.refreshData.hasObservers()) {
             mViewModel.refreshData.observe(this, Observer {
                 if (it.state == NetStateType.SUCCESS) {
-                    loadData(it.getT())
+                    loadData(it.requireT())
                 } else if (it.state == NetStateType.ERROR) {
-                    queryError(it.getT())
+                    queryError(it.isRefresh())
                 }
                 finalDo()
             })
@@ -144,8 +144,8 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
         }
     }
 
-    private fun queryError(data: RootListData<RankingsResult>) {
-        if (data.isPull) {
+    private fun queryError(isRefresh:Boolean) {
+        if (isRefresh) {
             ToastUtils.show("加载失败")
         } else {
             scoreAdapter.loadMoreModule.loadMoreFail()

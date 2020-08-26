@@ -82,7 +82,7 @@ class HomeFragment : BaseFragment() {
         viewModel.tabList.observe(viewLifecycleOwner, Observer {
             if (it.state == NetStateType.SUCCESS) {
                 mTabTitles.clear()
-                mTabTitles.addAll(it.getT())
+                mTabTitles.addAll(it.requireT())
                 refreshTabList("推荐")
             }
 

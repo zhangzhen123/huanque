@@ -284,8 +284,8 @@ class VoiceSignActivity : BaseVMActivity<VoiceSignViewModel>() {
 
     private fun initViewModel() {
         mViewModel.signPoints.observe(this, Observer {
-            if (it.state == NetStateType.SUCCESS) {
-                points = it.getT().points
+            if (it.isSuccess()) {
+                points = it.requireT().points
                 changePointText()
             }
         })
