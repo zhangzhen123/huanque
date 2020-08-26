@@ -127,7 +127,7 @@ class MakeFriendsViewModel : BaseViewModel() {
                 emit(ReactiveData(NetStateType.SUCCESS, rList))
             }, error = { e ->
                 logger("报错了：$e")
-                emit(e.convertListError(RootListData(isPull = type != QueryType.LOAD_MORE)))
+                emit(e.convertListError(queryType = type))
             }, needLoadState = type == QueryType.INIT)
 
         }

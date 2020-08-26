@@ -100,7 +100,7 @@ class OnLineViewModel : BaseViewModel() {
                 listResult.value = result.convertRtData()
 
             }, error = {
-                listResult.value = it.convertListError(OnlineListData(isPull = type != QueryType.LOAD_MORE))
+                listResult.value = it.convertListError(queryType = type)
             },needLoadState = type==QueryType.INIT)
         }
     }

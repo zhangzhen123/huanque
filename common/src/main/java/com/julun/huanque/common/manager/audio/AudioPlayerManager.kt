@@ -190,6 +190,7 @@ class AudioPlayerManager {
                 if (mediaPlayFunctionListener != null) {
                     mediaPlayFunctionListener!!.prepared()
                     mediaPlayFunctionListener!!.start()
+                    mediaPlayFunctionListener!!.resume()
                 }
             }
             //播放错误监听
@@ -237,7 +238,7 @@ class AudioPlayerManager {
             mHandler.sendMessage(message)
             mediaPlayer!!.stop()
             mediaPlayer!!.reset()
-            mediaPlayFunctionListener?.reset()
+            mediaPlayFunctionListener?.stop()
             mediaPlayer!!.release()
             mediaPlayer = null
         }
@@ -250,6 +251,7 @@ class AudioPlayerManager {
         if (mediaPlayer != null) {
             isPlaying = true
             mHandler.postDelayed(mRunnable, sleep.toLong())
+            mediaPlayFunctionListener?.resume()
             mediaPlayer!!.start()
         }
     }

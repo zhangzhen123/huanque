@@ -173,8 +173,8 @@ class UserCardFragment : BaseDialogFragment() {
                 return@Observer
             }
             if (it != null && it.isSuccess()) {
-                mUserCardViewModel.userInfoData.value?.follow = it.getT().follow != FollowStatus.False
-                if (it.getT().follow != FollowStatus.False) {
+                mUserCardViewModel.userInfoData.value?.follow = it.requireT().follow != FollowStatus.False
+                if (it.requireT().follow != FollowStatus.False) {
                     //关注状态
                     tv_attention.text = "已关注"
                 } else {

@@ -16,7 +16,6 @@ import com.julun.huanque.common.suger.convertListError
 import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -68,7 +67,7 @@ class LiveSquareViewModel : BaseViewModel() {
                 result.isPull = queryType != QueryType.LOAD_MORE
                 hotDataList.value = result.convertRtData()
             }, error = {
-                hotDataList.value = it.convertListError(RootListData(isPull = queryType != QueryType.LOAD_MORE))
+                hotDataList.value = it.convertListError(queryType = queryType)
             }, needLoadState = queryType == QueryType.INIT)
         }
     }

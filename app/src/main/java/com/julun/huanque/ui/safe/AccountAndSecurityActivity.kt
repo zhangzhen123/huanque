@@ -64,7 +64,7 @@ class AccountAndSecurityActivity : BaseVMActivity<AccountAndSecurityViewModel>()
     private fun initViewModel() {
         mViewModel.securityInfo.observe(this, Observer {
             if (it.isSuccess()) {
-                renderData(it.getT())
+                renderData(it.requireT())
             }
         })
         userBindViewModel.bindWinXinData.observe(this, Observer {
@@ -82,7 +82,7 @@ class AccountAndSecurityActivity : BaseVMActivity<AccountAndSecurityViewModel>()
         })
         userBindViewModel.aliPayAuth.observe(this, Observer {
             if (it.state == NetStateType.SUCCESS) {
-                val data = it.getT()
+                val data = it.requireT()
                 logger.info("获取后台支付宝授权信息成功 开始发起授权")
                 AliPayManager.aliAuth(this, data.authInfo)
             } else if (it.state == NetStateType.ERROR) {

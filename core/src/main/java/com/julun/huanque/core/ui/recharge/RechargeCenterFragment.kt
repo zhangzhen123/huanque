@@ -202,7 +202,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
     private fun initViewModel() {
         mViewModel.mRechargeRespDto.observe(this, Observer {
             if (it.isSuccess()) {
-                val data = it.getT()
+                val data = it.requireT()
                 refreshData(data)
                 loadAd(data.adList)
             }

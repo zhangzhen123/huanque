@@ -97,7 +97,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         mViewModel.userInfo.observe(this, Observer {
             refreshView.isRefreshing = false
             if (it.isSuccess()) {
-                loadData(it.getT())
+                loadData(it.requireT())
             }
         })
         mViewModel.checkAuthorResult.observe(this, Observer {
