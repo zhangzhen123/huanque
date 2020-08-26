@@ -535,6 +535,12 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun hideFloating(event : HideFloatingEvent){
+        FloatingManager.hideFloatingView()
+    }
+
+
     override fun finish() {
         FloatingManager.hideFloatingView()
         super.finish()

@@ -267,6 +267,7 @@ class MessageFragment : BaseFragment() {
 
         mPlayerMessageViewModel.blockListData.observe(this, Observer {
             if (it != null) {
+                mMessageViewModel.blockListData = it
                 mAdapter.blockList = it
                 mAdapter.notifyDataSetChanged()
             }
@@ -291,7 +292,7 @@ class MessageFragment : BaseFragment() {
         })
     }
 
-    private fun showEmptyView(){
+    private fun showEmptyView() {
         pageView.showEmpty(
             false,
             R.mipmap.icon_default_empty,

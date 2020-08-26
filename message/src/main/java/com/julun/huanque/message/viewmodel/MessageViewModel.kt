@@ -62,6 +62,9 @@ class MessageViewModel : BaseViewModel() {
     //直播间内标识位
     var player = false
 
+    //免打扰列表
+    var blockListData: MutableList<String>? = null
+
     /**
      * 删除会话
      */
@@ -222,6 +225,12 @@ class MessageViewModel : BaseViewModel() {
      * @param stranger 消息是否是陌生人发送
      */
     fun refreshConversation(targerId: String, stranger: Boolean) {
+        //判断是否处于免打扰列表当中
+        if (blockListData?.contains(targerId) == true) {
+            //免打扰会话发送过来的消息
+            return
+        }
+
         RongIMClient.getInstance()
             .getConversation(Conversation.ConversationType.PRIVATE, targerId, object : RongIMClient.ResultCallback<Conversation>() {
                 override fun onSuccess(p0: Conversation?) {

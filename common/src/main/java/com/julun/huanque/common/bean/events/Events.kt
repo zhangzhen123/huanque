@@ -76,8 +76,8 @@ class FoldStrangerMessageEvent()
  * @param stranger 陌生人状态
  * @param follow 关注状态
  */
-class UserInfoChangeEvent(val userId: Long = 0L, val stranger: Boolean = false,val follow: String = "") : Serializable{
-    constructor(userId: Long = 0L, stranger: Boolean = false) : this(userId,stranger,"")
+class UserInfoChangeEvent(val userId: Long = 0L, val stranger: Boolean = false, val follow: String = "") : Serializable {
+    constructor(userId: Long = 0L, stranger: Boolean = false) : this(userId, stranger, "")
 }
 
 
@@ -154,3 +154,8 @@ class QueryUnreadCountEvent(var player: Boolean)
 class UnreadCountEvent(var unreadCount: Int, var player: Boolean)
 
 class ImagePositionEvent(var position: Int)
+
+/**
+ * 关闭悬浮窗事件
+ */
+class HideFloatingEvent() : Serializable
