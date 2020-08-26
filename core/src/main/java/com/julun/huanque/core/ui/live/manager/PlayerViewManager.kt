@@ -1164,12 +1164,12 @@ class PlayerViewManager(val context: PlayerActivity) {
                 )
             )
 
-            val notify = NotifyManager.checkNotifyPeriodical(context)
+//            val notify = NotifyManager.checkNotifyPeriodical(context)
             //不提醒时才弹成功
-            if (!notify) {
+//            if (!notify) {
                 //关注成功提示
 //                mDialogManager.openDialog(FollowSuccessFragment::class.java)
-            }
+//            }
 
         } else {
 //            ToastUtils.show(R.string.unsubscribe_success)

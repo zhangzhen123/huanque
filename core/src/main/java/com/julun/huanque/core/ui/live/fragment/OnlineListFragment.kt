@@ -102,7 +102,6 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
     override fun showLoadState(state: NetState) {
         when (state.state) {
             NetStateType.SUCCESS -> {
-                mHeadView.findViewById<View>(R.id.tvHeadBottom).hide()
                 adapter.removeEmptyView()
             }
             NetStateType.LOADING -> {
@@ -161,9 +160,10 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
 //                    activity?.startActivity<WebActivity>(
 //                        BusiConstant.WEB_URL to mRoyalUrl
 //                    )
-                    val bundle = Bundle()
-                    bundle.putLong("programId", mPlayerViewModel.programId)
-                    RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE, bundle)
+                    //不再跳转任何页面
+//                    val bundle = Bundle()
+//                    bundle.putLong("programId", mPlayerViewModel.programId)
+//                    RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE, bundle)
                 } else {
                     //打开用户卡片
                     mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel, nickname = item.nickname)
@@ -403,10 +403,10 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
         //展示贵宾列表
         listView?.adapter = mHeadAdapter
         mHeadAdapter.setList(data.royalHonorList)
-//        if (data.isPull && data.list.isEmpty()) {
-//            //普通列表为空那就把贵族列表title去除
-//            headBottom?.hide()
-//        }
+        if (data.isPull && data.list.isEmpty()) {
+            //普通列表为空那就把贵族列表title去除
+            headBottom?.hide()
+        }
 //        }
     }
 
@@ -447,13 +447,14 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 frameWidth = 74
             )
             if (!TextUtils.isEmpty(item.royalPic)) {
+                holder.setVisible(R.id.sdvItemRoyal, true)
                 ImageUtils.loadImageWithHeight_2(
                     holder.getView(R.id.sdvItemRoyal),
                     item.royalPic,
                     dp2px(16f)
                 )
             } else {
-                holder.setGone(R.id.sdvItemRoyal, false)
+                holder.setGone(R.id.sdvItemRoyal, true)
             }
             val rvBadgeList = holder.getView<RecyclerView>(R.id.rvItemList)
             rvBadgeList.layoutManager =

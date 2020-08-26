@@ -202,7 +202,7 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
 
                 // 榜单前3
                 if (position < 3) {
-                    holder.setVisible(R.id.rankImage, true).setGone(R.id.rankText, false)
+                    holder.setVisible(R.id.rankImage, true).setGone(R.id.rankText, true)
                         .setImageResource(R.id.rankImage, ImageHelper.getRankResId(position))
                 } else {
                     holder.getView<TextView>(R.id.rankText).setTFDINCondensedBold()
