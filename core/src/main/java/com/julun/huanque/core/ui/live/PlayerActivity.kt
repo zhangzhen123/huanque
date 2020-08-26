@@ -249,7 +249,7 @@ class PlayerActivity : BaseActivity() {
             isAnchor = intent.getBooleanExtra(UserType.Anchor, false)
             streamId = intent.getStringExtra(IntentParamKey.STREAM_ID.name)
             mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
-            if(mFrom != PlayerFrom.FloatWindow){
+            if (mFrom != PlayerFrom.FloatWindow) {
                 AliplayerManager.stop()
             }
 //            isFromSquare = intent.getBooleanExtra(FromPager.FROM_SQUARE, false)
@@ -742,6 +742,7 @@ class PlayerActivity : BaseActivity() {
     fun privatePoint(event: EventMessageBean) {
 //        liveViewManager.getUnReadMessageCount()
         playerMessageViewModel.queryRongPrivateCount(event.targetId)
+        playerMessageViewModel.needRefreshConversationFlag.value = event
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1953,7 +1954,7 @@ class PlayerActivity : BaseActivity() {
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
             }
             val baseData = viewModel.baseData.value
-            if (PermissionUtils.checkFloatPermission(this) && baseData != null) {
+            if (PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
                 FloatingManager.showFloatingView(
                     GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
                     viewModel.programId,

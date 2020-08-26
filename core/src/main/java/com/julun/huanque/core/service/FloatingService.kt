@@ -33,6 +33,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.anko.dip
+import java.lang.Exception
 
 
 /**
@@ -224,7 +225,11 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         UserHeartManager.setProgramId(null)
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                Requests.create(LiveRoomService::class.java).leave(ProgramIdForm(mProgramId)).dataConvert()
+                try {
+                    Requests.create(LiveRoomService::class.java).leave(ProgramIdForm(mProgramId)).dataConvert()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
         if (windowManager != null && display != null) {

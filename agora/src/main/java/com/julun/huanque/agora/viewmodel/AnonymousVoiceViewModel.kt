@@ -7,6 +7,7 @@ import com.julun.huanque.common.bean.beans.CheckBeansData
 import com.julun.huanque.common.bean.beans.FollowResultBean
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.bean.events.SendRNEvent
+import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.InviteUserIdForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm
@@ -210,6 +211,7 @@ class AnonymousVoiceViewModel : BaseViewModel() {
                 val follow = socialService.follow(FriendIdForm(userId)).dataConvert()
                 val followBean = FollowResultBean(follow = follow.follow, userId = userId)
                 followStatusData.value = followBean
+                EventBus.getDefault().post(UserInfoChangeEvent(userId,follow.stranger))
                 EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
             }, {
 

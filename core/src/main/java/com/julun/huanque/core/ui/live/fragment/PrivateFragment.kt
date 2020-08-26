@@ -5,6 +5,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LifecycleEventObserver
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.BottomActionBean
@@ -26,24 +27,52 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class PrivateFragment : BaseDialogFragment() {
 
+    private var messageFragment: Fragment? = null
     override fun getLayoutId() = R.layout.fragment_private
 
     override fun initViews() {
         val bundle = Bundle()
         bundle.putBoolean(ParamConstant.PLAYER, true)
-        val messageFragment = ARouter.getInstance().build(ARouterConstant.MessageFragment).with(bundle).navigation() as? Fragment
+        messageFragment = ARouter.getInstance().build(ARouterConstant.MessageFragment).with(bundle).navigation() as? Fragment
 
+
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        setDialogSize(Gravity.BOTTOM, ViewGroup.LayoutParams.MATCH_PARENT, 480)
+        showFragment()
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        removeFragment()
+    }
+
+    /**
+     * 移除Fragment
+     */
+    private fun removeFragment() {
+        val transaction = childFragmentManager.beginTransaction()
+        messageFragment?.let {
+            transaction.remove(it)
+        }
+        transaction.commitAllowingStateLoss()
+        childFragmentManager.executePendingTransactions()
+    }
+
+    /**
+     * 显示Fragment
+     */
+    private fun showFragment() {
         val transaction = childFragmentManager.beginTransaction()
         messageFragment?.let {
             transaction.add(R.id.frame, it)
         }
         transaction.commitAllowingStateLoss()
         childFragmentManager.executePendingTransactions()
-
     }
 
-    override fun onStart() {
-        super.onStart()
-        setDialogSize(Gravity.BOTTOM, ViewGroup.LayoutParams.MATCH_PARENT, 480)
-    }
 }
