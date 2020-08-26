@@ -187,3 +187,8 @@ data class UserSecurityInfo(
  * 余额使用
  */
 data class BeansData(var beans: Long = 0) : Serializable
+
+
+data class DestroyAccountResult(
+    var message: String? = null
+)

@@ -80,13 +80,11 @@ class SettingActivity : BaseActivity() {
             MyAlertDialog(this).showAlertWithOKAndCancel(
                 "退出登录后将无法收到TA的消息了，确定退出吗？",
                 MyAlertDialog.MyDialogCallback(onRight = {
-                    LoginManager.doLoginOut {
-                        if (it) {
-                            //退出登录成功
-                            val intent = Intent(this, LoginActivity::class.java)
-                            startActivity(intent)
-                        }
-                    }
+                    LoginManager.doLoginOut({
+                        //退出登录成功
+                        val intent = Intent(this, LoginActivity::class.java)
+                        startActivity(intent)
+                    })
                 }, onCancel = {
                 }), "退出提示", "确定"
             )

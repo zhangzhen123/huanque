@@ -39,6 +39,8 @@ object BusiConstant {
 
     //广场封面大小
     const val OSS_350 = "!350"
+
+    var DESTROY_ACCOUNT_RESULT_CODE = 502 //注销账号result_code
 }
 
 /**
@@ -832,6 +834,7 @@ object PlayerFrom {
     const val FlowerRank = "FlowerRank"
 
     const val RN = "RN"
+    const val DESTROY_ACCOUNT = "destroyAccount"
 }
 
 /**

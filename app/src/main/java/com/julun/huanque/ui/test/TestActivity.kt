@@ -126,11 +126,12 @@ class TestActivity : BaseActivity() {
             ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
         }
         tv_clear_session.onClickNew {
-            LoginManager.doLoginOut {
-                if (it) {
-                    logger.info("退出登录成功")
-                }
-            }
+            LoginManager.doLoginOut(success = {
+                logger.info("退出登录成功 ${Thread.currentThread()}")
+                tv_clear_session.text = "退出登录成功"
+            },error = {
+                logger.info("退出登录失败了 ${Thread.currentThread()}")
+            })
         }
         report.onClickNew {
             val extra = Bundle()
@@ -198,7 +199,8 @@ class TestActivity : BaseActivity() {
 //                    headPic="user/head/b0295e5d-5c2d-45a8-928f-5333c880f489.jpg"
 //                }
 //            ).navigation()
-            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY).withString(IntentParamKey.TYPE.name, ShareFromModule.Invite).navigation()
+            ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY)
+                .withString(IntentParamKey.TYPE.name, ShareFromModule.Invite).navigation()
         }
 
         btn_usercard.onClickNew {
@@ -211,9 +213,9 @@ class TestActivity : BaseActivity() {
             dialog.show(supportFragmentManager, "CardManagerDialogFragment")
         }
         val spannableString = DraweeSpanStringBuilder("1234567一句带彩虹屁的文本还带动效一句带彩虹色的文本还带动效 WWWWAAAA243555")
-        val start=10
+        val start = 10
         val end = 20
-        val span= AnimatedRainbowSpan()
+        val span = AnimatedRainbowSpan()
         spannableString.setSpan(span, start, end, 0)
         spannableString.setImageSpan(this, R.mipmap.intimate_level_1, 3, 3, dp2px(30), dp2px(16))
         spannableString.setImageSpan(this, R.mipmap.anim_living, 5, 5, dp2px(30), dp2px(16))
@@ -235,24 +237,28 @@ class TestActivity : BaseActivity() {
 
         spannableString.setDraweeSpanChangedListener { builder ->
             logger.info("setDraweeSpanChangedListener")
-            text_rainbow.setDraweeSpanStringBuilder(builder) }
+            text_rainbow.setDraweeSpanStringBuilder(builder)
+        }
     }
+
     private val ANIMATED_COLOR_SPAN_FLOAT_PROPERTY: Property<AnimatedRainbowSpan, Float> =
         object : Property<AnimatedRainbowSpan, Float>(
             Float::class.java, "ANIMATED_COLOR_SPAN_FLOAT_PROPERTY"
         ) {
             override operator fun set(span: AnimatedRainbowSpan, value: Float) {
-                span.translateXPercentage=value
+                span.translateXPercentage = value
             }
 
             override operator fun get(span: AnimatedRainbowSpan): Float {
                 return span.translateXPercentage
             }
         }
+
     override fun onSaveInstanceState(outState: Bundle) {
         logger.info("onSaveInstanceState=${outState}")
         super.onSaveInstanceState(outState)
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         logger("onActivityResult")
