@@ -12,6 +12,7 @@ import com.julun.huanque.common.helper.RunOnMainSchedulerTransformer
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.CancelableObservableSubscriber
+import com.julun.huanque.common.utils.LoginStatusUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.reflect.ClassInfo
@@ -31,6 +32,7 @@ import java.util.*
 private const val MSG_DATA_FAILURE = "未能正确的获取数据"
 private const val REQUEST_RETURN_TYPE_DEF_ERROR = -200
 const val OTHER_DEF_ERROR = -100//其他错误各种报错异常
+
 //给各个 接口添加扩展方法
 private fun <T> Observable<Root<T>>.afterRequest(intArray: IntArray? = null): Observable<T> = this.map {
     return@map mapper(it, intArray)
@@ -114,6 +116,7 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
             if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
                 RongCloudManager.logout()
             }
+            LoginStatusUtils.logout()
             //跳转登录页面
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         }

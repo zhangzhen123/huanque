@@ -10,14 +10,10 @@ import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.MessageCustomBeanType
-import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.sortList
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
 import io.rong.imlib.RongIMClient
@@ -29,7 +25,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
-import kotlin.math.max
 
 /**
  *@创建者   dong
@@ -37,6 +32,8 @@ import kotlin.math.max
  *@描述 会话列表ViewModel
  */
 class MessageViewModel : BaseViewModel() {
+    //获取数据的标记位
+    val queryDataFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //会话列表
     val conversationListData: MutableLiveData<MutableList<LocalConversation>> by lazy { MutableLiveData<MutableList<LocalConversation>>() }
@@ -64,6 +61,9 @@ class MessageViewModel : BaseViewModel() {
 
     //免打扰列表
     var blockListData: MutableList<String>? = null
+
+    //获取免打扰列表成功之后，需要获取会话列表的标识位
+    var needQueryConversation = false
 
     /**
      * 删除会话
@@ -115,6 +115,10 @@ class MessageViewModel : BaseViewModel() {
      * 获取本地会话列表
      */
     fun getConversationList() {
+        if (blockListData == null) {
+            needQueryConversation = true
+            return
+        }
         RongIMClient.getInstance().getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(p0: List<Conversation>?) {
 //                if (!mStranger && !player) {
@@ -415,8 +419,11 @@ class MessageViewModel : BaseViewModel() {
                                     strangerLastestTime = it.conversation.sentTime
                                     targetName = it.showUserInfo?.nickname ?: ""
                                 }
-                                strangerUnreadCount += it.conversation.unreadMessageCount
-                                strangerList.add(it)
+                                if (blockListData?.contains(it.conversation.targetId) != true) {
+                                    //不是免打扰消息
+                                    strangerUnreadCount += it.conversation.unreadMessageCount
+                                    strangerList.add(it)
+                                }
                             }
                         }
                         //插入陌生人item

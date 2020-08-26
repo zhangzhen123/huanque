@@ -486,7 +486,7 @@ class MainActivity : BaseActivity() {
         })
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")
         if (event.result) {
@@ -536,7 +536,7 @@ class MainActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun hideFloating(event : HideFloatingEvent){
+    fun hideFloating(event: HideFloatingEvent) {
         FloatingManager.hideFloatingView()
     }
 

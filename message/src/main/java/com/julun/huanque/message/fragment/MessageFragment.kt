@@ -3,13 +3,11 @@ package com.julun.huanque.message.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.events.*
@@ -35,7 +33,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.topPadding
-import kotlin.math.log
 
 /**
  *@创建者   dong
@@ -98,16 +95,7 @@ class MessageFragment : BaseFragment() {
             //设置头部边距
             msg_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         }
-        pageView.showLoading()
-        mMessageViewModel.getConversationList()
-        if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
-            //融云已经连接
-            //查询会话列表和免打扰列表
-            mPlayerMessageViewModel.getBlockedConversationList()
-        } else {
-            showEmptyView()
-        }
-
+        mMessageViewModel.queryDataFlag.value = true
     }
 
 
@@ -225,6 +213,21 @@ class MessageFragment : BaseFragment() {
      * 初始化ViewModel
      */
     private fun initViewModel() {
+        mMessageViewModel.queryDataFlag.observe(this, Observer {
+            if (it == true) {
+                pageView.showLoading()
+                if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
+                    //融云已经连接
+                    //查询会话列表和免打扰列表
+                    mPlayerMessageViewModel.getBlockedConversationList()
+                    mMessageViewModel.getConversationList()
+                }
+//                else {
+//                    logger.info("Message 融云未连接 ${RongIMClient.getInstance().currentConnectionStatus}")
+//                    showEmptyView()
+//                }
+            }
+        })
         mMessageViewModel.conversationListData.observe(this, Observer {
             if (it != null) {
 //                mAdapter.setNewData(it)
@@ -268,6 +271,9 @@ class MessageFragment : BaseFragment() {
         mPlayerMessageViewModel.blockListData.observe(this, Observer {
             if (it != null) {
                 mMessageViewModel.blockListData = it
+                if(mMessageViewModel.needQueryConversation){
+                    mMessageViewModel.getConversationList()
+                }
                 mAdapter.blockList = it
                 mAdapter.notifyDataSetChanged()
             }
@@ -361,12 +367,16 @@ class MessageFragment : BaseFragment() {
         mMessageViewModel.userInfoUpdate(bean)
     }
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loginChange(event: LoginEvent) {
         if (!event.result) {
             //退出登录，清空会话列表
             mMessageViewModel.conversationListData.value = null
             mAdapter.setNewInstance(null)
+        } else {
+            //登录成功，重新获取数据
+            mMessageViewModel.queryDataFlag.value = true
         }
     }
 
@@ -374,9 +384,7 @@ class MessageFragment : BaseFragment() {
     fun connectSuccess(event: RongConnectEvent) {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，加载数据
-            pageView.showLoading()
-            mPlayerMessageViewModel.getBlockedConversationList()
-            mMessageViewModel.getConversationList()
+            mMessageViewModel.queryDataFlag.value = true
         }
     }
 
