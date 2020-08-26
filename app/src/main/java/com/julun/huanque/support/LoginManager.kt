@@ -24,8 +24,10 @@ import com.julun.huanque.common.net.services.UserService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
@@ -198,24 +200,40 @@ object LoginManager {
         RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
     }
 
-    fun doLoginOut(callback: (Boolean) -> Unit) {
+    fun doLoginOut(success: () -> Unit, error: NError? = null) {
         GlobalScope.launch {
             kotlin.runCatching {
                 /*  val result = */userService.logout().dataConvert()
-                SessionUtils.clearSession()
-                UserHeartManager.stopBeat()
-                if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED)
-                    RongCloudManager.logout { callback(true) }
-                else {
-                    callback(true)
+                launch(Dispatchers.Main) {
+                    loginOutSuccess(success, error)
                 }
                 EventBus.getDefault().post(LoginEvent(false))
             }.onFailure {
                 it.printStackTrace()
-                callback(false)
+                launch(Dispatchers.Main) {
+                    error?.invoke(it)
+                }
             }
         }
 
+    }
+
+    /**
+     * 退出登录成功 清除数据 断开心跳 以及断开融云
+     * 注销成功也是执行这个
+     */
+    fun loginOutSuccess(success: () -> Unit, error: NError? = null) {
+        try {
+            SessionUtils.clearSession()
+            UserHeartManager.stopBeat()
+            if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED)
+                RongCloudManager.logout { success() }
+            else {
+                success()
+            }
+        } catch (e: Exception) {
+            error?.invoke(e)
+        }
     }
 
     /**

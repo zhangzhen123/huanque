@@ -526,13 +526,11 @@ class MainActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loginOut(event: LoginOutEvent) {
         //登录通知
-        LoginManager.doLoginOut {
-            if (it) {
-                //退出登录成功
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-            }
-        }
+        LoginManager.doLoginOut({
+            //退出登录成功
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        })
     }
 
     override fun finish() {

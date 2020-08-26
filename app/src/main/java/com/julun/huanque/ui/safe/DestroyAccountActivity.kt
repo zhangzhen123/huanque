@@ -71,12 +71,12 @@ class DestroyAccountActivity : BaseVMActivity<DestroyAccountModel>() {
         mViewModel.applyResult.observe(this, Observer {
             if (it != null && it.isSuccess()) {
                 //
-                LoginManager.doLoginOut {
+                LoginManager.loginOutSuccess({
                     toast("账号注销成功")
                     setResult(BusiConstant.DESTROY_ACCOUNT_RESULT_CODE)
                     startActivity<LoginActivity>()
                     finish()
-                }
+                })
 
             } else if (it.state == NetStateType.ERROR) {
                 val error = it.error ?: return@Observer

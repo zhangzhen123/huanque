@@ -170,6 +170,6 @@ interface UserService {
      * 注销账号
      */
     @POST("user/acct/login/destroyAccount")
-    suspend fun destroyAccount(@Body form: EmptyForm = EmptyForm()): Root<DestroyAccountResult>
+    suspend fun destroyAccount(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
 
 }
