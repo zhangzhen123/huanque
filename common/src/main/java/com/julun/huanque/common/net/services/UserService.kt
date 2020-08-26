@@ -163,6 +163,13 @@ interface UserService {
      * 获取账户余额
      */
     @POST("user/acct/info/beans")
-    suspend fun beans(@Body form: EmptyForm = EmptyForm()) : Root<BeansData>
+    suspend fun beans(@Body form: EmptyForm = EmptyForm()): Root<BeansData>
+
+
+    /**
+     * 注销账号
+     */
+    @POST("user/acct/login/destroyAccount")
+    suspend fun destroyAccount(@Body form: EmptyForm = EmptyForm()): Root<DestroyAccountResult>
 
 }

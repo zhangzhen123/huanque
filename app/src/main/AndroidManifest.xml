@@ -90,6 +90,8 @@
         <activity
             android:name=".activity.PrivacyActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.safe.DestroyAccountActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
