@@ -460,6 +460,7 @@
                         android:layout_marginLeft="@dimen/dimen_6"
                         android:layout_marginEnd="@dimen/dimen_6"
                         android:layout_marginRight="@dimen/dimen_6"
+                        app:actualImageScaleType="fitCenter"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_royal_level"
                         app:layout_constraintRight_toLeftOf="@+id/iv_royal_forward"
                         app:layout_constraintTop_toTopOf="@+id/iv_royal_level" />
@@ -537,6 +538,7 @@
                         android:layout_marginEnd="@dimen/dimen_6"
                         android:layout_marginRight="@dimen/dimen_6"
                         android:visibility="gone"
+                        app:actualImageScaleType="fitCenter"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_author_level"
                         app:layout_constraintRight_toLeftOf="@+id/iv_author_forward"
                         app:layout_constraintTop_toTopOf="@+id/iv_author_level"
