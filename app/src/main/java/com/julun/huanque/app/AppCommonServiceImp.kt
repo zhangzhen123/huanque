@@ -22,14 +22,6 @@ class AppCommonServiceImpl : AppCommonService {
     override fun activityResultCallBack(requestCode: Int, resultCode: Int, data: Intent?) {
     }
 
-    override fun getExternalChannel(): String {
-        return "channel"
-    }
-
-    override fun getInnerChannel(): String {
-        return "channel"
-    }
-
     override fun loginSuccess(session: Session) {
         logger("登录成功的通知回调 id=${session.userId}")
         //绑定极光

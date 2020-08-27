@@ -32,17 +32,6 @@ interface AppCommonService : IProvider {
      */
     fun activityResultCallBack(requestCode: Int, resultCode: Int, data: Intent?)
 
-
-    /**
-     * 外部渠道号
-     */
-    fun getExternalChannel(): String
-
-    /**
-     * 内部渠道号
-     */
-    fun getInnerChannel(): String
-
     /**
      * 登录成功
      */
