@@ -33,6 +33,7 @@ import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
+import com.julun.huanque.core.manager.AliplayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.rnlib.RNPageActivity
@@ -80,17 +81,21 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 logger.info("start 总长=${audioPlayerManager.getDuration()}")
                 //不使用实际的值
 //                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
+                AliplayerManager.soundOff()
             }
 
             override fun resume() {
                 logger.info("resume")
+                AliplayerManager.soundOff()
             }
             override fun pause() {
                 logger.info("pause")
+                AliplayerManager.soundOn()
             }
 
             override fun stop() {
                 logger.info("stop")
+                AliplayerManager.soundOn()
             }
 
 

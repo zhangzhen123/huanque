@@ -322,8 +322,8 @@ open class LivePlayerFragment : BaseFragment() {
      * 根据数据进行播放
      */
     private fun playByInfo(playInfo: PlayInfo, videoView: SingleVideoView) {
-        videoView.play(GlobalUtils.getPlayUrl(playInfo), videoView == mMainVideoView)
-//        videoView.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/24288", videoView == mMainVideoView)
+//        videoView.play(GlobalUtils.getPlayUrl(playInfo), videoView == mMainVideoView)
+        videoView.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/12457", videoView == mMainVideoView)
     }
 
     /**

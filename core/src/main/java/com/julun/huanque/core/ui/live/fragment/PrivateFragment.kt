@@ -46,8 +46,8 @@ class PrivateFragment : BaseDialogFragment() {
     }
 
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onStop() {
+        super.onStop()
         removeFragment()
     }
 
