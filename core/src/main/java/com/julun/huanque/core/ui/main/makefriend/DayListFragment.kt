@@ -179,6 +179,7 @@ class DayListFragment(val type: String) : BaseFragment() {
      */
     private fun showDefaultView() {
         ImageHelper.setDefaultHeaderPic(sdv_header, SessionUtils.getSex())
+        sdv_header.loadImage("${SessionUtils.getHeaderPic()}${BusiConstant.OSS_160}", 46f, 46f)
         tv_num.text = "-"
         tv_nickname.text = SessionUtils.getNickName()
         tv_num.setTFDINCondensedBold()
