@@ -13,6 +13,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.svga.SVGAHelper
 import com.opensource.svgaplayer.*
@@ -123,7 +124,12 @@ open class SVGAPlayerView : androidx.appcompat.widget.AppCompatImageView {
         animator?.removeAllListeners()
         animator?.removeAllUpdateListeners()
     }
-
+    //新增在view再次添加进窗口时重新启动动画
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        logger("onAttachedToWindow")
+        startAnimation()
+    }
     private fun loadAttrs(attrs: AttributeSet) {
         if(isInEditMode){
             return

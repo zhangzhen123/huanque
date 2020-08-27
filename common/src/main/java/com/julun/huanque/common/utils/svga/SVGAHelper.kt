@@ -15,6 +15,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 import okhttp3.*
+import retrofit2.http.Url
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -147,6 +148,23 @@ object SVGAHelper {
 
     }
 
+    /**
+     * 传入的url 网络请求的解析 不使用内存缓存 （对于同一个svga同时多个view播放时 不能使用缓存 否则只会有一个播放）
+     */
+    fun parseNoCache(url: String, callback: SVGAParser.ParseCompletion) {
+
+        parser.parse(URL(url), object : SVGAParser.ParseCompletion {
+            override fun onComplete(videoItem: SVGAVideoEntity) {
+                callback.onComplete(videoItem)
+            }
+            override fun onError() {
+                callback.onError()
+            }
+
+        })
+
+    }
+
     //总的调用入口
     fun startParse(url: String, callback: SVGAParser.ParseCompletion) {
         if (url.startsWith("http://") || url.startsWith("https://")) {
@@ -244,9 +262,10 @@ object SVGAHelper {
             override fun resume(url: URL, complete: Function1<InputStream, Unit>, failure: Function1<Exception, Unit>) {
 
                 val cacheBuild = CacheControl.Builder()
-                        .maxAge(60, TimeUnit.DAYS).build()
+                    .maxAge(60, TimeUnit.DAYS).build()
                 val request = Request.Builder().cacheControl(
-                        cacheBuild).url(url).get().build()
+                    cacheBuild
+                ).url(url).get().build()
                 client.newCall(request).enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         e.printStackTrace()
@@ -255,7 +274,7 @@ object SVGAHelper {
 
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
-                        logger.info("cacheResponse:" + response.cacheResponse() + "networkResponse:" + response.networkResponse())
+//                        logger.info("cacheResponse:" + response.cacheResponse() + "networkResponse:" + response.networkResponse())
                         if (response.body() != null)
                             complete(response.body()!!.byteStream())
                     }
