@@ -105,7 +105,7 @@ class TargetUserObj(
     //本地图片地址（图片消息使用）
     var localPic: String = "",
     //是否是陌生人
-    var stranger: Boolean = false
+    var stranger: String = ""
 )
 
 /**

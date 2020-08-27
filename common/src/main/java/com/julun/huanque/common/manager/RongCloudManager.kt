@@ -261,7 +261,7 @@ object RongCloudManager {
         conversationType: Conversation.ConversationType,
         customType: String,
         customBean: Any,
-        unreadCount : Boolean = false
+        unreadCount: Boolean = false
     ) {
         val messageContent = CustomSimulateMessage.obtain().apply {
             type = customType
@@ -297,9 +297,9 @@ object RongCloudManager {
         }
         if (senderId == targetId) {
             //插入接收消息
-            val receivedStatus = if(unreadCount){
+            val receivedStatus = if (unreadCount) {
                 Message.ReceivedStatus(0)
-            }else{
+            } else {
                 Message.ReceivedStatus(1)
             }
             RongIMClient.getInstance()
@@ -325,7 +325,8 @@ object RongCloudManager {
 //                    switchThread(message)
 //                }
                 if (message != null) {
-                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
+                    EventBus.getDefault()
+                        .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
                 }
             }
 
@@ -458,7 +459,8 @@ object RongCloudManager {
             override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
                 if (message != null) {
 //                    switchThread(message)
-                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
+                    EventBus.getDefault()
+                        .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
                 }
                 OssUpLoadManager.uploadFiles(arrayListOf(targetUserObj.localPic), OssUpLoadManager.MESSAGE_PIC) { code, list ->
                     if (code == OssUpLoadManager.CODE_SUCCESS) {
@@ -567,7 +569,8 @@ object RongCloudManager {
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
                     if (message != null) {
-                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
+                        EventBus.getDefault()
+                            .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
                     }
                 }
 
@@ -650,7 +653,8 @@ object RongCloudManager {
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
                     if (message != null) {
-                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
+                        EventBus.getDefault()
+                            .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
                     }
                 }
 
@@ -817,8 +821,8 @@ object RongCloudManager {
                     e.printStackTrace()
                 }
                 if (message.conversationType == Conversation.ConversationType.CHATROOM) {
-                        //直播间聊天室的消息
-                        MessageReceptor.putTextMessageWithData(bean)
+                    //直播间聊天室的消息
+                    MessageReceptor.putTextMessageWithData(bean)
                 } else if (message.conversationType == Conversation.ConversationType.PRIVATE) {
                     bean.privateMessage = true
                     MessageProcessor.processPrivateTextMessageOnMain(message)

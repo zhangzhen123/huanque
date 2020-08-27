@@ -26,6 +26,7 @@ import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserInfo
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.init.CommonInit
@@ -242,7 +243,7 @@ object GlobalUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return user?.targetUserObj?.stranger ?: false
+        return getStrangerBoolean(user?.targetUserObj?.stranger ?: "")
     }
 
 
@@ -269,7 +270,7 @@ object GlobalUtils {
         myClipboard.setPrimaryClip(ClipData.newPlainText("text", text))
         if (attentionContent.isNotEmpty()) {
 //            ToastUtils.showCustom(attentionContent, Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL or Gravity.BOTTOM)
-            Toast.makeText(context,attentionContent,Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, attentionContent, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -420,7 +421,7 @@ object GlobalUtils {
                     userId = user.targetUserObj?.userId ?: 0
                     //用户性别
                     sex = user.targetUserObj?.sex ?: ""
-                    stranger = user.targetUserObj?.stranger ?: false
+                    stranger = getStrangerBoolean(user.targetUserObj?.stranger ?: "")
                 }
             } else {
                 //对方发送消息
@@ -434,7 +435,7 @@ object GlobalUtils {
                     userId = user.senderId
                     //用户性别
                     sex = user.sex
-                    stranger = user.targetUserObj?.stranger ?: false
+                    stranger = getStrangerBoolean(user.targetUserObj?.stranger ?: "")
                 }
             }
 
@@ -442,7 +443,7 @@ object GlobalUtils {
         return currentUser
     }
 
-    fun getEarphoneLinkStatus() : Boolean{
+    fun getEarphoneLinkStatus(): Boolean {
         val am = CommonInit.getInstance().getCurrentActivity()?.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
         am?.mode = AudioManager.MODE_IN_COMMUNICATION
 //获取当前使用的麦克风，设置媒体播放麦克风
@@ -476,5 +477,22 @@ object GlobalUtils {
             return false
         }
     }
+
+    /**
+     * 获取陌生人String状态
+     */
+    fun getStrangerString(stranger: Boolean): String {
+        if (stranger) {
+            return BusiConstant.True
+        } else {
+            return BusiConstant.False
+        }
+    }
+
+    /**
+     * 获取陌生人Boolean状态
+     */
+    fun getStrangerBoolean(stranger: String) = stranger == BusiConstant.True
+
 
 }

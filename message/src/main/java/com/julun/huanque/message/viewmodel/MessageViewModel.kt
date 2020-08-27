@@ -14,6 +14,7 @@ import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
 import io.rong.imlib.RongIMClient
@@ -480,7 +481,7 @@ class MessageViewModel : BaseViewModel() {
                     userId = user.targetUserObj?.userId ?: 0
                     //用户性别
                     sex = user.targetUserObj?.sex ?: ""
-                    stranger = user.targetUserObj?.stranger ?: false
+                    stranger = GlobalUtils.getStrangerBoolean(user.targetUserObj?.stranger ?: "")
                 }
             } else {
                 //对方发送消息
@@ -494,7 +495,7 @@ class MessageViewModel : BaseViewModel() {
                     userId = user.senderId
                     //用户性别
                     sex = user.sex
-                    stranger = user.targetUserObj?.stranger ?: false
+                    stranger = GlobalUtils.getStrangerBoolean(user.targetUserObj?.stranger ?: "")
                 }
             }
 

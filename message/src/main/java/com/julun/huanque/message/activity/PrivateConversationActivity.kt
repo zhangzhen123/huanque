@@ -1437,7 +1437,7 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.basicBean?.value?.intimate?.intimateLevel ?: 0
             meetStatus = targetChatInfo.meetStatus
             userId = targetChatInfo.userId
-            stranger = targetChatInfo.stranger
+            stranger = GlobalUtils.getStrangerString(targetChatInfo.stranger)
         }
 
         if (targetChatInfo.userId == SessionUtils.getUserId()) {
