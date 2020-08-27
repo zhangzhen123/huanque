@@ -373,6 +373,12 @@ class MessageViewModel : BaseViewModel() {
                                 }
                             }
                         }
+                        currentUser?.let { user ->
+                            withContext(Dispatchers.IO) {
+                                //将数据保存到数据库一份
+                                HuanQueDatabase.getInstance().chatUserDao().insert(user)
+                            }
+                        }
                     }
 
                     if (currentUser?.stranger == true && add && !mStranger) {
@@ -646,7 +652,7 @@ class MessageViewModel : BaseViewModel() {
             }
         }
         //陌生人状态变动，更新数据库
-        updataStrangerData(bean.userId,bean.stranger)
+        updataStrangerData(bean.userId, bean.stranger)
     }
 
     /**

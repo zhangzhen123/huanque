@@ -21,6 +21,9 @@ object ParamConstant {
     //来源
     const val FROM = "FROM"
 
+    //分享用户ID
+    const val ShareUserId = "ShareUserId"
+
     //协议接口传递的数据使用的KEY
     const val AGREEMENT_BEAN = "AGREEMENT_BEAN"
 
