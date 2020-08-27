@@ -131,6 +131,9 @@ class PlayerActivity : BaseActivity() {
     //来源
     private var mFrom = ""
 
+    //分享用户Id
+    private var mShareUSerId = ""
+
     override fun getLayoutId(): Int = R.layout.activity_live_room
 
     // 视频直播
@@ -249,6 +252,7 @@ class PlayerActivity : BaseActivity() {
             isAnchor = intent.getBooleanExtra(UserType.Anchor, false)
             streamId = intent.getStringExtra(IntentParamKey.STREAM_ID.name)
             mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
+            mShareUSerId = intent.getStringExtra(ParamConstant.ShareUserId) ?: ""
             if (mFrom != PlayerFrom.FloatWindow) {
                 AliplayerManager.stop()
             }
@@ -809,7 +813,7 @@ class PlayerActivity : BaseActivity() {
 //                GIODataPool.fromType = null
 //                val positionIndex = GIODataPool.positionIndex
 //                GIODataPool.positionIndex = null
-                form = UserEnterRoomForm(programId, fromType = mFrom)
+                form = UserEnterRoomForm(programId, fromType = mFrom,shareUserId = mShareUSerId)
                 viewModel.enterLivRoom(form)
             }
         } else {
@@ -1023,6 +1027,9 @@ class PlayerActivity : BaseActivity() {
      * 登录成功之后重置页面，和数据不挂钩的页面
      */
     private fun resetView() {
+        //重置缓存数据
+        mFrom = ""
+        mShareUSerId = ""
         //清空缓存的消息ID
         RongCloudManager.cacheList.clear()
         // 移除加载层

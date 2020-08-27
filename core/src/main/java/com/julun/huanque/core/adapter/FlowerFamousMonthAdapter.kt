@@ -16,10 +16,7 @@ import com.julun.huanque.common.bean.beans.FamousUser
 import com.julun.huanque.common.bean.beans.SingleFamousMonth
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.ForceUtils
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.ImageUtils
-import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -31,6 +28,13 @@ import com.julun.rnlib.RnConstant
  */
 class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHolder>(R.layout.recycler_item_famous_month) {
 
+    //小头像的边框宽度
+    private val smallBorder = ((ScreenUtils.getScreenWidth() - dp2pxf(60 + 30)) / 3).toInt()
+
+    //间隔宽度
+    private val dividerWidth = dp2px(10)
+
+
     override fun convert(holder: BaseViewHolder, item: SingleFamousMonth) {
         val tvMonth = holder.getView<TextView>(R.id.tv_month)
         val month = item.month
@@ -41,12 +45,13 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
         }
         tvMonth.setTFDINCondensedBold()
         val recyclerViewInner = holder.getView<RecyclerView>(R.id.recyclerView_inner)
+        ViewUtils.updateViewWidth(recyclerViewInner, (smallBorder + dividerWidth) * 3)
         if (recyclerViewInner.adapter == null) {
             //未设置过Adapter
             recyclerViewInner.layoutManager = GridLayoutManager(context, 3)
             val headeView = LayoutInflater.from(context).inflate(R.layout.view_famous_header, null)
 
-            recyclerViewInner.adapter = FlowerFamousUserAdapter().apply {
+            recyclerViewInner.adapter = FlowerFamousUserAdapter((smallBorder + dividerWidth).toInt()).apply {
                 if (headeView != null) {
                     addHeaderView(headeView)
                 }
@@ -65,6 +70,8 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
             val tv_nickname_first = headerView.findViewById<TextView>(R.id.tv_nickname_first)
             val tv_day_first = headerView.findViewById<TextView>(R.id.tv_day_first)
             val view_border_first = headerView.findViewById<View>(R.id.view_border_first)
+
+            ViewUtils.updateViewBorder(sdv_first, (smallBorder * 2 + dividerWidth).toInt(), (smallBorder * 2 + dividerWidth).toInt())
 
             if (ForceUtils.isIndexNotOutOfBounds(0, dataList)) {
                 val firstData = dataList[0]
@@ -105,6 +112,7 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
             val tv_nickname_second = headerView.findViewById<TextView>(R.id.tv_nickname_second)
             val tv_day_second = headerView.findViewById<TextView>(R.id.tv_day_second)
             val view_border_second = headerView.findViewById<View>(R.id.view_border_second)
+            ViewUtils.updateViewBorder(sdv_second, smallBorder.toInt(), smallBorder.toInt())
             if (ForceUtils.isIndexNotOutOfBounds(1, dataList)) {
                 val secondData = dataList[1]
                 sdv_second.show()
@@ -144,6 +152,7 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
             val tv_nickname_third = headerView.findViewById<TextView>(R.id.tv_nickname_third)
             val tv_day_third = headerView.findViewById<TextView>(R.id.tv_day_third)
             val view_border_third = headerView.findViewById<View>(R.id.view_border_third)
+            ViewUtils.updateViewBorder(sdv_third, smallBorder.toInt(), smallBorder.toInt())
             if (ForceUtils.isIndexNotOutOfBounds(2, dataList)) {
                 val thirdData = dataList[2]
                 sdv_third.show()

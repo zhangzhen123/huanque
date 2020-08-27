@@ -28,12 +28,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_inner"
-        android:layout_width="330dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="15dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="1dp"
         android:overScrollMode="never"
         android:paddingBottom="24dp"
+        app:layout_constraintLeft_toRightOf="@id/view_line"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_month" />
 
@@ -41,12 +42,12 @@
         android:id="@+id/view_line"
         android:layout_width="4dp"
         android:layout_height="0px"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="18dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/bg_famous_line"
         app:layout_constraintBottom_toBottomOf="@+id/iv_circle_bottom"
-        app:layout_constraintRight_toLeftOf="@id/recyclerView_inner"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_month" />
 
     <ImageView
