@@ -675,6 +675,9 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         onInvisibleToUser();
+        if (mRNReLayoutStatus) {
+            removeCallbacks(measureAndLayout);
+        }
     }
 
     @Override
