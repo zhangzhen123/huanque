@@ -645,6 +645,8 @@ class MessageViewModel : BaseViewModel() {
                 }
             }
         }
+        //陌生人状态变动，更新数据库
+        updataStrangerData(bean.userId,bean.stranger)
     }
 
     /**
@@ -673,7 +675,7 @@ class MessageViewModel : BaseViewModel() {
                     hasStranger = true
                 }
             }
-            if (!hasStranger) {
+            if (!hasStranger && !mStranger) {
                 //没有陌生人消息会话，添加陌生人消息会话
                 val info = hashMapOf<String, String>()
 

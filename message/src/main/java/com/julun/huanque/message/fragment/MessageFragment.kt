@@ -340,8 +340,8 @@ class MessageFragment : BaseFragment() {
 
         tv_message_unread.onClickNew {
             activity?.let { act ->
-//                PrivateConversationActivity.newInstance(act, 20000516)
-                PrivateConversationActivity.newInstance(act, 10)
+                PrivateConversationActivity.newInstance(act, 20000751)
+//                PrivateConversationActivity.newInstance(act, 10)
             }
         }
 
@@ -372,6 +372,7 @@ class MessageFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun userInfoChangeEvent(bean: UserInfoChangeEvent) {
         //用户数据发生变化
+        logger.info("Message 关注状态变更 ${bean.stranger}")
         mMessageViewModel.userInfoUpdate(bean)
     }
 
