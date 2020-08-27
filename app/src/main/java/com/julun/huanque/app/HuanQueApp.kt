@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import cn.jiguang.verifysdk.api.JVerificationInterface
+import cn.jpush.android.api.JPushInterface
 import com.ishumei.smantifraud.SmAntiFraud
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.julun.huanque.BuildConfig
@@ -19,8 +20,11 @@ import com.julun.huanque.common.constant.MMKVConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.init.HuanQueInit
+import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.ui.cockroach.DebugSafeModeTipActivity
 import com.julun.jpushlib.TagAliasOperatorHelper
 import com.sina.weibo.sdk.openapi.IWBAPI
@@ -32,6 +36,7 @@ import com.wanjian.cockroach.CrashLog
 import com.wanjian.cockroach.ExceptionHandler
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 
 open class HuanQueApp : Application() {
@@ -53,9 +58,9 @@ open class HuanQueApp : Application() {
         MMKV.initialize(this)
         val baseUrl = if (BuildConfig.DEBUG) {
             val url = MMKV.defaultMMKV().decodeString(MMKVConstant.URL)
-            if(!TextUtils.isEmpty(url) && url?.startsWith("http") == true){
+            if (!TextUtils.isEmpty(url) && url?.startsWith("http") == true) {
                 url
-            }else{
+            } else {
                 BuildConfig.SERVICE_BASE_URL_DEV
             }
         } else {
@@ -71,24 +76,68 @@ open class HuanQueApp : Application() {
 //            /*一键登录相关*/
             JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
             JVerificationInterface.init(this)
-            try {
-                initShumei(this)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+//            try {
+//                initShumei(this)
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
         }
         if (AppHelper.isMainProcess(this)) {
-            CommonInit.getInstance().inSDK = false
-            HuanQueInit.getInstance().init(this)
-            CommonInit.getInstance().taskDispatcher
-                ?.addTask(JPushTask())
-                ?.addTask(TencentTask())
-
-            CommonInit.getInstance().taskDispatcher?.start()
-            CommonInit.getInstance().taskDispatcher?.await()
-            CommonInit.getInstance().taskDispatcher = null
+            initWithCoroutines()
+//            CommonInit.getInstance().inSDK = false
+//            HuanQueInit.getInstance().init(this)
+//            CommonInit.getInstance().taskDispatcher
+//                ?.addTask(JPushTask())
+//                ?.addTask(TencentTask())
+//
+//            CommonInit.getInstance().taskDispatcher?.start()
+//            CommonInit.getInstance().taskDispatcher?.await()
+//            CommonInit.getInstance().taskDispatcher = null
         }
 
+    }
+
+    /**
+     * 通过协程初始化各种内容
+     */
+    private fun initWithCoroutines() {
+        logger("initWithCoroutines start---${Thread.currentThread()}")
+        runBlocking {
+            logger("runBlocking start---${Thread.currentThread()}")
+            CommonInit.getInstance().inSDK = false
+            val init = async {
+                HuanQueInit.getInstance().init(this@HuanQueApp)
+//                CommonInit.getInstance().initWithCoroutines(this@HuanQueApp)
+            }
+
+            val jPush = async(Dispatchers.Default) {
+                logger("launch jPush---${Thread.currentThread()}")
+                JPushInterface.setDebugMode(BuildConfig.DEBUG)    // 设置开启日志,发布时请关闭日志
+                JPushInterface.init(this@HuanQueApp.applicationContext)            // 初始化 JPush
+                /*一键登录相关*/
+//        JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
+//        JVerificationInterface.init(mContext)
+            }
+            val tx = async(Dispatchers.Default) {
+                logger("launch weixin---${Thread.currentThread()}")
+                HuanQueApp.wxApi = WXApiManager.initWeiXin(this@HuanQueApp.applicationContext, BuildConfig.WX_APP_ID)
+            }
+            val shumei = async(Dispatchers.Default) {
+                try {
+                    logger("launch shumei---${Thread.currentThread()}")
+                    initShumei(this@HuanQueApp)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            init.await()
+            jPush.await()
+            tx.await()
+            shumei.await()
+            logger("runBlocking end---${Thread.currentThread()}")
+        }
+
+        logger("initWithCoroutines end---${Thread.currentThread()}")
     }
 
     private fun initBugly(app: Application) {
@@ -189,7 +238,7 @@ open class HuanQueApp : Application() {
                     toast.show()
                 }
 //                ToastUtils.show(R.string.attention_restart)
-                if(!BuildConfig.DEBUG){
+                if (!BuildConfig.DEBUG) {
                     //重启重启 延迟是为了commit执行完
                     Observable.timer(200, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
@@ -217,7 +266,7 @@ open class HuanQueApp : Application() {
 //        option.channel = channelId
         option.serverIdCallback = object : SmAntiFraud.IServerSmidCallback {
             override fun onSuccess(serverId: String?) {
-//                ULog.i("DXC  serverId = $serverId")
+                ULog.i("DXC  serverId = $serverId")
                 //分发成功
                 if (serverId?.isNotEmpty() == true && serverId != mDeviceId) {
                     //获取到新的serverId,更新给服务端

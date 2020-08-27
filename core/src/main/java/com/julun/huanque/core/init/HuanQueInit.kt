@@ -50,11 +50,12 @@ class HuanQueInit private constructor()  {
         return debug
     }
 
-    fun init(application: Application) {
+    suspend fun init(application: Application) {
         mContext = application
         if (AppHelper.isMainProcess(application)) {
 //            CommonInit.getInstance().setBaseUrlByMode(debug)
-            CommonInit.getInstance().init(application)
+//            CommonInit.getInstance().init(application)
+            CommonInit.getInstance().initWithCoroutines(application)
         }
     }
 
