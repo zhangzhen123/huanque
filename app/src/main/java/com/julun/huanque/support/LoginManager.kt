@@ -204,14 +204,14 @@ object LoginManager {
         GlobalScope.launch {
             kotlin.runCatching {
                 /*  val result = */userService.logout().dataConvert()
-                launch(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     loginOutSuccess(success, error)
                 }
                 LoginStatusUtils.logout()
                 EventBus.getDefault().postSticky(LoginEvent(false))
             }.onFailure {
                 it.printStackTrace()
-                launch(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     error?.invoke(it)
                 }
             }

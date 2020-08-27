@@ -55,7 +55,7 @@ object BalanceUtils {
     /**
      * 从服务端获取最新余额
      */
-    fun queryLastestBalance() {
+    fun queryLatestBalance() {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
                 val result = userService.beans().data ?: return@withContext
