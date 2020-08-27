@@ -873,3 +873,6 @@ object Agreement {
     //主播管理规范
     const val AnchorAgreement = "https://cdn.ihuanque.com/protocol/AnchorManage.html"
 }
+object MetaKey {
+    const val DOWNLOAD_CHANNEL = "UMENG_CHANNEL"//渠道链接  2018/2/26修改本地渠道链接标识DOWNLOAD_CHANNEL为UMENG_CHANNEL
+}

@@ -3,19 +3,15 @@ package com.julun.huanque.common.net.interceptors
 import android.os.Build
 import android.text.TextUtils
 import android.util.ArrayMap
-import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.interfaces.routerservice.AppCommonService
 import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.utils.device.DeviceUtils
-import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.utils.NetUtils
-import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.helper.ChannelCodeHelper
 import java.net.URLEncoder
 import java.util.*
 import kotlin.collections.ArrayList
@@ -83,15 +79,13 @@ object HeaderInfoHelper {
 //                map["c"] = BusiConstant.XinLiao
 //            }
         } else {
-            val jAppChannelCode = (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
-                .navigation() as? AppCommonService)?.getInnerChannel()
+            val jAppChannelCode = ChannelCodeHelper.getInnerChannel()
             if (jAppChannelCode?.isNotBlank() == true) {
                 map["c"] = "$jAppChannelCode"
             }
         }
 
-        val jExtraChannelCode = (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
-            .navigation() as? AppCommonService)?.getExternalChannel()
+        val jExtraChannelCode = ChannelCodeHelper.getExternalChannel()
         if (jExtraChannelCode?.isNotBlank() == true) {
             map["e"] = "$jExtraChannelCode"
         }
