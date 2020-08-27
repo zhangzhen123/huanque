@@ -489,11 +489,12 @@ class PlayerViewModel : BaseViewModel() {
 
     fun refreshUserInfoData() {
         val roomForm = UserEnterRoomForm(programId)
-        //todo
-//        liveService.getRoomUserInfo(roomForm)
-//            .handleResponse(makeSubscriber {
-//                userInfo.value = it
-//            })
+        viewModelScope.launch {
+            request({
+                val result = liveService.getRoomUserInfo(roomForm).dataConvert()
+                userInfo.value = result
+            })
+        }
 
     }
 

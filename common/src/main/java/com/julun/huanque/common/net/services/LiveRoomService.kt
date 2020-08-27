@@ -107,7 +107,7 @@ interface LiveRoomService {
     @POST("live/room/consume/sendGift")
     suspend fun sendGift(@Body form: ConsumeForm): Root<SendGiftResult>
 
-    
+
     //===================================== 管理相关接口 start ======================================
     /**
      * 查询管理权限
@@ -125,7 +125,13 @@ interface LiveRoomService {
      * 离开直播间
      */
     @POST("live/room/info/leave")
-    suspend fun leave(@Body form : ProgramIdForm) : Root<VoidResult>
+    suspend fun leave(@Body form: ProgramIdForm): Root<VoidResult>
+
+    /**
+     * 刷新用户信息
+     */
+    @POST("live/room/info/refreshUser")
+    suspend fun getRoomUserInfo(@Body form: UserEnterRoomForm): Root<UserInfo>
 
     //===================================== 管理相关接口 end ========================================
 }

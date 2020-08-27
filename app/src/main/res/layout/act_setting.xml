@@ -30,7 +30,8 @@
                 android:layout_height="54dp"
                 android:background="@color/white"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -118,6 +119,7 @@
                 android:layout_width="0px"
                 android:layout_height="54dp"
                 android:background="@color/white"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_privacy" />
@@ -130,6 +132,7 @@
                 android:text="青少年模式"
                 android:textColor="@color/black_333"
                 android:textSize="@dimen/sp_16"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/view_juvenile"
                 app:layout_constraintLeft_toLeftOf="@id/view_juvenile"
                 app:layout_constraintTop_toTopOf="@id/view_juvenile" />
@@ -142,6 +145,7 @@
                 android:text="未设置"
                 android:textColor="@color/black_999"
                 android:textSize="@dimen/sp_14"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/view_juvenile"
                 app:layout_constraintRight_toRightOf="@id/view_juvenile"
                 app:layout_constraintTop_toTopOf="@id/view_juvenile" />
@@ -151,6 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
                 android:src="@mipmap/icon_arrow_msg_setting"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/view_juvenile"
                 app:layout_constraintRight_toRightOf="@id/view_juvenile"
                 app:layout_constraintTop_toTopOf="@id/view_juvenile" />
