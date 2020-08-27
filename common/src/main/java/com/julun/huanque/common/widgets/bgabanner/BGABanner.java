@@ -675,6 +675,9 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         onInvisibleToUser();
+        if (measureAndLayout != null) {
+            removeCallbacks(measureAndLayout);
+        }
     }
 
     @Override
@@ -1030,23 +1033,30 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
     public void requestLayout() {
         super.requestLayout();
         if (mRNReLayoutStatus) {
-            post(measureAndLayout);
+            reLayout();
         }
     }
+
+    private Runnable measureAndLayout;
 
     /**
      * view多处使用了, 由于Android 一个view只能add到一个父view里面的机制原因，所以你多处调用的时候，你要提前移除，建议在下次调用之前removeAllViews();
      * 保守方案在rn初始化constructor的时候给Android原生端发个通知调用removeAllViews后在render；
      */
-    private final Runnable measureAndLayout = new Runnable() {
-        @Override
-        public void run() {
-            measure(
-                    MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
-            layout(getLeft(), getTop(), getRight(), getBottom());
+    private void reLayout() {
+        if (measureAndLayout == null) {
+            measureAndLayout = new Runnable() {
+                @Override
+                public void run() {
+                    measure(
+                            MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+                            MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+                    layout(getLeft(), getTop(), getRight(), getBottom());
+                }
+            };
         }
-    };
+        post(measureAndLayout);
+    }
 
     /**
      * RN新增方法

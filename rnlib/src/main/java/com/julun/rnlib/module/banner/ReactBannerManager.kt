@@ -1,30 +1,34 @@
 package com.julun.rnlib.module.banner
 
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.annotation.NonNull
 import androidx.viewpager.widget.ViewPager
 import com.facebook.drawee.view.SimpleDraweeView
-import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableArray
-import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerModule
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.events.EventDispatcher
-import com.facebook.react.uimanager.events.RCTEventEmitter
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.isVisible
+import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.rnlib.R
-import org.jay.launchstarter.TaskDispatcher.getContext
+import org.jetbrains.anko.backgroundColor
 
 
 class ReactBannerManager : SimpleViewManager<BGABanner?>() {
 
     private var banner: BGABanner? = null
     private var eventDispatcher: EventDispatcher? = null
+    private var mIsNeedImageShadow: String? = null
 
     companion object {
         const val REACT_CLASS = "RNCBannerView"
@@ -38,11 +42,25 @@ class ReactBannerManager : SimpleViewManager<BGABanner?>() {
     @NonNull
     override fun createViewInstance(@NonNull reactContext: ThemedReactContext): BGABanner {
         eventDispatcher = reactContext.getNativeModule(UIManagerModule::class.java).eventDispatcher
-
-        banner = BGABanner(reactContext, null);
-        banner!!.setAdapter(BGABanner.Adapter<SimpleDraweeView, String> { _, itemView, pic, _ ->
-            if (pic != null) {
-                ImageUtils.loadImageNoResize(itemView, pic)
+        val banner =
+            LayoutInflater.from(reactContext).inflate(R.layout.hq_rn_view_banner, null) as BGABanner
+        banner!!.setAdapter(BGABanner.Adapter<FrameLayout, String> { _, itemView, pic, _ ->
+            val image = itemView.findViewById<SimpleDraweeView>(R.id.sdv_image)
+            image?.let {
+                if (pic != null) {
+                    ImageUtils.loadImageNoResize(it, pic)
+                }
+            }
+            val imageShadow = itemView.findViewById<ImageView>(R.id.iv_shadow)
+            if (mIsNeedImageShadow.isNullOrEmpty()) {
+                imageShadow.hide()
+            } else {
+                if (imageShadow.isVisible()) {
+                    return@Adapter
+                }
+                imageShadow.show()
+                imageShadow.backgroundColor =
+                    GlobalUtils.formatColor(mIsNeedImageShadow ?: "", R.color.shadow)
             }
         })
         // 点击事件
@@ -70,7 +88,11 @@ class ReactBannerManager : SimpleViewManager<BGABanner?>() {
                 override fun onPageScrollStateChanged(state: Int) {
                 }
 
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
                 }
 
                 override fun onPageSelected(position: Int) {
@@ -120,7 +142,7 @@ class ReactBannerManager : SimpleViewManager<BGABanner?>() {
     // 覆盖在每个item图片上的背景颜色：在图片之上覆盖一层白色透明颜色
     @ReactProp(name = "overlayColor")
     fun setIndicatorBottom(banner: BGABanner, overlayColor: String?) {
-
+        mIsNeedImageShadow = overlayColor
     }
 
     // 设置指示器距离底部距离（默认指示器位置为底部居中）
