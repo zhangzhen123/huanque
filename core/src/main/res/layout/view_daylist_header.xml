@@ -35,7 +35,6 @@
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginBottom="10dp"
-        android:foreground="@drawable/bg_header_shader_first"
         app:layout_constraintBottom_toTopOf="@+id/view_first_bottom"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -43,6 +42,16 @@
         app:roundAsCircle="true"
         app:roundingBorderColor="@color/primary_color"
         app:roundingBorderWidth="2dp" />
+
+    <View
+        android:id="@+id/view_foreground_first"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@drawable/bg_header_shader_first"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_first"
+        app:layout_constraintRight_toRightOf="@id/sdv_first"
+        app:layout_constraintTop_toTopOf="@id/sdv_first"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_first"/>
 
     <View
         android:id="@+id/view_first_bottom"
@@ -121,6 +130,7 @@
         app:roundingBorderWidth="2dp" />
 
     <View
+        android:id="@+id/view_foreground_second"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_margin="2dp"
@@ -207,6 +217,7 @@
         app:roundingBorderWidth="2dp" />
 
     <View
+        android:id="@+id/view_foreground_third"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_margin="2dp"
