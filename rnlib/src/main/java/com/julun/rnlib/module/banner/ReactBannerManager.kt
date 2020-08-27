@@ -44,7 +44,7 @@ class ReactBannerManager : SimpleViewManager<BGABanner?>() {
         eventDispatcher = reactContext.getNativeModule(UIManagerModule::class.java).eventDispatcher
         val banner =
             LayoutInflater.from(reactContext).inflate(R.layout.hq_rn_view_banner, null) as BGABanner
-        banner!!.setAdapter(BGABanner.Adapter<FrameLayout, String> { _, itemView, pic, _ ->
+        banner.setAdapter(BGABanner.Adapter<FrameLayout, String> { _, itemView, pic, _ ->
             val image = itemView.findViewById<SimpleDraweeView>(R.id.sdv_image)
             image?.let {
                 if (pic != null) {
@@ -64,12 +64,33 @@ class ReactBannerManager : SimpleViewManager<BGABanner?>() {
             }
         })
         // 点击事件
-        banner!!.setDelegate { banner, _, _, position ->
-            eventDispatcher?.dispatchEvent(BannerItemClickEvent(banner!!.id, position))
+        banner.setDelegate { _, _, _, position ->
+            eventDispatcher?.dispatchEvent(BannerItemClickEvent(banner.id, position))
         }
-        banner!!.setIsNeedShowIndicatorOnOnlyOnePage(false)
-        banner!!.setRNViewPagerStatus(true)
-        return banner!!
+        // 滑动切换事件
+        banner.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                if (position >= 0 && position < banner.itemCount) {
+                    eventDispatcher?.dispatchEvent(
+                        BannerIndexChangeEvent(banner.id, position)
+                    )
+                }
+            }
+
+        })
+        banner.setIsNeedShowIndicatorOnOnlyOnePage(false)
+        banner.setRNViewPagerStatus(true)
+        return banner
     }
 
     // 设置数据源（暂只支持纯图片的数据源List<String>）
@@ -82,31 +103,6 @@ class ReactBannerManager : SimpleViewManager<BGABanner?>() {
             }
             // 自定义布局：以中心对准填满整个视图
             banner.setData(R.layout.item_rn_banner_image, picList, null)
-
-            // 滑动切换事件
-            banner.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                override fun onPageScrollStateChanged(state: Int) {
-                }
-
-                override fun onPageScrolled(
-                    position: Int,
-                    positionOffset: Float,
-                    positionOffsetPixels: Int
-                ) {
-                }
-
-                override fun onPageSelected(position: Int) {
-                    if (position >= 0 && position < list.size()) {
-                        eventDispatcher?.dispatchEvent(
-                            BannerIndexChangeEvent(
-                                banner.id,
-                                position
-                            )
-                        )
-                    }
-                }
-
-            })
         }
     }
 
@@ -125,7 +121,9 @@ class ReactBannerManager : SimpleViewManager<BGABanner?>() {
     // 设置当前激活item
     @ReactProp(name = "index", defaultInt = 0)
     fun setIndex(banner: BGABanner, index: Int) {
-        banner.currentItem = index;
+        if (banner.currentItem != index) {
+            banner.currentItem = index;
+        }
     }
 
     // center：底部居中，right：底部居右
