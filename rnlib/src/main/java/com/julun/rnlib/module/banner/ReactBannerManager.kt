@@ -1,24 +1,21 @@
 package com.julun.rnlib.module.banner
 
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.widget.FrameLayout
 import androidx.annotation.NonNull
 import androidx.viewpager.widget.ViewPager
 import com.facebook.drawee.view.SimpleDraweeView
-import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableArray
-import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerModule
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.events.EventDispatcher
-import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.rnlib.R
-import org.jay.launchstarter.TaskDispatcher.getContext
 
 
 class ReactBannerManager : SimpleViewManager<BGABanner?>() {
@@ -38,11 +35,14 @@ class ReactBannerManager : SimpleViewManager<BGABanner?>() {
     @NonNull
     override fun createViewInstance(@NonNull reactContext: ThemedReactContext): BGABanner {
         eventDispatcher = reactContext.getNativeModule(UIManagerModule::class.java).eventDispatcher
-
-        banner = BGABanner(reactContext, null);
-        banner!!.setAdapter(BGABanner.Adapter<SimpleDraweeView, String> { _, itemView, pic, _ ->
-            if (pic != null) {
-                ImageUtils.loadImageNoResize(itemView, pic)
+        val banner =
+            LayoutInflater.from(reactContext).inflate(R.layout.hq_rn_view_banner, null) as BGABanner
+        banner!!.setAdapter(BGABanner.Adapter<FrameLayout, String> { _, itemView, pic, _ ->
+            val image = itemView.findViewById<SimpleDraweeView>(R.id.sdv_image)
+            image?.let {
+                if (pic != null) {
+                    ImageUtils.loadImageNoResize(it, pic)
+                }
             }
         })
         // 点击事件
@@ -70,7 +70,11 @@ class ReactBannerManager : SimpleViewManager<BGABanner?>() {
                 override fun onPageScrollStateChanged(state: Int) {
                 }
 
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
                 }
 
                 override fun onPageSelected(position: Int) {
