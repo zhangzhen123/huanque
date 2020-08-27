@@ -28,9 +28,9 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.julun.huanque.common.R;
-import com.julun.huanque.common.helper.MixedHelper;
 import com.julun.huanque.common.widgets.bgabanner.transformer.BGAPageTransformer;
 import com.julun.huanque.common.widgets.bgabanner.transformer.TransitionEffect;
+import com.rd.utils.DensityUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -948,7 +948,8 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
             }
             try {
                 container.addView(view);
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
             return view;
         }
 
@@ -1015,6 +1016,7 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
 
     /**
      * RN才需要重新layout,所以需要这个状态来控制
+     *
      * @param status
      */
     public void setRNViewPagerStatus(boolean status) {
@@ -1023,31 +1025,43 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
 
     //因为RN使用原生ViewPager会有兼容性问题，ReactRootView重写onLayout会导致添加进去的View出现各种问题，需要重新layout才能正常使用
     //但是在Android原生直接使用就不能重新布局，这样会有空白的问题
-    //解决方案：https://yuweiguocn.github.io/resolve-react-native-addview-invalid/
+    //解决方案：https://blog.csdn.net/aiynmimi/article/details/99315456?biz_id=102&utm_term=ReactNative%E5%B0%81%E8%A3%85View%E6%89%A7%E8%A1%8CaddView%E9%A1%B5%E9%9D%A2%E4%B8%8D%E5%88%B7&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-1-99315456&spm=1018.2118.3001.4187
     @Override
     public void requestLayout() {
         super.requestLayout();
         if (mRNReLayoutStatus) {
-            reLayout();
+            post(measureAndLayout);
         }
     }
 
-    public void reLayout() {
-        if (getWidth() > 0 && getHeight() > 0) {
-            int w = MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY);
-            int h = MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY);
-            measure(w, h);
-            layout(getPaddingLeft() + getLeft(), getPaddingTop() + getTop(), getWidth() + getPaddingLeft() + getLeft(), getHeight() + getPaddingTop() + getTop());
+    /**
+     * view多处使用了, 由于Android 一个view只能add到一个父view里面的机制原因，所以你多处调用的时候，你要提前移除，建议在下次调用之前removeAllViews();
+     * 保守方案在rn初始化constructor的时候给Android原生端发个通知调用removeAllViews后在render；
+     */
+    private final Runnable measureAndLayout = new Runnable() {
+        @Override
+        public void run() {
+            measure(
+                    MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+            layout(getLeft(), getTop(), getRight(), getBottom());
         }
-    }
+    };
 
-
-    /** RN新增方法 **/
+    /**
+     * RN新增方法
+     **/
     public void setPointGravity(int pointGravity) {
         this.mPointGravity = pointGravity;
     }
 
     public void setPointTopBottomMargin(int mPointTopBottomMargin) {
-        this.mPointTopBottomMargin = mPointTopBottomMargin;
+//        this.mPointTopBottomMargin = mPointTopBottomMargin;
+        if (mPointRealContainerLl != null && mPointRealContainerLl.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mPointRealContainerLl.getLayoutParams();
+            params.setMargins(0, 0, 0, DensityUtils.dpToPx(mPointTopBottomMargin));
+            mPointRealContainerLl.setLayoutParams(params);
+        }
+
     }
 }
