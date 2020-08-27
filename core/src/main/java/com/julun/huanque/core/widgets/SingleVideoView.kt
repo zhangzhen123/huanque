@@ -19,11 +19,13 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.MicAnchor
 import com.julun.huanque.common.interfaces.PlayStateListener
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.R
+import com.julun.huanque.core.manager.AliplayerManager
 import com.trello.rxlifecycle4.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -35,10 +37,12 @@ import java.util.concurrent.TimeUnit
  *@创建者   dong
  *@创建时间 2019/12/4 18:18
  *@描述  地址播放器使用的拉流view
+ * @param useManager true 使用 AliplayerManager内的播放器    false  创建一个新的播放器
  */
-class SingleVideoView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Boolean = false) : ConstraintLayout(context, attrs) {
 
-    constructor(context: Context) : this(context, null)
+    constructor(context: Context, useManager: Boolean = false) : this(context, null, useManager)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, null, false)
 
     //surfaceview是否已经创建
     private var created = false
@@ -66,11 +70,21 @@ class SingleVideoView(context: Context, attrs: AttributeSet?) : ConstraintLayout
     //渲染成功时间
     private var mRenderTime = 0L
 
+
+    private var mRenderListener = IPlayer.OnRenderingStartListener {
+        mRenderTime = System.currentTimeMillis()
+        //首帧渲染显示事件,隐藏封面
+        if (mLogEnable) {
+            ULog.i("${this} DXCPlayer 首帧渲染显示事件")
+            ULog.i("${this} DXCPlayer  时间  started时间 = ${mPlayTime - mSetTime},renderTime = ${mRenderTime - mSetTime},mAutoPlayTime = ${mAutoPlayTime - mSetTime}")
+        }
+        posterImage.hide()
+        mPlayStateListener?.onFirstRenderListener()
+    }
+
     //log输出标识位
     private var mLogEnable = false
 
-    //是否是推荐
-    var mRecommend = false
 
     //是否处于聊天模式(默认为false)
     var mChatMode = false
@@ -86,7 +100,36 @@ class SingleVideoView(context: Context, attrs: AttributeSet?) : ConstraintLayout
             }
         })
         initViewModel()
-        initPlayer()
+        if (useManager) {
+            mAliPlayer = AliplayerManager.mAliPlayer
+            AliplayerManager.mRenderListener = mRenderListener
+            if (AliplayerManager.mRendered) {
+                posterImage.hide()
+            }
+
+        } else {
+            initPlayer()
+        }
+
+        surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
+            override fun surfaceCreated(holder: SurfaceHolder) {
+                created = true
+                mAliPlayer?.setDisplay(holder)
+                //防止黑屏
+                mAliPlayer?.redraw()
+            }
+
+            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+                mAliPlayer?.redraw()
+            }
+
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+                if (!useManager) {
+                    mAliPlayer?.setDisplay(null)
+                }
+            }
+        })
+
 //        if (BuildConfig.APP_TYPE.isEmpty()) {
 //            //主包  显示水印
 //            iv_watermark.show()
@@ -126,11 +169,12 @@ class SingleVideoView(context: Context, attrs: AttributeSet?) : ConstraintLayout
 
     /**
      * 释放流相关
-     * @param remove 是否闪退父布局
      */
-    fun release(remove: Boolean = true) {
+    fun release() {
         mUrl = ""
-        mAliPlayer?.stop()
+        if (!useManager) {
+            mAliPlayer?.stop()
+        }
         isFree = true
         playerInfo = null
         this.hide()
@@ -183,9 +227,13 @@ class SingleVideoView(context: Context, attrs: AttributeSet?) : ConstraintLayout
      * 显示封面
      */
     fun showCover(picUrl: String) {
+        if (useManager && AliplayerManager.mRendered) {
+            //播放器处于拉流状态，不显示封面
+            return
+        }
         posterImage.show()
 //        ImageUtils.loadImage(posterImage, picUrl)
-        ImageUtils.loadImageWithBlur(posterImage,picUrl,3,13)
+        ImageUtils.loadImageWithBlur(posterImage, picUrl, 3, 13)
     }
 
     /**
@@ -224,16 +272,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?) : ConstraintLayout
             }
             mAliPlayer?.redraw()
         }
-        mAliPlayer?.setOnRenderingStartListener {
-            mRenderTime = System.currentTimeMillis()
-            //首帧渲染显示事件,隐藏封面
-            if (mLogEnable) {
-                ULog.i("${this} DXCPlayer 首帧渲染显示事件")
-                ULog.i("${this} DXCPlayer  时间  started时间 = ${mPlayTime - mSetTime},renderTime = ${mRenderTime - mSetTime},mAutoPlayTime = ${mAutoPlayTime - mSetTime}")
-            }
-            posterImage.hide()
-            mPlayStateListener?.onFirstRenderListener()
-        }
+        mAliPlayer?.setOnRenderingStartListener(mRenderListener)
         mAliPlayer?.setOnInfoListener {
             //其他信息的事件，type包括了：循环播放开始，缓冲位置，当前播放位置，自动播放开始等
             if (it.code == InfoCode.AutoPlayStart) {
@@ -291,22 +330,6 @@ class SingleVideoView(context: Context, attrs: AttributeSet?) : ConstraintLayout
         }
         mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL
 
-        surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-            override fun surfaceCreated(holder: SurfaceHolder) {
-                created = true
-                mAliPlayer?.setDisplay(holder)
-                //防止黑屏
-                mAliPlayer?.redraw()
-            }
-
-            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-                mAliPlayer?.redraw()
-            }
-
-            override fun surfaceDestroyed(holder: SurfaceHolder) {
-                mAliPlayer?.setDisplay(null)
-            }
-        })
         //禁用硬解码
 //        mAliPlayer?.enableHardwareDecoder(false)
         val config = mAliPlayer?.config ?: return
@@ -369,6 +392,9 @@ class SingleVideoView(context: Context, attrs: AttributeSet?) : ConstraintLayout
             mAliPlayer?.setDataSource(urlSource)
             mAliPlayer?.isAutoPlay = true
 //            ULog.i("PlayerLine 准备播放器")
+            if (useManager) {
+                AliplayerManager.mRendered = false
+            }
             mAliPlayer?.prepare()
 //            mAliPlayer?.start()
         }
@@ -404,15 +430,14 @@ class SingleVideoView(context: Context, attrs: AttributeSet?) : ConstraintLayout
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-//        created = false
-        if (mRecommend) {
-//            pause()
-        } else {
-            release(false)
-            //释放播放器
+        release()
+        //释放播放器
+        if (!useManager) {
             mAliPlayer?.release();
-            mAliPlayer = null
+        } else {
+            AliplayerManager.mRenderListener = null
         }
+        mAliPlayer = null
         ULog.i("PlayerLine 释放播放器")
 //        Completable.complete()
 //                .subscribeOn(Schedulers.io())

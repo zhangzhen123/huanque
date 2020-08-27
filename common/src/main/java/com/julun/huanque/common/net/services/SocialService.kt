@@ -40,7 +40,7 @@ interface SocialService {
      * 取消关注好友
      */
     @POST("social/friend/relation/unFollow")
-    suspend fun unFollow(@Body form: FriendIdForm): Root<VoidResult>
+    suspend fun unFollow(@Body form: FriendIdForm): Root<FollowBean>
 
     /**
      * 获取私聊数据

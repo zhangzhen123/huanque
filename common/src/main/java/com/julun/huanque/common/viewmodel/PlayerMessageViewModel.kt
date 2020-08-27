@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
+import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
 import com.julun.huanque.common.bean.events.UnreadCountEvent
 import com.julun.huanque.common.bean.message.CustomMessage
@@ -46,6 +47,9 @@ class PlayerMessageViewModel : BaseViewModel() {
 
     //免打扰列表
     val blockListData: MutableLiveData<MutableList<String>> by lazy { MutableLiveData<MutableList<String>>() }
+
+    //需要刷新会话列表
+    val needRefreshConversationFlag : MutableLiveData<EventMessageBean> by lazy { MutableLiveData<EventMessageBean>() }
 
     //获取免打扰列表成功之后，需要获取未读数的标识位
     var needQuerUnreadCount = false

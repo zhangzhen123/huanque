@@ -645,6 +645,8 @@ class MessageViewModel : BaseViewModel() {
                 }
             }
         }
+        //陌生人状态变动，更新数据库
+        updataStrangerData(bean.userId,bean.stranger)
     }
 
     /**
@@ -654,16 +656,42 @@ class MessageViewModel : BaseViewModel() {
     private fun doWithExclusionEvent(userId: Long) {
         val list = conversationListData.value ?: return
         var index = -1
+        var strangerConversation: LocalConversation? = null
         list.forEachIndexed { ind, it ->
             if (it.conversation.targetId == "$userId") {
                 index = ind
+                strangerConversation = it
                 return@forEachIndexed
             }
         }
 
-        if (index >= 0) {
+        if (index >= 0 && strangerConversation != null) {
             //当前列表里面存在该会话，直接删除就可以
             list.removeAt(index)
+            //判断是否含有陌生人会话
+            var hasStranger = false
+            list.forEach {
+                if (it.conversation.targetId == null) {
+                    hasStranger = true
+                }
+            }
+            if (!hasStranger && !mStranger) {
+                //没有陌生人消息会话，添加陌生人消息会话
+                val info = hashMapOf<String, String>()
+
+                info.put(LocalConversation.TIME, "${strangerConversation?.conversation?.sentTime ?: 0}")
+                val unreadCount = if (blockListData?.contains("$userId") == true) {
+                    0
+                } else {
+                    strangerConversation?.conversation?.unreadMessageCount ?: 0
+                }
+                info.put(LocalConversation.UNREADCOUNT, "$unreadCount")
+                info.put(LocalConversation.NICKNAME, "${strangerConversation?.showUserInfo?.nickname}")
+                val strangerConversation = LocalConversation().apply {
+                    strangerInfo = info
+                }
+                list.add(strangerConversation)
+            }
             //显示新的列表
             conversationListData.value = list
         }

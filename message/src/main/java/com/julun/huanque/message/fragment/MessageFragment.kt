@@ -2,8 +2,12 @@ package com.julun.huanque.message.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.GenericLifecycleObserver
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -97,7 +101,6 @@ class MessageFragment : BaseFragment() {
         }
         mMessageViewModel.queryDataFlag.value = true
     }
-
 
     /**
      * 初始化RecyclerView
@@ -271,7 +274,7 @@ class MessageFragment : BaseFragment() {
         mPlayerMessageViewModel.blockListData.observe(this, Observer {
             if (it != null) {
                 mMessageViewModel.blockListData = it
-                if(mMessageViewModel.needQueryConversation){
+                if (mMessageViewModel.needQueryConversation) {
                     mMessageViewModel.getConversationList()
                 }
                 mAdapter.blockList = it
@@ -294,6 +297,11 @@ class MessageFragment : BaseFragment() {
                     "消息"
                 }
                 tv_title_player.text = str
+            }
+        })
+        mPlayerMessageViewModel.needRefreshConversationFlag.observe(this, Observer {
+            if (it != null) {
+                mMessageViewModel.refreshConversation(it.targetId, it.stranger)
             }
         })
     }
@@ -332,8 +340,8 @@ class MessageFragment : BaseFragment() {
 
         tv_message_unread.onClickNew {
             activity?.let { act ->
-//                PrivateConversationActivity.newInstance(act, 20000516)
-                PrivateConversationActivity.newInstance(act, 10)
+                PrivateConversationActivity.newInstance(act, 20000751)
+//                PrivateConversationActivity.newInstance(act, 10)
             }
         }
 
@@ -364,6 +372,7 @@ class MessageFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun userInfoChangeEvent(bean: UserInfoChangeEvent) {
         //用户数据发生变化
+        logger.info("Message 关注状态变更 ${bean.stranger}")
         mMessageViewModel.userInfoUpdate(bean)
     }
 

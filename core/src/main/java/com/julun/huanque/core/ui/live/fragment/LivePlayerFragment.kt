@@ -51,7 +51,7 @@ open class LivePlayerFragment : BaseFragment() {
         object : SingleVideoView.OnVideoListener {
             override fun onClickAuthorInfo(authorInfo: MicAnchor) {
                 logger.info("点击了主播信息$authorInfo")
-                mPlayerViewModel.checkoutRoom.value=authorInfo.programId
+                mPlayerViewModel.checkoutRoom.value = authorInfo.programId
             }
         }
     }
@@ -67,7 +67,7 @@ open class LivePlayerFragment : BaseFragment() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         //添加主布局
-        mMainVideoView = SingleVideoView(requireContext())
+        mMainVideoView = SingleVideoView(requireContext(), true)
         mMainVideoView?.let { mv ->
             mViewList.add(mv)
             ll_container.addView(mv, 0)
@@ -323,6 +323,7 @@ open class LivePlayerFragment : BaseFragment() {
      */
     private fun playByInfo(playInfo: PlayInfo, videoView: SingleVideoView) {
         videoView.play(GlobalUtils.getPlayUrl(playInfo), videoView == mMainVideoView)
+//        videoView.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/24288", videoView == mMainVideoView)
     }
 
     /**

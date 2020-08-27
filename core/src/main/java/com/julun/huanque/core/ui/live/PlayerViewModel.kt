@@ -11,6 +11,7 @@ import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.SendRNEvent
+import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.forms.*
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.*
@@ -540,6 +541,7 @@ class PlayerViewModel : BaseViewModel() {
                 val follow = mSocialService.follow(FriendIdForm(userId)).dataConvert()
                 val followBean = FollowResultBean(follow = follow.follow,userId = userId)
                 followStatusData.value = followBean.convertRtData()
+                EventBus.getDefault().post(UserInfoChangeEvent(userId,follow.stranger))
                 EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
             }, {
                 followStatusData.value = it.convertError()
@@ -567,9 +569,10 @@ class PlayerViewModel : BaseViewModel() {
     fun unFollow(userId: Long) {
         viewModelScope.launch {
             request({
-                mSocialService.unFollow(FriendIdForm(userId)).dataConvert()
+                val follow = mSocialService.unFollow(FriendIdForm(userId)).dataConvert()
                 val followBean = FollowResultBean(follow = FollowStatus.False,userId = userId)
                 followStatusData.value = followBean.convertRtData()
+                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger))
                 EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to false)))
             }, {
                 followStatusData.value = it.convertError()

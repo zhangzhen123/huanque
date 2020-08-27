@@ -6,11 +6,6 @@
     android:layout_height="231dp"
     >
 
-    <com.julun.huanque.core.widgets.SingleVideoView
-        android:id="@+id/video_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <ImageView
         android:id="@+id/iv_close"
         android:layout_width="wrap_content"

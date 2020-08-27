@@ -202,7 +202,10 @@ class PrivateConversationViewModel : BaseViewModel() {
 
         RongIMClient.getInstance().setMessageReceivedStatus(message.messageId, Message.ReceivedStatus(1))
         //        }
-        EventBus.getDefault().post(EventMessageBean(message.targetId ?: ""))
+        if(message.senderUserId != "${SessionUtils.getUserId()}"){
+            //收到对方消息
+            EventBus.getDefault().post(EventMessageBean(message.targetId ?: "", chatInfoData.value?.stranger ?: false))
+        }
     }
 
 
@@ -223,7 +226,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                 }
                 RongCloudManager.resetUserInfoData(user)
 
-                chatInfoData.value = result.friendUser
+                chatInfoData.value = result.friendUser.apply { stranger = result.stranger }
                 intimateData.value = result.intimate
                 msgFeeData.value = result.msgFee
                 basicBean.value = result

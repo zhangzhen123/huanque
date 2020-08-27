@@ -166,7 +166,7 @@ class NetcallBean(
 /**
  * 关注返回的实体
  */
-class FollowBean(var follow: String = "") : Serializable
+class FollowBean(var follow: String = "",var stranger : Boolean = false) : Serializable
 
 data class AliAuthInfo(
     var authInfo: String = ""
