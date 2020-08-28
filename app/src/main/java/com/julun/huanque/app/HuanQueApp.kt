@@ -27,7 +27,6 @@ import com.julun.huanque.core.init.HuanQueInit
 import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.ui.cockroach.DebugSafeModeTipActivity
 import com.julun.jpushlib.TagAliasOperatorHelper
-import com.sina.weibo.sdk.openapi.IWBAPI
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mmkv.MMKV
@@ -36,7 +35,9 @@ import com.wanjian.cockroach.CrashLog
 import com.wanjian.cockroach.ExceptionHandler
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
 open class HuanQueApp : Application() {
@@ -247,7 +248,7 @@ open class HuanQueApp : Application() {
                 Log.e("Cockroach", "--->onMayBeBlackScreen:$thread<---", e)
                 //黑屏时建议直接杀死app
 //                sysExcepHandle
-// r.uncaughtException(thread, RuntimeException("black screen"))
+                // r.uncaughtException(thread, RuntimeException("black screen"))
                 Handler(Looper.getMainLooper()).post {
                     toast.setText(resources.getString(R.string.attention_restart))
                     toast.show()

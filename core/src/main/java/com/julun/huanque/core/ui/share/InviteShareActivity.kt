@@ -7,6 +7,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -93,12 +94,17 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
         }
 
         mViewModel.queryShareType()
+        val rsLP=rv_share_contents.layoutParams as LinearLayout.LayoutParams
         when (applyModule) {
             ShareFromModule.Program -> {
                 ll_copy.hide()
+                rsLP.weight=0f
+                rsLP.height=LinearLayout.LayoutParams.WRAP_CONTENT
             }
             ShareFromModule.Invite -> {
                 ll_copy.show()
+                rsLP.weight=1f
+                rsLP.height=0
             }
         }
         playInAnimator()
