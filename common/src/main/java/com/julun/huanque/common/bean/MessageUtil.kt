@@ -115,7 +115,8 @@ open class TplBean(
         }
 
         //加上发言人信息
-        userInfo?.let {
+        val user = userInfo
+        if (user != null) {
             val nicknameKey = "\${extra.user.nickName}"
             val royalIconKey = "\${extra.user.royalLevelIcon}"
             val levelIconKey = "\${extra.user.userLevelIcon}"
@@ -127,43 +128,43 @@ open class TplBean(
 
             val prepositionKey = "\${preposition}" //介词
             val toNicknameKey = "\${toNickName}" //目标人姓名
-            val anchorLevel: Int = it.anchorLevel//主播等级
+            val anchorLevel: Int = user.anchorLevel//主播等级
             //1.首先设置全局颜色
             styleParamMap[MessageUtil.KEY_ALL] =
                 StyleParam(styleType = MessageUtil.KEY_BASIC, color = "#FFFFFF", fontWeight = DraweeSpanTextView.BOLD)
             //2.主播的发言处理
-            if (anchorLevel > 0 && it.targetUserObj?.nickname !== null && "${it.senderId}" == "${SessionUtils.getUserId()}") {
+            if (anchorLevel > 0 && user.targetUserObj?.nickname !== null && "${user.senderId}" == "${SessionUtils.getUserId()}") {
 
                 textTpl = "$nicknameKey $prepositionKey $toNicknameKey $textTpl"
                 textParams.put(prepositionKey, "对")
                 styleParamMap.put(prepositionKey, StyleParam(el = prepositionKey, color = "#000000"))
-                textParams.put(toNicknameKey, "${it.targetUserObj?.nickname}")
+                textParams.put(toNicknameKey, "${user.targetUserObj?.nickname}")
                 styleParamMap.put(toNicknameKey, StyleParam(el = toNicknameKey, color = "#FFD630"))
             } else {
                 textTpl = "$nicknameKey $textTpl"
             }
             //3.用户昵称处理
-            val tNickName: String = if (it.nickname.isNotBlank()) {
+            val tNickName: String = if (user.nickname.isNotBlank()) {
                 if (privateMessage) {
                     //私聊消息，昵称之后添加'：'，对添加的‘：’也渲染
-                    "${it.nickname}："
+                    "${user.nickname}："
                 } else {
-                    it.nickname
+                    user.nickname
                 }
             } else {
-                it.nickname
+                user.nickname
             }
 
 
             textParams.put(nicknameKey, tNickName)
-            val nick = if (StringHelper.isEmpty(it.nickColor)) null else it.nickColor
+            val nick = if (StringHelper.isEmpty(user.nickColor)) null else user.nickColor
             styleParamMap[nicknameKey] = StyleParam(el = nicknameKey, color = nick)
-            if(it.lightColor.isNotEmpty()){
-                styleParamMap[nicknameKey] = StyleParam(el = nicknameKey, lightColor = it.lightColor)
+            if (user.lightColor.isNotEmpty()) {
+                styleParamMap[nicknameKey] = StyleParam(el = nicknameKey, lightColor = user.lightColor)
             }
 
             //4.添加勋章
-            val goodsList = it.badgesPic
+            val goodsList = user.badgesPic
             goodsList.reversed().forEachIndexed { i, s ->
                 val goodsIconKey = "\${extra.user.goodsIconKey$i}"
                 textTpl = "$goodsIconKey$textTpl"
@@ -211,8 +212,7 @@ open class TplBean(
 //                    styleParamMap.put(guardIconKey, StyleParam(el = guardIconKey, styleType = MessageUtil.KEY_IMG, source = MessageUtil.KEY_REMOTE, preffix = MessageUtil.PREFFIX_USER_LEVEL))
 //                }
                 //贵族等级图片改成远程
-                val royalPic = it.royalPic
-                val royalLevel = it.royalLevel
+                val royalPic = user.royalPic
                 if (royalPic.isNotEmpty()) {
                     textTpl = "$royalIconKey$textTpl"
                     textParams.put(royalIconKey, royalPic)
@@ -225,34 +225,21 @@ open class TplBean(
                             preffix = MessageUtil.PREFIX_ROYAL_LEVEL
                         )
                     )
-                } else if (royalLevel > -1 && royalLevel < 9) {
-                    //兼容老版本发言消息
-                    textTpl = "$royalIconKey$textTpl"
-                    textParams.put(royalIconKey, "$royalLevel")
+                }
+                if (user.userLevel > 0) {
+                    textTpl = "$levelIconKey$textTpl"
+                    textParams.put(levelIconKey, "${user.userLevel}")
                     styleParamMap.put(
-                        royalIconKey,
+                        levelIconKey,
                         StyleParam(
-                            el = royalIconKey,
+                            el = levelIconKey,
                             styleType = MessageUtil.KEY_IMG,
                             source = MessageUtil.KEY_LOCAL,
-                            preffix = MessageUtil.PREFIX_ROYAL_LEVEL
+                            preffix = MessageUtil.PREFIX_USER_LEVEL
                         )
                     )
                 }
-//                if (it.displayType?.contains(MessageDisplayType.MYSTERY) != true || it.userLevel < 1) {
-                //不是神秘人
-                textTpl = "$levelIconKey$textTpl"
-                textParams.put(levelIconKey, "${it.userLevel}")
-//                }
-                styleParamMap.put(
-                    levelIconKey,
-                    StyleParam(
-                        el = levelIconKey,
-                        styleType = MessageUtil.KEY_IMG,
-                        source = MessageUtil.KEY_LOCAL,
-                        preffix = MessageUtil.PREFIX_USER_LEVEL
-                    )
-                )
+
 
             }
 
@@ -293,7 +280,7 @@ open class TplBean(
 //                return@forEach
             }
 
-            if (styleParam.preffix == MessageUtil.PREFIX_ROYAL_LEVEL) {
+            if (styleParam.preffix == MessageUtil.PREFIX_USER_LEVEL) {
                 val paramValue: String? = textParams[it]
                 if (StringHelper.isEmpty(paramValue) || "0" == paramValue) {//0或者没有填写,都是错误的,需要过滤掉
                     textTpl = textTpl.replace(it, "")
