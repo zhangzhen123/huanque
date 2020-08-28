@@ -40,7 +40,7 @@ interface SocialService {
      * 取消关注好友
      */
     @POST("social/friend/relation/unFollow")
-    suspend fun unFollow(@Body form: FriendIdForm): Root<VoidResult>
+    suspend fun unFollow(@Body form: FriendIdForm): Root<FollowBean>
 
     /**
      * 获取私聊数据
@@ -227,4 +227,28 @@ interface SocialService {
      */
     @POST("social/friend/avoice/accept")
     suspend fun avoiceAccept(@Body form: InviteUserIdForm): Root<VoidResult>
+
+    /**
+     * 拒绝匿名邀请
+     */
+    @POST("social/friend/avoice/reject")
+    suspend fun avoiceReject(@Body form: InviteUserIdForm): Root<VoidResult>
+
+    /**
+     * 花魁 昨日榜
+     */
+    @POST("social/flower/rank/yesterday")
+    suspend fun flowerYesterday(@Body form: EmptyForm = EmptyForm()): Root<FlowerDayListBean>
+
+    /**
+     * 花魁 今日榜
+     */
+    @POST("social/flower/rank/today")
+    suspend fun flowerToday(@Body form: EmptyForm = EmptyForm()): Root<FlowerDayListBean>
+
+    /**
+     * 名人榜
+     */
+    @POST("social/flower/rank/famous")
+    suspend fun flowerFamous(@Body form: EmptyForm = EmptyForm()): Root<FamousListBean>
 }

@@ -7,11 +7,10 @@ import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import android.view.*
+import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
-import com.facebook.drawee.view.SimpleDraweeView
+import androidx.cardview.widget.CardView
 import com.julun.huanque.common.bean.forms.ProgramIdForm
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.PlayerFrom
@@ -23,21 +22,18 @@ import com.julun.huanque.common.net.RequestCaller
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.dp2pxf
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.widgets.SingleVideoView
-import com.julun.huanque.core.widgets.SurfaceVideoViewOutlineProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.anko.dip
+import java.lang.Exception
 
 
 /**
@@ -53,7 +49,7 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
     //直播间ID
     private var mProgramId = 0L
     private var display: View? = null
-    private var videView: SingleVideoView? = null
+    private var videoView: SingleVideoView? = null
     private var ivClose: ImageView? = null
     private var ivQuiet: ImageView? = null
 
@@ -66,6 +62,9 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
     private var isclick = false
 
     private var show = true
+
+    //点击跳转直播间标识位
+    private var jumpToPlayer = false
 
     override fun onCreate() {
         super.onCreate()
@@ -107,8 +106,8 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         }
         val coverUrl = intent?.getStringExtra(ParamConstant.PIC) ?: ""
         val playInfo = intent?.getStringExtra(ParamConstant.PLAY_INFO) ?: ""
-        videView?.play(playInfo, false)
-        videView?.showCover(coverUrl)
+//        videView?.play(playInfo, false)
+        videoView?.showCover(coverUrl)
 //        videView?.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/16611", false)
         mProgramId = intent?.getLongExtra(ParamConstant.PROGRAM_ID, 0) ?: 0
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, mProgramId)
@@ -125,7 +124,12 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         if (PermissionUtils.checkFloatPermission(this)) {
             val layoutInflater: LayoutInflater = LayoutInflater.from(this)
             display = layoutInflater.inflate(R.layout.view_floating, null)
-            videView = display?.findViewById(R.id.video_view)
+            videoView = SingleVideoView(CommonInit.getInstance().getContext(), true)
+            val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            lp.height = ViewGroup.LayoutParams.MATCH_PARENT
+            videoView?.let { vv ->
+                (display as? CardView)?.addView(vv, 0, lp)
+            }
 //            sdvCover = display?.findViewById(R.id.sdv_cover)
 //            videView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
 //            videView?.clipToOutline = true;
@@ -151,9 +155,9 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
                 val quietSelect = ivQuiet?.isSelected ?: false
                 ivQuiet?.isSelected = !quietSelect
                 if (ivQuiet?.isSelected == true) {
-                    videView?.soundOff()
+                    videoView?.soundOff()
                 } else {
-                    videView?.soundOn()
+                    videoView?.soundOn()
                 }
             }
             R.id.iv_close -> {
@@ -162,6 +166,7 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
             }
             R.id.view_floating -> {
                 //跳转直播间
+                jumpToPlayer = true
                 CommonInit.getInstance().getCurrentActivity()?.let { act ->
                     PlayerActivity.start(act, programId = mProgramId, from = PlayerFrom.FloatWindow)
                 }
@@ -219,13 +224,18 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         UserHeartManager.setProgramId(null)
         GlobalScope.launch {
-            withContext(Dispatchers.IO){
-                Requests.create(LiveRoomService::class.java).leave(ProgramIdForm(mProgramId)).dataConvert()
+            withContext(Dispatchers.IO) {
+                try {
+                    Requests.create(LiveRoomService::class.java).leave(ProgramIdForm(mProgramId)).dataConvert()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
-
         }
         if (windowManager != null && display != null) {
-            videView?.stop()
+            if (!jumpToPlayer) {
+                videoView?.stop()
+            }
             windowManager?.removeView(display)
         }
         super.onDestroy()

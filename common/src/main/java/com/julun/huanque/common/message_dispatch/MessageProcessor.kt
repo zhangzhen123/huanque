@@ -4,12 +4,12 @@ import android.text.TextUtils
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.basic.VoidResult
-import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.SystemTargetId
+import com.julun.huanque.common.helper.TplHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
@@ -104,7 +104,7 @@ object MessageProcessor {
      */
     fun parseTextMessage(jsonString: String, msgId: String) {
 
-        val bean = MessageUtil.decodeMessageContent(jsonString)
+        val bean = TplHelper.decodeMessageContent(jsonString)
         bean.preProcess()
 
         val displayTypes = bean.display.split(",")
@@ -117,7 +117,7 @@ object MessageProcessor {
                 if (index == 0) {
                     checkDisplayType(bean, displayTypes[0], msgId)
                 } else {
-                    val beanC = MessageUtil.decodeMessageContent(jsonString)
+                    val beanC = TplHelper.decodeMessageContent(jsonString)
                     beanC.preProcess()
                     checkDisplayType(beanC, s, msgId)
                 }
@@ -1213,12 +1213,23 @@ object MessageProcessor {
     }
 
     /**
+     * 匿名语音 揭秘身份消息
+     */
+    interface AnonyVoiceUnveilProcessor : EventMessageProcessor<UserInfoInRoom> {
+        override fun getEventType() = EventMessageType.AnonyVoiceUnveil
+    }
+
+    /**
      * 匿名语音  邀请消息
      */
     interface AnonyVoiceInviteProcessor : EventMessageProcessor<AnonyVoiceInviteBean> {
         override fun getEventType() = EventMessageType.AnonyVoiceInvite
 
         override fun isGlobal() = true
+    }
+
+    interface AnonyVoiceCancelProcessor : EventMessageProcessor<AnonyVoiceCancelBean> {
+        override fun getEventType() = EventMessageType.AnonyVoiceCancel
     }
 
 
@@ -1573,9 +1584,15 @@ enum class EventMessageType(val klass: Class<*>) {
     //公开信息消息
     AnonyVoiceOpen(UserInfoInRoom::class.java),
 
-    //匿名语音 邀请消息
-    AnonyVoiceInvite(AnonyVoiceInviteBean::class.java)
+    //匿名语音 揭秘身份消息
+    AnonyVoiceUnveil(UserInfoInRoom::class.java),
 
+    //匿名语音 邀请消息
+    AnonyVoiceInvite(AnonyVoiceInviteBean::class.java),
+
+    //匿名语音邀请  取消消息
+    AnonyVoiceCancel(AnonyVoiceCancelBean::class.java)
+//inviteUserId
     //禁言消息
 //    MuteUser(OperatorMessageBean::class.java),
 //    //设备封禁消息

@@ -6,15 +6,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.FriendBean
 import com.julun.huanque.common.bean.beans.SysMsgBean
-import com.julun.huanque.common.constant.ActivityCodes
-import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.MessageConstants
-import com.julun.huanque.common.constant.SystemTargetId
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
@@ -202,7 +200,7 @@ class SysMsgActivity : BaseActivity() {
 
     private fun customAction(sysBean: SysMsgBean) {
         val touchType = sysBean.touchType
-        if(touchType.isEmpty()){
+        if (touchType.isEmpty()) {
             return
         }
         when (touchType) {
@@ -232,6 +230,12 @@ class SysMsgActivity : BaseActivity() {
             }
 
             MessageConstants.ACTION_None -> {
+            }
+            MessageConstants.PlumFlower -> {
+                //花魁榜
+                val bundle = Bundle()
+                bundle.putString(ParamConstant.TYPE, sysBean.touchValue)
+                ARouter.getInstance().build(ARouterConstant.PLUM_FLOWER_ACTIVITY).with(bundle).navigation()
             }
 //            else -> {
 //                ToastUtils.show("没有记录的action类型 -> ${touchType}")

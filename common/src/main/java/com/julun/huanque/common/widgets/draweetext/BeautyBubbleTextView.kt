@@ -2,7 +2,6 @@ package com.julun.huanque.common.widgets.draweetext
 
 import android.annotation.TargetApi
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
@@ -10,11 +9,12 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.R
-import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.helper.TplHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ULog
@@ -38,30 +38,34 @@ import java.util.*
  * 漂亮的气泡文字组件 在[DraweeSpanTextView]的基础上进行的扩展
  *
  */
-class BeautyBubbleTextView : RelativeLayout {
+class BeautyBubbleTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+    RelativeLayout(context, attrs) {
+    companion object {
+        const val DEFAULT_SIZE = 12
+    }
 
     private val logger = ULog.getLogger("BubbleTextView")
 
-    var svgaPlayerViewRt: SVGAPlayerView? = null
-    var webpGifViewRt: SimpleDraweeView? = null
-    var svgaPlayerViewRb: SVGAPlayerView? = null
-    var webpGifViewRb: SimpleDraweeView? = null
-    var svgaPlayerViewLt: SVGAPlayerView? = null
-    var webpGifViewLt: SimpleDraweeView? = null
-    var svgaPlayerViewLb: SVGAPlayerView? = null
-    var webpGifViewLb: SimpleDraweeView? = null
+    private var svgaPlayerViewRt: SVGAPlayerView? = null
+    private var webpGifViewRt: SimpleDraweeView? = null
+    private var svgaPlayerViewRb: SVGAPlayerView? = null
+    private var webpGifViewRb: SimpleDraweeView? = null
+    private var svgaPlayerViewLt: SVGAPlayerView? = null
+    private var webpGifViewLt: SimpleDraweeView? = null
+    private var svgaPlayerViewLb: SVGAPlayerView? = null
+    private var webpGifViewLb: SimpleDraweeView? = null
 
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
-        context,
-        attrs,
-        defStyleAttr,
-        defStyleRes
-    )
+//    constructor(context: Context) : super(context)
+//    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+//    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+//
+//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+//        context,
+//        attrs,
+//        defStyleAttr,
+//        defStyleRes
+//    )
 
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_bubble_drawee_span_text, this)
@@ -75,7 +79,12 @@ class BeautyBubbleTextView : RelativeLayout {
     }
 
     fun render(tplBean: TplBean) {
-        logger.info("chatBubble=${tplBean.userInfo?.chatBubble}")
+//        tplBean.userInfo?.chatBubble?.let {
+//            it.lb = "config/anim/84805b5eeb4d4a588ebc4512c675a4b9.webp"
+//            it.rb = "config/anim/84805b5eeb4d4a588ebc4512c675a4b9.webp"
+//            it.lt = "config/anim/84805b5eeb4d4a588ebc4512c675a4b9.webp"
+//        }
+        logger.info("tpl=${tplBean.realTxt}chatBubble=${tplBean.userInfo?.chatBubble}")
         //渲染文字
         draweeSpanTv.render(tplBean)
 
@@ -84,17 +93,17 @@ class BeautyBubbleTextView : RelativeLayout {
         try {
 //            chatBubble = chatBubble ?: ChatBubble()
 //            if (chatBubble.radius == -1) {
-//                chatBubble.radius = MessageUtil.MESSAGE_BG_RADIUS
+//                chatBubble.radius = MessageHelper.MESSAGE_BG_RADIUS
 //            }
             val dlp = draweeSpanTv.layoutParams as LayoutParams
             if (chatBubble == null || chatBubble.bgc.isEmpty()) {
                 logger.info("没有气泡配置")
                 //默认填充背景色
-//                chatBubble.bgc = "${MessageUtil.MESSAGE_BG}-${MessageUtil.MESSAGE_BG}"
+//                chatBubble.bgc = "${MessageHelper.MESSAGE_BG}-${MessageHelper.MESSAGE_BG}"
                 val gDrawable = GradientDrawable()
-                gDrawable.cornerRadius = dp2pxf(MessageUtil.MESSAGE_BG_RADIUS)
+                gDrawable.cornerRadius = dp2pxf(TplHelper.MESSAGE_BG_RADIUS)
                 gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
-                val colorInt: Int = Color.parseColor(MessageUtil.MESSAGE_BG)
+                val colorInt: Int = Color.parseColor(TplHelper.MESSAGE_BG)
                 gDrawable.setColor(colorInt)
                 draweeSpanTv.backgroundDrawable = gDrawable
                 dlp.topMargin = dp2px(3)
@@ -112,7 +121,7 @@ class BeautyBubbleTextView : RelativeLayout {
                     logger.info("colors=$colorInts")
                     if (colorInts.size > 1) {
                         val gDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colorInts.toIntArray())
-                        val radius = if (chatBubble.radius == -1) MessageUtil.MESSAGE_BG_RADIUS else chatBubble.radius
+                        val radius = if (chatBubble.radius == -1) TplHelper.MESSAGE_BG_RADIUS else chatBubble.radius
                         gDrawable.cornerRadius = dp2pxf(radius)
                         //默认透明度
 //                        gDrawable.alpha = (0.4 * 255).toInt()
@@ -124,7 +133,7 @@ class BeautyBubbleTextView : RelativeLayout {
                                 colorBdInts.add(color)
                             }
                             if (colorBdInts.isNotEmpty()) {
-                                gDrawable.setStroke(dp2px(1), colorBdInts[0])
+                                gDrawable.setStroke(dp2px(0.7f), colorBdInts[0])
                             }
 
                             gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
@@ -170,7 +179,10 @@ class BeautyBubbleTextView : RelativeLayout {
 //                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_rt_id)
                 if (svgaPlayerViewRt == null) {
                     svgaPlayerViewRt = SVGAPlayerView(context)
-                    val sParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 12), dp2px(map["h"]?.toIntOrNull() ?: 12))
+                    val sParams = LayoutParams(
+                        dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE),
+                        dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    )
 
                     sParams.alignEnd(R.id.draweeSpanTv)
                     sParams.sameTop(R.id.draweeSpanTv)
@@ -182,8 +194,8 @@ class BeautyBubbleTextView : RelativeLayout {
                     addView(svgaPlayerViewRt, sParams)
                 } else {
                     val sParams = svgaPlayerViewRt!!.layoutParams as LayoutParams
-                    sParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
-                    sParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
+                    sParams.width = dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    sParams.height = dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
                     svgaPlayerViewRt!!.show()
                     svgaPlayerViewRt!!.requestLayout()
                 }
@@ -192,7 +204,11 @@ class BeautyBubbleTextView : RelativeLayout {
 //                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_rt_id)
                 if (webpGifViewRt == null) {
                     webpGifViewRt = SimpleDraweeView(context)
-                    val wParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 12), dp2px(map["h"]?.toIntOrNull() ?: 12))
+                    webpGifViewRt!!.hierarchy.actualImageScaleType = ScalingUtils.ScaleType.FIT_CENTER
+                    val wParams = LayoutParams(
+                        dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE),
+                        dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    )
                     wParams.alignEnd(R.id.draweeSpanTv)
                     wParams.sameTop(R.id.draweeSpanTv)
                     wParams.topMargin = -(dp2px(7))
@@ -202,8 +218,8 @@ class BeautyBubbleTextView : RelativeLayout {
                     webpGifViewRt!!.loadImageInPx(rt, wParams.width, wParams.height)
                 } else {
                     val wParams = webpGifViewRt!!.layoutParams as LayoutParams
-                    wParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
-                    wParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
+                    wParams.width = dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    wParams.height = dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
                     webpGifViewRt!!.show()
                     webpGifViewRt!!.requestLayout()
                     webpGifViewRt!!.loadImageInPx(rt, wParams.width, wParams.height)
@@ -219,7 +235,10 @@ class BeautyBubbleTextView : RelativeLayout {
 //                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_rb_id)
                 if (svgaPlayerViewRb == null) {
                     svgaPlayerViewRb = SVGAPlayerView(context)
-                    val sParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 12), dp2px(map["h"]?.toIntOrNull() ?: 12))
+                    val sParams = LayoutParams(
+                        dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE),
+                        dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    )
 
                     sParams.alignEnd(R.id.draweeSpanTv)
                     sParams.sameBottom(R.id.draweeSpanTv)
@@ -231,8 +250,8 @@ class BeautyBubbleTextView : RelativeLayout {
                     addView(svgaPlayerViewRb, sParams)
                 } else {
                     val sParams = svgaPlayerViewRb!!.layoutParams as LayoutParams
-                    sParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
-                    sParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
+                    sParams.width = dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    sParams.height = dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
                     svgaPlayerViewRb!!.show()
                     svgaPlayerViewRb!!.requestLayout()
                 }
@@ -242,7 +261,11 @@ class BeautyBubbleTextView : RelativeLayout {
 //                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_rb_id)
                 if (webpGifViewRb == null) {
                     webpGifViewRb = SimpleDraweeView(context)
-                    val wParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 12), dp2px(map["h"]?.toIntOrNull() ?: 12))
+                    webpGifViewRb!!.hierarchy.actualImageScaleType = ScalingUtils.ScaleType.FIT_CENTER
+                    val wParams = LayoutParams(
+                        dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE),
+                        dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    )
                     wParams.alignEnd(R.id.draweeSpanTv)
                     wParams.sameBottom(R.id.draweeSpanTv)
                     wParams.bottomMargin = -(dp2px(7))
@@ -252,11 +275,11 @@ class BeautyBubbleTextView : RelativeLayout {
                     webpGifViewRb!!.loadImageInPx(rb, wParams.width, wParams.height)
                 } else {
                     val wParams = webpGifViewRb!!.layoutParams as LayoutParams
-                    wParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
-                    wParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
+                    wParams.width = dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    wParams.height = dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
                     webpGifViewRb!!.show()
                     webpGifViewRb!!.requestLayout()
-                    webpGifViewRb!!.loadImageInPx(rt, wParams.width, wParams.height)
+                    webpGifViewRb!!.loadImageInPx(rb, wParams.width, wParams.height)
                 }
 
             }
@@ -269,7 +292,10 @@ class BeautyBubbleTextView : RelativeLayout {
 //                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_lt_id)
                 if (svgaPlayerViewLt == null) {
                     svgaPlayerViewLt = SVGAPlayerView(context)
-                    val sParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 12), dp2px(map["h"]?.toIntOrNull() ?: 12))
+                    val sParams = LayoutParams(
+                        dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE),
+                        dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    )
                     sParams.alignStart(R.id.draweeSpanTv)
                     sParams.sameTop(R.id.draweeSpanTv)
                     sParams.topMargin = -(dp2px(7))
@@ -280,8 +306,8 @@ class BeautyBubbleTextView : RelativeLayout {
                     addView(svgaPlayerViewLt, sParams)
                 } else {
                     val sParams = svgaPlayerViewLt!!.layoutParams as LayoutParams
-                    sParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
-                    sParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
+                    sParams.width = dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    sParams.height = dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
                     svgaPlayerViewLt?.show()
                     svgaPlayerViewLt?.requestLayout()
                 }
@@ -291,7 +317,11 @@ class BeautyBubbleTextView : RelativeLayout {
 //                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_lt_id)
                 if (webpGifViewLt == null) {
                     webpGifViewLt = SimpleDraweeView(context)
-                    val wParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 12), dp2px(map["h"]?.toIntOrNull() ?: 12))
+                    webpGifViewLt!!.hierarchy.actualImageScaleType = ScalingUtils.ScaleType.FIT_CENTER
+                    val wParams = LayoutParams(
+                        dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE),
+                        dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    )
                     wParams.alignStart(R.id.draweeSpanTv)
                     wParams.sameTop(R.id.draweeSpanTv)
                     wParams.topMargin = -(dp2px(7))
@@ -301,11 +331,11 @@ class BeautyBubbleTextView : RelativeLayout {
                     webpGifViewLt!!.loadImageInPx(lt, wParams.width, wParams.height)
                 } else {
                     val wParams = webpGifViewLt!!.layoutParams as LayoutParams
-                    wParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
-                    wParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
+                    wParams.width = dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    wParams.height = dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
                     webpGifViewLt!!.show()
                     webpGifViewLt!!.requestLayout()
-                    webpGifViewLt!!.loadImageInPx(rt, wParams.width, wParams.height)
+                    webpGifViewLt!!.loadImageInPx(lt, wParams.width, wParams.height)
                 }
 
             }
@@ -318,7 +348,10 @@ class BeautyBubbleTextView : RelativeLayout {
 //                var svgaPlayerView = findViewById<SVGAPlayerView>(R.id.bb_svga_lb_id)
                 if (svgaPlayerViewLb == null) {
                     svgaPlayerViewLb = SVGAPlayerView(context)
-                    val sParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 12), dp2px(map["h"]?.toIntOrNull() ?: 12))
+                    val sParams = LayoutParams(
+                        dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE),
+                        dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    )
 
                     sParams.alignStart(R.id.draweeSpanTv)
                     sParams.sameBottom(R.id.draweeSpanTv)
@@ -330,8 +363,8 @@ class BeautyBubbleTextView : RelativeLayout {
                     addView(svgaPlayerViewLb, sParams)
                 } else {
                     val sParams = svgaPlayerViewLb!!.layoutParams as LayoutParams
-                    sParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
-                    sParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
+                    sParams.width = dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    sParams.height = dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
                     svgaPlayerViewLb!!.show()
                     svgaPlayerViewLb!!.requestLayout()
                 }
@@ -339,9 +372,14 @@ class BeautyBubbleTextView : RelativeLayout {
                 startPlaySvga(lb, svgaPlayerViewLb!!)
             } else {
 //                var webpGifView = findViewById<SimpleDraweeView>(R.id.bb_sdv_lb_id)
+                logger.info("lb=${chatBubble.lb}")
                 if (webpGifViewLb == null) {
                     webpGifViewLb = SimpleDraweeView(context)
-                    val wParams = LayoutParams(dp2px(map["w"]?.toIntOrNull() ?: 12), dp2px(map["h"]?.toIntOrNull() ?: 12))
+                    webpGifViewLb!!.hierarchy.actualImageScaleType = ScalingUtils.ScaleType.FIT_CENTER
+                    val wParams = LayoutParams(
+                        dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE),
+                        dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    )
                     wParams.alignStart(R.id.draweeSpanTv)
                     wParams.sameBottom(R.id.draweeSpanTv)
                     wParams.bottomMargin = -(dp2px(7))
@@ -351,11 +389,11 @@ class BeautyBubbleTextView : RelativeLayout {
                     webpGifViewLb!!.loadImageInPx(lb, wParams.width, wParams.height)
                 } else {
                     val wParams = webpGifViewLb!!.layoutParams as LayoutParams
-                    wParams.width = dp2px(map["w"]?.toIntOrNull() ?: 12)
-                    wParams.height = dp2px(map["h"]?.toIntOrNull() ?: 12)
+                    wParams.width = dp2px(map["w"]?.toIntOrNull() ?: DEFAULT_SIZE)
+                    wParams.height = dp2px(map["h"]?.toIntOrNull() ?: DEFAULT_SIZE)
                     webpGifViewLb!!.show()
                     webpGifViewLb!!.requestLayout()
-                    webpGifViewLb!!.loadImageInPx(rt, wParams.width, wParams.height)
+                    webpGifViewLb!!.loadImageInPx(lb, wParams.width, wParams.height)
                 }
 
             }
@@ -371,14 +409,13 @@ class BeautyBubbleTextView : RelativeLayout {
         val callback: SVGAParser.ParseCompletion = object : SVGAParser.ParseCompletion {
             override fun onComplete(videoItem: SVGAVideoEntity) {
                 svgaPlayerView.setVideoItem(videoItem)
-//                svgaViewModel.animationFinish.value = null
                 svgaPlayerView.startAnimation()
             }
 
             override fun onError() {
             }
         }
-        SVGAHelper.startParse(url, callback)
+        SVGAHelper.parseNoCache(StringHelper.getOssImgUrl(url), callback)
     }
 
     private fun parseParams(paramString: String): Map<String, String> {

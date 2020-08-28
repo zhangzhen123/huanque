@@ -46,7 +46,7 @@ class AboutUsActivity : BaseActivity() {
         view_consumer.onClickNew {
             //客服热线，跳转拨打电话页面
             //跳转到拨号界面，同时传递电话号码
-            val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:400-400-400"))
+            val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:0571-87396543"))
             startActivity(dialIntent)
         }
 

@@ -39,6 +39,8 @@ object BusiConstant {
 
     //广场封面大小
     const val OSS_350 = "!350"
+
+    var DESTROY_ACCOUNT_RESULT_CODE = 502 //注销账号result_code
 }
 
 /**
@@ -65,7 +67,7 @@ object SPParamKey {
 
     //悬浮窗内的ProgramId
     const val PROGRAM_ID_IN_FLOATING = "PROGRAM_ID_IN_FLOATING"
-    
+
     //客服地址
     const val CUSTOMER_URL = "CUSTOMER_URL"
 }
@@ -828,7 +830,11 @@ object PlayerFrom {
     //传送门
     const val SendRoom = "SendRoom"
 
+    //花魁榜
+    const val FlowerRank = "FlowerRank"
+
     const val RN = "RN"
+    const val DESTROY_ACCOUNT = "destroyAccount"
 }
 
 /**
@@ -866,4 +872,7 @@ object Agreement {
 
     //主播管理规范
     const val AnchorAgreement = "https://cdn.ihuanque.com/protocol/AnchorManage.html"
+}
+object MetaKey {
+    const val DOWNLOAD_CHANNEL = "UMENG_CHANNEL"//渠道链接  2018/2/26修改本地渠道链接标识DOWNLOAD_CHANNEL为UMENG_CHANNEL
 }

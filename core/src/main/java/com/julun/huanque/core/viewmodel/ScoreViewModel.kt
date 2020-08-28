@@ -51,7 +51,7 @@ class ScoreViewModel : BaseViewModel() {
                 result.isPull = queryType != QueryType.LOAD_MORE
                 refreshData.value = result.convertRtData()
             }, error = {
-                refreshData.value = it.convertListError(RootListData(isPull = queryType != QueryType.LOAD_MORE))
+                refreshData.value = it.convertListError(queryType)
             }, needLoadState = queryType == QueryType.INIT)
         }
     }
@@ -71,7 +71,7 @@ class ScoreViewModel : BaseViewModel() {
                 result.isPull = queryType != QueryType.LOAD_MORE
                 refreshData.value = result.convertRtData()
             }, error = {
-                refreshData.value = it.convertListError(RootListData(isPull = queryType != QueryType.LOAD_MORE))
+                refreshData.value = it.convertListError(queryType)
             }, needLoadState = queryType == QueryType.INIT)
         }
 
@@ -92,7 +92,7 @@ class ScoreViewModel : BaseViewModel() {
                 result.isPull = queryType != QueryType.LOAD_MORE
                 refreshData.value = result.convertRtData()
             }, error = {
-                refreshData.value = it.convertListError(RootListData(isPull = queryType != QueryType.LOAD_MORE))
+                refreshData.value = it.convertListError(queryType)
             }, needLoadState = queryType == QueryType.INIT)
         }
 

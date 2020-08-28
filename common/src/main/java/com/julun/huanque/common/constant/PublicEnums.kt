@@ -405,6 +405,9 @@ object MessageConstants {
     //亲密度等级提升
     const val FRIEDN_LEVEL_UP = "IntimateLevelUp"
 
+    //花魁榜
+    const val PlumFlower = "PlumFlower"
+
 
 }
 
@@ -554,11 +557,13 @@ object ImageActivityOperate {
     const val REPORT: String = "report"
     const val SAVE: String = "save"
 }
+
 object ImageActivityFrom {
     const val CHAT: String = "chat"
     const val HOME: String = "home"
     const val RN: String = "rn"
 }
+
 /**
  * 隐私权限list
  * @author WanZhiYuan
@@ -566,18 +571,22 @@ object ImageActivityFrom {
 object PrivacyEnums {
     //位置
     const val PRIVACY_ADDRESS = "address"
+
     //通知
     const val PRIVACY_NOTIFICATION = "notification"
+
     //照相机
     const val PRIVATE_CAMERA = "camera"
+
     //文件
     const val PRIVATE_FLIE = "file"
+
     //麦克风
     const val PRIVACY_MIKE = "mike"
 }
 
-object HomeMakeMoneyType{
-    const val Invite="Invite"
-    const val Game="Game"
-    const val Task="Task"
+object HomeMakeMoneyType {
+    const val Invite = "Invite"
+    const val Game = "Game"
+    const val Task = "Task"
 }

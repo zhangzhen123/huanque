@@ -173,8 +173,8 @@ class UserCardFragment : BaseDialogFragment() {
                 return@Observer
             }
             if (it != null && it.isSuccess()) {
-                mUserCardViewModel.userInfoData.value?.follow = it.getT().follow != FollowStatus.False
-                if (it.getT().follow != FollowStatus.False) {
+                mUserCardViewModel.userInfoData.value?.follow = it.requireT().follow != FollowStatus.False
+                if (it.requireT().follow != FollowStatus.False) {
                     //关注状态
                     tv_attention.text = "已关注"
                 } else {
@@ -263,17 +263,17 @@ class UserCardFragment : BaseDialogFragment() {
 
         view_caifu_level.onClickNew {
             //打开财富等级说明页
-            WebActivity.startWeb(requireActivity(), "www.baidu.com")
+            RNPageActivity.start(requireActivity(),RnConstant.WEALTH_LEVEL_PAGE,Bundle().apply { putLong("programId",mUserCardViewModel.programId) })
         }
         view_guizu_level.onClickNew {
             //打开贵族等级说明页
             val bundle = Bundle()
-            bundle.putLong("programId",mPlayerViewModel.programId)
-            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
+            bundle.putLong("programId", mPlayerViewModel.programId)
+            RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE, bundle)
         }
         view_zhubo_level.onClickNew {
             //打开主播等级说明页
-            WebActivity.startWeb(requireActivity(), "www.baidu.com")
+            RNPageActivity.start(requireActivity(),RnConstant.ANCHOR_LEVEL_PAGE)
         }
         ll_leyuan.onClickNew {
             //打开游戏
@@ -301,6 +301,9 @@ class UserCardFragment : BaseDialogFragment() {
         ImageHelper.setDefaultHeaderPic(sdv_header, sex)
         ImageUtils.loadImage(sdv_header, data.headPic, 80f, 80f)
         tv_nickname.text = data.nickname
+        if (data.nickcolor.isNotEmpty()) {
+            tv_nickname.textColor = GlobalUtils.formatColor(data.nickcolor)
+        }
         tv_id.text = "欢鹊ID：${mUserCardViewModel.mUserId}"
 
         if (data.canReport) {

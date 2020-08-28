@@ -628,7 +628,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     if (params?.hasKey("list") == true) {
                         val rrl = params.getArray("list") ?: return@runOnUiThread
                         for (i in 0 until rrl.size()) {
-                            list.add(rrl.getMap(i)?.getString("coverPic") ?: "")
+                            list.add(rrl.getString(i) ?: "")
                         }
                     }
 

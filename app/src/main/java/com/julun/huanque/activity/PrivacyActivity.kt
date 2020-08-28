@@ -105,7 +105,7 @@ class PrivacyActivity : BaseActivity() {
                     }
                 }
                 PrivacyEnums.PRIVATE_FLIE -> {
-                    helper.setText(R.id.tvPriName, "文件存储和访问功能")
+                    helper.setText(R.id.tvPriName, "文件存储和访问")
                     if (ContextCompat.checkSelfPermission(application, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         //没有外部存储读取权限,添加该权限
                         helper.setText(R.id.tvPriState, "去设置")

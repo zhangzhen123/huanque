@@ -4,15 +4,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.beans.AnonymousBasicInfo
 import com.julun.huanque.common.bean.beans.CheckBeansData
+import com.julun.huanque.common.bean.beans.FollowResultBean
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
+import com.julun.huanque.common.bean.events.SendRNEvent
+import com.julun.huanque.common.bean.events.UserInfoChangeEvent
+import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.InviteUserIdForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.RNMessageConst
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
+import com.julun.huanque.common.suger.convertError
+import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -54,6 +63,12 @@ class AnonymousVoiceViewModel : BaseViewModel() {
     //结束声音
     val closeSoundFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //匿名语音结束标记位
+    val voiceEndFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //关注结果
+    val followStatusData: MutableLiveData<FollowResultBean> by lazy { MutableLiveData<FollowResultBean>() }
+
     //声网token
     var agoraToken = ""
 
@@ -65,6 +80,8 @@ class AnonymousVoiceViewModel : BaseViewModel() {
 
     //邀请的用户ID
     var inviteUserId = 0L
+
+    var targetUserId = 0L
 
 
     fun getBasicData() {
@@ -83,6 +100,8 @@ class AnonymousVoiceViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 socialService.startMatch().dataConvert()
+            }, {
+                currentState.value = WAIT
             })
         }
     }
@@ -108,8 +127,11 @@ class AnonymousVoiceViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 socialService.avoiceHangUp(NetcallIdForm(callId)).dataConvert()
+            }, {}, {
+                ToastUtils.show("匿名语音已结束")
                 closeSoundFlag.value = true
-            }, {}, { currentState.value = WAIT })
+                voiceEndFlag.value = true
+            })
         }
     }
 
@@ -156,8 +178,44 @@ class AnonymousVoiceViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = socialService.avoiceAccept(InviteUserIdForm(inviteUserId)).dataConvert()
+                currentState.value = VOICE
+            }, {
+                currentState.value = WAIT
+            }, {
+
             })
         }
     }
 
+    /**
+     *
+     * 拒绝邀请
+     */
+    fun avoiceReject(inviteUserId: Long) {
+        viewModelScope.launch {
+            request({
+                socialService.avoiceReject(InviteUserIdForm(inviteUserId)).dataConvert()
+            }, {}, {
+                closeSoundFlag.value = true
+                voiceEndFlag.value = true
+            })
+        }
+    }
+
+    /**
+     * 关注
+     */
+    fun follow(userId: Long) {
+        viewModelScope.launch {
+            request({
+                val follow = socialService.follow(FriendIdForm(userId)).dataConvert()
+                val followBean = FollowResultBean(follow = follow.follow, userId = userId)
+                followStatusData.value = followBean
+                EventBus.getDefault().post(UserInfoChangeEvent(userId,follow.stranger))
+                EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
+            }, {
+
+            })
+        }
+    }
 }

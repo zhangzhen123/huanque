@@ -52,8 +52,18 @@ class MyAlertDialog : AppBaseDialog {
      *  所有的样式风格属性
      */
 
-    fun showAlertCustom(message: String, callback: MyDialogCallback? = MyDialogCallback(), hasOk: Boolean = true, okText: String = "确认", hasNo: Boolean = true, noText: String = "取消", title: String = "提示"
-                        , hasTitle: Boolean = false, cancelable: Boolean = false) {
+    fun showAlertCustom(
+        message: String,
+        callback: MyDialogCallback? = MyDialogCallback(),
+        hasOk: Boolean = true,
+        okText: String = "确认",
+        hasNo: Boolean = true,
+        noText: String = "取消",
+        title: String = "提示"
+        ,
+        hasTitle: Boolean = false,
+        cancelable: Boolean = false
+    ) {
         //要不要确定按钮
         if (hasOk) {
             rightText?.show()
@@ -83,13 +93,24 @@ class MyAlertDialog : AppBaseDialog {
         setCancelable(cancelable)
         show()
     }
+
     /**
      *
      *  所有的样式风格属性 支持富文本内容
      */
 
-    fun showAlertCustomWithSpannable(message: SpannableString, callback: MyDialogCallback? = MyDialogCallback(), hasOk: Boolean = true, okText: String = "确认", hasNo: Boolean = true, noText: String = "取消", title: String = "提示"
-                        , hasTitle: Boolean = false, cancelable: Boolean = true) {
+    fun showAlertCustomWithSpannable(
+        message: SpannableString,
+        callback: MyDialogCallback? = MyDialogCallback(),
+        hasOk: Boolean = true,
+        okText: String = "确认",
+        hasNo: Boolean = true,
+        noText: String = "取消",
+        title: String = "提示"
+        ,
+        hasTitle: Boolean = false,
+        cancelable: Boolean = true
+    ) {
         //要不要确定按钮
         if (hasOk) {
             rightText?.show()
@@ -119,13 +140,28 @@ class MyAlertDialog : AppBaseDialog {
         setCancelable(cancelable)
         show()
     }
+
     //有确认和取消  可取消的弹窗
-    fun showAlertWithOKAndCancelAny(message: String, callback: MyDialogCallback? = MyDialogCallback(), title: String = "提示", okText: String = "确认", noText: String = "取消", cancelable: Boolean = false) {
+    fun showAlertWithOKAndCancelAny(
+        message: String,
+        callback: MyDialogCallback? = MyDialogCallback(),
+        title: String = "提示",
+        okText: String = "确认",
+        noText: String = "取消",
+        cancelable: Boolean = false
+    ) {
         showAlertCustom(message, callback, true, okText, true, noText, title, true, cancelable)
     }
 
     //有确认和取消
-    fun showAlertWithOKAndCancel(message: String, callback: MyDialogCallback? = MyDialogCallback(), title: String = "提示", okText: String = "确认", noText: String = "取消", hasTitle: Boolean = true) {
+    fun showAlertWithOKAndCancel(
+        message: String,
+        callback: MyDialogCallback? = MyDialogCallback(),
+        title: String = "提示",
+        okText: String = "确认",
+        noText: String = "取消",
+        hasTitle: Boolean = true
+    ) {
         showAlertCustom(message, callback, true, okText, true, noText, title, hasTitle, true)
     }
 
@@ -187,7 +223,11 @@ class MyAlertDialog : AppBaseDialog {
     /**
      * 设置取消按钮
      */
-    fun setCancelButtonType(content: String = "取消", color: Int = context.resources.getColor(R.color.black_333), isShow: Boolean = true): MyAlertDialog {
+    fun setCancelButtonType(
+        content: String = "取消",
+        color: Int = context.resources.getColor(R.color.black_333),
+        isShow: Boolean = true
+    ): MyAlertDialog {
         if (!isShow) {
             cancelText!!.visibility = View.GONE
             fgxView!!.visibility = View.GONE
@@ -202,7 +242,11 @@ class MyAlertDialog : AppBaseDialog {
     /**
      * 设置确定按钮
      */
-    fun setConfirmButtonType(content: String = "确定", color: Int = context.resources.getColor(R.color.black_333), isShow: Boolean = true): MyAlertDialog {
+    fun setConfirmButtonType(
+        content: String = "确定",
+        color: Int = context.resources.getColor(R.color.black_333),
+        isShow: Boolean = true
+    ): MyAlertDialog {
         if (!isShow) {
             rightText?.visibility = View.GONE
             fgxView?.visibility = View.GONE
@@ -217,7 +261,10 @@ class MyAlertDialog : AppBaseDialog {
     /**
      * 设置按钮颜色
      */
-    fun setButtonColor(leftColor: Int = context.resources.getColor(R.color.black_333),rightColor: Int = context.resources.getColor(R.color.black_333)){
+    fun setButtonColor(
+        leftColor: Int = context.resources.getColor(R.color.black_333),
+        rightColor: Int = context.resources.getColor(R.color.black_333)
+    ) {
         cancelText?.textColor = leftColor
         rightText?.textColor = rightColor
     }
@@ -225,11 +272,11 @@ class MyAlertDialog : AppBaseDialog {
     override fun initEvents() {
         cancelText!!.setOnClickListener(this)
         rightText!!.setOnClickListener(this)
-//        this.setOnCancelListener {
-//            if (this.callback != null) {
-//                this.callback!!.onCancel()
-//            }
-//        }
+        this.setOnCancelListener {
+            if (this.callback != null) {
+                this.callback!!.onDissmiss()
+            }
+        }
     }
 
     override fun onClick(v: View) {
@@ -244,6 +291,6 @@ class MyAlertDialog : AppBaseDialog {
         this.dismiss()
     }
 
-    class MyDialogCallback(val onCancel: () -> Unit = {}, val onRight: () -> Unit = {})
+    class MyDialogCallback(val onCancel: () -> Unit = {}, val onRight: () -> Unit = {}, val onDissmiss: () -> Unit = {})
 
 }

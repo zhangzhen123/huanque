@@ -15,8 +15,8 @@ class AnimatedRainbowSpan(private var colors: IntArray= intArrayOf(Color.BLUE, C
     override fun updateDrawState(paint: TextPaint) {
 //        logger("updateDrawState $translateXPercentage")
         translateXPercentage += 0.02f
-        if(translateXPercentage>=5f){
-            translateXPercentage=0f
+        if(translateXPercentage>=2f){
+            translateXPercentage=0.02f
         }
         paint.style = Paint.Style.FILL
 //        val width=paint.measureText(text)

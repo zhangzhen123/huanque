@@ -33,6 +33,7 @@ import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
+import com.julun.huanque.core.manager.AliplayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.rnlib.RNPageActivity
@@ -80,19 +81,24 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 logger.info("start 总长=${audioPlayerManager.getDuration()}")
                 //不使用实际的值
 //                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
+                AliplayerManager.soundOff()
             }
 
+            override fun resume() {
+                logger.info("resume")
+                AliplayerManager.soundOff()
+            }
             override fun pause() {
                 logger.info("pause")
+                AliplayerManager.soundOn()
             }
 
             override fun stop() {
                 logger.info("stop")
+                AliplayerManager.soundOn()
             }
 
-            override fun reset() {
-                logger.info("reset")
-            }
+
         })
         audioPlayerManager.setMediaPlayInfoListener(object : MediaPlayInfoListener {
             override fun onError(mp: MediaPlayer?, what: Int, extra: Int) {
@@ -206,7 +212,13 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
                     }
                     HeadModule.PlumFlower -> {
-
+                        //花魁
+                        activity?.let { act ->
+                            val intent = Intent(act, PlumFlowerActivity::class.java)
+                            if (ForceUtils.activityMatch(intent)) {
+                                act.startActivity(intent)
+                            }
+                        }
                     }
                     else -> {
 
@@ -397,11 +409,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             //
             mRefreshView.isRefreshing = false
             if (it.state == NetStateType.SUCCESS) {
-                loadData(it.getT())
+                loadData(it.requireT())
             } else if (it.state == NetStateType.ERROR) {
-                //dodo
-                val data = it.getT()
-                loadFail(data.isPull)
+                loadFail(it.isRefresh())
             }
         })
 
@@ -506,7 +516,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         mViewModel.queryInfo(QueryType.REFRESH)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")
         if (event.result) {

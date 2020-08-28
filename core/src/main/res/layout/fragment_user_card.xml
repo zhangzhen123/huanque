@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="16dp">
 
-            <com.julun.huanque.common.widgets.ShimmerTextView
+            <TextView
                 android:id="@+id/tv_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -212,7 +212,7 @@
             <TextView
                 android:id="@+id/tv_caifu_level"
                 android:layout_width="wrap_content"
-                android:layout_height="16dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
@@ -266,7 +266,7 @@
             <TextView
                 android:id="@+id/tv_guizu_level"
                 android:layout_width="wrap_content"
-                android:layout_height="16dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
@@ -320,7 +320,7 @@
             <TextView
                 android:id="@+id/tv_zhubo_level"
                 android:layout_width="wrap_content"
-                android:layout_height="16dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="@color/white"

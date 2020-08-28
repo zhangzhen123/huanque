@@ -34,6 +34,7 @@ import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.WebpAnimatorListener
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
@@ -196,9 +197,18 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     val sdvImage = helper.getView<SimpleDraweeView>(R.id.sdv_image)
 //                    showGiftView(helper, content.context)
                     sdvImage.backgroundResource = R.drawable.bg_gift_pic
-                    val imageResource = EmojiSpanBuilder.getPrivilegeResource(context, content.context)
-                    ImageUtils.loadImageLocal(sdvImage, imageResource)
-                    showTextImageQueBi(helper.getView<SimpleDraweeSpanTextView>(R.id.tv_quebi), item, helper.adapterPosition)
+                    val contentContext = content.context
+                    if (contentContext.isNotEmpty()) {
+                        try {
+                            val name = JsonUtil.deserializeAsObject<String>(contentContext, String::class.java)
+                            val pUrl = GlobalUtils.getPrivilegeUrl(name)
+                            sdvImage.loadImage(pUrl, 100f, 100f)
+                        } catch (e: java.lang.Exception) {
+                            e.printStackTrace()
+                        }
+
+                        showTextImageQueBi(helper.getView<SimpleDraweeSpanTextView>(R.id.tv_quebi), item, helper.adapterPosition)
+                    }
                 }
                 MessageCustomBeanType.Expression_Animation -> {
                     //动画表情

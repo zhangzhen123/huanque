@@ -9,20 +9,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.TextView
+import com.alibaba.android.arouter.launcher.ARouter
+import com.facebook.cache.common.CacheErrorLogger
+import com.facebook.cache.disk.DiskCacheConfig
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.R
+import com.julun.huanque.common.bean.events.HideFloatingEvent
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.manager.ActivitiesManager
-import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
+import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
+import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.utils.svga.SVGAHelper
+import kotlinx.coroutines.*
+import org.greenrobot.eventbus.EventBus
 import org.jay.launchstarter.TaskDispatcher
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
+import java.io.File
+import java.lang.Exception
 import java.lang.ref.WeakReference
 
 /**
@@ -46,15 +57,16 @@ class CommonInit {
 
 
     }
+
     //这里记录fresco配置 给其他第三方用
-    var frescoConfig: ImagePipelineConfig?=null
+    var frescoConfig: ImagePipelineConfig? = null
     private var urlTest = "http://office.katule.cn:9205/"
 
     //保存的全局application
     private lateinit var mContext: Application
     var inSDK = true
 
-//    private var libraryListener: CommonListener? = null
+    //    private var libraryListener: CommonListener? = null
 //
 //    fun setCommonListener(listener: CommonListener) {
 //        this.libraryListener = listener
@@ -63,6 +75,9 @@ class CommonInit {
 //    fun getCommonListener() = libraryListener
     //当前处于活动状态的Activity
     private var mActivityReference: WeakReference<Activity>? = null
+
+    //当前显示页面数量
+    private var mActCount = 0
 
 
     //判断app是否在前台
@@ -142,6 +157,7 @@ class CommonInit {
 
             override fun onActivityStarted(activity: Activity) {
                 logger("onActivityStarted:$activity")
+                mActCount++
                 setCurrentActivity(activity)
             }
 
@@ -154,6 +170,11 @@ class CommonInit {
 
             override fun onActivityStopped(activity: Activity) {
                 logger("onActivityStopped:$activity")
+                mActCount--
+                if (mActCount == 0) {
+                    //从前台退到后台
+                    EventBus.getDefault().post(HideFloatingEvent())
+                }
             }
 
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
@@ -161,16 +182,8 @@ class CommonInit {
             }
 
         })
-//        if (BuildConfig.DEBUG) {           // 这两行必须写在init之前，否则这些配置在init过程中将无效
-//            ARouter.openLog()     // 打印日志
-//            ARouter.openDebug()  // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
-//        }
-//        ARouter.init(application) // 尽可能早，推荐在Application中初始化
-//        PartyLibraryInit.getInstance().initComponent(application)
         initTask(application)
     }
-
-
 
 
     /**
@@ -288,5 +301,177 @@ class CommonInit {
             taskDispatcher?.await()
             taskDispatcher = null
         }
+    }
+
+    suspend fun initWithCoroutines(application: Application) {
+        val currentTime = System.currentTimeMillis()
+        logger("common initWithCoroutines start----${Thread.currentThread()} ")
+        mContext = application
+        application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+            override fun onActivityPaused(activity: Activity?) {
+                isAppOnForeground = false
+            }
+
+            override fun onActivityResumed(activity: Activity) {
+                setCurrentActivity(activity)
+                isAppOnForeground = true
+
+                if (activity != null && (activity.localClassName == "com.cmic.sso.sdk.activity.LoginAuthActivity" || activity.localClassName == "cn.jiguang.verifysdk.CtLoginActivity")) {
+                    val contentView = activity.window?.peekDecorView()?.findViewById<View>(android.R.id.content)
+                        ?: return
+                    //获取号码栏
+                    val phoneView = getMatchTextView(contentView, "****") ?: return
+                    val viewContent = phoneView.text.toString().trim()
+                    if (viewContent.contains("本机号码")) {
+                        return
+                    }
+                    val realContent = "本机号码：$viewContent"
+                    phoneView.text = realContent
+                    phoneView.backgroundResource = R.drawable.bg_owner_phone_number
+//                    phoneView.backgroundColor = GlobalUtils.getColor(R.color.black_333)
+                    //设置宽高
+                    val params = phoneView.layoutParams
+                    params.height = activity.dip(50)
+                    val phoneNumWidthPx = ScreenUtils.getScreenWidth() - activity.dip(38) * 2
+                    params.width = phoneNumWidthPx
+                    phoneView.layoutParams = params
+                    //获取隐私栏
+//                    val privacyView = getMatchTextView(contentView, "登录即为同意羚萌") ?: return
+//                    val privacyText = privacyView.text
+//                    if(privacyText is SpannableString){
+//                        privacyText.getSpans()
+//                    }
+                }
+
+            }
+
+            override fun onActivityStarted(activity: Activity) {
+                logger("onActivityStarted:$activity")
+                mActCount++
+                setCurrentActivity(activity)
+            }
+
+            override fun onActivityDestroyed(activity: Activity) {
+                ActivitiesManager.removeActivities(activity)
+            }
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
+            }
+
+            override fun onActivityStopped(activity: Activity) {
+                logger("onActivityStopped:$activity")
+                mActCount--
+                if (mActCount == 0) {
+                    //从前台退到后台
+                    EventBus.getDefault().post(HideFloatingEvent())
+                }
+            }
+
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                ActivitiesManager.push(activity)
+            }
+
+        })
+
+        coroutineScope {
+            val timeC = System.currentTimeMillis()
+            logger("Common  coroutineScope start launch----${Thread.currentThread()} ")
+            val normal = async {
+                val timeN=System.currentTimeMillis()
+                ToastUtils.init(application)//初始化自定义土司
+                SharedPreferencesUtils.init(application)
+                RongCloudManager.clearRoomList()
+                //手动设置Rx ComputationScheduler线程数目
+//        System.setProperty(PartyLibraryInit.KEY_MAX_THREADS, "5")
+                //debug模式开启webview debug调试
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && BuildConfig.DEBUG) {
+                        WebView.setWebContentsDebuggingEnabled(true)
+                    }
+                } catch (e: Exception) {
+//                    e.printStackTrace()
+                }
+                logger("普通内容初始化 end launch----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN} ")
+            }
+
+            val aRouter = async(Dispatchers.Default) {
+                val timeN=System.currentTimeMillis()
+
+                if (BuildConfig.DEBUG) {           // 这两行必须写在init之前，否则这些配置在init过程中将无效
+                    ARouter.openLog()     // 打印日志
+                    ARouter.openDebug()  // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
+                }
+                ARouter.init(mContext as Application) // 尽可能早，推荐在Application中初始化
+                logger("launch ARouter----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN} ")
+                //初始化实名认证SDK
+                ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation()
+                ULog.i("launch REALNAME----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN}")
+            }
+            val fresco = async(Dispatchers.Default) {
+                val time=System.currentTimeMillis()
+                //缓存的试着
+                val cacheConfigBuilder: DiskCacheConfig.Builder = DiskCacheConfig.newBuilder(mContext)
+                val cacheDir: File = mContext.cacheDir
+                val frescoCacheDir = File(cacheDir, "fresco")
+                if (!frescoCacheDir.exists()) {
+                    frescoCacheDir.mkdir()
+                }
+
+                cacheConfigBuilder.setVersion(BuildConfig.VERSION_CODE)
+//                .setMaxCacheSize (1000L)
+//                .setMaxCacheSizeOnLowDiskSpace (100L)
+//                .setMaxCacheSizeOnVeryLowDiskSpace (10)
+                    .setCacheErrorLogger { cacheErrorCategory: CacheErrorLogger.CacheErrorCategory, clazz: Class<*>, _: String, throwable: Throwable? ->
+                        throwable?.printStackTrace()
+                        println("fresco 缓存错误.... cacheErrorCategory -> $cacheErrorCategory class $clazz ")
+                    }
+//                .setBaseDirectoryName(frescoCacheDir.name)
+                    .setBaseDirectoryPathSupplier { frescoCacheDir }
+
+
+                //总体的配置
+                val config: ImagePipelineConfig = OkHttpImagePipelineConfigFactory
+                    .newBuilder(mContext, Requests.getImageClient())//设置 使用 okhttp 客户端
+//                .setSmallImageDiskCacheConfig(cacheConfigBuilder.build())//设置缓存
+                    .setMainDiskCacheConfig(cacheConfigBuilder.build())
+                    .setDownsampleEnabled(true)//设置图片压缩时支持多种类型的图片
+                    .experiment().setDecodeCancellationEnabled(true)
+//                .experiment().setNativeCodeDisabled(true) //是否使用底层去加载
+                    .build()
+                CommonInit.getInstance().frescoConfig = config
+                Fresco.initialize(mContext, config)
+                ULog.i("launch initFresco----${Thread.currentThread()} duration=${System.currentTimeMillis()-time} ")
+            }
+
+            val rong = async(Dispatchers.Default) {
+                val time=System.currentTimeMillis()
+                //蛋疼的融云多次初始化的问题,必须把其他的初始化工作放在融云的初始化工作代码快里面,否则将会执行多次(3次)
+                RongCloudManager.rongCloudInit(mContext as Application) {}
+                ULog.i("launch RongCloudManager----${Thread.currentThread()} duration=${System.currentTimeMillis()-time}")
+            }
+
+            val svga = async(Dispatchers.Default) {
+//                val time=System.currentTimeMillis()
+                //初始化svga播放管理器
+                SVGAHelper.init(mContext)
+//                ULog.i("launch SVGAHelper----${Thread.currentThread()} duration=${System.currentTimeMillis() - time} ")
+            }
+            val oss = async(Dispatchers.Default) {
+//                val time=System.currentTimeMillis()
+                //初始化svga播放管理器
+                OssUpLoadManager.initOss(mContext)
+//                ULog.i("launch initOss----${Thread.currentThread()} duration=${System.currentTimeMillis() - time} ")
+            }
+
+            normal.await()
+            aRouter.await()
+            fresco.await()
+            rong.await()
+            svga.await()
+            oss.await()
+            logger("Common  coroutineScope  end launch----${Thread.currentThread()} duration=${System.currentTimeMillis() - timeC} ")
+        }
+        logger("Common initWithCoroutines end----${Thread.currentThread()} duration=${System.currentTimeMillis() - currentTime} ")
+
     }
 }

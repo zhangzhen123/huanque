@@ -52,8 +52,11 @@ class PrivateConversationViewModel : BaseViewModel() {
     //增加消息
     val addMessageData: MutableLiveData<Message> by lazy { MutableLiveData<Message>() }
 
-    //message有变化
+    //message有变化(添加新消息 传true  添加历史消息 传false)
     val messageChangeState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //变化的消息列表
+    var changeMessageList = mutableListOf<Message>()
 
     //没有更多了
     var noMoreState: Boolean = false
@@ -149,8 +152,9 @@ class PrivateConversationViewModel : BaseViewModel() {
                     noMoreState = (p0?.size ?: 0) < 20
                     val list = messageListData.value
                     if (list != null) {
-                        list.addAll(0, queryMessageList)
-                        messageChangeState.postValue(true)
+                        changeMessageList.clear()
+                        changeMessageList.addAll(queryMessageList)
+                        messageChangeState.postValue(false)
                     } else {
                         messageListData.value = queryMessageList
                     }
@@ -190,7 +194,8 @@ class PrivateConversationViewModel : BaseViewModel() {
         val content = message.content
         if (content is CustomMessage && content.type == MessageCustomBeanType.Expression_Animation) {
             //动画消息
-            messageListData.value?.add(message)
+            changeMessageList.clear()
+            changeMessageList.add(message)
             messageChangeState.postValue(true)
         } else {
             addMessageData.value = message
@@ -198,7 +203,10 @@ class PrivateConversationViewModel : BaseViewModel() {
 
         RongIMClient.getInstance().setMessageReceivedStatus(message.messageId, Message.ReceivedStatus(1))
         //        }
-        EventBus.getDefault().post(EventMessageBean(message.targetId ?: ""))
+        if (message.senderUserId != "${SessionUtils.getUserId()}") {
+            //收到对方消息
+            EventBus.getDefault().post(EventMessageBean(message.targetId ?: "", chatInfoData.value?.stranger ?: false))
+        }
     }
 
 
@@ -219,7 +227,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                 }
                 RongCloudManager.resetUserInfoData(user)
 
-                chatInfoData.value = result.friendUser
+                chatInfoData.value = result.friendUser.apply { stranger = result.stranger }
                 intimateData.value = result.intimate
                 msgFeeData.value = result.msgFee
                 basicBean.value = result

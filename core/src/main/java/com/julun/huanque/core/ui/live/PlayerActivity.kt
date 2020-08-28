@@ -50,6 +50,7 @@ import com.julun.huanque.common.viewmodel.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.core.R
+import com.julun.huanque.core.manager.AliplayerManager
 import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
@@ -129,6 +130,9 @@ class PlayerActivity : BaseActivity() {
 
     //来源
     private var mFrom = ""
+
+    //分享用户Id
+    private var mShareUSerId = ""
 
     override fun getLayoutId(): Int = R.layout.activity_live_room
 
@@ -248,6 +252,10 @@ class PlayerActivity : BaseActivity() {
             isAnchor = intent.getBooleanExtra(UserType.Anchor, false)
             streamId = intent.getStringExtra(IntentParamKey.STREAM_ID.name)
             mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
+            mShareUSerId = intent.getStringExtra(ParamConstant.ShareUserId) ?: ""
+            if (mFrom != PlayerFrom.FloatWindow) {
+                AliplayerManager.stop()
+            }
 //            isFromSquare = intent.getBooleanExtra(FromPager.FROM_SQUARE, false)
             //gift=-1代表无效
             val gift = intent.getIntExtra(IntentParamKey.OPEN_GIFT.name, -1)
@@ -449,6 +457,7 @@ class PlayerActivity : BaseActivity() {
             } else {
                 liveViewManager.preUpAndDownData()
             }
+            publicMessageView.clearMessages()
             if (it.isLiving) {
                 cur_live_bg.hide()
             } else {
@@ -737,6 +746,7 @@ class PlayerActivity : BaseActivity() {
     fun privatePoint(event: EventMessageBean) {
 //        liveViewManager.getUnReadMessageCount()
         playerMessageViewModel.queryRongPrivateCount(event.targetId)
+        playerMessageViewModel.needRefreshConversationFlag.value = event
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -803,7 +813,7 @@ class PlayerActivity : BaseActivity() {
 //                GIODataPool.fromType = null
 //                val positionIndex = GIODataPool.positionIndex
 //                GIODataPool.positionIndex = null
-                form = UserEnterRoomForm(programId, fromType = mFrom)
+                form = UserEnterRoomForm(programId, fromType = mFrom,shareUserId = mShareUSerId)
                 viewModel.enterLivRoom(form)
             }
         } else {
@@ -1017,6 +1027,9 @@ class PlayerActivity : BaseActivity() {
      * 登录成功之后重置页面，和数据不挂钩的页面
      */
     private fun resetView() {
+        //重置缓存数据
+        mFrom = ""
+        mShareUSerId = ""
         //清空缓存的消息ID
         RongCloudManager.cacheList.clear()
         // 移除加载层
@@ -1948,7 +1961,7 @@ class PlayerActivity : BaseActivity() {
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
             }
             val baseData = viewModel.baseData.value
-            if (PermissionUtils.checkFloatPermission(this) && baseData != null) {
+            if (PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
                 FloatingManager.showFloatingView(
                     GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
                     viewModel.programId,
@@ -1956,6 +1969,7 @@ class PlayerActivity : BaseActivity() {
                     !baseData.isLandscape
                 )
             } else {
+                AliplayerManager.stop()
                 viewModel.leaveProgram()
             }
             super.finish()

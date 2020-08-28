@@ -14,6 +14,8 @@ import kotlin.collections.HashMap
 
 /** 送礼事件 **/
 class SendGiftEvent(
+    //昵称颜色
+    var nickColor : String = "",
     var giftId: Int = -1,
     var cacheIt: Boolean = false,
     var count: Int = 0,
@@ -1138,5 +1140,15 @@ class AnonyVoiceHangUpBean(
  */
 class AnonyVoiceInviteBean(
     //邀请的用户ID
-    var inviteUserId: Long = 0
+    var inviteUserId: Long = 0,
+    //邀请的时间
+    var inviteTime: Long = 0
 ) : Serializable
+
+/**
+ * 匿名语音邀请取消消息
+ */
+class AnonyVoiceCancelBean(
+    //邀请的用户ID
+    var inviteUserId: Long = 0
+)

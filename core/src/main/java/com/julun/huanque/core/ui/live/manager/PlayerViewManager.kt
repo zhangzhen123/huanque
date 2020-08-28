@@ -17,12 +17,12 @@ import com.alibaba.fastjson.JSONObject
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.ChatMessageBean
-import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StorageHelper
+import com.julun.huanque.common.helper.TplHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.NotifyManager
 import com.julun.huanque.common.manager.RongCloudManager
@@ -223,13 +223,13 @@ class PlayerViewManager(val context: PlayerActivity) {
 
         viewModel.followStatusData.observe(context, Observer {
             logger.info("Player 关注状态 status = $it")
-            if (it != null && it.isSuccess() && it.getT().userId != viewModel.programId) {
+            if (it != null && it.isSuccess() && it.getT()?.userId != viewModel.programId) {
                 //不是主播的关注数据
                 return@Observer
             }
             context.liveHeader.setSubscribeEnable(true)
             if (it != null && it.isSuccess()) {
-                modifySubscribe(it.getT().follow == FollowStatus.True)
+                modifySubscribe(it.requireT().follow == FollowStatus.True)
             }
 
         })
@@ -703,7 +703,7 @@ class PlayerViewManager(val context: PlayerActivity) {
                 val baseData: BaseData = JsonUtil.deserializeAsObject(runwayMessage.message, BaseData::class.java)
                 val jsonObject = baseData.data as JSONObject
                 val jsonString = jsonObject.toJSONString()
-                val tplBean = MessageUtil.decodeMessageContent(jsonString)
+                val tplBean = TplHelper.decodeMessageContent(jsonString)
                 tplBean.preProcess()
                 //这里的跑到消息,都可以只播放一遍
                 tplBean.context?.canOnlyPlayOneTime = true
@@ -744,7 +744,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 //        chatInputView.setFreeDanMu(data.hasFreeDanMu, data.danMuCard)
 //        chatInputView.mystery = data.mystery
 //        chatInputView.initRoyalDanmu(data.royalLevel)
-//        viewModel.roomUserChatExtra = ChatUtils.createRoomUserChat(roomData, viewModel.baseData.value, isAnchor)
+        viewModel.roomUserChatExtra = ChatUtils.createRoomUserChat(viewModel.roomData, viewModel.baseData.value, false)
     }
 
     /**
@@ -1164,12 +1164,12 @@ class PlayerViewManager(val context: PlayerActivity) {
                 )
             )
 
-            val notify = NotifyManager.checkNotifyPeriodical(context)
+//            val notify = NotifyManager.checkNotifyPeriodical(context)
             //不提醒时才弹成功
-            if (!notify) {
-                //关注成功提示
+//            if (!notify) {
+            //关注成功提示
 //                mDialogManager.openDialog(FollowSuccessFragment::class.java)
-            }
+//            }
 
         } else {
 //            ToastUtils.show(R.string.unsubscribe_success)

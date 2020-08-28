@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.collection.LruCache
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -23,15 +24,14 @@ import com.julun.huanque.common.bean.beans.OnlineUserInfo
 import com.julun.huanque.common.bean.beans.UserInfoBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.PhotoHeadView
-import com.julun.huanque.common.widgets.ShimmerTextView
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
@@ -39,6 +39,7 @@ import com.julun.huanque.core.viewmodel.OnLineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_online_list.*
+import org.jetbrains.anko.textColor
 import java.lang.ref.SoftReference
 
 /**
@@ -101,7 +102,6 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
     override fun showLoadState(state: NetState) {
         when (state.state) {
             NetStateType.SUCCESS -> {
-                mHeadView.findViewById<View>(R.id.tvHeadBottom).hide()
                 adapter.removeEmptyView()
             }
             NetStateType.LOADING -> {
@@ -160,9 +160,10 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
 //                    activity?.startActivity<WebActivity>(
 //                        BusiConstant.WEB_URL to mRoyalUrl
 //                    )
-                    val bundle = Bundle()
-                    bundle.putLong("programId",mPlayerViewModel.programId)
-                    RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
+                    //不再跳转任何页面
+//                    val bundle = Bundle()
+//                    bundle.putLong("programId", mPlayerViewModel.programId)
+//                    RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE, bundle)
                 } else {
                     //打开用户卡片
                     mPlayerViewModel.userInfoView.value = UserInfoBean(item.userId, false, item.royalLevel, nickname = item.nickname)
@@ -182,12 +183,10 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
     private fun prepareViewModel() {
         mViewModel.listResult.observe(this, Observer {
             if (it.state == NetStateType.SUCCESS) {
-                renderData(it.getT())
+                renderData(it.requireT())
             } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show("网络出现了问题~")
-                if (it.getT().isPull) {
-
-                } else {
+                if (!it.isRefresh()) {
                     adapter.loadMoreModule.loadMoreFail()
                 }
             }
@@ -250,16 +249,16 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                         tv_head_action.text = "立即续费>"
                         tv_head_action.onClickNew {
                             val bundle = Bundle()
-                            bundle.putLong("programId",mPlayerViewModel.programId)
-                            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
+                            bundle.putLong("programId", mPlayerViewModel.programId)
+                            RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE, bundle)
                         }
 
                     } else {
                         tv_head_action.text = "开通贵族>"
                         tv_head_action.onClickNew {
                             val bundle = Bundle()
-                            bundle.putLong("programId",mPlayerViewModel.programId)
-                            RNPageActivity.start(requireActivity(),RnConstant.ROYAL_PAGE,bundle)
+                            bundle.putLong("programId", mPlayerViewModel.programId)
+                            RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE, bundle)
                         }
                     }
                 }
@@ -333,7 +332,7 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
 //                        picture?.hide()
 //                    }
                     repeat(4) {
-                        if(data.list.isNotEmpty()){
+                        if (data.list.isNotEmpty()) {
                             data.royalHonorList.add(data.list.removeAt(0))
                         }
                     }
@@ -402,10 +401,10 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
         //展示贵宾列表
         listView?.adapter = mHeadAdapter
         mHeadAdapter.setList(data.royalHonorList)
-//        if (data.isPull && data.list.isEmpty()) {
-//            //普通列表为空那就把贵族列表title去除
-//            headBottom?.hide()
-//        }
+        if (data.isPull && data.list.isEmpty()) {
+            //普通列表为空那就把贵族列表title去除
+            headBottom?.hide()
+        }
 //        }
     }
 
@@ -427,12 +426,17 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
         private val MAX_SIZE = 100
 
         override fun convert(holder: BaseViewHolder, item: OnlineUserInfo) {
-
-
+            val tvItemNickname = holder.getView<TextView>(R.id.tvItemNickname)
+            tvItemNickname.text = item.nickname
+            if (item.nickcolor.isNotEmpty()) {
+                tvItemNickname.textColor = GlobalUtils.formatColor(item.nickcolor)
+            } else {
+                tvItemNickname.textColor = GlobalUtils.getColor(R.color.black_333)
+            }
             holder.setImageResource(
                 R.id.ivItemLevel,
                 ImageHelper.getUserLevelImg(item.userLevel)
-            ).setText(R.id.tvItemNickname, item.nickname)
+            )
             holder.getView<PhotoHeadView>(R.id.sdvItemHead).setImage(
                 headUrl = item.headPic + BusiConstant.OSS_160,
                 frameUrl = item.headFrame,
@@ -441,13 +445,14 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 frameWidth = 74
             )
             if (!TextUtils.isEmpty(item.royalPic)) {
+                holder.setVisible(R.id.sdvItemRoyal, true)
                 ImageUtils.loadImageWithHeight_2(
                     holder.getView(R.id.sdvItemRoyal),
                     item.royalPic,
                     dp2px(16f)
                 )
             } else {
-                holder.setGone(R.id.sdvItemRoyal, false)
+                holder.setGone(R.id.sdvItemRoyal, true)
             }
             val rvBadgeList = holder.getView<RecyclerView>(R.id.rvItemList)
             rvBadgeList.layoutManager =
@@ -488,10 +493,9 @@ class OnlineHeadAdapter :
     override fun convert(holder: BaseViewHolder, item: OnlineUserInfo) {
 
         val headView = holder.getView<PhotoHeadView>(R.id.sdvHeadImage)
-        val royalNickname = holder.getView<ShimmerTextView>(R.id.tvHeadNickname)
+        val royalNickname = holder.getView<TextView>(R.id.tvHeadNickname)
         if (item.userId == -1L) {
             royalNickname.text = "虚位以待"
-            royalNickname.setAnimation(false)
             holder.setTextColorRes(R.id.tvHeadNickname, R.color.black_999)
 //            ImageUtils.loadImageLocal(
 //                holder.getView(R.id.sdvHeadImage),
@@ -500,7 +504,11 @@ class OnlineHeadAdapter :
             headView.setImageCustom(headRes = R.mipmap.important_placeholder)
         } else {
             royalNickname.text = item.nickname
-            holder.setTextColorRes(R.id.tvHeadNickname, R.color.black_333)
+            if (item.nickcolor.isNotEmpty()) {
+                royalNickname.textColor = GlobalUtils.formatColor(item.nickcolor)
+            } else {
+                royalNickname.textColor = GlobalUtils.getColor(R.color.black_333)
+            }
 //            ImageUtils.loadImage(holder.getView(R.id.sdvHeadImage), item.headPic, 46f, 46f)
             headView.setImage(
                 headUrl = item.headPic + BusiConstant.OSS_160,

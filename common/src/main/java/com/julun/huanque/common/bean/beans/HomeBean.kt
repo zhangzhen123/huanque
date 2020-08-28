@@ -3,6 +3,7 @@ package com.julun.huanque.common.bean.beans
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.julun.huanque.common.basic.RootListData
 import java.io.Serializable
+import java.util.logging.Level
 
 class HomeItemBean(var showType: Int, var content: Any) : MultiItemEntity {
     companion object {
@@ -216,7 +217,9 @@ data class AnonymousBasicInfo(
     //剩余次数
     var surplusTimes: Int = 0,
     //匹配时间，如果大于0  继续匹配状态
-    var waitingSeconds : Long = 0
+    var waitingSeconds: Long = 0,
+    //本人头像
+    var myHeadPic: String = ""
 ) : Serializable
 
 /**
@@ -227,4 +230,75 @@ data class CheckBeansData(
     var beans: Long = 0,
     //余额是否足够
     var hasEnoughBeans: String = ""
+) : Serializable
+
+data class SingleFlowerDayListBean(
+    //勋章列表
+    var badgesPic: MutableList<String> = mutableListOf(),
+    //头像
+    var headPic: String = "",
+    //昵称
+    var nickname: String = "",
+    //排名
+    var ranking: String = "",
+    //贵族等级
+    var royalLevel: Int = 0,
+    //排名
+    var score: Int = 0,
+    //用户Id
+    var userId: Long = 0,
+    //用户等级
+    var userLevel: Int = 0,
+    //用户类型
+    var userType: String = "",
+    //直播状态
+    var living: String = ""
+) : Serializable
+
+/**
+ * 花魁榜单数据
+ */
+data class FlowerDayListBean(
+    //本人信息
+    var rankInfo: SingleFlowerDayListBean = SingleFlowerDayListBean(),
+    //列表信息
+    var rankList: MutableList<SingleFlowerDayListBean> = mutableListOf(),
+    //今日榜的倒计时
+    var ttl: Long = 0
+) : Serializable
+
+/**
+ * 名人用户
+ */
+data class FamousUser(
+    //日期
+    var day: Int = 0,
+    //头像
+    var headPic: String = "",
+    //是否本人
+    var myself: String = "",
+    //昵称
+    var nickname: String = "",
+    //用户ID
+    var userId: Long = 0
+) : Serializable
+
+/**
+ * 名人榜  单个月数据
+ */
+data class SingleFamousMonth(
+    //月份
+    var month: Int = 0,
+    //当月的名人数据
+    var userList: MutableList<FamousUser> = mutableListOf()
+) : Serializable
+
+/**
+ * 名人榜数据
+ */
+data class FamousListBean(
+    //是否上榜
+    var inRank: String = "",
+    //名人榜数据
+    var monthList: MutableList<SingleFamousMonth> = mutableListOf()
 ) : Serializable

@@ -43,6 +43,8 @@ import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.EggSettingViewModel
 import com.julun.huanque.core.viewmodel.PropViewModel
 import com.julun.huanque.core.viewmodel.SendGiftViewModel
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import com.trello.rxlifecycle4.android.FragmentEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -208,7 +210,7 @@ class SendGiftFragment : BaseDialogFragment() {
             showDotter(dotter_bag, true)
         }
         tv_privilege.onClickNew {
-            WebActivity.startWeb(requireActivity(), "www.baidu.com")
+            RNPageActivity.start(requireActivity(), RnConstant.WEALTH_LEVEL_PAGE, Bundle().apply { putLong("programId", playerViewModel.programId) })
         }
         // 礼物数量容器控制 数量listview显示隐藏
         sendCountLayout?.onTouch { view, motionEvent ->

@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_invite_container"
-    android:layout_width="253dp"
-    android:layout_height="@dimen/dimen_450">
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
 
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_share_pic"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        app:layout_constraintDimensionRatio="2.5:4.5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

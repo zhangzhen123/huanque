@@ -23,7 +23,7 @@
             android:layout_centerVertical="true"
             android:layout_margin="1dp" />
 
-        <com.julun.huanque.common.widgets.ShimmerTextView
+        <TextView
             android:id="@+id/sendNicknameText"
             android:layout_width="75dp"
             android:layout_height="wrap_content"

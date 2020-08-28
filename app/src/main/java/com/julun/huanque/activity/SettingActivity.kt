@@ -36,7 +36,7 @@ class SettingActivity : BaseActivity() {
         fun newInstance(act: Activity, royalLevel: Int) {
             val intent = Intent(act, SettingActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
-                intent.putExtra(ParamConstant.RoyalLevel, royalLevel)
+                intent.putExtra(ParamConstant.AnchorLevel, royalLevel)
                 act.startActivity(intent)
             }
         }
@@ -46,7 +46,7 @@ class SettingActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         header_view.textTitle.text = "设置"
-        val royalLevel = intent?.getIntExtra(ParamConstant.RoyalLevel, 0) ?: 0
+        val royalLevel = intent?.getIntExtra(ParamConstant.AnchorLevel, 0) ?: 0
         if (royalLevel > 0) {
             view_anchor_agreement.show()
             tv_anchor_agreement.show()
@@ -80,13 +80,11 @@ class SettingActivity : BaseActivity() {
             MyAlertDialog(this).showAlertWithOKAndCancel(
                 "退出登录后将无法收到TA的消息了，确定退出吗？",
                 MyAlertDialog.MyDialogCallback(onRight = {
-                    LoginManager.doLoginOut {
-                        if (it) {
-                            //退出登录成功
-                            val intent = Intent(this, LoginActivity::class.java)
-                            startActivity(intent)
-                        }
-                    }
+                    LoginManager.doLoginOut({
+                        //退出登录成功
+                        val intent = Intent(this, LoginActivity::class.java)
+                        startActivity(intent)
+                    })
                 }, onCancel = {
                 }), "退出提示", "确定"
             )

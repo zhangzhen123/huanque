@@ -135,7 +135,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:text="400-xxx-xxxx"
+        android:text="0571-87396543"
         android:textColor="#C5C5C5"
         android:textSize="@dimen/sp_12"
         app:layout_constraintBottom_toBottomOf="@id/view_consumer"

@@ -95,16 +95,16 @@ class MakeFriendsViewModel : BaseViewModel() {
                 //处理引导插入
                 if (totalList.size >= GUIDE_INDEX_01) {
                     if (curRemind?.coverRemind == true) {
-                        if (needGuide2) {
-                            needGuide2 = false
+                        if (needGuide1) {
+                            needGuide1 = false
                             logger("添加完善引导12")
                             val index = GUIDE_INDEX_01 - (totalList.size - list.size)
                             list.add(index, HomeItemBean(HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION, curRemind!!))
                         }
 
                     } else if (curRemind?.tagRemind == true) {
-                        if (needGuide1) {
-                            needGuide1 = false
+                        if (needGuide2) {
+                            needGuide2 = false
                             logger("添加tag引导11")
                             val index = GUIDE_INDEX_01 - (totalList.size - list.size)
                             list.add(index, HomeItemBean(HomeItemBean.GUIDE_TO_ADD_TAG, Any()))
@@ -113,7 +113,7 @@ class MakeFriendsViewModel : BaseViewModel() {
                     }
 
                 }
-                if (totalList.size >= GUIDE_INDEX_02 && curRemind?.coverRemind == true) {
+                if (totalList.size >= GUIDE_INDEX_02 && curRemind?.tagRemind == true) {
                     if (needGuide2) {
                         needGuide2 = false
                         logger("添加完善引导22")
@@ -127,7 +127,7 @@ class MakeFriendsViewModel : BaseViewModel() {
                 emit(ReactiveData(NetStateType.SUCCESS, rList))
             }, error = { e ->
                 logger("报错了：$e")
-                emit(e.convertListError(RootListData(isPull = type != QueryType.LOAD_MORE)))
+                emit(e.convertListError(queryType = type))
             }, needLoadState = type == QueryType.INIT)
 
         }

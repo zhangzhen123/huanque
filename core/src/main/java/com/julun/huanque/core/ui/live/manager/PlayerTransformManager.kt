@@ -290,7 +290,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         //刷新用户信息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.RefreshUserMessageProcessor {
             override fun process(data: VoidResult) {
-//                mPlayerViewModel.refreshUserInfoData()
+                mPlayerViewModel.refreshUserInfoData()
             }
         })
 

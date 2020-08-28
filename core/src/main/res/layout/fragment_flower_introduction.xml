@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_flower_introduction">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="榜单说明"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_title_today"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="43dp"
+        android:text="今日榜"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_content_today"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="1. 今日实时好感度排名前15的用户（收到/送出礼物越多排名越靠前）\n2. 实时刷新榜单，好感度相同的按达成时间先后排名 \n3. 日榜第1名计入花魁名人榜"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_today" />
+
+    <TextView
+        android:id="@+id/tv_title_yesterday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:text="昨日榜"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_content_today" />
+
+    <TextView
+        android:id="@+id/tv_content_yesterday"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="1. 按昨日累计好感度排名前15的用户排名，计入昨日榜 \n2. 次日00:00统计数据，1分钟后公布该榜单 \n3. 日榜第1名计入花魁名人榜"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_yesterday" />
+
+    <TextView
+        android:id="@+id/tv_title_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:text="好感度"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_content_yesterday" />
+
+    <TextView
+        android:id="@+id/tv_content_like"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="1. 好感度是指用户在交友过程中消费或收到的鹊币总价值，例如私聊送礼/收礼、私信、语音。（直播间送礼不产生好感度）"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_like" />
+
+    <TextView
+        android:id="@+id/tv_know"
+        android:layout_width="0px"
+        android:layout_height="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_flower_introduction_know"
+        android:gravity="center"
+        android:text="知道了"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_content_like" />
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="1px"
+        android:layout_marginTop="15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_know" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -123,6 +123,7 @@ android {
                     JPUSH_APPKEY : "${sdk.JPUSH_KEY_HQ}",
                     JPUSH_CHANNEL: "developer-default"
             ]
+            testCoverageEnabled = true
         }
 
     }

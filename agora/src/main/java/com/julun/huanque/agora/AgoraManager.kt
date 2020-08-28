@@ -1,6 +1,7 @@
 package com.julun.huanque.agora
 
 import android.app.Application
+import android.content.Context
 import com.julun.huanque.agora.handler.AgoraEventHandler
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.utils.ULog
@@ -17,7 +18,7 @@ object AgoraManager {
     var mRtcEngine: RtcEngine? = null
     val mHandler = AgoraEventHandler()
 
-    fun initAgora(app: Application) {
+    fun initAgora(context: Context) {
         try {
 //            val appId = if (BuildConfig.DEBUG) {
 //                "fbc90bda63d84f29b514dceb0ce0bc2b"
@@ -25,7 +26,7 @@ object AgoraManager {
 //                "ac6d4391e1534b6482327e4baea03e08"
 //            }
             val appId = "78fb9516fe5b4e759c51a5d880e1fd1b"
-            mRtcEngine = RtcEngine.create(app.applicationContext, appId, mHandler)
+            mRtcEngine = RtcEngine.create(context, appId, mHandler)
             //设置直播属性(直播属性可以用与语音)
             mRtcEngine?.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING)
             ULog.i("AGORA 初始化完成")

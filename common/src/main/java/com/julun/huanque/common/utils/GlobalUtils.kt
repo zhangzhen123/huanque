@@ -26,10 +26,12 @@ import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserInfo
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.widgets.emotion.Emotions
 import io.rong.imlib.model.MessageContent
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
@@ -46,6 +48,28 @@ import java.lang.ref.SoftReference
  *@描述  全局的utils类  用于存放一些不成体系的工具方法
  */
 object GlobalUtils {
+    //特权表情的集合列表
+    private val privilegeMap = hashMapOf<String, String>()
+
+    init {
+        // 加载特权表情
+        privilegeMap.put("[约吗]", "config/expression-privilege/yuema.gif")
+        privilegeMap.put("[等撩]", "config/expression-privilege/dengliao.gif")
+        privilegeMap.put("[送花]", "config/expression-privilege/songhua.gif")
+        privilegeMap.put("[么么哒]", "config/expression-privilege/memeda.gif")
+        privilegeMap.put("[色眯眯]", "config/expression-privilege/semimi.gif")
+        privilegeMap.put("[晚安]", "config/expression-privilege/wanan.gif")
+        privilegeMap.put("[乞讨]", "config/expression-privilege/qitao.gif")
+        privilegeMap.put("[耍酷]", "config/expression-privilege/shuaku.gif")
+        privilegeMap.put("[在吗]", "config/expression-privilege/zaima.gif")
+        privilegeMap.put("[太难了]", "config/expression-privilege/tainanle.gif")
+        privilegeMap.put("[生气]", "config/expression-privilege/shengqi.gif")
+        privilegeMap.put("[委屈]", "config/expression-privilege/weiqv.gif")
+        privilegeMap.put("[哈哈哈]", "config/expression-privilege/hahaha.gif")
+        privilegeMap.put("[约架]", "config/expression-privilege/yuejia.gif")
+        privilegeMap.put("[咬你]", "config/expression-privilege/yaoni.gif")
+        privilegeMap.put("[挑衅]", "config/expression-privilege/tiaoxin.gif")
+    }
 
     /**
      * 将string转化为map  string需要符合 "***-***" 这样的格式
@@ -242,7 +266,7 @@ object GlobalUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return user?.targetUserObj?.stranger ?: false
+        return getStrangerBoolean(user?.targetUserObj?.stranger ?: "")
     }
 
 
@@ -269,7 +293,7 @@ object GlobalUtils {
         myClipboard.setPrimaryClip(ClipData.newPlainText("text", text))
         if (attentionContent.isNotEmpty()) {
 //            ToastUtils.showCustom(attentionContent, Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL or Gravity.BOTTOM)
-            Toast.makeText(context,attentionContent,Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, attentionContent, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -420,7 +444,7 @@ object GlobalUtils {
                     userId = user.targetUserObj?.userId ?: 0
                     //用户性别
                     sex = user.targetUserObj?.sex ?: ""
-                    stranger = user.targetUserObj?.stranger ?: false
+                    stranger = getStrangerBoolean(user.targetUserObj?.stranger ?: "")
                 }
             } else {
                 //对方发送消息
@@ -434,7 +458,7 @@ object GlobalUtils {
                     userId = user.senderId
                     //用户性别
                     sex = user.sex
-                    stranger = user.targetUserObj?.stranger ?: false
+                    stranger = getStrangerBoolean(user.targetUserObj?.stranger ?: "")
                 }
             }
 
@@ -442,7 +466,7 @@ object GlobalUtils {
         return currentUser
     }
 
-    fun getEarphoneLinkStatus() : Boolean{
+    fun getEarphoneLinkStatus(): Boolean {
         val am = CommonInit.getInstance().getCurrentActivity()?.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
         am?.mode = AudioManager.MODE_IN_COMMUNICATION
 //获取当前使用的麦克风，设置媒体播放麦克风
@@ -476,5 +500,27 @@ object GlobalUtils {
             return false
         }
     }
+
+    /**
+     * 获取陌生人String状态
+     */
+    fun getStrangerString(stranger: Boolean): String {
+        if (stranger) {
+            return BusiConstant.True
+        } else {
+            return BusiConstant.False
+        }
+    }
+
+    /**
+     * 获取陌生人Boolean状态
+     */
+    fun getStrangerBoolean(stranger: String) = stranger == BusiConstant.True
+
+    /**
+     * 获取特权表情动图的地址
+     */
+    fun getPrivilegeUrl(key: String) = privilegeMap[key] ?: ""
+
 
 }

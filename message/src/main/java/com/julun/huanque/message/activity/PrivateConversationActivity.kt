@@ -23,6 +23,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.view.panel.PanelView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -44,10 +45,7 @@ import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.onTouch
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
@@ -73,6 +71,8 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
+import kotlinx.android.synthetic.main.act_private_chat.tv_unread_count
+import kotlinx.android.synthetic.main.item_header_conversions.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -82,6 +82,7 @@ import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.px2dip
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import java.util.concurrent.TimeUnit
+import kotlin.math.log
 
 
 /**
@@ -157,6 +158,9 @@ class PrivateConversationActivity : BaseActivity() {
      */
     private var mIntimateDetailFragment: IntimateDetailFragment? = null
 
+    //是否显示过付费弹窗
+    private var feeDialogShow = false
+
     override fun getLayoutId() = R.layout.act_private_chat
 
     //首次进入私聊详情的倒计时
@@ -175,6 +179,7 @@ class PrivateConversationActivity : BaseActivity() {
         header_view.imageOperation.show()
         initViewModel()
         initRecyclerView()
+        feeDialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
 
         initBasic(intent)
         registerMessageEventProcessor()
@@ -291,12 +296,21 @@ class PrivateConversationActivity : BaseActivity() {
         })
 
         mPrivateConversationViewModel?.messageChangeState?.observe(this, Observer {
-            if (it == true) {
-                mAdapter.notifyDataSetChanged()
-                mAdapter.upFetchModule.isUpFetching = false
-                mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
-//                scrollToBottom()
+            if (it != null) {
+                val messageList = mPrivateConversationViewModel?.changeMessageList ?: return@Observer
+
+                if (it) {
+                    //添加新消息
+                    mAdapter.addData(messageList)
+                    scrollToBottom()
+                } else {
+                    //添加历史消息
+                    mAdapter.addData(0, messageList)
+                    mAdapter.upFetchModule.isUpFetching = false
+                    mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
+                }
                 mPrivateConversationViewModel?.messageChangeState?.value = null
+                mPrivateConversationViewModel?.changeMessageList?.clear()
                 showXiaoQueAuto()
             }
         })
@@ -422,9 +436,7 @@ class PrivateConversationActivity : BaseActivity() {
         tv_send.onClickNew {
             //发送按钮
             val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
-            val dialogShow =
-                SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
-            if (msgFee != null && msgFee > 0 && !dialogShow) {
+            if (msgFee != null && msgFee > 0 && !feeDialogShow) {
                 //消息需要付费
                 showMessageFeeDialog(Message_Text, msgFee)
                 return@onClickNew
@@ -462,9 +474,8 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_pic.onClickNew {
             val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
-            val dialogShow =
-                SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
-            if (msgFee != null && msgFee > 0 && !dialogShow) {
+
+            if (msgFee != null && msgFee > 0 && !feeDialogShow) {
                 //消息需要付费
                 showMessageFeeDialog(Message_Pic, msgFee)
                 return@onClickNew
@@ -592,29 +603,59 @@ class PrivateConversationActivity : BaseActivity() {
                     EmojiType.PREROGATIVE -> {
                         //特权表情,直接发送
                         val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
-                        val dialogShow =
-                            SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
-                        if (msgFee != null && msgFee > 0 && !dialogShow) {
+
+                        if (msgFee != null && msgFee > 0 && !feeDialogShow) {
                             //消息需要付费
-                            showMessageFeeDialog(Message_Privilege, msgFee)
+                            MyAlertDialog(this@PrivateConversationActivity).showAlertWithOKAndCancel(
+                                "私信消息${msgFee}鹊币/条",
+                                MyAlertDialog.MyDialogCallback(onRight = {
+                                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                                    feeDialogShow = true
+                                    sendChatMessage(message = emotion.text, messageType = Message_Privilege)
+                                }, onCancel = {
+                                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                                    feeDialogShow = true
+                                }, onDissmiss = {
+                                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                                    feeDialogShow = true
+                                }), "私信消息费用", "继续发送"
+                            )
                             return
                         }
+
                         sendChatMessage(message = emotion.text, messageType = Message_Privilege)
                     }
                     EmojiType.ANIMATION -> {
                         //动画表情
-                        val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
-                        val dialogShow =
-                            SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
-                        if (msgFee != null && msgFee > 0 && !dialogShow) {
-                            //消息需要付费
-                            showMessageFeeDialog(Message_Animation, msgFee)
-                            return
-                        }
                         //随机结果
                         val result =
                             mPrivateConversationViewModel?.calcuteAnimationResult(emotion.text)
                                 ?: ""
+
+                        val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
+                        if (msgFee != null && msgFee > 0 && !feeDialogShow) {
+                            //消息需要付费
+                            MyAlertDialog(this@PrivateConversationActivity).showAlertWithOKAndCancel(
+                                "私信消息${msgFee}鹊币/条",
+                                MyAlertDialog.MyDialogCallback(onRight = {
+                                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                                    feeDialogShow = true
+                                    sendChatMessage(
+                                        message = emotion.text,
+                                        animationResult = result,
+                                        messageType = Message_Animation
+                                    )
+                                }, onCancel = {
+                                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                                    feeDialogShow = true
+                                }, onDissmiss = {
+                                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                                    feeDialogShow = true
+                                }), "私信消息费用", "继续发送"
+                            )
+                            return
+                        }
+
                         sendChatMessage(
                             message = emotion.text,
                             animationResult = result,
@@ -714,14 +755,13 @@ class PrivateConversationActivity : BaseActivity() {
      * @param fee 价格
      */
     private fun showMessageFeeDialog(messageType: String, fee: Long) {
-        val dialogShow =
-            SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
-        if (!dialogShow) {
+        if (!feeDialogShow) {
             //未显示过价格弹窗，显示弹窗
             MyAlertDialog(this).showAlertWithOKAndCancel(
                 "私信消息${fee}鹊币/条",
                 MyAlertDialog.MyDialogCallback(onRight = {
                     SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                    feeDialogShow = true
                     when (messageType) {
                         Message_Pic -> {
                             iv_pic.performClick()
@@ -735,6 +775,10 @@ class PrivateConversationActivity : BaseActivity() {
 
                 }, onCancel = {
                     SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                    feeDialogShow = true
+                }, onDissmiss = {
+                    SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
+                    feeDialogShow = true
                 }), "私信消息费用", "继续发送"
             )
         } else {
@@ -762,6 +806,7 @@ class PrivateConversationActivity : BaseActivity() {
     private fun showEmojiSuspend(type: String, view: View, emotion: Emotion) {
         val location = IntArray(2)
         view.getLocationOnScreen(location)
+        val content = emotion.text
         var dx = 0
         var dy = 0
         var rootView: View? = null
@@ -774,6 +819,7 @@ class PrivateConversationActivity : BaseActivity() {
                 mEmojiPopupWindow?.setBackgroundDrawable(drawable)
                 dx = location[0] + (view.width - dip(50)) / 2
                 dy = location[1] - dip(66) + dip(13)
+                rootView.findViewById<ImageView>(R.id.iv_emoji)?.imageResource = emotion.drawableRes
             }
             EmojiType.PREROGATIVE -> {
                 rootView = LayoutInflater.from(this)
@@ -783,6 +829,8 @@ class PrivateConversationActivity : BaseActivity() {
                 mEmojiPopupWindow?.setBackgroundDrawable(drawable)
                 dx = location[0] + (view.width - dip(94)) / 2
                 dy = location[1] - dip(116) + dip(13)
+                val sdvEmoji = rootView.findViewById<SimpleDraweeView>(R.id.sdv_emoji)
+                sdvEmoji?.loadImage(GlobalUtils.getPrivilegeUrl(content), 36f, 36f)
             }
             else -> {
 
@@ -793,8 +841,8 @@ class PrivateConversationActivity : BaseActivity() {
             return
         }
 
-        rootView.findViewById<ImageView>(R.id.iv_emoji)?.imageResource = emotion.drawableRes
-        val content = emotion.text
+
+
         val name = content.substring(content.indexOf("[") + 1, content.indexOf("]"))
         rootView.findViewById<TextView>(R.id.tv_emoji)?.text = name
 
@@ -1115,6 +1163,8 @@ class PrivateConversationActivity : BaseActivity() {
                             val bundle = Bundle()
                             bundle.putLong(IntentParamKey.PROGRAM_ID.name, info.programId)
                             bundle.putString(ParamConstant.FROM, PlayerFrom.SendRoom)
+                            bundle.putString(ParamConstant.ShareUserId, tempData.senderUserId)
+
 
                             ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle).navigation()
                         } catch (e: Exception) {
@@ -1393,7 +1443,7 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.basicBean?.value?.intimate?.intimateLevel ?: 0
             meetStatus = targetChatInfo.meetStatus
             userId = targetChatInfo.userId
-            stranger = targetChatInfo.stranger
+            stranger = GlobalUtils.getStrangerString(targetChatInfo.stranger)
         }
 
         if (targetChatInfo.userId == SessionUtils.getUserId()) {

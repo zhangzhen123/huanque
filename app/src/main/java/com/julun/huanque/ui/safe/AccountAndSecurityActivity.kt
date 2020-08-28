@@ -1,5 +1,7 @@
 package com.julun.huanque.ui.safe
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -17,10 +19,7 @@ import com.julun.huanque.common.bean.beans.UserSecurityInfo
 import com.julun.huanque.common.bean.events.AliAuthCodeEvent
 import com.julun.huanque.common.bean.events.BindPhoneSuccessEvent
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.ErrorCodes
-import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.PhoneLoginType
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ToastUtils
@@ -31,6 +30,7 @@ import kotlinx.android.synthetic.main.act_setting.*
 import kotlinx.android.synthetic.main.act_setting.header_view
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.textColor
 
 
@@ -64,7 +64,7 @@ class AccountAndSecurityActivity : BaseVMActivity<AccountAndSecurityViewModel>()
     private fun initViewModel() {
         mViewModel.securityInfo.observe(this, Observer {
             if (it.isSuccess()) {
-                renderData(it.getT())
+                renderData(it.requireT())
             }
         })
         userBindViewModel.bindWinXinData.observe(this, Observer {
@@ -82,7 +82,7 @@ class AccountAndSecurityActivity : BaseVMActivity<AccountAndSecurityViewModel>()
         })
         userBindViewModel.aliPayAuth.observe(this, Observer {
             if (it.state == NetStateType.SUCCESS) {
-                val data = it.getT()
+                val data = it.requireT()
                 logger.info("获取后台支付宝授权信息成功 开始发起授权")
                 AliPayManager.aliAuth(this, data.authInfo)
             } else if (it.state == NetStateType.ERROR) {
@@ -164,6 +164,17 @@ class AccountAndSecurityActivity : BaseVMActivity<AccountAndSecurityViewModel>()
             } else {
                 userBindViewModel.getAliPayAuthInfo()
             }
+        }
+        view_log_off.onClickNew {
+            startActivityForResult(Intent(this,DestroyAccountActivity::class.java),BusiConstant.DESTROY_ACCOUNT_RESULT_CODE)
+        }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == BusiConstant.DESTROY_ACCOUNT_RESULT_CODE) {
+            logger.info("注销返回码")
+            finish()
+            return
         }
 
     }

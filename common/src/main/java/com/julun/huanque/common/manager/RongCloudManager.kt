@@ -252,6 +252,7 @@ object RongCloudManager {
 
     /**
      * 发送模拟消息
+     * @param unreadCount 是否需要未读消息
      */
     fun sendSimulateMessage(
         targetId: String,
@@ -259,7 +260,8 @@ object RongCloudManager {
         extra: RoomUserChatExtra?,
         conversationType: Conversation.ConversationType,
         customType: String,
-        customBean: Any
+        customBean: Any,
+        unreadCount: Boolean = false
     ) {
         val messageContent = CustomSimulateMessage.obtain().apply {
             type = customType
@@ -295,7 +297,11 @@ object RongCloudManager {
         }
         if (senderId == targetId) {
             //插入接收消息
-            val receivedStatus = Message.ReceivedStatus(0x1)
+            val receivedStatus = if (unreadCount) {
+                Message.ReceivedStatus(0)
+            } else {
+                Message.ReceivedStatus(1)
+            }
             RongIMClient.getInstance()
                 .insertIncomingMessage(conversationType, targetId, senderId, receivedStatus, messageContent, sentTime, callback)
         } else {
@@ -309,7 +315,7 @@ object RongCloudManager {
      */
     fun sendCustomMessage(msg: Message, callback: (Boolean, Message) -> Unit = { result, msg -> }) {
 
-        RongIMClient.getInstance().sendMessage(msg, null, null, object : IRongCallback.ISendMessageCallback {
+        RongIMClient.getInstance().sendMessage(msg, "你有一条新的信息", null, object : IRongCallback.ISendMessageCallback {
             /**
              * 消息发送前回调, 回调时消息已存储数据库
              * @param message 已存库的消息体
@@ -319,7 +325,8 @@ object RongCloudManager {
 //                    switchThread(message)
 //                }
                 if (message != null) {
-                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
+                    EventBus.getDefault()
+                        .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
                 }
             }
 
@@ -448,11 +455,12 @@ object RongCloudManager {
         }
         targetUserObj ?: return
 
-        RongIMClient.getInstance().sendMediaMessage(localMessage, null, null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
+        RongIMClient.getInstance().sendMediaMessage(localMessage, "你有一条新的信息", null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
             override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
                 if (message != null) {
 //                    switchThread(message)
-                    EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
+                    EventBus.getDefault()
+                        .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
                 }
                 OssUpLoadManager.uploadFiles(arrayListOf(targetUserObj.localPic), OssUpLoadManager.MESSAGE_PIC) { code, list ->
                     if (code == OssUpLoadManager.CODE_SUCCESS) {
@@ -556,12 +564,13 @@ object RongCloudManager {
         RongIMClient.getInstance().sendMessage(conversationType,
             targetId,
             chatMessage,
-            null,
+            "你有一条新的信息",
             null,
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
                     if (message != null) {
-                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
+                        EventBus.getDefault()
+                            .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
                     }
                 }
 
@@ -640,11 +649,12 @@ object RongCloudManager {
      */
     fun send(oMessage: Message, targetId: String, callback: (Boolean, Message) -> Unit = { result, msg -> }): Unit {
         //        EventBus.getDefault().post(EventMessageBean(targetId))
-        RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE, targetId, oMessage.content, null, null,
+        RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE, targetId, oMessage.content, "你有一条新的信息", null,
             object : IRongCallback.ISendMessageCallback {
                 override fun onAttached(message: Message?) {
                     if (message != null) {
-                        EventBus.getDefault().post(EventMessageBean(message.targetId, currentUserObj?.targetUserObj?.stranger ?: false))
+                        EventBus.getDefault()
+                            .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
                     }
                 }
 
@@ -811,8 +821,8 @@ object RongCloudManager {
                     e.printStackTrace()
                 }
                 if (message.conversationType == Conversation.ConversationType.CHATROOM) {
-                        //直播间聊天室的消息
-                        MessageReceptor.putTextMessageWithData(bean)
+                    //直播间聊天室的消息
+                    MessageReceptor.putTextMessageWithData(bean)
                 } else if (message.conversationType == Conversation.ConversationType.PRIVATE) {
                     bean.privateMessage = true
                     MessageProcessor.processPrivateTextMessageOnMain(message)

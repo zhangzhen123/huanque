@@ -164,7 +164,7 @@ class UserEnterAnimatorView @JvmOverloads constructor(context: Context, attrs: A
                 if (webpUrl.isNotEmpty() && webpMap.isNotEmpty()) {
                     thisLp.height = DensityHelper.dp2px(100f)
                     enter_bg_svga.hide()
-                    setAnimator(webpMap, false)
+                    setAnimator(webpMap, true)
                     viewModel?.messageState?.value = webp
                 } else {
                     thisLp.height = DensityHelper.dp2px(150f)

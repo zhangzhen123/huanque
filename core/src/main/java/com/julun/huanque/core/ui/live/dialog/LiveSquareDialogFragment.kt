@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -20,7 +21,9 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.AuthorFollowBean
 import com.julun.huanque.common.bean.beans.ProgramLiveInfo
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
@@ -110,15 +113,15 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
     private fun initViewModel() {
         mViewModel.followList.observe(this, Observer {
             if (it.isSuccess()) {
-                renderFollowData(it.getT())
+                renderFollowData(it.requireT())
             }
         })
 
         mViewModel.hotDataList.observe(this, Observer {
             if (it.state == NetStateType.SUCCESS) {
-                renderHotData(it.getT())
+                renderHotData(it.requireT())
             } else if (it.state == NetStateType.ERROR) {
-                ToastUtils.show(it.error?.busiMessage)
+                loadHotFail(it.isRefresh())
             }
             mRefreshLayout.isRefreshing = false
         })
@@ -157,6 +160,13 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
         }
     }
 
+    private fun loadHotFail(isPull: Boolean) {
+        if (isPull) {
+            ToastUtils.show("刷新失败")
+        } else {
+            authorAdapter.loadMoreModule.loadMoreFail()
+        }
+    }
     private fun renderHotData(listData: RootListData<ProgramLiveInfo>) {
 
         if (listData.isPull) {
@@ -197,8 +207,8 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                         msg = "没有开播的主播，去交友看看吧",
                         btnTex = "前往",
                         onClick = View.OnClickListener {
-                            //todo
-                            logger.info("跳转到xxxx")
+                            logger.info("跳转到交友")
+                            ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
                         })
                 )
 

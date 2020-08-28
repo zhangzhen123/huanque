@@ -15,7 +15,7 @@ import com.julun.huanque.common.database.table.LoginStatus
 @Dao
 interface LoginStatusDao {
     @Query("SELECT * FROM LoginStatus where userId = :userId  LIMIT 1")
-    fun getLoginStatus(userId: Long): LiveData<LoginStatus>
+    fun getLoginStatus(userId: Long): LiveData<LoginStatus>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(bean: LoginStatus): Long

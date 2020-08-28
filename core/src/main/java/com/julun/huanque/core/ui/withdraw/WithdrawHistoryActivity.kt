@@ -105,9 +105,8 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
     private fun initViewModel() {
         mViewModel.historyData.observe(this, Observer {
             mRefreshView.isRefreshing = false
-            if (it.state == NetStateType.SUCCESS) {
-                val data = it.getT()
-                refreshData(data)
+            if (it.isSuccess()) {
+                refreshData(it.requireT())
             }
         })
 

@@ -47,7 +47,6 @@ import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.android.synthetic.main.activity_test.*
 import org.jetbrains.anko.startActivity
 import java.io.File
-import java.math.BigInteger
 import java.util.*
 
 /**
@@ -127,11 +126,12 @@ class TestActivity : BaseActivity() {
             ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY).navigation()
         }
         tv_clear_session.onClickNew {
-            LoginManager.doLoginOut {
-                if (it) {
-                    logger.info("退出登录成功")
-                }
-            }
+            LoginManager.doLoginOut(success = {
+                logger.info("退出登录成功 ${Thread.currentThread()}")
+                tv_clear_session.text = "退出登录成功"
+            },error = {
+                logger.info("退出登录失败了 ${Thread.currentThread()}")
+            })
         }
         report.onClickNew {
             val extra = Bundle()
@@ -239,16 +239,6 @@ class TestActivity : BaseActivity() {
             logger.info("setDraweeSpanChangedListener")
             text_rainbow.setDraweeSpanStringBuilder(builder)
         }
-
-
-        test_big_format.text = "num1=${StringHelper.formatBigNum(BigInteger("562"))}\n" +
-                "num2=${StringHelper.formatBigNum(BigInteger("5621"))}\n" +
-                "num3=${StringHelper.formatBigNum(BigInteger("4843195"))}\n" +
-                "num4=${StringHelper.formatBigNum(BigInteger("21773753736"))}\n" +
-                "num5=${StringHelper.formatBigNum(BigInteger("5621773753736"))}\n" +
-                "num6=${StringHelper.formatBigNum(BigInteger("105807943509339"))}\n" +
-                "num7=${StringHelper.formatBigNum(BigInteger("5297181089855920"))}\n" +
-                "num8=${StringHelper.formatBigNum(BigInteger("938219908377998000"))}\n"
     }
 
     private val ANIMATED_COLOR_SPAN_FLOAT_PROPERTY: Property<AnimatedRainbowSpan, Float> =

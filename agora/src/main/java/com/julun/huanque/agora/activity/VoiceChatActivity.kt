@@ -188,7 +188,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
-                if(mVoiceChatViewModel?.waitingClose == true){
+                if (mVoiceChatViewModel?.waitingClose == true) {
                     return
                 }
                 mVoiceChatViewModel?.waitingClose = true
@@ -203,7 +203,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
-                if(mVoiceChatViewModel?.waitingClose == true){
+                if (mVoiceChatViewModel?.waitingClose == true) {
                     return
                 }
                 mVoiceChatViewModel?.waitingClose = true
@@ -228,7 +228,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
-                if(mVoiceChatViewModel?.waitingClose == true){
+                if (mVoiceChatViewModel?.waitingClose == true) {
                     return
                 }
                 mVoiceChatViewModel?.waitingClose = true
@@ -239,7 +239,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         //服务端断开消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallDisconnectProcessor {
             override fun process(data: VoidResult) {
-                if(mVoiceChatViewModel?.waitingClose == true){
+                if (mVoiceChatViewModel?.waitingClose == true) {
                     return
                 }
                 mVoiceChatViewModel?.waitingClose = true
@@ -262,7 +262,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     //不是当前语音通话的消息
                     return
                 }
-                if(mVoiceChatViewModel?.waitingClose == true){
+                if (mVoiceChatViewModel?.waitingClose == true) {
                     return
                 }
                 mVoiceChatViewModel?.waitingClose = true
@@ -434,6 +434,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         //取消超时倒计时
                         mDisposable?.dispose()
                         mCallingContentDisposable?.dispose()
+                        //开始对方未加入倒计时
+                        otherNoJoinCountDown()
                     }
                     VoiceChatViewModel.VOICE_CLOSE -> {
                         //结束状态
@@ -445,6 +447,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 //                        leaveChannel()
 //                        ToastUtils.show("通话已结束")
                         mDisposable?.dispose()
+                        mOtherNoJoinDisposable?.dispose()
                         mDurationDisposable?.dispose()
                         mCallingContentDisposable?.dispose()
                         Observable.timer(1, TimeUnit.SECONDS)
@@ -516,6 +519,18 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 )
             }
         })
+    }
+
+    /**
+     * 对方未加入频道 倒计时
+     */
+    private fun otherNoJoinCountDown() {
+        mOtherNoJoinDisposable = Observable.timer(10, TimeUnit.SECONDS)
+            .bindUntilEvent(this, ActivityEvent.DESTROY)
+            .subscribe({
+                mVoiceChatViewModel?.hangUpVoice()
+            }, {})
+
     }
 
     /**
@@ -703,7 +718,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         }
 
         chatExtra.targetUserObj?.intimateLevel = relationInfo.intimateLevel
-        chatExtra.targetUserObj?.stranger = relationInfo.stranger
+        chatExtra.targetUserObj?.stranger = GlobalUtils.getStrangerString(relationInfo.stranger)
 
         val conversationType = if (bean.needRefresh) {
             Conversation.ConversationType.GROUP
@@ -717,12 +732,16 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             chatExtra,
             conversationType,
             MessageCustomBeanType.Voice_Conmmunication_Simulate,
-            bean
+            bean,
+            sId == tId
         )
     }
 
 
     private var mDisposable: Disposable? = null
+
+    //对方未加入直播间消息
+    private var mOtherNoJoinDisposable: Disposable? = null
 
     /**
      * 主叫或者被叫 的等待定时挂断方法
@@ -737,7 +756,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     mVoiceChatViewModel?.calcelVoice(CancelType.Timeout)
                 } else {
 //                    mVoiceChatViewModel?.refuseVoice(true)
-                    mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
+                    mVoiceChatViewModel?.voiceBeanData?.postValue(VoiceConmmunicationSimulate(VoiceResultType.CANCEL))
+                    mVoiceChatViewModel?.currentVoiceState?.postValue(VoiceChatViewModel.VOICE_CLOSE)
                 }
 
             }, {})
@@ -750,6 +770,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
     override fun onUserJoined(uid: Int, elapsed: Int) {
+        logger.info("AGORA Message 用户加入频道消息")
+        if (uid.toLong() != SessionUtils.getUserId()) {
+            mOtherNoJoinDisposable?.dispose()
+        }
     }
 
     override fun onLocalVideoStats(stats: IRtcEngineEventHandler.LocalVideoStats?) {

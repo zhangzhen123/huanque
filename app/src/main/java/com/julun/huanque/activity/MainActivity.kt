@@ -3,7 +3,6 @@ package com.julun.huanque.activity
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import android.os.Message
 import android.view.View
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
@@ -54,6 +53,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 
 @Route(path = ARouterConstant.MAIN_ACTIVITY)
@@ -468,6 +468,13 @@ class MainActivity : BaseActivity() {
         //邀请匿名语音消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceInviteProcessor {
             override fun process(data: AnonyVoiceInviteBean) {
+                if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                    return
+                }
+                if (abs(System.currentTimeMillis() - data.inviteTime) > 30 * 1000) {
+                    //邀请消息时间，与本地时间  相差超过30秒，直接忽略
+                    return
+                }
                 val intent = Intent(this@MainActivity, AnonymousVoiceActivity::class.java)
                 intent.putExtra(ParamConstant.TYPE, ConmmunicationUserType.CALLED)
                 intent.putExtra(ParamConstant.InviteUserId, data.inviteUserId)
@@ -479,7 +486,7 @@ class MainActivity : BaseActivity() {
         })
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")
         if (event.result) {
@@ -487,7 +494,7 @@ class MainActivity : BaseActivity() {
             //重新去定位地址
             mLocationService.registerListener(mLocationListener)
             mLocationService.start()
-        }else{
+        } else {
             mMainViewModel.unreadMsgCount.value = 0
         }
 
@@ -519,14 +526,18 @@ class MainActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loginOut(event: LoginOutEvent) {
         //登录通知
-        LoginManager.doLoginOut {
-            if (it) {
-                //退出登录成功
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-            }
-        }
+        LoginManager.doLoginOut({
+            //退出登录成功
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        })
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun hideFloating(event: HideFloatingEvent) {
+        FloatingManager.hideFloatingView()
+    }
+
 
     override fun finish() {
         FloatingManager.hideFloatingView()

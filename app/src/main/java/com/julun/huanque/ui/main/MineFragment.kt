@@ -97,7 +97,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         mViewModel.userInfo.observe(this, Observer {
             refreshView.isRefreshing = false
             if (it.isSuccess()) {
-                loadData(it.getT())
+                loadData(it.requireT())
             }
         })
         mViewModel.checkAuthorResult.observe(this, Observer {
@@ -138,7 +138,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            BalanceUtils.queryLastestBalance()
+            BalanceUtils.queryLatestBalance()
         }
     }
 
@@ -172,7 +172,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         if (info.userBasic.anchorLevel > 0) {
             sdv_author_level.show()
             val wealthAddrss = GlobalUtils.getString(R.string.anchor_address)
-            sdv_author_level.loadImage(String.format(wealthAddrss, info.userBasic.anchorLevel), 55f, 16f)
+//            sdv_author_level.loadImage(String.format(wealthAddrss, info.userBasic.anchorLevel), 55f, 16f)
+            ImageUtils.loadImageWithHeight_2(sdv_author_level,String.format(wealthAddrss, info.userBasic.anchorLevel),dp2px(16))
 
         } else {
             tv_author_privilege.show()
@@ -317,9 +318,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             }
         }
         ivSetting.onClickNew {
-            val royalLevel = mViewModel.userInfo.value?.getT()?.userBasic?.royalLevel ?: 0
+            val anchorLevel = mViewModel.userInfo.value?.getT()?.userBasic?.anchorLevel ?: 0
             val act = requireActivity()
-            SettingActivity.newInstance(act, royalLevel)
+            SettingActivity.newInstance(act, anchorLevel)
         }
         rlQueBi.onClickNew {
             requireActivity().startActivity<RechargeCenterActivity>()
@@ -443,9 +444,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 holder.setText(R.id.tvTitle, item.userTabName)
 
                 if (item.tagCount == 0) {
-                    holder.setGone(R.id.tv_tag, true).setText(R.id.tv_tag, "${item.tagCount}")
+                    holder.setGone(R.id.tv_tag, true)
                 } else {
-                    holder.setGone(R.id.tv_tag, false)
+                    holder.setGone(R.id.tv_tag, false).setText(R.id.tv_tag, "${item.tagCount}")
                 }
             }
         }

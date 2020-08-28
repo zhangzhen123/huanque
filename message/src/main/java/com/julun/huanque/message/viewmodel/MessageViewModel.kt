@@ -10,14 +10,11 @@ import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.MessageCustomBeanType
-import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.sortList
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
 import io.rong.imlib.RongIMClient
@@ -29,7 +26,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
-import kotlin.math.max
 
 /**
  *@创建者   dong
@@ -37,6 +33,8 @@ import kotlin.math.max
  *@描述 会话列表ViewModel
  */
 class MessageViewModel : BaseViewModel() {
+    //获取数据的标记位
+    val queryDataFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //会话列表
     val conversationListData: MutableLiveData<MutableList<LocalConversation>> by lazy { MutableLiveData<MutableList<LocalConversation>>() }
@@ -61,6 +59,12 @@ class MessageViewModel : BaseViewModel() {
 
     //直播间内标识位
     var player = false
+
+    //免打扰列表
+    var blockListData: MutableList<String>? = null
+
+    //获取免打扰列表成功之后，需要获取会话列表的标识位
+    var needQueryConversation = false
 
     /**
      * 删除会话
@@ -112,6 +116,10 @@ class MessageViewModel : BaseViewModel() {
      * 获取本地会话列表
      */
     fun getConversationList() {
+        if (blockListData == null) {
+            needQueryConversation = true
+            return
+        }
         RongIMClient.getInstance().getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(p0: List<Conversation>?) {
 //                if (!mStranger && !player) {
@@ -222,6 +230,12 @@ class MessageViewModel : BaseViewModel() {
      * @param stranger 消息是否是陌生人发送
      */
     fun refreshConversation(targerId: String, stranger: Boolean) {
+        //判断是否处于免打扰列表当中
+        if (blockListData?.contains(targerId) == true) {
+            //免打扰会话发送过来的消息
+            return
+        }
+
         RongIMClient.getInstance()
             .getConversation(Conversation.ConversationType.PRIVATE, targerId, object : RongIMClient.ResultCallback<Conversation>() {
                 override fun onSuccess(p0: Conversation?) {
@@ -360,6 +374,12 @@ class MessageViewModel : BaseViewModel() {
                                 }
                             }
                         }
+                        currentUser?.let { user ->
+                            withContext(Dispatchers.IO) {
+                                //将数据保存到数据库一份
+                                HuanQueDatabase.getInstance().chatUserDao().insert(user)
+                            }
+                        }
                     }
 
                     if (currentUser?.stranger == true && add && !mStranger) {
@@ -406,8 +426,11 @@ class MessageViewModel : BaseViewModel() {
                                     strangerLastestTime = it.conversation.sentTime
                                     targetName = it.showUserInfo?.nickname ?: ""
                                 }
-                                strangerUnreadCount += it.conversation.unreadMessageCount
-                                strangerList.add(it)
+                                if (blockListData?.contains(it.conversation.targetId) != true) {
+                                    //不是免打扰消息
+                                    strangerUnreadCount += it.conversation.unreadMessageCount
+                                    strangerList.add(it)
+                                }
                             }
                         }
                         //插入陌生人item
@@ -458,7 +481,7 @@ class MessageViewModel : BaseViewModel() {
                     userId = user.targetUserObj?.userId ?: 0
                     //用户性别
                     sex = user.targetUserObj?.sex ?: ""
-                    stranger = user.targetUserObj?.stranger ?: false
+                    stranger = GlobalUtils.getStrangerBoolean(user.targetUserObj?.stranger ?: "")
                 }
             } else {
                 //对方发送消息
@@ -472,7 +495,7 @@ class MessageViewModel : BaseViewModel() {
                     userId = user.senderId
                     //用户性别
                     sex = user.sex
-                    stranger = user.targetUserObj?.stranger ?: false
+                    stranger = GlobalUtils.getStrangerBoolean(user.targetUserObj?.stranger ?: "")
                 }
             }
 
@@ -629,6 +652,8 @@ class MessageViewModel : BaseViewModel() {
                 }
             }
         }
+        //陌生人状态变动，更新数据库
+        updataStrangerData(bean.userId, bean.stranger)
     }
 
     /**
@@ -638,16 +663,42 @@ class MessageViewModel : BaseViewModel() {
     private fun doWithExclusionEvent(userId: Long) {
         val list = conversationListData.value ?: return
         var index = -1
+        var strangerConversation: LocalConversation? = null
         list.forEachIndexed { ind, it ->
             if (it.conversation.targetId == "$userId") {
                 index = ind
+                strangerConversation = it
                 return@forEachIndexed
             }
         }
 
-        if (index >= 0) {
+        if (index >= 0 && strangerConversation != null) {
             //当前列表里面存在该会话，直接删除就可以
             list.removeAt(index)
+            //判断是否含有陌生人会话
+            var hasStranger = false
+            list.forEach {
+                if (it.conversation.targetId == null) {
+                    hasStranger = true
+                }
+            }
+            if (!hasStranger && !mStranger) {
+                //没有陌生人消息会话，添加陌生人消息会话
+                val info = hashMapOf<String, String>()
+
+                info.put(LocalConversation.TIME, "${strangerConversation?.conversation?.sentTime ?: 0}")
+                val unreadCount = if (blockListData?.contains("$userId") == true) {
+                    0
+                } else {
+                    strangerConversation?.conversation?.unreadMessageCount ?: 0
+                }
+                info.put(LocalConversation.UNREADCOUNT, "$unreadCount")
+                info.put(LocalConversation.NICKNAME, "${strangerConversation?.showUserInfo?.nickname}")
+                val strangerConversation = LocalConversation().apply {
+                    strangerInfo = info
+                }
+                list.add(strangerConversation)
+            }
             //显示新的列表
             conversationListData.value = list
         }

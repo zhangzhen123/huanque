@@ -3,6 +3,7 @@ package com.julun.huanque.core.manager
 import android.content.Intent
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.core.service.FloatingService
 
 /**
@@ -34,6 +35,7 @@ object FloatingManager {
      * 关闭悬浮窗
      */
     fun hideFloatingView() {
+        logger("关闭悬浮窗")
         CommonInit.getInstance().getCurrentActivity()?.let { act ->
             val intent = Intent(act, FloatingService::class.java)
             act.stopService(intent)

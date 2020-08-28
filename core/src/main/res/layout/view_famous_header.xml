@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="5dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_first"
+        android:layout_width="200dp"
+        android:layout_height="0px"
+        android:layout_marginLeft="5dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="centerCrop"
+        app:roundedCornerRadius="6dp" />
+
+    <View
+        android:id="@+id/view_shader_first"
+        android:layout_width="0px"
+        android:layout_height="27dp"
+        android:background="@drawable/bg_famous_nickname"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_first"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_first"
+        app:layout_constraintRight_toRightOf="@id/sdv_first" />
+
+    <TextView
+        android:id="@+id/tv_nickname_first"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="5dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_first"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_first"
+        tools:text="的科技" />
+
+    <TextView
+        android:id="@+id/tv_day_first"
+        android:layout_width="30dp"
+        android:layout_height="24dp"
+        android:background="@drawable/bg_famous_day"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintRight_toRightOf="@id/sdv_first"
+        app:layout_constraintTop_toTopOf="@id/sdv_first"
+        tools:text="7" />
+
+    <View
+        android:id="@+id/view_border_first"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@drawable/bg_famous_myself"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_first"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_first"
+        app:layout_constraintRight_toRightOf="@id/sdv_first"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/sdv_first" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_second"
+        android:layout_width="95dp"
+        android:layout_height="0px"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toRightOf="@id/sdv_first"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="centerCrop"
+        app:roundedCornerRadius="6dp" />
+
+    <View
+        android:id="@+id/view_shader_second"
+        android:layout_width="0px"
+        android:layout_height="27dp"
+        android:background="@drawable/bg_famous_nickname"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_second"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_second"
+        app:layout_constraintRight_toRightOf="@id/sdv_second" />
+
+    <TextView
+        android:id="@+id/tv_nickname_second"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_second"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_second"
+        app:layout_constraintRight_toRightOf="@id/sdv_second"
+        tools:text="的科技" />
+
+    <TextView
+        android:id="@+id/tv_day_second"
+        android:layout_width="30dp"
+        android:layout_height="24dp"
+        android:background="@drawable/bg_famous_day"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintRight_toRightOf="@id/sdv_second"
+        app:layout_constraintTop_toTopOf="@id/sdv_second"
+        tools:text="7" />
+
+    <View
+        android:id="@+id/view_border_second"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@drawable/bg_famous_myself"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_second"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_second"
+        app:layout_constraintRight_toRightOf="@id/sdv_second"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/sdv_second" />
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_third"
+        android:layout_width="95dp"
+        android:layout_height="0px"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_first"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toRightOf="@id/sdv_first"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="centerCrop"
+        app:roundedCornerRadius="6dp" />
+
+    <View
+        android:id="@+id/view_shader_third"
+        android:layout_width="0px"
+        android:layout_height="27dp"
+        android:background="@drawable/bg_famous_nickname"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_third"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_third"
+        app:layout_constraintRight_toRightOf="@id/sdv_third" />
+
+    <TextView
+        android:id="@+id/tv_nickname_third"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_third"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_third"
+        app:layout_constraintRight_toRightOf="@id/sdv_third"
+        tools:text="的科技" />
+
+    <TextView
+        android:id="@+id/tv_day_third"
+        android:layout_width="30dp"
+        android:layout_height="24dp"
+        android:background="@drawable/bg_famous_day"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintRight_toRightOf="@id/sdv_third"
+        app:layout_constraintTop_toTopOf="@id/sdv_third"
+        tools:text="7" />
+
+    <View
+        android:id="@+id/view_border_third"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@drawable/bg_famous_myself"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_third"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_third"
+        app:layout_constraintRight_toRightOf="@id/sdv_third"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/sdv_third" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

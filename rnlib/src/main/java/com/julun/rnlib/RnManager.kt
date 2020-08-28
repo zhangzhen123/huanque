@@ -14,10 +14,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEm
 import com.horcrux.svg.SvgPackage
 import com.julun.huanque.common.net.interceptors.HeaderInfoHelper
 import com.julun.huanque.common.suger.logger
-import com.julun.rnlib.reactpackage.AppMessageReactPackage
-import com.julun.rnlib.reactpackage.GlobalReactPackage
-import com.julun.rnlib.reactpackage.OpenPageReactPackage
-import com.julun.rnlib.reactpackage.UploadReactPackage
+import com.julun.rnlib.reactpackage.*
 import com.luck.picture.lib.config.PictureConfig
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage
 import com.reactnativecommunity.webview.RNCWebViewPackage
@@ -68,6 +65,7 @@ object RnManager {
                 .addPackage(RNCViewPagerPackage())
                 .addPackage(ReactVideoPackage())
                 .addPackage(RNCWebViewPackage())
+                .addPackage(BannerReactPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)
                 .setNativeModuleCallExceptionHandler {

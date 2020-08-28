@@ -40,10 +40,10 @@ class EmojiSuspendDialogFragment : BaseDialogFragment() {
 
     override fun initViews() {
         val bean = arguments?.getSerializable(ParamConstant.Emotion) as? Emotion
-        bean?.let {
-            iv_emoji.imageResource = it.drawableRes
-            tv_emoji.text = it.text
-        }
+//        bean?.let {
+//            iv_emoji.imageResource = it.drawableRes
+//            tv_emoji.text = it.text
+//        }
 
         mLocation = arguments?.getIntArray(ParamConstant.LOCATION)
     }

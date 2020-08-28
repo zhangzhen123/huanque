@@ -221,14 +221,14 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         mViewModel.programId = programId
         mViewModel.homeInfo.observe(this, Observer {
             if (it.isSuccess()) {
-                renderData(it.getT())
+                renderData(it.requireT())
             }
         })
 
         mViewModel.buyResult.observe(this, Observer {
             iv_bottom_03.isEnabled = true
             if (it.isSuccess()) {
-                val bird = it.getT()
+                val bird = it.requireT()
                 if (bird.currentUpgrade.upgradePos < birdAdapter.data.size) {
                     birdAdapter.data[bird.currentUpgrade.upgradePos] = bird.currentUpgrade
                     birdAdapter.notifyItemChanged(bird.currentUpgrade.upgradePos)
@@ -240,8 +240,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         })
         mViewModel.combineResult.observe(this, Observer {
             if (it.isSuccess()) {
-                logger.info(it.getT().resultType)
-                processCombineResult(it.getT())
+                logger.info(it.requireT().resultType)
+                processCombineResult(it.requireT())
 
             }
         })

@@ -4,15 +4,16 @@ import androidx.lifecycle.MutableLiveData
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
+import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
 import com.julun.huanque.common.bean.events.UnreadCountEvent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
@@ -47,6 +48,9 @@ class PlayerMessageViewModel : BaseViewModel() {
     //免打扰列表
     val blockListData: MutableLiveData<MutableList<String>> by lazy { MutableLiveData<MutableList<String>>() }
 
+    //需要刷新会话列表
+    val needRefreshConversationFlag: MutableLiveData<EventMessageBean> by lazy { MutableLiveData<EventMessageBean>() }
+
     //获取免打扰列表成功之后，需要获取未读数的标识位
     var needQuerUnreadCount = false
 
@@ -54,7 +58,7 @@ class PlayerMessageViewModel : BaseViewModel() {
      * 获取融云未读消息(直播间使用)
      */
     fun queryRongPrivateCount(targetId: String = "") {
-        if(blockListData.value == null){
+        if (blockListData.value == null) {
             //未获取到免打扰列表
             needQuerUnreadCount = true
             return
@@ -143,7 +147,7 @@ class PlayerMessageViewModel : BaseViewModel() {
                     tempQueryCount++
                     if (tempQueryCount == totalQueryCount) {
                         unreadCountInPlayer.value = tempUnreadCount
-                        EventBus.getDefault().post(UnreadCountEvent(tempUnreadCount,true))
+                        EventBus.getDefault().post(UnreadCountEvent(tempUnreadCount, true))
                     }
                 }
 
@@ -151,7 +155,7 @@ class PlayerMessageViewModel : BaseViewModel() {
                     tempQueryCount++
                     if (tempQueryCount == totalQueryCount) {
                         unreadCountInPlayer.value = tempUnreadCount
-                        EventBus.getDefault().post(UnreadCountEvent(tempUnreadCount,true))
+                        EventBus.getDefault().post(UnreadCountEvent(tempUnreadCount, true))
                     }
                 }
             })
@@ -186,7 +190,7 @@ class PlayerMessageViewModel : BaseViewModel() {
                     userId = user.targetUserObj?.userId ?: 0
                     //用户性别
                     sex = user.targetUserObj?.sex ?: ""
-                    stranger = user.targetUserObj?.stranger ?: false
+                    stranger = GlobalUtils.getStrangerBoolean(user.targetUserObj?.stranger ?: "")
                 }
             } else {
                 //对方发送消息
@@ -200,7 +204,7 @@ class PlayerMessageViewModel : BaseViewModel() {
                     userId = user.senderId
                     //用户性别
                     sex = user.sex
-                    stranger = user.targetUserObj?.stranger ?: false
+                    stranger = GlobalUtils.getStrangerBoolean(user.targetUserObj?.stranger ?: "")
                 }
             }
 
@@ -220,7 +224,7 @@ class PlayerMessageViewModel : BaseViewModel() {
                     blockedIdList.add(it.targetId)
                 }
                 blockListData.value = blockedIdList
-                if(needQuerUnreadCount){
+                if (needQuerUnreadCount) {
                     needQuerUnreadCount = false
                     queryRongPrivateCount()
                 }

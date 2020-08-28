@@ -11,6 +11,7 @@ import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.SendRNEvent
+import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.forms.*
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.*
@@ -488,11 +489,12 @@ class PlayerViewModel : BaseViewModel() {
 
     fun refreshUserInfoData() {
         val roomForm = UserEnterRoomForm(programId)
-        //todo
-//        liveService.getRoomUserInfo(roomForm)
-//            .handleResponse(makeSubscriber {
-//                userInfo.value = it
-//            })
+        viewModelScope.launch {
+            request({
+                val result = liveService.getRoomUserInfo(roomForm).dataConvert()
+                userInfo.value = result
+            })
+        }
 
     }
 
@@ -534,12 +536,13 @@ class PlayerViewModel : BaseViewModel() {
     /**
      * 关注
      */
-    fun follow(userId : Long) {
+    fun follow(userId: Long) {
         viewModelScope.launch {
             request({
                 val follow = mSocialService.follow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(follow = follow.follow,userId = userId)
+                val followBean = FollowResultBean(follow = follow.follow, userId = userId)
                 followStatusData.value = followBean.convertRtData()
+                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
                 EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
             }, {
                 followStatusData.value = it.convertError()
@@ -567,9 +570,10 @@ class PlayerViewModel : BaseViewModel() {
     fun unFollow(userId: Long) {
         viewModelScope.launch {
             request({
-                mSocialService.unFollow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(follow = FollowStatus.False,userId = userId)
+                val follow = mSocialService.unFollow(FriendIdForm(userId)).dataConvert()
+                val followBean = FollowResultBean(follow = FollowStatus.False, userId = userId)
                 followStatusData.value = followBean.convertRtData()
+                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
                 EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to false)))
             }, {
                 followStatusData.value = it.convertError()
@@ -604,7 +608,7 @@ class PlayerViewModel : BaseViewModel() {
             TextTouch.OpenLiveRoom -> {
                 val messageContext = tplBean.context       //此时当前的消息不能为空
                 if (!isAnchor && messageContext != null) {
-                    checkoutRoom.value = messageContext.roomId
+                    checkoutRoom.value = messageContext.programId
                 }
             }
             TextTouch.OpenSendGiftView -> {
@@ -739,7 +743,7 @@ class PlayerViewModel : BaseViewModel() {
         if (startLookTime == 0L) {
             return false
         }
-        if ((currentTime - startLookTime) > 60 * 1000 && roomData?.follow != true) {
+        if ((currentTime - startLookTime) > 120 * 1000 && roomData?.follow != true) {
             guideToFollow.value = 1
             return true
         }

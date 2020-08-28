@@ -30,6 +30,14 @@
             app:placeholderImage="@mipmap/logo_placeholder_small"
             app:roundAsCircle="true" />
 
+        <ImageView
+            android:id="@+id/iv_anchor_level"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginLeft="21dp"
+            android:translationY="1dp"
+            android:layout_alignParentBottom="true"/>
+
         <!--<com.facebook.drawee.view.SimpleDraweeView-->
         <!--android:id="@+id/subscribeAnchorImage"-->
         <!--android:layout_width="34dp"-->
