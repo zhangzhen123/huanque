@@ -64,7 +64,22 @@ public class Emotions {
         NORMAL_EMOTIONS.put("[困了]", R.drawable.kunle);
 
         // 加载特权表情
+        PRIVILEGE_EMOTIONS.put("[约吗]", R.drawable.expression_privilege_yuema);
+        PRIVILEGE_EMOTIONS.put("[等撩]", R.drawable.expression_privilege_dengliao);
+        PRIVILEGE_EMOTIONS.put("[送花]", R.drawable.expression_privilege_songhua);
+        PRIVILEGE_EMOTIONS.put("[么么哒]", R.drawable.expression_privilege_memeda);
+        PRIVILEGE_EMOTIONS.put("[色眯眯]", R.drawable.expression_privilege_semimi);
         PRIVILEGE_EMOTIONS.put("[晚安]", R.drawable.expression_privilege_wanan);
+        PRIVILEGE_EMOTIONS.put("[乞讨]", R.drawable.expression_privilege_qitao);
+        PRIVILEGE_EMOTIONS.put("[耍酷]", R.drawable.expression_privilege_shuaku);
+        PRIVILEGE_EMOTIONS.put("[在吗]", R.drawable.expression_privilege_zaima);
+        PRIVILEGE_EMOTIONS.put("[太难了]", R.drawable.expression_privilege_tainanle);
+        PRIVILEGE_EMOTIONS.put("[生气]", R.drawable.expression_privilege_shengqi);
+        PRIVILEGE_EMOTIONS.put("[委屈]", R.drawable.expression_privilege_weiqv);
+        PRIVILEGE_EMOTIONS.put("[哈哈哈]", R.drawable.expression_privilege_hahaha);
+        PRIVILEGE_EMOTIONS.put("[约架]", R.drawable.expression_privilege_yuejia);
+        PRIVILEGE_EMOTIONS.put("[咬你]", R.drawable.expression_privilege_yaoni);
+        PRIVILEGE_EMOTIONS.put("[挑衅]", R.drawable.expression_privilege_tiaoxin);
 
         // 加载动画表情
         ANIMATION_EMOTIONS.put("[猜拳]", R.drawable.icon_caiquan);

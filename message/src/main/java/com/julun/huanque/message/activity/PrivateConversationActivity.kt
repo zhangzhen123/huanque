@@ -23,6 +23,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.view.panel.PanelView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -44,10 +45,7 @@ import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.onTouch
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
@@ -73,6 +71,8 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
+import kotlinx.android.synthetic.main.act_private_chat.tv_unread_count
+import kotlinx.android.synthetic.main.item_header_conversions.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -82,6 +82,7 @@ import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.px2dip
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import java.util.concurrent.TimeUnit
+import kotlin.math.log
 
 
 /**
@@ -835,8 +836,10 @@ class PrivateConversationActivity : BaseActivity() {
             return
         }
 
-        rootView.findViewById<ImageView>(R.id.iv_emoji)?.imageResource = emotion.drawableRes
         val content = emotion.text
+        logger.info("url = ${GlobalUtils.getPrivilegeUrl(content)}")
+        val sdvEmoji = rootView.findViewById<SimpleDraweeView>(R.id.sdv_emoji)
+        sdvEmoji?.loadImage(GlobalUtils.getPrivilegeUrl(content), 36f, 36f)
         val name = content.substring(content.indexOf("[") + 1, content.indexOf("]"))
         rootView.findViewById<TextView>(R.id.tv_emoji)?.text = name
 

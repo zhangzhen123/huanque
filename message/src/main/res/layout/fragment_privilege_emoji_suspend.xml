@@ -5,8 +5,8 @@
     android:layout_width="94dp"
     android:layout_height="116dp">
 
-    <ImageView
-        android:id="@+id/iv_emoji"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_emoji"
         android:layout_width="70dp"
         android:layout_height="70dp"
         app:layout_constraintBottom_toTopOf="@+id/tv_emoji"
