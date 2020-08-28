@@ -50,6 +50,7 @@ import java.util.concurrent.TimeUnit
 class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     companion object {
         fun newInstance() = LeYuanFragment()
+
         //一些播放的音频短
         const val BIRD_BUY = "bird/bird_buy.mp3"
         const val BIRD_COIN = "bird/bird_coin.mp3"
@@ -157,7 +158,6 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                                     if (currentCombineItem == currentTargetItem) {
                                         logger.info("是同一个item 不处理")
                                         recoveryItemBird()
-                                        bird_mask.hide()
                                     } else {
                                         mViewModel.combineBird(
                                             currentCombineItem!!.upgradeId,
@@ -242,7 +242,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             if (it.isSuccess()) {
                 logger.info(it.requireT().resultType)
                 processCombineResult(it.requireT())
-
+            }else{
+                recoveryItemBird()
             }
         })
         mViewModel.recycleResult.observe(this, Observer {
@@ -253,7 +254,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 if (currentIndex != -1) {
                     birdAdapter.setData(currentIndex, UpgradeBirdBean(upgradePos = currentIndex))
                 }
-            }else{
+            } else {
                 ToastUtils.show(it.error?.busiMessage)
             }
         })
@@ -269,19 +270,23 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 tv_balance_produce.text = "${StringHelper.formatBigNum(it)}金币/秒"
             }
         })
-
+        mViewModel.unlockUpgrade.observe(this, Observer {
+            if (it != null) {
+                renderBottom(it)
+            }
+        })
 
     }
 
     /**
      * 播放出售金币飘出动画
      */
-    private fun playRecycleBirdCoin(coin:BigInteger?){
-        if(coin==null){
+    private fun playRecycleBirdCoin(coin: BigInteger?) {
+        if (coin == null) {
             return
         }
-        tv_recycler_coin.text="$coin"
-        val aniText1 = ObjectAnimator.ofFloat(tv_recycler_coin, View.TRANSLATION_Y, 0f, -dp2pxf(40))
+        tv_recycler_coin.text = "+${StringHelper.formatBigNum(coin)}"
+        val aniText1 = ObjectAnimator.ofFloat(tv_recycler_coin, View.TRANSLATION_Y, 0f, -dp2pxf(30))
         aniText1.interpolator = AccelerateDecelerateInterpolator()
         aniText1.duration = 200
         //目的是继续显示
@@ -298,6 +303,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         tv_recycler_coin.show()
         set.start()
     }
+
     /**
      * 播放金币变化动画
      */
@@ -363,6 +369,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         if (currentIndex != -1) {
             birdAdapter.notifyItemChanged(currentIndex)
         }
+        bird_mask.hide()
     }
 
     /**
@@ -387,7 +394,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
     private var currentUnlockUpgrade: UnlockUpgrade? = null
     private fun renderData(info: BirdHomeInfo) {
-        currentUnlockUpgrade = info.unlockUpgrade
+
         info.functionInfo.let { fInfo ->
             sdv_cai_shen.loadImage(fInfo.wealth.functionIcon, 80f, 80f)
             if (fInfo.wealth.functionNum.isNotEmpty() && fInfo.wealth.functionNum != "0") {
@@ -429,15 +436,23 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             } else {
                 tv_shen_mi.hide()
             }
-            tv_cash.text="${info.cash}"
+            tv_cash.text = "${info.cash}"
         }
 
 
         birdAdapter.setList(info.upgradeList)
         startAniInterval()
-        tv_bird_price.text = StringHelper.formatBigNum(info.unlockUpgrade.upgradeCoins)
-        tv_price_level.text = "Lv.${info.unlockUpgrade.upgradeLevel}"
-        sdv_bottom_bird.loadImage(info.unlockUpgrade.upgradeIcon, 86f, 86f)
+
+    }
+
+    /**
+     * 刷新底部购买栏数据
+     */
+    private fun renderBottom(unlockUpgrade: UnlockUpgrade) {
+        currentUnlockUpgrade = unlockUpgrade
+        tv_bird_price.text = StringHelper.formatBigNum(unlockUpgrade.upgradeCoins)
+        tv_price_level.text = "Lv.${unlockUpgrade.upgradeLevel}"
+        sdv_bottom_bird.loadImage(unlockUpgrade.upgradeIcon, 86f, 86f)
     }
 
     private var aniIntervalDispose: Disposable? = null
@@ -500,7 +515,6 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             set.playTogether(anim1, anim2)
             set.addListener(onEnd = {
                 recoveryItemBird()
-                bird_mask.hide()
             })
             set.start()
         }

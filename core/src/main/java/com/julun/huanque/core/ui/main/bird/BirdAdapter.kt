@@ -15,6 +15,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.UpgradeBirdBean
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.core.R
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -62,7 +63,7 @@ class BirdAdapter(var programId: Long? = null) : BaseQuickAdapter<UpgradeBirdBea
                 } else {
                     item.onlineCoinsPerSec.multiply(BigInteger.valueOf(CoinsPerSec))
                 }
-                holder.setText(R.id.tv_level, "${item.upgradeLevel}").setText(R.id.tv_produce_sec, "+$pSec")
+                holder.setText(R.id.tv_level, "${item.upgradeLevel}").setText(R.id.tv_produce_sec, "+${StringHelper.formatBigNum(pSec)}")
 //                playAnim(imgView, holder.getView(R.id.tv_produce_sec))
             }
             else -> {

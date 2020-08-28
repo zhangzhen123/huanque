@@ -49,7 +49,7 @@ data class BuyBirdResult(
     var coinsPerSec: BigInteger = BigInteger.ZERO,
     var currentUpgrade: UpgradeBirdBean = UpgradeBirdBean(),
     var totalCoins: BigInteger = BigInteger.ZERO,
-    var unlockUpgrade: UnlockUpgrade = UnlockUpgrade()
+    var unlockUpgrade: UnlockUpgrade? = null
 )
 
 data class UpgradeBirdBean(
@@ -63,9 +63,9 @@ data class UpgradeBirdBean(
     var upgradePos: Int = 0,
     var upgradeSaleCoins: BigInteger = BigInteger.ZERO,
     //本地字段 当正在操作时 会有一个蒙层效果
-    var isActive:Boolean=false,
+    var isActive: Boolean = false,
     //创建时间 用于后面每次计算收益
-    var createTime:Long =System.currentTimeMillis()/100
+    var createTime: Long = System.currentTimeMillis() / 100
 )
 
 data class CombineResult(
@@ -85,6 +85,7 @@ data class CombineResult(
         const val Function = "Function"
     }
 }
+
 data class RecycleResult(
     var coinsPerSec: BigInteger = BigInteger.ZERO,
     var totalCoins: BigInteger = BigInteger.ZERO

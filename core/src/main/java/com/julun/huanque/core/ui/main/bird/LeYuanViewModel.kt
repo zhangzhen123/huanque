@@ -46,8 +46,11 @@ class LeYuanViewModel : BaseViewModel() {
 
     val recycleResult: MutableLiveData<ReactiveData<RecycleResult>> by lazy { MutableLiveData<ReactiveData<RecycleResult>>() }
 
+    val unlockUpgrade: MutableLiveData<UnlockUpgrade> by lazy { MutableLiveData<UnlockUpgrade>() }
     val totalCoin: MutableLiveData<BigInteger> by lazy { MutableLiveData<BigInteger>() }
     val coinsPerSec: MutableLiveData<BigInteger> by lazy { MutableLiveData<BigInteger>() }
+
+
     var programId: Long? = null
     private var currentInfo: BirdHomeInfo? = null
     fun queryHome() {
@@ -74,6 +77,7 @@ class LeYuanViewModel : BaseViewModel() {
                 homeInfo.value = result.convertRtData()
                 totalCoin.value = result.totalCoins
                 coinsPerSec.value = result.coinsPerSec
+                unlockUpgrade.value = result.unlockUpgrade
 //                startProcessCoins()
             }, error = {
                 it.printStackTrace()
@@ -92,6 +96,9 @@ class LeYuanViewModel : BaseViewModel() {
                 buyResult.value = result.convertRtData()
                 totalCoin.value = result.totalCoins
                 coinsPerSec.value = result.coinsPerSec
+                if (result.unlockUpgrade != null) {
+                    unlockUpgrade.value = result.unlockUpgrade
+                }
 //                startProcessCoins()
             }, error = {
                 it.printStackTrace()
@@ -123,9 +130,13 @@ class LeYuanViewModel : BaseViewModel() {
                     //刷新整个页面
                     queryHome()
                 }
+                if (result.unlockUpgrade != null) {
+                    unlockUpgrade.value = result.unlockUpgrade
+                }
                 combineResult.value = result.convertRtData()
             }, error = {
                 it.printStackTrace()
+                combineResult.value = it.convertError()
             })
 
         }
@@ -166,7 +177,7 @@ class LeYuanViewModel : BaseViewModel() {
 //
 //        }
 //    }
-     fun startProcessCoins(ps: BigInteger) {
+    fun startProcessCoins(ps: BigInteger) {
         if (totalCoin.value != null) {
             totalCoin.postValue(totalCoin.value?.add(ps))
         }
