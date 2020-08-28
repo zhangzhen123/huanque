@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_emoji"
+        app:layout_constraintTop_toBottomOf="@id/sdv_emoji"
         tools:text="肯德" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

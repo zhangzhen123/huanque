@@ -310,6 +310,7 @@ class PrivateConversationActivity : BaseActivity() {
                     mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
                 }
                 mPrivateConversationViewModel?.messageChangeState?.value = null
+                mPrivateConversationViewModel?.changeMessageList?.clear()
                 showXiaoQueAuto()
             }
         })
@@ -805,6 +806,7 @@ class PrivateConversationActivity : BaseActivity() {
     private fun showEmojiSuspend(type: String, view: View, emotion: Emotion) {
         val location = IntArray(2)
         view.getLocationOnScreen(location)
+        val content = emotion.text
         var dx = 0
         var dy = 0
         var rootView: View? = null
@@ -817,6 +819,7 @@ class PrivateConversationActivity : BaseActivity() {
                 mEmojiPopupWindow?.setBackgroundDrawable(drawable)
                 dx = location[0] + (view.width - dip(50)) / 2
                 dy = location[1] - dip(66) + dip(13)
+                rootView.findViewById<ImageView>(R.id.iv_emoji)?.imageResource = emotion.drawableRes
             }
             EmojiType.PREROGATIVE -> {
                 rootView = LayoutInflater.from(this)
@@ -826,6 +829,8 @@ class PrivateConversationActivity : BaseActivity() {
                 mEmojiPopupWindow?.setBackgroundDrawable(drawable)
                 dx = location[0] + (view.width - dip(94)) / 2
                 dy = location[1] - dip(116) + dip(13)
+                val sdvEmoji = rootView.findViewById<SimpleDraweeView>(R.id.sdv_emoji)
+                sdvEmoji?.loadImage(GlobalUtils.getPrivilegeUrl(content), 36f, 36f)
             }
             else -> {
 
@@ -836,10 +841,8 @@ class PrivateConversationActivity : BaseActivity() {
             return
         }
 
-        val content = emotion.text
-        logger.info("url = ${GlobalUtils.getPrivilegeUrl(content)}")
-        val sdvEmoji = rootView.findViewById<SimpleDraweeView>(R.id.sdv_emoji)
-        sdvEmoji?.loadImage(GlobalUtils.getPrivilegeUrl(content), 36f, 36f)
+
+
         val name = content.substring(content.indexOf("[") + 1, content.indexOf("]"))
         rootView.findViewById<TextView>(R.id.tv_emoji)?.text = name
 

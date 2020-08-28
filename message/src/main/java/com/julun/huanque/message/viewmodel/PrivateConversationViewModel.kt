@@ -194,6 +194,7 @@ class PrivateConversationViewModel : BaseViewModel() {
         val content = message.content
         if (content is CustomMessage && content.type == MessageCustomBeanType.Expression_Animation) {
             //动画消息
+            changeMessageList.clear()
             changeMessageList.add(message)
             messageChangeState.postValue(true)
         } else {
@@ -202,7 +203,7 @@ class PrivateConversationViewModel : BaseViewModel() {
 
         RongIMClient.getInstance().setMessageReceivedStatus(message.messageId, Message.ReceivedStatus(1))
         //        }
-        if(message.senderUserId != "${SessionUtils.getUserId()}"){
+        if (message.senderUserId != "${SessionUtils.getUserId()}") {
             //收到对方消息
             EventBus.getDefault().post(EventMessageBean(message.targetId ?: "", chatInfoData.value?.stranger ?: false))
         }

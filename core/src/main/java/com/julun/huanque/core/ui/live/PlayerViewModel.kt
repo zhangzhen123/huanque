@@ -743,7 +743,7 @@ class PlayerViewModel : BaseViewModel() {
         if (startLookTime == 0L) {
             return false
         }
-        if ((currentTime - startLookTime) > 60 * 1000 && roomData?.follow != true) {
+        if ((currentTime - startLookTime) > 120 * 1000 && roomData?.follow != true) {
             guideToFollow.value = 1
             return true
         }

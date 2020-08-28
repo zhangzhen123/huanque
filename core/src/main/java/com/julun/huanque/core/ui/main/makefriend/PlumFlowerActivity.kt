@@ -9,7 +9,10 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
@@ -34,6 +37,7 @@ import org.jetbrains.anko.textSizeDimen
  *@创建时间 2020/8/21 17:19
  *@描述 花魁页面
  */
+@Route(path = ARouterConstant.PLUM_FLOWER_ACTIVITY)
 class PlumFlowerActivity : BaseActivity() {
 
     private lateinit var mCommonNavigator: CommonNavigator
@@ -43,6 +47,7 @@ class PlumFlowerActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_plum_flower
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        val type = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
         val barHeight = StatusBarUtil.getStatusBarHeight(this)
         val params = view_top.layoutParams as? ConstraintLayout.LayoutParams
         params?.topMargin = barHeight
@@ -57,6 +62,9 @@ class PlumFlowerActivity : BaseActivity() {
         pager.adapter = mPagerAdapter
         pager.offscreenPageLimit = 3
         initMagicIndicator()
+        if(type == "Famous"){
+            pager.currentItem = 2
+        }
     }
 
     override fun initEvents(rootView: View) {
