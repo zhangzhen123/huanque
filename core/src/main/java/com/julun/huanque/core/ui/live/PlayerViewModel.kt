@@ -489,11 +489,12 @@ class PlayerViewModel : BaseViewModel() {
 
     fun refreshUserInfoData() {
         val roomForm = UserEnterRoomForm(programId)
-        //todo
-//        liveService.getRoomUserInfo(roomForm)
-//            .handleResponse(makeSubscriber {
-//                userInfo.value = it
-//            })
+        viewModelScope.launch {
+            request({
+                val result = liveService.getRoomUserInfo(roomForm).dataConvert()
+                userInfo.value = result
+            })
+        }
 
     }
 
@@ -535,13 +536,13 @@ class PlayerViewModel : BaseViewModel() {
     /**
      * 关注
      */
-    fun follow(userId : Long) {
+    fun follow(userId: Long) {
         viewModelScope.launch {
             request({
                 val follow = mSocialService.follow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(follow = follow.follow,userId = userId)
+                val followBean = FollowResultBean(follow = follow.follow, userId = userId)
                 followStatusData.value = followBean.convertRtData()
-                EventBus.getDefault().post(UserInfoChangeEvent(userId,follow.stranger))
+                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
                 EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
             }, {
                 followStatusData.value = it.convertError()
@@ -570,9 +571,9 @@ class PlayerViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val follow = mSocialService.unFollow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(follow = FollowStatus.False,userId = userId)
+                val followBean = FollowResultBean(follow = FollowStatus.False, userId = userId)
                 followStatusData.value = followBean.convertRtData()
-                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger))
+                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
                 EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to false)))
             }, {
                 followStatusData.value = it.convertError()

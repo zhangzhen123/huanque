@@ -172,7 +172,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         if (info.userBasic.anchorLevel > 0) {
             sdv_author_level.show()
             val wealthAddrss = GlobalUtils.getString(R.string.anchor_address)
-            sdv_author_level.loadImage(String.format(wealthAddrss, info.userBasic.anchorLevel), 55f, 16f)
+//            sdv_author_level.loadImage(String.format(wealthAddrss, info.userBasic.anchorLevel), 55f, 16f)
+            ImageUtils.loadImageWithHeight_2(sdv_author_level,String.format(wealthAddrss, info.userBasic.anchorLevel),dp2px(16))
 
         } else {
             tv_author_privilege.show()
@@ -317,9 +318,9 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             }
         }
         ivSetting.onClickNew {
-            val royalLevel = mViewModel.userInfo.value?.getT()?.userBasic?.royalLevel ?: 0
+            val anchorLevel = mViewModel.userInfo.value?.getT()?.userBasic?.anchorLevel ?: 0
             val act = requireActivity()
-            SettingActivity.newInstance(act, royalLevel)
+            SettingActivity.newInstance(act, anchorLevel)
         }
         rlQueBi.onClickNew {
             requireActivity().startActivity<RechargeCenterActivity>()

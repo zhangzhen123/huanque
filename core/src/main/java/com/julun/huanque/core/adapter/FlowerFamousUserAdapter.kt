@@ -9,6 +9,8 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.FamousUser
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.ViewUtils
 import com.julun.huanque.core.R
 
 /**
@@ -16,10 +18,12 @@ import com.julun.huanque.core.R
  *@创建时间 2020/8/24 17:32
  *@描述 名人榜 用户Adapter
  */
-class FlowerFamousUserAdapter : BaseQuickAdapter<FamousUser, BaseViewHolder>(R.layout.recycler_item_famous_user) {
+class FlowerFamousUserAdapter(val border: Int) : BaseQuickAdapter<FamousUser, BaseViewHolder>(R.layout.recycler_item_famous_user) {
     override fun convert(holder: BaseViewHolder, item: FamousUser) {
         val sdv = holder.getView<SimpleDraweeView>(R.id.sdv)
-        sdv.loadImage(item.headPic, 95f, 95f)
+        ViewUtils.updateViewBorder(holder.itemView, border, border)
+        ImageUtils.loadImageInPx(sdv, item.headPic, border, border)
+
         val view_border = holder.getView<View>(R.id.view_border)
         val view_shader = holder.getView<View>(R.id.view_shader)
         if (item.myself == BusiConstant.True) {

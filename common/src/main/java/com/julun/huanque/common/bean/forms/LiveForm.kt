@@ -38,7 +38,8 @@ class EnterExForm(var programId: Long? = null, var dataType: String? = null) : S
 class UserEnterRoomForm(
     programId: Long,
     var positionIndex: Int? = null,
-    var fromType: String? = null
+    var fromType: String? = null,
+    var shareUserId : String = ""
 ) : ProgramIdForm(programId)
 
 class RecommendProgramForm(var programId: Long? = null) : SessionForm()

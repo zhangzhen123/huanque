@@ -79,7 +79,7 @@ class MainViewModel : BaseViewModel() {
                     this.userId = SessionUtils.getUserId()
                     sex = SessionUtils.getSex()
                     intimateLevel = result.intimateLevel
-                    stranger = result.stranger
+                    stranger = GlobalUtils.getStrangerString(result.stranger)
                 }
 
                 chatExtra.apply {

@@ -7,12 +7,13 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv"
-        android:layout_width="95dp"
-        android:layout_height="0px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:placeholderImage="@mipmap/logo_placeholder_medium"
         app:placeholderImageScaleType="centerCrop"
         app:roundedCornerRadius="6dp" />

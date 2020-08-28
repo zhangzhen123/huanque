@@ -357,7 +357,7 @@
 
                     <com.facebook.drawee.view.SimpleDraweeView
                         android:id="@+id/sdv_wealth"
-                        android:layout_width="55dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/dimen_16"
                         android:layout_marginStart="@dimen/dimen_6"
                         android:layout_marginLeft="@dimen/dimen_6"
@@ -531,7 +531,7 @@
 
                     <com.facebook.drawee.view.SimpleDraweeView
                         android:id="@+id/sdv_author_level"
-                        android:layout_width="55dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/dimen_16"
                         android:layout_marginStart="@dimen/dimen_6"
                         android:layout_marginLeft="@dimen/dimen_6"

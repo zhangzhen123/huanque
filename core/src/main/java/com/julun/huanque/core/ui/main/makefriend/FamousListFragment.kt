@@ -44,6 +44,7 @@ class FamousListFragment : BaseFragment() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initViewModel()
         initRecyclerView()
+        statePage.showLoading()
         mViewModel.getFamousList()
     }
 
@@ -59,6 +60,12 @@ class FamousListFragment : BaseFragment() {
                 }
                 NetStateType.ERROR -> {
                     statePage.showError()
+                }
+                NetStateType.NETWORK_ERROR -> {
+                    statePage.showError(btnClick = View.OnClickListener {
+                        statePage.showLoading()
+                        mViewModel.getFamousList()
+                    })
                 }
             }
         })
@@ -80,6 +87,9 @@ class FamousListFragment : BaseFragment() {
 //                tempData.addAll(it.monthList)
 //                tempData.addAll(it.monthList)
 //                tempData.addAll(it.monthList)
+                if (it.monthList.isNotEmpty()) {
+                    statePage.showSuccess()
+                }
                 mAdapter.setList(it.monthList)
             }
         })

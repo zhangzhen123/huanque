@@ -718,7 +718,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         }
 
         chatExtra.targetUserObj?.intimateLevel = relationInfo.intimateLevel
-        chatExtra.targetUserObj?.stranger = relationInfo.stranger
+        chatExtra.targetUserObj?.stranger = GlobalUtils.getStrangerString(relationInfo.stranger)
 
         val conversationType = if (bean.needRefresh) {
             Conversation.ConversationType.GROUP

@@ -59,14 +59,20 @@ class DayListFragment(val type: String) : BaseFragment() {
 
     //头部相关视图
     private var sdvFirst: SimpleDraweeView? = null
+    private var viewForegroundFirst: View? = null
     private var tvNicknameFirst: TextView? = null
     private var tvScoreFirst: TextView? = null
+    private var livingFirstTag: SimpleDraweeView? = null
 
     private var sdvSecond: SimpleDraweeView? = null
+    private var livingSecondTag: SimpleDraweeView? = null
+    private var viewForegroundSecond: View? = null
     private var tvNicknameSecond: TextView? = null
     private var tvScoreSecond: TextView? = null
 
     private var sdvThird: SimpleDraweeView? = null
+    private var livingThirdTag: SimpleDraweeView? = null
+    private var viewForegroundThird: View? = null
     private var tvNicknameThird: TextView? = null
     private var tvScoreThird: TextView? = null
 
@@ -81,16 +87,22 @@ class DayListFragment(val type: String) : BaseFragment() {
         initRecyclerView()
 
         sdvFirst = mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_first)
+        viewForegroundFirst = mHeaderView?.findViewById<View>(R.id.view_foreground_first)
         tvNicknameFirst = mHeaderView?.findViewById<TextView>(R.id.tv_nickname_first)
         tvScoreFirst = mHeaderView?.findViewById<TextView>(R.id.tv_score_first)
+        livingFirstTag = mHeaderView?.findViewById<SimpleDraweeView>(R.id.living_first_tag)
 
         sdvSecond = mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_second)
+        viewForegroundSecond = mHeaderView?.findViewById<View>(R.id.view_foreground_second)
         tvNicknameSecond = mHeaderView?.findViewById<TextView>(R.id.tv_nickname_second)
         tvScoreSecond = mHeaderView?.findViewById<TextView>(R.id.tv_score_second)
+        livingSecondTag = mHeaderView?.findViewById<SimpleDraweeView>(R.id.living_second_tag)
 
         sdvThird = mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_third)
+        viewForegroundThird = mHeaderView?.findViewById<View>(R.id.view_foreground_third)
         tvNicknameThird = mHeaderView?.findViewById<TextView>(R.id.tv_nickname_third)
         tvScoreThird = mHeaderView?.findViewById<TextView>(R.id.tv_score_third)
+        livingThirdTag = mHeaderView?.findViewById<SimpleDraweeView>(R.id.living_third_tag)
 
         tvRanking = mHeaderView?.findViewById<TextView>(R.id.tv_ranking)
 
@@ -147,6 +159,16 @@ class DayListFragment(val type: String) : BaseFragment() {
                 NetStateType.ERROR -> {
                     statePage.showError()
                 }
+                NetStateType.NETWORK_ERROR -> {
+                    statePage.showError(btnClick = View.OnClickListener {
+                        statePage.showLoading()
+                        if (type == TODAY) {
+                            mViewModel.getToadyList()
+                        } else if (type == YESTERDAY) {
+                            mViewModel.getYesterdayList()
+                        }
+                    })
+                }
             }
         })
 
@@ -179,6 +201,7 @@ class DayListFragment(val type: String) : BaseFragment() {
      */
     private fun showDefaultView() {
         ImageHelper.setDefaultHeaderPic(sdv_header, SessionUtils.getSex())
+        sdv_header.loadImage("${SessionUtils.getHeaderPic()}${BusiConstant.OSS_160}", 46f, 46f)
         tv_num.text = "-"
         tv_nickname.text = SessionUtils.getNickName()
         tv_num.setTFDINCondensedBold()
@@ -238,14 +261,16 @@ class DayListFragment(val type: String) : BaseFragment() {
             sdvFirst?.loadImage("${firstUser.headPic}${BusiConstant.OSS_160}")
             tvNicknameFirst?.text = firstUser.nickname
             tvScoreFirst?.text = StringHelper.formatNumber(firstUser.score)
-            val livingFirstTag = mHeaderView?.findViewById<SimpleDraweeView>(R.id.living_first_tag)
-            if (livingFirstTag != null) {
-                if (firstUser.living == BusiConstant.True) {
-                    livingFirstTag.show()
-                    ImageUtils.loadGifImageLocal(livingFirstTag, R.mipmap.anim_living)
-                } else {
-                    livingFirstTag.hide()
+
+            if (firstUser.living == BusiConstant.True) {
+                livingFirstTag?.show()
+                livingFirstTag?.let { tag ->
+                    ImageUtils.loadGifImageLocal(tag, R.mipmap.anim_living)
                 }
+                viewForegroundFirst?.show()
+            } else {
+                livingFirstTag?.hide()
+                viewForegroundFirst?.hide()
             }
         }
         if (ForceUtils.isIndexNotOutOfBounds(1, bean.rankList)) {
@@ -253,14 +278,16 @@ class DayListFragment(val type: String) : BaseFragment() {
             sdvSecond?.loadImage("${secondUser.headPic}${BusiConstant.OSS_160}")
             tvNicknameSecond?.text = secondUser.nickname
             tvScoreSecond?.text = StringHelper.formatNumber(secondUser.score)
-            val livingSecondTag = mHeaderView?.findViewById<SimpleDraweeView>(R.id.living_second_tag)
-            if (livingSecondTag != null) {
-                if (secondUser.living == BusiConstant.True) {
-                    livingSecondTag.show()
-                    ImageUtils.loadGifImageLocal(livingSecondTag, R.mipmap.anim_living)
-                } else {
-                    livingSecondTag.hide()
+
+            if (secondUser.living == BusiConstant.True) {
+                livingSecondTag?.show()
+                viewForegroundSecond?.show()
+                livingSecondTag?.let { tag ->
+                    ImageUtils.loadGifImageLocal(tag, R.mipmap.anim_living)
                 }
+            } else {
+                livingSecondTag?.hide()
+                viewForegroundSecond?.hide()
             }
         }
         if (ForceUtils.isIndexNotOutOfBounds(2, bean.rankList)) {
@@ -268,14 +295,16 @@ class DayListFragment(val type: String) : BaseFragment() {
             sdvThird?.loadImage("${thirdUser.headPic}${BusiConstant.OSS_160}")
             tvNicknameThird?.text = thirdUser.nickname
             tvScoreThird?.text = StringHelper.formatNumber(thirdUser.score)
-            val livingThirdTag = mHeaderView?.findViewById<SimpleDraweeView>(R.id.living_third_tag)
-            if (livingThirdTag != null) {
-                if (thirdUser.living == BusiConstant.True) {
-                    livingThirdTag.show()
-                    ImageUtils.loadGifImageLocal(livingThirdTag, R.mipmap.anim_living)
-                } else {
-                    livingThirdTag.hide()
+
+            if (thirdUser.living == BusiConstant.True) {
+                livingThirdTag?.show()
+                viewForegroundThird?.show()
+                livingThirdTag?.let { tag ->
+                    ImageUtils.loadGifImageLocal(tag, R.mipmap.anim_living)
                 }
+            } else {
+                livingThirdTag?.hide()
+                viewForegroundThird?.hide()
             }
         }
         val normalList = mutableListOf<SingleFlowerDayListBean>()

@@ -21,10 +21,11 @@
         android:id="@+id/tv_ranking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
         android:text="很遗憾你没有入榜"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toTopOf="@id/sdv_first"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,14 +34,33 @@
         android:id="@+id/sdv_first"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginTop="20dp"
-        android:foreground="@drawable/bg_header_shader_first"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/view_first_bottom"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_ranking"
+        app:layout_constraintTop_toTopOf="parent"
         app:roundAsCircle="true"
         app:roundingBorderColor="@color/primary_color"
         app:roundingBorderWidth="2dp" />
+
+    <View
+        android:id="@+id/view_foreground_first"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@drawable/bg_header_shader_first"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_first"
+        app:layout_constraintRight_toRightOf="@id/sdv_first"
+        app:layout_constraintTop_toTopOf="@id/sdv_first"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_first"/>
+
+    <View
+        android:id="@+id/view_first_bottom"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="375 : 93"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/living_first_tag"
@@ -74,6 +94,7 @@
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/sdv_first"
         app:layout_constraintRight_toRightOf="@id/sdv_first"
         app:layout_constraintTop_toBottomOf="@id/sdv_first"
@@ -83,10 +104,11 @@
         android:id="@+id/tv_score_first"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:includeFontPadding="false"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/tv_nickname_first"
         app:layout_constraintRight_toRightOf="@id/tv_nickname_first"
         app:layout_constraintTop_toBottomOf="@id/tv_nickname_first"
@@ -98,14 +120,17 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginLeft="39dp"
-        android:layout_marginTop="47dp"
+        android:layout_marginTop="9dp"
+        app:layout_constraintBottom_toTopOf="@id/view_bottom_other"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_ranking"
+        app:layout_constraintTop_toTopOf="parent"
         app:roundAsCircle="true"
         app:roundingBorderColor="#E2F1F3"
         app:roundingBorderWidth="2dp" />
 
     <View
+        android:id="@+id/view_foreground_second"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_margin="2dp"
@@ -114,6 +139,16 @@
         app:layout_constraintLeft_toLeftOf="@id/sdv_second"
         app:layout_constraintRight_toRightOf="@id/sdv_second"
         app:layout_constraintTop_toTopOf="@id/sdv_second" />
+
+
+    <View
+        android:id="@+id/view_bottom_other"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="375:72"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/living_second_tag"
@@ -147,6 +182,7 @@
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/sdv_second"
         app:layout_constraintRight_toRightOf="@id/sdv_second"
         app:layout_constraintTop_toBottomOf="@id/sdv_second"
@@ -156,10 +192,11 @@
         android:id="@+id/tv_score_second"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:includeFontPadding="false"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/tv_nickname_second"
         app:layout_constraintRight_toRightOf="@id/tv_nickname_second"
         app:layout_constraintTop_toBottomOf="@id/tv_nickname_second"
@@ -170,15 +207,17 @@
         android:id="@+id/sdv_third"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginTop="47dp"
+        android:layout_marginTop="9dp"
         android:layout_marginRight="36dp"
+        app:layout_constraintBottom_toTopOf="@id/view_bottom_other"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_ranking"
+        app:layout_constraintTop_toTopOf="parent"
         app:roundAsCircle="true"
         app:roundingBorderColor="#FD962D"
         app:roundingBorderWidth="2dp" />
 
     <View
+        android:id="@+id/view_foreground_third"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_margin="2dp"
@@ -219,6 +258,8 @@
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_score_third"
         app:layout_constraintLeft_toLeftOf="@id/sdv_third"
         app:layout_constraintRight_toRightOf="@id/sdv_third"
         app:layout_constraintTop_toBottomOf="@id/sdv_third"
@@ -228,10 +269,11 @@
         android:id="@+id/tv_score_third"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:includeFontPadding="false"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/tv_nickname_third"
         app:layout_constraintRight_toRightOf="@id/tv_nickname_third"
         app:layout_constraintTop_toBottomOf="@id/tv_nickname_third"

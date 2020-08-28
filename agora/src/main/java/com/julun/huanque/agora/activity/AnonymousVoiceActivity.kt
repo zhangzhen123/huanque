@@ -390,7 +390,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     private fun showViewByData(info: AnonymousBasicInfo) {
         ImageUtils.loadImage(sdv_header, "${info.myHeadPic}${BusiConstant.OSS_160}", 75f, 75f)
         val count = info.surplusTimes
-        tv_duration.isEnabled = count > 0
+        tv_match.isEnabled = count > 0
         tv_duration.text = "剩余${info.surplusTimes}次"
         info.headPics.forEachIndexed { index, header ->
             when (index) {
@@ -634,8 +634,11 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     private fun stopMatch() {
         mDisposable?.dispose()
         tv_match.isSelected = false
-        tv_duration.text = "剩余${mAnonymousVoiceViewModel?.basicData?.value?.surplusTimes}次"
+        val surplusTimes = mAnonymousVoiceViewModel?.basicData?.value?.surplusTimes ?: 0
+        tv_duration.text = "剩余${surplusTimes}次"
         tv_match.text = "开始匹配"
+
+        tv_match.isEnabled = surplusTimes > 0
         tv_content.text = "欢鹊会为你匹配最合拍的对象"
         tv_waiting_content.hide()
         animatorFirstSet.cancel()
@@ -857,7 +860,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         val countDownDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
             .take(communicationTime + 1)
             .observeOn(AndroidSchedulers.mainThread())
-            .bindUntilEvent(this, ActivityEvent.STOP)
+            .bindUntilEvent(this, ActivityEvent.DESTROY)
             .subscribe({
                 tv_reminder_time.text = "剩余时间 ${TimeUtils.countDownTimeFormat1(communicationTime - it)}"
             }, {}, {

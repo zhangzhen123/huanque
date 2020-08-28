@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.helper.DensityHelper
@@ -42,6 +43,11 @@ class PlumFlowerActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_plum_flower
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        val barHeight = StatusBarUtil.getStatusBarHeight(this)
+        val params = view_top.layoutParams as? ConstraintLayout.LayoutParams
+        params?.topMargin = barHeight
+        view_top.layoutParams = params
+
         StatusBarUtil.setTransparent(this)
         val framList = mutableListOf<Fragment>()
         framList.add(DayListFragment(DayListFragment.YESTERDAY))

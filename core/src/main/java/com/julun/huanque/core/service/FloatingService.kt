@@ -63,8 +63,8 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
 
     private var show = true
 
-    //点击返回键关闭
-    private var closeClick = false
+    //点击跳转直播间标识位
+    private var jumpToPlayer = false
 
     override fun onCreate() {
         super.onCreate()
@@ -162,11 +162,11 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
             }
             R.id.iv_close -> {
                 //关闭
-                closeClick = true
                 FloatingManager.hideFloatingView()
             }
             R.id.view_floating -> {
                 //跳转直播间
+                jumpToPlayer = true
                 CommonInit.getInstance().getCurrentActivity()?.let { act ->
                     PlayerActivity.start(act, programId = mProgramId, from = PlayerFrom.FloatWindow)
                 }
@@ -233,7 +233,7 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
             }
         }
         if (windowManager != null && display != null) {
-            if (closeClick) {
+            if (!jumpToPlayer) {
                 videoView?.stop()
             }
             windowManager?.removeView(display)

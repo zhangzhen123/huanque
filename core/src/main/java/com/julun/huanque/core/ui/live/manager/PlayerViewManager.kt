@@ -744,7 +744,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 //        chatInputView.setFreeDanMu(data.hasFreeDanMu, data.danMuCard)
 //        chatInputView.mystery = data.mystery
 //        chatInputView.initRoyalDanmu(data.royalLevel)
-//        viewModel.roomUserChatExtra = ChatUtils.createRoomUserChat(roomData, viewModel.baseData.value, isAnchor)
+        viewModel.roomUserChatExtra = ChatUtils.createRoomUserChat(viewModel.roomData, viewModel.baseData.value, false)
     }
 
     /**
@@ -1167,7 +1167,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 //            val notify = NotifyManager.checkNotifyPeriodical(context)
             //不提醒时才弹成功
 //            if (!notify) {
-                //关注成功提示
+            //关注成功提示
 //                mDialogManager.openDialog(FollowSuccessFragment::class.java)
 //            }
 
