@@ -159,6 +159,16 @@ class DayListFragment(val type: String) : BaseFragment() {
                 NetStateType.ERROR -> {
                     statePage.showError()
                 }
+                NetStateType.NETWORK_ERROR -> {
+                    statePage.showError(btnClick = View.OnClickListener {
+                        statePage.showLoading()
+                        if (type == TODAY) {
+                            mViewModel.getToadyList()
+                        } else if (type == YESTERDAY) {
+                            mViewModel.getYesterdayList()
+                        }
+                    })
+                }
             }
         })
 

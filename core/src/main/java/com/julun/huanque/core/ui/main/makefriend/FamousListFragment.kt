@@ -61,6 +61,12 @@ class FamousListFragment : BaseFragment() {
                 NetStateType.ERROR -> {
                     statePage.showError()
                 }
+                NetStateType.NETWORK_ERROR -> {
+                    statePage.showError(btnClick = View.OnClickListener {
+                        statePage.showLoading()
+                        mViewModel.getFamousList()
+                    })
+                }
             }
         })
 

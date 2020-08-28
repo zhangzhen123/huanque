@@ -46,11 +46,11 @@ dependencies {
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
     implementation project(path: ':common')
     api "cn.jiguang.sdk:jpush:3.3.6"
-    api 'cn.jiguang.sdk:jcore:2.1.4'
+    api 'cn.jiguang.sdk:jcore:2.3.4'
     implementation 'cn.jiguang.sdk.plugin:huawei:3.3.6'
     implementation 'cn.jiguang.sdk.plugin:xiaomi:3.3.6'
     implementation 'cn.jiguang.sdk.plugin:oppo:3.3.6'
     implementation 'cn.jiguang.sdk.plugin:vivo:3.3.6'
-    api 'cn.jiguang.sdk:jverification:2.5.2'
+    api 'cn.jiguang.sdk:jverification:2.6.5'
 
 }
