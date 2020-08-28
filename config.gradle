@@ -38,7 +38,7 @@ ext {
     ]
 
     api = [
-            BASE_URL_PRODUCT: "https://api.51lm.tv/",
+            BASE_URL_PRODUCT: "https://api.ihuanque.com/",
             BASE_URL_DEV    : "http://192.168.96.249:7777/",
 //            BASE_URL_DEV    : "http://192.168.96.240:7777/",
 

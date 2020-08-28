@@ -3,15 +3,12 @@ package com.julun.huanque.common.helper
 import android.text.TextUtils
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.R
-import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.StyleParam
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.MeetStatus
 import com.julun.huanque.common.constant.Sex
-import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.widgets.emotion.Emotions
-import com.julun.huanque.common.widgets.live.chatInput.EmojiUtil
 
 object ImageHelper {
 
@@ -334,15 +331,15 @@ object ImageHelper {
      * 获取本地的诸如 emoj,用户等级,主播等级和贵族等级的图片资源id
      */
     fun getLocalImageResId(paramValue: String?, styleParam: StyleParam): Int {
-        return if (MessageUtil.PREFIX_USER_LEVEL == styleParam.preffix) {
+        return if (TplHelper.PREFIX_USER_LEVEL == styleParam.preffix) {
             if (paramValue?.toInt() == -1) -1 else
                 getUserLevelImg(levelString = paramValue)
-        } else if (MessageUtil.PREFIX_ROYAL_LEVEL == styleParam.preffix) {
+        } else if (TplHelper.PREFIX_ROYAL_LEVEL == styleParam.preffix) {
             if (paramValue?.toInt() == -1) -1 else
                 getRoyalLevelImgLong(levelString = paramValue)
-        } else if (MessageUtil.PREFIX_ANCHOR_LEVEL == styleParam.preffix) {
+        } else if (TplHelper.PREFIX_ANCHOR_LEVEL == styleParam.preffix) {
             getAnchorLevelResId(paramValue!!.toInt())
-        } else if (MessageUtil.PREFIX_EMOJI == styleParam.preffix) {
+        } else if (TplHelper.PREFIX_EMOJI == styleParam.preffix) {
 //            EmojiUtil.EmojiResArray["$paramValue".toInt()]
             try {
                 val paramName = styleParam.el
