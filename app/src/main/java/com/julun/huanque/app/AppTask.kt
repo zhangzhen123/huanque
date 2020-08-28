@@ -1,7 +1,10 @@
 package com.julun.huanque.app
 
 import cn.jpush.android.api.JPushInterface
+import com.ishumei.smantifraud.SmAntiFraud
 import com.julun.huanque.BuildConfig
+import com.julun.huanque.agora.AgoraManager
+import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.support.WXApiManager
 import org.jay.launchstarter.Task
 
@@ -106,9 +109,41 @@ class TencentTask : Task() {
     override fun run() {
         HuanQueApp.wxApi = WXApiManager.initWeiXin(mContext, BuildConfig.WX_APP_ID)
 //        AppInitUtils.qqApi = Tencent.createInstance(BuildConfig.QQ_APP_ID, mContext)
+
+        //数美初始化放在 耗时比较短的放一起
+        val option = SmAntiFraud.SmOption()
+        // 数美提供的公司唯一标识码
+        val org = "HvjKuOJMi7FlcXA8DbFx"
+        option.organization = org
+        option.appId = "default"
+        //渠道代码 //如果是首次启动 App，设置为 true，否则设置为 false 或不设置。
+//        val channelId = OpenInstallManager.getChannelId()
+//        option.channel = channelId
+        option.serverIdCallback = object : SmAntiFraud.IServerSmidCallback {
+            override fun onSuccess(serverId: String?) {
+                ULog.i("DXC  serverId = $serverId")
+                //分发成功
+                if (serverId?.isNotEmpty() == true && serverId != HuanQueApp.mDeviceId) {
+                    //获取到新的serverId,更新给服务端
+                    HuanQueApp.mDeviceId = serverId
+//                    EventBus.getDefault().postSticky(DeviceEvent())
+                }
+            }
+
+            override fun onError(errorCode: Int) {
+
+            }
+        }
+        SmAntiFraud.create(mContext.applicationContext, option)
     }
 }
 
+class AgoraTask : Task() {
+    override fun run() {
+        //初始化声网
+        AgoraManager.initAgora(mContext)
+    }
+}
 /**
  * 友盟放到UI线程执行，一定要提前初始化，要么会丢统计数据
  * @author WanZhiYuan

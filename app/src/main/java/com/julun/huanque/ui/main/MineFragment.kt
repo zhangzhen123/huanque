@@ -138,7 +138,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            BalanceUtils.queryLastestBalance()
+            BalanceUtils.queryLatestBalance()
         }
     }
 
