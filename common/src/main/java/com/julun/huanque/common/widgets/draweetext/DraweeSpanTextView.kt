@@ -159,7 +159,7 @@ class DraweeSpanTextView @JvmOverloads constructor(
 
                                 if (styleParam.preffix == MessageUtil.PREFIX_USER_LEVEL) {
                                     specifiedHeight = dip(16)
-                                    specifiedWidth = dip(29)
+                                    specifiedWidth = dip(35)
                                 }
 
                                 builder.setImageSpan(context, resId, index, index, specifiedWidth, specifiedHeight)
@@ -195,6 +195,7 @@ class DraweeSpanTextView @JvmOverloads constructor(
 
 
         builder.setDraweeSpanChangedListener { bd -> this.setDraweeSpanStringBuilder(bd) }
+        logger.info("builder = $builder")
         this.setDraweeSpanStringBuilder(builder)
 
 //        this.movementMethod = LinkMovementMethod.getInstance() //开始响应点击事件

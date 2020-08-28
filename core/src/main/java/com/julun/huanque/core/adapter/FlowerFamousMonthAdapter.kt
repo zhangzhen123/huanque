@@ -46,23 +46,26 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
         tvMonth.setTFDINCondensedBold()
         val recyclerViewInner = holder.getView<RecyclerView>(R.id.recyclerView_inner)
         ViewUtils.updateViewWidth(recyclerViewInner, (smallBorder + dividerWidth) * 3)
+        val layoutPosition = holder.layoutPosition - headerLayoutCount
         if (recyclerViewInner.adapter == null) {
             //未设置过Adapter
             recyclerViewInner.layoutManager = GridLayoutManager(context, 3)
-            val headeView = LayoutInflater.from(context).inflate(R.layout.view_famous_header, null)
 
-            recyclerViewInner.adapter = FlowerFamousUserAdapter((smallBorder + dividerWidth).toInt()).apply {
-                if (headeView != null) {
-                    addHeaderView(headeView)
+            recyclerViewInner.adapter = FlowerFamousUserAdapter(smallBorder + dividerWidth).apply {
+                if (layoutPosition == 0) {
+                    val headeView = LayoutInflater.from(context).inflate(R.layout.view_famous_header, null)
+                    if (headeView != null) {
+                        addHeaderView(headeView)
+                    }
                 }
             }
         }
 
         val adapter = recyclerViewInner.adapter as? FlowerFamousUserAdapter ?: return
-        val headerLayout = adapter.headerLayout ?: return
+        val headerLayout = adapter.headerLayout
         val dataList = item.userList
 
-        if (headerLayout.childCount > 0) {
+        if (headerLayout != null && headerLayout.childCount > 0) {
             val headerView = headerLayout.getChildAt(0)
             //第一个视图
             val sdv_first = headerView.findViewById<SimpleDraweeView>(R.id.sdv_first)
@@ -112,7 +115,7 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
             val tv_nickname_second = headerView.findViewById<TextView>(R.id.tv_nickname_second)
             val tv_day_second = headerView.findViewById<TextView>(R.id.tv_day_second)
             val view_border_second = headerView.findViewById<View>(R.id.view_border_second)
-            ViewUtils.updateViewBorder(sdv_second, smallBorder.toInt(), smallBorder.toInt())
+            ViewUtils.updateViewBorder(sdv_second, smallBorder, smallBorder)
             if (ForceUtils.isIndexNotOutOfBounds(1, dataList)) {
                 val secondData = dataList[1]
                 sdv_second.show()
@@ -189,7 +192,11 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
 
         val adapterData = mutableListOf<FamousUser>()
         dataList.forEachIndexed { index, data ->
-            if (index >= 3) {
+            if (layoutPosition == 0) {
+                if (index >= 3) {
+                    adapterData.add(data)
+                }
+            } else {
                 adapterData.add(data)
             }
         }

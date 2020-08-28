@@ -72,6 +72,9 @@ object ARouterConstant {
     //充值页面
     const val RECHARGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/RechargeCenterActivity"
 
+    //花魁榜
+    const val PLUM_FLOWER_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/PlumFlowerActivity"
+
     //余额不足弹窗
     const val BalanceNotEnoughFragment = "/$CORE$PREFIX_FRAGMENT/BalanceNotEnoughFragment"
 
@@ -96,6 +99,7 @@ object ARouterConstant {
 
     //头像认证授权页
     const val REAL_HEAD_ACTIVITY = "/$REAL_NAME$PREFIX_ACTIVITY/RealHeadActivity"
+
     //实名认证服务
     const val REALNAME_SERVICE = "/$REAL_NAME$SERVICE/RealNameService"
 

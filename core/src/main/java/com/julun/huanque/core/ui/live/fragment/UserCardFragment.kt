@@ -263,7 +263,7 @@ class UserCardFragment : BaseDialogFragment() {
 
         view_caifu_level.onClickNew {
             //打开财富等级说明页
-            WebActivity.startWeb(requireActivity(), "www.baidu.com")
+            RNPageActivity.start(requireActivity(),RnConstant.WEALTH_LEVEL_PAGE,Bundle().apply { putLong("programId",mUserCardViewModel.programId) })
         }
         view_guizu_level.onClickNew {
             //打开贵族等级说明页
@@ -273,7 +273,7 @@ class UserCardFragment : BaseDialogFragment() {
         }
         view_zhubo_level.onClickNew {
             //打开主播等级说明页
-            WebActivity.startWeb(requireActivity(), "www.baidu.com")
+            RNPageActivity.start(requireActivity(),RnConstant.ANCHOR_LEVEL_PAGE)
         }
         ll_leyuan.onClickNew {
             //打开游戏

@@ -155,6 +155,7 @@ class DayListFragment(val type: String) : BaseFragment() {
             swipeLayout.isRefreshing = false
             when (it.state) {
                 NetStateType.SUCCESS -> {
+                    statePage.showSuccess()
                 }
                 NetStateType.ERROR -> {
                     statePage.showError()
@@ -207,16 +208,24 @@ class DayListFragment(val type: String) : BaseFragment() {
         tv_num.setTFDINCondensedBold()
 
         ImageHelper.setDefaultHeaderPic(sdvFirst ?: return, Sex.FEMALE)
-        tvNicknameFirst?.text = "-"
         tvScoreFirst?.text = "-"
 
         ImageHelper.setDefaultHeaderPic(sdvSecond ?: return, Sex.FEMALE)
-        tvNicknameSecond?.text = "-"
+
         tvScoreSecond?.text = "-"
 
         ImageHelper.setDefaultHeaderPic(sdvThird ?: return, Sex.FEMALE)
-        tvNicknameThird?.text = "-"
         tvScoreThird?.text = "-"
+
+        if (type == YESTERDAY) {
+            tvNicknameFirst?.text = "无人上榜"
+            tvNicknameSecond?.text = "无人上榜"
+            tvNicknameThird?.text = "无人上榜"
+        } else if (type == TODAY) {
+            tvNicknameFirst?.text = "虚位以待"
+            tvNicknameSecond?.text = "虚位以待"
+            tvNicknameThird?.text = "虚位以待"
+        }
     }
 
     private fun getSingleData(index: Int): SingleFlowerDayListBean? {
@@ -333,7 +342,7 @@ class DayListFragment(val type: String) : BaseFragment() {
             .doOnSubscribe {
                 val ranking = tvRanking ?: return@doOnSubscribe
                 val paint = ranking.paint
-                val content = "距离日榜截至： 24：99：99"
+                val content = "距离日榜截止： 24:55:55"
                 val width = paint.measureText(content)
                 val params = ranking.layoutParams
                 params.width = width.toInt()
