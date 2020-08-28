@@ -44,97 +44,112 @@ open class HuanQueApp : Application() {
         var wxApi: IWXAPI? = null
 
         //        var qqApi: Tencent? = null
+        //数美分发的deviceId，用于过滤。（设置一次监听会触发两次onSuccess）
+        var mDeviceId = ""
     }
 
-    //数美分发的deviceId，用于过滤。（设置一次监听会触发两次onSuccess）
-    private var mDeviceId = ""
 
     override fun onCreate() {
         super.onCreate()
-        install()
+        val time = System.currentTimeMillis()
+
         if (ProcessPhoenix.isPhoenixProcess(this)) {
             return
         }
-        MMKV.initialize(this)
-        val baseUrl = if (BuildConfig.DEBUG) {
-            val url = MMKV.defaultMMKV().decodeString(MMKVConstant.URL)
-            if (!TextUtils.isEmpty(url) && url?.startsWith("http") == true) {
-                url
-            } else {
-                BuildConfig.SERVICE_BASE_URL_DEV
-            }
-        } else {
-            BuildConfig.SERVICE_BASE_URL_PRODUCT
-        }
-        CommonInit.getInstance().setBaseUrl(baseUrl)
         if (AppHelper.isMainProcess(this)) {
+            install()
+            MMKV.initialize(this)
+            val baseUrl = if (BuildConfig.DEBUG) {
+                val url = MMKV.defaultMMKV().decodeString(MMKVConstant.URL)
+                if (!TextUtils.isEmpty(url) && url?.startsWith("http") == true) {
+                    url
+                } else {
+                    BuildConfig.SERVICE_BASE_URL_DEV
+                }
+            } else {
+                BuildConfig.SERVICE_BASE_URL_PRODUCT
+            }
+            CommonInit.getInstance().setBaseUrl(baseUrl)
             //bugly初始化(bugly的初始化放在所有初始化的第一个，以免一些日志错过收集)
             initBugly(this)
             //初始化声网
-            AgoraManager.initAgora(this)
+//            AgoraManager.initAgora(this)
             TagAliasOperatorHelper.getInstance().init(this)
 //            /*一键登录相关*/
             JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
             JVerificationInterface.init(this)
-//            try {
-//                initShumei(this)
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-        }
-        if (AppHelper.isMainProcess(this)) {
-            initWithCoroutines()
-//            CommonInit.getInstance().inSDK = false
-//            HuanQueInit.getInstance().init(this)
-//            CommonInit.getInstance().taskDispatcher
-//                ?.addTask(JPushTask())
-//                ?.addTask(TencentTask())
-//
-//            CommonInit.getInstance().taskDispatcher?.start()
-//            CommonInit.getInstance().taskDispatcher?.await()
-//            CommonInit.getInstance().taskDispatcher = null
         }
 
+        if (AppHelper.isMainProcess(this)) {
+            initWithCoroutines()
+//            initWithTaskDispatch()
+        }
+        logger("AppInit end duration=${System.currentTimeMillis() - time}")
+    }
+
+    private fun initWithTaskDispatch() {
+        CommonInit.getInstance().inSDK = false
+        HuanQueInit.getInstance().init(this)
+        CommonInit.getInstance().taskDispatcher
+            ?.addTask(JPushTask())
+            ?.addTask(TencentTask())
+            ?.addTask(AgoraTask())
+
+        CommonInit.getInstance().taskDispatcher?.start()
+        CommonInit.getInstance().taskDispatcher?.await()
+        CommonInit.getInstance().taskDispatcher = null
     }
 
     /**
      * 通过协程初始化各种内容
      */
     private fun initWithCoroutines() {
-        logger("initWithCoroutines start---${Thread.currentThread()}")
         runBlocking {
+            val currentTime = System.currentTimeMillis()
             logger("runBlocking start---${Thread.currentThread()}")
             CommonInit.getInstance().inSDK = false
             val init = async {
-                HuanQueInit.getInstance().init(this@HuanQueApp)
-//                CommonInit.getInstance().initWithCoroutines(this@HuanQueApp)
+//                val time=System.currentTimeMillis()
+                HuanQueInit.getInstance().initWithCoroutine(this@HuanQueApp)
+//                logger("launch init---${Thread.currentThread()} duration=${System.currentTimeMillis()-time}")
             }
 
             val jPush = async(Dispatchers.Default) {
-                logger("launch jPush---${Thread.currentThread()}")
+//                val time=System.currentTimeMillis()
                 JPushInterface.setDebugMode(BuildConfig.DEBUG)    // 设置开启日志,发布时请关闭日志
                 JPushInterface.init(this@HuanQueApp.applicationContext)            // 初始化 JPush
                 /*一键登录相关*/
-//        JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
-//        JVerificationInterface.init(mContext)
+                //        JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
+                //        JVerificationInterface.init(mContext)
+//                logger("launch jPush---${Thread.currentThread()} duration=${System.currentTimeMillis()-time}")
             }
             val tx = async(Dispatchers.Default) {
-                logger("launch weixin---${Thread.currentThread()}")
-                HuanQueApp.wxApi = WXApiManager.initWeiXin(this@HuanQueApp.applicationContext, BuildConfig.WX_APP_ID)
+//                val time=System.currentTimeMillis()
+                wxApi = WXApiManager.initWeiXin(this@HuanQueApp.applicationContext, BuildConfig.WX_APP_ID)
+//                logger("launch weixin---${Thread.currentThread()} duration=${System.currentTimeMillis()-time}")
             }
-            val shumei = async(Dispatchers.Default) {
+            val shuMei = async(Dispatchers.Default) {
+//                val time=System.currentTimeMillis()
                 try {
-                    logger("launch shumei---${Thread.currentThread()}")
                     initShumei(this@HuanQueApp)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
+//                logger("launch shumei---${Thread.currentThread()}  duration=${System.currentTimeMillis()-time}")
             }
+            val agora = async(Dispatchers.Default) {
+//                val time=System.currentTimeMillis()
+                //初始化声网
+                AgoraManager.initAgora(this@HuanQueApp.applicationContext)
+//                logger("launch agora---${Thread.currentThread()}  duration=${System.currentTimeMillis()-time}")
+            }
+
             init.await()
             jPush.await()
             tx.await()
-            shumei.await()
-            logger("runBlocking end---${Thread.currentThread()}")
+            shuMei.await()
+            agora.await()
+            logger("runBlocking end---${Thread.currentThread()} duration=${System.currentTimeMillis() - currentTime}")
         }
 
         logger("initWithCoroutines end---${Thread.currentThread()}")

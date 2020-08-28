@@ -182,15 +182,7 @@ class CommonInit {
             }
 
         })
-//        if (BuildConfig.DEBUG) {           // 这两行必须写在init之前，否则这些配置在init过程中将无效
-//            ARouter.openLog()     // 打印日志
-//            ARouter.openDebug()  // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
-//        }
-//        ARouter.init(application) // 尽可能早，推荐在Application中初始化
-//        PartyLibraryInit.getInstance().initComponent(application)
         initTask(application)
-
-
     }
 
 
@@ -312,6 +304,8 @@ class CommonInit {
     }
 
     suspend fun initWithCoroutines(application: Application) {
+        val currentTime = System.currentTimeMillis()
+        logger("common initWithCoroutines start----${Thread.currentThread()} ")
         mContext = application
         application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity?) {
@@ -378,16 +372,17 @@ class CommonInit {
             }
 
         })
-        logger("common initWithCoroutines start----${Thread.currentThread()} ")
+
         coroutineScope {
-            logger("Common  GlobalScope.launch start launch----${Thread.currentThread()} ")
+            val timeC = System.currentTimeMillis()
+            logger("Common  coroutineScope start launch----${Thread.currentThread()} ")
             val normal = async {
-                logger("普通内容初始化 launch----${Thread.currentThread()} ")
+//                val timeN=System.currentTimeMillis()
+//                logger("普通内容初始化 launch----${Thread.currentThread()} ")
                 ToastUtils.init(application)//初始化自定义土司
                 SharedPreferencesUtils.init(application)
                 RongCloudManager.clearRoomList()
                 //手动设置Rx ComputationScheduler线程数目
-                //todo
 //        System.setProperty(PartyLibraryInit.KEY_MAX_THREADS, "5")
                 //debug模式开启webview debug调试
                 try {
@@ -397,22 +392,24 @@ class CommonInit {
                 } catch (e: Exception) {
 //                    e.printStackTrace()
                 }
-                logger("普通内容初始化 end launch----${Thread.currentThread()} ")
+//                logger("普通内容初始化 end launch----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN} ")
             }
 
             val aRouter = async(Dispatchers.Default) {
-                logger("launch ARouter----${Thread.currentThread()} ")
+//                val timeN=System.currentTimeMillis()
+
                 if (BuildConfig.DEBUG) {           // 这两行必须写在init之前，否则这些配置在init过程中将无效
                     ARouter.openLog()     // 打印日志
                     ARouter.openDebug()  // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
                 }
                 ARouter.init(mContext as Application) // 尽可能早，推荐在Application中初始化
-                ULog.i("launch REALNAME----${Thread.currentThread()} ")
+//                logger("launch ARouter----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN} ")
                 //初始化实名认证SDK
                 ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation()
+//                ULog.i("launch REALNAME----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN}")
             }
             val fresco = async(Dispatchers.Default) {
-                ULog.i("launch initFresco----${Thread.currentThread()} ")
+//                val time=System.currentTimeMillis()
 
                 //缓存的试着
                 val cacheConfigBuilder: DiskCacheConfig.Builder = DiskCacheConfig.newBuilder(mContext)
@@ -446,35 +443,38 @@ class CommonInit {
                     .build()
                 CommonInit.getInstance().frescoConfig = config
                 Fresco.initialize(mContext, config)
+//                ULog.i("launch initFresco----${Thread.currentThread()} duration=${System.currentTimeMillis()-time} ")
             }
 
             val rong = async(Dispatchers.Default) {
-                ULog.i("launch RongCloudManager----${Thread.currentThread()} ")
+//                val time=System.currentTimeMillis()
                 //蛋疼的融云多次初始化的问题,必须把其他的初始化工作放在融云的初始化工作代码快里面,否则将会执行多次(3次)
                 RongCloudManager.rongCloudInit(mContext as Application) {}
+//                ULog.i("launch RongCloudManager----${Thread.currentThread()} duration=${System.currentTimeMillis()-time}")
             }
 
             val svga = async(Dispatchers.Default) {
-                ULog.i("launch SVGAHelper----${Thread.currentThread()} ")
+//                val time=System.currentTimeMillis()
                 //初始化svga播放管理器
                 SVGAHelper.init(mContext)
+//                ULog.i("launch SVGAHelper----${Thread.currentThread()} duration=${System.currentTimeMillis() - time} ")
             }
             val oss = async(Dispatchers.Default) {
-                ULog.i("launch initOss----${Thread.currentThread()} ")
+//                val time=System.currentTimeMillis()
                 //初始化svga播放管理器
                 OssUpLoadManager.initOss(mContext)
+//                ULog.i("launch initOss----${Thread.currentThread()} duration=${System.currentTimeMillis() - time} ")
             }
 
-            logger("Common  GlobalScope.launch  center launch----${Thread.currentThread()} ")
             normal.await()
             aRouter.await()
             fresco.await()
             rong.await()
             svga.await()
             oss.await()
-            logger("Common  GlobalScope.launch  end launch----${Thread.currentThread()} ")
+            logger("Common  coroutineScope  end launch----${Thread.currentThread()} duration=${System.currentTimeMillis() - timeC} ")
         }
-        logger("Common initWithCoroutines end----${Thread.currentThread()} ")
+        logger("Common initWithCoroutines end----${Thread.currentThread()} duration=${System.currentTimeMillis() - currentTime} ")
 
     }
 }

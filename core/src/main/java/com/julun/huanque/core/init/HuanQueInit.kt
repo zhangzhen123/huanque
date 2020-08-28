@@ -11,7 +11,7 @@ import com.julun.huanque.common.init.CommonInit
  *
  * 总调用入口
  */
-class HuanQueInit private constructor()  {
+class HuanQueInit private constructor() {
 
     companion object {
         @Volatile
@@ -28,6 +28,7 @@ class HuanQueInit private constructor()  {
         }
 
     }
+
     private lateinit var mContext: Application
 
     private var debug = false
@@ -50,11 +51,20 @@ class HuanQueInit private constructor()  {
         return debug
     }
 
-    suspend fun init(application: Application) {
+    fun init(application: Application) {
         mContext = application
         if (AppHelper.isMainProcess(application)) {
 //            CommonInit.getInstance().setBaseUrlByMode(debug)
-//            CommonInit.getInstance().init(application)
+            //使用TaskDispatcher分发进行初始化
+            CommonInit.getInstance().init(application)
+        }
+    }
+
+    suspend fun initWithCoroutine(application: Application) {
+        mContext = application
+        if (AppHelper.isMainProcess(application)) {
+//            CommonInit.getInstance().setBaseUrlByMode(debug)
+            //使用协程初始化
             CommonInit.getInstance().initWithCoroutines(application)
         }
     }
