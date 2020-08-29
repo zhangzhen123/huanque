@@ -750,6 +750,14 @@ class PlayerActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    fun blockChange(event: MessageBlockEvent) {
+        //免打扰状态变更
+        playerMessageViewModel.blockListData.value = null
+        playerMessageViewModel.unreadList.clear()
+        playerMessageViewModel.getBlockedConversationList()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateShow(event: OpenPrivateChatRoomEvent) {
         //打开私信
         playerMessageViewModel.privateConversationData.value = event
@@ -813,7 +821,7 @@ class PlayerActivity : BaseActivity() {
 //                GIODataPool.fromType = null
 //                val positionIndex = GIODataPool.positionIndex
 //                GIODataPool.positionIndex = null
-                form = UserEnterRoomForm(programId, fromType = mFrom,shareUserId = mShareUSerId)
+                form = UserEnterRoomForm(programId, fromType = mFrom, shareUserId = mShareUSerId)
                 viewModel.enterLivRoom(form)
             }
         } else {

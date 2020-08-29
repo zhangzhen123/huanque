@@ -61,6 +61,7 @@ class PlayerMessageViewModel : BaseViewModel() {
         if (blockListData.value == null) {
             //未获取到免打扰列表
             needQuerUnreadCount = true
+            unreadList.clear()
             return
         }
         if (unreadList.contains(targetId)) {
