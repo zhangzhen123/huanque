@@ -55,8 +55,8 @@ class PlumFlowerActivity : BaseActivity() {
 
         StatusBarUtil.setTransparent(this)
         val framList = mutableListOf<Fragment>()
-        framList.add(DayListFragment(DayListFragment.YESTERDAY))
-        framList.add(DayListFragment(DayListFragment.TODAY))
+        framList.add(DayListFragment(DayListFragment.YESTERDAY,barHeight))
+        framList.add(DayListFragment(DayListFragment.TODAY,barHeight))
         framList.add(FamousListFragment())
         mPagerAdapter = PlumFlowerFragmentAdapter(framList, supportFragmentManager, this)
         pager.adapter = mPagerAdapter

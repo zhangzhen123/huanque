@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit
  *@创建时间 2020/8/21 20:14
  *@描述 日榜Fragment
  */
-class DayListFragment(val type: String) : BaseFragment() {
+class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
 
     companion object {
         //今日
@@ -342,7 +342,7 @@ class DayListFragment(val type: String) : BaseFragment() {
             .doOnSubscribe {
                 val ranking = tvRanking ?: return@doOnSubscribe
                 val paint = ranking.paint
-                val content = "距离日榜截止： 24:55:55"
+                val content = "距离日榜截止： 99:99:99"
                 val width = paint.measureText(content)
                 val params = ranking.layoutParams
                 params.width = width.toInt()
@@ -369,7 +369,7 @@ class DayListFragment(val type: String) : BaseFragment() {
         mHeaderView?.let { view ->
             mAdapter.addHeaderView(view)
             val params = view.layoutParams
-            params.height = ScreenUtils.getScreenWidth() * 978 / 1125 - dp2px(64)
+            params.height = ScreenUtils.getScreenWidth() * 978 / 1125 - dp2px(44) - barHeight
             view.layoutParams = params
         }
 

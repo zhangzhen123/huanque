@@ -18,6 +18,7 @@ import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
@@ -340,8 +341,8 @@ class MessageFragment : BaseFragment() {
 
         tv_message_unread.onClickNew {
             activity?.let { act ->
-                PrivateConversationActivity.newInstance(act, 20000519)
-//                PrivateConversationActivity.newInstance(act, 10)
+//                PrivateConversationActivity.newInstance(act, 20000767)
+                PrivateConversationActivity.newInstance(act, 10)
             }
         }
 
@@ -349,11 +350,12 @@ class MessageFragment : BaseFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateMessageReceive(bean: EventMessageBean) {
-//        if (bean.onlyRefreshUnReadCount) {
-//            mMessageViewModel.refreshUnreadCount(bean.targetId)
-//        } else {
-        mMessageViewModel.refreshConversation(bean.targetId, bean.stranger)
-//        }
+        if (bean.onlyRefreshUnReadCount && mMessageViewModel.mStranger) {
+            //在陌生人页面，只刷新未读数，解决异步导致的异常
+            mMessageViewModel.refreshUnreadCount(bean.targetId)
+        } else {
+            mMessageViewModel.refreshConversation(bean.targetId, bean.stranger)
+        }
     }
 
 
@@ -372,7 +374,6 @@ class MessageFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun userInfoChangeEvent(bean: UserInfoChangeEvent) {
         //用户数据发生变化
-        logger.info("Message 关注状态变更 ${bean.stranger}")
         mMessageViewModel.userInfoUpdate(bean)
     }
 

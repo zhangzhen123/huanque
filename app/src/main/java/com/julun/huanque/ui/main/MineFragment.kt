@@ -171,6 +171,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
         if (info.userBasic.anchorLevel > 0) {
             sdv_author_level.show()
+            tv_author_privilege.hide()
             val wealthAddrss = GlobalUtils.getString(R.string.anchor_address)
 //            sdv_author_level.loadImage(String.format(wealthAddrss, info.userBasic.anchorLevel), 55f, 16f)
             ImageUtils.loadImageWithHeight_2(sdv_author_level,String.format(wealthAddrss, info.userBasic.anchorLevel),dp2px(16))

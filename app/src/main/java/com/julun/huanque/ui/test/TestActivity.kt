@@ -28,10 +28,7 @@ import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.FileUtils
-import com.julun.huanque.common.utils.MD5Util
-import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.VideoUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.draweetext.AnimatedRainbowSpan
 import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
@@ -43,6 +40,7 @@ import com.julun.rnlib.RNPageActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
+import com.plattysoft.leonids.ParticleSystem
 import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.android.synthetic.main.activity_test.*
 import org.jetbrains.anko.startActivity
@@ -129,7 +127,7 @@ class TestActivity : BaseActivity() {
             LoginManager.doLoginOut(success = {
                 logger.info("退出登录成功 ${Thread.currentThread()}")
                 tv_clear_session.text = "退出登录成功"
-            },error = {
+            }, error = {
                 logger.info("退出登录失败了 ${Thread.currentThread()}")
             })
         }
@@ -211,6 +209,21 @@ class TestActivity : BaseActivity() {
             //管理弹窗
             val dialog = CardManagerDialogFragment()
             dialog.show(supportFragmentManager, "CardManagerDialogFragment")
+        }
+
+        btn_anim.onClickNew {
+            //
+            ParticleSystem(this@TestActivity, 100, GlobalUtils.getDrawable(R.mipmap.bg_header_audio), 1500)
+                .setSpeedModuleAndAngleRange(0.5f, 1f, 0, 30)
+                .setRotationSpeed(500f)
+                .setAcceleration(0.003f, 90)
+                .emit(-100, 400, 3, 5000)
+
+            ParticleSystem(this@TestActivity, 100, GlobalUtils.getDrawable(R.mipmap.bg_header_audio), 1500)
+                .setSpeedModuleAndAngleRange(0.5f, 1f, 150, 180)
+                .setRotationSpeed(500f)
+                .setAcceleration(0.003f, 90)
+                .emit(1180, 400, 3, 5000)
         }
         val spannableString = DraweeSpanStringBuilder("1234567一句带彩虹屁的文本还带动效一句带彩虹色的文本还带动效 WWWWAAAA243555")
         val start = 10

@@ -553,7 +553,7 @@ class AnimationFragment : BaseFragment() {
     private fun setUserEnterLayout() {
         val ueLp = (user_enter_view?.layoutParams as? FrameLayout.LayoutParams) ?: return
         if (!isHorizontal) {
-            ueLp.topMargin = container001Top + DensityHelper.dp2px(36f)
+            ueLp.topMargin = container001Top + DensityHelper.dp2px(56f)
             ueLp.width = PlayerViewManager.SCREEN_WIDTH
         } else {
             ueLp.topMargin = DensityHelper.dp2px(150f)
