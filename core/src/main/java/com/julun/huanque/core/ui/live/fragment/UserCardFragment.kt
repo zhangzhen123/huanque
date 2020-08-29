@@ -36,6 +36,7 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
+import com.julun.huanque.core.viewmodel.CardManagerViewModel
 import com.julun.huanque.core.viewmodel.UserCardViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -56,6 +57,7 @@ import org.jetbrains.anko.textColor
 class UserCardFragment : BaseDialogFragment() {
 
     private val mUserCardViewModel: UserCardViewModel by viewModels<UserCardViewModel>()
+    private val mCardManagerViewModel: CardManagerViewModel by activityViewModels()
     private val mPlayerViewModel: PlayerViewModel by activityViewModels()
 
     companion object {
@@ -186,6 +188,17 @@ class UserCardFragment : BaseDialogFragment() {
                 tv_attention.isEnabled = true
             }
         })
+        mCardManagerViewModel.listResult.observe(this, Observer {
+            if (it != null) {
+                mCardManagerViewModel.listResult.value = null
+                val dialog = CardManagerDialogFragment.newInstance(
+                    programId = mUserCardViewModel.programId,
+                    targetUserId = mUserCardViewModel.mUserId,
+                    nickname = mUserCardViewModel.userInfoData.value?.nickname ?: ""
+                )
+                dialog.show(childFragmentManager, "CardManagerDialogFragment")
+            }
+        })
     }
 
     /**
@@ -263,7 +276,10 @@ class UserCardFragment : BaseDialogFragment() {
 
         view_caifu_level.onClickNew {
             //打开财富等级说明页
-            RNPageActivity.start(requireActivity(),RnConstant.WEALTH_LEVEL_PAGE,Bundle().apply { putLong("programId",mUserCardViewModel.programId) })
+            RNPageActivity.start(
+                requireActivity(),
+                RnConstant.WEALTH_LEVEL_PAGE,
+                Bundle().apply { putLong("programId", mUserCardViewModel.programId) })
         }
         view_guizu_level.onClickNew {
             //打开贵族等级说明页
@@ -273,19 +289,14 @@ class UserCardFragment : BaseDialogFragment() {
         }
         view_zhubo_level.onClickNew {
             //打开主播等级说明页
-            RNPageActivity.start(requireActivity(),RnConstant.ANCHOR_LEVEL_PAGE)
+            RNPageActivity.start(requireActivity(), RnConstant.ANCHOR_LEVEL_PAGE)
         }
         ll_leyuan.onClickNew {
             //打开游戏
         }
         tv_manage.onClickNew {
             //打开管理弹窗
-            val dialog = CardManagerDialogFragment.newInstance(
-                programId = mUserCardViewModel.programId,
-                targetUserId = mUserCardViewModel.mUserId,
-                nickname = mUserCardViewModel.userInfoData.value?.nickname ?: ""
-            )
-            dialog.show(childFragmentManager, "CardManagerDialogFragment")
+            mCardManagerViewModel.getManage(mUserCardViewModel.programId, mUserCardViewModel.mUserId)
         }
     }
 
