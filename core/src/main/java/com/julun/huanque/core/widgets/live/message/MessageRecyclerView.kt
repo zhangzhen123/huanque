@@ -24,8 +24,10 @@ import org.jetbrains.anko.matchParent
  *
  * Created by djp on 2017/1/9.
  */
-class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) : androidx.recyclerview.widget.RecyclerView(context, attributeSet) {
+class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) :
+    androidx.recyclerview.widget.RecyclerView(context, attributeSet) {
     private val logger = ULog.getLogger("MessageRecyclerView")
+
     //是否是主播身份
     var isAnchor = false
 
@@ -37,6 +39,7 @@ class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) : andro
         const val STYLE_TREASURE_BOX = 3 //宝箱功能
         const val STYLE_FANS_JOIN = 4//粉丝团引导
         const val STYLE_FANS_JOIN_OTHER = 5//粉丝团加入
+
         //星球霸主消息
         const val STYLE_PLANET = 6
 
@@ -47,17 +50,19 @@ class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) : andro
         private const val MAX_LINES: Int = 100       //最大保留条目数
         private const val ITEMS_COUNT_TO_REMOVE = 40 //到达最大条目数的时候，删除的条目数
     }
+
     init {
-        isVerticalFadingEdgeEnabled=true
+        isVerticalFadingEdgeEnabled = true
         setFadingEdgeLength(dp2px(30))
     }
+
     fun addOtherItem(bean: ChatMessageBean) {
         chatRecordAdapter.addData(bean)
         if (!isUserScroll)
             scrollToBottom()
     }
 
-//    override fun getTopFadingEdgeStrength(): Float {
+    //    override fun getTopFadingEdgeStrength(): Float {
 //        return super.getTopFadingEdgeStrength()
 //    }
 //
@@ -135,24 +140,12 @@ class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) : andro
                 NORMAL -> {
                     val tpl = item.content as TplBean
                     val txtInfo = holder.getView<BeautyBubbleTextView>(R.id.chatContent)
-                    try {
-                        if (tpl.privateMessage && tpl.userInfo?.msgType == 1) {
-                            txtInfo.render(tpl.specialExtra())
-                        } else {
-                            txtInfo.render(tpl)
-                        }
-                        //针对上神左边界的处理
-//                        val tpllp = txtInfo.layoutParams as RecyclerView.LayoutParams
-//                        if (tpl.userInfo?.displayType?.contains(BusiConstant.DisplayType.SSCOLORFUL) == true) {
-//                            tpllp.leftMargin = DensityHelper.dp2px(0f)
-//                        } else {
-//                            tpllp.leftMargin = DensityHelper.dp2px(3f)
-//                        }
-//                logger.info("新的下标 -->>> $position 解析后的文本：${item.realTxt} 原始文本：${item.textTpl}")
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        logger.info("发生错误了,, $e ${JsonUtil.serializeAsString(item)}")
+                    if (tpl.privateMessage && tpl.userInfo?.msgType == 1) {
+                        txtInfo.render(tpl.specialExtra())
+                    } else {
+                        txtInfo.render(tpl)
                     }
+//                logger.info("新的下标 -->>> $position 解析后的文本：${item.realTxt} 原始文本：${item.textTpl}")
                 }
 //                STYLE_FOLLOW -> {
 //                    val follow = item.content as ChatFollow
@@ -294,9 +287,11 @@ class MessageRecyclerView(context: Context, attributeSet: AttributeSet?) : andro
                     } else {
                         if (onChatMessageItemClickListener != null) {
                             val info = tpl.userInfo
-                            val userInfo = UserInfoBean(info?.userId
+                            val userInfo = UserInfoBean(
+                                info?.userId
                                     ?: 0, (info?.anchorLevel ?: 0) > 0, info?.royalLevel
-                                    ?: 0, "")
+                                    ?: 0, ""
+                            )
                             onChatMessageItemClickListener?.onChatMessageItemClick(userInfo, tpl)
                         }
                     }

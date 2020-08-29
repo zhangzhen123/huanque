@@ -17,12 +17,12 @@ import com.alibaba.fastjson.JSONObject
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.ChatMessageBean
-import com.julun.huanque.common.bean.MessageUtil
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StorageHelper
+import com.julun.huanque.common.helper.TplHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.NotifyManager
 import com.julun.huanque.common.manager.RongCloudManager
@@ -703,7 +703,7 @@ class PlayerViewManager(val context: PlayerActivity) {
                 val baseData: BaseData = JsonUtil.deserializeAsObject(runwayMessage.message, BaseData::class.java)
                 val jsonObject = baseData.data as JSONObject
                 val jsonString = jsonObject.toJSONString()
-                val tplBean = MessageUtil.decodeMessageContent(jsonString)
+                val tplBean = TplHelper.decodeMessageContent(jsonString)
                 tplBean.preProcess()
                 //这里的跑到消息,都可以只播放一遍
                 tplBean.context?.canOnlyPlayOneTime = true
