@@ -2,7 +2,9 @@ package com.julun.huanque.core.ui.share
 
 import android.Manifest
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -17,15 +19,9 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.facebook.common.references.CloseableReference
-import com.facebook.datasource.DataSource
-import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
-import com.facebook.imagepipeline.core.ImagePipeline
-import com.facebook.imagepipeline.image.CloseableImage
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
-import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
@@ -94,17 +90,17 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
         }
 
         mViewModel.queryShareType()
-        val rsLP=rv_share_contents.layoutParams as LinearLayout.LayoutParams
+        val rsLP = rv_share_contents.layoutParams as LinearLayout.LayoutParams
         when (applyModule) {
             ShareFromModule.Program -> {
                 ll_copy.hide()
-                rsLP.weight=0f
-                rsLP.height=LinearLayout.LayoutParams.WRAP_CONTENT
+                rsLP.weight = 0f
+                rsLP.height = LinearLayout.LayoutParams.WRAP_CONTENT
             }
             ShareFromModule.Invite -> {
                 ll_copy.show()
-                rsLP.weight=1f
-                rsLP.height=0
+                rsLP.weight = 1f
+                rsLP.height = 0
             }
         }
         playInAnimator()
@@ -143,16 +139,17 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
         }
 
         tv_copy.onClickNew {
-            GlobalUtils.copyToSharePlate(this, currentCode,attentionContent = "已复制邀请码")
+            GlobalUtils.copyToSharePlate(this, currentCode, attentionContent = "已复制邀请码")
         }
         sharePosterAdapter.setOnItemClickListener { _, view, position ->
             val item = sharePosterAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             when (item.itemType) {
                 1 -> {
                     if (currentSelect != item) {
-                        currentSelectView = view
+//                        currentSelectView = view
                         currentSelect = item
                         sharePosterAdapter.notifyDataSetChanged()
+                        setShadowView()
                     }
 
                 }
@@ -175,6 +172,76 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
         overridePendingTransition(0, 0)
     }
 
+    /**
+     * 为了截图跟展示的不一样 这里搞个看不见的影子view 用于截图
+     */
+    private fun setShadowView() {
+        if (currentSelect == null) {
+            return
+        }
+        fl_holder.removeAllViews()
+        when (applyModule) {
+            ShareFromModule.Program -> {
+                val viewRoot = LayoutInflater.from(this).inflate(R.layout.item_live_share, fl_holder)
+//                val w=dp2px(275)
+//                val h=dp2px(339)
+//            viewRoot.layout(0,0,w,h)
+//            val measuredWidth = View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.EXACTLY)
+//            val measuredHeight = View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.EXACTLY)
+//            /** 当然，measure完后，并不会实际改变View的尺寸，需要调用View.layout方法去进行布局。
+//             * 按示例调用layout函数后，View的大小将会变成你想要设置成的大小。
+//             */
+//            /** 当然，measure完后，并不会实际改变View的尺寸，需要调用View.layout方法去进行布局。
+//             * 按示例调用layout函数后，View的大小将会变成你想要设置成的大小。
+//             */
+//            viewRoot.measure(measuredWidth, measuredHeight)
+//            viewRoot.layout(0, 0, viewRoot.measuredWidth, viewRoot.measuredHeight)
+                val sdvSharePic = viewRoot.findViewById<SimpleDraweeView>(R.id.sdv_share_pic)
+                val sdvQrCode = viewRoot.findViewById<SimpleDraweeView>(R.id.sdv_qr_code)
+                val tvName = viewRoot.findViewById<TextView>(R.id.tv_user_name)
+                val text2 = viewRoot.findViewById<TextView>(R.id.tv002)
+                sdvSharePic.loadImage(currentSelect!!.posterPic, 235f, 235f)
+                sdvQrCode.setImageBitmap(currentSelect!!.qrBitmap)
+                val name = if (currentSelect!!.authorName.length > 5) {
+                    "${currentSelect!!.authorName.substring(0, 5)}..."
+                } else {
+                    currentSelect!!.authorName
+                }
+                tvName.text = name
+                text2.text = "扫码加为好友"
+                currentSelectView = viewRoot.findViewById(R.id.live_share_container)
+            }
+            ShareFromModule.Invite -> {
+                val viewRoot = LayoutInflater.from(this).inflate(R.layout.item_invite_share, fl_holder)
+                val sdvSharePic = viewRoot.findViewById<SimpleDraweeView>(R.id.sdv_share_pic)
+                val sdvQrCode = viewRoot.findViewById<SimpleDraweeView>(R.id.sdv_qr_code)
+                val sdvUserPic = viewRoot.findViewById<SimpleDraweeView>(R.id.sdv_user_pic)
+                val tvName = viewRoot.findViewById<TextView>(R.id.tv_user_name)
+                val tvInvite = viewRoot.findViewById<TextView>(R.id.tv_invite_code)
+                sdvSharePic.loadImage(currentSelect!!.posterPic, 250f, 450f)
+                sdvQrCode.loadImage(currentSelect!!.qrCode, 60f, 60f)
+                sdvUserPic.loadImage(SessionUtils.getHeaderPic(), 45f, 45f)
+                val name = if (SessionUtils.getNickName().length > 5) {
+                    "${SessionUtils.getNickName().substring(0, 5)}..."
+                } else {
+                    SessionUtils.getNickName()
+                }
+                tvName.text = name
+
+                if (currentSelect!!.inviteCode.isNotEmpty()) {
+                    tvInvite.text = "邀请码${currentSelect!!.inviteCode}"
+                    tvInvite.show()
+                } else {
+                    tvInvite.hide()
+                }
+                val ivCheck = viewRoot.findViewById<ImageView>(R.id.iv_check)
+                ivCheck.hide()
+                currentSelectView = viewRoot.findViewById(R.id.item_invite_container)
+            }
+        }
+
+    }
+
     private fun saveViewToImageFile(type: String) {
 
 
@@ -182,25 +249,23 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
             ToastUtils.show("你还没有选择要分享的目标")
             return
         }
-        val tv002 = when (applyModule) {
-            ShareFromModule.Program -> {
-                currentSelectView?.findViewById<TextView>(R.id.tv002)
-            }
-            else -> {
-                null
-            }
-        }
 
-        val checkView = currentSelectView?.findViewById<View>(R.id.iv_check)
-        //截屏时修改文案
-        tv002?.text = "扫码加为好友"
-        //隐藏不必要的view
-        checkView?.hide()
+//        val checkView = currentSelectView?.findViewById<View>(R.id.iv_check)
+//        //隐藏不必要的view
+//        checkView?.hide()
         currentSelectView?.post {
 
-            val bitmap = BitmapUtil.viewConversionBitmap(currentSelectView!!)
-            tv002?.text = "分享给好友"
-            checkView?.show()
+            val bitmap = when (applyModule) {
+                ShareFromModule.Program -> {
+                    BitmapUtil.viewConversionBitmap(currentSelectView!!, Color.TRANSPARENT)
+                }
+                else -> {
+                    BitmapUtil.viewConversionBitmap(currentSelectView!!)
+                }
+            }
+
+//            val bitmap = BitmapUtil.viewConversionBitmap(currentSelectView!!)
+//            checkView?.show()
             when (type) {
                 ShareTypeEnum.FriendCircle -> {
                     wxService?.weiXinShare(this, ShareObject().apply {
@@ -266,13 +331,16 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
 
         if (applyModule == ShareFromModule.Program) {
             rv_share_contents.post {
-                currentSelectView = sharePosterAdapter.getViewByPosition(0, R.id.live_share_container)
+                currentSelect = sharePosterAdapter.getItemOrNull(0)
+//                currentSelectView = sharePosterAdapter.getViewByPosition(0, R.id.live_share_container)
+                setShadowView()
             }
         } else if (applyModule == ShareFromModule.Invite) {
             tv_invite_code.text = posterInfo.inviteCode
             rv_share_contents.post {
                 currentSelect = sharePosterAdapter.getItemOrNull(0)
-                currentSelectView = sharePosterAdapter.getViewByPosition(0, R.id.item_invite_container)
+//                currentSelectView = sharePosterAdapter.getViewByPosition(0, R.id.item_invite_container)
+                setShadowView()
                 sharePosterAdapter.notifyDataSetChanged()
             }
         }

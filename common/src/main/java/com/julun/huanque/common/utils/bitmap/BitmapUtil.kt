@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.text.TextUtils
 import android.util.Base64
 import android.view.View
+import androidx.annotation.ColorInt
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
@@ -93,12 +94,12 @@ object BitmapUtil {
     /**
      * view转bitmap
      */
-    fun viewConversionBitmap(v: View): Bitmap {
+    fun viewConversionBitmap(v: View,bgColor:Int=Color.WHITE): Bitmap {
         val w: Int = v.width
         val h: Int = v.height
         val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         val c = Canvas(bmp)
-        c.drawColor(Color.WHITE)
+        c.drawColor(bgColor)
         /** 如果不设置canvas画布为白色，则生成透明  */
         v.layout(0, 0, w, h)
         v.draw(c)
