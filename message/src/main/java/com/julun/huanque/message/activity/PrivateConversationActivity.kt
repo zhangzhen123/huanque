@@ -804,6 +804,9 @@ class PrivateConversationActivity : BaseActivity() {
      * 显示表情悬浮效果
      */
     private fun showEmojiSuspend(type: String, view: View, emotion: Emotion) {
+        if(mEmojiPopupWindow?.isShowing == true){
+            return
+        }
         val location = IntArray(2)
         view.getLocationOnScreen(location)
         val content = emotion.text

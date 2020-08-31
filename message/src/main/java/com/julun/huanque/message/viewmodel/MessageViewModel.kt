@@ -215,16 +215,28 @@ class MessageViewModel : BaseViewModel() {
      * 刷新消息未读数(只在陌生人页面使用)
      */
     fun refreshUnreadCount(targetId: String) {
-        var realIndex = -1
-        conversationListData.value?.forEachIndexed { index, localConversation ->
-            if (localConversation.conversation.targetId == targetId) {
-                realIndex = index
-                return@forEachIndexed
-            }
-        }
-        if(realIndex >= 0){
-            changePosition.value = realIndex
-        }
+        RongIMClient.getInstance()
+            .getConversation(Conversation.ConversationType.PRIVATE, targetId, object : RongIMClient.ResultCallback<Conversation>() {
+                override fun onSuccess(p0: Conversation?) {
+                    p0 ?: return
+                    var realIndex = -1
+                    conversationListData.value?.forEachIndexed { index, localConversation ->
+                        if (localConversation.conversation.targetId == targetId) {
+                            realIndex = index
+                            localConversation.conversation = p0
+                            return@forEachIndexed
+                        }
+                    }
+
+                    if (realIndex >= 0) {
+                        changePosition.value = realIndex
+                    }
+                }
+
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                }
+
+            })
     }
 
 
