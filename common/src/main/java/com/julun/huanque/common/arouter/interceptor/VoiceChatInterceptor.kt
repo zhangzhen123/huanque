@@ -121,7 +121,8 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
                     }
                     1401 -> {
                         //特权未解锁
-                        showIntimateDialog()
+                        ToastUtils.show("亲密等级达到lv3才能语音通话哦")
+//                        showIntimateDialog()
                     }
                     1402 -> {
                         //显示价格弹窗
