@@ -19,8 +19,8 @@
         android:id="@+id/ivHeadRoyal"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="@dimen/dimen_7"
+        android:layout_marginBottom="11dp"
+        android:layout_marginEnd="@dimen/dimen_11"
         app:layout_constraintBottom_toBottomOf="@+id/sdvHeadImage"
         app:layout_constraintRight_toRightOf="@+id/sdvHeadImage" />
 

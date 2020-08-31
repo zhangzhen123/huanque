@@ -60,7 +60,7 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
             EmojiType.PREROGATIVE -> {
                 //特权表情
                 adapter = AnimationAdapter().apply { setList(Emotions.getEmotions(EmojiType.PREROGATIVE)) }
-                GridLayoutManager(context, 5)
+                GridLayoutManager(context, 4)
             }
             EmojiType.ANIMATION -> {
                 //动画表情

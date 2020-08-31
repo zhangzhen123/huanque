@@ -254,6 +254,8 @@ class MessageFragment : BaseFragment() {
                 } else {
                     //单个变动
 //                    mAdapter.refreshNotifyItemChanged(it)
+                    val unreadCount = mAdapter.getItem(it + mAdapter.headerLayoutCount)?.conversation?.unreadMessageCount
+                    logger.info("Message unreadCount = $unreadCount")
                     mAdapter.notifyItemChanged(it + mAdapter.headerLayoutCount)
                 }
                 mMessageViewModel.changePosition.value = null

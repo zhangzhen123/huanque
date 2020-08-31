@@ -338,7 +338,7 @@ object ImageHelper {
             if (paramValue?.toInt() == -1) -1 else
                 getRoyalLevelImgLong(levelString = paramValue)
         } else if (TplHelper.PREFIX_ANCHOR_LEVEL == styleParam.preffix) {
-            getAnchorLevelResId(paramValue!!.toInt())
+            getAnchorLevelShortResId(paramValue!!.toInt())
         } else if (TplHelper.PREFIX_EMOJI == styleParam.preffix) {
 //            EmojiUtil.EmojiResArray["$paramValue".toInt()]
             try {

@@ -287,7 +287,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                                     } else {
                                         stranged = userData?.stranger ?: false
                                     }
-                                    EventBus.getDefault().post(EventMessageBean(targerId, onlyRefreshUnReadCount = true))
+                                    EventBus.getDefault().post(EventMessageBean(targerId,stranged, onlyRefreshUnReadCount = true))
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                 }
