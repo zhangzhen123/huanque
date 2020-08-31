@@ -283,6 +283,17 @@ data class FamousUser(
     var userId: Long = 0
 ) : Serializable
 
+class FamousListMultiBean(override val itemType: Int, var content: Any) : MultiItemEntity {
+    companion object {
+        //头部
+        val HeaderView = 1
+
+        //实际内容
+        val Content = 2
+    }
+
+}
+
 /**
  * 名人榜  单个月数据
  */

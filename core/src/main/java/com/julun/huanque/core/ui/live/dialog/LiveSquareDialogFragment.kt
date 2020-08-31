@@ -148,13 +148,13 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             followAdapter.addData(data.list)
             if (data.hasMore) {
                 if (data.list.isEmpty()) {
-                    followAdapter.loadMoreModule.loadMoreEnd(false)
+                    followAdapter.loadMoreModule.loadMoreEnd(true)
                 } else {
                     followAdapter.loadMoreModule.loadMoreComplete()
                 }
 
             } else {
-                followAdapter.loadMoreModule.loadMoreEnd()
+                followAdapter.loadMoreModule.loadMoreEnd(true)
             }
 
         }

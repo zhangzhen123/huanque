@@ -61,12 +61,13 @@ class JoinChatRoomViewModel : BaseViewModel() {
     private fun getHistoryMessage(targetID: String) {
         RongIMClient.getInstance().getChatroomHistoryMessages(
             targetID,
-            System.currentTimeMillis(),
+            0,
             50,
-            RongIMClient.TimestampOrder.RC_TIMESTAMP_ASC,
+            RongIMClient.TimestampOrder.RC_TIMESTAMP_DESC,
             object : IRongCallback.IChatRoomHistoryMessageCallback {
                 override fun onSuccess(p0: MutableList<Message>?, p1: Long) {
-                    p0?.forEach { message ->
+                    p0?.reverse()
+                    p0?.forEachIndexed { index, message ->
                         val conent = message.content
                         if (conent is TextMessage) {
                             RongCloudManager.switchThread(message)

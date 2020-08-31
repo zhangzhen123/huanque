@@ -1,6 +1,5 @@
 package com.julun.huanque.core.adapter
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.bean.beans.FamousListMultiBean
 import com.julun.huanque.common.bean.beans.FamousUser
 import com.julun.huanque.common.bean.beans.SingleFamousMonth
 import com.julun.huanque.common.constant.BusiConstant
@@ -20,13 +20,14 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
+import kotlin.math.ceil
 
 /**
  *@创建者   dong
  *@创建时间 2020/8/24 16:58
  *@描述 名人榜  每月的Adapter
  */
-class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHolder>(R.layout.recycler_item_famous_month) {
+class FlowerFamousMonthAdapter : BaseMultiItemQuickAdapter<FamousListMultiBean, BaseViewHolder>(null) {
 
     //小头像的边框宽度
     private val smallBorder = ((ScreenUtils.getScreenWidth() - dp2pxf(60 + 30)) / 3).toInt()
@@ -34,8 +35,31 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
     //间隔宽度
     private val dividerWidth = dp2px(10)
 
+    init {
+        addItemType(FamousListMultiBean.HeaderView, R.layout.recycler_item_famous_month_header)
+        addItemType(FamousListMultiBean.Content, R.layout.recycler_item_famous_month)
+    }
 
-    override fun convert(holder: BaseViewHolder, item: SingleFamousMonth) {
+
+    override fun convert(holder: BaseViewHolder, multiBean: FamousListMultiBean) {
+        if (multiBean.itemType == FamousListMultiBean.HeaderView) {
+            //头部
+            val item = "${multiBean.content}"
+            val content = if (item == BusiConstant.True) {
+                //本人在名人榜
+                "恭喜你荣登名人榜"
+            } else {
+                //本人不在名人榜
+                "很遗憾你没有入榜"
+            }
+            holder.setText(R.id.tv_title, content)
+            return
+        }
+        val item = multiBean.content
+        if (item !is SingleFamousMonth) {
+            return
+        }
+
         val tvMonth = holder.getView<TextView>(R.id.tv_month)
         val month = item.month
         if (month >= 10) {
@@ -45,8 +69,11 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
         }
         tvMonth.setTFDINCondensedBold()
         val recyclerViewInner = holder.getView<RecyclerView>(R.id.recyclerView_inner)
+        val layoutPosition = holder.layoutPosition - 1
         ViewUtils.updateViewWidth(recyclerViewInner, (smallBorder + dividerWidth) * 3)
-        val layoutPosition = holder.layoutPosition - headerLayoutCount
+
+
+
         if (recyclerViewInner.adapter == null) {
             //未设置过Adapter
             recyclerViewInner.layoutManager = GridLayoutManager(context, 3)
@@ -211,7 +238,7 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
         val position = holder.adapterPosition
         val view_line = holder.getView<View>(R.id.view_line)
         val lineParams = view_line.layoutParams as? ConstraintLayout.LayoutParams
-        if (position - headerLayoutCount == 0) {
+        if (position - 1 == 0) {
             //第一个视图
             lineParams?.topMargin = dp2px(10)
         } else {
@@ -273,4 +300,26 @@ class FlowerFamousMonthAdapter : BaseQuickAdapter<SingleFamousMonth, BaseViewHol
         }
     }
 
+    /**
+     * 计算REcyclerView的高度
+     */
+    private fun computeRecyclerViewHeight(rv: RecyclerView, first: Boolean, count: Int) : Int{
+        val tempHeight = if (first) {
+            //头部高度
+            val headerHeight = smallBorder * 2 + dividerWidth + dp2px(5)
+            //其他高度
+            val row = ceil((count - 3) / 3.0).toInt()
+            val rvHeight = (smallBorder + dividerWidth) * row
+            headerHeight + rvHeight
+        } else {
+            //总体高度
+            val row = ceil(count / 3.0).toInt()
+            val rvHeight = (smallBorder + dividerWidth) * row
+            rvHeight
+        }
+//        val params = rv.layoutParams
+//        params.height = tempHeight + dp2px(24)
+//        rv.layoutParams = params
+        return tempHeight + dp2px(24)
+    }
 }
