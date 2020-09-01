@@ -26,6 +26,7 @@ import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.FileUtils
 import com.julun.huanque.common.utils.NetUtils
+import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.luck.picture.lib.PictureSelector
@@ -65,6 +66,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     private var mDoubleTapReloadRecognizer: DoubleTapReloadRecognizer? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        StatusBarUtil.setTransparent(this)
         try {
             EventBus.getDefault().register(this)
             val intent = intent
@@ -622,8 +624,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         index = params.getInt("index")
                     }
                     var userId = 0
-                    if(params?.hasKey("userId")==true){
-                        userId=params.getInt("userId")
+                    if (params?.hasKey("userId") == true) {
+                        userId = params.getInt("userId")
                     }
                     if (params?.hasKey("list") == true) {
                         val rrl = params.getArray("list") ?: return@runOnUiThread
@@ -632,7 +634,14 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         }
                     }
 
-                    ImageActivity.start(this, index, list, from = ImageActivityFrom.RN,operate = ImageActivityOperate.REPORT,userId = userId.toLong())
+                    ImageActivity.start(
+                        this,
+                        index,
+                        list,
+                        from = ImageActivityFrom.RN,
+                        operate = ImageActivityOperate.REPORT,
+                        userId = userId.toLong()
+                    )
                 }
 
                 RnConstant.WEBVIEW_PAGE -> {

@@ -154,19 +154,20 @@ class SimpleGiftEffectsContainerView @JvmOverloads constructor(context: Context,
         return null
     }
 
-    fun clearQueueData() {
-//        queueOrder.clear()
-//        queueOrderItems.clear()
+    private fun clearQueueData() {
         queueGiftEffects.clear()
-        giftAnimView1.resetLastGiftObj()
-        giftAnimView2.resetLastGiftObj()
     }
-
-    fun destoryResource() {
+    fun resetView(){
+        clearQueueData()
+        messageHandler.removeCallbacks(messageRunnable)
+        giftAnimView1.resetView()
+        giftAnimView2.resetView()
+    }
+    fun destroyResource() {
         clearQueueData()
         messageHandler.removeCallbacksAndMessages(null)
-        giftAnimView1.destoryResource()
-        giftAnimView2.destoryResource()
+        giftAnimView1.destroyResource()
+        giftAnimView2.destroyResource()
     }
 
 }

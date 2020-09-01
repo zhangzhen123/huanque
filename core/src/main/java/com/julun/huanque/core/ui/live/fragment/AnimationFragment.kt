@@ -138,7 +138,7 @@ class AnimationFragment : BaseFragment() {
         enterAnimatorView = rootView.findViewById(R.id.user_enter_view)
 
         initViewHeight()
-        simpleGift?.clearQueueData()
+        simpleGift?.resetView()
 
         initViewModel()
         initListeners()
@@ -827,7 +827,7 @@ class AnimationFragment : BaseFragment() {
         luxury_enter?.resetView()
 
         enterAnimatorView?.resetView()
-        simpleGift?.clearQueueData()
+        simpleGift?.resetView()
 //        duanwu_view?.reset()
 //        author_progress_up?.upSuccessAndHide()//目的时为了在切换时重置状态
         //清空弹幕缓存数据和内容
@@ -838,8 +838,8 @@ class AnimationFragment : BaseFragment() {
 //        rescueAnchorView?.resetView()
     }
 
-    fun destoryResource() {
-        simpleGift?.destoryResource()
+    fun destroyResource() {
+        simpleGift?.destroyResource()
         mHighlyAnimation?.destoryResources()
         user_enter_view?.clearQueue()
         barrage_view?.clearQueue()
