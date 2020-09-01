@@ -49,7 +49,7 @@ import org.greenrobot.eventbus.EventBus
  *@创建时间 2020/7/22 20:08
  *@描述 跳转语音通话页面的拦截器
  */
-@Interceptor(priority = 8, name = "VoiceChat")
+@Interceptor(priority = 1, name = "VoiceChat")
 class VoiceChatInterceptor : IInterceptor, RequestCaller {
     private var mContext: Context? = null
     private val socialService: SocialService by lazy { Requests.create(SocialService::class.java) }

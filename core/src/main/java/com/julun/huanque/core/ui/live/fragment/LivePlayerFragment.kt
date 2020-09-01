@@ -19,12 +19,14 @@ import com.julun.huanque.common.constant.ScreenType
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.viewmodel.VideoChangeViewModel
 import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
+import com.julun.huanque.core.manager.AliplayerManager
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.OrientationViewModel
 import com.julun.huanque.core.widgets.SingleVideoView
@@ -201,6 +203,7 @@ open class LivePlayerFragment : BaseFragment() {
             logger.info("播放的流地址一致")
             return
         }
+        AliplayerManager.stop()
         // 设置流信息
         mMainVideoView?.let { main ->
             main.setPlayInfo(MicAnchor().apply {
