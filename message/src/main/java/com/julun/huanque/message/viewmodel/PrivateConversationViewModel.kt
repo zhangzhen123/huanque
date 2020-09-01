@@ -97,6 +97,9 @@ class PrivateConversationViewModel : BaseViewModel() {
     //送礼弹窗的显示标记位
     val sendGiftShowFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //播放动画标识位
+    val startAnimationFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //操作类型
     var operationType = ""
 
@@ -287,7 +290,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                                     } else {
                                         stranged = userData?.stranger ?: false
                                     }
-                                    EventBus.getDefault().post(EventMessageBean(targerId,stranged, onlyRefreshUnReadCount = true))
+                                    EventBus.getDefault().post(EventMessageBean(targerId, stranged, onlyRefreshUnReadCount = true))
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                 }

@@ -24,6 +24,8 @@ class CardManagerViewModel : BaseViewModel() {
     val auditResult by lazy { MutableLiveData<Boolean>() }
     val listResult by lazy { MutableLiveData<ArrayList<ManagerOptionInfo>>() }
 
+    val canShowFlag : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     fun saveManage(info: ManagerInfo, programId: Long, targetId: Long) {
         viewModelScope.launch {
             request({
@@ -54,7 +56,10 @@ class CardManagerViewModel : BaseViewModel() {
         }
     }
 
-    fun getManage(programId: Long, targetId: Long) {
+    /**
+     * @param judgeShow 判断是否可以显示管理弹窗
+     */
+    fun getManage(programId: Long, targetId: Long, judgeShow: Boolean = false) {
         viewModelScope.launch {
             request({
                 val list =
@@ -65,7 +70,11 @@ class CardManagerViewModel : BaseViewModel() {
                         )
                     )
                         .dataConvert()
-                listResult.value = list
+                if(judgeShow){
+                    canShowFlag.value = list.isNotEmpty()
+                }else{
+                    listResult.value = list
+                }
             }, error = { e ->
                 if (e !is ResponseError) {
                     ToastUtils.show("网络异常，请重试~！")

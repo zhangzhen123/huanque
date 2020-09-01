@@ -355,6 +355,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         mPrivateConversationViewModel?.sendGiftSuccessData?.observe(this, Observer {
             if (it != null) {
+                mPrivateConversationViewModel?.startAnimationFlag?.value = true
                 //送礼成功.发送自定义消息
                 sendChatMessage(messageType = Message_Gift)
             }
@@ -395,6 +396,11 @@ class PrivateConversationActivity : BaseActivity() {
             }
             scrollToBottom()
             view_place.layoutParams = placeParams
+        })
+        mPrivateConversationViewModel?.startAnimationFlag?.observe(this, Observer {
+            if (it == true) {
+                ToastUtils.show("此处假装在播放动画")
+            }
         })
     }
 
@@ -560,7 +566,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_share.onClickNew {
             //传送门
-            val result = judgeIntimate("CSM","亲密等级达到lv3才能发送传送门哦")
+            val result = judgeIntimate("CSM", "亲密等级达到lv3才能发送传送门哦")
             if (result) {
                 //有权限
                 val programId = SharedPreferencesUtils.getLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
@@ -1002,6 +1008,18 @@ class PrivateConversationActivity : BaseActivity() {
                 val targetId = mPrivateConversationViewModel?.targetIdData?.value
                 if (msg.targetId == "$targetId") {
                     //就是当前的消息，直接显示
+                    //判断是否是送礼消息
+                    val content = msg.content
+                    if (content is CustomMessage) {
+                        if (content.type == MessageCustomBeanType.Gift) {
+                            if (!MessageUtils.getAnimationStarted(msg)) {
+                                //需要播放动画
+                                MessageUtils.setAnimationStarted(msg)
+                                mPrivateConversationViewModel?.startAnimationFlag?.value = true
+                            }
+                        }
+                    }
+
                     mPrivateConversationViewModel?.addMessage(msg)
 //                    scrollToBottom()
                 }
@@ -1180,6 +1198,16 @@ class PrivateConversationActivity : BaseActivity() {
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
+                    }
+                }
+                R.id.view_bg_gift -> {
+                    //送礼消息
+                    val started = tempData.senderUserId == "${SessionUtils.getUserId()}" || MessageUtils.getAnimationStarted(tempData)
+                    if (!started) {
+                        //播放动画
+                        MessageUtils.setAnimationStarted(tempData)
+                        mPrivateConversationViewModel?.startAnimationFlag?.value = true
+                        mAdapter.notifyItemChanged(position)
                     }
                 }
             }

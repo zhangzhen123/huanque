@@ -65,7 +65,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     var otherUserInfo: ChatUser? = null
 
     init {
-        addChildClickViewIds(R.id.sdv_image, R.id.tv_content, R.id.con_send_room)
+        addChildClickViewIds(R.id.sdv_image, R.id.tv_content, R.id.con_send_room, R.id.view_bg_gift)
         addChildLongClickViewIds(R.id.tv_content)
     }
 
@@ -188,8 +188,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             //自定义消息
             when (content.type) {
                 MessageCustomBeanType.Gift -> {
+                    val started = helper.itemViewType == MINE || MessageUtils.getAnimationStarted(item)
                     showMessageView(helper, GIFT_VIEW, helper.itemViewType)
-                    showGiftView(helper, content.context, helper.itemViewType == MINE)
+                    showGiftView(helper, content.context, started)
                 }
                 MessageCustomBeanType.Expression_Privilege -> {
                     //特权表情
@@ -227,7 +228,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     val sdvImage = helper.getView<SimpleDraweeView>(R.id.sdv_image)
                     sdvImage.background = null
                     if (expressionAnimationBean != null) {
-                        val started = map?.get(ParamConstant.MSG_ANIMATION_STARTED) as? Boolean
+                        val started = MessageUtils.getAnimationStarted(item)
                         val position = helper.layoutPosition
                         when (EmojiSpanBuilder.getPrivilegeResource(context, expressionAnimationBean.name)) {
                             R.drawable.icon_shaizi -> {
@@ -373,8 +374,29 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         //隐藏收益视图
         holder.getView<View>(R.id.tv_quebi).hide()
 
+        //传送门消息视图
         val con_send_room = holder.getView<View>(R.id.con_send_room)
 
+        //送礼消息视图
+        val view_bg_gift = holder.getView<View>(R.id.view_bg_gift)
+        val tv_gift_content = holder.getView<View>(R.id.tv_gift_content)
+        val tv_detail = holder.getView<View>(R.id.tv_detail)
+        val sdv_gift_pic = holder.getView<View>(R.id.sdv_gift_pic)
+        val view_gift_border = holder.getView<View>(R.id.view_gift_border)
+
+        if (messageType != GIFT_VIEW) {
+            view_bg_gift.hide()
+            tv_gift_content.hide()
+            tv_detail.hide()
+            sdv_gift_pic.hide()
+            view_gift_border.hide()
+        } else {
+            view_bg_gift.show()
+            tv_gift_content.show()
+            tv_detail.show()
+            sdv_gift_pic.show()
+            view_gift_border.show()
+        }
 
         when (messageType) {
             TEXT_MESSAGE -> {
@@ -421,10 +443,10 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             }
             GIFT_VIEW -> {
                 sdv_header.show()
-                rl_content?.show()
-                sdv_image.show()
-                tv_pic_content.show()
 
+                rl_content?.hide()
+                sdv_image.hide()
+                tv_pic_content.hide()
                 tv_content.hide()
                 con_send_room.hide()
             }
@@ -449,52 +471,16 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
      * 显示礼物视图的数据
      * @param mine 是否是送礼本人
      */
-    private fun showGiftView(helper: BaseViewHolder, str: String, mine: Boolean) {
+    private fun showGiftView(helper: BaseViewHolder, str: String, started: Boolean) {
         try {
             val chatGift = JsonUtil.deserializeAsObject<ChatGift>(str, ChatGift::class.java)
-            ImageUtils.loadImage(helper.getView(R.id.sdv_image), chatGift.selPic, 100f, 100f)
-            val draweeView = helper.getView<SimpleDraweeSpanTextView>(R.id.tv_pic_content)
-            draweeView.textSize = 14f
-            draweeView.textColor = GlobalUtils.getColor(R.color.black_666)
-
-            val bi = chatGift.beans * max(chatGift.giftCount, 1)
-            val str = if (mine) {
-                "送你一${chatGift.giftName}#$bi"
+            ImageUtils.loadImage(helper.getView(R.id.sdv_gift_pic), chatGift.selPic, 50f, 50f)
+            helper.setText(R.id.tv_gift_content, "送你一个${chatGift.giftName}")
+            if (started) {
+                helper.setText(R.id.tv_detail, "${chatGift.beans}鹊币")
             } else {
-                "送你一${chatGift.giftName}#$bi"
+                helper.setText(R.id.tv_detail, "点击查看")
             }
-
-
-            val draweeSpanStringBuilder = DraweeSpanStringBuilder(str)
-            val draweeHierarchy = GenericDraweeHierarchyBuilder.newInstance(context.resources)
-                .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE)
-                .build()
-            val uri = Uri.parse("res://${context!!.packageName}/" + R.mipmap.icon_quebi_message)
-
-            val controller = Fresco.newDraweeControllerBuilder()
-                .setUri(uri)
-                .setAutoPlayAnimations(true)
-                .build()
-
-            val index = str.indexOf("#")
-
-            draweeSpanStringBuilder.setImageSpan(
-                context, /* Context */
-                draweeHierarchy, /* hierarchy to be used */
-                controller, /* controller to be used to update the hierarchy */
-                index, /* image index within the text */
-                30, /* image width */
-                30, /* image height */
-                false, /* auto resize */
-                DraweeSpan.ALIGN_CENTER
-            ) /* alignment */
-
-            draweeSpanStringBuilder.setSpan(
-                ForegroundColorSpan(GlobalUtils.getColor(R.color.color_quebi)), index, str.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            draweeView.setDraweeSpanStringBuilder(draweeSpanStringBuilder)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -754,13 +740,13 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     }
 
                     override fun onError() {
-                        setAnimationStarted(msg)
+                        MessageUtils.setAnimationStarted(msg)
                         ImageUtils.loadImageLocal(view, resultPic)
 //                        updateSingleMessage(msg, position)
                     }
 
                     override fun onEnd() {
-                        setAnimationStarted(msg)
+                        MessageUtils.setAnimationStarted(msg)
                         ImageUtils.loadImageLocal(view, resultPic)
 //                        updateSingleMessage(msg, position)
                     }
@@ -819,12 +805,12 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
                 }, {
                     ImageUtils.loadImageLocal(view, resultPic)
-                    setAnimationStarted(msg)
+                    MessageUtils.setAnimationStarted(msg)
                     logger("Message 猜拳 结果1")
 //                    updateSingleMessage(msg, position)
                 }, {
                     ImageUtils.loadImageLocal(view, resultPic)
-                    setAnimationStarted(msg)
+                    MessageUtils.setAnimationStarted(msg)
                     logger("Message 猜拳 结果2")
 //                    updateSingleMessage(msg, position)
                 })
@@ -835,23 +821,6 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         }
     }
 
-
-    /**
-     * 设置动画已经播放过
-     */
-    private fun setAnimationStarted(msg: Message) {
-        try {
-            val extra = JsonUtil.serializeAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, true))
-            msg.extra = extra
-
-            if (msg.messageId > 0) {
-                //数据库修改
-                RongCloudManager.updateMessageExtra(msg.messageId, extra)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 
     /**
      * 更新发送状态
