@@ -295,7 +295,11 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         })
 
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            var isUserDo=false
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if(newState==RecyclerView.SCROLL_STATE_DRAGGING){
+                    isUserDo=true
+                }
                 super.onScrollStateChanged(recyclerView, newState)
             }
 
@@ -306,7 +310,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 val view: View? = linearLayoutManager.findViewByPosition(1)
 //                logger.info("viewHead=${viewHead?.id}  view=$view ")
                 if(viewHead==null||view==null){
-                    if(!ic_sticky_mkf_task.isVisible()){
+                    if(!ic_sticky_mkf_task.isVisible()&&isUserDo){
                         logger.info("此时需要显示粘性布局")
                         ic_sticky_mkf_task.show()
                     }
@@ -314,13 +318,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 }
                 if (viewHead.id == R.id.mkf_header_container) {
                     val top = view.top
-//                    logger.info("top=$top ")
 
-//                    if (top <= stickyHeight) {
-//                        ic_sticky_mkf_task.y = 0f
-//                    } else {
-//                        ic_sticky_mkf_task.y = (-(stickyHeight - top)).toFloat()
-//                    }
                     if (top <= dp2px(45)) {
                         ic_sticky_mkf_task.show()
                     } else {
