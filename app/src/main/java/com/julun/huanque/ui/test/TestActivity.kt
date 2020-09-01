@@ -1,8 +1,6 @@
 package com.julun.huanque.ui.test
 
-import android.animation.FloatEvaluator
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
+import android.animation.*
 import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
@@ -11,7 +9,12 @@ import android.text.format.DateUtils
 import android.util.Log
 import android.util.Property
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.BounceInterpolator
 import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -42,10 +45,16 @@ import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.plattysoft.leonids.ParticleSystem
 import com.tencent.bugly.crashreport.CrashReport
+import com.trello.rxlifecycle4.android.ActivityEvent
+import com.trello.rxlifecycle4.kotlin.bindUntilEvent
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_test.*
+import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.startActivity
 import java.io.File
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  *
@@ -225,6 +234,16 @@ class TestActivity : BaseActivity() {
                 .setAcceleration(0.003f, 90)
                 .emit(1180, 400, 3, 5000)
         }
+
+        btn_anim2.onClickNew {
+            //带回弹的动画
+            Observable.interval(0, 50, TimeUnit.MILLISECONDS)
+                .take(30)
+                .observeOn(AndroidSchedulers.mainThread())
+                .bindUntilEvent(this, ActivityEvent.DESTROY)
+                .subscribe({ startAnimation() }, {})
+        }
+
         val spannableString = DraweeSpanStringBuilder("1234567一句带彩虹屁的文本还带动效一句带彩虹色的文本还带动效 WWWWAAAA243555")
         val start = 10
         val end = 20
@@ -377,6 +396,47 @@ class TestActivity : BaseActivity() {
         }
 
         //结果回调onActivityResult code
+    }
+
+
+    /**
+     * 开始掉落动画（单个视图）
+     */
+    private fun startAnimation() {
+        //1 添加view
+        val contentView = this.findViewById<FrameLayout>(android.R.id.content)
+        val iv = ImageView(this).apply {
+            imageResource = R.mipmap.pic_xiaoque_active
+        }
+        val tempX = ScreenUtils.getScreenWidth() * (0.8 * Math.random() + 0.1)
+        val params = FrameLayout.LayoutParams(dp2px(40), dp2px(40))
+        contentView.addView(iv, params)
+        iv.x = tempX.toFloat()
+
+        //开始动画
+        val targetY = ScreenUtils.getScreenHeight() - iv.bottom
+        val yTranslateAnimator = ObjectAnimator.ofFloat(iv, "translationY", 0f, targetY.toFloat())
+
+        yTranslateAnimator.apply {
+            duration = 2500 + (1000 * Math.random()).toLong()
+            interpolator = BounceInterpolator()
+        }
+        yTranslateAnimator.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                contentView.removeView(iv)
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+        })
+
+        yTranslateAnimator.start()
     }
 
 }

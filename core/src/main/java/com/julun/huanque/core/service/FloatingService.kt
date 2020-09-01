@@ -223,18 +223,18 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         // 移除浮动框
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         UserHeartManager.setProgramId(null)
-        GlobalScope.launch {
-            withContext(Dispatchers.IO) {
-                try {
-                    Requests.create(LiveRoomService::class.java).leave(ProgramIdForm(mProgramId)).dataConvert()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
         if (windowManager != null && display != null) {
             if (!jumpToPlayer) {
                 videoView?.stop()
+                GlobalScope.launch {
+                    withContext(Dispatchers.IO) {
+                        try {
+                            Requests.create(LiveRoomService::class.java).leave(ProgramIdForm(mProgramId)).dataConvert()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
             }
             windowManager?.removeView(display)
         }
