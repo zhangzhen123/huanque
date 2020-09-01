@@ -176,6 +176,9 @@ class PlayerViewModel : BaseViewModel() {
     //跳转到贡献榜
     val scoreView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //在线列表关闭标识位
+    val onLineDismissFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //打开广场直播
     val squareView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 

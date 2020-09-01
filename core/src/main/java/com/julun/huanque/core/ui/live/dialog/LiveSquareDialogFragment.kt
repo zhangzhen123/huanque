@@ -148,13 +148,13 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             followAdapter.addData(data.list)
             if (data.hasMore) {
                 if (data.list.isEmpty()) {
-                    followAdapter.loadMoreModule.loadMoreEnd(false)
+                    followAdapter.loadMoreModule.loadMoreEnd(true)
                 } else {
                     followAdapter.loadMoreModule.loadMoreComplete()
                 }
 
             } else {
-                followAdapter.loadMoreModule.loadMoreEnd()
+                followAdapter.loadMoreModule.loadMoreEnd(true)
             }
 
         }
@@ -279,11 +279,11 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                     holder.setText(R.id.anchor_city, item.city)
                 }
 
-                if (item.isLiving) {
-                    holder.setText(R.id.tv_author_status, "直播中")
-                } else {
-                    holder.setText(R.id.tv_author_status, "休息中")
-                }
+//                if (item.isLiving) {
+//                    holder.setText(R.id.tv_author_status, "直播中")
+//                } else {
+//                    holder.setText(R.id.tv_author_status, "休息中")
+//                }
             }
         }
 

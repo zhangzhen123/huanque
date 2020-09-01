@@ -75,6 +75,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     //音频播放器
     private var mPlayer: MediaPlayer? = null
 
+    //对方是否加入频道的标记位
+    private var otherJoinChannel = false
+
     private val mAudioListener = AudioManager.OnAudioFocusChangeListener {
         logger.info("Voice focusChange = $it")
     }
@@ -525,6 +528,11 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 对方未加入频道 倒计时
      */
     private fun otherNoJoinCountDown() {
+        logger.info("AGORA Message 开始未加入频道倒计时：otherJoinChannel = $otherJoinChannel")
+        if (otherJoinChannel || mOtherNoJoinDisposable != null) {
+            //对方已经加入
+            return
+        }
         mOtherNoJoinDisposable = Observable.timer(10, TimeUnit.SECONDS)
             .bindUntilEvent(this, ActivityEvent.DESTROY)
             .subscribe({
@@ -770,8 +778,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
     override fun onUserJoined(uid: Int, elapsed: Int) {
-        logger.info("AGORA Message 用户加入频道消息")
+        logger.info("AGORA Message 用户加入频道消息 uid = $uid mOtherNoJoinDisposable = ${mOtherNoJoinDisposable?.isDisposed}")
         if (uid.toLong() != SessionUtils.getUserId()) {
+            otherJoinChannel = true
             mOtherNoJoinDisposable?.dispose()
         }
     }

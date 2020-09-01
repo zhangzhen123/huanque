@@ -14,6 +14,7 @@ import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
@@ -210,19 +211,33 @@ class MessageViewModel : BaseViewModel() {
         queryUnreadCountFlag.postValue(true)
     }
 
-//    /**
-//     * 刷新消息未读数
-//     */
-//    fun refreshUnreadCount(targetId: String) {
-//        var stranger = false
-//        conversationListData.value?.forEachIndexed { index, localConversation ->
-//            if (localConversation.conversation.targetId == targetId) {
-//                stranger = localConversation.showUserInfo?.stranger ?: false
-//                return@forEachIndexed
-//            }
-//        }
-//        refreshConversation(targetId, stranger)
-//    }
+    /**
+     * 刷新消息未读数(只在陌生人页面使用)
+     */
+    fun refreshUnreadCount(targetId: String) {
+        RongIMClient.getInstance()
+            .getConversation(Conversation.ConversationType.PRIVATE, targetId, object : RongIMClient.ResultCallback<Conversation>() {
+                override fun onSuccess(p0: Conversation?) {
+                    p0 ?: return
+                    var realIndex = -1
+                    conversationListData.value?.forEachIndexed { index, localConversation ->
+                        if (localConversation.conversation.targetId == targetId) {
+                            realIndex = index
+                            localConversation.conversation = p0
+                            return@forEachIndexed
+                        }
+                    }
+
+                    if (realIndex >= 0) {
+                        changePosition.value = realIndex
+                    }
+                }
+
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                }
+
+            })
+    }
 
 
     /**
@@ -230,11 +245,11 @@ class MessageViewModel : BaseViewModel() {
      * @param stranger 消息是否是陌生人发送
      */
     fun refreshConversation(targerId: String, stranger: Boolean) {
-        //判断是否处于免打扰列表当中
-        if (blockListData?.contains(targerId) == true) {
-            //免打扰会话发送过来的消息
-            return
-        }
+//        //判断是否处于免打扰列表当中
+//        if (blockListData?.contains(targerId) == true) {
+//            //免打扰会话发送过来的消息
+//            return
+//        }
 
         RongIMClient.getInstance()
             .getConversation(Conversation.ConversationType.PRIVATE, targerId, object : RongIMClient.ResultCallback<Conversation>() {
@@ -268,7 +283,9 @@ class MessageViewModel : BaseViewModel() {
                     if (foldStrangerMsg && stranger == mStranger) {
                         //开启陌生人折叠，标识相同，需要在当前会话列表中添加改会话
                         try {
-                            updataStrangerData(targerId.toLong(), stranger)
+                            if (targerId != SystemTargetId.systemNoticeSender && targerId != SystemTargetId.friendNoticeSender) {
+                                updataStrangerData(targerId.toLong(), stranger)
+                            }
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
@@ -671,6 +688,7 @@ class MessageViewModel : BaseViewModel() {
                 return@forEachIndexed
             }
         }
+
 
         if (index >= 0 && strangerConversation != null) {
             //当前列表里面存在该会话，直接删除就可以

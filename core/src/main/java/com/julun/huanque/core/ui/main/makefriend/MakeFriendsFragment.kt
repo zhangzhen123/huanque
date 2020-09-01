@@ -81,7 +81,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 logger.info("start 总长=${audioPlayerManager.getDuration()}")
                 //不使用实际的值
 //                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
-                AliplayerManager.soundOff()
+//                AliplayerManager.soundOff()
             }
 
             override fun resume() {
@@ -282,14 +282,12 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         mRecyclerView.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewDetachedFromWindow(view: View) {
                 if (view.getTag(R.id.play_tag_key) == ParamConstant.IS_AUDIO_PLAY) {
-                    //todo
                     logger.info("播放的item被移除了 ")
                 }
             }
 
             override fun onChildViewAttachedToWindow(view: View) {
                 if (view.getTag(R.id.play_tag_key) == ParamConstant.IS_AUDIO_PLAY) {
-                    //todo
                     logger.info("播放的item再次添加 ")
                 }
             }
@@ -297,7 +295,11 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         })
 
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            var isUserDo=false
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if(newState==RecyclerView.SCROLL_STATE_DRAGGING){
+                    isUserDo=true
+                }
                 super.onScrollStateChanged(recyclerView, newState)
             }
 
@@ -307,15 +309,16 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 val viewHead: View? = linearLayoutManager.findViewByPosition(0)
                 val view: View? = linearLayoutManager.findViewByPosition(1)
 //                logger.info("viewHead=${viewHead?.id}  view=$view ")
-                if (viewHead != null && view != null && viewHead.id == R.id.mkf_header_container) {
+                if(viewHead==null||view==null){
+                    if(!ic_sticky_mkf_task.isVisible()&&isUserDo){
+                        logger.info("此时需要显示粘性布局")
+                        ic_sticky_mkf_task.show()
+                    }
+                    return
+                }
+                if (viewHead.id == R.id.mkf_header_container) {
                     val top = view.top
-//                    logger.info("top=$top ")
 
-//                    if (top <= stickyHeight) {
-//                        ic_sticky_mkf_task.y = 0f
-//                    } else {
-//                        ic_sticky_mkf_task.y = (-(stickyHeight - top)).toFloat()
-//                    }
                     if (top <= dp2px(45)) {
                         ic_sticky_mkf_task.show()
                     } else {

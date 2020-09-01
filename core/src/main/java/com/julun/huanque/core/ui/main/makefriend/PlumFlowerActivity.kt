@@ -9,6 +9,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.constant.ARouterConstant
@@ -54,15 +55,30 @@ class PlumFlowerActivity : BaseActivity() {
         view_top.layoutParams = params
 
         StatusBarUtil.setTransparent(this)
+        val famousListFragment = FamousListFragment()
         val framList = mutableListOf<Fragment>()
-        framList.add(DayListFragment(DayListFragment.YESTERDAY))
-        framList.add(DayListFragment(DayListFragment.TODAY))
-        framList.add(FamousListFragment())
+        framList.add(DayListFragment(DayListFragment.YESTERDAY, barHeight))
+        framList.add(DayListFragment(DayListFragment.TODAY, barHeight))
+        framList.add(famousListFragment)
         mPagerAdapter = PlumFlowerFragmentAdapter(framList, supportFragmentManager, this)
         pager.adapter = mPagerAdapter
         pager.offscreenPageLimit = 3
+        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                if (position == 2) {
+                    famousListFragment.pageSelected()
+                }
+            }
+
+        })
         initMagicIndicator()
-        if(type == "Famous"){
+        if (type == "Famous") {
             pager.currentItem = 2
         }
     }

@@ -287,7 +287,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                                     } else {
                                         stranged = userData?.stranger ?: false
                                     }
-                                    EventBus.getDefault().post(EventMessageBean(targerId, stranged))
+                                    EventBus.getDefault().post(EventMessageBean(targerId,stranged, onlyRefreshUnReadCount = true))
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                 }
@@ -495,7 +495,6 @@ class PrivateConversationViewModel : BaseViewModel() {
                     user.intimateLevel = intimateLevel
                     user.stranger = stranger
                     HuanQueDatabase.getInstance().chatUserDao().insert(user)
-                    EventBus.getDefault().post(UserInfoChangeEvent(user.userId, stranger))
                 }
             }
 

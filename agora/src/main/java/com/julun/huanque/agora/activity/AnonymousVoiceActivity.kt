@@ -29,6 +29,7 @@ import com.julun.huanque.agora.viewmodel.AnonymousVoiceViewModel
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.events.HideFloatingEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
@@ -50,6 +51,7 @@ import kotlinx.android.synthetic.main.act_anonymous_voice.ll_quiet
 import kotlinx.android.synthetic.main.act_anonymous_voice.ll_voice_accept
 import kotlinx.android.synthetic.main.act_anonymous_voice.sdv_header
 import kotlinx.android.synthetic.main.act_voice_chat.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
@@ -116,6 +118,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EventBus.getDefault().post(HideFloatingEvent())
         ll_hands_free.isEnabled = !GlobalUtils.getEarphoneLinkStatus()
     }
 

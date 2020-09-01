@@ -557,7 +557,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_share.onClickNew {
             //传送门
-            val result = judgeIntimate("CSM")
+            val result = judgeIntimate("CSM","亲密等级达到lv3才能发送传送门哦")
             if (result) {
                 //有权限
                 val programId = SharedPreferencesUtils.getLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
@@ -804,6 +804,9 @@ class PrivateConversationActivity : BaseActivity() {
      * 显示表情悬浮效果
      */
     private fun showEmojiSuspend(type: String, view: View, emotion: Emotion) {
+        if (mEmojiPopupWindow?.isShowing == true) {
+            return
+        }
         val location = IntArray(2)
         view.getLocationOnScreen(location)
         val content = emotion.text
@@ -840,7 +843,6 @@ class PrivateConversationActivity : BaseActivity() {
         if (rootView == null) {
             return
         }
-
 
 
         val name = content.substring(content.indexOf("[") + 1, content.indexOf("]"))
@@ -920,7 +922,7 @@ class PrivateConversationActivity : BaseActivity() {
     /**
      * 判断当前亲密等级是否可以发送图片
      */
-    private fun judgeIntimate(key: String): Boolean {
+    private fun judgeIntimate(key: String, toastContent: String = ""): Boolean {
         val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate
         if (intimate == null) {
             Toast.makeText(this, "缺少亲密度等级数据", Toast.LENGTH_SHORT).show()
@@ -935,8 +937,13 @@ class PrivateConversationActivity : BaseActivity() {
                     true
                 } else {
                     //亲密度等级不足
-                    SingleIntimateprivilegeFragment.newInstance(it, currentLevel)
-                        .show(this, "SingleIntimateprivilegeFragment")
+                    if (toastContent.isNotEmpty()) {
+                        ToastUtils.show(toastContent)
+                    } else {
+                        SingleIntimateprivilegeFragment.newInstance(it, currentLevel)
+                            .show(this, "SingleIntimateprivilegeFragment")
+                    }
+
                     false
                 }
 
@@ -1654,7 +1661,7 @@ class PrivateConversationActivity : BaseActivity() {
                     permission.granted -> {
                         logger.info("获取权限成功")
                         //判断亲密特权
-                        val result = judgeIntimate("FSTP")
+                        val result = judgeIntimate("FSTP", "亲密等级达到lv2才能发送图片哦")
                         if (result) {
                             goToPictureSelectPager()
                         }

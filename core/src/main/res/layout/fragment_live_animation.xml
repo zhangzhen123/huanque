@@ -14,12 +14,12 @@
         android:layout_height="match_parent">
 
         <!--主播升级进度条-->
-<!--        <com.julun.huanque.lmcore.basic.widgets.live.message.AuthorLevelProgressView-->
-<!--            android:id="@+id/author_progress_up"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="@dimen/author_progress_height"-->
-<!--            android:layout_marginStart="2dp"-->
-<!--            android:layout_marginLeft="2dp" />-->
+        <!--        <com.julun.huanque.lmcore.basic.widgets.live.message.AuthorLevelProgressView-->
+        <!--            android:id="@+id/author_progress_up"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="@dimen/author_progress_height"-->
+        <!--            android:layout_marginStart="2dp"-->
+        <!--            android:layout_marginLeft="2dp" />-->
 
         <com.julun.huanque.core.widgets.live.pk.PkMicView
             android:id="@+id/pkMicView"
@@ -36,14 +36,14 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="42dp" />
 
-<!--        <com.julun.huanque.lmcore.basic.widgets.GameBannerView-->
-<!--            android:id="@+id/gdavGameBanner"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="end"-->
-<!--            android:layout_marginEnd="8dp"-->
-<!--            android:layout_marginRight="8dp"-->
-<!--            android:visibility="gone" />-->
+        <!--        <com.julun.huanque.lmcore.basic.widgets.GameBannerView-->
+        <!--            android:id="@+id/gdavGameBanner"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="end"-->
+        <!--            android:layout_marginEnd="8dp"-->
+        <!--            android:layout_marginRight="8dp"-->
+        <!--            android:visibility="gone" />-->
 
 
         <TextView
@@ -82,6 +82,22 @@
             <!--tools:visibility="visible"-->
             <!--android:visibility="gone" />-->
         </LinearLayout>
+
+        <!--入场动画-->
+        <FrameLayout
+            android:id="@+id/user_enter_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end">
+
+            <com.julun.huanque.core.widgets.live.message.UserEnterAnimatorView
+                android:id="@+id/user_enter_view"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </FrameLayout>
+
         <!-- 各种高级动画（中奖、开守护等） -->
         <com.julun.huanque.core.widgets.live.HighlyAnimationView
             android:id="@+id/highlyAnimation"
@@ -161,20 +177,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/simple_gift_container_height"
             android:layout_gravity="bottom" />
-        <!--入场动画-->
-        <FrameLayout
-            android:id="@+id/user_enter_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end">
 
-            <com.julun.huanque.core.widgets.live.message.UserEnterAnimatorView
-                android:id="@+id/user_enter_view"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </FrameLayout>
 
     </FrameLayout>
 </FrameLayout>

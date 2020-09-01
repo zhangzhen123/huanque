@@ -70,8 +70,7 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
     }
 
     // 动画显示初始状态
-    private var animViewSate: Int =
-        STATE_ENABLE
+    private var animViewSate: Int = STATE_ENABLE
     // 最新礼物显示数据
     private var lastGift: SendGiftEvent? = null
     // 另外一个互相引用的view
@@ -484,12 +483,19 @@ class SimpleGiftEffectsView @JvmOverloads constructor(context: Context, attrs: A
         return dynamicEntity
     }
 
-    fun resetLastGiftObj() {
+    private fun resetLastGiftObj() {
         lastGift = SendGiftEvent(giftId = -100)//giftId = -100为了防止后台不返回giftId而导致与默认初始值相同 导致无法判断该事件唯一性
     }
-
-    fun destoryResource() {
-        this.clearAnimation()
+    fun resetView(){
+        resetLastGiftObj()
+        animViewSate = STATE_ENABLE
+        endHandler?.removeCallbacks(endRunnable)
+        hideHandler.removeCallbacks(hideRunnable)
+        isGiftEffectPlay=false
+        this.hide()
+    }
+    fun destroyResource() {
+        resetLastGiftObj()
         otherWeakView?.clear()
         endHandler?.removeCallbacks(endRunnable)
         endHandler?.removeCallbacksAndMessages(null)

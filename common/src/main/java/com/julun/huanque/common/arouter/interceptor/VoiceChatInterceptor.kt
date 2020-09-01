@@ -20,6 +20,7 @@ import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.BaseDialogBean
 import com.julun.huanque.common.bean.beans.NetcallBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
+import com.julun.huanque.common.bean.events.HideFloatingEvent
 import com.julun.huanque.common.bean.forms.CreateCommunicationForm
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.constant.*
@@ -41,6 +42,7 @@ import com.julun.huanque.common.utils.svga.SVGAHelper.logger
 import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -63,6 +65,8 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
 
     override fun process(postcard: Postcard?, callback: InterceptorCallback?) {
         if ((postcard?.path ?: "") == ARouterConstant.VOICE_CHAT_ACTIVITY) {
+            //关闭悬浮窗
+            EventBus.getDefault().post(HideFloatingEvent())
             mPostcard = postcard
             mCallback = callback
             //跳转语音会话页面
@@ -117,7 +121,8 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
                     }
                     1401 -> {
                         //特权未解锁
-                        showIntimateDialog()
+                        ToastUtils.show("亲密等级达到lv3才能语音通话哦")
+//                        showIntimateDialog()
                     }
                     1402 -> {
                         //显示价格弹窗

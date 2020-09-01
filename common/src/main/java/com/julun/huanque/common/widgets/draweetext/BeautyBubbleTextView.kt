@@ -157,16 +157,16 @@ class BeautyBubbleTextView @JvmOverloads constructor(context: Context, attrs: At
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        //先全部隐藏
+        svgaPlayerViewRt?.hide()
+        webpGifViewRt?.hide()
+        svgaPlayerViewRb?.hide()
+        webpGifViewRb?.hide()
+        svgaPlayerViewLt?.hide()
+        webpGifViewLt?.hide()
+        svgaPlayerViewLb?.hide()
+        webpGifViewLb?.hide()
         if (chatBubble == null) {
-            svgaPlayerViewRt?.hide()
-            webpGifViewRt?.hide()
-            svgaPlayerViewRb?.hide()
-            webpGifViewRb?.hide()
-            svgaPlayerViewLt?.hide()
-            webpGifViewLt?.hide()
-            svgaPlayerViewLb?.hide()
-            webpGifViewLb?.hide()
-
             return
         }
 

@@ -66,7 +66,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_live_room.*
 import kotlinx.android.synthetic.main.frame_danmu.*
-import kotlinx.android.synthetic.main.item_mkf_normal.*
 import kotlinx.android.synthetic.main.view_live_header.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -750,6 +749,14 @@ class PlayerActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    fun blockChange(event: MessageBlockEvent) {
+        //免打扰状态变更
+        playerMessageViewModel.blockListData.value = null
+        playerMessageViewModel.unreadList.clear()
+        playerMessageViewModel.getBlockedConversationList()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateShow(event: OpenPrivateChatRoomEvent) {
         //打开私信
         playerMessageViewModel.privateConversationData.value = event
@@ -813,7 +820,7 @@ class PlayerActivity : BaseActivity() {
 //                GIODataPool.fromType = null
 //                val positionIndex = GIODataPool.positionIndex
 //                GIODataPool.positionIndex = null
-                form = UserEnterRoomForm(programId, fromType = mFrom,shareUserId = mShareUSerId)
+                form = UserEnterRoomForm(programId, fromType = mFrom, shareUserId = mShareUSerId)
                 viewModel.enterLivRoom(form)
             }
         } else {
@@ -1778,7 +1785,7 @@ class PlayerActivity : BaseActivity() {
         RongCloudManager.destroyMessageConsumer()
         // 退出直播间
         MessageProcessor.clearProcessors(false)
-        animationFragment.destoryResource()
+        animationFragment.destroyResource()
         programId = 0
         //每次退出统一关闭zego回调
 //        (ProviderPoolManager.getService(ARouterConstant.ZEGOSERVICE) as? ZegoService)?.clearCallBack()

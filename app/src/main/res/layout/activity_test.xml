@@ -172,11 +172,18 @@
                 android:layout_height="wrap_content"
                 android:text="管理弹窗" />
 
-<!--            <com.julun.huanque.common.widgets.ShimmerTextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:paddingRight="10dp"-->
-<!--                android:text="我是测试哈  ℡º ¹ ² ³ ⁴ ⁵ " />-->
+            <Button
+                android:id="@+id/btn_anim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="动画" />
+
+            <Button
+                android:id="@+id/btn_anim2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="动画2" />
+
 
             <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
                 android:id="@+id/text_rainbow"

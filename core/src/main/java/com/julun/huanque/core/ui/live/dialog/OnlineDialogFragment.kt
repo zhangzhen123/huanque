@@ -118,6 +118,13 @@ class OnlineDialogFragment : BaseDialogFragment() {
             mCommonNavigator.notifyDataSetChanged()
 //            }
         })
+
+        mPlayerViewModel?.onLineDismissFlag?.observe(this, Observer {
+            if(it == true){
+                dismiss()
+                mPlayerViewModel?.onLineDismissFlag?.value = false
+            }
+        })
 //        mPlayerViewModel?.goGuardAndShowBubbleDialog?.observe(this, Observer {
 //            it ?: return@Observer
 //            if (mPlayerViewModel?.isThemeRoom == true) {
