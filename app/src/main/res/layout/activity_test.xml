@@ -193,6 +193,13 @@
                 android:textColor="@color/white"
                 android:text="一句带彩虹色的文本 还带动效 一句带彩虹色的文本 还带动效 WWWWAAAA！！@3243555" />
 
+            <TextView
+                android:id="@+id/tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="肯德基的安徽的话给"
+                android:textColor="@color/white"/>
+
         </LinearLayout>
 
     </ScrollView>

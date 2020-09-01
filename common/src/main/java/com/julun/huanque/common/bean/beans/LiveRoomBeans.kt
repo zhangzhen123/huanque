@@ -536,6 +536,8 @@ data class ChatBubble(
     var rt: String = "",//右上
     var lt: String = "",//左上
     var rb: String = "",//右下
+    //私信右上
+    var crt: String = "",
     var radius: Int = -1//圆角大小
 
 ) {

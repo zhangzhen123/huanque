@@ -20,8 +20,8 @@ import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
+import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.*
 import io.reactivex.rxjava3.core.Observable
@@ -45,6 +45,8 @@ import kotlin.Exception
 class PrivateConversationViewModel : BaseViewModel() {
 
     private val socialService: SocialService by lazy { Requests.create(SocialService::class.java) }
+
+    private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
     //消息列表
     val messageListData: MutableLiveData<MutableList<Message>> by lazy { MutableLiveData<MutableList<Message>>() }
@@ -99,6 +101,9 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //播放动画标识位
     val startAnimationFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //气泡
+    val bubbleData: MutableLiveData<ChatBubble> by lazy { MutableLiveData<ChatBubble>() }
 
     //操作类型
     var operationType = ""
@@ -227,6 +232,12 @@ class PrivateConversationViewModel : BaseViewModel() {
                     senderId = mineInfo.userId
                     nickname = mineInfo.nickname
                     sex = mineInfo.sex
+                    chatBubble = if (result.intimate.intimateLevel >= 4) {
+                        //亲密度达到4级，有气泡权限
+                        bubbleData.value
+                    } else {
+                        null
+                    }
                 }
                 RongCloudManager.resetUserInfoData(user)
 
@@ -258,6 +269,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     senderId = SessionUtils.getUserId()
                     nickname = SessionUtils.getNickName()
                     sex = SessionUtils.getSex()
+                    chatBubble = bubbleData.value
                 }
                 RongCloudManager.resetUserInfoData(user)
             })
@@ -562,5 +574,19 @@ class PrivateConversationViewModel : BaseViewModel() {
             })
         }
     }
+
+    /**
+     * 获取设置
+     */
+    fun getSetting() {
+        viewModelScope.launch {
+            request({
+                val result = userService.settings().dataConvert()
+                SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, result.chatBubble)
+                bubbleData.value = result.chatBubble
+            })
+        }
+    }
+
 
 }

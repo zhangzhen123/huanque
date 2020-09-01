@@ -1,5 +1,6 @@
 package com.julun.huanque.message.adapter
 
+import android.graphics.Color
 import android.net.Uri
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
@@ -20,6 +21,7 @@ import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.drawee.span.SimpleDraweeSpanTextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.ChatUser
+import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.SendRoomInfo
@@ -46,6 +48,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
+import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.bottomPadding
 import org.jetbrains.anko.textColor
@@ -282,12 +285,25 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
             tvContent.maxWidth = ScreenUtils.getScreenWidth() - DensityHelper.dp2px(65f) * 2
             if (content is TextMessage) {
-                showMessageView(helper, TEXT_MESSAGE, helper.itemViewType)
+                var user: RoomUserChatExtra? = null
+                val extra = content.extra
+                if (extra != null) {
+                    try {
+                        user = JsonUtil.deserializeAsObject(extra, RoomUserChatExtra::class.java)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                showMessageView(helper, TEXT_MESSAGE, helper.itemViewType, user?.chatBubble)
                 //是否都是表情
                 val allEmoji = EmojiSpanBuilder.allEmoji(context, content.content)
+                val sdv_mark = helper.getView<SimpleDraweeView>(R.id.sdv_mark)
 
                 if (allEmoji) {
                     tvContent.background = null
+                    sdv_mark.hide()
+                } else {
+                    sdv_mark.loadImage(user?.chatBubble?.crt ?: "", 72f, 32f)
                 }
                 tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content, true)
 //                    EmojiUtil.message2emoji(content.content)
@@ -357,9 +373,8 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
     /**
      * 显示消息视图
-     * @param picMessage 是否是图片消息
      */
-    private fun showMessageView(holder: BaseViewHolder, messageType: String, itemType: Int) {
+    private fun showMessageView(holder: BaseViewHolder, messageType: String, itemType: Int, cb: ChatBubble? = null) {
         //普通内容区域
         var rl_content: View? = null
         if (itemType == OTHER) {
@@ -373,6 +388,8 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         val tv_pic_content = holder.getView<View>(R.id.tv_pic_content)
         //隐藏收益视图
         holder.getView<View>(R.id.tv_quebi).hide()
+        //气泡角标
+        val sdv_mark = holder.getView<View>(R.id.sdv_mark)
 
         //传送门消息视图
         val con_send_room = holder.getView<View>(R.id.con_send_room)
@@ -398,17 +415,30 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             view_gift_border.show()
         }
 
+        if (messageType == TEXT_MESSAGE) {
+            sdv_mark.show()
+        } else {
+            sdv_mark.hide()
+        }
+
         when (messageType) {
             TEXT_MESSAGE -> {
                 //显示普通文案视图
                 sdv_header.show()
                 rl_content?.show()
                 tv_content.show()
-                if (itemType == OTHER) {
-                    tv_content.backgroundResource = R.drawable.bg_chat_other
+                if (cb != null) {
+                    tv_content.backgroundDrawable = GlobalUtils.getBubbleDrawable(cb, itemType == OTHER)
+                    tv_content.textColor = Color.WHITE
                 } else {
-                    tv_content.backgroundResource = R.drawable.bg_chat_mine
+                    if (itemType == OTHER) {
+                        tv_content.backgroundResource = R.drawable.bg_chat_other
+                    } else {
+                        tv_content.backgroundResource = R.drawable.bg_chat_mine
+                    }
+                    tv_content.textColor = GlobalUtils.getColor(R.color.black_333)
                 }
+
 
                 tv_pic_content.hide()
                 sdv_image.hide()

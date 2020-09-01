@@ -166,7 +166,7 @@ class NetcallBean(
 /**
  * 关注返回的实体
  */
-class FollowBean(var follow: String = "",var stranger : Boolean = false) : Serializable
+class FollowBean(var follow: String = "", var stranger: Boolean = false) : Serializable
 
 data class AliAuthInfo(
     var authInfo: String = ""
@@ -188,3 +188,7 @@ data class UserSecurityInfo(
  */
 data class BeansData(var beans: Long = 0) : Serializable
 
+/**
+ * 私信气泡配置类
+ */
+data class SettingBean(var chatBubble: ChatBubble = ChatBubble()) : Serializable

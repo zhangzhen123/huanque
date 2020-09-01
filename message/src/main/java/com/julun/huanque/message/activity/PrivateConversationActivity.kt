@@ -28,6 +28,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.ChatUser
+import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.SendRoomInfo
 import com.julun.huanque.common.bean.beans.TargetUserObj
@@ -221,6 +222,14 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
         //获取小鹊语料
         mPrivateConversationViewModel?.getActiveWord()
+        //获取配置相关
+        val cb = SPUtils.getObject<ChatBubble>(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble::class.java)
+        if (cb == null) {
+            mPrivateConversationViewModel?.getSetting()
+        } else {
+            mPrivateConversationViewModel?.bubbleData?.value = cb
+        }
+
         showBackground()
     }
 
@@ -400,6 +409,17 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.startAnimationFlag?.observe(this, Observer {
             if (it == true) {
                 ToastUtils.show("此处假装在播放动画")
+            }
+        })
+        mPrivateConversationViewModel?.bubbleData?.observe(this, Observer {
+            if (it != null) {
+                val intimateLevel = mPrivateConversationViewModel?.basicBean?.value?.intimate?.intimateLevel ?: 0
+                if (intimateLevel >= 4) {
+                    //亲密度达到4级，有气泡权限
+                    RongCloudManager.updateChatBubble(it)
+                } else {
+                    RongCloudManager.updateChatBubble(null)
+                }
             }
         })
     }
@@ -1853,6 +1873,10 @@ class PrivateConversationActivity : BaseActivity() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun intimateChange(data: IntimateBean) {
+        if (data.intimateLevel >= 4) {
+            //亲密度达到4级，有气泡权限
+            RongCloudManager.updateChatBubble(mPrivateConversationViewModel?.bubbleData?.value)
+        }
         val userIds = data.userIds
         val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: 0
         if (userIds.contains(SessionUtils.getUserId()) && userIds.contains(targetId)) {

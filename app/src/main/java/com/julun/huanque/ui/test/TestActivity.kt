@@ -24,6 +24,7 @@ import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
+import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.DensityHelper
@@ -50,6 +51,7 @@ import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_test.*
+import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.startActivity
 import java.io.File
@@ -73,6 +75,7 @@ class TestActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.activity_test
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        tv.backgroundDrawable = GlobalUtils.getBubbleDrawable(ChatBubble(bdc = "#FFDF20-#FFCB53",bgc = "#0309FF-#FE1212"),false)
         viewModel.userInfo.observe(this, Observer {
             println("我是用户信息：=$it")
             ret_resp.text = "语音签名：${it.points.getOrNull(0)?.voiceContent}"
