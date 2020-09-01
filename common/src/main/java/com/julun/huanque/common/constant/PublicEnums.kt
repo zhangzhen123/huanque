@@ -590,3 +590,22 @@ object HomeMakeMoneyType {
     const val Game = "Game"
     const val Task = "Task"
 }
+
+object BirdTaskJump {
+    const val LiveRoom = "LiveRoom"
+    const val InviteFriend = "InviteFriend"
+    const val FriendHome = "FriendHome"
+    const val Message = "Message"
+}
+object BirdTaskStatus{
+    const val NotReceive="NotReceive"
+    const val NotFinish="NotFinish"
+    const val Received="Received"
+
+}
+object MainPageIndexConst {
+    const val MAIN_FRAGMENT_INDEX = 0
+    const val LEYUAN_FRAGMENT_INDEX = 1
+    const val MESSAGE_FRAGMENT_INDEX = 2
+    const val MINE_FRAGMENT_INDEX = 3
+}

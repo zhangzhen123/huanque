@@ -77,6 +77,10 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
     //当前移动的位置
     private var currentXY: IntArray? = null
+
+    private var shopDialogFragment: BirdShopDialogFragment? = null
+
+    private var birdTaskDialogFragment: BirdTaskDialogFragment? = null
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         programId = arguments?.getLong(IntentParamKey.PROGRAM_ID.name)
         initViewModel()
@@ -96,6 +100,15 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         iv_bird_guide.onClickNew {
             logger.info("点击了规则")
 
+        }
+        iv_shop.onClickNew {
+            logger.info("点击了商店")
+            shopDialogFragment = shopDialogFragment ?: BirdShopDialogFragment(mViewModel)
+            shopDialogFragment?.show(requireActivity(), "shopDialogFragment")
+        }
+        iv_task.onClickNew {
+            birdTaskDialogFragment=birdTaskDialogFragment?: BirdTaskDialogFragment(mViewModel)
+            birdTaskDialogFragment?.show(requireActivity(),"birdTaskDialogFragment")
         }
         rv_bird_packet.onTouch { _, event ->
 //            logger.info("rv_bird_packet event=${event.action} rawX=${event.rawX} rawY=${event.rawY}")
@@ -242,7 +255,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             if (it.isSuccess()) {
                 logger.info(it.requireT().resultType)
                 processCombineResult(it.requireT())
-            }else{
+            } else {
                 recoveryItemBird()
             }
         })

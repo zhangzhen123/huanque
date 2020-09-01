@@ -1,0 +1,100 @@
+package com.julun.huanque.core.ui.main.bird
+
+import android.view.View
+import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
+import com.julun.huanque.common.base.BaseVMDialogFragment
+import com.julun.huanque.common.basic.NetState
+import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.QueryType
+import com.julun.huanque.common.helper.MixedHelper
+import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.core.R
+import kotlinx.android.synthetic.main.fragment_bird_shop.*
+
+/**
+ * [leYuanViewModel]将主面板的viewModel传过来 供商店调用
+ */
+class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : BaseVMDialogFragment<BirdShopViewModel>() {
+
+
+    private val birdAdapter: ShopBirdAdapter by lazy { ShopBirdAdapter() }
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_bird_shop
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 520)
+    }
+
+    override fun initViews() {
+        initViewModel()
+        birdsList.layoutManager = GridLayoutManager(requireContext(), 3)
+        birdsList.adapter = birdAdapter
+        birdAdapter.setOnItemClickListener { _, _, position ->
+            val item = birdAdapter.getItemOrNull(position)
+            if (item != null) {
+                if (item.unlocked) {
+                    leYuanViewModel.buyBird(item.upgradeLevel)
+                } else {
+                    ToastUtils.show("当前等级未解锁！")
+                }
+
+            }
+        }
+        ivClose.onClickNew {
+            dismiss()
+        }
+        mRefreshLayout.setOnRefreshListener {
+            mViewModel.queryShop(QueryType.REFRESH)
+        }
+        mViewModel.queryShop()
+    }
+
+    override fun reCoverView() {
+        initViewModel()
+        mViewModel.queryShop()
+    }
+    private fun initViewModel() {
+        leYuanViewModel.totalCoin.observe(this, Observer {
+            totalCoin.text = "余额${StringHelper.formatBigNum(it)}金币"
+        })
+        mViewModel.shopInfo.observe(this, Observer {
+            mRefreshLayout.isRefreshing = false
+            if (it.isSuccess()) {
+                birdAdapter.setNewInstance(it.requireT().upgradeList)
+            }
+
+        })
+    }
+
+    override fun showLoadState(state: NetState) {
+        when (state.state) {
+            NetStateType.SUCCESS -> {//showSuccess()
+                state_pager_view.showSuccess()
+                mRefreshLayout.show()
+                birdAdapter.setEmptyView(
+                    MixedHelper.getEmptyView(
+                        requireContext()
+                    )
+                )
+
+            }
+            NetStateType.LOADING -> {//showLoading()
+                mRefreshLayout.hide()
+                state_pager_view.showLoading()
+            }
+            NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
+                state_pager_view.showError(showBtn = true, btnClick = View.OnClickListener {
+                    mViewModel.queryShop()
+                })
+            }
+        }
+    }
+}

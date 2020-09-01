@@ -33,10 +33,10 @@ interface LeYuanService {
 
     /**
      * 返回值resultType说明：
-        MovePos：单向移动
-        SwapPos：互换位置
-        Upgrade：合成升级(客户端需移除合并的两只鹊，并插入合成后的升级鹊)
-        Function：产生功能鹊(客户端需移除合并的两只鹊)
+    MovePos：单向移动
+    SwapPos：互换位置
+    Upgrade：合成升级(客户端需移除合并的两只鹊，并插入合成后的升级鹊)
+    Function：产生功能鹊(客户端需移除合并的两只鹊)
      */
     @POST("social/magpie/combine")
     suspend fun combine(@Body form: BirdCombineForm): Root<CombineResult>
@@ -46,6 +46,24 @@ interface LeYuanService {
      */
     @POST("social/magpie/recovery")
     suspend fun recovery(@Body form: RecycleBirdForm): Root<RecycleResult>
+
+    /**
+     * 商店信息
+     */
+    @POST("social/magpie/shop")
+    suspend fun shop(@Body form: EmptyForm = EmptyForm()): Root<BirdShopInfo>
+
+    /**
+     * 任务信息
+     */
+    @POST("social/magpie/taskList")
+    suspend fun taskList(@Body form: EmptyForm = EmptyForm()): Root<BirdTaskInfo>
+
+    /**
+     * 领取任务
+     */
+    @POST("social/magpie/receiveTaskAward")
+    suspend fun receiveTaskAward(@Body form: TaskBirdReceive): Root<BirdTaskReceiveResult>
 
 
 }

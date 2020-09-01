@@ -1,6 +1,5 @@
 package com.julun.huanque.core.ui.main.bird
 
-import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
@@ -12,14 +11,12 @@ import com.julun.huanque.common.bean.forms.RecycleBirdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LeYuanService
-import com.julun.huanque.common.suger.*
-import com.julun.huanque.core.R
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.Disposable
+import com.julun.huanque.common.suger.convertError
+import com.julun.huanque.common.suger.convertRtData
+import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.request
 import kotlinx.coroutines.launch
 import java.math.BigInteger
-import java.util.concurrent.TimeUnit
 
 /**
  *
@@ -27,7 +24,7 @@ import java.util.concurrent.TimeUnit
  *
  *@Date: 2020/6/30 20:05
  *
- *@Description: HomeViewModel 首页逻辑处理
+ *@Description: 乐园首页的相关
  *
  */
 class LeYuanViewModel : BaseViewModel() {
@@ -108,7 +105,26 @@ class LeYuanViewModel : BaseViewModel() {
         }
 
     }
+    //供商店用
+    fun buyBird(level:Int) {
+        viewModelScope.launch {
+            request({
+                val result = service.buyBird(BuyBirdForm(programId, level)).dataConvert()
+                buyResult.value = result.convertRtData()
+                totalCoin.value = result.totalCoins
+                coinsPerSec.value = result.coinsPerSec
+                if (result.unlockUpgrade != null) {
+                    unlockUpgrade.value = result.unlockUpgrade
+                }
+//                startProcessCoins()
+            }, error = {
+                it.printStackTrace()
+                buyResult.value = it.convertError()
+            })
 
+        }
+
+    }
     /**
      * 合体操作
      * 合成升级、移动位置、互换位置都调用该接口

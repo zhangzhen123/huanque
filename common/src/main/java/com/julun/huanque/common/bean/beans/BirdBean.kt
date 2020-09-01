@@ -90,3 +90,51 @@ data class RecycleResult(
     var coinsPerSec: BigInteger = BigInteger.ZERO,
     var totalCoins: BigInteger = BigInteger.ZERO
 )
+
+data class UpgradeShopBirdBean(
+    var unlocked: Boolean = false,
+    var upgradeCoins: BigInteger = BigInteger.ZERO,
+    var upgradeIcon: String = "",
+    var upgradeLevel: Int = 0,
+    var upgradeName: String = ""
+)
+
+data class BirdShopInfo(var upgradeList: MutableList<UpgradeShopBirdBean> = mutableListOf())
+
+data class BirdTaskInfo(
+    var activeInfo: BirdActiveInfo = BirdActiveInfo(),
+    var taskList: MutableList<BirdTask> = mutableListOf<BirdTask>()
+)
+
+data class BirdActiveInfo(
+    var activeValue: Int = 0,
+    var awardList: List<BirdAward> = listOf(),
+    var maxActiveValue: Int = 0
+)
+
+data class BirdTask(
+    var awardActive: Int = 0,
+    var currentNum: Int = 0,
+    var jumpType: String = "",
+    var targetNum: Int = 0,
+    var taskCode: String = "",
+    var taskDesc: String = "",
+    var taskName: String = "",
+    var taskStatus: String = "",
+    var taskStatusText: String = "",
+    var taskImage: String = ""
+)
+
+data class BirdAward(
+    var activeCode: String = "",
+    var awardName: String = "",
+    var awardStatus: String = "",
+    var targetActive: Int = 0
+)
+
+data class BirdTaskReceiveResult(
+    var activeValue: Int = 0,
+    var awardCoins: Int = 0,
+    var taskStatus: String = "",
+    var taskStatusText: String = ""
+)

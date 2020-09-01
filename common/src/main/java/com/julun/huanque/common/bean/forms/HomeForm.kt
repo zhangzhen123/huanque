@@ -21,3 +21,5 @@ data class BirdCombineForm(
 )
 
 class RecycleBirdForm(var programId: Long? = null, var upgradeId: Long)
+
+class TaskBirdReceive(var taskCode: String)

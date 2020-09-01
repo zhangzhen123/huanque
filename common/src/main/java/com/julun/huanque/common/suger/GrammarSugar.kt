@@ -10,15 +10,15 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.ColorInt
-import androidx.fragment.app.DialogFragment
 import androidx.core.content.FileProvider
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import com.facebook.drawee.generic.RoundingParams
-import com.julun.huanque.common.utils.ULog
 import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.widget.text.span.BetterImageSpan
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.utils.SortUtils
+import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.fresco.DraweeHolderBuilder
 import java.io.File
 import java.io.Serializable
@@ -305,7 +305,7 @@ fun Map<String, out Serializable>.bundle(): Bundle {
     return intent
 }
 
-fun DialogFragment.show(activity: AppCompatActivity, tag: String) {
+fun DialogFragment.show(activity: FragmentActivity, tag: String) {
     this.show(activity.supportFragmentManager, tag)
 }
 

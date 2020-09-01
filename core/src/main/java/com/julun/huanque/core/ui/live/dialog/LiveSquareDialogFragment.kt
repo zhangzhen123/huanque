@@ -21,10 +21,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.AuthorFollowBean
 import com.julun.huanque.common.bean.beans.ProgramLiveInfo
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.PlayerFrom
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.dp2px
@@ -200,7 +197,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
         when (state.state) {
             NetStateType.SUCCESS -> {//showSuccess()
                 state_pager_view.showSuccess()
-                authorList.show()
+                mRefreshLayout.show()
                 authorAdapter.setEmptyView(
                     MixedHelper.getErrorView(
                         requireContext(),
@@ -208,13 +205,13 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                         btnTex = "前往",
                         onClick = View.OnClickListener {
                             logger.info("跳转到交友")
-                            ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+                            ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
                         })
                 )
 
             }
             NetStateType.LOADING -> {//showLoading()
-                authorList.hide()
+                mRefreshLayout.hide()
                 state_pager_view.showLoading()
             }
             NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
