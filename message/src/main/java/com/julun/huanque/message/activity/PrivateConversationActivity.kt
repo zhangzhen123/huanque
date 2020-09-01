@@ -418,6 +418,9 @@ class PrivateConversationActivity : BaseActivity() {
         header_view.imageViewBack.onClickNew {
             finish()
         }
+        tv_unread_count.onClickNew {
+            finish()
+        }
         header_view.imageOperation.onClickNew {
             //打开会话设置
             val chatUserBean =
