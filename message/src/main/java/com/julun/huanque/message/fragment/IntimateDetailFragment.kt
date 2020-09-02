@@ -43,7 +43,7 @@ class IntimateDetailFragment : BaseDialogFragment() {
     override fun initViews() {
         initRecyclerView()
         iv_rule.onClickNew {
-            WebActivity.startWeb(requireActivity(), "www.baidu.com")
+            RNPageActivity.start(requireActivity(),RnConstant.INTIMATE_LEVEL_PAGE,Bundle().apply { putLong("friendId",mViewModel.friendId) })
         }
 
         sdv_other.onClickNew {

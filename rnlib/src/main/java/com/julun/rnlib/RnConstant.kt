@@ -34,6 +34,8 @@ object RnConstant {
     const val CHAT_BUBBLE_PAGE:String="ChatBubblePage"
     //我的座驾
     const val MY_CAR_PAGE:String="MyCarPage"
+    //亲密度说明页
+    const val INTIMATE_LEVEL_PAGE:String="IntimateLevelPage"
 
 
 

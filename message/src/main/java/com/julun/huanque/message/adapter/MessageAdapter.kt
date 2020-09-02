@@ -1,5 +1,6 @@
 package com.julun.huanque.message.adapter
 
+import android.graphics.Color
 import android.net.Uri
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
@@ -20,6 +21,7 @@ import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.drawee.span.SimpleDraweeSpanTextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.ChatUser
+import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.SendRoomInfo
@@ -33,10 +35,7 @@ import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.WebpAnimatorListener
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.loadImage
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.message.R
@@ -46,6 +45,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
+import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.bottomPadding
 import org.jetbrains.anko.textColor
@@ -65,7 +65,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     var otherUserInfo: ChatUser? = null
 
     init {
-        addChildClickViewIds(R.id.sdv_image, R.id.tv_content, R.id.con_send_room)
+        addChildClickViewIds(R.id.sdv_image, R.id.tv_content, R.id.con_send_room, R.id.view_bg_gift)
         addChildLongClickViewIds(R.id.tv_content)
     }
 
@@ -188,8 +188,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             //自定义消息
             when (content.type) {
                 MessageCustomBeanType.Gift -> {
+                    val started = helper.itemViewType == MINE || MessageUtils.getAnimationStarted(item)
                     showMessageView(helper, GIFT_VIEW, helper.itemViewType)
-                    showGiftView(helper, content.context, helper.itemViewType == MINE)
+                    showGiftView(helper, content.context, started)
                 }
                 MessageCustomBeanType.Expression_Privilege -> {
                     //特权表情
@@ -227,7 +228,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     val sdvImage = helper.getView<SimpleDraweeView>(R.id.sdv_image)
                     sdvImage.background = null
                     if (expressionAnimationBean != null) {
-                        val started = map?.get(ParamConstant.MSG_ANIMATION_STARTED) as? Boolean
+                        val started = MessageUtils.getAnimationStarted(item)
                         val position = helper.layoutPosition
                         when (EmojiSpanBuilder.getPrivilegeResource(context, expressionAnimationBean.name)) {
                             R.drawable.icon_shaizi -> {
@@ -281,12 +282,25 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
             tvContent.maxWidth = ScreenUtils.getScreenWidth() - DensityHelper.dp2px(65f) * 2
             if (content is TextMessage) {
-                showMessageView(helper, TEXT_MESSAGE, helper.itemViewType)
+                var user: RoomUserChatExtra? = null
+                val extra = content.extra
+                if (extra != null) {
+                    try {
+                        user = JsonUtil.deserializeAsObject(extra, RoomUserChatExtra::class.java)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                showMessageView(helper, TEXT_MESSAGE, helper.itemViewType, user?.chatBubble)
                 //是否都是表情
                 val allEmoji = EmojiSpanBuilder.allEmoji(context, content.content)
+                val sdv_mark = helper.getView<SimpleDraweeView>(R.id.sdv_mark)
 
                 if (allEmoji) {
                     tvContent.background = null
+                    sdv_mark.hide()
+                } else {
+                    sdv_mark.loadImage(user?.chatBubble?.crt ?: "", 72f, 32f)
                 }
                 tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content, true)
 //                    EmojiUtil.message2emoji(content.content)
@@ -356,9 +370,8 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
     /**
      * 显示消息视图
-     * @param picMessage 是否是图片消息
      */
-    private fun showMessageView(holder: BaseViewHolder, messageType: String, itemType: Int) {
+    private fun showMessageView(holder: BaseViewHolder, messageType: String, itemType: Int, cb: ChatBubble? = null) {
         //普通内容区域
         var rl_content: View? = null
         if (itemType == OTHER) {
@@ -372,9 +385,38 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         val tv_pic_content = holder.getView<View>(R.id.tv_pic_content)
         //隐藏收益视图
         holder.getView<View>(R.id.tv_quebi).hide()
+        //气泡角标
+        val sdv_mark = holder.getView<View>(R.id.sdv_mark)
 
+        //传送门消息视图
         val con_send_room = holder.getView<View>(R.id.con_send_room)
 
+        //送礼消息视图
+        val view_bg_gift = holder.getView<View>(R.id.view_bg_gift)
+        val tv_gift_content = holder.getView<View>(R.id.tv_gift_content)
+        val tv_detail = holder.getView<View>(R.id.tv_detail)
+        val sdv_gift_pic = holder.getView<View>(R.id.sdv_gift_pic)
+        val view_gift_border = holder.getView<View>(R.id.view_gift_border)
+
+        if (messageType != GIFT_VIEW) {
+            view_bg_gift.hide()
+            tv_gift_content.hide()
+            tv_detail.hide()
+            sdv_gift_pic.hide()
+            view_gift_border.hide()
+        } else {
+            view_bg_gift.show()
+            tv_gift_content.show()
+            tv_detail.show()
+            sdv_gift_pic.show()
+            view_gift_border.show()
+        }
+
+        if (messageType == TEXT_MESSAGE) {
+            sdv_mark.show()
+        } else {
+            sdv_mark.hide()
+        }
 
         when (messageType) {
             TEXT_MESSAGE -> {
@@ -382,11 +424,20 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 sdv_header.show()
                 rl_content?.show()
                 tv_content.show()
-                if (itemType == OTHER) {
-                    tv_content.backgroundResource = R.drawable.bg_chat_other
+                if (cb != null) {
+                    tv_content.backgroundDrawable = GlobalUtils.getBubbleDrawable(cb, itemType == OTHER)
+                    tv_content.textColor = Color.WHITE
+                    tv_content.minWidth = dp2px(60)
                 } else {
-                    tv_content.backgroundResource = R.drawable.bg_chat_mine
+                    if (itemType == OTHER) {
+                        tv_content.backgroundResource = R.drawable.bg_chat_other
+                    } else {
+                        tv_content.backgroundResource = R.drawable.bg_chat_mine
+                    }
+                    tv_content.textColor = GlobalUtils.getColor(R.color.black_333)
+                    tv_content.minWidth = dp2px(40)
                 }
+
 
                 tv_pic_content.hide()
                 sdv_image.hide()
@@ -421,10 +472,10 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             }
             GIFT_VIEW -> {
                 sdv_header.show()
-                rl_content?.show()
-                sdv_image.show()
-                tv_pic_content.show()
 
+                rl_content?.hide()
+                sdv_image.hide()
+                tv_pic_content.hide()
                 tv_content.hide()
                 con_send_room.hide()
             }
@@ -449,52 +500,16 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
      * 显示礼物视图的数据
      * @param mine 是否是送礼本人
      */
-    private fun showGiftView(helper: BaseViewHolder, str: String, mine: Boolean) {
+    private fun showGiftView(helper: BaseViewHolder, str: String, started: Boolean) {
         try {
             val chatGift = JsonUtil.deserializeAsObject<ChatGift>(str, ChatGift::class.java)
-            ImageUtils.loadImage(helper.getView(R.id.sdv_image), chatGift.selPic, 100f, 100f)
-            val draweeView = helper.getView<SimpleDraweeSpanTextView>(R.id.tv_pic_content)
-            draweeView.textSize = 14f
-            draweeView.textColor = GlobalUtils.getColor(R.color.black_666)
-
-            val bi = chatGift.beans * max(chatGift.giftCount, 1)
-            val str = if (mine) {
-                "送你一${chatGift.giftName}#$bi"
+            ImageUtils.loadImage(helper.getView(R.id.sdv_gift_pic), chatGift.selPic, 50f, 50f)
+            helper.setText(R.id.tv_gift_content, "送你一个${chatGift.giftName}")
+            if (started) {
+                helper.setText(R.id.tv_detail, "${chatGift.beans}鹊币")
             } else {
-                "送你一${chatGift.giftName}#$bi"
+                helper.setText(R.id.tv_detail, "点击查看")
             }
-
-
-            val draweeSpanStringBuilder = DraweeSpanStringBuilder(str)
-            val draweeHierarchy = GenericDraweeHierarchyBuilder.newInstance(context.resources)
-                .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE)
-                .build()
-            val uri = Uri.parse("res://${context!!.packageName}/" + R.mipmap.icon_quebi_message)
-
-            val controller = Fresco.newDraweeControllerBuilder()
-                .setUri(uri)
-                .setAutoPlayAnimations(true)
-                .build()
-
-            val index = str.indexOf("#")
-
-            draweeSpanStringBuilder.setImageSpan(
-                context, /* Context */
-                draweeHierarchy, /* hierarchy to be used */
-                controller, /* controller to be used to update the hierarchy */
-                index, /* image index within the text */
-                30, /* image width */
-                30, /* image height */
-                false, /* auto resize */
-                DraweeSpan.ALIGN_CENTER
-            ) /* alignment */
-
-            draweeSpanStringBuilder.setSpan(
-                ForegroundColorSpan(GlobalUtils.getColor(R.color.color_quebi)), index, str.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            draweeView.setDraweeSpanStringBuilder(draweeSpanStringBuilder)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -754,13 +769,13 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     }
 
                     override fun onError() {
-                        setAnimationStarted(msg)
+                        MessageUtils.setAnimationStarted(msg)
                         ImageUtils.loadImageLocal(view, resultPic)
 //                        updateSingleMessage(msg, position)
                     }
 
                     override fun onEnd() {
-                        setAnimationStarted(msg)
+                        MessageUtils.setAnimationStarted(msg)
                         ImageUtils.loadImageLocal(view, resultPic)
 //                        updateSingleMessage(msg, position)
                     }
@@ -819,12 +834,12 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
                 }, {
                     ImageUtils.loadImageLocal(view, resultPic)
-                    setAnimationStarted(msg)
+                    MessageUtils.setAnimationStarted(msg)
                     logger("Message 猜拳 结果1")
 //                    updateSingleMessage(msg, position)
                 }, {
                     ImageUtils.loadImageLocal(view, resultPic)
-                    setAnimationStarted(msg)
+                    MessageUtils.setAnimationStarted(msg)
                     logger("Message 猜拳 结果2")
 //                    updateSingleMessage(msg, position)
                 })
@@ -835,23 +850,6 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         }
     }
 
-
-    /**
-     * 设置动画已经播放过
-     */
-    private fun setAnimationStarted(msg: Message) {
-        try {
-            val extra = JsonUtil.serializeAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, true))
-            msg.extra = extra
-
-            if (msg.messageId > 0) {
-                //数据库修改
-                RongCloudManager.updateMessageExtra(msg.messageId, extra)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 
     /**
      * 更新发送状态

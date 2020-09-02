@@ -51,11 +51,6 @@ class FamousListFragment : BaseFragment() {
     }
 
 
-    fun pageSelected() {
-        recyclerView.post { recyclerView.scrollToPosition(0) }
-    }
-
-
     /**
      * 初始化ViewModel
      */
@@ -96,7 +91,6 @@ class FamousListFragment : BaseFragment() {
                         data.add(FamousListMultiBean(FamousListMultiBean.Content, sfm))
                     }
                     mAdapter.setList(data)
-                    recyclerView.post { recyclerView.scrollToPosition(0) }
                 } else {
                     statePage.showEmpty(emptyTxt = "快去名人榜争得一席之地吧")
                 }

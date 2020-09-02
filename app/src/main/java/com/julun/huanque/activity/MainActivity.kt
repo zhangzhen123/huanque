@@ -15,6 +15,7 @@ import com.julun.huanque.R
 import com.julun.huanque.agora.activity.AnonymousVoiceActivity
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.AnonyVoiceInviteBean
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
@@ -478,8 +479,14 @@ class MainActivity : BaseActivity() {
                 if (ForceUtils.activityMatch(intent)) {
                     startActivity(intent)
                 }
-
             }
+        })
+
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.RefreshUserSettingProcessor {
+            override fun process(data: VoidResult) {
+                mMainViewModel.getSetting()
+            }
+
         })
     }
 

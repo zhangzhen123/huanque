@@ -188,9 +188,9 @@ class UserCardFragment : BaseDialogFragment() {
                 tv_attention.isEnabled = true
             }
         })
-        mCardManagerViewModel.listResult.observe(this, Observer {
+        mCardManagerViewModel.canShowFlag.observe(this, Observer {
             if (it != null) {
-                mCardManagerViewModel.listResult.value = null
+                mCardManagerViewModel.canShowFlag.value = null
                 val dialog = CardManagerDialogFragment.newInstance(
                     programId = mUserCardViewModel.programId,
                     targetUserId = mUserCardViewModel.mUserId,
@@ -296,7 +296,7 @@ class UserCardFragment : BaseDialogFragment() {
         }
         tv_manage.onClickNew {
             //打开管理弹窗
-            mCardManagerViewModel.getManage(mUserCardViewModel.programId, mUserCardViewModel.mUserId)
+            mCardManagerViewModel.getManage(mUserCardViewModel.programId, mUserCardViewModel.mUserId,true)
         }
     }
 

@@ -28,6 +28,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.ChatUser
+import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.SendRoomInfo
 import com.julun.huanque.common.bean.beans.TargetUserObj
@@ -183,6 +184,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         initBasic(intent)
         registerMessageEventProcessor()
+        mIntimateDetailViewModel?.friendId = mPrivateConversationViewModel?.targetIdData?.value ?: 0L
         mPrivateConversationViewModel?.fromPlayer = intent?.getBooleanExtra(ParamConstant.FROM, false) ?: false
         EventBus.getDefault().post(QueryUnreadCountEvent(mPrivateConversationViewModel?.fromPlayer ?: false))
     }
@@ -221,6 +223,14 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
         //获取小鹊语料
         mPrivateConversationViewModel?.getActiveWord()
+        //获取配置相关
+        val cb = SPUtils.getObject<ChatBubble>(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble::class.java)
+        if (cb == null) {
+            mPrivateConversationViewModel?.getSetting()
+        } else {
+            mPrivateConversationViewModel?.bubbleData?.value = cb
+        }
+
         showBackground()
     }
 
@@ -355,6 +365,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         mPrivateConversationViewModel?.sendGiftSuccessData?.observe(this, Observer {
             if (it != null) {
+                mPrivateConversationViewModel?.startAnimationFlag?.value = true
                 //送礼成功.发送自定义消息
                 sendChatMessage(messageType = Message_Gift)
             }
@@ -396,6 +407,22 @@ class PrivateConversationActivity : BaseActivity() {
             scrollToBottom()
             view_place.layoutParams = placeParams
         })
+        mPrivateConversationViewModel?.startAnimationFlag?.observe(this, Observer {
+            if (it == true) {
+                ToastUtils.show("此处假装在播放动画")
+            }
+        })
+        mPrivateConversationViewModel?.bubbleData?.observe(this, Observer {
+            if (it != null) {
+                val intimateLevel = mPrivateConversationViewModel?.basicBean?.value?.intimate?.intimateLevel ?: 0
+                if (intimateLevel >= 4) {
+                    //亲密度达到4级，有气泡权限
+                    RongCloudManager.updateChatBubble(it)
+                } else {
+                    RongCloudManager.updateChatBubble(null)
+                }
+            }
+        })
     }
 
     /**
@@ -416,6 +443,9 @@ class PrivateConversationActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         header_view.imageViewBack.onClickNew {
+            finish()
+        }
+        tv_unread_count.onClickNew {
             finish()
         }
         header_view.imageOperation.onClickNew {
@@ -557,7 +587,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_share.onClickNew {
             //传送门
-            val result = judgeIntimate("CSM","亲密等级达到lv3才能发送传送门哦")
+            val result = judgeIntimate("CSM", "亲密等级达到lv3才能发送传送门哦")
             if (result) {
                 //有权限
                 val programId = SharedPreferencesUtils.getLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
@@ -999,6 +1029,18 @@ class PrivateConversationActivity : BaseActivity() {
                 val targetId = mPrivateConversationViewModel?.targetIdData?.value
                 if (msg.targetId == "$targetId") {
                     //就是当前的消息，直接显示
+                    //判断是否是送礼消息
+                    val content = msg.content
+                    if (content is CustomMessage) {
+                        if (content.type == MessageCustomBeanType.Gift) {
+                            if (!MessageUtils.getAnimationStarted(msg)) {
+                                //需要播放动画
+                                MessageUtils.setAnimationStarted(msg)
+                                mPrivateConversationViewModel?.startAnimationFlag?.value = true
+                            }
+                        }
+                    }
+
                     mPrivateConversationViewModel?.addMessage(msg)
 //                    scrollToBottom()
                 }
@@ -1177,6 +1219,16 @@ class PrivateConversationActivity : BaseActivity() {
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
+                    }
+                }
+                R.id.view_bg_gift -> {
+                    //送礼消息
+                    val started = tempData.senderUserId == "${SessionUtils.getUserId()}" || MessageUtils.getAnimationStarted(tempData)
+                    if (!started) {
+                        //播放动画
+                        MessageUtils.setAnimationStarted(tempData)
+                        mPrivateConversationViewModel?.startAnimationFlag?.value = true
+                        mAdapter.notifyItemChanged(position)
                     }
                 }
             }
@@ -1822,6 +1874,10 @@ class PrivateConversationActivity : BaseActivity() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun intimateChange(data: IntimateBean) {
+        if (data.intimateLevel >= 4) {
+            //亲密度达到4级，有气泡权限
+            RongCloudManager.updateChatBubble(mPrivateConversationViewModel?.bubbleData?.value)
+        }
         val userIds = data.userIds
         val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: 0
         if (userIds.contains(SessionUtils.getUserId()) && userIds.contains(targetId)) {

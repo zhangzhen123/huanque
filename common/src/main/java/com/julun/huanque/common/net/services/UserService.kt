@@ -172,4 +172,9 @@ interface UserService {
     @POST("user/acct/login/destroyAccount")
     suspend fun destroyAccount(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
 
+    /**
+     *
+     */
+    @POST("user/app/settings")
+    suspend fun settings(@Body form: EmptyForm = EmptyForm()) : Root<SettingBean>
 }

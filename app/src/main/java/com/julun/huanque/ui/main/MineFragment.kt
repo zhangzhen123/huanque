@@ -150,15 +150,15 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         tvQueBi.text = "${info.userBasic.beans}"
         tvLingQian.text = info.userBasic.cash
 
-        if (info.userBasic.userLevel > 0) {
-            sdv_wealth.show()
-            tv_wealth_privilege.hide()
-            val wealthAddrss = GlobalUtils.getString(R.string.wealth_address)
-            sdv_wealth.loadImage(String.format(wealthAddrss, info.userBasic.userLevel), 55f, 16f)
-        } else {
-            sdv_wealth.hide()
-            tv_wealth_privilege.show()
-        }
+//        if (info.userBasic.userLevel > 0) {
+//        sdv_wealth.show()
+//        tv_wealth_privilege.hide()
+        val wealthAddrss = GlobalUtils.getString(R.string.wealth_address)
+        sdv_wealth.loadImage(String.format(wealthAddrss, info.userBasic.userLevel), 55f, 16f)
+//        } else {
+//            sdv_wealth.hide()
+//            tv_wealth_privilege.show()
+//        }
 
         if (info.userBasic.royalLevel > 0) {
             tv_royal_privilege.hide()
@@ -174,7 +174,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             tv_author_privilege.hide()
             val wealthAddrss = GlobalUtils.getString(R.string.anchor_address)
 //            sdv_author_level.loadImage(String.format(wealthAddrss, info.userBasic.anchorLevel), 55f, 16f)
-            ImageUtils.loadImageWithHeight_2(sdv_author_level,String.format(wealthAddrss, info.userBasic.anchorLevel),dp2px(16))
+            ImageUtils.loadImageWithHeight_2(sdv_author_level, String.format(wealthAddrss, info.userBasic.anchorLevel), dp2px(16))
 
         } else {
             tv_author_privilege.show()

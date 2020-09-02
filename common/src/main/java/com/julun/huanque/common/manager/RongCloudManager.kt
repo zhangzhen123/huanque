@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.TplBean
+import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.EventMessageBean
@@ -729,6 +730,13 @@ object RongCloudManager {
     fun destroyMessageConsumer() {
         MessageReceptor.destroyBufferedTimer()
         currentUserObj = null
+    }
+
+    /**
+     * 更新聊天气泡数据
+     */
+    fun updateChatBubble(bean : ChatBubble?){
+        currentUserObj?.chatBubble = bean
     }
 
     /**

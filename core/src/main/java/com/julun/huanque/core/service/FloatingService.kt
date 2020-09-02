@@ -224,7 +224,10 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         UserHeartManager.setProgramId(null)
         if (windowManager != null && display != null) {
-            if (!jumpToPlayer) {
+            if (!jumpToPlayer && !"com.julun.huanque.core.ui.live.PlayerActivity".contains(
+                    "${CommonInit.getInstance().getCurrentActivity()?.localClassName}"
+                )
+            ) {
                 videoView?.stop()
                 GlobalScope.launch {
                     withContext(Dispatchers.IO) {

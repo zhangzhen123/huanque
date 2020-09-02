@@ -70,6 +70,9 @@ object SPParamKey {
 
     //客服地址
     const val CUSTOMER_URL = "CUSTOMER_URL"
+
+    //私信聊天框设置
+    const val PRIVATE_CHAT_BUBBLE = "PRIVATE_CHAT_BUBBLE"
 }
 
 /**
