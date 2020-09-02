@@ -242,7 +242,7 @@ class PlayerActivity : BaseActivity() {
         }
 
         //移除activity栈里面的私聊页面
-        ActivitiesManager.removeActivity("com.julun.huanque.message.activity.PrivateConversationActivity")
+        ActivitiesManager.INSTANCE.removeActivity("com.julun.huanque.message.activity.PrivateConversationActivity")
 
         if (savedInstanceState == null) {
             //重置token失效连接次数

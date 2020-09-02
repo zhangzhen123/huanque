@@ -403,7 +403,7 @@ class MainActivity : BaseActivity() {
         if (secondTime - firstTime < 2000) {
             //两秒之内点击了两次返回键  退出程序
             finish()
-            ActivitiesManager.finishApp()
+            ActivitiesManager.INSTANCE.finishApp()
         } else {
             ToastUtils.show("再按一次退出程序")
             firstTime = secondTime

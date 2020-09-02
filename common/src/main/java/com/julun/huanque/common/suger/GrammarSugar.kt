@@ -540,11 +540,23 @@ fun <T> List<T>.sortList(comparator: Comparator<T>): List<T> {
 }
 
 //有序的遍历 从0开始
-public inline fun <T> List<T>.forEachIndexedOrdered(action: (index: Int, T) -> Unit): Unit {
+inline fun <T> List<T>.forEachIndexedOrdered(action: (index: Int, T) -> Unit): Unit {
     var index = 0
     val last = this.size - 1
     for (i in 0..last) {
         val item = this[i]
         action(index++, item)
+    }
+}
+
+/**
+ * 可以跳出循环的遍历操作 如果[action]返回true代表需要跳出循环
+ */
+inline fun <T> Iterable<T>.forEachBreak(action: (T) -> Boolean) {
+    kotlin.run breaking@{
+        for (element in this)
+            if (action(element)) {
+                return@breaking
+            }
     }
 }

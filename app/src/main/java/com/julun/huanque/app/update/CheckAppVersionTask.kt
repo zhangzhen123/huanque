@@ -255,7 +255,7 @@ class CheckAppVersionTask(
                                         downloadTimes = 0
 //                                    System.exit(1)
                                         callbackError()
-                                        ActivitiesManager.finishApp()
+                                        ActivitiesManager.INSTANCE.finishApp()
                                     }
                                 ), "下载新版本app失败")
                             UpgradeApkService.unRegisterErrorListener()

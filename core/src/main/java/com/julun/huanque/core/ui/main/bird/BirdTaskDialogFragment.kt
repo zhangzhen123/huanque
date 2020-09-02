@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseVMDialogFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
@@ -98,6 +99,11 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         })
         mViewModel.receiveTaskResult.observe(this, Observer {
             if (it.isSuccess()) {
+                MyAlertDialog(requireActivity()).showAlertWithOK(
+                    "恭喜您成功领取了${it.requireT().awardCoins}金币",
+                    title = "领取成功",
+                    okText = "知道了"
+                )
                 mViewModel.queryInfo(QueryType.REFRESH)
             } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show("${it.error?.busiMessage}")
