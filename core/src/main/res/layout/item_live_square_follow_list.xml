@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="76dp"
-    android:layout_height="80dp">
+    android:layout_height="100dp">
 
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/anchorPicture"
         android:layout_width="@dimen/dimen_56"
         android:layout_height="@dimen/dimen_56"
+        android:layout_marginTop="@dimen/dimen_10"
         app:actualImageScaleType="focusCrop"
         app:failureImage="@mipmap/logo_placeholder_small"
         app:failureImageScaleType="fitCenter"

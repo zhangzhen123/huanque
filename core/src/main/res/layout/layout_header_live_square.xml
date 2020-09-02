@@ -19,9 +19,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/followList"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_80"
-        android:layout_marginTop="@dimen/dimen_15"
-        android:layout_marginBottom="@dimen/dimen_13"
+        android:layout_height="@dimen/dimen_100"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginBottom="@dimen/dimen_3"
         tools:visibility="visible"
         android:visibility="gone" />
 
