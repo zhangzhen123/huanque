@@ -176,6 +176,21 @@ data class ChatGroupGift(
     var version: Int = 0
 )
 
+/**
+ * 礼物相关动画配置类
+ */
+data class SpecialParams(
+    //背景音乐地址
+    var bgm: String = "",
+    //动画地址
+    var svgaUrl: String = "",
+    //动画地址
+    var webpUrl: String = "",
+    //飘屏图片地址，多个以英文逗号分隔
+    var pics: String = "",
+    //飘屏类型，可选类型
+    var screenType: String = ""
+) : Serializable
 
 data class ChatGift(
     var beans: Int = 0,
@@ -183,9 +198,32 @@ data class ChatGift(
     var giftName: String = "",
     var pic: String = "",
     var selPic: String = "",
+    //动画配置类
+    var specialParams: SpecialParams = SpecialParams(),
+    //动画类型
+    var specialType: String = "",
     //本地字段 送礼数量，发送自定义消息场景下使用
     var giftCount: Int = 1
-)
+) {
+    companion object {
+        //动画类型
+        //音效
+        const val Sound = "Sound"
+
+        //飘屏
+        const val Screen = "Screen"
+
+        //动画
+        const val Animation = "Animation"
+
+        //飘屏类型
+        //两边向中间飘屏
+        const val BothSide = "BothSide"
+
+        //从上往下嫖屏
+        const val TopDown = "TopDown"
+    }
+}
 
 data class ChatSendResult(
     var beans: Long = 0,

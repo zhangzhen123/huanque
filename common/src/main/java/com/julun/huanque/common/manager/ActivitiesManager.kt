@@ -62,4 +62,17 @@ object ActivitiesManager {
         }
         act?.finish()
     }
+
+    /**
+     * 是否包含某个Activity
+     * @param activityName activity完整类名
+     */
+    fun hasActivity(activityName: String): Boolean {
+        activities.forEach {
+            if (activityName.contains(it.localClassName)) {
+                return true
+            }
+        }
+        return false
+    }
 }

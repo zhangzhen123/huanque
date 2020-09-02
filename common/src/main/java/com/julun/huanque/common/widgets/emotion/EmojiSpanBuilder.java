@@ -54,11 +54,22 @@ public class EmojiSpanBuilder {
      */
     public static Spannable buildEmotionSpannable(Context context, String text, Boolean allEmojiBig) {
         int border = DensityHelper.dp2px(20f);
-        if (allEmojiBig && allEmoji(context, text)) {
+        boolean all = allEmoji(context, text);
+        if (allEmojiBig && all) {
             border = DensityHelper.dp2px(44f);
         }
-        Matcher matcherEmotion = sPatternEmotion.matcher(text);
-        SpannableString spannableString = new SpannableString(text);
+        String showContent = text;
+        if (all) {
+            // 都是表情，在表情之间增加一个空格符(增加间距)
+            StringBuilder sBuilder = new StringBuilder();
+            Matcher matcherEmotion = sPatternEmotion.matcher(text);
+            while (matcherEmotion.find()) {
+                sBuilder.append(matcherEmotion.group()).append(" ");
+            }
+            showContent = sBuilder.deleteCharAt(sBuilder.length() - 1).toString();
+        }
+        Matcher matcherEmotion = sPatternEmotion.matcher(showContent);
+        SpannableString spannableString = new SpannableString(showContent);
         while (matcherEmotion.find()) {
             String key = matcherEmotion.group();
             int imgRes = Emotions.getDrawableResByName(key);
@@ -82,7 +93,7 @@ public class EmojiSpanBuilder {
      */
     public static int getPrivilegeResource(Context context, String text) {
         Matcher matcherEmotion = sPatternEmotion.matcher(text);
-        if(matcherEmotion.find()){
+        if (matcherEmotion.find()) {
             String key = matcherEmotion.group();
             int imgRes = Emotions.getDrawableResByName(key);
             return imgRes;

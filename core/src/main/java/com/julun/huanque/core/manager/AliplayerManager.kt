@@ -23,6 +23,9 @@ object AliplayerManager {
 
     var mRenderListener: IPlayer.OnRenderingStartListener? = null
 
+    //当前播放的流地址
+    var mUrl = ""
+
     //是否渲染了首帧
     var mRendered = false
 
@@ -129,6 +132,7 @@ object AliplayerManager {
     }
 
     fun stop() {
+        mUrl = ""
         mRendered = false
         mAliPlayer?.stop()
     }

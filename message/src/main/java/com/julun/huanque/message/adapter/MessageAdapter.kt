@@ -7,6 +7,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
@@ -197,7 +198,6 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
                     val sdvImage = helper.getView<SimpleDraweeView>(R.id.sdv_image)
 //                    showGiftView(helper, content.context)
-                    sdvImage.backgroundResource = R.drawable.bg_gift_pic
                     val contentContext = content.context
                     if (contentContext.isNotEmpty()) {
                         try {
@@ -226,7 +226,6 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     }
                     showMessageView(helper, PIC_MESSAGE, helper.itemViewType)
                     val sdvImage = helper.getView<SimpleDraweeView>(R.id.sdv_image)
-                    sdvImage.background = null
                     if (expressionAnimationBean != null) {
                         val started = MessageUtils.getAnimationStarted(item)
                         val position = helper.layoutPosition
@@ -299,8 +298,10 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 if (allEmoji) {
                     tvContent.background = null
                     sdv_mark.hide()
+                    tvContent.setPadding(0, 0, 0, 0)
                 } else {
                     sdv_mark.loadImage(user?.chatBubble?.crt ?: "", 72f, 32f)
+                    tvContent.setPadding(dp2px(15), dp2px(10), dp2px(15), dp2px(10))
                 }
                 tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content, true)
 //                    EmojiUtil.message2emoji(content.content)

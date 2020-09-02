@@ -108,7 +108,6 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/bg_gift_pic"
         android:visibility="gone"
         app:layout_constraintRight_toLeftOf="@id/sdv_header"
         app:layout_constraintTop_toTopOf="@id/sdv_header"

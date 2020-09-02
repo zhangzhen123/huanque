@@ -17,6 +17,7 @@ import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.net.RequestCaller
 import com.julun.huanque.common.net.Requests
@@ -224,10 +225,8 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         UserHeartManager.setProgramId(null)
         if (windowManager != null && display != null) {
-            if (!jumpToPlayer && !"com.julun.huanque.core.ui.live.PlayerActivity".contains(
-                    "${CommonInit.getInstance().getCurrentActivity()?.localClassName}"
-                )
-            ) {
+
+            if (!jumpToPlayer && !ActivitiesManager.hasActivity("com.julun.huanque.core.ui.live.PlayerActivity")) {
                 videoView?.stop()
                 GlobalScope.launch {
                     withContext(Dispatchers.IO) {

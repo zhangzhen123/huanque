@@ -28,11 +28,13 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Agreement
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.manager.FloatingManager
@@ -69,6 +71,8 @@ class LoginActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_login
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        //切换账号的时候移除气泡缓存
+        SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
         initViewModel()
         initFastLogin()
     }
@@ -124,7 +128,7 @@ class LoginActivity : BaseActivity() {
             WebActivity.startWeb(this, Agreement.UserAgreement)
         }
         tv_register_privacy.onClickNew {
-            WebActivity.startWeb(this,Agreement.PrivacyAgreement)
+            WebActivity.startWeb(this, Agreement.PrivacyAgreement)
         }
     }
 
@@ -239,7 +243,6 @@ class LoginActivity : BaseActivity() {
         //设置动画
         uiConfigBuilder.setNeedStartAnim(true)
         uiConfigBuilder.setNeedCloseAnim(true)
-
 
 
         //设置登录按钮

@@ -365,7 +365,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         mPrivateConversationViewModel?.sendGiftSuccessData?.observe(this, Observer {
             if (it != null) {
-                mPrivateConversationViewModel?.startAnimationFlag?.value = true
+                mPrivateConversationViewModel?.startAnimationFlag?.value = it
                 //送礼成功.发送自定义消息
                 sendChatMessage(messageType = Message_Gift)
             }
@@ -408,8 +408,8 @@ class PrivateConversationActivity : BaseActivity() {
             view_place.layoutParams = placeParams
         })
         mPrivateConversationViewModel?.startAnimationFlag?.observe(this, Observer {
-            if (it == true) {
-                ToastUtils.show("此处假装在播放动画")
+            if (it != null) {
+
             }
         })
         mPrivateConversationViewModel?.bubbleData?.observe(this, Observer {
@@ -1036,7 +1036,8 @@ class PrivateConversationActivity : BaseActivity() {
                             if (!MessageUtils.getAnimationStarted(msg)) {
                                 //需要播放动画
                                 MessageUtils.setAnimationStarted(msg)
-                                mPrivateConversationViewModel?.startAnimationFlag?.value = true
+                                //todo
+//                                mPrivateConversationViewModel?.startAnimationFlag?.value = true
                             }
                         }
                     }
@@ -1227,7 +1228,8 @@ class PrivateConversationActivity : BaseActivity() {
                     if (!started) {
                         //播放动画
                         MessageUtils.setAnimationStarted(tempData)
-                        mPrivateConversationViewModel?.startAnimationFlag?.value = true
+                        //todo
+//                        mPrivateConversationViewModel?.startAnimationFlag?.value = true
                         mAdapter.notifyItemChanged(position)
                     }
                 }

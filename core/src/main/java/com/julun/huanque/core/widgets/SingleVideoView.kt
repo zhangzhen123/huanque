@@ -220,7 +220,11 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Bo
     }
 
     fun getStreamUrl(): String {
-        return mUrl
+        return if (useManager) {
+            AliplayerManager.mUrl
+        } else {
+            mUrl
+        }
     }
 
     /**
@@ -393,6 +397,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Bo
             mAliPlayer?.isAutoPlay = true
 //            ULog.i("PlayerLine 准备播放器")
             if (useManager) {
+                AliplayerManager.mUrl = mUrl
                 AliplayerManager.mRendered = false
             }
             mAliPlayer?.prepare()
