@@ -14,4 +14,7 @@ class IntimateDetailViewModel : BaseViewModel() {
 
     val basicBean: MutableLiveData<ConversationBasicBean> by lazy { MutableLiveData<ConversationBasicBean>() }
 
+    //对方ID
+    var friendId = 0L
+
 }

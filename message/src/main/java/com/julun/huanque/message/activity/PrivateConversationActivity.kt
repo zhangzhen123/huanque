@@ -184,6 +184,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         initBasic(intent)
         registerMessageEventProcessor()
+        mIntimateDetailViewModel?.friendId = mPrivateConversationViewModel?.targetIdData?.value ?: 0L
         mPrivateConversationViewModel?.fromPlayer = intent?.getBooleanExtra(ParamConstant.FROM, false) ?: false
         EventBus.getDefault().post(QueryUnreadCountEvent(mPrivateConversationViewModel?.fromPlayer ?: false))
     }
