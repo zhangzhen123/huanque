@@ -429,7 +429,6 @@ class PlayerViewModel : BaseViewModel() {
     val bgChange: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
     fun getLivRoomBase(programId: Long) {
         logger("getLivRoomBase")
-        UserHeartManager.setProgramId(programId)
         viewModelScope.launch {
             request({
                 val form = if (programId == 0L) {
@@ -503,6 +502,7 @@ class PlayerViewModel : BaseViewModel() {
 
     fun enterLivRoom(form: UserEnterRoomForm) {
         logger("enterLivRoom")
+        UserHeartManager.setProgramId(form.programId)
         viewModelScope.launch {
             request({
                 val result = liveService.enterLivRoom(form).dataConvert(intArrayOf(-1))
