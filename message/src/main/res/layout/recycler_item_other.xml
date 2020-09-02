@@ -88,7 +88,7 @@
             android:layout_marginRight="4dp"
             android:background="@drawable/bg_chat_other"
             android:gravity="center_vertical|left"
-            android:minWidth="60dp"
+            android:minWidth="40dp"
             android:minHeight="40dp"
             android:paddingLeft="15dp"
             android:paddingTop="10dp"

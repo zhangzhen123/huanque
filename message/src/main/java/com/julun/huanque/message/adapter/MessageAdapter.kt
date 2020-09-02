@@ -35,10 +35,7 @@ import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.WebpAnimatorListener
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.loadImage
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.message.R
@@ -430,6 +427,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 if (cb != null) {
                     tv_content.backgroundDrawable = GlobalUtils.getBubbleDrawable(cb, itemType == OTHER)
                     tv_content.textColor = Color.WHITE
+                    tv_content.minWidth = dp2px(60)
                 } else {
                     if (itemType == OTHER) {
                         tv_content.backgroundResource = R.drawable.bg_chat_other
@@ -437,6 +435,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                         tv_content.backgroundResource = R.drawable.bg_chat_mine
                     }
                     tv_content.textColor = GlobalUtils.getColor(R.color.black_333)
+                    tv_content.minWidth = dp2px(40)
                 }
 
 
