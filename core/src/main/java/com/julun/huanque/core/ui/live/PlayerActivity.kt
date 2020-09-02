@@ -461,10 +461,8 @@ class PlayerActivity : BaseActivity() {
                 cur_live_bg.hide()
             } else {
                 cur_live_bg.show()
-                if (currentLiveBgUrl?.isNotEmpty() != true) {
-                    currentLiveBgUrl = it.prePic
-                    liveViewManager.loadBlurImage(cur_live_bg, it.prePic)
-                }
+                currentLiveBgUrl = it.prePic
+                liveViewManager.loadBlurImage(cur_live_bg, it.prePic)
             }
 
 //            conversationListViewModel?.anchorData = it
@@ -767,42 +765,6 @@ class PlayerActivity : BaseActivity() {
         val followBean = FollowResultBean(follow = event.follow, userId = event.userId)
         viewModel.followStatusData.value = followBean.convertRtData()
     }
-
-    /**
-     * 统一的eventBus处理入口方法
-     */
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    fun eventBusAction(event: EventAction) {
-//        logger.info("eventBusAction:${event.code}")
-//        when (event.code) {
-//            EventBusCode.RefreshUserInfo -> {
-//                viewModel.refreshUserInfoData()
-//            }
-//            EventBusCode.SubscribeChange -> {
-//                val subStatus = event.data as? SubscribeEvent ?: return
-//                viewModel.attentionAble.value = true
-//                if (subStatus.isError) {
-//                    //订阅异常
-//                    return
-//                }
-//                if (subStatus.programId != viewModel.programId.toLong()) {
-//                    //不是该直播间的订阅通知
-//                    return
-//                }
-//                viewModel.modifySubscribe.value = subStatus.isSubscribed
-//            }
-//            EventBusCode.openPrivate -> {
-//                val data = event.data as? OpenPrivateChatRoomEvent ?: return
-//                while (ActivitiesManager.getCurrentActivity() !is PlayerActivity) {
-//                    ActivitiesManager.finishTopActivity()
-//                }
-//                viewModel.privateMessageView.value = PrivateMessageBean(data.userId, data.nickname)
-//            }
-//            EventBusCode.RefreshGift -> {
-//                liveViewManager.refreshGiftFragment()
-//            }
-//        }
-//    }
 
     private fun joinChatCallback(joined: Boolean?) {
         if (joined != null && joined) {
@@ -1606,6 +1568,7 @@ class PlayerActivity : BaseActivity() {
                 if (!liveViewManager.isHorizontal && !isAnchor) {
                     surface_view?.scrollEnable = true
                 }
+                cur_live_bg.hide()
                 if (data.programId == programId) {
                     val baseData: UserEnterRoomRespBase = viewModel.baseData.value ?: return
                     addPlayFragment(true, LiveBean().apply {
@@ -1644,9 +1607,10 @@ class PlayerActivity : BaseActivity() {
                 } else {
                     //收到停播消息，设置上次开播时间为刚刚
                     showOriView()
-                    mVideoViewModel?.logout?.postValue(true)
+                    mVideoViewModel.logout.postValue(true)
                     viewModel.baseData.value?.lastShowTimeDiffText = "刚刚"
 //                    surface_view?.scrollEnable = false
+                    cur_live_bg.show()
                     addPlayFragment(false)
                 }
             }

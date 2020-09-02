@@ -17,7 +17,7 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <com.julun.huanque.common.widgets.refreshlayout.VpSwipeRefreshLayout
         android:id="@+id/mRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,7 +29,7 @@
             android:id="@+id/authorList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </com.julun.huanque.common.widgets.refreshlayout.VpSwipeRefreshLayout>
 
 
     <com.julun.huanque.common.widgets.statepage.StatePageView
