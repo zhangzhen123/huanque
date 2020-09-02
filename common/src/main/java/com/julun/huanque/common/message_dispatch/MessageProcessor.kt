@@ -1239,6 +1239,14 @@ object MessageProcessor {
         override fun getEventType() = EventMessageType.AnonyVoiceCancel
     }
 
+    /**
+     * 刷新私信气泡设置消息
+     */
+    interface RefreshUserSettingProcessor : EventMessageProcessor<VoidResult> {
+        override fun getEventType() = EventMessageType.RefreshUserSetting
+        override fun isGlobal() = true
+    }
+
 
 }
 
@@ -1600,7 +1608,10 @@ enum class EventMessageType(val klass: Class<*>) {
     AnonyVoiceInvite(AnonyVoiceInviteBean::class.java),
 
     //匿名语音邀请  取消消息
-    AnonyVoiceCancel(AnonyVoiceCancelBean::class.java)
+    AnonyVoiceCancel(AnonyVoiceCancelBean::class.java),
+
+    //刷新气泡设置消息
+    RefreshUserSetting(VoidResult::class.java)
 //inviteUserId
     //禁言消息
 //    MuteUser(OperatorMessageBean::class.java),

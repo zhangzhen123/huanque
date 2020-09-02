@@ -1855,12 +1855,14 @@ class PlayerActivity : BaseActivity() {
         initListener()
         chat_layout.onTouch { _, _ ->
             mHelper?.hookSystemBackByPanelSwitcher()
+            ll_input.hide()
             false
         }
         publicMessageView.mEventListener = object : EventListener {
             override fun onDispatch(ev: MotionEvent?) {
                 if (ev?.action == MotionEvent.ACTION_DOWN) {
                     mHelper?.hookSystemBackByPanelSwitcher()
+                    ll_input.hide()
                 }
             }
         }
