@@ -16,7 +16,6 @@ import com.julun.huanque.common.net.interceptors.HeaderInfoHelper
 import com.julun.huanque.common.suger.logger
 import com.julun.rnlib.reactpackage.*
 import com.luck.picture.lib.config.PictureConfig
-import com.reactnativecommunity.viewpager.RNCViewPagerPackage
 import com.reactnativecommunity.webview.RNCWebViewPackage
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage
 import com.swmansion.reanimated.ReanimatedPackage
@@ -62,7 +61,6 @@ object RnManager {
                 .addPackage(RNCMaskedViewPackage())
                 .addPackage(SvgPackage())
                 .addPackage(ReanimatedPackage())
-                .addPackage(RNCViewPagerPackage())
                 .addPackage(ReactVideoPackage())
                 .addPackage(RNCWebViewPackage())
                 .addPackage(BannerReactPackage())
