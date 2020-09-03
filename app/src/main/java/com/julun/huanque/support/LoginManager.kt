@@ -92,9 +92,8 @@ object LoginManager {
             isLogging = true
             val deviceID = SmAntiFraud.getDeviceId() ?: ""
             val result = userService.weiXinLogin(WeiXinForm(code, BuildConfig.WX_APP_ID, deviceID)).dataConvert()
-            loginSuccess(result, WECHAT_LOGIN)
-            // 当前连接着融云，先退出，因为token变了，需要退出重连
-            processRongYun(result, success)
+            loginSuccess(result, WECHAT_LOGIN, success)
+
         } catch (e: Exception) {
             e.printStackTrace()
             var message = "${e.message}"
@@ -122,9 +121,8 @@ object LoginManager {
             val result =
                 userService.mobileLogin(MobileLoginForm(phoneNum, code, shuMeiDeviceId = SmAntiFraud.getDeviceId() ?: ""))
                     .dataConvert()
-            loginSuccess(result, MOBILE_LOGIN)
-            // 当前连接着融云，先退出，因为token变了，需要退出重连
-            processRongYun(result, success)
+            loginSuccess(result, MOBILE_LOGIN, success)
+
         } catch (e: Exception) {
             error?.invoke(e)
         } finally {
@@ -143,9 +141,8 @@ object LoginManager {
         try {
             isLogging = true
             val result = userService.mobileQuick(MobileQuickForm(jToken, SmAntiFraud.getDeviceId() ?: "")).dataConvert()
-            loginSuccess(result, MOBILE_FAST_LOGIN)
-            // 当前连接着融云，先退出，因为token变了，需要退出重连
-            processRongYun(result, success)
+            loginSuccess(result, MOBILE_FAST_LOGIN, success)
+
         } catch (e: Exception) {
             error?.invoke(e)
         } finally {
@@ -173,17 +170,27 @@ object LoginManager {
     }
 
     /**
-     * 登录成功
+     * 登录成功 可能没有注册完成
      */
-    private fun loginSuccess(it: Session, type: Int = 0) {
-        SessionUtils.setSession(it)
-        //通知登录成功
-        if (it.regComplete) {
+    private fun loginSuccess(
+        session: Session,
+        type: Int = 0,
+        success: (Session) -> Unit
+    ) {
+        SessionUtils.setSession(session)
+        //如果登录的账号是注册完整的 就执行完整的登录后续操作（心跳，融云等等）
+        if (session.regComplete) {
             (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
-                .navigation() as? AppCommonService)?.loginSuccess(it)
+                .navigation() as? AppCommonService)?.loginSuccess(session)
             EventBus.getDefault().post(LoginEvent(true))
             LoginStatusUtils.loginSuccess()
+            UserHeartManager.startOnline()
+            processRongYun(session, success)
+        } else {
+            //如果没有注册完成标志 也通知回调 让登录页做后续操作
+            success(session)
         }
+
 
     }
 
@@ -198,6 +205,7 @@ object LoginManager {
         LoginStatusUtils.loginSuccess()
         //连接融云
         RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
+        UserHeartManager.startOnline()
     }
 
     fun doLoginOut(success: () -> Unit, error: NError? = null) {
@@ -207,8 +215,7 @@ object LoginManager {
                 withContext(Dispatchers.Main) {
                     loginOutSuccess(success, error)
                 }
-                LoginStatusUtils.logout()
-                EventBus.getDefault().postSticky(LoginEvent(false))
+
             }.onFailure {
                 it.printStackTrace()
                 withContext(Dispatchers.Main) {
@@ -232,6 +239,8 @@ object LoginManager {
             else {
                 success()
             }
+            LoginStatusUtils.logout()
+            EventBus.getDefault().post(LoginEvent(false))
         } catch (e: Exception) {
             error?.invoke(e)
         }
