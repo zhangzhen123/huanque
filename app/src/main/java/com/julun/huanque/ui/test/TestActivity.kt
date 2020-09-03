@@ -112,7 +112,7 @@ class TestActivity : BaseActivity() {
             finish()
         }
         goto_photo.onClickNew {
-            goToPictureSelectPager(1, PictureConfig.TYPE_VIDEO)
+            goToPictureSelectPager(1, PictureConfig.TYPE_IMAGE)
         }
         set_push.onClickNew {
             val userId = SessionUtils.getUserId().toString()
