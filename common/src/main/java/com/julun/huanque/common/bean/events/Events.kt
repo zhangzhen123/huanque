@@ -159,3 +159,9 @@ class ImagePositionEvent(var position: Int)
  * 关闭悬浮窗事件
  */
 class HideFloatingEvent() : Serializable
+
+/**
+ * 收到封禁通知关闭直播间事件
+ */
+class BannedAndClosePlayer() : Serializable
+

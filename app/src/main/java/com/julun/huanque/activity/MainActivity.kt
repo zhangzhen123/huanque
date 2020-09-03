@@ -19,6 +19,7 @@ import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.AnonyVoiceInviteBean
 import com.julun.huanque.common.bean.beans.IntimateBean
 import com.julun.huanque.common.bean.beans.NetCallReceiveBean
+import com.julun.huanque.common.bean.beans.OperatorMessageBean
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.*
@@ -486,7 +487,35 @@ class MainActivity : BaseActivity() {
             override fun process(data: VoidResult) {
                 mMainViewModel.getSetting()
             }
-
+        })
+        //封禁账户消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserProcessor {
+            override fun process(data: OperatorMessageBean) {
+                ToastUtils.show("您已被封禁账号")
+                FloatingManager.hideFloatingView()
+                EventBus.getDefault().post(BannedAndClosePlayer())
+                EventBus.getDefault().post(LoginOutEvent())
+            }
+        })
+        //直播封禁（用户不允许进入任何直播间）
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserLivingProcessor {
+            override fun process(data: OperatorMessageBean) {
+                ToastUtils.show("您已无法访问直播功能")
+                EventBus.getDefault().post(BannedAndClosePlayer())
+                FloatingManager.hideFloatingView()
+            }
+        })
+        //踢人消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.KickUserProcessor {
+            override fun process(data: OperatorMessageBean) {
+                ToastUtils.show("您已被踢出直播间")
+                EventBus.getDefault().post(BannedAndClosePlayer())
+                val programId = SharedPreferencesUtils.getLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
+                if(programId == data.programId){
+                    //如果悬浮窗正在播放的是被踢出的直播间就处理
+                    FloatingManager.hideFloatingView()
+                }
+            }
         })
     }
 
