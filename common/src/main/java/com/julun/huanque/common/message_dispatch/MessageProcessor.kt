@@ -1165,6 +1165,7 @@ object MessageProcessor {
      */
     interface KickUserProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.KickUser
+        override fun isGlobal() = true
     }
 //    /**
 //     * 禁言消息
@@ -1177,6 +1178,7 @@ object MessageProcessor {
      */
     interface BanUserProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.BanUser
+        override fun isGlobal() = true
     }
 
     /**
@@ -1184,6 +1186,7 @@ object MessageProcessor {
      */
     interface BanUserLivingProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.BanUserLiving
+        override fun isGlobal() = true
     }
 
     //直播间热度变化
