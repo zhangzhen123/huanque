@@ -247,21 +247,21 @@ object GlobalUtils {
         when (conent) {
             is ImageMessage -> {
                 //图片消息
-                extra = conent.extra
+                extra = conent.extra ?: ""
             }
 
             is CustomMessage -> {
                 //自定义消息
-                extra = conent.extra
+                extra = conent.extra ?: ""
             }
 
             is CustomSimulateMessage -> {
                 //模拟消息
-                extra = conent.extra
+                extra = conent.extra ?: ""
             }
             is TextMessage -> {
                 //文本消息
-                extra = conent.extra
+                extra = conent.extra ?: ""
             }
         }
         if (extra.isEmpty()) {
@@ -534,7 +534,7 @@ object GlobalUtils {
      * 获取气泡的Drawable
      * @param left 是否是居右显示
      */
-    fun getBubbleDrawable(bubble: ChatBubble, left: Boolean) : Drawable {
+    fun getBubbleDrawable(bubble: ChatBubble, left: Boolean): Drawable {
         val borderColor = getColorArray(bubble.bdc)
         val borderDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, borderColor)
         borderDrawable.shape = GradientDrawable.RECTANGLE
@@ -549,9 +549,9 @@ object GlobalUtils {
         val solidColor = getColorArray(bubble.bgc)
         val solidDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, solidColor)
         solidDrawable.shape = GradientDrawable.RECTANGLE
-        solidDrawable.setStroke(dp2px(1),Color.TRANSPARENT)
+        solidDrawable.setStroke(dp2px(1), Color.TRANSPARENT)
         solidDrawable.cornerRadii = floatArray
-        val drawableArray = arrayOf(borderDrawable,solidDrawable)
+        val drawableArray = arrayOf(borderDrawable, solidDrawable)
         return LayerDrawable(drawableArray)
     }
 

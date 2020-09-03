@@ -300,7 +300,12 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     sdv_mark.hide()
                     tvContent.setPadding(0, 0, 0, 0)
                 } else {
-                    sdv_mark.loadImage(user?.chatBubble?.crt ?: "", 72f, 32f)
+                    if (user?.chatBubble == null) {
+                        sdv_mark.hide()
+                    } else {
+                        sdv_mark.show()
+                        sdv_mark.loadImage(user?.chatBubble?.crt ?: "", 72f, 32f)
+                    }
                     tvContent.setPadding(dp2px(15), dp2px(10), dp2px(15), dp2px(10))
                 }
                 tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content, true)
@@ -505,7 +510,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         try {
             val chatGift = JsonUtil.deserializeAsObject<ChatGift>(str, ChatGift::class.java)
             ImageUtils.loadImage(helper.getView(R.id.sdv_gift_pic), chatGift.selPic, 50f, 50f)
-            helper.setText(R.id.tv_gift_content, "送你一个${chatGift.giftName}")
+            helper.setText(R.id.tv_gift_content, "送你一${chatGift.giftUnit}${chatGift.giftName}")
             if (started) {
                 helper.setText(R.id.tv_detail, "${chatGift.beans}鹊币")
             } else {

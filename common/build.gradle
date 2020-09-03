@@ -164,7 +164,8 @@ dependencies {
     api rootProject.ext.dependencies["NINEOLDANDROIDS"]
     //MMKV
     api rootProject.ext.dependencies["MMKV"]
-   /* 阿里播放器*/
+    /* 阿里播放器*/
     api rootProject.ext.dependencies["ALIYUN_PLAYER"]
     api rootProject.ext.dependencies["ALI_VCCONAN"]
+    api 'com.plattysoft.leonids:LeonidsLib:1.3.2'
 }

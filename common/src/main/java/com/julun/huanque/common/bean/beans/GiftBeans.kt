@@ -202,6 +202,8 @@ data class ChatGift(
     var specialParams: SpecialParams = SpecialParams(),
     //动画类型
     var specialType: String = "",
+    //礼物单位
+    var giftUnit: String = "",
     //本地字段 送礼数量，发送自定义消息场景下使用
     var giftCount: Int = 1
 ) {

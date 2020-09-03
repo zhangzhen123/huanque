@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,10 +29,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.ChatUser
-import com.julun.huanque.common.bean.beans.ChatBubble
-import com.julun.huanque.common.bean.beans.IntimateBean
-import com.julun.huanque.common.bean.beans.SendRoomInfo
-import com.julun.huanque.common.bean.beans.TargetUserObj
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
 import com.julun.huanque.common.bean.events.QueryUnreadCountEvent
 import com.julun.huanque.common.bean.events.UnreadCountEvent
@@ -151,6 +149,9 @@ class PrivateConversationActivity : BaseActivity() {
 
     private var mChatSendGiftFragment: ChatSendGiftFragment? = null
 
+    //动画使用的Fragment
+    private var mAnimationFragment: PrivateAnimationFragment? = null
+
     //余额不足弹窗
     private var mBalanceNotFoundFragment: BaseDialogFragment? = null
 
@@ -173,6 +174,13 @@ class PrivateConversationActivity : BaseActivity() {
     override fun isRegisterEventBus() = true
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        val barHeight = StatusBarUtil.getStatusBarHeight(this)
+        val params = header_view.layoutParams as? ConstraintLayout.LayoutParams
+        params?.topMargin = barHeight
+        header_view.layoutParams = params
+
+        StatusBarUtil.setTransparent(this)
+
         val bgColor = GlobalUtils.getColor(R.color.color_gray_three)
         StatusBarUtil.setColor(this, bgColor)
         header_view.backgroundColor = bgColor
@@ -409,7 +417,8 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.startAnimationFlag?.observe(this, Observer {
             if (it != null) {
-
+                mAnimationFragment = mAnimationFragment ?: PrivateAnimationFragment()
+                mAnimationFragment?.show(supportFragmentManager, "PrivateAnimationFragment")
             }
         })
         mPrivateConversationViewModel?.bubbleData?.observe(this, Observer {
@@ -1036,8 +1045,15 @@ class PrivateConversationActivity : BaseActivity() {
                             if (!MessageUtils.getAnimationStarted(msg)) {
                                 //需要播放动画
                                 MessageUtils.setAnimationStarted(msg)
-                                //todo
-//                                mPrivateConversationViewModel?.startAnimationFlag?.value = true
+                                try {
+                                    val str = content.context
+                                    if (str.isNotEmpty()) {
+                                        val chatGift = JsonUtil.deserializeAsObject<ChatGift>(str, ChatGift::class.java)
+                                        mPrivateConversationViewModel?.startAnimationFlag?.value = chatGift
+                                    }
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
                             }
                         }
                     }
@@ -1228,8 +1244,19 @@ class PrivateConversationActivity : BaseActivity() {
                     if (!started) {
                         //播放动画
                         MessageUtils.setAnimationStarted(tempData)
-                        //todo
-//                        mPrivateConversationViewModel?.startAnimationFlag?.value = true
+                        if (content is CustomMessage) {
+                            if (content.type == MessageCustomBeanType.Gift) {
+                                try {
+                                    val str = content.context
+                                    if (str.isNotEmpty()) {
+                                        val chatGift = JsonUtil.deserializeAsObject<ChatGift>(str, ChatGift::class.java)
+                                        mPrivateConversationViewModel?.startAnimationFlag?.value = chatGift
+                                    }
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            }
+                        }
                         mAdapter.notifyItemChanged(position)
                     }
                 }

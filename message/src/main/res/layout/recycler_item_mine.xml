@@ -117,7 +117,7 @@
 
     <View
         android:id="@+id/view_bg_gift"
-        android:layout_width="215dp"
+        android:layout_width="225dp"
         android:layout_height="70dp"
         android:layout_marginRight="10dp"
         android:background="@drawable/bg_gift_pic"
@@ -129,7 +129,7 @@
         android:id="@+id/sdv_gift_pic"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="10dp"
         app:layout_constraintBottom_toBottomOf="@id/view_bg_gift"
         app:layout_constraintLeft_toLeftOf="@id/view_bg_gift"
         app:layout_constraintTop_toTopOf="@id/view_bg_gift" />
