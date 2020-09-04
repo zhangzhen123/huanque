@@ -85,7 +85,7 @@
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="12sp"
-        tools:text="万"
+        android:text="万"
         app:layout_constraintBottom_toBottomOf="@+id/anchorPicture"
         android:layout_marginEnd="@dimen/dimen_6"
         app:layout_constraintRight_toRightOf="parent" />
