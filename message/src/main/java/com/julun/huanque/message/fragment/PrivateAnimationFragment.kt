@@ -1,14 +1,18 @@
 package com.julun.huanque.message.fragment
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.DialogInterface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.BounceInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -111,6 +115,7 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
                 tv_gift_name.text = gift.giftName
 
                 mPrivateAnimationViewModel.startPlayer()
+                startScaleAnimaiton(sdv_gift_icon)
             }
             ChatGift.Screen -> {
                 //飘屏类型
@@ -152,7 +157,7 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
 
                 sdv_gift_icon.loadImage(gift.pic, 80f, 80f)
                 tv_gift_name.text = gift.giftName
-
+                startScaleAnimaiton(sdv_gift_icon)
                 //两秒以后关闭
                 Observable.timer(2, TimeUnit.SECONDS)
                     .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
@@ -161,6 +166,34 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
             }
         }
     }
+
+    private var mAnimator: AnimatorSet? = null
+
+    /**
+     * 开始缩放动画
+     */
+    private fun startScaleAnimaiton(targetView: View) {
+        mAnimator?.cancel()
+        mAnimator = AnimatorSet()
+        val xScaleAnimation = ObjectAnimator.ofFloat(targetView, "scaleX", 0.9f, 1.3f)
+        val yScaleAnimation = ObjectAnimator.ofFloat(targetView, "scaleY", 0.9f, 1.3f)
+
+        xScaleAnimation.apply {
+            duration = 750
+            interpolator = LinearInterpolator()
+            repeatMode = ValueAnimator.REVERSE
+            repeatCount = ValueAnimator.INFINITE
+        }
+        yScaleAnimation.apply {
+            duration = 750
+            interpolator = LinearInterpolator()
+            repeatMode = ValueAnimator.REVERSE
+            repeatCount = ValueAnimator.INFINITE
+        }
+        mAnimator?.playTogether(xScaleAnimation, yScaleAnimation)
+        mAnimator?.start()
+    }
+
 
     /**
      * 获取随机图片
@@ -188,7 +221,8 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
         val iv = SimpleDraweeView(context).apply {
             setImageURI(StringHelper.getOssImgUrl(url))
         }
-        val tempX = ScreenUtils.getScreenWidth() * (0.8 * Math.random() + 0.1)
+//        val tempX = ScreenUtils.getScreenWidth() * (0.8 * Math.random() + 0.1)
+        val tempX = (ScreenUtils.getScreenWidth() - dp2px(40)) * Math.random()
         val params = FrameLayout.LayoutParams(dp2px(40), dp2px(40))
         con_root.addView(iv, params)
         iv.x = tempX.toFloat()
@@ -209,7 +243,6 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
             override fun onAnimationEnd(animation: Animator?) {
                 con_root?.removeView(iv)
                 removeCount++
-                logger.info("Message removeCount = $removeCount")
                 if (removeCount == total) {
                     //动画播放完成
                     mPrivateAnimationViewModel.animationEndFlag.value = true
@@ -253,6 +286,7 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
         sdv_gift.hide()
         tv_gift_name.hide()
         mPrivateAnimationViewModel.stopPlayer()
+        mAnimator?.cancel()
     }
 
     override fun onKey(dialog: DialogInterface?, keyCode: Int, event: KeyEvent?): Boolean {

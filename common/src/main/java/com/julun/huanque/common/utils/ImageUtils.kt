@@ -558,7 +558,7 @@ object ImageUtils {
                             LoopCountModifyingBackend(animatable.animationBackend, count)
                         animatorListener?.let { l ->
                             l.onStart()
-                            val dur = animatable.loopDurationMs
+                            val dur = animatable.loopDurationMs * count
                             Observable.timer(dur, TimeUnit.MILLISECONDS)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({ l.onEnd() }, { it.printStackTrace() })

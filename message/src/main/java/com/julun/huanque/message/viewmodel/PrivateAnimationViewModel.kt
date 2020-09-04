@@ -74,14 +74,13 @@ class PrivateAnimationViewModel : BaseViewModel() {
 
         mAliPlayer.setOnCompletionListener {
             //播放完成事件
-            logger("Message 音效播放完成")
-            logger("Message 音效播放完成 duration = ${System.currentTimeMillis() - voiceStartTime}")
+            logger("Message 音效播放完成 duration = ${System.currentTimeMillis() - voiceStartTime} time = ${System.currentTimeMillis()}")
             voiceCompleteFlag.postValue(true)
         }
 
         mAliPlayer.setOnPreparedListener {
             //准备成功事件
-            logger("Message 音效准备成功事件")
+            logger("Message 音效准备成功事件 time = ${System.currentTimeMillis()}")
             voicePreparedFlag = true
             preparedFlag.value = judgePrepared()
         }
@@ -91,6 +90,7 @@ class PrivateAnimationViewModel : BaseViewModel() {
      * 准备资源
      */
     fun prepareResource(gift: ChatGift) {
+        logger("Message 开始准备资源")
         voicePreparedFlag = false
         bitmapPreparedFlag = false
         val specialParams = gift.specialParams
@@ -149,6 +149,7 @@ class PrivateAnimationViewModel : BaseViewModel() {
     private fun prepareAnimation(picUrl: String) {
         ImageUtils.requestImageForBitmap(picUrl, {
             //图片下载成功
+            logger("Message 图片下载成功")
             bitmapPreparedFlag = true
             preparedFlag.postValue(judgePrepared())
         })
@@ -161,6 +162,7 @@ class PrivateAnimationViewModel : BaseViewModel() {
     fun prepareVoice(url: String) {
         val urlSource = UrlSource()
         urlSource.uri = url
+        mAliPlayer?.isAutoPlay = false
         mAliPlayer?.setDataSource(urlSource)
         mAliPlayer?.prepare()
     }

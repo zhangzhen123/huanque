@@ -291,11 +291,11 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     }
                 }
                 showMessageView(helper, TEXT_MESSAGE, helper.itemViewType, user?.chatBubble)
-                //是否都是表情
-                val allEmoji = EmojiSpanBuilder.allEmoji(context, content.content)
+                //是否显示大表情
+                val bigEmoji = EmojiSpanBuilder.allEmoji(context, content.content)
                 val sdv_mark = helper.getView<SimpleDraweeView>(R.id.sdv_mark)
 
-                if (allEmoji) {
+                if (bigEmoji) {
                     tvContent.background = null
                     sdv_mark.hide()
                     tvContent.setPadding(0, 0, 0, 0)
@@ -308,7 +308,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     }
                     tvContent.setPadding(dp2px(15), dp2px(10), dp2px(15), dp2px(10))
                 }
-                tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content, true)
+                tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content, bigEmoji)
 //                    EmojiUtil.message2emoji(content.content)
                 //判断是否显示文本鹊币
 //                if (helper.itemViewType == OTHER) {
@@ -770,7 +770,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             ImageUtils.showAnimator(
                 view,
                 "asset://${CommonInit.getInstance().getApp().assets}/webp/shaizi.webp",
-                16, object : WebpAnimatorListener {
+                3, object : WebpAnimatorListener {
                     override fun onStart() {
                     }
 
