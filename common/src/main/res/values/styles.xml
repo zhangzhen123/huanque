@@ -311,9 +311,9 @@
     <style name="picture.me.style_single" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <!--标题栏背景色-->
-        <item name="colorPrimary">@color/percent90translucentBlack</item>
+        <item name="colorPrimary">@color/black</item>
         <!--状态栏背景色-->
-        <item name="colorPrimaryDark">@color/percent90translucentBlack</item>
+        <item name="colorPrimaryDark">@color/black</item>
         <!--是否改变图片列表界面状态栏字体颜色为黑色-->
         <item name="picture.statusFontColor">false</item>
         <!--返回键图标-->

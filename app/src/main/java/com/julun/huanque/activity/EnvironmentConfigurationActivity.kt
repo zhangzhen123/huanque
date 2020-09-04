@@ -34,7 +34,7 @@ class EnvironmentConfigurationActivity : BaseActivity() {
 
     private val products by lazy {
         arrayListOf<String>(
-            "https://api.51lm.tv/"
+            "https://api.ihuanque.com/"
         )
     }
     private val developers by lazy {

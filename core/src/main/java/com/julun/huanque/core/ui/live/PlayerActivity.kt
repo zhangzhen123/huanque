@@ -55,11 +55,11 @@ import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
+import com.julun.huanque.core.ui.live.fragment.LivePlayerFragment
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
 import com.julun.huanque.core.ui.live.manager.PlayerViewManager
 import com.julun.huanque.core.viewmodel.*
 import com.julun.huanque.core.widgets.live.slide.SlideViewContainer
-import com.julun.huanque.core.ui.live.fragment.LivePlayerFragment
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -176,6 +176,9 @@ class PlayerActivity : BaseActivity() {
     }
 
     private var isAnchor = false//是不是主播进入
+
+    //是否被封禁了
+    private var isBanned: Boolean = false
 
     companion object {
         //主播开播之前数据
@@ -448,6 +451,8 @@ class PlayerActivity : BaseActivity() {
 
         viewModel.baseData.observe(this, Observer {
             it ?: return@Observer
+            //重置封禁开关
+            isBanned = false
             //basic接口新增不传programId时 随机返回一个新的programId 这里更新programId
             programId = it.programId
             liveViewManager.resetSlideViewLocation()
@@ -614,7 +619,8 @@ class PlayerActivity : BaseActivity() {
      */
     private fun openPrivateConversation() {
         lifecycleScope.launchWhenResumed {
-            val userInfo = playerMessageViewModel.privateConversationData.value ?: return@launchWhenResumed
+            val userInfo =
+                playerMessageViewModel.privateConversationData.value ?: return@launchWhenResumed
             val bundle = Bundle()
             bundle.putLong(ParamConstant.TARGET_USER_ID, userInfo.userId)
             bundle.putString(ParamConstant.NICKNAME, userInfo.nickname)
@@ -1702,34 +1708,12 @@ class PlayerActivity : BaseActivity() {
 //
 //        })
 
-        //踢人消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.KickUserProcessor {
-            override fun process(data: OperatorMessageBean) {
-                ToastUtils.show("${data.nickname}把${data.targetNickname}踢出直播间${data.time}")
-                finish()
-            }
-        })
 //        //禁言消息
 //        MessageProcessor.registerEventProcessor(object : MessageProcessor.MuteUserProcessor {
 //            override fun process(data: OperatorMessageBean) {
 //                ToastUtils.show("${data.nickname}给了${data.targetNickname}一个${data.time}禁言套餐")
 //            }
 //        })
-        //封禁账户消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserProcessor {
-            override fun process(data: OperatorMessageBean) {
-                ToastUtils.show("${data.nickname}把${data.targetNickname}账号封禁了${data.time}")
-                EventBus.getDefault().post(LoginOutEvent())
-                finish()
-            }
-        })
-        //直播封禁（用户不允许进入任何直播间）
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserLivingProcessor {
-            override fun process(data: OperatorMessageBean) {
-                ToastUtils.show("${data.nickname}禁止${data.targetNickname}${data.time}进入任何直播间")
-                finish()
-            }
-        })
     }
 
 
@@ -1905,6 +1889,21 @@ class PlayerActivity : BaseActivity() {
      * 关闭界面时增加判断是会主页还是直接关闭
      */
     override fun finish() {
+        //封禁状态直接关闭直播间
+        if (isBanned) {
+            if (isAnchor) {
+                stopPublish()
+            } else {
+                viewModel.leave(programId)
+                if (goHome) {
+                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
+                }
+                AliplayerManager.stop()
+                viewModel.leaveProgram()
+            }
+            super.finish()
+            return
+        }
         if (isAnchor) {
             //主播
             if (!closable && joinViewModel.joinData.value == true) {
@@ -2223,8 +2222,21 @@ class PlayerActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun queryUnreadMsgCount(event: QueryUnreadCountEvent) {
         if (event.player) {
-            EventBus.getDefault().postSticky(UnreadCountEvent(playerMessageViewModel.unreadCountInPlayer.value ?: 0, true))
+            EventBus.getDefault().postSticky(
+                UnreadCountEvent(
+                    playerMessageViewModel.unreadCountInPlayer.value ?: 0,
+                    true
+                )
+            )
         }
     }
 
+    /**
+     * 收到封禁通知关闭直播间
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun bannedAndCosePlayer(event: BannedAndClosePlayer) {
+        isBanned = true
+        finish()
+    }
 }
