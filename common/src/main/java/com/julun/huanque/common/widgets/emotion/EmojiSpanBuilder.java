@@ -24,17 +24,20 @@ public class EmojiSpanBuilder {
             "\\[([\u4e00-\u9fa5\\w])+\\]|[\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]");
 
     /**
-     * 是否都是表情
+     * 是否显示大表情
      * @return
      */
     public static boolean allEmoji(Context context, String text) {
         Matcher matcherEmotion = sPatternEmotion.matcher(text);
         int keyLengh = 0;
+
+        int count = 0;
         while (matcherEmotion.find()) {
+            count++;
             String key = matcherEmotion.group();
             keyLengh += key.length();
         }
-        if (keyLengh == text.length()) {
+        if (count <= 3 && keyLengh == text.length()) {
             return true;
         } else {
             return false;
@@ -48,18 +51,16 @@ public class EmojiSpanBuilder {
     /**
      *
      * @param context
-     * @param text
-     * @param allEmojiBig 都是表情放大
+     * @param big 显示大表情
      * @return
      */
-    public static Spannable buildEmotionSpannable(Context context, String text, Boolean allEmojiBig) {
+    public static Spannable buildEmotionSpannable(Context context, String text, Boolean big) {
         int border = DensityHelper.dp2px(20f);
-        boolean all = allEmoji(context, text);
-        if (allEmojiBig && all) {
+        if (big) {
             border = DensityHelper.dp2px(44f);
         }
         String showContent = text;
-        if (all) {
+        if (big) {
             // 都是表情，在表情之间增加一个空格符(增加间距)
             StringBuilder sBuilder = new StringBuilder();
             Matcher matcherEmotion = sPatternEmotion.matcher(text);

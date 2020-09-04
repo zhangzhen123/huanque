@@ -37,7 +37,7 @@ object AliplayerManager {
      * 初始化播放器
      */
     private fun initPlayer() {
-        mAliPlayer.enableLog(false)
+//        mAliPlayer.enableLog(false)
         mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL
         mAliPlayer.setOnCompletionListener {
             //播放完成事件
