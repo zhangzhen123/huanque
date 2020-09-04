@@ -57,7 +57,7 @@ public class EmojiSpanBuilder {
     public static Spannable buildEmotionSpannable(Context context, String text, Boolean big) {
         int border = DensityHelper.dp2px(20f);
         if (big) {
-            border = DensityHelper.dp2px(44f);
+            border = DensityHelper.dp2px(46f);
         }
         String showContent = text;
         if (big) {

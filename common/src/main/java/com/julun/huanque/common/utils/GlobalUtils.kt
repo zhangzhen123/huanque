@@ -539,9 +539,9 @@ object GlobalUtils {
         val borderDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, borderColor)
         borderDrawable.shape = GradientDrawable.RECTANGLE
         val floatArray = if (left) {
-            floatArrayOf(dp2pxf(2), dp2pxf(2), dp2pxf(20), dp2pxf(20), dp2pxf(20), dp2pxf(20), dp2pxf(20), dp2pxf(20))
+            floatArrayOf(dp2pxf(2), dp2pxf(2), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23))
         } else {
-            floatArrayOf(dp2pxf(20), dp2pxf(20), dp2pxf(2), dp2pxf(2), dp2pxf(20), dp2pxf(20), dp2pxf(20), dp2pxf(20))
+            floatArrayOf(dp2pxf(23), dp2pxf(23), dp2pxf(2), dp2pxf(2), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23))
         }
         borderDrawable.cornerRadii = floatArray
 

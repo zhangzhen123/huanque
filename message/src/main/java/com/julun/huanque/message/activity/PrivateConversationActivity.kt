@@ -583,12 +583,12 @@ class PrivateConversationActivity : BaseActivity() {
             }
         }
 
-        tv_send_exactly.onClickNew {
-            //小鹊助手，直接发送
-            showXiaoQueView(false)
-            sendChatMessage(getActiveWord(), "", "")
-        }
-        tv_edit.onClickNew {
+//        tv_send_exactly.onClickNew {
+//            //小鹊助手，直接发送
+//            showXiaoQueView(false)
+//            sendChatMessage(getActiveWord(), "", "")
+//        }
+        view_xiaoque.onClickNew {
             //小鹊助手，编辑
             showXiaoQueView(false)
             val text = getActiveWord()
@@ -1479,21 +1479,15 @@ class PrivateConversationActivity : BaseActivity() {
         if (show) {
             //显示助手文案视图
             view_xiaoque.show()
-            tv_send_exactly.show()
+            iv_arrow.show()
             iv_que_close.show()
-            tv_edit.show()
-            iv_eye.show()
             tv_active_content.show()
-            view_xiaoque_top.show()
         } else {
             //隐藏助手文案视图
             view_xiaoque.hide()
-            tv_send_exactly.hide()
+            iv_arrow.hide()
             iv_que_close.hide()
-            tv_edit.hide()
-            iv_eye.hide()
             tv_active_content.hide()
-            view_xiaoque_top.hide()
         }
 
     }
