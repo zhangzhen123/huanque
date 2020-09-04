@@ -1875,6 +1875,7 @@ class PlayerActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         FloatingManager.hideFloatingView()
+        AliplayerManager.soundOn()
 
         //处理支付刷新
 //        if (refreshPay) {

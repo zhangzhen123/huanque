@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -54,6 +55,7 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.fragment.*
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
+import com.julun.huanque.message.viewmodel.PrivateAnimationViewModel
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -71,7 +73,6 @@ import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.act_private_chat.*
 import kotlinx.android.synthetic.main.act_private_chat.tv_unread_count
-import kotlinx.android.synthetic.main.item_header_conversions.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -79,9 +80,7 @@ import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.px2dip
-import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import java.util.concurrent.TimeUnit
-import kotlin.math.log
 
 
 /**
@@ -141,6 +140,9 @@ class PrivateConversationActivity : BaseActivity() {
 
     private var mIntimateDetailViewModel: IntimateDetailViewModel? = null
 
+    //动画使用的ViewModel
+    private val mPrivateAnimationViewModel: PrivateAnimationViewModel by viewModels()
+
     private var mHelper: PanelSwitchHelper? = null
 
     private val mAdapter = MessageAdapter()
@@ -174,12 +176,12 @@ class PrivateConversationActivity : BaseActivity() {
     override fun isRegisterEventBus() = true
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        val barHeight = StatusBarUtil.getStatusBarHeight(this)
-        val params = header_view.layoutParams as? ConstraintLayout.LayoutParams
-        params?.topMargin = barHeight
-        header_view.layoutParams = params
+//        val barHeight = StatusBarUtil.getStatusBarHeight(this)
+//        val params = header_view.layoutParams as? ConstraintLayout.LayoutParams
+//        params?.topMargin = barHeight
+//        header_view.layoutParams = params
 
-        StatusBarUtil.setTransparent(this)
+//        StatusBarUtil.setTransparent(this)
 
         val bgColor = GlobalUtils.getColor(R.color.color_gray_three)
         StatusBarUtil.setColor(this, bgColor)
@@ -373,7 +375,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         mPrivateConversationViewModel?.sendGiftSuccessData?.observe(this, Observer {
             if (it != null) {
-                mPrivateConversationViewModel?.startAnimationFlag?.value = it
+                mPrivateConversationViewModel?.startAnimationData?.value = it
                 //送礼成功.发送自定义消息
                 sendChatMessage(messageType = Message_Gift)
             }
@@ -415,8 +417,15 @@ class PrivateConversationActivity : BaseActivity() {
             scrollToBottom()
             view_place.layoutParams = placeParams
         })
-        mPrivateConversationViewModel?.startAnimationFlag?.observe(this, Observer {
+        mPrivateConversationViewModel?.startAnimationData?.observe(this, Observer {
             if (it != null) {
+                mPrivateAnimationViewModel.giftData.value = it
+                mPrivateAnimationViewModel.prepareResource(it)
+            }
+        })
+
+        mPrivateAnimationViewModel.preparedFlag.observe(this, Observer {
+            if (it == true) {
                 mAnimationFragment = mAnimationFragment ?: PrivateAnimationFragment()
                 mAnimationFragment?.show(supportFragmentManager, "PrivateAnimationFragment")
             }
@@ -1049,7 +1058,7 @@ class PrivateConversationActivity : BaseActivity() {
                                     val str = content.context
                                     if (str.isNotEmpty()) {
                                         val chatGift = JsonUtil.deserializeAsObject<ChatGift>(str, ChatGift::class.java)
-                                        mPrivateConversationViewModel?.startAnimationFlag?.value = chatGift
+                                        mPrivateConversationViewModel?.startAnimationData?.value = chatGift
                                     }
                                 } catch (e: Exception) {
                                     e.printStackTrace()
@@ -1250,7 +1259,7 @@ class PrivateConversationActivity : BaseActivity() {
                                     val str = content.context
                                     if (str.isNotEmpty()) {
                                         val chatGift = JsonUtil.deserializeAsObject<ChatGift>(str, ChatGift::class.java)
-                                        mPrivateConversationViewModel?.startAnimationFlag?.value = chatGift
+                                        mPrivateConversationViewModel?.startAnimationData?.value = chatGift
                                     }
                                 } catch (e: Exception) {
                                     e.printStackTrace()

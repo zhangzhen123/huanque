@@ -100,7 +100,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     val sendGiftShowFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //播放动画标识位
-    val startAnimationFlag: MutableLiveData<ChatGift> by lazy { MutableLiveData<ChatGift>() }
+    val startAnimationData: MutableLiveData<ChatGift> by lazy { MutableLiveData<ChatGift>() }
 
     //气泡
     val bubbleData: MutableLiveData<ChatBubble> by lazy { MutableLiveData<ChatBubble>() }

@@ -2,40 +2,33 @@ package com.julun.huanque.message.fragment
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.content.DialogInterface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.ViewGroup
 import android.view.animation.BounceInterpolator
 import android.widget.FrameLayout
-import android.widget.ImageView
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.dp2pxf
-import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.viewmodel.PrivateAnimationViewModel
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import com.plattysoft.leonids.ParticleSystem
-import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.android.FragmentEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.fragment_private_animation.*
-import kotlinx.android.synthetic.main.item_header_conversions.*
-import org.jetbrains.anko.imageResource
-import java.lang.Math.round
 import java.util.concurrent.TimeUnit
-import kotlin.math.floor
 import kotlin.math.roundToInt
 
 /**
@@ -43,11 +36,11 @@ import kotlin.math.roundToInt
  *@创建时间 2020/9/2 17:31
  *@描述 私信  用户播放动画的Fragment
  */
-class PrivateAnimationFragment : BaseDialogFragment() {
+class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
 
     private val mPrivateConversationViewModel: PrivateConversationViewModel by activityViewModels()
 
-    private val mPrivateAnimationViewModel: PrivateAnimationViewModel by viewModels()
+    private val mPrivateAnimationViewModel: PrivateAnimationViewModel by activityViewModels()
 
     override fun getLayoutId() = R.layout.fragment_private_animation
 
@@ -60,15 +53,19 @@ class PrivateAnimationFragment : BaseDialogFragment() {
 
     override fun onResume() {
         super.onResume()
+        sdv_gift_icon.hide()
+        tv_gift_name.hide()
+        sdv_gift.hide()
+
         initViewModel()
     }
 
     private fun initViewModel() {
-        mPrivateConversationViewModel.startAnimationFlag.observe(this, Observer {
+        mPrivateConversationViewModel.startAnimationData.observe(this, Observer {
             if (it != null) {
                 //开始播放动画
                 playAnimaiton(it)
-                mPrivateConversationViewModel.startAnimationFlag.value = null
+                mPrivateConversationViewModel.startAnimationData.value = null
             }
         })
 
@@ -78,10 +75,24 @@ class PrivateAnimationFragment : BaseDialogFragment() {
                 dismiss()
             }
         })
+
+        mPrivateAnimationViewModel.voiceCompleteFlag.observe(this, Observer {
+            if (it == true) {
+                mPrivateAnimationViewModel.voiceCompleteFlag.value = null
+//                //延迟一秒关闭，效果好一点
+//                Observable.timer(1, TimeUnit.SECONDS)
+//                    .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .doFinally { dismiss() }
+//                    .subscribe({}, {}, {})
+                dismiss()
+            }
+        })
     }
 
     override fun onStart() {
         super.onStart()
+        dialog?.setOnKeyListener(this)
         setDialogSize(Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     }
 
@@ -93,6 +104,13 @@ class PrivateAnimationFragment : BaseDialogFragment() {
         when (gift.specialType) {
             ChatGift.Sound -> {
                 //音效类型
+                sdv_gift_icon.show()
+                tv_gift_name.show()
+
+                sdv_gift_icon.loadImage(gift.pic, 80f, 80f)
+                tv_gift_name.text = gift.giftName
+
+                mPrivateAnimationViewModel.startPlayer()
             }
             ChatGift.Screen -> {
                 //飘屏类型
@@ -121,8 +139,25 @@ class PrivateAnimationFragment : BaseDialogFragment() {
             }
             ChatGift.Animation -> {
                 //动画类型
+                //播放音效
+                mPrivateAnimationViewModel.startPlayer()
+                //播放动画
+                sdv_gift.show()
+                ImageUtils.showAnimator(sdv_gift, specialParams.webpUrl)
             }
             else -> {
+                //普通礼物动画
+                sdv_gift_icon.show()
+                tv_gift_name.show()
+
+                sdv_gift_icon.loadImage(gift.pic, 80f, 80f)
+                tv_gift_name.text = gift.giftName
+
+                //两秒以后关闭
+                Observable.timer(2, TimeUnit.SECONDS)
+                    .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ dismiss() }, { it.printStackTrace() })
             }
         }
     }
@@ -172,7 +207,7 @@ class PrivateAnimationFragment : BaseDialogFragment() {
             }
 
             override fun onAnimationEnd(animation: Animator?) {
-                con_root.removeView(iv)
+                con_root?.removeView(iv)
                 removeCount++
                 logger.info("Message removeCount = $removeCount")
                 if (removeCount == total) {
@@ -211,6 +246,23 @@ class PrivateAnimationFragment : BaseDialogFragment() {
             .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ dismiss() }, { it.printStackTrace() })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        sdv_gift.hide()
+        tv_gift_name.hide()
+        mPrivateAnimationViewModel.stopPlayer()
+    }
+
+    override fun onKey(dialog: DialogInterface?, keyCode: Int, event: KeyEvent?): Boolean {
+        logger.info("Message keyCode = $keyCode")
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        } else {
+            //这里注意当不是返回键时需将事件扩散，否则无法处理其他点击事件
+            return false;
+        }
     }
 
 

@@ -229,7 +229,7 @@ class PlayerViewManager(val context: PlayerActivity) {
             }
             context.liveHeader.setSubscribeEnable(true)
             if (it != null && it.isSuccess()) {
-                modifySubscribe(it.requireT().follow == FollowStatus.True)
+                modifySubscribe(it.requireT().follow != FollowStatus.False)
             }
 
         })
