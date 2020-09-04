@@ -192,6 +192,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Bo
      * 恢复播放
      */
     fun resume() {
+        if (mLogEnable)
         ULog.i("DXCPlayer 恢复播放resume")
         if (mUrl.isNotEmpty()) {
             mAliPlayer?.start()

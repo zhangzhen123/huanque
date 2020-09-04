@@ -9,7 +9,7 @@
     <string name="lift_now">立即提升</string>
     <string name="complete_your_info">展示你的魅力</string>
     <string name="complete_info">完善资料</string>
-    <string name="complete_your_info_des">据统计每上传1张照片，被人喜欢的几率提升20%</string>
+    <string name="complete_your_info_des">每上传1张照片，被人喜欢的几率提升20%</string>
     <string name="upload_photo">上传照片</string>
 
     <string name="other_recharge_hint">请输入羚萌ID号，不支持靓号</string>
