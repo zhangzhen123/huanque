@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.main.bird
 
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
@@ -16,6 +17,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.fragment_bird_shop.*
+import org.jetbrains.anko.backgroundColor
 
 /**
  * [leYuanViewModel]将主面板的viewModel传过来 供商店调用
@@ -30,7 +32,7 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 520)
+        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 435)
     }
 
     override fun initViews() {
@@ -51,6 +53,7 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         ivClose.onClickNew {
             dismiss()
         }
+        state_pager_view.backgroundColor= Color.TRANSPARENT
         mRefreshLayout.setOnRefreshListener {
             mViewModel.queryShop(QueryType.REFRESH)
         }
@@ -63,7 +66,7 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
     }
     private fun initViewModel() {
         leYuanViewModel.totalCoin.observe(this, Observer {
-            totalCoin.text = "余额${StringHelper.formatBigNum(it)}金币"
+            totalCoin.text = "${StringHelper.formatBigNum(it)}"
         })
         mViewModel.shopInfo.observe(this, Observer {
             mRefreshLayout.isRefreshing = false

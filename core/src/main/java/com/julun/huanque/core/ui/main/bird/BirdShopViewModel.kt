@@ -12,6 +12,7 @@ import com.julun.huanque.common.suger.convertError
 import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**

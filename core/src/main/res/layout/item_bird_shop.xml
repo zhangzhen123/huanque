@@ -4,56 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:layout_width="@dimen/dimen_125">
 
-
-    <TextView
-        android:id="@+id/tv_level"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_22"
-        android:layout_marginStart="@dimen/dimen_5"
-        android:layout_marginEnd="@dimen/dimen_5"
-        android:background="@color/percent30translucentBlack"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_12"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="99" />
-
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_bird"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_90"
-        app:actualImageScaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_level" />
-
-    <TextView
-        android:id="@+id/tv_bird_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_12"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sdv_bird"
-        tools:text="100金币" />
 
     <View
-        android:id="@+id/viewLock"
+        android:id="@+id/view_bg_item"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="@dimen/dimen_2"
-        android:background="@color/percent50translucentBlack"
+        android:layout_height="172dp"
+        android:background="@mipmap/bg_bird_shop_item"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_bg_item_tree"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dimen_18"
+        android:layout_marginTop="@dimen/dimen_29"
+        android:layout_marginEnd="@dimen/dimen_18"
+        android:background="@mipmap/bg_bird_shop_item_tree"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@+id/view_bg_item"
+        app:layout_constraintStart_toStartOf="@+id/view_bg_item"
+        app:layout_constraintTop_toTopOf="@+id/view_bg_item" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:actualImageScaleType="fitCenter"
+        android:layout_margin="@dimen/dimen_5"
+        app:layout_constraintBottom_toBottomOf="@+id/view_bg_item_tree"
+        app:layout_constraintEnd_toEndOf="@+id/view_bg_item_tree"
+        app:layout_constraintStart_toStartOf="@+id/view_bg_item_tree"
+        app:layout_constraintTop_toTopOf="@+id/view_bg_item_tree" />
+
+    <TextView
+        android:id="@+id/tv_level"
+        android:layout_width="@dimen/dimen_95"
+        android:layout_height="@dimen/dimen_32"
+        android:layout_marginStart="@dimen/dimen_5"
+        android:layout_marginEnd="@dimen/dimen_5"
+        android:background="@mipmap/bg_bird_name"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Lv6.xx鹊" />
+    <TextView
+        android:id="@+id/tv_bird_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/bg_bird_shop_buy"
+        android:drawableStart="@mipmap/icon_bird_coin"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:gravity="center"
+        android:paddingStart="@dimen/dimen_6"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintEnd_toEndOf="@+id/view_bg_item"
+        app:layout_constraintStart_toStartOf="@+id/view_bg_item"
+        app:layout_constraintTop_toBottomOf="@+id/view_bg_item_tree"
+        tools:text="100888金币" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
