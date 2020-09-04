@@ -149,7 +149,7 @@ class PrivateConversationActivity : BaseActivity() {
 
     private var mLinearLayoutManager: LinearLayoutManager? = null
 
-    private var mChatSendGiftFragment: ChatSendGiftFragment? = null
+    private var mChatSendGiftFragment: PrivateSendGiftFragment? = null
 
     //动画使用的Fragment
     private var mAnimationFragment: PrivateAnimationFragment? = null
@@ -545,9 +545,9 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_gift.onClickNew {
             mHelper?.hookSystemBackByPanelSwitcher()
-            mChatSendGiftFragment = mChatSendGiftFragment ?: ChatSendGiftFragment()
+            mChatSendGiftFragment = mChatSendGiftFragment ?: PrivateSendGiftFragment()
 
-            mChatSendGiftFragment?.show(this, "ChatSendGiftFragment")
+            mChatSendGiftFragment?.show(this, "PrivateSendGiftFragment")
             Observable.timer(300, TimeUnit.MILLISECONDS)
                 .bindUntilEvent(this, ActivityEvent.DESTROY)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -1072,6 +1072,13 @@ class PrivateConversationActivity : BaseActivity() {
                 }
             }
         }
+        //用户经验变动消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.UserExpChangeMessageProcessor {
+            override fun process(data: UserExpChangeEvent) {
+                mPrivateConversationViewModel?.userExpChangeEvent?.value = data
+            }
+
+        })
     }
 
     override fun onStart() {

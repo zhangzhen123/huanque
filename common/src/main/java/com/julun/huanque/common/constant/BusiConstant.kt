@@ -41,6 +41,8 @@ object BusiConstant {
     const val OSS_350 = "!350"
 
     var DESTROY_ACCOUNT_RESULT_CODE = 502 //注销账号result_code
+
+    var EMPTY_GIFT = -100
 }
 
 /**

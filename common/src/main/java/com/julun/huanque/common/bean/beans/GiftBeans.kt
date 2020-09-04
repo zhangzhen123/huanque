@@ -149,6 +149,16 @@ data class GroupInfo(
     var version: Int = 0
 )
 
+/**
+ * 私信送礼面板使用
+ */
+data class PrivateGroupInfo(
+    var giftList: MutableList<ChatGift> = mutableListOf(),
+    var typeCode: String = "",
+    var typeName: String = "",
+    var version: Int = 0
+)
+
 //本地使用
 data class TabItemInfo(
     var typeCode: String = "",
@@ -167,6 +177,15 @@ data class ChatGiftInfo(
     var beans: Long = 0,
     var giftList: List<ChatGift> = listOf(),
     var tips: String = "",
+    //背包tab 红点标识位
+    var bagChange: Boolean = false,
+    var giftGroupList: List<PrivateGroupInfo> = listOf(),
+    var needExp: Long = 0,//下一级的经验总值
+    var showTab: String = "",
+    var userExp: Long = 0,//当前级的经验进度值
+    var userLevel: Int = 0,
+    var expRatio: Double = 0.0,//经验比例
+    var expRatioTtl: Long = 0,//经验卡倒计时
     //本地字段
     var viewPagerData: MutableList<ChatGroupGift> = mutableListOf()
 )
@@ -204,6 +223,10 @@ data class ChatGift(
     var specialType: String = "",
     //礼物单位
     var giftUnit: String = "",
+    //tag文案
+    var tagContent: String? = null,
+    //用户经验
+    var userExp: Long = 0,
     //本地字段 送礼数量，发送自定义消息场景下使用
     var giftCount: Int = 1
 ) {

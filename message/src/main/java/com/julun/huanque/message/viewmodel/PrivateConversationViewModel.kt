@@ -105,6 +105,9 @@ class PrivateConversationViewModel : BaseViewModel() {
     //气泡
     val bubbleData: MutableLiveData<ChatBubble> by lazy { MutableLiveData<ChatBubble>() }
 
+    //用户等级变化消息
+    val userExpChangeEvent: MutableLiveData<UserExpChangeEvent> by lazy { MutableLiveData<UserExpChangeEvent>() }
+
     //操作类型
     var operationType = ""
 

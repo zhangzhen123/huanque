@@ -1,30 +1,22 @@
-package com.julun.huanque.core.adapter
+package com.julun.huanque.common.adapter
 
-import android.graphics.Color
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.StrikethroughSpan
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.facebook.drawee.view.SimpleDraweeView
-import org.jetbrains.anko.backgroundDrawable
-import android.text.style.AbsoluteSizeSpan
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.julun.huanque.common.bean.beans.LiveGiftDto
-import com.julun.huanque.common.helper.DensityHelper.Companion.sp2px
-import com.julun.huanque.common.helper.StringHelper
+import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.R
+import com.julun.huanque.common.bean.beans.ChatGift
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.widgets.TagView
-import com.julun.huanque.core.R
-import com.julun.huanque.core.ui.live.fragment.SendGiftFragment
+import org.jetbrains.anko.backgroundDrawable
 
 
 /**
@@ -33,16 +25,16 @@ import com.julun.huanque.core.ui.live.fragment.SendGiftFragment
  * @iterativeVersion 4.17
  * @iterativeDetail 增加折扣券逻辑
  */
-class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_cmp_gift) {
+class PrivateGiftAdapter : BaseQuickAdapter<ChatGift, BaseViewHolder>(R.layout.item_cmp_gift) {
     // 当前选中的礼物
     companion object {
         //选中的礼物
-        var selectedGift: LiveGiftDto? = null
+        var selectedGift: ChatGift? = null
     }
 
-    override fun convert(vh: BaseViewHolder, item: LiveGiftDto) {
+    override fun convert(vh: BaseViewHolder, item: ChatGift) {
         //过滤空礼物
-        if (item.giftId == SendGiftFragment.EMPTY_GIFT) {
+        if (item.chatGiftId == BusiConstant.EMPTY_GIFT) {
             vh.setGone(R.id.gift_name, true)
                 .setGone(R.id.gift_icon, true)
                 .setGone(R.id.gift_price, true)
@@ -62,9 +54,9 @@ class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_
 
         val tagData = item.tagContent?.split(",")
         llTag.removeAllViews()
-        if(tagData.isNullOrEmpty()){
+        if (tagData.isNullOrEmpty()) {
             llTag.hide()
-        }else{
+        } else {
             llTag.show()
             tagData.forEach {
                 val tagView = TagView(context)
@@ -76,12 +68,7 @@ class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_
             }
 
         }
-        val expTime = item.expTime
-        val pText = if (expTime.isEmpty()) {
-            "${item.beans}"
-        } else {
-            expTime
-        }
+        val pText = "${item.beans}"
         vh.setText(R.id.gift_name, item.giftName)
             .setText(R.id.gift_price, pText).setVisible(R.id.gift_price, true)
             .setVisible(R.id.gift_name, true)
@@ -90,28 +77,12 @@ class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_
         ImageUtils.loadImage(giftPic, item.pic ?: "", 78f, 69f)
 
         val giftBagInfo = vh.getView<TextView>(R.id.giftBagInfo)
+        giftBagInfo.hide()
         //判断地址
         if (item === selectedGift) {
-            giftBagInfo.isSelected = true
             playAnim(giftPic)
         } else {
-            giftBagInfo.isSelected = false
             giftPic.clearAnimation()
-        }
-        val viewDot = vh.getView<View>(R.id.view_dot)
-        val str: String = StringHelper.paddingNumberWithEmptyCharEven(item.bagCount, 4)
-        if (item.bag) {
-            //处于背包当中，显示数量
-            giftBagInfo.show()
-            giftBagInfo.text = str
-            if (item.changeMark) {
-                viewDot.show()
-            } else {
-                viewDot.hide()
-            }
-        } else {
-            giftBagInfo.hide()
-            viewDot.hide()
         }
     }
 
