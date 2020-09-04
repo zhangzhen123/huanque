@@ -127,7 +127,7 @@ class ScoreFragment : BaseVMFragment<ScoreViewModel>() {
     private fun openPlayerInfo(user: RankingsResult) {
         //显示用户名片
         mPlayerViewModel.userInfoView.value = UserInfoBean(user.userId, nickname = user.nickname)
-        mPlayerViewModel.scoreDismissFlag.value = true
+//        mPlayerViewModel.scoreDismissFlag.value = true
     }
 
     private fun queryRankingsResult(queryType: QueryType) {

@@ -142,10 +142,8 @@ object TplHelper {
 
                 textParams.put(nicknameKey, tNickName)
                 val nick = if (StringHelper.isEmpty(user.nickColor)) null else user.nickColor
-                styleParamMap[nicknameKey] = StyleParam(el = nicknameKey, color = nick)
-                if (user.lightColor.isNotEmpty()) {
-                    styleParamMap[nicknameKey] = StyleParam(el = nicknameKey, lightColor = user.lightColor)
-                }
+                styleParamMap[nicknameKey] = StyleParam(el = nicknameKey, color = nick,lightColor = user.lightColor)
+
 
                 //4.添加勋章
                 val goodsList = user.badgesPic

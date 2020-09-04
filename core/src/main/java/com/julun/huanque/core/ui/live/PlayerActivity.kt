@@ -359,6 +359,8 @@ class PlayerActivity : BaseActivity() {
                 hasJoinRoom = true
                 joinChatCallback(it)
                 playerMessageViewModel.getBlockedConversationList()
+                //在获取消息前清空私聊红点
+                actionView.togglePrivateRedPointView(0)
                 playerMessageViewModel.queryRongPrivateCount()
             } else {
                 viewModel.errorState.value = 2
@@ -1031,7 +1033,7 @@ class PlayerActivity : BaseActivity() {
         // 清空公聊消息列表
         publicMessageView.clearMessages()
         //清空私聊红点
-        actionView.togglePrivateRedPointView(0)
+//        actionView.togglePrivateRedPointView(0)
         initInput()
 
         // 注册融云交互事件 因为有些消息回调需要roomData所以必须在成功回调后注册事件监听
@@ -2235,7 +2237,7 @@ class PlayerActivity : BaseActivity() {
      * 收到封禁通知关闭直播间
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun bannedAndCosePlayer(event: BannedAndClosePlayer) {
+    fun bannedAndClosePlayer(event: BannedAndClosePlayer) {
         isBanned = true
         finish()
     }

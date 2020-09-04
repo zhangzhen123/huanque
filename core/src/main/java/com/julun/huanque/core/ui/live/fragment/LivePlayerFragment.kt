@@ -495,7 +495,7 @@ open class LivePlayerFragment : BaseFragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun VideoEvent(bean: VideoPlayerEvent) {
+    fun videoEvent(bean: VideoPlayerEvent) {
         mViewList.forEach {
             if (it.isFree) {
                 return@forEach

@@ -30,6 +30,7 @@ import com.julun.huanque.common.bean.beans.UserTool
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
@@ -435,13 +436,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             override fun convert(holder: BaseViewHolder, item: UserDataTab) {
                 val tvCount = holder.getView<TextView>(R.id.tvCount)
                 val count = item.count
-                if (count >= 10000) {
-                    val iCount = count / 1000
-                    val dCount = iCount / 10.toDouble()
-                    tvCount.text = "${NumberFormatUtils.formatWithdecimal1(dCount)}W"
-                } else {
-                    tvCount.text = "$count"
-                }
+                tvCount.text="${StringHelper.formatNum(count)}"
                 holder.setText(R.id.tvTitle, item.userTabName)
 
                 if (item.tagCount == 0) {

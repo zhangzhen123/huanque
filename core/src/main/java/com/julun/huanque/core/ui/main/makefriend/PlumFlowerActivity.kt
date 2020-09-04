@@ -9,7 +9,6 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.constant.ARouterConstant
@@ -17,7 +16,6 @@ import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.NumberFormatUtils
 import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
 import com.julun.huanque.core.R

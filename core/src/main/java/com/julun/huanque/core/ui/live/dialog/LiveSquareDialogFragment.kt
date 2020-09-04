@@ -274,9 +274,9 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                     textHot.text = "${item.heatValue}"
                     holder.setGone(R.id.user_count_w, true)
                 } else {
-                    val format = DecimalFormat("#")
+                    val format = DecimalFormat("#.0")
                     format.roundingMode = RoundingMode.HALF_UP
-                    textHot.text = "${format.format((item.heatValue / 10000.0))}万"
+                    textHot.text = "${format.format((item.heatValue / 10000.0))}"
                     holder.setGone(R.id.user_count_w, false)
                 }
                 ImageUtils.loadImage(
@@ -290,7 +290,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
 
                     holder.setText(R.id.anchor_city, item.city)
                 }
-
+                ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
 //                if (item.isLiving) {
 //                    holder.setText(R.id.tv_author_status, "直播中")
 //                } else {

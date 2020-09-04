@@ -115,7 +115,7 @@ class MainActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         if (SessionUtils.getIsRegUser() && SessionUtils.getSessionId().isNotEmpty()) {
             AppChecker.startCheck(true)
-            UserHeartManager.startOnline()
+//            UserHeartManager.startOnline()
         } else {
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         }
@@ -561,8 +561,7 @@ class MainActivity : BaseActivity() {
         //登录通知
         LoginManager.doLoginOut({
             //退出登录成功
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+            ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         })
     }
 

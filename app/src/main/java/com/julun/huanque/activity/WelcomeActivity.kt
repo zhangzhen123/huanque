@@ -6,15 +6,13 @@ import android.os.Bundle
 import android.view.View
 import com.julun.huanque.R
 import com.julun.huanque.activity.MainActivity
-import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
-import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
-import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 
 /**
@@ -48,6 +46,7 @@ class WelcomeActivity : BaseActivity() {
         val registerUser = SessionUtils.getIsRegUser()
         val intent = if (registerUser && SessionUtils.getRegComplete()) {
             RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
+            UserHeartManager.startOnline()
             //登录成功并且数据已经填写完成
             Intent(this, MainActivity::class.java)
         } else {
