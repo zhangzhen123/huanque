@@ -223,10 +223,11 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
     override fun onDestroy() {
         // 移除浮动框
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
-        UserHeartManager.setProgramId(null)
+
         if (windowManager != null && display != null) {
 
             if (!jumpToPlayer && !ActivitiesManager.hasActivity("com.julun.huanque.core.ui.live.PlayerActivity")) {
+                UserHeartManager.setProgramId(null)
                 videoView?.stop()
                 GlobalScope.launch {
                     withContext(Dispatchers.IO) {
