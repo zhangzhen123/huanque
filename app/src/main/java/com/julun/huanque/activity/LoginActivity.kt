@@ -25,6 +25,7 @@ import cn.jiguang.verifysdk.api.LoginSettings
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Agreement
@@ -72,7 +73,7 @@ class LoginActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         //切换账号的时候移除气泡缓存
-        SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
+        SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble())
         initViewModel()
         initFastLogin()
     }

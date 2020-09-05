@@ -235,7 +235,7 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.getActiveWord()
         //获取配置相关
         val cb = SPUtils.getObject<ChatBubble>(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble::class.java)
-        if (cb == null) {
+        if (cb == null || cb.bgc.isEmpty()) {
             mPrivateConversationViewModel?.getSetting()
         } else {
             mPrivateConversationViewModel?.bubbleData?.value = cb
