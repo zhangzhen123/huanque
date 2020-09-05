@@ -142,10 +142,15 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
                     }
                 }
+                val action=holder.getView<TextView>(R.id.btn_action)
                 if (bean.anchor && bean.living) {
-                    holder.setText(R.id.btn_action, "围观")
+                    action.text = "围观"
+                    action.textColor=Color.parseColor("#FF8E8E")
+                    action.backgroundResource=R.drawable.bg_stroke_btn3
                 } else {
-                    holder.setText(R.id.btn_action, "私信")
+                    action.text = "私信"
+                    action.textColor=Color.parseColor("#FFCC00")
+                    action.backgroundResource=R.drawable.bg_stroke_btn1
                 }
                 when {
                     list.isNotEmpty() -> {
