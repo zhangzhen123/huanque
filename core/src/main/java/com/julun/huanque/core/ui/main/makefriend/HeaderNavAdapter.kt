@@ -7,11 +7,16 @@ import com.julun.huanque.common.bean.beans.HeadModule
 import com.julun.huanque.core.R
 import org.jetbrains.anko.imageResource
 
-class HeaderNavAdapter : BaseQuickAdapter<HeadModule, BaseViewHolder>(R.layout.item_item_mkf_header) {
+class HeaderNavAdapter(val width: Int) : BaseQuickAdapter<HeadModule, BaseViewHolder>(R.layout.item_item_mkf_header) {
 
     override fun convert(holder: BaseViewHolder, item: HeadModule) {
-
         val container = holder.getView<ImageView>(R.id.sdv_nav_bg)
+        //动态修改宽度
+        val params = container.layoutParams
+        params.width = width
+        container.layoutParams = params
+
+
 //        container.loadImage(item.bgPic, 90f, 70f)
 //        val url = item.baseInfo.headPic
 //        if (url.isNotEmpty()) {
