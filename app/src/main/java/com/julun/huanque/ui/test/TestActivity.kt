@@ -39,7 +39,7 @@ import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
-import com.julun.jpushlib.TagAliasOperatorHelper
+//import com.julun.jpushlib.TagAliasOperatorHelper
 import com.julun.rnlib.RNPageActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -117,11 +117,11 @@ class TestActivity : BaseActivity() {
         set_push.onClickNew {
             val userId = SessionUtils.getUserId().toString()
             logger.info("jpush userId=$userId")
-            val tagAliasBean = TagAliasOperatorHelper.TagAliasBean()
-            tagAliasBean.action = TagAliasOperatorHelper.ACTION_SET
-            tagAliasBean.isAliasAction = true
-            tagAliasBean.alias = userId
-            TagAliasOperatorHelper.getInstance().handleAction(tagAliasBean)
+//            val tagAliasBean = TagAliasOperatorHelper.TagAliasBean()
+//            tagAliasBean.action = TagAliasOperatorHelper.ACTION_SET
+//            tagAliasBean.isAliasAction = true
+//            tagAliasBean.alias = userId
+//            TagAliasOperatorHelper.getInstance().handleAction(tagAliasBean)
         }
         open_cv.onClickNew {
             PrivateConversationActivity.newInstance(this, 20000041)

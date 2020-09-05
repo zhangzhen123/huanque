@@ -9,7 +9,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import cn.jiguang.verifysdk.api.JVerificationInterface
-import cn.jpush.android.api.JPushInterface
+//import cn.jpush.android.api.JPushInterface
 import com.ishumei.smantifraud.SmAntiFraud
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.julun.huanque.BuildConfig
@@ -26,7 +26,7 @@ import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.init.HuanQueInit
 import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.ui.cockroach.DebugSafeModeTipActivity
-import com.julun.jpushlib.TagAliasOperatorHelper
+//import com.julun.jpushlib.TagAliasOperatorHelper
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mmkv.MMKV
@@ -35,6 +35,8 @@ import com.wanjian.cockroach.CrashLog
 import com.wanjian.cockroach.ExceptionHandler
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.rong.push.RongPushClient
+import io.rong.push.pushconfig.PushConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -75,7 +77,7 @@ open class HuanQueApp : Application() {
             initBugly(this)
             //初始化声网
 //            AgoraManager.initAgora(this)
-            TagAliasOperatorHelper.getInstance().init(this)
+//            TagAliasOperatorHelper.getInstance().init(this)
 //            /*一键登录相关*/
             JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
             JVerificationInterface.init(this)
@@ -109,19 +111,27 @@ open class HuanQueApp : Application() {
             val currentTime = System.currentTimeMillis()
             logger("runBlocking start---${Thread.currentThread()}")
             CommonInit.getInstance().inSDK = false
+            logger("XIAOMI_APPID=${AppHelper.getAppMetaData("XIAOMI_APPID",this@HuanQueApp).substring(3)}")
             val init = async {
 //                val time=System.currentTimeMillis()
+                val config: PushConfig = PushConfig.Builder()
+                    .enableHWPush(true)
+                    .enableMiPush(AppHelper.getAppMetaData("XIAOMI_APPID",this@HuanQueApp).substring(3), AppHelper.getAppMetaData("XIAOMI_APPKEY",this@HuanQueApp).substring(3))
+                    .enableOppoPush(AppHelper.getAppMetaData("OPPO_APPKEY_P",this@HuanQueApp),AppHelper.getAppMetaData("OPPO_APPSECRET_P",this@HuanQueApp))
+                    .enableVivoPush(true)
+                    .build()
+                RongPushClient.setPushConfig(config)
                 HuanQueInit.getInstance().initWithCoroutine(this@HuanQueApp)
 //                logger("launch init---${Thread.currentThread()} duration=${System.currentTimeMillis()-time}")
             }
 
             val jPush = async(Dispatchers.Default) {
 //                val time=System.currentTimeMillis()
-                JPushInterface.setDebugMode(BuildConfig.DEBUG)    // 设置开启日志,发布时请关闭日志
-                JPushInterface.init(this@HuanQueApp.applicationContext)            // 初始化 JPush
-                /*一键登录相关*/
-                //        JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
-                //        JVerificationInterface.init(mContext)
+                //不再使用jPush
+//                JPushInterface.setDebugMode(BuildConfig.DEBUG)    // 设置开启日志,发布时请关闭日志
+//                JPushInterface.init(this@HuanQueApp.applicationContext)            // 初始化 JPush
+
+
 //                logger("launch jPush---${Thread.currentThread()} duration=${System.currentTimeMillis()-time}")
             }
             val tx = async(Dispatchers.Default) {

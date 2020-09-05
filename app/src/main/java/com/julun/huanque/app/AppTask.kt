@@ -1,6 +1,6 @@
 package com.julun.huanque.app
 
-import cn.jpush.android.api.JPushInterface
+//import cn.jpush.android.api.JPushInterface
 import com.ishumei.smantifraud.SmAntiFraud
 import com.julun.huanque.BuildConfig
 import com.julun.huanque.agora.AgoraManager
@@ -54,8 +54,8 @@ import org.jay.launchstarter.Task
 class JPushTask : Task() {
     override fun run() {
         //初始化极光
-        JPushInterface.setDebugMode(BuildConfig.DEBUG)    // 设置开启日志,发布时请关闭日志
-        JPushInterface.init(mContext.applicationContext)            // 初始化 JPush
+//        JPushInterface.setDebugMode(BuildConfig.DEBUG)    // 设置开启日志,发布时请关闭日志
+//        JPushInterface.init(mContext.applicationContext)            // 初始化 JPush
         /*一键登录相关*/
 //        JVerificationInterface.setDebugMode(BuildConfig.DEBUG)
 //        JVerificationInterface.init(mContext)
