@@ -264,17 +264,17 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
      */
     private fun startSlideAnimation(drawable: Drawable) {
         ParticleSystem(con_root, 100, drawable, 1500)
-            .setSpeedModuleAndAngleRange(0.4f, 0.6f, 0, 30)
+            .setSpeedModuleAndAngleRange(0.2f, 0.55f, 330, 360)
             .setRotationSpeed(1000f)
             .setAcceleration(0.002f, 90)
-            .emit(-100, 400, 10, 2000)
+            .emit(-200, 400, 20, 1000)
 
         ParticleSystem(con_root, 100, drawable, 1500)
-            .setSpeedModuleAndAngleRange(0.4f, 0.6f, 150, 180)
+            .setSpeedModuleAndAngleRange(0.2f, 0.55f, 180, 210)
             .setRotationSpeed(1000f)
             .setAcceleration(0.002f, 90)
-            .emit(1180, 400, 10, 2000)
-        val intervalTimer = (2000 + 1500).toLong()
+            .emit(ScreenUtils.getScreenWidth() + 200, 400, 20, 1000)
+        val intervalTimer = (1000 + 1500).toLong()
         Observable.timer(intervalTimer, TimeUnit.MILLISECONDS)
             .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
             .observeOn(AndroidSchedulers.mainThread())
