@@ -286,7 +286,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
                     android:src="@mipmap/icon_xiaoque_arrow"
-                    app:layout_constraintBottom_toTopOf="@id/iv_xiaoque"
+                    app:layout_constraintBottom_toTopOf="@id/edit_text"
                     app:layout_constraintLeft_toLeftOf="@id/iv_xiaoque"
                     app:layout_constraintRight_toRightOf="@id/iv_xiaoque" />
 

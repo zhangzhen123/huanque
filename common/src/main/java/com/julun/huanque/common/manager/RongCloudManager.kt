@@ -12,6 +12,7 @@ import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.events.RongConnectEvent
+import com.julun.huanque.common.bean.message.CommandCustomMessage
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
@@ -101,6 +102,7 @@ object RongCloudManager {
     private fun registeCustomMessage() {
         RongIMClient.registerMessageType(CustomMessage::class.java)
         RongIMClient.registerMessageType(CustomSimulateMessage::class.java)
+        RongIMClient.registerMessageType(CommandCustomMessage::class.java)
     }
 
     var maxConnectCount = 0
@@ -735,7 +737,7 @@ object RongCloudManager {
     /**
      * 更新聊天气泡数据
      */
-    fun updateChatBubble(bean : ChatBubble?){
+    fun updateChatBubble(bean: ChatBubble?) {
         currentUserObj?.chatBubble = bean
     }
 
@@ -765,6 +767,10 @@ object RongCloudManager {
         val content: MessageContent? = message.content
         val isRetrieved = message.receivedStatus.isRetrieved
         when (content) {
+            is CommandCustomMessage-> {
+                //自定义的command消息
+                doWithCommandCustomMessage(message,content)
+            }
             is CustomMessage -> {
                 //自定义消息
                 if (message.conversationType == Conversation.ConversationType.PRIVATE) {
@@ -887,6 +893,61 @@ object RongCloudManager {
             }
         }
     }
+
+    /**
+     * 处理自定义消息发送过来的command消息
+     */
+    private fun doWithCommandCustomMessage(message: Message,content : CommandCustomMessage) {
+        val isRetrieved = message.receivedStatus.isRetrieved
+        logger.info("收到CommandMessage消息 ${JsonUtil.serializeAsString(content)}")
+        // 将数据解析为字典对象
+        val dataString = content.data
+        val baseList = JsonUtil.deserializeAsObjectList(dataString, BaseData::class.java)
+
+        baseList?.forEach {
+            // 消息类型
+            val msgType = it.msgType
+            if (!checkMessage(it, isRetrieved)) return@forEach
+            if (it.data == null) return@forEach
+            val jsonObject = it.data as JSONObject
+            val jsonString = jsonObject.toJSONString()
+
+            when (msgType) {
+                MessageProcessor.MessageType.Text.name -> {
+                    if (TextUtils.isEmpty(roomId)) return
+                    // 文本消息
+                    MessageProcessor.parseTextMessage(jsonString, it.msgId)
+                }
+                MessageProcessor.MessageType.Event.name -> {
+                    val eventCode = jsonObject.getString(MessageProcessor.EVENT_CODE)
+                    if (!TextUtils.isEmpty(eventCode)) {
+                        if (message.receivedStatus.isRetrieved) {
+                            //如果这条消息被被其他登录的多端收取过，那么直接丢弃
+                            return@forEach
+                        }
+                        //                                MessageProcessor.parseEventMessage(jsonObject)
+                        //                                return@forEach
+                    }
+                    //                            if (TextUtils.isEmpty(roomId)) return
+                    MessageProcessor.parseEventMessage(jsonObject)
+                }
+                MessageProcessor.MessageType.Animation.name -> {
+                    if (TextUtils.isEmpty(roomId)) return
+                    logger.info("收到动画消息 $jsonString")
+                    // 缓存到消息队列
+                    MessageReceptor.putAnimationMessage(jsonObject)
+                }
+                else -> {
+                    if (TextUtils.isEmpty(roomId)) return
+                    val msg = "不支持的消息类型"
+                    logger.info(msg)
+                    //                    toast!!.showErrorMessage(message)
+                    reportCrash(msg)
+                }
+            }
+        }
+    }
+
 
     /**
      * 检查消息的安全性  是不是串消息  是不是重复消息
