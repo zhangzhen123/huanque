@@ -1,6 +1,7 @@
 package com.julun.huanque.message.viewmodel
 
-import android.graphics.drawable.BitmapDrawable
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import com.aliyun.player.AliPlayerFactory
 import com.aliyun.player.nativeclass.CacheConfig
@@ -11,6 +12,7 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.FileUtils
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ImageUtils
 
 
@@ -23,6 +25,9 @@ class PrivateAnimationViewModel : BaseViewModel() {
     //动画播放成功标识位
     val animationEndFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //需要播放的礼物列表
+    val giftList = mutableListOf<ChatGift>()
+
     //音效准备成功标识位
     var voicePreparedFlag = false
 
@@ -31,6 +36,9 @@ class PrivateAnimationViewModel : BaseViewModel() {
 
     //音效播放完成标识位
     val voiceCompleteFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //弹窗隐藏标识位
+    val dismissState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //需要播放动画的礼物对象
     val giftData: MutableLiveData<ChatGift> by lazy { MutableLiveData<ChatGift>() }
@@ -155,6 +163,23 @@ class PrivateAnimationViewModel : BaseViewModel() {
         })
     }
 
+    /**
+     * 开始消费动画礼物
+     */
+    fun startConsumeGift(fragment: Fragment? = null) {
+        logger("Message state = ${fragment?.lifecycle?.currentState},atLeast = ${fragment?.lifecycle?.currentState?.isAtLeast(Lifecycle.State.CREATED)}")
+        if (fragment?.lifecycle?.currentState?.isAtLeast(Lifecycle.State.CREATED) == true || giftData.value != null) {
+            //弹窗处于显示当中或者正在消费礼物动画
+            return
+        } else {
+            //弹窗未处于显示当中,并且没有处于消费礼物流程当中，开始消费礼物动画
+            if (ForceUtils.isIndexNotOutOfBounds(0, giftList)) {
+                val tempData = giftList.removeAt(0)
+                giftData.value = tempData
+            }
+        }
+
+    }
 
     /**
      * 开始播放音效

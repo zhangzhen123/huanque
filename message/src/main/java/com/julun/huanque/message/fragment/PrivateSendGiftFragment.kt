@@ -74,8 +74,6 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
     // 所有礼物面板数据
     private var goodsCfgData: ChatGiftInfo? = null
 
-    private var sendRequesting = false
-
     private var curGiftIsSending: ChatGift? = null//记录当前正在执行赠送回调的礼物
 
     private var tabList: ArrayList<TabItemInfo> = arrayListOf()//记录大tab标签的
@@ -575,10 +573,6 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
     // 发送礼物按钮点击事件
     private val sendGiftClick: View.OnClickListener by lazy {
         View.OnClickListener {
-            // 上次发送礼物还没结束
-            if (sendRequesting) {
-                return@OnClickListener
-            }
             if (selectedGift == null) {
                 ToastUtils.show("选择要送出的礼物喔~")
                 return@OnClickListener
@@ -593,7 +587,6 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
      */
     private fun realSendGift(gift: ChatGift) {
         sendPagerAdapter = lastPagerAdapter
-        sendRequesting = true
         curGiftIsSending = gift
         sendActionBtn?.text = "..."
         val targetId = mPrivateConversationViewModel.targetIdData.value
@@ -635,7 +628,6 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
         // 请求结束
         sendActionBtn?.text = "赠送"
         curGiftIsSending = null
-        sendRequesting = false
     }
 
     // 选中礼物

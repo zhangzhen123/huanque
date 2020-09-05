@@ -420,7 +420,17 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.startAnimationData?.observe(this, Observer {
             if (it != null) {
-                mPrivateAnimationViewModel.giftData.value = it
+                //将礼物添加到待播放列表
+                mPrivateAnimationViewModel.giftList.add(it)
+                //开始消费礼物动画
+                mPrivateAnimationViewModel.startConsumeGift(mAnimationFragment)
+                mPrivateConversationViewModel?.startAnimationData?.value = null
+            }
+        })
+
+        mPrivateAnimationViewModel.giftData.observe(this, Observer {
+            if (it != null) {
+                //开始消费动画
                 mPrivateAnimationViewModel.prepareResource(it)
             }
         })
