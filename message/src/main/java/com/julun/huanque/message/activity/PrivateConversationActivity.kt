@@ -574,7 +574,7 @@ class PrivateConversationActivity : BaseActivity() {
                 if (ForceUtils.isIndexNotOutOfBounds(position, wordList)) {
                     val word = wordList[position]
                     vModel.currentActiveWord = word
-                    tv_active_content.text = "${word.wordType},\"${word.content}\""
+                    tv_active_content.text = "${word.wordType}，“${word.content}"
                 }
                 if (vModel.wordPosition >= wordList.size - 1) {
                     //数据已经使用光，从后台获取新的数据
