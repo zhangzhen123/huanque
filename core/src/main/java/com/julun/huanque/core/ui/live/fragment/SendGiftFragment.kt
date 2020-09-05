@@ -1383,7 +1383,7 @@ class SendGiftFragment : BaseDialogFragment() {
 
     private fun resetData() {
         // 请求结束
-        sendActionBtn?.text = "赠 送"
+        sendActionBtn?.text = "赠送"
         curGiftIsSending = null
         sendRequesting = false
     }

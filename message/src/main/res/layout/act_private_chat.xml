@@ -15,6 +15,31 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/iv_intimate"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="54dp"
+        android:src="@mipmap/icon_intimate_level_heart"
+        app:layout_constraintBottom_toBottomOf="@id/header_view"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header_view" />
+
+    <TextView
+        android:id="@+id/tv_intimate"
+        android:layout_width="26dp"
+        android:layout_height="10dp"
+        android:background="@drawable/bg_intimate_level"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintBottom_toBottomOf="@id/iv_intimate"
+        app:layout_constraintLeft_toLeftOf="@id/iv_intimate"
+        app:layout_constraintRight_toRightOf="@id/iv_intimate"
+        android:text="lv.0" />
+
+
     <TextView
         android:id="@+id/tv_unread_count"
         android:layout_width="wrap_content"
@@ -261,9 +286,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
                     android:src="@mipmap/icon_xiaoque_arrow"
+                    app:layout_constraintBottom_toTopOf="@id/iv_xiaoque"
                     app:layout_constraintLeft_toLeftOf="@id/iv_xiaoque"
-                    app:layout_constraintRight_toRightOf="@id/iv_xiaoque"
-                    app:layout_constraintBottom_toTopOf="@id/iv_xiaoque" />
+                    app:layout_constraintRight_toRightOf="@id/iv_xiaoque" />
 
                 <TextView
                     android:id="@+id/tv_active_content"
@@ -288,7 +313,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_margin="5dp"
-                    android:padding="2dp"
+                    android:padding="6dp"
                     android:src="@mipmap/icon_xiaoque_close"
                     android:visibility="gone"
                     app:layout_constraintRight_toRightOf="@id/view_xiaoque"
@@ -335,16 +360,5 @@
 
         </com.effective.android.panel.view.panel.PanelContainer>
     </com.effective.android.panel.view.PanelSwitchLayout>
-
-
-    <ImageView
-        android:id="@+id/iv_intimate"
-        android:layout_width="52dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginRight="21dp"
-        android:src="@mipmap/icon_intimate_level_heart"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,7 +25,7 @@ import org.jetbrains.anko.backgroundDrawable
  * @iterativeVersion 4.17
  * @iterativeDetail 增加折扣券逻辑
  */
-class PrivateGiftAdapter : BaseQuickAdapter<ChatGift, BaseViewHolder>(R.layout.item_cmp_gift) {
+class PrivateGiftAdapter : BaseQuickAdapter<ChatGift, BaseViewHolder>(R.layout.item_cmp_gift_private) {
     // 当前选中的礼物
     companion object {
         //选中的礼物

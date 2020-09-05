@@ -365,6 +365,7 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.operationType = ""
                 //刷新特权表情
                 refreshPrivilegeEmoji(it.intimate)
+                tv_intimate.text = "lv.${it.intimate.intimateLevel}"
             }
             showTitleView(it.friendUser.nickname, it.meetStatus)
             mIntimateDetailViewModel?.basicBean?.value = it
@@ -517,8 +518,6 @@ class PrivateConversationActivity : BaseActivity() {
             }
         })
 
-        edit_text.keyListener
-
 
         iv_pic.onClickNew {
             val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
@@ -532,9 +531,10 @@ class PrivateConversationActivity : BaseActivity() {
         }
         iv_intimate.onClickNew {
             //显示欢遇弹窗
-            mIntimateDetailFragment =
-                mIntimateDetailFragment ?: IntimateDetailFragment.newInstance()
-            mIntimateDetailFragment?.show(supportFragmentManager, "IntimateDetailFragment")
+            RNPageActivity.start(
+                this,
+                RnConstant.INTIMATE_LEVEL_PAGE,
+                Bundle().apply { putLong("friendId", mPrivateConversationViewModel?.targetIdData?.value ?: 0L) })
         }
 
         iv_phone.onClickNew {

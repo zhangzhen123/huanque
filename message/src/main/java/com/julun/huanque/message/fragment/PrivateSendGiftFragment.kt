@@ -3,6 +3,7 @@ package com.julun.huanque.message.fragment
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Typeface
+import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -20,6 +21,7 @@ import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.ConsumeForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
@@ -113,7 +115,12 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
     private fun initListener() {
 
         tv_privilege.onClickNew {
-            RNPageActivity.start(requireActivity(), RnConstant.WEALTH_LEVEL_PAGE)
+            val programId = SharedPreferencesUtils.getLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
+            RNPageActivity.start(requireActivity(), RnConstant.WEALTH_LEVEL_PAGE, Bundle().apply {
+                putLong(
+                    "programId", programId
+                )
+            })
         }
         view_top?.onTouch { _, motionEvent ->
             if (motionEvent.action === MotionEvent.ACTION_DOWN) {
@@ -626,7 +633,7 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
 
     private fun resetData() {
         // 请求结束
-        sendActionBtn?.text = "赠 送"
+        sendActionBtn?.text = "赠送"
         curGiftIsSending = null
         sendRequesting = false
     }
