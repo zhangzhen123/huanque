@@ -23,11 +23,13 @@ import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
+import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
 import kotlin.math.ceil
@@ -144,10 +146,15 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
                     }
                 }
+                val btn_action = holder.getView<TextView>(R.id.btn_action)
                 if (bean.anchor && bean.living) {
-                    holder.setText(R.id.btn_action, "围观")
+                    btn_action.text = "围观"
+                    btn_action.textColor = GlobalUtils.formatColor("#FF8E8E")
+                    btn_action.backgroundResource = R.drawable.bg_home_onlooker
                 } else {
-                    holder.setText(R.id.btn_action, "私信")
+                    btn_action.text = "私信"
+                    btn_action.textColor = GlobalUtils.formatColor("#FFCC00")
+                    btn_action.backgroundResource = R.drawable.bg_stroke_btn1
                 }
                 when {
                     list.isNotEmpty() -> {
