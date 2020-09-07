@@ -49,18 +49,18 @@ object VoiceManager {
         mVoicePlayer?.config = config
 
 
-//        //设置缓存相关
-//        val cacheConfig = CacheConfig()
-//        //开启缓存功能
-//        cacheConfig.mEnable = true
-//        //能够缓存的单个文件最大时长。超过此长度则不缓存
-//        cacheConfig.mMaxDurationS = 2000
-////        //缓存目录的位置
-//        cacheConfig.mDir = "${FileUtils.getCachePath(CommonInit.getInstance().getApp())}/chat/voice"
-//        //缓存目录的最大大小。超过此大小，将会删除最旧的缓存文件
-//        cacheConfig.mMaxSizeMB = 500
-////        //设置缓存配置给到播放器
-//        mVoicePlayer.setCacheConfig(cacheConfig)
+        //设置缓存相关
+        val cacheConfig = CacheConfig()
+        //开启缓存功能
+        cacheConfig.mEnable = true
+        //能够缓存的单个文件最大时长。超过此长度则不缓存
+        cacheConfig.mMaxDurationS = 2000
+//        //缓存目录的位置
+        cacheConfig.mDir = "${FileUtils.getCachePath(CommonInit.getInstance().getApp())}/chat/voice"
+        //缓存目录的最大大小。超过此大小，将会删除最旧的缓存文件
+        cacheConfig.mMaxSizeMB = 500
+//        //设置缓存配置给到播放器
+        mVoicePlayer.setCacheConfig(cacheConfig)
 
         mVoicePlayer.setOnPreparedListener {
             logger("voice preparedTime = ${System.currentTimeMillis()}")
@@ -76,17 +76,18 @@ object VoiceManager {
      * 播放响铃音效
      */
     fun startRing(autoPlayer: Boolean = true) {
+        mVoicePlayer.isLoop = true
         val dataSource = UrlSource()
         dataSource.uri = StringHelper.getOssAudioUrl(RingUrl)
         mVoicePlayer.isAutoPlay = autoPlayer
-//        if (!autoPlayer) {
-//            //缓冲，不播放
-//            mVoicePlayer.setOnPreparedListener {
-//                startFinish(false)
-//            }
-//        } else {
-//            mVoicePlayer.setOnPreparedListener(null)
-//        }
+        if (!autoPlayer) {
+            //缓冲，不播放
+            mVoicePlayer.setOnPreparedListener {
+                startFinish(false)
+            }
+        } else {
+            mVoicePlayer.setOnPreparedListener(null)
+        }
         mVoicePlayer.setDataSource(dataSource)
 
         mVoicePlayer.prepare()
@@ -97,17 +98,18 @@ object VoiceManager {
      * 播放结束音效
      */
     fun startFinish(autoPlayer: Boolean = true) {
+        mVoicePlayer.isLoop = false
         val dataSource = UrlSource()
         dataSource.uri = StringHelper.getOssAudioUrl(FinishUrl)
         mVoicePlayer.isAutoPlay = autoPlayer
-//        if (!autoPlayer) {
-//            //缓冲，不播放
-//            mVoicePlayer.setOnPreparedListener {
-//                startMatch(false)
-//            }
-//        } else {
-//            mVoicePlayer.setOnPreparedListener(null)
-//        }
+        if (!autoPlayer) {
+            //缓冲，不播放
+            mVoicePlayer.setOnPreparedListener {
+                startMatch(false)
+            }
+        } else {
+            mVoicePlayer.setOnPreparedListener(null)
+        }
         mVoicePlayer.setDataSource(dataSource)
         mVoicePlayer.prepare()
     }
@@ -116,10 +118,11 @@ object VoiceManager {
      * 播放匹配音效
      */
     fun startMatch(autoPlayer: Boolean = true) {
+        mVoicePlayer.isLoop = true
         val dataSource = UrlSource()
         dataSource.uri = StringHelper.getOssAudioUrl(MatchUrl)
         mVoicePlayer.isAutoPlay = autoPlayer
-//        mVoicePlayer.setOnPreparedListener(null)
+        mVoicePlayer.setOnPreparedListener(null)
         mVoicePlayer.setDataSource(dataSource)
         mVoicePlayer.prepare()
     }
