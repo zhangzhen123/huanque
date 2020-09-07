@@ -31,14 +31,14 @@
                 android:id="@+id/tv_empty_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="榜单上还差个你，快去努力吧！"
                 android:textColor="@color/black_999"
                 android:textSize="@dimen/sp_14"
-                app:layout_constraintVertical_bias="0.66"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.66"
+                tools:text="榜单上还差个你，快去努力吧！" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

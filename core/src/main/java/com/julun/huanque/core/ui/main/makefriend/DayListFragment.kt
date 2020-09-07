@@ -328,6 +328,11 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
             tv_empty_content.hide()
         } else {
             tv_empty_content.show()
+            if (type == TODAY) {
+                tv_empty_content.text = "榜单上还差个你，快去努力吧！"
+            } else if (type == YESTERDAY) {
+                tv_empty_content.text = "没有更多的人上榜了"
+            }
         }
     }
 

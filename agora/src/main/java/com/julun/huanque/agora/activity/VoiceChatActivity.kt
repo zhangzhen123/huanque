@@ -34,6 +34,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.hide
@@ -72,9 +73,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     private var am: AudioManager? = null
 
-    //音频播放器
-    private var mPlayer: MediaPlayer? = null
-
     //对方是否加入频道的标记位
     private var otherJoinChannel = false
 
@@ -109,7 +107,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         initViewModel()
         mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
         sendMediaButton()
-        requestAudioFocus()
+//        requestAudioFocus()
         val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
         if (netCallBean == null) {
             ToastUtils.show("没有对方数据")
@@ -283,12 +281,11 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 播放音效
      */
     private fun playAudio(calling: Boolean) {
-        mPlayer = if (calling) {
-            MediaPlayer.create(this, R.raw.ring)?.apply { isLooping = true }
+        if (calling) {
+            VoiceManager.startRing()
         } else {
-            MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }
+            VoiceManager.startFinish()
         }
-        mPlayer?.start()
 
         am?.mode = AudioManager.MODE_NORMAL
         am?.isSpeakerphoneOn = true;
@@ -431,8 +428,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         ll_hands_free.show()
                         ll_voice_accept.hide()
 
-                        mPlayer?.stop()
-                        mPlayer = null
+                        VoiceManager.stopAllVoice()
 
                         //取消超时倒计时
                         mDisposable?.dispose()
@@ -442,8 +438,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     }
                     VoiceChatViewModel.VOICE_CLOSE -> {
                         //结束状态
-                        mPlayer?.stop()
-                        mPlayer = null
+                        VoiceManager.stopAllVoice()
 
                         playAudio(false)
                         //退出频道
@@ -899,8 +894,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         releaseVideoFocus()
         leaveChannel()
-        mPlayer?.stop()
-        mPlayer = null
+        VoiceManager.stopAllVoice()
 
     }
 

@@ -11,6 +11,7 @@ import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
+import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
@@ -31,6 +32,7 @@ class WelcomeActivity : BaseActivity() {
         //移除缓存的私信气泡数据
         SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE,ChatBubble())
         checkPermissions()
+        VoiceManager.startRing(false)
     }
 
     private fun checkPermissions() {
