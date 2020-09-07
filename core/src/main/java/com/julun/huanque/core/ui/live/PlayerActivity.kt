@@ -1603,7 +1603,7 @@ class PlayerActivity : BaseActivity() {
         MessageProcessor.registerEventProcessor(object :
             MessageProcessor.StopLivingMessageProcessor {
             override fun process(data: CloseShowEvent) {
-                viewModel?.squareView?.value = true
+                viewModel.squareView.value = true
                 liveViewManager.switchToVertical()
                 //只有非NormalStop才关播
                 if (isAnchor && data.stopType != StopType.NORMALSTOP) {
