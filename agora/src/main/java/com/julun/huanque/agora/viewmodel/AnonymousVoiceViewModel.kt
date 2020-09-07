@@ -69,6 +69,9 @@ class AnonymousVoiceViewModel : BaseViewModel() {
     //关注结果
     val followStatusData: MutableLiveData<FollowResultBean> by lazy { MutableLiveData<FollowResultBean>() }
 
+    //关闭页面的标识位
+    val finishFlag : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //声网token
     var agoraToken = ""
 
@@ -115,6 +118,7 @@ class AnonymousVoiceViewModel : BaseViewModel() {
                 {
                     socialService.cancelMatch().dataConvert()
                     currentState.value = WAIT
+//                    finishFlag.value = true
                 }
             )
         }
@@ -211,7 +215,7 @@ class AnonymousVoiceViewModel : BaseViewModel() {
                 val follow = socialService.follow(FriendIdForm(userId)).dataConvert()
                 val followBean = FollowResultBean(follow = follow.follow, userId = userId)
                 followStatusData.value = followBean
-                EventBus.getDefault().post(UserInfoChangeEvent(userId,follow.stranger))
+                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger))
                 EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
             }, {
 
