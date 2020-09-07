@@ -1,3 +1,4 @@
+include ':platform_push'
 include ':maplib'
 include ':jpushlib'
 include ':picture_library'

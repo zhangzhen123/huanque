@@ -218,6 +218,7 @@ class MainActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         UserHeartManager.stopBeat()
+        RongIMClient.getInstance().disconnect()
     }
 
 

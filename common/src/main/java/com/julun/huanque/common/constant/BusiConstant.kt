@@ -840,6 +840,8 @@ object PlayerFrom {
 
     const val RN = "RN"
     const val DESTROY_ACCOUNT = "destroyAccount"
+
+    const val Push = "Push"
 }
 
 /**
