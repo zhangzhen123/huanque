@@ -1086,6 +1086,8 @@ class OperatorMessageBean : Serializable {
     var nickname: String = ""
     var time: String = ""
     var targetNickname: String = ""
+    //被操作的直播间
+    var programId:Long = 0
 }
 
 /**

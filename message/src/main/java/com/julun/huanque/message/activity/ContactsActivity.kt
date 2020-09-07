@@ -20,9 +20,9 @@ import com.julun.huanque.common.constant.ContactsTabType
 import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.DensityHelper
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.NumberFormatUtils
 import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.ProgramFragmentAdapter
@@ -222,14 +222,14 @@ class ContactsActivity : BaseActivity() {
                     simplePagerTitleView.textSizeDimen = R.dimen.text_size_big
                     val userTab = it.getTypeList()[index]
                     val count = userTab.count
-                    if (count >= 10000) {
-                        val iCount = count / 1000
-                        val dCount = iCount / 10.toDouble()
-                        simplePagerTitleView.text = "${userTab.userTabName}${NumberFormatUtils.formatWithdecimal1(dCount)}W"
-                    } else {
-                        simplePagerTitleView.text = "${userTab.userTabName}$count"
-                    }
-
+//                    if (count >= 10000) {
+//                        val iCount = count / 1000
+//                        val dCount = iCount / 10.toDouble()
+//                        simplePagerTitleView.text = "${userTab.userTabName}${NumberFormatUtils.formatWithdecimal1(dCount)}W"
+//                    } else {
+//                        simplePagerTitleView.text = "${userTab.userTabName}$count"
+//                    }
+                    simplePagerTitleView.text = "${userTab.userTabName}${StringHelper.formatNum(count)}"
                     simplePagerTitleView.normalColor = GlobalUtils.getColor(R.color.black_999)
                     simplePagerTitleView.selectedColor = GlobalUtils.getColor(R.color.black_333)
                     simplePagerTitleView.setOnClickListener { pager.currentItem = index }

@@ -55,11 +55,11 @@ import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
+import com.julun.huanque.core.ui.live.fragment.LivePlayerFragment
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
 import com.julun.huanque.core.ui.live.manager.PlayerViewManager
 import com.julun.huanque.core.viewmodel.*
 import com.julun.huanque.core.widgets.live.slide.SlideViewContainer
-import com.julun.huanque.core.ui.live.fragment.LivePlayerFragment
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -176,6 +176,9 @@ class PlayerActivity : BaseActivity() {
     }
 
     private var isAnchor = false//是不是主播进入
+
+    //是否被封禁了
+    private var isBanned: Boolean = false
 
     companion object {
         //主播开播之前数据
@@ -356,6 +359,8 @@ class PlayerActivity : BaseActivity() {
                 hasJoinRoom = true
                 joinChatCallback(it)
                 playerMessageViewModel.getBlockedConversationList()
+                //在获取消息前清空私聊红点
+                actionView.togglePrivateRedPointView(0)
                 playerMessageViewModel.queryRongPrivateCount()
             } else {
                 viewModel.errorState.value = 2
@@ -448,6 +453,8 @@ class PlayerActivity : BaseActivity() {
 
         viewModel.baseData.observe(this, Observer {
             it ?: return@Observer
+            //重置封禁开关
+            isBanned = false
             //basic接口新增不传programId时 随机返回一个新的programId 这里更新programId
             programId = it.programId
             liveViewManager.resetSlideViewLocation()
@@ -461,10 +468,8 @@ class PlayerActivity : BaseActivity() {
                 cur_live_bg.hide()
             } else {
                 cur_live_bg.show()
-                if (currentLiveBgUrl?.isNotEmpty() != true) {
-                    currentLiveBgUrl = it.prePic
-                    liveViewManager.loadBlurImage(cur_live_bg, it.prePic)
-                }
+                currentLiveBgUrl = it.prePic
+                liveViewManager.loadBlurImage(cur_live_bg, it.prePic)
             }
 
 //            conversationListViewModel?.anchorData = it
@@ -616,7 +621,8 @@ class PlayerActivity : BaseActivity() {
      */
     private fun openPrivateConversation() {
         lifecycleScope.launchWhenResumed {
-            val userInfo = playerMessageViewModel.privateConversationData.value ?: return@launchWhenResumed
+            val userInfo =
+                playerMessageViewModel.privateConversationData.value ?: return@launchWhenResumed
             val bundle = Bundle()
             bundle.putLong(ParamConstant.TARGET_USER_ID, userInfo.userId)
             bundle.putString(ParamConstant.NICKNAME, userInfo.nickname)
@@ -768,42 +774,6 @@ class PlayerActivity : BaseActivity() {
         viewModel.followStatusData.value = followBean.convertRtData()
     }
 
-    /**
-     * 统一的eventBus处理入口方法
-     */
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    fun eventBusAction(event: EventAction) {
-//        logger.info("eventBusAction:${event.code}")
-//        when (event.code) {
-//            EventBusCode.RefreshUserInfo -> {
-//                viewModel.refreshUserInfoData()
-//            }
-//            EventBusCode.SubscribeChange -> {
-//                val subStatus = event.data as? SubscribeEvent ?: return
-//                viewModel.attentionAble.value = true
-//                if (subStatus.isError) {
-//                    //订阅异常
-//                    return
-//                }
-//                if (subStatus.programId != viewModel.programId.toLong()) {
-//                    //不是该直播间的订阅通知
-//                    return
-//                }
-//                viewModel.modifySubscribe.value = subStatus.isSubscribed
-//            }
-//            EventBusCode.openPrivate -> {
-//                val data = event.data as? OpenPrivateChatRoomEvent ?: return
-//                while (ActivitiesManager.getCurrentActivity() !is PlayerActivity) {
-//                    ActivitiesManager.finishTopActivity()
-//                }
-//                viewModel.privateMessageView.value = PrivateMessageBean(data.userId, data.nickname)
-//            }
-//            EventBusCode.RefreshGift -> {
-//                liveViewManager.refreshGiftFragment()
-//            }
-//        }
-//    }
-
     private fun joinChatCallback(joined: Boolean?) {
         if (joined != null && joined) {
             if (viewModel.loginSuccessData.value != null) {
@@ -822,6 +792,7 @@ class PlayerActivity : BaseActivity() {
 //                GIODataPool.positionIndex = null
                 form = UserEnterRoomForm(programId, fromType = mFrom, shareUserId = mShareUSerId)
                 viewModel.enterLivRoom(form)
+                viewModel.requestBubble()
             }
         } else {
             //加入聊天室失败
@@ -1063,7 +1034,7 @@ class PlayerActivity : BaseActivity() {
         // 清空公聊消息列表
         publicMessageView.clearMessages()
         //清空私聊红点
-        actionView.togglePrivateRedPointView(0)
+//        actionView.togglePrivateRedPointView(0)
         initInput()
 
         // 注册融云交互事件 因为有些消息回调需要roomData所以必须在成功回调后注册事件监听
@@ -1576,6 +1547,7 @@ class PlayerActivity : BaseActivity() {
                 // 如果升级的是自己，则刷新个人信息
                 if (localUserId == data.userId) {
                     viewModel.refreshUserInfoData()
+                    viewModel.requestBubble()
                 }
             }
         })
@@ -1606,6 +1578,7 @@ class PlayerActivity : BaseActivity() {
                 if (!liveViewManager.isHorizontal && !isAnchor) {
                     surface_view?.scrollEnable = true
                 }
+                cur_live_bg.hide()
                 if (data.programId == programId) {
                     val baseData: UserEnterRoomRespBase = viewModel.baseData.value ?: return
                     addPlayFragment(true, LiveBean().apply {
@@ -1644,9 +1617,10 @@ class PlayerActivity : BaseActivity() {
                 } else {
                     //收到停播消息，设置上次开播时间为刚刚
                     showOriView()
-                    mVideoViewModel?.logout?.postValue(true)
+                    mVideoViewModel.logout.postValue(true)
                     viewModel.baseData.value?.lastShowTimeDiffText = "刚刚"
 //                    surface_view?.scrollEnable = false
+                    cur_live_bg.show()
                     addPlayFragment(false)
                 }
             }
@@ -1738,34 +1712,12 @@ class PlayerActivity : BaseActivity() {
 //
 //        })
 
-        //踢人消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.KickUserProcessor {
-            override fun process(data: OperatorMessageBean) {
-                ToastUtils.show("${data.nickname}把${data.targetNickname}踢出直播间${data.time}")
-                finish()
-            }
-        })
 //        //禁言消息
 //        MessageProcessor.registerEventProcessor(object : MessageProcessor.MuteUserProcessor {
 //            override fun process(data: OperatorMessageBean) {
 //                ToastUtils.show("${data.nickname}给了${data.targetNickname}一个${data.time}禁言套餐")
 //            }
 //        })
-        //封禁账户消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserProcessor {
-            override fun process(data: OperatorMessageBean) {
-                ToastUtils.show("${data.nickname}把${data.targetNickname}账号封禁了${data.time}")
-                EventBus.getDefault().post(LoginOutEvent())
-                finish()
-            }
-        })
-        //直播封禁（用户不允许进入任何直播间）
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserLivingProcessor {
-            override fun process(data: OperatorMessageBean) {
-                ToastUtils.show("${data.nickname}禁止${data.targetNickname}${data.time}进入任何直播间")
-                finish()
-            }
-        })
     }
 
 
@@ -1855,12 +1807,14 @@ class PlayerActivity : BaseActivity() {
         initListener()
         chat_layout.onTouch { _, _ ->
             mHelper?.hookSystemBackByPanelSwitcher()
+            ll_input.hide()
             false
         }
         publicMessageView.mEventListener = object : EventListener {
             override fun onDispatch(ev: MotionEvent?) {
                 if (ev?.action == MotionEvent.ACTION_DOWN) {
                     mHelper?.hookSystemBackByPanelSwitcher()
+                    ll_input.hide()
                 }
             }
         }
@@ -1909,6 +1863,7 @@ class PlayerActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         FloatingManager.hideFloatingView()
+        AliplayerManager.soundOn()
 
         //处理支付刷新
 //        if (refreshPay) {
@@ -1938,6 +1893,21 @@ class PlayerActivity : BaseActivity() {
      * 关闭界面时增加判断是会主页还是直接关闭
      */
     override fun finish() {
+        //封禁状态直接关闭直播间
+        if (isBanned) {
+            if (isAnchor) {
+                stopPublish()
+            } else {
+                viewModel.leave(programId)
+//                if (goHome) {
+//                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
+//                }
+                AliplayerManager.stop()
+                viewModel.leaveProgram()
+            }
+            super.finish()
+            return
+        }
         if (isAnchor) {
             //主播
             if (!closable && joinViewModel.joinData.value == true) {
@@ -1964,9 +1934,9 @@ class PlayerActivity : BaseActivity() {
             viewModel.leave(programId)
 //            mDanmuFragment?.release()
             //用户
-            if (goHome) {
-                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
-            }
+//            if (goHome) {
+//                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
+//            }
             val baseData = viewModel.baseData.value
             if (PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
                 FloatingManager.showFloatingView(
@@ -2256,8 +2226,21 @@ class PlayerActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun queryUnreadMsgCount(event: QueryUnreadCountEvent) {
         if (event.player) {
-            EventBus.getDefault().postSticky(UnreadCountEvent(playerMessageViewModel.unreadCountInPlayer.value ?: 0, true))
+            EventBus.getDefault().postSticky(
+                UnreadCountEvent(
+                    playerMessageViewModel.unreadCountInPlayer.value ?: 0,
+                    true
+                )
+            )
         }
     }
 
+    /**
+     * 收到封禁通知关闭直播间
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun bannedAndClosePlayer(event: BannedAndClosePlayer) {
+        isBanned = true
+        finish()
+    }
 }

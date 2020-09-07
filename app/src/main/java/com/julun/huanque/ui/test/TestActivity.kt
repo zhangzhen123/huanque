@@ -24,6 +24,7 @@ import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
+import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.DensityHelper
@@ -38,7 +39,7 @@ import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
 import com.julun.huanque.support.LoginManager
-import com.julun.jpushlib.TagAliasOperatorHelper
+//import com.julun.jpushlib.TagAliasOperatorHelper
 import com.julun.rnlib.RNPageActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -50,6 +51,7 @@ import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.activity_test.*
+import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.startActivity
 import java.io.File
@@ -73,6 +75,7 @@ class TestActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.activity_test
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        tv.backgroundDrawable = GlobalUtils.getBubbleDrawable(ChatBubble(bdc = "#FFDF20-#FFCB53",bgc = "#0309FF-#FE1212"),false)
         viewModel.userInfo.observe(this, Observer {
             println("我是用户信息：=$it")
             ret_resp.text = "语音签名：${it.points.getOrNull(0)?.voiceContent}"
@@ -109,16 +112,16 @@ class TestActivity : BaseActivity() {
             finish()
         }
         goto_photo.onClickNew {
-            goToPictureSelectPager(1, PictureConfig.TYPE_VIDEO)
+            goToPictureSelectPager(1, PictureConfig.TYPE_IMAGE)
         }
         set_push.onClickNew {
             val userId = SessionUtils.getUserId().toString()
             logger.info("jpush userId=$userId")
-            val tagAliasBean = TagAliasOperatorHelper.TagAliasBean()
-            tagAliasBean.action = TagAliasOperatorHelper.ACTION_SET
-            tagAliasBean.isAliasAction = true
-            tagAliasBean.alias = userId
-            TagAliasOperatorHelper.getInstance().handleAction(tagAliasBean)
+//            val tagAliasBean = TagAliasOperatorHelper.TagAliasBean()
+//            tagAliasBean.action = TagAliasOperatorHelper.ACTION_SET
+//            tagAliasBean.isAliasAction = true
+//            tagAliasBean.alias = userId
+//            TagAliasOperatorHelper.getInstance().handleAction(tagAliasBean)
         }
         open_cv.onClickNew {
             PrivateConversationActivity.newInstance(this, 20000041)

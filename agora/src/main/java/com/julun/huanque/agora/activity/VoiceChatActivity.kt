@@ -1,20 +1,15 @@
 package com.julun.huanque.agora.activity
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.media.AudioManager
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +29,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.hide
@@ -44,7 +40,6 @@ import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.agora.rtc.Constants
-import io.agora.rtc.Constants.AUDIO_ROUTE_HEADSETBLUETOOTH
 import io.agora.rtc.IRtcEngineEventHandler
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -71,9 +66,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     private var mCallingContentDisposable: Disposable? = null
 
     private var am: AudioManager? = null
-
-    //音频播放器
-    private var mPlayer: MediaPlayer? = null
 
     //对方是否加入频道的标记位
     private var otherJoinChannel = false
@@ -108,8 +100,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         StatusBarUtil.setTransparent(this)
         initViewModel()
         mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
-        sendMediaButton()
-        requestAudioFocus()
+//        sendMediaButton()
+//        requestAudioFocus()
         val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
         if (netCallBean == null) {
             ToastUtils.show("没有对方数据")
@@ -120,7 +112,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         waveView.setMaxRadius(dp2pxf(105))
         waveView.setDuration(2500)
         waveView.setSpeed(750)
-        waveView.setStyle(Paint.Style.STROKE);
+        waveView.setStyle(Paint.Style.STROKE)
         waveView.start()
         mVoiceChatViewModel?.netcallBeanData?.value = netCallBean
 
@@ -137,15 +129,21 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
 
         AgoraManager.mHandler.addHandler(this)
+        playAudio(true)
         if (mType == ConmmunicationUserType.CALLING) {
             checkPermissions()
+            logger.info("Voice initViews = ${System.currentTimeMillis()}")
         } else {
             timer()
         }
         registerMessage()
+//        Observable.timer(100, TimeUnit.MILLISECONDS)
+//            .bindUntilEvent(this, ActivityEvent.DESTROY)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({ playAudio(true) }, {})
 
+//        playAudio(true)
     }
-
 
     private fun registerMessage() {
         MessageProcessor.clearProcessors(false)
@@ -283,15 +281,14 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 播放音效
      */
     private fun playAudio(calling: Boolean) {
-        mPlayer = if (calling) {
-            MediaPlayer.create(this, R.raw.ring)?.apply { isLooping = true }
+        if (calling) {
+            VoiceManager.startRing()
         } else {
-            MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }
+            VoiceManager.startFinish()
         }
-        mPlayer?.start()
 
-        am?.mode = AudioManager.MODE_NORMAL
-        am?.isSpeakerphoneOn = true;
+//        am?.mode = AudioManager.MODE_NORMAL
+//        am?.isSpeakerphoneOn = true;
     }
 
     override fun initEvents(rootView: View) {
@@ -376,7 +373,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         logger.info("获取权限成功")
                         if (mType == ConmmunicationUserType.CALLING) {
                             timer()
-                            playAudio(true)
+                            logger.info("Voice checkPermissions = ${System.currentTimeMillis()}")
                         } else if (mType == ConmmunicationUserType.CALLED) {
                             mVoiceChatViewModel?.acceptVoice()
                             //加入会话
@@ -421,7 +418,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         ll_hands_free.hide()
                         ll_voice_accept.show()
                         showWaitContent(false)
-                        playAudio(true)
+//                        if (mType == ConmmunicationUserType.CALLED) {
+//                            playAudio(true)
+//                        }
                     }
                     VoiceChatViewModel.VOICE_ACCEPT -> {
                         //接听状态
@@ -431,8 +430,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         ll_hands_free.show()
                         ll_voice_accept.hide()
 
-                        mPlayer?.stop()
-                        mPlayer = null
+                        VoiceManager.stopAllVoice()
 
                         //取消超时倒计时
                         mDisposable?.dispose()
@@ -442,8 +440,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     }
                     VoiceChatViewModel.VOICE_CLOSE -> {
                         //结束状态
-                        mPlayer?.stop()
-                        mPlayer = null
+                        VoiceManager.stopAllVoice()
 
                         playAudio(false)
                         //退出频道
@@ -657,6 +654,32 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             mVoiceChatViewModel?.hangUpVoice()
         }
         logger.info("$TAG joinResult = $result")
+    }
+
+    /**
+     * 播放音效
+     */
+    private fun playerAudio() {
+        AgoraManager.mRtcEngine?.leaveChannel()
+        var accessToken = mVoiceChatViewModel?.agoraToken ?: ""
+        if (accessToken.isEmpty()) {
+            return
+        }
+        //设置为主播身份
+        AgoraManager.mRtcEngine?.setClientRole(Constants.CLIENT_ROLE_BROADCASTER)
+        AgoraManager.mRtcEngine?.enableAudio()
+        AgoraManager.mRtcEngine?.setDefaultAudioRoutetoSpeakerphone(false)
+        //默认开启声音
+        AgoraManager.mRtcEngine?.adjustRecordingSignalVolume(100)
+        //默认听筒
+        // Allows a user to join a channel.
+        val result = AgoraManager.mRtcEngine?.joinChannel(
+            accessToken,
+            "system_android",
+            null,
+            SessionUtils.getUserId().toInt()
+        )
+        AgoraManager.mRtcEngine?.startAudioMixing("/assets/ring.mp3", false, false, 100);
     }
 
     // Tutorial Step 3
@@ -897,10 +920,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         super.onViewDestroy()
         waveView.stopImmediately()
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
-        releaseVideoFocus()
+//        releaseVideoFocus()
         leaveChannel()
-        mPlayer?.stop()
-        mPlayer = null
+        VoiceManager.stopAllVoice()
 
     }
 

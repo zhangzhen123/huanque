@@ -149,6 +149,16 @@ data class GroupInfo(
     var version: Int = 0
 )
 
+/**
+ * 私信送礼面板使用
+ */
+data class PrivateGroupInfo(
+    var giftList: MutableList<ChatGift> = mutableListOf(),
+    var typeCode: String = "",
+    var typeName: String = "",
+    var version: Int = 0
+)
+
 //本地使用
 data class TabItemInfo(
     var typeCode: String = "",
@@ -167,6 +177,15 @@ data class ChatGiftInfo(
     var beans: Long = 0,
     var giftList: List<ChatGift> = listOf(),
     var tips: String = "",
+    //背包tab 红点标识位
+    var bagChange: Boolean = false,
+    var giftGroupList: List<PrivateGroupInfo> = listOf(),
+    var needExp: Long = 0,//下一级的经验总值
+    var showTab: String = "",
+    var userExp: Long = 0,//当前级的经验进度值
+    var userLevel: Int = 0,
+    var expRatio: Double = 0.0,//经验比例
+    var expRatioTtl: Long = 0,//经验卡倒计时
     //本地字段
     var viewPagerData: MutableList<ChatGroupGift> = mutableListOf()
 )
@@ -176,6 +195,23 @@ data class ChatGroupGift(
     var version: Int = 0
 )
 
+/**
+ * 礼物相关动画配置类
+ */
+data class SpecialParams(
+    //背景音乐地址
+    var bgm: String = "",
+    //动画地址
+    var svgaUrl: String = "",
+    //动画地址
+    var webpUrl: String = "",
+    //飘屏图片地址，多个以英文逗号分隔
+    var pics: String = "",
+    //飘屏类型，可选类型
+    var screenType: String = "",
+    //飘屏礼物数量
+    var count: Int = 0
+) : Serializable
 
 data class ChatGift(
     var beans: Int = 0,
@@ -183,9 +219,38 @@ data class ChatGift(
     var giftName: String = "",
     var pic: String = "",
     var selPic: String = "",
+    //动画配置类
+    var specialParams: SpecialParams = SpecialParams(),
+    //动画类型
+    var specialType: String = "",
+    //礼物单位
+    var giftUnit: String = "",
+    //tag文案
+    var tagContent: String? = null,
+    //用户经验
+    var userExp: Long = 0,
     //本地字段 送礼数量，发送自定义消息场景下使用
     var giftCount: Int = 1
-)
+) {
+    companion object {
+        //动画类型
+        //音效
+        const val Sound = "Sound"
+
+        //飘屏
+        const val Screen = "Screen"
+
+        //动画
+        const val Animation = "Animation"
+
+        //飘屏类型
+        //两边向中间飘屏
+        const val BothSide = "BothSide"
+
+        //从上往下嫖屏
+        const val TopDown = "TopDown"
+    }
+}
 
 data class ChatSendResult(
     var beans: Long = 0,

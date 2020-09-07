@@ -72,13 +72,13 @@ class EggResultFragment : BaseDialogFragment() {
     private fun showView(result: EggHitSumResult) {
         tv_mengdou.show()
         val count = result.prizeBeans
-        val unit = if (count >= 10000) {
-            val df = DecimalFormat("#.00")
-            "${StringHelper.formatMengDou(df.format((count / 10000.toDouble())).toDouble())}万"
-        } else {
-            "${StringHelper.formatNumber(count)}"
-        }
-        tv_mengdou.text = "总计${unit}鹊币"
+//        val unit = if (count >= 10000) {
+//            val df = DecimalFormat("#.00")
+//            "${StringHelper.formatMengDou(df.format((count / 10000.toDouble())).toDouble())}万"
+//        } else {
+//            "${StringHelper.formatNumber(count)}"
+//        }
+        tv_mengdou.text = "总计${StringHelper.formatCoinsCount(count)}"
         mAdapter.setList(result.prizeList)
     }
 

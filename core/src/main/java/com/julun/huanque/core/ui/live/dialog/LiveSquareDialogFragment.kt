@@ -21,7 +21,10 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.AuthorFollowBean
 import com.julun.huanque.common.bean.beans.ProgramLiveInfo
-import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.dp2px
@@ -85,7 +88,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             mViewModel.requestHotList(QueryType.LOAD_MORE, playViewModel.programId)
         }
         authorAdapter.addHeaderView(headerLayout)
-
+        authorAdapter.headerWithEmptyEnable = true
         authorList.adapter = authorAdapter
         authorList.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(5)))
         authorList.isNestedScrollingEnabled = false
@@ -99,12 +102,14 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             }
         }
         mRefreshLayout.setOnRefreshListener {
-            mViewModel.requestFollowList(true)
-            mViewModel.requestHotList(QueryType.REFRESH, playViewModel.programId)
+//            mViewModel.requestFollowList(true)
+//            mViewModel.requestHotList(QueryType.REFRESH, playViewModel.programId)
+            mViewModel.requestHotListAndFollow(QueryType.REFRESH, playViewModel.programId)
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
-        mViewModel.requestFollowList(true)
-        mViewModel.requestHotList(QueryType.INIT, playViewModel.programId)
+//        mViewModel.requestFollowList(true)
+//        mViewModel.requestHotList(QueryType.INIT, playViewModel.programId)
+        mViewModel.requestHotListAndFollow(QueryType.INIT, playViewModel.programId)
     }
 
     private fun initViewModel() {
@@ -164,17 +169,38 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             authorAdapter.loadMoreModule.loadMoreFail()
         }
     }
+
     private fun renderHotData(listData: RootListData<ProgramLiveInfo>) {
 
         if (listData.isPull) {
             authorAdapter.setList(listData.list)
             if (listData.list.isNotEmpty()) {
                 headerLayout.hotTitle.show()
+            } else {
+                authorAdapter.setEmptyView(
+                    MixedHelper.getErrorView(
+                        requireContext(),
+                        msg = "没有开播的主播，去交友看看吧",
+                        btnTex = "前往",
+                        onClick = View.OnClickListener {
+                            logger.info("跳转到交友")
+                            ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                                .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+                        }).apply {
+                        val lp = if (mViewModel.followList.value?.getT()?.list?.isNotEmpty() == true) {
+                            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(300))
+                        } else {
+                            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                        }
+
+                        this.layoutParams = lp
+                    }
+                )
+
             }
         } else {
             authorAdapter.addData(listData.list)
         }
-
         if (listData.hasMore) {
             //如果下拉加载更多时 返回的列表为空 会触发死循环 这里直接设置加载完毕状态
             if (listData.list.isEmpty()) {
@@ -198,17 +224,6 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             NetStateType.SUCCESS -> {//showSuccess()
                 state_pager_view.showSuccess()
                 mRefreshLayout.show()
-                authorAdapter.setEmptyView(
-                    MixedHelper.getErrorView(
-                        requireContext(),
-                        msg = "没有开播的主播，去交友看看吧",
-                        btnTex = "前往",
-                        onClick = View.OnClickListener {
-                            logger.info("跳转到交友")
-                            ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
-                        })
-                )
-
             }
             NetStateType.LOADING -> {//showLoading()
                 mRefreshLayout.hide()
@@ -216,7 +231,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             }
             NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
                 state_pager_view.showError(showBtn = true, btnClick = View.OnClickListener {
-                    mViewModel.queryInfo()
+                    mViewModel.requestHotListAndFollow(QueryType.INIT, playViewModel.programId)
                 })
             }
 
@@ -239,7 +254,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                 holder.setText(R.id.anchorNickname, item.programName)
                 ImageUtils.loadImage(
                     holder.getView(R.id.anchorPicture)
-                        ?: return, item.anchorPic+BusiConstant.OSS_160, 55f, 55f
+                        ?: return, item.anchorPic + BusiConstant.OSS_160, 55f, 55f
                 )
                 if (item.livingStatus) {
                     holder.setGone(R.id.fl_living, false)
@@ -253,20 +268,20 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
 
             override fun convert(holder: BaseViewHolder, item: ProgramLiveInfo) {
                 holder.setText(R.id.anchor_nickname, item.programName)
-                val textHot=holder.getView<TextView>(R.id.user_count)
+                val textHot = holder.getView<TextView>(R.id.user_count)
                 textHot.setTFDinCdc2()
-                if(item.heatValue<10000){
-                    textHot.text="${item.heatValue}"
-                    holder.setGone(R.id.user_count_w,true)
-                }else{
-                    val format = DecimalFormat("#")
+                if (item.heatValue < 10000) {
+                    textHot.text = "${item.heatValue}"
+                    holder.setGone(R.id.user_count_w, true)
+                } else {
+                    val format = DecimalFormat("#.0")
                     format.roundingMode = RoundingMode.HALF_UP
-                    textHot.text= "${format.format((item.heatValue / 10000.0)) }万"
-                    holder.setGone(R.id.user_count_w,false)
+                    textHot.text = "${format.format((item.heatValue / 10000.0))}"
+                    holder.setGone(R.id.user_count_w, false)
                 }
                 ImageUtils.loadImage(
                     holder.getView(R.id.anchorPicture)
-                        ?: return, item.coverPic+BusiConstant.OSS_350, 150f, 150f
+                        ?: return, item.coverPic + BusiConstant.OSS_350, 150f, 150f
                 )
                 if (item.city.isEmpty()) {
                     holder.setGone(R.id.anchor_city, true)
@@ -275,7 +290,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
 
                     holder.setText(R.id.anchor_city, item.city)
                 }
-
+                ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
 //                if (item.isLiving) {
 //                    holder.setText(R.id.tv_author_status, "直播中")
 //                } else {

@@ -51,7 +51,7 @@ class SysMsgAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.item_sy
             holder.setText(R.id.tvDate, TimeUtils.formatMessageTime(time))
 
             //subTitle
-            holder.setText(R.id.tvSubTitle, itemInfo?.subTitle ?: "")
+            holder.setText(R.id.tvTitle, itemInfo?.subTitle ?: "")
             //desc
             holder.setText(R.id.tvBody, itemInfo?.body ?: "")
 

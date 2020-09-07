@@ -8,7 +8,7 @@ import com.julun.huanque.common.helper.UnExpectedCrashExceptionForhuanqueApp
 import com.julun.huanque.common.interfaces.routerservice.AppCommonService
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.suger.logger
-import com.julun.jpushlib.TagAliasOperatorHelper
+//import com.julun.jpushlib.TagAliasOperatorHelper
 
 @Route(path = ARouterConstant.APP_COMMON_SERVICE)
 class AppCommonServiceImpl : AppCommonService {
@@ -25,12 +25,12 @@ class AppCommonServiceImpl : AppCommonService {
     override fun loginSuccess(session: Session) {
         logger("登录成功的通知回调 id=${session.userId}")
         //绑定极光
-        val userId = session.userId.toString()
-        val tagAliasBean = TagAliasOperatorHelper.TagAliasBean()
-        tagAliasBean.action = TagAliasOperatorHelper.ACTION_SET
-        tagAliasBean.isAliasAction = true
-        tagAliasBean.alias = userId
-        TagAliasOperatorHelper.getInstance().handleAction(tagAliasBean)
+//        val userId = session.userId.toString()
+//        val tagAliasBean = TagAliasOperatorHelper.TagAliasBean()
+//        tagAliasBean.action = TagAliasOperatorHelper.ACTION_SET
+//        tagAliasBean.isAliasAction = true
+//        tagAliasBean.alias = userId
+//        TagAliasOperatorHelper.getInstance().handleAction(tagAliasBean)
     }
 
     override fun logout() {

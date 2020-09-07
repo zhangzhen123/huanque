@@ -188,9 +188,9 @@ class UserCardFragment : BaseDialogFragment() {
                 tv_attention.isEnabled = true
             }
         })
-        mCardManagerViewModel.listResult.observe(this, Observer {
+        mCardManagerViewModel.canShowFlag.observe(this, Observer {
             if (it != null) {
-                mCardManagerViewModel.listResult.value = null
+                mCardManagerViewModel.canShowFlag.value = null
                 val dialog = CardManagerDialogFragment.newInstance(
                     programId = mUserCardViewModel.programId,
                     targetUserId = mUserCardViewModel.mUserId,
@@ -246,10 +246,6 @@ class UserCardFragment : BaseDialogFragment() {
         }
         tv_home_page.onClickNew {
             //主页
-            if (mUserCardViewModel.userInfoData.value?.canInteractive != true) {
-                Toast.makeText(context, "无法查看该用户的主页", Toast.LENGTH_SHORT).show()
-                return@onClickNew
-            }
             val userId = mUserCardViewModel.mUserId
             if (userId == SessionUtils.getUserId()) {
                 //跳转我的主页
@@ -259,6 +255,10 @@ class UserCardFragment : BaseDialogFragment() {
                 )
             } else {
                 //跳转他人主页
+                if (mUserCardViewModel.userInfoData.value?.canInteractive != true) {
+                    Toast.makeText(context, "无法查看该用户的主页", Toast.LENGTH_SHORT).show()
+                    return@onClickNew
+                }
                 RNPageActivity.start(
                     requireActivity(),
                     RnConstant.PERSONAL_HOMEPAGE,
@@ -296,7 +296,7 @@ class UserCardFragment : BaseDialogFragment() {
         }
         tv_manage.onClickNew {
             //打开管理弹窗
-            mCardManagerViewModel.getManage(mUserCardViewModel.programId, mUserCardViewModel.mUserId)
+            mCardManagerViewModel.getManage(mUserCardViewModel.programId, mUserCardViewModel.mUserId, true)
         }
     }
 

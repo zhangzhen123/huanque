@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
@@ -23,12 +24,16 @@ import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
+import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
+import kotlin.math.ceil
 
 class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolder>(null), LoadMoreModule,
     PhotosAdapter.OnItemClick {
@@ -101,14 +106,14 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 }
                 ImageHelper.setDefaultHeaderPic(headPic, bean.sex)
 
-                headPic.loadImage(bean.headPic+ BusiConstant.OSS_160, 66f, 66f)
+                headPic.loadImage(bean.headPic + BusiConstant.OSS_160, 66f, 66f)
                 val name = if (bean.nickname.length > 5) {
                     "${bean.nickname.substring(0, 5)}…"
                 } else {
                     bean.nickname
                 }
                 val sign = if (bean.mySign.length > 15) {
-                    "${bean.mySign.substring(0,15)}…"
+                    "${bean.mySign.substring(0, 15)}…"
                 } else {
                     bean.mySign
                 }
@@ -142,10 +147,15 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
                     }
                 }
+                val action=holder.getView<TextView>(R.id.btn_action)
                 if (bean.anchor && bean.living) {
-                    holder.setText(R.id.btn_action, "围观")
+                    action.text = "围观"
+                    action.textColor=Color.parseColor("#FF8E8E")
+                    action.backgroundResource=R.drawable.bg_stroke_btn3
                 } else {
-                    holder.setText(R.id.btn_action, "私信")
+                    action.text = "私信"
+                    action.textColor=Color.parseColor("#FFCC00")
+                    action.backgroundResource=R.drawable.bg_stroke_btn1
                 }
                 when {
                     list.isNotEmpty() -> {
@@ -231,15 +241,26 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val sp = SpannableString(content)
                 sp.setSpan(styleSpan1A, 0, start, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
                 tvTask.text = sp
-                rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                if (rv.itemDecorationCount <= 0) {
-                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(4)))
-                }
+
+
+                rv.layoutManager = GridLayoutManager(context, 3)
+//                if (rv.itemDecorationCount <= 0) {
+//                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(10)))
+//                }
                 val mHeaderNavAdapter: HeaderNavAdapter
                 if (rv.adapter != null) {
                     mHeaderNavAdapter = rv.adapter as HeaderNavAdapter
                 } else {
-                    mHeaderNavAdapter = HeaderNavAdapter()
+                    //动态计算的宽高
+                    //图片宽度
+                    val singlePicWidth = (ScreenUtils.getScreenWidth() - dp2px(48)) / 3
+                    val tempHeight = ceil(singlePicWidth * 210 / 327.0 + dp2px(8)).toInt()
+
+                    val rvParams = rv.layoutParams
+                    rvParams.height = tempHeight
+                    rv.layoutParams = rvParams
+
+                    mHeaderNavAdapter = HeaderNavAdapter(singlePicWidth)
                     rv.adapter = mHeaderNavAdapter
                 }
 

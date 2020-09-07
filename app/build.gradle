@@ -57,17 +57,27 @@ android {
 
         manifestPlaceholders = [
                 packagename       : rootProject.ext.packageType,
-                HUAWEI_APPID      : "appid=100210995",// 华为平台注册的appid
+                HUAWEI_APPID      : "appid=102845793",// 华为平台注册的appid
 
-                XIAOMI_APPKEY     : "MI-5661755253832", // 小米平台注册的appkey
-                XIAOMI_APPID      : "MI-2882303761517552832", // 小米平台注册的appid
+                XIAOMI_APPKEY     : "MI-5161864536858", // 小米平台注册的appkey
+                XIAOMI_APPID      : "MI-2882303761518645858", // 小米平台注册的appid
 
-                OPPO_APPKEY       : "OP-2f73y9a5s36s04kc444KKO4gw", // OPPO平台注册的appkey
-                OPPO_APPID        : "OP-3547263", // OPPO平台注册的appid
-                OPPO_APPSECRET    : "OP-bB0Acd0bF72AA7081c0205bCc0a3656F",//OPPO平台注册的appsecret
+                OPPO_APPKEY       : "OP-2c8b8dc3d9b04392884e8bc83fed73fd", // OPPO平台注册的appkey
+                OPPO_APPID        : "OP-30339257", // OPPO平台注册的appid
+                OPPO_APPSECRET    : "OP-2087b5267b324ff499a4a1c7616498c8",//OPPO平台注册的appsecret
 
-                VIVO_APPKEY       : "34ee4684-4c43-4e9b-ad71-1acef6d8382a", // VIVO平台注册的appkey
-                VIVO_APPID        : "12656", // VIVO平台注册的appid
+                VIVO_APPKEY       : "3abc3373c8c587cb9b1600cb8c5522bc", // VIVO平台注册的appkey
+                VIVO_APPID        : "104396366", // VIVO平台注册的appid
+
+                HUAWEI_APPID_P     : "102845793",// 华为平台注册的appid
+
+
+                OPPO_APPKEY_P      : "3abc3373c8c587cb9b1600cb8c5522bc", // OPPO平台注册的appkey
+                OPPO_APPID_P         : "30339257", // OPPO平台注册的appid
+                OPPO_APPSECRET_P     : "2087b5267b324ff499a4a1c7616498c8",//OPPO平台注册的appsecret
+
+                VIVO_APPKEY_P        : "3abc3373c8c587cb9b1600cb8c5522bc", // VIVO平台注册的appkey
+                VIVO_APPID_P         : "104396366", // VIVO平台注册的appid
         ]
 
         ndk {
@@ -144,7 +154,7 @@ dependencies {
     implementation project(path: ':cockroach')
     implementation project(path: ':message')
     implementation project(path: ':agora')
-    implementation project(':jpushlib')
+//    implementation project(':jpushlib')
     implementation project(':maplib')
 
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
@@ -155,4 +165,9 @@ dependencies {
     implementation rootProject.ext.dependencies["WECHAT"]
     implementation 'com.sina.weibo.sdk:core:10.7.0:openDefaultRelease@aar'
     implementation project(path: ':realname')
+    //一键登录
+    implementation 'cn.jiguang.sdk:jcore:2.3.4'
+    implementation 'cn.jiguang.sdk:jverification:2.6.5'
+    //厂商推送
+    implementation project(':platform_push')
 }

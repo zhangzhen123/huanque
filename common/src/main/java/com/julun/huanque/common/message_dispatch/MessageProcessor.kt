@@ -1158,6 +1158,7 @@ object MessageProcessor {
      */
     interface KickUserProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.KickUser
+        override fun isGlobal() = true
     }
 //    /**
 //     * 禁言消息
@@ -1170,6 +1171,7 @@ object MessageProcessor {
      */
     interface BanUserProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.BanUser
+        override fun isGlobal() = true
     }
 
     /**
@@ -1177,6 +1179,7 @@ object MessageProcessor {
      */
     interface BanUserLivingProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.BanUserLiving
+        override fun isGlobal() = true
     }
 
     //直播间热度变化
@@ -1230,6 +1233,14 @@ object MessageProcessor {
 
     interface AnonyVoiceCancelProcessor : EventMessageProcessor<AnonyVoiceCancelBean> {
         override fun getEventType() = EventMessageType.AnonyVoiceCancel
+    }
+
+    /**
+     * 刷新私信气泡设置消息
+     */
+    interface RefreshUserSettingProcessor : EventMessageProcessor<VoidResult> {
+        override fun getEventType() = EventMessageType.RefreshUserSetting
+        override fun isGlobal() = true
     }
 
 
@@ -1591,7 +1602,10 @@ enum class EventMessageType(val klass: Class<*>) {
     AnonyVoiceInvite(AnonyVoiceInviteBean::class.java),
 
     //匿名语音邀请  取消消息
-    AnonyVoiceCancel(AnonyVoiceCancelBean::class.java)
+    AnonyVoiceCancel(AnonyVoiceCancelBean::class.java),
+
+    //刷新气泡设置消息
+    RefreshUserSetting(VoidResult::class.java)
 //inviteUserId
     //禁言消息
 //    MuteUser(OperatorMessageBean::class.java),

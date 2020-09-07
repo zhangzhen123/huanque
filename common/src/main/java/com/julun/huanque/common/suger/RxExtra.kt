@@ -11,6 +11,7 @@ import com.julun.huanque.common.helper.DefaultRxTransformer
 import com.julun.huanque.common.helper.RunOnMainSchedulerTransformer
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.net.CancelableObservableSubscriber
 import com.julun.huanque.common.utils.LoginStatusUtils
 import com.julun.huanque.common.utils.SessionUtils
@@ -116,6 +117,7 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
             if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
                 RongCloudManager.logout()
             }
+            UserHeartManager.stopBeat()
             LoginStatusUtils.logout()
             //跳转登录页面
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()

@@ -11,12 +11,14 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
-import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.AppService
 import com.julun.huanque.common.suger.handleWithResponse
 import com.julun.huanque.common.suger.installApk
-import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.utils.MD5Util
+import com.julun.huanque.common.utils.SPUtils
+import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.ULog
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import java.io.File

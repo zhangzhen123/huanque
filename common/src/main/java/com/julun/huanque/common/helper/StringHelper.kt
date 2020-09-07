@@ -490,12 +490,7 @@ object StringHelper {
     }
 
     private fun generatePlaceHolders(left: Int) = (1..left).map { " " }.toString().replace(", ", "").substring(1, left + 1)
-    fun formatNum(value: Int): String {
-        if (value < 10000)
-            return "${value}萌豆"
-        else
-            return "${value / 10000}万萌豆"
-    }
+
 
     //格式化数字 三位一个逗号
     fun formatNumber(num: Double): String {
@@ -522,7 +517,7 @@ object StringHelper {
 //        if (num < 10000) {
 //            return DecimalFormat("#.#").format((num / 1000.0)) + "k"
 //        }
-        return DecimalFormat("#.0").format((num / 10000.0)) + "w"
+        return DecimalFormat("#.0").format((num / 10000.0)) + "W"
     }
 
     /**
@@ -574,16 +569,6 @@ object StringHelper {
         }
     }
 
-    /*对PK结果格式进行处理*/
-    fun formatScore(count: Long): String {
-        return if (count < 1000000) {
-            "$count"
-        } else {
-            val format = DecimalFormat("#.00")
-            format.roundingMode = RoundingMode.DOWN
-            format.format((count / 10000.0)) + "万"
-        }
-    }
 
     /*对玩家经验值格式进行处理*/
     fun formatUserScore(count: Long): String {
@@ -615,16 +600,6 @@ object StringHelper {
             name
         }
     }
-
-    /**
-     * 格式化萌豆  3位一个‘，’，最多保留两位小数
-     */
-    fun formatMengDou(num: Double): String {
-        val format = NumberFormat.getInstance()
-        format.maximumFractionDigits = 2
-        return format.format(num)
-    }
-
     /**
      * 对请求的body进行处理
      */

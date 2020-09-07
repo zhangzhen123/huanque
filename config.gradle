@@ -33,7 +33,7 @@ ext {
             //MMKV
             MMKV                         : 'com.tencent:mmkv-static:1.2.1',
             //阿里云播放器相关
-            ALIYUN_PLAYER                : 'com.aliyun.sdk.android:AliyunPlayer:4.7.4-full',
+            ALIYUN_PLAYER                : 'com.aliyun.sdk.android:AliyunPlayer:5.1.5-full',
             ALI_VCCONAN                  : 'com.alivc.conan:AlivcConan:1.0.2',
     ]
 
@@ -92,7 +92,7 @@ ext {
 
             //rongyun
             GY_KEY           : "pkfcgjstffu48",
-            GY_KEY_PRODECT   : "c9kqb3rdkkn8j",
+            GY_KEY_PRODECT   : "qf3d5gbjq9lfh",
             GY_KEY_TEST      : "kj7swf8okndj2"
     ]
 }

@@ -41,6 +41,8 @@ object BusiConstant {
     const val OSS_350 = "!350"
 
     var DESTROY_ACCOUNT_RESULT_CODE = 502 //注销账号result_code
+
+    var EMPTY_GIFT = -100
 }
 
 /**
@@ -70,6 +72,9 @@ object SPParamKey {
 
     //客服地址
     const val CUSTOMER_URL = "CUSTOMER_URL"
+
+    //私信聊天框设置
+    const val PRIVATE_CHAT_BUBBLE = "PRIVATE_CHAT_BUBBLE"
 }
 
 /**
@@ -835,6 +840,8 @@ object PlayerFrom {
 
     const val RN = "RN"
     const val DESTROY_ACCOUNT = "destroyAccount"
+
+    const val Push = "Push"
 }
 
 /**

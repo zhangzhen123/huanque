@@ -152,19 +152,7 @@ class CardManagerDialogFragment : BaseDialogFragment() {
     private fun showAlertDialog(item: ManagerInfo) {
         mConfirmDialog =
             mConfirmDialog ?: MyAlertDialog(activity ?: return)
-        mConfirmDialog?.showAlertWithOKAndCancel("确认将${nickname ?: ""}" +
-                "${when (item.mangeType) {
-                    "KickUser" -> {
-                        "踢出${item.itemName}"
-                    }
-                    "Ban" -> {
-                        item.itemName
-                    }
-                    else -> {
-                        "${item.mangeTypeDesc}${item.itemName}"
-                    }
-                }
-                }吗?"
+        mConfirmDialog?.showAlertWithOKAndCancel("确认将${nickname}${item.itemName}吗?"
             , MyAlertDialog.MyDialogCallback(
                 onCancel = {},
                 onRight = {

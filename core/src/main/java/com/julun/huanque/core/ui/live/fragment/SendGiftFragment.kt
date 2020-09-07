@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -29,19 +28,17 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.CircleBarView
 import com.julun.huanque.common.widgets.GiftTitleView
 import com.julun.huanque.common.widgets.happybubble.BubbleDialog
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
-import com.julun.huanque.core.adapter.GiftAdapter
+import com.julun.huanque.common.adapter.GiftAdapter
 import com.julun.huanque.core.adapter.GiftCountAdapter
-import com.julun.huanque.core.adapter.SimplePagerAdapter
+import com.julun.huanque.common.adapter.SimplePagerAdapter
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.EggSettingViewModel
-import com.julun.huanque.core.viewmodel.PropViewModel
 import com.julun.huanque.core.viewmodel.SendGiftViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -53,7 +50,6 @@ import io.reactivex.rxjava3.core.Observable.*
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_gift.*
-import kotlinx.android.synthetic.main.fragment_anchorisnotonline.*
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
@@ -62,7 +58,6 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.Common
 import org.jetbrains.anko.configuration
 import org.jetbrains.anko.forEachChild
 import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.textColor
 import java.util.concurrent.TimeUnit
 
 
@@ -126,8 +121,6 @@ class SendGiftFragment : BaseDialogFragment() {
 
 
     companion object {
-        const val EMPTY_GIFT = -100
-
         const val GiftBox = "GiftBox"//礼盒
 
         //        const val CJBWL_EGG=-59
@@ -735,7 +728,7 @@ class SendGiftFragment : BaseDialogFragment() {
             if (groupInfo.giftList.size < pageLimit) {
                 val size = pageLimit - groupInfo.giftList.size
                 for (i in 1..size) {
-                    groupInfo.giftList.add(LiveGiftDto().apply { giftId = EMPTY_GIFT }) //空白填充 -100代表空白
+                    groupInfo.giftList.add(LiveGiftDto().apply { giftId = BusiConstant.EMPTY_GIFT }) //空白填充 -100代表空白
                 }
             }
         }
@@ -1390,7 +1383,7 @@ class SendGiftFragment : BaseDialogFragment() {
 
     private fun resetData() {
         // 请求结束
-        sendActionBtn?.text = "赠 送"
+        sendActionBtn?.text = "赠送"
         curGiftIsSending = null
         sendRequesting = false
     }
@@ -1489,7 +1482,7 @@ class SendGiftFragment : BaseDialogFragment() {
                 hideCountListView()
 
                 val currentGift = mAdapter.data[position]
-                if (currentGift.giftId == EMPTY_GIFT) {
+                if (currentGift.giftId == BusiConstant.EMPTY_GIFT) {
                     hideCountListView()
                     return@setOnItemClickListener
                 }

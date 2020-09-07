@@ -141,6 +141,7 @@ class PlayerMessageViewModel : BaseViewModel() {
         var tempUnreadCount = 0
         var tempQueryCount = 0
         val totalQueryCount = unreadList.size
+
         unreadList.forEach {
             RongIMClient.getInstance().getUnreadCount(Conversation.ConversationType.PRIVATE, it, object : RongIMClient.ResultCallback<Int>() {
                 override fun onSuccess(unreadCount: Int?) {

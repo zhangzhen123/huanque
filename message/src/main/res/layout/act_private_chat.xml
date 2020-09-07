@@ -14,23 +14,52 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    
+
+    <ImageView
+        android:id="@+id/iv_intimate"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="54dp"
+        android:src="@mipmap/icon_intimate_level_heart"
+        app:layout_constraintBottom_toBottomOf="@id/header_view"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header_view" />
+
+    <TextView
+        android:id="@+id/tv_intimate"
+        android:layout_width="26dp"
+        android:layout_height="10dp"
+        android:background="@drawable/bg_intimate_level"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintBottom_toBottomOf="@id/iv_intimate"
+        app:layout_constraintLeft_toLeftOf="@id/iv_intimate"
+        app:layout_constraintRight_toRightOf="@id/iv_intimate"
+        android:text="lv.0" />
+
+
     <TextView
         android:id="@+id/tv_unread_count"
-        android:layout_width="35dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginLeft="44dp"
-        android:includeFontPadding="false"
-        android:visibility="gone"
-        tools:text="1"
-        android:gravity="center"
-        android:textSize="@dimen/sp_14"
-        android:textColor="@color/black_333"
-        tools:visibility="visible"
+        android:layout_marginLeft="34dp"
         android:background="@drawable/bg_unread_count_top"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:minWidth="20dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/header_view"
         app:layout_constraintLeft_toLeftOf="@id/header_view"
         app:layout_constraintTop_toTopOf="@id/header_view"
-        app:layout_constraintBottom_toBottomOf="@id/header_view"/>
+        tools:text="1"
+        tools:visibility="visible" />
 
 
     <com.effective.android.panel.view.PanelSwitchLayout
@@ -170,8 +199,8 @@
                 <!-- 小鹊 -->
                 <ImageView
                     android:id="@+id/iv_xiaoque"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
                     android:src="@mipmap/pic_xiaoque_active"
@@ -181,8 +210,8 @@
 
                 <TextView
                     android:id="@+id/tv_send"
-                    android:layout_width="60dp"
-                    android:layout_height="40dp"
+                    android:layout_width="62dp"
+                    android:layout_height="36dp"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/sel_verification_code"
                     android:enabled="false"
@@ -214,107 +243,77 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_private_input"
                     android:hint="聊点什么吧..."
                     android:imeOptions="actionSearch"
-                    android:minHeight="40dp"
+                    android:minHeight="36dp"
                     android:paddingLeft="15dp"
-                    android:paddingTop="9dp"
+                    android:paddingTop="7dp"
                     android:paddingRight="15dp"
-                    android:paddingBottom="9dp"
+                    android:paddingBottom="7dp"
                     android:textSize="@dimen/sp_16"
                     app:layout_constraintBottom_toTopOf="@id/view_input_bottom"
                     app:layout_constraintLeft_toRightOf="@id/iv_xiaoque"
                     app:layout_constraintRight_toLeftOf="@id/tv_send" />
 
+                <!--                <View-->
+                <!--                    android:id="@+id/view_xiaoque_top"-->
+                <!--                    android:layout_width="0px"-->
+                <!--                    android:layout_height="1px"-->
+                <!--                    android:layout_marginBottom="5dp"-->
+                <!--                    app:layout_constraintBottom_toTopOf="@id/edit_text"-->
+                <!--                    app:layout_constraintLeft_toLeftOf="parent"-->
+                <!--                    app:layout_constraintRight_toRightOf="parent"-->
+                <!--                    tools:visibility="visible" />-->
+
 
                 <View
                     android:id="@+id/view_xiaoque"
                     android:layout_width="0px"
-                    android:layout_height="0px"
-                    android:background="@drawable/bg_xiaoque_content"
+                    android:layout_height="64dp"
                     android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@id/iv_xiaoque"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/view_xiaoque_top"
-                    tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/tv_send_exactly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="28dp"
-                    android:text="发送"
-                    android:textColor="@color/color_quebi"
-                    android:textSize="@dimen/sp_14"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/view_xiaoque"
-                    app:layout_constraintRight_toRightOf="@id/view_xiaoque"
-                    tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/tv_edit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="28dp"
-                    android:text="编辑"
-                    android:textColor="@color/color_quebi"
-                    android:textSize="@dimen/sp_14"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/view_xiaoque"
-                    app:layout_constraintRight_toLeftOf="@id/tv_send_exactly"
                     tools:visibility="visible" />
 
                 <ImageView
-                    android:id="@+id/iv_eye"
-                    android:layout_width="30dp"
-                    android:layout_height="17dp"
-                    android:layout_marginLeft="20dp"
-                    android:src="@mipmap/icon_eye_xiaoque"
-                    android:visibility="gone"
-                    app:layout_constraintLeft_toLeftOf="@id/view_xiaoque"
-                    app:layout_constraintTop_toTopOf="@+id/tv_active_content"
-                    tools:visibility="visible" />
+                    android:id="@+id/iv_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:src="@mipmap/icon_xiaoque_arrow"
+                    app:layout_constraintBottom_toTopOf="@id/edit_text"
+                    app:layout_constraintLeft_toLeftOf="@id/iv_xiaoque"
+                    app:layout_constraintRight_toRightOf="@id/iv_xiaoque" />
 
                 <TextView
                     android:id="@+id/tv_active_content"
                     android:layout_width="0px"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="6dp"
-                    android:text="肯德基嗯肯德基嗯"
-                    android:textColor="@color/black_666"
+                    android:layout_height="0px"
+                    android:background="@drawable/bg_xiaoque"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="29dp"
+                    android:textColor="@color/black_333"
                     android:textSize="@dimen/sp_14"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@id/tv_edit"
-                    app:layout_constraintLeft_toRightOf="@id/iv_eye"
-                    app:layout_constraintRight_toRightOf="parent"
-                    tools:visibility="visible" />
-
-                <View
-                    android:id="@+id/view_xiaoque_top"
-                    android:layout_width="1px"
-                    android:layout_height="1px"
-                    android:layout_marginBottom="20dp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@id/tv_active_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/iv_arrow"
+                    app:layout_constraintLeft_toLeftOf="@id/view_xiaoque"
+                    app:layout_constraintRight_toRightOf="@id/view_xiaoque"
+                    app:layout_constraintTop_toTopOf="@id/view_xiaoque"
+                    tools:text="肯德基嗯肯德基嗯"
                     tools:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/iv_que_close"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_margin="8dp"
-                    android:padding="2dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="5dp"
+                    android:padding="6dp"
                     android:src="@mipmap/icon_xiaoque_close"
                     android:visibility="gone"
                     app:layout_constraintRight_toRightOf="@id/view_xiaoque"
@@ -361,16 +360,5 @@
 
         </com.effective.android.panel.view.panel.PanelContainer>
     </com.effective.android.panel.view.PanelSwitchLayout>
-
-
-    <ImageView
-        android:id="@+id/iv_intimate"
-        android:layout_width="52dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginRight="21dp"
-        android:src="@mipmap/icon_intimate_level_heart"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

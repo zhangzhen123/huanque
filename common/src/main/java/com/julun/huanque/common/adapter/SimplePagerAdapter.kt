@@ -1,4 +1,4 @@
-package com.julun.huanque.core.adapter
+package com.julun.huanque.common.adapter
 
 import androidx.viewpager.widget.PagerAdapter
 import android.util.SparseArray

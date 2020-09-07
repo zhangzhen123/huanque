@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="undeadActivityStyle2" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <!-- 背景设置为透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 是否有边框 -->
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <!-- 是否浮动在界面上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 窗体上面是否有遮盖 -->
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 背景是否变暗 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 为窗体的Enter和Exit设置动画 -->
+        <item name="android:windowAnimationStyle">@null</item>
+        <!-- 是否禁止窗体显示前显示的View -->
+        <item name="android:windowDisablePreview">true</item>
+
+        <item name="android:windowNoDisplay">false</item>
+    </style>
+
+</resources>

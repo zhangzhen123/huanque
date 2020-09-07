@@ -126,18 +126,19 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
             //需要显示特权表情遮罩
             view_shade.show()
             tv_privilege_attetnion.show()
+            tv_privilege_attetnion.text = "亲密等级Lv4可解锁"
 
-            val str = "亲密度等级$mNeedLevel，立即解锁"
-            val spannableString = SpannableString(str)
-            val colorText = "立即解锁"
-            val index = str.indexOf(colorText)
-            spannableString.setSpan(
-                ForegroundColorSpan(GlobalUtils.getColor(R.color.send_private_chat)),
-                index,
-                index + colorText.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            );
-            tv_privilege_attetnion.text = spannableString
+//            val str = "亲密度等级$mNeedLevel，立即解锁"
+//            val spannableString = SpannableString(str)
+//            val colorText = "立即解锁"
+//            val index = str.indexOf(colorText)
+//            spannableString.setSpan(
+//                ForegroundColorSpan(GlobalUtils.getColor(R.color.send_private_chat)),
+//                index,
+//                index + colorText.length,
+//                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+//            );
+//            tv_privilege_attetnion.text = spannableString
 
         } else {
             view_shade.hide()

@@ -21,6 +21,7 @@ import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
+import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.SessionUtils
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
@@ -222,32 +223,16 @@ class MainViewModel : BaseViewModel() {
     }
 
     /**
-     * 刷新语音会话消息
+     * 获取气泡设置
      */
-//    private fun refreshCallId(callId: Long) {
-//        viewModelScope.launch {
-//            request({
-//                val result = socialService.netcallResult(NetcallIdForm(callId)).dataConvert()
-//                val
-//                val bean = VoiceConmmunicationSimulate()
-//                bean.billUserId = result.billUserId
-//                bean.duration = result.duration
-//                bean.totalBeans = result.totalBeans
-//                bean.needRefresh = false
-//
-//                val chatExtra = JsonUtil.deserializeAsObject<RoomUserChatExtra>(content.extra, RoomUserChatExtra::class.java)
-//
-//                RongCloudManager.sendSimulateMessage(
-//                    msg.targetId, msg.senderUserId, chatExtra,
-//                    Conversation.ConversationType.PRIVATE,
-//                    MessageCustomBeanType.Voice_Conmmunication_Simulate,
-//                    bean
-//                )
-//                RongIMClient.getInstance().deleteMessages(intArrayOf(msg.messageId))
-//                GlobalUtils.removeSingleRefreshCallId(msg.messageId)
-//            })
-//        }
-//    }
+    fun getSetting() {
+        viewModelScope.launch {
+            request({
+                val result = userService.settings().dataConvert()
+                SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, result.chatBubble ?: return@request)
+            })
+        }
+    }
 
 
 }

@@ -10,9 +10,11 @@
         android:id="@+id/header_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_75"
-        android:layout_marginStart="@dimen/dimen_15"
-        android:layout_marginLeft="@dimen/dimen_15"
-        android:overScrollMode="always"
+        android:layout_marginStart="@dimen/dimen_6"
+        android:layout_marginLeft="@dimen/dimen_6"
+        android:layout_marginEnd="@dimen/dimen_6"
+        android:layout_marginRight="@dimen/dimen_6"
+        android:overScrollMode="never"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,10 +35,10 @@
             android:id="@+id/tv_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_6"
+            android:includeFontPadding="false"
             android:textColor="#F55656"
             android:textSize="@dimen/sp_15"
-            android:includeFontPadding="false"
-            android:layout_marginTop="@dimen/dimen_6"
             tools:text="99" />
 
 

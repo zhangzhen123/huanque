@@ -192,6 +192,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Bo
      * 恢复播放
      */
     fun resume() {
+        if (mLogEnable)
         ULog.i("DXCPlayer 恢复播放resume")
         if (mUrl.isNotEmpty()) {
             mAliPlayer?.start()
@@ -220,7 +221,11 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Bo
     }
 
     fun getStreamUrl(): String {
-        return mUrl
+        return if (useManager) {
+            AliplayerManager.mUrl
+        } else {
+            mUrl
+        }
     }
 
     /**
@@ -242,7 +247,6 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Bo
     fun initPlayer() {
         ULog.i("PlayerLine 创建播放器")
         mAliPlayer = AliPlayerFactory.createAliPlayer(context.applicationContext)
-        mAliPlayer?.enableLog(false)
         mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL;
         ULog.i("PlayerLine 设置监听事件")
         mAliPlayer?.setOnCompletionListener {
@@ -386,6 +390,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Bo
     fun playStream() {
         //聊天模式 不需要播放视频   && NetUtils.isNetConnected()
         if (mUrl.isNotEmpty() && !mChatMode) {
+            AliplayerManager.mRenderListener = mRenderListener
             val urlSource = UrlSource()
             urlSource.uri = mUrl
 //            ULog.i("PlayerLine 创建播放源")
@@ -393,6 +398,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Bo
             mAliPlayer?.isAutoPlay = true
 //            ULog.i("PlayerLine 准备播放器")
             if (useManager) {
+                AliplayerManager.mUrl = mUrl
                 AliplayerManager.mRendered = false
             }
             mAliPlayer?.prepare()

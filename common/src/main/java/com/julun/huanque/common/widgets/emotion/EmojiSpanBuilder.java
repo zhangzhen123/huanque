@@ -24,17 +24,20 @@ public class EmojiSpanBuilder {
             "\\[([\u4e00-\u9fa5\\w])+\\]|[\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]");
 
     /**
-     * 是否都是表情
+     * 是否显示大表情
      * @return
      */
     public static boolean allEmoji(Context context, String text) {
         Matcher matcherEmotion = sPatternEmotion.matcher(text);
         int keyLengh = 0;
+
+        int count = 0;
         while (matcherEmotion.find()) {
+            count++;
             String key = matcherEmotion.group();
             keyLengh += key.length();
         }
-        if (keyLengh == text.length()) {
+        if (count <= 3 && keyLengh == text.length()) {
             return true;
         } else {
             return false;
@@ -48,17 +51,26 @@ public class EmojiSpanBuilder {
     /**
      *
      * @param context
-     * @param text
-     * @param allEmojiBig 都是表情放大
+     * @param big 显示大表情
      * @return
      */
-    public static Spannable buildEmotionSpannable(Context context, String text, Boolean allEmojiBig) {
+    public static Spannable buildEmotionSpannable(Context context, String text, Boolean big) {
         int border = DensityHelper.dp2px(20f);
-        if (allEmojiBig && allEmoji(context, text)) {
-            border = DensityHelper.dp2px(44f);
+        if (big) {
+            border = DensityHelper.dp2px(46f);
         }
-        Matcher matcherEmotion = sPatternEmotion.matcher(text);
-        SpannableString spannableString = new SpannableString(text);
+        String showContent = text;
+        if (big) {
+            // 都是表情，在表情之间增加一个空格符(增加间距)
+            StringBuilder sBuilder = new StringBuilder();
+            Matcher matcherEmotion = sPatternEmotion.matcher(text);
+            while (matcherEmotion.find()) {
+                sBuilder.append(matcherEmotion.group()).append(" ");
+            }
+            showContent = sBuilder.deleteCharAt(sBuilder.length() - 1).toString();
+        }
+        Matcher matcherEmotion = sPatternEmotion.matcher(showContent);
+        SpannableString spannableString = new SpannableString(showContent);
         while (matcherEmotion.find()) {
             String key = matcherEmotion.group();
             int imgRes = Emotions.getDrawableResByName(key);
@@ -82,7 +94,7 @@ public class EmojiSpanBuilder {
      */
     public static int getPrivilegeResource(Context context, String text) {
         Matcher matcherEmotion = sPatternEmotion.matcher(text);
-        if(matcherEmotion.find()){
+        if (matcherEmotion.find()) {
             String key = matcherEmotion.group();
             int imgRes = Emotions.getDrawableResByName(key);
             return imgRes;

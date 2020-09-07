@@ -8,6 +8,10 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.StateListDrawable
 import android.media.AudioManager
 import android.os.Handler
 import android.os.Looper
@@ -21,6 +25,7 @@ import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.launcher.ARouter.logger
 import com.julun.huanque.common.R
 import com.julun.huanque.common.bean.ChatUser
+import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.beans.PlayInfo
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserInfo
@@ -29,7 +34,9 @@ import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.database.HuanQueDatabase
+import com.julun.huanque.common.helper.DensityHelper.Companion.dp2px
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.widgets.emotion.Emotions
 import io.rong.imlib.model.MessageContent
@@ -240,21 +247,21 @@ object GlobalUtils {
         when (conent) {
             is ImageMessage -> {
                 //图片消息
-                extra = conent.extra
+                extra = conent.extra ?: ""
             }
 
             is CustomMessage -> {
                 //自定义消息
-                extra = conent.extra
+                extra = conent.extra ?: ""
             }
 
             is CustomSimulateMessage -> {
                 //模拟消息
-                extra = conent.extra
+                extra = conent.extra ?: ""
             }
             is TextMessage -> {
                 //文本消息
-                extra = conent.extra
+                extra = conent.extra ?: ""
             }
         }
         if (extra.isEmpty()) {
@@ -521,6 +528,52 @@ object GlobalUtils {
      * 获取特权表情动图的地址
      */
     fun getPrivilegeUrl(key: String) = privilegeMap[key] ?: ""
+
+
+    /**
+     * 获取气泡的Drawable
+     * @param left 是否是居右显示
+     */
+    fun getBubbleDrawable(bubble: ChatBubble, left: Boolean): Drawable {
+        val borderColor = getColorArray(bubble.bdc)
+        val borderDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, borderColor)
+        borderDrawable.shape = GradientDrawable.RECTANGLE
+        val floatArray = if (left) {
+            floatArrayOf(dp2pxf(2), dp2pxf(2), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23))
+        } else {
+            floatArrayOf(dp2pxf(23), dp2pxf(23), dp2pxf(2), dp2pxf(2), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23))
+        }
+        borderDrawable.cornerRadii = floatArray
+
+
+        val solidColor = getColorArray(bubble.bgc)
+        val solidDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, solidColor)
+        solidDrawable.shape = GradientDrawable.RECTANGLE
+        solidDrawable.setStroke(dp2px(1), Color.TRANSPARENT)
+        solidDrawable.cornerRadii = floatArray
+        val drawableArray = arrayOf(borderDrawable, solidDrawable)
+        return LayerDrawable(drawableArray)
+    }
+
+    /**
+     * 获取颜色数组
+     */
+    private fun getColorArray(colors: String): IntArray {
+        val colorArray = IntArray(2)
+        val colorStrArray = colors.split("-")
+        if (ForceUtils.isIndexNotOutOfBounds(0, colorStrArray)) {
+            colorArray[0] = formatColor(colorStrArray[0])
+        } else {
+            colorArray[0] = Color.WHITE
+        }
+
+        if (ForceUtils.isIndexNotOutOfBounds(1, colorStrArray)) {
+            colorArray[1] = formatColor(colorStrArray[1])
+        } else {
+            colorArray[1] = Color.WHITE
+        }
+        return colorArray
+    }
 
 
 }

@@ -61,6 +61,35 @@ object AppHelper {
         return resultData ?: ""
     }
 
+    /**
+     * 获取application中指定的meta-data
+     * @return 如果没有获取成功(没有对应值，或者异常)，则返回值为空
+     */
+    fun getAppMetaData(key: String,context: Context): String {
+        if (TextUtils.isEmpty(key)) {
+            return ""
+        }
+        var resultData: String? = null
+        try {
+            val packageManager = context.packageManager
+            if (packageManager != null) {
+                val applicationInfo = packageManager.getApplicationInfo(
+                    context.packageName,
+                    PackageManager.GET_META_DATA
+                )
+                if (applicationInfo != null) {
+                    if (applicationInfo.metaData != null) {
+                        resultData = applicationInfo.metaData.getString(key)
+                    }
+                }
+
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+
+        return resultData ?: ""
+    }
     //获取当前版本号
     fun getAppVersionName(): String? {
         var versionName = ""

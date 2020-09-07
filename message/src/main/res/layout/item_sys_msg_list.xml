@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_40"
+        android:layout_height="@dimen/dimen_42"
         android:background="@drawable/hq_message_bg_shape_gray"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -32,11 +32,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/dimen_5"
+            android:layout_marginLeft="@dimen/dimen_6"
             android:layout_toRightOf="@+id/ivTitle"
+            android:textStyle="bold"
             android:text="小鹊提醒"
             android:textColor="@color/black_333"
-            android:textSize="@dimen/sp_14" />
+            android:textSize="@dimen/sp_16" />
 
         <TextView
             android:id="@+id/tvDate"
@@ -46,7 +47,7 @@
             android:layout_centerInParent="true"
             android:layout_marginRight="@dimen/dimen_20"
             android:gravity="right"
-            android:text="下午4:59"
+            tools:text="下午4:59"
             android:textColor="@color/black_999"
             android:textSize="@dimen/sp_12" />
     </RelativeLayout>
@@ -57,36 +58,34 @@
         android:background="@drawable/hq_message_bg_shape_white"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvSubTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_15"
-            android:layout_marginTop="@dimen/dimen_20"
-            android:text="欢迎注册"
-            android:textColor="@color/black_333"
-            android:textSize="@dimen/sp_18" />
+<!--        <TextView-->
+<!--            android:id="@+id/tvSubTitle"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="@dimen/dimen_15"-->
+<!--            android:layout_marginTop="@dimen/dimen_20"-->
+<!--            android:text="欢迎注册"-->
+<!--            android:textColor="@color/black_333"-->
+<!--            android:textSize="@dimen/sp_18" />-->
 
         <TextView
             android:id="@+id/tvBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_15"
-            android:layout_marginTop="@dimen/dimen_15"
+            android:layout_marginTop="@dimen/dimen_5"
             android:layout_marginRight="@dimen/dimen_15"
             android:gravity="left"
             tools:text="恭喜注册成功，完成绑定手机号码，成为欢鹊的成员，恭喜您完成注册，开启的您的欢鹊之旅，恭喜恭喜恭喜恭喜。"
-            android:textColor="@color/black_999"
+            android:textColor="@color/black_666"
             android:layout_marginBottom="@dimen/dimen_20"
             android:textSize="@dimen/sp_14" />
 
         <View
             android:id="@+id/vLine"
             android:layout_width="wrap_content"
-            android:layout_height="1px"
-            android:layout_marginLeft="@dimen/dimen_15"
-            android:layout_marginRight="@dimen/dimen_15"
-            android:background="#E5E5E5" />
+            android:layout_height="1dp"
+            android:background="#F3F4F5" />
 
         <TextView
             android:id="@+id/tvCheckOut"
@@ -99,7 +98,7 @@
             android:gravity="center_vertical"
             android:text="查看详情"
             android:layout_marginBottom="@dimen/dimen_18"
-            android:textColor="@color/black_333"
+            android:textColor="@color/black_999"
             android:textSize="@dimen/sp_14" />
     </LinearLayout>
 

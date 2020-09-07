@@ -12,10 +12,7 @@ import com.julun.huanque.common.bean.forms.ProgramListForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.ProgramService
-import com.julun.huanque.common.suger.convertListError
-import com.julun.huanque.common.suger.convertRtData
-import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.suger.*
 import kotlinx.coroutines.launch
 
 
@@ -66,6 +63,37 @@ class LiveSquareViewModel : BaseViewModel() {
                 offsetHot += result.list.size
                 result.isPull = queryType != QueryType.LOAD_MORE
                 hotDataList.value = result.convertRtData()
+            }, error = {
+                hotDataList.value = it.convertListError(queryType = queryType)
+            })
+        }
+    }
+
+    //刷新或者初始化请求必须放一起去获取 不然会有先后顺序问题 注意：这里不做加载更多操作
+    fun requestHotListAndFollow(queryType: QueryType, programId: Long) {
+
+        viewModelScope.launch {
+            if (queryType == QueryType.REFRESH) {
+                offset1 = 0
+                offsetHot = 0
+            }
+            request({
+                val resultF = programService.squareFollowList(LiveFollowForm(offset1)).dataConvert()
+                offset1 += resultF.list.size
+                resultF.isPull = queryType != QueryType.LOAD_MORE
+                followList.value = resultF.convertRtData()
+                logger("resultF=${resultF}")
+            }, error = {
+                followList.value = it.convertListError(queryType = queryType)
+            })
+
+            request({
+                val result =
+                    programService.squareHeatList(ProgramListForm(offset = offsetHot, programId = programId)).dataConvert()
+                offsetHot += result.list.size
+                result.isPull = queryType != QueryType.LOAD_MORE
+                hotDataList.value = result.convertRtData()
+                logger("result=${result}")
             }, error = {
                 hotDataList.value = it.convertListError(queryType = queryType)
             }, needLoadState = queryType == QueryType.INIT)
