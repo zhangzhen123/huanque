@@ -20,12 +20,11 @@ object AgoraManager {
 
     fun initAgora(context: Context) {
         try {
-//            val appId = if (BuildConfig.DEBUG) {
-//                "fbc90bda63d84f29b514dceb0ce0bc2b"
-//            } else {
-//                "ac6d4391e1534b6482327e4baea03e08"
-//            }
-            val appId = "78fb9516fe5b4e759c51a5d880e1fd1b"
+            val appId = if (BuildConfig.DEBUG) {
+                "78fb9516fe5b4e759c51a5d880e1fd1b"
+            } else {
+                "aa91c22c10004e66b7a1bee69fbb2ccd"
+            }
             mRtcEngine = RtcEngine.create(context, appId, mHandler)
             //设置直播属性(直播属性可以用与语音)
             mRtcEngine?.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING)
