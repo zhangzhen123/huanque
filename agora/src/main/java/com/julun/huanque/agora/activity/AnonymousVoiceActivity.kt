@@ -537,6 +537,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                             mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.MATCH
                         } else {
                             mAnonymousVoiceViewModel?.cancelMatch()
+                            finish()
                         }
 
                     }
@@ -997,6 +998,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         stopMatch()
         matchCompositeDisposable.clear()
         voiceCompositeDisposable.clear()
+        VoiceManager.stopAllVoice()
     }
 
     override fun onDestroy() {
