@@ -20,6 +20,7 @@ class CircularCornerTextView(context: Context?, attrs: AttributeSet?) : TextView
     var leftBottom = false
     var rightBottom = false
     var startColor = 0
+    var middleColor = 0
     var endColor = 0
 
 
@@ -47,12 +48,19 @@ class CircularCornerTextView(context: Context?, attrs: AttributeSet?) : TextView
         initBackground()
     }
 
-    fun setTransitionalColor(@ColorInt tColor : Int){
-        setTransitionalColor(tColor,tColor)
+    fun setTransitionalColor(@ColorInt tColor: Int) {
+        setTransitionalColor(tColor, tColor)
     }
 
-    fun setTransitionalColor(@ColorInt startColor : Int,@ColorInt endColor : Int){
+    fun setTransitionalColor(@ColorInt startColor: Int, @ColorInt endColor: Int) {
         this.startColor = startColor
+        this.endColor = endColor
+        invalidate()
+    }
+
+    fun setTransitionalColor(@ColorInt startColor: Int, @ColorInt middleColor: Int, @ColorInt endColor: Int) {
+        this.startColor = startColor
+        this.middleColor = middleColor
         this.endColor = endColor
         invalidate()
     }
@@ -64,7 +72,11 @@ class CircularCornerTextView(context: Context?, attrs: AttributeSet?) : TextView
 //        if (radius == 0F) {
 //            return
 //        }
-        val colors = intArrayOf(startColor, endColor)
+        val colors = if (middleColor == 0) {
+            intArrayOf(startColor, endColor)
+        } else {
+            intArrayOf(startColor, middleColor, endColor)
+        }
         val bg = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors)
         if (radiusWrap) {
             radius = (measuredHeight / 2).toFloat()

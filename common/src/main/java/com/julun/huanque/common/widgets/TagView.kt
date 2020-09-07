@@ -34,6 +34,7 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
         initProgramTagCTV()
         initSimpleDraweeView()
     })
+
     //CircularCornerTextView相关属性
     private var radiusWrap = false
     private var radius = 0F
@@ -43,6 +44,7 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
     private var rightBottom = false
     private var startColor = 0
     private var endColor = 0
+
     //CircularCornerTextView padding 属性(单位dp)
     private var tPaddingLeft = 0
     private var tPaddingTop = 0
@@ -203,6 +205,7 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
             val firstStr = tagStr.substring(ProgramTagType.TEXT.length)
             val strList = firstStr.split("-")
             var startColorStr = ""
+            var middleColor = ""
             var endColorStr = ""
             if (strList.size >= 2) {
                 ctv.text = strList[0]
@@ -210,13 +213,25 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
                 endColorStr = strList[1]
             }
             if (strList.size >= 3) {
+                startColorStr = strList[1]
                 endColorStr = strList[2]
             }
 
+            if (strList.size >= 4) {
+                //3色渐变
+                startColorStr = strList[1]
+                middleColor = strList[2]
+                endColorStr = strList[3]
+            }
             try {
                 val startColor = Color.parseColor("#$startColorStr")
                 val endColor = Color.parseColor("#$endColorStr")
-                ctv.setTransitionalColor(startColor, endColor)
+                if (middleColor.isEmpty()) {
+                    ctv.setTransitionalColor(startColor, endColor)
+                } else {
+                    val middleColor = Color.parseColor("#$middleColor")
+                    ctv.setTransitionalColor(startColor, middleColor, endColor)
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
