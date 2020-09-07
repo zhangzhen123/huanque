@@ -22,6 +22,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.*
 import io.reactivex.rxjava3.core.Observable
@@ -585,7 +586,7 @@ class PrivateConversationViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = userService.settings().dataConvert()
-                SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, result.chatBubble)
+                SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, result.chatBubble ?: return@request)
                 bubbleData.value = result.chatBubble
             })
         }

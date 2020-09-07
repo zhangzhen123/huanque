@@ -7,10 +7,7 @@ import android.animation.ValueAnimator
 import android.content.DialogInterface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.BounceInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
@@ -48,7 +45,7 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
 
     override fun getLayoutId() = R.layout.fragment_private_animation
 
-    //不需要对象
+    //不需要动画
     override fun needEnterAnimation() = false
 
     override fun initViews() {
@@ -60,44 +57,49 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
         sdv_gift_icon.hide()
         tv_gift_name.hide()
         sdv_gift.hide()
+        con_root?.alpha = 1.0f
 
         initViewModel()
     }
 
     private fun initViewModel() {
-        mPrivateConversationViewModel.startAnimationData.observe(this, Observer {
-            if (it != null) {
-                //开始播放动画
-                playAnimaiton(it)
-                mPrivateConversationViewModel.startAnimationData.value = null
-            }
-        })
-
         mPrivateAnimationViewModel.animationEndFlag.observe(this, Observer {
             if (it == true) {
                 mPrivateAnimationViewModel.animationEndFlag.value = null
-                dismiss()
+                mPrivateAnimationViewModel.dismissState.value = true
             }
         })
 
         mPrivateAnimationViewModel.voiceCompleteFlag.observe(this, Observer {
             if (it == true) {
                 mPrivateAnimationViewModel.voiceCompleteFlag.value = null
-//                //延迟一秒关闭，效果好一点
-//                Observable.timer(1, TimeUnit.SECONDS)
-//                    .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .doFinally { dismiss() }
-//                    .subscribe({}, {}, {})
-                dismiss()
+                mPrivateAnimationViewModel.dismissState.value = true
             }
         })
+        mPrivateAnimationViewModel.dismissState.observe(this, Observer {
+            if (it == true) {
+                mPrivateAnimationViewModel.dismissState.value = null
+                startDismissAnimation()
+            }
+        })
+
+        mPrivateAnimationViewModel.giftData.observe(this, Observer {
+            if (it != null) {
+                //开始播放动画
+                playAnimaiton(it)
+                //清空礼物效果
+                mPrivateAnimationViewModel.giftData.value = null
+            }
+        })
+
     }
 
     override fun onStart() {
         super.onStart()
         dialog?.setOnKeyListener(this)
         setDialogSize(Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        //不需要半透明遮罩层
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     /**
@@ -123,17 +125,18 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
                 if (picArray.isEmpty()) {
                     return
                 }
+                val count = specialParams.count
                 if (specialParams.screenType == ChatGift.BothSide) {
                     //两侧飘屏
                     val picUrl = getRandomPicUrl(picArray)
                     ImageUtils.requestImageForBitmap(picUrl, {
                         val bitmapDrawable = BitmapDrawable(resources, it)
-                        activity?.runOnUiThread { startSlideAnimation(bitmapDrawable) }
+                        activity?.runOnUiThread { startSlideAnimation(bitmapDrawable, count / 2) }
                     })
 
                 } else if (specialParams.screenType == ChatGift.TopDown) {
                     //从上往下飘屏
-                    val totalCount = 30
+                    val totalCount = count
                     Observable.interval(0, 50, TimeUnit.MILLISECONDS)
                         .doOnSubscribe { removeCount = 0 }
                         .take(totalCount.toLong())
@@ -162,7 +165,7 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
                 Observable.timer(2, TimeUnit.SECONDS)
                     .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ dismiss() }, { it.printStackTrace() })
+                    .subscribe({ mPrivateAnimationViewModel.dismissState.value = true }, { it.printStackTrace() })
             }
         }
     }
@@ -262,23 +265,23 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
     /**
      * 播放两侧抛出动画
      */
-    private fun startSlideAnimation(drawable: Drawable) {
+    private fun startSlideAnimation(drawable: Drawable, count: Int) {
         ParticleSystem(con_root, 100, drawable, 1500)
-            .setSpeedModuleAndAngleRange(0.4f, 0.6f, 0, 30)
-            .setRotationSpeed(600f)
-            .setAcceleration(0.003f, 90)
-            .emit(-100, 400, 3, 5000)
+            .setSpeedModuleAndAngleRange(0.2f, 0.55f, 330, 360)
+            .setRotationSpeed(1000f)
+            .setAcceleration(0.002f, 90)
+            .emit(-200, 400, count, 1000)
 
         ParticleSystem(con_root, 100, drawable, 1500)
-            .setSpeedModuleAndAngleRange(0.4f, 0.6f, 150, 180)
-            .setRotationSpeed(600f)
-            .setAcceleration(0.003f, 90)
-            .emit(1180, 400, 3, 5000)
-        val intervalTimer = (5000 + 1500).toLong()
+            .setSpeedModuleAndAngleRange(0.2f, 0.55f, 180, 210)
+            .setRotationSpeed(1000f)
+            .setAcceleration(0.002f, 90)
+            .emit(ScreenUtils.getScreenWidth() + 200, 400, count, 1000)
+        val intervalTimer = (1000 + 1500).toLong()
         Observable.timer(intervalTimer, TimeUnit.MILLISECONDS)
             .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ dismiss() }, { it.printStackTrace() })
+            .subscribe({ mPrivateAnimationViewModel.dismissState.value = true }, { it.printStackTrace() })
     }
 
     override fun onDestroyView() {
@@ -297,6 +300,39 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
             //这里注意当不是返回键时需将事件扩散，否则无法处理其他点击事件
             return false;
         }
+    }
+
+    private var mAlphaAnimator: Animator? = null
+
+    /**
+     * 开始隐藏动画
+     */
+    private fun startDismissAnimation() {
+        mAlphaAnimator = mAlphaAnimator ?: ObjectAnimator.ofFloat(con_root, "alpha", 1.0f, 0.0f).apply {
+            duration = 500
+            interpolator = LinearInterpolator()
+            addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    dismiss()
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+
+            })
+        }
+        mAlphaAnimator?.start()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mPrivateAnimationViewModel.startConsumeGift(this)
     }
 
 

@@ -235,7 +235,7 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateConversationViewModel?.getActiveWord()
         //获取配置相关
         val cb = SPUtils.getObject<ChatBubble>(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble::class.java)
-        if (cb == null) {
+        if (cb == null || cb.bgc.isEmpty()) {
             mPrivateConversationViewModel?.getSetting()
         } else {
             mPrivateConversationViewModel?.bubbleData?.value = cb
@@ -365,6 +365,7 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.operationType = ""
                 //刷新特权表情
                 refreshPrivilegeEmoji(it.intimate)
+                tv_intimate.text = "lv.${it.intimate.intimateLevel}"
             }
             showTitleView(it.friendUser.nickname, it.meetStatus)
             mIntimateDetailViewModel?.basicBean?.value = it
@@ -419,7 +420,17 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.startAnimationData?.observe(this, Observer {
             if (it != null) {
-                mPrivateAnimationViewModel.giftData.value = it
+                //将礼物添加到待播放列表
+                mPrivateAnimationViewModel.giftList.add(it)
+                //开始消费礼物动画
+                mPrivateAnimationViewModel.startConsumeGift(mAnimationFragment)
+                mPrivateConversationViewModel?.startAnimationData?.value = null
+            }
+        })
+
+        mPrivateAnimationViewModel.giftData.observe(this, Observer {
+            if (it != null) {
+                //开始消费动画
                 mPrivateAnimationViewModel.prepareResource(it)
             }
         })
@@ -517,8 +528,6 @@ class PrivateConversationActivity : BaseActivity() {
             }
         })
 
-        edit_text.keyListener
-
 
         iv_pic.onClickNew {
             val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
@@ -532,9 +541,10 @@ class PrivateConversationActivity : BaseActivity() {
         }
         iv_intimate.onClickNew {
             //显示欢遇弹窗
-            mIntimateDetailFragment =
-                mIntimateDetailFragment ?: IntimateDetailFragment.newInstance()
-            mIntimateDetailFragment?.show(supportFragmentManager, "IntimateDetailFragment")
+            RNPageActivity.start(
+                this,
+                RnConstant.INTIMATE_LEVEL_PAGE,
+                Bundle().apply { putLong("friendId", mPrivateConversationViewModel?.targetIdData?.value ?: 0L) })
         }
 
         iv_phone.onClickNew {
@@ -574,7 +584,7 @@ class PrivateConversationActivity : BaseActivity() {
                 if (ForceUtils.isIndexNotOutOfBounds(position, wordList)) {
                     val word = wordList[position]
                     vModel.currentActiveWord = word
-                    tv_active_content.text = "${word.wordType},\"${word.content}\""
+                    tv_active_content.text = "${word.wordType}，“${word.content}”"
                 }
                 if (vModel.wordPosition >= wordList.size - 1) {
                     //数据已经使用光，从后台获取新的数据
@@ -583,12 +593,12 @@ class PrivateConversationActivity : BaseActivity() {
             }
         }
 
-        tv_send_exactly.onClickNew {
-            //小鹊助手，直接发送
-            showXiaoQueView(false)
-            sendChatMessage(getActiveWord(), "", "")
-        }
-        tv_edit.onClickNew {
+//        tv_send_exactly.onClickNew {
+//            //小鹊助手，直接发送
+//            showXiaoQueView(false)
+//            sendChatMessage(getActiveWord(), "", "")
+//        }
+        view_xiaoque.onClickNew {
             //小鹊助手，编辑
             showXiaoQueView(false)
             val text = getActiveWord()
@@ -1479,21 +1489,15 @@ class PrivateConversationActivity : BaseActivity() {
         if (show) {
             //显示助手文案视图
             view_xiaoque.show()
-            tv_send_exactly.show()
+            iv_arrow.show()
             iv_que_close.show()
-            tv_edit.show()
-            iv_eye.show()
             tv_active_content.show()
-            view_xiaoque_top.show()
         } else {
             //隐藏助手文案视图
             view_xiaoque.hide()
-            tv_send_exactly.hide()
+            iv_arrow.hide()
             iv_que_close.hide()
-            tv_edit.hide()
-            iv_eye.hide()
             tv_active_content.hide()
-            view_xiaoque_top.hide()
         }
 
     }

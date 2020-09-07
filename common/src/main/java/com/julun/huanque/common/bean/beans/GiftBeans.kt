@@ -208,7 +208,9 @@ data class SpecialParams(
     //飘屏图片地址，多个以英文逗号分隔
     var pics: String = "",
     //飘屏类型，可选类型
-    var screenType: String = ""
+    var screenType: String = "",
+    //飘屏礼物数量
+    var count: Int = 0
 ) : Serializable
 
 data class ChatGift(

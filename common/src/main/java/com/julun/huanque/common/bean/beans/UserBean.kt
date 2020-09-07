@@ -191,4 +191,4 @@ data class BeansData(var beans: Long = 0) : Serializable
 /**
  * 私信气泡配置类
  */
-data class SettingBean(var chatBubble: ChatBubble = ChatBubble()) : Serializable
+data class SettingBean(var chatBubble: ChatBubble? = null) : Serializable

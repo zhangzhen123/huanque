@@ -225,7 +225,6 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
 
         if (windowManager != null && display != null) {
-
             if (!jumpToPlayer && !ActivitiesManager.hasActivity("com.julun.huanque.core.ui.live.PlayerActivity")) {
                 UserHeartManager.setProgramId(null)
                 videoView?.stop()

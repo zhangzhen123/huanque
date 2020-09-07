@@ -441,7 +441,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                         tv_content.backgroundResource = R.drawable.bg_chat_mine
                     }
                     tv_content.textColor = GlobalUtils.getColor(R.color.black_333)
-                    tv_content.minWidth = dp2px(40)
+                    tv_content.minWidth = dp2px(46)
                 }
 
 

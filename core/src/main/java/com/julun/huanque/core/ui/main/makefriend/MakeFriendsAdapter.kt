@@ -23,12 +23,16 @@ import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
+import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
+import kotlin.math.ceil
 
 class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolder>(null), LoadMoreModule,
     PhotosAdapter.OnItemClick {
@@ -101,14 +105,14 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 }
                 ImageHelper.setDefaultHeaderPic(headPic, bean.sex)
 
-                headPic.loadImage(bean.headPic+ BusiConstant.OSS_160, 66f, 66f)
+                headPic.loadImage(bean.headPic + BusiConstant.OSS_160, 66f, 66f)
                 val name = if (bean.nickname.length > 5) {
                     "${bean.nickname.substring(0, 5)}…"
                 } else {
                     bean.nickname
                 }
                 val sign = if (bean.mySign.length > 15) {
-                    "${bean.mySign.substring(0,15)}…"
+                    "${bean.mySign.substring(0, 15)}…"
                 } else {
                     bean.mySign
                 }
@@ -236,15 +240,26 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val sp = SpannableString(content)
                 sp.setSpan(styleSpan1A, 0, start, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
                 tvTask.text = sp
+
+
                 rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                if (rv.itemDecorationCount <= 0) {
-                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(4)))
-                }
+//                if (rv.itemDecorationCount <= 0) {
+//                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(10)))
+//                }
                 val mHeaderNavAdapter: HeaderNavAdapter
                 if (rv.adapter != null) {
                     mHeaderNavAdapter = rv.adapter as HeaderNavAdapter
                 } else {
-                    mHeaderNavAdapter = HeaderNavAdapter()
+                    //动态计算的宽高
+                    //图片宽度
+                    val singlePicWidth = (ScreenUtils.getScreenWidth() - dp2px(52)) / 3
+                    val tempHeight = ceil(singlePicWidth * 210 / 327.0 + dp2px(5)).toInt()
+
+                    val rvParams = rv.layoutParams
+                    rvParams.height = tempHeight
+                    rv.layoutParams = rvParams
+
+                    mHeaderNavAdapter = HeaderNavAdapter(singlePicWidth)
                     rv.adapter = mHeaderNavAdapter
                 }
 

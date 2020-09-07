@@ -88,14 +88,14 @@
             android:layout_marginRight="4dp"
             android:background="@drawable/bg_chat_other"
             android:gravity="center_vertical|left"
-            android:minWidth="40dp"
-            android:minHeight="40dp"
+            android:minWidth="46dp"
+            android:minHeight="46dp"
             android:paddingLeft="15dp"
             android:paddingTop="10dp"
             android:paddingRight="15dp"
             android:paddingBottom="10dp"
             android:textColor="@color/black_333"
-            android:textSize="@dimen/text_size_small"
+            android:textSize="@dimen/sp_16"
             tools:text="考虑i偶记得发" />
 
         <View

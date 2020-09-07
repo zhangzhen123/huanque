@@ -229,7 +229,7 @@ class MainViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = userService.settings().dataConvert()
-                SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, result.chatBubble)
+                SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, result.chatBubble ?: return@request)
             })
         }
     }

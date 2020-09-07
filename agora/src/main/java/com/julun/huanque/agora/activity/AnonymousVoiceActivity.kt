@@ -4,19 +4,18 @@ import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator.*
+import android.animation.ValueAnimator.INFINITE
+import android.animation.ValueAnimator.RESTART
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginTop
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -31,6 +30,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.HideFloatingEvent
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
@@ -45,12 +45,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.internal.operators.observable.ObservableTake
 import kotlinx.android.synthetic.main.act_anonymous_voice.*
-import kotlinx.android.synthetic.main.act_anonymous_voice.ll_close
-import kotlinx.android.synthetic.main.act_anonymous_voice.ll_hands_free
-import kotlinx.android.synthetic.main.act_anonymous_voice.ll_quiet
-import kotlinx.android.synthetic.main.act_anonymous_voice.ll_voice_accept
-import kotlinx.android.synthetic.main.act_anonymous_voice.sdv_header
-import kotlinx.android.synthetic.main.act_voice_chat.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
@@ -106,9 +100,6 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     private var communicationTime = 0L
 
     private var am: AudioManager? = null
-
-    //音频播放器
-    private var mPlayer: MediaPlayer? = null
 
     //其他人未加入倒计时
     private var mOtherNoJoinDisposable: Disposable? = null
@@ -256,22 +247,19 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
      * 播放音效
      */
     private fun playAudio(calling: Boolean) {
-        mPlayer?.stop()
-        mPlayer = null
-        mPlayer = if (calling) {
+        if (calling) {
             if (mAnonymousVoiceViewModel?.currentState?.value == AnonymousVoiceViewModel.MATCH) {
-                MediaPlayer.create(this, R.raw.anonymous_match)?.apply { isLooping = true }
+                VoiceManager.startMatch()
             } else {
-                MediaPlayer.create(this, R.raw.ring)?.apply { isLooping = true }
+                VoiceManager.startRing()
             }
         } else {
-            MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }
+            VoiceManager.startFinish()
         }
-        mPlayer?.start()
 
         am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
         am?.mode = AudioManager.MODE_NORMAL
-        am?.isSpeakerphoneOn = true;
+        am?.isSpeakerphoneOn = true
     }
 
     private fun initViewModel() {
@@ -283,8 +271,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         })
         mAnonymousVoiceViewModel?.currentState?.observe(this, Observer {
             if (it != null) {
-                mPlayer?.stop()
-                mPlayer = null
+                VoiceManager.stopAllVoice()
                 when (it) {
                     AnonymousVoiceViewModel.WAIT -> {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
@@ -1132,8 +1119,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         leaveChannel()
         mDisposable?.dispose()
-        mPlayer?.stop()
-        mPlayer = null
+        VoiceManager.stopAllVoice()
     }
 
     override fun onBackPressed() {

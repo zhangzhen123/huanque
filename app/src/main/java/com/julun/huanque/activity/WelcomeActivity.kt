@@ -7,9 +7,11 @@ import android.view.View
 import com.julun.huanque.R
 import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
+import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
@@ -28,8 +30,9 @@ class WelcomeActivity : BaseActivity() {
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         //移除缓存的私信气泡数据
-        SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
+        SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE,ChatBubble())
         checkPermissions()
+        VoiceManager.startRing(false)
     }
 
     private fun checkPermissions() {
