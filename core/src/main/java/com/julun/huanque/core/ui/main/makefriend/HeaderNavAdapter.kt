@@ -1,10 +1,13 @@
 package com.julun.huanque.core.ui.main.makefriend
 
+import android.graphics.Color
 import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.bean.beans.HeadModule
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.core.R
+import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.imageResource
 
 class HeaderNavAdapter(val width: Int) : BaseQuickAdapter<HeadModule, BaseViewHolder>(R.layout.item_item_mkf_header) {
@@ -15,7 +18,6 @@ class HeaderNavAdapter(val width: Int) : BaseQuickAdapter<HeadModule, BaseViewHo
         val params = container.layoutParams
         params.width = width
         container.layoutParams = params
-
 
 //        container.loadImage(item.bgPic, 90f, 70f)
 //        val url = item.baseInfo.headPic
@@ -42,6 +44,7 @@ class HeaderNavAdapter(val width: Int) : BaseQuickAdapter<HeadModule, BaseViewHo
                 holder.setText(R.id.tv_title1, "匿名语音")
                 holder.setText(R.id.tv_title2, "${item.num}人参与")
                 container.imageResource = R.mipmap.bg_header_audio
+
             }
             HeadModule.MagpieParadise -> {
                 holder.setText(R.id.tv_title1, "养鹊乐园")

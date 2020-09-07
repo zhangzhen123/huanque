@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -10,9 +10,7 @@
         android:id="@+id/sdv_nav_bg"
         android:layout_width="@dimen/dimen_90"
         android:layout_height="0px"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="@dimen/dimen_5"
-        android:layout_marginRight="5dp"
+        android:layout_marginTop="@dimen/dimen_8"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="327:210"
@@ -55,8 +53,7 @@
         android:layout_width="@dimen/dimen_20"
         android:layout_height="@dimen/dimen_22"
         android:src="@mipmap/icon_hot"
-        app:layout_constraintLeft_toRightOf="@id/sdv_nav_bg"
-        app:layout_constraintRight_toRightOf="@id/sdv_nav_bg"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
