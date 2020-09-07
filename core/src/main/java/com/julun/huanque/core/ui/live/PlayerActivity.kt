@@ -792,6 +792,7 @@ class PlayerActivity : BaseActivity() {
 //                GIODataPool.positionIndex = null
                 form = UserEnterRoomForm(programId, fromType = mFrom, shareUserId = mShareUSerId)
                 viewModel.enterLivRoom(form)
+                viewModel.requestBubble()
             }
         } else {
             //加入聊天室失败
@@ -1546,6 +1547,7 @@ class PlayerActivity : BaseActivity() {
                 // 如果升级的是自己，则刷新个人信息
                 if (localUserId == data.userId) {
                     viewModel.refreshUserInfoData()
+                    viewModel.requestBubble()
                 }
             }
         })

@@ -28,6 +28,7 @@ import com.julun.huanque.common.suger.setCircleImageSpan
 import com.julun.huanque.common.utils.*
 import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.dip
+import java.lang.Exception
 
 /**
  *
@@ -206,106 +207,110 @@ class DraweeSpanTextView @JvmOverloads constructor(
      * 渲染每一块 文本区域
      */
     private fun forEachBasicSpan(index: Int, styleParam: StyleParam, source: SpannableStringBuilder) {
-        val text = data?.textParams?.get(styleParam.el)
-        val subTexLength: Int = text?.length ?: return
-        val allColor: String? = data?.styleParamMap?.get(TplHelper.KEY_ALL)?.color
-        //                        source.setSpan(UnderlineSpan(), index, (index + subTexLength), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        if (StringHelper.isNotEmpty(styleParam.underLineColor)) {
-            //下划线
-            source.setSpan(
-                UnderlineSpan(), index, (index + subTexLength),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-        if (styleParam.el.indexOf("\${extra.user.nickName}") > -1) {
-            logger.info("nickName render")
-            val color = if (StringHelper.isEmpty(styleParam.color)) {
-                ContextCompat.getColor(context, R.color.app_main)
-            } else {
-                Color.parseColor(styleParam.color)
+        try {
+            val text = data?.textParams?.get(styleParam.el)
+            val subTexLength: Int = text?.length ?: return
+            val allColor: String? = data?.styleParamMap?.get(TplHelper.KEY_ALL)?.color
+            //                        source.setSpan(UnderlineSpan(), index, (index + subTexLength), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            if (StringHelper.isNotEmpty(styleParam.underLineColor)) {
+                //下划线
+                source.setSpan(
+                    UnderlineSpan(), index, (index + subTexLength),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             }
-            source.setSpan(
-                ForegroundColorSpan(color), index, (index + subTexLength),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            ) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
-            if (styleParam.lightColor.isNotEmpty()) {
-                val lightColor = if (StringHelper.isEmpty(styleParam.lightColor)) {
+            if (styleParam.el.indexOf("\${extra.user.nickName}") > -1) {
+                logger.info("nickName render")
+                val color = if (StringHelper.isEmpty(styleParam.color)) {
                     ContextCompat.getColor(context, R.color.app_main)
                 } else {
-                    Color.parseColor(styleParam.lightColor)
-                }
-                val colorInts = arrayListOf<Int>()
-                val colorSize = if (subTexLength < 3) {
-                    3
-                } else {
-                    subTexLength
-                }
-                repeat(colorSize) {
-                    colorInts.add(color)
-                }
-                val halfIndex = colorSize / 2
-                if (halfIndex < colorInts.size) {
-                    colorInts[halfIndex] = lightColor
+                    Color.parseColor(styleParam.color)
                 }
                 source.setSpan(
-                    AnimatedRainbowSpan(colorInts.toIntArray()), index, (index + subTexLength),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-                setNeedRainbow(true)
-                postInvalidateDelayed(1)
-            } else {
-                setNeedRainbow(false)
-            }
-            //删除线
-//            source.setSpan(StrikethroughSpan(), index, (index + subTexLength),  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
-            //下划线
-//            source.setSpan(UnderlineSpan(), index, (index + subTexLength),  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
-            //加点击
-
-            /*source.setSpan(object : ClickableSpan() {
-                override fun updateDrawState(ds: TextPaint) {
-                    ds.color = Color.RED
-                    ds.isUnderlineText = true
-                }
-
-                override fun onClick(widget: View?) {
-                    println("点击了: widget $widget ")
-//                    huanqueApp.getApp().longToast("被 点击了 呵呵 ")
-                }
-            }, index, (index + subTexLength), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)*/
-
-        } else {
-
-            //前景色
-            when {
-                StringHelper.isNotEmpty(styleParam.color) -> source.setSpan(
-                    ForegroundColorSpan(Color.parseColor(styleParam.color)), index, (index + subTexLength),
+                    ForegroundColorSpan(color), index, (index + subTexLength),
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                 ) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
-                //如果有全局颜色使用全局颜色
-                StringHelper.isNotEmpty(allColor) -> source.setSpan(
-                    ForegroundColorSpan(Color.parseColor(allColor)), index, (index + subTexLength),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-                else -> source.setSpan(
-                    ForegroundColorSpan(Color.WHITE), index, (index + subTexLength),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-            }
-            //背景色
-            if (StringHelper.isNotEmpty(styleParam.bgColor)) {
-                source.setSpan(
-                    BackgroundColorSpan(Color.parseColor(styleParam.bgColor)), index, (index + subTexLength),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-            }
-        }
+                if (styleParam.lightColor.isNotEmpty()) {
+                    val lightColor = if (StringHelper.isEmpty(styleParam.lightColor)) {
+                        ContextCompat.getColor(context, R.color.app_main)
+                    } else {
+                        Color.parseColor(styleParam.lightColor)
+                    }
+                    val colorInts = arrayListOf<Int>()
+                    val colorSize = if (subTexLength < 3) {
+                        3
+                    } else {
+                        subTexLength
+                    }
+                    repeat(colorSize) {
+                        colorInts.add(color)
+                    }
+                    val halfIndex = colorSize / 2
+                    if (halfIndex < colorInts.size) {
+                        colorInts[halfIndex] = lightColor
+                    }
+                    source.setSpan(
+                        AnimatedRainbowSpan(colorInts.toIntArray()), index, (index + subTexLength),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    setNeedRainbow(true)
+                    postInvalidateDelayed(1)
+                } else {
+                    setNeedRainbow(false)
+                }
+                //删除线
+//            source.setSpan(StrikethroughSpan(), index, (index + subTexLength),  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
+                //下划线
+//            source.setSpan(UnderlineSpan(), index, (index + subTexLength),  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
+                //加点击
 
-        if (BOLD == styleParam.fontWeight) {
-            source.setSpan(
-                StyleSpan(Typeface.BOLD), index, (index + subTexLength),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+                /*source.setSpan(object : ClickableSpan() {
+                    override fun updateDrawState(ds: TextPaint) {
+                        ds.color = Color.RED
+                        ds.isUnderlineText = true
+                    }
+
+                    override fun onClick(widget: View?) {
+                        println("点击了: widget $widget ")
+    //                    huanqueApp.getApp().longToast("被 点击了 呵呵 ")
+                    }
+                }, index, (index + subTexLength), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)*/
+
+            } else {
+
+                //前景色
+                when {
+                    StringHelper.isNotEmpty(styleParam.color) -> source.setSpan(
+                        ForegroundColorSpan(Color.parseColor(styleParam.color)), index, (index + subTexLength),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    ) //setSpan时需要指定的 flag,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE(前后都不包括).
+                    //如果有全局颜色使用全局颜色
+                    StringHelper.isNotEmpty(allColor) -> source.setSpan(
+                        ForegroundColorSpan(Color.parseColor(allColor)), index, (index + subTexLength),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    else -> source.setSpan(
+                        ForegroundColorSpan(Color.WHITE), index, (index + subTexLength),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+                //背景色
+                if (StringHelper.isNotEmpty(styleParam.bgColor)) {
+                    source.setSpan(
+                        BackgroundColorSpan(Color.parseColor(styleParam.bgColor)), index, (index + subTexLength),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+            }
+
+            if (BOLD == styleParam.fontWeight) {
+                source.setSpan(
+                    StyleSpan(Typeface.BOLD), index, (index + subTexLength),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

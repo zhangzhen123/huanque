@@ -54,8 +54,8 @@ object ChatUtils {
                 badgesPic = userInfo.badgesPic,
                 royalPic = userInfo.royalPic,
                 nickColor = userInfo.nickColor,
-                lightColor = userInfo.lightColor,
-                chatBubble = userInfo.chatBubble
+                lightColor = userInfo.lightColor
+//                chatBubble = userInfo.chatBubble
             )
         }
         return roomUserChat

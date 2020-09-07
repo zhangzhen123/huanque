@@ -523,7 +523,7 @@ class UserInfo {
     //是否免费弹幕(粉丝特权)
     var hasFreeDanMu: Boolean = false
     var danMuCard: Int = 0
-    var chatBubble: ChatBubble? = null
+//    var chatBubble: ChatBubble? = null
 }
 
 /**

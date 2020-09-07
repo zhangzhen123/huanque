@@ -295,26 +295,6 @@ class PlayerViewModel : BaseViewModel() {
     //是否展示猜字谜气泡
     val isShowGuessWordsBubbleLayout: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-    //一元礼包
-    val oneYuanInfo: MutableLiveData<OneYuanInfo> by lazy { MutableLiveData<OneYuanInfo>() }
-
-
-    //是否是一元首充
-    val firstOneYuanRecharge: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-    //是否展示一元首充tips
-    val oneYuanTips: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-
-    //猜字谜奖励
-    val wordAwardData: MutableLiveData<WordPuzzleAward> by lazy { MutableLiveData<WordPuzzleAward>() }
-
-    //通知刷新小主回馈页
-    val noticeRefreshFeedback: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-    //签到成功展示奖励弹窗
-//    val showSigninSuccessDialog: MutableLiveData<SigninAward> by lazy { MutableLiveData<SigninAward>() }
-
     //刷新礼物面板
     val refreshGift: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -424,7 +404,6 @@ class PlayerViewModel : BaseViewModel() {
 
     //记录当前切换的节目列表
     val switchList: MutableLiveData<ArrayList<SwitchBean>> by lazy { MutableLiveData<ArrayList<SwitchBean>>() }
-
     //处理直播间背景在pk时的切换 0初始样式 1 二人pk 2 三人pk 3斗地主
     val bgChange: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
     fun getLivRoomBase(programId: Long) {
@@ -497,7 +476,6 @@ class PlayerViewModel : BaseViewModel() {
                 userInfo.value = result
             })
         }
-
     }
 
     fun enterLivRoom(form: UserEnterRoomForm) {
@@ -752,5 +730,16 @@ class PlayerViewModel : BaseViewModel() {
         }
         return false
     }
+    fun requestBubble() {
+        viewModelScope.launch {
+            request({
+                val settingInfo = mUserService.settings().dataConvert()
+                roomUserChatExtra?.chatBubble=settingInfo.chatBubble
+                RongCloudManager.updateChatBubble(settingInfo.chatBubble)
+            }, {
+                it.printStackTrace()
+            })
 
+        }
+    }
 }
