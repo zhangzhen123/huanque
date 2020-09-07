@@ -1897,9 +1897,9 @@ class PlayerActivity : BaseActivity() {
                 stopPublish()
             } else {
                 viewModel.leave(programId)
-                if (goHome) {
-                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
-                }
+//                if (goHome) {
+//                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
+//                }
                 AliplayerManager.stop()
                 viewModel.leaveProgram()
             }
@@ -1932,9 +1932,9 @@ class PlayerActivity : BaseActivity() {
             viewModel.leave(programId)
 //            mDanmuFragment?.release()
             //用户
-            if (goHome) {
-                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
-            }
+//            if (goHome) {
+//                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
+//            }
             val baseData = viewModel.baseData.value
             if (PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
                 FloatingManager.showFloatingView(

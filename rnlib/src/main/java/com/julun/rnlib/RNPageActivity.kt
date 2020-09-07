@@ -59,7 +59,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             activity.startActivity(intent)
         }
     }
-
+    private var goHome: Boolean = false //整合所有界面的返回操作 重写onBackPressed()方法
     private lateinit var mReactRootView: ReactRootView
     private var mReactInstanceManager: ReactInstanceManager? = null
     private val mDeveloperSupport = true
@@ -72,6 +72,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             val intent = intent
             val moduleName = intent.getStringExtra(RnConstant.MODULE_NAME)
             val initialProperties = intent.getBundleExtra(RnConstant.INITIAL_PROPERTIES)
+            goHome = intent.getBooleanExtra(IntentParamKey.EXTRA_FLAG_GO_HOME.name, false)
             RnManager.curActivity = this
 
             mReactRootView = ReactRootView(this)
@@ -155,6 +156,13 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         }
     }
 
+    override fun finish() {
+        if (goHome) {
+            //如果有特殊标记返回首页,则返回首页
+            ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
+        }
+        super.finish()
+    }
     override fun onDestroy() {
         super.onDestroy()
         mReactInstanceManager?.onHostDestroy(this)

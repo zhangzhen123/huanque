@@ -134,6 +134,7 @@
         <meta-data
             android:name="OPPO_APPSECRET_P"
             android:value="${OPPO_APPSECRET_P}" />
+
         <service
             android:name="com.heytap.mcssdk.PushService"
             android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
@@ -177,5 +178,31 @@
             android:name="com.vivo.push.app_id"
             android:value="${VIVO_APPID_P}" />
         <!--vivo配置结束-->
+
+
+        <!-- 融云相关    SDK核心功能  必选 -->
+        <activity
+            android:name="com.julun.platform_push.receiver.RongPushSpringboardActivity"
+            android:exported="true"
+            android:theme="@style/undeadActivityStyle2">
+<!--            这个过滤是华为会用到 其他的推送也可能会走-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="${applicationId}"
+                    android:path="/conversationlist"
+                    android:scheme="rong" />
+            </intent-filter>
+        </activity>
+        <receiver
+            android:name="com.julun.platform_push.receiver.RongCloudPushMessageReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="io.rong.push.intent.MESSAGE_ARRIVED" />
+                <action android:name="io.rong.push.intent.MESSAGE_CLICKED" />
+                <action android:name="io.rong.push.intent.THIRD_PARTY_PUSH_STATE" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

@@ -590,3 +590,22 @@ object HomeMakeMoneyType {
     const val Game = "Game"
     const val Task = "Task"
 }
+
+object PushDataActionType{
+    //这个类型测试用
+    const val EditMineHomePage="EditMineHomePage"
+    const val LiveRoom="LiveRoom"
+    const val Url="Url"//打开指定url
+    const val PrivateChat="PrivateChat"//定位到私信
+    const val OfficialCertPage="OfficialCertPage"//跳转到官方认证页面
+
+    const val AnchorCertPage="AnchorCertPage"//跳转到主播认证页面
+    const val MineHomePage="MineHomePage"//跳转到我的主页
+    const val SystemNotice="SystemNotice" //（打开系统通知页面）
+    const val FriendNotice="FriendNotice"// (打开好友通知页面)
+    //Yesterday：昨日榜单Tab，
+    //Today:今日榜单Tab（暂无这样的跳转需求），
+    //Famous: 名人榜单Tab
+    const val PlumFlower="PlumFlower"//（跳转到今日花魁）
+
+}
