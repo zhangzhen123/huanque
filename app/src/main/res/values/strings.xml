@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">欢鹊</string>
+    <string name="app_name">欢鹊交友</string>
     <string name="attention_restart" translatable="false">程序出现异常，正在重启，请稍后</string>
     <string name="photo_uncertificated">照片未认证</string>
     <string name="wealth_level">财富等级</string>
