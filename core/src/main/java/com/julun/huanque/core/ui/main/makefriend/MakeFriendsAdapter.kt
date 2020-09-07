@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
@@ -242,7 +243,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 tvTask.text = sp
 
 
-                rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                rv.layoutManager = GridLayoutManager(context, 3)
 //                if (rv.itemDecorationCount <= 0) {
 //                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(10)))
 //                }
@@ -252,8 +253,8 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 } else {
                     //动态计算的宽高
                     //图片宽度
-                    val singlePicWidth = (ScreenUtils.getScreenWidth() - dp2px(52)) / 3
-                    val tempHeight = ceil(singlePicWidth * 210 / 327.0 + dp2px(5)).toInt()
+                    val singlePicWidth = (ScreenUtils.getScreenWidth() - dp2px(48)) / 3
+                    val tempHeight = ceil(singlePicWidth * 210 / 327.0 + dp2px(8)).toInt()
 
                     val rvParams = rv.layoutParams
                     rvParams.height = tempHeight

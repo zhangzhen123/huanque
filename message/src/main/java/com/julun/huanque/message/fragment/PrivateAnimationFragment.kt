@@ -39,8 +39,6 @@ import kotlin.math.roundToInt
  */
 class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
 
-    private val mPrivateConversationViewModel: PrivateConversationViewModel by activityViewModels()
-
     private val mPrivateAnimationViewModel: PrivateAnimationViewModel by activityViewModels()
 
     override fun getLayoutId() = R.layout.fragment_private_animation
@@ -123,9 +121,14 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
                 //飘屏类型
                 val picArray = specialParams.pics.split(",")
                 if (picArray.isEmpty()) {
+                    mPrivateAnimationViewModel.dismissState.value = true
                     return
                 }
-                val count = specialParams.count
+                val count = if (specialParams.count == 0) {
+                    20
+                } else {
+                    specialParams.count
+                }
                 if (specialParams.screenType == ChatGift.BothSide) {
                     //两侧飘屏
                     val picUrl = getRandomPicUrl(picArray)
