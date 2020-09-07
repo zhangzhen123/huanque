@@ -92,6 +92,13 @@
             android:screenOrientation="portrait" />
         <activity android:name=".ui.safe.DestroyAccountActivity"
             android:screenOrientation="portrait"/>
+
+        <!-- 下载服务 -->
+        <service android:name=".app.update.UpgradeApkService">
+            <intent-filter>
+                <action android:name="com.lingmeng.downService.start" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

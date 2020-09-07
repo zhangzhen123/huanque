@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="282dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center">
 
+
     <LinearLayout
         android:id="@+id/linearlayout_001"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_below="@+id/top_img"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="-10dp"
+        android:background="@drawable/bg_shape_white1"
         android:orientation="vertical"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp">
+        android:paddingLeft="@dimen/dimen_26"
+        android:paddingTop="@dimen/dimen_20"
+        android:paddingRight="@dimen/dimen_26"
+        android:paddingBottom="@dimen/dimen_25">
+
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="203dp"
+            android:background="@drawable/bg_shape_white2"
             android:orientation="horizontal">
 
             <TextView
@@ -28,7 +33,8 @@
                 android:gravity="center"
                 android:text="@string/find_new_version"
                 android:textColor="@color/black_333"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/version_num"
@@ -39,7 +45,8 @@
                 android:maxLines="1"
                 android:text="(版本号)"
                 android:textColor="@color/black_333"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <ScrollView
@@ -53,16 +60,16 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:text="更新内容"
-                android:textSize="@dimen/sp_14"
-                android:textColor="@color/black_999" />
+                android:textColor="@color/black_999"
+                android:textSize="@dimen/sp_14" />
         </ScrollView>
 
         <TextView
             android:id="@+id/ok_btn"
-            android:layout_width="110dp"
+            android:layout_width="230dp"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/selector_btn_solid"
             android:gravity="center"
             android:text="@string/update_now"
@@ -70,13 +77,18 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/top_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/bg_upgrade_header" />
 
     <ImageView
         android:id="@+id/dialog_cancel"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_alignEnd="@id/linearlayout_001"
+        android:layout_marginTop="15dp"
         android:scaleType="center"
-        android:layout_alignRight="@id/linearlayout_001"
-        android:layout_marginTop="45dp"
-        android:src="@mipmap/icon_close_black_01" />
+        android:src="@mipmap/icon_close_white_01" />
 </RelativeLayout>
