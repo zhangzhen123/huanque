@@ -91,8 +91,15 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
 
         mPrivateAnimationViewModel.giftData.observe(this, Observer {
             if (it != null) {
+                mPrivateAnimationViewModel.prepareResource(it)
+            }
+        })
+
+        mPrivateAnimationViewModel.preparedFlag.observe(this, Observer {
+            if (it == true) {
                 //开始播放动画
-                playAnimaiton(it)
+                val bean = mPrivateAnimationViewModel.giftData.value ?: return@Observer
+                playAnimaiton(bean)
                 //清空礼物效果
                 mPrivateAnimationViewModel.giftData.value = null
             }

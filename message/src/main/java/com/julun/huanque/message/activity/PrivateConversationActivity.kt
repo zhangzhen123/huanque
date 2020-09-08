@@ -176,13 +176,6 @@ class PrivateConversationActivity : BaseActivity() {
     override fun isRegisterEventBus() = true
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-//        val barHeight = StatusBarUtil.getStatusBarHeight(this)
-//        val params = header_view.layoutParams as? ConstraintLayout.LayoutParams
-//        params?.topMargin = barHeight
-//        header_view.layoutParams = params
-
-//        StatusBarUtil.setTransparent(this)
-
         val bgColor = GlobalUtils.getColor(R.color.color_gray_three)
         StatusBarUtil.setColor(this, bgColor)
         header_view.backgroundColor = bgColor
@@ -431,16 +424,11 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateAnimationViewModel.giftData.observe(this, Observer {
             if (it != null) {
                 //开始消费动画
-                mPrivateAnimationViewModel.prepareResource(it)
-            }
-        })
-
-        mPrivateAnimationViewModel.preparedFlag.observe(this, Observer {
-            if (it == true) {
                 mAnimationFragment = mAnimationFragment ?: PrivateAnimationFragment()
                 mAnimationFragment?.show(supportFragmentManager, "PrivateAnimationFragment")
             }
         })
+
         mPrivateConversationViewModel?.bubbleData?.observe(this, Observer {
             if (it != null) {
                 val intimateLevel = mPrivateConversationViewModel?.basicBean?.value?.intimate?.intimateLevel ?: 0
