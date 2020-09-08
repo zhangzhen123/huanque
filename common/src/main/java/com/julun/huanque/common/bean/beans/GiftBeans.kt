@@ -243,6 +243,9 @@ data class ChatGift(
         //动画
         const val Animation = "Animation"
 
+        //普通礼物
+        const val Normal = "Normal"
+
         //飘屏类型
         //两边向中间飘屏
         const val BothSide = "BothSide"

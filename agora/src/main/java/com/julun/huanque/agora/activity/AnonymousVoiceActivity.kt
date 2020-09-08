@@ -435,7 +435,11 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
         }
         header_page.imageViewBack.onClickNew {
-            mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT
+            val currentState = mAnonymousVoiceViewModel?.currentState?.value
+            if (currentState == AnonymousVoiceViewModel.MATCH) {
+                //调用取消匹配接口
+                mAnonymousVoiceViewModel?.cancelMatch()
+            }
             finish()
         }
         tv_match.onClickNew {
@@ -999,6 +1003,11 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         matchCompositeDisposable.clear()
         voiceCompositeDisposable.clear()
         VoiceManager.stopAllVoice()
+        val currentState = mAnonymousVoiceViewModel?.currentState?.value
+        if (currentState == AnonymousVoiceViewModel.MATCH) {
+            //调用取消匹配接口
+            mAnonymousVoiceViewModel?.cancelMatch()
+        }
     }
 
     override fun onDestroy() {

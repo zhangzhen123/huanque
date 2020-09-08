@@ -13,12 +13,16 @@ import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.facebook.drawee.drawable.ScalingUtils
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.interfaces.WebpAnimatorListener
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.StatusBarUtil
@@ -106,36 +110,25 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
     }
 
     /**
-     * 设置布局
-     */
-    private fun updateParams() {
-        val window = dialog?.window ?: return
-        val params = window.attributes
-        params.gravity = Gravity.CENTER
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT
-        params.height = ScreenUtils.getScreenHeight() - mBarHeight
-        window.attributes = params
-    }
-
-    /**
      * 播放动画
      */
     private fun playAnimaiton(gift: ChatGift) {
         val specialParams = gift.specialParams
         when (gift.specialType) {
-            ChatGift.Sound -> {
-                //音效类型
-                sdv_gift_icon.show()
-                tv_gift_name.show()
-
-                sdv_gift_icon.loadImage(gift.pic, 80f, 80f)
-                tv_gift_name.text = gift.giftName
-
-                mPrivateAnimationViewModel.startPlayer()
-                startScaleAnimaiton(sdv_gift_icon)
-            }
+//            ChatGift.Sound -> {
+//                //音效类型
+//                sdv_gift_icon.show()
+//                tv_gift_name.show()
+//
+//                sdv_gift_icon.loadImage(gift.pic, 80f, 80f)
+//                tv_gift_name.text = gift.giftName
+//
+//                mPrivateAnimationViewModel.startPlayer()
+//                startScaleAnimaiton(sdv_gift_icon)
+//            }
             ChatGift.Screen -> {
                 //飘屏类型
+                sdv_gift.hide()
                 val picArray = specialParams.pics.split(",")
                 if (picArray.isEmpty()) {
                     mPrivateAnimationViewModel.dismissState.value = true
@@ -165,8 +158,13 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
                         .subscribe({ startAnimation(totalCount, getRandomPicUrl(picArray)) }, {})
                 }
             }
-            ChatGift.Animation -> {
+            ChatGift.Sound, ChatGift.Animation -> {
                 //动画类型
+                val builder = GenericDraweeHierarchyBuilder(resources)
+                val hierarchy = builder
+                    .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP)
+                    .build()
+                sdv_gift.hierarchy = hierarchy
                 //播放音效
                 mPrivateAnimationViewModel.startPlayer()
                 //播放动画
@@ -175,17 +173,39 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
             }
             else -> {
                 //普通礼物动画
-                sdv_gift_icon.show()
-                tv_gift_name.show()
+                sdv_gift.show()
+                //设置FitCenter
 
-                sdv_gift_icon.loadImage(gift.pic, 80f, 80f)
-                tv_gift_name.text = gift.giftName
-                startScaleAnimaiton(sdv_gift_icon)
-                //两秒以后关闭
-                Observable.timer(2, TimeUnit.SECONDS)
-                    .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ mPrivateAnimationViewModel.dismissState.value = true }, { it.printStackTrace() })
+                val builder = GenericDraweeHierarchyBuilder(resources)
+                val hierarchy = builder
+                    .setActualImageScaleType(ScalingUtils.ScaleType.CENTER)
+                    .build()
+                sdv_gift.hierarchy = hierarchy
+
+                ImageUtils.showAnimator(sdv_gift, specialParams.webpUrl, animatorListener = object : WebpAnimatorListener {
+                    override fun onStart() {
+                    }
+
+                    override fun onError() {
+                        mPrivateAnimationViewModel.dismissState.value = true
+                    }
+
+                    override fun onEnd() {
+                        mPrivateAnimationViewModel.dismissState.value = true
+                    }
+
+                })
+//                sdv_gift_icon.show()
+//                tv_gift_name.show()
+//
+//                sdv_gift_icon.loadImage(gift.pic, 80f, 80f)
+//                tv_gift_name.text = gift.giftName
+//                startScaleAnimaiton(sdv_gift_icon)
+//                //两秒以后关闭
+//                Observable.timer(2, TimeUnit.SECONDS)
+//                    .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe({ mPrivateAnimationViewModel.dismissState.value = true }, { it.printStackTrace() })
             }
         }
     }
