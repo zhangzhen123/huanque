@@ -151,7 +151,7 @@ class PrivateAnimationViewModel : BaseViewModel() {
                 return bitmapPreparedFlag
             }
             else -> {
-                return false
+                return true
             }
         }
     }
