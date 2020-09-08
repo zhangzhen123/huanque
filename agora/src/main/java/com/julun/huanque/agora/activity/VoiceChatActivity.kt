@@ -63,6 +63,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     private var mType = ""
 
+    //耳机是否插入
+    private var mEarphone = false
+
     private var mCallingContentDisposable: Disposable? = null
 
     private var am: AudioManager? = null
@@ -79,7 +82,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
-        ll_hands_free.isEnabled = !GlobalUtils.getEarphoneLinkStatus()
     }
 
     /**
@@ -100,6 +102,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         StatusBarUtil.setTransparent(this)
         initViewModel()
         mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
+        mEarphone = intent?.getBooleanExtra(ParamConstant.Earphone, false) ?: false
+        ll_hands_free.isEnabled = !mEarphone
 //        sendMediaButton()
 //        requestAudioFocus()
         val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
@@ -287,8 +291,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             VoiceManager.startFinish()
         }
 
-//        am?.mode = AudioManager.MODE_NORMAL
-//        am?.isSpeakerphoneOn = true;
+        am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        am?.mode = AudioManager.MODE_NORMAL
+        am?.isSpeakerphoneOn = !mEarphone
     }
 
     override fun initEvents(rootView: View) {
@@ -428,6 +433,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         ll_quiet.show()
                         ll_close.show()
                         ll_hands_free.show()
+//                        ll_hands_free.isEnabled = !GlobalUtils.getEarphoneLinkStatus()
                         ll_voice_accept.hide()
 
                         VoiceManager.stopAllVoice()
@@ -656,31 +662,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         logger.info("$TAG joinResult = $result")
     }
 
-    /**
-     * 播放音效
-     */
-    private fun playerAudio() {
-        AgoraManager.mRtcEngine?.leaveChannel()
-        var accessToken = mVoiceChatViewModel?.agoraToken ?: ""
-        if (accessToken.isEmpty()) {
-            return
-        }
-        //设置为主播身份
-        AgoraManager.mRtcEngine?.setClientRole(Constants.CLIENT_ROLE_BROADCASTER)
-        AgoraManager.mRtcEngine?.enableAudio()
-        AgoraManager.mRtcEngine?.setDefaultAudioRoutetoSpeakerphone(false)
-        //默认开启声音
-        AgoraManager.mRtcEngine?.adjustRecordingSignalVolume(100)
-        //默认听筒
-        // Allows a user to join a channel.
-        val result = AgoraManager.mRtcEngine?.joinChannel(
-            accessToken,
-            "system_android",
-            null,
-            SessionUtils.getUserId().toInt()
-        )
-        AgoraManager.mRtcEngine?.startAudioMixing("/assets/ring.mp3", false, false, 100);
-    }
 
     // Tutorial Step 3
     private fun leaveChannel() {

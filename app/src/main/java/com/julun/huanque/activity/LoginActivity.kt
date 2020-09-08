@@ -73,7 +73,7 @@ class LoginActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         //切换账号的时候移除气泡缓存
-        SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble())
+        SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
         initViewModel()
         initFastLogin()
     }

@@ -55,7 +55,7 @@ object ActivitiesManager {
     fun removeActivity(className: String) {
         var act: Activity? = null
         activities.forEach {
-            if (it.localClassName == className) {
+            if (className.contains(it.localClassName)) {
                 act = it
                 return@forEach
             }

@@ -308,7 +308,7 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
 
 
         yTranslateAnimator.apply {
-            duration = 2500 + (1000 * Math.random()).toLong()
+            duration = 3500 + (2000 * Math.random()).toLong()
             interpolator = BounceInterpolator()
         }
 
@@ -320,7 +320,7 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
         }
 
         removeTranslateAnimator.apply {
-            duration = 200
+            duration = 250
             interpolator = LinearInterpolator()
         }
 
@@ -362,13 +362,13 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
     private fun startSlideAnimation(drawable: Drawable, count: Int) {
         ParticleSystem(con_root, 100, drawable, 1500)
             .setSpeedModuleAndAngleRange(0.2f, 0.55f, 330, 360)
-            .setRotationSpeed(1000f)
+            .setRotationSpeed(300f)
             .setAcceleration(0.002f, 90)
             .emit(-200, 400, count, 1000)
 
         ParticleSystem(con_root, 100, drawable, 1500)
             .setSpeedModuleAndAngleRange(0.2f, 0.55f, 180, 210)
-            .setRotationSpeed(1000f)
+            .setRotationSpeed(300f)
             .setAcceleration(0.002f, 90)
             .emit(ScreenUtils.getScreenWidth() + 200, 400, count, 1000)
         val intervalTimer = (1000 + 1500).toLong()
