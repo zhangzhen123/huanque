@@ -91,6 +91,7 @@ class PrivateAnimationViewModel : BaseViewModel() {
             logger("Message 音效准备成功事件 time = ${System.currentTimeMillis()}")
             voicePreparedFlag = true
             preparedFlag.value = judgePrepared()
+            logger("Private  voice dur = ${mAliPlayer.duration}")
         }
     }
 

@@ -23,6 +23,9 @@ import com.julun.huanque.common.net.RequestCaller
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.core.R
@@ -46,6 +49,21 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
 
     private var windowManager: WindowManager? = null
     private var layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
+
+    //距离屏幕的间距
+    private val mMargin = 40
+
+    //x最小值
+    private val xMin = mMargin
+
+    //X最大值
+    private var xMax = 0
+
+    //y最小值
+    private val yMin = 0
+
+    //y最大值
+    private var yMax = 0
 
     //直播间ID
     private var mProgramId = 0L
@@ -87,7 +105,7 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
 //        // 设置视频的播放窗口大小
 //        layoutParams.width = 400
 //        layoutParams.height = 550
-        layoutParams.x = 700
+        layoutParams.x = 660
         layoutParams.y = dip(53)
     }
 
@@ -97,9 +115,13 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         if (mVertical) {
             layoutParams.width = dip(130)
             layoutParams.height = dip(231)
+            yMax = ScreenUtils.getScreenHeight()  - dip(231)
+            xMax = ScreenUtils.getScreenWidth() - mMargin - dip(130)
         } else {
             layoutParams.width = dip(213)
             layoutParams.height = dip(160)
+            yMax = ScreenUtils.getScreenHeight()  - dip(160)
+            xMax = ScreenUtils.getScreenWidth() - mMargin - dip(213)
         }
 
         if (show) {
@@ -202,8 +224,21 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
                     val movedY = nowY - y
                     x = nowX
                     y = nowY
-                    layoutParams?.x = (layoutParams?.x + movedX).toInt()
-                    layoutParams.y = layoutParams.y + movedY.toInt()
+                    var tempX = (layoutParams.x + movedX).toInt()
+                    if (tempX < xMin) {
+                        tempX = xMin
+                    } else if (tempX > xMax) {
+                        tempX = xMax
+                    }
+                    layoutParams.x = tempX
+
+                    var tempY = layoutParams.y + movedY.toInt()
+                    if (tempY < yMin) {
+                        tempY = yMin
+                    } else if (tempY > yMax) {
+                        tempY = yMax
+                    }
+                    layoutParams.y = tempY
                     windowManager?.updateViewLayout(view, layoutParams)
                 }
                 MotionEvent.ACTION_UP -> {

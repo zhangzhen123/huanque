@@ -17,12 +17,13 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.message.R
 import com.julun.huanque.message.viewmodel.PrivateAnimationViewModel
-import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import com.plattysoft.leonids.ParticleSystem
 import com.trello.rxlifecycle4.android.FragmentEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
@@ -40,6 +41,9 @@ import kotlin.math.roundToInt
 class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
 
     private val mPrivateAnimationViewModel: PrivateAnimationViewModel by activityViewModels()
+
+    //顶部栏高度
+    private val mBarHeight = StatusBarUtil.getStatusBarHeight(CommonInit.getInstance().getContext())
 
     override fun getLayoutId() = R.layout.fragment_private_animation
 
@@ -96,8 +100,21 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
         super.onStart()
         dialog?.setOnKeyListener(this)
         setDialogSize(Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+//        updateParams()
         //不需要半透明遮罩层
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+    }
+
+    /**
+     * 设置布局
+     */
+    private fun updateParams() {
+        val window = dialog?.window ?: return
+        val params = window.attributes
+        params.gravity = Gravity.CENTER
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT
+        params.height = ScreenUtils.getScreenHeight() - mBarHeight
+        window.attributes = params
     }
 
     /**
@@ -224,31 +241,71 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
      * 开始掉落动画（单个视图）
      */
     private fun startAnimation(total: Int, url: String) {
+        val border = 270
         val iv = SimpleDraweeView(context).apply {
             setImageURI(StringHelper.getOssImgUrl(url))
         }
 //        val tempX = ScreenUtils.getScreenWidth() * (0.8 * Math.random() + 0.1)
-        val tempX = (ScreenUtils.getScreenWidth() - dp2px(40)) * Math.random()
-        val params = FrameLayout.LayoutParams(dp2px(40), dp2px(40))
+        val tempX = (ScreenUtils.getScreenWidth() - border) * Math.random()
+        val params = FrameLayout.LayoutParams(border, border)
         con_root.addView(iv, params)
         iv.x = tempX.toFloat()
 
         //开始动画
-        val targetY = ScreenUtils.getScreenHeight() - iv.bottom
-        val yTranslateAnimator = ObjectAnimator.ofFloat(iv, "translationY", -dp2pxf(40), targetY.toFloat())
+        val targetY = ScreenUtils.getScreenHeight() - mBarHeight * 2
+//        val targetY = con_root.bottom
+        logger.info("Private mBarHeight = ${mBarHeight},targetY = $targetY,screenHeight = ${ScreenUtils.getScreenHeight()}，con_root.bottom = ${con_root.bottom},con_root.height = ${con_root.height}")
+        val yTranslateAnimator = ObjectAnimator.ofFloat(iv, "translationY", -300f, targetY.toFloat())
+
+        val removeTranslateAnimator = ObjectAnimator.ofFloat(iv, "translationY", targetY.toFloat(), (targetY + border).toFloat())
+
+
+        val time = System.currentTimeMillis()
+        val index = time % 3
+
+        val rotationAnimator: ObjectAnimator? = when (index) {
+            0L -> {
+                //正向转
+                ObjectAnimator.ofFloat(iv, "rotation", 0f, 360f)
+            }
+            1L -> {
+                //反向转
+                ObjectAnimator.ofFloat(iv, "rotation", 0f, -360f)
+            }
+            else -> {
+                //不转
+                null
+            }
+        }
+
+
 
         yTranslateAnimator.apply {
             duration = 2500 + (1000 * Math.random()).toLong()
             interpolator = BounceInterpolator()
         }
 
-        yTranslateAnimator.addListener(object : Animator.AnimatorListener {
+        rotationAnimator?.apply {
+            duration = 2000
+            repeatCount = -1
+            repeatMode = ValueAnimator.RESTART
+            interpolator = LinearInterpolator()
+        }
+
+        removeTranslateAnimator.apply {
+            duration = 200
+            interpolator = LinearInterpolator()
+        }
+
+
+        removeTranslateAnimator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
             }
 
             override fun onAnimationEnd(animation: Animator?) {
                 con_root?.removeView(iv)
                 removeCount++
+                rotationAnimator?.cancel()
                 if (removeCount == total) {
                     //动画播放完成
                     mPrivateAnimationViewModel.animationEndFlag.value = true
@@ -262,7 +319,14 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
             }
         })
 
-        yTranslateAnimator.start()
+        val animatorSet = AnimatorSet()
+        if (rotationAnimator != null) {
+            animatorSet.play(yTranslateAnimator).with(rotationAnimator).before(removeTranslateAnimator)
+        } else {
+            animatorSet.play(yTranslateAnimator).before(removeTranslateAnimator)
+        }
+        animatorSet.start()
+
     }
 
     /**
@@ -312,7 +376,7 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
      */
     private fun startDismissAnimation() {
         mAlphaAnimator = mAlphaAnimator ?: ObjectAnimator.ofFloat(con_root, "alpha", 1.0f, 0.0f).apply {
-            duration = 500
+            duration = 300
             interpolator = LinearInterpolator()
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {
