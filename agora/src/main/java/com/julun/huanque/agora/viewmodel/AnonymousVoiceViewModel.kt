@@ -182,7 +182,7 @@ class AnonymousVoiceViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = socialService.avoiceAccept(InviteUserIdForm(inviteUserId)).dataConvert()
-                currentState.value = VOICE
+//                currentState.value = VOICE
             }, {
                 currentState.value = WAIT
             }, {

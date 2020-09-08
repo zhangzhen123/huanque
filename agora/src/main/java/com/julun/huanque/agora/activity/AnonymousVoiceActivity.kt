@@ -220,7 +220,6 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             override fun process(data: AnonyVoiceCancelBean) {
                 if (data.inviteUserId == mAnonymousVoiceViewModel?.inviteUserId && mAnonymousVoiceViewModel?.currentState?.value == AnonymousVoiceViewModel.WAIT_ACCEPT) {
                     //匿名语音取消消息
-                    ToastUtils.show("匿名语音已结束")
                     mAnonymousVoiceViewModel?.voiceEndFlag?.value = true
                 }
             }
