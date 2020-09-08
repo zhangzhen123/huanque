@@ -105,7 +105,7 @@ class CardManagerDialogFragment : BaseDialogFragment() {
                         dialog.show(childFragmentManager, "CardManagerDialogFragment")
                     } else {
                         showAlertDialog(ManagerInfo().apply {
-                            itemName = mangeTypeDesc
+                            itemName = item.mangeTypeDesc
                             mangeType = item.mangeType
                             mangeTypeDesc = item.mangeTypeDesc
                         })
