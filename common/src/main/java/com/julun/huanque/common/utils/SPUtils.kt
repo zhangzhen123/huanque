@@ -92,7 +92,7 @@ object SPUtils {
     }
 
     fun remove(key: String) {
-        editor.remove(key)
+        editor.remove(key).commit()
     }
 
     private fun commit(editor: SharedPreferences.Editor) {

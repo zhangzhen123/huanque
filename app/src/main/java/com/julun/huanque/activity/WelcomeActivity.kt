@@ -30,7 +30,7 @@ class WelcomeActivity : BaseActivity() {
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         //移除缓存的私信气泡数据
-        SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE,ChatBubble())
+        SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
         checkPermissions()
         VoiceManager.startRing(false)
     }
