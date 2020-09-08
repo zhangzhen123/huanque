@@ -118,6 +118,9 @@ object ParamConstant {
     //头像
     const val HeaderPic = "HeaderPic"
 
+    //耳机是否插入
+    const val Earphone = "Earphone"
+
 
     const val TARGET_USER_ID = "TargetUserId"
 

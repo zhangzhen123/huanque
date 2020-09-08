@@ -63,6 +63,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     private var mType = ""
 
+    //耳机是否插入
+    private var mEarphone = false
+
     private var mCallingContentDisposable: Disposable? = null
 
     private var am: AudioManager? = null
@@ -79,7 +82,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
-//
     }
 
     /**
@@ -100,6 +102,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         StatusBarUtil.setTransparent(this)
         initViewModel()
         mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
+        mEarphone = intent?.getBooleanExtra(ParamConstant.Earphone, false) ?: false
+        ll_hands_free.isEnabled = !mEarphone
 //        sendMediaButton()
 //        requestAudioFocus()
         val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
@@ -287,8 +291,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             VoiceManager.startFinish()
         }
 
-//        am?.mode = AudioManager.MODE_NORMAL
-//        am?.isSpeakerphoneOn = true;
+        am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        am?.mode = AudioManager.MODE_NORMAL
+        am?.isSpeakerphoneOn = !mEarphone
     }
 
     override fun initEvents(rootView: View) {
@@ -428,7 +433,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         ll_quiet.show()
                         ll_close.show()
                         ll_hands_free.show()
-                        ll_hands_free.isEnabled = !GlobalUtils.getEarphoneLinkStatus()
+//                        ll_hands_free.isEnabled = !GlobalUtils.getEarphoneLinkStatus()
                         ll_voice_accept.hide()
 
                         VoiceManager.stopAllVoice()

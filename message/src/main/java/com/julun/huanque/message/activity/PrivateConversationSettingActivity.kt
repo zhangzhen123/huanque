@@ -215,12 +215,13 @@ class PrivateConversationSettingActivity : BaseActivity() {
             goToPictureSelectPager()
         } else {
             //亲密度等级不够，显示特权弹窗
-            IntimateUtil.intimatePrivilegeList.forEach {
-                if (it.key == "LTBJ") {
-                    SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(supportFragmentManager, "SingleIntimateprivilegeFragment")
-                    return
-                }
-            }
+            ToastUtils.show("亲密等级达到${data?.chatBackgroundLevel}才能设置聊天背景哦")
+//            IntimateUtil.intimatePrivilegeList.forEach {
+//                if (it.key == "LTBJ") {
+//                    SingleIntimateprivilegeFragment.newInstance(it, currentLevel).show(supportFragmentManager, "SingleIntimateprivilegeFragment")
+//                    return
+//                }
+//            }
 
         }
     }
