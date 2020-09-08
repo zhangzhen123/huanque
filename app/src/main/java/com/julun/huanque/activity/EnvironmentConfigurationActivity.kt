@@ -61,9 +61,9 @@ class EnvironmentConfigurationActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         sources.clear()
-        prepareProducts(products)
-        prepareDevelopers(developers)
-        prepareTests(tests)
+        prepareList(products,PRODUCTION)
+        prepareList(developers,DEVELOPER)
+        prepareList(tests,TEST)
         rvList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvList.adapter = adapter
         adapter.setList(sources)
@@ -100,43 +100,13 @@ class EnvironmentConfigurationActivity : BaseActivity() {
         }
     }
 
-    private fun prepareProducts(list: List<String>) {
+    private fun prepareList(list: List<String>, type: Int) {
         list.forEachIndexed { index, url ->
             val bean = EnvironmentConfigurationBean().apply {
                 if (index == 0) {
                     isFirst = true
                 }
-                type = PRODUCTION
-                this.url = url
-            }
-            if (!sources.contains(bean)) {
-                sources.add(bean)
-            }
-        }
-    }
-
-    private fun prepareDevelopers(list: List<String>) {
-        list.forEachIndexed { index, url ->
-            val bean = EnvironmentConfigurationBean().apply {
-                if (index == 0) {
-                    isFirst = true
-                }
-                type = DEVELOPER
-                this.url = url
-            }
-            if (!sources.contains(bean)) {
-                sources.add(bean)
-            }
-        }
-    }
-
-    private fun prepareTests(list: List<String>) {
-        list.forEachIndexed { index, url ->
-            val bean = EnvironmentConfigurationBean().apply {
-                if (index == 0) {
-                    isFirst = true
-                }
-                type = TEST
+                this.type = type
                 this.url = url
             }
             if (!sources.contains(bean)) {
