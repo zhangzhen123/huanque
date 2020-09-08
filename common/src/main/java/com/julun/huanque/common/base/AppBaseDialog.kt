@@ -7,6 +7,7 @@ import android.view.View
 import androidx.annotation.StyleRes
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.holdDialog
+import com.julun.huanque.common.suger.logger
 import java.lang.ref.WeakReference
 
 /**

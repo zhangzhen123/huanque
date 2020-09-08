@@ -28,6 +28,7 @@ import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.utils.SPUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.model.Conversation
@@ -390,9 +391,6 @@ class PlayerViewModel : BaseViewModel() {
     //关注状态
     val followStatusData: MutableLiveData<ReactiveData<FollowResultBean>> by lazy { MutableLiveData<ReactiveData<FollowResultBean>>() }
 
-    //公聊设置的用户数据
-    var roomUserChatExtra: RoomUserChatExtra? = null
-
     //需要申请权限的跳转类型
     var mPermissionJumpType = ""
 
@@ -404,6 +402,7 @@ class PlayerViewModel : BaseViewModel() {
 
     //记录当前切换的节目列表
     val switchList: MutableLiveData<ArrayList<SwitchBean>> by lazy { MutableLiveData<ArrayList<SwitchBean>>() }
+
     //处理直播间背景在pk时的切换 0初始样式 1 二人pk 2 三人pk 3斗地主
     val bgChange: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
     fun getLivRoomBase(programId: Long) {
@@ -474,6 +473,8 @@ class PlayerViewModel : BaseViewModel() {
             request({
                 val result = liveService.getRoomUserInfo(roomForm).dataConvert()
                 userInfo.value = result
+                //每次拿到用户信息后 都去再拿一次气泡配置
+                requestBubble()
             })
         }
     }
@@ -488,7 +489,8 @@ class PlayerViewModel : BaseViewModel() {
                 gameListData.value = result.gameList
                 getAdConfig.value = result.poppuAds
                 bagChangeFlag.value = result.user?.bagChange ?: false
-
+                //获取bubble放在拿到用户信息后
+                requestBubble()
             }, error = {
                 it.printStackTrace()
                 errorState.value = 3
@@ -524,7 +526,8 @@ class PlayerViewModel : BaseViewModel() {
                 val followBean = FollowResultBean(follow = follow.follow, userId = userId)
                 followStatusData.value = followBean.convertRtData()
                 EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
-                EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
+                EventBus.getDefault()
+                    .post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
             }, {
                 followStatusData.value = it.convertError()
             })
@@ -555,7 +558,8 @@ class PlayerViewModel : BaseViewModel() {
                 val followBean = FollowResultBean(follow = FollowStatus.False, userId = userId)
                 followStatusData.value = followBean.convertRtData()
                 EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
-                EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to false)))
+                EventBus.getDefault()
+                    .post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to false)))
             }, {
                 followStatusData.value = it.convertError()
             })
@@ -574,7 +578,12 @@ class PlayerViewModel : BaseViewModel() {
                 val info = tplBean.userInfo
 //                if ((info?.userLevel ?: 0) > 0) {
                 info?.let {
-                    val userInfo = UserInfoBean(info.userId, baseData.value?.programId == info.userId, info.royalLevel, nickname = it.nickname)
+                    val userInfo = UserInfoBean(
+                        info.userId,
+                        baseData.value?.programId == info.userId,
+                        info.royalLevel,
+                        nickname = it.nickname
+                    )
                     userInfoView.value = userInfo
                 }
 //                }
@@ -730,12 +739,17 @@ class PlayerViewModel : BaseViewModel() {
         }
         return false
     }
+
     fun requestBubble() {
         viewModelScope.launch {
             request({
-                val settingInfo = mUserService.settings().dataConvert()
-                roomUserChatExtra?.chatBubble=settingInfo.chatBubble
-                RongCloudManager.updateChatBubble(settingInfo.chatBubble)
+                var bubbleInfo = SPUtils.getObject<ChatBubble>(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble::class.java)
+                if (bubbleInfo == null) {
+                    val settingInfo = mUserService.settings().dataConvert()
+                    bubbleInfo = settingInfo.chatBubble
+                    SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, settingInfo.chatBubble ?: return@request)
+                }
+                RongCloudManager.updateChatBubble(bubbleInfo)
             }, {
                 it.printStackTrace()
             })

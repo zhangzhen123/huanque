@@ -198,7 +198,8 @@ class PlayerViewManager(val context: PlayerActivity) {
     }
 
     private fun initViewModel() {
-        viewModel.userInfo.observe(context, Observer { refreshUserViewData(it ?: return@Observer) })
+        viewModel.userInfo.observe(context, Observer { refreshUserViewData(it ?: return@Observer)
+        })
         propViewModel.colorfulState.observe(context, Observer {
 //            if (it == true) {
 //                //炫彩功能开启 并且不是神秘人状态
@@ -294,11 +295,6 @@ class PlayerViewManager(val context: PlayerActivity) {
 //                        closeGuardView()
                         val defaultContent = actionValue as? String ?: ""
                         openChatInputBox(defaultContent, it.innerActionType)
-                        // 刷新融云用户数据
-                        RongCloudManager.resetUserInfoData(
-                            viewModel.roomUserChatExtra
-                                ?: return@Observer
-                        )
                     }
                     ClickType.GIFT -> {
                         //打开送礼弹窗
@@ -744,7 +740,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 //        chatInputView.setFreeDanMu(data.hasFreeDanMu, data.danMuCard)
 //        chatInputView.mystery = data.mystery
 //        chatInputView.initRoyalDanmu(data.royalLevel)
-        viewModel.roomUserChatExtra = ChatUtils.createRoomUserChat(viewModel.roomData, viewModel.baseData.value, false)
+        RongCloudManager.resetUserInfoData(ChatUtils.createRoomUserChat(viewModel.roomData, viewModel.baseData.value, false))
     }
 
     /**
