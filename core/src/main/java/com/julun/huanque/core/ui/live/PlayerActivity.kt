@@ -2056,6 +2056,8 @@ class PlayerActivity : BaseActivity() {
      * @param loginStateChange 登录状态变更触发重置的标识位
      */
     private fun resetRoom(loginStateChange: Boolean = false) {
+        //在这里就先把注册的事件监听全部注销 因为到切换后请求base+连接融云+enter有时间间隔 期间会继续收到消息 导致一系列问题
+        MessageProcessor.clearProcessors(false)
         //重新换成默认背景色
         main_content.backgroundResource = R.color.live_bg_color
 
