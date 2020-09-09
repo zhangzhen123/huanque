@@ -119,6 +119,9 @@ class SendGiftFragment : BaseDialogFragment() {
     // 当前跑道价值
     private var runwayCurrentValue: Long = 0
 
+    //背包需要刷新标记位
+    private var bagNeedRefresh = false
+
 
     companion object {
         const val GiftBox = "GiftBox"//礼盒
@@ -284,6 +287,12 @@ class SendGiftFragment : BaseDialogFragment() {
             refreshGiftView(it ?: return@Observer)
         })
         viewModel?.bagData?.observe(this, Observer {
+            it?.forEach { dto ->
+                if (dto.changeMark) {
+                    bagNeedRefresh = true
+                    return@forEach
+                }
+            }
             showBagData(it ?: return@Observer)
         })
         viewModel?.bagChangeState?.observe(this, Observer {
@@ -873,8 +882,8 @@ class SendGiftFragment : BaseDialogFragment() {
      * 刷新背包数据
      */
     private fun refreshBag() {
-        if (viewModel?.bagNeedRefresh == true) {
-            val bagList = viewModel?.bagData?.value ?: return
+        if (bagNeedRefresh) {
+            val bagList = mBagData
             val removeList = mutableListOf<LiveGiftDto>()
             bagList.forEach {
                 it.changeMark = false
@@ -886,7 +895,7 @@ class SendGiftFragment : BaseDialogFragment() {
                 bagList.remove(it)
             }
             viewModel?.bagData?.value = bagList
-            viewModel?.bagNeedRefresh = false
+            bagNeedRefresh = false
         }
     }
 
@@ -1152,7 +1161,7 @@ class SendGiftFragment : BaseDialogFragment() {
                     if (count <= 0) {
                         it.couldSend = false
                         setSelectGiftFunction(selectedGift)
-                        viewModel?.bagNeedRefresh = true
+                        bagNeedRefresh = true
                     }
                     mBagViewPagerAdapter.notifyDataSetChanged()
                     return@forEach

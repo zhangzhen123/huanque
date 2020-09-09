@@ -78,7 +78,8 @@ class EggResultFragment : BaseDialogFragment() {
 //        } else {
 //            "${StringHelper.formatNumber(count)}"
 //        }
-        tv_mengdou.text = "总计${StringHelper.formatCoinsCount(count)}"
+//        tv_mengdou.text = "总计${StringHelper.formatCoinsCount(count)}鹊币"
+        tv_mengdou.text = "总计${count}鹊币"
         mAdapter.setList(result.prizeList)
     }
 
