@@ -24,10 +24,7 @@ import com.julun.huanque.common.net.services.UserService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
