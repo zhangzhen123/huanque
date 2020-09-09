@@ -436,13 +436,13 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             override fun convert(holder: BaseViewHolder, item: UserDataTab) {
                 val tvCount = holder.getView<TextView>(R.id.tvCount)
                 val count = item.count
-                tvCount.text="${StringHelper.formatNum(count)}"
+                tvCount.text = "${StringHelper.formatNum(count)}"
                 holder.setText(R.id.tvTitle, item.userTabName)
 
-                if (item.tagCount == 0) {
+                if (item.addCount == 0) {
                     holder.setGone(R.id.tv_tag, true)
                 } else {
-                    holder.setGone(R.id.tv_tag, false).setText(R.id.tv_tag, "${item.tagCount}")
+                    holder.setGone(R.id.tv_tag, false).setText(R.id.tv_tag, StringHelper.formatNum(item.addCount.toLong()))
                 }
             }
         }

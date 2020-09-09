@@ -273,11 +273,13 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
                 UserHeartManager.setProgramId(null)
                 videoView?.stop()
                 GlobalScope.launch {
-                    withContext(Dispatchers.IO) {
-                        try {
-                            Requests.create(LiveRoomService::class.java).leave(ProgramIdForm(mProgramId)).dataConvert()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                    kotlin.runCatching {
+                        withContext(Dispatchers.IO) {
+                            try {
+                                Requests.create(LiveRoomService::class.java).leave(ProgramIdForm(mProgramId)).dataConvert()
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         }
                     }
                 }

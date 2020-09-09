@@ -417,17 +417,15 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
     // 当前新增用户是否在列表中，不在则添加
     private fun addRoomUser(newObj: UserInfoForLmRoom) {
         val newUserId = newObj.userId
-        if (newUserId != programId) {
-            var bool = false
-            for ((userId) in roomUsers) {
-                if (userId == newUserId) {
-                    bool = true
-                    break
-                }
+        var bool = false
+        for ((userId) in roomUsers) {
+            if (userId == newUserId) {
+                bool = true
+                break
             }
-            if (!bool) {
-                roomUsers.add(newObj)
-            }
+        }
+        if (!bool) {
+            roomUsers.add(newObj)
         }
     }
 
