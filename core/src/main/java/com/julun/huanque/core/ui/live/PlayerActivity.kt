@@ -42,6 +42,7 @@ import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.message_dispatch.EventMessageType
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
@@ -464,11 +465,11 @@ class PlayerActivity : BaseActivity() {
                 liveViewManager.preUpAndDownData()
             }
             publicMessageView.clearMessages()
+            currentLiveBgUrl = it.prePic
             if (it.isLiving) {
                 cur_live_bg.hide()
             } else {
                 cur_live_bg.show()
-                currentLiveBgUrl = it.prePic
                 liveViewManager.loadBlurImage(cur_live_bg, it.prePic)
             }
 
@@ -1617,7 +1618,10 @@ class PlayerActivity : BaseActivity() {
                     mVideoViewModel.logout.postValue(true)
                     viewModel.baseData.value?.lastShowTimeDiffText = "刚刚"
 //                    surface_view?.scrollEnable = false
-                    cur_live_bg.show()
+                    currentLiveBgUrl?.let {
+                        cur_live_bg.show()
+                        liveViewManager.loadBlurImage(cur_live_bg, it)
+                    }
                     addPlayFragment(false)
                 }
             }
@@ -1715,6 +1719,7 @@ class PlayerActivity : BaseActivity() {
 //                ToastUtils.show("${data.nickname}给了${data.targetNickname}一个${data.time}禁言套餐")
 //            }
 //        })
+
     }
 
 
