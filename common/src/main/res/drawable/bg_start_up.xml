@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+    <item android:gravity="top|center_horizontal">
+        <bitmap
+            android:src="@mipmap/startup_top"
+            android:tileMode="mirror"></bitmap>
+    </item>
+    <item android:gravity="bottom">
+        <bitmap
+            android:gravity="center_horizontal|top"
+            android:src="@mipmap/startup_bottom"></bitmap>
+    </item>
+</layer-list>

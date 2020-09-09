@@ -13,6 +13,7 @@ import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.utils.SPUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
@@ -27,6 +28,7 @@ class WelcomeActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         logger.info("WelcomeActivity initViews")
+        logger.info("Welcome width = ${ScreenUtils.getScreenWidth()},height = ${ScreenUtils.getScreenHeight()}")
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         //移除缓存的私信气泡数据
