@@ -59,7 +59,7 @@
         android:id="@+id/tv_bird_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@mipmap/bg_bird_shop_buy"
+        android:background="@mipmap/bg_bird_btn_green"
         android:drawableStart="@mipmap/icon_bird_coin"
         android:layout_marginTop="@dimen/dimen_10"
         android:gravity="center"

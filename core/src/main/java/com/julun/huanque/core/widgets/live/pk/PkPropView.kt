@@ -1,4 +1,4 @@
-package com.julun.huanque.lmcore.basic.widgets.live
+package com.julun.huanque.core.widgets.live.pk
 
 import android.annotation.TargetApi
 import android.content.Context

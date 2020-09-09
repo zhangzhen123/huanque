@@ -36,7 +36,7 @@ class ShopBirdAdapter : BaseQuickAdapter<UpgradeShopBirdBean, BaseViewHolder>(R.
                 drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
                 text.setCompoundDrawables(drawable, null, null, null)
             }
-            text.backgroundResource=R.mipmap.bg_bird_shop_buy
+            text.backgroundResource=R.mipmap.bg_bird_btn_green
         } else {
             text.text = "Lv.${item.upgradeLevel}解锁"
             val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_bird_shop_lock)

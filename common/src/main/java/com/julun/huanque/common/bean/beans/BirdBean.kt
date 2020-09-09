@@ -122,14 +122,17 @@ data class BirdTask(
     var taskName: String = "",
     var taskStatus: String = "",
     var taskStatusText: String = "",
-    var taskImage: String = ""
+    var taskImage: String = "",
+    var awardType: String = ""
 )
 
 data class BirdAward(
     var activeCode: String = "",
     var awardName: String = "",
     var awardStatus: String = "",
-    var targetActive: Int = 0
+    var awardPic: String = "",
+    var targetActive: Int = 0,
+    var awardCount: Int = 0
 )
 
 data class BirdTaskReceiveResult(

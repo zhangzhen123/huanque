@@ -597,12 +597,20 @@ object BirdTaskJump {
     const val FriendHome = "FriendHome"
     const val Message = "Message"
 }
-object BirdTaskStatus{
-    const val NotReceive="NotReceive"
-    const val NotFinish="NotFinish"
-    const val Received="Received"
+
+object BirdTaskStatus {
+    const val NotReceive = "NotReceive"
+    const val NotFinish = "NotFinish"
+    const val Received = "Received"
 
 }
+
+object BirdTaskAwardType {
+    const val Small = "Small"
+    const val Middle = "Middle"
+    const val Big = "Big"
+}
+
 object MainPageIndexConst {
     const val MAIN_FRAGMENT_INDEX = 0
     const val LEYUAN_FRAGMENT_INDEX = 1
@@ -610,21 +618,22 @@ object MainPageIndexConst {
     const val MINE_FRAGMENT_INDEX = 3
 }
 
-object PushDataActionType{
+object PushDataActionType {
     //这个类型测试用
-    const val EditMineHomePage="EditMineHomePage"
-    const val LiveRoom="LiveRoom"
-    const val Url="Url"//打开指定url
-    const val PrivateChat="PrivateChat"//定位到私信
-    const val OfficialCertPage="OfficialCertPage"//跳转到官方认证页面
+    const val EditMineHomePage = "EditMineHomePage"
+    const val LiveRoom = "LiveRoom"
+    const val Url = "Url"//打开指定url
+    const val PrivateChat = "PrivateChat"//定位到私信
+    const val OfficialCertPage = "OfficialCertPage"//跳转到官方认证页面
 
-    const val AnchorCertPage="AnchorCertPage"//跳转到主播认证页面
-    const val MineHomePage="MineHomePage"//跳转到我的主页
-    const val SystemNotice="SystemNotice" //（打开系统通知页面）
-    const val FriendNotice="FriendNotice"// (打开好友通知页面)
+    const val AnchorCertPage = "AnchorCertPage"//跳转到主播认证页面
+    const val MineHomePage = "MineHomePage"//跳转到我的主页
+    const val SystemNotice = "SystemNotice" //（打开系统通知页面）
+    const val FriendNotice = "FriendNotice"// (打开好友通知页面)
+
     //Yesterday：昨日榜单Tab，
     //Today:今日榜单Tab（暂无这样的跳转需求），
     //Famous: 名人榜单Tab
-    const val PlumFlower="PlumFlower"//（跳转到今日花魁）
+    const val PlumFlower = "PlumFlower"//（跳转到今日花魁）
 
 }

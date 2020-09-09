@@ -1,9 +1,21 @@
 package com.julun.huanque.core.ui.main.bird
 
+import android.annotation.TargetApi
+import android.content.Context
+import android.graphics.Color
+import android.os.Build
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseVMDialogFragment
@@ -11,17 +23,30 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
+import com.julun.huanque.common.bean.beans.BirdAward
+import com.julun.huanque.common.bean.beans.BirdTaskInfo
+import com.julun.huanque.common.bean.beans.PkPropInfo
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.R
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
-import com.julun.rnlib.RnManager
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_bird_tasks.*
+import kotlinx.android.synthetic.main.view_bird_task_award.view.*
+import kotlinx.android.synthetic.main.view_pk_prop.view.*
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.textColor
+import java.util.concurrent.TimeUnit
 
 /**
  * [leYuanViewModel]将主面板的viewModel传过来 供商店调用
@@ -79,6 +104,17 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         mRefreshLayout.setOnRefreshListener {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
+
+        award_01.onClickNew {
+            logger.info("award_01")
+
+        }
+        award_02.onClickNew {
+            logger.info("award_02")
+        }
+        award_03.onClickNew {
+            logger.info("award_03")
+        }
         mViewModel.queryInfo()
     }
 
@@ -93,7 +129,8 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
             mRefreshLayout.isRefreshing = false
             if (it.isSuccess()) {
                 val data = it.requireT()
-                taskAdapter.setNewInstance(data.taskList)
+                renderData(data)
+
             }
 
         })
@@ -109,6 +146,22 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
                 ToastUtils.show("${it.error?.busiMessage}")
             }
         })
+    }
+
+    private fun renderData(data: BirdTaskInfo) {
+        taskAdapter.setNewInstance(data.taskList)
+        tv_active.text = "${data.activeInfo.activeValue}"
+        //换算成100基数
+        val process = 100f * data.activeInfo.activeValue / data.activeInfo.maxActiveValue
+        logger.info("当前的完成进度=$process")
+        val plp = view_process.layoutParams as ConstraintLayout.LayoutParams
+        val pBlp = view_process_bg.layoutParams as ConstraintLayout.LayoutParams
+        plp.horizontalWeight = process
+        pBlp.horizontalWeight = 100f - process
+        view_process_bg.requestLayout()
+        award_01.renderData(data.activeInfo.awardList.getOrNull(0))
+        award_02.renderData(data.activeInfo.awardList.getOrNull(1))
+        award_03.renderData(data.activeInfo.awardList.getOrNull(2))
     }
 
     override fun showLoadState(state: NetState) {
@@ -133,5 +186,52 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
                 })
             }
         }
+    }
+
+}
+
+class BirdTaskAwardView : FrameLayout {
+
+    private val logger = ULog.getLogger("BirdTaskAwardView")
+
+    constructor(context: Context) : super(context)
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes
+    )
+
+    init {
+        LayoutInflater.from(context).inflate(R.layout.view_bird_task_award, this)
+    }
+
+    fun renderData(award: BirdAward?) {
+        if (award == null) {
+            return
+        }
+        sdv_gift.loadImage(award.awardPic, 32f, 26f)
+        tv_num.text = "x${award.awardCount}"
+        when (award.awardStatus) {
+            BirdTaskStatus.Received -> {
+                masking.show()
+                iv_finish.show()
+                tv_num.hide()
+                this.isEnabled = false
+            }
+            else -> {
+                masking.hide()
+                iv_finish.hide()
+                tv_num.show()
+                this.isEnabled = true
+            }
+        }
+
     }
 }

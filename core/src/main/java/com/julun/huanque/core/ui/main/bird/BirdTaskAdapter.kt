@@ -1,12 +1,19 @@
 package com.julun.huanque.core.ui.main.bird
 
+import android.graphics.Color
+import android.widget.TextView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.BirdTask
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.core.R
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
+import org.jetbrains.anko.textColor
 
 /**
  *
@@ -21,13 +28,49 @@ class BirdTaskAdapter : BaseQuickAdapter<BirdTask, BaseViewHolder>(R.layout.item
     init {
         addChildClickViewIds(R.id.tvAction)
     }
-    override fun convert(holder: BaseViewHolder, item: BirdTask) {
-        val imgView = holder.getView<SimpleDraweeView>(R.id.sdv_img)
 
-        imgView.loadImage(item.taskImage, 60f, 60f)
+    override fun convert(holder: BaseViewHolder, item: BirdTask) {
+//        val imgView = holder.getView<SimpleDraweeView>(R.id.sdv_img)
+
         holder.setText(R.id.tv_title, "${item.taskName}(${item.currentNum}/${item.targetNum})")
-            .setText(R.id.tv_desc, item.taskDesc).setText(R.id.tv_active,"活跃度+${item.awardActive}")
+            .setText(R.id.tv_desc, item.taskDesc).setText(R.id.tv_active, "活跃度+${item.awardActive}")
             .setText(R.id.tvAction, item.taskStatusText)
+        val tvAction = holder.getView<TextView>(R.id.tvAction)
+        when (item.taskStatus) {
+            BirdTaskStatus.NotFinish -> {
+                tvAction.setBackgroundResource(R.mipmap.bg_bird_btn_red)
+                tvAction.textColor = Color.WHITE
+            }
+            BirdTaskStatus.NotReceive -> {
+                tvAction.setBackgroundResource(R.mipmap.bg_bird_btn_green)
+                tvAction.textColor = Color.WHITE
+            }
+            BirdTaskStatus.Received -> {
+                tvAction.background = null
+                tvAction.textColor = Color.parseColor("#9E8282")
+            }
+            else -> {
+                tvAction.setBackgroundResource(R.mipmap.bg_bird_btn_red)
+                tvAction.textColor = Color.WHITE
+            }
+
+        }
+        when (item.awardType) {
+            BirdTaskAwardType.Small -> {
+                holder.setText(R.id.tv_coin_title,"少量金币")
+            }
+            BirdTaskAwardType.Middle -> {
+                holder.setText(R.id.tv_coin_title,"中量金币")
+            }
+
+            BirdTaskAwardType.Big -> {
+                holder.setText(R.id.tv_coin_title,"大量金币")
+            }
+            else->{
+                holder.setText(R.id.tv_coin_title,"少量金币")
+            }
+
+        }
 
     }
 

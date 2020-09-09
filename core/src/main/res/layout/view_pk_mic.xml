@@ -18,19 +18,19 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <com.julun.huanque.lmcore.basic.widgets.live.PkPropView
+        <com.julun.huanque.core.widgets.live.pk.PkPropView
             android:id="@+id/pk_prop_01"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <com.julun.huanque.lmcore.basic.widgets.live.PkPropView
+        <com.julun.huanque.core.widgets.live.pk.PkPropView
             android:id="@+id/pk_prop_02"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <com.julun.huanque.lmcore.basic.widgets.live.PkPropView
+        <com.julun.huanque.core.widgets.live.pk.PkPropView
             android:id="@+id/pk_prop_03"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
