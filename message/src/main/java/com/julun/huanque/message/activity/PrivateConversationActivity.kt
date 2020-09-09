@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -1047,7 +1048,7 @@ class PrivateConversationActivity : BaseActivity() {
                     //就是当前的消息，直接显示
                     //判断是否是送礼消息
                     val content = msg.content
-                    if (content is CustomMessage) {
+                    if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && content is CustomMessage) {
                         if (content.type == MessageCustomBeanType.Gift) {
                             if (!MessageUtils.getAnimationStarted(msg)) {
                                 //需要播放动画

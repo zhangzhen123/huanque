@@ -41,9 +41,6 @@ class SendGiftViewModel : BaseViewModel() {
     //刷新数据中
     val isRefreshing: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-    //背包礼物需要本地刷新标记位
-    var bagNeedRefresh = false
-
     private val liveRoomService: LiveRoomService by lazy {
         Requests.create(LiveRoomService::class.java)
     }
@@ -77,14 +74,9 @@ class SendGiftViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = liveRoomService.bag(ProgramIdForm(programId)).dataConvert()
-                var hasDot = false
                 result.forEach {
                     it.bag = true
-                    if (it.changeMark) {
-                        hasDot = true
-                    }
                 }
-                bagNeedRefresh = hasDot
 
                 bagData.value = result
 
