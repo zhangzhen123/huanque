@@ -1,12 +1,15 @@
 package com.julun.huanque.core.widgets
 
 import android.content.Context
+import android.content.res.TypedArray
+import android.os.Build
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.View
 import android.view.View.OnClickListener
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.aliyun.player.AliPlayer
 import com.aliyun.player.AliPlayerFactory
@@ -19,7 +22,6 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.MicAnchor
 import com.julun.huanque.common.interfaces.PlayStateListener
 import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
@@ -29,9 +31,9 @@ import com.julun.huanque.core.manager.AliplayerManager
 import com.trello.rxlifecycle4.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-
 import kotlinx.android.synthetic.main.view_single_video.view.*
 import java.util.concurrent.TimeUnit
+
 
 /**
  *@创建者   dong
@@ -39,10 +41,10 @@ import java.util.concurrent.TimeUnit
  *@描述  地址播放器使用的拉流view
  * @param useManager true 使用 AliplayerManager内的播放器    false  创建一个新的播放器
  */
-class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Boolean = false) : ConstraintLayout(context, attrs) {
+class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Boolean = false) : ConstraintLayout(context, attrs) {
 
     constructor(context: Context, useManager: Boolean = false) : this(context, null, useManager)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, null, false)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, false)
 
     //surfaceview是否已经创建
     private var created = false
@@ -93,6 +95,13 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Bo
         context.let {
             LayoutInflater.from(it).inflate(R.layout.view_single_video, this)
         }
+        if(!useManager){
+            val ta: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.SingleVideoView)
+            useManager = ta.getBoolean(R.styleable.SingleVideoView_useManager,false)
+            ta.recycle()
+        }
+
+
         anchor_info.onClickNew { }
         anchor_info.setOnClickListener(OnClickListener {
             if (playerInfo != null && playerInfo?.isAnchor != true) {
@@ -405,6 +414,15 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, val useManager: Bo
 //            mAliPlayer?.start()
         }
 //        ULog.i("DXCPlayer 开始播放playStream")
+    }
+
+    /**
+     * 剪裁圆角
+     */
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    fun clip(radius : Float){
+        this.outlineProvider = SurfaceVideoViewOutlineProvider(radius);
+        this.clipToOutline = true;
     }
 
 
