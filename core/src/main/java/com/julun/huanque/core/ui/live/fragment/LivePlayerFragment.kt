@@ -18,7 +18,10 @@ import com.julun.huanque.common.constant.PKType
 import com.julun.huanque.common.constant.ScreenType
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.reportCrash
-import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.viewmodel.VideoChangeViewModel
 import com.julun.huanque.common.viewmodel.VideoViewModel
@@ -322,8 +325,8 @@ open class LivePlayerFragment : BaseFragment() {
      * 根据数据进行播放
      */
     private fun playByInfo(playInfo: PlayInfo, videoView: SingleVideoView) {
-//        videoView.play(GlobalUtils.getPlayUrl(playInfo), videoView == mMainVideoView)
-        videoView.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/28198", videoView == mMainVideoView)
+        videoView.play(GlobalUtils.getPlayUrl(playInfo), videoView == mMainVideoView)
+//        videoView.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/24288", videoView == mMainVideoView)
     }
 
     /**
