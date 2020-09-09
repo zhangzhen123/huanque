@@ -93,6 +93,28 @@
         <activity android:name=".ui.safe.DestroyAccountActivity"
             android:screenOrientation="portrait"/>
 
+        <!-- since 2.0.0 optional 可选项，使用一键登录功能必须添加  -->
+        <!-- since 2.1.1 optional 可选项，通过screenOrientation设置授权页面横竖屏展示  -->
+        <activity
+            android:name="com.cmic.sso.sdk.activity.OAuthActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTop">
+        </activity>
+        <!-- since 2.0.0 optional 可选项，使用一键登录功能必须添加  -->
+        <!-- since 2.1.1 optional 可选项，通过screenOrientation设置授权页面横竖屏展示  -->
+        <activity
+            android:name="com.cmic.sso.sdk.activity.LoginAuthActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTop">
+        </activity>
+        <!-- since 2.0.0 optional 可选项，使用一键登录功能必须添加  -->
+        <!-- since 2.1.1 optional 可选项，通过screenOrientation设置授权页面横竖屏展示  -->
+        <activity android:name="cn.jiguang.verifysdk.CtLoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/ActivityDialogStyle"
+            android:launchMode="singleTop">
+        </activity>
+
         <!-- 下载服务 -->
         <service android:name=".app.update.UpgradeApkService">
             <intent-filter>
