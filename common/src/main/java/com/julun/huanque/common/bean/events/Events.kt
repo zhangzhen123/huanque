@@ -165,3 +165,8 @@ class HideFloatingEvent() : Serializable
  */
 class BannedAndClosePlayer() : Serializable
 
+/**
+ * 一键登录接口请求成功消息
+ */
+class FastLoginEvent() : Serializable
+

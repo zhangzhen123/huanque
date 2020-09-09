@@ -26,6 +26,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.ChatBubble
+import com.julun.huanque.common.bean.events.FastLoginEvent
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Agreement
@@ -33,6 +34,7 @@ import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.px2dp
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.SPUtils
@@ -203,6 +205,7 @@ class LoginActivity : BaseActivity() {
             if (mTest) {
                 Toast.makeText(this@LoginActivity, "Step 5 授权页面回调 operator=$operator,code=$code", Toast.LENGTH_SHORT).show()
             }
+            logger.info("Login errorMsg = $errorMsg")
             runOnUiThread {
                 when (code) {
                     CODE_LOGIN_SUCCESS -> {
@@ -223,16 +226,21 @@ class LoginActivity : BaseActivity() {
         val widthPx = Math.min(ScreenUtils.getScreenHeight(), ScreenUtils.getScreenWidth())
         val heightPx = Math.max(ScreenUtils.getScreenHeight(), ScreenUtils.getScreenWidth())
 
-        val uiConfigBuilder = JVerifyUIConfig.Builder().setDialogTheme(
-            DensityHelper.px2dp(widthPx.toFloat()),
-            DensityHelper.px2dp(heightPx.toFloat()), 0, 0, true
-        )
+        val uiConfigBuilder = JVerifyUIConfig.Builder()
+//            .setDialogTheme(
+//            DensityHelper.px2dp(widthPx.toFloat()),
+//            DensityHelper.px2dp(heightPx.toFloat()), 0, 0, true
+//        )
         //设置logo
-        uiConfigBuilder.setLogoHeight(161)
-        uiConfigBuilder.setLogoWidth(198)
+        uiConfigBuilder.setLogoWidth(206)
+        uiConfigBuilder.setLogoHeight(144)
         uiConfigBuilder.setLogoImgPath("bg_logo_login")
         uiConfigBuilder.setLogoHidden(false)
         uiConfigBuilder.setLogoOffsetY(110)
+//        uiConfigBuilder.setNavTransparent(true)
+        uiConfigBuilder.setStatusBarTransparent(true)
+        uiConfigBuilder.setStatusBarDarkMode(true)
+        uiConfigBuilder.setNavHidden(true)
         //设置手机号码
         uiConfigBuilder.setNumberFieldOffsetBottomY(197)
             .setNumberColor(GlobalUtils.getColor(R.color.black_333))
@@ -242,8 +250,8 @@ class LoginActivity : BaseActivity() {
         uiConfigBuilder.setSloganTextColor(Color.WHITE)
 
         //设置动画
-        uiConfigBuilder.setNeedStartAnim(true)
-        uiConfigBuilder.setNeedCloseAnim(true)
+//        uiConfigBuilder.setNeedStartAnim(true)
+//        uiConfigBuilder.setNeedCloseAnim(true)
 
 
         //设置登录按钮
@@ -348,6 +356,11 @@ class LoginActivity : BaseActivity() {
         logger.info("收到微信登录code:${event.code}")
         mViewModel?.weiXinLogin(event.code)
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun fastLoginSuccess(event : FastLoginEvent){
+        JVerificationInterface.dismissLoginAuthActivity()
     }
 
 }

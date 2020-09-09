@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
+import com.julun.huanque.common.bean.events.FastLoginEvent
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.net.Requests
@@ -13,6 +14,7 @@ import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.support.LoginManager
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -48,6 +50,7 @@ class LoginViewModel : BaseViewModel() {
 //            })
             LoginManager.fastLogin(jToken, success = { result ->
                 loginData.postValue(result)
+                EventBus.getDefault().post(FastLoginEvent())
             }, error = {
                 if (it is ResponseError) {
                     ToastUtils.show(it.busiMessage)
