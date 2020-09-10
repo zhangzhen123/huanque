@@ -47,6 +47,8 @@ class LeYuanViewModel : BaseViewModel() {
     val totalCoin: MutableLiveData<BigInteger> by lazy { MutableLiveData<BigInteger>() }
     val coinsPerSec: MutableLiveData<BigInteger> by lazy { MutableLiveData<BigInteger>() }
 
+    //功能鹊描述
+    val functionBirds: MutableLiveData<MutableList<FunctionBirdDes>> by lazy { MutableLiveData<MutableList<FunctionBirdDes>>() }
 
     var programId: Long? = null
     private var currentInfo: BirdHomeInfo? = null
@@ -105,8 +107,9 @@ class LeYuanViewModel : BaseViewModel() {
         }
 
     }
+
     //供商店用
-    fun buyBird(level:Int) {
+    fun buyBird(level: Int) {
         viewModelScope.launch {
             request({
                 val result = service.buyBird(BuyBirdForm(programId, level)).dataConvert()
@@ -125,6 +128,7 @@ class LeYuanViewModel : BaseViewModel() {
         }
 
     }
+
     /**
      * 合体操作
      * 合成升级、移动位置、互换位置都调用该接口
@@ -198,6 +202,74 @@ class LeYuanViewModel : BaseViewModel() {
             totalCoin.postValue(totalCoin.value?.add(ps))
         }
 
+    }
+
+    /**
+
+    2.财神鹊，显示icon、图片。
+    -功能：放飞后获得888元零钱奖励。
+    -来源：两个神秘鹊合并，有机会获得。
+    3.红包鹊
+    -功能：放飞后有机会获得1-100元零钱奖励。
+    -来源：两个lv37小鹊合并，有机会获得。两个神秘鹊合并有机会获得。
+    4.牛郎鹊
+    功能：和织女鹊一起放飞，获得00元零钱奖励。
+    来源：两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。
+    5.织女鹊
+    -功能：和牛郎鹊一起放飞，获得88元零钱奖励。
+    -来源：两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。
+    6.神秘鹊
+    -功能：两个神秘鹊放飞，随机获得财神鹊、红包鹊、牛郎鹊、织女鹊。
+    -来源：两个lv37小鹊合并，有机会获得。
+     */
+    fun gotFunctionBirdInfo() {
+        val list = mutableListOf<FunctionBirdDes>()
+        val wealth = currentInfo?.functionInfo?.wealth
+        val cowherd = currentInfo?.functionInfo?.cowherd
+        val mystical = currentInfo?.functionInfo?.mystical
+        val redpacket = currentInfo?.functionInfo?.redpacket
+        val weaver = currentInfo?.functionInfo?.weaver
+
+        list.add(
+            FunctionBirdDes(
+                "财神鹊", wealth?.functionIcon,
+                bFunction = "放飞后获得888元零钱奖励。",
+                source = "两个神秘鹊合并，有机会获得。"
+            )
+        )
+        list.add(
+            FunctionBirdDes(
+                "红包鹊",
+                redpacket?.functionIcon,
+                bFunction = "放飞后有机会获得1-100元零钱奖励。",
+                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并有机会获得。"
+            )
+        )
+        list.add(
+            FunctionBirdDes(
+                "牛郎鹊",
+                cowherd?.functionIcon,
+                bFunction = "和织女鹊一起放飞，获得00元零钱奖励。",
+                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。"
+            )
+        )
+        list.add(
+            FunctionBirdDes(
+                "织女鹊",
+                weaver?.functionIcon,
+                bFunction = "和牛郎鹊一起放飞，获得88元零钱奖励。",
+                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。"
+            )
+        )
+        list.add(
+            FunctionBirdDes(
+                "神秘鹊",
+                mystical?.functionIcon,
+                bFunction = "两个神秘鹊放飞，随机获得财神鹊、红包鹊、牛郎鹊、织女鹊。",
+                source = "两个lv37小鹊合并，有机会获得。"
+            )
+        )
+        functionBirds.value = list
     }
 
 }

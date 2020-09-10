@@ -141,3 +141,10 @@ data class BirdTaskReceiveResult(
     var taskStatus: String = "",
     var taskStatusText: String = ""
 )
+
+data class FunctionBirdDes(
+    var birdName: String = "",
+    var birdPic: String? = null,
+    var bFunction: String = "",
+    var source: String = ""
+)

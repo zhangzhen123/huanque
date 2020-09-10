@@ -1,7 +1,5 @@
 package com.julun.huanque.common.constant
 
-import com.julun.huanque.common.bean.beans.IntimatePrivilege
-
 
 /**
  *

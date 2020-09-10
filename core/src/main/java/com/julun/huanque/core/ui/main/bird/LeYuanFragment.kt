@@ -81,6 +81,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     private var shopDialogFragment: BirdShopDialogFragment? = null
 
     private var birdTaskDialogFragment: BirdTaskDialogFragment? = null
+
+    private var birdDescDialogFragment: BirdDescriptionDialogFragment? = null
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         programId = arguments?.getLong(IntentParamKey.PROGRAM_ID.name)
         initViewModel()
@@ -107,8 +109,12 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             shopDialogFragment?.show(requireActivity(), "shopDialogFragment")
         }
         iv_task.onClickNew {
-            birdTaskDialogFragment=birdTaskDialogFragment?: BirdTaskDialogFragment(mViewModel)
-            birdTaskDialogFragment?.show(requireActivity(),"birdTaskDialogFragment")
+            birdTaskDialogFragment = birdTaskDialogFragment ?: BirdTaskDialogFragment(mViewModel)
+            birdTaskDialogFragment?.show(requireActivity(), "birdTaskDialogFragment")
+        }
+        iv_bottom_01.onClickNew {
+            birdDescDialogFragment = birdDescDialogFragment ?: BirdDescriptionDialogFragment((mViewModel))
+            birdDescDialogFragment?.show(requireActivity(), "birdDescDialogFragment")
         }
         rv_bird_packet.onTouch { _, event ->
 //            logger.info("rv_bird_packet event=${event.action} rawX=${event.rawX} rawY=${event.rawY}")

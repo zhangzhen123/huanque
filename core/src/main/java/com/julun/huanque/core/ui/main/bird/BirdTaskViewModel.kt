@@ -5,6 +5,7 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.TaskBirdActiveReceive
 import com.julun.huanque.common.bean.forms.TaskBirdReceive
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -28,6 +29,8 @@ class BirdTaskViewModel : BaseViewModel() {
         Requests.create(LeYuanService::class.java)
     }
     val receiveTaskResult: MutableLiveData<ReactiveData<BirdTaskReceiveResult>> by lazy { MutableLiveData<ReactiveData<BirdTaskReceiveResult>>() }
+
+    val receiveActiveAward: MutableLiveData<ReactiveData<BirdTaskReceiveResult>> by lazy { MutableLiveData<ReactiveData<BirdTaskReceiveResult>>() }
     val taskInfo: LiveData<ReactiveData<BirdTaskInfo>> = queryState.switchMap {
         liveData {
             request({
@@ -55,6 +58,18 @@ class BirdTaskViewModel : BaseViewModel() {
 
         }
 
+    }
+
+    fun receiveAward(code: String) {
+        viewModelScope.launch {
+            request({
+                val result = service.receiveActiveAward(TaskBirdActiveReceive(code)).dataConvert()
+                receiveActiveAward.value = result.convertRtData()
+            }, error = {
+                receiveActiveAward.value = it.convertError()
+            })
+
+        }
     }
 
 }

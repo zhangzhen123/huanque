@@ -41,9 +41,14 @@ import com.julun.rnlib.RnConstant
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.android.synthetic.main.fragment_bird_shop.*
 import kotlinx.android.synthetic.main.fragment_bird_tasks.*
+import kotlinx.android.synthetic.main.fragment_bird_tasks.ivClose
+import kotlinx.android.synthetic.main.fragment_bird_tasks.mRefreshLayout
+import kotlinx.android.synthetic.main.fragment_bird_tasks.state_pager_view
 import kotlinx.android.synthetic.main.view_bird_task_award.view.*
 import kotlinx.android.synthetic.main.view_pk_prop.view.*
+import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
 import java.util.concurrent.TimeUnit
@@ -106,15 +111,28 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         }
 
         award_01.onClickNew {
-            logger.info("award_01")
+            val data = award_01.currentData ?: return@onClickNew
+            logger.info("award_01 ${data.awardStatus}")
+            if (data.awardStatus == BirdTaskStatus.NotReceive) {
+                mViewModel.receiveAward(data.activeCode)
+            }
 
         }
         award_02.onClickNew {
-            logger.info("award_02")
+            val data = award_02.currentData ?: return@onClickNew
+            logger.info("award_02 ${data.awardStatus}")
+            if (data.awardStatus == BirdTaskStatus.NotReceive) {
+                mViewModel.receiveAward(data.activeCode)
+            }
         }
         award_03.onClickNew {
-            logger.info("award_03")
+            val data = award_03.currentData ?: return@onClickNew
+            logger.info("award_03 ${data.awardStatus}")
+            if (data.awardStatus == BirdTaskStatus.NotReceive) {
+                mViewModel.receiveAward(data.activeCode)
+            }
         }
+        state_pager_view.backgroundColor = Color.TRANSPARENT
         mViewModel.queryInfo()
     }
 
@@ -212,10 +230,12 @@ class BirdTaskAwardView : FrameLayout {
         LayoutInflater.from(context).inflate(R.layout.view_bird_task_award, this)
     }
 
+    var currentData: BirdAward? = null
     fun renderData(award: BirdAward?) {
         if (award == null) {
             return
         }
+        currentData = award
         sdv_gift.loadImage(award.awardPic, 32f, 26f)
         tv_num.text = "x${award.awardCount}"
         when (award.awardStatus) {
@@ -234,4 +254,5 @@ class BirdTaskAwardView : FrameLayout {
         }
 
     }
+
 }
