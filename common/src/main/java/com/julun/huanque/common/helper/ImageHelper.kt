@@ -344,7 +344,7 @@ object ImageHelper {
             try {
                 val paramName = styleParam.el
                 val name = "[${paramName.substring(paramName.indexOf("$") + 2, paramName.length - 1)}]"
-                Emotions.getDrawableResByName(name)
+                Emotions.getNormalResByName(name)
             } catch (e: Exception) {
                 e.printStackTrace()
                 -1

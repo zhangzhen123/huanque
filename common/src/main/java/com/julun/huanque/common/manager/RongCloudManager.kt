@@ -725,6 +725,15 @@ object RongCloudManager {
         currentUserObj = userObj
     }
 
+    /**
+     * 私信页面使用的，刷新用户数据
+     */
+    fun resetUSerInfoPrivate(userObj: RoomUserChatExtra){
+        if(currentUserObj == null){
+            currentUserObj = userObj
+        }
+    }
+
     //    fun rongCloudIsInited(): Boolean {
     //        return imState == RCIM_STATE_INITED
     //    }

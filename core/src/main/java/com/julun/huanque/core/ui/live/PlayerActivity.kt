@@ -1873,7 +1873,8 @@ class PlayerActivity : BaseActivity() {
         super.onResume()
         FloatingManager.hideFloatingView()
         AliplayerManager.soundOn()
-
+        //从其他页面回来，获取气泡数据
+        viewModel.requestBubble()
         //处理支付刷新
 //        if (refreshPay) {
 //            Observable.timer(200, TimeUnit.MILLISECONDS)

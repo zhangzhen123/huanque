@@ -83,4 +83,6 @@ object UserHeartManager {
     fun setProgramId(programId: Long?) {
         currentProgramId = programId
     }
+
+    fun getProgramId() = currentProgramId
 }

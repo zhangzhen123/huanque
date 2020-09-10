@@ -90,6 +90,13 @@ public class Emotions {
         return new String(Character.toChars(code));
     }
 
+    public static int getNormalResByName(String emotionName) {
+        if (!TextUtils.isEmpty(emotionName) && NORMAL_EMOTIONS.containsKey(emotionName)) {
+            return NORMAL_EMOTIONS.get(emotionName);
+        }
+        return -1;
+    }
+
     public static int getDrawableResByName(String emotionName) {
         if (!TextUtils.isEmpty(emotionName) && NORMAL_EMOTIONS.containsKey(emotionName)) {
             return NORMAL_EMOTIONS.get(emotionName);
