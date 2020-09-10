@@ -7,7 +7,12 @@ import com.aliyun.player.bean.ErrorInfo
 import com.aliyun.player.bean.InfoCode
 import com.aliyun.player.nativeclass.TrackInfo
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.ULog
+import com.trello.rxlifecycle4.kotlin.bindToLifecycle
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import java.util.concurrent.TimeUnit
 
 /**
  *@创建者   dong
@@ -19,12 +24,15 @@ object AliplayerManager {
     var mAliPlayer = AliPlayerFactory.createAliPlayer(CommonInit.getInstance().getContext())
 
     //log输出标识位
-    private var mLogEnable = false
+    private var mLogEnable = true
 
     var mRenderListener: IPlayer.OnRenderingStartListener? = null
 
     //当前播放的流地址
     var mUrl = ""
+
+    //调用了stop方法
+    var stoped = false
 
     //是否渲染了首帧
     var mRendered = false
@@ -73,11 +81,11 @@ object AliplayerManager {
         }
         mAliPlayer?.setOnInfoListener {
             //其他信息的事件，type包括了：循环播放开始，缓冲位置，当前播放位置，自动播放开始等
-            if (it.code == InfoCode.AutoPlayStart) {
-                if (mLogEnable) {
-                    ULog.i("${this} DXCPlayer 自动播放回调")
-                }
+//            if (it.code == InfoCode.AutoPlayStart) {
+            if (mLogEnable) {
+//                ULog.i("${this} DXCPlayer code = ${it.code},msg = ${it.extraMsg}")
             }
+//            }
         }
         mAliPlayer?.setOnTrackChangedListener(object : IPlayer.OnTrackChangedListener {
             override fun onChangedSuccess(trackInfo: TrackInfo) {
@@ -95,6 +103,15 @@ object AliplayerManager {
             }
             if (it == IPlayer.completion || it == IPlayer.error) {
                 //CDN切换的时候会触发此回调，重新调用播放方法
+                if (stoped) {
+                    stoped = false
+                    return@setOnStateChangedListener
+                }
+                Observable.timer(2, TimeUnit.SECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        mAliPlayer?.prepare()
+                    }, {}, {})
             }
         }
         mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL
@@ -135,6 +152,7 @@ object AliplayerManager {
         mUrl = ""
         mRendered = false
         mAliPlayer?.stop()
+        stoped = true
     }
 
     /**

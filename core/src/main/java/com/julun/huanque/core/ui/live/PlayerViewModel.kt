@@ -388,6 +388,9 @@ class PlayerViewModel : BaseViewModel() {
     //刷新礼物背包
     val refreshGiftPackage: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //显示未开播弹窗
+    val showNoOpenFragment : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //关注状态
     val followStatusData: MutableLiveData<ReactiveData<FollowResultBean>> by lazy { MutableLiveData<ReactiveData<FollowResultBean>>() }
 

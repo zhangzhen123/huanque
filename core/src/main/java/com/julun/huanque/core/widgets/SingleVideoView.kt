@@ -336,7 +336,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         //                            ULog.i("DXCplayer set 2 it = $it")
-                        playStream()
+                        mAliPlayer?.prepare()
                     }, {}, {})
             }
             mPlayStateListener?.playState(it)
@@ -409,6 +409,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             if (useManager) {
                 AliplayerManager.mUrl = mUrl
                 AliplayerManager.mRendered = false
+                AliplayerManager.stoped = false
             }
             mAliPlayer?.prepare()
 //            mAliPlayer?.start()

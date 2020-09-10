@@ -26,6 +26,7 @@ class JoinChatRoomViewModel : BaseViewModel() {
      * 进入聊天室
      */
     fun joinChatRoom(programId: String, chatroom: Boolean = false) {
+        MessageReceptor.destroyBufferedTimer()
         RongCloudManager.mRoomType = if (chatroom) MessageProcessor.RoomType.ChatRoom.name else MessageProcessor.RoomType.LiveRoom.name
         RongCloudManager.roomId = programId
         RongCloudManager.quitAllChatRoom(false)
@@ -40,7 +41,6 @@ class JoinChatRoomViewModel : BaseViewModel() {
             override fun onSuccess() {
 //                imState = RCIM_STATE_CHATROOMED
                 logger("当前的线程：${Thread.currentThread().name}")
-                MessageReceptor.destroyBufferedTimer()
                 MessageReceptor.createBufferedTimer()
                 joinData.value = true
                 getHistoryMessage(rId.toString())
