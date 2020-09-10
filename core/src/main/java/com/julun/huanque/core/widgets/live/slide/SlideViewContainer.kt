@@ -29,8 +29,8 @@ import com.julun.huanque.core.R
  *
  *
  **/
-class SlideViewContainer @kotlin.jvm.JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, style: Int = 0)
-    : ConstraintLayout(context, attrs, style) {
+class SlideViewContainer @kotlin.jvm.JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, style: Int = 0) :
+    ConstraintLayout(context, attrs, style) {
 
     private val logger = ULog.getLogger("SlideViewContainer")
 
@@ -52,27 +52,37 @@ class SlideViewContainer @kotlin.jvm.JvmOverloads constructor(context: Context, 
     var scrollEnable: Boolean = true//是否可用滑动效果 默认是可以的
 
     private val SCREEN_WIDTH: Int by lazy { ScreenUtils.getScreenWidth() }
+
     //右抽屉的宽度
     val RIGHTDRAWERWIDTH: Int by lazy { resources.getDimensionPixelOffset(R.dimen.right_drawer_width) }
+
     //水平滑动累积值
     var mScrollXDistance = 0f
+
     //垂直滑动累积值
     var mScrollYDistance = 0f
 
     //右抽屉滑动累积值
     var mRightDrawerDistance = 0f
+
     //左右滑动显隐的监听
     var onHideOrShowListener: OnHideOrShowListener? = null
+
     //上下切换的监听
     var onSwitchListener: OnSwitchListener? = null
+
     //滑动监听
     var onScrollListener: OnScrollListener? = null
+
     //记录当前的滑动垂直模式
     var isVerticalMode = false
+
     //记录当前的滑动水平模式
     var isHorizontalMode = false
+
     //是不是右侧抽屉滑动模式
     var isRightDrawerMode = false
+
     //右侧抽屉
     var rightDrawer: SlideViewRightDrawer? = null
 
@@ -261,7 +271,7 @@ class SlideViewContainer @kotlin.jvm.JvmOverloads constructor(context: Context, 
         if (scrollEnable && mDetector != null) {
             //把离开事件给过滤出来
             when (event.action) {
-                MotionEvent.ACTION_UP ,MotionEvent.ACTION_CANCEL-> {
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
 //                    logger.info("mScrollXDistance=$mScrollXDistance mScrollYDistance=$mScrollYDistance")
                     //
                     if (isHorizontalMode) {
@@ -277,9 +287,9 @@ class SlideViewContainer @kotlin.jvm.JvmOverloads constructor(context: Context, 
                         mScrollXDistance = 0f
                     } else if (isVerticalMode) {
 //                        logger.info("当前垂直滑动不在原点$mScrollYDistance")
-                        if(event.action==MotionEvent.ACTION_CANCEL){
+                        if (event.action == MotionEvent.ACTION_CANCEL) {
                             outContainer?.smoothScrollTo(0, 0)
-                        }else{
+                        } else {
                             scrollOrRecover()
                         }
                         mScrollYDistance = 0f
@@ -291,7 +301,7 @@ class SlideViewContainer @kotlin.jvm.JvmOverloads constructor(context: Context, 
                 }
             }
             return mDetector!!.onTouchEvent(event)
-        } else{
+        } else {
             return false
         }
     }
@@ -393,7 +403,13 @@ class SlideViewContainer @kotlin.jvm.JvmOverloads constructor(context: Context, 
      * 对外开放 重置当前slideView位置
      */
     fun resetSelf() {
-        scrollTo(0, 0)
+        val x = mScroller.currX
+        val y = mScroller.currY
+        val dx = 0 - x
+        val dy = 0 - y
+        mScroller.startScroll(x, y, dx, dy)
+        ViewCompat.postInvalidateOnAnimation(this)
+//        scrollTo(0, 0)
     }
 
     /**

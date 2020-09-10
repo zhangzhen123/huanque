@@ -160,12 +160,14 @@ class SimpleGiftEffectsContainerView @JvmOverloads constructor(context: Context,
     fun resetView(){
         clearQueueData()
         messageHandler.removeCallbacks(messageRunnable)
+        isTasking=false
         giftAnimView1.resetView()
         giftAnimView2.resetView()
     }
     fun destroyResource() {
         clearQueueData()
         messageHandler.removeCallbacksAndMessages(null)
+        isTasking=false
         giftAnimView1.destroyResource()
         giftAnimView2.destroyResource()
     }

@@ -91,6 +91,7 @@ class PrivateAnimationViewModel : BaseViewModel() {
             logger("Message 音效准备成功事件 time = ${System.currentTimeMillis()}")
             voicePreparedFlag = true
             preparedFlag.value = judgePrepared()
+            logger("Private  voice dur = ${mAliPlayer.duration}")
         }
     }
 
@@ -103,22 +104,22 @@ class PrivateAnimationViewModel : BaseViewModel() {
         bitmapPreparedFlag = false
         val specialParams = gift.specialParams
         when (gift.specialType) {
-            ChatGift.Sound -> {
-                //音效动画
-                prepareVoice(StringHelper.getOssAudioUrl(specialParams.bgm))
-            }
+//            ChatGift.Sound -> {
+//                //音效动画
+//                prepareVoice(StringHelper.getOssAudioUrl(specialParams.bgm))
+//            }
             ChatGift.Screen -> {
                 //飘屏动画
                 preparedFlag.value = true
             }
-            ChatGift.Animation -> {
+            ChatGift.Sound, ChatGift.Animation -> {
                 //动画类型
                 prepareVoice(StringHelper.getOssAudioUrl(specialParams.bgm))
                 prepareAnimation(StringHelper.getOssImgUrl(specialParams.webpUrl))
             }
             else -> {
                 //普通礼物动画
-                preparedFlag.value = true
+                prepareAnimation(StringHelper.getOssImgUrl(specialParams.webpUrl))
             }
         }
     }
@@ -129,10 +130,10 @@ class PrivateAnimationViewModel : BaseViewModel() {
     private fun judgePrepared(): Boolean {
         val gift = giftData.value ?: return false
         when (gift.specialType) {
-            ChatGift.Sound -> {
-                return voicePreparedFlag
-            }
-            ChatGift.Animation -> {
+//            ChatGift.Sound -> {
+//                return voicePreparedFlag
+//            }
+            ChatGift.Sound, ChatGift.Animation -> {
                 val params = gift.specialParams
                 if (params.bgm.isNotEmpty() && params.webpUrl.isNotEmpty()) {
                     return voicePreparedFlag && bitmapPreparedFlag
@@ -145,8 +146,12 @@ class PrivateAnimationViewModel : BaseViewModel() {
                 }
                 return false
             }
+            ChatGift.Normal -> {
+                //普通礼物，准备动画资源
+                return bitmapPreparedFlag
+            }
             else -> {
-                return false
+                return true
             }
         }
     }

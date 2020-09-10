@@ -33,6 +33,7 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.WebpAnimatorListener
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.fresco.LoopCountModifyingBackend
 import com.julun.huanque.common.widgets.live.WebpGifView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -556,6 +557,7 @@ object ImageUtils {
                         //设置循环次数
                         animatable.animationBackend =
                             LoopCountModifyingBackend(animatable.animationBackend, count)
+                        logger("Private  animtion dur = ${animatable.loopDurationMs * count}")
                         animatorListener?.let { l ->
                             l.onStart()
                             val dur = animatable.loopDurationMs * count

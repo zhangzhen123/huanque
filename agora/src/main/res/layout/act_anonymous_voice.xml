@@ -322,7 +322,7 @@
 
             <TextView
                 android:id="@+id/tv_nickname_mine"
-                android:layout_width="0px"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:includeFontPadding="false"
@@ -422,7 +422,7 @@
 
             <TextView
                 android:id="@+id/tv_nickname_other"
-                android:layout_width="0px"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:includeFontPadding="false"

@@ -13,16 +13,21 @@ import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.facebook.drawee.drawable.ScalingUtils
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.interfaces.WebpAnimatorListener
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.message.R
 import com.julun.huanque.message.viewmodel.PrivateAnimationViewModel
-import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import com.plattysoft.leonids.ParticleSystem
 import com.trello.rxlifecycle4.android.FragmentEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
@@ -40,6 +45,9 @@ import kotlin.math.roundToInt
 class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
 
     private val mPrivateAnimationViewModel: PrivateAnimationViewModel by activityViewModels()
+
+    //顶部栏高度
+    private val mBarHeight = StatusBarUtil.getStatusBarHeight(CommonInit.getInstance().getContext())
 
     override fun getLayoutId() = R.layout.fragment_private_animation
 
@@ -83,8 +91,15 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
 
         mPrivateAnimationViewModel.giftData.observe(this, Observer {
             if (it != null) {
+                mPrivateAnimationViewModel.prepareResource(it)
+            }
+        })
+
+        mPrivateAnimationViewModel.preparedFlag.observe(this, Observer {
+            if (it == true) {
                 //开始播放动画
-                playAnimaiton(it)
+                val bean = mPrivateAnimationViewModel.giftData.value ?: return@Observer
+                playAnimaiton(bean)
                 //清空礼物效果
                 mPrivateAnimationViewModel.giftData.value = null
             }
@@ -96,6 +111,7 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
         super.onStart()
         dialog?.setOnKeyListener(this)
         setDialogSize(Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+//        updateParams()
         //不需要半透明遮罩层
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
@@ -106,19 +122,20 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
     private fun playAnimaiton(gift: ChatGift) {
         val specialParams = gift.specialParams
         when (gift.specialType) {
-            ChatGift.Sound -> {
-                //音效类型
-                sdv_gift_icon.show()
-                tv_gift_name.show()
-
-                sdv_gift_icon.loadImage(gift.pic, 80f, 80f)
-                tv_gift_name.text = gift.giftName
-
-                mPrivateAnimationViewModel.startPlayer()
-                startScaleAnimaiton(sdv_gift_icon)
-            }
+//            ChatGift.Sound -> {
+//                //音效类型
+//                sdv_gift_icon.show()
+//                tv_gift_name.show()
+//
+//                sdv_gift_icon.loadImage(gift.pic, 80f, 80f)
+//                tv_gift_name.text = gift.giftName
+//
+//                mPrivateAnimationViewModel.startPlayer()
+//                startScaleAnimaiton(sdv_gift_icon)
+//            }
             ChatGift.Screen -> {
                 //飘屏类型
+                sdv_gift.hide()
                 val picArray = specialParams.pics.split(",")
                 if (picArray.isEmpty()) {
                     mPrivateAnimationViewModel.dismissState.value = true
@@ -148,8 +165,13 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
                         .subscribe({ startAnimation(totalCount, getRandomPicUrl(picArray)) }, {})
                 }
             }
-            ChatGift.Animation -> {
+            ChatGift.Sound, ChatGift.Animation -> {
                 //动画类型
+                val builder = GenericDraweeHierarchyBuilder(resources)
+                val hierarchy = builder
+                    .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP)
+                    .build()
+                sdv_gift.hierarchy = hierarchy
                 //播放音效
                 mPrivateAnimationViewModel.startPlayer()
                 //播放动画
@@ -158,17 +180,39 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
             }
             else -> {
                 //普通礼物动画
-                sdv_gift_icon.show()
-                tv_gift_name.show()
+                sdv_gift.show()
+                //设置FitCenter
 
-                sdv_gift_icon.loadImage(gift.pic, 80f, 80f)
-                tv_gift_name.text = gift.giftName
-                startScaleAnimaiton(sdv_gift_icon)
-                //两秒以后关闭
-                Observable.timer(2, TimeUnit.SECONDS)
-                    .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ mPrivateAnimationViewModel.dismissState.value = true }, { it.printStackTrace() })
+                val builder = GenericDraweeHierarchyBuilder(resources)
+                val hierarchy = builder
+                    .setActualImageScaleType(ScalingUtils.ScaleType.CENTER)
+                    .build()
+                sdv_gift.hierarchy = hierarchy
+
+                ImageUtils.showAnimator(sdv_gift, specialParams.webpUrl, animatorListener = object : WebpAnimatorListener {
+                    override fun onStart() {
+                    }
+
+                    override fun onError() {
+                        mPrivateAnimationViewModel.dismissState.value = true
+                    }
+
+                    override fun onEnd() {
+                        mPrivateAnimationViewModel.dismissState.value = true
+                    }
+
+                })
+//                sdv_gift_icon.show()
+//                tv_gift_name.show()
+//
+//                sdv_gift_icon.loadImage(gift.pic, 80f, 80f)
+//                tv_gift_name.text = gift.giftName
+//                startScaleAnimaiton(sdv_gift_icon)
+//                //两秒以后关闭
+//                Observable.timer(2, TimeUnit.SECONDS)
+//                    .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe({ mPrivateAnimationViewModel.dismissState.value = true }, { it.printStackTrace() })
             }
         }
     }
@@ -224,31 +268,71 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
      * 开始掉落动画（单个视图）
      */
     private fun startAnimation(total: Int, url: String) {
+        val border = 270
         val iv = SimpleDraweeView(context).apply {
             setImageURI(StringHelper.getOssImgUrl(url))
         }
 //        val tempX = ScreenUtils.getScreenWidth() * (0.8 * Math.random() + 0.1)
-        val tempX = (ScreenUtils.getScreenWidth() - dp2px(40)) * Math.random()
-        val params = FrameLayout.LayoutParams(dp2px(40), dp2px(40))
+        val tempX = (ScreenUtils.getScreenWidth() - border) * Math.random()
+        val params = FrameLayout.LayoutParams(border, border)
         con_root.addView(iv, params)
         iv.x = tempX.toFloat()
 
         //开始动画
-        val targetY = ScreenUtils.getScreenHeight() - iv.bottom
-        val yTranslateAnimator = ObjectAnimator.ofFloat(iv, "translationY", -dp2pxf(40), targetY.toFloat())
+        val targetY = ScreenUtils.getScreenHeight() - mBarHeight * 2
+//        val targetY = con_root.bottom
+        logger.info("Private mBarHeight = ${mBarHeight},targetY = $targetY,screenHeight = ${ScreenUtils.getScreenHeight()}，con_root.bottom = ${con_root.bottom},con_root.height = ${con_root.height}")
+        val yTranslateAnimator = ObjectAnimator.ofFloat(iv, "translationY", -300f, targetY.toFloat())
+
+        val removeTranslateAnimator = ObjectAnimator.ofFloat(iv, "translationY", targetY.toFloat(), (targetY + border).toFloat())
+
+
+        val time = System.currentTimeMillis()
+        val index = time % 3
+
+        val rotationAnimator: ObjectAnimator? = when (index) {
+            0L -> {
+                //正向转
+                ObjectAnimator.ofFloat(iv, "rotation", 0f, 360f)
+            }
+            1L -> {
+                //反向转
+                ObjectAnimator.ofFloat(iv, "rotation", 0f, -360f)
+            }
+            else -> {
+                //不转
+                null
+            }
+        }
+
+
 
         yTranslateAnimator.apply {
-            duration = 2500 + (1000 * Math.random()).toLong()
+            duration = 3500 + (2000 * Math.random()).toLong()
             interpolator = BounceInterpolator()
         }
 
-        yTranslateAnimator.addListener(object : Animator.AnimatorListener {
+        rotationAnimator?.apply {
+            duration = 2000
+            repeatCount = -1
+            repeatMode = ValueAnimator.RESTART
+            interpolator = LinearInterpolator()
+        }
+
+        removeTranslateAnimator.apply {
+            duration = 250
+            interpolator = LinearInterpolator()
+        }
+
+
+        removeTranslateAnimator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
             }
 
             override fun onAnimationEnd(animation: Animator?) {
                 con_root?.removeView(iv)
                 removeCount++
+                rotationAnimator?.cancel()
                 if (removeCount == total) {
                     //动画播放完成
                     mPrivateAnimationViewModel.animationEndFlag.value = true
@@ -262,7 +346,14 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
             }
         })
 
-        yTranslateAnimator.start()
+        val animatorSet = AnimatorSet()
+        if (rotationAnimator != null) {
+            animatorSet.play(yTranslateAnimator).with(rotationAnimator).before(removeTranslateAnimator)
+        } else {
+            animatorSet.play(yTranslateAnimator).before(removeTranslateAnimator)
+        }
+        animatorSet.start()
+
     }
 
     /**
@@ -271,13 +362,13 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
     private fun startSlideAnimation(drawable: Drawable, count: Int) {
         ParticleSystem(con_root, 100, drawable, 1500)
             .setSpeedModuleAndAngleRange(0.2f, 0.55f, 330, 360)
-            .setRotationSpeed(1000f)
+            .setRotationSpeed(300f)
             .setAcceleration(0.002f, 90)
             .emit(-200, 400, count, 1000)
 
         ParticleSystem(con_root, 100, drawable, 1500)
             .setSpeedModuleAndAngleRange(0.2f, 0.55f, 180, 210)
-            .setRotationSpeed(1000f)
+            .setRotationSpeed(300f)
             .setAcceleration(0.002f, 90)
             .emit(ScreenUtils.getScreenWidth() + 200, 400, count, 1000)
         val intervalTimer = (1000 + 1500).toLong()
@@ -312,7 +403,7 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
      */
     private fun startDismissAnimation() {
         mAlphaAnimator = mAlphaAnimator ?: ObjectAnimator.ofFloat(con_root, "alpha", 1.0f, 0.0f).apply {
-            duration = 500
+            duration = 300
             interpolator = LinearInterpolator()
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {

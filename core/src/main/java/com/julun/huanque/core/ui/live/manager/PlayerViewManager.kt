@@ -198,7 +198,8 @@ class PlayerViewManager(val context: PlayerActivity) {
     }
 
     private fun initViewModel() {
-        viewModel.userInfo.observe(context, Observer { refreshUserViewData(it ?: return@Observer) })
+        viewModel.userInfo.observe(context, Observer { refreshUserViewData(it ?: return@Observer)
+        })
         propViewModel.colorfulState.observe(context, Observer {
 //            if (it == true) {
 //                //炫彩功能开启 并且不是神秘人状态
@@ -294,11 +295,6 @@ class PlayerViewManager(val context: PlayerActivity) {
 //                        closeGuardView()
                         val defaultContent = actionValue as? String ?: ""
                         openChatInputBox(defaultContent, it.innerActionType)
-                        // 刷新融云用户数据
-                        RongCloudManager.resetUserInfoData(
-                            viewModel.roomUserChatExtra
-                                ?: return@Observer
-                        )
                     }
                     ClickType.GIFT -> {
                         //打开送礼弹窗
@@ -744,7 +740,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 //        chatInputView.setFreeDanMu(data.hasFreeDanMu, data.danMuCard)
 //        chatInputView.mystery = data.mystery
 //        chatInputView.initRoyalDanmu(data.royalLevel)
-        viewModel.roomUserChatExtra = ChatUtils.createRoomUserChat(viewModel.roomData, viewModel.baseData.value, false)
+        RongCloudManager.resetUserInfoData(ChatUtils.createRoomUserChat(viewModel.roomData, viewModel.baseData.value, false))
     }
 
     /**
@@ -1107,7 +1103,6 @@ class PlayerViewManager(val context: PlayerActivity) {
         mDialogManager.hideAllDialog()
         context.ll_input.show()
         context.actionView.hide()
-        context.edit_text.requestFocus()
 
         val deC = if (innerActionType == ClickType.SEND_MESSAGE) {
             //发言功能
@@ -1124,6 +1119,7 @@ class PlayerViewManager(val context: PlayerActivity) {
         //
         context.edit_text.setSelection(deC.length)
         context.edit_text.requestFocus()
+//        logger.info("Player publicMessageView x = ${context.publicMessageView.x},y = ${context.publicMessageView.y},width = ${context.publicMessageView.width},height = ${context.publicMessageView.height}")
 //
 //            //引导发言取消还没显示的不再显示 已经显示的隐藏掉
 //            viewModel.guideToSpeakDisposable?.dispose()

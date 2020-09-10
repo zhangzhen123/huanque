@@ -347,7 +347,7 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
             .doOnSubscribe {
                 val ranking = tvRanking ?: return@doOnSubscribe
                 val paint = ranking.paint
-                val content = "距离日榜截至： 99:99:99"
+                val content = "距离日榜截止： 99:99:99"
                 val width = paint.measureText(content)
                 val params = ranking.layoutParams
                 params.width = width.toInt()
@@ -359,7 +359,7 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
             .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                tvRanking?.text = "距离日榜截至： ${TimeUtils.countDownTimeFormat(count - it)}"
+                tvRanking?.text = "距离日榜截止： ${TimeUtils.countDownTimeFormat(count - it)}"
             }, {})
     }
 

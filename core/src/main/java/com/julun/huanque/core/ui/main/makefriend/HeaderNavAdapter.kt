@@ -39,6 +39,7 @@ class HeaderNavAdapter(val width: Int) : BaseQuickAdapter<HeadModule, BaseViewHo
                 holder.setText(R.id.tv_title1, "蒙面女王")
 
                 holder.setText(R.id.tv_title2, "今日剩余${item.num}次")
+
             }
             HeadModule.AnonymousVoice -> {
                 holder.setText(R.id.tv_title1, "匿名语音")

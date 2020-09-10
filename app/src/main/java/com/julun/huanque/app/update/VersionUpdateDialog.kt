@@ -1,11 +1,14 @@
 package com.julun.huanque.app.update
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.julun.huanque.R
 import com.julun.huanque.common.base.AppBaseDialog
+import com.julun.huanque.common.manager.ActivitiesManager
+import com.julun.huanque.common.suger.logger
 
 
 /**
@@ -48,6 +51,9 @@ class VersionUpdateDialog : AppBaseDialog {
         version_info = window?.findViewById(R.id.version_info)
         ok_btn = window?.findViewById(R.id.ok_btn)
         dialog_cancel = window?.findViewById(R.id.dialog_cancel)
+        setOnCancelListener {
+            this.callback?.onCancel?.invoke()
+        }
     }
 
     // 显示
@@ -63,10 +69,10 @@ class VersionUpdateDialog : AppBaseDialog {
         version_info!!.text = versionInfo
         force = isForce
         //强制升级 不现实取消键
-        if (force)
-            dialog_cancel?.visibility = View.INVISIBLE
-        else
-            dialog_cancel?.visibility = View.VISIBLE
+//        if (force)
+//            dialog_cancel?.visibility = View.INVISIBLE
+//        else
+//            dialog_cancel?.visibility = View.VISIBLE
         this.callback = callback
         show()
     }
@@ -81,6 +87,10 @@ class VersionUpdateDialog : AppBaseDialog {
         when (v.id) {
             R.id.dialog_cancel -> if (callback != null) {
                 this.callback!!.onCancel()
+                if (force){
+                    //直接关闭app
+                    ActivitiesManager.finishApp()
+                }
             }
             R.id.ok_btn -> if (callback != null) {
                 this.callback!!.onOk()

@@ -3,6 +3,7 @@ package com.julun.huanque.common.manager
 import android.app.Application
 import android.net.Uri
 import android.text.TextUtils
+import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.BuildConfig
 import com.julun.huanque.common.bean.BaseData
@@ -767,9 +768,9 @@ object RongCloudManager {
         val content: MessageContent? = message.content
         val isRetrieved = message.receivedStatus.isRetrieved
         when (content) {
-            is CommandCustomMessage-> {
+            is CommandCustomMessage -> {
                 //自定义的command消息
-                doWithCommandCustomMessage(message,content)
+                doWithCommandCustomMessage(message, content)
             }
             is CustomMessage -> {
                 //自定义消息
@@ -897,7 +898,7 @@ object RongCloudManager {
     /**
      * 处理自定义消息发送过来的command消息
      */
-    private fun doWithCommandCustomMessage(message: Message,content : CommandCustomMessage) {
+    private fun doWithCommandCustomMessage(message: Message, content: CommandCustomMessage) {
         val isRetrieved = message.receivedStatus.isRetrieved
         logger.info("收到CommandMessage消息 ${JsonUtil.serializeAsString(content)}")
         // 将数据解析为字典对象
@@ -1088,8 +1089,16 @@ object RongCloudManager {
                 RongIMClient.ConnectionStatusListener.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT -> {
                     ToastUtils.showErrorMessage("您已在其它客户端登陆，当前客户端已下线~")
                     //抢登事件
-                    //                    EventBus.getDefault().post(RongForcedReturn())
-                    //                    SessionUtils.deleteSession()
+                    //清空session
+                    SessionUtils.clearSession()
+                    //登出融云
+                    if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
+                        RongCloudManager.logout()
+                    }
+                    UserHeartManager.stopBeat()
+                    LoginStatusUtils.logout()
+                    //跳转登录页面
+                    ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
                 }
                 RongIMClient.ConnectionStatusListener.ConnectionStatus.DISCONNECTED -> {
                     val loginOutSuccess = System.currentTimeMillis()

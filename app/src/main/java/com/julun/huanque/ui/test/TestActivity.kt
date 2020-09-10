@@ -256,38 +256,38 @@ class TestActivity : BaseActivity() {
         spannableString.setImageSpan(this, R.mipmap.anim_living, 5, 5, dp2px(30), dp2px(16))
         text_rainbow.setDraweeSpanStringBuilder(spannableString)
 
-        val objectAnimator: ObjectAnimator = ObjectAnimator.ofFloat(
-            span, ANIMATED_COLOR_SPAN_FLOAT_PROPERTY, 0f, 100f
-        )
-        objectAnimator.setEvaluator(FloatEvaluator())
-        objectAnimator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
-            override fun onAnimationUpdate(animation: ValueAnimator?) {
-                text_rainbow.setDraweeSpanStringBuilder(spannableString)
-            }
-        })
-        objectAnimator.setInterpolator(LinearInterpolator())
-        objectAnimator.setDuration(DateUtils.MINUTE_IN_MILLIS * 3)
-        objectAnimator.setRepeatCount(ValueAnimator.INFINITE)
+//        val objectAnimator: ObjectAnimator = ObjectAnimator.ofFloat(
+//            span, ANIMATED_COLOR_SPAN_FLOAT_PROPERTY, 0f, 100f
+//        )
+//        objectAnimator.setEvaluator(FloatEvaluator())
+//        objectAnimator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
+//            override fun onAnimationUpdate(animation: ValueAnimator?) {
+//                text_rainbow.setDraweeSpanStringBuilder(spannableString)
+//            }
+//        })
+//        objectAnimator.setInterpolator(LinearInterpolator())
+//        objectAnimator.setDuration(DateUtils.MINUTE_IN_MILLIS * 3)
+//        objectAnimator.setRepeatCount(ValueAnimator.INFINITE)
 //        objectAnimator.start()
 
-        spannableString.setDraweeSpanChangedListener { builder ->
-            logger.info("setDraweeSpanChangedListener")
-            text_rainbow.setDraweeSpanStringBuilder(builder)
-        }
+//        spannableString.setDraweeSpanChangedListener { builder ->
+//            logger.info("setDraweeSpanChangedListener")
+//            text_rainbow.setDraweeSpanStringBuilder(builder)
+//        }
     }
 
-    private val ANIMATED_COLOR_SPAN_FLOAT_PROPERTY: Property<AnimatedRainbowSpan, Float> =
-        object : Property<AnimatedRainbowSpan, Float>(
-            Float::class.java, "ANIMATED_COLOR_SPAN_FLOAT_PROPERTY"
-        ) {
-            override operator fun set(span: AnimatedRainbowSpan, value: Float) {
-                span.translateXPercentage = value
-            }
-
-            override operator fun get(span: AnimatedRainbowSpan): Float {
-                return span.translateXPercentage
-            }
-        }
+//    private val ANIMATED_COLOR_SPAN_FLOAT_PROPERTY: Property<AnimatedRainbowSpan, Float> =
+//        object : Property<AnimatedRainbowSpan, Float>(
+//            Float::class.java, "ANIMATED_COLOR_SPAN_FLOAT_PROPERTY"
+//        ) {
+//            override operator fun set(span: AnimatedRainbowSpan, value: Float) {
+//                span.translateX = value
+//            }
+//
+//            override operator fun get(span: AnimatedRainbowSpan): Float {
+//                return span.translateX
+//            }
+//        }
 
     override fun onSaveInstanceState(outState: Bundle) {
         logger.info("onSaveInstanceState=${outState}")

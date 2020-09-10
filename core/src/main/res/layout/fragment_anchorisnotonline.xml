@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/con"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:background="@color/black_999">
+    android:layout_height="match_parent">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/authorPhotoImage"

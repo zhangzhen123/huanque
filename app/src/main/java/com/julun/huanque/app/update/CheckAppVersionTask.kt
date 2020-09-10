@@ -193,11 +193,11 @@ class CheckAppVersionTask(
         val newVersion = "V${data.newVersion}"
         val isForce = UpdateType.Force == (data.updateType)
         if (activity != null && !activity.isFinishing) {
-            VersionUpdateDialog(activity).showUpdateDialog(
+            VersionUpdateDialog(activity,dissmissWhenTouchOutSide = !isForce).showUpdateDialog(
                 versionInfo = newVersionDesc, versionNum = newVersion, versionDate = "",
                 isForce = isForce, callback = VersionUpdateDialog.MyDialogCallback(
                     onCancel = {
-                        SPUtils.commitString(UpgradeApkService.IGNORED_VERSION, data.newVersion.replace(".", ""))
+//                        SPUtils.commitString(UpgradeApkService.IGNORED_VERSION, data.newVersion.replace(".", ""))
                         callback(false)
                     },
                     onOk = {

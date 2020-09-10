@@ -33,10 +33,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.handleResponse
 import com.julun.huanque.common.suger.whatEver
-import com.julun.huanque.common.utils.IntimateUtil
-import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.utils.svga.SVGAHelper.logger
 import io.rong.imlib.model.Conversation
@@ -73,7 +70,10 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
             postcard?.extras?.let { bundle ->
                 mUserId = bundle.getLong(ParamConstant.UserId)
                 mType = bundle.getString(ParamConstant.TYPE) ?: ""
+                //耳机是否插入
+                bundle.putBoolean(ParamConstant.Earphone, GlobalUtils.getEarphoneLinkStatus())
             }
+
 
             if (mType == ConmmunicationUserType.CALLING) {
                 //主叫

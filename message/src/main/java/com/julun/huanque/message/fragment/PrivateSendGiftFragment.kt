@@ -16,6 +16,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.adapter.PrivateGiftAdapter
 import com.julun.huanque.common.adapter.SimplePagerAdapter
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.ConsumeForm
@@ -166,6 +167,7 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
             if (it.state == NetStateType.SUCCESS) {
                 hideLoadingView()
                 refreshGiftView(it.requireT())
+                viewModel.giftList.value?.state = NetStateType.IDLE
             } else if (it.state == NetStateType.ERROR) {
                 //dodo
             }
@@ -387,8 +389,6 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
         }
 
         hideLoadingView()
-        // 当前用户余额
-        balanceLabel?.text = "${goodsCfgData?.beans}"
         // 按每页10个礼物组装数据
         val viewPagerData: MutableList<PrivateGroupInfo> = mutableListOf()
         goodsCfgData?.giftGroupList?.forEach {

@@ -264,7 +264,9 @@ class MessageFragment : BaseFragment() {
 
         mMessageViewModel.unreadMsgCount.observe(this, Observer {
             if (it != null) {
-                val str = if (it > 0) {
+                val str = if (it > 99) {
+                    "消息(99+)"
+                } else if (it > 0) {
                     "消息($it)"
                 } else {
                     "消息"
@@ -294,7 +296,9 @@ class MessageFragment : BaseFragment() {
 
         mPlayerMessageViewModel.unreadCountInPlayer.observe(this, Observer {
             if (it != null) {
-                val str = if (it > 0) {
+                val str = if (it > 99) {
+                    "消息(99+)"
+                } else if (it > 0) {
                     "消息($it)"
                 } else {
                     "消息"

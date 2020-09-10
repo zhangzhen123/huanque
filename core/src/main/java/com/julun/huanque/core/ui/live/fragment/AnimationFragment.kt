@@ -634,8 +634,7 @@ class AnimationFragment : BaseFragment() {
 
                 if (data.luckBeans > 0 && data.userId == SessionUtils.getUserId()) {
                     logger.info("有中奖 刷新余额${data.luckBeans}")
-                    //todo
-//                    RechargeViewModel.synchronousBalance(activity ?: return)
+                    BalanceUtils.queryLatestBalance()
                 }
             }
         })

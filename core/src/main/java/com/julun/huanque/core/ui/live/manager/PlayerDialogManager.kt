@@ -135,7 +135,10 @@ class PlayerDialogManager(val context: PlayerActivity) {
 
         playerViewModel.squareView.observe(context, Observer {
             if (it == true) {
-                openDialog(LiveSquareDialogFragment::class.java)
+                if(!isFragmentShow(LiveSquareDialogFragment::class.java)){
+                    openDialog(LiveSquareDialogFragment::class.java)
+                }
+
             }
         })
 

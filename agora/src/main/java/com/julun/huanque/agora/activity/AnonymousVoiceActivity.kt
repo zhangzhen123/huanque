@@ -220,7 +220,6 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             override fun process(data: AnonyVoiceCancelBean) {
                 if (data.inviteUserId == mAnonymousVoiceViewModel?.inviteUserId && mAnonymousVoiceViewModel?.currentState?.value == AnonymousVoiceViewModel.WAIT_ACCEPT) {
                     //匿名语音取消消息
-                    ToastUtils.show("匿名语音已结束")
                     mAnonymousVoiceViewModel?.voiceEndFlag?.value = true
                 }
             }
@@ -435,7 +434,11 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
         }
         header_page.imageViewBack.onClickNew {
-            mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT
+            val currentState = mAnonymousVoiceViewModel?.currentState?.value
+            if (currentState == AnonymousVoiceViewModel.MATCH) {
+                //调用取消匹配接口
+                mAnonymousVoiceViewModel?.cancelMatch()
+            }
             finish()
         }
         tv_match.onClickNew {
@@ -537,6 +540,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                             mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.MATCH
                         } else {
                             mAnonymousVoiceViewModel?.cancelMatch()
+                            finish()
                         }
 
                     }
@@ -997,6 +1001,12 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         stopMatch()
         matchCompositeDisposable.clear()
         voiceCompositeDisposable.clear()
+        VoiceManager.stopAllVoice()
+        val currentState = mAnonymousVoiceViewModel?.currentState?.value
+        if (currentState == AnonymousVoiceViewModel.MATCH) {
+            //调用取消匹配接口
+            mAnonymousVoiceViewModel?.cancelMatch()
+        }
     }
 
     override fun onDestroy() {

@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -176,13 +177,6 @@ class PrivateConversationActivity : BaseActivity() {
     override fun isRegisterEventBus() = true
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-//        val barHeight = StatusBarUtil.getStatusBarHeight(this)
-//        val params = header_view.layoutParams as? ConstraintLayout.LayoutParams
-//        params?.topMargin = barHeight
-//        header_view.layoutParams = params
-
-//        StatusBarUtil.setTransparent(this)
-
         val bgColor = GlobalUtils.getColor(R.color.color_gray_three)
         StatusBarUtil.setColor(this, bgColor)
         header_view.backgroundColor = bgColor
@@ -431,16 +425,11 @@ class PrivateConversationActivity : BaseActivity() {
         mPrivateAnimationViewModel.giftData.observe(this, Observer {
             if (it != null) {
                 //开始消费动画
-                mPrivateAnimationViewModel.prepareResource(it)
-            }
-        })
-
-        mPrivateAnimationViewModel.preparedFlag.observe(this, Observer {
-            if (it == true) {
                 mAnimationFragment = mAnimationFragment ?: PrivateAnimationFragment()
                 mAnimationFragment?.show(supportFragmentManager, "PrivateAnimationFragment")
             }
         })
+
         mPrivateConversationViewModel?.bubbleData?.observe(this, Observer {
             if (it != null) {
                 val intimateLevel = mPrivateConversationViewModel?.basicBean?.value?.intimate?.intimateLevel ?: 0
@@ -1059,7 +1048,7 @@ class PrivateConversationActivity : BaseActivity() {
                     //就是当前的消息，直接显示
                     //判断是否是送礼消息
                     val content = msg.content
-                    if (content is CustomMessage) {
+                    if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && content is CustomMessage) {
                         if (content.type == MessageCustomBeanType.Gift) {
                             if (!MessageUtils.getAnimationStarted(msg)) {
                                 //需要播放动画

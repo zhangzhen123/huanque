@@ -42,6 +42,7 @@ import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.message_dispatch.EventMessageType
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
@@ -464,11 +465,11 @@ class PlayerActivity : BaseActivity() {
                 liveViewManager.preUpAndDownData()
             }
             publicMessageView.clearMessages()
+            currentLiveBgUrl = it.prePic
             if (it.isLiving) {
                 cur_live_bg.hide()
             } else {
                 cur_live_bg.show()
-                currentLiveBgUrl = it.prePic
                 liveViewManager.loadBlurImage(cur_live_bg, it.prePic)
             }
 
@@ -792,7 +793,6 @@ class PlayerActivity : BaseActivity() {
 //                GIODataPool.positionIndex = null
                 form = UserEnterRoomForm(programId, fromType = mFrom, shareUserId = mShareUSerId)
                 viewModel.enterLivRoom(form)
-                viewModel.requestBubble()
             }
         } else {
             //加入聊天室失败
@@ -1169,7 +1169,6 @@ class PlayerActivity : BaseActivity() {
         // 准备好开始接收融云消息
         val temp =
             ChatUtils.createRoomUserChat(viewModel.roomData, viewModel.baseData.value, isAnchor)
-        viewModel.roomUserChatExtra = temp
         RongCloudManager.startMessageConsumerWithCurrentUserObj(temp)
     }
 
@@ -1547,7 +1546,6 @@ class PlayerActivity : BaseActivity() {
                 // 如果升级的是自己，则刷新个人信息
                 if (localUserId == data.userId) {
                     viewModel.refreshUserInfoData()
-                    viewModel.requestBubble()
                 }
             }
         })
@@ -1603,7 +1601,7 @@ class PlayerActivity : BaseActivity() {
         MessageProcessor.registerEventProcessor(object :
             MessageProcessor.StopLivingMessageProcessor {
             override fun process(data: CloseShowEvent) {
-                viewModel?.squareView?.value = true
+                viewModel.squareView.value = true
                 liveViewManager.switchToVertical()
                 //只有非NormalStop才关播
                 if (isAnchor && data.stopType != StopType.NORMALSTOP) {
@@ -1620,7 +1618,10 @@ class PlayerActivity : BaseActivity() {
                     mVideoViewModel.logout.postValue(true)
                     viewModel.baseData.value?.lastShowTimeDiffText = "刚刚"
 //                    surface_view?.scrollEnable = false
-                    cur_live_bg.show()
+                    currentLiveBgUrl?.let {
+                        cur_live_bg.show()
+                        liveViewManager.loadBlurImage(cur_live_bg, it)
+                    }
                     addPlayFragment(false)
                 }
             }
@@ -1718,6 +1719,7 @@ class PlayerActivity : BaseActivity() {
 //                ToastUtils.show("${data.nickname}给了${data.targetNickname}一个${data.time}禁言套餐")
 //            }
 //        })
+
     }
 
 
@@ -2059,6 +2061,8 @@ class PlayerActivity : BaseActivity() {
      * @param loginStateChange 登录状态变更触发重置的标识位
      */
     private fun resetRoom(loginStateChange: Boolean = false) {
+        //在这里就先把注册的事件监听全部注销 因为到切换后请求base+连接融云+enter有时间间隔 期间会继续收到消息 导致一系列问题
+        MessageProcessor.clearProcessors(false)
         //重新换成默认背景色
         main_content.backgroundResource = R.color.live_bg_color
 
