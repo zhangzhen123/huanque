@@ -5,7 +5,7 @@ package com.julun.huanque.common.constant
  */
 
 object SPType {
-    val COMMON_SP = "common_sp"//使用最频繁的
+    const val COMMON_SP = "common_sp"//使用最频繁的
 }
 
 /** 动画类型  */
@@ -228,20 +228,6 @@ object ClickType {
     const val SEND_MESSAGE = "SEND_MESSAGE"
 }
 
-object MenuActionType {
-    const val MOECOINTASK = "MoeCoinTask"//萌币任务
-    const val KINGWAR = "KingWar"//王者之战
-    const val LUCKYROTATE = "LuckyRotate"//幸运转盘
-    const val MOECOINMARKET = "MoeCoinMarket"//萌币商城
-    const val FACTORYCAR = "FactoryCar"//豪车工厂
-    const val TURNCARD = "TurnCard"//翻牌游戏
-    const val TACTGAMEYY = "TActGameYY"//邀友活动
-
-    const val PASSLEVEL = "PassLevel"//携手闯关
-    const val STAGEPK = "StagePk"//PK段位赛
-    const val CHATMODE = "ChatMode"//聊天模式
-}
-
 /**
  * 页面标识位
  * @author  WanZhiYuan
@@ -260,23 +246,6 @@ object TabTags {
     const val TAB_TAG_MANAGER = "manager"
 }
 
-object LoginType {
-    //游客
-    val VISITOR = "VISITOR"
-
-    // SESSION登陆
-    val LOGIN_SESSION = "LOGIN_SESSION"
-
-    // 本站登陆
-    val LOGIN_NORMAL = "LOGIN_NORMAL"
-
-    /**靓号登录 */
-    val LOGIN_BY_BEAUTY_NUM = "LOGIN_BY_BEAUTY_NUM"
-
-    //第三方登陆已绑定
-    val THIRD_BINDED = "THIRD_BINDED"
-}
-
 /**
  * 直播间打开时附带的操作
  */
@@ -293,23 +262,6 @@ object LiveOperaType {
 
     //打开首充
     const val OPEN_FIRST_RECHARGE = "OPEN_FIRST_RECHARGE"
-}
-
-/**
- * 分享常量类
- */
-object ShareConstants {
-    const val SHARE_WX = "wx"
-    const val SHARE_WX_TEXT = "微信"
-    const val SHARE_WX_FRIENDS = "wx_friends"
-    const val SHARE_WX_FRIENDS_TEXT = "朋友圈"
-    const val SHARE_QQ = "qq"
-    const val SHARE_QQ_TEXT = "QQ"
-    const val SHARE_QQ_ZONE = "qq_zone"
-    const val SHARE_QQ_ZONE_TEXT = "QQ空间"
-    const val SHARE_COPY = "copy"
-    const val SHARE_COPY_TEXT = "复制链接"
-
 }
 
 object DialogOrderNumber {

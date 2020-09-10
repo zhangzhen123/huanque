@@ -83,8 +83,16 @@
             android:id="@+id/tv_cai_shen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@mipmap/bg_dot_bird_level"
+            android:layout_marginTop="@dimen/dimen_13"
+            android:layout_marginEnd="@dimen/dimen_12"
+            android:background="@drawable/bg_bird_function_num"
             android:gravity="center"
+            android:includeFontPadding="false"
+            android:minWidth="@dimen/dimen_15"
+            android:paddingStart="@dimen/dimen_3"
+            android:paddingEnd="@dimen/dimen_3"
+            android:textColor="@color/white"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="@+id/sdv_cai_shen"
             app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen"
             tools:text="99" />
@@ -111,8 +119,16 @@
             android:id="@+id/tv_niu_lang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@mipmap/bg_dot_bird_level"
+            android:layout_marginTop="@dimen/dimen_13"
+            android:layout_marginEnd="@dimen/dimen_12"
+            android:background="@drawable/bg_bird_function_num"
             android:gravity="center"
+            android:includeFontPadding="false"
+            android:minWidth="@dimen/dimen_15"
+            android:paddingStart="@dimen/dimen_3"
+            android:paddingEnd="@dimen/dimen_3"
+            android:textColor="@color/white"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="@+id/sdv_bird_niu_lang"
             app:layout_constraintTop_toTopOf="@+id/sdv_bird_niu_lang"
             tools:text="99" />
@@ -139,8 +155,16 @@
             android:id="@+id/tv_zhi_nv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@mipmap/bg_dot_bird_level"
+            android:layout_marginTop="@dimen/dimen_13"
+            android:layout_marginEnd="@dimen/dimen_12"
+            android:background="@drawable/bg_bird_function_num"
             android:gravity="center"
+            android:includeFontPadding="false"
+            android:minWidth="@dimen/dimen_15"
+            android:paddingStart="@dimen/dimen_3"
+            android:paddingEnd="@dimen/dimen_3"
+            android:textColor="@color/white"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="@+id/sdv_bird_zhi_nv"
             app:layout_constraintTop_toTopOf="@+id/sdv_bird_zhi_nv"
             tools:text="99" />
@@ -168,8 +192,16 @@
             android:id="@+id/tv_shen_mi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@mipmap/bg_dot_bird_level"
+            android:layout_marginTop="@dimen/dimen_13"
+            android:layout_marginEnd="@dimen/dimen_12"
+            android:background="@drawable/bg_bird_function_num"
             android:gravity="center"
+            android:includeFontPadding="false"
+            android:minWidth="@dimen/dimen_15"
+            android:paddingStart="@dimen/dimen_3"
+            android:paddingEnd="@dimen/dimen_3"
+            android:textColor="@color/white"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="@+id/sdv_bird_shen_mi"
             app:layout_constraintTop_toTopOf="@+id/sdv_bird_shen_mi"
             tools:text="99" />
@@ -197,11 +229,19 @@
             android:id="@+id/tv_hong_bao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@mipmap/bg_dot_bird_level"
+            android:layout_marginTop="@dimen/dimen_13"
+            android:layout_marginEnd="@dimen/dimen_12"
+            android:background="@drawable/bg_bird_function_num"
             android:gravity="center"
+            android:includeFontPadding="false"
+            android:minWidth="@dimen/dimen_15"
+            android:paddingStart="@dimen/dimen_3"
+            android:paddingEnd="@dimen/dimen_3"
+            android:textColor="@color/white"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="@+id/sdv_bird_hong_bao"
             app:layout_constraintTop_toTopOf="@+id/sdv_bird_hong_bao"
-            tools:text="99" />
+            tools:text="9" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -413,11 +453,11 @@
         android:textColor="@color/white"
         android:textSize="@dimen/sp_12"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/tv_bird_price"
         app:layout_constraintEnd_toEndOf="@+id/tv_bird_price"
         app:layout_constraintStart_toStartOf="@+id/tv_bird_price"
-        tools:text="+10000" />
+        tools:text="+10000"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/tv_bird_price"
@@ -477,6 +517,12 @@
             android:layout_width="@dimen/dimen_10"
             android:layout_height="@dimen/dimen_89"
             android:scaleType="fitCenter" />
+        <com.julun.huanque.common.widgets.live.WebpGifView
+            android:id="@+id/bird_combine_ani"
+            android:layout_width="@dimen/dimen_93"
+            android:layout_height="@dimen/dimen_93"
+            android:scaleType="fitCenter" />
+
     </FrameLayout>
 
 

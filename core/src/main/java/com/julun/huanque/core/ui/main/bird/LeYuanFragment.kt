@@ -13,6 +13,7 @@ import android.view.animation.BounceInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.animation.addListener
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -28,13 +29,18 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.SoundPoolManager
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.widgets.live.WebpGifView
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_leyuan.*
+import kotlinx.android.synthetic.main.view_pk_mic.view.*
 import org.jetbrains.anko.sdk23.listeners.onTouch
+import org.jetbrains.anko.startActivity
 import java.math.BigInteger
 import java.util.concurrent.TimeUnit
 
@@ -57,6 +63,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         const val BIRD_COMBINE = "bird/bird_combine.mp3"
     }
 
+    private val mFunctionViewModel: BirdFunctionViewModel by activityViewModels()
 
     var programId: Long? = null
     override fun getLayoutId() = R.layout.fragment_leyuan
@@ -83,21 +90,83 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     private var birdTaskDialogFragment: BirdTaskDialogFragment? = null
 
     private var birdDescDialogFragment: BirdDescriptionDialogFragment? = null
+
+
+    private var birdFunctionDialogFragment: BirdFunctionDialogFragment? = null
+
+    private var mBirdGotFunctionDialogFragment: BirdGotFunctionDialogFragment? = null
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         programId = arguments?.getLong(IntentParamKey.PROGRAM_ID.name)
         initViewModel()
         rv_bird_packet.adapter = birdAdapter
         rv_bird_packet.layoutManager = GridLayoutManager(requireContext(), 4)
-
+        sdv_cai_shen.onClickNew {
+            val bird = mViewModel.gotFunctionBirdInfo("wealth")
+            if (bird != null) {
+                if (birdFunctionDialogFragment == null) {
+                    birdFunctionDialogFragment = BirdFunctionDialogFragment.newInstance(bird)
+                } else {
+                    birdFunctionDialogFragment?.setBird(bird)
+                }
+                birdFunctionDialogFragment?.show(requireActivity(), "birdFunctionDialogFragment")
+            }
+        }
+        sdv_bird_niu_lang.onClickNew {
+            val bird = mViewModel.gotFunctionBirdInfo("cowherd")
+            if (bird != null) {
+                if (birdFunctionDialogFragment == null) {
+                    birdFunctionDialogFragment = BirdFunctionDialogFragment.newInstance(bird)
+                } else {
+                    birdFunctionDialogFragment?.setBird(bird)
+                }
+                birdFunctionDialogFragment?.show(requireActivity(), "birdFunctionDialogFragment")
+            }
+        }
+        sdv_bird_zhi_nv.onClickNew {
+            val bird = mViewModel.gotFunctionBirdInfo("weaver")
+            if (bird != null) {
+                if (birdFunctionDialogFragment == null) {
+                    birdFunctionDialogFragment = BirdFunctionDialogFragment.newInstance(bird)
+                } else {
+                    birdFunctionDialogFragment?.setBird(bird)
+                }
+                birdFunctionDialogFragment?.show(requireActivity(), "birdFunctionDialogFragment")
+            }
+        }
+        sdv_bird_hong_bao.onClickNew {
+            val bird = mViewModel.gotFunctionBirdInfo("redpacket")
+            if (bird != null) {
+                if (birdFunctionDialogFragment == null) {
+                    birdFunctionDialogFragment = BirdFunctionDialogFragment.newInstance(bird)
+                } else {
+                    birdFunctionDialogFragment?.setBird(bird)
+                }
+                birdFunctionDialogFragment?.show(requireActivity(), "birdFunctionDialogFragment")
+            }
+        }
+        sdv_bird_shen_mi.onClickNew {
+            val bird = mViewModel.gotFunctionBirdInfo("mystical")
+            if (bird != null) {
+                if (birdFunctionDialogFragment == null) {
+                    birdFunctionDialogFragment = BirdFunctionDialogFragment.newInstance(bird)
+                } else {
+                    birdFunctionDialogFragment?.setBird(bird)
+                }
+                birdFunctionDialogFragment?.show(requireActivity(), "birdFunctionDialogFragment")
+            }
+        }
         iv_bottom_03.onClickNew {
             iv_bottom_03.isEnabled = false
             mViewModel.buyBird()
         }
+
         ll_redPacket.onClickNew {
             logger.info("点击了红包")
+            gotoWithdraw()
         }
         iv_redPacket.onClickNew {
             logger.info("点击了红包2")
+            gotoWithdraw()
         }
         iv_bird_guide.onClickNew {
             logger.info("点击了规则")
@@ -212,8 +281,29 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
             true
         }
+        bird_combine_ani.setCallBack(object : WebpGifView.GiftViewPlayCallBack {
+            //不管成功加载或者失败加载  都开始本地动画
+            override fun onRelease() {
+            }
+
+            override fun onStart() {
+            }
+
+            override fun onError() {
+                bird_combine_ani.hide()
+            }
+
+            override fun onEnd() {
+                bird_combine_ani.hide()
+
+            }
+        })
         initMusicSet()
         initMusic()
+    }
+
+    private fun gotoWithdraw() {
+        requireActivity().startActivity<WithdrawActivity>()
     }
 
     private fun initMusic() {
@@ -294,6 +384,28 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 renderBottom(it)
             }
         })
+        mViewModel.functionInfo.observe(this, Observer {
+            if (it != null) {
+                //弹出获取功能鹊
+                if (mBirdGotFunctionDialogFragment == null) {
+                    mBirdGotFunctionDialogFragment = BirdGotFunctionDialogFragment.newInstance(it)
+                } else {
+                    mBirdGotFunctionDialogFragment?.setBird(it)
+                }
+                mBirdGotFunctionDialogFragment?.show(requireActivity(), "BirdGotFunctionDialogFragment")
+            }
+        })
+
+
+        mFunctionViewModel.flyResult.observe(this, Observer {
+            it ?: return@Observer
+            if (it.isSuccess()) {
+                //直接刷新
+                mViewModel.queryHome()
+            }
+
+        })
+
 
     }
 
@@ -561,7 +673,6 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         image.getLocationOnScreen(location)
         bird_mask.x = location[0].toFloat()
         bird_mask.y = location[1].toFloat()
-        bird_mask.requestLayout()
         bird_mask.show()
         bird_mask.loadImage(currentCombineItem!!.upgradeIcon, 93f, 93f)
 
@@ -571,9 +682,16 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
         bird_mask2.x = location[0].toFloat()
         bird_mask2.y = location[1].toFloat()
-        bird_mask2.requestLayout()
+//        bird_mask2.requestLayout()
         bird_mask2.show()
         bird_mask2.loadImage(currentCombineItem!!.upgradeIcon, 93f, 93f)
+
+        bird_combine_ani.x = location[0].toFloat()
+        bird_combine_ani.y = location[1].toFloat()
+        mask_container.requestLayout()
+        bird_combine_ani.hide()
+
+
         //设定向两边
         val distance = dp2px(65)
         //2.做合并动画
@@ -601,6 +719,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         anim02.addListener(onEnd = {
             //播放特效 播放声音
             SoundPoolManager.instance.play(BIRD_COMBINE)
+            bird_combine_ani.show()
+            ImageUtils.loadWebpImageLocal(bird_combine_ani, R.mipmap.anim_bird_combine)
             logger.info("动画播放完了 开始播放特效")
             //3.将原有的两个鹊移除 将升级的鹊放入 目标格子
             val currentNew = result.currentUpgrade

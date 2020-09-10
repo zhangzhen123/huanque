@@ -65,7 +65,7 @@ class BirdDescriptionDialogFragment(private val leYuanViewModel: LeYuanViewModel
         leYuanViewModel.functionBirds.observe(this, Observer {
             birdAdapter.setNewInstance(it ?: return@Observer)
         })
-        leYuanViewModel.gotFunctionBirdInfo()
+        leYuanViewModel.gotFunctionBirdInfos()
     }
 
 }

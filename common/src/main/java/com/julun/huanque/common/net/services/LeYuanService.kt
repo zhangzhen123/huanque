@@ -71,6 +71,10 @@ interface LeYuanService {
     @POST("social/magpie/receiveActiveAward")
     suspend fun receiveActiveAward(@Body form: TaskBirdActiveReceive): Root<BirdTaskReceiveResult>
 
-
+    /**
+     * 领取活跃奖励
+     */
+    @POST("social/magpie/fly")
+    suspend fun fly(@Body form: BirdFunctionForm): Root<BirdFlyResult>
 
 }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/bg_bird_desc"
+    tools:layout_width="@dimen/dimen_280">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird_tree"
+        android:layout_width="89dp"
+        android:layout_height="89dp"
+        android:layout_marginTop="@dimen/dimen_51"
+        app:actualImageResource="@mipmap/bg_bird_shop_item_tree"
+        app:actualImageScaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundAsCircle="true" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:actualImageScaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/sdv_bird_tree"
+        app:layout_constraintEnd_toEndOf="@+id/sdv_bird_tree"
+        app:layout_constraintStart_toStartOf="@+id/sdv_bird_tree"
+        app:layout_constraintTop_toTopOf="@+id/sdv_bird_tree"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:roundAsCircle="true" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="@dimen/dimen_95"
+        android:layout_height="@dimen/dimen_32"
+        android:layout_marginTop="@dimen/dimen_15"
+        android:gravity="center"
+        android:textColor="#80514F"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/sdv_bird"
+        app:layout_constraintStart_toStartOf="@+id/sdv_bird"
+        app:layout_constraintTop_toBottomOf="@+id/sdv_bird_tree"
+        tools:text="Lv6.xx鹊" />
+
+
+    <TextView
+        android:id="@+id/tv_ok"
+        android:layout_width="@dimen/dimen_90"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:background="@mipmap/bg_bird_btn_green"
+        android:gravity="center"
+        android:text="知道了"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

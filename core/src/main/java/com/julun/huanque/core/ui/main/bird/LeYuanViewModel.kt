@@ -11,10 +11,7 @@ import com.julun.huanque.common.bean.forms.RecycleBirdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LeYuanService
-import com.julun.huanque.common.suger.convertError
-import com.julun.huanque.common.suger.convertRtData
-import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.suger.*
 import kotlinx.coroutines.launch
 import java.math.BigInteger
 
@@ -47,9 +44,12 @@ class LeYuanViewModel : BaseViewModel() {
     val totalCoin: MutableLiveData<BigInteger> by lazy { MutableLiveData<BigInteger>() }
     val coinsPerSec: MutableLiveData<BigInteger> by lazy { MutableLiveData<BigInteger>() }
 
+    val functionInfo: MutableLiveData<FunctionBird> by lazy { MutableLiveData<FunctionBird>() }
+
     //功能鹊描述
     val functionBirds: MutableLiveData<MutableList<FunctionBirdDes>> by lazy { MutableLiveData<MutableList<FunctionBirdDes>>() }
 
+    private val functionBirdsList = mutableListOf<FunctionBirdDes>()
     var programId: Long? = null
     private var currentInfo: BirdHomeInfo? = null
     fun queryHome() {
@@ -147,6 +147,7 @@ class LeYuanViewModel : BaseViewModel() {
             request({
                 val result = service.combine(BirdCombineForm(upgradeId1, upgradeId2, upgradePos1, upgradePos2)).dataConvert()
                 if (result.functionInfo != null) {
+                    functionInfo.value = result.functionInfo
                     //刷新整个页面
                     queryHome()
                 }
@@ -204,6 +205,65 @@ class LeYuanViewModel : BaseViewModel() {
 
     }
 
+    fun getFunctionBirdInfo() {
+        functionBirdsList.clear()
+        val wealth = currentInfo?.functionInfo?.wealth
+        val cowherd = currentInfo?.functionInfo?.cowherd
+        val mystical = currentInfo?.functionInfo?.mystical
+        val redpacket = currentInfo?.functionInfo?.redpacket
+        val weaver = currentInfo?.functionInfo?.weaver
+
+        functionBirdsList.add(
+            FunctionBirdDes(
+                "财神鹊", wealth?.functionIcon,
+                bFunction = "放飞后获得888元零钱奖励。",
+                source = "两个神秘鹊合并，有机会获得。",
+                num = wealth?.functionNum?.toIntOrNull(),
+                type = "wealth"
+            )
+        )
+        functionBirdsList.add(
+            FunctionBirdDes(
+                "红包鹊",
+                redpacket?.functionIcon,
+                bFunction = "放飞后有机会获得1-100元零钱奖励。",
+                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并有机会获得。",
+                num = redpacket?.functionNum?.toIntOrNull(),
+                type = "redpacket"
+            )
+        )
+        functionBirdsList.add(
+            FunctionBirdDes(
+                "牛郎鹊",
+                cowherd?.functionIcon,
+                bFunction = "和织女鹊一起放飞，获得00元零钱奖励。",
+                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。",
+                num = cowherd?.functionNum?.toIntOrNull(),
+                type = "cowherd"
+            )
+        )
+        functionBirdsList.add(
+            FunctionBirdDes(
+                "织女鹊",
+                weaver?.functionIcon,
+                bFunction = "和牛郎鹊一起放飞，获得88元零钱奖励。",
+                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。",
+                num = weaver?.functionNum?.toIntOrNull(),
+                type = "weaver"
+            )
+        )
+        functionBirdsList.add(
+            FunctionBirdDes(
+                "神秘鹊",
+                mystical?.functionIcon,
+                bFunction = "两个神秘鹊放飞，随机获得财神鹊、红包鹊、牛郎鹊、织女鹊。",
+                source = "两个lv37小鹊合并，有机会获得。",
+                num = mystical?.functionNum?.toIntOrNull(),
+                type = "mystical"
+            )
+        )
+    }
+
     /**
 
     2.财神鹊，显示icon、图片。
@@ -222,54 +282,19 @@ class LeYuanViewModel : BaseViewModel() {
     -功能：两个神秘鹊放飞，随机获得财神鹊、红包鹊、牛郎鹊、织女鹊。
     -来源：两个lv37小鹊合并，有机会获得。
      */
-    fun gotFunctionBirdInfo() {
-        val list = mutableListOf<FunctionBirdDes>()
-        val wealth = currentInfo?.functionInfo?.wealth
-        val cowherd = currentInfo?.functionInfo?.cowherd
-        val mystical = currentInfo?.functionInfo?.mystical
-        val redpacket = currentInfo?.functionInfo?.redpacket
-        val weaver = currentInfo?.functionInfo?.weaver
+    fun gotFunctionBirdInfos() {
+        getFunctionBirdInfo()
+        functionBirds.value = functionBirdsList
+    }
 
-        list.add(
-            FunctionBirdDes(
-                "财神鹊", wealth?.functionIcon,
-                bFunction = "放飞后获得888元零钱奖励。",
-                source = "两个神秘鹊合并，有机会获得。"
-            )
-        )
-        list.add(
-            FunctionBirdDes(
-                "红包鹊",
-                redpacket?.functionIcon,
-                bFunction = "放飞后有机会获得1-100元零钱奖励。",
-                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并有机会获得。"
-            )
-        )
-        list.add(
-            FunctionBirdDes(
-                "牛郎鹊",
-                cowherd?.functionIcon,
-                bFunction = "和织女鹊一起放飞，获得00元零钱奖励。",
-                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。"
-            )
-        )
-        list.add(
-            FunctionBirdDes(
-                "织女鹊",
-                weaver?.functionIcon,
-                bFunction = "和牛郎鹊一起放飞，获得88元零钱奖励。",
-                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。"
-            )
-        )
-        list.add(
-            FunctionBirdDes(
-                "神秘鹊",
-                mystical?.functionIcon,
-                bFunction = "两个神秘鹊放飞，随机获得财神鹊、红包鹊、牛郎鹊、织女鹊。",
-                source = "两个lv37小鹊合并，有机会获得。"
-            )
-        )
-        functionBirds.value = list
+    fun gotFunctionBirdInfo(type: String): FunctionBirdDes? {
+        getFunctionBirdInfo()
+        functionBirdsList.forEach {
+            if (it.type == type) {
+                return it
+            }
+        }
+        return null
     }
 
 }

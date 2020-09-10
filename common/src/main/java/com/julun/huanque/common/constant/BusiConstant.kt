@@ -865,19 +865,6 @@ object RNMessageConst {
     const val FollowUserChange: String = "FollowUserChange"
 }
 
-/**
- * 隐私协议
- */
-object Agreement {
-    //用户协议
-    const val UserAgreement = "https://cdn.ihuanque.com/protocol/UserReg.html"
-
-    //隐私协议
-    const val PrivacyAgreement = "https://cdn.ihuanque.com/protocol/PrivacyProtect.html"
-
-    //主播管理规范
-    const val AnchorAgreement = "https://cdn.ihuanque.com/protocol/AnchorManage.html"
-}
 object MetaKey {
     const val DOWNLOAD_CHANNEL = "UMENG_CHANNEL"//渠道链接  2018/2/26修改本地渠道链接标识DOWNLOAD_CHANNEL为UMENG_CHANNEL
 }

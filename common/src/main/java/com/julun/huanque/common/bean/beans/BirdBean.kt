@@ -1,5 +1,6 @@
 package com.julun.huanque.common.bean.beans
 
+import java.io.Serializable
 import java.math.BigInteger
 
 /**
@@ -43,7 +44,7 @@ data class FunctionBird(
     var functionIcon: String = "",
     var functionName: String = "",
     var functionNum: String = ""
-)
+):Serializable
 
 data class BuyBirdResult(
     var coinsPerSec: BigInteger = BigInteger.ZERO,
@@ -146,5 +147,21 @@ data class FunctionBirdDes(
     var birdName: String = "",
     var birdPic: String? = null,
     var bFunction: String = "",
-    var source: String = ""
+    var source: String = "",
+    var num: Int? = null,
+    var type: String = ""
+) : Serializable
+
+data class BirdFlyResult(
+    var cash: String = "",
+    var functionNumInfo: FunctionNumInfo = FunctionNumInfo(),
+    var resultType: String = ""
+)
+
+data class FunctionNumInfo(
+    var cowherd: String = "",
+    var mystical: String = "",
+    var redpacket: String = "",
+    var wealth: String = "",
+    var weaver: String = ""
 )
