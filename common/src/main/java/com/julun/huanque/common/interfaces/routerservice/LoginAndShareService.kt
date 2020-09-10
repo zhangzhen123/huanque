@@ -28,4 +28,6 @@ interface LoginAndShareService : IProvider {
 
 
     fun weiBoShareResult(data: Intent)
+
+    fun checkWeixinInstalled(activity : Activity) : Boolean
 }

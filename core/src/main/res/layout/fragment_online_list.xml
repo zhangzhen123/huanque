@@ -6,36 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/header_tips"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_29"
-        android:background="#FFFAEE"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/tv_head_tips"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/dimen_15"
-            android:gravity="center"
-            android:textColor="@color/black_333"
-            android:textSize="@dimen/sp_12"
-            tools:text="直播间热度榜第一，差上一名123热度。" />
-
-        <TextView
-            android:id="@+id/tv_head_action"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/dimen_15"
-            android:gravity="center"
-            android:textColor="#FFA202"
-            android:textSize="@dimen/sp_12"
-            tools:text="开通贵族>" />
-
-    </RelativeLayout>
-
     <!--    <com.julun.huanque.common.widgets.refreshlayout.HuanQueRefreshLayout-->
     <!--        android:id="@+id/lmrlRefreshView"-->
     <!--        android:layout_width="match_parent"-->
@@ -47,12 +17,53 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_tips">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvList"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/header_tips"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_29"
+                    android:background="#FFFAEE"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tv_head_tips"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/dimen_15"
+                        android:gravity="center"
+                        android:textColor="@color/black_333"
+                        android:textSize="@dimen/sp_12"
+                        tools:text="直播间热度榜第一，差上一名123热度。" />
+
+                    <TextView
+                        android:id="@+id/tv_head_action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="@dimen/dimen_15"
+                        android:gravity="center"
+                        android:textColor="#FFA202"
+                        android:textSize="@dimen/sp_12"
+                        tools:text="开通贵族>" />
+
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="29dp" />
+            </FrameLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <!--    </com.julun.huanque.common.widgets.refreshlayout.HuanQueRefreshLayout>-->
 

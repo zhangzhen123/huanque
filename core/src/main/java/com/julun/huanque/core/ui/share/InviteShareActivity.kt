@@ -268,20 +268,26 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
 //            checkView?.show()
             when (type) {
                 ShareTypeEnum.FriendCircle -> {
-                    wxService?.weiXinShare(this, ShareObject().apply {
-                        this.shareType = WeiXinShareType.WXImage
-                        this.shareWay = ShareWayEnum.WXSceneTimeline
-                        this.shareImage = bitmap
-                    })
-                    finish()
+                    //朋友圈
+                    if (wxService?.checkWeixinInstalled(this) == true) {
+                        wxService?.weiXinShare(this, ShareObject().apply {
+                            this.shareType = WeiXinShareType.WXImage
+                            this.shareWay = ShareWayEnum.WXSceneTimeline
+                            this.shareImage = bitmap
+                        })
+                        finish()
+                    }
                 }
                 ShareTypeEnum.WeChat -> {
-                    wxService?.weiXinShare(this, ShareObject().apply {
-                        this.shareType = WeiXinShareType.WXImage
-                        this.shareWay = ShareWayEnum.WXSceneSession
-                        this.shareImage = bitmap
-                    })
-                    finish()
+                    //微信
+                    if (wxService?.checkWeixinInstalled(this) == true) {
+                        wxService?.weiXinShare(this, ShareObject().apply {
+                            this.shareType = WeiXinShareType.WXImage
+                            this.shareWay = ShareWayEnum.WXSceneSession
+                            this.shareImage = bitmap
+                        })
+                        finish()
+                    }
                 }
                 ShareTypeEnum.Sina -> {
                     wxService?.weiBoShare(this, ShareObject().apply {
