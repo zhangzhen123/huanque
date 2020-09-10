@@ -2,6 +2,7 @@ package com.julun.huanque.common.base.dialog
 
 import android.app.Activity
 import android.text.SpannableString
+import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.TextView
 import com.julun.huanque.common.R
@@ -135,7 +136,8 @@ class MyAlertDialog : AppBaseDialog {
             titleText?.hide()
             msgText?.text = message
         }
-
+        //必须设置否则点击事件无效
+        msgText?.movementMethod = LinkMovementMethod.getInstance()
         this.callback = callback
         setCancelable(cancelable)
         show()
