@@ -24,6 +24,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.events.RefreshVoiceCardEvent
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
@@ -47,6 +48,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.internal.operators.observable.ObservableTake
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.act_voice_chat.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.imageResource
 import java.util.concurrent.TimeUnit
 
@@ -919,6 +921,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onDestroy() {
         super.onDestroy()
         MessageProcessor.clearProcessors(false)
+        //发送事件，通知刷新语音券
+        EventBus.getDefault().post(RefreshVoiceCardEvent())
     }
 
     override fun onBackPressed() {

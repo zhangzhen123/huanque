@@ -352,3 +352,5 @@ data class ChatDetailBean(
     var remindSign: String = ""
 ) :
     Serializable
+
+data class PropListBean(var propList : MutableList<PrivateProp> = mutableListOf()) : Serializable

@@ -252,6 +252,6 @@ interface SocialService {
     @POST("social/flower/rank/famous")
     suspend fun flowerFamous(@Body form: EmptyForm = EmptyForm()): Root<FamousListBean>
 
-    @POST("social/flower/rank/propList")
-    suspend fun propList(@Body form: EmptyForm = EmptyForm()): Root<MutableList<PrivateProp>>
+    @POST("social/friend/chat/propList")
+    suspend fun propList(@Body form: EmptyForm = EmptyForm()): Root<PropListBean>
 }

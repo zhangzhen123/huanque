@@ -603,7 +603,7 @@ class PrivateConversationViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = socialService.propList().dataConvert()
-                propListData.value = result
+                propListData.value = result.propList
             })
         }
     }
