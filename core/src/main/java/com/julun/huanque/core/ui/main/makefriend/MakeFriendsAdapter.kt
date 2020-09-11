@@ -24,13 +24,12 @@ import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
-import org.jetbrains.anko.backgroundDrawable
+import com.luck.picture.lib.decoration.GridSpacingItemDecoration
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
 import kotlin.math.ceil
@@ -147,27 +146,37 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
                     }
                 }
-                val action=holder.getView<TextView>(R.id.btn_action)
+                val action = holder.getView<TextView>(R.id.btn_action)
                 if (bean.anchor && bean.living) {
                     action.text = "围观"
-                    action.textColor=Color.parseColor("#FF8E8E")
-                    action.backgroundResource=R.drawable.bg_stroke_btn3
+                    action.textColor = Color.parseColor("#FF8E8E")
+                    action.backgroundResource = R.drawable.bg_stroke_btn3
                 } else {
                     action.text = "私信"
-                    action.textColor=Color.parseColor("#FFCC00")
-                    action.backgroundResource=R.drawable.bg_stroke_btn1
+                    action.textColor = Color.parseColor("#FFCC00")
+                    action.backgroundResource = R.drawable.bg_stroke_btn1
                 }
                 when {
                     list.isNotEmpty() -> {
                         val rv = holder.getView<RecyclerView>(R.id.rv_photos)
                         rv.setRecycledViewPool(mPhotoViewPool)
                         rv.setHasFixedSize(true)
-                        rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
                         holder.setGone(R.id.ll_audio, true).setGone(R.id.rv_tags, true)
                         rv.show()
+//                        rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                        // if (rv.itemDecorationCount <= 0) {
+//                            rv.addItemDecoration(HorizontalItemDecoration(dp2px(5)))
+//                        }
+                        rv.layoutManager = GridLayoutManager(context, 4)
                         if (rv.itemDecorationCount <= 0) {
-                            rv.addItemDecoration(HorizontalItemDecoration(dp2px(5)))
+                            rv.addItemDecoration(
+                                GridSpacingItemDecoration(
+                                    4,
+                                    dp2px(5), false
+                                )
+                            )
                         }
+
                         val mPhotosAdapter: PhotosAdapter
                         if (rv.adapter != null) {
                             mPhotosAdapter = rv.adapter as PhotosAdapter
@@ -288,8 +297,19 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 }
                 tvName.text = name
 //                rv.setRecycledViewPool(mPhotoViewPool)
-                rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-
+//                rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+//                if (rv.itemDecorationCount <= 0) {
+//                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(15)))
+//                }
+                rv.layoutManager = GridLayoutManager(context, 4)
+                if (rv.itemDecorationCount <= 0) {
+                    rv.addItemDecoration(
+                        GridSpacingItemDecoration(
+                            4,
+                            dp2px(10), false
+                        )
+                    )
+                }
                 val list = arrayListOf<PhotoBean>()
                 repeat(4) {
                     val url = bean.picList.getOrNull(it)
@@ -300,9 +320,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                     }
 
                 }
-                if (rv.itemDecorationCount <= 0) {
-                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(15)))
-                }
+
                 val mPhotosAdapter: PhotosAdapter
                 if (rv.adapter != null) {
                     mPhotosAdapter = rv.adapter as PhotosAdapter

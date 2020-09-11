@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.common.constant.BusiConstant
@@ -23,7 +24,9 @@ class PhotosAdapter : BaseQuickAdapter<PhotoBean, BaseViewHolder>(R.layout.item_
         val imgView=holder.getView<SimpleDraweeView>(R.id.sdv_photo)
         if(item.url.isNotEmpty()){
             imgView.loadImage(item.url+BusiConstant.OSS_120,60f,60f)
+            imgView.hierarchy.actualImageScaleType= ScalingUtils.ScaleType.CENTER_CROP
         }else{
+            imgView.hierarchy.actualImageScaleType= ScalingUtils.ScaleType.FIT_XY
             imgView.loadImageLocal(item.res)
         }
         if(mOnItemClick!=null){
