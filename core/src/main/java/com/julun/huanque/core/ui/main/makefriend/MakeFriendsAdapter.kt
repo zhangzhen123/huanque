@@ -180,7 +180,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         val mPhotosAdapter: PhotosAdapter
                         if (rv.adapter != null) {
                             mPhotosAdapter = rv.adapter as PhotosAdapter
-                            mPhotosAdapter.testPosition(holder.adapterPosition)
+//                            mPhotosAdapter.testPosition(holder.adapterPosition)
                         } else {
                             mPhotosAdapter = PhotosAdapter()
                             rv.adapter = mPhotosAdapter
@@ -324,7 +324,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val mPhotosAdapter: PhotosAdapter
                 if (rv.adapter != null) {
                     mPhotosAdapter = rv.adapter as PhotosAdapter
-                    mPhotosAdapter.testPosition(holder.adapterPosition + 1000)
+//                    mPhotosAdapter.testPosition(holder.adapterPosition + 1000)
                 } else {
                     mPhotosAdapter = PhotosAdapter()
                     rv.adapter = mPhotosAdapter
