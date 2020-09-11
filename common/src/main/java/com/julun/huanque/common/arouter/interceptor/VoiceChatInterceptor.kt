@@ -6,18 +6,14 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.lifecycleScope
 import com.alibaba.android.arouter.facade.Postcard
 import com.alibaba.android.arouter.facade.annotation.Interceptor
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback
 import com.alibaba.android.arouter.facade.template.IInterceptor
 import com.alibaba.android.arouter.launcher.ARouter
-import com.julun.huanque.common.R
-import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.BaseDialogBean
 import com.julun.huanque.common.bean.beans.NetcallBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.events.HideFloatingEvent
@@ -34,11 +30,7 @@ import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.handleResponse
 import com.julun.huanque.common.suger.whatEver
 import com.julun.huanque.common.utils.*
-import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
-import com.julun.huanque.common.utils.svga.SVGAHelper.logger
 import io.rong.imlib.model.Conversation
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 /**

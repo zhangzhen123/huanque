@@ -34,7 +34,7 @@ object WXApiManager {
     //来自于动态页的分享
     private var mIsFromDynamic: Boolean = false
 
-    private fun checkWXInstalled(context: Activity, checkPay: Boolean = false): Boolean {
+    fun checkWXInstalled(context: Activity, checkPay: Boolean = false): Boolean {
         if (HuanQueApp.wxApi?.isWXAppInstalled == true) {
             if (checkPay) {
                 if ((HuanQueApp.wxApi?.wxAppSupportAPI

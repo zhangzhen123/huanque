@@ -243,7 +243,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                         null
                     }
                 }
-                RongCloudManager.resetUserInfoData(user)
+                RongCloudManager.resetUSerInfoPrivate(user)
 
                 chatInfoData.value = result.friendUser.apply { stranger = result.stranger }
                 intimateData.value = result.intimate
@@ -262,7 +262,6 @@ class PrivateConversationViewModel : BaseViewModel() {
                     if (friendUser.toString() != (userInDb?.toString() ?: "")) {
                         //数据不一致，需要保存用户数据
                         HuanQueDatabase.getInstance().chatUserDao().insert(friendUser)
-                        val tempDAta = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(friendUser.userId)
                         EventBus.getDefault().post(UserInfoChangeEvent(friendUser.userId, friendUser.stranger))
                     }
                 }
@@ -275,7 +274,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     sex = SessionUtils.getSex()
                     chatBubble = bubbleData.value
                 }
-                RongCloudManager.resetUserInfoData(user)
+                RongCloudManager.resetUSerInfoPrivate(user)
             })
         }
 

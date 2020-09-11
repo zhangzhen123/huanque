@@ -105,7 +105,8 @@
         android:id="@+id/rl_game"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginLeft="6dp">
+        android:layout_marginLeft="6dp"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/gameImage"

@@ -6,4 +6,8 @@
             <enum name="vertical" value="1" />
         </attr>
     </declare-styleable>
+    
+    <declare-styleable name="SingleVideoView">
+        <attr name="useManager" format="boolean"/>
+    </declare-styleable>
 </resources>

@@ -30,6 +30,7 @@ import com.julun.huanque.common.bean.events.FastLoginEvent
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Agreement
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.manager.ActivitiesManager
@@ -328,17 +329,13 @@ class LoginActivity : BaseActivity() {
         return uiConfigBuilder.build()
     }
 
-//    override fun onNewIntent(intent: Intent?) {
-//        super.onNewIntent(intent)
-//        if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
-//            //注册成功，跳转首页
-//            val intent = Intent(this, MainActivity::class.java)
-//            startActivity(intent)
-//        } else {
-//            SessionUtils.clearSession()
-//        }
-//        finish()
-//    }
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent?.getStringExtra(ParamConstant.TYPE) == "EXIT") {
+            //退出APP
+            ActivitiesManager.finishApp()
+        }
+    }
 
     override fun finish() {
         if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
@@ -359,7 +356,7 @@ class LoginActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun fastLoginSuccess(event : FastLoginEvent){
+    fun fastLoginSuccess(event: FastLoginEvent) {
         JVerificationInterface.dismissLoginAuthActivity()
     }
 

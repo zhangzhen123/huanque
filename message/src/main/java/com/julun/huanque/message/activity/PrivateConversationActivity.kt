@@ -45,6 +45,7 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
@@ -530,10 +531,13 @@ class PrivateConversationActivity : BaseActivity() {
         }
         iv_intimate.onClickNew {
             //显示欢遇弹窗
-            RNPageActivity.start(
-                this,
-                RnConstant.INTIMATE_LEVEL_PAGE,
-                Bundle().apply { putLong("friendId", mPrivateConversationViewModel?.targetIdData?.value ?: 0L) })
+            val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: 0L
+            if (targetId > 0) {
+                RNPageActivity.start(
+                    this,
+                    RnConstant.INTIMATE_LEVEL_PAGE,
+                    Bundle().apply { putLong("friendId", targetId) })
+            }
         }
 
         iv_phone.onClickNew {
@@ -607,7 +611,7 @@ class PrivateConversationActivity : BaseActivity() {
             val result = judgeIntimate("CSM", "亲密等级达到lv3才能发送传送门哦")
             if (result) {
                 //有权限
-                val programId = SharedPreferencesUtils.getLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
+                val programId = UserHeartManager.getProgramId() ?: 0
                 if (programId <= 0) {
                     //不在直播间内
                     ToastUtils.show("您当前不在直播间内，无法发送传送门哦")
@@ -728,15 +732,15 @@ class PrivateConversationActivity : BaseActivity() {
 
             override fun showPrivilegeFragment(code: String) {
                 //显示特权弹窗
-                val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
-                val currentLevel = intimate.intimateLevel
-                IntimateUtil.intimatePrivilegeList.forEach {
-                    if (it.key == "ZSBQ") {
-                        SingleIntimateprivilegeFragment.newInstance(it, currentLevel)
-                            .show(supportFragmentManager, "SingleIntimateprivilegeFragment")
-                        return
-                    }
-                }
+//                val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
+//                val currentLevel = intimate.intimateLevel
+//                IntimateUtil.intimatePrivilegeList.forEach {
+//                    if (it.key == "ZSBQ") {
+//                        SingleIntimateprivilegeFragment.newInstance(it, currentLevel)
+//                            .show(supportFragmentManager, "SingleIntimateprivilegeFragment")
+//                        return
+//                    }
+//                }
             }
         })
     }

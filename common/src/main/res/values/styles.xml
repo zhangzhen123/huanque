@@ -86,11 +86,11 @@
         <!-- Customize your theme here. -->
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
-        <item name="android:windowBackground">@drawable/bitmap_startup</item>
+        <item name="android:windowBackground">@drawable/bg_start_up</item>
     </style>
 
     <style name="AppLauncher" parent="@android:style/Theme.NoTitleBar.Fullscreen">
-        <item name="android:windowBackground">@drawable/bitmap_startup</item>
+        <item name="android:windowBackground">@drawable/bitmap_startup_top</item>
     </style>
     <!--从底部进入的activity主题-->
     <style name="BottomInTheme" parent="@style/CustomToolBarTheme">

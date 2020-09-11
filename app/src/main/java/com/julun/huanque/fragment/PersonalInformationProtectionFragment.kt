@@ -15,6 +15,7 @@ import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.constant.Agreement
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.XYCode
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.ui.web.WebActivity
@@ -55,7 +56,9 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
         }
         tv_exit.onClickNew {
             activity?.let { act ->
-                act.startActivity(Intent(act, LoginActivity::class.java))
+                val intent = Intent(act, LoginActivity::class.java)
+                intent.putExtra(ParamConstant.TYPE,"EXIT")
+                act.startActivity(intent)
             }
             dismiss()
         }

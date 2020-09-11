@@ -201,7 +201,11 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     val contentContext = content.context
                     if (contentContext.isNotEmpty()) {
                         try {
-                            val name = JsonUtil.deserializeAsObject<String>(contentContext, String::class.java)
+                            val name = if (contentContext.startsWith("\"") && contentContext.endsWith("\"")) {
+                                JsonUtil.deserializeAsObject<String>(contentContext, String::class.java)
+                            } else {
+                                contentContext
+                            }
                             val pUrl = GlobalUtils.getPrivilegeUrl(name)
                             sdvImage.loadImage(pUrl, 100f, 100f)
                         } catch (e: java.lang.Exception) {

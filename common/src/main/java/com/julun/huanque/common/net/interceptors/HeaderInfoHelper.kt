@@ -85,6 +85,12 @@ object HeaderInfoHelper {
             }
         }
 
+        //openinstall code
+        val openinstallCode = ChannelCodeHelper.getChannelCode()
+        if (openinstallCode.isNotEmpty()) {
+            map["f"] = openinstallCode
+        }
+
         val jExtraChannelCode = ChannelCodeHelper.getExternalChannel()
         if (jExtraChannelCode?.isNotBlank() == true) {
             map["e"] = "$jExtraChannelCode"

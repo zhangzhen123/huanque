@@ -19,7 +19,8 @@ class UserDataTab(
     var userTabName: String = "",
     //数据条数
     var count: Long = 0,
-    var tagCount: Int = 0
+    //新增数量
+    var addCount: Int = 0
 )
 
 /**

@@ -73,7 +73,7 @@ public class EmojiSpanBuilder {
         SpannableString spannableString = new SpannableString(showContent);
         while (matcherEmotion.find()) {
             String key = matcherEmotion.group();
-            int imgRes = Emotions.getDrawableResByName(key);
+            int imgRes = Emotions.getNormalResByName(key);
             if (imgRes != -1) {
                 int start = matcherEmotion.start();
                 Drawable drawable = ContextCompat.getDrawable(context, imgRes);

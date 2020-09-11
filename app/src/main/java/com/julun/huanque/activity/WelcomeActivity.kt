@@ -4,11 +4,17 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
+import com.fm.openinstall.OpenInstall
+import com.fm.openinstall.listener.AppWakeUpAdapter
+import com.fm.openinstall.model.AppData
 import com.julun.huanque.R
 import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.ChatBubble
+import com.julun.huanque.common.bean.beans.OpenInstallParamsBean
 import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.manager.VoiceManager
@@ -17,6 +23,7 @@ import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
+import com.julun.huanque.viewmodel.WelcomeViewModel
 
 /**
  *@创建者   dong
@@ -24,17 +31,41 @@ import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
  *@描述 欢迎页
  */
 class WelcomeActivity : BaseActivity() {
+
+    //openinstall返回的bean
+    private var mOpenInstallBean: OpenInstallParamsBean? = null
+
+    private var viewModel: WelcomeViewModel? = null
+
     override fun getLayoutId() = R.layout.act_welcome
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        logger.info("WelcomeActivity initViews")
-        logger.info("Welcome width = ${ScreenUtils.getScreenWidth()},height = ${ScreenUtils.getScreenHeight()}")
+
+        initViewModel()
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         //移除缓存的私信气泡数据
         SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
         checkPermissions()
         VoiceManager.startRing(false)
+        getWakeUp(intent)
+    }
+
+    /**
+     * 初始化ViewModel
+     */
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this).get(WelcomeViewModel::class.java)
+        doOpenInstall(mOpenInstallBean ?: return)
+    }
+
+    /**
+     * OpenInstall解析之后的操作
+     */
+    private fun doOpenInstall(bean: OpenInstallParamsBean) {
+        //用户归因调用
+//        viewModel?.channel = bean.h5ChannelCode
+//        viewModel?.userOpenInstall(bean.h5SID, bean.h5PID, bean.h5ChannelCode)
     }
 
     private fun checkPermissions() {
@@ -45,6 +76,47 @@ class WelcomeActivity : BaseActivity() {
                 //申请存储权限，无论成功还是失败，直接跳转
                 startActivity()
             }
+    }
+
+
+    //获取唤醒参数
+    private fun getWakeUp(intent: Intent?) {
+        if (intent != null && intent.data?.host != null)
+            OpenInstall.getWakeUp(intent, wakeUpAdapter)
+    }
+
+    /**
+     * 唤醒参数获取回调
+     * 如果在没有数据时有特殊的需求，可将AppWakeUpAdapter替换成AppWakeUpListener
+     *
+     * @param appData
+     */
+    private var wakeUpAdapter: AppWakeUpAdapter? = object : AppWakeUpAdapter() {
+        override fun onWakeUp(appData: AppData?) {
+            //获取渠道数据
+            val channelCode = appData?.getChannel() ?: ""
+            if (channelCode.isNotEmpty()) {
+                ChannelCodeHelper.setChannelCode(channelCode)
+            }
+            //获取绑定数据
+            val bindData = appData?.getData()
+            ChannelCodeHelper.saveWakeParams(bindData ?: "")
+            logger.info("获取wakeUpAdapter数据成功：$channelCode 额外参数$bindData")
+//            val bean = ChannelCodeHelper.getWeakUpData(appData ?: return)
+//            if (viewModel != null) {
+//                //viewModel不为空，直接上传
+//                doOpenInstall(bean ?: return)
+//            } else {
+//                //viewModel为空，保存数据
+//                mOpenInstallBean = bean
+//            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        // 此处要调用，否则App在后台运行时，会无法截获
+        OpenInstall.getWakeUp(intent, wakeUpAdapter)
     }
 
     private fun startActivity() {
@@ -62,5 +134,10 @@ class WelcomeActivity : BaseActivity() {
         }
         startActivity(intent)
         finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        wakeUpAdapter = null;
     }
 }
