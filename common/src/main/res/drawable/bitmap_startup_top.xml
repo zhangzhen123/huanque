@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-    android:gravity="fill"
+    android:dither="true"
+    android:filter="true"
+    android:gravity="top|fill_horizontal"
     android:src="@mipmap/startup_top"
-    android:tileMode="clamp">
-</bitmap>
+    android:tileMode="clamp"></bitmap>

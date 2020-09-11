@@ -264,9 +264,9 @@ class FlowerFamousMonthAdapter : BaseMultiItemQuickAdapter<FamousListMultiBean, 
 
     private fun getDayContent(day: Int): String {
         return if (day >= 10) {
-            "$day"
+            "${day}日"
         } else {
-            "0${day}"
+            "0${day}日"
         }
     }
 
@@ -303,7 +303,7 @@ class FlowerFamousMonthAdapter : BaseMultiItemQuickAdapter<FamousListMultiBean, 
     /**
      * 计算REcyclerView的高度
      */
-    private fun computeRecyclerViewHeight(rv: RecyclerView, first: Boolean, count: Int) : Int{
+    private fun computeRecyclerViewHeight(rv: RecyclerView, first: Boolean, count: Int): Int {
         val tempHeight = if (first) {
             //头部高度
             val headerHeight = smallBorder * 2 + dividerWidth + dp2px(5)
