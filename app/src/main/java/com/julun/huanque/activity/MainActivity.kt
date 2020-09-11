@@ -34,6 +34,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.manager.FloatingManager
+import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
@@ -51,6 +52,7 @@ import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
@@ -256,10 +258,12 @@ class MainActivity : BaseActivity() {
         }
         view_leyuan.onClickNew {
             //乐园
-            if (getCurrentFragment() != mLeYuanFragment) {
-                tabIconAnimation(MainPageIndexConst.LEYUAN_FRAGMENT_INDEX)
-            }
-            showFragmentNew(MainPageIndexConst.LEYUAN_FRAGMENT_INDEX)
+//            if (getCurrentFragment() != mLeYuanFragment) {
+//                tabIconAnimation(MainPageIndexConst.LEYUAN_FRAGMENT_INDEX)
+//            }
+//            showFragmentNew(MainPageIndexConst.LEYUAN_FRAGMENT_INDEX)
+            startActivity<LeYuanBirdActivity>()
+
         }
         view_message.onClickNew {
             //消息

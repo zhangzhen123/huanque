@@ -35,6 +35,7 @@ import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.AliplayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
+import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -335,8 +336,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         when (type) {
             HomeMakeMoneyType.Invite -> RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
             HomeMakeMoneyType.Game -> {
-                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, 1)
-                    .navigation()
+//                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, 1)
+//                    .navigation()
+                requireActivity().startActivity<LeYuanBirdActivity>()
             }
             HomeMakeMoneyType.Task -> RNPageActivity.start(requireActivity(), RnConstant.CHAT_COLLEGE_PAGE)
         }

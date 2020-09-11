@@ -16,6 +16,8 @@ import androidx.core.animation.addListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.binioter.guideview.Guide
+import com.binioter.guideview.GuideBuilder
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMFragment
@@ -25,6 +27,7 @@ import com.julun.huanque.common.bean.beans.CombineResult
 import com.julun.huanque.common.bean.beans.UnlockUpgrade
 import com.julun.huanque.common.bean.beans.UpgradeBirdBean
 import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.SoundPoolManager
@@ -33,12 +36,15 @@ import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.live.WebpGifView
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.main.bird.guide.LottieComponent
+import com.julun.huanque.core.ui.main.bird.guide.LottieComponent2
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_leyuan.*
-import kotlinx.android.synthetic.main.view_pk_mic.view.*
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.sdk23.listeners.onTouch
 import org.jetbrains.anko.startActivity
 import java.math.BigInteger
@@ -59,9 +65,11 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
         //一些播放的音频短
         const val BIRD_BUY = "bird/bird_buy.mp3"
+        const val BIRD_COIN_SHORT = "bird/bird_coin_short.mp3"
         const val BIRD_COIN = "bird/bird_coin.mp3"
         const val BIRD_COMBINE = "bird/bird_combine.mp3"
     }
+
 
     private val mFunctionViewModel: BirdFunctionViewModel by activityViewModels()
 
@@ -300,6 +308,144 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         })
         initMusicSet()
         initMusic()
+
+
+    }
+
+    private var guide1: Guide? = null
+    private var isGuide1: Boolean = false
+    private fun initGuideView1() {
+        val needBirdGuide = StorageHelper.getNeedBirdGuide()
+        //todo test
+//        if (!needBirdGuide) {
+//            logger.info("不再需要引导")
+//            return
+//        }
+        val builder = GuideBuilder()
+        builder.setTargetView(iv_bottom_03)
+            .setAlpha(204)
+//            .setHighTargetCorner(20)
+            .setHighTargetPaddingTop(dp2px(18))
+            .setHighTargetPaddingBottom(dp2px(5))
+            .setHighTargetPaddingLeft(dp2px(15))
+            .setHighTargetPaddingRight(dp2px(15))
+            .setAutoDismiss(false)
+//            .setOutsideTouchable(true)
+        builder.setOnVisibilityChangedListener(object : GuideBuilder.OnVisibilityChangedListener {
+            override fun onShown() {
+                isGuide1 = true
+            }
+
+            override fun onDismiss() {
+                logger("引导1关闭")
+                isGuide1 = false
+            }
+        })
+
+        builder.addComponent(LottieComponent(0).apply {
+            this.listener = object : LottieComponent.OnListener {
+                override fun onclickView(viewId: Int) {
+                    logger.info("点击了引导view=$viewId")
+                    if (viewId == R.id.close) {
+                        logger.info("用户主动关闭了引导 不再引导")
+                        guide1?.dismiss()
+                        StorageHelper.setNeedBirdGuide(false)
+                    } else if (viewId == R.id.click_holder) {
+                        mViewModel.buyBird()
+                    }
+
+                }
+
+            }
+        })
+        guide1 = builder.createGuide()
+        guide1?.show(requireActivity())
+    }
+
+    private var guide2: Guide? = null
+    private var isGuide2: Boolean = false
+    private fun initGuideView2() {
+        val builder = GuideBuilder()
+        builder.setTargetView(iv_bottom_03)
+            .setAlpha(204)
+            .setHighTargetPaddingTop(dp2px(18))
+            .setHighTargetPaddingBottom(dp2px(5))
+            .setHighTargetPaddingLeft(dp2px(15))
+            .setHighTargetPaddingRight(dp2px(15))
+            .setAutoDismiss(false)
+//            .setOutsideTouchable(true)
+        builder.setOnVisibilityChangedListener(object : GuideBuilder.OnVisibilityChangedListener {
+            override fun onShown() {
+                isGuide2 = true
+            }
+
+            override fun onDismiss() {
+                logger("引导2关闭")
+                isGuide2 = false
+            }
+        })
+
+        builder.addComponent(LottieComponent(1).apply {
+            this.listener = object : LottieComponent.OnListener {
+                override fun onclickView(viewId: Int) {
+                    logger.info("点击了引导view=$viewId")
+                    if (viewId == R.id.close) {
+                        guide2?.dismiss()
+                        StorageHelper.setNeedBirdGuide(false)
+                        logger.info("用户主动关闭了引导 不再引导")
+                    } else if (viewId == R.id.click_holder) {
+                        mViewModel.buyBird()
+                        //
+                    }
+
+                }
+
+            }
+        })
+        guide2 = builder.createGuide()
+        guide2?.show(requireActivity())
+    }
+
+    private var guide3: Guide? = null
+    private var isGuide3: Boolean = false
+    private fun initGuideView3() {
+        val viewFirst = birdAdapter.getViewByPosition(0, R.id.constraintLayout) ?: return
+        val builder = GuideBuilder()
+        builder.setTargetView(viewFirst)
+            .setAlpha(204)
+            .setHighTargetPaddingTop(dp2px(3))
+            .setHighTargetPaddingBottom(dp2px(3))
+            .setHighTargetPaddingLeft(dp2px(10))
+            .setHighTargetPaddingRight(viewFirst.width)
+            .setAutoDismiss(false)
+            .setOutsideTouchable(true)
+        builder.setOnVisibilityChangedListener(object : GuideBuilder.OnVisibilityChangedListener {
+            override fun onShown() {
+                isGuide3 = true
+            }
+
+            override fun onDismiss() {
+                logger("引导3关闭")
+                isGuide3 = false
+                StorageHelper.setNeedBirdGuide(false)
+            }
+        })
+        builder.addComponent(LottieComponent2(px2dp(viewFirst.width * 2f)).apply {
+            this.listener = object : LottieComponent2.OnListener {
+                override fun onclickView(viewId: Int) {
+                    logger.info("点击了引导view=$viewId")
+                    if (viewId == R.id.close) {
+                        guide3?.dismiss()
+                        StorageHelper.setNeedBirdGuide(false)
+                        logger.info("用户主动关闭了引导 不再引导")
+                    }
+
+                }
+
+            }
+        })
+        guide3 = builder.createGuide()
+        guide3?.show(requireActivity())
     }
 
     private fun gotoWithdraw() {
@@ -321,6 +467,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
         val manager = requireContext().assets
         SoundPoolManager.instance.loadRF(BIRD_BUY, manager.openFd(BIRD_BUY))
+        SoundPoolManager.instance.loadRF(BIRD_COIN_SHORT, manager.openFd(BIRD_COIN_SHORT))
         SoundPoolManager.instance.loadRF(BIRD_COIN, manager.openFd(BIRD_COIN))
         SoundPoolManager.instance.loadRF(BIRD_COMBINE, manager.openFd(BIRD_COMBINE))
 
@@ -342,6 +489,13 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                     birdAdapter.data[bird.currentUpgrade.upgradePos] = bird.currentUpgrade
                     birdAdapter.notifyItemChanged(bird.currentUpgrade.upgradePos)
                     SoundPoolManager.instance.play(BIRD_BUY)
+                }
+                if(isGuide1){
+                    guide1?.dismiss()
+                    initGuideView2()
+                }else if(isGuide2){
+                    guide2?.dismiss()
+                    initGuideView3()
                 }
             } else {
                 ToastUtils.show(it.error?.busiMessage)
@@ -513,13 +667,17 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         if (state) {
             sdv_bottom_bird.hide()
             tv_bird_price.text = StringHelper.formatBigNum(currentCombineItem!!.upgradeSaleCoins)
+            tv_bird_price.backgroundResource=R.mipmap.bg_bird_price_recycler
             tv_recycler.show()
             tv_price_level.text = "可回收"
+            iv_bottom_03.imageResource=R.mipmap.bg_bird_bottom_03_recycler
         } else {
             sdv_bottom_bird.show()
             tv_recycler.hide()
             tv_bird_price.text = StringHelper.formatBigNum(currentUnlockUpgrade!!.upgradeCoins)
+            tv_bird_price.backgroundResource=R.mipmap.bg_bird_price
             tv_price_level.text = "Lv.${currentUnlockUpgrade!!.upgradeLevel}"
+            iv_bottom_03.imageResource=R.mipmap.bg_bird_bottom_03
         }
     }
 
@@ -573,7 +731,9 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
         birdAdapter.setList(info.upgradeList)
         startAniInterval()
-
+        rv_bird_packet.postDelayed({
+            initGuideView1()
+        }, 100)
     }
 
     /**
@@ -601,7 +761,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                             val textView = birdAdapter.getViewByPosition(index, R.id.tv_produce_sec) as? TextView
                             if (imageView != null && textView != null) {
                                 birdAdapter.playAnim2(imageView, textView)
-                                SoundPoolManager.instance.play(BIRD_COIN)
+                                SoundPoolManager.instance.play(BIRD_COIN_SHORT)
                                 if (programId == null) {
                                     mViewModel.startProcessCoins(upgradeBirdBean.onlineCoinsPerSec)
                                 } else {
@@ -730,7 +890,9 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 bird_mask.hide()
                 bird_mask2.hide()
             }
-
+            if (isGuide3) {
+                guide3?.dismiss()
+            }
         })
         val combineAnim = AnimatorSet()
         combineAnim.playSequentially(anim01, anim02)

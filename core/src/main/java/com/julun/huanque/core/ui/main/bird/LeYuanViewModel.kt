@@ -90,7 +90,7 @@ class LeYuanViewModel : BaseViewModel() {
     fun buyBird() {
         viewModelScope.launch {
             request({
-                val level = currentInfo?.unlockUpgrade?.upgradeLevel ?: return@request
+                val level = unlockUpgrade.value?.upgradeLevel ?: return@request
                 val result = service.buyBird(BuyBirdForm(programId, level)).dataConvert()
                 buyResult.value = result.convertRtData()
                 totalCoin.value = result.totalCoins

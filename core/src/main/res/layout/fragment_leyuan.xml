@@ -243,59 +243,68 @@
             app:layout_constraintTop_toTopOf="@+id/sdv_bird_hong_bao"
             tools:text="9" />
 
+        <LinearLayout
+            android:id="@+id/ll_redPacket"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_26"
+            android:layout_marginStart="@dimen/dimen_23"
+            android:layout_marginTop="@dimen/dimen_29"
+            android:background="@drawable/bg_shape_bird_cash"
+            android:gravity="center"
+            android:minWidth="@dimen/dimen_53"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我的零钱"
+                android:textColor="@color/colorAccent_lib"
+                android:textSize="9sp" />
+
+            <TextView
+                android:id="@+id/tv_cash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="9sp"
+                tools:text="99.99元" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_redPacket"
+            android:layout_width="@dimen/dimen_21"
+            android:layout_height="@dimen/dimen_26"
+            android:layout_marginStart="7dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/icon_bird_red_packet"
+            app:layout_constraintBottom_toBottomOf="@+id/ll_redPacket"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ll_redPacket" />
+
+        <ImageView
+            android:id="@+id/iv_bird_guide"
+            android:layout_width="@dimen/dimen_46"
+            android:layout_height="@dimen/dimen_46"
+            android:layout_marginStart="@dimen/dimen_7"
+            android:layout_marginTop="@dimen/dimen_11"
+            android:src="@mipmap/icon_bird_guide"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_redPacket" />
+
+        <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_34"
+            android:layout_marginTop="@dimen/dimen_28"
+            android:layout_marginEnd="@dimen/dimen_9"
+            android:src="@mipmap/icon_bird_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <LinearLayout
-        android:id="@+id/ll_redPacket"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/dimen_26"
-        android:layout_marginStart="@dimen/dimen_23"
-        android:layout_marginTop="@dimen/dimen_29"
-        android:background="@drawable/bg_shape_bird_cash"
-        android:gravity="center"
-        android:minWidth="@dimen/dimen_53"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="我的零钱"
-            android:textColor="@color/colorAccent_lib"
-            android:textSize="9sp" />
-
-        <TextView
-            android:id="@+id/tv_cash"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="9sp"
-            tools:text="99.99元" />
-
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/iv_redPacket"
-        android:layout_width="@dimen/dimen_21"
-        android:layout_height="@dimen/dimen_26"
-        android:layout_marginStart="7dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/icon_bird_red_packet"
-        app:layout_constraintBottom_toBottomOf="@+id/ll_redPacket"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ll_redPacket" />
-
-    <ImageView
-        android:id="@+id/iv_bird_guide"
-        android:layout_width="@dimen/dimen_46"
-        android:layout_height="@dimen/dimen_46"
-        android:layout_marginTop="@dimen/dimen_24"
-        android:layout_marginEnd="@dimen/dimen_7"
-        android:src="@mipmap/icon_bird_guide"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_bird_packet"
@@ -439,8 +448,8 @@
         android:gravity="center"
         android:maxLines="1"
         android:text="立即回收"
-        android:textColor="@color/black_666"
-        android:textSize="@dimen/sp_16"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_18"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_bird_price"
         app:layout_constraintEnd_toEndOf="@+id/iv_bottom_03"
@@ -517,6 +526,7 @@
             android:layout_width="@dimen/dimen_10"
             android:layout_height="@dimen/dimen_89"
             android:scaleType="fitCenter" />
+
         <com.julun.huanque.common.widgets.live.WebpGifView
             android:id="@+id/bird_combine_ani"
             android:layout_width="@dimen/dimen_93"
