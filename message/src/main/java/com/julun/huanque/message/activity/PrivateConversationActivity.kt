@@ -309,6 +309,20 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.addMessageData?.value = null
             }
         })
+        mPrivateConversationViewModel?.propListData?.observe(this, Observer {
+            //道具列表
+            if (it != null) {
+                if (ForceUtils.isIndexNotOutOfBounds(0, it)) {
+                    val firstData = it[0]
+                    tv_msg_card.text = "${firstData.goodsName} ${firstData.count}"
+                }
+
+                if (ForceUtils.isIndexNotOutOfBounds(1, it)) {
+                    val secondData = it[1]
+                    tv_voice_card.text = "${secondData.goodsName} ${secondData.count}"
+                }
+            }
+        })
 
         mPrivateConversationViewModel?.messageChangeState?.observe(this, Observer {
             if (it != null) {

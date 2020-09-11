@@ -275,7 +275,11 @@ data class ActiveBean(var activeList: MutableList<ActiveWord> = mutableListOf())
  * @param beans 鹊币余额
  * @param consumeBeans 本次花费金额
  */
-data class SendMsgBean(var beans: Long = 0, var consumeBeans: Long = 0)
+data class SendMsgBean(
+    var beans: Long = 0, var consumeBeans: Long = 0,
+//道具列表
+    var propList: MutableList<PrivateProp> = mutableListOf()
+)
 
 /**
  * 图文混排对象

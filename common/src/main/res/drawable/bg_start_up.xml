@@ -5,14 +5,11 @@
             <solid android:color="@color/white" />
         </shape>
     </item>
-    <item
-        android:drawable="@drawable/bitmap_startup_top" />
+    <item android:drawable="@drawable/bitmap_startup_top" />
     <!--    <item android:gravity="top|center_horizontal">-->
     <!--        <bitmap-->
     <!--            android:src="@mipmap/startup_top"-->
     <!--            android:tileMode="clamp"></bitmap>-->
     <!--    </item>-->
-    <item
-        android:drawable="@drawable/bitmap_startup_bottom"
-        android:gravity="bottom" />
+    <item android:drawable="@drawable/bitmap_startup_bottom" />
 </layer-list>

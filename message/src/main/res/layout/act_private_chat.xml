@@ -32,12 +32,12 @@
         android:background="@drawable/bg_intimate_level"
         android:gravity="center"
         android:includeFontPadding="false"
+        android:text="lv.0"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_10"
         app:layout_constraintBottom_toBottomOf="@id/iv_intimate"
         app:layout_constraintLeft_toLeftOf="@id/iv_intimate"
-        app:layout_constraintRight_toRightOf="@id/iv_intimate"
-        android:text="lv.0" />
+        app:layout_constraintRight_toRightOf="@id/iv_intimate" />
 
 
     <TextView
@@ -113,6 +113,23 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_msg_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="150dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_voice_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="200dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bottom_action"

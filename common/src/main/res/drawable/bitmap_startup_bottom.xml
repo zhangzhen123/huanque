@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-    android:gravity="fill"
+    android:gravity="bottom"
     android:src="@mipmap/startup_bottom"
     android:tileMode="disabled">
 </bitmap>
