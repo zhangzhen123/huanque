@@ -11,5 +11,7 @@
     <!--            android:src="@mipmap/startup_top"-->
     <!--            android:tileMode="clamp"></bitmap>-->
     <!--    </item>-->
-    <item android:drawable="@drawable/bitmap_startup_bottom" />
+    <item
+        android:drawable="@drawable/bitmap_startup_bottom"
+        android:gravity="bottom" />
 </layer-list>
