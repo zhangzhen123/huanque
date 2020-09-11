@@ -75,6 +75,9 @@ object SPParamKey {
 
     //私信聊天框设置
     const val PRIVATE_CHAT_BUBBLE = "PRIVATE_CHAT_BUBBLE"
+
+    //欢迎页有没有显示过隐私弹窗
+    const val Welcome_privacy_Fragment = "Welcome_privacy_Fragment"
 }
 
 /**
