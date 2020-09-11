@@ -531,10 +531,13 @@ class PrivateConversationActivity : BaseActivity() {
         }
         iv_intimate.onClickNew {
             //显示欢遇弹窗
-            RNPageActivity.start(
-                this,
-                RnConstant.INTIMATE_LEVEL_PAGE,
-                Bundle().apply { putLong("friendId", mPrivateConversationViewModel?.targetIdData?.value ?: 0L) })
+            val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: 0L
+            if (targetId > 0) {
+                RNPageActivity.start(
+                    this,
+                    RnConstant.INTIMATE_LEVEL_PAGE,
+                    Bundle().apply { putLong("friendId", targetId) })
+            }
         }
 
         iv_phone.onClickNew {

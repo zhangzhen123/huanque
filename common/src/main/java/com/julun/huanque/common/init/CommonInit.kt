@@ -115,8 +115,12 @@ class CommonInit {
         return mContext
     }
 
-    fun init(application: Application) {
+    fun initContext(application: Application){
         mContext = application
+    }
+
+    fun init(application: Application) {
+//        mContext = application
         application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity?) {
                 isAppOnForeground = false
@@ -278,7 +282,6 @@ class CommonInit {
     var taskDispatcher: TaskDispatcher? = null
     fun initTask(application: Application) {
         ToastUtils.init(application)//初始化自定义土司
-        SharedPreferencesUtils.init(application)
         RongCloudManager.clearRoomList()
         //手动设置Rx ComputationScheduler线程数目
         //todo
@@ -306,7 +309,7 @@ class CommonInit {
     suspend fun initWithCoroutines(application: Application) {
         val currentTime = System.currentTimeMillis()
         logger("common initWithCoroutines start----${Thread.currentThread()} ")
-        mContext = application
+//        mContext = application
         application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity?) {
                 isAppOnForeground = false

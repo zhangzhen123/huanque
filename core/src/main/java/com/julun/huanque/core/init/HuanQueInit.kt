@@ -52,7 +52,7 @@ class HuanQueInit private constructor() {
     }
 
     fun init(application: Application) {
-        mContext = application
+//        mContext = application
         if (AppHelper.isMainProcess(application)) {
 //            CommonInit.getInstance().setBaseUrlByMode(debug)
             //使用TaskDispatcher分发进行初始化
@@ -60,8 +60,12 @@ class HuanQueInit private constructor() {
         }
     }
 
-    suspend fun initWithCoroutine(application: Application) {
+    fun initContext(application: Application){
         mContext = application
+    }
+
+    suspend fun initWithCoroutine(application: Application) {
+//        mContext = application
         if (AppHelper.isMainProcess(application)) {
 //            CommonInit.getInstance().setBaseUrlByMode(debug)
             //使用协程初始化

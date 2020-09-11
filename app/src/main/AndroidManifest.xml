@@ -28,6 +28,7 @@
         tools:replace="android:icon, android:theme,android:allowBackup,android:supportsRtl">
         <activity
             android:name=".activity.WelcomeActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeL">
             <intent-filter>
@@ -35,6 +36,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="mn9xou" />
+            </intent-filter>
+
         </activity>
 
         <activity
@@ -90,30 +101,38 @@
         <activity
             android:name=".activity.PrivacyActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.safe.DestroyAccountActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.safe.DestroyAccountActivity"
+            android:screenOrientation="portrait" />
 
         <!-- since 2.0.0 optional 可选项，使用一键登录功能必须添加  -->
         <!-- since 2.1.1 optional 可选项，通过screenOrientation设置授权页面横竖屏展示  -->
         <activity
             android:name="com.cmic.sso.sdk.activity.OAuthActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop">
-        </activity>
+            android:launchMode="singleTop"></activity>
         <!-- since 2.0.0 optional 可选项，使用一键登录功能必须添加  -->
         <!-- since 2.1.1 optional 可选项，通过screenOrientation设置授权页面横竖屏展示  -->
         <activity
             android:name="com.cmic.sso.sdk.activity.LoginAuthActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop">
-        </activity>
+            android:launchMode="singleTop"></activity>
         <!-- since 2.0.0 optional 可选项，使用一键登录功能必须添加  -->
         <!-- since 2.1.1 optional 可选项，通过screenOrientation设置授权页面横竖屏展示  -->
-        <activity android:name="cn.jiguang.verifysdk.CtLoginActivity"
+        <activity
+            android:name="cn.jiguang.verifysdk.CtLoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/ActivityDialogStyle"
-            android:launchMode="singleTop">
-        </activity>
+            android:launchMode="singleTop"
+            android:theme="@style/ActivityDialogStyle"></activity>
+
+        <meta-data
+            android:name="com.openinstall.APP_KEY"
+            android:value="mn9xou" />
+
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="bozai" />
+
 
         <!-- 下载服务 -->
         <service android:name=".app.update.UpgradeApkService">

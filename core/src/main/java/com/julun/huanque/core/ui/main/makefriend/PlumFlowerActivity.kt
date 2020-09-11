@@ -64,6 +64,8 @@ class PlumFlowerActivity : BaseActivity() {
         initMagicIndicator()
         if (type == "Famous") {
             pager.currentItem = 2
+        } else {
+            pager.currentItem = 1
         }
     }
 
