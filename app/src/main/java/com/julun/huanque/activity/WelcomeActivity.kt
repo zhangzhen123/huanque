@@ -136,11 +136,6 @@ class WelcomeActivity : BaseActivity() {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        // 此处要调用，否则App在后台运行时，会无法截获
-        OpenInstall.getWakeUp(intent, wakeUpAdapter)
-    }
 
     private fun startActivity() {
         val registerUser = SessionUtils.getIsRegUser()

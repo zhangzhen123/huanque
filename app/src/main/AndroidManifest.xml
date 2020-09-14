@@ -28,7 +28,6 @@
         tools:replace="android:icon, android:theme,android:allowBackup,android:supportsRtl">
         <activity
             android:name=".activity.WelcomeActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeL">
             <intent-filter>
