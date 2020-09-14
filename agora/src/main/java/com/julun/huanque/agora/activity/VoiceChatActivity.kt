@@ -5,9 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
@@ -70,13 +74,20 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     private var mCallingContentDisposable: Disposable? = null
 
-    private var am: AudioManager? = null
+    private var mAudioManager: AudioManager? = null
+
+    private var mPlaybackAttributes: AudioAttributes? = null
+
+    private var mFocusRequest: AudioFocusRequest? = null
+
+    private var mListenerHandler: Handler? = null
 
     //音频播放器
     private var mPlayer: MediaPlayer? = null
 
     //对方是否加入频道的标记位
     private var otherJoinChannel = false
+
 
     private val mAudioListener = AudioManager.OnAudioFocusChangeListener {
         logger.info("Voice focusChange = $it")
@@ -93,8 +104,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 申请音频焦点
      */
     private fun requestAudioFocus() {
-        am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
-        val result = am?.requestAudioFocus(
+        mAudioManager = mAudioManager ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        val result = mAudioManager?.requestAudioFocus(
             mAudioListener,  // Use the music stream.
             AudioManager.STREAM_SYSTEM,  // Request permanent focus.
             AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
@@ -290,15 +301,73 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 播放音效
      */
     private fun playAudio(calling: Boolean) {
-        mPlayer = if (calling) {
-            MediaPlayer.create(this, R.raw.ring)?.apply { isLooping = true }
-        } else {
-            MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }
-        }
-        mPlayer?.start()
 
-//        am?.mode = AudioManager.MODE_NORMAL
-//        am?.isSpeakerphoneOn = true;
+        mAudioManager = mAudioManager ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+
+        mAudioManager?.mode = AudioManager.MODE_NORMAL
+        mAudioManager?.isSpeakerphoneOn = true
+
+        //静音其他音效
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mAudioManager?.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, AudioManager.FLAG_PLAY_SOUND)
+        } else {
+            mAudioManager?.setStreamMute(AudioManager.STREAM_MUSIC, true)
+        }
+
+        mPlayer?.reset()
+        mPlayer = mPlayer ?: MediaPlayer()
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mPlaybackAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build()
+
+            mPlayer?.setAudioAttributes(mPlaybackAttributes)
+        } else {
+            mPlayer?.setAudioStreamType(AudioManager.STREAM_ALARM);//音量跟随闹钟音量
+        }
+        val sourceName = if (calling) {
+            "ring.mp3"
+        } else {
+            "finish.mp3"
+        }
+
+        val afd = assets.openFd(sourceName)
+        mPlayer?.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+        mPlayer?.prepare()
+        val mFocusLock = Any()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mListenerHandler = Handler()
+            mFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
+                .setAudioAttributes(mPlaybackAttributes!!)
+                .setAcceptsDelayedFocusGain(true)
+                .setWillPauseWhenDucked(true)
+                .setOnAudioFocusChangeListener(mAudioListener, mListenerHandler!!)
+                .build()
+
+            // requesting audio focus
+            val res = mAudioManager?.requestAudioFocus(mFocusRequest!!)
+            synchronized(mFocusLock) {
+                if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    mPlayer?.start()
+                }
+            }
+        } else {
+            val res = mAudioManager?.requestAudioFocus(
+                mAudioListener,  // Use the music stream.
+                AudioManager.STREAM_SYSTEM,  // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
+            )
+
+            synchronized(mFocusLock) {
+                if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    mPlayer?.start()
+                }
+            }
+        }
+
     }
 
     override fun initEvents(rootView: View) {
@@ -442,7 +511,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                         ll_voice_accept.hide()
 
                         mPlayer?.stop()
-                        mPlayer = null
 
                         //取消超时倒计时
                         mDisposable?.dispose()
@@ -453,7 +521,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     VoiceChatViewModel.VOICE_CLOSE -> {
                         //结束状态
                         mPlayer?.stop()
-                        mPlayer = null
 
                         playAudio(false)
                         //退出频道
@@ -882,7 +949,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             tv_recharge.hide()
             tv_attention.hide()
             tv_surplus_time.hide()
-
         } else {
             //显示视图
             view_balance.show()
@@ -912,17 +978,23 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         leaveChannel()
         mPlayer?.stop()
         mPlayer = null
-
     }
 
     /**
      * 释放音频焦点
      */
     private fun releaseVideoFocus() {
-        am?.isSpeakerphoneOn = true
-        am?.abandonAudioFocus(
-            mAudioListener
-        )
+        mAudioManager?.isSpeakerphoneOn = true
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mFocusRequest?.let {
+                mAudioManager?.abandonAudioFocusRequest(it)
+            }
+        } else {
+            mAudioManager?.abandonAudioFocus(
+                mAudioListener
+            )
+        }
+
     }
 
     override fun onDestroy() {
@@ -930,6 +1002,13 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         MessageProcessor.clearProcessors(false)
         //发送事件，通知刷新语音券
         EventBus.getDefault().post(RefreshVoiceCardEvent())
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //静音其他音效
+            mAudioManager?.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE, AudioManager.FLAG_PLAY_SOUND)
+        } else {
+            mAudioManager?.setStreamMute(AudioManager.STREAM_MUSIC, false)
+        }
     }
 
     override fun onBackPressed() {
@@ -943,14 +1022,15 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 禁用其他音效
      */
     private fun sendMediaButton() {
-        am?.mode = AudioManager.MODE_IN_COMMUNICATION
+        mAudioManager?.mode = AudioManager.MODE_IN_COMMUNICATION
         //先判断后台是否再播放音乐
-        if (am?.isMusicActive == true) {
+        if (mAudioManager?.isMusicActive == true) {
             val keyEvent = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_CLOSE);
             val intent = Intent(Intent.ACTION_MEDIA_BUTTON);
             intent.putExtra(Intent.EXTRA_KEY_EVENT, keyEvent);
             sendOrderedBroadcast(intent, null);
         }
     }
+
 
 }

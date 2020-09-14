@@ -255,7 +255,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             if (mAnonymousVoiceViewModel?.currentState?.value == AnonymousVoiceViewModel.MATCH) {
                 MediaPlayer.create(this, R.raw.anonymous_match)?.apply { isLooping = true }
             } else {
-                MediaPlayer.create(this, R.raw.ring)?.apply { isLooping = true }
+                MediaPlayer.create(this, R.raw.anonymous_match)?.apply { isLooping = true }
             }
         } else {
             MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }

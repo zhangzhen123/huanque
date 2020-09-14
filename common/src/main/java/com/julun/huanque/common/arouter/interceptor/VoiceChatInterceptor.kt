@@ -67,7 +67,7 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
                 val earPhoneLinked = GlobalUtils.getEarphoneLinkStatus()
                 logger("Interceptor 耳机是否插入 earPhoneLinked = $earPhoneLinked")
                 bundle.putBoolean(ParamConstant.Earphone, earPhoneLinked)
-                ToastUtils.show("耳机是否插入 $earPhoneLinked")
+//                ToastUtils.show("耳机是否插入 $earPhoneLinked")
             }
 
 
