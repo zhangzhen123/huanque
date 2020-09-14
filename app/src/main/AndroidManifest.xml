@@ -131,7 +131,7 @@
 
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="bozai" />
+            android:value="" />
 
 
         <!-- 下载服务 -->
