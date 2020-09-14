@@ -482,14 +482,15 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     extra.putBoolean(IntentParamKey.EXTRA_FLAG_GO_HOME.name, false)
                     jump(WebActivity::class.java, extra = extra)
                 }
-                BannerTouchType.Toast -> {
-                    //弹窗类型
-                    if (model.touchValue == "FirstRecharge") {
-                        //todo
-//                        val rechargeInfo = mFirstRechargeViewModel?.oneYuanInfo?.value
-//                            ?: return@Delegate
-//                        OneYuanDialogFragment.newInstance(rechargeInfo).showPositive(childFragmentManager, "OneYuanDialogFragment")
-                    }
+                BannerTouchType.Recharge -> {
+                    //充值页面
+                    requireActivity().startActivity<RechargeCenterActivity>()
+                }
+                BannerTouchType.InviteFriend -> {
+                    //邀请好友
+                    RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+                }
+                else -> {
                 }
             }
         }
