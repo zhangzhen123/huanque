@@ -28,6 +28,7 @@ import com.julun.huanque.common.net.RequestCaller
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.handleResponse
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.whatEver
 import com.julun.huanque.common.utils.*
 import io.rong.imlib.model.Conversation
@@ -63,7 +64,10 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
                 mUserId = bundle.getLong(ParamConstant.UserId)
                 mType = bundle.getString(ParamConstant.TYPE) ?: ""
                 //耳机是否插入
-                bundle.putBoolean(ParamConstant.Earphone, GlobalUtils.getEarphoneLinkStatus())
+                val earPhoneLinked = GlobalUtils.getEarphoneLinkStatus()
+                logger("Interceptor 耳机是否插入 earPhoneLinked = $earPhoneLinked")
+                bundle.putBoolean(ParamConstant.Earphone, earPhoneLinked)
+                ToastUtils.show("耳机是否插入 $earPhoneLinked")
             }
 
 

@@ -19,7 +19,6 @@ import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
-import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
@@ -53,7 +52,7 @@ class WelcomeActivity : BaseActivity() {
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         //移除缓存的私信气泡数据
         SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
-        VoiceManager.startRing(false)
+//        VoiceManager.startRing(false)
         getWakeUp(intent)
 
         if (mShowFragment) {

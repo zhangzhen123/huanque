@@ -11,6 +11,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -30,7 +31,6 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.HideFloatingEvent
 import com.julun.huanque.common.constant.*
-import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
@@ -100,6 +100,9 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     private var communicationTime = 0L
 
     private var am: AudioManager? = null
+
+    //音频播放器
+    private var mPlayer: MediaPlayer? = null
 
     //其他人未加入倒计时
     private var mOtherNoJoinDisposable: Disposable? = null
@@ -246,15 +249,18 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
      * 播放音效
      */
     private fun playAudio(calling: Boolean) {
-        if (calling) {
+        mPlayer?.stop()
+        mPlayer = null
+        mPlayer = if (calling) {
             if (mAnonymousVoiceViewModel?.currentState?.value == AnonymousVoiceViewModel.MATCH) {
-                VoiceManager.startMatch()
+                MediaPlayer.create(this, R.raw.anonymous_match)?.apply { isLooping = true }
             } else {
-                VoiceManager.startRing()
+                MediaPlayer.create(this, R.raw.ring)?.apply { isLooping = true }
             }
         } else {
-            VoiceManager.startFinish()
+            MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }
         }
+        mPlayer?.start()
 
         am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
         am?.mode = AudioManager.MODE_NORMAL
@@ -270,7 +276,8 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         })
         mAnonymousVoiceViewModel?.currentState?.observe(this, Observer {
             if (it != null) {
-                VoiceManager.stopAllVoice()
+                mPlayer?.stop()
+                mPlayer = null
                 when (it) {
                     AnonymousVoiceViewModel.WAIT -> {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
@@ -1001,7 +1008,8 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         stopMatch()
         matchCompositeDisposable.clear()
         voiceCompositeDisposable.clear()
-        VoiceManager.stopAllVoice()
+        mPlayer?.stop()
+        mPlayer = null
         val currentState = mAnonymousVoiceViewModel?.currentState?.value
         if (currentState == AnonymousVoiceViewModel.MATCH) {
             //调用取消匹配接口
@@ -1129,7 +1137,8 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         leaveChannel()
         mDisposable?.dispose()
-        VoiceManager.stopAllVoice()
+        mPlayer?.stop()
+        mPlayer = null
     }
 
     override fun onBackPressed() {

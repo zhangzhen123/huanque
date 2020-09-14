@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.media.AudioManager
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -30,7 +31,6 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.hide
@@ -71,6 +71,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     private var mCallingContentDisposable: Disposable? = null
 
     private var am: AudioManager? = null
+
+    //音频播放器
+    private var mPlayer: MediaPlayer? = null
 
     //对方是否加入频道的标记位
     private var otherJoinChannel = false
@@ -287,15 +290,15 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 播放音效
      */
     private fun playAudio(calling: Boolean) {
-        if (calling) {
-            VoiceManager.startRing()
+        mPlayer = if (calling) {
+            MediaPlayer.create(this, R.raw.ring)?.apply { isLooping = true }
         } else {
-            VoiceManager.startFinish()
+            MediaPlayer.create(this, R.raw.finish).apply { isLooping = false }
         }
+        mPlayer?.start()
 
-        am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
-        am?.mode = AudioManager.MODE_NORMAL
-        am?.isSpeakerphoneOn = !mEarphone
+//        am?.mode = AudioManager.MODE_NORMAL
+//        am?.isSpeakerphoneOn = true;
     }
 
     override fun initEvents(rootView: View) {
@@ -438,7 +441,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 //                        ll_hands_free.isEnabled = !GlobalUtils.getEarphoneLinkStatus()
                         ll_voice_accept.hide()
 
-                        VoiceManager.stopAllVoice()
+                        mPlayer?.stop()
+                        mPlayer = null
 
                         //取消超时倒计时
                         mDisposable?.dispose()
@@ -448,7 +452,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     }
                     VoiceChatViewModel.VOICE_CLOSE -> {
                         //结束状态
-                        VoiceManager.stopAllVoice()
+                        mPlayer?.stop()
+                        mPlayer = null
 
                         playAudio(false)
                         //退出频道
@@ -903,9 +908,10 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         super.onViewDestroy()
         waveView.stopImmediately()
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
-//        releaseVideoFocus()
+        releaseVideoFocus()
         leaveChannel()
-        VoiceManager.stopAllVoice()
+        mPlayer?.stop()
+        mPlayer = null
 
     }
 
@@ -913,6 +919,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 释放音频焦点
      */
     private fun releaseVideoFocus() {
+        am?.isSpeakerphoneOn = true
         am?.abandonAudioFocus(
             mAudioListener
         )
