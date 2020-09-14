@@ -128,6 +128,6 @@ object ParamConstant {
     const val REPORT_TYPE = "reportType"
 
     const val CHAT_MODE = "CHAT_MODE"
-
-
+    //直播间观看奖励需要倒计时
+    const val BIRD_AWARD_INFO= "BIRD_AWARD_FINO"
 }

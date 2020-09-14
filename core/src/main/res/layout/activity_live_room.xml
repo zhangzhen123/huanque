@@ -12,12 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/live_bg_color">
+
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/cur_live_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
             app:actualImageScaleType="centerCrop" />
+
         <FrameLayout
             android:id="@+id/playerPanel"
             android:layout_width="match_parent"
@@ -263,9 +265,15 @@
             <!--                android:layout_width="@dimen/right_drawer_width"-->
             <!--                android:layout_height="match_parent"-->
             <!--                app:layout_constraintEnd_toEndOf="parent" />-->
+            <com.julun.huanque.core.widgets.live.BirdAwardCounterView
+                android:id="@+id/bird_count_view"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_60"
+                android:layout_marginStart="@dimen/dimen_11"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/liveRunwayView" />
         </com.julun.huanque.core.widgets.live.slide.SlideViewContainer>
-
-
 
 
     </com.julun.huanque.core.widgets.live.slide.ScrollVerticalContainer>

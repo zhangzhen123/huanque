@@ -111,7 +111,7 @@
             android:id="@+id/gameImage"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:src="@drawable/selector_live_action_game" />
+            android:src="@mipmap/icon_live_game_bird" />
 
         <View
             android:id="@+id/tv_light_count"

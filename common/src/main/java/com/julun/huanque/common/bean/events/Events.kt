@@ -170,3 +170,8 @@ class BannedAndClosePlayer() : Serializable
  */
 class FastLoginEvent() : Serializable
 
+/**
+ * 关闭养鸟
+ */
+class HideBirdEvent() : Serializable
+

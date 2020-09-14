@@ -840,6 +840,8 @@ object PlayerFrom {
     const val DESTROY_ACCOUNT = "destroyAccount"
 
     const val Push = "Push"
+    //养鹊
+    const val Magpie = "Magpie"
 }
 
 /**

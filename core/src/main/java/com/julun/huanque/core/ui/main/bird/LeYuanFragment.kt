@@ -26,6 +26,7 @@ import com.julun.huanque.common.bean.beans.BirdHomeInfo
 import com.julun.huanque.common.bean.beans.CombineResult
 import com.julun.huanque.common.bean.beans.UnlockUpgrade
 import com.julun.huanque.common.bean.beans.UpgradeBirdBean
+import com.julun.huanque.common.bean.events.HideBirdEvent
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.StringHelper
@@ -36,6 +37,7 @@ import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.live.WebpGifView
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.guide.LottieComponent
 import com.julun.huanque.core.ui.main.bird.guide.LottieComponent2
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
@@ -43,6 +45,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_leyuan.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.sdk23.listeners.onTouch
@@ -103,8 +106,24 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     private var birdFunctionDialogFragment: BirdFunctionDialogFragment? = null
 
     private var mBirdGotFunctionDialogFragment: BirdGotFunctionDialogFragment? = null
+    private var isInLivePage = false
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         programId = arguments?.getLong(IntentParamKey.PROGRAM_ID.name)
+        val activity = requireActivity()
+        if (activity is PlayerActivity) {
+            isInLivePage = true
+            csl_top.inVisible()
+            view_top_holder.show()
+            view_top_holder.onTouch { _, _ ->
+                logger("触摸头部关闭弹窗")
+                EventBus.getDefault().post(HideBirdEvent())
+                false
+            }
+        } else if (activity is LeYuanBirdActivity) {
+            isInLivePage = false
+            csl_top.show()
+            view_top_holder.hide()
+        }
         initViewModel()
         rv_bird_packet.adapter = birdAdapter
         rv_bird_packet.layoutManager = GridLayoutManager(requireContext(), 4)
@@ -178,6 +197,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         }
         iv_bird_guide.onClickNew {
             logger.info("点击了规则")
+            //todo 跳转h5
+
 
         }
         iv_shop.onClickNew {
@@ -306,10 +327,10 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
             }
         })
-        initMusicSet()
-        initMusic()
-
-
+        if (!isInLivePage) {
+            initMusicSet()
+            initMusic()
+        }
     }
 
     private var guide1: Guide? = null
@@ -473,6 +494,12 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
     }
 
+    private fun playSound(soundPath: String) {
+        if (!isInLivePage) {
+            SoundPoolManager.instance.play(soundPath)
+        }
+    }
+
     private fun initViewModel() {
         mViewModel.programId = programId
         mViewModel.homeInfo.observe(this, Observer {
@@ -488,12 +515,13 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 if (bird.currentUpgrade.upgradePos < birdAdapter.data.size) {
                     birdAdapter.data[bird.currentUpgrade.upgradePos] = bird.currentUpgrade
                     birdAdapter.notifyItemChanged(bird.currentUpgrade.upgradePos)
-                    SoundPoolManager.instance.play(BIRD_BUY)
+//                    SoundPoolManager.instance.play(BIRD_BUY)
+                    playSound(BIRD_BUY)
                 }
-                if(isGuide1){
+                if (isGuide1) {
                     guide1?.dismiss()
                     initGuideView2()
-                }else if(isGuide2){
+                } else if (isGuide2) {
                     guide2?.dismiss()
                     initGuideView3()
                 }
@@ -511,7 +539,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         })
         mViewModel.recycleResult.observe(this, Observer {
             if (it.isSuccess()) {
-                SoundPoolManager.instance.play(BIRD_COIN)
+//                SoundPoolManager.instance.play(BIRD_COIN)
+                playSound(BIRD_COIN)
                 playRecycleBirdCoin(currentCombineItem?.upgradeSaleCoins)
                 val currentIndex = birdAdapter.data.indexOf(currentCombineItem)
                 if (currentIndex != -1) {
@@ -667,17 +696,17 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         if (state) {
             sdv_bottom_bird.hide()
             tv_bird_price.text = StringHelper.formatBigNum(currentCombineItem!!.upgradeSaleCoins)
-            tv_bird_price.backgroundResource=R.mipmap.bg_bird_price_recycler
+            tv_bird_price.backgroundResource = R.mipmap.bg_bird_price_recycler
             tv_recycler.show()
             tv_price_level.text = "可回收"
-            iv_bottom_03.imageResource=R.mipmap.bg_bird_bottom_03_recycler
+            iv_bottom_03.imageResource = R.mipmap.bg_bird_bottom_03_recycler
         } else {
             sdv_bottom_bird.show()
             tv_recycler.hide()
             tv_bird_price.text = StringHelper.formatBigNum(currentUnlockUpgrade!!.upgradeCoins)
-            tv_bird_price.backgroundResource=R.mipmap.bg_bird_price
+            tv_bird_price.backgroundResource = R.mipmap.bg_bird_price
             tv_price_level.text = "Lv.${currentUnlockUpgrade!!.upgradeLevel}"
-            iv_bottom_03.imageResource=R.mipmap.bg_bird_bottom_03
+            iv_bottom_03.imageResource = R.mipmap.bg_bird_bottom_03
         }
     }
 
@@ -731,9 +760,11 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
         birdAdapter.setList(info.upgradeList)
         startAniInterval()
-        rv_bird_packet.postDelayed({
-            initGuideView1()
-        }, 100)
+        if (requireActivity() is LeYuanBirdActivity) {
+            rv_bird_packet.postDelayed({
+                initGuideView1()
+            }, 100)
+        }
     }
 
     /**
@@ -761,7 +792,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                             val textView = birdAdapter.getViewByPosition(index, R.id.tv_produce_sec) as? TextView
                             if (imageView != null && textView != null) {
                                 birdAdapter.playAnim2(imageView, textView)
-                                SoundPoolManager.instance.play(BIRD_COIN_SHORT)
+//                                SoundPoolManager.instance.play(BIRD_COIN_SHORT)
+                                playSound(BIRD_COIN_SHORT)
                                 if (programId == null) {
                                     mViewModel.startProcessCoins(upgradeBirdBean.onlineCoinsPerSec)
                                 } else {
@@ -878,7 +910,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         //(3)靠拢后 播放合体特效
         anim02.addListener(onEnd = {
             //播放特效 播放声音
-            SoundPoolManager.instance.play(BIRD_COMBINE)
+//            SoundPoolManager.instance.play(BIRD_COMBINE)
+            playSound(BIRD_COMBINE)
             bird_combine_ani.show()
             ImageUtils.loadWebpImageLocal(bird_combine_ani, R.mipmap.anim_bird_combine)
             logger.info("动画播放完了 开始播放特效")

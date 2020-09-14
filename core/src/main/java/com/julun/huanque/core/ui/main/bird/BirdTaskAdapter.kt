@@ -31,8 +31,12 @@ class BirdTaskAdapter : BaseQuickAdapter<BirdTask, BaseViewHolder>(R.layout.item
 
     override fun convert(holder: BaseViewHolder, item: BirdTask) {
 //        val imgView = holder.getView<SimpleDraweeView>(R.id.sdv_img)
-
-        holder.setText(R.id.tv_title, "${item.taskName}(${item.currentNum}/${item.targetNum})")
+        val title = if (item.targetNum == 0) {
+            item.taskName
+        } else {
+            "${item.taskName}(${item.currentNum}/${item.targetNum})"
+        }
+        holder.setText(R.id.tv_title, title)
             .setText(R.id.tv_desc, item.taskDesc).setText(R.id.tv_active, "活跃度+${item.awardActive}")
             .setText(R.id.tvAction, item.taskStatusText)
         val tvAction = holder.getView<TextView>(R.id.tvAction)
@@ -57,17 +61,17 @@ class BirdTaskAdapter : BaseQuickAdapter<BirdTask, BaseViewHolder>(R.layout.item
         }
         when (item.awardType) {
             BirdTaskAwardType.Small -> {
-                holder.setText(R.id.tv_coin_title,"少量金币")
+                holder.setText(R.id.tv_coin_title, "少量金币")
             }
             BirdTaskAwardType.Middle -> {
-                holder.setText(R.id.tv_coin_title,"中量金币")
+                holder.setText(R.id.tv_coin_title, "中量金币")
             }
 
             BirdTaskAwardType.Big -> {
-                holder.setText(R.id.tv_coin_title,"大量金币")
+                holder.setText(R.id.tv_coin_title, "大量金币")
             }
-            else->{
-                holder.setText(R.id.tv_coin_title,"少量金币")
+            else -> {
+                holder.setText(R.id.tv_coin_title, "少量金币")
             }
 
         }

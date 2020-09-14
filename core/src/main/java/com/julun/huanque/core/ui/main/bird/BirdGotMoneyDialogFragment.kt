@@ -53,7 +53,7 @@ class BirdGotMoneyDialogFragment : BaseDialogFragment() {
     private fun renderData() {
         val money = arguments?.getString("money")
         if (money != null) {
-            tv_title.text = "恭喜您成功领取了\n ${money}元零钱"
+            tv_title.text = money
         }
     }
 

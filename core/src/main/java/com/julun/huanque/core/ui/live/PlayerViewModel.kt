@@ -740,7 +740,7 @@ class PlayerViewModel : BaseViewModel() {
         return false
     }
 
-    fun requestBubble() {
+    private fun requestBubble() {
         viewModelScope.launch {
             request({
                 var bubbleInfo = SPUtils.getObject<ChatBubble>(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble::class.java)
@@ -756,4 +756,17 @@ class PlayerViewModel : BaseViewModel() {
 
         }
     }
+
+    //在直播间倒计时60秒后请求领取
+    fun watchLiveEnd() {
+        viewModelScope.launch {
+            request({
+                val result = liveService.watchLiveEnd(ProgramIdForm(programId)).dataConvert()
+            }, {
+                it.printStackTrace()
+            })
+
+        }
+    }
+
 }

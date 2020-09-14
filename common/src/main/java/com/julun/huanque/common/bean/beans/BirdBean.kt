@@ -44,7 +44,7 @@ data class FunctionBird(
     var functionIcon: String = "",
     var functionName: String = "",
     var functionNum: String = ""
-):Serializable
+) : Serializable
 
 data class BuyBirdResult(
     var coinsPerSec: BigInteger = BigInteger.ZERO,
@@ -124,7 +124,8 @@ data class BirdTask(
     var taskStatus: String = "",
     var taskStatusText: String = "",
     var taskImage: String = "",
-    var awardType: String = ""
+    var awardType: String = "",
+    var taskParams: String = ""
 )
 
 data class BirdAward(
@@ -165,3 +166,10 @@ data class FunctionNumInfo(
     var wealth: String = "",
     var weaver: String = ""
 )
+
+data class BirdLiveAward(
+    var time: Long = 0,
+    var awardType: String = "",
+    var taskCode: String = ""
+
+) : Serializable

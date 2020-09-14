@@ -96,7 +96,8 @@ class BirdFunctionDialogFragment : BaseDialogFragment() {
             it ?: return@Observer
             if (it.isSuccess()) {
                 dismiss()
-                val dialog = BirdGotMoneyDialogFragment.newInstance(it.requireT().cash)
+                val content="恭喜您成功领取了\n ${it.requireT().cash}元零钱"
+                val dialog = BirdGotMoneyDialogFragment.newInstance(content)
                 dialog.show(requireActivity(), "BirdGotMoneyDialogFragment")
             }
             tv_bird_fly.isEnabled = true

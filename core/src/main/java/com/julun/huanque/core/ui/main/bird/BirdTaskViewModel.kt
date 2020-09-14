@@ -5,11 +5,13 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.RandomRoomForm
 import com.julun.huanque.common.bean.forms.TaskBirdActiveReceive
 import com.julun.huanque.common.bean.forms.TaskBirdReceive
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LeYuanService
+import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.BalanceUtils
 import kotlinx.coroutines.launch
@@ -28,9 +30,14 @@ class BirdTaskViewModel : BaseViewModel() {
     private val service: LeYuanService by lazy {
         Requests.create(LeYuanService::class.java)
     }
+    private val liveService: LiveRoomService by lazy {
+        Requests.create(LiveRoomService::class.java)
+    }
     val receiveTaskResult: MutableLiveData<ReactiveData<BirdTaskReceiveResult>> by lazy { MutableLiveData<ReactiveData<BirdTaskReceiveResult>>() }
 
     val receiveActiveAward: MutableLiveData<ReactiveData<BirdTaskReceiveResult>> by lazy { MutableLiveData<ReactiveData<BirdTaskReceiveResult>>() }
+
+    val mRandomRoom: MutableLiveData<ReactiveData<ProgramRoomBean>> by lazy { MutableLiveData<ReactiveData<ProgramRoomBean>>() }
     val taskInfo: LiveData<ReactiveData<BirdTaskInfo>> = queryState.switchMap {
         liveData {
             request({
@@ -70,6 +77,18 @@ class BirdTaskViewModel : BaseViewModel() {
             })
 
         }
+    }
+    fun randomLive(){
+        viewModelScope.launch {
+            request({
+                val result = liveService.randomRoom(RandomRoomForm("Magpie")).dataConvert()
+                mRandomRoom.value = result.convertRtData()
+            }, error = {
+                mRandomRoom.value = it.convertError()
+            })
+
+        }
+
     }
 
 }

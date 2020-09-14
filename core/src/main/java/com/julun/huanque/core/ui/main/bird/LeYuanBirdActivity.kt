@@ -20,7 +20,7 @@ import com.julun.huanque.core.R
  */
 class LeYuanBirdActivity : BaseActivity() {
     private val leYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
-    override fun getLayoutId() = R.layout.activity_le_yuan
+    override fun getLayoutId() = R.layout.activity_le_yuan_bird
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         StatusBarUtil.setTransparent(this)

@@ -133,7 +133,8 @@ class PlayerActivity : BaseActivity() {
 
     //分享用户Id
     private var mShareUSerId = ""
-
+    //欢鹊领取倒计时
+    private var mBirdAwardCountInfo : BirdLiveAward?=null
     override fun getLayoutId(): Int = R.layout.activity_live_room
 
     // 视频直播
@@ -184,7 +185,7 @@ class PlayerActivity : BaseActivity() {
     companion object {
         //主播开播之前数据
         const val AnchorData = "AnchorData"
-
+        private const val PERMISSIONALERT_WINDOW_CODE = 123
         /**
          * @param activity 源Activity
          */
@@ -256,6 +257,7 @@ class PlayerActivity : BaseActivity() {
             streamId = intent.getStringExtra(IntentParamKey.STREAM_ID.name)
             mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
             mShareUSerId = intent.getStringExtra(ParamConstant.ShareUserId) ?: ""
+            mBirdAwardCountInfo = intent.getSerializableExtra(ParamConstant.BIRD_AWARD_INFO) as? BirdLiveAward
             if (mFrom != PlayerFrom.FloatWindow) {
                 AliplayerManager.stop()
             }
@@ -594,7 +596,7 @@ class PlayerActivity : BaseActivity() {
 
     }
 
-    private val PERMISSIONALERT_WINDOW_CODE = 123
+
 
     /**
      * 检测悬浮窗权限
@@ -1090,6 +1092,10 @@ class PlayerActivity : BaseActivity() {
         if (rescueData != null) {
             //LiveData统一处理
             viewModel.fansRescueData.value = rescueData
+        }
+        if(mBirdAwardCountInfo!=null){
+            bird_count_view.showCounting(mBirdAwardCountInfo!!)
+            mBirdAwardCountInfo=null
         }
     }
 
@@ -2002,7 +2008,8 @@ class PlayerActivity : BaseActivity() {
         liveViewManager.showOrHideContentView(hide = false, needAnimator = false)
         //这段代码主要是处理 从推送过来的消息 如果正在看直播并且房间号 不一样点击时也可切换房间
         val program = intent.getLongExtra(IntentParamKey.PROGRAM_ID.name, 0L)
-
+        mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
+        mBirdAwardCountInfo = intent.getSerializableExtra(ParamConstant.BIRD_AWARD_INFO) as? BirdLiveAward
         if (program != 0L) {
             //直播间切换
             checkoutRoom(program)
@@ -2089,6 +2096,7 @@ class PlayerActivity : BaseActivity() {
         surface_view?.scrollEnable = false
         surface_view.visibility = View.INVISIBLE
 //        chatInputView.resetView()
+        bird_count_view?.resetView()
         closeVideoPlayer()
         //去除之前直播间的高级动画
         highly_anim.clearWebpResource()

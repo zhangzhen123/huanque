@@ -202,7 +202,7 @@
         <item name="android:colorBackgroundCacheHint">@null</item><!-- 背景缓存颜色 -->
     </style>
 
-    <style name="LoadingDailogTransparent" parent="@android:style/Theme.Dialog">
+    <style name="LoadingDialogTransparent" parent="@android:style/Theme.Dialog">
         <!--<item name="android:windowFrame">@null</item>&lt;!&ndash;边框&ndash;&gt;-->
         <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
         <item name="android:windowIsTranslucent">false</item><!--半透明-->
@@ -210,7 +210,17 @@
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
     </style>
-
+    <style name="DialogTransparent" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊 遮罩层效果-->
+        <item name="android:backgroundDimAmount">0.0</item><!-- 灰度 遮罩层颜色深度 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
+    </style>
     <style name="dialog_fullScreen" parent="BottomDialogTransparent">
         <item name="android:windowTranslucentStatus" tools:ignore="NewApi">true</item>
         <item name="android:windowFullscreen">true</item>

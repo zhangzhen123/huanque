@@ -189,7 +189,8 @@ object ClickType {
 
     //星球霸主
     const val PLANTE = "PLANTE"
-
+    //养鹊
+    const val BIRD = "BIRD"
     //推流设置页面
     const val PUBLISH_SETTING = "PUBLISH_SETTING"
 
