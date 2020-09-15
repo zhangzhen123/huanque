@@ -93,7 +93,7 @@ class InviteShareViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val url=programInfo?.headPic?:return@request
-                val form = SharePosterImageForm(StringHelper.getOssImgUrl(url))
+                val form = SharePosterImageForm(programId =programInfo?.programId?:return@request )
                 val result = service.programShare(form).dataConvert()
                 val bitmap = BitmapUtil.base64ToBitmap(result.replace("data:image/png;base64,",""))
                 val info = SharePosterInfo(
