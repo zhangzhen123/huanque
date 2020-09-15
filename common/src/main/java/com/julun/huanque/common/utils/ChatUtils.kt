@@ -48,6 +48,7 @@ object ChatUtils {
                 anchorLevel = baseData.anchorLevel
             }
             roomUserChat = RoomUserChatExtra(
+                headPic = userInfo.headPic,
                 userId = userInfo.userId, nickname = userInfo.nickname,
                 royalLevel = userInfo.royalLevel, userLevel = userInfo.userLevel,
                 anchorLevel = anchorLevel,
