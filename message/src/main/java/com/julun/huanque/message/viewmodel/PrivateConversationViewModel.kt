@@ -76,6 +76,9 @@ class PrivateConversationViewModel : BaseViewModel() {
     //基础数据
     val basicBean: MutableLiveData<ConversationBasicBean> by lazy { MutableLiveData<ConversationBasicBean>() }
 
+    //私信 道具列表
+    val propListData: MutableLiveData<MutableList<PrivateProp>> by lazy { MutableLiveData<MutableList<PrivateProp>>() }
+
     //亲密度数据
     val intimateData: MutableLiveData<IntimateBean> by lazy { MutableLiveData<IntimateBean>() }
 
@@ -243,11 +246,12 @@ class PrivateConversationViewModel : BaseViewModel() {
                         null
                     }
                 }
-                RongCloudManager.resetUserInfoData(user)
+                RongCloudManager.resetUSerInfoPrivate(user)
 
                 chatInfoData.value = result.friendUser.apply { stranger = result.stranger }
                 intimateData.value = result.intimate
                 msgFeeData.value = result.msgFee
+                propListData.value = result.propList
                 basicBean.value = result
                 BalanceUtils.saveBalance(result.beans)
 
@@ -262,7 +266,6 @@ class PrivateConversationViewModel : BaseViewModel() {
                     if (friendUser.toString() != (userInDb?.toString() ?: "")) {
                         //数据不一致，需要保存用户数据
                         HuanQueDatabase.getInstance().chatUserDao().insert(friendUser)
-                        val tempDAta = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(friendUser.userId)
                         EventBus.getDefault().post(UserInfoChangeEvent(friendUser.userId, friendUser.stranger))
                     }
                 }
@@ -275,7 +278,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     sex = SessionUtils.getSex()
                     chatBubble = bubbleData.value
                 }
-                RongCloudManager.resetUserInfoData(user)
+                RongCloudManager.resetUSerInfoPrivate(user)
             })
         }
 
@@ -345,6 +348,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                 val result = socialService.sendMsg(SendMsgForm(targetId, content)).dataConvert(intArrayOf(ErrorCodes.BALANCE_NOT_ENOUGH))
                 BalanceUtils.saveBalance(result.beans)
                 msgFeeData.value = result.consumeBeans
+                propListData.value = result.propList
                 if (type.isEmpty()) {
                     localMsg?.sentStatus = Message.SentStatus.SENT
                     msgData.value = localMsg
@@ -586,8 +590,25 @@ class PrivateConversationViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = userService.settings().dataConvert()
-                SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, result.chatBubble ?: return@request)
+                val chatBubble = result.chatBubble
+                if (chatBubble == null) {
+                    SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
+                } else {
+                    SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, chatBubble)
+                }
                 bubbleData.value = result.chatBubble
+            })
+        }
+    }
+
+    /**
+     *刷新私信道具
+     */
+    fun propList() {
+        viewModelScope.launch {
+            request({
+                val result = socialService.propList().dataConvert()
+                propListData.value = result.propList
             })
         }
     }

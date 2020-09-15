@@ -19,7 +19,8 @@ class UserDataTab(
     var userTabName: String = "",
     //数据条数
     var count: Long = 0,
-    var tagCount: Int = 0
+    //新增数量
+    var addCount: Int = 0
 )
 
 /**
@@ -111,6 +112,19 @@ class IntimateBean(
 )
 
 /**
+ * 私聊道具
+ */
+class PrivateProp(
+    //道具数量
+    var count: Int = 0,
+    var goodsId: Long = 0,
+    //道具名称
+    var goodsName: String = "",
+    //道具图片
+    var goodsPic: String = ""
+) : Serializable
+
+/**
  * 会话详情页面基础信息
  */
 class ConversationBasicBean(
@@ -131,7 +145,9 @@ class ConversationBasicBean(
     //对方是否接受语音通话
     var answer: Boolean = false,
     //是否是陌生人
-    var stranger: Boolean = false
+    var stranger: Boolean = false,
+    //道具列表
+    var propList: MutableList<PrivateProp> = mutableListOf()
 )
 
 /**

@@ -36,7 +36,7 @@ class SharePosterQueryForm(var applyModule:String)
 /**
  * 传个图片地址 生成一个二维码返回
  */
-class SharePosterImageForm(var headPic:String)
+class SharePosterImageForm(var programId:Long)
 
 enum class ShareWay {
     WXFriends,

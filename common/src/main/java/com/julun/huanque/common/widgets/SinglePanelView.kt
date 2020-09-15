@@ -20,6 +20,7 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.common.widgets.emotion.Emotions
 import kotlinx.android.synthetic.main.panel_single_emoji.view.*
@@ -97,7 +98,7 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
     private fun initListener() {
         tv_privilege_attetnion.onClickNew {
             //弹窗说明弹窗
-            mListener?.showPrivilegeFragment("ZSBQ")
+            ToastUtils.show("亲密等级达到Lv4才能发送专属表情哦")
         }
 
         view_shade.onClickNew {

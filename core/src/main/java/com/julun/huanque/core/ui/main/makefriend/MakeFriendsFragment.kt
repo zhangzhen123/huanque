@@ -89,6 +89,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 logger.info("resume")
                 AliplayerManager.soundOff()
             }
+
             override fun pause() {
                 logger.info("pause")
                 AliplayerManager.soundOn()
@@ -270,6 +271,14 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     logger.info("去赚钱")
                     gotoMakeMoney()
                 }
+                R.id.living_fg -> {
+                    //点击了开播的头像
+                    val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@onAdapterChildClickNew
+                    if (bean.anchor && bean.living) {
+                        logger.info("点击围观--$position")
+                        PlayerActivity.start(requireActivity(), programId = bean.userId, from = PlayerFrom.Home)
+                    }
+                }
             }
         }
         ll_balance_h.onClickNew {
@@ -296,10 +305,10 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         })
 
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            var isUserDo=false
+            var isUserDo = false
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if(newState==RecyclerView.SCROLL_STATE_DRAGGING){
-                    isUserDo=true
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    isUserDo = true
                 }
                 super.onScrollStateChanged(recyclerView, newState)
             }
@@ -310,8 +319,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 val viewHead: View? = linearLayoutManager.findViewByPosition(0)
                 val view: View? = linearLayoutManager.findViewByPosition(1)
 //                logger.info("viewHead=${viewHead?.id}  view=$view ")
-                if(viewHead==null||view==null){
-                    if(!ic_sticky_mkf_task.isVisible()&&isUserDo){
+                if (viewHead == null || view == null) {
+                    if (!ic_sticky_mkf_task.isVisible() && isUserDo) {
                         logger.info("此时需要显示粘性布局")
                         ic_sticky_mkf_task.show()
                     }
@@ -521,7 +530,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         mViewModel.queryInfo(QueryType.REFRESH)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")
         if (event.result) {

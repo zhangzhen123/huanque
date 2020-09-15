@@ -6,11 +6,9 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator.INFINITE
 import android.animation.ValueAnimator.RESTART
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.media.AudioManager
 import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -99,8 +97,6 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     //通话时长
     private var communicationTime = 0L
 
-    private var am: AudioManager? = null
-
     //其他人未加入倒计时
     private var mOtherNoJoinDisposable: Disposable? = null
 
@@ -150,7 +146,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT_ACCEPT
             mAnonymousVoiceViewModel?.inviteUserId = intent?.getLongExtra(ParamConstant.InviteUserId, 0) ?: 0L
             //1 播放响铃
-            playAudio(true)
+            VoiceManager.playRing()
             //2 超时计算
             timer()
         } else {
@@ -242,25 +238,6 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             }, {})
     }
 
-    /**
-     * 播放音效
-     */
-    private fun playAudio(calling: Boolean) {
-        if (calling) {
-            if (mAnonymousVoiceViewModel?.currentState?.value == AnonymousVoiceViewModel.MATCH) {
-                VoiceManager.startMatch()
-            } else {
-                VoiceManager.startRing()
-            }
-        } else {
-            VoiceManager.startFinish()
-        }
-
-        am = am ?: getSystemService(Context.AUDIO_SERVICE) as? AudioManager
-        am?.mode = AudioManager.MODE_NORMAL
-        am?.isSpeakerphoneOn = true
-    }
-
     private fun initViewModel() {
         mAnonymousVoiceViewModel = ViewModelProvider(this).get(AnonymousVoiceViewModel::class.java)
         mAnonymousVoiceViewModel?.basicData?.observe(this, Observer {
@@ -270,7 +247,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         })
         mAnonymousVoiceViewModel?.currentState?.observe(this, Observer {
             if (it != null) {
-                VoiceManager.stopAllVoice()
+                VoiceManager.stop()
                 when (it) {
                     AnonymousVoiceViewModel.WAIT -> {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
@@ -285,7 +262,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                     }
                     AnonymousVoiceViewModel.MATCH -> {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
-                        playAudio(true)
+                        VoiceManager.playMatch()
                         startMatch()
                     }
                     AnonymousVoiceViewModel.VOICE -> {
@@ -347,7 +324,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
         mAnonymousVoiceViewModel?.closeSoundFlag?.observe(this, Observer {
             if (it == true) {
-                playAudio(false)
+                VoiceManager.playFinish()
             }
         })
 
@@ -1001,7 +978,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         stopMatch()
         matchCompositeDisposable.clear()
         voiceCompositeDisposable.clear()
-        VoiceManager.stopAllVoice()
+        VoiceManager.stop()
         val currentState = mAnonymousVoiceViewModel?.currentState?.value
         if (currentState == AnonymousVoiceViewModel.MATCH) {
             //调用取消匹配接口
@@ -1129,7 +1106,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         leaveChannel()
         mDisposable?.dispose()
-        VoiceManager.stopAllVoice()
+        VoiceManager.destroy()
     }
 
     override fun onBackPressed() {

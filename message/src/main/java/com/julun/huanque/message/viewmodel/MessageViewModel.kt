@@ -88,7 +88,8 @@ class MessageViewModel : BaseViewModel() {
                 }
                 tempData?.let {
                     list.remove(it)
-                    conversationListData.value = list
+                    //
+                    conversationListData.value = removeDuplicates(list)
                 }
             }
 
@@ -111,6 +112,23 @@ class MessageViewModel : BaseViewModel() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    /**
+     * 去除重复的会话
+     */
+    private fun removeDuplicates(list: MutableList<LocalConversation>): MutableList<LocalConversation> {
+        //会话Id列表
+        val targetIdList = mutableListOf<String>()
+        val realList = mutableListOf<LocalConversation>()
+        list.forEach {
+            val targetId = it.conversation.targetId ?: ""
+            if (!targetIdList.contains(targetId)) {
+                targetIdList.add(targetId)
+                realList.add(it)
+            }
+        }
+        return realList
     }
 
     /**
@@ -532,7 +550,7 @@ class MessageViewModel : BaseViewModel() {
         }
 
         val sortResult = sortConversation(list)
-        conversationListData.postValue(sortResult)
+        conversationListData.postValue(removeDuplicates(sortResult))
     }
 
 
@@ -718,7 +736,7 @@ class MessageViewModel : BaseViewModel() {
                 list.add(strangerConversation)
             }
             //显示新的列表
-            conversationListData.value = list
+            conversationListData.value = removeDuplicates(list)
         }
         //不存在该会话，什么都不用处理
     }

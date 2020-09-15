@@ -43,12 +43,12 @@
 
     <TextView
         android:id="@+id/tv_day"
-        android:layout_width="30dp"
+        android:layout_width="42dp"
         android:layout_height="24dp"
         android:background="@drawable/bg_famous_day"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/sp_14"
         app:layout_constraintRight_toRightOf="@id/sdv"
         app:layout_constraintTop_toTopOf="@id/sdv"
         tools:text="7" />

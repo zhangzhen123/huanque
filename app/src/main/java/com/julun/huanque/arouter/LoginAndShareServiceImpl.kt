@@ -41,6 +41,10 @@ class LoginAndShareServiceImpl : LoginAndShareService {
         WeiBoApiManager.shareResult(data)
     }
 
+    override fun checkWeixinInstalled(activity: Activity): Boolean {
+        return WXApiManager.checkWXInstalled(activity,false)
+    }
+
     override fun init(context: Context?) {
 
     }

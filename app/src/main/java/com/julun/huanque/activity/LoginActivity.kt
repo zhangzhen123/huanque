@@ -23,23 +23,20 @@ import cn.jiguang.verifysdk.api.JVerificationInterface
 import cn.jiguang.verifysdk.api.JVerifyUIConfig
 import cn.jiguang.verifysdk.api.LoginSettings
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.events.FastLoginEvent
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.Agreement
-import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.px2dp
 import com.julun.huanque.common.ui.web.WebActivity
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.SPUtils
-import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.viewmodel.LoginViewModel
@@ -69,6 +66,9 @@ class LoginActivity : BaseActivity() {
     private val CODE_LOGIN_SUCCESS = 6000
 
     private var mViewModel: LoginViewModel? = null
+
+    private var clickCount = 0
+    private var lastClickTime = 0L
 
 
     override fun getLayoutId() = R.layout.act_login
@@ -113,6 +113,26 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun initEvents(rootView: View) {
+        con.onClickNew {
+            if (BuildConfig.DEBUG) {
+                //切换环境
+                val intent = Intent(this, EnvironmentConfigurationActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    startActivity(intent)
+                }
+            } else {
+                //
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastClickTime < 1000) {
+                    clickCount++
+                }
+                if (clickCount > 8) {
+                    ToastUtils.show(ChannelCodeHelper.getInnerChannel())
+                    clickCount = 0
+                }
+                lastClickTime = currentTime
+            }
+        }
         view_phone_number_fast_login.onClickNew {
 //            ToastUtils.show("mPreviewSuccess = $mPreviewSuccess")
             if (mPreviewSuccess) {
@@ -328,17 +348,13 @@ class LoginActivity : BaseActivity() {
         return uiConfigBuilder.build()
     }
 
-//    override fun onNewIntent(intent: Intent?) {
-//        super.onNewIntent(intent)
-//        if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
-//            //注册成功，跳转首页
-//            val intent = Intent(this, MainActivity::class.java)
-//            startActivity(intent)
-//        } else {
-//            SessionUtils.clearSession()
-//        }
-//        finish()
-//    }
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent?.getStringExtra(ParamConstant.TYPE) == "EXIT") {
+            //退出APP
+            ActivitiesManager.INSTANCE.finishApp()
+        }
+    }
 
     override fun finish() {
         if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
@@ -359,7 +375,7 @@ class LoginActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun fastLoginSuccess(event : FastLoginEvent){
+    fun fastLoginSuccess(event: FastLoginEvent) {
         JVerificationInterface.dismissLoginAuthActivity()
     }
 

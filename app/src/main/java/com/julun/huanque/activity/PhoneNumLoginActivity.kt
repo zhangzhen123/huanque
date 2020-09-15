@@ -134,7 +134,7 @@ class PhoneNumLoginActivity : BaseActivity() {
                 ToastUtils.show(it.error?.busiMessage)
             }
         })
-        if(type == PhoneLoginType.TYPE_LOGIN){
+        if (type == PhoneLoginType.TYPE_LOGIN) {
             mViewModel?.loginStatus?.observe(this, Observer {
                 if (it == true) {
                     //登录成功
@@ -189,6 +189,7 @@ class PhoneNumLoginActivity : BaseActivity() {
                         login_btn.isEnabled = phone_num.editableText.length >= 11
                     } else {
                         code_num_clear.visibility = View.GONE
+                        login_btn.isEnabled = false
                     }
                 }
             }
@@ -250,7 +251,7 @@ class PhoneNumLoginActivity : BaseActivity() {
             WebActivity.startWeb(this, Agreement.UserAgreement)
         }
         tv_register_privacy.onClickNew {
-            WebActivity.startWeb(this,Agreement.PrivacyAgreement)
+            WebActivity.startWeb(this, Agreement.PrivacyAgreement)
         }
     }
 

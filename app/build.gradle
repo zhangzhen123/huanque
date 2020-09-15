@@ -99,8 +99,8 @@ android {
                 }
 //                print("variant =${variant.productFlavors[0].name}")
                 def sb = new StringBuilder()
-//                sb.append("${variant.productFlavors[0].name}_${type}")
-                sb.append("${type}")
+                sb.append("hq_${type}")
+//                sb.append("${type}")
 //                if (rootProject.ext.functionConfig["publish"]) {
 //                    sb.append("_Publish")
 //                }

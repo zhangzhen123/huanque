@@ -388,6 +388,9 @@ class PlayerViewModel : BaseViewModel() {
     //刷新礼物背包
     val refreshGiftPackage: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //显示未开播弹窗
+    val showNoOpenFragment: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //关注状态
     val followStatusData: MutableLiveData<ReactiveData<FollowResultBean>> by lazy { MutableLiveData<ReactiveData<FollowResultBean>>() }
 
@@ -740,14 +743,19 @@ class PlayerViewModel : BaseViewModel() {
         return false
     }
 
-    private fun requestBubble() {
+     fun requestBubble() {
         viewModelScope.launch {
             request({
                 var bubbleInfo = SPUtils.getObject<ChatBubble>(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble::class.java)
                 if (bubbleInfo == null) {
                     val settingInfo = mUserService.settings().dataConvert()
                     bubbleInfo = settingInfo.chatBubble
-                    SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, settingInfo.chatBubble ?: return@request)
+                    if (bubbleInfo != null) {
+                        SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, bubbleInfo)
+                    } else {
+                        SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
+                    }
+
                 }
                 RongCloudManager.updateChatBubble(bubbleInfo)
             }, {

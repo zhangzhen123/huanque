@@ -32,10 +32,7 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
-import com.julun.huanque.common.bean.events.QueryUnreadCountEvent
-import com.julun.huanque.common.bean.events.UnreadCountEvent
-import com.julun.huanque.common.bean.events.UserInfoChangeEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.message.ExpressionAnimationBean
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
@@ -45,6 +42,7 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
@@ -191,6 +189,7 @@ class PrivateConversationActivity : BaseActivity() {
         mIntimateDetailViewModel?.friendId = mPrivateConversationViewModel?.targetIdData?.value ?: 0L
         mPrivateConversationViewModel?.fromPlayer = intent?.getBooleanExtra(ParamConstant.FROM, false) ?: false
         EventBus.getDefault().post(QueryUnreadCountEvent(mPrivateConversationViewModel?.fromPlayer ?: false))
+//        mPrivateConversationViewModel?.propList()
     }
 
     /**
@@ -306,6 +305,38 @@ class PrivateConversationActivity : BaseActivity() {
                 scrollToBottom(true)
                 showXiaoQueAuto()
                 mPrivateConversationViewModel?.addMessageData?.value = null
+            }
+        })
+        mPrivateConversationViewModel?.propListData?.observe(this, Observer {
+            //道具列表
+            if (it != null) {
+                if (ForceUtils.isIndexNotOutOfBounds(0, it)) {
+                    val firstData = it[0]
+                    sdv_first_prop.show()
+                    sdv_first_prop.loadImage(firstData.goodsPic, 38f, 24f)
+                    tv_first_prop_count.show()
+                    tv_first_prop_count.text = "${firstData.count}"
+                } else {
+                    sdv_first_prop.hide()
+                    tv_first_prop_count.hide()
+                }
+
+                if (ForceUtils.isIndexNotOutOfBounds(1, it)) {
+                    val secondData = it[1]
+                    sdv_second_prop.show()
+                    sdv_second_prop.loadImage(secondData.goodsPic, 38f, 24f)
+                    tv_second_prop_count.show()
+                    tv_second_prop_count.text = "${secondData.count}"
+                } else {
+                    sdv_second_prop.hide()
+                    tv_second_prop_count.hide()
+                }
+            } else {
+                sdv_first_prop.hide()
+                tv_first_prop_count.hide()
+
+                sdv_second_prop.hide()
+                tv_second_prop_count.hide()
             }
         })
 
@@ -530,10 +561,13 @@ class PrivateConversationActivity : BaseActivity() {
         }
         iv_intimate.onClickNew {
             //显示欢遇弹窗
-            RNPageActivity.start(
-                this,
-                RnConstant.INTIMATE_LEVEL_PAGE,
-                Bundle().apply { putLong("friendId", mPrivateConversationViewModel?.targetIdData?.value ?: 0L) })
+            val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: 0L
+            if (targetId > 0) {
+                RNPageActivity.start(
+                    this,
+                    RnConstant.INTIMATE_LEVEL_PAGE,
+                    Bundle().apply { putLong("friendId", targetId) })
+            }
         }
 
         iv_phone.onClickNew {
@@ -607,7 +641,7 @@ class PrivateConversationActivity : BaseActivity() {
             val result = judgeIntimate("CSM", "亲密等级达到lv3才能发送传送门哦")
             if (result) {
                 //有权限
-                val programId = SharedPreferencesUtils.getLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
+                val programId = UserHeartManager.getProgramId() ?: 0
                 if (programId <= 0) {
                     //不在直播间内
                     ToastUtils.show("您当前不在直播间内，无法发送传送门哦")
@@ -728,15 +762,15 @@ class PrivateConversationActivity : BaseActivity() {
 
             override fun showPrivilegeFragment(code: String) {
                 //显示特权弹窗
-                val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
-                val currentLevel = intimate.intimateLevel
-                IntimateUtil.intimatePrivilegeList.forEach {
-                    if (it.key == "ZSBQ") {
-                        SingleIntimateprivilegeFragment.newInstance(it, currentLevel)
-                            .show(supportFragmentManager, "SingleIntimateprivilegeFragment")
-                        return
-                    }
-                }
+//                val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate ?: return
+//                val currentLevel = intimate.intimateLevel
+//                IntimateUtil.intimatePrivilegeList.forEach {
+//                    if (it.key == "ZSBQ") {
+//                        SingleIntimateprivilegeFragment.newInstance(it, currentLevel)
+//                            .show(supportFragmentManager, "SingleIntimateprivilegeFragment")
+//                        return
+//                    }
+//                }
             }
         })
     }
@@ -1944,6 +1978,8 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.msgFeeData?.value = 0L
             }
         }
+        val stranger = data.stranger[targetId] ?: false
+        EventBus.getDefault().post(UserInfoChangeEvent(targetId, stranger))
     }
 
 
@@ -1982,6 +2018,10 @@ class PrivateConversationActivity : BaseActivity() {
         EventBus.getDefault().removeStickyEvent(bean)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun refreshVoiceCard(event: RefreshVoiceCardEvent) {
+        mPrivateConversationViewModel?.propList()
+    }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)

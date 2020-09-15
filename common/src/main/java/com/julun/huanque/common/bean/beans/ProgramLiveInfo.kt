@@ -40,7 +40,8 @@ open class ProgramLiveInfo : Serializable {
     @JSONField(name = "isPcLive")
     var isPcLive: Boolean = false
 
-    var city:String =""
+    var city: String = ""
+
     /** 角标图片或文字 **/
     var tagContentTpl: String = ""
 
@@ -96,6 +97,9 @@ class AuthorFollowBean : Serializable {
 
     /** 开播状态 **/
     var livingStatus: Boolean = false
+
+    //用户昵称
+    var nickname: String = ""
 
     /** pc直播平台 **/
     var pcLiveStatus: Boolean = false

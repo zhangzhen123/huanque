@@ -313,3 +313,15 @@ data class FamousListBean(
     //名人榜数据
     var monthList: MutableList<SingleFamousMonth> = mutableListOf()
 ) : Serializable
+
+/**
+ * openinstall传递参数的对象
+ */
+data class OpenInstallParamsBean(
+    //渠道号，本地使用
+    var h5ChannelCode: String? = null,
+    //传递给后台参数
+    var h5SID: String? = null,
+    //传递给后台参数
+    var h5PID: String? = null
+) : Serializable

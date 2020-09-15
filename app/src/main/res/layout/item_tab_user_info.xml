@@ -43,13 +43,17 @@
         android:id="@+id/tv_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
+        android:layout_gravity="center"
         android:background="@drawable/bg_num_dot_01"
+        android:gravity="center"
+        android:includeFontPadding="false"
         android:maxLines="1"
-        android:padding="@dimen/dimen_1"
+        android:minWidth="10dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
         android:textColor="@color/white"
         android:textSize="9sp"
         app:layout_constraintEnd_toEndOf="@+id/line1"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="999" />
+        tools:text="9" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -175,3 +175,8 @@ class FastLoginEvent() : Serializable
  */
 class HideBirdEvent() : Serializable
 
+/**
+ * 刷新语音券消息
+ */
+class RefreshVoiceCardEvent() : Serializable
+

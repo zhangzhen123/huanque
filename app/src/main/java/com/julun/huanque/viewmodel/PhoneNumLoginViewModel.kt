@@ -37,8 +37,11 @@ import org.json.JSONObject
  */
 class PhoneNumLoginViewModel : BaseViewModel() {
 
-    private val userService: UserService by lazy { Requests.create(
-        UserService::class.java) }
+    private val userService: UserService by lazy {
+        Requests.create(
+            UserService::class.java
+        )
+    }
 
     //倒计时标识位
     val tickState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -269,9 +272,9 @@ class PhoneNumLoginViewModel : BaseViewModel() {
 //                    ToastUtils.show(it.busiMessage)
 //                }
 //            })
-            LoginManager.loginByMobile(phoneNum,code,success = {result->
+            LoginManager.loginByMobile(phoneNum, code, success = { result ->
                 loginData.postValue(result)
-            },error = {
+            }, error = {
                 if (it is ResponseError) {
                     ToastUtils.show(it.busiMessage)
                 }
@@ -279,6 +282,7 @@ class PhoneNumLoginViewModel : BaseViewModel() {
         }
 
     }
+
     /**
      * 请求手机验证码接口
      */
@@ -309,9 +313,9 @@ class PhoneNumLoginViewModel : BaseViewModel() {
         //首先请求后台是否需要极验
         //需要就调起极验
         //最后调起请求验证码
-        captchaURL = BuildConfig.SERVICE_BASE_URL_DEV + "user/acct/login/initGeeTest?"
+        captchaURL = CommonInit.getInstance().getBaseUrl() + "user/acct/login/initGeeTest?"
         // 设置二次验证的URL，需替换成自己的服务器URL
-        validateURL = BuildConfig.SERVICE_BASE_URL_DEV + "user/acct/login/verifyGeeTest?"
+        validateURL = CommonInit.getInstance().getBaseUrl() + "user/acct/login/verifyGeeTest?"
         captchaURL += "mobile=$phone"
         validateURL += "mobile=$phone"
         logger.info("captchaURL:" + captchaURL + " validateURL:" + validateURL)

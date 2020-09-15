@@ -15,9 +15,17 @@ import kotlinx.coroutines.launch
  *@描述 协议ViewModel
  */
 class PersonalInformationProtectionViewModel : BaseViewModel() {
+    //同意按钮点击标识位，欢迎页使用
+    val agreeClickState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //取消按钮点击标识位，欢迎页使用
+    val cancelClickState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val agreeState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-    private val userService: UserService by lazy { Requests.create(
-        UserService::class.java) }
+    private val userService: UserService by lazy {
+        Requests.create(
+            UserService::class.java
+        )
+    }
 
     /**
      * 同意协议

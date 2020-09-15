@@ -34,10 +34,13 @@ object LoginStatusUtils {
     fun loginSuccess() {
         //登录成功
         GlobalScope.launch {
-            withContext(Dispatchers.IO) {
-                val status = LoginStatus(SessionUtils.getUserId(), true)
-                HuanQueDatabase.getInstance().loginStatusDao().insert(status)
+            kotlin.runCatching {
+                withContext(Dispatchers.IO) {
+                    val status = LoginStatus(SessionUtils.getUserId(), true)
+                    HuanQueDatabase.getInstance().loginStatusDao().insert(status)
+                }
             }
+
         }
 
     }
@@ -47,8 +50,10 @@ object LoginStatusUtils {
      */
     fun logout() {
         GlobalScope.launch {
-            withContext(Dispatchers.IO) {
-                HuanQueDatabase.getInstance().loginStatusDao().deleteLoginStatus()
+            kotlin.runCatching {
+                withContext(Dispatchers.IO) {
+                    HuanQueDatabase.getInstance().loginStatusDao().deleteLoginStatus()
+                }
             }
         }
 

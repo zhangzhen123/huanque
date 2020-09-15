@@ -251,7 +251,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
             }
 
             override fun convert(holder: BaseViewHolder, item: AuthorFollowBean) {
-                holder.setText(R.id.anchorNickname, item.programName)
+                holder.setText(R.id.anchorNickname, item.nickname)
                 ImageUtils.loadImage(
                     holder.getView(R.id.anchorPicture)
                         ?: return, item.anchorPic + BusiConstant.OSS_160, 55f, 55f

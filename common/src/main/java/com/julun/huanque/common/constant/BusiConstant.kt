@@ -73,6 +73,9 @@ object SPParamKey {
 
     //私信聊天框设置
     const val PRIVATE_CHAT_BUBBLE = "PRIVATE_CHAT_BUBBLE"
+
+    //欢迎页有没有显示过隐私弹窗
+    const val Welcome_privacy_Fragment = "Welcome_privacy_Fragment"
 }
 
 /**
@@ -583,6 +586,9 @@ object BannerTouchType {
 
     //小程序
     const val MINI = "Mini"
+
+    //邀友
+    const val InviteFriend = "InviteFriend"
 
     //打开星球霸主
     const val OpenLiveRoomAndPlanet = "OpenLiveRoomAndPlanet"

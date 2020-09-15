@@ -83,6 +83,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 val bundle = Bundle()
                 bundle.putString("type", "SeenMe")
                 RNPageActivity.start(requireActivity(), RnConstant.VISIT_HISTORY_PAGE, bundle)
+                //清空新增的访客数量
+                infoTabAdapter.data?.forEachIndexed { index, userDataTab ->
+                    if (userDataTab.userDataTabType == ContactsTabType.Visit) {
+                        userDataTab.addCount = 0
+                        infoTabAdapter.notifyItemChanged(index)
+                        return@forEachIndexed
+                    }
+                }
             }
         }
 
@@ -179,6 +187,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
         } else {
             tv_author_privilege.show()
+            sdv_author_level.hide()
         }
 
 
@@ -436,13 +445,13 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             override fun convert(holder: BaseViewHolder, item: UserDataTab) {
                 val tvCount = holder.getView<TextView>(R.id.tvCount)
                 val count = item.count
-                tvCount.text="${StringHelper.formatNum(count)}"
+                tvCount.text = "${StringHelper.formatNum(count)}"
                 holder.setText(R.id.tvTitle, item.userTabName)
 
-                if (item.tagCount == 0) {
+                if (item.addCount == 0) {
                     holder.setGone(R.id.tv_tag, true)
                 } else {
-                    holder.setGone(R.id.tv_tag, false).setText(R.id.tv_tag, "${item.tagCount}")
+                    holder.setGone(R.id.tv_tag, false).setText(R.id.tv_tag, StringHelper.formatNum(item.addCount.toLong()))
                 }
             }
         }
@@ -482,14 +491,15 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     extra.putBoolean(IntentParamKey.EXTRA_FLAG_GO_HOME.name, false)
                     jump(WebActivity::class.java, extra = extra)
                 }
-                BannerTouchType.Toast -> {
-                    //弹窗类型
-                    if (model.touchValue == "FirstRecharge") {
-                        //todo
-//                        val rechargeInfo = mFirstRechargeViewModel?.oneYuanInfo?.value
-//                            ?: return@Delegate
-//                        OneYuanDialogFragment.newInstance(rechargeInfo).showPositive(childFragmentManager, "OneYuanDialogFragment")
-                    }
+                BannerTouchType.Recharge -> {
+                    //充值页面
+                    requireActivity().startActivity<RechargeCenterActivity>()
+                }
+                BannerTouchType.InviteFriend -> {
+                    //邀请好友
+                    RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+                }
+                else -> {
                 }
             }
         }

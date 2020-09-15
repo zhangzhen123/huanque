@@ -1,6 +1,6 @@
 include ':platform_push'
 include ':maplib'
-include ':jpushlib'
+//include ':jpushlib'
 include ':picture_library'
 include ':agora'
 include ':message'

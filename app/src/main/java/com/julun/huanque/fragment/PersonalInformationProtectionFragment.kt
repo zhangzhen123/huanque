@@ -1,6 +1,7 @@
 package com.julun.huanque.fragment
 
 import android.content.Intent
+import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
@@ -15,10 +16,13 @@ import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.constant.Agreement
+import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.constant.XYCode
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.viewmodel.PersonalInformationProtectionViewModel
 import kotlinx.android.synthetic.main.fragment_personal_information_protection.*
 
@@ -28,10 +32,25 @@ import kotlinx.android.synthetic.main.fragment_personal_information_protection.*
  *@描述 个人信息保护指引弹窗
  */
 class PersonalInformationProtectionFragment : BaseDialogFragment() {
+    companion object {
+        const val From_Welcome = "From_Welcome"
+        fun newInstance(welcome: Boolean): PersonalInformationProtectionFragment {
+            val fragment = PersonalInformationProtectionFragment()
+            val bundle = Bundle()
+            bundle.putBoolean(From_Welcome, welcome)
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
+
+    //欢迎页显示
+    private var mFromWelcome = false
+
     private val mViewModel: PersonalInformationProtectionViewModel by activityViewModels()
     override fun getLayoutId() = R.layout.fragment_personal_information_protection
 
     override fun initViews() {
+        mFromWelcome = arguments?.getBoolean(From_Welcome, false) ?: false
         initListener()
         val style = SpannableStringBuilder()
         //设置文字
@@ -51,12 +70,26 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
 
     private fun initListener() {
         tv_agree.onClickNew {
-            mViewModel.agree(XYCode.YHYSXY)
+            if (mFromWelcome) {
+                mViewModel.agreeClickState.value = true
+                SharedPreferencesUtils.commitBoolean(SPParamKey.Welcome_privacy_Fragment, true)
+                dismiss()
+            } else {
+                mViewModel.agree(XYCode.YHYSXY)
+            }
+
         }
         tv_exit.onClickNew {
-            activity?.let { act ->
-                act.startActivity(Intent(act, LoginActivity::class.java))
+            if (mFromWelcome) {
+                mViewModel.cancelClickState.value = true
+            } else {
+                activity?.let { act ->
+                    val intent = Intent(act, LoginActivity::class.java)
+                    intent.putExtra(ParamConstant.TYPE, "EXIT")
+                    act.startActivity(intent)
+                }
             }
+
             dismiss()
         }
     }
@@ -72,6 +105,20 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
         })
     }
 
+    override fun needEnterAnimation() = false
+    private fun setWindowConfig() {
+        this.setDialogSize(Gravity.CENTER, 35)
+//        //不需要半透明遮罩层
+////        win.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        if (!mFromWelcome) {
+            val win = dialog?.window ?: return
+            win.setWindowAnimations(R.style.dialog_bottom_bottom_style)
+        }
+    }
+
+    //    override fun setWindowAnimations() {
+//        dialog?.window?.setWindowAnimations(com.julun.huanque.core.R.style.dialog_bottom_enter_style)
+//    }
     override fun onStart() {
         super.onStart()
         setWindowConfig()
@@ -81,14 +128,6 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
         dialog?.setOnKeyListener { _, keyCode, _ ->
             keyCode == KeyEvent.KEYCODE_BACK
         }
-    }
-
-    private fun setWindowConfig() {
-        this.setDialogSize(Gravity.CENTER, 35)
-        //不需要半透明遮罩层
-        val win = dialog?.window ?: return
-//        win.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        win.setWindowAnimations(R.style.dialog_bottom_bottom_style)
     }
 
 
@@ -105,7 +144,7 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
                     //点击事件
-                    WebActivity.startWeb(requireActivity(),address)
+                    WebActivity.startWeb(requireActivity(), address)
 //                    val extra = Bundle()
 //                    extra.putString(BusiConstant.PUSH_URL, LMUtils.getDomainName(address))
 //                    extra.putBoolean(IntentParamKey.EXTRA_FLAG_DO_NOT_GO_HOME.name, true)

@@ -492,6 +492,12 @@ class PlayerActivity : BaseActivity() {
 //            chatInputView.setAnchorIdAndProgramId(it.anchorId, programId)
         })
 
+        viewModel.showNoOpenFragment.observe(this, Observer {
+            if (it == true) {
+                viewModel.showNoOpenFragment.value = false
+                addPlayFragment(false)
+            }
+        })
 
         //错误返回码处理
         viewModel.errorState.observe(this, Observer {
@@ -1607,6 +1613,7 @@ class PlayerActivity : BaseActivity() {
         MessageProcessor.registerEventProcessor(object :
             MessageProcessor.StopLivingMessageProcessor {
             override fun process(data: CloseShowEvent) {
+                logger.info("Player 接受到停播消息")
                 viewModel.squareView.value = true
                 liveViewManager.switchToVertical()
                 //只有非NormalStop才关播
@@ -1628,7 +1635,7 @@ class PlayerActivity : BaseActivity() {
                         cur_live_bg.show()
                         liveViewManager.loadBlurImage(cur_live_bg, it)
                     }
-                    addPlayFragment(false)
+                    viewModel.showNoOpenFragment.value = true
                 }
             }
         })
@@ -1872,7 +1879,8 @@ class PlayerActivity : BaseActivity() {
         super.onResume()
         FloatingManager.hideFloatingView()
         AliplayerManager.soundOn()
-
+        //从其他页面回来，获取气泡数据
+        viewModel.requestBubble()
         //处理支付刷新
 //        if (refreshPay) {
 //            Observable.timer(200, TimeUnit.MILLISECONDS)
@@ -1893,6 +1901,19 @@ class PlayerActivity : BaseActivity() {
         exitLiveRoom()
         super.onDestroy()
         viewModel.runwayCache.value = null
+        val baseData = viewModel.baseData.value
+        if (PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
+            FloatingManager.showFloatingView(
+                GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
+                viewModel.programId,
+                baseData.prePic,
+                !baseData.isLandscape
+            )
+        } else {
+            AliplayerManager.stop()
+            viewModel.leaveProgram()
+        }
+        logger.info("Player 执行OnDestroy方法")
     }
 
     private var closable = false
@@ -1945,18 +1966,18 @@ class PlayerActivity : BaseActivity() {
 //            if (goHome) {
 //                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
 //            }
-            val baseData = viewModel.baseData.value
-            if (PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
-                FloatingManager.showFloatingView(
-                    GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
-                    viewModel.programId,
-                    baseData.prePic,
-                    !baseData.isLandscape
-                )
-            } else {
-                AliplayerManager.stop()
-                viewModel.leaveProgram()
-            }
+//            val baseData = viewModel.baseData.value
+//            if (PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
+//                FloatingManager.showFloatingView(
+//                    GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
+//                    viewModel.programId,
+//                    baseData.prePic,
+//                    !baseData.isLandscape
+//                )
+//            } else {
+//                AliplayerManager.stop()
+//                viewModel.leaveProgram()
+//            }
             super.finish()
         }
     }

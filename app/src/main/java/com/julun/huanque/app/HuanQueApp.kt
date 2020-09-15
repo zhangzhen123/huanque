@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import cn.jiguang.verifysdk.api.JVerificationInterface
+import com.fm.openinstall.OpenInstall
 //import cn.jpush.android.api.JPushInterface
 import com.ishumei.smantifraud.SmAntiFraud
 import com.jakewharton.processphoenix.ProcessPhoenix
@@ -18,10 +19,13 @@ import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.agora.AgoraManager
 import com.julun.huanque.common.constant.MMKVConstant
 import com.julun.huanque.common.helper.AppHelper
+import com.julun.huanque.common.helper.ChannelCodeHelper
+import com.julun.huanque.common.helper.ChannelCodeHelper.getInstallData
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.init.HuanQueInit
 import com.julun.huanque.support.WXApiManager
@@ -61,6 +65,13 @@ open class HuanQueApp : Application() {
         }
         if (AppHelper.isMainProcess(this)) {
             install()
+            HuanQueInit.getInstance().initContext(this)
+            CommonInit.getInstance().initContext(this)
+            //初始化SP（Opinstall需要使用）
+            SharedPreferencesUtils.init(this)
+            OpenInstall.init(this)
+            //获取安装参数
+            ChannelCodeHelper.getInstallData()
             MMKV.initialize(this)
             val baseUrl = if (BuildConfig.DEBUG) {
                 val url = MMKV.defaultMMKV().decodeString(MMKVConstant.URL)
@@ -111,13 +122,19 @@ open class HuanQueApp : Application() {
             val currentTime = System.currentTimeMillis()
             logger("runBlocking start---${Thread.currentThread()}")
             CommonInit.getInstance().inSDK = false
-            logger("XIAOMI_APPID=${AppHelper.getAppMetaData("XIAOMI_APPID",this@HuanQueApp).substring(3)}")
+            logger("XIAOMI_APPID=${AppHelper.getAppMetaData("XIAOMI_APPID", this@HuanQueApp).substring(3)}")
             val init = async {
 //                val time=System.currentTimeMillis()
                 val config: PushConfig = PushConfig.Builder()
                     .enableHWPush(true)
-                    .enableMiPush(AppHelper.getAppMetaData("XIAOMI_APPID",this@HuanQueApp).substring(3), AppHelper.getAppMetaData("XIAOMI_APPKEY",this@HuanQueApp).substring(3))
-                    .enableOppoPush(AppHelper.getAppMetaData("OPPO_APPKEY_P",this@HuanQueApp),AppHelper.getAppMetaData("OPPO_APPSECRET_P",this@HuanQueApp))
+                    .enableMiPush(
+                        AppHelper.getAppMetaData("XIAOMI_APPID", this@HuanQueApp).substring(3),
+                        AppHelper.getAppMetaData("XIAOMI_APPKEY", this@HuanQueApp).substring(3)
+                    )
+                    .enableOppoPush(
+                        AppHelper.getAppMetaData("OPPO_APPKEY_P", this@HuanQueApp),
+                        AppHelper.getAppMetaData("OPPO_APPSECRET_P", this@HuanQueApp)
+                    )
                     .enableVivoPush(true)
                     .build()
                 RongPushClient.setPushConfig(config)

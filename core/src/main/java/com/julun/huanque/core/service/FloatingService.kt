@@ -4,13 +4,14 @@ import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.Outline
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.cardview.widget.CardView
+import androidx.annotation.RequiresApi
 import com.julun.huanque.common.bean.forms.ProgramIdForm
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.PlayerFrom
@@ -32,12 +33,12 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.widgets.SingleVideoView
+import com.julun.huanque.core.widgets.SurfaceVideoViewOutlineProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.anko.dip
-import java.lang.Exception
 
 
 /**
@@ -90,7 +91,7 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
         // 设置图片格式，效果为背景透明
-        layoutParams.format = PixelFormat.RGB_565
+        layoutParams.format = PixelFormat.RGBA_8888
 //        Log.i("悬浮窗", "Build.VERSION.SDK_INT" + Build.VERSION.SDK_INT)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // android 8.0及以后使用
@@ -115,12 +116,12 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         if (mVertical) {
             layoutParams.width = dip(130)
             layoutParams.height = dip(231)
-            yMax = ScreenUtils.getScreenHeight()  - dip(231)
+            yMax = ScreenUtils.getScreenHeight() - dip(231)
             xMax = ScreenUtils.getScreenWidth() - mMargin - dip(130)
         } else {
             layoutParams.width = dip(213)
             layoutParams.height = dip(160)
-            yMax = ScreenUtils.getScreenHeight()  - dip(160)
+            yMax = ScreenUtils.getScreenHeight() - dip(160)
             xMax = ScreenUtils.getScreenWidth() - mMargin - dip(213)
         }
 
@@ -147,15 +148,19 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         if (PermissionUtils.checkFloatPermission(this)) {
             val layoutInflater: LayoutInflater = LayoutInflater.from(this)
             display = layoutInflater.inflate(R.layout.view_floating, null)
-            videoView = SingleVideoView(CommonInit.getInstance().getContext(), true)
+            videoView = display?.findViewById(R.id.svv)
             val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             lp.height = ViewGroup.LayoutParams.MATCH_PARENT
-            videoView?.let { vv ->
-                (display as? CardView)?.addView(vv, 0, lp)
-            }
+//            videoView?.let { vv ->
+//                val margin = dp2px(1)
+//                lp.setMargins(margin, margin, margin, margin)
+//                (display as? FrameLayout)?.addView(vv, 0, lp)
+//            }
 //            sdvCover = display?.findViewById(R.id.sdv_cover)
-//            videView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
-//            videView?.clipToOutline = true;
+
+//            videoView?.let {
+//                clipViewCornerByDp(it,12f)
+//            }
 
             ivClose = display?.findViewById(R.id.iv_close)
             ivQuiet = display?.findViewById(R.id.iv_quiet)
@@ -165,6 +170,10 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
 //            display?.setBackgroundColor(0)
 //            display?.getBackground()?.setAlpha(0)
             windowManager?.addView(display, layoutParams)
+
+            videoView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
+            videoView?.clipToOutline = true;
+
             display?.setOnTouchListener(FloatingOnTouchListener())
             display?.findViewById<View>(R.id.view_floating)?.setOnClickListener(this)
             show = false
@@ -264,11 +273,13 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
                 UserHeartManager.setProgramId(null)
                 videoView?.stop()
                 GlobalScope.launch {
-                    withContext(Dispatchers.IO) {
-                        try {
-                            Requests.create(LiveRoomService::class.java).leave(ProgramIdForm(mProgramId)).dataConvert()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                    kotlin.runCatching {
+                        withContext(Dispatchers.IO) {
+                            try {
+                                Requests.create(LiveRoomService::class.java).leave(ProgramIdForm(mProgramId)).dataConvert()
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         }
                     }
                 }
@@ -279,4 +290,15 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
     }
 
     override fun getRequestCallerId() = StringHelper.uuid()
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    fun clipViewCornerByDp(view: View, pixel: Float) {
+        view.clipToOutline = true
+        view.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, pixel)
+            }
+        }
+    }
+
 }

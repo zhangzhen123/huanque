@@ -23,6 +23,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.viewmodel.PlayerMessageViewModel
+import com.julun.huanque.message.BuildConfig
 import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.*
 import com.julun.huanque.message.adapter.ConversationListAdapter
@@ -345,12 +346,14 @@ class MessageFragment : BaseFragment() {
             mPlayerMessageViewModel.contactsData.value = true
         }
 
-        tv_message_unread.onClickNew {
-            activity?.let { act ->
-//                PrivateConversationActivity.newInstance(act, 20000767)
-                PrivateConversationActivity.newInstance(act, 10)
-            }
-        }
+//        if(BuildConfig.DEBUG){
+//            tv_message_unread.onClickNew {
+//                activity?.let { act ->
+////                PrivateConversationActivity.newInstance(act, 20000767)
+//                    PrivateConversationActivity.newInstance(act, 10)
+//                }
+//            }
+//        }
 
     }
 

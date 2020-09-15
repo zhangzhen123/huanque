@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/bitmap_startup_top" />
+    <!--    <item android:gravity="top|center_horizontal">-->
+    <!--        <bitmap-->
+    <!--            android:src="@mipmap/startup_top"-->
+    <!--            android:tileMode="clamp"></bitmap>-->
+    <!--    </item>-->
+    <item
+        android:drawable="@drawable/bitmap_startup_bottom"
+        android:gravity="bottom" />
+</layer-list>

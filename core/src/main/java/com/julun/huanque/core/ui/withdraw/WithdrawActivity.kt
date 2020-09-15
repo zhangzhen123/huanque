@@ -5,8 +5,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextPaint
+import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -38,6 +39,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
+
 
 /**
  *
@@ -377,7 +379,18 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
      * 刷新数据
      */
     private fun refreshData(info: WithdrawInfo) {
-        if (info.protocolUrl.isNotEmpty()) {
+        val protocolUrl = info.protocolUrl
+        if (protocolUrl.isNotEmpty()) {
+            val clickableSpan: ClickableSpan = object : ClickableSpan() {
+                override fun onClick(textView: View) {
+                    WebActivity.startWeb(this@WithdrawActivity, protocolUrl)
+                }
+
+                override fun updateDrawState(ds: TextPaint) {
+                    super.updateDrawState(ds)
+                    ds.isUnderlineText = false
+                }
+            }
             val content = StringBuilder()
             content.append("您在申请零钱提现之前，请您务必审慎阅读、充分理解")
             val start = content.length//记录开始位置
@@ -387,6 +400,7 @@ class WithdrawActivity : BaseVMActivity<WithdrawViewModel>() {
             content.append(ps)
             val styleSpan1B = ForegroundColorSpan(Color.parseColor("#FF5757"))
             val sp = SpannableString(content)
+            sp.setSpan(clickableSpan, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
             sp.setSpan(styleSpan1B, start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
             alertDialog.showAlertCustomWithSpannable(sp, MyAlertDialog.MyDialogCallback(onCancel = {
                 finish()
