@@ -331,7 +331,7 @@ class PrivateConversationActivity : BaseActivity() {
                     sdv_second_prop.hide()
                     tv_second_prop_count.hide()
                 }
-            }else{
+            } else {
                 sdv_first_prop.hide()
                 tv_first_prop_count.hide()
 
@@ -1978,6 +1978,8 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.msgFeeData?.value = 0L
             }
         }
+        val stranger = data.stranger[targetId] ?: false
+        EventBus.getDefault().post(UserInfoChangeEvent(targetId, stranger))
     }
 
 
@@ -2017,7 +2019,7 @@ class PrivateConversationActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun refreshVoiceCard(event : RefreshVoiceCardEvent){
+    fun refreshVoiceCard(event: RefreshVoiceCardEvent) {
         mPrivateConversationViewModel?.propList()
     }
 

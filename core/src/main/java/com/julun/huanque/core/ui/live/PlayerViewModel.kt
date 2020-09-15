@@ -389,7 +389,7 @@ class PlayerViewModel : BaseViewModel() {
     val refreshGiftPackage: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //显示未开播弹窗
-    val showNoOpenFragment : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val showNoOpenFragment: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //关注状态
     val followStatusData: MutableLiveData<ReactiveData<FollowResultBean>> by lazy { MutableLiveData<ReactiveData<FollowResultBean>>() }
@@ -750,7 +750,12 @@ class PlayerViewModel : BaseViewModel() {
                 if (bubbleInfo == null) {
                     val settingInfo = mUserService.settings().dataConvert()
                     bubbleInfo = settingInfo.chatBubble
-                    SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, settingInfo.chatBubble ?: return@request)
+                    if (bubbleInfo != null) {
+                        SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, bubbleInfo)
+                    } else {
+                        SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
+                    }
+
                 }
                 RongCloudManager.updateChatBubble(bubbleInfo)
             }, {
