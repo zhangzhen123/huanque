@@ -72,7 +72,7 @@ android {
                 HUAWEI_APPID_P     : "102845793",// 华为平台注册的appid
 
 
-                OPPO_APPKEY_P      : "3abc3373c8c587cb9b1600cb8c5522bc", // OPPO平台注册的appkey
+                OPPO_APPKEY_P      : "2c8b8dc3d9b04392884e8bc83fed73fd", // OPPO平台注册的appkey
                 OPPO_APPID_P         : "30339257", // OPPO平台注册的appid
                 OPPO_APPSECRET_P     : "2087b5267b324ff499a4a1c7616498c8",//OPPO平台注册的appsecret
 
