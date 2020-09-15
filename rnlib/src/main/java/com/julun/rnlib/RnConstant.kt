@@ -36,6 +36,8 @@ object RnConstant {
     const val MY_CAR_PAGE:String="MyCarPage"
     //亲密度说明页
     const val INTIMATE_LEVEL_PAGE:String="IntimateLevelPage"
+    //零钱页面
+    const val SmallChangePage:String="SmallChangePage"
 
 
 
