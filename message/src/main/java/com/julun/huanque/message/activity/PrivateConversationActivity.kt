@@ -299,11 +299,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         mPrivateConversationViewModel?.addMessageData?.observe(this, Observer {
             if (it != null) {
-                mAdapter.addData(it)
-                mAdapter.upFetchModule.isUpFetching = false
-                mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
-                scrollToBottom(true)
-                showXiaoQueAuto()
+                addSingleMessage(it)
                 mPrivateConversationViewModel?.addMessageData?.value = null
             }
         })
@@ -1099,8 +1095,8 @@ class PrivateConversationActivity : BaseActivity() {
                             }
                         }
                     }
-
-                    mPrivateConversationViewModel?.addMessage(msg)
+                    addSingleMessage(msg)
+//                    mPrivateConversationViewModel?.addMessage(msg)
 //                    scrollToBottom()
                 }
             }
@@ -1800,6 +1796,17 @@ class PrivateConversationActivity : BaseActivity() {
                 }
 
             }
+    }
+
+    /**
+     * 增加单条消息
+     */
+    private fun addSingleMessage(msg : Message){
+        mAdapter.addData(msg)
+        mAdapter.upFetchModule.isUpFetching = false
+        mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
+        scrollToBottom(true)
+        showXiaoQueAuto()
     }
 
     /**
