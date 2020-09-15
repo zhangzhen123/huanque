@@ -32,10 +32,7 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.events.ChatBackgroundChangedEvent
-import com.julun.huanque.common.bean.events.QueryUnreadCountEvent
-import com.julun.huanque.common.bean.events.UnreadCountEvent
-import com.julun.huanque.common.bean.events.UserInfoChangeEvent
+import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.message.ExpressionAnimationBean
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
@@ -192,6 +189,7 @@ class PrivateConversationActivity : BaseActivity() {
         mIntimateDetailViewModel?.friendId = mPrivateConversationViewModel?.targetIdData?.value ?: 0L
         mPrivateConversationViewModel?.fromPlayer = intent?.getBooleanExtra(ParamConstant.FROM, false) ?: false
         EventBus.getDefault().post(QueryUnreadCountEvent(mPrivateConversationViewModel?.fromPlayer ?: false))
+//        mPrivateConversationViewModel?.propList()
     }
 
     /**
@@ -307,6 +305,38 @@ class PrivateConversationActivity : BaseActivity() {
                 scrollToBottom(true)
                 showXiaoQueAuto()
                 mPrivateConversationViewModel?.addMessageData?.value = null
+            }
+        })
+        mPrivateConversationViewModel?.propListData?.observe(this, Observer {
+            //道具列表
+            if (it != null) {
+                if (ForceUtils.isIndexNotOutOfBounds(0, it)) {
+                    val firstData = it[0]
+                    sdv_first_prop.show()
+                    sdv_first_prop.loadImage(firstData.goodsPic, 38f, 24f)
+                    tv_first_prop_count.show()
+                    tv_first_prop_count.text = "${firstData.count}"
+                } else {
+                    sdv_first_prop.hide()
+                    tv_first_prop_count.hide()
+                }
+
+                if (ForceUtils.isIndexNotOutOfBounds(1, it)) {
+                    val secondData = it[1]
+                    sdv_second_prop.show()
+                    sdv_second_prop.loadImage(secondData.goodsPic, 38f, 24f)
+                    tv_second_prop_count.show()
+                    tv_second_prop_count.text = "${secondData.count}"
+                } else {
+                    sdv_second_prop.hide()
+                    tv_second_prop_count.hide()
+                }
+            }else{
+                sdv_first_prop.hide()
+                tv_first_prop_count.hide()
+
+                sdv_second_prop.hide()
+                tv_second_prop_count.hide()
             }
         })
 
@@ -1986,6 +2016,10 @@ class PrivateConversationActivity : BaseActivity() {
         EventBus.getDefault().removeStickyEvent(bean)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun refreshVoiceCard(event : RefreshVoiceCardEvent){
+        mPrivateConversationViewModel?.propList()
+    }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)

@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.fm.openinstall.OpenInstall
 import com.fm.openinstall.listener.AppWakeUpAdapter
@@ -17,12 +19,13 @@ import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
-import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
+import com.julun.huanque.fragment.PersonalInformationProtectionFragment
+import com.julun.huanque.viewmodel.PersonalInformationProtectionViewModel
 import com.julun.huanque.viewmodel.WelcomeViewModel
 
 /**
@@ -31,24 +34,33 @@ import com.julun.huanque.viewmodel.WelcomeViewModel
  *@描述 欢迎页
  */
 class WelcomeActivity : BaseActivity() {
+    //是否同意过隐私弹窗
+    private var mShowFragment = false
 
     //openinstall返回的bean
     private var mOpenInstallBean: OpenInstallParamsBean? = null
 
     private var viewModel: WelcomeViewModel? = null
+    private var mPersonalInformationProtectionViewModel: PersonalInformationProtectionViewModel? = null
 
     override fun getLayoutId() = R.layout.act_welcome
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-
+        mShowFragment = SharedPreferencesUtils.getBoolean(SPParamKey.Welcome_privacy_Fragment, false)
         initViewModel()
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         //移除缓存的私信气泡数据
         SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
-        checkPermissions()
-        VoiceManager.startRing(false)
+//        VoiceManager.startRing(false)
         getWakeUp(intent)
+
+        if (mShowFragment) {
+            checkPermissions()
+        } else {
+            val mPersonalInformationProtectionFragment = PersonalInformationProtectionFragment.newInstance(true)
+            mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
+        }
     }
 
     /**
@@ -56,6 +68,17 @@ class WelcomeActivity : BaseActivity() {
      */
     private fun initViewModel() {
         viewModel = ViewModelProvider(this).get(WelcomeViewModel::class.java)
+        mPersonalInformationProtectionViewModel = ViewModelProvider(this).get(PersonalInformationProtectionViewModel::class.java)
+        mPersonalInformationProtectionViewModel?.agreeClickState?.observe(this, Observer {
+            if (it == true) {
+                checkPermissions()
+            }
+        })
+        mPersonalInformationProtectionViewModel?.cancelClickState?.observe(this, Observer {
+            if (it == true) {
+                finish()
+            }
+        })
         doOpenInstall(mOpenInstallBean ?: return)
     }
 
@@ -113,11 +136,6 @@ class WelcomeActivity : BaseActivity() {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        // 此处要调用，否则App在后台运行时，会无法截获
-        OpenInstall.getWakeUp(intent, wakeUpAdapter)
-    }
 
     private fun startActivity() {
         val registerUser = SessionUtils.getIsRegUser()

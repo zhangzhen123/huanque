@@ -32,12 +32,12 @@
         android:background="@drawable/bg_intimate_level"
         android:gravity="center"
         android:includeFontPadding="false"
+        android:text="lv.0"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_10"
         app:layout_constraintBottom_toBottomOf="@id/iv_intimate"
         app:layout_constraintLeft_toLeftOf="@id/iv_intimate"
-        app:layout_constraintRight_toRightOf="@id/iv_intimate"
-        android:text="lv.0" />
+        app:layout_constraintRight_toRightOf="@id/iv_intimate" />
 
 
     <TextView
@@ -114,16 +114,16 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bottom_action"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
-                android:background="@color/color_gray_three"
                 android:minHeight="104dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent">
-
+<!--android:background="@color/color_gray_three"-->
                 <View
                     android:id="@+id/view_input_bottom"
                     android:layout_width="0px"
@@ -194,6 +194,61 @@
                     app:layout_constraintLeft_toRightOf="@id/iv_share"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/view_input_bottom" />
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/sdv_first_prop"
+                    android:layout_width="38dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="15dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@id/edit_text"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:placeholderImage="@mipmap/logo_placeholder_medium"
+                    app:placeholderImageScaleType="centerCrop"
+                    app:roundedCornerRadius="4dp" />
+
+                <TextView
+                    android:id="@+id/tv_first_prop_count"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/bg_num"
+                    android:includeFontPadding="false"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_10"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@id/sdv_first_prop"
+                    app:layout_constraintLeft_toRightOf="@id/sdv_first_prop"
+                    app:layout_constraintRight_toRightOf="@id/sdv_first_prop"
+                    app:layout_constraintTop_toTopOf="@id/sdv_first_prop" />
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/sdv_second_prop"
+                    android:layout_width="38dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="70dp"
+                    android:layout_marginBottom="15dp"
+                    app:layout_constraintBottom_toTopOf="@id/edit_text"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:placeholderImage="@mipmap/logo_placeholder_medium"
+                    app:placeholderImageScaleType="centerCrop"
+                    app:roundedCornerRadius="4dp" />
+
+                <TextView
+                    android:id="@+id/tv_second_prop_count"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/bg_num"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_10"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@id/sdv_second_prop"
+                    app:layout_constraintLeft_toRightOf="@id/sdv_second_prop"
+                    app:layout_constraintRight_toRightOf="@id/sdv_second_prop"
+                    app:layout_constraintTop_toTopOf="@id/sdv_second_prop" />
 
 
                 <!-- 小鹊 -->

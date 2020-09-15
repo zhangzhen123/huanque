@@ -28,6 +28,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="fitXY"
+        app:fadeDuration="0"
         app:roundAsCircle="true"
         app:roundingBorderColor="@color/white"
         app:roundingBorderWidth="2dp" />

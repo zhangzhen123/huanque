@@ -75,6 +75,9 @@ object SPParamKey {
 
     //私信聊天框设置
     const val PRIVATE_CHAT_BUBBLE = "PRIVATE_CHAT_BUBBLE"
+
+    //欢迎页有没有显示过隐私弹窗
+    const val Welcome_privacy_Fragment = "Welcome_privacy_Fragment"
 }
 
 /**
@@ -586,6 +589,9 @@ object BannerTouchType {
     //小程序
     const val MINI = "Mini"
 
+    //邀友
+    const val InviteFriend = "InviteFriend"
+
     //打开星球霸主
     const val OpenLiveRoomAndPlanet = "OpenLiveRoomAndPlanet"
 }
@@ -880,6 +886,7 @@ object Agreement {
     //主播管理规范
     const val AnchorAgreement = "https://cdn.ihuanque.com/protocol/AnchorManage.html"
 }
+
 object MetaKey {
     const val DOWNLOAD_CHANNEL = "UMENG_CHANNEL"//渠道链接  2018/2/26修改本地渠道链接标识DOWNLOAD_CHANNEL为UMENG_CHANNEL
 }

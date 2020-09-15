@@ -192,8 +192,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:text="Copyright©1692020 聚轮网络版权所有"
-
+        android:text="Copyright©2020 聚轮网络版权所有"
         android:textColor="@color/black_999"
         android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toBottomOf="parent"
