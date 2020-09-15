@@ -590,7 +590,12 @@ class PrivateConversationViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = userService.settings().dataConvert()
-                SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, result.chatBubble ?: return@request)
+                val chatBubble = result.chatBubble
+                if (chatBubble == null) {
+                    SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
+                } else {
+                    SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, chatBubble)
+                }
                 bubbleData.value = result.chatBubble
             })
         }

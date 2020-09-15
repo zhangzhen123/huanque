@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.LiveRemindBeans
@@ -47,19 +49,27 @@ class LiveRemindActivity : BaseActivity() {
         rvList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvList.adapter = mAdapter
         mAdapter.loadMoreModule.isEnableLoadMore = true
+        mAdapter.loadMoreModule.setOnLoadMoreListener {
+            mViewModel?.queryData?.value = false
+        }
 
         mViewModel?.queryData?.value = true
     }
 
-    override fun onStart() {
-        super.onStart()
-        mViewModel?.queryData?.value = true
-    }
+//    override fun onStart() {
+//        super.onStart()
+//        mViewModel?.queryData?.value = true
+//    }
 
     override fun initEvents(rootView: View) {
         ivback.onClickNew {
             onBackPressed()
         }
+
+        rlRefreshView.setOnRefreshListener {
+            mViewModel?.queryData?.value = true
+        }
+
         mAdapter.onAdapterChildClickNew { _, view, position ->
             when (view?.id) {
                 R.id.ivPush -> {
@@ -113,6 +123,7 @@ class LiveRemindActivity : BaseActivity() {
             if (it.list.isNotEmpty()) {
                 commonView.hide()
                 if (it.isPull) {
+                    rlRefreshView.isRefreshing = false
                     mAdapter.setList(it.list)
                 } else {
                     mAdapter.addData(it.list)

@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
  * @date 2020/07/15
  */
 class LiveRemindViewModel : BaseViewModel() {
-
+    private val mLiveRemindSevice: LiveRemindService by lazy { Requests.create(LiveRemindService::class.java) }
     val queryData = MutableLiveData<Boolean>()
     val success: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -34,8 +34,7 @@ class LiveRemindViewModel : BaseViewModel() {
             }
             request({
                 val data =
-                    Requests.create(LiveRemindService::class.java)
-                        .followList(LiveRemindForm(offset = offset))
+                    mLiveRemindSevice.followList(LiveRemindForm(offset = offset))
                         .dataConvert()
                 offset += data.list.size
                 data.isPull = it
@@ -44,11 +43,11 @@ class LiveRemindViewModel : BaseViewModel() {
         }
     }
 
+
     fun updatePush(push: String, programId: Long) {
         viewModelScope.launch {
             request({
-                Requests.create(LiveRemindService::class.java)
-                    .changeFollowPush(LiveRemindForm(pushOpen = push, programId = programId))
+                mLiveRemindSevice.changeFollowPush(LiveRemindForm(pushOpen = push, programId = programId))
                     .dataConvert()
                 success.value = true
             }, error = { e ->
