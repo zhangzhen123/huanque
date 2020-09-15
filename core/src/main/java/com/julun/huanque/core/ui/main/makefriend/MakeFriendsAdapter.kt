@@ -54,7 +54,9 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
         addChildClickViewIds(
             R.id.iv_audio_play, R.id.btn_action,
             R.id.ll_task, R.id.ll_balance,
-            R.id.iv_guide_tag_close, R.id.iv_guide_info_close
+            R.id.iv_guide_tag_close,
+            R.id.iv_guide_info_close,
+            R.id.living_fg
         )
     }
 
