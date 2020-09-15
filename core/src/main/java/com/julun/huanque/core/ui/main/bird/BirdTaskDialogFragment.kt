@@ -91,6 +91,7 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
                             ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
                                 .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MESSAGE_FRAGMENT_INDEX).navigation()
                             this@BirdTaskDialogFragment.dismiss()
+                            EventBus.getDefault().post(HideBirdEvent())
                         }
 
                     }

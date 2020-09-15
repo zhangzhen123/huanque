@@ -18,6 +18,8 @@ import kotlinx.android.synthetic.main.fragment_bird_got_func_bird.*
  *
  *@Description: 获取到功能鹊的弹窗
  *
+ * 修改 也支持解锁显示
+ *
  */
 class BirdGotFunctionDialogFragment : BaseDialogFragment() {
 
@@ -53,12 +55,16 @@ class BirdGotFunctionDialogFragment : BaseDialogFragment() {
         }
     }
 
-    fun renderData() {
+    private fun renderData() {
         val birdDes = arguments?.getSerializable("bird") as? FunctionBird
         currentBird = birdDes
         birdDes?.let { bird ->
             sdv_bird.loadImage(bird.functionIcon, 80f, 80f)
-            tv_name.text = bird.functionName
+            if(bird.level!=null){
+                tv_name.text = "Lv${bird.level} "+bird.functionName
+            }else{
+                tv_name.text = bird.functionName
+            }
         }
     }
 

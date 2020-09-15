@@ -19,7 +19,8 @@ data class BirdHomeInfo(
     var functionInfo: BirdFunctionInfo = BirdFunctionInfo(),
     var totalCoins: BigInteger = BigInteger.ZERO,
     var unlockUpgrade: UnlockUpgrade = UnlockUpgrade(),
-    var upgradeList: MutableList<UpgradeBirdBean> = mutableListOf()
+    var upgradeList: MutableList<UpgradeBirdBean> = mutableListOf(),
+    var hasNotReceive: Boolean = false
 )
 
 data class BirdFunctionInfo(
@@ -43,16 +44,27 @@ data class UnlockUpgrade(
 data class FunctionBird(
     var functionIcon: String = "",
     var functionName: String = "",
-    var functionNum: String = ""
+    var functionNum: String = "",
+    var level: Int? = null
 ) : Serializable
 
 data class BuyBirdResult(
     var coinsPerSec: BigInteger = BigInteger.ZERO,
     var currentUpgrade: UpgradeBirdBean = UpgradeBirdBean(),
     var totalCoins: BigInteger = BigInteger.ZERO,
-    var unlockUpgrade: UnlockUpgrade? = null
+    var unlockUpgrade: UnlockUpgrade? = null,
+    var hasEnough: Boolean = false,
+    var taskGuideInfo: TaskGuideInfo = TaskGuideInfo()
 )
 
+data class TaskGuideInfo(
+    var awardType: String = "",
+    var jumpType: String = "",
+    var taskCode: String = "",
+    var taskGuideDesc: String = "",
+    var taskGuideName: String = "",
+    var taskParams: String = ""
+):Serializable
 data class UpgradeBirdBean(
     var onlineCoinsPerSec: BigInteger = BigInteger.ZERO,
     var programCoinsPerSec: BigInteger = BigInteger.ZERO,
@@ -73,7 +85,8 @@ data class CombineResult(
     var resultType: String = "",
     var unlockUpgrade: UnlockUpgrade? = null,//合并操作后 棋盘升级
     var currentUpgrade: UpgradeBirdBean? = null,//合并成功的升级鹊
-    var functionInfo: FunctionBird? = null//合成功能鹊后 刷新整个棋盘
+    var functionInfo: FunctionBird? = null,//合成功能鹊后 刷新整个棋盘
+    var currentUpgradeFirst: Boolean = false
 ) {
     companion object {
         //MovePos：单向移动
@@ -173,3 +186,9 @@ data class BirdLiveAward(
     var taskCode: String = ""
 
 ) : Serializable
+
+data class BirdCoinBean(
+    var coinsPerSec: BigInteger = BigInteger.ZERO,
+    var hasNotReceive: Boolean = false,
+    var totalCoins: BigInteger = BigInteger.ZERO
+)

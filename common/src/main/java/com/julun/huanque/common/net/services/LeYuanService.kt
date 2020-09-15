@@ -76,5 +76,11 @@ interface LeYuanService {
      */
     @POST("social/magpie/fly")
     suspend fun fly(@Body form: BirdFunctionForm): Root<BirdFlyResult>
+    /**
+     * 获取最新的金币信息
+     */
+    @POST("social/magpie/coinsInfo")
+    suspend fun coinsInfo(@Body form: ProgramIdForm): Root<BirdCoinBean>
+
 
 }

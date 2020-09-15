@@ -5,8 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.events.HideBirdEvent
 import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.core.R
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  *
@@ -29,5 +32,11 @@ class LeYuanBirdActivity : BaseActivity() {
         transaction.replace(R.id.fragment_container, leYuanFragment).commit()
     }
 
-
+    override fun isRegisterEventBus(): Boolean {
+        return true
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun close(event: HideBirdEvent){
+        finish()
+    }
 }

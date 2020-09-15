@@ -22,11 +22,9 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
-import com.julun.huanque.common.bean.beans.BirdHomeInfo
-import com.julun.huanque.common.bean.beans.CombineResult
-import com.julun.huanque.common.bean.beans.UnlockUpgrade
-import com.julun.huanque.common.bean.beans.UpgradeBirdBean
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.HideBirdEvent
+import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.StringHelper
@@ -106,6 +104,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     private var birdFunctionDialogFragment: BirdFunctionDialogFragment? = null
 
     private var mBirdGotFunctionDialogFragment: BirdGotFunctionDialogFragment? = null
+
+    private var mBirdTaskGuideFragment: BirdTaskGuideFragment? = null
     private var isInLivePage = false
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         programId = arguments?.getLong(IntentParamKey.PROGRAM_ID.name)
@@ -213,6 +213,9 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         iv_bottom_01.onClickNew {
             birdDescDialogFragment = birdDescDialogFragment ?: BirdDescriptionDialogFragment((mViewModel))
             birdDescDialogFragment?.show(requireActivity(), "birdDescDialogFragment")
+        }
+        ivClose.onClickNew {
+            EventBus.getDefault().post(HideBirdEvent())
         }
         rv_bird_packet.onTouch { _, event ->
 //            logger.info("rv_bird_packet event=${event.action} rawX=${event.rawX} rawY=${event.rawY}")
@@ -337,11 +340,10 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     private var isGuide1: Boolean = false
     private fun initGuideView1() {
         val needBirdGuide = StorageHelper.getNeedBirdGuide()
-        //todo test
-//        if (!needBirdGuide) {
-//            logger.info("不再需要引导")
-//            return
-//        }
+        if (!needBirdGuide) {
+            logger.info("不再需要引导")
+            return
+        }
         val builder = GuideBuilder()
         builder.setTargetView(iv_bottom_03)
             .setAlpha(204)
@@ -512,19 +514,29 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             iv_bottom_03.isEnabled = true
             if (it.isSuccess()) {
                 val bird = it.requireT()
-                if (bird.currentUpgrade.upgradePos < birdAdapter.data.size) {
-                    birdAdapter.data[bird.currentUpgrade.upgradePos] = bird.currentUpgrade
-                    birdAdapter.notifyItemChanged(bird.currentUpgrade.upgradePos)
+                if (bird.hasEnough) {
+                    if (bird.currentUpgrade.upgradePos < birdAdapter.data.size) {
+                        birdAdapter.data[bird.currentUpgrade.upgradePos] = bird.currentUpgrade
+                        birdAdapter.notifyItemChanged(bird.currentUpgrade.upgradePos)
 //                    SoundPoolManager.instance.play(BIRD_BUY)
-                    playSound(BIRD_BUY)
+                        playSound(BIRD_BUY)
+                    }
+                    if (isGuide1) {
+                        guide1?.dismiss()
+                        initGuideView2()
+                    } else if (isGuide2) {
+                        guide2?.dismiss()
+                        initGuideView3()
+                    }
+                } else {
+                    if (mBirdTaskGuideFragment == null) {
+                        mBirdTaskGuideFragment = BirdTaskGuideFragment.newInstance(task = bird.taskGuideInfo)
+                    } else {
+                        mBirdTaskGuideFragment?.setTask(bird.taskGuideInfo)
+                    }
+                    mBirdTaskGuideFragment?.show(requireActivity(), "BirdTaskGuideFragment")
                 }
-                if (isGuide1) {
-                    guide1?.dismiss()
-                    initGuideView2()
-                } else if (isGuide2) {
-                    guide2?.dismiss()
-                    initGuideView3()
-                }
+
             } else {
                 ToastUtils.show(it.error?.busiMessage)
             }
@@ -560,6 +572,16 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         mViewModel.coinsPerSec.observe(this, Observer {
             if (it != null) {
                 tv_balance_produce.text = "${StringHelper.formatBigNum(it)}金币/秒"
+            }
+        })
+        mViewModel.hasNotReceive.observe(this, Observer {
+            if (it != null) {
+                if (it) {
+                    tv_task_tag.show()
+                } else {
+                    tv_task_tag.hide()
+                }
+
             }
         })
         mViewModel.unlockUpgrade.observe(this, Observer {
@@ -930,6 +952,22 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         val combineAnim = AnimatorSet()
         combineAnim.playSequentially(anim01, anim02)
         combineAnim.start()
+
+        if (result.currentUpgradeFirst) {
+            val currentNew = result.currentUpgrade ?: return
+            val funBird =
+                FunctionBird(
+                    functionName = currentNew.upgradeName,
+                    functionIcon = currentNew.upgradeIcon,
+                    level = currentNew.upgradeLevel
+                )
+            if (mBirdGotFunctionDialogFragment == null) {
+                mBirdGotFunctionDialogFragment = BirdGotFunctionDialogFragment.newInstance(funBird)
+            } else {
+                mBirdGotFunctionDialogFragment?.setBird(funBird)
+            }
+            mBirdGotFunctionDialogFragment?.show(requireActivity(), "BirdGotFunctionDialogFragment")
+        }
     }
 
     /**

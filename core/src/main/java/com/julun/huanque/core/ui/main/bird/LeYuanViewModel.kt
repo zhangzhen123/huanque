@@ -49,6 +49,7 @@ class LeYuanViewModel : BaseViewModel() {
     //功能鹊描述
     val functionBirds: MutableLiveData<MutableList<FunctionBirdDes>> by lazy { MutableLiveData<MutableList<FunctionBirdDes>>() }
 
+    val hasNotReceive: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     private val functionBirdsList = mutableListOf<FunctionBirdDes>()
     var programId: Long? = null
     private var currentInfo: BirdHomeInfo? = null
@@ -77,6 +78,7 @@ class LeYuanViewModel : BaseViewModel() {
                 totalCoin.value = result.totalCoins
                 coinsPerSec.value = result.coinsPerSec
                 unlockUpgrade.value = result.unlockUpgrade
+                hasNotReceive.value =result.hasNotReceive
 //                startProcessCoins()
             }, error = {
                 it.printStackTrace()
@@ -297,4 +299,19 @@ class LeYuanViewModel : BaseViewModel() {
         return null
     }
 
+    fun refreshCoins(){
+        viewModelScope.launch {
+            request({
+                val result = service.coinsInfo(ProgramIdForm(programId)).dataConvert()
+                totalCoin.value = result.totalCoins
+                coinsPerSec.value = result.coinsPerSec
+                hasNotReceive.value =result.hasNotReceive
+            }, error = {
+                it.printStackTrace()
+                recycleResult.value = it.convertError()
+            })
+
+        }
+
+    }
 }
