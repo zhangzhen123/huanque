@@ -238,7 +238,7 @@ class LeYuanViewModel : BaseViewModel() {
             FunctionBirdDes(
                 "牛郎鹊",
                 cowherd?.functionIcon,
-                bFunction = "和织女鹊一起放飞，获得00元零钱奖励。",
+                bFunction = "和织女鹊一起放飞，获得88元零钱奖励。",
                 source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。",
                 num = cowherd?.functionNum?.toIntOrNull(),
                 type = "cowherd"

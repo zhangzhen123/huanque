@@ -412,7 +412,7 @@
         app:layout_constraintEnd_toEndOf="@+id/iv_task"
         app:layout_constraintStart_toEndOf="@+id/iv_task"
         app:layout_constraintTop_toTopOf="@+id/iv_task"
-        tools:text="领取"
+        android:text="领取"
         tools:visibility="visible" />
 
     <ImageView

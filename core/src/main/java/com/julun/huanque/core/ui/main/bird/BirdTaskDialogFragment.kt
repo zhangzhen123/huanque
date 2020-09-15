@@ -42,7 +42,7 @@ import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundColor
 
 /**
- * [leYuanViewModel]将主面板的viewModel传过来 供商店调用
+ * [leYuanViewModel]将主面板的viewModel传过来
  */
 class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : BaseVMDialogFragment<BirdTaskViewModel>() {
 
@@ -160,10 +160,20 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
                 val dialog = BirdGotMoneyDialogFragment.newInstance(content)
                 dialog.show(requireActivity(), "BirdGotMoneyDialogFragment")
                 mViewModel.queryInfo(QueryType.REFRESH)
+                leYuanViewModel.refreshCoins()
             } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show("${it.error?.busiMessage}")
             }
         })
+        mViewModel.receiveActiveAward.observe(this, Observer {
+            if (it.isSuccess()) {
+                mViewModel.queryInfo(QueryType.REFRESH)
+                leYuanViewModel.refreshCoins()
+            } else if (it.state == NetStateType.ERROR) {
+                ToastUtils.show("${it.error?.busiMessage}")
+            }
+        })
+
         mViewModel.mRandomRoom.observe(this, Observer {
             if (it.isSuccess()) {
                 val item = currentItem ?: return@Observer
@@ -204,7 +214,11 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         val pBlp = view_process_bg.layoutParams as ConstraintLayout.LayoutParams
         plp.horizontalWeight = process
         pBlp.horizontalWeight = 100f - process
-        view_process_bg.requestLayout()
+        view_process.post {
+            view_process.requestLayout()
+            view_process_bg.requestLayout()
+        }
+
         award_01.renderData(data.activeInfo.awardList.getOrNull(0))
         award_02.renderData(data.activeInfo.awardList.getOrNull(1))
         award_03.renderData(data.activeInfo.awardList.getOrNull(2))

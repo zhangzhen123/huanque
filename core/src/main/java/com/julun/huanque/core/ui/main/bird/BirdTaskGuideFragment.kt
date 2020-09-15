@@ -102,6 +102,7 @@ class BirdTaskGuideFragment : BaseVMDialogFragment<BirdTaskViewModel>() {
         data ?: return
         tv_title.text = data.taskGuideName
         tv_desc.text = data.taskGuideDesc
+        tv_ok.text = data.jumpTypeText
         when (data.awardType) {
             BirdTaskAwardType.Small -> {
                 sdv_coins.loadImageLocal(R.mipmap.icon_bird_coin_little)

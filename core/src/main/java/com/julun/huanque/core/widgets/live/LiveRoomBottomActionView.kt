@@ -105,7 +105,7 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
                             bean.type = ClickType.PLANTE
                         }
                         ClickType.BIRD -> {
-                            //星球争霸
+                            //养鹊
                             bean.type = ClickType.BIRD
                         }
                         else -> {

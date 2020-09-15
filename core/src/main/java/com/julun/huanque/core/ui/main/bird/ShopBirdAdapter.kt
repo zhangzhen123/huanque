@@ -8,6 +8,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.UpgradeShopBirdBean
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.core.R
 import org.jetbrains.anko.backgroundResource
 
@@ -25,7 +26,7 @@ class ShopBirdAdapter : BaseQuickAdapter<UpgradeShopBirdBean, BaseViewHolder>(R.
     override fun convert(holder: BaseViewHolder, item: UpgradeShopBirdBean) {
         val imgView = holder.getView<SimpleDraweeView>(R.id.sdv_bird)
 
-        imgView.loadImage(item.upgradeIcon, 90f, 90f)
+
         holder.setText(R.id.tv_level, "Lv${item.upgradeLevel}${item.upgradeName}")
             .setText(R.id.tv_bird_price, "${StringHelper.formatBigNum(item.upgradeCoins)}金币")
         val text = holder.getView<TextView>(R.id.tv_bird_price)
@@ -37,14 +38,16 @@ class ShopBirdAdapter : BaseQuickAdapter<UpgradeShopBirdBean, BaseViewHolder>(R.
                 text.setCompoundDrawables(drawable, null, null, null)
             }
             text.backgroundResource=R.mipmap.bg_bird_btn_green
+            imgView.loadImage(item.upgradeIcon, 90f, 90f)
         } else {
-            text.text = "Lv.${item.upgradeLevel}解锁"
+            text.text = "Lv.${item.unlockLevel}解锁"
             val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_bird_shop_lock)
             if (drawable != null) {
                 drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
                 text.setCompoundDrawables(drawable, null, null, null)
             }
             text.backgroundResource=R.mipmap.bg_bird_shop_lock
+            ImageUtils.loadImageWithTile(imgView,item.upgradeIcon)
         }
 //                playAnim(imgView, holder.getView(R.id.tv_produce_sec))
 //        holder.setGone(R.id.viewLock, item.unlocked)

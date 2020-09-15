@@ -35,8 +35,9 @@ class LeYuanBirdActivity : BaseActivity() {
     override fun isRegisterEventBus(): Boolean {
         return true
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun close(event: HideBirdEvent){
+    fun close(event: HideBirdEvent) {
         finish()
     }
 }

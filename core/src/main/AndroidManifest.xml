@@ -96,6 +96,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".ui.main.bird.LeYuanBirdActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
 
         <service android:name=".service.FloatingService" />

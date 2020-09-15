@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
+import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.RandomRoomForm
 import com.julun.huanque.common.bean.forms.TaskBirdActiveReceive
@@ -35,7 +36,7 @@ class BirdTaskViewModel : BaseViewModel() {
     }
     val receiveTaskResult: MutableLiveData<ReactiveData<BirdTaskReceiveResult>> by lazy { MutableLiveData<ReactiveData<BirdTaskReceiveResult>>() }
 
-    val receiveActiveAward: MutableLiveData<ReactiveData<BirdTaskReceiveResult>> by lazy { MutableLiveData<ReactiveData<BirdTaskReceiveResult>>() }
+    val receiveActiveAward: MutableLiveData<ReactiveData<VoidResult>> by lazy { MutableLiveData<ReactiveData<VoidResult>>() }
 
     val mRandomRoom: MutableLiveData<ReactiveData<ProgramRoomBean>> by lazy { MutableLiveData<ReactiveData<ProgramRoomBean>>() }
     val taskInfo: LiveData<ReactiveData<BirdTaskInfo>> = queryState.switchMap {

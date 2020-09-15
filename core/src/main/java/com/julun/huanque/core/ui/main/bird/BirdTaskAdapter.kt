@@ -10,6 +10,7 @@ import com.julun.huanque.common.bean.beans.BirdTask
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.loadImage
+import com.julun.huanque.common.suger.loadImageLocal
 import com.julun.huanque.core.R
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -59,19 +60,25 @@ class BirdTaskAdapter : BaseQuickAdapter<BirdTask, BaseViewHolder>(R.layout.item
             }
 
         }
+        val sdvImg = holder.getView<SimpleDraweeView>(R.id.sdv_img)
+
         when (item.awardType) {
             BirdTaskAwardType.Small -> {
                 holder.setText(R.id.tv_coin_title, "少量金币")
+                sdvImg.loadImageLocal(R.mipmap.icon_bird_coin_little)
             }
             BirdTaskAwardType.Middle -> {
                 holder.setText(R.id.tv_coin_title, "中量金币")
+                sdvImg.loadImageLocal(R.mipmap.icon_bird_coin_middle)
             }
 
             BirdTaskAwardType.Big -> {
                 holder.setText(R.id.tv_coin_title, "大量金币")
+                sdvImg.loadImageLocal(R.mipmap.icon_bird_coin_big)
             }
             else -> {
                 holder.setText(R.id.tv_coin_title, "少量金币")
+                sdvImg.loadImageLocal(R.mipmap.icon_bird_coin_little)
             }
 
         }

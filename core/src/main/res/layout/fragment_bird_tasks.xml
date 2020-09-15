@@ -75,7 +75,6 @@
             android:background="@mipmap/icon_bird_task_process"
             app:layout_constraintBottom_toBottomOf="@+id/view4"
             app:layout_constraintEnd_toStartOf="@+id/view_process_bg"
-            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="@+id/view4"
             app:layout_constraintTop_toTopOf="@+id/view4" />
 
@@ -85,7 +84,7 @@
             android:layout_height="0dp"
             android:background="#6B4B2D"
             app:layout_constraintBottom_toBottomOf="@+id/view4"
-            app:layout_constraintEnd_toEndOf="@id/view4"
+            app:layout_constraintEnd_toEndOf="@+id/view4"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/view_process"
             app:layout_constraintTop_toTopOf="@+id/view4" />
@@ -119,7 +118,7 @@
             android:background="#FABD3B"
             app:layout_constraintBottom_toBottomOf="@+id/view4"
             app:layout_constraintEnd_toEndOf="@+id/p_30"
-            app:layout_constraintStart_toEndOf="@id/p_30"
+            app:layout_constraintStart_toEndOf="@+id/p_30"
             app:layout_constraintTop_toTopOf="@+id/view4" />
 
         <View
@@ -139,7 +138,7 @@
             android:background="#FABD3B"
             app:layout_constraintBottom_toBottomOf="@+id/view4"
             app:layout_constraintEnd_toEndOf="@+id/p_60"
-            app:layout_constraintStart_toEndOf="@id/p_60"
+            app:layout_constraintStart_toEndOf="@+id/p_60"
             app:layout_constraintTop_toTopOf="@+id/view4" />
 
         <View
@@ -147,7 +146,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/view4"
-            app:layout_constraintEnd_toEndOf="@id/view4"
+            app:layout_constraintEnd_toEndOf="@+id/view4"
             app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toEndOf="@+id/p_60"
             app:layout_constraintTop_toTopOf="@+id/view4" />

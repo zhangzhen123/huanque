@@ -24,8 +24,7 @@
         app:actualImageScaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="@+id/view_bg1"
         app:layout_constraintStart_toStartOf="@+id/view_bg1"
-        app:layout_constraintTop_toTopOf="@+id/view_bg1"
-       app:actualImageResource="@mipmap/icon_bird_coin" />
+        app:layout_constraintTop_toTopOf="@+id/view_bg1" />
 
     <TextView
         android:id="@+id/tv_coin_title"

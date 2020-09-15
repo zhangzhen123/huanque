@@ -45,6 +45,7 @@ data class FunctionBird(
     var functionIcon: String = "",
     var functionName: String = "",
     var functionNum: String = "",
+    var functionCode: String = "",
     var level: Int? = null
 ) : Serializable
 
@@ -53,7 +54,7 @@ data class BuyBirdResult(
     var currentUpgrade: UpgradeBirdBean = UpgradeBirdBean(),
     var totalCoins: BigInteger = BigInteger.ZERO,
     var unlockUpgrade: UnlockUpgrade? = null,
-    var hasEnough: Boolean = false,
+    var hasEnough: Boolean? = null,
     var taskGuideInfo: TaskGuideInfo = TaskGuideInfo()
 )
 
@@ -63,8 +64,10 @@ data class TaskGuideInfo(
     var taskCode: String = "",
     var taskGuideDesc: String = "",
     var taskGuideName: String = "",
-    var taskParams: String = ""
-):Serializable
+    var taskParams: String = "",
+    var jumpTypeText: String = ""
+) : Serializable
+
 data class UpgradeBirdBean(
     var onlineCoinsPerSec: BigInteger = BigInteger.ZERO,
     var programCoinsPerSec: BigInteger = BigInteger.ZERO,
@@ -110,6 +113,7 @@ data class UpgradeShopBirdBean(
     var upgradeCoins: BigInteger = BigInteger.ZERO,
     var upgradeIcon: String = "",
     var upgradeLevel: Int = 0,
+    var unlockLevel: Int = 0,
     var upgradeName: String = ""
 )
 
@@ -152,7 +156,7 @@ data class BirdAward(
 
 data class BirdTaskReceiveResult(
     var activeValue: Int = 0,
-    var awardCoins: Int = 0,
+    var awardCoins: BigInteger = BigInteger.ZERO,
     var taskStatus: String = "",
     var taskStatusText: String = ""
 )
@@ -168,16 +172,8 @@ data class FunctionBirdDes(
 
 data class BirdFlyResult(
     var cash: String = "",
-    var functionNumInfo: FunctionNumInfo = FunctionNumInfo(),
+    var functionInfo: FunctionBird = FunctionBird(),
     var resultType: String = ""
-)
-
-data class FunctionNumInfo(
-    var cowherd: String = "",
-    var mystical: String = "",
-    var redpacket: String = "",
-    var wealth: String = "",
-    var weaver: String = ""
 )
 
 data class BirdLiveAward(

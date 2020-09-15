@@ -39,6 +39,8 @@ import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.guide.LottieComponent
 import com.julun.huanque.core.ui.main.bird.guide.LottieComponent2
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -107,6 +109,9 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
     private var mBirdTaskGuideFragment: BirdTaskGuideFragment? = null
     private var isInLivePage = false
+
+    //当前是否正在操作请求中 如果没有完成 就不再执行下次拖动
+    private var isActionDoing: Boolean = false
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         programId = arguments?.getLong(IntentParamKey.PROGRAM_ID.name)
         val activity = requireActivity()
@@ -201,6 +206,10 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
 
         }
+        iv_bottom_02.onClickNew {
+            logger.info("点击了邀友")
+            RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+        }
         iv_shop.onClickNew {
             logger.info("点击了商店")
             shopDialogFragment = shopDialogFragment ?: BirdShopDialogFragment(mViewModel)
@@ -221,6 +230,10 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 //            logger.info("rv_bird_packet event=${event.action} rawX=${event.rawX} rawY=${event.rawY}")
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    if(isActionDoing){
+                        logger.info("当前的操作还没完成")
+                        return@onTouch false
+                    }
                     val itemView = rv_bird_packet.findChildViewUnder(event.x, event.y)
                     logger.info("获取到当前的view ${itemView?.id}")
                     if (itemView != null) {
@@ -265,7 +278,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 }
                 MotionEvent.ACTION_UP -> {
                     if (currentCombineItem?.upgradeId != null) {
-
+                        isActionDoing = true
                         val itemView = rv_bird_packet.findChildViewUnder(event.x, event.y)
                         if (itemView != null) {
                             switchRecycleState(false)
@@ -278,6 +291,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                                     if (currentCombineItem == currentTargetItem) {
                                         logger.info("是同一个item 不处理")
                                         recoveryItemBird()
+                                        isActionDoing = false
                                     } else {
                                         mViewModel.combineBird(
                                             currentCombineItem!!.upgradeId,
@@ -288,6 +302,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
                                     }
 
+                                } else {
+                                    isActionDoing = false
                                 }
                             }
 
@@ -298,9 +314,12 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                                 val upgradeId = currentCombineItem?.upgradeId
                                 if (upgradeId != null) {
                                     mViewModel.recycleBird(upgradeId)
+                                } else {
+                                    isActionDoing = false
                                 }
                                 bird_mask.hide()
                             } else {
+                                isActionDoing = false
                                 switchRecycleState(false)
                                 playBackAnim(currentXY, originXY)
                             }
@@ -514,7 +533,14 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             iv_bottom_03.isEnabled = true
             if (it.isSuccess()) {
                 val bird = it.requireT()
-                if (bird.hasEnough) {
+                if (bird.hasEnough != null && bird.hasEnough == false) {
+                    if (mBirdTaskGuideFragment == null) {
+                        mBirdTaskGuideFragment = BirdTaskGuideFragment.newInstance(task = bird.taskGuideInfo)
+                    } else {
+                        mBirdTaskGuideFragment?.setTask(bird.taskGuideInfo)
+                    }
+                    mBirdTaskGuideFragment?.show(requireActivity(), "BirdTaskGuideFragment")
+                } else {
                     if (bird.currentUpgrade.upgradePos < birdAdapter.data.size) {
                         birdAdapter.data[bird.currentUpgrade.upgradePos] = bird.currentUpgrade
                         birdAdapter.notifyItemChanged(bird.currentUpgrade.upgradePos)
@@ -528,13 +554,6 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                         guide2?.dismiss()
                         initGuideView3()
                     }
-                } else {
-                    if (mBirdTaskGuideFragment == null) {
-                        mBirdTaskGuideFragment = BirdTaskGuideFragment.newInstance(task = bird.taskGuideInfo)
-                    } else {
-                        mBirdTaskGuideFragment?.setTask(bird.taskGuideInfo)
-                    }
-                    mBirdTaskGuideFragment?.show(requireActivity(), "BirdTaskGuideFragment")
                 }
 
             } else {
@@ -548,6 +567,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             } else {
                 recoveryItemBird()
             }
+            isActionDoing = false
         })
         mViewModel.recycleResult.observe(this, Observer {
             if (it.isSuccess()) {
@@ -561,6 +581,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             } else {
                 ToastUtils.show(it.error?.busiMessage)
             }
+            isActionDoing = false
         })
         mViewModel.totalCoin.observe(this, Observer {
             if (it != null) {
@@ -712,6 +733,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
      * 切换回收状态[state]回收状态
      */
     private fun switchRecycleState(state: Boolean) {
+
         if (currentCombineItem == null || currentUnlockUpgrade == null) {
             return
         }
@@ -817,9 +839,21 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 //                                SoundPoolManager.instance.play(BIRD_COIN_SHORT)
                                 playSound(BIRD_COIN_SHORT)
                                 if (programId == null) {
-                                    mViewModel.startProcessCoins(upgradeBirdBean.onlineCoinsPerSec)
+                                    mViewModel.startProcessCoins(
+                                        upgradeBirdBean.onlineCoinsPerSec.multiply(
+                                            BigInteger.valueOf(
+                                                BirdAdapter.CoinsPerSec
+                                            )
+                                        )
+                                    )
                                 } else {
-                                    mViewModel.startProcessCoins(upgradeBirdBean.programCoinsPerSec)
+                                    mViewModel.startProcessCoins(
+                                        upgradeBirdBean.programCoinsPerSec.multiply(
+                                            BigInteger.valueOf(
+                                                BirdAdapter.CoinsPerSec
+                                            )
+                                        )
+                                    )
                                 }
 
                             }
