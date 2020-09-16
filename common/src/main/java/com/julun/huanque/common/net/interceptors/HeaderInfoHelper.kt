@@ -5,6 +5,7 @@ import android.text.TextUtils
 import android.util.ArrayMap
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.BuildConfig
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.helper.StringHelper
@@ -12,6 +13,7 @@ import com.julun.huanque.common.utils.device.DeviceUtils
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.utils.NetUtils
 import com.julun.huanque.common.helper.ChannelCodeHelper
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import java.net.URLEncoder
 import java.util.*
 import kotlin.collections.ArrayList
@@ -99,11 +101,9 @@ object HeaderInfoHelper {
         if (iei.isNotEmpty()) {
             map["x"] = iei
         }
-        //todo
-//        if (DeviceUtils.getUdid().isNotEmpty()) {
-////            map["i"] = SharedPreferencesUtils.getString(ParamConstant.UUID, "").toUpperCase()
-//        }
-        map["i"] = "kdiqngiuhzmanigngudengui1836".toUpperCase()
+        if (DeviceUtils.getUdid().isNotEmpty()) {
+            map["i"] = SharedPreferencesUtils.getString(ParamConstant.UUID, "").toUpperCase()
+        }
         val operatorId = NetUtils.getOperatorId()
         val isi = when {
             operatorId.startsWith("46000") || operatorId.startsWith("46002") || operatorId.startsWith(
