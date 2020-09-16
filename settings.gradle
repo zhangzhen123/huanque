@@ -11,6 +11,7 @@ include ':common'
 include ':core'
 include ':cockroach'
 include ':realname'
+include ':msa_service'
 
 
 //rn需要依赖的第三方
