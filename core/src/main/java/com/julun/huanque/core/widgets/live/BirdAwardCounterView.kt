@@ -11,6 +11,7 @@ import com.julun.huanque.common.bean.beans.BirdLiveAward
 import com.julun.huanque.common.bean.beans.BottomActionBean
 import com.julun.huanque.common.constant.BirdTaskAwardType
 import com.julun.huanque.common.constant.ClickType
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImageLocal
 import com.julun.huanque.common.suger.onClickNew
@@ -69,7 +70,7 @@ class BirdAwardCounterView : ConstraintLayout {
                         this.type = ClickType.BIRD
                     }
                     postDelayed({
-                        val content = "恭喜您成功领取了\n ${it.requireT().awardCoins}金币"
+                        val content = "恭喜您成功领取了\n ${StringHelper.formatBigNum(it.requireT().awardCoins)}金币"
                         val dialog = BirdGotMoneyDialogFragment.newInstance(content)
                         dialog.show(act, "BirdGotMoneyDialogFragment")
                         this@BirdAwardCounterView?.hide()

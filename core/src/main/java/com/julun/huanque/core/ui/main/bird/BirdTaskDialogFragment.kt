@@ -156,7 +156,7 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
 //                    title = "领取成功",
 //                    okText = "知道了"
 //                )
-                val content = "恭喜您成功领取了\n ${it.requireT().awardCoins}金币"
+                val content = "恭喜您成功领取了\n ${StringHelper.formatBigNum(it.requireT().awardCoins)}金币"
                 val dialog = BirdGotMoneyDialogFragment.newInstance(content)
                 dialog.show(requireActivity(), "BirdGotMoneyDialogFragment")
                 mViewModel.queryInfo(QueryType.REFRESH)

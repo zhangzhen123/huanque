@@ -12,6 +12,8 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.core.R
 import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.leftPadding
+import org.jetbrains.anko.padding
 
 /**
  *
@@ -38,7 +40,8 @@ class ShopBirdAdapter : BaseQuickAdapter<UpgradeShopBirdBean, BaseViewHolder>(R.
                 drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
                 text.setCompoundDrawables(drawable, null, null, null)
             }
-            text.backgroundResource=R.mipmap.bg_bird_btn_green
+            text.backgroundResource = R.mipmap.bg_bird_btn_green
+            text.leftPadding = dp2px(6)
             imgView.loadImage(item.upgradeIcon, 90f, 90f)
         } else {
             text.text = "Lv.${item.unlockLevel}解锁"
@@ -47,8 +50,9 @@ class ShopBirdAdapter : BaseQuickAdapter<UpgradeShopBirdBean, BaseViewHolder>(R.
                 drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
                 text.setCompoundDrawables(drawable, null, null, null)
             }
-            text.backgroundResource=R.mipmap.bg_bird_shop_lock
-            ImageUtils.loadImageWithShadow(imgView,item.upgradeIcon,90, 90, intArrayOf(Color.parseColor("#80000000")))
+            text.backgroundResource = R.mipmap.bg_bird_shop_lock
+            text.leftPadding = 0
+            ImageUtils.loadImageWithShadow(imgView, item.upgradeIcon, 90, 90, intArrayOf(Color.parseColor("#80000000")))
         }
 //                playAnim(imgView, holder.getView(R.id.tv_produce_sec))
 //        holder.setGone(R.id.viewLock, item.unlocked)

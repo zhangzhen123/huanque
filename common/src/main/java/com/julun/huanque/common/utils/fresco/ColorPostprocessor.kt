@@ -1,27 +1,24 @@
 package com.julun.huanque.common.utils.fresco
 
 import android.graphics.Bitmap
-import com.facebook.common.references.CloseableReference
-import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
+import com.facebook.cache.common.CacheKey
+import com.facebook.cache.common.SimpleCacheKey
 import com.facebook.imagepipeline.request.BasePostprocessor
-import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.bitmap.BitmapUtil
 
 /**
  * 对bitmap的像素的颜色进行修改
- * 由于bitmap是又复用池的 所以不要对同一个bitmap处理多次 不然在设置带透明度的颜色时会越来越透明 最后看不见
  */
 class ColorPostprocessor(var colors: IntArray? = null) : BasePostprocessor() {
-    companion object {
-        val bitmapHashSet: HashSet<Int> = hashSetOf()
-    }
 
-    override fun process(
-        bitmap: Bitmap,
-        bitmapFactory: PlatformBitmapFactory
-    ): CloseableReference<Bitmap> {
-
-        //这个是直接修改像素点为指定颜色值 简单暴力 但是效果不好会有毛边锯齿
+    private var mCacheKey: CacheKey? = null
+//    override fun process(
+//        bitmap: Bitmap,
+//        bitmapFactory: PlatformBitmapFactory
+//    ): CloseableReference<Bitmap> {
+//        logger("process1=s=${bitmap.hashCode()}")
+//        return super.process(bitmap, bitmapFactory)
+    //这个是直接修改像素点为指定颜色值 简单暴力 但是效果不好会有毛边锯齿
 //        val width: Int = bitmap.width //获取位图的宽
 //
 //        val height: Int = bitmap.height //获取位图的高
@@ -39,16 +36,33 @@ class ColorPostprocessor(var colors: IntArray? = null) : BasePostprocessor() {
 //            }
 //        }
 //        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-        //使用着色器实现
-        val rb: Bitmap?
-        if (bitmapHashSet.contains(bitmap.hashCode())) {
-            rb = bitmap
-        } else {
-            rb = BitmapUtil.addGradient(bitmap, colors)
-            bitmapHashSet.add(bitmap.hashCode())
-        }
-//        logger("bitmap=${bitmap.hashCode()} rb=${rb.hashCode()}")
-        return bitmapFactory.createBitmap(rb)
+    //使用着色器实现
+//        val rb: Bitmap? = BitmapUtil.addGradient(bitmap.copy(Bitmap.Config.ARGB_8888,true), colors)
+//        logger("bitmap=${bitmap.byteCount} rb=${rb?.byteCount}")
+//        return bitmapFactory.createBitmap(rb)
 
+//    }
+
+//    override fun process(destBitmap: Bitmap, sourceBitmap: Bitmap?) {
+//        logger("process2=d=${destBitmap.hashCode()} s=${sourceBitmap.hashCode()}")
+//        super.process(destBitmap, sourceBitmap)
+//    }
+
+    override fun process(bitmap: Bitmap) {
+//        logger("process3=${bitmap.hashCode()}")
+        BitmapUtil.addGradient(bitmap, colors)
+    }
+
+    override fun getPostprocessorCacheKey(): CacheKey? {
+        if (mCacheKey == null) {
+            var colorStr = "c"
+            colors?.forEach {
+                colorStr += it
+            }
+            val key: String = "ColorPostprocessor;${colorStr};"
+            mCacheKey = SimpleCacheKey(key)
+        }
+//        logger("mCacheKey=${mCacheKey}")
+        return mCacheKey
     }
 }
