@@ -10,14 +10,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
 import android.text.TextWatcher
-import android.view.KeyEvent
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.view.inputmethod.EditorInfo
-import android.widget.FrameLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -27,6 +22,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -72,6 +68,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
@@ -1218,9 +1215,12 @@ class PlayerActivity : BaseActivity() {
             }
 
             override fun onLongClick(type: String, view: View, emotion: Emotion) {
+                //长按,显示弹窗
+                showEmojiSuspend(type, view, emotion)
             }
 
             override fun onActionUp() {
+                mEmojiPopupWindow?.dismiss()
             }
 
             override fun onClickDelete() {
@@ -1283,6 +1283,48 @@ class PlayerActivity : BaseActivity() {
         val keyEventUp = KeyEvent(KeyEvent.ACTION_UP, keyCode)
         edit_text.onKeyDown(keyCode, keyEventDown)
         edit_text.onKeyUp(keyCode, keyEventUp)
+    }
+    //悬浮表情
+    private var mEmojiPopupWindow: PopupWindow? = null
+    /**
+     * 显示表情悬浮效果
+     */
+    private fun showEmojiSuspend(type: String, view: View, emotion: Emotion) {
+        if (mEmojiPopupWindow?.isShowing == true) {
+            return
+        }
+        val location = IntArray(2)
+        view.getLocationOnScreen(location)
+        val content = emotion.text
+        var dx = 0
+        var dy = 0
+        var rootView: View? = null
+        when (type) {
+            EmojiType.NORMAL -> {
+                rootView =
+                    LayoutInflater.from(this).inflate(R.layout.fragment_normal_emoji_suspend, null)
+                mEmojiPopupWindow = PopupWindow(rootView, dip(50), dip(66))
+                val drawable = GlobalUtils.getDrawable(R.drawable.bg_emoji_suspend)
+                mEmojiPopupWindow?.setBackgroundDrawable(drawable)
+                dx = location[0] + (view.width - dip(50)) / 2
+                dy = location[1] - dip(66) + dip(13)
+                rootView.findViewById<ImageView>(R.id.iv_emoji)?.imageResource = emotion.drawableRes
+            }
+            else -> {
+
+            }
+        }
+
+        if (rootView == null) {
+            return
+        }
+
+
+        val name = content.substring(content.indexOf("[") + 1, content.indexOf("]"))
+        rootView.findViewById<TextView>(R.id.tv_emoji)?.text = name
+
+        mEmojiPopupWindow?.isOutsideTouchable = false
+        mEmojiPopupWindow?.showAtLocation(view, Gravity.TOP or Gravity.LEFT, dx, dy)
     }
 
     /**

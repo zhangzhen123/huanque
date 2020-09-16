@@ -10,8 +10,6 @@ import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.message.R
-import kotlinx.android.synthetic.main.fragment_normal_emoji_suspend.*
-import org.jetbrains.anko.imageResource
 
 /**
  *@创建者   dong

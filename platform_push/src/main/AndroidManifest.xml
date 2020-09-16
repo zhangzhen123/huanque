@@ -162,9 +162,18 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
+`
         <!-- vivo push 推送 receiver 声明 -->
+<!--
         <receiver android:name="io.rong.push.platform.vivo.VivoPushMessageReceiver">
+            <intent-filter>
+                &lt;!&ndash; 接收 vivo push 消息 &ndash;&gt;
+                <action android:name="com.vivo.pushclient.action.RECEIVE" />
+            </intent-filter>
+        </receiver>
+-->
+        <!--自定的Receive-->
+        <receiver android:name="com.julun.platform_push.receiver.VivoPushReceiver">
             <intent-filter>
                 <!-- 接收 vivo push 消息 -->
                 <action android:name="com.vivo.pushclient.action.RECEIVE" />
@@ -185,7 +194,7 @@
             android:name="com.julun.platform_push.receiver.RongPushSpringboardActivity"
             android:exported="true"
             android:theme="@style/undeadActivityStyle2">
-<!--            这个过滤是华为会用到 其他的推送也可能会走-->
+            <!--            这个过滤是华为会用到 其他的推送也可能会走-->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

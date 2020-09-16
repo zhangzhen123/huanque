@@ -94,9 +94,10 @@ class WelcomeActivity : BaseActivity() {
     private fun checkPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions
-            .requestEachCombined(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .requestEachCombined(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE)
             .subscribe { permission ->
                 //申请存储权限，无论成功还是失败，直接跳转
+                viewModel?.initUUID()
                 startActivity()
             }
     }

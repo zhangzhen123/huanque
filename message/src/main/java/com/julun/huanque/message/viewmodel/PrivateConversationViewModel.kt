@@ -215,7 +215,13 @@ class PrivateConversationViewModel : BaseViewModel() {
         } else {
             addMessageData.value = message
         }
+        foWithReceiveMessage(message)
+    }
 
+    /**
+     * 对接收到到的消息进行处理
+     */
+    fun foWithReceiveMessage(message : Message){
         RongIMClient.getInstance().setMessageReceivedStatus(message.messageId, Message.ReceivedStatus(1))
         //        }
         if (message.senderUserId != "${SessionUtils.getUserId()}") {

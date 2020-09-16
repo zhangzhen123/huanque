@@ -3,6 +3,7 @@ package com.julun.huanque.common.widgets.emotion
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -11,8 +12,10 @@ import com.effective.android.panel.view.panel.IPanelView
 import com.julun.huanque.common.R
 import com.julun.huanque.common.constant.EmojiType
 import com.julun.huanque.common.interfaces.EmojiInputListener
+import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.suger.onClickNew
 import kotlinx.android.synthetic.main.panel_view_public_chat.view.*
+import kotlinx.android.synthetic.main.panel_view_public_chat.view.iv_delete
 
 /**
  *@创建者   dong
@@ -51,11 +54,28 @@ class PuclicChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView,
                 mListener?.onClick(EmojiType.NORMAL, tempData)
             }
         }
+        mNormalEmojiAdapter.setOnItemLongClickListener { adapter, view, position ->
+            if (position < adapter.data.size) {
+                val tempData = adapter.getItem(position) as? Emotion
+                mListener?.onLongClick(EmojiType.NORMAL, view, tempData ?: return@setOnItemLongClickListener true)
+                view.isSelected = true
+            }
+            return@setOnItemLongClickListener true
+        }
     }
 
     private fun initListener(){
         iv_delete.onClickNew {
             mListener?.onClickDelete()
+        }
+
+        recyclerView_emoji.mEventListener = object : EventListener {
+            override fun onDispatch(ev: MotionEvent?) {
+                if (ev?.action == MotionEvent.ACTION_UP) {
+                    mListener?.onActionUp()
+                }
+            }
+
         }
     }
 
