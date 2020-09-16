@@ -952,8 +952,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         val anim0102 =
             ObjectAnimator.ofFloat(bird_mask2, View.TRANSLATION_X, bird_mask2.translationX, bird_mask2.translationX + distance)
         val anim01 = AnimatorSet()
-        anim01.duration = 200
-        anim01.interpolator = BounceInterpolator()
+        anim01.duration = 150
+        anim01.interpolator = AnticipateOvershootInterpolator()
         anim01.playTogether(anim0101, anim0102)
 
         //(2)停留一段时间后 相互靠拢
@@ -962,9 +962,9 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         val anim0202 =
             ObjectAnimator.ofFloat(bird_mask2, View.TRANSLATION_X, bird_mask2.translationX + distance, bird_mask2.translationX)
         val anim02 = AnimatorSet()
-        anim02.interpolator = AnticipateOvershootInterpolator()
-        anim02.duration = 200
-        anim02.startDelay = 200
+        anim02.interpolator = BounceInterpolator()
+        anim02.duration = 150
+        anim02.startDelay = 50
         anim02.playTogether(anim0201, anim0202)
         //(3)靠拢后 播放合体特效
         anim02.addListener(onEnd = {
@@ -985,26 +985,26 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             if (isGuide3) {
                 guide3?.dismiss()
             }
+            if (result.currentUpgradeFirst) {
+                currentNew?:return@addListener
+                val funBird =
+                    FunctionBird(
+                        functionName = currentNew.upgradeName,
+                        functionIcon = currentNew.upgradeIcon,
+                        level = currentNew.upgradeLevel
+                    )
+                if (mBirdGotFunctionDialogFragment == null) {
+                    mBirdGotFunctionDialogFragment = BirdGotFunctionDialogFragment.newInstance(funBird)
+                } else {
+                    mBirdGotFunctionDialogFragment?.setBird(funBird)
+                }
+                mBirdGotFunctionDialogFragment?.show(requireActivity(), "BirdGotFunctionDialogFragment")
+            }
         })
         val combineAnim = AnimatorSet()
         combineAnim.playSequentially(anim01, anim02)
         combineAnim.start()
 
-        if (result.currentUpgradeFirst) {
-            val currentNew = result.currentUpgrade ?: return
-            val funBird =
-                FunctionBird(
-                    functionName = currentNew.upgradeName,
-                    functionIcon = currentNew.upgradeIcon,
-                    level = currentNew.upgradeLevel
-                )
-            if (mBirdGotFunctionDialogFragment == null) {
-                mBirdGotFunctionDialogFragment = BirdGotFunctionDialogFragment.newInstance(funBird)
-            } else {
-                mBirdGotFunctionDialogFragment?.setBird(funBird)
-            }
-            mBirdGotFunctionDialogFragment?.show(requireActivity(), "BirdGotFunctionDialogFragment")
-        }
     }
 
     /**
