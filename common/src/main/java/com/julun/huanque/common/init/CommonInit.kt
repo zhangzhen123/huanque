@@ -409,6 +409,9 @@ class CommonInit {
                 //初始化实名认证SDK
                 ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation()
                 ULog.i("launch REALNAME----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN}")
+                //初始化MSA SDK并获取oaid
+                ARouter.getInstance().build(ARouterConstant.MSA_SERVICE).navigation()
+                ULog.i("launch MSASERVICE----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN}")
             }
             val fresco = async(Dispatchers.Default) {
                 val time=System.currentTimeMillis()

@@ -3,8 +3,10 @@ package com.julun.huanque.common.net.interceptors
 import android.os.Build
 import android.text.TextUtils
 import android.util.ArrayMap
+import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.BuildConfig
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.utils.SessionUtils
@@ -13,6 +15,7 @@ import com.julun.huanque.common.utils.device.DeviceUtils
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.utils.NetUtils
 import com.julun.huanque.common.helper.ChannelCodeHelper
+import com.julun.huanque.common.interfaces.routerservice.IMSAService
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import java.net.URLEncoder
 import java.util.*
@@ -140,10 +143,11 @@ object HeaderInfoHelper {
 //        if (!TextUtils.isEmpty(ip)) {
 //            map["ip"] = ip
 //        }
-//        val oaid = huanqueService.getService(IMSAService::class.java)?.getHuaweiOaid()
-//        if (!TextUtils.isEmpty(oaid)) {
-//            map["w"] = oaid ?: ""
-//        }
+        val oaid = (ARouter.getInstance().build(ARouterConstant.MSA_SERVICE)
+            .navigation() as? IMSAService)?.getOaid()
+        if (!oaid.isNullOrEmpty()) {
+            map["w"] = oaid
+        }
         return map
     }
 
