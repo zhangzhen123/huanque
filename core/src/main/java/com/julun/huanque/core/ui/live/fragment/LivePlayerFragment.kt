@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.live.fragment
 
+import android.media.AudioManager
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -12,6 +13,7 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.bean.beans.BottomActionBean
 import com.julun.huanque.common.bean.beans.MicAnchor
 import com.julun.huanque.common.bean.beans.PlayInfo
+import com.julun.huanque.common.bean.events.FloatingCloseEvent
 import com.julun.huanque.common.bean.events.VideoPlayerEvent
 import com.julun.huanque.common.constant.ClickType
 import com.julun.huanque.common.constant.PKType
@@ -506,6 +508,14 @@ open class LivePlayerFragment : BaseFragment() {
                 it.soundOn()
             }
         }
+    }
+
+    /**
+     * 悬浮窗关闭消息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun floatingClose(bean: FloatingCloseEvent) {
+        mMainVideoView?.resetHolder()
     }
 
     override fun onDestroyView() {
