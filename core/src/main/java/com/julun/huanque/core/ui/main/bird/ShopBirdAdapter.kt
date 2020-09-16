@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.main.bird
 
+import android.graphics.Color
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -47,7 +48,7 @@ class ShopBirdAdapter : BaseQuickAdapter<UpgradeShopBirdBean, BaseViewHolder>(R.
                 text.setCompoundDrawables(drawable, null, null, null)
             }
             text.backgroundResource=R.mipmap.bg_bird_shop_lock
-            ImageUtils.loadImageWithTile(imgView,item.upgradeIcon)
+            ImageUtils.loadImageWithShadow(imgView,item.upgradeIcon,90, 90, intArrayOf(Color.parseColor("#80000000")))
         }
 //                playAnim(imgView, holder.getView(R.id.tv_produce_sec))
 //        holder.setGone(R.id.viewLock, item.unlocked)

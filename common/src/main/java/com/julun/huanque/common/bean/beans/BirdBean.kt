@@ -172,8 +172,17 @@ data class FunctionBirdDes(
 
 data class BirdFlyResult(
     var cash: String = "",
-    var functionInfo: FunctionBird = FunctionBird(),
+    var functionInfo: FunctionBird? = null,
+    var functionNumInfo: FunctionNumInfo? = null,
     var resultType: String = ""
+)
+
+data class FunctionNumInfo(
+    var cowherd: String = "",
+    var mystical: String = "",
+    var redpacket: String = "",
+    var wealth: String = "",
+    var weaver: String = ""
 )
 
 data class BirdLiveAward(

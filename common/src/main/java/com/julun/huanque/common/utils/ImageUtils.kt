@@ -35,7 +35,7 @@ import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.WebpAnimatorListener
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.fresco.LoopCountModifyingBackend
-import com.julun.huanque.common.utils.fresco.MyTilePostprocessor
+import com.julun.huanque.common.utils.fresco.ColorPostprocessor
 import com.julun.huanque.common.widgets.live.WebpGifView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -261,19 +261,19 @@ object ImageUtils {
     /**
      * 设置加载的图片填充指定颜色
      */
-    fun loadImageWithTile(
+    fun loadImageWithShadow(
         imgView: SimpleDraweeView,
         url: String,
         width: Int = 0,
-        height: Int = 0
+        height: Int = 0, colors: IntArray? = null
     ) {
 
         val builder = ImageRequestBuilder
             .newBuilderWithSource(Uri.parse(StringHelper.getOssImgUrl(url)))
             .setProgressiveRenderingEnabled(true)
-            .setPostprocessor(MyTilePostprocessor())
+            .setPostprocessor(ColorPostprocessor(colors))
         if (width != 0 && height != 0) {
-            builder.resizeOptions = ResizeOptions(width, height)
+            builder.resizeOptions = ResizeOptions(DensityHelper.dp2px(width), DensityHelper.dp2px(height))
         }
 
         val imageRequest = builder.build()

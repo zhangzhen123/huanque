@@ -98,7 +98,7 @@ class BirdFunctionDialogFragment : BaseDialogFragment() {
                 dismiss()
                 when (it.requireT().resultType) {
                     "Function" -> {
-                        val mBirdGotFunctionDialogFragment = BirdGotFunctionDialogFragment.newInstance(it.requireT().functionInfo)
+                        val mBirdGotFunctionDialogFragment = BirdGotFunctionDialogFragment.newInstance(it.requireT().functionInfo?:return@Observer)
                         mBirdGotFunctionDialogFragment.show(requireActivity(), "BirdGotFunctionDialogFragment")
                     }
                     "Cash" -> {

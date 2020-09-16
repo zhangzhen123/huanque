@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <View
         android:id="@+id/view_top_holder"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_260"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/csl_top"
         android:layout_width="match_parent"
@@ -67,21 +69,12 @@
             android:id="@+id/sdv_cai_shen"
             android:layout_width="@dimen/dimen_80"
             android:layout_height="@dimen/dimen_80"
-            android:layout_marginTop="@dimen/dimen_40"
+            android:layout_marginStart="@dimen/dimen_75"
+            android:layout_marginTop="@dimen/dimen_32"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <ImageView
-            android:id="@+id/iv_cai_shen"
-            android:layout_width="@dimen/dimen_30"
-            android:layout_height="@dimen/dimen_58"
-            android:layout_marginStart="@dimen/dimen_68"
-            android:layout_marginBottom="@dimen/dimen_30"
-            android:src="@mipmap/icon_bird_tag_caishen"
-            app:layout_constraintBottom_toBottomOf="@+id/sdv_cai_shen"
-            app:layout_constraintStart_toStartOf="@+id/sdv_cai_shen" />
 
         <TextView
             android:id="@+id/tv_cai_shen"
@@ -105,19 +98,11 @@
             android:id="@+id/sdv_bird_niu_lang"
             android:layout_width="@dimen/dimen_80"
             android:layout_height="@dimen/dimen_80"
-            android:layout_marginTop="@dimen/dimen_40"
+            android:layout_marginTop="@dimen/dimen_56"
+            android:layout_marginEnd="@dimen/dimen_15"
             app:layout_constraintEnd_toStartOf="@+id/sdv_cai_shen"
             app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
 
-        <ImageView
-            android:id="@+id/iv_tag_niu_lang"
-            android:layout_width="@dimen/dimen_30"
-            android:layout_height="@dimen/dimen_58"
-            android:layout_marginTop="@dimen/dimen_4"
-            android:src="@mipmap/icon_bird_tag_niulang"
-            app:layout_constraintEnd_toStartOf="@+id/sdv_bird_niu_lang"
-            app:layout_constraintStart_toStartOf="@+id/sdv_bird_niu_lang"
-            app:layout_constraintTop_toTopOf="@+id/sdv_bird_niu_lang" />
 
         <TextView
             android:id="@+id/tv_niu_lang"
@@ -141,19 +126,11 @@
             android:id="@+id/sdv_bird_zhi_nv"
             android:layout_width="@dimen/dimen_80"
             android:layout_height="@dimen/dimen_80"
-            android:layout_marginStart="@dimen/dimen_55"
-            android:layout_marginTop="@dimen/dimen_60"
-            app:layout_constraintStart_toStartOf="@+id/sdv_cai_shen"
-            app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
+            android:layout_marginEnd="@dimen/dimen_17"
+            android:layout_marginBottom="@dimen/dimen_14"
+            app:layout_constraintBottom_toBottomOf="@+id/bird_tree"
+            app:layout_constraintEnd_toEndOf="@+id/bird_tree" />
 
-        <ImageView
-            android:id="@+id/iv_tag_zhi_nv"
-            android:layout_width="@dimen/dimen_30"
-            android:layout_height="@dimen/dimen_58"
-            android:layout_marginStart="@dimen/dimen_72"
-            android:src="@mipmap/icon_bird_tag_zhinv"
-            app:layout_constraintStart_toStartOf="@+id/sdv_bird_zhi_nv"
-            app:layout_constraintTop_toTopOf="@+id/sdv_bird_zhi_nv" />
 
         <TextView
             android:id="@+id/tv_zhi_nv"
@@ -178,19 +155,10 @@
             android:id="@+id/sdv_bird_shen_mi"
             android:layout_width="@dimen/dimen_80"
             android:layout_height="@dimen/dimen_80"
-            android:layout_marginStart="@dimen/dimen_57"
-            android:layout_marginTop="@dimen/dimen_58"
-            app:layout_constraintStart_toStartOf="@+id/sdv_bird_zhi_nv"
-            app:layout_constraintTop_toTopOf="@+id/sdv_bird_zhi_nv" />
+            android:layout_marginStart="@dimen/dimen_12"
+            app:layout_constraintStart_toEndOf="@+id/sdv_bird_niu_lang"
+            app:layout_constraintTop_toBottomOf="@+id/sdv_cai_shen" />
 
-        <ImageView
-            android:id="@+id/iv_tag_shen_mi"
-            android:layout_width="@dimen/dimen_30"
-            android:layout_height="@dimen/dimen_58"
-            android:layout_marginStart="@dimen/dimen_68"
-            android:src="@mipmap/icon_bird_tag_shenmi"
-            app:layout_constraintStart_toStartOf="@+id/sdv_bird_shen_mi"
-            app:layout_constraintTop_toTopOf="@+id/sdv_bird_shen_mi" />
 
         <TextView
             android:id="@+id/tv_shen_mi"
@@ -214,20 +182,11 @@
             android:id="@+id/sdv_bird_hong_bao"
             android:layout_width="@dimen/dimen_80"
             android:layout_height="@dimen/dimen_80"
-            android:layout_marginStart="@dimen/dimen_22"
+            android:layout_marginStart="@dimen/dimen_35"
             android:layout_marginTop="@dimen/dimen_3"
-            app:layout_constraintStart_toStartOf="@+id/sdv_bird_niu_lang"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sdv_bird_niu_lang" />
 
-        <ImageView
-            android:id="@+id/iv_tag_hong_bao"
-            android:layout_width="@dimen/dimen_30"
-            android:layout_height="@dimen/dimen_58"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:layout_marginEnd="@dimen/dimen_72"
-            android:src="@mipmap/icon_bird_tag_hongbao"
-            app:layout_constraintEnd_toEndOf="@+id/sdv_bird_hong_bao"
-            app:layout_constraintTop_toTopOf="@+id/sdv_bird_hong_bao" />
 
         <TextView
             android:id="@+id/tv_hong_bao"
@@ -406,13 +365,13 @@
         android:gravity="center"
         android:paddingStart="@dimen/dimen_3"
         android:paddingEnd="@dimen/dimen_3"
+        android:text="领取"
         android:textColor="@color/white"
         android:textSize="9sp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/iv_task"
         app:layout_constraintStart_toEndOf="@+id/iv_task"
         app:layout_constraintTop_toTopOf="@+id/iv_task"
-        android:text="领取"
         tools:visibility="visible" />
 
     <ImageView

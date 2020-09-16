@@ -230,7 +230,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 //            logger.info("rv_bird_packet event=${event.action} rawX=${event.rawX} rawY=${event.rawY}")
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if(isActionDoing){
+                    if (isActionDoing) {
                         logger.info("当前的操作还没完成")
                         return@onTouch false
                     }
@@ -627,7 +627,10 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             it ?: return@Observer
             if (it.isSuccess()) {
                 //直接刷新
-                mViewModel.queryHome()
+                view_top_holder?.postDelayed({
+                    mViewModel.queryHome()
+                }, 500)
+
             }
 
         })
