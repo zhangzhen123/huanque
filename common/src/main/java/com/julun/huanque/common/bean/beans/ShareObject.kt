@@ -100,13 +100,16 @@ data class SharePoster(
     var posterId: Int = 0,
     var posterPic: String = "",//背景图片
     var posterTitle: String = "",
-    var qrCode: String = ""//二维码图片
+    var qrCode: String = "",//二维码图片
+    var qrCodeBase64: String = ""//新版使用直接返回的二维码图片实体
 ) : MultiItemEntity {
     var inviteCode: String = ""
+
     //本地字段
-    var authorName:String=""
+    var authorName: String = ""
+
     //
-    var qrBitmap:Bitmap?=null
+    var qrBitmap: Bitmap? = null
     override val itemType: Int
         get() = when (applyModule) {
             ShareFromModule.Invite -> 1

@@ -63,6 +63,7 @@ object RPushUtil {
                             val ext =
                                 rc.getJSONObject("ext").toString() // 使用开发者后台的广播推送功能时，填充的自定义键值对。
                         }
+                        shouldOpenMain(context)
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
@@ -103,19 +104,23 @@ object RPushUtil {
                     startOpenRnPage(context, RnConstant.ANCHOR_CERT_PAGE)
                 }
                 PushDataActionType.FriendNotice -> {
-                    //todo
+                    startActivityByARouter(context, ARouterConstant.SysMsgActivity, bundle = Bundle().apply {
+                        this.putString(ParamConstant.TYPE, bean.touchValue)
+                    }, goHome = true)
+
                 }
                 PushDataActionType.SystemNotice -> {
-                    //todo
+                    startActivityByARouter(context, ARouterConstant.SysMsgActivity, bundle = Bundle().apply {
+                        this.putString(ParamConstant.TYPE, bean.touchValue)
+                    }, goHome = true)
+
                 }
                 PushDataActionType.OfficialCertPage -> {
                     startOpenRnPage(context, RnConstant.OFFICIAL_CERT_PAGE)
                 }
                 PushDataActionType.PlumFlower -> {
-                    val bundle = Bundle()
-                    ARouter.getInstance().build(ARouterConstant.PLUM_FLOWER_ACTIVITY).with(bundle).navigation()
                     startActivityByARouter(context, ARouterConstant.PLUM_FLOWER_ACTIVITY, bundle = Bundle().apply {
-                        bundle.putString(ParamConstant.TYPE, bean.touchValue)
+                        this.putString(ParamConstant.TYPE, bean.touchValue)
                     }, goHome = true)
                 }
                 else -> {
@@ -124,6 +129,7 @@ object RPushUtil {
             }
 
         } catch (e: Exception) {
+            shouldOpenMain(context = context)
             e.printStackTrace()
             Log.e(TAG, "Get message extra JSON error!")
         }

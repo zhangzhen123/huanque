@@ -39,6 +39,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_invite_share.*
+import org.jetbrains.anko.imageBitmap
 import java.util.*
 
 /**
@@ -219,7 +220,8 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                 val tvName = viewRoot.findViewById<TextView>(R.id.tv_user_name)
                 val tvInvite = viewRoot.findViewById<TextView>(R.id.tv_invite_code)
                 sdvSharePic.loadImage(currentSelect!!.posterPic, 250f, 450f)
-                sdvQrCode.loadImage(currentSelect!!.qrCode, 60f, 60f)
+//                sdvQrCode.loadImage(currentSelect!!.qrCode, 60f, 60f)
+                sdvQrCode.imageBitmap=currentSelect!!.qrBitmap
                 sdvUserPic.loadImage(SessionUtils.getHeaderPic(), 45f, 45f)
                 val name = if (SessionUtils.getNickName().length > 5) {
                     "${SessionUtils.getNickName().substring(0, 5)}..."
@@ -399,7 +401,8 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         val sdvUserPic = holder.getView<SimpleDraweeView>(R.id.sdv_user_pic)
 
                         sdvSharePic.loadImage(item.posterPic, 250f, 450f)
-                        sdvQrCode.loadImage(item.qrCode, 60f, 60f)
+//                        sdvQrCode.loadImage(item.qrCode, 60f, 60f)
+                        sdvQrCode.imageBitmap=item.qrBitmap
                         sdvUserPic.loadImage(SessionUtils.getHeaderPic(), 45f, 45f)
                         val name = if (SessionUtils.getNickName().length > 5) {
                             "${SessionUtils.getNickName().substring(0, 5)}..."

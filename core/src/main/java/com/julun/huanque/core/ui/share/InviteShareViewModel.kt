@@ -75,12 +75,13 @@ class InviteShareViewModel : BaseViewModel() {
                 }
 
                 val result = service.sharePoster(form).dataConvert()
-                if (result.inviteCode.isNotEmpty()) {
-                    result.posterList.forEach {
-                        it.inviteCode = result.inviteCode
-                    }
-                }
                 sharePosters.value = result.convertRtData()
+                result.posterList.forEach { post->
+                    if (result.inviteCode.isNotEmpty()) {
+                        post.inviteCode = result.inviteCode
+                    }
+                    post.qrBitmap=BitmapUtil.base64ToBitmap(post.qrCodeBase64.replace("data:image/png;base64,", ""))
+                }
             }, error = { e ->
                 logger("报错了：$e")
                 sharePosters.value = e.convertError()
@@ -92,10 +93,10 @@ class InviteShareViewModel : BaseViewModel() {
     fun queryLiveQrCode() {
         viewModelScope.launch {
             request({
-                val url=programInfo?.headPic?:return@request
-                val form = SharePosterImageForm(programId =programInfo?.programId?:return@request )
+                val url = programInfo?.headPic ?: return@request
+                val form = SharePosterImageForm(programId = programInfo?.programId ?: return@request)
                 val result = service.programShare(form).dataConvert()
-                val bitmap = BitmapUtil.base64ToBitmap(result.replace("data:image/png;base64,",""))
+                val bitmap = BitmapUtil.base64ToBitmap(result.replace("data:image/png;base64,", ""))
                 val info = SharePosterInfo(
                     posterList = mutableListOf<SharePoster>(
                         SharePoster(
