@@ -27,6 +27,9 @@ import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.fragment.PersonalInformationProtectionFragment
 import com.julun.huanque.viewmodel.PersonalInformationProtectionViewModel
 import com.julun.huanque.viewmodel.WelcomeViewModel
+import com.julun.platform_push.receiver.RPushUtil
+import io.reactivex.rxjava3.core.Observable
+import java.util.concurrent.TimeUnit
 
 /**
  *@创建者   dong
@@ -54,12 +57,21 @@ class WelcomeActivity : BaseActivity() {
         SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
 //        VoiceManager.startRing(false)
         getWakeUp(intent)
-
+        getPushClickData()
         if (mShowFragment) {
             checkPermissions()
         } else {
             val mPersonalInformationProtectionFragment = PersonalInformationProtectionFragment.newInstance(true)
             mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
+        }
+    }
+
+    private fun getPushClickData() {
+        val pushData = intent.extras?.getString("appData")
+        if (pushData != null) {
+            Observable.timer(500, TimeUnit.MILLISECONDS).subscribe {
+                RPushUtil.parseJson(pushData, this.applicationContext)
+            }
         }
     }
 
