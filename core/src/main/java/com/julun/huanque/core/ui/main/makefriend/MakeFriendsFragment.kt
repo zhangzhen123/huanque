@@ -460,6 +460,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         }
         val headerData = stateList.list.getOrNull(0)
         if (headerData?.showType == HomeItemBean.HEADER) {
+            ic_sticky_mkf_task.hide()
             val headerInfo = headerData.content as? HeadNavigateInfo ?: return
             currentHeadInfo = headerInfo
             tv_balance_h.text = headerInfo.taskBar.myCash
