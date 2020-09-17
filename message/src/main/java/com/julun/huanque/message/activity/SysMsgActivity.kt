@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -36,6 +37,7 @@ import org.jetbrains.anko.backgroundResource
  * @since 1.0.0
  * @date 2020/07/13
  */
+@Route(path = ARouterConstant.SysMsgActivity)
 class SysMsgActivity : BaseActivity() {
 
     private var mViewModel: SysMsgViewModel? = null

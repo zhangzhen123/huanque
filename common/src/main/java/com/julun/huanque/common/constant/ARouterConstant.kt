@@ -25,6 +25,8 @@ object ARouterConstant {
     //PrivateConversationActivity
     //声网播放器使用
     private const val AGORA = "AGORA"
+    //MSA
+    private const val MSA = "msa_service"
 
     /*--GROUP相关结束--*/
 
@@ -62,7 +64,7 @@ object ARouterConstant {
     //联系人页面
     const val ContactsActivity = "/$MESSAGE$PREFIX_ACTIVITY/ContactsActivity"
 
-
+    const val SysMsgActivity = "/$MESSAGE$PREFIX_ACTIVITY/SysMsgActivity"
     //亲密特权弹窗
     const val SINGLE_INTIMATE_PRIVILEGE_FRAGMENT = "/$MESSAGE$PREFIX_FRAGMENT/SingleIntimateprivilegeFragment"
 
@@ -110,4 +112,7 @@ object ARouterConstant {
 
     //H5页面
     const val WEB_ACTIVITY = "/$COMMON$PREFIX_ACTIVITY/WebActivity"
+
+    /** MSA 模块 **/
+    const val MSA_SERVICE = "/$MSA$SERVICE/MSAService"
 }

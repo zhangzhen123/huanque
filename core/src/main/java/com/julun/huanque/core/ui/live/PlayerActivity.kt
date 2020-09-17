@@ -1089,7 +1089,6 @@ class PlayerActivity : BaseActivity() {
             if (guideSpeak) {
 //                viewModel.guideToSendMessage()
             }
-            liveViewManager.showGestureGuideView()
         }
         val rescueData = data.salvationInfo
         if (rescueData != null) {
@@ -1284,8 +1283,10 @@ class PlayerActivity : BaseActivity() {
         edit_text.onKeyDown(keyCode, keyEventDown)
         edit_text.onKeyUp(keyCode, keyEventUp)
     }
+
     //悬浮表情
     private var mEmojiPopupWindow: PopupWindow? = null
+
     /**
      * 显示表情悬浮效果
      */
@@ -1669,6 +1670,7 @@ class PlayerActivity : BaseActivity() {
                     )
                 } else {
                     //收到停播消息，设置上次开播时间为刚刚
+                    AliplayerManager.stop()
                     showOriView()
                     mVideoViewModel.logout.postValue(true)
                     viewModel.baseData.value?.lastShowTimeDiffText = "刚刚"
@@ -1944,7 +1946,7 @@ class PlayerActivity : BaseActivity() {
         super.onDestroy()
         viewModel.runwayCache.value = null
         val baseData = viewModel.baseData.value
-        if (PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
+        if (!isBanned && viewModel.loginState.value == true && PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
             FloatingManager.showFloatingView(
                 GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
                 viewModel.programId,
@@ -2315,7 +2317,10 @@ class PlayerActivity : BaseActivity() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun bannedAndClosePlayer(event: BannedAndClosePlayer) {
-        isBanned = true
-        finish()
+        if (event.programId == null || event.programId == programId) {
+            ToastUtils.show("您已被踢出直播间")
+            isBanned = true
+            finish()
+        }
     }
 }

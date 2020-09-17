@@ -12,6 +12,7 @@ import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import com.julun.huanque.common.bean.events.FloatingCloseEvent
 import com.julun.huanque.common.bean.forms.ProgramIdForm
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.PlayerFrom
@@ -38,6 +39,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.dip
 
 
@@ -265,6 +267,7 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
     }
 
     override fun onDestroy() {
+        EventBus.getDefault().post(FloatingCloseEvent())
         // 移除浮动框
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
 

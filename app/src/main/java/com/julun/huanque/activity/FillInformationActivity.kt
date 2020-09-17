@@ -25,6 +25,7 @@ import com.julun.huanque.common.base.dialog.CommonLoadingDialog
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -60,6 +61,9 @@ class FillInformationActivity : BaseActivity() {
         }
     }
 
+    //邀请码 标识位
+    private val CODE_TEMPLATE = "-code-"
+
     val loadingDialog: CommonLoadingDialog by lazy { CommonLoadingDialog.newInstance("") }
     private val mPersonalInformationProtectionFragment = PersonalInformationProtectionFragment()
 
@@ -75,6 +79,16 @@ class FillInformationActivity : BaseActivity() {
         mViewModel?.currentStatus?.value = FillInformationViewModel.FIRST
         //隐私协议弹窗
         mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
+        //邀请码
+        val extraCode = ChannelCodeHelper.getExternalChannel() ?: ""
+        if (extraCode.contains(CODE_TEMPLATE)) {
+            val strings = extraCode.split(CODE_TEMPLATE)
+            val code = strings.getOrNull(1)
+            if(code?.isNotEmpty()==true){
+                et_invitation_code.setText(code)
+            }
+        }
+
     }
 
     /**

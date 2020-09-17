@@ -46,6 +46,9 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     constructor(context: Context, useManager: Boolean = false) : this(context, null, useManager)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, false)
 
+    //surfaceHolder
+    private var mSurfaceHolder: SurfaceHolder? = null
+
     //surfaceview是否已经创建
     private var created = false
 
@@ -85,7 +88,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     }
 
     //log输出标识位
-    private var mLogEnable = false
+    private var mLogEnable = true
 
 
     //是否处于聊天模式(默认为false)
@@ -95,9 +98,9 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         context.let {
             LayoutInflater.from(it).inflate(R.layout.view_single_video, this)
         }
-        if(!useManager){
+        if (!useManager) {
             val ta: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.SingleVideoView)
-            useManager = ta.getBoolean(R.styleable.SingleVideoView_useManager,false)
+            useManager = ta.getBoolean(R.styleable.SingleVideoView_useManager, false)
             ta.recycle()
         }
 
@@ -111,7 +114,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         initViewModel()
         if (useManager) {
             mAliPlayer = AliplayerManager.mAliPlayer
-            AliplayerManager.mRenderListener = mRenderListener
+//            AliplayerManager.mRenderListener = mRenderListener
             if (AliplayerManager.mRendered) {
                 posterImage.hide()
             }
@@ -126,6 +129,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                 mAliPlayer?.setDisplay(holder)
                 //防止黑屏
                 mAliPlayer?.redraw()
+                mSurfaceHolder = holder
             }
 
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -183,10 +187,10 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         mUrl = ""
         if (!useManager) {
             mAliPlayer?.stop()
+            this.hide()
         }
         isFree = true
         playerInfo = null
-        this.hide()
         anchor_info.visibility = View.GONE
     }
 
@@ -202,7 +206,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
      */
     fun resume() {
         if (mLogEnable)
-        ULog.i("DXCPlayer 恢复播放resume")
+            ULog.i("DXCPlayer 恢复播放resume")
         if (mUrl.isNotEmpty()) {
             mAliPlayer?.start()
         }
@@ -215,9 +219,13 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         if (!created) {
             return
         }
-        mUrl = ""
-        isFree = true
-        mAliPlayer?.stop()
+        if (useManager) {
+            AliplayerManager.stop()
+        } else {
+            mUrl = ""
+            isFree = true
+            mAliPlayer?.stop()
+        }
     }
 
 
@@ -399,7 +407,6 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     fun playStream() {
         //聊天模式 不需要播放视频   && NetUtils.isNetConnected()
         if (mUrl.isNotEmpty() && !mChatMode) {
-            AliplayerManager.mRenderListener = mRenderListener
             val urlSource = UrlSource()
             urlSource.uri = mUrl
 //            ULog.i("PlayerLine 创建播放源")
@@ -407,6 +414,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             mAliPlayer?.isAutoPlay = true
 //            ULog.i("PlayerLine 准备播放器")
             if (useManager) {
+                AliplayerManager.mRenderListener = mRenderListener
                 AliplayerManager.mUrl = mUrl
                 AliplayerManager.mRendered = false
                 AliplayerManager.stoped = false
@@ -421,7 +429,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
      * 剪裁圆角
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun clip(radius : Float){
+    fun clip(radius: Float) {
         this.outlineProvider = SurfaceVideoViewOutlineProvider(radius);
         this.clipToOutline = true;
     }
@@ -455,6 +463,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        mSurfaceHolder = null
         release()
         //释放播放器
         if (!useManager) {
@@ -463,11 +472,21 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             AliplayerManager.mRenderListener = null
         }
         mAliPlayer = null
-        ULog.i("PlayerLine 释放播放器")
 //        Completable.complete()
 //                .subscribeOn(Schedulers.io())
 //                .subscribe({ mAliPlayer?.release() }, {})
 
+    }
+
+    /**
+     * 悬浮窗关闭的时候，重新将直播间主流的holder设置给播放器
+     */
+    fun resetHolder() {
+        mSurfaceHolder?.let { holder ->
+            mAliPlayer?.setDisplay(holder)
+            //防止黑屏
+            mAliPlayer?.redraw()
+        }
     }
 
     fun getPlayerVideo(): AliPlayer? {

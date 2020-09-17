@@ -46,7 +46,6 @@ object AliplayerManager {
      */
     private fun initPlayer() {
 //        mAliPlayer.enableLog(false)
-        mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL
         mAliPlayer.setOnCompletionListener {
             //播放完成事件
         }
@@ -104,13 +103,15 @@ object AliplayerManager {
             if (it == IPlayer.completion || it == IPlayer.error) {
                 //CDN切换的时候会触发此回调，重新调用播放方法
                 if (stoped) {
-                    stoped = false
                     return@setOnStateChangedListener
                 }
                 Observable.timer(2, TimeUnit.SECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        mAliPlayer?.prepare()
+                        if (!stoped && !mRendered) {
+                            stoped = false
+                            mAliPlayer?.prepare()
+                        }
                     }, {}, {})
             }
         }

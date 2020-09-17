@@ -58,7 +58,7 @@ public class Emotions {
 
         NORMAL_EMOTIONS.put("[我不看]", R.drawable.wobukan);
         NORMAL_EMOTIONS.put("[我不听]", R.drawable.wobuting);
-        NORMAL_EMOTIONS.put("[色迷迷]", R.drawable.semimi);
+        NORMAL_EMOTIONS.put("[色眯眯]", R.drawable.semimi);
         NORMAL_EMOTIONS.put("[气呼呼]", R.drawable.qihuhu);
         NORMAL_EMOTIONS.put("[惊讶]", R.drawable.jingya);
         NORMAL_EMOTIONS.put("[困了]", R.drawable.kunle);

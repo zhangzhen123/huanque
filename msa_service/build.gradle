@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
+}
+
+android {
+    compileSdkVersion hq.compileSdkVersion
+    buildToolsVersion hq.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion hq.minSdkVersion
+        targetSdkVersion hq.targetSdkVersion
+        versionCode 1
+        versionName '1.0'
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //library配置混淆文件api
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(path: ':common')
+    api files('libs/oaid_sdk_1.0.22.aar')
+    kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
+}

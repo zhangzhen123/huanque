@@ -125,6 +125,7 @@ android {
                     JPUSH_APPKEY : "${sdk.JPUSH_KEY_HQ}",
                     JPUSH_CHANNEL: "developer-default",
             ]
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
@@ -134,6 +135,7 @@ android {
                     JPUSH_CHANNEL: "developer-default"
             ]
             testCoverageEnabled = true
+            signingConfig signingConfigs.debug
         }
 
     }
@@ -156,6 +158,8 @@ dependencies {
     implementation project(path: ':agora')
 //    implementation project(':jpushlib')
     implementation project(':maplib')
+    implementation project(path: ':realname')
+    implementation project(path: ':msa_service')
 
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
     implementation rootProject.ext.dependencies["BUGLY_CRASHREPORT"]
@@ -164,10 +168,9 @@ dependencies {
     implementation 'com.jakewharton:process-phoenix:2.0.0'
     implementation rootProject.ext.dependencies["WECHAT"]
     implementation 'com.sina.weibo.sdk:core:10.7.0:openDefaultRelease@aar'
-    implementation project(path: ':realname')
     //一键登录
-    implementation 'cn.jiguang.sdk:jcore:2.3.4'
-    implementation 'cn.jiguang.sdk:jverification:2.6.5'
+    implementation 'cn.jiguang.sdk:jcore:2.1.4'
+    implementation 'cn.jiguang.sdk:jverification:2.5.2'
     //厂商推送
     implementation project(':platform_push')
 }
