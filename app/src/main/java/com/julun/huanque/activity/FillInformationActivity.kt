@@ -80,11 +80,11 @@ class FillInformationActivity : BaseActivity() {
         //隐私协议弹窗
         mPersonalInformationProtectionFragment.show(supportFragmentManager, "PersonalInformationProtectionFragment")
         //邀请码
-        val extralCode = ChannelCodeHelper.getExternalChannel() ?: ""
-        if (extralCode.contains(CODE_TEMPLATE)) {
-            val index = extralCode.indexOf(CODE_TEMPLATE)
-            val code = extralCode.substring(index, extralCode.length - 1)
-            if(code?.isNotEmpty()){
+        val extraCode = ChannelCodeHelper.getExternalChannel() ?: ""
+        if (extraCode.contains(CODE_TEMPLATE)) {
+            val strings = extraCode.split(CODE_TEMPLATE)
+            val code = strings.getOrNull(1)
+            if(code?.isNotEmpty()==true){
                 et_invitation_code.setText(code)
             }
         }
