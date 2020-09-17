@@ -221,7 +221,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     /**
      * 对接收到到的消息进行处理
      */
-    fun foWithReceiveMessage(message : Message){
+    fun foWithReceiveMessage(message: Message) {
         RongIMClient.getInstance().setMessageReceivedStatus(message.messageId, Message.ReceivedStatus(1))
         //        }
         if (message.senderUserId != "${SessionUtils.getUserId()}") {
@@ -353,7 +353,10 @@ class PrivateConversationViewModel : BaseViewModel() {
             request({
                 val result = socialService.sendMsg(SendMsgForm(targetId, content)).dataConvert(intArrayOf(ErrorCodes.BALANCE_NOT_ENOUGH))
                 BalanceUtils.saveBalance(result.beans)
-                msgFeeData.value = result.consumeBeans
+                if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
+                    msgFeeData.value = result.consumeBeans
+                }
+                basicBean.value?.chatTicketCnt = result.chatTicketCnt
                 propListData.value = result.propList
                 if (type.isEmpty()) {
                     localMsg?.sentStatus = Message.SentStatus.SENT
@@ -413,7 +416,10 @@ class PrivateConversationViewModel : BaseViewModel() {
             request({
                 val result = socialService.sendPic(SendMsgForm(targetId, content)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
-                msgFeeData.value = result.consumeBeans
+                if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
+                    msgFeeData.value = result.consumeBeans
+                }
+                basicBean.value?.chatTicketCnt = result.chatTicketCnt
                 uploader?.success(Uri.parse(content))
             }, {
                 if (it !is ResponseError) {
@@ -440,7 +446,10 @@ class PrivateConversationViewModel : BaseViewModel() {
             request({
                 val result = socialService.sendDice(SendMsgForm(targetId, content)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
-                msgFeeData.value = result.consumeBeans
+                if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
+                    msgFeeData.value = result.consumeBeans
+                }
+                basicBean.value?.chatTicketCnt = result.chatTicketCnt
                 try {
                     val cMessage = localMsg.content as? CustomMessage
 
@@ -475,7 +484,10 @@ class PrivateConversationViewModel : BaseViewModel() {
             request({
                 val result = socialService.sendFinger(SendMsgForm(targetId, content)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
-                msgFeeData.value = result.consumeBeans
+                if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
+                    msgFeeData.value = result.consumeBeans
+                }
+                basicBean.value?.chatTicketCnt = result.chatTicketCnt
                 try {
                     val cMessage = localMsg.content as? CustomMessage
 

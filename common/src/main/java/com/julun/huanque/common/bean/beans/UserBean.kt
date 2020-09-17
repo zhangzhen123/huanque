@@ -147,7 +147,9 @@ class ConversationBasicBean(
     //是否是陌生人
     var stranger: Boolean = false,
     //道具列表
-    var propList: MutableList<PrivateProp> = mutableListOf()
+    var propList: MutableList<PrivateProp> = mutableListOf(),
+    //聊天券数量
+    var chatTicketCnt: Int = 0
 )
 
 /**
