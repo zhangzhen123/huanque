@@ -105,14 +105,13 @@
         android:id="@+id/rl_game"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginLeft="6dp"
-        android:visibility="gone">
+        android:layout_marginStart="6dp">
 
         <ImageView
             android:id="@+id/gameImage"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:src="@drawable/selector_live_action_game" />
+            android:src="@mipmap/icon_live_game_bird" />
 
         <View
             android:id="@+id/tv_light_count"

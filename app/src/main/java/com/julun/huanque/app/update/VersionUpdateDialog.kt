@@ -89,7 +89,7 @@ class VersionUpdateDialog : AppBaseDialog {
                 this.callback!!.onCancel()
                 if (force){
                     //直接关闭app
-                    ActivitiesManager.finishApp()
+                    ActivitiesManager.INSTANCE.finishApp()
                 }
             }
             R.id.ok_btn -> if (callback != null) {

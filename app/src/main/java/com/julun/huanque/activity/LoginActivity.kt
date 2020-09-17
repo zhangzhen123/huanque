@@ -352,7 +352,7 @@ class LoginActivity : BaseActivity() {
         super.onNewIntent(intent)
         if (intent?.getStringExtra(ParamConstant.TYPE) == "EXIT") {
             //退出APP
-            ActivitiesManager.finishApp()
+            ActivitiesManager.INSTANCE.finishApp()
         }
     }
 
@@ -362,7 +362,7 @@ class LoginActivity : BaseActivity() {
         } else {
             //未登录成功，需要退出APP
             SessionUtils.clearSession()
-            ActivitiesManager.finishApp()
+            ActivitiesManager.INSTANCE.finishApp()
         }
         super.finish()
     }

@@ -24,7 +24,7 @@ object AliplayerManager {
     var mAliPlayer = AliPlayerFactory.createAliPlayer(CommonInit.getInstance().getContext())
 
     //log输出标识位
-    private var mLogEnable = true
+    private var mLogEnable = false
 
     var mRenderListener: IPlayer.OnRenderingStartListener? = null
 

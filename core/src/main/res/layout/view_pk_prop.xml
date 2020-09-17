@@ -5,37 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_pk_prop_img"
+        android:layout_width="45dp"
+        android:layout_height="37dp"
+        app:actualImageScaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/tv_pk_prop_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_5"
-        android:layout_marginLeft="@dimen/dimen_5"
+        android:layout_height="14dp"
+        android:layout_marginTop="@dimen/dimen_1"
+        android:background="@drawable/shape_pk_prop_name"
         android:gravity="center"
-        android:orientation="vertical">
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/sdv_pk_prop_img"
-            android:layout_width="45dp"
-            android:layout_height="37dp"
-            app:actualImageScaleType="fitCenter" />
-
-        <TextView
-            android:id="@+id/tv_pk_prop_name"
-            android:layout_width="wrap_content"
-            android:layout_height="14dp"
-            android:layout_marginTop="@dimen/dimen_1"
-            android:background="@drawable/shape_pk_prop_name"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:maxWidth="49dp"
-            android:maxLines="1"
-            android:paddingLeft="@dimen/dimen_4"
-            android:paddingRight="@dimen/dimen_4"
-            android:text="使用"
-            android:textColor="@color/white"
-            android:textSize="8sp"
-            tools:text="小猫持有" />
-    </LinearLayout>
+        android:includeFontPadding="false"
+        android:maxWidth="49dp"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/dimen_4"
+        android:paddingRight="@dimen/dimen_4"
+        android:text="使用"
+        android:textColor="@color/white"
+        android:textSize="8sp"
+        tools:text="小猫持有" />
 
 
 </merge>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/bg_bird_desc"
+    tools:layout_width="@dimen/dimen_280">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird_tree"
+        android:layout_width="89dp"
+        android:layout_height="89dp"
+        android:layout_marginTop="@dimen/dimen_9"
+        app:actualImageResource="@mipmap/bg_bird_shop_item_tree"
+        app:actualImageScaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundAsCircle="true" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:actualImageScaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/sdv_bird_tree"
+        app:layout_constraintEnd_toEndOf="@+id/sdv_bird_tree"
+        app:layout_constraintStart_toStartOf="@+id/sdv_bird_tree"
+        app:layout_constraintTop_toTopOf="@+id/sdv_bird_tree"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:roundAsCircle="true" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="@dimen/dimen_95"
+        android:layout_height="@dimen/dimen_32"
+        android:layout_marginTop="@dimen/dimen_15"
+        android:gravity="center"
+        android:textColor="#80514F"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/sdv_bird"
+        app:layout_constraintStart_toStartOf="@+id/sdv_bird"
+        app:layout_constraintTop_toBottomOf="@+id/sdv_bird"
+        tools:text="Lv6.xx鹊" />
+
+    <TextView
+        android:id="@+id/tv_desc_title"
+        android:layout_width="@dimen/dimen_49"
+        android:layout_height="@dimen/dimen_18"
+        android:layout_marginStart="@dimen/dimen_30"
+        android:background="@mipmap/bg_bird_item_desc_title"
+        android:gravity="center"
+        android:text="功能"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_30"
+        android:layout_marginTop="@dimen/dimen_7"
+        android:layout_marginEnd="@dimen/dimen_30"
+        android:gravity="start"
+        android:textColor="#D75151"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_desc_title"
+        tools:text="功能描述功能描述功能描述功能描述功能描述" />
+
+    <TextView
+        android:id="@+id/tv_source_title"
+        android:layout_width="@dimen/dimen_49"
+        android:layout_height="@dimen/dimen_18"
+        android:layout_marginStart="@dimen/dimen_30"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:background="@mipmap/bg_bird_source_title"
+        android:gravity="center"
+        android:text="来源"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_desc" />
+
+    <TextView
+        android:id="@+id/tv_source"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_30"
+        android:layout_marginTop="@dimen/dimen_7"
+        android:layout_marginEnd="@dimen/dimen_30"
+        android:gravity="start"
+        android:textColor="#794747"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_source_title"
+        tools:text="功能描述功能描述功能描述功能描述功能描述功能描述" />
+
+    <TextView
+        android:id="@+id/tv_bird_fly"
+        android:layout_width="@dimen/dimen_90"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:background="@mipmap/bg_bird_btn_enable"
+        android:gravity="center"
+        android:text="放飞"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_source" />
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="@dimen/dimen_26"
+        android:layout_height="@dimen/dimen_26"
+        android:layout_marginEnd="@dimen/dimen_5"
+        android:scaleType="centerInside"
+        android:src="@mipmap/icon_bird_dialog_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

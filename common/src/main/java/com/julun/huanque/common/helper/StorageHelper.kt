@@ -26,6 +26,8 @@ object StorageHelper {
     private const val NEED_GUIDE_TO_SPEAK = "NEED_GUIDE_TO_SPEAK"
     //提现方式
     private const val WITHDRAW_TYPE = "WITHDRAW_TYPE"
+
+    private const val NEED_GUIDE_TO__PLAY_BIRD = "need_guide_to_play_bird"
     /**
      * 保存ad
      */
@@ -47,34 +49,42 @@ object StorageHelper {
 
     //直播间是否展示关注
     fun setLiveShowFollow(status: Boolean) {
-        SharedPreferencesUtils.commitBoolean(FIRST_LIVE_SHOW_FOLLOW, status)
+        SPUtils.commitBoolean(FIRST_LIVE_SHOW_FOLLOW, status)
     }
-    fun getLiveShowFollowStatus() = SharedPreferencesUtils.getBoolean(FIRST_LIVE_SHOW_FOLLOW, true)
+    fun getLiveShowFollowStatus() = SPUtils.getBoolean(FIRST_LIVE_SHOW_FOLLOW, true)
 
 
 
     //直播间是否展示手势引导
     fun setLiveFirstGestureGuide(status: Boolean) {
-        SharedPreferencesUtils.commitBoolean(FIRST_LIVE_GUIDE_GESTURE, status)
+        SPUtils.commitBoolean(FIRST_LIVE_GUIDE_GESTURE, status)
     }
-    fun getLiveFirstGestureGuideStatus() = SharedPreferencesUtils.getBoolean(FIRST_LIVE_GUIDE_GESTURE, true)
+    fun getLiveFirstGestureGuideStatus() = SPUtils.getBoolean(FIRST_LIVE_GUIDE_GESTURE, true)
 
 
     fun setNotifyRefreshDate(date: String) {
-        SharedPreferencesUtils.commitString(NOTIFY_REFRESH_DATE, date)
+        SPUtils.commitString(NOTIFY_REFRESH_DATE, date)
     }
-    fun getNotifyRefreshDate() = SharedPreferencesUtils.getString(NOTIFY_REFRESH_DATE, "")
+    fun getNotifyRefreshDate() = SPUtils.getString(NOTIFY_REFRESH_DATE, "")
 
     //是否需要引导发言
     fun setNeedGuideToSpeak(status: Boolean) {
-        SharedPreferencesUtils.commitBoolean(NEED_GUIDE_TO_SPEAK, status)
+        SPUtils.commitBoolean(NEED_GUIDE_TO_SPEAK, status)
     }
 
-    fun getNeedGuideToSpeakStatus() = SharedPreferencesUtils.getBoolean(NEED_GUIDE_TO_SPEAK, true)
+    fun getNeedGuideToSpeakStatus() = SPUtils.getBoolean(NEED_GUIDE_TO_SPEAK, true)
 
 
     fun setWithdrawType(date: String) {
-        SharedPreferencesUtils.commitString(WITHDRAW_TYPE, date)
+        SPUtils.commitString(WITHDRAW_TYPE, date)
     }
-    fun getWithdrawType() = SharedPreferencesUtils.getString(WITHDRAW_TYPE, "")
+    fun getWithdrawType() = SPUtils.getString(WITHDRAW_TYPE, "")
+
+
+    fun setNeedBirdGuide(need:Boolean){
+        SPUtils.commitBoolean(NEED_GUIDE_TO__PLAY_BIRD, need)
+    }
+    fun getNeedBirdGuide():Boolean{
+        return SPUtils.getBoolean(NEED_GUIDE_TO__PLAY_BIRD, true)
+    }
 }

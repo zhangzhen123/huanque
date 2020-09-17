@@ -167,8 +167,8 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
      */
     protected fun setDialogSize(
         gravity: Int = Gravity.BOTTOM,
-        width: Int = ViewGroup.LayoutParams.WRAP_CONTENT ,
-        height: Int = ViewGroup.LayoutParams.WRAP_CONTENT ,
+        width: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
+        height: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
         padding: Int = 0
     ) {
         val window = dialog?.window ?: return
@@ -191,7 +191,11 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
     /**
      * 宽度显示比例
      */
-    protected fun setDialogSize(gravity: Int = Gravity.BOTTOM, marginWidth: Int, height: Int = ViewGroup.LayoutParams.WRAP_CONTENT) {
+    protected fun setDialogSize(
+        gravity: Int = Gravity.BOTTOM,
+        marginWidth: Int,
+        height: Int = ViewGroup.LayoutParams.WRAP_CONTENT
+    ) {
         val window = dialog?.window ?: return
         val params = window.attributes
         params.gravity = gravity

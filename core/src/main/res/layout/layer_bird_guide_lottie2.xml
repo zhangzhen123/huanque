@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="@color/black_999">
+
+    <View
+        android:id="@+id/holder_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_500"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="@dimen/dimen_36"
+        android:layout_height="@dimen/dimen_36"
+        android:layout_marginEnd="@dimen/dimen_30"
+        android:src="@mipmap/icon_close_white_01"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/arrow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/close"
+        android:layout_marginStart="@dimen/dimen_70"
+        android:src="@mipmap/icon_guide_arrow_02"
+        app:layout_constraintBottom_toTopOf="@+id/lottieAnimationView2"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnimationView2"
+        android:layout_width="@dimen/dimen_150"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_height="66dp"
+        android:layout_gravity="end"
+        android:layout_marginStart="@dimen/dimen_10"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/arrow2"
+        app:layout_constraintStart_toStartOf="@+id/arrow2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="json/bird_guide_01.json"
+        app:lottie_loop="true" />
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="@dimen/dimen_20"
+        android:layout_height="wrap_content"
+        android:rotationX="-180"
+        android:rotationY="-180"
+        android:src="@mipmap/icon_guide_arrow_01"
+        app:layout_constraintEnd_toEndOf="@+id/lottieAnimationView2"
+        app:layout_constraintTop_toBottomOf="@+id/lottieAnimationView2" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/close"
+        android:layout_marginStart="@dimen/dimen_7"
+        android:text="拖动奶嘴鹊进行合并升级"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/arrow"
+        app:layout_constraintStart_toStartOf="@+id/arrow"
+        app:layout_constraintTop_toBottomOf="@+id/arrow" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

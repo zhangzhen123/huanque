@@ -134,4 +134,15 @@ interface LiveRoomService {
     suspend fun getRoomUserInfo(@Body form: UserEnterRoomForm): Root<UserInfo>
 
     //===================================== 管理相关接口 end ========================================
+
+    /**
+     * 随机获取一个直播间
+     */
+    @POST("live/room/info/randomRoom")
+    suspend fun randomRoom(@Body form: RandomRoomForm): Root<ProgramRoomBean>
+    /**
+     * 观看直播任务结束
+     */
+    @POST("social/magpie/watchLive")
+    suspend fun watchLiveEnd(@Body form: ProgramIdForm): Root<VoidResult>
 }

@@ -36,6 +36,7 @@ import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
+import com.julun.huanque.core.ui.live.dialog.BirdDialogFragment
 import com.julun.huanque.core.ui.live.fragment.BalanceNotEnoughFragment
 import com.julun.huanque.core.ui.live.fragment.PrivateFragment
 import com.julun.huanque.core.viewmodel.AnchorNoLiveViewModel
@@ -306,24 +307,12 @@ class PlayerViewManager(val context: PlayerActivity) {
                     }
                     ClickType.GAME -> {
                         //打开游戏界面
-//                        mDialogManager.openDialog(GameMoreFragment::class.java, builder = { fg ->
-//                            var gameFragment = fg
-//                            if (gameFragment == null) {
-//                                val location = IntArray(2)
-//                                val gameView = context.findViewById<View>(R.id.gameImage)
-//                                gameView.getLocationInWindow(location)
-//
-//                                val localParams = IntArray(4)
-//                                localParams[0] = location[0]
-//                                localParams[1] = location[1]
-//                                localParams[2] = gameView.width
-//                                localParams[3] = gameView.height
-//                                gameFragment = GameMoreFragment.newInstance(localParams)
-//                            }
-//                            gameFragment
-//                        }, reuse = true)
-                    }
 
+                    }
+                    ClickType.BIRD -> {
+                        //打开养鹊
+                        mDialogManager.openDialog(BirdDialogFragment::class.java)
+                    }
                     ClickType.PRIVATE_MESSAGE -> {
                         //打开私聊
                         openPrivateDialog()

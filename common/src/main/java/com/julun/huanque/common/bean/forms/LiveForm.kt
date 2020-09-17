@@ -309,3 +309,10 @@ data class CardManagerForm(
     var programId: Long = 0, var targetUserId: Long = 0, var mangeType: String? = null,
     var itemValue: String? = null, var deviceUuid: String? = null
 )
+
+/**
+ * 随机获取一个直播间
+ */
+class RandomRoomForm(
+    var sourceType: String? = null
+)

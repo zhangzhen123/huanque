@@ -5,7 +5,7 @@ package com.julun.huanque.common.constant
  */
 
 object SPType {
-    val COMMON_SP = "common_sp"//使用最频繁的
+    const val COMMON_SP = "common_sp"//使用最频繁的
 }
 
 /** 动画类型  */
@@ -189,7 +189,8 @@ object ClickType {
 
     //星球霸主
     const val PLANTE = "PLANTE"
-
+    //养鹊
+    const val BIRD = "BIRD"
     //推流设置页面
     const val PUBLISH_SETTING = "PUBLISH_SETTING"
 
@@ -228,20 +229,6 @@ object ClickType {
     const val SEND_MESSAGE = "SEND_MESSAGE"
 }
 
-object MenuActionType {
-    const val MOECOINTASK = "MoeCoinTask"//萌币任务
-    const val KINGWAR = "KingWar"//王者之战
-    const val LUCKYROTATE = "LuckyRotate"//幸运转盘
-    const val MOECOINMARKET = "MoeCoinMarket"//萌币商城
-    const val FACTORYCAR = "FactoryCar"//豪车工厂
-    const val TURNCARD = "TurnCard"//翻牌游戏
-    const val TACTGAMEYY = "TActGameYY"//邀友活动
-
-    const val PASSLEVEL = "PassLevel"//携手闯关
-    const val STAGEPK = "StagePk"//PK段位赛
-    const val CHATMODE = "ChatMode"//聊天模式
-}
-
 /**
  * 页面标识位
  * @author  WanZhiYuan
@@ -260,23 +247,6 @@ object TabTags {
     const val TAB_TAG_MANAGER = "manager"
 }
 
-object LoginType {
-    //游客
-    val VISITOR = "VISITOR"
-
-    // SESSION登陆
-    val LOGIN_SESSION = "LOGIN_SESSION"
-
-    // 本站登陆
-    val LOGIN_NORMAL = "LOGIN_NORMAL"
-
-    /**靓号登录 */
-    val LOGIN_BY_BEAUTY_NUM = "LOGIN_BY_BEAUTY_NUM"
-
-    //第三方登陆已绑定
-    val THIRD_BINDED = "THIRD_BINDED"
-}
-
 /**
  * 直播间打开时附带的操作
  */
@@ -293,23 +263,6 @@ object LiveOperaType {
 
     //打开首充
     const val OPEN_FIRST_RECHARGE = "OPEN_FIRST_RECHARGE"
-}
-
-/**
- * 分享常量类
- */
-object ShareConstants {
-    const val SHARE_WX = "wx"
-    const val SHARE_WX_TEXT = "微信"
-    const val SHARE_WX_FRIENDS = "wx_friends"
-    const val SHARE_WX_FRIENDS_TEXT = "朋友圈"
-    const val SHARE_QQ = "qq"
-    const val SHARE_QQ_TEXT = "QQ"
-    const val SHARE_QQ_ZONE = "qq_zone"
-    const val SHARE_QQ_ZONE_TEXT = "QQ空间"
-    const val SHARE_COPY = "copy"
-    const val SHARE_COPY_TEXT = "复制链接"
-
 }
 
 object DialogOrderNumber {
@@ -591,21 +544,49 @@ object HomeMakeMoneyType {
     const val Task = "Task"
 }
 
-object PushDataActionType{
-    //这个类型测试用
-    const val EditMineHomePage="EditMineHomePage"
-    const val LiveRoom="LiveRoom"
-    const val Url="Url"//打开指定url
-    const val PrivateChat="PrivateChat"//定位到私信
-    const val OfficialCertPage="OfficialCertPage"//跳转到官方认证页面
+object BirdTaskJump {
+    const val LiveRoom = "LiveRoom"
+    const val InviteFriend = "InviteFriend"
+    const val FriendHome = "FriendHome"
+    const val Message = "Message"
+}
 
-    const val AnchorCertPage="AnchorCertPage"//跳转到主播认证页面
-    const val MineHomePage="MineHomePage"//跳转到我的主页
-    const val SystemNotice="SystemNotice" //（打开系统通知页面）
-    const val FriendNotice="FriendNotice"// (打开好友通知页面)
+object BirdTaskStatus {
+    const val NotReceive = "NotReceive"
+    const val NotFinish = "NotFinish"
+    const val Received = "Received"
+
+}
+
+object BirdTaskAwardType {
+    const val Small = "Small"
+    const val Middle = "Middle"
+    const val Big = "Big"
+}
+
+object MainPageIndexConst {
+    const val MAIN_FRAGMENT_INDEX = 0
+    const val LEYUAN_FRAGMENT_INDEX = 1
+    const val MESSAGE_FRAGMENT_INDEX = 2
+    const val MINE_FRAGMENT_INDEX = 3
+}
+
+object PushDataActionType {
+    //这个类型测试用
+    const val EditMineHomePage = "EditMineHomePage"
+    const val LiveRoom = "LiveRoom"
+    const val Url = "Url"//打开指定url
+    const val PrivateChat = "PrivateChat"//定位到私信
+    const val OfficialCertPage = "OfficialCertPage"//跳转到官方认证页面
+
+    const val AnchorCertPage = "AnchorCertPage"//跳转到主播认证页面
+    const val MineHomePage = "MineHomePage"//跳转到我的主页
+    const val SystemNotice = "SystemNotice" //（打开系统通知页面）
+    const val FriendNotice = "FriendNotice"// (打开好友通知页面)
+
     //Yesterday：昨日榜单Tab，
     //Today:今日榜单Tab（暂无这样的跳转需求），
     //Famous: 名人榜单Tab
-    const val PlumFlower="PlumFlower"//（跳转到今日花魁）
+    const val PlumFlower = "PlumFlower"//（跳转到今日花魁）
 
 }

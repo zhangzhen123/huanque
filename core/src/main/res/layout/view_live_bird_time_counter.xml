@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_coins"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="@dimen/dimen_6"
+        android:layout_marginEnd="@dimen/dimen_6"
+        android:background="@mipmap/bg_bird_coin_award"
+        app:actualImageResource="@mipmap/icon_bird_coin_little"
+        app:actualImageScaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_12"
+        android:layout_marginBottom="@dimen/dimen_1"
+        android:background="@drawable/bg_live_bird_coin"
+        android:gravity="center"
+        android:paddingStart="@dimen/dimen_3"
+        android:paddingEnd="@dimen/dimen_3"
+        android:textColor="@color/white"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sdv_coins"
+        app:layout_constraintEnd_toEndOf="@id/sdv_coins"
+        app:layout_constraintStart_toStartOf="@+id/sdv_coins"
+        tools:text="少量金币" />
+
+    <TextView
+        android:id="@+id/tv_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_12"
+        android:background="@drawable/bg_num_dot_01"
+        android:gravity="center"
+        android:paddingStart="@dimen/dimen_5"
+        android:paddingEnd="@dimen/dimen_5"
+        android:textColor="@color/white"
+        android:textSize="8sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="60" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

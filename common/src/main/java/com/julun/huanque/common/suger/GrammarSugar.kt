@@ -10,15 +10,15 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.ColorInt
-import androidx.fragment.app.DialogFragment
 import androidx.core.content.FileProvider
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import com.facebook.drawee.generic.RoundingParams
-import com.julun.huanque.common.utils.ULog
 import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.widget.text.span.BetterImageSpan
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.utils.SortUtils
+import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.fresco.DraweeHolderBuilder
 import java.io.File
 import java.io.Serializable
@@ -305,7 +305,7 @@ fun Map<String, out Serializable>.bundle(): Bundle {
     return intent
 }
 
-fun DialogFragment.show(activity: AppCompatActivity, tag: String) {
+fun DialogFragment.show(activity: FragmentActivity, tag: String) {
     this.show(activity.supportFragmentManager, tag)
 }
 
@@ -540,11 +540,23 @@ fun <T> List<T>.sortList(comparator: Comparator<T>): List<T> {
 }
 
 //有序的遍历 从0开始
-public inline fun <T> List<T>.forEachIndexedOrdered(action: (index: Int, T) -> Unit): Unit {
+inline fun <T> List<T>.forEachIndexedOrdered(action: (index: Int, T) -> Unit): Unit {
     var index = 0
     val last = this.size - 1
     for (i in 0..last) {
         val item = this[i]
         action(index++, item)
+    }
+}
+
+/**
+ * 可以跳出循环的遍历操作 如果[action]返回true代表需要跳出循环
+ */
+inline fun <T> Iterable<T>.forEachBreak(action: (T) -> Boolean) {
+    kotlin.run breaking@{
+        for (element in this)
+            if (action(element)) {
+                return@breaking
+            }
     }
 }

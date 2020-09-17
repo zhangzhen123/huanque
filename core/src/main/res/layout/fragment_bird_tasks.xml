@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/view_bg1"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="@dimen/dimen_23"
+        android:background="#37578A"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_bg2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#416298"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_bg1" />
+
+    <ImageView
+        android:layout_width="146dp"
+        android:layout_height="62dp"
+        android:src="@mipmap/icon_bird_task_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="@dimen/dimen_26"
+        android:layout_height="@dimen/dimen_26"
+        android:layout_marginTop="@dimen/dimen_3"
+        android:layout_marginEnd="@dimen/dimen_8"
+        android:scaleType="centerInside"
+        android:src="@mipmap/icon_bird_dialog_close"
+        app:layout_constraintEnd_toEndOf="@+id/view_bg2"
+        app:layout_constraintTop_toTopOf="@+id/view_bg2" />
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/mRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dimen_73"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tasksList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/bg_bird_task_bottom"
+        android:paddingTop="@dimen/dimen_20"
+        android:paddingBottom="@dimen/dimen_10"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <View
+            android:id="@+id/view_process"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@mipmap/icon_bird_task_process"
+            app:layout_constraintBottom_toBottomOf="@+id/view4"
+            app:layout_constraintEnd_toStartOf="@+id/view_process_bg"
+            app:layout_constraintStart_toStartOf="@+id/view4"
+            app:layout_constraintTop_toTopOf="@+id/view4" />
+
+        <View
+            android:id="@+id/view_process_bg"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#6B4B2D"
+            app:layout_constraintBottom_toBottomOf="@+id/view4"
+            app:layout_constraintEnd_toEndOf="@+id/view4"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/view_process"
+            app:layout_constraintTop_toTopOf="@+id/view4" />
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_16"
+            android:layout_marginStart="@dimen/dimen_55"
+            android:layout_marginEnd="@dimen/dimen_24"
+            android:background="@mipmap/bg_bird_task_process"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_active"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_active"
+            app:layout_constraintTop_toTopOf="@+id/tv_active" />
+
+        <View
+            android:id="@+id/p_30"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/view4"
+            app:layout_constraintEnd_toStartOf="@+id/p_60"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="@+id/view4"
+            app:layout_constraintTop_toTopOf="@+id/view4" />
+
+        <View
+            android:id="@+id/line_1"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="#FABD3B"
+            app:layout_constraintBottom_toBottomOf="@+id/view4"
+            app:layout_constraintEnd_toEndOf="@+id/p_30"
+            app:layout_constraintStart_toEndOf="@+id/p_30"
+            app:layout_constraintTop_toTopOf="@+id/view4" />
+
+        <View
+            android:id="@+id/p_60"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/view4"
+            app:layout_constraintEnd_toStartOf="@+id/end"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/p_30"
+            app:layout_constraintTop_toTopOf="@+id/view4" />
+
+        <View
+            android:id="@+id/line_2"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="#FABD3B"
+            app:layout_constraintBottom_toBottomOf="@+id/view4"
+            app:layout_constraintEnd_toEndOf="@+id/p_60"
+            app:layout_constraintStart_toEndOf="@+id/p_60"
+            app:layout_constraintTop_toTopOf="@+id/view4" />
+
+        <View
+            android:id="@+id/end"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/view4"
+            app:layout_constraintEnd_toEndOf="@+id/view4"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toEndOf="@+id/p_60"
+            app:layout_constraintTop_toTopOf="@+id/view4" />
+
+        <TextView
+            android:id="@+id/tv_active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_11"
+            android:layout_marginTop="@dimen/dimen_12"
+            android:background="@mipmap/bg_bird_task_active"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="99" />
+
+        <TextView
+            android:id="@+id/tv_active_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="活跃值"
+            android:textColor="#794747"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toEndOf="@+id/tv_active"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_active" />
+
+        <TextView
+            android:id="@+id/tv_30_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_2"
+            android:background="@mipmap/bg_bird_active_process"
+            android:gravity="center"
+            android:text="30"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toEndOf="@+id/line_1"
+            app:layout_constraintStart_toStartOf="@+id/line_1"
+            app:layout_constraintTop_toBottomOf="@+id/line_1" />
+
+        <TextView
+            android:id="@+id/tv_60_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_2"
+            android:background="@mipmap/bg_bird_active_process"
+            android:gravity="center"
+            android:text="60"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toEndOf="@+id/line_2"
+            app:layout_constraintStart_toStartOf="@+id/line_2"
+            app:layout_constraintTop_toBottomOf="@+id/line_2" />
+
+        <TextView
+            android:id="@+id/tv_120_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_2"
+            android:background="@mipmap/bg_bird_active_process"
+            android:gravity="center"
+            android:text="120"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintEnd_toEndOf="@+id/end"
+            app:layout_constraintStart_toEndOf="@+id/end"
+            app:layout_constraintTop_toBottomOf="@+id/end" />
+
+        <com.julun.huanque.core.ui.main.bird.BirdTaskAwardView
+            android:id="@+id/award_01"
+            android:layout_width="@dimen/dimen_36"
+            android:layout_height="@dimen/dimen_30"
+            android:layout_marginBottom="@dimen/dimen_5"
+            app:layout_constraintBottom_toTopOf="@+id/line_1"
+            app:layout_constraintEnd_toEndOf="@+id/line_1"
+            app:layout_constraintStart_toStartOf="@+id/line_1" />
+
+        <com.julun.huanque.core.ui.main.bird.BirdTaskAwardView
+            android:id="@+id/award_02"
+            android:layout_width="@dimen/dimen_36"
+            android:layout_height="@dimen/dimen_30"
+            android:layout_marginBottom="@dimen/dimen_5"
+            app:layout_constraintBottom_toTopOf="@+id/line_2"
+            app:layout_constraintEnd_toEndOf="@+id/line_2"
+            app:layout_constraintStart_toStartOf="@+id/line_2" />
+
+        <com.julun.huanque.core.ui.main.bird.BirdTaskAwardView
+            android:id="@+id/award_03"
+            android:layout_width="@dimen/dimen_36"
+            android:layout_height="@dimen/dimen_30"
+            android:layout_marginBottom="@dimen/dimen_5"
+            app:layout_constraintBottom_toTopOf="@+id/end"
+            app:layout_constraintEnd_toEndOf="@+id/end"
+            app:layout_constraintStart_toEndOf="@+id/end" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.julun.huanque.common.widgets.statepage.StatePageView
+        android:id="@+id/state_pager_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="@color/black_999">
+
+    <View
+        android:id="@+id/holder_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_450"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="@dimen/dimen_36"
+        android:layout_height="@dimen/dimen_36"
+        android:layout_marginEnd="@dimen/dimen_20"
+        android:src="@mipmap/icon_close_white_01"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="点击购买第一只奶嘴鹊"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/arrow"
+        app:layout_constraintEnd_toEndOf="@+id/click_holder"
+        app:layout_constraintStart_toStartOf="@+id/click_holder" />
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="@dimen/dimen_20"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_guide_arrow_01"
+        app:layout_constraintBottom_toTopOf="@+id/click_holder"
+        app:layout_constraintEnd_toEndOf="@+id/click_holder"
+        app:layout_constraintStart_toStartOf="@+id/click_holder" />
+
+    <View
+        android:id="@+id/click_holder"
+        android:layout_width="166dp"
+        android:layout_height="@dimen/dimen_85"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnimationView"
+        android:layout_width="@dimen/dimen_66"
+        android:layout_height="66dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/space"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="json/bird_guide_03.json"
+        app:lottie_loop="true" />
+
+    <Space
+        android:id="@+id/space"
+        android:layout_width="@dimen/dimen_20"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/click_holder"
+        app:layout_constraintStart_toEndOf="@+id/click_holder" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,11 +34,12 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.manager.FloatingManager
+import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.support.LoginManager
-import com.julun.huanque.ui.main.LeYuanFragment
+import com.julun.huanque.core.ui.main.bird.LeYuanFragment
 import com.julun.huanque.ui.main.MineFragment
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.maplib.LocationService
@@ -51,6 +52,7 @@ import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
@@ -66,12 +68,7 @@ class MainActivity : BaseActivity() {
 
     //    private val mMineFragment: Fragment by lazy { RNPageFragment.start("PH") }
 
-    companion object {
-        private const val MAIN_FRAGMENT_INDEX = 0
-        private const val LEYUAN_FRAGMENT_INDEX = 1
-        private const val MESSAGE_FRAGMENT_INDEX = 2
-        private const val MINE_FRAGMENT_INDEX = 3
-    }
+
 
 
     private val mMainViewModel: MainViewModel by viewModels()
@@ -253,32 +250,34 @@ class MainActivity : BaseActivity() {
         view_make_friends.onClickNew {
             //交友
             if (getCurrentFragment() != mHomeFragment) {
-                tabIconAnimation(MAIN_FRAGMENT_INDEX)
+                tabIconAnimation(MainPageIndexConst.MAIN_FRAGMENT_INDEX)
             } else {
                 mHomeFragment.scrollToTop()
             }
-            showFragmentNew(MAIN_FRAGMENT_INDEX)
+            showFragmentNew(MainPageIndexConst.MAIN_FRAGMENT_INDEX)
         }
         view_leyuan.onClickNew {
             //乐园
-            if (getCurrentFragment() != mLeYuanFragment) {
-                tabIconAnimation(LEYUAN_FRAGMENT_INDEX)
-            }
-            showFragmentNew(LEYUAN_FRAGMENT_INDEX)
+//            if (getCurrentFragment() != mLeYuanFragment) {
+//                tabIconAnimation(MainPageIndexConst.LEYUAN_FRAGMENT_INDEX)
+//            }
+//            showFragmentNew(MainPageIndexConst.LEYUAN_FRAGMENT_INDEX)
+            startActivity<LeYuanBirdActivity>()
+
         }
         view_message.onClickNew {
             //消息
             if (getCurrentFragment() != mMessageFragment) {
-                tabIconAnimation(MESSAGE_FRAGMENT_INDEX)
+                tabIconAnimation(MainPageIndexConst.MESSAGE_FRAGMENT_INDEX)
             }
-            showFragmentNew(MESSAGE_FRAGMENT_INDEX)
+            showFragmentNew(MainPageIndexConst.MESSAGE_FRAGMENT_INDEX)
         }
         view_mine.onClickNew {
             //我的
             if (getCurrentFragment() != mMineFragment) {
-                tabIconAnimation(MINE_FRAGMENT_INDEX)
+                tabIconAnimation(MainPageIndexConst.MINE_FRAGMENT_INDEX)
             }
-            showFragmentNew(MINE_FRAGMENT_INDEX)
+            showFragmentNew(MainPageIndexConst.MINE_FRAGMENT_INDEX)
         }
     }
 
@@ -287,16 +286,16 @@ class MainActivity : BaseActivity() {
      */
     private fun goToTab(index: Int) {
         when (index) {
-            MAIN_FRAGMENT_INDEX -> {
+            MainPageIndexConst.MAIN_FRAGMENT_INDEX -> {
                 view_make_friends.performClick()
             }
-            LEYUAN_FRAGMENT_INDEX -> {
+            MainPageIndexConst.LEYUAN_FRAGMENT_INDEX -> {
                 view_leyuan.performClick()
             }
-            MESSAGE_FRAGMENT_INDEX -> {
+            MainPageIndexConst.MESSAGE_FRAGMENT_INDEX -> {
                 view_message.performClick()
             }
-            MINE_FRAGMENT_INDEX -> {
+            MainPageIndexConst.MINE_FRAGMENT_INDEX -> {
                 view_mine.performClick()
             }
         }
@@ -351,10 +350,10 @@ class MainActivity : BaseActivity() {
      */
     private fun getFragmentByIndex(index: Int): Fragment? {
         return when (index) {
-            MAIN_FRAGMENT_INDEX -> mHomeFragment
-            LEYUAN_FRAGMENT_INDEX -> mLeYuanFragment
-            MESSAGE_FRAGMENT_INDEX -> mMessageFragment
-            MINE_FRAGMENT_INDEX -> mMineFragment
+            MainPageIndexConst.MAIN_FRAGMENT_INDEX -> mHomeFragment
+            MainPageIndexConst.LEYUAN_FRAGMENT_INDEX -> mLeYuanFragment
+            MainPageIndexConst.MESSAGE_FRAGMENT_INDEX -> mMessageFragment
+            MainPageIndexConst.MINE_FRAGMENT_INDEX -> mMineFragment
             else -> {
                 null
             }
@@ -411,7 +410,7 @@ class MainActivity : BaseActivity() {
         if (secondTime - firstTime < 2000) {
             //两秒之内点击了两次返回键  退出程序
             finish()
-            ActivitiesManager.finishApp()
+            ActivitiesManager.INSTANCE.finishApp()
         } else {
             ToastUtils.show("再按一次退出程序")
             firstTime = secondTime
@@ -523,7 +522,7 @@ class MainActivity : BaseActivity() {
     fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")
         if (event.result) {
-            goToTab(MAIN_FRAGMENT_INDEX)
+            goToTab(MainPageIndexConst.MAIN_FRAGMENT_INDEX)
             //重新去定位地址
             mLocationService.registerListener(mLocationListener)
             mLocationService.start()
