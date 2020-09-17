@@ -1941,7 +1941,7 @@ class PlayerActivity : BaseActivity() {
         super.onDestroy()
         viewModel.runwayCache.value = null
         val baseData = viewModel.baseData.value
-        if (!isBanned && viewModel.loginState.value == true && PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
+        if (!isBanned && SessionUtils.getSessionId().isNotEmpty() && PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
             FloatingManager.showFloatingView(
                 GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
                 viewModel.programId,

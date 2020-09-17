@@ -337,8 +337,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             requireActivity().startActivity<RechargeCenterActivity>()
         }
         rlLingQian.onClickNew {
-//            requireActivity().startActivity<WithdrawActivity>()
-            RNPageActivity.start(requireActivity(), RnConstant.SmallChangePage)
+            requireActivity().startActivity<WithdrawActivity>()
+//            RNPageActivity.start(requireActivity(), RnConstant.SmallChangePage)
         }
         cl_user_wealth_level.onClickNew {
             RNPageActivity.start(requireActivity(), RnConstant.WEALTH_LEVEL_PAGE)

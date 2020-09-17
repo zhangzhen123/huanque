@@ -277,8 +277,10 @@ data class ActiveBean(var activeList: MutableList<ActiveWord> = mutableListOf())
  */
 data class SendMsgBean(
     var beans: Long = 0, var consumeBeans: Long = 0,
-//道具列表
-    var propList: MutableList<PrivateProp> = mutableListOf()
+    //道具列表
+    var propList: MutableList<PrivateProp> = mutableListOf(),
+    //聊天券数量
+    var chatTicketCnt: Int = 0
 )
 
 /**
@@ -353,4 +355,4 @@ data class ChatDetailBean(
 ) :
     Serializable
 
-data class PropListBean(var propList : MutableList<PrivateProp> = mutableListOf()) : Serializable
+data class PropListBean(var propList: MutableList<PrivateProp> = mutableListOf()) : Serializable
