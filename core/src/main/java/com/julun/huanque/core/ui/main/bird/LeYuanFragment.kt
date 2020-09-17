@@ -188,8 +188,11 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             }
         }
         iv_bottom_03.onClickNew {
-            iv_bottom_03.isEnabled = false
-            mViewModel.buyBird()
+            if(!isActionDoing){
+                iv_bottom_03.isEnabled = false
+                mViewModel.buyBird()
+            }
+
         }
 
         ll_redPacket.onClickNew {
@@ -566,8 +569,9 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 processCombineResult(it.requireT())
             } else {
                 recoveryItemBird()
+                isActionDoing = false
             }
-            isActionDoing = false
+
         })
         mViewModel.recycleResult.observe(this, Observer {
             if (it.isSuccess()) {
@@ -698,7 +702,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                     currentCombineItem?.upgradePos = targetIndex
                     birdAdapter.setData(targetIndex, currentCombineItem!!)
                     bird_mask.hide()
-
+                    isActionDoing = false
 
                 }
                 //合并升级
@@ -715,6 +719,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                     birdAdapter.setData(targetIndex, currentCombineItem!!)
 
                     bird_mask.hide()
+                    isActionDoing = false
                 }
             }
         }
@@ -908,6 +913,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
      */
     private fun playCombineAnim(result: CombineResult) {
         if (currentTargetViewHolder == null || currentCombineItem == null || currentTargetItem == null) {
+            isActionDoing = false
             return
         }
         val currentIndex = birdAdapter.data.indexOf(currentCombineItem!!)
@@ -982,6 +988,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 bird_mask.hide()
                 bird_mask2.hide()
             }
+            isActionDoing = false
             if (isGuide3) {
                 guide3?.dismiss()
             }
