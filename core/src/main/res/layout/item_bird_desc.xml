@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/view_bg_item"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:background="@mipmap/bg_bird_desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_bg_item_tree"
+        android:layout_width="89dp"
+        android:layout_height="89dp"
+        android:layout_marginStart="@dimen/dimen_18"
+        android:layout_marginTop="@dimen/dimen_29"
+        android:layout_marginBottom="@dimen/dimen_18"
+        android:background="@mipmap/bg_bird_shop_item_tree"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_bird"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/dimen_5"
+        app:actualImageScaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/view_bg_item_tree"
+        app:layout_constraintEnd_toEndOf="@+id/view_bg_item_tree"
+        app:layout_constraintStart_toStartOf="@+id/view_bg_item_tree"
+        app:layout_constraintTop_toTopOf="@+id/view_bg_item_tree" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="@dimen/dimen_95"
+        android:layout_height="@dimen/dimen_32"
+        android:layout_marginStart="@dimen/dimen_5"
+        android:layout_marginEnd="@dimen/dimen_5"
+        android:background="@mipmap/bg_bird_name"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Lv6.xx鹊" />
+
+    <TextView
+        android:id="@+id/tv_desc_title"
+        android:layout_width="@dimen/dimen_49"
+        android:layout_height="@dimen/dimen_18"
+        android:layout_marginStart="@dimen/dimen_10"
+        android:background="@mipmap/bg_bird_item_desc_title"
+        android:gravity="center"
+        android:text="功能"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintStart_toEndOf="@+id/view_bg_item_tree"
+        app:layout_constraintTop_toTopOf="@+id/view_bg_item_tree" />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_7"
+        android:layout_marginEnd="@dimen/dimen_25"
+        android:gravity="start"
+        android:textColor="#D75151"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view_bg_item_tree"
+        app:layout_constraintTop_toBottomOf="@+id/tv_desc_title"
+        tools:text="功能描述功能描述功能描述功能描述" />
+
+    <TextView
+        android:id="@+id/tv_source_title"
+        android:layout_width="@dimen/dimen_49"
+        android:layout_height="@dimen/dimen_18"
+        android:layout_marginStart="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:background="@mipmap/bg_bird_source_title"
+        android:gravity="center"
+        android:text="来源"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintStart_toEndOf="@+id/view_bg_item_tree"
+        app:layout_constraintTop_toBottomOf="@+id/tv_desc" />
+
+    <TextView
+        android:id="@+id/tv_source"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_7"
+        android:layout_marginEnd="@dimen/dimen_25"
+        android:layout_marginBottom="@dimen/dimen_15"
+        android:gravity="start"
+        android:textColor="#794747"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view_bg_item_tree"
+        app:layout_constraintTop_toBottomOf="@+id/tv_source_title"
+        tools:text="功能描述功能描述功能描述功能描述功能描述功能描述功能描述功能描述功能描述功能描述功能描述功能描述" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

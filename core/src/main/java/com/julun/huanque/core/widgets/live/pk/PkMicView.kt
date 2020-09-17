@@ -38,7 +38,6 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.PKViewModel
-import com.julun.huanque.lmcore.basic.widgets.live.PkPropView
 import com.opensource.svgaplayer.SVGACallback
 import com.opensource.svgaplayer.SVGAParser
 import com.opensource.svgaplayer.SVGAVideoEntity

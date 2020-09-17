@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Message
+import com.julun.huanque.common.suger.logger
 import java.io.File
 import java.io.IOException
 
@@ -149,7 +150,7 @@ class AudioPlayerManager {
      * 开始播放
      * @return true 开始播放， false 播放错误
      */
-    fun start(): Boolean {
+    fun start(isLoop: Boolean = false): Boolean {
         mediaPlayer = if (musicType == PLAY_STATE1) {
             MediaPlayer.create(mContext, rawId)
         } else {
@@ -177,8 +178,10 @@ class AudioPlayerManager {
                     mediaPlayer!!.prepareAsync()
                 }
             }
+            mediaPlayer!!.isLooping = isLoop
             //播放完成自动停止
             mediaPlayer!!.setOnCompletionListener { mediaPlayer ->
+                logger("播放完了")
                 if (mMediaPlayInfoListener != null) mMediaPlayInfoListener!!.onCompletion(mediaPlayer)
                 stop()
             }

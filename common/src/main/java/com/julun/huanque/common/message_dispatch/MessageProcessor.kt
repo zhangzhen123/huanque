@@ -1090,13 +1090,6 @@ object MessageProcessor {
         override fun getEventType() = EventMessageType.ThemeProgramShowChangeNotice
     }
 
-    /**
-     * 主题房宝箱可领取
-     */
-    interface ThemeOnlineTreasureEnableInfoProcessor :
-        EventMessageProcessor<ThemeOnlineTreasureEnableInfo> {
-        override fun getEventType() = EventMessageType.UserThemeOnlineTreasure
-    }
 
     /**
      * 语音通话被叫消息
@@ -1549,8 +1542,6 @@ enum class EventMessageType(val klass: Class<*>) {
     //主题房节目单变化消息
     ThemeProgramShowChangeNotice(ProgramRoomBean::class.java),
 
-    //主题房可以领取宝箱
-    UserThemeOnlineTreasure(ThemeOnlineTreasureEnableInfo::class.java),
 
     //接下来是欢鹊使用
     //别人向你发起语音通话

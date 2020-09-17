@@ -10,9 +10,6 @@ import androidx.fragment.app.FragmentManager
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.R
 import com.julun.huanque.common.helper.reportCrash
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.show
-import kotlinx.android.synthetic.main.layout_loading_view.*
 
 /**
  * Created by dong on 2018/5/10.
@@ -37,7 +34,7 @@ class CommonLoadingDialog : AppCompatDialogFragment() {
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.LoadingDailogTransparent)
+        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.LoadingDialogTransparent)
 //        lifecycle.addObserver(GenericLifecycleObserver { _, event ->
 //            when (event) {
 //                Lifecycle.Event.ON_START -> {

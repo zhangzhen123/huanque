@@ -288,7 +288,7 @@ object JPushUtil {
     fun shouldOpenMain(context: Context) {
         if (CommonInit.getInstance().isAppOnForeground) {
             if (CommonInit.getInstance().getCurrentActivity() is PushSpringboardActivity) {
-                if (ActivitiesManager.totalActivityCount <= 1) {
+                if (ActivitiesManager.INSTANCE.totalActivityCount <= 1) {
                     ULog.i(TAG, "只有一个空跳板界面")
                     startActivityByARouter(context = context, pager = ARouterConstant.MAIN_ACTIVITY,goHome = false)
 
@@ -313,7 +313,7 @@ object JPushUtil {
         var result: Boolean = false
         val activity = CommonInit.getInstance().getCurrentActivity()
         if (activity is PushSpringboardActivity) {
-            if (ActivitiesManager.totalActivityCount <= 1) {
+            if (ActivitiesManager.INSTANCE.totalActivityCount <= 1) {
                 ULog.i(TAG, "只有一个空跳板界面")
                 result = true
             } else {

@@ -166,7 +166,7 @@ class CommonInit {
             }
 
             override fun onActivityDestroyed(activity: Activity) {
-                ActivitiesManager.removeActivities(activity)
+                ActivitiesManager.INSTANCE.removeActivities(activity)
             }
 
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
@@ -182,7 +182,7 @@ class CommonInit {
             }
 
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                ActivitiesManager.push(activity)
+                ActivitiesManager.INSTANCE.push(activity)
             }
 
         })
@@ -355,7 +355,7 @@ class CommonInit {
             }
 
             override fun onActivityDestroyed(activity: Activity) {
-                ActivitiesManager.removeActivities(activity)
+                ActivitiesManager.INSTANCE.removeActivities(activity)
             }
 
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
@@ -371,7 +371,7 @@ class CommonInit {
             }
 
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                ActivitiesManager.push(activity)
+                ActivitiesManager.INSTANCE.push(activity)
             }
 
         })

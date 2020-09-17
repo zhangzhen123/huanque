@@ -172,6 +172,11 @@ class BannedAndClosePlayer(var programId: Long? = null) : Serializable
 class FastLoginEvent() : Serializable
 
 /**
+ * 关闭养鸟
+ */
+class HideBirdEvent() : Serializable
+
+/**
  * 刷新语音券消息
  */
 class RefreshVoiceCardEvent() : Serializable

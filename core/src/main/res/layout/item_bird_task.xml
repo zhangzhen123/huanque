@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_80"
+    android:background="@mipmap/bg_bird_item_task">
+
+    <View
+        android:id="@+id/view_bg1"
+        android:layout_width="60dp"
+        android:layout_height="@dimen/dimen_60"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/bg_bird_task_001"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_img"
+        android:layout_width="@dimen/dimen_40"
+        android:layout_height="@dimen/dimen_40"
+        app:actualImageScaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="@+id/view_bg1"
+        app:layout_constraintStart_toStartOf="@+id/view_bg1"
+        app:layout_constraintTop_toTopOf="@+id/view_bg1" />
+
+    <TextView
+        android:id="@+id/tv_coin_title"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_20"
+        android:background="@drawable/bg_bird_task_002"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@+id/view_bg1"
+        app:layout_constraintEnd_toEndOf="@+id/view_bg1"
+        app:layout_constraintStart_toStartOf="@+id/view_bg1"
+        tools:text="少量金币" />
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10"
+        android:layout_marginEnd="@dimen/dimen_5"
+        android:gravity="start"
+        android:maxLines="1"
+        android:textColor="#794747"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toTopOf="@+id/tv_desc"
+        app:layout_constraintEnd_toStartOf="@+id/tvAction"
+        app:layout_constraintStart_toEndOf="@+id/view_bg1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="任务任务任务任务" />
+
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginEnd="@dimen/dimen_5"
+        android:gravity="start"
+        android:maxLines="1"
+        android:textColor="#794747"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvAction"
+        app:layout_constraintStart_toEndOf="@+id/view_bg1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title"
+        tools:text="100金币100金币100金币100金币100金币100金币" />
+
+
+    <TextView
+        android:id="@+id/tv_active"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textColor="#D75151"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toTopOf="@+id/tvAction"
+        app:layout_constraintEnd_toEndOf="@+id/tvAction"
+        app:layout_constraintStart_toStartOf="@+id/tvAction"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="活跃的+100" />
+
+    <TextView
+        android:id="@+id/tvAction"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_30"
+        android:layout_marginTop="@dimen/dimen_2"
+        android:layout_marginEnd="@dimen/dimen_20"
+        android:background="@mipmap/bg_bird_btn_green"
+        android:gravity="center"
+        android:maxLines="1"
+        android:minWidth="@dimen/dimen_66"
+        android:paddingLeft="@dimen/dimen_5"
+        android:paddingRight="@dimen/dimen_5"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_active"
+        tools:text="去直播间" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

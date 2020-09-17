@@ -48,7 +48,6 @@
         android:id="@+id/view_leyuan"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
         app:layout_constraintLeft_toRightOf="@id/view_make_friends"
         app:layout_constraintRight_toLeftOf="@+id/view_message"
@@ -110,7 +109,6 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="top"
         android:orientation="vertical"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/view_leyuan"
         app:layout_constraintLeft_toLeftOf="@id/view_leyuan"
         app:layout_constraintRight_toRightOf="@id/view_leyuan">

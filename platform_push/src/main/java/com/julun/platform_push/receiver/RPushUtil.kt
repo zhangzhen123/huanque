@@ -143,7 +143,7 @@ object RPushUtil {
     fun shouldOpenMain(context: Context) {
         if (CommonInit.getInstance().isAppOnForeground) {
             if (CommonInit.getInstance().getCurrentActivity() is RongPushSpringboardActivity) {
-                if (ActivitiesManager.totalActivityCount <= 1) {
+                if (ActivitiesManager.INSTANCE.totalActivityCount <= 1) {
                     ULog.i(TAG, "只有一个空跳板界面")
                     startActivityByARouter(context = context, pager = ARouterConstant.MAIN_ACTIVITY, goHome = false)
 
@@ -168,7 +168,7 @@ object RPushUtil {
         var result: Boolean = false
         val activity = CommonInit.getInstance().getCurrentActivity()
         if (activity is RongPushSpringboardActivity) {
-            if (ActivitiesManager.totalActivityCount <= 1) {
+            if (ActivitiesManager.INSTANCE.totalActivityCount <= 1) {
                 ULog.i(TAG, "只有一个空跳板界面")
                 result = true
             } else {
@@ -179,7 +179,7 @@ object RPushUtil {
             activity.finish()
             result = true
         } else {
-            if (ActivitiesManager.totalActivityCount <= 0) {
+            if (ActivitiesManager.INSTANCE.totalActivityCount <= 0) {
                 ULog.i(TAG, "没有任何页面 要返回首页")
                 result = true
             } else {

@@ -8,7 +8,12 @@ import java.util.*
  * Created by nirack on 17-5-12.
  * 只管理activity的生命周期
  */
-object ActivitiesManager {
+class ActivitiesManager private constructor() {
+    companion object {
+        //使用 by lazy 实现单例
+        val INSTANCE: ActivitiesManager by lazy { ActivitiesManager() }
+    }
+
     private val activities = Stack<Activity>()
     fun push(activity: Activity) {
         activities.push(activity)

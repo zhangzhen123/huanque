@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_gift"
+        android:layout_width="32dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="@dimen/dimen_4"
+        android:layout_marginEnd="@dimen/dimen_3"
+        android:background="#ECDBA4"
+        app:actualImageScaleType="fitCenter"
+        app:roundedCornerRadius="@dimen/dimen_4"
+        app:roundingBorderColor="@color/white"
+        app:roundingBorderWidth="@dimen/dimen_1" />
+
+    <TextView
+        android:id="@+id/tv_num"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="@dimen/dimen_1"
+        android:background="@drawable/bg_rectangle_red_02"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/dimen_3"
+        android:paddingRight="@dimen/dimen_3"
+        android:textColor="@color/white"
+        android:textSize="8sp"
+        tools:text="99" />
+
+    <View
+        android:id="@+id/masking"
+        android:layout_width="@dimen/dimen_32"
+        android:layout_height="@dimen/dimen_26"
+        android:layout_marginTop="@dimen/dimen_4"
+        android:layout_marginEnd="@dimen/dimen_3"
+        android:background="@drawable/bg_shape_black_p60"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_finish"
+        android:layout_width="@dimen/dimen_32"
+        android:layout_height="@dimen/dimen_26"
+        android:layout_marginTop="@dimen/dimen_4"
+        android:layout_marginEnd="@dimen/dimen_3"
+        android:src="@mipmap/icon_bird_task_finish"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</merge>

@@ -51,7 +51,7 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
     private var mExperience = false
 
     //游戏类型
-    private var mGameType: String? = null
+    private var mGameType: String? = ClickType.BIRD
 
 
     private fun initEvents() {
@@ -103,6 +103,10 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
                         GameType.Planet -> {
                             //星球争霸
                             bean.type = ClickType.PLANTE
+                        }
+                        ClickType.BIRD -> {
+                            //养鹊
+                            bean.type = ClickType.BIRD
                         }
                         else -> {
                             //打开游戏面板
