@@ -127,7 +127,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
 
             override fun onSeekBarProgress(progress: Int) {
-                logger.info("onSeekBarProgress progress=${progress / 1000}")
+//                logger.info("onSeekBarProgress progress=${progress / 1000}")
                 currentPlayHomeRecomItem?.let {
                     it.currentPlayProcess = it.introduceVoiceLength - progress / 1000
                     if (it.currentPlayProcess <= 0) {
@@ -247,7 +247,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                             .navigation(requireActivity())
                     }
                 }
-                R.id.iv_audio_play -> {
+                R.id.ll_audio -> {
                     logger.info("点击了音频播放---$position")
                     val bean = mAdapter.getItem(position)?.content as? HomeRecomItem
                     switchAudio(position, bean)

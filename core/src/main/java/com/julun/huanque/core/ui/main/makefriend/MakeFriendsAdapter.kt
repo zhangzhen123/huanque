@@ -52,7 +52,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
         mPhotoViewPool.setMaxRecycledViews(0, 20)
 
         addChildClickViewIds(
-            R.id.iv_audio_play, R.id.btn_action,
+            R.id.ll_audio, R.id.btn_action,
             R.id.ll_task, R.id.ll_balance,
             R.id.iv_guide_tag_close,
             R.id.iv_guide_info_close,
