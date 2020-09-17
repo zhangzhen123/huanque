@@ -1087,7 +1087,6 @@ class PlayerActivity : BaseActivity() {
             if (guideSpeak) {
 //                viewModel.guideToSendMessage()
             }
-            liveViewManager.showGestureGuideView()
         }
         val rescueData = data.salvationInfo
         if (rescueData != null) {

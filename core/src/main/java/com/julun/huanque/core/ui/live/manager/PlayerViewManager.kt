@@ -752,7 +752,6 @@ class PlayerViewManager(val context: PlayerActivity) {
             //主播身份不切换聊天模式
             return
         }
-        //todo
 //        context.chatInputView.mChatMode = chatMode
         if (chatMode) {
             //修改聊天高度
