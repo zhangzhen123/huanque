@@ -226,6 +226,9 @@ class MessageFragment : BaseFragment() {
                     //查询会话列表和免打扰列表
                     mPlayerMessageViewModel.getBlockedConversationList()
                     mMessageViewModel.getConversationList()
+                } else if(RongCloudUtils.RongCloudNeedConnectedManually()){
+                    //手动连接一次
+                    RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = false)
                 }
 //                else {
 //                    logger.info("Message 融云未连接 ${RongIMClient.getInstance().currentConnectionStatus}")

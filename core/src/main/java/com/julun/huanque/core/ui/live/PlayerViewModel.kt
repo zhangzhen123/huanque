@@ -423,11 +423,13 @@ class PlayerViewModel : BaseViewModel() {
             }, error = {
                 errorState.value = 1
                 if (it is ResponseError) {
-                    ToastUtils.show(it.busiMessage)
+
                     when (it.busiCode) {
                         1201 -> {//节目不存在
+                            ToastUtils.show(it.busiMessage)
                         }
                         1202 -> {//没有进入直播间权限
+                            ToastUtils.show(it.busiMessage)
                         }
                         else -> {
                             finishState.postValue(true)
