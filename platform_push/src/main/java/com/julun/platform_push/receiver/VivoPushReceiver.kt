@@ -16,11 +16,11 @@ class VivoPushReceiver : io.rong.push.platform.vivo.VivoPushMessageReceiver() {
     override fun onNotificationMessageClicked(context: Context?, message: UPSNotificationMessage?) {
         logger("onNotificationMessageClicked=${message}")
         super.onNotificationMessageClicked(context, message)
-        val pushData=message?.params?.get("appData")
-        if(pushData!=null&&context!=null){
+        val pushData = message?.params?.get("appData")
+        if (context != null) {
             //vivo会默认启动启动页 导致会打开首页  所以这里一定要延迟打开相应页面 不然会被首页覆盖掉
-            Observable.timer(700,TimeUnit.MILLISECONDS).subscribe {
-                RPushUtil.parseJson(pushData,context)
+            Observable.timer(700, TimeUnit.MILLISECONDS).subscribe {
+                RPushUtil.parseJson(pushData ?: "", context)
             }
 
         }

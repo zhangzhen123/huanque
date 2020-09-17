@@ -15,6 +15,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.JsonUtil
@@ -45,12 +46,12 @@ object RPushUtil {
                 Log.i(TAG, "options:$options")
                 try {
                     val jsonObject = JSONObject(options)
-                    if (jsonObject.has("appData")) {
-                        // appData 对应的是客户端 sendMessage() 时的参数 pushData
-                        Log.i(TAG, "pushData:" + jsonObject.getString("appData"))
-                        parseJson(jsonObject.getString("appData"), context)
-
+                    val appData=if(jsonObject.has("appData")){
+                        jsonObject.getString("appData")
+                    }else{
+                        ""
                     }
+                    parseJson(appData, context)
                     if (jsonObject.has("rc")) {
                         val rcs = jsonObject.getString("rc")
                         val rc = JSONObject(rcs)
@@ -63,7 +64,6 @@ object RPushUtil {
                             val ext =
                                 rc.getJSONObject("ext").toString() // 使用开发者后台的广播推送功能时，填充的自定义键值对。
                         }
-                        shouldOpenMain(context)
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
@@ -75,9 +75,13 @@ object RPushUtil {
         return result
     }
 
-
+    private fun checkNeedConnectRongCloud(){
+        RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
+    }
+    //这里统一处理所有的推送消息
     fun parseJson(jsonString: String, context: Context) {
         try {
+            checkNeedConnectRongCloud()
             val bean = JsonUtil.deserializeAsObject<PushAppData>(jsonString, PushAppData::class.java)
 
             when (bean.touchType) {

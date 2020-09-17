@@ -1,7 +1,9 @@
 package com.julun.huanque.app.update
 
 import android.content.Intent
+import android.os.Build
 import android.os.Environment
+import com.julun.huanque.BuildConfig
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.CheckVersionResult
 import com.julun.huanque.common.bean.forms.FindNewsForm
@@ -193,11 +195,14 @@ class CheckAppVersionTask(
         val newVersion = "V${data.newVersion}"
         val isForce = UpdateType.Force == (data.updateType)
         if (activity != null && !activity.isFinishing) {
-            VersionUpdateDialog(activity,dissmissWhenTouchOutSide = !isForce).showUpdateDialog(
+            VersionUpdateDialog(activity, dissmissWhenTouchOutSide = !isForce).showUpdateDialog(
                 versionInfo = newVersionDesc, versionNum = newVersion, versionDate = "",
                 isForce = isForce, callback = VersionUpdateDialog.MyDialogCallback(
                     onCancel = {
-//                        SPUtils.commitString(UpgradeApkService.IGNORED_VERSION, data.newVersion.replace(".", ""))
+                        //仅限开发用
+                        if (BuildConfig.DEBUG) {
+                            SPUtils.commitString(UpgradeApkService.IGNORED_VERSION, data.newVersion.replace(".", ""))
+                        }
                         callback(false)
                     },
                     onOk = {

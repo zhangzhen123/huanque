@@ -27,8 +27,8 @@ class RongCloudPushMessageReceiver : PushMessageReceiver() {
         logger("onNotificationMessageClicked p=${p2.toString()}")
         try {
             val pushDate = p2?.pushData
-            if (pushDate != null && p0 != null) {
-                RPushUtil.parseJson(pushDate, p0)
+            if (p0 != null) {
+                RPushUtil.parseJson(pushDate?:"", p0)
             }
         } catch (e: Exception) {
             e.printStackTrace()
