@@ -124,6 +124,7 @@ android {
                     JPUSH_APPKEY : "${sdk.JPUSH_KEY_HQ}",
                     JPUSH_CHANNEL: "developer-default",
             ]
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
@@ -133,6 +134,7 @@ android {
                     JPUSH_CHANNEL: "developer-default"
             ]
             testCoverageEnabled = true
+            signingConfig signingConfigs.debug
         }
 
     }
