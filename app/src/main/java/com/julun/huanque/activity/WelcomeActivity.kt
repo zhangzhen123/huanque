@@ -51,6 +51,10 @@ class WelcomeActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         mShowFragment = SharedPreferencesUtils.getBoolean(SPParamKey.Welcome_privacy_Fragment, false)
         initViewModel()
+        if (!SPUtils.getBoolean(SPParamKey.APP_START, false)) {
+            //调用激活接口
+            viewModel?.appStart()
+        }
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         //移除缓存的私信气泡数据

@@ -30,9 +30,11 @@ import com.julun.huanque.message.R
 import com.julun.huanque.message.viewmodel.PrivateAnimationViewModel
 import com.plattysoft.leonids.ParticleSystem
 import com.trello.rxlifecycle4.android.FragmentEvent
+import com.trello.rxlifecycle4.kotlin.bind
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_private_animation.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
@@ -50,6 +52,9 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
     private val mBarHeight = StatusBarUtil.getStatusBarHeight(CommonInit.getInstance().getContext())
 
     override fun getLayoutId() = R.layout.fragment_private_animation
+
+    //加载资源5秒超时
+    private var mDisposable: Disposable? = null
 
     //不需要动画
     override fun needEnterAnimation() = false
@@ -92,11 +97,17 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
         mPrivateAnimationViewModel.giftData.observe(this, Observer {
             if (it != null) {
                 mPrivateAnimationViewModel.prepareResource(it)
+                mDisposable?.dispose()
+                mDisposable = Observable.timer(5, TimeUnit.SECONDS)
+                    .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ mPrivateAnimationViewModel.dismissState.value = true })
             }
         })
 
         mPrivateAnimationViewModel.preparedFlag.observe(this, Observer {
             if (it == true) {
+                mDisposable?.dispose()
                 //开始播放动画
                 val bean = mPrivateAnimationViewModel.giftData.value ?: return@Observer
                 playAnimaiton(bean)
@@ -106,6 +117,7 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
         })
 
     }
+
 
     override fun onStart() {
         super.onStart()

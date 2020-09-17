@@ -78,6 +78,9 @@ object SPParamKey {
 
     //欢迎页有没有显示过隐私弹窗
     const val Welcome_privacy_Fragment = "Welcome_privacy_Fragment"
+
+    //激活接口调用标记位
+    const val APP_START = "APP_START"
 }
 
 /**
