@@ -162,8 +162,9 @@ class HideFloatingEvent() : Serializable
 
 /**
  * 收到封禁通知关闭直播间事件
+ * @param programId 直播间ID 可以为null
  */
-class BannedAndClosePlayer() : Serializable
+class BannedAndClosePlayer(var programId: Long? = null) : Serializable
 
 /**
  * 一键登录接口请求成功消息
@@ -175,3 +176,7 @@ class FastLoginEvent() : Serializable
  */
 class RefreshVoiceCardEvent() : Serializable
 
+/**
+ * 悬浮窗关闭消息
+ */
+class FloatingCloseEvent() : Serializable

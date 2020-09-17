@@ -509,8 +509,7 @@ class MainActivity : BaseActivity() {
         //踢人消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.KickUserProcessor {
             override fun process(data: OperatorMessageBean) {
-                ToastUtils.show("您已被踢出直播间")
-                EventBus.getDefault().post(BannedAndClosePlayer())
+                EventBus.getDefault().post(BannedAndClosePlayer(data.programId))
                 val programId = SharedPreferencesUtils.getLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
                 if(programId == data.programId){
                     //如果悬浮窗正在播放的是被踢出的直播间就处理
