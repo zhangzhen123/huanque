@@ -33,11 +33,14 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.manager.ActivitiesManager
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.px2dp
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.manager.FloatingManager
+import com.julun.huanque.fragment.FastDialogFragment
 import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.act_login.*
@@ -59,17 +62,22 @@ class LoginActivity : BaseActivity() {
     //是否处于测试模式。用于控制Toast的显示
     private var mTest = false
 
-    //预取号成功标识
-    private var mPreviewSuccess = false
+    //预取号CODE
+    private var mPreviewCode = 0
 
     //登录成功标识
     private val CODE_LOGIN_SUCCESS = 6000
+
+    //预取号成功的code
+    private val CODE_PRELOGIN_SUCCESS = 7000
 
     private var mViewModel: LoginViewModel? = null
 
     private var clickCount = 0
     private var lastClickTime = 0L
 
+    //预取号加载中状态
+    private val mFastDialogFragment = FastDialogFragment()
 
     override fun getLayoutId() = R.layout.act_login
 
@@ -135,14 +143,31 @@ class LoginActivity : BaseActivity() {
         }
         view_phone_number_fast_login.onClickNew {
 //            ToastUtils.show("mPreviewSuccess = $mPreviewSuccess")
-            if (mPreviewSuccess) {
-                //预取号成功，跳转一键登录页面
-                loginAuth()
-            } else {
-                //预取号未成功，跳转手机号登录页面
-                val intent = Intent(this, PhoneNumLoginActivity::class.java)
-                startActivity(intent)
+            mFastDialogFragment.dismiss()
+            when (mPreviewCode) {
+                CODE_PRELOGIN_SUCCESS -> {
+                    //预取号成功，跳转一键登录页面
+                    loginAuth()
+                }
+                7002 -> {
+                    //预取号中，显示弹窗
+                    mFastDialogFragment.show(supportFragmentManager, "FastDialogFragment")
+                }
+                else -> {
+                    //预取号失败
+                    val intent = Intent(this, PhoneNumLoginActivity::class.java)
+                    startActivity(intent)
+                }
             }
+
+//            if (mPreviewCode == CODE_PRELOGIN_SUCCESS) {
+//                //预取号成功，跳转一键登录页面
+//                loginAuth()
+//            } else {
+//                //预取号未成功，跳转手机号登录页面
+//                val intent = Intent(this, PhoneNumLoginActivity::class.java)
+//                startActivity(intent)
+//            }
         }
         view_weixin.onClickNew {
             WXApiManager.doLogin(this)
@@ -153,6 +178,9 @@ class LoginActivity : BaseActivity() {
         tv_register_privacy.onClickNew {
             WebActivity.startWeb(this, Agreement.PrivacyAgreement)
         }
+        iv_other_phone.onClickNew {
+            startActivity(Intent(this, PhoneNumLoginActivity::class.java))
+        }
     }
 
     /**
@@ -160,6 +188,7 @@ class LoginActivity : BaseActivity() {
      */
     private fun initFastLogin() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            showOrHidePhoneLogin(false)
             //没有对应权限，直接退出
             return
         }
@@ -167,6 +196,7 @@ class LoginActivity : BaseActivity() {
         //判断是否初始化成功
         if (!JVerificationInterface.isInitSuccess()) {
             //初始化未成功，直接返回
+            showOrHidePhoneLogin(false)
             return
         }
 
@@ -175,16 +205,31 @@ class LoginActivity : BaseActivity() {
         if (!verifyEnable) {
             //环境不可用，直接返回
             logger.info("当前网络环境不支持认证")
+            showOrHidePhoneLogin(false)
             return
         }
-
+        showOrHidePhoneLogin(true)
         //预取号
         JVerificationInterface.preLogin(this, 5000) { code, content ->
             //预取号结果
-            mPreviewSuccess = code == 7000
+            mPreviewCode = code
             logger.info("onResult [$code] message=$content")
         }
     }
+
+    /**
+     * 本地号码登录View 的显示与隐藏
+     */
+    private fun showOrHidePhoneLogin(show: Boolean) {
+        if (show) {
+            view_phone_number_fast_login.show()
+            tv_phone.show()
+        } else {
+            view_phone_number_fast_login.hide()
+            tv_phone.hide()
+        }
+    }
+
 
     /**
      * 开始登录（一键登录）
