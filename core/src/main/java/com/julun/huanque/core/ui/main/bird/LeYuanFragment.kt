@@ -21,6 +21,7 @@ import com.binioter.guideview.GuideBuilder
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.HideBirdEvent
@@ -123,6 +124,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
     //当前是否正在操作请求中 如果没有完成 就不再执行下次拖动
     private var isActionDoing: Boolean = false
+
+    private val myAlertDialog: MyAlertDialog by lazy { MyAlertDialog(requireActivity(), false) }
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val pid = arguments?.getLong(IntentParamKey.PROGRAM_ID.name)
         if (pid != 0L && pid != null) {
@@ -315,13 +318,21 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                                             recoveryItemBird()
                                             isActionDoing = false
                                         } else {
-                                            mViewModel.combineBird(
-                                                currentCombineItem!!.upgradeId,
-                                                currentTargetItem!!.upgradeId,
-                                                currentCombineItem!!.upgradePos,
-                                                currentTargetItem!!.upgradePos
-                                            )
-
+                                            if (currentCombineItem!!.upgradeLevel == 37 && currentTargetItem!!.upgradeLevel == 37) {
+                                                myAlertDialog.showAlertWithOKAndCancel(
+                                                    message = "合并后您将随机获得一只功能鹊，并且您的棋盘将被重置，包括已合成的升级鹊和金币余额。",
+                                                    noText = "再想想",
+                                                    okText = "确定合并",
+                                                    callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                                        startCombineBird()
+                                                    }, onCancel = {
+                                                        recoveryItemBird()
+                                                        isActionDoing = false
+                                                    })
+                                                )
+                                            } else {
+                                                startCombineBird()
+                                            }
                                         }
 
                                     } else {
@@ -377,6 +388,22 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             initMusicSet()
             initMusic()
         }
+    }
+
+    private fun startCombineBird() {
+        if (currentCombineItem != null && currentTargetItem != null) {
+            mViewModel.combineBird(
+                currentCombineItem!!.upgradeId,
+                currentTargetItem!!.upgradeId,
+                currentCombineItem!!.upgradePos,
+                currentTargetItem!!.upgradePos
+            )
+
+        } else {
+            recoveryItemBird()
+            isActionDoing = false
+        }
+
     }
 
     private var guide1: Guide? = null
@@ -610,8 +637,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         })
         mViewModel.totalCoin.observe(this, Observer {
             if (it != null) {
-//                tv_balance.text = "余额${StringHelper.formatBigNum(it)}金币"
-                tv_balance.text = StringHelper.formatBigNum(it)
+                tv_balance.text = "${StringHelper.formatBigNum(it)}金币"
+//                tv_balance.text = StringHelper.formatBigNum(it)
                 playCoinTextAni()
             }
         })
@@ -727,7 +754,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
                 }
                 //合并升级
-                CombineResult.Upgrade -> {
+                CombineResult.Upgrade,CombineResult.Function -> {
 
                     playCombineAnim(result)
 
@@ -1011,15 +1038,22 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             bird_combine_ani.show()
             ImageUtils.loadWebpImageLocal(bird_combine_ani, R.mipmap.anim_bird_combine)
             logger.info("动画播放完了 开始播放特效")
+            bird_mask.hide()
+            bird_mask2.hide()
+            isActionDoing = false
+            //如果生成了升级鹊 直接弹窗 这里不再往后处理
+            if (result.functionInfo != null) {
+                mViewModel.functionInfo.value = result.functionInfo
+                //刷新整个页面
+                mViewModel.queryHome()
+                return@addListener
+            }
             //3.将原有的两个鹊移除 将升级的鹊放入 目标格子
             val currentNew = result.currentUpgrade
             if (currentIndex != -1 && targetIndex != -1 && currentNew != null) {
                 birdAdapter.setData(currentIndex, UpgradeBirdBean(upgradePos = currentIndex))
                 birdAdapter.setData(targetIndex, currentNew)
-                bird_mask.hide()
-                bird_mask2.hide()
             }
-            isActionDoing = false
             if (isGuide3) {
                 guide3?.dismiss()
             }

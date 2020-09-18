@@ -61,7 +61,7 @@
         app:layout_constraintStart_toStartOf="@+id/bird_bg"
         app:layout_constraintTop_toTopOf="@+id/bird_bg" />
 
-    <TextView
+    <com.julun.huanque.common.widgets.ColorfulTextView
         android:id="@+id/tv_produce_sec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,7 +71,8 @@
         app:layout_constraintTop_toTopOf="@+id/bird_bg"
         android:textColor="@color/white"
         android:visibility="gone"
-        android:textSize="@dimen/sp_12"
+        tools:visibility="visible"
+        android:textSize="@dimen/sp_20"
         tools:text="+100" />
 
     <TextView

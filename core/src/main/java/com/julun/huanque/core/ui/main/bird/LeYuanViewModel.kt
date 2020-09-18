@@ -148,11 +148,11 @@ class LeYuanViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = service.combine(BirdCombineForm(upgradeId1, upgradeId2, upgradePos1, upgradePos2)).dataConvert()
-                if (result.functionInfo != null) {
-                    functionInfo.value = result.functionInfo
-                    //刷新整个页面
-                    queryHome()
-                }
+//                if (result.functionInfo != null) {
+//                    functionInfo.value = result.functionInfo
+//                    //刷新整个页面
+//                    queryHome()
+//                }
                 if (result.unlockUpgrade != null) {
                     unlockUpgrade.value = result.unlockUpgrade
                 }

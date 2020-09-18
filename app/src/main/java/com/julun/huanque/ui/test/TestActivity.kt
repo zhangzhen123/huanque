@@ -2,6 +2,7 @@ package com.julun.huanque.ui.test
 
 import android.animation.*
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.TextUtils
@@ -274,6 +275,10 @@ class TestActivity : BaseActivity() {
 //            logger.info("setDraweeSpanChangedListener")
 //            text_rainbow.setDraweeSpanStringBuilder(builder)
 //        }
+        tvColorful.onClickNew {
+            tvColorful.isColorsVertical=true
+            tvColorful.colors=intArrayOf(Color.parseColor("#FFFBEF"),Color.parseColor("#E5A441"),Color.parseColor("#FFFBEF"))
+        }
     }
 
 //    private val ANIMATED_COLOR_SPAN_FLOAT_PROPERTY: Property<AnimatedRainbowSpan, Float> =

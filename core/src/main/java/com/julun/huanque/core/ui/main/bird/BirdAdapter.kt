@@ -4,8 +4,10 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
+import android.graphics.Color
 import android.view.DragEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.*
 import android.view.animation.Animation.AnimationListener
 import android.widget.TextView
@@ -14,9 +16,12 @@ import androidx.core.animation.addListener
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.bean.beans.HomeItemBean
 import com.julun.huanque.common.bean.beans.UpgradeBirdBean
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.widgets.ColorfulTextView
 import com.julun.huanque.core.R
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.annotations.NonNull
@@ -43,6 +48,15 @@ class BirdAdapter(var programId: Long? = null) : BaseQuickAdapter<UpgradeBirdBea
         const val CoinsPerSec = 5L
     }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        val holder = super.onCreateViewHolder(parent, viewType)
+        val colorTv = holder.getView<ColorfulTextView>(R.id.tv_produce_sec)
+        colorTv.isColorsVertical = true
+        colorTv.colors = intArrayOf(Color.parseColor("#FFFBEF"), Color.parseColor("#E5A441"))
+        colorTv.setStrokeColorAndWidth(Color.parseColor("#B96E23"), 2f)
+        return holder
+    }
+
     override fun convert(holder: BaseViewHolder, item: UpgradeBirdBean) {
         val imgView = holder.getView<SimpleDraweeView>(R.id.sdv_bird)
         when {
@@ -63,7 +77,8 @@ class BirdAdapter(var programId: Long? = null) : BaseQuickAdapter<UpgradeBirdBea
                 } else {
                     item.onlineCoinsPerSec.multiply(BigInteger.valueOf(CoinsPerSec))
                 }
-                holder.setText(R.id.tv_level, "${item.upgradeLevel}").setText(R.id.tv_produce_sec, "+${StringHelper.formatBigNum(pSec)}")
+                holder.setText(R.id.tv_level, "${item.upgradeLevel}")
+                    .setText(R.id.tv_produce_sec, "+${StringHelper.formatBigNum(pSec)}")
 //                playAnim(imgView, holder.getView(R.id.tv_produce_sec))
             }
             else -> {
@@ -133,8 +148,8 @@ class BirdAdapter(var programId: Long? = null) : BaseQuickAdapter<UpgradeBirdBea
     fun playAnim2(view: View, textView: TextView) {
 
 
-        val aniX = ObjectAnimator.ofFloat(view, View.SCALE_X, 1.0f, 1.02f,1.0f)
-        val aniY = ObjectAnimator.ofFloat(view, View.SCALE_Y, 1.0f, 1.2f,1.0f)
+        val aniX = ObjectAnimator.ofFloat(view, View.SCALE_X, 1.0f, 1.02f, 1.0f)
+        val aniY = ObjectAnimator.ofFloat(view, View.SCALE_Y, 1.0f, 1.2f, 1.0f)
 
 
         val set1 = AnimatorSet()
@@ -151,7 +166,7 @@ class BirdAdapter(var programId: Long? = null) : BaseQuickAdapter<UpgradeBirdBea
         //目的是继续显示
         val aniText2 = ObjectAnimator.ofFloat(textView, View.TRANSLATION_Y, -dp2pxf(40), -dp2pxf(45))
         aniText2.startDelay = 100
-        aniText2.duration = 300
+        aniText2.duration = 300 * 100
         val set2 = AnimatorSet()
         set2.playSequentially(aniText1, aniText2)
         set2.addListener(onEnd = {

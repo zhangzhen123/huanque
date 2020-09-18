@@ -278,7 +278,8 @@
         android:paddingTop="@dimen/dimen_34"
         android:paddingBottom="@dimen/dimen_60"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_height="@dimen/dimen_410" />
+        android:minHeight="@dimen/dimen_400"
+        tools:layout_height="@dimen/dimen_400" />
 
     <View
         android:id="@+id/divide"
