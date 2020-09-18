@@ -142,6 +142,10 @@ class PhoneNumLoginActivity : BaseActivity() {
                 }
             })
         }
+
+        mViewModel?.codeReponse?.observe(this, Observer {
+            get_code.isClickable = it == true
+        })
     }
 
     override fun initEvents(rootView: View) {
