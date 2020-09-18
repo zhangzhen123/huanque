@@ -104,6 +104,9 @@
             android:name=".ui.safe.DestroyAccountActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".activity.SelectSexActivity"
+            android:screenOrientation="portrait"/>
+
         <!-- since 2.0.0 optional 可选项，使用一键登录功能必须添加  -->
         <!-- since 2.1.1 optional 可选项，通过screenOrientation设置授权页面横竖屏展示  -->
         <activity

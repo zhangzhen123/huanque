@@ -173,8 +173,14 @@ interface UserService {
     suspend fun destroyAccount(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
 
     /**
-     *
+     *获取气泡配置
      */
     @POST("user/app/settings")
-    suspend fun settings(@Body form: EmptyForm = EmptyForm()) : Root<SettingBean>
+    suspend fun settings(@Body form: EmptyForm = EmptyForm()): Root<SettingBean>
+
+    /**
+     * 激活APP
+     */
+    @POST("user/app/start")
+    suspend fun appStart(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
 }

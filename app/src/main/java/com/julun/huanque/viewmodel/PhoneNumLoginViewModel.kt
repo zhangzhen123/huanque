@@ -60,7 +60,7 @@ class PhoneNumLoginViewModel : BaseViewModel() {
         // 设置验证模式，1：bind，2：unbind
         gt3ConfigBean.pattern = 1
         // 设置点击灰色区域是否消失，默认不消失
-        gt3ConfigBean.isCanceledOnTouchOutside = true
+        gt3ConfigBean.isCanceledOnTouchOutside = false
         // 设置debug模式，开代理可调试
         gt3ConfigBean.isDebug = BuildConfig.DEBUG
         // 设置语言，如果为null则使用系统默认语言
@@ -123,6 +123,7 @@ class PhoneNumLoginViewModel : BaseViewModel() {
          */
         override fun onClosed(num: Int) {
             Log.e(TAG, "GT3BaseListener-->onClosed-->$num")
+            codeReponse.postValue(true)
         }
 
         /**
@@ -131,6 +132,7 @@ class PhoneNumLoginViewModel : BaseViewModel() {
          */
         override fun onSuccess(result: String) {
             Log.e(TAG, "GT3BaseListener-->onSuccess-->$result")
+            codeReponse.postValue(true)
         }
 
         /**
@@ -139,6 +141,7 @@ class PhoneNumLoginViewModel : BaseViewModel() {
          */
         override fun onFailed(errorBean: GT3ErrorBean) {
             Log.e(TAG, "GT3BaseListener-->onFailed-->$errorBean")
+            codeReponse.postValue(true)
         }
 
         /**
@@ -294,16 +297,19 @@ class PhoneNumLoginViewModel : BaseViewModel() {
                 var openGeetest = result?.get("flag")
                 when (openGeetest) {//是否唤起极验
                     true -> startGeeTest(phone)
-                    else -> tickState.value = true //请求验证码正常返回   开始倒计时
+                    else -> {
+                        //请求验证码正常返回   开始倒计时
+                        codeReponse.value = true
+                        tickState.value = true
+                    }
                 }
             }, {
+                codeReponse.value = true
                 if (it is ResponseError) {
                     when (it.busiCode) {
                         5015, 5011, 5012, 5010, 1106, 503 -> ToastUtils.show(it.busiMessage)
                     }
                 }
-            }, {
-                codeReponse.value = true
             })
         }
     }
