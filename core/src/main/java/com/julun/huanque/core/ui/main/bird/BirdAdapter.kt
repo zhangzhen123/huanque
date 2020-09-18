@@ -166,7 +166,7 @@ class BirdAdapter(var programId: Long? = null) : BaseQuickAdapter<UpgradeBirdBea
         //目的是继续显示
         val aniText2 = ObjectAnimator.ofFloat(textView, View.TRANSLATION_Y, -dp2pxf(40), -dp2pxf(45))
         aniText2.startDelay = 100
-        aniText2.duration = 300 * 100
+        aniText2.duration = 300
         val set2 = AnimatorSet()
         set2.playSequentially(aniText1, aniText2)
         set2.addListener(onEnd = {

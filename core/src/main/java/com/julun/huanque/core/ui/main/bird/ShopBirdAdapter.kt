@@ -31,10 +31,10 @@ class ShopBirdAdapter : BaseQuickAdapter<UpgradeShopBirdBean, BaseViewHolder>(R.
 
 
         holder.setText(R.id.tv_level, "Lv${item.upgradeLevel}${item.upgradeName}")
-            .setText(R.id.tv_bird_price, "${StringHelper.formatBigNum(item.upgradeCoins)}金币")
+            .setText(R.id.tv_bird_price, "${StringHelper.formatBigNum(item.upgradeCoins)}")
         val text = holder.getView<TextView>(R.id.tv_bird_price)
         if (item.unlocked) {
-            text.text = "${StringHelper.formatBigNum(item.upgradeCoins)}金币"
+            text.text = "${StringHelper.formatBigNum(item.upgradeCoins)}"
             val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_bird_coin)
             if (drawable != null) {
                 drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)

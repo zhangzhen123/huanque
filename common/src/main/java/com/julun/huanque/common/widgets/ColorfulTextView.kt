@@ -7,7 +7,6 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
-import com.julun.huanque.common.suger.logger
 
 
 /**
@@ -79,7 +78,7 @@ class ColorfulTextView(context: Context, attrs: AttributeSet?) : AppCompatTextVi
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         mViewWidth = measuredWidth
         mViewHeight = measuredHeight
-        logger("mViewWidth=$mViewWidth mViewHeight=$mViewHeight")
+//        logger("mViewWidth=$mViewWidth mViewHeight=$mViewHeight")
 //        if (mLinearGradient == null) {
         mLinearGradient = if (isColorsVertical) {
             LinearGradient(

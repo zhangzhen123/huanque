@@ -27,6 +27,25 @@
             app:layout_constraintBottom_toBottomOf="@+id/bird_tree"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <View
+            android:id="@+id/view3"
+            android:layout_width="@dimen/dimen_63"
+            android:layout_height="@dimen/dimen_33"
+            android:layout_marginStart="@dimen/dimen_50"
+            android:layout_marginTop="@dimen/dimen_33"
+            android:background="@mipmap/icon_bird_cloud_01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="@dimen/dimen_36"
+            android:layout_height="@dimen/dimen_22"
+            android:layout_marginTop="@dimen/dimen_78"
+            android:layout_marginEnd="@dimen/dimen_38"
+            android:background="@mipmap/icon_bird_cloud_02"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/scenery_tree_bg"
             android:layout_width="match_parent"
@@ -47,31 +66,12 @@
             app:layout_constraintRight_toRightOf="parent" />
 
 
-        <View
-            android:id="@+id/view3"
-            android:layout_width="@dimen/dimen_63"
-            android:layout_height="@dimen/dimen_33"
-            android:layout_marginStart="@dimen/dimen_50"
-            android:layout_marginTop="@dimen/dimen_14"
-            android:background="@mipmap/icon_bird_cloud_01"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:layout_width="@dimen/dimen_36"
-            android:layout_height="@dimen/dimen_22"
-            android:layout_marginTop="@dimen/dimen_57"
-            android:layout_marginEnd="@dimen/dimen_38"
-            android:background="@mipmap/icon_bird_cloud_02"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv_cai_shen"
             android:layout_width="@dimen/dimen_80"
             android:layout_height="@dimen/dimen_80"
             android:layout_marginStart="@dimen/dimen_75"
-            android:layout_marginTop="@dimen/dimen_12"
+            android:layout_marginTop="@dimen/dimen_20"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/bird_tree" />
@@ -99,7 +99,7 @@
             android:id="@+id/sdv_bird_niu_lang"
             android:layout_width="@dimen/dimen_80"
             android:layout_height="@dimen/dimen_80"
-            android:layout_marginTop="@dimen/dimen_56"
+            android:layout_marginTop="@dimen/dimen_58"
             android:layout_marginEnd="@dimen/dimen_15"
             app:layout_constraintEnd_toStartOf="@+id/sdv_cai_shen"
             app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
@@ -157,6 +157,7 @@
             android:layout_width="@dimen/dimen_80"
             android:layout_height="@dimen/dimen_80"
             android:layout_marginStart="@dimen/dimen_12"
+            android:layout_marginTop="@dimen/dimen_3"
             app:layout_constraintStart_toEndOf="@+id/sdv_bird_niu_lang"
             app:layout_constraintTop_toBottomOf="@+id/sdv_cai_shen" />
 
@@ -212,7 +213,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_26"
             android:layout_marginStart="@dimen/dimen_23"
-            android:layout_marginTop="@dimen/dimen_29"
+            android:layout_marginTop="@dimen/dimen_40"
             android:background="@drawable/bg_shape_bird_cash"
             android:gravity="center"
             android:minWidth="@dimen/dimen_53"
@@ -249,37 +250,33 @@
             app:layout_constraintTop_toTopOf="@+id/ll_redPacket" />
 
         <ImageView
-            android:id="@+id/iv_bird_guide"
-            android:layout_width="@dimen/dimen_46"
-            android:layout_height="@dimen/dimen_46"
-            android:layout_marginStart="@dimen/dimen_7"
-            android:layout_marginTop="@dimen/dimen_11"
-            android:src="@mipmap/icon_bird_guide"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ll_redPacket" />
-
-        <ImageView
             android:id="@+id/ivClose"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_34"
-            android:layout_marginTop="@dimen/dimen_28"
             android:layout_marginEnd="@dimen/dimen_9"
             android:src="@mipmap/icon_bird_close"
+            app:layout_constraintBottom_toBottomOf="@+id/ll_redPacket"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/ll_redPacket" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.julun.huanque.core.widgets.DispatchRecyclerView
         android:id="@+id/rv_bird_packet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_80"
         android:background="#416298"
+        android:minHeight="@dimen/dimen_300"
         android:overScrollMode="never"
         android:paddingTop="@dimen/dimen_34"
-        android:paddingBottom="@dimen/dimen_60"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:minHeight="@dimen/dimen_400"
-        tools:layout_height="@dimen/dimen_400" />
+        tools:layout_height="@dimen/dimen_300" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_80"
+        android:background="#416298"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <View
         android:id="@+id/divide"
@@ -321,9 +318,9 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_12"
+                android:textSize="@dimen/sp_15"
                 android:textStyle="bold"
-                tools:text="余额100000金币" />
+                tools:text="100000" />
 
         </LinearLayout>
 
@@ -337,10 +334,18 @@
             android:gravity="center"
             android:textColor="#FFF35B"
             android:textSize="@dimen/sp_12"
-            android:textStyle="bold"
             tools:text="1500000金币/秒" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_bird_guide"
+        android:layout_width="@dimen/dimen_58"
+        android:layout_height="@dimen/dimen_58"
+        android:src="@mipmap/icon_bird_guide"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_balance_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_balance_bg" />
 
     <ImageView
         android:id="@+id/iv_shop"
@@ -348,7 +353,7 @@
         android:layout_height="@dimen/dimen_58"
         android:src="@mipmap/icon_bird_shop"
         app:layout_constraintBottom_toBottomOf="@+id/iv_balance_bg"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_bird_guide"
         app:layout_constraintTop_toTopOf="@+id/iv_balance_bg" />
 
     <ImageView
@@ -420,12 +425,12 @@
         app:layout_constraintEnd_toEndOf="@+id/iv_bottom_03"
         app:layout_constraintStart_toEndOf="@+id/tv_price_level" />
 
-    <TextView
+    <com.julun.huanque.common.widgets.ColorfulTextView
         android:id="@+id/tv_recycler_coin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="@dimen/sp_12"
+        android:textSize="@dimen/sp_16"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_bird_price"
         app:layout_constraintEnd_toEndOf="@+id/tv_bird_price"
@@ -447,6 +452,7 @@
         android:paddingEnd="@dimen/dimen_14"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/iv_bottom_03"
         app:layout_constraintEnd_toEndOf="@+id/iv_bottom_03"
         app:layout_constraintStart_toStartOf="@+id/iv_bottom_03"
@@ -461,6 +467,7 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_10"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/tv_bird_price"
         app:layout_constraintStart_toStartOf="@+id/tv_bird_price"
         tools:text="lv35" />

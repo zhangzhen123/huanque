@@ -47,7 +47,9 @@ class BirdGotFunctionDialogFragment : BaseDialogFragment() {
     fun setBird(bird: FunctionBird) {
         arguments?.putSerializable("bird", bird)
     }
-
+    override fun setWindowAnimations() {
+        dialog?.window?.setWindowAnimations(R.style.dialog_center_open_ani)
+    }
     override fun initViews() {
         renderData()
         tv_ok.onClickNew {

@@ -17,6 +17,10 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.fragment_bird_shop.*
+import kotlinx.android.synthetic.main.fragment_bird_shop.ivClose
+import kotlinx.android.synthetic.main.fragment_bird_shop.mRefreshLayout
+import kotlinx.android.synthetic.main.fragment_bird_shop.state_pager_view
+import kotlinx.android.synthetic.main.fragment_bird_tasks.*
 import org.jetbrains.anko.backgroundColor
 
 /**
@@ -32,7 +36,7 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 435)
+        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
     }
 
     override fun initViews() {
@@ -57,6 +61,7 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         mRefreshLayout.setOnRefreshListener {
             mViewModel.queryShop(QueryType.REFRESH)
         }
+        MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
         mViewModel.queryShop()
     }
 

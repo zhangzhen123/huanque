@@ -219,7 +219,7 @@ class LeYuanViewModel : BaseViewModel() {
             FunctionBirdDes(
                 "财神鹊", wealth?.functionIcon,
                 bFunction = "放飞后获得888元零钱奖励。",
-                source = "两个神秘鹊合并，有机会获得。",
+                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。",
                 num = wealth?.functionNum?.toIntOrNull(),
                 type = "wealth"
             )

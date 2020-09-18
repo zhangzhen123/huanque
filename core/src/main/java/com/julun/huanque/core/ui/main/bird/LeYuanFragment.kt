@@ -3,6 +3,7 @@ package com.julun.huanque.core.ui.main.bird
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.graphics.Color
 import android.graphics.RectF
 import android.os.Bundle
 import android.view.MotionEvent
@@ -16,6 +17,7 @@ import androidx.core.animation.addListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.binioter.guideview.Guide
 import com.binioter.guideview.GuideBuilder
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -25,11 +27,9 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.HideBirdEvent
-import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.SoundPoolManager
 import com.julun.huanque.common.suger.*
@@ -146,8 +146,12 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             csl_top.show()
             view_top_holder.hide()
         }
+        tv_recycler_coin.isColorsVertical = true
+        tv_recycler_coin.colors = intArrayOf(Color.parseColor("#FFFBEF"), Color.parseColor("#E5A441"))
+        tv_recycler_coin.setStrokeColorAndWidth(Color.parseColor("#B96E23"), 2f)
         initViewModel()
         rv_bird_packet.adapter = birdAdapter
+        (rv_bird_packet.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         rv_bird_packet.layoutManager = GridLayoutManager(requireContext(), 4)
         sdv_cai_shen.onClickNew {
             val bird = mViewModel.gotFunctionBirdInfo("wealth")
@@ -204,9 +208,10 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 birdFunctionDialogFragment?.show(requireActivity(), "birdFunctionDialogFragment")
             }
         }
-        iv_bottom_03.onClickNew {
+        iv_bottom_03.onClick {
+            logger.info("购买操作-----$isActionDoing")
             if (!isActionDoing) {
-                iv_bottom_03.isEnabled = false
+//                iv_bottom_03.isEnabled = false
                 mViewModel.buyBird()
             }
 
@@ -581,7 +586,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         })
 
         mViewModel.buyResult.observe(this, Observer {
-            iv_bottom_03.isEnabled = true
+//            iv_bottom_03.isEnabled = true
             if (it.isSuccess()) {
                 val bird = it.requireT()
                 if (bird.hasEnough != null && bird.hasEnough == false) {
@@ -637,8 +642,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         })
         mViewModel.totalCoin.observe(this, Observer {
             if (it != null) {
-                tv_balance.text = "${StringHelper.formatBigNum(it)}金币"
-//                tv_balance.text = StringHelper.formatBigNum(it)
+//                tv_balance.text = "${StringHelper.formatBigNum(it)}金币"
+                tv_balance.text = StringHelper.formatBigNum(it)
                 playCoinTextAni()
             }
         })
@@ -854,7 +859,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             } else {
                 tv_shen_mi.hide()
             }
-            tv_cash.text = "${info.cash}"
+            tv_cash.text = "${info.cash}元"
         }
 
 
@@ -998,7 +1003,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
 
         //设定向两边
-        val distance = dp2px(65)
+        val distance = dp2px(35)
         //2.做合并动画
         //(1)mask1 mask2向两边展开动画
         val anim0101 =
@@ -1011,8 +1016,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 bird_mask2.translationX + distance
             )
         val anim01 = AnimatorSet()
-        anim01.duration = 150
-        anim01.interpolator = AnticipateOvershootInterpolator()
+        anim01.duration = 100
+//        anim01.interpolator = AnticipateOvershootInterpolator()
         anim01.playTogether(anim0101, anim0102)
 
         //(2)停留一段时间后 相互靠拢
@@ -1027,8 +1032,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             )
         val anim02 = AnimatorSet()
         anim02.interpolator = BounceInterpolator()
-        anim02.duration = 150
-        anim02.startDelay = 50
+        anim02.duration = 100
+        anim02.startDelay = 10
         anim02.playTogether(anim0201, anim0202)
         //(3)靠拢后 播放合体特效
         anim02.addListener(onEnd = {
