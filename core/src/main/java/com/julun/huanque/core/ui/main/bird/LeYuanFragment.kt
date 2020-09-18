@@ -28,6 +28,7 @@ import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.SoundPoolManager
 import com.julun.huanque.common.suger.*
@@ -39,6 +40,7 @@ import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.guide.LottieComponent
 import com.julun.huanque.core.ui.main.bird.guide.LottieComponent2
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
+import com.julun.huanque.core.widgets.DispatchRecyclerView
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -64,7 +66,16 @@ import java.util.concurrent.TimeUnit
  */
 class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     companion object {
-        fun newInstance() = LeYuanFragment()
+        fun newInstance(programId: Long? = null): LeYuanFragment {
+            val fragment = LeYuanFragment()
+            fragment.arguments = Bundle().apply {
+                if (programId != null) {
+                    putLong(IntentParamKey.PROGRAM_ID.name, programId)
+                }
+
+            }
+            return fragment
+        }
 
         //一些播放的音频短
         const val BIRD_BUY = "bird/bird_buy.mp3"
@@ -113,7 +124,10 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     //当前是否正在操作请求中 如果没有完成 就不再执行下次拖动
     private var isActionDoing: Boolean = false
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        programId = arguments?.getLong(IntentParamKey.PROGRAM_ID.name)
+        val pid = arguments?.getLong(IntentParamKey.PROGRAM_ID.name)
+        if (pid != 0L && pid != null) {
+            programId = pid
+        }
         val activity = requireActivity()
         if (activity is PlayerActivity) {
             isInLivePage = true
@@ -188,7 +202,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             }
         }
         iv_bottom_03.onClickNew {
-            if(!isActionDoing){
+            if (!isActionDoing) {
                 iv_bottom_03.isEnabled = false
                 mViewModel.buyBird()
             }
@@ -229,129 +243,136 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         ivClose.onClickNew {
             EventBus.getDefault().post(HideBirdEvent())
         }
-        rv_bird_packet.onTouch { _, event ->
+        rv_bird_packet.mDispatchListener = object : DispatchRecyclerView.DispatchListener {
+            override fun dispatch(event: MotionEvent?): Boolean {
+                event ?: return false
 //            logger.info("rv_bird_packet event=${event.action} rawX=${event.rawX} rawY=${event.rawY}")
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    if (isActionDoing) {
-                        logger.info("当前的操作还没完成")
-                        return@onTouch false
-                    }
-                    val itemView = rv_bird_packet.findChildViewUnder(event.x, event.y)
-                    logger.info("获取到当前的view ${itemView?.id}")
-                    if (itemView != null) {
-                        val viewHolder = rv_bird_packet.getChildViewHolder(itemView) as? BaseViewHolder
-                        if (viewHolder != null) {
-                            currentCombineItem = birdAdapter.getItemOrNull(viewHolder.adapterPosition)
-                            logger.info("获取到当前的item=${viewHolder.adapterPosition}")
-                            if (currentCombineItem?.upgradeId != null) {
-
-                                val image = viewHolder.getView<SimpleDraweeView>(R.id.sdv_bird)
-                                val bmLp = bird_mask.layoutParams as FrameLayout.LayoutParams
-                                bmLp.width = image.width
-                                bmLp.height = image.height
-                                val location = IntArray(2)
-                                image.getLocationOnScreen(location)
-                                bird_mask.x = location[0].toFloat()
-                                bird_mask.y = location[1].toFloat()
-                                originXY = location
-                                bird_mask.requestLayout()
-                                bird_mask.show()
-                                bird_mask.loadImage(currentCombineItem!!.upgradeIcon, 93f, 93f)
-                                //设置蒙层
-                                currentCombineItem?.isActive = true
-                                birdAdapter.notifyItemChanged(viewHolder.adapterPosition)
-                                switchRecycleState(true)
-                            } else {
-                                logger.info("这里item没有鸟")
-                            }
-
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        if (isActionDoing) {
+                            logger.info("当前的操作还没完成 停止分发")
+                            return false
                         }
-
-                    }
-
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    if (currentCombineItem?.upgradeId != null) {
-                        currentXY =
-                            intArrayOf((event.rawX - bird_mask.width / 2).toInt(), (event.rawY - bird_mask.height / 2).toInt())
-                        bird_mask.x = event.rawX - bird_mask.width / 2
-                        bird_mask.y = event.rawY - bird_mask.height / 2
-                    }
-                }
-                MotionEvent.ACTION_UP -> {
-                    if (currentCombineItem?.upgradeId != null) {
-                        isActionDoing = true
                         val itemView = rv_bird_packet.findChildViewUnder(event.x, event.y)
+                        logger.info("获取到当前的view ${itemView?.id}")
                         if (itemView != null) {
-                            switchRecycleState(false)
                             val viewHolder = rv_bird_packet.getChildViewHolder(itemView) as? BaseViewHolder
                             if (viewHolder != null) {
-                                currentTargetItem = birdAdapter.getItemOrNull(viewHolder.adapterPosition)
-                                currentTargetViewHolder = viewHolder
-                                if (currentCombineItem != null && currentTargetItem != null) {
-                                    logger.info("获取到指定目标item 开始执行操作 ${viewHolder.layoutPosition}")
-                                    if (currentCombineItem == currentTargetItem) {
-                                        logger.info("是同一个item 不处理")
-                                        recoveryItemBird()
-                                        isActionDoing = false
-                                    } else {
-                                        mViewModel.combineBird(
-                                            currentCombineItem!!.upgradeId,
-                                            currentTargetItem!!.upgradeId,
-                                            currentCombineItem!!.upgradePos,
-                                            currentTargetItem!!.upgradePos
-                                        )
+                                currentCombineItem = birdAdapter.getItemOrNull(viewHolder.adapterPosition)
+                                logger.info("获取到当前的item=${viewHolder.adapterPosition}")
+                                if (currentCombineItem?.upgradeId != null) {
 
-                                    }
-
+                                    val image = viewHolder.getView<SimpleDraweeView>(R.id.sdv_bird)
+                                    val bmLp = bird_mask.layoutParams as FrameLayout.LayoutParams
+                                    bmLp.width = image.width
+                                    bmLp.height = image.height
+                                    val location = IntArray(2)
+                                    image.getLocationOnScreen(location)
+                                    bird_mask.x = location[0].toFloat()
+                                    bird_mask.y = location[1].toFloat()
+                                    originXY = location
+                                    bird_mask.requestLayout()
+                                    bird_mask.show()
+                                    bird_mask.loadImage(currentCombineItem!!.upgradeIcon, 93f, 93f)
+                                    //设置蒙层
+                                    currentCombineItem?.isActive = true
+                                    birdAdapter.notifyItemChanged(viewHolder.adapterPosition)
+                                    switchRecycleState(true)
                                 } else {
-                                    isActionDoing = false
+                                    logger.info("这里item没有鸟")
                                 }
-                            }
 
-                        } else {
-                            logger.info("当前的触控点不在任何itemView上")
-                            if (calculateDragToSell(event.rawX, event.rawY)) {
-                                logger.info("符合拖拽卖出 开始调用出售")
-                                val upgradeId = currentCombineItem?.upgradeId
-                                if (upgradeId != null) {
-                                    mViewModel.recycleBird(upgradeId)
-                                } else {
-                                    isActionDoing = false
-                                }
-                                bird_mask.hide()
-                            } else {
-                                isActionDoing = false
-                                switchRecycleState(false)
-                                playBackAnim(currentXY, originXY)
                             }
 
                         }
 
                     }
+                    MotionEvent.ACTION_MOVE -> {
+                        if (currentCombineItem?.upgradeId != null) {
+                            currentXY =
+                                intArrayOf(
+                                    (event.rawX - bird_mask.width / 2).toInt(),
+                                    (event.rawY - bird_mask.height / 2).toInt()
+                                )
+                            bird_mask.x = event.rawX - bird_mask.width / 2
+                            bird_mask.y = event.rawY - bird_mask.height / 2
+                        }
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        if (currentCombineItem?.upgradeId != null) {
+                            isActionDoing = true
+                            val itemView = rv_bird_packet.findChildViewUnder(event.x, event.y)
+                            if (itemView != null) {
+                                switchRecycleState(false)
+                                val viewHolder = rv_bird_packet.getChildViewHolder(itemView) as? BaseViewHolder
+                                if (viewHolder != null) {
+                                    currentTargetItem = birdAdapter.getItemOrNull(viewHolder.adapterPosition)
+                                    currentTargetViewHolder = viewHolder
+                                    if (currentCombineItem != null && currentTargetItem != null) {
+                                        logger.info("获取到指定目标item 开始执行操作 ${viewHolder.layoutPosition}")
+                                        if (currentCombineItem == currentTargetItem) {
+                                            logger.info("是同一个item 不处理")
+                                            recoveryItemBird()
+                                            isActionDoing = false
+                                        } else {
+                                            mViewModel.combineBird(
+                                                currentCombineItem!!.upgradeId,
+                                                currentTargetItem!!.upgradeId,
+                                                currentCombineItem!!.upgradePos,
+                                                currentTargetItem!!.upgradePos
+                                            )
+
+                                        }
+
+                                    } else {
+                                        isActionDoing = false
+                                    }
+                                }
+
+                            } else {
+                                logger.info("当前的触控点不在任何itemView上")
+                                if (calculateDragToSell(event.rawX, event.rawY)) {
+                                    logger.info("符合拖拽卖出 开始调用出售")
+                                    val upgradeId = currentCombineItem?.upgradeId
+                                    if (upgradeId != null) {
+                                        mViewModel.recycleBird(upgradeId)
+                                    } else {
+                                        isActionDoing = false
+                                    }
+                                    bird_mask.hide()
+                                } else {
+                                    isActionDoing = false
+                                    switchRecycleState(false)
+                                    playBackAnim(currentXY, originXY)
+                                }
+
+                            }
+
+                        }
+                    }
                 }
-            }
 
-            true
+                return true
+            }
         }
-        bird_combine_ani.setCallBack(object : WebpGifView.GiftViewPlayCallBack {
-            //不管成功加载或者失败加载  都开始本地动画
-            override fun onRelease() {
-            }
+        bird_combine_ani.setCallBack(
+            object : WebpGifView.GiftViewPlayCallBack {
+                //不管成功加载或者失败加载  都开始本地动画
+                override fun onRelease() {
+                }
 
-            override fun onStart() {
-            }
+                override fun onStart() {
+                }
 
-            override fun onError() {
-                bird_combine_ani.hide()
-            }
+                override fun onError() {
+                    bird_combine_ani.hide()
+                }
 
-            override fun onEnd() {
-                bird_combine_ani.hide()
+                override fun onEnd() {
+                    bird_combine_ani.hide()
 
-            }
-        })
+                }
+            })
         if (!isInLivePage) {
             initMusicSet()
             initMusic()
@@ -956,7 +977,12 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         val anim0101 =
             ObjectAnimator.ofFloat(bird_mask, View.TRANSLATION_X, bird_mask.translationX, bird_mask.translationX - distance)
         val anim0102 =
-            ObjectAnimator.ofFloat(bird_mask2, View.TRANSLATION_X, bird_mask2.translationX, bird_mask2.translationX + distance)
+            ObjectAnimator.ofFloat(
+                bird_mask2,
+                View.TRANSLATION_X,
+                bird_mask2.translationX,
+                bird_mask2.translationX + distance
+            )
         val anim01 = AnimatorSet()
         anim01.duration = 150
         anim01.interpolator = AnticipateOvershootInterpolator()
@@ -966,7 +992,12 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         val anim0201 =
             ObjectAnimator.ofFloat(bird_mask, View.TRANSLATION_X, bird_mask.translationX - distance, bird_mask.translationX)
         val anim0202 =
-            ObjectAnimator.ofFloat(bird_mask2, View.TRANSLATION_X, bird_mask2.translationX + distance, bird_mask2.translationX)
+            ObjectAnimator.ofFloat(
+                bird_mask2,
+                View.TRANSLATION_X,
+                bird_mask2.translationX + distance,
+                bird_mask2.translationX
+            )
         val anim02 = AnimatorSet()
         anim02.interpolator = BounceInterpolator()
         anim02.duration = 150
@@ -993,7 +1024,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 guide3?.dismiss()
             }
             if (result.currentUpgradeFirst) {
-                currentNew?:return@addListener
+                currentNew ?: return@addListener
                 val funBird =
                     FunctionBird(
                         functionName = currentNew.upgradeName,

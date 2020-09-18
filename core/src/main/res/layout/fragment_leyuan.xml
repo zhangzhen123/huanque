@@ -8,13 +8,15 @@
     <View
         android:id="@+id/view_top_holder"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_260"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/rv_bird_packet"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/csl_top"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_260"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/rv_bird_packet"
         app:layout_constraintTop_toTopOf="parent">
 
         <View
@@ -39,11 +41,10 @@
             android:id="@+id/bird_tree"
             android:layout_width="match_parent"
             android:layout_height="255dp"
-            android:layout_marginTop="@dimen/dimen_15"
             android:src="@mipmap/bg_bird_tree"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintRight_toRightOf="parent" />
 
 
         <View
@@ -70,10 +71,10 @@
             android:layout_width="@dimen/dimen_80"
             android:layout_height="@dimen/dimen_80"
             android:layout_marginStart="@dimen/dimen_75"
-            android:layout_marginTop="@dimen/dimen_32"
+            android:layout_marginTop="@dimen/dimen_12"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/bird_tree" />
 
 
         <TextView
@@ -268,15 +269,16 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.julun.huanque.core.widgets.DispatchRecyclerView
         android:id="@+id/rv_bird_packet"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:background="#416298"
         android:overScrollMode="never"
         android:paddingTop="@dimen/dimen_34"
+        android:paddingBottom="@dimen/dimen_60"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/csl_top" />
+        tools:layout_height="@dimen/dimen_410" />
 
     <View
         android:id="@+id/divide"
@@ -410,7 +412,8 @@
         android:maxLines="1"
         android:text="立即回收"
         android:textColor="@color/white"
-        android:textSize="@dimen/sp_18"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_bird_price"
         app:layout_constraintEnd_toEndOf="@+id/iv_bottom_03"

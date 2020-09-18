@@ -22,7 +22,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
-import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -38,7 +37,6 @@ import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.message_dispatch.EventMessageType
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
