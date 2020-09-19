@@ -93,6 +93,9 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
         initViewModel()
     }
 
+    override fun reCoverView() {
+        initViewModel()
+    }
     private fun initListener() {
         tv_agree.onClickNew {
             if (mType == WelcomeActivity) {
@@ -216,4 +219,5 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
             )
         }
     }
+    override fun order() = DialogOrderNumber.LOCAL_DIALOG
 }

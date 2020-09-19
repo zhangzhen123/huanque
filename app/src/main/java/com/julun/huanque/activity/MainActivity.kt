@@ -181,12 +181,15 @@ class MainActivity : BaseActivity() {
         }
 
 //        mProtectionFragment = mProtectionFragment ?: PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
+        mProtectionFragment = mProtectionFragment ?: PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
 //        mProtectionFragment?.show(supportFragmentManager, "PersonalInformationProtectionFragment")
+        addOrderDialog(mProtectionFragment)
         val birthday = intent.getStringExtra(ParamConstant.Birthday)
         if (birthday?.isNotEmpty() == true) {
             mUpdateInfoFragment =
                 mUpdateInfoFragment ?: UpdateInfoFragment.newInstance(birthday)
-            mUpdateInfoFragment?.show(supportFragmentManager, "UpdateInfoFragment")
+//            mUpdateInfoFragment?.show(supportFragmentManager, "UpdateInfoFragment")
+            addOrderDialog(mUpdateInfoFragment)
         }
 
     }

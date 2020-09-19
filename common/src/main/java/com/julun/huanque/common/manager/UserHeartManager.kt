@@ -9,6 +9,8 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.AppService
 import com.julun.huanque.common.suger.handleWithResponse
 import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.suger.nothing
+import com.julun.huanque.common.suger.whatEver
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
@@ -36,10 +38,7 @@ object UserHeartManager {
         disposable?.dispose()
         disposable = Observable.interval(HEART_DURATION, HEART_DURATION, TimeUnit.SECONDS).subscribe {
             val form = UserOnlineHeartForm(currentProgramId, onlineId)
-            service.alive(form).handleWithResponse({
-                logger("心跳成功")
-            }
-            )
+            service.alive(form).nothing()
 
         }
     }

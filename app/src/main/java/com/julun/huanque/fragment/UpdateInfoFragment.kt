@@ -20,6 +20,7 @@ import com.bigkoo.pickerview.view.TimePickerView
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.forms.UpdateInformationForm
+import com.julun.huanque.common.constant.DialogOrderNumber
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.interfaces.EventListener
@@ -347,6 +348,6 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
             return false;
         }
     }
-
+    override fun order() = DialogOrderNumber.LOCAL_DIALOG
 
 }

@@ -175,6 +175,12 @@ fun <T> Observable<Root<T>>.whatEver() {
     this.afterRequest().compose(RunOnMainSchedulerTransformer()).subscribe({}, {})
 }
 
+/**
+ * 不做任何处理
+ */
+fun <T> Observable<Root<T>>.nothing() {
+    this.subscribe()
+}
 //添加处理函数
 fun <T> Observable<Root<T>>.handleResponse(observableSubscriber: CancelableObservableSubscriber<T>) {
     this.afterRequest(observableSubscriber.specifiedCodes).compose(RunOnMainSchedulerTransformer<T>())
