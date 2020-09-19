@@ -28,7 +28,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
-            android:id="@+id/view3"
+            android:id="@+id/view_cloud_01"
             android:layout_width="@dimen/dimen_63"
             android:layout_height="@dimen/dimen_33"
             android:layout_marginStart="@dimen/dimen_50"
@@ -38,6 +38,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
+            android:id="@+id/view_cloud_02"
             android:layout_width="@dimen/dimen_36"
             android:layout_height="@dimen/dimen_22"
             android:layout_marginTop="@dimen/dimen_78"
@@ -369,6 +370,7 @@
         android:id="@+id/tv_task_tag"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dimen_14"
+        android:layout_marginTop="@dimen/dimen_8"
         android:background="@drawable/bg_live_red_point"
         android:gravity="center"
         android:paddingStart="@dimen/dimen_3"
@@ -378,7 +380,6 @@
         android:textSize="9sp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/iv_task"
-        app:layout_constraintStart_toEndOf="@+id/iv_task"
         app:layout_constraintTop_toTopOf="@+id/iv_task"
         tools:visibility="visible" />
 

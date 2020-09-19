@@ -1,6 +1,7 @@
 package com.julun.huanque.common.bean.beans
 
 import java.io.Serializable
+import java.math.BigDecimal
 import java.math.BigInteger
 
 /**
@@ -14,7 +15,7 @@ import java.math.BigInteger
  */
 
 data class BirdHomeInfo(
-    var cash: String = "",
+    var cash: BigDecimal = BigDecimal.ZERO,
     var coinsPerSec: BigInteger = BigInteger.ZERO,
     var functionInfo: BirdFunctionInfo = BirdFunctionInfo(),
     var totalCoins: BigInteger = BigInteger.ZERO,
@@ -171,7 +172,7 @@ data class FunctionBirdDes(
 ) : Serializable
 
 data class BirdFlyResult(
-    var cash: String = "",
+    var cash: BigDecimal = BigDecimal.ZERO,
     var functionInfo: FunctionBird? = null,
     var functionNumInfo: FunctionNumInfo? = null,
     var resultType: String = ""

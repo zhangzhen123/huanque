@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AnticipateOvershootInterpolator
 import android.view.animation.BounceInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -34,6 +33,7 @@ import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.SoundPoolManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.live.WebpGifView
 import com.julun.huanque.core.R
@@ -392,7 +392,32 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         if (!isInLivePage) {
             initMusicSet()
             initMusic()
+            initCloudAni()
         }
+    }
+    //云朵动画
+    private fun initCloudAni() {
+        view_cloud_01.post {
+            val anim0101 =
+                ObjectAnimator.ofFloat(view_cloud_01, View.TRANSLATION_X, -view_cloud_01.right.toFloat(), ScreenUtils.screenWidthFloat-view_cloud_01.left.toFloat())
+            val anim0102 =
+                ObjectAnimator.ofFloat(
+                    view_cloud_02,
+                    View.TRANSLATION_X,
+                    -view_cloud_02.right.toFloat(), ScreenUtils.screenWidthFloat-view_cloud_02.left.toFloat()
+                )
+            anim0101.repeatMode = ValueAnimator.RESTART
+            anim0101.repeatCount = ValueAnimator.INFINITE
+            anim0101.duration=1000L*20
+            anim0101.startDelay=1000L
+            anim0101.start()
+            anim0102.repeatMode = ValueAnimator.RESTART
+            anim0102.repeatCount = ValueAnimator.INFINITE
+
+            anim0102.duration=1000L*15
+            anim0102.start()
+        }
+
     }
 
     private fun startCombineBird() {
@@ -683,10 +708,57 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         mFunctionViewModel.flyResult.observe(this, Observer {
             it ?: return@Observer
             if (it.isSuccess()) {
+                val data = it.requireT()
                 //直接刷新
-                view_top_holder?.postDelayed({
-                    mViewModel.queryHome()
-                }, 500)
+                when (data.resultType) {
+                    "Function" -> {
+                        view_top_holder?.postDelayed({
+                            mViewModel.queryHome()
+                        }, 500)
+                    }
+                    "Cash" -> {
+                        //手动更改余额 减去功能鹊数目
+                        val info=mViewModel.homeInfo.value?.getT()
+                        if(info!=null){
+                            tv_cash.text = "${info.cash.add(data.cash)}元"
+                            val fInfo=data.functionNumInfo?:return@Observer
+                            if (fInfo.wealth.isNotEmpty() && fInfo.wealth != "0") {
+                                tv_cai_shen.text = fInfo.wealth
+                                tv_cai_shen.show()
+                            } else {
+                                tv_cai_shen.hide()
+                            }
+                            if (fInfo.cowherd.isNotEmpty() && fInfo.cowherd != "0") {
+                                tv_niu_lang.text = fInfo.cowherd
+                                tv_niu_lang.show()
+                            } else {
+                                tv_niu_lang.hide()
+                            }
+                            sdv_bird_zhi_nv.loadImage(fInfo.weaver, 80f, 80f)
+                            if (fInfo.weaver.isNotEmpty() && fInfo.weaver != "0") {
+                                tv_zhi_nv.text = fInfo.weaver
+                                tv_zhi_nv.show()
+                            } else {
+                                tv_zhi_nv.hide()
+                            }
+
+                            if (fInfo.redpacket.isNotEmpty() && fInfo.redpacket != "0") {
+                                tv_hong_bao.text = fInfo.redpacket
+                                tv_hong_bao.show()
+                            } else {
+                                tv_hong_bao.hide()
+                            }
+                            if (fInfo.mystical.isNotEmpty() && fInfo.mystical != "0") {
+                                tv_shen_mi.text = fInfo.mystical
+                                tv_shen_mi.show()
+                            } else {
+                                tv_shen_mi.hide()
+                            }
+                        }
+
+                    }
+                }
+
 
             }
 
@@ -759,7 +831,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
                 }
                 //合并升级
-                CombineResult.Upgrade,CombineResult.Function -> {
+                CombineResult.Upgrade, CombineResult.Function -> {
 
                     playCombineAnim(result)
 
