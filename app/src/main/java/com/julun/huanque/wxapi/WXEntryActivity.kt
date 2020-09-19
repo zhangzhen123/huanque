@@ -3,13 +3,9 @@ package com.julun.huanque.wxapi
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import com.julun.huanque.activity.FillInformationActivity
-import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.app.HuanQueApp
 import com.julun.huanque.common.base.dialog.MyAlertDialog

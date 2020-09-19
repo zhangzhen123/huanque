@@ -102,7 +102,13 @@ class UpdateVoiceForm(var voiceUrl: String, var length: Long)
 /**
  * 保存定位信息
  */
-class SaveLocationForm(var lat: String, var lng: String, var city: String, var province: String? = null, var district: String? = null)
+class SaveLocationForm(
+    var lat: String,
+    var lng: String,
+    var city: String,
+    var province: String? = null,
+    var district: String? = null
+)
 
 
 /**
@@ -122,3 +128,8 @@ class ValidateForm(var content: String = "", var programId: Long = 0)
  * 发送传送门的form
  */
 class SendRoomForm(var friendId: Long, var programId: Long)
+
+/**
+ * 性别的Form
+ */
+class SexForm(var sexType: String = "")

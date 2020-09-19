@@ -46,12 +46,20 @@ data class UserLevelInfo(
 )
 
 /**
- * 更新头像使用的bean
+ * 更新性别后返回的数据
  */
-data class UpdateHeaderBean(
+data class UpdateSexBean(
     //聊天token
     var imToken: String = "",
-    var sex: String = ""
+    var sex: String = "",
+    //用户ID
+    var userId: Long = 0L,
+    //昵称
+    var nickname: String = "",
+    //用户头像
+    var headPic: String = "",
+    //生日
+    var birthday: String = ""
 )
 
 data class VoiceSignPointBean(

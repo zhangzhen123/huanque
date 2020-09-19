@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.widget.FrameLayout
 import android.widget.TextView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.cache.common.CacheErrorLogger
@@ -23,6 +24,7 @@ import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.net.Requests
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.svga.SVGAHelper
@@ -65,6 +67,16 @@ class CommonInit {
     //保存的全局application
     private lateinit var mContext: Application
     var inSDK = true
+
+    /**
+     * 一键登录页面
+     */
+    private var mFastLoginContentView: FrameLayout? = null
+
+    /**
+     * 获取一键登录页面
+     */
+    fun getFastLoginContentView() = mFastLoginContentView
 
     //    private var libraryListener: CommonListener? = null
 //
@@ -115,13 +127,14 @@ class CommonInit {
         return mContext
     }
 
-    fun initContext(application: Application){
+    fun initContext(application: Application) {
         mContext = application
     }
 
     fun init(application: Application) {
 //        mContext = application
-        application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+        application.registerActivityLifecycleCallbacks(object :
+            Application.ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity?) {
                 isAppOnForeground = false
             }
@@ -131,18 +144,18 @@ class CommonInit {
                 isAppOnForeground = true
 
                 if (activity != null && (activity.localClassName == "com.cmic.sso.sdk.activity.LoginAuthActivity" || activity.localClassName == "cn.jiguang.verifysdk.CtLoginActivity")) {
-                    val contentView = activity.window?.peekDecorView()?.findViewById<View>(android.R.id.content)
-                        ?: return
+                    val contentView =
+                        activity.window?.peekDecorView()?.findViewById<View>(android.R.id.content)
+                            ?: return
                     //获取号码栏
                     val phoneView = getMatchTextView(contentView, "****") ?: return
                     val viewContent = phoneView.text.toString().trim()
-                    if (viewContent.contains("本机号码")) {
+                    if (viewContent.contains("一键登录")) {
                         return
                     }
-                    val realContent = "本机号码：$viewContent"
+                    val realContent = "$viewContent 一键登录"
                     phoneView.text = realContent
-                    phoneView.backgroundResource = R.drawable.bg_owner_phone_number
-//                    phoneView.backgroundColor = GlobalUtils.getColor(R.color.black_333)
+                    phoneView.backgroundResource = R.drawable.bg_phone_number_fast_login
                     //设置宽高
                     val params = phoneView.layoutParams
                     params.height = activity.dip(50)
@@ -306,13 +319,37 @@ class CommonInit {
         }
     }
 
+    /**
+     * 隐藏所有的TextView（保留ImageView）
+     */
+    private fun hideAllTextView(view: View) {
+        if (view is ViewGroup) {
+            val childCount = view.childCount
+            (0 until childCount).forEach {
+                val tempView = view.getChildAt(it)
+                if (tempView is TextView) {
+                    tempView.hide()
+                } else {
+                    hideAllTextView(tempView)
+                }
+            }
+        }
+
+    }
+
     suspend fun initWithCoroutines(application: Application) {
         val currentTime = System.currentTimeMillis()
         logger("common initWithCoroutines start----${Thread.currentThread()} ")
 //        mContext = application
-        application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+        application.registerActivityLifecycleCallbacks(object :
+            Application.ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity?) {
                 isAppOnForeground = false
+                if (activity != null && (activity.localClassName == "com.cmic.sso.sdk.activity.LoginAuthActivity" || activity.localClassName == "cn.jiguang.verifysdk.CtLoginActivity")) {
+                    mFastLoginContentView?.let { hideAllTextView(it) }
+
+                    mFastLoginContentView = null
+                }
             }
 
             override fun onActivityResumed(activity: Activity) {
@@ -320,18 +357,19 @@ class CommonInit {
                 isAppOnForeground = true
 
                 if (activity != null && (activity.localClassName == "com.cmic.sso.sdk.activity.LoginAuthActivity" || activity.localClassName == "cn.jiguang.verifysdk.CtLoginActivity")) {
-                    val contentView = activity.window?.peekDecorView()?.findViewById<View>(android.R.id.content)
-                        ?: return
+                    val contentView =
+                        activity.window?.peekDecorView()?.findViewById<View>(android.R.id.content)
+                            ?: return
+                    mFastLoginContentView = contentView as? FrameLayout
                     //获取号码栏
                     val phoneView = getMatchTextView(contentView, "****") ?: return
                     val viewContent = phoneView.text.toString().trim()
-                    if (viewContent.contains("本机号码")) {
+                    if (viewContent.contains("一键登录")) {
                         return
                     }
-                    val realContent = "本机号码：$viewContent"
+                    val realContent = "$viewContent 一键登录"
                     phoneView.text = realContent
-                    phoneView.backgroundResource = R.drawable.bg_owner_phone_number
-//                    phoneView.backgroundColor = GlobalUtils.getColor(R.color.black_333)
+                    phoneView.backgroundResource = R.drawable.bg_phone_number_fast_login
                     //设置宽高
                     val params = phoneView.layoutParams
                     params.height = activity.dip(50)
@@ -380,7 +418,7 @@ class CommonInit {
             val timeC = System.currentTimeMillis()
             logger("Common  coroutineScope start launch----${Thread.currentThread()} ")
             val normal = async {
-                val timeN=System.currentTimeMillis()
+                val timeN = System.currentTimeMillis()
                 ToastUtils.init(application)//初始化自定义土司
                 SharedPreferencesUtils.init(application)
                 RongCloudManager.clearRoomList()
@@ -394,29 +432,30 @@ class CommonInit {
                 } catch (e: Exception) {
 //                    e.printStackTrace()
                 }
-                logger("普通内容初始化 end launch----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN} ")
+                logger("普通内容初始化 end launch----${Thread.currentThread()} duration=${System.currentTimeMillis() - timeN} ")
             }
 
             val aRouter = async(Dispatchers.Default) {
-                val timeN=System.currentTimeMillis()
+                val timeN = System.currentTimeMillis()
 
                 if (BuildConfig.DEBUG) {           // 这两行必须写在init之前，否则这些配置在init过程中将无效
                     ARouter.openLog()     // 打印日志
                     ARouter.openDebug()  // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
                 }
                 ARouter.init(mContext as Application) // 尽可能早，推荐在Application中初始化
-                logger("launch ARouter----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN} ")
+                logger("launch ARouter----${Thread.currentThread()} duration=${System.currentTimeMillis() - timeN} ")
                 //初始化实名认证SDK
                 ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE).navigation()
-                ULog.i("launch REALNAME----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN}")
+                ULog.i("launch REALNAME----${Thread.currentThread()} duration=${System.currentTimeMillis() - timeN}")
                 //初始化MSA SDK并获取oaid
                 ARouter.getInstance().build(ARouterConstant.MSA_SERVICE).navigation()
-                ULog.i("launch MSASERVICE----${Thread.currentThread()} duration=${System.currentTimeMillis()-timeN}")
+                ULog.i("launch MSASERVICE----${Thread.currentThread()} duration=${System.currentTimeMillis() - timeN}")
             }
             val fresco = async(Dispatchers.Default) {
-                val time=System.currentTimeMillis()
+                val time = System.currentTimeMillis()
                 //缓存的试着
-                val cacheConfigBuilder: DiskCacheConfig.Builder = DiskCacheConfig.newBuilder(mContext)
+                val cacheConfigBuilder: DiskCacheConfig.Builder =
+                    DiskCacheConfig.newBuilder(mContext)
                 val cacheDir: File = mContext.cacheDir
                 val frescoCacheDir = File(cacheDir, "fresco")
                 if (!frescoCacheDir.exists()) {
@@ -446,14 +485,14 @@ class CommonInit {
                     .build()
                 CommonInit.getInstance().frescoConfig = config
                 Fresco.initialize(mContext, config)
-                ULog.i("launch initFresco----${Thread.currentThread()} duration=${System.currentTimeMillis()-time} ")
+                ULog.i("launch initFresco----${Thread.currentThread()} duration=${System.currentTimeMillis() - time} ")
             }
 
             val rong = async(Dispatchers.Default) {
-                val time=System.currentTimeMillis()
+                val time = System.currentTimeMillis()
                 //蛋疼的融云多次初始化的问题,必须把其他的初始化工作放在融云的初始化工作代码快里面,否则将会执行多次(3次)
                 RongCloudManager.rongCloudInit(mContext as Application) {}
-                ULog.i("launch RongCloudManager----${Thread.currentThread()} duration=${System.currentTimeMillis()-time}")
+                ULog.i("launch RongCloudManager----${Thread.currentThread()} duration=${System.currentTimeMillis() - time}")
             }
 
             val svga = async(Dispatchers.Default) {

@@ -96,6 +96,9 @@ object ParamConstant {
     //邀请的用户ID
     const val InviteUserId = "inviteUserId"
 
+    //生日数据
+    const val Birthday = "Birthday"
+
 
     //UUID
     const val UUID = "UUID"

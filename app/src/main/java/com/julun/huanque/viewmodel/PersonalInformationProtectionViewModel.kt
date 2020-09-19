@@ -7,6 +7,7 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.suger.dataConvert
 import kotlinx.coroutines.launch
 
 /**

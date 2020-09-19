@@ -12,6 +12,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.events.BindPhoneSuccessEvent
+import com.julun.huanque.common.bean.events.FinishToLoginEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.constant.IntentParamKey
@@ -37,6 +38,8 @@ import kotlinx.android.synthetic.main.act_phone_num.*
 import kotlinx.android.synthetic.main.act_phone_num.register_rule
 import kotlinx.android.synthetic.main.act_phone_num.tv_register_privacy
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import org.jetbrains.anko.textColor
 import java.util.concurrent.TimeUnit
@@ -120,7 +123,7 @@ class PhoneNumLoginActivity : BaseActivity() {
                 if (it.regComplete) {
                     startActivity(Intent(this, MainActivity::class.java))
                 } else {
-                    FillInformationActivity.newInstance(this)
+                    SelectSexActivity.newInstance(this)
                 }
             }
         })
@@ -312,5 +315,11 @@ class PhoneNumLoginActivity : BaseActivity() {
         ScreenUtils.hideSoftInput(this)
     }
 
+    override fun isRegisterEventBus() = true
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun toLoginEvent(event: FinishToLoginEvent) {
+        finish()
+    }
 
 }
