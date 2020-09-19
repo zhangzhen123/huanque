@@ -195,4 +195,16 @@ interface UserService {
      */
     @POST("user/acct/data/updateCard")
     suspend fun updateCard(@Body form: UpdateInformationForm): Root<UpdateSexBean>
+
+    /**
+     * 新手礼包
+     */
+    @POST("user/welfare/newUserBag")
+    suspend fun newUserBag(@Body form: EmptyForm = EmptyForm()): Root<NewUserGiftBean>
+
+    /**
+     * 领取新手礼包
+     */
+    @POST("user/welfare/receiveNewUserBag")
+    suspend fun receiveNewUserBag(@Body form: EmptyForm = EmptyForm()) : Root<VoidResult>
 }

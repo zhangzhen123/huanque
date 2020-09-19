@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/view_bg"
+        android:layout_width="65dp"
+        android:layout_height="72dp"
+        android:background="@drawable/bg_item_new_user_gift"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_gift"
+        android:layout_width="63dp"
+        android:layout_height="52dp"
+        app:layout_constraintLeft_toLeftOf="@id/view_bg"
+        app:layout_constraintRight_toRightOf="@id/view_bg"
+        app:layout_constraintTop_toTopOf="@id/view_bg"
+        app:placeholderImage="@mipmap/logo_placeholder_small"
+        app:placeholderImageScaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tv_gift_enable_time"
+        android:layout_width="0px"
+        android:layout_height="18dp"
+        android:background="@drawable/bg_new_user_gift_enable_time"
+        android:gravity="center"
+        android:textColor="#D38053"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintBottom_toBottomOf="@id/view_bg"
+        app:layout_constraintLeft_toLeftOf="@id/view_bg"
+        app:layout_constraintRight_toRightOf="@id/view_bg"
+        tools:text="有效期3天" />
+
+    <TextView
+        android:id="@+id/tv_gift_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/tv_gift_enable_time"
+        app:layout_constraintRight_toRightOf="@id/tv_gift_enable_time"
+        app:layout_constraintTop_toBottomOf="@id/tv_gift_enable_time"
+        tools:text="肯定很高" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

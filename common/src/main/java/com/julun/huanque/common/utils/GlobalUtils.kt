@@ -82,7 +82,11 @@ object GlobalUtils {
         val count = array.size / 2
         (0 until count).forEach {
             val index = it * 2
-            if (ForceUtils.isIndexNotOutOfBounds(index, array) && ForceUtils.isIndexNotOutOfBounds(index, array)) {
+            if (ForceUtils.isIndexNotOutOfBounds(index, array) && ForceUtils.isIndexNotOutOfBounds(
+                    index,
+                    array
+                )
+            ) {
                 map.put(array[index], array[index + 1])
             }
         }
@@ -177,7 +181,8 @@ object GlobalUtils {
     /**
      * 获取Drawable
      */
-    fun getDrawable(@DrawableRes dId: Int) = CommonInit.getInstance().getApp().resources.getDrawable(dId)
+    fun getDrawable(@DrawableRes dId: Int) =
+        CommonInit.getInstance().getApp().resources.getDrawable(dId)
 
 
     /**
@@ -278,7 +283,8 @@ object GlobalUtils {
     fun updateStrangerData(userId: Long, stranger: Boolean) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                val chatUser = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(userId) ?: return@withContext
+                val chatUser = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(userId)
+                    ?: return@withContext
                 if (chatUser.stranger != stranger) {
                     chatUser.stranger = stranger
                     HuanQueDatabase.getInstance().chatUserDao().insert(chatUser)
@@ -291,7 +297,8 @@ object GlobalUtils {
      * 复制文案
      */
     fun copyToSharePlate(context: Context, text: String, attentionContent: String = "内容已复制到剪切板") {
-        val myClipboard: ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val myClipboard: ClipboardManager =
+            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         myClipboard.setPrimaryClip(ClipData.newPlainText("text", text))
         if (attentionContent.isNotEmpty()) {
 //            ToastUtils.showCustom(attentionContent, Toast.LENGTH_SHORT, Gravity.CENTER_VERTICAL or Gravity.BOTTOM)
@@ -351,7 +358,8 @@ object GlobalUtils {
      */
     fun getNeedRefreshMessageIdSet(): HashSet<String> {
         val defaultSet = HashSet<String>()
-        val oriSet = SharedPreferencesUtils.getStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, defaultSet)
+        val oriSet =
+            SharedPreferencesUtils.getStringSet(SPParamKey.EXCEPTION_MESSAGE_LIST, defaultSet)
         return if (oriSet is HashSet<String>) {
             oriSet
         } else {
@@ -469,7 +477,8 @@ object GlobalUtils {
     }
 
     fun getEarphoneLinkStatus(): Boolean {
-        val audioManager = CommonInit.getInstance().getCurrentActivity()?.getSystemService(Context.AUDIO_SERVICE) as? AudioManager ?: return false
+        val audioManager = CommonInit.getInstance().getCurrentActivity()
+            ?.getSystemService(Context.AUDIO_SERVICE) as? AudioManager ?: return false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val devices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)
             for (device in devices) {
@@ -548,9 +557,27 @@ object GlobalUtils {
         val borderDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, borderColor)
         borderDrawable.shape = GradientDrawable.RECTANGLE
         val floatArray = if (left) {
-            floatArrayOf(dp2pxf(2), dp2pxf(2), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23))
+            floatArrayOf(
+                dp2pxf(2),
+                dp2pxf(2),
+                dp2pxf(23),
+                dp2pxf(23),
+                dp2pxf(23),
+                dp2pxf(23),
+                dp2pxf(23),
+                dp2pxf(23)
+            )
         } else {
-            floatArrayOf(dp2pxf(23), dp2pxf(23), dp2pxf(2), dp2pxf(2), dp2pxf(23), dp2pxf(23), dp2pxf(23), dp2pxf(23))
+            floatArrayOf(
+                dp2pxf(23),
+                dp2pxf(23),
+                dp2pxf(2),
+                dp2pxf(2),
+                dp2pxf(23),
+                dp2pxf(23),
+                dp2pxf(23),
+                dp2pxf(23)
+            )
         }
         borderDrawable.cornerRadii = floatArray
 
@@ -583,6 +610,11 @@ object GlobalUtils {
         }
         return colorArray
     }
+
+    /**
+     * 获取新手礼包保存的key
+     */
+    fun getNewUserKey(userId: Long) = "NewUser-$userId"
 
 
 }

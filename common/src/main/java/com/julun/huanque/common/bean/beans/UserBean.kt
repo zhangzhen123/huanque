@@ -68,7 +68,12 @@ class SocialListBean(
 /**
  * 关注结果使用的Bean
  */
-class FollowResultBean(var type: String = "", var userId: Long = 0L, var follow: String = "", var formerFollow: String = "")
+class FollowResultBean(
+    var type: String = "",
+    var userId: Long = 0L,
+    var follow: String = "",
+    var formerFollow: String = ""
+)
 
 /**
  * 亲密特权
@@ -210,3 +215,29 @@ data class BeansData(var beans: Long = 0) : Serializable
  * 私信气泡配置类
  */
 data class SettingBean(var chatBubble: ChatBubble? = null) : Serializable
+
+/**
+ * 新手礼包的单个礼物
+ */
+data class SingleNewUserGiftBean(
+    //数量
+    var count: Int = 0,
+    //道具ID
+    var prodId: Long = 0,
+    //道具名称
+    var prodName: String = "",
+    //道具图片
+    var prodPic: String = "",
+    //有效时间
+    var validDays: Int = 0
+) : Serializable
+
+/**
+ * 新手礼包
+ */
+data class NewUserGiftBean(
+    //是否领取过新手礼包
+    var received: String = "",
+    //奖励列表
+    var bagList: MutableList<SingleNewUserGiftBean> = mutableListOf()
+) : Serializable

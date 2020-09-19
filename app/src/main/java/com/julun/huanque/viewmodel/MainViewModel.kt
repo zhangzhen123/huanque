@@ -3,6 +3,7 @@ package com.julun.huanque.viewmodel
 import android.os.Bundle
 import androidx.lifecycle.*
 import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.common.bean.beans.NewUserGiftBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.net.Requests
@@ -39,8 +40,38 @@ class MainViewModel : BaseViewModel() {
     //未读消息数量
     val unreadMsgCount: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
+    val newUserBean: MutableLiveData<NewUserGiftBean> by lazy { MutableLiveData<NewUserGiftBean>() }
+
     private val userService: UserService by lazy {
         Requests.create(UserService::class.java)
+    }
+
+    /**
+     * 获取新手礼包数据
+     */
+    fun getNewUserGift() {
+        viewModelScope.launch {
+            request({
+                val bag = userService.newUserBag().dataConvert()
+                if (bag.received == BusiConstant.False) {
+                    //未领取，显示弹窗
+                    newUserBean.value = bag
+                } else {
+                    SPUtils.commitBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), true)
+                }
+            })
+        }
+    }
+
+    /**
+     * 领取新手礼包
+     */
+    fun receiveNewUserBag() {
+        viewModelScope.launch {
+            request({
+                userService.receiveNewUserBag().dataConvert()
+            })
+        }
     }
 
 
@@ -54,7 +85,8 @@ class MainViewModel : BaseViewModel() {
                 val bundle = Bundle()
                 bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLED)
                 bundle.putSerializable(ParamConstant.NetCallBean, result)
-                ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle).navigation()
+                ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle)
+                    .navigation()
 
             })
         }
@@ -132,41 +164,49 @@ class MainViewModel : BaseViewModel() {
      * 刷新语音通话结果
      */
     fun netcallResult(msgId: Int) {
-        RongIMClient.getInstance().getMessage(msgId, object : RongIMClient.ResultCallback<io.rong.imlib.model.Message>() {
-            override fun onSuccess(msg: io.rong.imlib.model.Message?) {
-                val content = msg?.content
-                if (content is CustomSimulateMessage && content.type == MessageCustomBeanType.Voice_Conmmunication_Simulate) {
-                    //该ID对应的消息是模拟插入的语音消息，进行刷新操作
-                    getCallResult(msg)
-                } else {
-                    //该消息ID不是插入的语音消息，直接删除
-                    GlobalUtils.removeSingleRefreshMessageId(msgId)
+        RongIMClient.getInstance()
+            .getMessage(msgId, object : RongIMClient.ResultCallback<io.rong.imlib.model.Message>() {
+                override fun onSuccess(msg: io.rong.imlib.model.Message?) {
+                    val content = msg?.content
+                    if (content is CustomSimulateMessage && content.type == MessageCustomBeanType.Voice_Conmmunication_Simulate) {
+                        //该ID对应的消息是模拟插入的语音消息，进行刷新操作
+                        getCallResult(msg)
+                    } else {
+                        //该消息ID不是插入的语音消息，直接删除
+                        GlobalUtils.removeSingleRefreshMessageId(msgId)
+                    }
+
                 }
 
-            }
-
-            override fun onError(code: RongIMClient.ErrorCode?) {
-                logger("netcallResult code = ${code}")
-            }
-        })
+                override fun onError(code: RongIMClient.ErrorCode?) {
+                    logger("netcallResult code = ${code}")
+                }
+            })
     }
 
     private fun getCallResult(msg: io.rong.imlib.model.Message) {
         val content = msg.content
         if (content is CustomSimulateMessage && content.type == MessageCustomBeanType.Voice_Conmmunication_Simulate) {
             try {
-                val bean = JsonUtil.deserializeAsObject<VoiceConmmunicationSimulate>(content.context, VoiceConmmunicationSimulate::class.java)
+                val bean = JsonUtil.deserializeAsObject<VoiceConmmunicationSimulate>(
+                    content.context,
+                    VoiceConmmunicationSimulate::class.java
+                )
                 bean.sentTime = msg.sentTime
 
                 viewModelScope.launch {
                     request({
-                        val result = socialService.netcallResult(NetcallIdForm(bean.callId)).dataConvert()
+                        val result =
+                            socialService.netcallResult(NetcallIdForm(bean.callId)).dataConvert()
                         bean.billUserId = result.billUserId
                         bean.duration = result.duration
                         bean.totalBeans = result.totalBeans
                         bean.needRefresh = false
 
-                        val chatExtra = JsonUtil.deserializeAsObject<RoomUserChatExtra>(content.extra, RoomUserChatExtra::class.java)
+                        val chatExtra = JsonUtil.deserializeAsObject<RoomUserChatExtra>(
+                            content.extra,
+                            RoomUserChatExtra::class.java
+                        )
 
                         RongCloudManager.sendSimulateMessage(
                             msg.targetId, msg.senderUserId, chatExtra,
@@ -190,16 +230,17 @@ class MainViewModel : BaseViewModel() {
      */
     fun getUnreadCount() {
         val typeList = arrayOf(Conversation.ConversationType.PRIVATE)
-        RongIMClient.getInstance().getUnreadCount(typeList, false, object : RongIMClient.ResultCallback<Int>() {
-            override fun onSuccess(p0: Int?) {
-                unreadMsgCount.value = p0 ?: 0
-                EventBus.getDefault().post(UnreadCountEvent(p0 ?: 0, false))
-            }
+        RongIMClient.getInstance()
+            .getUnreadCount(typeList, false, object : RongIMClient.ResultCallback<Int>() {
+                override fun onSuccess(p0: Int?) {
+                    unreadMsgCount.value = p0 ?: 0
+                    EventBus.getDefault().post(UnreadCountEvent(p0 ?: 0, false))
+                }
 
-            override fun onError(p0: RongIMClient.ErrorCode?) {
-            }
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                }
 
-        })
+            })
     }
 
 
@@ -230,9 +271,9 @@ class MainViewModel : BaseViewModel() {
             request({
                 val result = userService.settings().dataConvert()
                 val chatBubble = result.chatBubble
-                if(chatBubble != null){
+                if (chatBubble != null) {
                     SPUtils.commitObject(SPParamKey.PRIVATE_CHAT_BUBBLE, chatBubble)
-                }else{
+                } else {
                     SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
                 }
             })

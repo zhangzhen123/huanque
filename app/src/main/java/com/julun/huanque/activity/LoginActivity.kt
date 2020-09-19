@@ -216,7 +216,7 @@ class LoginActivity : BaseActivity() {
         if (session.regComplete) {
             //跳转首页
             startActivity(Intent(act, MainActivity::class.java))
-            JVerificationInterface.dismissLoginAuthActivity()
+            finishFastLogin()
             finish()
         } else {
             SelectSexActivity.newInstance(act)
@@ -462,6 +462,36 @@ class LoginActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loginData(data: Session) {
         doWithSession(data)
+    }
+
+    /**
+     * 关闭一键登录页面
+     */
+    private fun finishFastLogin() {
+        val fastContentView = CommonInit.getInstance().getFastLoginContentView()
+        if (fastContentView != null) {
+            //隐藏所有的TextView
+            hideAllTextView(fastContentView)
+        }
+        JVerificationInterface.dismissLoginAuthActivity()
+    }
+
+    /**
+     * 隐藏所有的TextView（保留ImageView）
+     */
+    private fun hideAllTextView(view: View) {
+        if (view is ViewGroup) {
+            val childCount = view.childCount
+            (0 until childCount).forEach {
+                val tempView = view.getChildAt(it)
+                if (tempView is View) {
+                    tempView.hide()
+                } else {
+                    hideAllTextView(tempView)
+                }
+            }
+        }
+
     }
 
 }

@@ -348,6 +348,6 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
             return false;
         }
     }
-    override fun order() = DialogOrderNumber.LOCAL_DIALOG
+    override fun order() = 200
 
 }

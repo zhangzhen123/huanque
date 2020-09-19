@@ -319,24 +319,6 @@ class CommonInit {
         }
     }
 
-    /**
-     * 隐藏所有的TextView（保留ImageView）
-     */
-    private fun hideAllTextView(view: View) {
-        if (view is ViewGroup) {
-            val childCount = view.childCount
-            (0 until childCount).forEach {
-                val tempView = view.getChildAt(it)
-                if (tempView is TextView) {
-                    tempView.hide()
-                } else {
-                    hideAllTextView(tempView)
-                }
-            }
-        }
-
-    }
-
     suspend fun initWithCoroutines(application: Application) {
         val currentTime = System.currentTimeMillis()
         logger("common initWithCoroutines start----${Thread.currentThread()} ")
@@ -346,8 +328,6 @@ class CommonInit {
             override fun onActivityPaused(activity: Activity?) {
                 isAppOnForeground = false
                 if (activity != null && (activity.localClassName == "com.cmic.sso.sdk.activity.LoginAuthActivity" || activity.localClassName == "cn.jiguang.verifysdk.CtLoginActivity")) {
-                    mFastLoginContentView?.let { hideAllTextView(it) }
-
                     mFastLoginContentView = null
                 }
             }
