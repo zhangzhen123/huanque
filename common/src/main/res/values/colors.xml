@@ -56,6 +56,7 @@
 
     <!--黑色透明度-->
     <color name="percent15translucentBlack">#26000000</color>
+    <color name="percent20translucentBlack">#33000000</color>
     <color name="percent30translucentBlack">#4D000000</color>
     <color name="percent40translucentBlack">#66000000</color>
     <color name="percent50translucentBlack">#80000000</color>

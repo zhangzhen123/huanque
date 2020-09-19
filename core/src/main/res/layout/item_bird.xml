@@ -55,7 +55,7 @@
         android:id="@+id/bird_masking"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/percent30translucentBlack"
+        android:background="@drawable/bg_bird_masking"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/bird_bg"
         app:layout_constraintEnd_toEndOf="@+id/bird_bg"
