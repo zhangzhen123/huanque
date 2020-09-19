@@ -12,19 +12,25 @@ import android.view.KeyEvent
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.R
 import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseDialogFragment
-import com.julun.huanque.common.constant.Agreement
-import com.julun.huanque.common.constant.ParamConstant
-import com.julun.huanque.common.constant.SPParamKey
-import com.julun.huanque.common.constant.XYCode
+import com.julun.huanque.common.bean.events.FinishToLoginEvent
+import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.LoginStatusUtils
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
+import com.julun.huanque.support.LoginManager
 import com.julun.huanque.viewmodel.PersonalInformationProtectionViewModel
+import io.rong.imlib.RongIMClient
 import kotlinx.android.synthetic.main.fragment_personal_information_protection.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -33,24 +39,33 @@ import kotlinx.android.synthetic.main.fragment_personal_information_protection.*
  */
 class PersonalInformationProtectionFragment : BaseDialogFragment() {
     companion object {
-        const val From_Welcome = "From_Welcome"
-        fun newInstance(welcome: Boolean): PersonalInformationProtectionFragment {
+        //欢迎页使用
+        const val WelcomeActivity = "WelcomeActivity"
+
+        //登录页面使用
+        const val SelectActivity = "SelectActivity"
+
+        //首页使用
+        const val MainActivity = "MainActivity"
+
+        const val From = "From"
+        fun newInstance(type: String): PersonalInformationProtectionFragment {
             val fragment = PersonalInformationProtectionFragment()
             val bundle = Bundle()
-            bundle.putBoolean(From_Welcome, welcome)
+            bundle.putString(From, type)
             fragment.arguments = bundle
             return fragment
         }
     }
 
     //欢迎页显示
-    private var mFromWelcome = false
+    private var mType: String = ""
 
     private val mViewModel: PersonalInformationProtectionViewModel by activityViewModels()
     override fun getLayoutId() = R.layout.fragment_personal_information_protection
 
     override fun initViews() {
-        mFromWelcome = arguments?.getBoolean(From_Welcome, false) ?: false
+        mType = arguments?.getString(From, "") ?: ""
         initListener()
         val style = SpannableStringBuilder()
         //设置文字
@@ -58,8 +73,18 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
         val replaceStr = GlobalUtils.getString(R.string.app_name)
         val content = String.format(str, replaceStr, replaceStr)
         style.append(content)
-        updateTextColorAndClick(style, content, GlobalUtils.getString(R.string.agreement_conent_clickable), Agreement.UserAgreement)
-        updateTextColorAndClick(style, content, GlobalUtils.getString(R.string.agreement_register_conent_clickable), Agreement.PrivacyAgreement)
+        updateTextColorAndClick(
+            style,
+            content,
+            GlobalUtils.getString(R.string.agreement_conent_clickable),
+            Agreement.UserAgreement
+        )
+        updateTextColorAndClick(
+            style,
+            content,
+            GlobalUtils.getString(R.string.agreement_register_conent_clickable),
+            Agreement.PrivacyAgreement
+        )
         tv_content.text = style
         //配置给TextView
         tv_content.movementMethod = LinkMovementMethod.getInstance()
@@ -70,7 +95,7 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
 
     private fun initListener() {
         tv_agree.onClickNew {
-            if (mFromWelcome) {
+            if (mType == WelcomeActivity) {
                 mViewModel.agreeClickState.value = true
                 SharedPreferencesUtils.commitBoolean(SPParamKey.Welcome_privacy_Fragment, true)
                 dismiss()
@@ -80,16 +105,28 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
 
         }
         tv_exit.onClickNew {
-            if (mFromWelcome) {
-                mViewModel.cancelClickState.value = true
-            } else {
-                activity?.let { act ->
-                    val intent = Intent(act, LoginActivity::class.java)
-                    intent.putExtra(ParamConstant.TYPE, "EXIT")
-                    act.startActivity(intent)
+            when (mType) {
+                WelcomeActivity -> {
+                    //欢迎页
+                    mViewModel.cancelClickState.value = true
+                }
+                SelectActivity -> {
+                    //选择性别页面
+                    EventBus.getDefault().post(FinishToLoginEvent())
+                }
+                MainActivity -> {
+                    //首页使用
+                    SessionUtils.clearSession()
+                    //登出融云
+                    if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
+                        RongCloudManager.logout()
+                    }
+                    UserHeartManager.stopBeat()
+                    LoginStatusUtils.logout()
+                    //跳转登录页面
+                    ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
                 }
             }
-
             dismiss()
         }
     }
@@ -110,7 +147,7 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
         this.setDialogSize(Gravity.CENTER, 35)
 //        //不需要半透明遮罩层
 ////        win.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        if (!mFromWelcome) {
+        if (mType != WelcomeActivity) {
             val win = dialog?.window ?: return
             win.setWindowAnimations(R.style.dialog_bottom_bottom_style)
         }
@@ -122,8 +159,8 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
     override fun onStart() {
         super.onStart()
         setWindowConfig()
-        dialog?.setCancelable(false);
-        dialog?.setCanceledOnTouchOutside(false);
+        dialog?.setCancelable(false)
+        dialog?.setCanceledOnTouchOutside(false)
 
         dialog?.setOnKeyListener { _, keyCode, _ ->
             keyCode == KeyEvent.KEYCODE_BACK
@@ -138,7 +175,12 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
      * @param condition 识别的问题
      * @param address 跳转地址
      */
-    private fun updateTextColorAndClick(sb: SpannableStringBuilder, content: String, condition: String, address: String) {
+    private fun updateTextColorAndClick(
+        sb: SpannableStringBuilder,
+        content: String,
+        condition: String,
+        address: String
+    ) {
         if (content.contains(condition)) {
             //设置部分文字点击事件
             val clickableSpan = object : ClickableSpan() {
@@ -155,12 +197,23 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
             }
             val startIndex = content.indexOf(condition)
 
-            sb.setSpan(clickableSpan, startIndex, startIndex + condition.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            sb.setSpan(
+                clickableSpan,
+                startIndex,
+                startIndex + condition.length,
+                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            )
 
 
             //设置部分文字颜色
-            val foregroundColorSpan = ForegroundColorSpan(GlobalUtils.getColor(R.color.agreement_blue))
-            sb.setSpan(foregroundColorSpan, startIndex, startIndex + condition.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            val foregroundColorSpan =
+                ForegroundColorSpan(GlobalUtils.getColor(R.color.agreement_blue))
+            sb.setSpan(
+                foregroundColorSpan,
+                startIndex,
+                startIndex + condition.length,
+                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            )
         }
     }
 }

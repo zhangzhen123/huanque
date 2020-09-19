@@ -3,6 +3,7 @@ package com.julun.huanque.activity
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import com.julun.huanque.R
 import com.julun.huanque.agora.activity.AnonymousVoiceActivity
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.AnonyVoiceInviteBean
 import com.julun.huanque.common.bean.beans.IntimateBean
@@ -40,14 +42,21 @@ import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.core.ui.main.bird.LeYuanFragment
+import com.julun.huanque.fragment.PersonalInformationProtectionFragment
+import com.julun.huanque.fragment.UpdateInfoFragment
 import com.julun.huanque.ui.main.MineFragment
+import com.julun.huanque.viewmodel.FillInformationViewModel
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.maplib.LocationService
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.config.PictureConfig
+import com.luck.picture.lib.config.PictureMimeType
 import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
+import kotlinx.android.synthetic.main.act_fill_information.*
 import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -66,19 +75,24 @@ class MainActivity : BaseActivity() {
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
     private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
 
+    //隐私弹窗
+    private var mProtectionFragment: PersonalInformationProtectionFragment? = null
+
     //    private val mMineFragment: Fragment by lazy { RNPageFragment.start("PH") }
-
-
 
 
     private val mMainViewModel: MainViewModel by viewModels()
 
     private val mMessageViewModel: MessageViewModel by viewModels()
 
+    private val mFillInformationViewModel: FillInformationViewModel by viewModels()
+
     private var firstTime = 0L
 
     //封装百度地图相关的Service
     private lateinit var mLocationService: LocationService
+
+    private var mUpdateInfoFragment: UpdateInfoFragment? = null
 
     //百度地图监听的Listener
     private var mLocationListener = object : BDAbstractLocationListener() {
@@ -104,6 +118,7 @@ class MainActivity : BaseActivity() {
     override fun isRegisterEventBus(): Boolean = true
 
     override fun getLayoutId() = R.layout.main_activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //防止重建的缓存自动恢复
         super.onCreate(null)
@@ -115,6 +130,9 @@ class MainActivity : BaseActivity() {
 //            UserHeartManager.startOnline()
         } else {
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+        }
+        intent?.let {
+            judgeUpdateInfoFragment(it)
         }
 
         CommonInit.getInstance().setMainActivity(this)
@@ -152,31 +170,20 @@ class MainActivity : BaseActivity() {
         mLocationService.unregisterListener(mLocationListener)
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//        val rxPermissions = RxPermissions(this)
-//        rxPermissions
-//            .requestEachCombined(
-//                Manifest.permission.ACCESS_COARSE_LOCATION,
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            )
-//            .subscribe { permission ->
-//                //不管有没有给权限 都不影响百度定位 只不过不给权限会不太准确
-//                mLocationService.start()
-//                when {
-//                    permission.granted -> {
-//                        logger.info("获取权限成功")
-//                    }
-//                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
-//                        logger.info("获取定位被拒绝")
-//                    else -> {
-//                        logger.info("获取定位被永久拒绝")
-//                    }
-//                }
-//
-//            }
-//
-//    }
+    /**
+     * 判断是否显示更新用户数据弹窗
+     */
+    private fun judgeUpdateInfoFragment(intent: Intent) {
+//        mProtectionFragment = mProtectionFragment ?: PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
+//        mProtectionFragment?.show(supportFragmentManager, "PersonalInformationProtectionFragment")
+        val birthday = intent.getStringExtra(ParamConstant.Birthday)
+        if (birthday?.isNotEmpty() == true) {
+            mUpdateInfoFragment =
+                mUpdateInfoFragment ?: UpdateInfoFragment.newInstance(birthday)
+            mUpdateInfoFragment?.show(supportFragmentManager, "UpdateInfoFragment")
+        }
+
+    }
 
 
     /**
@@ -241,6 +248,18 @@ class MainActivity : BaseActivity() {
             if (it == true) {
                 mMainViewModel.getUnreadCount()
                 mMessageViewModel.queryUnreadCountFlag.value = false
+            }
+        })
+
+        mFillInformationViewModel.openPicFlag.observe(this, Observer {
+            if (it == true) {
+                //打开相册
+                checkPermissions()
+            }
+        })
+        mFillInformationViewModel.headerPicData.observe(this, Observer {
+            if (it != null) {
+                mLoadingDialog.dismiss()
             }
         })
 
@@ -422,6 +441,9 @@ class MainActivity : BaseActivity() {
         val targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, 0) ?: 0
         mMainViewModel.indexData.value = targetIndex
         if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
+            intent?.let {
+                judgeUpdateInfoFragment(it)
+            }
         } else {
             SessionUtils.clearSession()
             finish()
@@ -465,7 +487,8 @@ class MainActivity : BaseActivity() {
         })
 
         //邀请匿名语音消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceInviteProcessor {
+        MessageProcessor.registerEventProcessor(object :
+            MessageProcessor.AnonyVoiceInviteProcessor {
             override fun process(data: AnonyVoiceInviteBean) {
                 if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
                     return
@@ -483,7 +506,8 @@ class MainActivity : BaseActivity() {
             }
         })
 
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.RefreshUserSettingProcessor {
+        MessageProcessor.registerEventProcessor(object :
+            MessageProcessor.RefreshUserSettingProcessor {
             override fun process(data: VoidResult) {
                 mMainViewModel.getSetting()
             }
@@ -510,7 +534,7 @@ class MainActivity : BaseActivity() {
             override fun process(data: OperatorMessageBean) {
                 EventBus.getDefault().post(BannedAndClosePlayer(data.programId))
                 val programId = SharedPreferencesUtils.getLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
-                if(programId == data.programId){
+                if (programId == data.programId) {
                     //如果悬浮窗正在播放的是被踢出的直播间就处理
                     FloatingManager.hideFloatingView()
                 }
@@ -541,7 +565,8 @@ class MainActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun unreadCount(bean: QueryUnreadCountEvent) {
         if (!bean.player) {
-            EventBus.getDefault().postSticky(UnreadCountEvent(mMainViewModel.unreadMsgCount.value ?: 0, false))
+            EventBus.getDefault()
+                .postSticky(UnreadCountEvent(mMainViewModel.unreadMsgCount.value ?: 0, false))
         }
     }
 
@@ -573,6 +598,108 @@ class MainActivity : BaseActivity() {
     override fun finish() {
         FloatingManager.hideFloatingView()
         super.finish()
+    }
+
+    private fun checkPermissions() {
+        val rxPermissions = RxPermissions(this)
+        rxPermissions
+            .requestEachCombined(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            .subscribe { permission ->
+                when {
+                    permission.granted -> {
+                        logger.info("获取权限成功")
+                        goToPictureSelectPager()
+                    }
+                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+                        ToastUtils.show("权限无法获取")
+                    else -> {
+                        logger.info("获取权限被永久拒绝")
+                        val message = "无法获取到相机/存储权限，请手动到设置中开启"
+                        ToastUtils.show(message)
+                    }
+                }
+
+            }
+    }
+
+    private val mLoadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
+
+    /**
+     *
+     */
+    private fun goToPictureSelectPager() {
+        PictureSelector.create(this)
+            .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+            .theme(R.style.picture_me_style_single)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+            .minSelectNum(1)// 最小选择数量
+            .imageSpanCount(4)// 每行显示个数
+            .selectionMode(PictureConfig.SINGLE)
+            .previewImage(false)// 是否可预览图片
+            .isCamera(true)// 是否显示拍照按钮
+            .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+            .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
+            //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
+            .enableCrop(true)// 是否裁剪
+            .compress(true)// 是否压缩
+            .synOrAsy(true)//同步true或异步false 压缩 默认同步
+            //.compressSavePath(getPath())//压缩图片保存地址
+            .glideOverride(120, 120)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+            .isGif(false)// 是否显示gif图片
+//                    .selectionMedia(selectList)// 是否传入已选图片
+            .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+            //.cropCompressQuality(90)// 裁剪压缩质量 默认100
+            .minimumCompressSize(100)// 小于100kb的图片不压缩
+//            .cropWH(200, 200)// 裁剪宽高比，设置如果大于图片本身宽高则无效
+            .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+            .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
+            .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+            .isDragFrame(false)
+//            .circleDimmedLayer(true)// 是否圆形裁剪
+//            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+//            .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+//            .rotateEnabled(false) // 裁剪是否可旋转图片
+            .scaleEnabled(true)// 裁剪是否可放大缩小图片
+            .forResult(PictureConfig.CHOOSE_REQUEST)
+
+        //结果回调onActivityResult code
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        try {
+            if (requestCode == PictureConfig.CHOOSE_REQUEST) {
+                logger.info("收到图片")
+                val selectList = PictureSelector.obtainMultipleResult(data)
+                for (media in selectList) {
+                    Log.i("图片-----》", media.path)
+                }
+                if (selectList.size > 0) {
+                    val media = selectList[0]
+                    val path: String?
+                    path = if (media.isCut && !media.isCompressed) {
+                        // 裁剪过
+                        media.cutPath
+                    } else if (media.isCompressed || media.isCut && media.isCompressed) {
+                        // 压缩过,或者裁剪同时压缩过,以最终压缩过图片为准
+                        media.compressPath
+                    } else {
+                        media.path
+                    }
+                    logger.info("收到图片:$path")
+                    if (!mLoadingDialog.isShowing) {
+                        mLoadingDialog.showDialog()
+                    }
+
+                    mFillInformationViewModel.uploadHead(path)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            logger.info("图片返回出错了")
+        }
     }
 
 }

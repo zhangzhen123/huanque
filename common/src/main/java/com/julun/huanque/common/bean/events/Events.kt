@@ -76,7 +76,11 @@ class FoldStrangerMessageEvent()
  * @param stranger 陌生人状态
  * @param follow 关注状态
  */
-class UserInfoChangeEvent(val userId: Long = 0L, val stranger: Boolean = false, val follow: String = "") : Serializable {
+class UserInfoChangeEvent(
+    val userId: Long = 0L,
+    val stranger: Boolean = false,
+    val follow: String = ""
+) : Serializable {
     constructor(userId: Long = 0L, stranger: Boolean = false) : this(userId, stranger, "")
 }
 
@@ -185,3 +189,8 @@ class RefreshVoiceCardEvent() : Serializable
  * 悬浮窗关闭消息
  */
 class FloatingCloseEvent() : Serializable
+
+/**
+ * 登录页面上层页面  finish事件
+ */
+class FinishToLoginEvent() : Serializable

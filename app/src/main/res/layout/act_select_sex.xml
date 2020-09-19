@@ -75,10 +75,11 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@mipmap/icon_sex_selected"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/iv_male"
         app:layout_constraintLeft_toLeftOf="@id/iv_male"
         app:layout_constraintRight_toRightOf="@id/iv_male"
-        app:layout_constraintTop_toBottomOf="@id/iv_male"
-        app:layout_constraintBottom_toBottomOf="@id/iv_male"/>
+        app:layout_constraintTop_toBottomOf="@id/iv_male" />
 
 
     <ImageView
@@ -86,10 +87,11 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@mipmap/icon_sex_selected"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/iv_female"
         app:layout_constraintLeft_toLeftOf="@id/iv_female"
         app:layout_constraintRight_toRightOf="@id/iv_female"
-        app:layout_constraintTop_toBottomOf="@id/iv_female"
-        app:layout_constraintBottom_toBottomOf="@id/iv_female"/>
+        app:layout_constraintTop_toBottomOf="@id/iv_female" />
 
 
     <TextView
@@ -122,11 +124,11 @@
         android:layout_marginLeft="38dp"
         android:layout_marginRight="38dp"
         android:layout_marginBottom="29dp"
-        android:text="立即开聊"
-        android:textSize="@dimen/sp_18"
-        android:textColor="@color/col_next"
-        android:gravity="center"
         android:background="@drawable/sel_phone_num"
+        android:gravity="center"
+        android:text="立即开聊"
+        android:textColor="@color/col_next"
+        android:textSize="@dimen/sp_18"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

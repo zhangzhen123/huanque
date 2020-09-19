@@ -35,10 +35,21 @@ class FillInformationViewModel : BaseViewModel() {
         const val SECOND = "SECOND"
     }
 
-    private val userService: UserService by lazy { Requests.create(
-        UserService::class.java) }
+    private val userService: UserService by lazy {
+        Requests.create(
+            UserService::class.java
+        )
+    }
 
     val currentStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
+    //用户数据更新成功
+    val updateSuccessFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //打开相册的标记位
+    val openPicFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    val headerPicData : MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
 //    /**
 //     * 上传昵称之类的 状态
@@ -68,7 +79,13 @@ class FillInformationViewModel : BaseViewModel() {
      * @param nickname 昵称
      * @param code 邀请码
      */
-    private fun updateInformation(headerPic: String, sex: String, bir: String, nickname: String, code: String) {
+    private fun updateInformation(
+        headerPic: String,
+        sex: String,
+        bir: String,
+        nickname: String,
+        code: String
+    ) {
         viewModelScope.launch {
             request({
 //                updateInformationState.value = true
@@ -106,13 +123,17 @@ class FillInformationViewModel : BaseViewModel() {
     /**
      * 上传头像
      */
-    fun uploadHead(path: String, sex: String, bir: String, nickname: String, iCode: String) {
-        OssUpLoadManager.uploadFiles(arrayListOf(path), OssUpLoadManager.HEAD_POSITION) { code, list ->
+    fun uploadHead(path: String) {
+        OssUpLoadManager.uploadFiles(
+            arrayListOf(path),
+            OssUpLoadManager.HEAD_POSITION
+        ) { code, list ->
             if (code == OssUpLoadManager.CODE_SUCCESS) {
                 logger("头像上传oss成功：${list}")
                 val headPic = list?.firstOrNull()
                 if (headPic != null) {
-                    updateInformation(headPic, sex, bir, nickname, iCode)
+//                    updateInformation(headPic, sex, bir, nickname, iCode)
+                    headerPicData.value = headPic
                 }
 
             } else {
@@ -134,5 +155,19 @@ class FillInformationViewModel : BaseViewModel() {
         }
     }
 
+
+    /**
+     * 更新用户卡片
+     */
+    fun updateCard(form: UpdateInformationForm) {
+        viewModelScope.launch {
+            request({
+                val result = userService.updateCard(form).dataConvert()
+                SessionUtils.setNickName(result.nickname)
+                SessionUtils.setHeaderPic(result.headPic)
+                updateSuccessFlag.value = true
+            })
+        }
+    }
 
 }

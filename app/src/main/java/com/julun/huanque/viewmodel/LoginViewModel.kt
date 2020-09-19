@@ -39,18 +39,9 @@ class LoginViewModel : BaseViewModel() {
      */
     fun fastLogin(jToken: String) {
         viewModelScope.launch {
-//            request({
-//                val result = userService.mobileQuick(MobileQuickForm(jToken, SmAntiFraud.getDeviceId() ?: "")).dataConvert()
-//                SessionManager.loginSuccess(result)
-//                loginData.postValue(result)
-//            }, {
-//                if (it is ResponseError) {
-//                    ToastUtils.show(it.busiMessage)
-//                }
-//            })
             LoginManager.fastLogin(jToken, success = { result ->
-                loginData.postValue(result)
-                EventBus.getDefault().post(FastLoginEvent())
+//                loginData.postValue(result)
+                EventBus.getDefault().post(result)
             }, error = {
                 if (it is ResponseError) {
                     ToastUtils.show(it.busiMessage)
@@ -64,7 +55,8 @@ class LoginViewModel : BaseViewModel() {
         viewModelScope.launch {
             LoginManager.doLoginByWinXin(code) {
                 logger("weiXinLogin处理结果的线程：${Thread.currentThread().name}")
-                loginData.postValue(it)
+//                loginData.postValue(it)
+                EventBus.getDefault().post(it)
             }
 
         }

@@ -67,7 +67,7 @@ interface UserService {
      * 更新用户数据
      */
     @POST("user/acct/data/initInfo")
-    suspend fun updateInformation(@Body form: UpdateInformationForm): Root<UpdateHeaderBean>
+    suspend fun updateInformation(@Body form: UpdateInformationForm): Root<UpdateSexBean>
 
     /**
      * 开始获取验证码
@@ -79,7 +79,7 @@ interface UserService {
      * 同意协议
      */
     @POST("user/acct/info/agreement")
-    suspend fun agreement(@Body form: AgreementResultForm): Root<Void>
+    suspend fun agreement(@Body form: AgreementResultForm): Root<VoidResult>
 
 //    /**
 //     * 修改头像
@@ -183,4 +183,16 @@ interface UserService {
      */
     @POST("user/app/start")
     suspend fun appStart(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
+
+    /**
+     * 更新性别
+     */
+    @POST("/user/acct/data/initInfoBySex")
+    suspend fun initInfoBySex(@Body form: SexForm): Root<UpdateSexBean>
+
+    /**
+     * 更新用户名片
+     */
+    @POST("user/acct/data/updateCard")
+    suspend fun updateCard(@Body form: UpdateInformationForm): Root<UpdateSexBean>
 }
