@@ -15,52 +15,58 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.viewmodel.MainViewModel
-import kotlinx.android.synthetic.main.fragment_newuser.*
-import kotlinx.android.synthetic.main.item_new_user_gift.view.*
+import kotlinx.android.synthetic.main.fragment_newuser_male.*
 
 /**
  *@创建者   dong
  *@创建时间 2020/9/19 10:42
  *@描述 新手礼包
  */
-class NewUserFragment : BaseDialogFragment() {
+class NewUserMaleFragment : BaseDialogFragment() {
 
     private val mMainViewModel: MainViewModel by activityViewModels()
 
-    override fun getLayoutId() = R.layout.fragment_newuser
+    override fun getLayoutId() = R.layout.fragment_newuser_male
 
     override fun initViews() {
         iv_get.onClickNew {
             mMainViewModel.receiveNewUserBag()
             dismiss()
         }
+        initViewModel()
+    }
 
+    private fun initViewModel() {
         mMainViewModel.newUserBean.observe(this, Observer {
             if (it != null) {
                 val list = it.bagList
-                if (ForceUtils.isIndexNotOutOfBounds(0, list)) {
-                    val firstBean = list[0]
-                    gift_left.show()
-                    showGiftView(gift_left, firstBean)
-                } else {
-                    gift_left.hide()
+                if (list.isNotEmpty()) {
+                    //显示列表弹窗
+                    if (ForceUtils.isIndexNotOutOfBounds(0, list)) {
+                        val firstBean = list[0]
+                        gift_left.show()
+                        showGiftView(gift_left, firstBean)
+                    } else {
+                        gift_left.hide()
+                    }
+
+                    if (ForceUtils.isIndexNotOutOfBounds(1, list)) {
+                        val firstBean = list[1]
+                        gift_middle.show()
+                        showGiftView(gift_middle, firstBean)
+                    } else {
+                        gift_middle.hide()
+                    }
+
+                    if (ForceUtils.isIndexNotOutOfBounds(2, list)) {
+                        val firstBean = list[2]
+                        gift_right.show()
+                        showGiftView(gift_right, firstBean)
+                    } else {
+                        gift_right.hide()
+                    }
                 }
 
-                if (ForceUtils.isIndexNotOutOfBounds(1, list)) {
-                    val firstBean = list[1]
-                    gift_middle.show()
-                    showGiftView(gift_middle, firstBean)
-                } else {
-                    gift_middle.hide()
-                }
-
-                if (ForceUtils.isIndexNotOutOfBounds(2, list)) {
-                    val firstBean = list[2]
-                    gift_right.show()
-                    showGiftView(gift_right, firstBean)
-                } else {
-                    gift_right.hide()
-                }
             }
         })
     }

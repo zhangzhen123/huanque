@@ -53,10 +53,16 @@ class MainViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val bag = userService.newUserBag().dataConvert()
-                if (bag.received == BusiConstant.False) {
-                    //未领取，显示弹窗
+                if (bag.received == BusiConstant.False && SessionUtils.getSex() == Sex.MALE) {
+                    //男性未领取，显示弹窗
                     newUserBean.value = bag
-                } else {
+                }
+                if (SessionUtils.getSex() == Sex.FEMALE && !SPUtils.getBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), false)) {
+                    //女性 未观看视频
+                    newUserBean.value = bag
+                }
+                if (SessionUtils.getSex() == Sex.MALE && bag.received == BusiConstant.True) {
+                    //男性 领取过 保存
                     SPUtils.commitBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), true)
                 }
             })

@@ -42,7 +42,8 @@ import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.core.ui.main.bird.LeYuanFragment
-import com.julun.huanque.fragment.NewUserFragment
+import com.julun.huanque.fragment.NewUserFeMaleFragment
+import com.julun.huanque.fragment.NewUserMaleFragment
 import com.julun.huanque.fragment.PersonalInformationProtectionFragment
 import com.julun.huanque.fragment.UpdateInfoFragment
 import com.julun.huanque.ui.main.MineFragment
@@ -179,10 +180,7 @@ class MainActivity : BaseActivity() {
         val birthday = intent.getStringExtra(ParamConstant.Birthday)
         if (birthday?.isNotEmpty() == true) {
 
-            val mProtectionFragment =
-                PersonalInformationProtectionFragment.newInstance(
-                    PersonalInformationProtectionFragment.MainActivity
-                )
+            val mProtectionFragment = PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
             addOrderDialog(mProtectionFragment)
 
             val mUpdateInfoFragment = UpdateInfoFragment.newInstance(birthday)
@@ -252,9 +250,15 @@ class MainActivity : BaseActivity() {
 
         mMainViewModel.newUserBean.observe(this, Observer {
             if (it != null) {
-                if (it.received == BusiConstant.False) {
+                if (it.bagList.isNotEmpty()) {
                     //显示新手礼包弹窗
-                    val newUserGiftFragment = NewUserFragment()
+                    val newUserGiftFragment = NewUserMaleFragment()
+                    addOrderDialog(newUserGiftFragment)
+                }
+
+                if (it.videoUrl.isNotEmpty()) {
+                    //显示女性弹窗
+                    val newUserGiftFragment = NewUserFeMaleFragment()
                     addOrderDialog(newUserGiftFragment)
                 }
             }

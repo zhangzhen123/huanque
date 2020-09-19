@@ -239,5 +239,10 @@ data class NewUserGiftBean(
     //是否领取过新手礼包
     var received: String = "",
     //奖励列表
-    var bagList: MutableList<SingleNewUserGiftBean> = mutableListOf()
+    var bagList: MutableList<SingleNewUserGiftBean> = mutableListOf(),
+    //封面
+    var videoCover: String = "",
+    var videoId: Long = 0,
+    //播放地址
+    var videoUrl: String = ""
 ) : Serializable
