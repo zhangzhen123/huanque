@@ -403,7 +403,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 ObjectAnimator.ofFloat(
                     view_cloud_01,
                     View.TRANSLATION_X,
-                    -view_cloud_01.right.toFloat()-dp2px(50),
+                    -view_cloud_01.right.toFloat() - dp2px(50),
                     ScreenUtils.screenWidthFloat - view_cloud_01.left.toFloat()
                 )
             val anim0102 =
@@ -667,7 +667,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                     birdAdapter.setData(currentIndex, UpgradeBirdBean(upgradePos = currentIndex))
                 }
             } else {
-                ToastUtils.show(it.error?.busiMessage)
+//                ToastUtils.show(it.error?.busiMessage)
             }
             isActionDoing = false
         })
@@ -1044,7 +1044,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
      * 播放交换动画
      */
     private fun playSwapPosAni(result: CombineResult) {
-        if (currentTargetViewHolder == null || currentCombineItem == null || currentTargetItem == null||originXY==null||originXY!!.isEmpty()) {
+        if (currentTargetViewHolder == null || currentCombineItem == null || currentTargetItem == null || originXY == null || originXY!!.isEmpty()) {
             isActionDoing = false
             return
         }
@@ -1091,7 +1091,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         val anim01 = AnimatorSet()
         anim01.duration = 150
         anim01.playTogether(anim0101, anim0102)
-
+        anim01.interpolator = AccelerateDecelerateInterpolator()
         //(2)
         val anim0201 =
             ObjectAnimator.ofFloat(bird_mask2, View.TRANSLATION_X, bird_mask2.translationX, bird_mask.translationX)
@@ -1105,6 +1105,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         val anim02 = AnimatorSet()
         anim02.duration = 150
         anim02.playTogether(anim0201, anim0202)
+        anim02.interpolator = AccelerateDecelerateInterpolator()
         //(3)
         anim02.addListener(onEnd = {
             currentTargetItem?.upgradePos = currentIndex
