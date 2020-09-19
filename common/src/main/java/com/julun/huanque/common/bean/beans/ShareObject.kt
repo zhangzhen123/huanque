@@ -67,7 +67,7 @@ open class ShareObject : Serializable {
     /** 节目id **/
     var programId: String? = null
 
-    /** 分享平台 **/
+    /** 分享平台 (本地传递使用)**/
     var platForm: String? = null
 }
 

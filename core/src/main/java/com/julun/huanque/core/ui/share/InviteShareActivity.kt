@@ -59,6 +59,12 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
     private var currentSelect: SharePoster? = null
 
     private var applyModule: String = ""
+
+    //分享目标类型(可选项：Banner、Room、InviteFriend、Other)
+    private var mShareKeyType = ""
+
+    //分享目标Id ，如果是直播间，则填直播间ID, 如果是邀友，则填邀友海报ID
+    private var mShareKeyId = ""
     private var programInfo: MicAnchor? = null
     private val wxService: LoginAndShareService? by lazy {
         ARouter.getInstance().build(ARouterConstant.LOGIN_SHARE_SERVICE).navigation() as? LoginAndShareService
@@ -83,9 +89,12 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
         initViewModel()
         when (applyModule) {
             ShareFromModule.Program -> {
+                mShareKeyType = "Room"
+                mShareKeyId = "${mViewModel.programInfo?.programId ?: ""}"
                 mViewModel.queryLiveQrCode()
             }
             ShareFromModule.Invite -> {
+                mShareKeyType = "InviteFriend"
                 mViewModel.querySharePoster(applyModule)
             }
         }
@@ -151,6 +160,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         currentSelect = item
                         sharePosterAdapter.notifyDataSetChanged()
                         setShadowView()
+                        mShareKeyId = "${item.posterId}"
                     }
 
                 }
@@ -221,7 +231,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                 val tvInvite = viewRoot.findViewById<TextView>(R.id.tv_invite_code)
                 sdvSharePic.loadImage(currentSelect!!.posterPic, 250f, 450f)
 //                sdvQrCode.loadImage(currentSelect!!.qrCode, 60f, 60f)
-                sdvQrCode.imageBitmap=currentSelect!!.qrBitmap
+                sdvQrCode.imageBitmap = currentSelect!!.qrBitmap
                 sdvUserPic.loadImage(SessionUtils.getHeaderPic(), 45f, 45f)
                 val name = if (SessionUtils.getNickName().length > 5) {
                     "${SessionUtils.getNickName().substring(0, 5)}..."
@@ -276,6 +286,10 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                             this.shareType = WeiXinShareType.WXImage
                             this.shareWay = ShareWayEnum.WXSceneTimeline
                             this.shareImage = bitmap
+                            //以下是应用内传递数据使用
+                            this.platForm = ShareTypeEnum.FriendCircle
+                            this.shareKeyType = mShareKeyType
+                            this.shareKeyId = mShareKeyId
                         })
                         finish()
                     }
@@ -287,6 +301,10 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                             this.shareType = WeiXinShareType.WXImage
                             this.shareWay = ShareWayEnum.WXSceneSession
                             this.shareImage = bitmap
+                            //以下是应用内传递数据使用
+                            this.platForm = ShareTypeEnum.WeChat
+                            this.shareKeyType = mShareKeyType
+                            this.shareKeyId = mShareKeyId
                         })
                         finish()
                     }
@@ -295,6 +313,10 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
                     wxService?.weiBoShare(this, ShareObject().apply {
                         this.shareType = WeiBoShareType.WbImage
                         this.shareImage = bitmap
+                        //以下是应用内传递数据使用
+                        this.platForm = ShareTypeEnum.Sina
+                        this.shareKeyType = mShareKeyType
+                        this.shareKeyId = mShareKeyId
                     })
                 }
                 ShareTypeEnum.SaveImage -> {
@@ -402,7 +424,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
 
                         sdvSharePic.loadImage(item.posterPic, 250f, 450f)
 //                        sdvQrCode.loadImage(item.qrCode, 60f, 60f)
-                        sdvQrCode.imageBitmap=item.qrBitmap
+                        sdvQrCode.imageBitmap = item.qrBitmap
                         sdvUserPic.loadImage(SessionUtils.getHeaderPic(), 45f, 45f)
                         val name = if (SessionUtils.getNickName().length > 5) {
                             "${SessionUtils.getNickName().substring(0, 5)}..."
