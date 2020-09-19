@@ -42,6 +42,7 @@ import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.core.ui.main.bird.LeYuanFragment
+import com.julun.huanque.fragment.NewUserFragment
 import com.julun.huanque.fragment.PersonalInformationProtectionFragment
 import com.julun.huanque.fragment.UpdateInfoFragment
 import com.julun.huanque.ui.main.MineFragment
@@ -56,7 +57,6 @@ import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
-import kotlinx.android.synthetic.main.act_fill_information.*
 import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -174,6 +174,12 @@ class MainActivity : BaseActivity() {
      * 判断是否显示更新用户数据弹窗
      */
     private fun judgeUpdateInfoFragment(intent: Intent) {
+
+        //判断是否领取了礼包
+        if (!SPUtils.getBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), false)) {
+            mMainViewModel.getNewUserGift()
+        }
+
 //        mProtectionFragment = mProtectionFragment ?: PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
 //        mProtectionFragment?.show(supportFragmentManager, "PersonalInformationProtectionFragment")
         val birthday = intent.getStringExtra(ParamConstant.Birthday)
@@ -241,6 +247,16 @@ class MainActivity : BaseActivity() {
                     "99+"
                 }
                 showUnreadCount()
+            }
+        })
+
+        mMainViewModel.newUserBean.observe(this, Observer {
+            if (it != null) {
+                if (it.received == BusiConstant.False) {
+                    //显示新手礼包弹窗
+                    val newUserGiftFragment = NewUserFragment()
+                    addOrderDialog(newUserGiftFragment)
+                }
             }
         })
 
