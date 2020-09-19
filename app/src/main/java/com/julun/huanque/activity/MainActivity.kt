@@ -174,13 +174,15 @@ class MainActivity : BaseActivity() {
      * 判断是否显示更新用户数据弹窗
      */
     private fun judgeUpdateInfoFragment(intent: Intent) {
-//        mProtectionFragment = mProtectionFragment ?: PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
+        mProtectionFragment = mProtectionFragment ?: PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
 //        mProtectionFragment?.show(supportFragmentManager, "PersonalInformationProtectionFragment")
+        addOrderDialog(mProtectionFragment)
         val birthday = intent.getStringExtra(ParamConstant.Birthday)
         if (birthday?.isNotEmpty() == true) {
             mUpdateInfoFragment =
                 mUpdateInfoFragment ?: UpdateInfoFragment.newInstance(birthday)
-            mUpdateInfoFragment?.show(supportFragmentManager, "UpdateInfoFragment")
+//            mUpdateInfoFragment?.show(supportFragmentManager, "UpdateInfoFragment")
+            addOrderDialog(mUpdateInfoFragment)
         }
 
     }
