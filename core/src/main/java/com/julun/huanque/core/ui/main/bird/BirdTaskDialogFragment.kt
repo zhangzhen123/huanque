@@ -55,7 +55,7 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 500)
+        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
     }
 
     private var isInLivePage = false
@@ -106,7 +106,7 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         mRefreshLayout.setOnRefreshListener {
             mViewModel.queryInfo(QueryType.REFRESH)
         }
-
+        MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
         award_01.onClickNew {
             val data = award_01.currentData ?: return@onClickNew
             logger.info("award_01 ${data.awardStatus}")

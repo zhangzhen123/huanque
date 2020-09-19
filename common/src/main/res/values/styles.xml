@@ -140,7 +140,7 @@
 
     </style>
 
-    <style name="dialog_achievement_got" parent="@android:style/Animation.Dialog">
+    <style name="dialog_center_open_ani" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/scale_in_center</item>
 
     </style>

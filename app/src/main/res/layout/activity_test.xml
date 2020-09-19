@@ -199,6 +199,13 @@
                 android:layout_height="wrap_content"
                 android:text="肯德基的安徽的话给"
                 android:textColor="@color/white"/>
+            <com.julun.huanque.common.widgets.ColorfulTextView
+                android:id="@+id/tvColorful"
+                android:textSize="16sp"
+                android:textColor="@color/colorAccent_lib"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="安徽的话牛逼的不行啊啊啊啊99999" />
 
         </LinearLayout>
 

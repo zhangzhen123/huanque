@@ -148,11 +148,11 @@ class LeYuanViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = service.combine(BirdCombineForm(upgradeId1, upgradeId2, upgradePos1, upgradePos2)).dataConvert()
-                if (result.functionInfo != null) {
-                    functionInfo.value = result.functionInfo
-                    //刷新整个页面
-                    queryHome()
-                }
+//                if (result.functionInfo != null) {
+//                    functionInfo.value = result.functionInfo
+//                    //刷新整个页面
+//                    queryHome()
+//                }
                 if (result.unlockUpgrade != null) {
                     unlockUpgrade.value = result.unlockUpgrade
                 }
@@ -219,7 +219,7 @@ class LeYuanViewModel : BaseViewModel() {
             FunctionBirdDes(
                 "财神鹊", wealth?.functionIcon,
                 bFunction = "放飞后获得888元零钱奖励。",
-                source = "两个神秘鹊合并，有机会获得。",
+                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。",
                 num = wealth?.functionNum?.toIntOrNull(),
                 type = "wealth"
             )

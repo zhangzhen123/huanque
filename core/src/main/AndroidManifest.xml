@@ -61,7 +61,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <!-- 融云 Permissions Required -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application>
+        <meta-data android:name="android.max_aspect" android:value="2.2" />
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true" />
         <activity
             android:name=".ui.recharge.RechargeCenterActivity"
             android:launchMode="singleTop"

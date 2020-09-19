@@ -97,7 +97,9 @@ class BirdTaskGuideFragment : BaseVMDialogFragment<BirdTaskViewModel>() {
         currentTask = arguments?.getSerializable("task") as? TaskGuideInfo
         renderData(currentTask)
     }
-
+    override fun setWindowAnimations() {
+        dialog?.window?.setWindowAnimations(R.style.dialog_center_open_ani)
+    }
     private fun renderData(data: TaskGuideInfo?) {
         data ?: return
         tv_title.text = data.taskGuideName

@@ -33,7 +33,9 @@ class BirdGotMoneyDialogFragment : BaseDialogFragment() {
     override fun getLayoutId(): Int {
         return R.layout.fragment_bird_got_money
     }
-
+    override fun setWindowAnimations() {
+        dialog?.window?.setWindowAnimations(R.style.dialog_center_open_ani)
+    }
     override fun onStart() {
         super.onStart()
         setDialogSize(gravity = Gravity.CENTER, marginWidth = 45, height = ViewGroup.LayoutParams.WRAP_CONTENT)

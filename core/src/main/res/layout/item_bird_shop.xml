@@ -59,21 +59,23 @@
 
     <TextView
         android:id="@+id/tv_bird_price"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_10"
         android:layout_marginBottom="@dimen/dimen_15"
         android:background="@mipmap/bg_bird_btn_green"
         android:drawableStart="@mipmap/icon_bird_coin"
         android:gravity="center"
-        android:paddingStart="@dimen/dimen_6"
+        android:layout_marginStart="@dimen/dimen_15"
+        android:layout_marginEnd="@dimen/dimen_15"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_12"
+        android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="@+id/view_bg_item"
         app:layout_constraintEnd_toEndOf="@+id/view_bg_item"
         app:layout_constraintStart_toStartOf="@+id/view_bg_item"
         app:layout_constraintTop_toBottomOf="@+id/view_bg_item_tree"
-        tools:text="100888金币" />
+        tools:text="100888999" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

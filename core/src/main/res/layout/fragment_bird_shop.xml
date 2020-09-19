@@ -45,6 +45,7 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="14sp"
+        android:textStyle="bold"
         android:drawableStart="@mipmap/icon_bird_coin"
         app:layout_constraintEnd_toStartOf="@+id/ivClose"
         app:layout_constraintTop_toTopOf="@+id/view_bg2"
