@@ -219,5 +219,5 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
             )
         }
     }
-    override fun order() = DialogOrderNumber.LOCAL_DIALOG
+    override fun order() = 1
 }

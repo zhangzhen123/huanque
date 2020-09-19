@@ -75,9 +75,6 @@ class MainActivity : BaseActivity() {
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
     private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
 
-    //隐私弹窗
-    private var mProtectionFragment: PersonalInformationProtectionFragment? = null
-
     //    private val mMineFragment: Fragment by lazy { RNPageFragment.start("PH") }
 
 
@@ -91,8 +88,6 @@ class MainActivity : BaseActivity() {
 
     //封装百度地图相关的Service
     private lateinit var mLocationService: LocationService
-
-    private var mUpdateInfoFragment: UpdateInfoFragment? = null
 
     //百度地图监听的Listener
     private var mLocationListener = object : BDAbstractLocationListener() {
@@ -180,15 +175,17 @@ class MainActivity : BaseActivity() {
             mMainViewModel.getNewUserGift()
         }
 
-//        mProtectionFragment = mProtectionFragment ?: PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
-        mProtectionFragment = mProtectionFragment ?: PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
-//        mProtectionFragment?.show(supportFragmentManager, "PersonalInformationProtectionFragment")
-        addOrderDialog(mProtectionFragment)
+
         val birthday = intent.getStringExtra(ParamConstant.Birthday)
         if (birthday?.isNotEmpty() == true) {
-            mUpdateInfoFragment =
-                mUpdateInfoFragment ?: UpdateInfoFragment.newInstance(birthday)
-//            mUpdateInfoFragment?.show(supportFragmentManager, "UpdateInfoFragment")
+
+            val mProtectionFragment =
+                PersonalInformationProtectionFragment.newInstance(
+                    PersonalInformationProtectionFragment.MainActivity
+                )
+            addOrderDialog(mProtectionFragment)
+
+            val mUpdateInfoFragment = UpdateInfoFragment.newInstance(birthday)
             addOrderDialog(mUpdateInfoFragment)
         }
 

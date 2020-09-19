@@ -57,6 +57,11 @@ class WelcomeActivity : BaseActivity() {
     private var mLocalPreLoginListener = object : LocalPreLoginListener {
         override fun preLoginResult(success: Boolean) {
             mPreLoginSuccess = true
+
+            if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
+                //处于登录状态
+                return
+            }
             startActivity()
         }
     }
@@ -90,7 +95,9 @@ class WelcomeActivity : BaseActivity() {
             checkPermissions()
         } else {
             val mPersonalInformationProtectionFragment =
-                PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.WelcomeActivity)
+                PersonalInformationProtectionFragment.newInstance(
+                    PersonalInformationProtectionFragment.WelcomeActivity
+                )
             mPersonalInformationProtectionFragment.show(
                 supportFragmentManager,
                 "PersonalInformationProtectionFragment"
