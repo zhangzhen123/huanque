@@ -85,6 +85,6 @@ class NewUserMaleFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.CENTER, 35)
+        setDialogSize(Gravity.CENTER, 0)
     }
 }

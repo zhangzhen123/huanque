@@ -305,37 +305,35 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.propListData?.observe(this, Observer {
             //道具列表
-//            if (it != null) {
-//                if (ForceUtils.isIndexNotOutOfBounds(0, it)) {
-//                    val firstData = it[0]
-//                    sdv_first_prop.show()
-//                    sdv_first_prop.loadImage(firstData.goodsPic, 38f, 24f)
-//                    tv_first_prop_count.show()
-//                    tv_first_prop_count.text = "${firstData.count}"
-//                } else {
-//                    sdv_first_prop.hide()
-//                    tv_first_prop_count.hide()
-//                }
-//
-//                if (ForceUtils.isIndexNotOutOfBounds(1, it)) {
-//                    val secondData = it[1]
-//                    sdv_second_prop.show()
-//                    sdv_second_prop.loadImage(secondData.goodsPic, 38f, 24f)
-//                    tv_second_prop_count.show()
-//                    tv_second_prop_count.text = "${secondData.count}"
-//                } else {
-//                    sdv_second_prop.hide()
-//                    tv_second_prop_count.hide()
-//                }
-//            } else {
-//                sdv_first_prop.hide()
-//                tv_first_prop_count.hide()
-//
-//                sdv_second_prop.hide()
-//                tv_second_prop_count.hide()
-//            }
-            sdv_first_prop.hide()
-            tv_first_prop_count.hide()
+            if (it != null) {
+                if (ForceUtils.isIndexNotOutOfBounds(0, it)) {
+                    val firstData = it[0]
+                    sdv_first_prop.show()
+                    sdv_first_prop.loadImage(firstData.goodsPic, 38f, 24f)
+                    tv_first_prop_count.show()
+                    tv_first_prop_count.text = "${firstData.count}"
+                } else {
+                    sdv_first_prop.hide()
+                    tv_first_prop_count.hide()
+                }
+
+                if (ForceUtils.isIndexNotOutOfBounds(1, it)) {
+                    val secondData = it[1]
+                    sdv_second_prop.show()
+                    sdv_second_prop.loadImage(secondData.goodsPic, 38f, 24f)
+                    tv_second_prop_count.show()
+                    tv_second_prop_count.text = "${secondData.count}"
+                } else {
+                    sdv_second_prop.hide()
+                    tv_second_prop_count.hide()
+                }
+            } else {
+                sdv_first_prop.hide()
+                tv_first_prop_count.hide()
+
+                sdv_second_prop.hide()
+                tv_second_prop_count.hide()
+            }
         })
 
         mPrivateConversationViewModel?.messageChangeState?.observe(this, Observer {
