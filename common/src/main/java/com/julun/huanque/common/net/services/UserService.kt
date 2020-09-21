@@ -206,11 +206,17 @@ interface UserService {
      * 领取新手礼包
      */
     @POST("user/welfare/receiveNewUserBag")
-    suspend fun receiveNewUserBag(@Body form: EmptyForm = EmptyForm()) : Root<VoidResult>
+    suspend fun receiveNewUserBag(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
 
     /**
      * 分享成功
      */
     @POST("user/share/shareLog")
-    fun shareLog(@Body form : ShareForm) : Observable<Root<VoidResult>>
+    fun shareLog(@Body form: ShareForm): Observable<Root<VoidResult>>
+
+    /**
+     * 检查协议是否同意
+     */
+    @POST("user/acct/info/checkProtocol")
+    suspend fun checkProtocol(@Body form: CheckProtocolForm): Root<AgreementData>
 }

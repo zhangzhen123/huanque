@@ -44,6 +44,20 @@ object BusiConstant {
 }
 
 /**
+ * 协议类型
+ */
+object AgreementType {
+    //用户隐私协议
+    const val UserPrivacy = "UserPrivacy"
+
+    //倡议书
+    const val SecretDeal = "SecretDeal"
+
+    /** 实名认证协议 **/
+    const val TYPE_USER_CERTIFICATION = "UserCertification"
+}
+
+/**
  * SP使用的key
  */
 object SPParamKey {

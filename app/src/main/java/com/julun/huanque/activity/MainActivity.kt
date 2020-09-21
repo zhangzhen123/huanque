@@ -27,6 +27,7 @@ import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
+import com.julun.huanque.common.manager.OrderDialogManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
@@ -127,9 +128,7 @@ class MainActivity : BaseActivity() {
         } else {
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         }
-        intent?.let {
-            judgeUpdateInfoFragment(it)
-        }
+        judgeUpdateInfoFragment(intent)
 
         CommonInit.getInstance().setMainActivity(this)
         logger.info("DXC  userID = ${SessionUtils.getUserId()}，header = ${SessionUtils.getHeaderPic()}")
@@ -176,15 +175,12 @@ class MainActivity : BaseActivity() {
             mMainViewModel.getNewUserGift()
         }
 
+        mMainViewModel.checkProtocol(AgreementType.UserPrivacy)
 
         val birthday = intent.getStringExtra(ParamConstant.Birthday)
         if (birthday?.isNotEmpty() == true) {
-
-            val mProtectionFragment = PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
-            addOrderDialog(mProtectionFragment)
-
             val mUpdateInfoFragment = UpdateInfoFragment.newInstance(birthday)
-            addOrderDialog(mUpdateInfoFragment)
+            OrderDialogManager.addGlobalOrderDialog(mUpdateInfoFragment)
         }
 
     }
@@ -253,14 +249,22 @@ class MainActivity : BaseActivity() {
                 if (it.bagList.isNotEmpty()) {
                     //显示新手礼包弹窗
                     val newUserGiftFragment = NewUserMaleFragment()
-                    addOrderDialog(newUserGiftFragment)
+                    OrderDialogManager.addGlobalOrderDialog(newUserGiftFragment)
                 }
 
                 if (it.videoUrl.isNotEmpty()) {
                     //显示女性弹窗
                     val newUserGiftFragment = NewUserFeMaleFragment()
-                    addOrderDialog(newUserGiftFragment)
+                    OrderDialogManager.addGlobalOrderDialog(newUserGiftFragment)
                 }
+            }
+        })
+
+        mMainViewModel.userProtocolSignFlag.observe(this, Observer {
+            if (it != BusiConstant.True) {
+                //显示弹窗
+                val mProtectionFragment = PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
+                OrderDialogManager.addGlobalOrderDialog(mProtectionFragment)
             }
         })
 
