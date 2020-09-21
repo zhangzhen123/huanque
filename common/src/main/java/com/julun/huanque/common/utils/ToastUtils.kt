@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.julun.huanque.common.R
 import com.julun.huanque.common.helper.DensityHelper.Companion.dp2px
 import com.julun.huanque.common.net.NAction
+import com.julun.huanque.common.suger.logger
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 
@@ -27,11 +28,18 @@ object ToastUtils {
     }
 
     fun show(resId: Int) {
-        ToastMsg.INSTANCE.showToast(resId, 0)
+        ToastMsg.INSTANCE.showToast(resId, Toast.LENGTH_SHORT)
     }
 
     fun show(text: String?) {
         ToastMsg.INSTANCE.showToast(text, Toast.LENGTH_SHORT)
+    }
+
+    /**
+     * 这个toast对于重复的内容在显示期间进行过滤
+     */
+    fun show2(text: String?) {
+        ToastMsg.INSTANCE.showToastCustomNew(text, Toast.LENGTH_SHORT, Gravity.CENTER)
     }
 
     fun showLong(text: String?) {
@@ -102,15 +110,17 @@ object ToastUtils {
         @JvmOverloads
         fun showToast(resId: Int, duration: Int, gravity: Int = Gravity.CENTER) {
             if (resId != 0) {
-                runOnMain {
-                    customImage?.visibility = View.GONE
-                    tvContent?.setText(resId)
-                    val toast = Toast(mContext)
-                    toast.view = view
-                    toast.duration = duration
-                    toast.setGravity(gravity, 0, 0)
-                    toast.show()
-                }
+                val text = mContext?.resources?.getText(resId) ?: return
+                showToastCustom(text, duration, gravity)
+//                runOnMain {
+//                    customImage?.visibility = View.GONE
+//                    tvContent?.setText(resId)
+//                    val toast = Toast(mContext)
+//                    toast.view = view
+//                    toast.duration = duration
+//                    toast.setGravity(gravity, 0, 0)
+//                    toast.show()
+//                }
 
             }
         }
@@ -129,6 +139,42 @@ object ToastUtils {
                     toast.duration = duration
                     toast.setGravity(gravity, 0, 0)
                     toast.show()
+                }
+
+            }
+        }
+
+        /**
+         * 这个toast对于重复的内容在显示期间进行过滤 至少显示1秒
+         */
+        private var currentText: CharSequence? = null
+        fun showToastCustomNew(text: CharSequence?, duration: Int, gravity: Int) {
+            if (!TextUtils.isEmpty(text)) {
+                if(currentText==text){
+                    logger("当前新text与正在显示的text相同不再重复显示")
+                    return
+                }
+                currentText = text
+                runOnMain {
+                    customImage!!.visibility = View.GONE
+                    tvContent!!.text = text
+                    val toast = Toast(mContext)
+                    toast.view = view
+                    toast.duration = duration
+                    toast.setGravity(gravity, 0, 0)
+                    toast.show()
+                    //这里根据类型获取显示持续时间 实际持续时间是4000 7000 减去1秒是为了保证后续不重复显示的内容至少显示1秒
+                    val time = when (duration) {
+                        Toast.LENGTH_SHORT -> {
+                            3000L
+                        }
+                        else -> {
+                            6000L
+                        }
+                    }
+                    view?.postDelayed({
+                        currentText=null
+                    }, time)
                 }
 
             }

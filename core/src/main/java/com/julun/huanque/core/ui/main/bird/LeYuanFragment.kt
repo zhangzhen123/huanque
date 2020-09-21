@@ -444,7 +444,15 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
     private var guide1: Guide? = null
     private var isGuide1: Boolean = false
-    private fun initGuideView1() {
+
+    /**
+     * [hasPlay]如果当前的返回的棋盘不是一级或者棋盘有鹊时代表以经玩过
+     */
+    private fun initGuideView1(hasPlay:Boolean) {
+        if(hasPlay){
+            logger.info("已经玩过 不再需要引导")
+            return
+        }
         val needBirdGuide = StorageHelper.getNeedBirdGuide()
         if (!needBirdGuide) {
             logger.info("不再需要引导")
@@ -644,7 +652,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 }
 
             } else {
-                ToastUtils.show(it.error?.busiMessage)
+                ToastUtils.show2(it.error?.busiMessage)
             }
         })
         mViewModel.combineResult.observe(this, Observer {
@@ -946,7 +954,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         startAniInterval()
         if (requireActivity() is LeYuanBirdActivity) {
             rv_bird_packet.postDelayed({
-                initGuideView1()
+                val hasPlay=info.unlockUpgrade.upgradeLevel!=0||info.upgradeList.size>0
+                initGuideView1(hasPlay)
             }, 100)
         }
     }

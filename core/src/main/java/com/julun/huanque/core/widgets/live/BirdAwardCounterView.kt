@@ -73,8 +73,8 @@ class BirdAwardCounterView : ConstraintLayout {
                         val content = "恭喜您成功领取了\n ${StringHelper.formatBigNum(it.requireT().awardCoins)}金币"
                         val dialog = BirdGotMoneyDialogFragment.newInstance(content)
                         dialog.show(act, "BirdGotMoneyDialogFragment")
-                        this@BirdAwardCounterView?.hide()
                     }, 500L)
+                    this@BirdAwardCounterView?.hide()
                 } else if (it.state == NetStateType.ERROR) {
                     ToastUtils.show("${it.error?.busiMessage}")
                 }

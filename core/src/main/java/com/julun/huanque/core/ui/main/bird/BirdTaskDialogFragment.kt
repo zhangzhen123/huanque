@@ -286,13 +286,19 @@ class BirdTaskAwardView : FrameLayout {
             BirdTaskStatus.Received -> {
                 masking.show()
                 iv_finish.show()
-                tv_num.hide()
+                tv_receive.hide()
                 this.isEnabled = false
+            }
+            BirdTaskStatus.NotReceive -> {
+                masking.hide()
+                iv_finish.hide()
+                tv_receive.show()
+                this.isEnabled = true
             }
             else -> {
                 masking.hide()
                 iv_finish.hide()
-                tv_num.show()
+                tv_receive.hide()
                 this.isEnabled = true
             }
         }

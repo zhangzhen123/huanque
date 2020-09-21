@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
  *
  */
 object UserHeartManager {
-    private const val HEART_DURATION = 60L
+    private const val HEART_DURATION = 6L
 
     //最大重试次数
     private const val MAX_RQ = 3

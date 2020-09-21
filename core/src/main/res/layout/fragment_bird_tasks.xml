@@ -64,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@mipmap/bg_bird_task_bottom"
-        android:paddingTop="@dimen/dimen_20"
+        android:paddingTop="@dimen/dimen_13"
         android:paddingBottom="@dimen/dimen_10"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -223,7 +223,7 @@
         <com.julun.huanque.core.ui.main.bird.BirdTaskAwardView
             android:id="@+id/award_01"
             android:layout_width="@dimen/dimen_36"
-            android:layout_height="@dimen/dimen_30"
+            android:layout_height="@dimen/dimen_36"
             android:layout_marginBottom="@dimen/dimen_5"
             app:layout_constraintBottom_toTopOf="@+id/line_1"
             app:layout_constraintEnd_toEndOf="@+id/line_1"
@@ -232,7 +232,7 @@
         <com.julun.huanque.core.ui.main.bird.BirdTaskAwardView
             android:id="@+id/award_02"
             android:layout_width="@dimen/dimen_36"
-            android:layout_height="@dimen/dimen_30"
+            android:layout_height="@dimen/dimen_36"
             android:layout_marginBottom="@dimen/dimen_5"
             app:layout_constraintBottom_toTopOf="@+id/line_2"
             app:layout_constraintEnd_toEndOf="@+id/line_2"
@@ -241,7 +241,7 @@
         <com.julun.huanque.core.ui.main.bird.BirdTaskAwardView
             android:id="@+id/award_03"
             android:layout_width="@dimen/dimen_36"
-            android:layout_height="@dimen/dimen_30"
+            android:layout_height="@dimen/dimen_36"
             android:layout_marginBottom="@dimen/dimen_5"
             app:layout_constraintBottom_toTopOf="@+id/end"
             app:layout_constraintEnd_toEndOf="@+id/end"
