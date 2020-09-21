@@ -9,6 +9,7 @@ import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.bean.events.UnreadCountEvent
+import com.julun.huanque.common.bean.forms.CheckProtocolForm
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm
 import com.julun.huanque.common.bean.forms.SaveLocationForm
@@ -41,6 +42,9 @@ class MainViewModel : BaseViewModel() {
     val unreadMsgCount: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     val newUserBean: MutableLiveData<NewUserGiftBean> by lazy { MutableLiveData<NewUserGiftBean>() }
+
+    //用户隐私协议是否签署
+    val userProtocolSignFlag: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
     private val userService: UserService by lazy {
         Requests.create(UserService::class.java)
@@ -283,6 +287,18 @@ class MainViewModel : BaseViewModel() {
                     SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
                 }
             })
+        }
+    }
+
+    /**
+     * 检查协议
+     */
+    fun checkProtocol(protocol: String) {
+        viewModelScope.launch {
+            request({
+                val result = userService.checkProtocol(CheckProtocolForm(protocol)).dataConvert()
+                userProtocolSignFlag.value = result.sign
+            }, {})
         }
     }
 

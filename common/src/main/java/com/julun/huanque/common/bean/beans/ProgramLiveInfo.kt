@@ -326,7 +326,7 @@ data class KeyValue(var key: String, var value: String?)
  */
 data class AgreementData(
     var agreementCode: String = "",
-    var sign: Boolean = false,
+    var sign: String = "",
     //4.21 新增参数
     /** 协议ID **/
     var agreenebtId: Int? = null,

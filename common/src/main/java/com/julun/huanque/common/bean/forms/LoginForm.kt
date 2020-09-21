@@ -1,5 +1,7 @@
 package com.julun.huanque.common.bean.forms
 
+import java.io.Serializable
+
 /**
  *@创建者   dong
  *@创建时间 2020/7/3 15:27
@@ -62,3 +64,8 @@ class AgreementResultForm(var result: String = "True", var agreementCode: String
 class UpdateHeadForm(var headPic: String)
 
 class UserOnlineHeartForm(var programId: Long?=null,var onlineId:String?=null)
+
+/**
+ * 检查隐私协议的From
+ */
+class CheckProtocolForm(var targetType: String) : Serializable
