@@ -3,6 +3,7 @@ package com.julun.huanque.core.ui.main.bird
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.julun.huanque.common.base.BaseVMDialogFragment
@@ -37,6 +38,7 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
     override fun onStart() {
         super.onStart()
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     override fun initViews() {

@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.main.bird
 
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -46,6 +47,7 @@ class BirdDescriptionDialogFragment(private val leYuanViewModel: LeYuanViewModel
     override fun onStart() {
         super.onStart()
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     override fun initViews() {
