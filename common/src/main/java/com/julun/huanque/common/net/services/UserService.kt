@@ -207,4 +207,10 @@ interface UserService {
      */
     @POST("user/welfare/receiveNewUserBag")
     suspend fun receiveNewUserBag(@Body form: EmptyForm = EmptyForm()) : Root<VoidResult>
+
+    /**
+     * 分享成功
+     */
+    @POST("user/share/shareLog")
+    fun shareLog(@Body form : ShareForm) : Observable<Root<VoidResult>>
 }
