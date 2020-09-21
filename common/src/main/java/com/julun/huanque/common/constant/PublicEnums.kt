@@ -285,6 +285,7 @@ object DialogOrderNumber {
     //局部弹窗的排序  目前不需要优先级排序 默认就排到尾端 这里设置一个固定大值
     const val LOCAL_DIALOG = 9999 //
     //后续如果局部弹窗需要排序 从1000开始定义
+    const val LOCAL_DIALOG_PRIORITY_01 = 1000
 }
 
 /**
