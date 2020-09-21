@@ -8,9 +8,13 @@ import android.net.Uri
 import android.os.Build
 import com.julun.huanque.R
 import com.julun.huanque.common.bean.beans.ShareObject
+import com.julun.huanque.common.bean.forms.ShareForm
 import com.julun.huanque.common.constant.WeiBoShareType
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.net.Requests
+import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.suger.nothing
 import com.julun.huanque.common.utils.ToastUtils
 import com.sina.weibo.sdk.api.*
 import com.sina.weibo.sdk.auth.AuthInfo
@@ -35,7 +39,9 @@ object WeiBoApiManager {
     private const val SCOPE = ("all")
 
     private var wbApi: IWBAPI? = null
+    private var currentObject: ShareObject? = null
     fun doWeiBoShare(activity: Activity, shareObj: ShareObject) {
+        currentObject = shareObj
         wbApi = WBAPIFactory.createWBAPI(activity)
         val authInfo = AuthInfo(activity, APP_KEY, REDIRECT_URL, SCOPE)
         wbApi?.registerApp(activity, authInfo)
@@ -109,7 +115,7 @@ object WeiBoApiManager {
         //Android9.0以上只使用客户端分享
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             mShareClientOnly = true
-            if( wbApi?.isWBAppInstalled==false){
+            if (wbApi?.isWBAppInstalled == false) {
                 ToastUtils.show("请先安装微博客户端再分享")
                 return
             }
@@ -126,6 +132,7 @@ object WeiBoApiManager {
             override fun onComplete() {
                 logger("分享成功")
                 ToastUtils.show("分享成功")
+                Requests.create(UserService::class.java).shareLog(ShareForm(currentObject ?: return)).nothing()
             }
 
             override fun onCancel() {

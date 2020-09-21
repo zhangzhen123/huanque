@@ -395,26 +395,32 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             initCloudAni()
         }
     }
+
     //云朵动画
     private fun initCloudAni() {
         view_cloud_01.post {
             val anim0101 =
-                ObjectAnimator.ofFloat(view_cloud_01, View.TRANSLATION_X, -view_cloud_01.right.toFloat(), ScreenUtils.screenWidthFloat-view_cloud_01.left.toFloat())
+                ObjectAnimator.ofFloat(
+                    view_cloud_01,
+                    View.TRANSLATION_X,
+                    -view_cloud_01.right.toFloat() - dp2px(50),
+                    ScreenUtils.screenWidthFloat - view_cloud_01.left.toFloat()
+                )
             val anim0102 =
                 ObjectAnimator.ofFloat(
                     view_cloud_02,
                     View.TRANSLATION_X,
-                    -view_cloud_02.right.toFloat(), ScreenUtils.screenWidthFloat-view_cloud_02.left.toFloat()
+                    -view_cloud_02.right.toFloat(), ScreenUtils.screenWidthFloat - view_cloud_02.left.toFloat()
                 )
             anim0101.repeatMode = ValueAnimator.RESTART
             anim0101.repeatCount = ValueAnimator.INFINITE
-            anim0101.duration=1000L*20
-            anim0101.startDelay=1000L
+            anim0101.duration = 1000L * 40
+//            anim0101.startDelay = 1000L
             anim0101.start()
             anim0102.repeatMode = ValueAnimator.RESTART
             anim0102.repeatCount = ValueAnimator.INFINITE
 
-            anim0102.duration=1000L*15
+            anim0102.duration = 1000L * 30
             anim0102.start()
         }
 
@@ -661,7 +667,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                     birdAdapter.setData(currentIndex, UpgradeBirdBean(upgradePos = currentIndex))
                 }
             } else {
-                ToastUtils.show(it.error?.busiMessage)
+//                ToastUtils.show(it.error?.busiMessage)
             }
             isActionDoing = false
         })
@@ -718,10 +724,10 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                     }
                     "Cash" -> {
                         //手动更改余额 减去功能鹊数目
-                        val info=mViewModel.homeInfo.value?.getT()
-                        if(info!=null){
+                        val info = mViewModel.homeInfo.value?.getT()
+                        if (info != null) {
                             tv_cash.text = "${info.cash.add(data.cash)}元"
-                            val fInfo=data.functionNumInfo?:return@Observer
+                            val fInfo = data.functionNumInfo ?: return@Observer
                             if (fInfo.wealth.isNotEmpty() && fInfo.wealth != "0") {
                                 tv_cai_shen.text = fInfo.wealth
                                 tv_cai_shen.show()
@@ -837,14 +843,15 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
 
                 }
                 CombineResult.SwapPos -> {
-                    currentTargetItem?.upgradePos = currentIndex
-                    birdAdapter.setData(currentIndex, currentTargetItem!!)
+//                    currentTargetItem?.upgradePos = currentIndex
+//                    birdAdapter.setData(currentIndex, currentTargetItem!!)
+//
+//                    currentCombineItem?.upgradePos = targetIndex
+//                    birdAdapter.setData(targetIndex, currentCombineItem!!)
+//                    bird_mask.hide()
+//                    isActionDoing = false
 
-                    currentCombineItem?.upgradePos = targetIndex
-                    birdAdapter.setData(targetIndex, currentCombineItem!!)
-
-                    bird_mask.hide()
-                    isActionDoing = false
+                    playSwapPosAni(result)
                 }
             }
         }
@@ -1030,6 +1037,89 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             })
             set.start()
         }
+
+    }
+
+    /**
+     * 播放交换动画
+     */
+    private fun playSwapPosAni(result: CombineResult) {
+        if (currentTargetViewHolder == null || currentCombineItem == null || currentTargetItem == null || originXY == null || originXY!!.isEmpty()) {
+            isActionDoing = false
+            return
+        }
+        val currentIndex = birdAdapter.data.indexOf(currentCombineItem!!)
+        val targetIndex = birdAdapter.data.indexOf(currentTargetItem!!)
+
+        val image = currentTargetViewHolder!!.getView<SimpleDraweeView>(R.id.sdv_bird)
+        //1.播放合体动画前准备
+        val location = IntArray(2)
+        image.getLocationOnScreen(location)
+
+        val bmLp = bird_mask2.layoutParams as FrameLayout.LayoutParams
+        bmLp.width = image.width
+        bmLp.height = image.height
+        image.getLocationOnScreen(location)
+        //目标位置
+        bird_mask.x = location[0].toFloat()
+        bird_mask.y = location[1].toFloat()
+        bird_mask.show()
+        bird_mask.loadImage(currentTargetItem!!.upgradeIcon, 93f, 93f)
+
+        val bm2Lp = bird_mask2.layoutParams as FrameLayout.LayoutParams
+        bm2Lp.width = image.width
+        bm2Lp.height = image.height
+        //起始位置
+        bird_mask2.x = originXY?.getOrNull(0)?.toFloat() ?: return
+        bird_mask2.y = originXY?.getOrNull(1)?.toFloat() ?: return
+        bird_mask2.show()
+        bird_mask2.loadImage(currentCombineItem!!.upgradeIcon, 93f, 93f)
+
+        mask_container.requestLayout()
+
+
+        //2.做交换动画
+        val anim0101 =
+            ObjectAnimator.ofFloat(bird_mask, View.TRANSLATION_X, bird_mask.translationX, bird_mask2.translationX)
+        val anim0102 =
+            ObjectAnimator.ofFloat(
+                bird_mask,
+                View.TRANSLATION_Y,
+                bird_mask.translationY,
+                bird_mask2.translationY
+            )
+        val anim01 = AnimatorSet()
+        anim01.duration = 150
+        anim01.playTogether(anim0101, anim0102)
+        anim01.interpolator = AccelerateDecelerateInterpolator()
+        //(2)
+        val anim0201 =
+            ObjectAnimator.ofFloat(bird_mask2, View.TRANSLATION_X, bird_mask2.translationX, bird_mask.translationX)
+        val anim0202 =
+            ObjectAnimator.ofFloat(
+                bird_mask2,
+                View.TRANSLATION_Y,
+                bird_mask2.translationY,
+                bird_mask.translationY
+            )
+        val anim02 = AnimatorSet()
+        anim02.duration = 150
+        anim02.playTogether(anim0201, anim0202)
+        anim02.interpolator = AccelerateDecelerateInterpolator()
+        //(3)
+        anim02.addListener(onEnd = {
+            currentTargetItem?.upgradePos = currentIndex
+            birdAdapter.setData(currentIndex, currentTargetItem!!)
+
+            currentCombineItem?.upgradePos = targetIndex
+            birdAdapter.setData(targetIndex, currentCombineItem!!)
+            bird_mask.hide()
+            bird_mask2.hide()
+            isActionDoing = false
+        })
+        val sAnim = AnimatorSet()
+        sAnim.playTogether(anim01, anim02)
+        sAnim.start()
 
     }
 

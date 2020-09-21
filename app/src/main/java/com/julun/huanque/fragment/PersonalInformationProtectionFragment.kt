@@ -219,5 +219,5 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
             )
         }
     }
-    override fun order() = 1
+    override fun order() = DialogOrderNumber.PRIVACY_AGREEMENT_FRAGMENT
 }

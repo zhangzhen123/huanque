@@ -100,7 +100,7 @@
             android:id="@+id/sdv_bird_niu_lang"
             android:layout_width="@dimen/dimen_80"
             android:layout_height="@dimen/dimen_80"
-            android:layout_marginTop="@dimen/dimen_58"
+            android:layout_marginTop="@dimen/dimen_53"
             android:layout_marginEnd="@dimen/dimen_35"
             app:layout_constraintEnd_toStartOf="@+id/sdv_cai_shen"
             app:layout_constraintTop_toTopOf="@+id/sdv_cai_shen" />
