@@ -954,7 +954,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         startAniInterval()
         if (requireActivity() is LeYuanBirdActivity) {
             rv_bird_packet.postDelayed({
-                val hasPlay=info.unlockUpgrade.upgradeLevel!=0||info.upgradeList.size>0
+                val hasBird= info.upgradeList.any { it.upgradeId != null }
+                val hasPlay=info.unlockUpgrade.upgradeLevel>1||hasBird
                 initGuideView1(hasPlay)
             }, 100)
         }
