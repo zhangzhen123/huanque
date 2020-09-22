@@ -129,7 +129,12 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                     holder.setGone(R.id.view_online,false)
                 }else{
                     val second=(System.currentTimeMillis()-bean.lastOfflineTime)/1000L
-                    holder.setText(R.id.tv_online_status, TimeUtils.formatLostTime(second))
+                    if(bean.sex== Sex.FEMALE){
+                        holder.setText(R.id.tv_online_status, TimeUtils.formatLostTime2(second))
+                    }else{
+                        holder.setText(R.id.tv_online_status, TimeUtils.formatLostTime1(second))
+                    }
+
                     holder.setGone(R.id.view_online,true)
                 }
                 if (bean.city.isEmpty()) {

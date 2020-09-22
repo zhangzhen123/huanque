@@ -103,6 +103,9 @@
             android:name=".ui.main.bird.LeYuanBirdActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
+        <activity android:name=".ui.video.VideoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme"/>
 
         <service android:name=".service.FloatingService" />
     </application>

@@ -41,6 +41,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.guide.LottieComponent
 import com.julun.huanque.core.ui.main.bird.guide.LottieComponent2
+import com.julun.huanque.core.ui.video.VideoActivity
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.huanque.core.widgets.DispatchRecyclerView
 import com.julun.rnlib.RNPageActivity
@@ -228,8 +229,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         }
         iv_bird_guide.onClickNew {
             logger.info("点击了规则")
-            //todo 跳转h5
-
+            val url = mViewModel.homeInfo.value?.getT()?.teachVideoUrl?:return@onClickNew
+            VideoActivity.start(requireActivity(),StringHelper.getOssImgUrl(url))
 
         }
         iv_bottom_02.onClickNew {
