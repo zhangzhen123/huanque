@@ -43,5 +43,6 @@
         android:src="@mipmap/fg_home_flower_top"
         app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"
         app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="@+id/magic_indicator" />
 </androidx.constraintlayout.widget.ConstraintLayout>

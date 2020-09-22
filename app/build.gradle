@@ -43,7 +43,7 @@ android {
         minSdkVersion hq.minSdkVersion
         targetSdkVersion hq.targetSdkVersion
         versionCode 12000
-        versionName "1.20.00"
+        versionName "1.2.0"
 
         multiDexEnabled true
 

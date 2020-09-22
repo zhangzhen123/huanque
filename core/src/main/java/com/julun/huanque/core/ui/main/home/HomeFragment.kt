@@ -104,10 +104,12 @@ class HomeFragment : BaseFragment() {
             //
             if(it!=null){
                 sdw_flower.show()
+                iv_flower_fg.show()
                 sdw_flower.loadImage(it,32f,32f)
                 iv_flower_fg.imageResource=R.mipmap.fg_home_flower_top
             }else{
                 sdw_flower.hide()
+                iv_flower_fg.show()
                 iv_flower_fg.imageResource=R.mipmap.icon_home_flower_top
             }
         })
