@@ -25,6 +25,7 @@ object ARouterConstant {
     //PrivateConversationActivity
     //声网播放器使用
     private const val AGORA = "AGORA"
+
     //MSA
     private const val MSA = "msa_service"
 
@@ -38,6 +39,9 @@ object ARouterConstant {
     /*LMAPP模块*/
 
     const val MAIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/MAIN_ACTIVITY"
+
+    //派单弹窗
+    const val FATE_QUICK_MATCH_FRAGMENT = "/$APP$PREFIX_FRAGMENT/FateQuickMatchFragment"
 
     const val TEST_ACTIVITY = "/$APP$PREFIX_ACTIVITY/TestActivity"
 
@@ -65,6 +69,7 @@ object ARouterConstant {
     const val ContactsActivity = "/$MESSAGE$PREFIX_ACTIVITY/ContactsActivity"
 
     const val SysMsgActivity = "/$MESSAGE$PREFIX_ACTIVITY/SysMsgActivity"
+
     //亲密特权弹窗
     const val SINGLE_INTIMATE_PRIVILEGE_FRAGMENT = "/$MESSAGE$PREFIX_FRAGMENT/SingleIntimateprivilegeFragment"
 

@@ -598,7 +598,7 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
             ToastUtils.show("没有可赠送目标")
             return
         }
-        viewModel.sendGift(targetId, selectedGift ?: return)
+        viewModel.sendGift(targetId, selectedGift ?: return, fateId = mPrivateConversationViewModel.mFateID)
     }
 
     private fun sendGiftSuccess(data: SendGiftResult, form: ConsumeForm) {

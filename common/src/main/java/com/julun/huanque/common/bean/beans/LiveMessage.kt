@@ -15,7 +15,7 @@ import kotlin.collections.HashMap
 /** 送礼事件 **/
 class SendGiftEvent(
     //昵称颜色
-    var nickColor : String = "",
+    var nickColor: String = "",
     var giftId: Int = -1,
     var cacheIt: Boolean = false,
     var count: Int = 0,
@@ -1086,8 +1086,9 @@ class OperatorMessageBean : Serializable {
     var nickname: String = ""
     var time: String = ""
     var targetNickname: String = ""
+
     //被操作的直播间
-    var programId:Long = 0
+    var programId: Long = 0
 }
 
 /**
@@ -1154,3 +1155,27 @@ class AnonyVoiceCancelBean(
     //邀请的用户ID
     var inviteUserId: Long = 0
 )
+
+/**
+ * 派单对象
+ */
+class FateQuickMatchBean(
+    //用户数据
+    var userInfo: UserInfoInRoom = UserInfoInRoom(),
+    //未回复数量
+    var noReplyNum : Int = 0,
+    //订单ID
+    var fateId: String = "",
+    //过期时间
+    var expTime: Long = 0L
+)
+
+/**
+ * 派单状态变化消息
+ */
+class FateQuickMatchChangeBean(
+    //未回复数量
+    var noReplyNum: Int = 0,
+    //变化的列表
+    var fateInfo: HashMap<String, String> = hashMapOf()
+) : Serializable

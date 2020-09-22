@@ -226,7 +226,7 @@ class MessageFragment : BaseFragment() {
                     //查询会话列表和免打扰列表
                     mPlayerMessageViewModel.getBlockedConversationList()
                     mMessageViewModel.getConversationList()
-                } else if(RongCloudUtils.RongCloudNeedConnectedManually()){
+                } else if (RongCloudUtils.RongCloudNeedConnectedManually()) {
                     //手动连接一次
                     RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = false)
                 }
@@ -276,6 +276,18 @@ class MessageFragment : BaseFragment() {
                     "消息"
                 }
                 tv_message_unread.text = str
+            }
+        })
+
+        mMessageViewModel.chatRoomData.observe(this, Observer {
+            if (it != null) {
+                val noReplyNum = it.fateNoReplyNum
+                tv_yuanfen_count.text = "$noReplyNum"
+                if (noReplyNum >= 1) {
+                    tv_yuanfen_count.show()
+                } else {
+                    tv_yuanfen_count.hide()
+                }
             }
         })
 
@@ -347,6 +359,10 @@ class MessageFragment : BaseFragment() {
         iv_contacts_player.onClickNew {
             //联系人
             mPlayerMessageViewModel.contactsData.value = true
+        }
+
+        rl_yuanfen.onClickNew {
+            YuanFenActivity.newInstance(requireActivity(),mMessageViewModel.chatRoomData.value?.fateNoReplyNum ?: 0)
         }
 
 //        if(BuildConfig.DEBUG){

@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.common.bean.beans.FateQuickMatchBean
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.interfaces.routerservice.AppCommonService
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.OrderDialogManager
 import com.julun.huanque.common.suger.hideDialogs
 import com.julun.huanque.common.utils.ULog
@@ -23,7 +26,7 @@ import org.jetbrains.anko.contentView
  *@Date 2020/6/27 12:22
  *@Description activity基类封装
  *
-**/
+ **/
 
 abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
 
@@ -31,6 +34,11 @@ abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
     private var activityForeground: Boolean = false
     protected var goHome: Boolean = false //整合所有界面的返回操作 重写onBackPressed()方法
     protected val logger = ULog.getLogger(this.javaClass.name)
+    protected val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
+    private var mFragment: DialogFragment? = null
+
+    //不需要显示派单弹窗的页面列表
+    private val mNoFateActivityList = mutableListOf<String>("com.julun.huanque.agora.activity.VoiceChatActivity")
 
     private lateinit var mOrderDialogManager: OrderDialogManager
 
@@ -49,10 +57,41 @@ abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
             initEvents(contentView!!)//此时rootView不应该为空
 //            val end: Long = System.currentTimeMillis()
 //            println("初始化 activity <${this.javaClass.name}> 耗时: ${end - start}")
-        }else{
+        } else {
             throw NotImplementedError("activity没有设置有效的layout")
         }
         registerSelfAsEventHandler()
+        var canShowFate = true
+        mNoFateActivityList.forEach {
+            if (it.contains(this.localClassName)) {
+                canShowFate = false
+                return@forEach
+            }
+        }
+        if (canShowFate) {
+            initHuanQueViewModel()
+        }
+    }
+
+    /**
+     * 初始化全部ViewModel
+     */
+    private fun initHuanQueViewModel() {
+        mHuanQueViewModel.fateQuickMatchData.observe(this, Observer<FateQuickMatchBean> { it ->
+            logger.info("FateQuick Activity接收到数据 ${it}")
+            if (it != null) {
+                showPaidanFragment()
+            }
+        })
+    }
+
+    /**
+     * 显示派单Fragment
+     */
+    private fun showPaidanFragment() {
+        mFragment?.dismiss()
+        mFragment = ARouter.getInstance().build(ARouterConstant.FATE_QUICK_MATCH_FRAGMENT).navigation() as? BaseDialogFragment
+        mFragment?.show(supportFragmentManager, "PaidanFragment")
     }
 
     open fun setHeader() {

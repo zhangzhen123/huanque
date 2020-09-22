@@ -57,10 +57,10 @@ class ChatSendGiftViewModel : BaseViewModel() {
     }
 
     val sendResult: MutableLiveData<ReactiveData<ChatSendResult>> = MutableLiveData()
-    fun sendGift(friendId: Long, chatGift: ChatGift, count: Int = 1) {
+    fun sendGift(friendId: Long, chatGift: ChatGift, count: Int = 1,fateId : String? = null) {
         viewModelScope.launch {
             request({
-                val result = service.sendGift(SendChatGiftForm(friendId, chatGift.chatGiftId, count)).dataConvert(intArrayOf(1001))
+                val result = service.sendGift(SendChatGiftForm(friendId, chatGift.chatGiftId, count,fateId)).dataConvert(intArrayOf(1001))
                 sendResult.value = ReactiveData(state = NetStateType.SUCCESS, data = result)
                 sendGiftBean.value = chatGift.apply { giftCount = count }
                 BalanceUtils.saveBalance(result.beans)

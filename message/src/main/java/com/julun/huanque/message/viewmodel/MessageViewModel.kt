@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.LocalConversation
+import com.julun.huanque.common.bean.beans.ChatRoomBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
@@ -14,7 +15,11 @@ import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.net.Requests
+import com.julun.huanque.common.net.services.SocialService
+import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
@@ -34,6 +39,8 @@ import java.util.*
  *@描述 会话列表ViewModel
  */
 class MessageViewModel : BaseViewModel() {
+    private val socialService: SocialService by lazy { Requests.create(SocialService::class.java) }
+
     //获取数据的标记位
     val queryDataFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -48,6 +55,9 @@ class MessageViewModel : BaseViewModel() {
 
     //查询未读消息的标识位
     val queryUnreadCountFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //派单未回复数据
+    val chatRoomData: MutableLiveData<ChatRoomBean> by lazy { MutableLiveData<ChatRoomBean>() }
 
     //主播数据（直播间显示私聊弹窗，会有该数据）
     var anchorData: UserEnterRoomRespBase? = null
@@ -786,6 +796,16 @@ class MessageViewModel : BaseViewModel() {
                         }
                     })
             }
+        }
+    }
+
+    //获取速配数据
+    fun chatRoom() {
+        viewModelScope.launch {
+            request({
+                val result = socialService.chatHome().dataConvert()
+                chatRoomData.value = result
+            }, {})
         }
     }
 

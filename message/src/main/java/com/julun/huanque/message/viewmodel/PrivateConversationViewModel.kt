@@ -115,6 +115,9 @@ class PrivateConversationViewModel : BaseViewModel() {
     //操作类型
     var operationType = ""
 
+    //订单ID
+    var mFateID: String? = null
+
     //小鹊语料数据
     var wordList = mutableListOf<ActiveWord>()
 
@@ -351,7 +354,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun sendMsg(targetId: Long, content: String, targetUser: TargetUserObj, type: String = "", localMsg: Message? = null) {
         viewModelScope.launch {
             request({
-                val result = socialService.sendMsg(SendMsgForm(targetId, content)).dataConvert(intArrayOf(ErrorCodes.BALANCE_NOT_ENOUGH))
+                val result = socialService.sendMsg(SendMsgForm(targetId, content,mFateID)).dataConvert(intArrayOf(ErrorCodes.BALANCE_NOT_ENOUGH))
                 BalanceUtils.saveBalance(result.beans)
                 if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
                     msgFeeData.value = result.consumeBeans
@@ -414,7 +417,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun sendPic(uploader: IRongCallback.MediaMessageUploader?, targetId: Long, content: String) {
         viewModelScope.launch {
             request({
-                val result = socialService.sendPic(SendMsgForm(targetId, content)).dataConvert()
+                val result = socialService.sendPic(SendMsgForm(targetId, content,mFateID)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
                 if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
                     msgFeeData.value = result.consumeBeans
@@ -444,7 +447,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun sendDice(targetId: Long, content: String, localMsg: Message) {
         viewModelScope.launch {
             request({
-                val result = socialService.sendDice(SendMsgForm(targetId, content)).dataConvert()
+                val result = socialService.sendDice(SendMsgForm(targetId, content,mFateID)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
                 if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
                     msgFeeData.value = result.consumeBeans
@@ -482,7 +485,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun sendFinger(targetId: Long, content: String, localMsg: Message) {
         viewModelScope.launch {
             request({
-                val result = socialService.sendFinger(SendMsgForm(targetId, content)).dataConvert()
+                val result = socialService.sendFinger(SendMsgForm(targetId, content,mFateID)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
                 if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
                     msgFeeData.value = result.consumeBeans
@@ -594,7 +597,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun sendRoom(programId: Long) {
         viewModelScope.launch {
             request({
-                val sendRoomResult = socialService.sendRoom(SendRoomForm(targetIdData.value ?: return@request, programId)).dataConvert()
+                val sendRoomResult = socialService.sendRoom(SendRoomForm(targetIdData.value ?: return@request, programId,mFateID)).dataConvert()
                 sendRoomIndoData.value = sendRoomResult.sendRoomInfo
                 BalanceUtils.saveBalance(sendRoomResult.beans)
             })

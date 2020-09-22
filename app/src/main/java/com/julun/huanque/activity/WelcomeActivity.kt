@@ -18,6 +18,7 @@ import com.julun.huanque.common.bean.beans.OpenInstallParamsBean
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.interfaces.LocalPreLoginListener
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.utils.SPUtils
@@ -76,6 +77,7 @@ class WelcomeActivity : BaseActivity() {
         //开始预取号
         FastLoginManager.mPreListener = mLocalPreLoginListener
         FastLoginManager.preLogin()
+        HuanViewModelManager.huanQueViewModel.clearFateData()
 
         mShowFragment =
             SharedPreferencesUtils.getBoolean(SPParamKey.Welcome_privacy_Fragment, false)

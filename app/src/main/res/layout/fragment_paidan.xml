@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        app:cardCornerRadius="10dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="162dp"
+            android:background="@drawable/bg_fate">
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:textColor="#FFED72"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="缘分来了(180s)" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/sdv_header"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:placeholderImage="@mipmap/logo_placeholder_medium"
+                app:placeholderImageScaleType="fitCenter"
+                app:roundAsCircle="true"
+                app:roundingBorderColor="@color/white"
+                app:roundingBorderWidth="1dp" />
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:maxWidth="90dp"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@id/sdv_header"
+                app:layout_constraintTop_toTopOf="@id/sdv_header"
+                tools:text="了就给你电话" />
+
+            <TextView
+                android:id="@+id/tv_sex"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/bg_shape_mkf_sex_female"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textSize="@dimen/sp_10"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+                app:layout_constraintLeft_toRightOf="@id/tv_nickname"
+                app:layout_constraintTop_toTopOf="@id/tv_nickname"
+                tools:text="35"
+                tools:textColor="@color/black_333" />
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/bg_shape_mkf_location"
+                android:drawableLeft="@mipmap/icon_location"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="6dp"
+                android:textColor="#82ABD1"
+                android:textSize="@dimen/sp_10"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+                app:layout_constraintLeft_toRightOf="@id/tv_sex"
+                app:layout_constraintTop_toTopOf="@id/tv_nickname"
+                tools:text="柯东湖" />
+
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/sdv_caifu_level"
+                android:layout_width="35dp"
+                android:layout_height="14dp"
+                app:layout_constraintBottom_toBottomOf="@id/sdv_header"
+                app:layout_constraintLeft_toLeftOf="@id/tv_nickname" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/sdv_royal_level"
+                android:layout_width="50dp"
+                android:layout_height="14dp"
+                android:layout_marginLeft="3dp"
+                app:layout_constraintBottom_toBottomOf="@id/sdv_caifu_level"
+                app:layout_constraintLeft_toRightOf="@id/sdv_caifu_level" />
+
+
+            <ImageView
+                android:id="@+id/tv_chat"
+                android:layout_width="261dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:gravity="center"
+                android:src="@mipmap/icon_fate_chat"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="5dp"
+                android:padding="8dp"
+                android:src="@mipmap/icon_close_fate"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

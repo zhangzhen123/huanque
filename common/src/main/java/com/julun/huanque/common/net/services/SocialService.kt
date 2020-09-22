@@ -1,6 +1,7 @@
 package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.basic.VoidForm
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.ChatUser
@@ -252,6 +253,21 @@ interface SocialService {
     @POST("social/flower/rank/famous")
     suspend fun flowerFamous(@Body form: EmptyForm = EmptyForm()): Root<FamousListBean>
 
+    /**
+     * 道具列表
+     */
     @POST("social/friend/chat/propList")
     suspend fun propList(@Body form: EmptyForm = EmptyForm()): Root<PropListBean>
+
+    /**
+     * 派单相关数据
+     */
+    @POST("social/friend/chat/home")
+    suspend fun chatHome(@Body form: EmptyForm = EmptyForm()): Root<ChatRoomBean>
+
+    /**
+     * 派单列表
+     */
+    @POST("social/friend/chat/fateList")
+    suspend fun fateList(@Body form : OffsetForm) : Root<RootListData<FateInfo>>
 }

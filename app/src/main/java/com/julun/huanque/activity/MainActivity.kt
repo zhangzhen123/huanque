@@ -18,10 +18,7 @@ import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.VoidResult
-import com.julun.huanque.common.bean.beans.AnonyVoiceInviteBean
-import com.julun.huanque.common.bean.beans.IntimateBean
-import com.julun.huanque.common.bean.beans.NetCallReceiveBean
-import com.julun.huanque.common.bean.beans.OperatorMessageBean
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.*
@@ -155,6 +152,8 @@ class MainActivity : BaseActivity() {
             .bindUntilEvent(this, ActivityEvent.DESTROY)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ checkPermission() }, { it.printStackTrace() })
+
+        mMessageViewModel.chatRoom()
     }
 
     /**
@@ -560,6 +559,37 @@ class MainActivity : BaseActivity() {
                 }
             }
         })
+
+        //派单消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.FateQuickMatchProcessor {
+            override fun process(data: FateQuickMatchBean) {
+                val splTime = data.expTime - System.currentTimeMillis()
+                if (splTime <= 0) {
+                    //消息已经过期
+                    return
+                }
+                mHuanQueViewModel.setFateData(data)
+
+                val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
+                bean.fateNoReplyNum = data.noReplyNum
+                mMessageViewModel.chatRoomData.value = bean
+                EventBus.getDefault().post(FateQuickMatchChangeBean(noReplyNum = data.noReplyNum))
+            }
+        })
+
+        //派单状态变化消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.FateQuickMatchChangeProcessor {
+            override fun process(data: FateQuickMatchChangeBean) {
+                val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
+                bean.fateNoReplyNum = data.noReplyNum
+                mMessageViewModel.chatRoomData.value = bean
+                //发送EventBus
+                EventBus.getDefault().post(data)
+            }
+
+        })
+
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

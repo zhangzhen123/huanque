@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.infer.annotation.Assertions
 import com.facebook.react.ReactInstanceManager
@@ -16,10 +17,13 @@ import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
+import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.LoadingDialog
+import com.julun.huanque.common.bean.beans.FateQuickMatchBean
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.ui.image.ImageActivity
@@ -59,6 +63,11 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             activity.startActivity(intent)
         }
     }
+
+    protected val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
+
+    private var mFragment: BaseDialogFragment? = null
+
     private var goHome: Boolean = false //整合所有界面的返回操作 重写onBackPressed()方法
     private lateinit var mReactRootView: ReactRootView
     private var mReactInstanceManager: ReactInstanceManager? = null
@@ -111,7 +120,29 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             ToastUtils.show("加载rn模块出错了")
             finish()
         }
+        initHuanQueViewModel()
     }
+
+    /**
+     * 初始化全部ViewModel
+     */
+    private fun initHuanQueViewModel() {
+        mHuanQueViewModel.fateQuickMatchData.observe(this, Observer<FateQuickMatchBean> { it ->
+            if (it != null) {
+                showPaidanFragment()
+            }
+        })
+    }
+
+    /**
+     * 显示派单Fragment
+     */
+    private fun showPaidanFragment() {
+        mFragment?.dismiss()
+        mFragment = ARouter.getInstance().build(ARouterConstant.FATE_QUICK_MATCH_FRAGMENT).navigation() as? BaseDialogFragment
+        mFragment?.show(supportFragmentManager, "PaidanFragment")
+    }
+
 
     override fun invokeDefaultOnBackPressed() {
         super.onBackPressed()
@@ -163,6 +194,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         }
         super.finish()
     }
+
     override fun onDestroy() {
         super.onDestroy()
         mReactInstanceManager?.onHostDestroy(this)

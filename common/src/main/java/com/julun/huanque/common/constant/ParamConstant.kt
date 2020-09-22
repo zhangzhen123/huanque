@@ -124,6 +124,11 @@ object ParamConstant {
     //耳机是否插入
     const val Earphone = "Earphone"
 
+    //订单ID
+    const val FATE_ID = "FATE_ID"
+
+    //未回复的派单数量
+    const val FATE_UNREPLY = "FATE_UNREPLY"
 
     const val TARGET_USER_ID = "TargetUserId"
 
@@ -131,6 +136,7 @@ object ParamConstant {
     const val REPORT_TYPE = "reportType"
 
     const val CHAT_MODE = "CHAT_MODE"
+
     //直播间观看奖励需要倒计时
-    const val BIRD_AWARD_INFO= "BIRD_AWARD_FINO"
+    const val BIRD_AWARD_INFO = "BIRD_AWARD_FINO"
 }

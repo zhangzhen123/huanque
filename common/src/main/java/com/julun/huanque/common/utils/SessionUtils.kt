@@ -39,12 +39,15 @@ object SessionUtils {
     //用户性别
     private var SEX = "SEX"
 
+    //邀请码
+    private val INVITE_CODE = "INVITE_CODE"
+
     //是否验证过session
     var isCheckSession = false
 
-    var currentSession:Session?=null
+    var currentSession: Session? = null
     fun setSession(session: Session) {
-        currentSession=session
+        currentSession = session
         isCheckSession = true
         setSessionId(session.sessionId)
         setUserId(session.userId)
@@ -57,26 +60,28 @@ object SessionUtils {
         setRongImToken(session.imToken)
         setIsRegUser(session.regUser)
         setSex(session.sex)
+        setInviteCode(session.invitationCode)
     }
 
-    fun getSession():Session{
-        return currentSession?:Session().apply {
-            this.sessionId= getSessionId()
-            this.nickname= getNickName()
-            this.userId= getUserId()
-            this.headPic= getHeaderPic()
-            this.userType= getUserType()
-            this.voiceToken= getAgoraToken()
-            this.newUser= getNewUser()
-            this.regComplete= getRegComplete()
-            this.imToken= getRongImToken()
-            this.regUser= getIsRegUser()
-            this.sex= getSex()
+    fun getSession(): Session {
+        return currentSession ?: Session().apply {
+            this.sessionId = getSessionId()
+            this.nickname = getNickName()
+            this.userId = getUserId()
+            this.headPic = getHeaderPic()
+            this.userType = getUserType()
+            this.voiceToken = getAgoraToken()
+            this.newUser = getNewUser()
+            this.regComplete = getRegComplete()
+            this.imToken = getRongImToken()
+            this.regUser = getIsRegUser()
+            this.sex = getSex()
         }
     }
+
     //与deleteSession合并 不再单独调用
     fun clearSession() {
-        currentSession=null
+        currentSession = null
         setSessionId("")
         setUserId(0)
         setNickName("")
@@ -185,5 +190,12 @@ object SessionUtils {
     }
 
     fun getSex() = SharedPreferencesUtils.getString(SEX, "")
+
+    //设置邀请码
+    fun setInviteCode(code: String) {
+        SharedPreferencesUtils.commitString(INVITE_CODE, code)
+    }
+
+    fun getInviteCode() = SharedPreferencesUtils.getString(INVITE_CODE,"")
 
 }

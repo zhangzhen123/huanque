@@ -26,5 +26,8 @@
         <activity
             android:name=".activity.LiveRemindActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.YuanFenActivity"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>
