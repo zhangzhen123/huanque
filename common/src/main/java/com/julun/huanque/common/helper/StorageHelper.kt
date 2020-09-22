@@ -82,9 +82,15 @@ object StorageHelper {
 
 
     fun setNeedBirdGuide(need:Boolean){
-        SPUtils.commitBoolean(NEED_GUIDE_TO__PLAY_BIRD, need)
+        val userId:Long=SessionUtils.getUserId()
+        if(userId==0L){
+            return
+        }
+        SPUtils.commitBoolean("${NEED_GUIDE_TO__PLAY_BIRD}-${userId}", need)
     }
+    //带上用户Id
     fun getNeedBirdGuide():Boolean{
-        return SPUtils.getBoolean(NEED_GUIDE_TO__PLAY_BIRD, true)
+        val userId:Long=SessionUtils.getUserId()
+        return SPUtils.getBoolean("${NEED_GUIDE_TO__PLAY_BIRD}-${userId}", true)
     }
 }
