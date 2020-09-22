@@ -21,7 +21,8 @@ data class BirdHomeInfo(
     var totalCoins: BigInteger = BigInteger.ZERO,
     var unlockUpgrade: UnlockUpgrade = UnlockUpgrade(),
     var upgradeList: MutableList<UpgradeBirdBean> = mutableListOf(),
-    var hasNotReceive: Boolean = false
+    var hasNotReceive: Boolean = false,
+    var teachVideoUrl:String = ""
 )
 
 data class BirdFunctionInfo(

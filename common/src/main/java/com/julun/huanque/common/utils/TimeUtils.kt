@@ -671,16 +671,17 @@ object TimeUtils {
     30天＜离线时间，显示“1个月前”。
 
 
-     * [time]秒数 时间转化 单位 秒 转换成 x天 x时  前
+     * [time]秒数 时间转化 单位 秒 转换成 x天 x时  前 男
      */
-    fun formatLostTime(time: Long): String {
+    fun formatLostTime1(time: Long): String {
         val mi = 60
         val hh = mi * 60
         val dd = hh * 24
 
         val day = time / dd
         val hour = (time - day * dd) / hh
-        var formatStr: String = "刚刚"
+
+        var formatStr: String = ""
         when {
             day > 30 -> {
                 formatStr = "1个月前"
@@ -689,8 +690,36 @@ object TimeUtils {
                 formatStr = "${day}天前"
             }
             hour in 3..24 -> return "${hour}小时前"
+
         }
         return formatStr
     }
 
+    //女
+    fun formatLostTime2(time: Long): String {
+        val mi = 60
+        val hh = mi * 60
+        val dd = hh * 24
+
+        val day = time / dd
+        val hour = (time - day * dd) / hh
+        val minute = (time - day * dd - hour * hh) / mi
+        var formatStr: String = ""
+        when {
+            day > 30 -> {
+                formatStr = "1个月前"
+            }
+            day > 1 -> {
+                formatStr = "${day}天前"
+            }
+            hour in 3..24 -> return "${hour}小时前"
+            minute < 1 -> {
+                return "刚刚"
+            }
+            minute < 60 -> {
+                return "${minute}分钟前"
+            }
+        }
+        return formatStr
+    }
 }
