@@ -8,6 +8,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.StyleSpan
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +37,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.AliplayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
+import com.julun.huanque.core.ui.main.home.HomeViewModel
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -51,7 +53,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     companion object {
         fun newInstance() = MakeFriendsFragment()
     }
-
+    private val mHomeViewModel: HomeViewModel by activityViewModels()
     private val mAdapter: MakeFriendsAdapter by lazy { MakeFriendsAdapter() }
     override fun lazyLoadData() {
         mViewModel.queryInfo()
@@ -206,7 +208,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                         ARouter.getInstance().build(ARouterConstant.ANONYMOUS_VOICE_ACTIVITY).navigation()
                     }
                     HeadModule.MagpieParadise -> {
-
+                        requireActivity().startActivity<LeYuanBirdActivity>()
                     }
                     HeadModule.HotLive -> {
                         //热门直播
@@ -428,7 +430,10 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 loadFail(it.isRefresh())
             }
         })
-
+        mViewModel.flowerPic.observe(viewLifecycleOwner, Observer {
+            //
+            mHomeViewModel.flowerPic.value=it?:return@Observer
+        })
 
     }
 

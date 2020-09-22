@@ -69,7 +69,7 @@ import kotlin.math.abs
 class MainActivity : BaseActivity() {
 
     private val mHomeFragment: HomeFragment by lazy { HomeFragment.newInstance() }
-    private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
+//    private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
 
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
     private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
@@ -298,15 +298,11 @@ class MainActivity : BaseActivity() {
             }
             showFragmentNew(MainPageIndexConst.MAIN_FRAGMENT_INDEX)
         }
-        view_leyuan.onClickNew {
-            //乐园
-//            if (getCurrentFragment() != mLeYuanFragment) {
-//                tabIconAnimation(MainPageIndexConst.LEYUAN_FRAGMENT_INDEX)
-//            }
-//            showFragmentNew(MainPageIndexConst.LEYUAN_FRAGMENT_INDEX)
-            startActivity<LeYuanBirdActivity>()
-
-        }
+//        view_leyuan.onClickNew {
+//            //乐园
+//            startActivity<LeYuanBirdActivity>()
+//
+//        }
         view_message.onClickNew {
             //消息
             if (getCurrentFragment() != mMessageFragment) {
@@ -393,7 +389,7 @@ class MainActivity : BaseActivity() {
     private fun getFragmentByIndex(index: Int): Fragment? {
         return when (index) {
             MainPageIndexConst.MAIN_FRAGMENT_INDEX -> mHomeFragment
-            MainPageIndexConst.LEYUAN_FRAGMENT_INDEX -> mLeYuanFragment
+//            MainPageIndexConst.LEYUAN_FRAGMENT_INDEX -> mLeYuanFragment
             MainPageIndexConst.MESSAGE_FRAGMENT_INDEX -> mMessageFragment
             MainPageIndexConst.MINE_FRAGMENT_INDEX -> mMineFragment
             else -> {
@@ -409,9 +405,9 @@ class MainActivity : BaseActivity() {
         if (mHomeFragment.isVisible) {
             return mHomeFragment
         }
-        if (mLeYuanFragment.isVisible) {
-            return mLeYuanFragment
-        }
+//        if (mLeYuanFragment.isVisible) {
+//            return mLeYuanFragment
+//        }
         if (mMessageFragment.isVisible) {
             return mMessageFragment
         }

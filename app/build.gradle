@@ -42,8 +42,8 @@ android {
         applicationId "com.julun.huanque"
         minSdkVersion hq.minSdkVersion
         targetSdkVersion hq.targetSdkVersion
-        versionCode 10001
-        versionName "1.0.1"
+        versionCode 12000
+        versionName "1.2.0"
 
         multiDexEnabled true
 

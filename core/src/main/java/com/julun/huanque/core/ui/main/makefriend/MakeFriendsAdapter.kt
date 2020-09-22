@@ -8,6 +8,7 @@ import android.text.style.StyleSpan
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,13 +21,16 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.HomePageOnlineStatus
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.TimeUtils
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration
@@ -120,6 +124,14 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 }
                 holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_mkf_sign, sign)
                     .setText(R.id.tv_location, bean.city)
+                if(bean.onlineStatus== HomePageOnlineStatus.Online){
+                    holder.setText(R.id.tv_online_status, "在线")
+                    holder.setGone(R.id.view_online,false)
+                }else{
+                    val second=(System.currentTimeMillis()-bean.lastOfflineTime)/1000L
+                    holder.setText(R.id.tv_online_status, TimeUtils.formatLostTime(second))
+                    holder.setGone(R.id.view_online,true)
+                }
                 if (bean.city.isEmpty()) {
                     holder.setGone(R.id.tv_location, true)
                 } else {
@@ -252,26 +264,31 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val sp = SpannableString(content)
                 sp.setSpan(styleSpan1A, 0, start, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
                 tvTask.text = sp
-
-
-                rv.layoutManager = GridLayoutManager(context, 3)
-//                if (rv.itemDecorationCount <= 0) {
-//                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(10)))
-//                }
+                if(headerInfo.moduleList.size<=3){
+                    rv.layoutManager = GridLayoutManager(context, headerInfo.moduleList.size)
+                }else{
+                    rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                }
                 val mHeaderNavAdapter: HeaderNavAdapter
                 if (rv.adapter != null) {
                     mHeaderNavAdapter = rv.adapter as HeaderNavAdapter
                 } else {
-                    //动态计算的宽高
-                    //图片宽度
-                    val singlePicWidth = (ScreenUtils.getScreenWidth() - dp2px(48)) / 3
-                    val tempHeight = ceil(singlePicWidth * 210 / 327.0 + dp2px(8)).toInt()
-
-                    val rvParams = rv.layoutParams
-                    rvParams.height = tempHeight
-                    rv.layoutParams = rvParams
-
-                    mHeaderNavAdapter = HeaderNavAdapter(singlePicWidth)
+                    val rvParams = rv.layoutParams as ConstraintLayout.LayoutParams
+                    if(headerInfo.moduleList.size<=3){
+                        //动态计算的宽高
+                        //图片宽度
+                        val singlePicWidth = (ScreenUtils.getScreenWidth() - dp2px(48)) / 3
+                        val tempHeight = ceil(singlePicWidth * 210 / 327.0 + dp2px(8)).toInt()
+                        rvParams.height = tempHeight
+                        rvParams.marginEnd=dp2px(10)
+                        mHeaderNavAdapter = HeaderNavAdapter(ViewGroup.LayoutParams.MATCH_PARENT)
+                    }else{
+                        //宽度固定100dp 高度自适应
+                        rvParams.height=ViewGroup.LayoutParams.WRAP_CONTENT
+                        rvParams.marginEnd=0
+                        mHeaderNavAdapter = HeaderNavAdapter(dp2px(105))
+                    }
+                    rv.requestLayout()
                     rv.adapter = mHeaderNavAdapter
                 }
 

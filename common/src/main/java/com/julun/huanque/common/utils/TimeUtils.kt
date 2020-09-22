@@ -621,49 +621,6 @@ object TimeUtils {
     }
 
     /**
-     * 时间转化 单位 秒 转换成 HH:mm:ss
-     */
-    fun countDownTimeFormatCahtRoom(time: Long): String {
-        if (time == 0L) {
-            return "00:00"
-        }
-        val mi = 60
-        val hh = mi * 60
-//        val dd = hh * 24
-
-//        val day = time / dd
-        val hour = time / hh
-        val minute = (time - hour * hh) / mi
-        val second = (time - hour * hh - minute * mi)
-
-        val strHour: String
-        strHour = if (hour < 10) {
-            "0$hour"
-        } else {
-            "$hour"
-        }
-        val strMin: String
-        strMin = if (minute < 10) {
-            "0$minute"
-        } else {
-            "$minute"
-        }
-        val strS: String
-        strS = if (second < 10) {
-            "0$second"
-        } else {
-            "$second"
-        }
-
-
-        return if (hour > 0) {
-            "$strHour:$strMin:$strS"
-        } else {
-            "$strMin:$strS"
-        }
-    }
-
-    /**
      * 封盘剩余时间(PK使用)
      */
     fun sealedTime(time: Long): String {
@@ -703,4 +660,37 @@ object TimeUtils {
             ""
         }
     }
+
+    /**
+     * 离线时间≤3小时，显示”在线“。
+
+    3小时<离线时间≤24小时，显示“x小时前”。
+
+    1天＜离线时间≤30天，显示“x天前”。
+
+    30天＜离线时间，显示“1个月前”。
+
+
+     * [time]秒数 时间转化 单位 秒 转换成 x天 x时  前
+     */
+    fun formatLostTime(time: Long): String {
+        val mi = 60
+        val hh = mi * 60
+        val dd = hh * 24
+
+        val day = time / dd
+        val hour = (time - day * dd) / hh
+        var formatStr: String = "刚刚"
+        when {
+            day > 30 -> {
+                formatStr = "1个月前"
+            }
+            day > 1 -> {
+                formatStr = "${day}天前"
+            }
+            hour in 3..24 -> return "${hour}小时前"
+        }
+        return formatStr
+    }
+
 }

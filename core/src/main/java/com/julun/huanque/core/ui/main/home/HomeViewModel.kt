@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.main.home
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.julun.huanque.common.basic.ReactiveData
@@ -26,7 +27,7 @@ class HomeViewModel : BaseViewModel() {
     private val userService: HomeService by lazy {
         Requests.create(HomeService::class.java)
     }
-
+    val flowerPic: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     //协程请求示例
     val tabList: LiveData<ReactiveData<ArrayList<String>>> = queryState.switchMap {
         liveData {
