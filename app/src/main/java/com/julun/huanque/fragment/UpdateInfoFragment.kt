@@ -68,7 +68,7 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
 
 
     //邀请码 标识位
-    private val CODE_TEMPLATE = "-code-"
+//    private val CODE_TEMPLATE = "-code-"
 
     private var pvTime: TimePickerView? = null
 
@@ -81,14 +81,14 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
 
         et_nickname.setText(SessionUtils.getNickName())
         //邀请码
-        val extraCode = ChannelCodeHelper.getExternalChannel() ?: ""
-        if (extraCode.contains(CODE_TEMPLATE)) {
-            val strings = extraCode.split(CODE_TEMPLATE)
-            val code = strings.getOrNull(1)
-            if (code?.isNotEmpty() == true) {
-                et_invitation_code.setText(code)
-            }
-        }
+//        val extraCode = ChannelCodeHelper.getExternalChannel() ?: ""
+//        if (extraCode.contains(CODE_TEMPLATE)) {
+//            val strings = extraCode.split(CODE_TEMPLATE)
+//            val code = strings.getOrNull(1)
+//            if (code?.isNotEmpty() == true) {
+        et_invitation_code.setText(SessionUtils.getInviteCode())
+//            }
+//        }
 
         mBirthday = arguments?.getString(ParamConstant.Birthday, "") ?: ""
         tv_bir.text = mBirthday
@@ -348,6 +348,7 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
             return false;
         }
     }
+
     override fun order() = 200
 
 }

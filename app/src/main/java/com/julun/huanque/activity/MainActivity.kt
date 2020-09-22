@@ -573,7 +573,24 @@ class MainActivity : BaseActivity() {
                     return
                 }
                 mHuanQueViewModel.setFateData(data)
+
+                val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
+                bean.fateNoReplyNum = data.noReplyNum
+                mMessageViewModel.chatRoomData.value = bean
+                EventBus.getDefault().post(FateQuickMatchChangeBean(noReplyNum = data.noReplyNum))
             }
+        })
+
+        //派单状态变化消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.FateQuickMatchChangeProcessor {
+            override fun process(data: FateQuickMatchChangeBean) {
+                val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
+                bean.fateNoReplyNum = data.noReplyNum
+                mMessageViewModel.chatRoomData.value = bean
+                //发送EventBus
+                EventBus.getDefault().post(data)
+            }
+
         })
 
 

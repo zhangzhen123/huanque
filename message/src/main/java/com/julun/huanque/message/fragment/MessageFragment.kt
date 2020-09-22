@@ -279,6 +279,18 @@ class MessageFragment : BaseFragment() {
             }
         })
 
+        mMessageViewModel.chatRoomData.observe(this, Observer {
+            if (it != null) {
+                val noReplyNum = it.fateNoReplyNum
+                tv_yuanfen_count.text = "$noReplyNum"
+                if (noReplyNum >= 1) {
+                    tv_yuanfen_count.show()
+                } else {
+                    tv_yuanfen_count.hide()
+                }
+            }
+        })
+
 
         mPlayerMessageViewModel.blockListData.observe(this, Observer {
             if (it != null) {
@@ -349,13 +361,8 @@ class MessageFragment : BaseFragment() {
             mPlayerMessageViewModel.contactsData.value = true
         }
 
-        tv_yuanfen.onClickNew {
-            //
-            val act = requireActivity()
-            val intent = Intent(requireActivity(), YuanFenActivity::class.java)
-            if (ForceUtils.activityMatch(intent)) {
-                act.startActivity(intent)
-            }
+        rl_yuanfen.onClickNew {
+            YuanFenActivity.newInstance(requireActivity(),mMessageViewModel.chatRoomData.value?.fateNoReplyNum ?: 0)
         }
 
 //        if(BuildConfig.DEBUG){

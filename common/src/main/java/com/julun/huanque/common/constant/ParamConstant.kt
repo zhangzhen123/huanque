@@ -127,6 +127,9 @@ object ParamConstant {
     //订单ID
     const val FATE_ID = "FATE_ID"
 
+    //未回复的派单数量
+    const val FATE_UNREPLY = "FATE_UNREPLY"
+
     const val TARGET_USER_ID = "TargetUserId"
 
     //举报类型 主播或者用户

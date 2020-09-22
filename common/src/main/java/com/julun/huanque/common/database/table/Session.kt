@@ -30,5 +30,7 @@ data class Session(
     //是否为注册用户
     var regUser: Boolean = false,
     //性别
-    var sex: String = ""
+    var sex: String = "",
+    //邀请码
+    var invitationCode: String = ""
 )

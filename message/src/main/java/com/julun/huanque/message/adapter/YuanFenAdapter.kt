@@ -82,6 +82,7 @@ class YuanFenAdapter : BaseQuickAdapter<FateInfo, BaseViewHolder>(R.layout.recyc
                 tvMatchTime.textColor = GlobalUtils.getColor(R.color.black_666)
                 statusDrawable = if (ttl > 0) {
                     statusColor = GlobalUtils.formatColor("#FF3F3F")
+                    statusContent = "${item.ttl}s"
                     GlobalUtils.getDrawable(R.mipmap.icon_fate_count_down)
                 } else {
                     statusColor = GlobalUtils.formatColor("#FFAC09")

@@ -1162,26 +1162,20 @@ class AnonyVoiceCancelBean(
 class FateQuickMatchBean(
     //用户数据
     var userInfo: UserInfoInRoom = UserInfoInRoom(),
+    //未回复数量
+    var noReplyNum : Int = 0,
     //订单ID
-    var fateId : String = "",
+    var fateId: String = "",
     //过期时间
-    var expTime : Long = 0L
-//    //头像
-//    var headerPic: String = "",
-//    //昵称
-//    var nickname: String = "",
-//    //倒计时
-//    var count: Long = 0,
-//    //性别
-//    var sex: String = "",
-//    //位置
-//    var city: String = "",
-//    //贵族等级
-//    var royalPic: String = "",
-//    //财富等级
-//    var userLevel: Int = 0,
-//    //年龄
-//    var age: Int = 0,
-//    //用户ID
-//    var userId: Long = 0
+    var expTime: Long = 0L
 )
+
+/**
+ * 派单状态变化消息
+ */
+class FateQuickMatchChangeBean(
+    //未回复数量
+    var noReplyNum: Int = 0,
+    //变化的列表
+    var fateInfo: HashMap<String, String> = hashMapOf()
+) : Serializable

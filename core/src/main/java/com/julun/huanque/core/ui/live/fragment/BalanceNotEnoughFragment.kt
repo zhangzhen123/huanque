@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.live.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -9,7 +10,9 @@ import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_balance_not_enough.*
@@ -72,7 +75,11 @@ class BalanceNotEnoughFragment : BaseDialogFragment() {
 
         view_task.onClickNew {
             //去完成 进入养鹊乐园
-
+            val act = requireActivity()
+            val intent = Intent(act, LeYuanBirdActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                act.startActivity(intent)
+            }
             dismiss()
         }
     }
