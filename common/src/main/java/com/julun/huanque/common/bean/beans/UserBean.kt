@@ -154,8 +154,20 @@ class ConversationBasicBean(
     //道具列表
     var propList: MutableList<PrivateProp> = mutableListOf(),
     //聊天券数量
-    var chatTicketCnt: Int = 0
+    var chatTicketCnt: Int = 0,
+    //语音券数量
+    var voiceTicketCnt: Int = 0
 )
+
+/**
+ * 道具实体类
+ */
+class PropBean(
+//聊天券数量
+    var chatTicketCnt: Int = 0,
+    //语音券数量
+    var voiceTicketCnt: Int = 0
+) : Serializable
 
 /**
  * 两人之间的关系

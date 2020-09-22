@@ -280,7 +280,9 @@ data class SendMsgBean(
     //道具列表
     var propList: MutableList<PrivateProp> = mutableListOf(),
     //聊天券数量
-    var chatTicketCnt: Int = 0
+    var chatTicketCnt: Int = 0,
+    //语音券数量
+    var voiceTicketCnt: Int = 0
 )
 
 /**
@@ -358,7 +360,13 @@ data class ChatDetailBean(
 /**
  * 道具列表
  */
-data class PropListBean(var propList: MutableList<PrivateProp> = mutableListOf()) : Serializable
+data class PropListBean(
+    var propList: MutableList<PrivateProp> = mutableListOf(),
+    //聊天券数量
+    var chatTicketCnt: Int = 0,
+    //语音券数量
+    var voiceTicketCnt: Int = 0
+) : Serializable
 
 /**
  * 首页对象派单

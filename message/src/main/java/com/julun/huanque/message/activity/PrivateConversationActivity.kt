@@ -3,6 +3,7 @@ package com.julun.huanque.message.activity
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -306,38 +307,39 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.addMessageData?.value = null
             }
         })
-        mPrivateConversationViewModel?.propListData?.observe(this, Observer {
-            //道具列表
-            if (it != null) {
-                if (ForceUtils.isIndexNotOutOfBounds(0, it)) {
-                    val firstData = it[0]
-                    sdv_first_prop.show()
-                    sdv_first_prop.loadImage(firstData.goodsPic, 38f, 24f)
-                    tv_first_prop_count.show()
-                    tv_first_prop_count.text = "${firstData.count}"
-                } else {
-                    sdv_first_prop.hide()
-                    tv_first_prop_count.hide()
-                }
-
-                if (ForceUtils.isIndexNotOutOfBounds(1, it)) {
-                    val secondData = it[1]
-                    sdv_second_prop.show()
-                    sdv_second_prop.loadImage(secondData.goodsPic, 38f, 24f)
-                    tv_second_prop_count.show()
-                    tv_second_prop_count.text = "${secondData.count}"
-                } else {
-                    sdv_second_prop.hide()
-                    tv_second_prop_count.hide()
-                }
-            } else {
-                sdv_first_prop.hide()
-                tv_first_prop_count.hide()
-
-                sdv_second_prop.hide()
-                tv_second_prop_count.hide()
-            }
-        })
+//        mPrivateConversationViewModel?.propListData?.observe(this, Observer {
+//            //道具列表
+//            if (it != null) {
+//                if (ForceUtils.isIndexNotOutOfBounds(0, it)) {
+//                    val firstData = it[0]
+//                    sdv_first_prop.show()
+////                    sdv_first_prop.loadImage(firstData.goodsPic, 38f, 24f)
+//                    sdv_first_prop.imageResource = R.mipmap.icon_msg_small
+//                    tv_first_prop_count.show()
+//                    tv_first_prop_count.text = "${firstData.count}"
+//                } else {
+//                    sdv_first_prop.hide()
+//                    tv_first_prop_count.hide()
+//                }
+//
+//                if (ForceUtils.isIndexNotOutOfBounds(1, it)) {
+//                    val secondData = it[1]
+//                    sdv_second_prop.show()
+//                    sdv_second_prop.loadImage(secondData.goodsPic, 38f, 24f)
+//                    tv_second_prop_count.show()
+//                    tv_second_prop_count.text = "${secondData.count}"
+//                } else {
+//                    sdv_second_prop.hide()
+//                    tv_second_prop_count.hide()
+//                }
+//            } else {
+//                sdv_first_prop.hide()
+//                tv_first_prop_count.hide()
+//
+//                sdv_second_prop.hide()
+//                tv_second_prop_count.hide()
+//            }
+//        })
 
         mPrivateConversationViewModel?.messageChangeState?.observe(this, Observer {
             if (it != null) {
@@ -390,9 +392,22 @@ class PrivateConversationActivity : BaseActivity() {
                 //刷新特权表情
                 refreshPrivilegeEmoji(it.intimate)
                 tv_intimate.text = "lv.${it.intimate.intimateLevel}"
+
+            } else {
+                showTitleView(it?.friendUser?.nickname ?: "", it?.meetStatus ?: "")
+                mIntimateDetailViewModel?.basicBean?.value = it
             }
-            showTitleView(it.friendUser.nickname, it.meetStatus)
-            mIntimateDetailViewModel?.basicBean?.value = it
+        })
+
+        mPrivateConversationViewModel?.propData?.observe(this, Observer {
+            if (it != null) {
+                //道具
+                //语音券数量
+                val voiceTicketCount = it.voiceTicketCnt
+                //聊天券数量
+                val chatTicketCount = it.chatTicketCnt
+                updatePropView(voiceTicketCount, chatTicketCount)
+            }
         })
 
         //获取余额
@@ -471,6 +486,43 @@ class PrivateConversationActivity : BaseActivity() {
                 }
             }
         })
+    }
+
+    /**
+     * 更新道具视图
+     */
+    private fun updatePropView(voiceCount: Int, chatCount: Int) {
+        sdv_first_prop.hide()
+        tv_first_prop_count.hide()
+        sdv_second_prop.hide()
+        tv_second_prop_count.hide()
+
+        if (voiceCount > 0) {
+            //有语音券
+            sdv_first_prop.show()
+            sdv_first_prop.imageResource = R.mipmap.icon_voice_small
+            tv_first_prop_count.show()
+            tv_first_prop_count.text = "$voiceCount"
+        }
+
+        if (chatCount > 0) {
+            //有聊天券
+            val iv: ImageView
+            val tvCount: TextView
+            if (voiceCount <= 0) {
+                //使用First
+                iv = sdv_first_prop
+                tvCount = tv_first_prop_count
+            } else {
+                //使用second
+                iv = sdv_second_prop
+                tvCount = tv_second_prop_count
+            }
+            iv.show()
+            iv.imageResource = R.mipmap.icon_msg_small
+            tvCount.show()
+            tvCount.text = "$chatCount"
+        }
     }
 
     /**
@@ -772,6 +824,19 @@ class PrivateConversationActivity : BaseActivity() {
 //                }
             }
         })
+
+        sdv_first_prop.onClickNew {
+            //显示弹窗
+            val propBean = mPrivateConversationViewModel?.propData?.value ?: return@onClickNew
+            if (propBean.voiceTicketCnt > 0) {
+                PropFragment.newInstance(true).show(supportFragmentManager, "PropFragment")
+            } else {
+                PropFragment.newInstance(false).show(supportFragmentManager, "PropFragment")
+            }
+        }
+        sdv_second_prop.onClickNew {
+            PropFragment.newInstance(false).show(supportFragmentManager, "PropFragment")
+        }
     }
 
     // 删除光标所在前一位(不考虑切换到emoji时的光标位置，直接删除最后一位)
@@ -877,7 +942,8 @@ class PrivateConversationActivity : BaseActivity() {
 
 
     //悬浮表情
-    private var mEmojiPopupWindow: PopupWindow? = null
+    private
+    var mEmojiPopupWindow: PopupWindow? = null
 
 
     /**
@@ -1203,7 +1269,8 @@ class PrivateConversationActivity : BaseActivity() {
         }
     }
 
-    private var unfilledHeight = 0
+    private
+    var unfilledHeight = 0
 
     private fun initRecyclerView() {
         mLinearLayoutManager = LinearLayoutManager(this)
@@ -1288,7 +1355,8 @@ class PrivateConversationActivity : BaseActivity() {
                 }
                 R.id.view_bg_gift -> {
                     //送礼消息
-                    val started = tempData.senderUserId == "${SessionUtils.getUserId()}" || MessageUtils.getAnimationStarted(tempData)
+                    val started =
+                        tempData.senderUserId == "${SessionUtils.getUserId()}" || MessageUtils.getAnimationStarted(tempData)
                     if (!started) {
                         //播放动画
                         MessageUtils.setAnimationStarted(tempData)
@@ -1804,7 +1872,7 @@ class PrivateConversationActivity : BaseActivity() {
     /**
      * 增加单条消息
      */
-    private fun addSingleMessage(msg : Message){
+    private fun addSingleMessage(msg: Message) {
         mAdapter.addData(msg)
         mAdapter.upFetchModule.isUpFetching = false
         mAdapter.upFetchModule.isUpFetchEnable = mPrivateConversationViewModel?.noMoreState != true
