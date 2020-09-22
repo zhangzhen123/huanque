@@ -4,20 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/container"
     android:orientation="vertical">
 
     <ImageView
         android:id="@+id/sdv_nav_bg"
-        android:layout_width="@dimen/dimen_90"
+        android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_marginTop="@dimen/dimen_8"
+        android:layout_marginStart="@dimen/dimen_5"
+        android:layout_marginEnd="@dimen/dimen_5"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="327:210"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@mipmap/bg_header_mask" />
+        tools:src="@mipmap/bg_header_audio" />
 
 
     <TextView

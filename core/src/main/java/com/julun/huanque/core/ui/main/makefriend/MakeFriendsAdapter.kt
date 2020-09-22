@@ -8,6 +8,7 @@ import android.text.style.StyleSpan
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -252,26 +253,31 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val sp = SpannableString(content)
                 sp.setSpan(styleSpan1A, 0, start, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
                 tvTask.text = sp
-
-
-                rv.layoutManager = GridLayoutManager(context, 3)
-//                if (rv.itemDecorationCount <= 0) {
-//                    rv.addItemDecoration(HorizontalItemDecoration(dp2px(10)))
-//                }
+                if(headerInfo.moduleList.size<=3){
+                    rv.layoutManager = GridLayoutManager(context, headerInfo.moduleList.size)
+                }else{
+                    rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                }
                 val mHeaderNavAdapter: HeaderNavAdapter
                 if (rv.adapter != null) {
                     mHeaderNavAdapter = rv.adapter as HeaderNavAdapter
                 } else {
-                    //动态计算的宽高
-                    //图片宽度
-                    val singlePicWidth = (ScreenUtils.getScreenWidth() - dp2px(48)) / 3
-                    val tempHeight = ceil(singlePicWidth * 210 / 327.0 + dp2px(8)).toInt()
-
-                    val rvParams = rv.layoutParams
-                    rvParams.height = tempHeight
-                    rv.layoutParams = rvParams
-
-                    mHeaderNavAdapter = HeaderNavAdapter(singlePicWidth)
+                    val rvParams = rv.layoutParams as ConstraintLayout.LayoutParams
+                    if(headerInfo.moduleList.size<=3){
+                        //动态计算的宽高
+                        //图片宽度
+                        val singlePicWidth = (ScreenUtils.getScreenWidth() - dp2px(48)) / 3
+                        val tempHeight = ceil(singlePicWidth * 210 / 327.0 + dp2px(8)).toInt()
+                        rvParams.height = tempHeight
+                        rvParams.marginEnd=dp2px(10)
+                        mHeaderNavAdapter = HeaderNavAdapter(ViewGroup.LayoutParams.MATCH_PARENT)
+                    }else{
+                        //宽度固定100dp 高度自适应
+                        rvParams.height=ViewGroup.LayoutParams.WRAP_CONTENT
+                        rvParams.marginEnd=0
+                        mHeaderNavAdapter = HeaderNavAdapter(dp2px(100))
+                    }
+                    rv.requestLayout()
                     rv.adapter = mHeaderNavAdapter
                 }
 

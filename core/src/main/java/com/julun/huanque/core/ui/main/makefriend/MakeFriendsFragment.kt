@@ -206,7 +206,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                         ARouter.getInstance().build(ARouterConstant.ANONYMOUS_VOICE_ACTIVITY).navigation()
                     }
                     HeadModule.MagpieParadise -> {
-
+                        requireActivity().startActivity<LeYuanBirdActivity>()
                     }
                     HeadModule.HotLive -> {
                         //热门直播

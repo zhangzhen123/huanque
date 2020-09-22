@@ -43,7 +43,7 @@ object UserHeartManager {
         }
     }
 
-    var rqCount: Int = 0
+    private var rqCount: Int = 0
 
     /**
      * 开始启动在线功能

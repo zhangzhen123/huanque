@@ -128,8 +128,9 @@ class PlayerActivity : BaseActivity() {
 
     //分享用户Id
     private var mShareUSerId = ""
+
     //欢鹊领取倒计时
-    private var mBirdAwardCountInfo : BirdLiveAward?=null
+    private var mBirdAwardCountInfo: BirdLiveAward? = null
     override fun getLayoutId(): Int = R.layout.activity_live_room
 
     // 视频直播
@@ -181,6 +182,7 @@ class PlayerActivity : BaseActivity() {
         //主播开播之前数据
         const val AnchorData = "AnchorData"
         private const val PERMISSIONALERT_WINDOW_CODE = 123
+
         /**
          * @param activity 源Activity
          */
@@ -596,7 +598,6 @@ class PlayerActivity : BaseActivity() {
         })
 
     }
-
 
 
     /**
@@ -1092,9 +1093,9 @@ class PlayerActivity : BaseActivity() {
             //LiveData统一处理
             viewModel.fansRescueData.value = rescueData
         }
-        if(mBirdAwardCountInfo!=null){
+        if (mBirdAwardCountInfo != null) {
             bird_count_view.showCounting(mBirdAwardCountInfo!!)
-            mBirdAwardCountInfo=null
+            mBirdAwardCountInfo = null
         }
     }
 
@@ -1939,7 +1940,9 @@ class PlayerActivity : BaseActivity() {
     override fun onDestroy() {
         liveViewManager.destroyDialog()
         val baseData = viewModel.baseData.value
-        if (!isBanned && SessionUtils.getSessionId().isNotEmpty() && PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
+        if (!isBanned && SessionUtils.getSessionId()
+                .isNotEmpty() && PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null
+        ) {
             FloatingManager.showFloatingView(
                 GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
                 viewModel.programId,
@@ -2099,12 +2102,6 @@ class PlayerActivity : BaseActivity() {
      * 切换房间
      */
     private fun checkoutRoom(program: Long) {
-        if (this@PlayerActivity.programId == program) {
-            if (viewModel.loginSuccessData.value != null) {
-                //就在当前直播间，直接打开对应功能
-                doWithOpenAction()
-            }
-        }
         //如果当前是主播推流 禁止一切切换房间
         if (!isAnchor && program != 0L && this@PlayerActivity.programId != program) {
             viewModel.anchorProgramId.value = program
@@ -2112,7 +2109,12 @@ class PlayerActivity : BaseActivity() {
             this@PlayerActivity.programId = program
         } else {
             //处于当前直播间，直接执行打开操作
-            doWithOpenAction()
+            if (this@PlayerActivity.programId == program) {
+                if (viewModel.loginSuccessData.value != null) {
+                    //就在当前直播间，直接打开对应功能
+                    doWithOpenAction()
+                }
+            }
             return
         }
         liveViewManager.closePassThroughDialog()
