@@ -8,11 +8,11 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_gift"
-        android:layout_width="32dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="@dimen/dimen_4"
-        android:layout_marginEnd="@dimen/dimen_3"
-        android:background="#ECDBA4"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="@dimen/dimen_6"
+        android:layout_marginEnd="@dimen/dimen_6"
+        android:background="@drawable/bg_bird_active_img"
         app:actualImageScaleType="fitCenter"
         app:roundedCornerRadius="@dimen/dimen_4"
         app:roundingBorderColor="@color/white"
@@ -22,9 +22,11 @@
         android:id="@+id/tv_num"
         android:layout_width="wrap_content"
         android:layout_height="12dp"
-        android:layout_gravity="top|end"
+        android:layout_gravity="bottom|end"
         android:layout_marginTop="@dimen/dimen_1"
-        android:background="@drawable/bg_rectangle_red_02"
+        android:layout_marginEnd="@dimen/dimen_7"
+        android:layout_marginBottom="@dimen/dimen_1"
+        android:background="@drawable/bg_bird_active_red"
         android:gravity="center"
         android:includeFontPadding="false"
         android:maxLines="1"
@@ -32,23 +34,41 @@
         android:paddingRight="@dimen/dimen_3"
         android:textColor="@color/white"
         android:textSize="8sp"
-        tools:text="99" />
+        tools:text="X9" />
+
+    <TextView
+        android:id="@+id/tv_receive"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="@dimen/dimen_1"
+        android:background="@drawable/bg_bird_active_green"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/dimen_3"
+        android:paddingRight="@dimen/dimen_3"
+        android:text="领取"
+        android:textColor="@color/white"
+        android:textSize="8sp" />
 
     <View
         android:id="@+id/masking"
-        android:layout_width="@dimen/dimen_32"
-        android:layout_height="@dimen/dimen_26"
-        android:layout_marginTop="@dimen/dimen_4"
-        android:layout_marginEnd="@dimen/dimen_3"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="@dimen/dimen_7"
+        android:layout_marginEnd="@dimen/dimen_7"
+        android:layout_marginBottom="@dimen/dimen_1"
+        android:layout_marginStart="@dimen/dimen_1"
         android:background="@drawable/bg_shape_black_p60"
         android:visibility="gone" />
 
     <ImageView
         android:id="@+id/iv_finish"
-        android:layout_width="@dimen/dimen_32"
-        android:layout_height="@dimen/dimen_26"
-        android:layout_marginTop="@dimen/dimen_4"
-        android:layout_marginEnd="@dimen/dimen_3"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="@dimen/dimen_6"
+        android:layout_marginEnd="@dimen/dimen_6"
         android:src="@mipmap/icon_bird_task_finish"
         android:visibility="gone"
         tools:visibility="visible" />

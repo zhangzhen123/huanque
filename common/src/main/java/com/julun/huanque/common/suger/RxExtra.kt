@@ -130,13 +130,14 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
             } else {
                 "系统异常"
             }
-            Observable.just(message).compose(DefaultRxTransformer<String>()).subscribe {
-                try {
-                    ToastUtils.show(it)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+            ToastUtils.show2(message)
+//            Observable.just(message).compose(DefaultRxTransformer<String>()).subscribe {
+//                try {
+//                    ToastUtils.show(it)
+//                } catch (e: Exception) {
+//                    e.printStackTrace()
+//                }
+//            }
         }
 
 //        // 余额不足
@@ -145,15 +146,15 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
 //        }
         // 其他系统定义错误代码
         else -> {
-            Observable.just(it.message.toString()).compose(DefaultRxTransformer<String>()).subscribe {
-                try {
-                    ToastUtils.show(it)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    reportCrash("弹出窗口出错", e)
-                }
-            }
-
+            ToastUtils.show2(it.message.toString())
+//            Observable.just(it.message.toString()).compose(DefaultRxTransformer<String>()).subscribe {
+//                try {
+//
+//                } catch (e: Exception) {
+//                    e.printStackTrace()
+//                    reportCrash("弹出窗口出错", e)
+//                }
+//            }
 
         }
     }
@@ -177,10 +178,12 @@ fun <T> Observable<Root<T>>.whatEver() {
 
 /**
  * 不做任何处理
+ * 但是错误还是要抓取 不然会抛出异常
  */
 fun <T> Observable<Root<T>>.nothing() {
-    this.subscribe()
+    this.subscribe({}, { it.printStackTrace() })
 }
+
 //添加处理函数
 fun <T> Observable<Root<T>>.handleResponse(observableSubscriber: CancelableObservableSubscriber<T>) {
     this.afterRequest(observableSubscriber.specifiedCodes).compose(RunOnMainSchedulerTransformer<T>())

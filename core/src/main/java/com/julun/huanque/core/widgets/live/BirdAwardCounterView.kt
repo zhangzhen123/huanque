@@ -73,16 +73,17 @@ class BirdAwardCounterView : ConstraintLayout {
                         val content = "恭喜您成功领取了\n ${StringHelper.formatBigNum(it.requireT().awardCoins)}金币"
                         val dialog = BirdGotMoneyDialogFragment.newInstance(content)
                         dialog.show(act, "BirdGotMoneyDialogFragment")
-                        this@BirdAwardCounterView?.hide()
                     }, 500L)
+                    this@BirdAwardCounterView?.hide()
                 } else if (it.state == NetStateType.ERROR) {
                     ToastUtils.show("${it.error?.busiMessage}")
                 }
                 isEnabled = true
+                canReceive=false
             })
         }
         onClickNew {
-            if (time <= 0) {
+            if (canReceive) {
                 isEnabled = false
                 mBirdTaskViewModel?.receiveTask(currentBirdLiveAward?.taskCode ?: return@onClickNew)
             }
@@ -94,6 +95,7 @@ class BirdAwardCounterView : ConstraintLayout {
 
     //
     private var time: Long = 0
+    private var canReceive=false
     private var currentBirdLiveAward: BirdLiveAward? = null
     fun showCounting(info: BirdLiveAward) {
         this.show()
@@ -109,6 +111,7 @@ class BirdAwardCounterView : ConstraintLayout {
                 time = totalTime - it
                 if (time <= 0L) {
                     mPlayerViewModel?.watchLiveEnd()
+                    canReceive=true
                     tv_tips.text = "领取"
                 } else {
                     tv_tips.text = "$time"

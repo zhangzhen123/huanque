@@ -56,6 +56,7 @@ import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.startActivity
 import java.io.File
+import java.math.BigInteger
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -279,6 +280,11 @@ class TestActivity : BaseActivity() {
             tvColorful.isColorsVertical=true
             tvColorful.colors=intArrayOf(Color.parseColor("#FFFBEF"),Color.parseColor("#E5A441"),Color.parseColor("#FFFBEF"))
         }
+        tvColorful.text="${StringHelper.formatBigNum(BigInteger("1999"))}\n" +
+                "${StringHelper.formatBigNum(BigInteger("999"))}\n"+
+                "${StringHelper.formatBigNum(BigInteger("1999999"))}\n"+
+                "${StringHelper.formatBigNum(BigInteger("1999999999"))}\n"+
+                "${StringHelper.formatBigNum(BigInteger("1999999999999"))}\n"
     }
 
 //    private val ANIMATED_COLOR_SPAN_FLOAT_PROPERTY: Property<AnimatedRainbowSpan, Float> =

@@ -20,6 +20,7 @@
         android:layout_width="@dimen/dimen_36"
         android:layout_height="@dimen/dimen_36"
         android:layout_marginEnd="@dimen/dimen_30"
+        android:visibility="gone"
         android:src="@mipmap/icon_close_white_01"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

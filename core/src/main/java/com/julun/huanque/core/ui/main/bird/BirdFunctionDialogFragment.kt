@@ -78,11 +78,11 @@ class BirdFunctionDialogFragment : BaseDialogFragment() {
             tv_desc.text = bird.bFunction
             tv_source.text = bird.source
             if (bird.num != null && bird.num!! > 0) {
-                tv_bird_fly.isEnabled = true
+//                tv_bird_fly.isEnabled = true
                 tv_bird_fly.backgroundResource = R.mipmap.bg_bird_btn_green
 
             } else {
-                tv_bird_fly.isEnabled = false
+//                tv_bird_fly.isEnabled = false
                 tv_bird_fly.backgroundResource = R.mipmap.bg_bird_btn_enable
             }
         }

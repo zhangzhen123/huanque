@@ -69,6 +69,7 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         ivClose.onClickNew {
             dismiss()
         }
+        taskAdapter.addFooterView(LayoutInflater.from(context).inflate(R.layout.view_bottom_holder,null))
         taskAdapter.setOnItemChildClickListener { _, _, position ->
             currentItem = null
             val item = taskAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
@@ -286,13 +287,19 @@ class BirdTaskAwardView : FrameLayout {
             BirdTaskStatus.Received -> {
                 masking.show()
                 iv_finish.show()
-                tv_num.hide()
+                tv_receive.hide()
                 this.isEnabled = false
+            }
+            BirdTaskStatus.NotReceive -> {
+                masking.hide()
+                iv_finish.hide()
+                tv_receive.show()
+                this.isEnabled = true
             }
             else -> {
                 masking.hide()
                 iv_finish.hide()
-                tv_num.show()
+                tv_receive.hide()
                 this.isEnabled = true
             }
         }

@@ -533,6 +533,7 @@ object StringHelper {
      */
     fun formatBigNum(number: BigDecimal): String {
         val format = DecimalFormat("#.0")
+        format.roundingMode = RoundingMode.DOWN
         format.minimumFractionDigits = 1 //设置小数部分允许的最小位数
         val numK = BigDecimal("1000")
         if (number < numK) {
