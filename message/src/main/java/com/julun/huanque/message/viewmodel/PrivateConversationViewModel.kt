@@ -76,9 +76,6 @@ class PrivateConversationViewModel : BaseViewModel() {
     //基础数据
     val basicBean: MutableLiveData<ConversationBasicBean> by lazy { MutableLiveData<ConversationBasicBean>() }
 
-    //私信 道具列表
-    val propListData: MutableLiveData<MutableList<PrivateProp>> by lazy { MutableLiveData<MutableList<PrivateProp>>() }
-
     //亲密度数据
     val intimateData: MutableLiveData<IntimateBean> by lazy { MutableLiveData<IntimateBean>() }
 
@@ -111,6 +108,9 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //用户等级变化消息
     val userExpChangeEvent: MutableLiveData<UserExpChangeEvent> by lazy { MutableLiveData<UserExpChangeEvent>() }
+
+    //道具数据
+    val propData: MutableLiveData<PropBean> by lazy { MutableLiveData<PropBean>() }
 
     //操作类型
     var operationType = ""
@@ -260,8 +260,8 @@ class PrivateConversationViewModel : BaseViewModel() {
                 chatInfoData.value = result.friendUser.apply { stranger = result.stranger }
                 intimateData.value = result.intimate
                 msgFeeData.value = result.msgFee
-                propListData.value = result.propList
                 basicBean.value = result
+                propData.value = PropBean(result.chatTicketCnt, result.voiceTicketCnt)
                 BalanceUtils.saveBalance(result.beans)
 
                 withContext(Dispatchers.IO) {
@@ -354,13 +354,13 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun sendMsg(targetId: Long, content: String, targetUser: TargetUserObj, type: String = "", localMsg: Message? = null) {
         viewModelScope.launch {
             request({
-                val result = socialService.sendMsg(SendMsgForm(targetId, content,mFateID)).dataConvert(intArrayOf(ErrorCodes.BALANCE_NOT_ENOUGH))
+                val result = socialService.sendMsg(SendMsgForm(targetId, content, mFateID)).dataConvert(intArrayOf(ErrorCodes.BALANCE_NOT_ENOUGH))
                 BalanceUtils.saveBalance(result.beans)
                 if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
                     msgFeeData.value = result.consumeBeans
                 }
                 basicBean.value?.chatTicketCnt = result.chatTicketCnt
-                propListData.value = result.propList
+                propData.value = PropBean(result.chatTicketCnt, result.voiceTicketCnt)
                 if (type.isEmpty()) {
                     localMsg?.sentStatus = Message.SentStatus.SENT
                     msgData.value = localMsg
@@ -417,7 +417,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun sendPic(uploader: IRongCallback.MediaMessageUploader?, targetId: Long, content: String) {
         viewModelScope.launch {
             request({
-                val result = socialService.sendPic(SendMsgForm(targetId, content,mFateID)).dataConvert()
+                val result = socialService.sendPic(SendMsgForm(targetId, content, mFateID)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
                 if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
                     msgFeeData.value = result.consumeBeans
@@ -447,7 +447,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun sendDice(targetId: Long, content: String, localMsg: Message) {
         viewModelScope.launch {
             request({
-                val result = socialService.sendDice(SendMsgForm(targetId, content,mFateID)).dataConvert()
+                val result = socialService.sendDice(SendMsgForm(targetId, content, mFateID)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
                 if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
                     msgFeeData.value = result.consumeBeans
@@ -485,7 +485,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun sendFinger(targetId: Long, content: String, localMsg: Message) {
         viewModelScope.launch {
             request({
-                val result = socialService.sendFinger(SendMsgForm(targetId, content,mFateID)).dataConvert()
+                val result = socialService.sendFinger(SendMsgForm(targetId, content, mFateID)).dataConvert()
                 BalanceUtils.saveBalance(result.beans)
                 if (basicBean.value?.chatTicketCnt ?: 0 <= 0) {
                     msgFeeData.value = result.consumeBeans
@@ -597,7 +597,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     fun sendRoom(programId: Long) {
         viewModelScope.launch {
             request({
-                val sendRoomResult = socialService.sendRoom(SendRoomForm(targetIdData.value ?: return@request, programId,mFateID)).dataConvert()
+                val sendRoomResult = socialService.sendRoom(SendRoomForm(targetIdData.value ?: return@request, programId, mFateID)).dataConvert()
                 sendRoomIndoData.value = sendRoomResult.sendRoomInfo
                 BalanceUtils.saveBalance(sendRoomResult.beans)
             })
@@ -629,7 +629,9 @@ class PrivateConversationViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = socialService.propList().dataConvert()
-                propListData.value = result.propList
+//                propListData.value = result.propList
+                propData.value = PropBean(result.chatTicketCnt, result.voiceTicketCnt)
+                basicBean.value?.chatTicketCnt = result.chatTicketCnt
             })
         }
     }

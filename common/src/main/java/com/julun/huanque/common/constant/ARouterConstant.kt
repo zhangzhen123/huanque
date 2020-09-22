@@ -98,6 +98,9 @@ object ARouterConstant {
     //直播间
     const val PLAYER_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/PlayerActivity"
 
+    //乐园
+    const val LEYUAN_BIRD_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/LeYuanBirdActivity"
+
     /** 实名认证 start **/
     private const val REAL_NAME = "realname"
 
