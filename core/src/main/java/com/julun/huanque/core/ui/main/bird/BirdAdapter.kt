@@ -157,7 +157,7 @@ class BirdAdapter(var programId: Long? = null) : BaseQuickAdapter<UpgradeBirdBea
         set1.duration = 200
         set1.playTogether(aniX, aniY)
         set1.addListener(onEnd = {
-            textView.show()
+            textView?.show()
         })
 
         val aniText1 = ObjectAnimator.ofFloat(textView, View.TRANSLATION_Y, 0f, -dp2pxf(40))

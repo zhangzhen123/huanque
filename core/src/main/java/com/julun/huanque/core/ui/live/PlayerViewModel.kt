@@ -32,6 +32,7 @@ import com.julun.huanque.common.utils.SPUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.model.Conversation
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
@@ -287,9 +288,6 @@ class PlayerViewModel : BaseViewModel() {
     //引导提示公聊区显示加入粉丝团
     val guideToFansJoin: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-    //锦鲤池的runwayCache
-    val runwayCache: MutableLiveData<RunwayCache> by lazy { MutableLiveData<RunwayCache>() }
-
     //是否展示粉丝打卡气泡
     val isShowFansBubbleLayout: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -511,10 +509,16 @@ class PlayerViewModel : BaseViewModel() {
             })
         }
     }
-
-    fun leave(programId: Long) {
+    //因为已经销毁了界面不在生命周期内 使用viewModelScope不会执行
+    fun leave() {
         logger("leave")
         UserHeartManager.setProgramId(null)
+        GlobalScope.launch {
+            request({
+                liveService.leave(ProgramIdForm(programId)).dataConvert()
+            }, {})
+        }
+
     }
 
     fun closeAllDelayTime() {
@@ -538,20 +542,6 @@ class PlayerViewModel : BaseViewModel() {
             })
         }
     }
-
-
-    /**
-     * 离开直播间
-     */
-    fun leaveProgram() {
-        viewModelScope.launch {
-            request({
-                liveService.leave(ProgramIdForm(programId)).dataConvert()
-            }, {})
-        }
-
-    }
-
 
     /**
      * 取消关注

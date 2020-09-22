@@ -113,13 +113,13 @@ class PlayerActivity : BaseActivity() {
             return@observable
         }
 
-        val exception = Exception()
-        val stackTrace: Array<out StackTraceElement> = exception.stackTrace
-        val firstOrNull: StackTraceElement? =
-            stackTrace.firstOrNull { it.methodName == "exitLiveRoom" }
-        if (firstOrNull == null) {
-            reportCrash("programId被非正常的设置为 0 了", exception)
-        }
+//        val exception = Exception()
+//        val stackTrace: Array<out StackTraceElement> = exception.stackTrace
+//        val firstOrNull: StackTraceElement? =
+//            stackTrace.firstOrNull { it.methodName == "exitLiveRoom" }
+//        if (firstOrNull == null) {
+//            reportCrash("programId被非正常的设置为 0 了", exception)
+//        }
     }
     private var streamId: String? = null
 
@@ -1061,7 +1061,6 @@ class PlayerActivity : BaseActivity() {
         resetView()
         //重置过页面之后，调用刷新未读数方法
         privatePoint(EventMessageBean())
-        viewModel.runwayCache.value = null
         //隐藏猜字谜气泡
         viewModel.isShowGuessWordsBubbleLayout.value = false
         //关闭已经在路上的倒计时
@@ -1939,10 +1938,6 @@ class PlayerActivity : BaseActivity() {
     //当界面被销毁时关闭掉所有弹窗避免重建时弹窗恢复
     override fun onDestroy() {
         liveViewManager.destroyDialog()
-//        closeDialogIfExists()
-        exitLiveRoom()
-        super.onDestroy()
-        viewModel.runwayCache.value = null
         val baseData = viewModel.baseData.value
         if (!isBanned && SessionUtils.getSessionId().isNotEmpty() && PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null) {
             FloatingManager.showFloatingView(
@@ -1953,8 +1948,10 @@ class PlayerActivity : BaseActivity() {
             )
         } else {
             AliplayerManager.stop()
-            viewModel.leaveProgram()
+            viewModel.leave()
         }
+        exitLiveRoom()
+        super.onDestroy()
         logger.info("Player 执行OnDestroy方法")
     }
 
@@ -1969,12 +1966,10 @@ class PlayerActivity : BaseActivity() {
             if (isAnchor) {
                 stopPublish()
             } else {
-                viewModel.leave(programId)
 //                if (goHome) {
 //                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
 //                }
                 AliplayerManager.stop()
-                viewModel.leaveProgram()
             }
             super.finish()
             return
@@ -2002,7 +1997,6 @@ class PlayerActivity : BaseActivity() {
             if (!viewModel.finishCertain && viewModel.checkGuideFollow()) {
                 return
             }
-            viewModel.leave(programId)
 //            mDanmuFragment?.release()
             //用户
 //            if (goHome) {
@@ -2032,7 +2026,6 @@ class PlayerActivity : BaseActivity() {
 //            viewModel.appStopLiving(programId.toLong())
             mVideoViewModel?.stopAllStreamState?.value = true
         } else {
-            viewModel.leave(programId)
             super.finish()
         }
     }
@@ -2046,7 +2039,6 @@ class PlayerActivity : BaseActivity() {
 //            viewModel.todayStat(programId)
             mVideoViewModel?.stopAllStreamState?.value = true
         } else {
-            viewModel.leave(programId)
             super.finish()
         }
     }

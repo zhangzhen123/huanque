@@ -69,6 +69,7 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         ivClose.onClickNew {
             dismiss()
         }
+        taskAdapter.addFooterView(LayoutInflater.from(context).inflate(R.layout.view_bottom_holder,null))
         taskAdapter.setOnItemChildClickListener { _, _, position ->
             currentItem = null
             val item = taskAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener

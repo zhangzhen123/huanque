@@ -14,6 +14,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.animation.addListener
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -800,6 +801,9 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         set.playSequentially(aniText1, aniText2)
         set.addListener(onEnd = {
 //                    logger("数字执行完成  开始隐藏")
+            if(lifecycle.currentState<= Lifecycle.State.INITIALIZED){
+                return@addListener
+            }
             tv_recycler_coin?.hide()
             switchRecycleState(false)
         })
@@ -1033,16 +1037,19 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         if (currentPosition != null && currentPosition.isNotEmpty() && originPosition != null && originPosition.isNotEmpty()) {
             val anim1 = ValueAnimator.ofFloat(currentPosition[0].toFloat(), originPosition[0].toFloat())
             anim1.addUpdateListener { valueAnimate ->
-                bird_mask.x = valueAnimate.animatedValue as Float
+                bird_mask?.x = valueAnimate.animatedValue as Float
             }
             val anim2 = ValueAnimator.ofFloat(currentPosition[1].toFloat(), originPosition[1].toFloat())
             anim2.addUpdateListener { valueAnimate ->
-                bird_mask.y = valueAnimate.animatedValue as Float
+                bird_mask?.y = valueAnimate.animatedValue as Float
             }
             val set = AnimatorSet()
             set.duration = 300
             set.playTogether(anim1, anim2)
             set.addListener(onEnd = {
+                if(lifecycle.currentState<= Lifecycle.State.INITIALIZED){
+                    return@addListener
+                }
                 recoveryItemBird()
             })
             set.start()
@@ -1118,6 +1125,11 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         anim02.interpolator = AccelerateDecelerateInterpolator()
         //(3)
         anim02.addListener(onEnd = {
+            //一定要判断生命周期销毁时 不然会报找不到view
+            if(lifecycle.currentState<= Lifecycle.State.INITIALIZED){
+                isActionDoing = false
+                return@addListener
+            }
             currentTargetItem?.upgradePos = currentIndex
             birdAdapter.setData(currentIndex, currentTargetItem!!)
 
@@ -1209,8 +1221,11 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         anim02.playTogether(anim0201, anim0202)
         //(3)靠拢后 播放合体特效
         anim02.addListener(onEnd = {
+            if(lifecycle.currentState<= Lifecycle.State.INITIALIZED){
+                isActionDoing = false
+                return@addListener
+            }
             //播放特效 播放声音
-//            SoundPoolManager.instance.play(BIRD_COMBINE)
             playSound(BIRD_COMBINE)
             bird_combine_ani.show()
             ImageUtils.loadWebpImageLocal(bird_combine_ani, R.mipmap.anim_bird_combine)
