@@ -226,7 +226,7 @@ class MessageFragment : BaseFragment() {
                     //查询会话列表和免打扰列表
                     mPlayerMessageViewModel.getBlockedConversationList()
                     mMessageViewModel.getConversationList()
-                } else if(RongCloudUtils.RongCloudNeedConnectedManually()){
+                } else if (RongCloudUtils.RongCloudNeedConnectedManually()) {
                     //手动连接一次
                     RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = false)
                 }
@@ -347,6 +347,15 @@ class MessageFragment : BaseFragment() {
         iv_contacts_player.onClickNew {
             //联系人
             mPlayerMessageViewModel.contactsData.value = true
+        }
+
+        tv_yuanfen.onClickNew {
+            //
+            val act = requireActivity()
+            val intent = Intent(requireActivity(), YuanFenActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                act.startActivity(intent)
+            }
         }
 
 //        if(BuildConfig.DEBUG){

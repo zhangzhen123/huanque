@@ -15,7 +15,7 @@ class FriendIdForm(var friendId: Long)
 
 class TargetIdForm(var targetUserId: Long)
 
-class SendChatGiftForm(var friendId: Long, var chatGiftId: Int, var count: Int)
+class SendChatGiftForm(var friendId: Long, var chatGiftId: Int, var count: Int, var fateId: String? = null)
 
 /**
  * 创建语音通话的form
@@ -41,7 +41,7 @@ class NetcallHangUpForm(var callId: Long = 0, var duration: Long = 0) : Serializ
  * @param friendId 发送的好友ID
  * @param content 消息内容
  */
-class SendMsgForm(var friendId: Long = 0, var content: String = "")
+class SendMsgForm(var friendId: Long = 0, var content: String = "", var fateId: String? = null)
 
 class ReportForm {
     // 举报用户
@@ -127,9 +127,14 @@ class ValidateForm(var content: String = "", var programId: Long = 0)
 /**
  * 发送传送门的form
  */
-class SendRoomForm(var friendId: Long, var programId: Long)
+class SendRoomForm(var friendId: Long, var programId: Long, var fateId: String? = null)
 
 /**
  * 性别的Form
  */
 class SexForm(var sexType: String = "")
+
+/**
+ * 需要使用offset的form
+ */
+class OffsetForm(var offset: Int = 0)

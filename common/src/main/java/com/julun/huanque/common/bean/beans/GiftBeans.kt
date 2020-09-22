@@ -355,4 +355,57 @@ data class ChatDetailBean(
 ) :
     Serializable
 
+/**
+ * 道具列表
+ */
 data class PropListBean(var propList: MutableList<PrivateProp> = mutableListOf()) : Serializable
+
+/**
+ * 首页对象派单
+ */
+data class ChatRoomBean(
+    //派单未回复数量
+    var fateNoReplyNum: Int = 0,
+    //在线状态
+    var onlineStatus: String = ""
+) : Serializable
+
+/**
+ * 派单数据
+ */
+data class FateInfo(
+    //年龄
+    var age: Int = 0,
+    //城市
+    var city: String = "",
+    //订单Id
+    var fateId: String = "",
+    //匹配时间
+    var matchTime: String = "",
+    //用户头像
+    var headPic: String = "",
+    //用户昵称
+    var nickname: String = "",
+    //贵族等级
+    var royalPic: String = "",
+    //性别：男(M)、女(F)(可选项：Male、Female、Unknow)
+    var sexType: String = "",
+    var userId: Long = 0,
+    //用户等级
+    var userLevel: Int = 0,
+    //当前状态
+    var status: String = "",
+    //倒计时
+    var ttl: Int = 0
+) : Serializable {
+    companion object {
+        //等待回复
+        const val Wait = "Wait"
+
+        //准时回复
+        const val Finish = "Finish"
+
+        //超时回复
+        const val Timeout = "Timeout"
+    }
+}

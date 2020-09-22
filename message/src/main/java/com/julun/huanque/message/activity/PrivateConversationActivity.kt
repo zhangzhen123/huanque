@@ -21,6 +21,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.facade.annotation.Param
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
@@ -222,6 +223,8 @@ class PrivateConversationActivity : BaseActivity() {
 
         mPrivateConversationViewModel?.operationType =
             intent?.getStringExtra(ParamConstant.OPERATION) ?: ""
+        //订单ID
+//        mPrivateConversationViewModel?.mFateID = intent?.getStringExtra(ParamConstant.FATE_ID)
         //获取基本数据
         mPrivateConversationViewModel?.chatBasic(targetID ?: return)
         //获取小鹊语料

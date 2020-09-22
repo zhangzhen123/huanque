@@ -18,10 +18,7 @@ import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.VoidResult
-import com.julun.huanque.common.bean.beans.AnonyVoiceInviteBean
-import com.julun.huanque.common.bean.beans.IntimateBean
-import com.julun.huanque.common.bean.beans.NetCallReceiveBean
-import com.julun.huanque.common.bean.beans.OperatorMessageBean
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.*
@@ -155,6 +152,8 @@ class MainActivity : BaseActivity() {
             .bindUntilEvent(this, ActivityEvent.DESTROY)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ checkPermission() }, { it.printStackTrace() })
+
+        mMessageViewModel.chatRoom()
     }
 
     /**
@@ -564,6 +563,20 @@ class MainActivity : BaseActivity() {
                 }
             }
         })
+
+        //派单消息
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.FateQuickMatchProcessor {
+            override fun process(data: FateQuickMatchBean) {
+                val splTime = data.expTime - System.currentTimeMillis()
+                if (splTime <= 0) {
+                    //消息已经过期
+                    return
+                }
+                mHuanQueViewModel.setFateData(data)
+            }
+        })
+
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

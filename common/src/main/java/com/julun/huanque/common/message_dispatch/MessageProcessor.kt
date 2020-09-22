@@ -1243,6 +1243,13 @@ object MessageProcessor {
         override fun isGlobal() = true
     }
 
+    /**
+     * 派单消息
+     */
+    interface FateQuickMatchProcessor : EventMessageProcessor<FateQuickMatchBean> {
+        override fun getEventType() = EventMessageType.FateQuickMatch
+        override fun isGlobal() = true
+    }
 
 }
 
@@ -1605,7 +1612,10 @@ enum class EventMessageType(val klass: Class<*>) {
     AnonyVoiceCancel(AnonyVoiceCancelBean::class.java),
 
     //刷新气泡设置消息
-    RefreshUserSetting(VoidResult::class.java)
+    RefreshUserSetting(VoidResult::class.java),
+
+    //派单消息
+    FateQuickMatch(FateQuickMatchBean::class.java)
 //inviteUserId
     //禁言消息
 //    MuteUser(OperatorMessageBean::class.java),

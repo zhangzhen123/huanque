@@ -37,6 +37,7 @@ import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
@@ -114,6 +115,7 @@ class LoginActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         FloatingManager.hideFloatingView()
+        HuanViewModelManager.huanQueViewModel.clearFateData()
 
         if (!resume) {
             resume = true
