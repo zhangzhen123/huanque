@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.main.makefriend
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.julun.huanque.common.basic.NetStateType
@@ -54,6 +55,8 @@ class MakeFriendsViewModel : BaseViewModel() {
     //记录全部的列表
     private var totalList = mutableListOf<HomeRecomItem>()
 
+    val flowerPic:MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
     val stateList: LiveData<ReactiveData<RootListData<HomeItemBean>>> = queryState.switchMap { type ->
         liveData {
             val form: RecomListForm = if (type != QueryType.LOAD_MORE) {
@@ -85,7 +88,9 @@ class MakeFriendsViewModel : BaseViewModel() {
                     if (!guideCloseByUser2) {
                         needGuide2 = true
                     }
-
+                    if(homeListData.flowerPic!=null){
+                        flowerPic.value=homeListData.flowerPic
+                    }
                 } else {
                     resultList.forEach {
                         list.add(HomeItemBean(HomeItemBean.NORMAL, it))

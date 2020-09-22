@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.main.home
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
@@ -16,9 +17,11 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.makefriend.MakeFriendsFragment
+import com.julun.huanque.core.ui.main.makefriend.PlumFlowerActivity
 import com.julun.rnlib.RnManager
 import com.luck.picture.lib.tools.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -29,6 +32,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.CommonPagerTitleView
+import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.topPadding
 
 /**
@@ -67,6 +71,14 @@ class HomeFragment : BaseFragment() {
         home_container.post {
             RnManager.createReactInstanceManager(CommonInit.getInstance().getApp())
         }
+        iv_flower_fg.onClickNew {
+            activity?.let { act ->
+                val intent = Intent(act, PlumFlowerActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    act.startActivity(intent)
+                }
+            }
+        }
     }
 
     private fun initViewPager() {
@@ -88,7 +100,17 @@ class HomeFragment : BaseFragment() {
 
         })
         viewModel.queryInfo()
-
+        viewModel.flowerPic.observe(viewLifecycleOwner, Observer {
+            //
+            if(it!=null){
+                sdw_flower.show()
+                sdw_flower.loadImage(it,32f,32f)
+                iv_flower_fg.imageResource=R.mipmap.fg_home_flower_top
+            }else{
+                sdw_flower.hide()
+                iv_flower_fg.imageResource=R.mipmap.icon_home_flower_top
+            }
+        })
     }
 
     /**

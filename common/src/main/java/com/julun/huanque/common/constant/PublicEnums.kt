@@ -591,3 +591,7 @@ object PushDataActionType {
     const val PlumFlower = "PlumFlower"//（跳转到今日花魁）
 
 }
+object HomePageOnlineStatus {
+    const val Online = "Online"
+    const val Offline = "Offline"
+}

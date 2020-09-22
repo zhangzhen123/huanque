@@ -64,6 +64,7 @@ class HomeListData<T> : RootListData<T>() {
     var remind: HomeRemind = HomeRemind()
     var taskBar: HomeTaskBar = HomeTaskBar()
     var offset: Int? = null
+    var flowerPic:String?=null
 }
 
 data class HomeRemind(
@@ -98,7 +99,9 @@ data class HomeRecomItem(
     var nickname: String = "",
     var sex: String = "",
     var tagList: List<String> = listOf(),
-    var userId: Long = 0
+    var userId: Long = 0,
+    var onlineStatus:String="",
+    var lastOfflineTime:Long=0L
 ) {
 
     //去重需要的重写
