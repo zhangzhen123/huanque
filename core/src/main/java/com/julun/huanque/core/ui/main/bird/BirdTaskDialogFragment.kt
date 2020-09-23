@@ -96,6 +96,12 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
                             this@BirdTaskDialogFragment.dismiss()
                             EventBus.getDefault().post(HideBirdEvent())
                         }
+                        BirdTaskJump.AnonyVoiceCall -> {
+                            ARouter.getInstance().build(ARouterConstant.ANONYMOUS_VOICE_ACTIVITY).navigation()
+                            this@BirdTaskDialogFragment.dismiss()
+                            EventBus.getDefault().post(HideBirdEvent())
+
+                        }
 
                     }
 

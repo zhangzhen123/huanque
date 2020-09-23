@@ -46,9 +46,9 @@ object RPushUtil {
                 Log.i(TAG, "options:$options")
                 try {
                     val jsonObject = JSONObject(options)
-                    val appData=if(jsonObject.has("appData")){
+                    val appData = if (jsonObject.has("appData")) {
                         jsonObject.getString("appData")
-                    }else{
+                    } else {
                         ""
                     }
                     parseJson(appData, context)
@@ -75,9 +75,10 @@ object RPushUtil {
         return result
     }
 
-    private fun checkNeedConnectRongCloud(){
+    private fun checkNeedConnectRongCloud() {
         RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
     }
+
     //这里统一处理所有的推送消息
     fun parseJson(jsonString: String, context: Context) {
         try {
@@ -125,6 +126,12 @@ object RPushUtil {
                 PushDataActionType.PlumFlower -> {
                     startActivityByARouter(context, ARouterConstant.PLUM_FLOWER_ACTIVITY, bundle = Bundle().apply {
                         this.putString(ParamConstant.TYPE, bean.touchValue)
+                    }, goHome = true)
+                }
+                PushDataActionType.PrivateChat -> {
+                    val targetId = bean.touchValue.toLongOrNull() ?: return
+                    startActivityByARouter(context, ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY, bundle = Bundle().apply {
+                        this.putLong(ParamConstant.TARGET_USER_ID, targetId)
                     }, goHome = true)
                 }
                 else -> {

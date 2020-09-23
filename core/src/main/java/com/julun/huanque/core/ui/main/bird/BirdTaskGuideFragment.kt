@@ -84,6 +84,12 @@ class BirdTaskGuideFragment : BaseVMDialogFragment<BirdTaskViewModel>() {
                     this@BirdTaskGuideFragment.dismiss()
                     EventBus.getDefault().post(HideBirdEvent())
                 }
+                BirdTaskJump.AnonyVoiceCall -> {
+                    ARouter.getInstance().build(ARouterConstant.ANONYMOUS_VOICE_ACTIVITY).navigation()
+                    this@BirdTaskGuideFragment.dismiss()
+                    EventBus.getDefault().post(HideBirdEvent())
+
+                }
 
             }
 

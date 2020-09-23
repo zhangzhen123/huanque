@@ -550,6 +550,8 @@ object BirdTaskJump {
     const val InviteFriend = "InviteFriend"
     const val FriendHome = "FriendHome"
     const val Message = "Message"
+    const val AnonyVoiceCall = "AnonyVoiceCall"
+
 }
 
 object BirdTaskStatus {
