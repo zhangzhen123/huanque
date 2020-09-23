@@ -662,7 +662,7 @@ object TimeUtils {
     }
 
     /**
-     * [time]秒数 时间转化 单位 秒 转换成 x天 x时  前 男
+     * [time]秒数 时间转化 单位 秒 转换成 x天 x时  前 男用户端看女性用户
      */
     fun formatLostTime1(time: Long): String {
         val mi = 60
@@ -686,7 +686,7 @@ object TimeUtils {
         return formatStr
     }
 
-    //女
+    //女用户端看男用户
     fun formatLostTime2(time: Long): String {
         val mi = 60
         val hh = mi * 60

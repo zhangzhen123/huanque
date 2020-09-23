@@ -52,7 +52,7 @@ class LeYuanViewModel : BaseViewModel() {
     val hasNotReceive: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     private val functionBirdsList = mutableListOf<FunctionBirdDes>()
     var programId: Long? = null
-    private var currentInfo: BirdHomeInfo? = null
+    var currentInfo: BirdHomeInfo? = null
     fun queryHome() {
         viewModelScope.launch {
             request({
@@ -219,7 +219,7 @@ class LeYuanViewModel : BaseViewModel() {
             FunctionBirdDes(
                 "财神鹊", wealth?.functionIcon,
                 bFunction = "放飞后获得888元零钱奖励。",
-                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。",
+                source = "两个lv37小鹊合并，有机会获得。\n两个神秘鹊合并，有机会获得。",
                 num = wealth?.functionNum?.toIntOrNull(),
                 type = "wealth"
             )
@@ -229,7 +229,7 @@ class LeYuanViewModel : BaseViewModel() {
                 "红包鹊",
                 redpacket?.functionIcon,
                 bFunction = "放飞后有机会获得1-100元零钱奖励。",
-                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并有机会获得。",
+                source = "两个lv37小鹊合并，有机会获得。\n两个神秘鹊合并有机会获得。",
                 num = redpacket?.functionNum?.toIntOrNull(),
                 type = "redpacket"
             )
@@ -239,7 +239,7 @@ class LeYuanViewModel : BaseViewModel() {
                 "牛郎鹊",
                 cowherd?.functionIcon,
                 bFunction = "和织女鹊一起放飞，获得88元零钱奖励。",
-                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。",
+                source = "两个lv37小鹊合并，有机会获得。\n两个神秘鹊合并，有机会获得。",
                 num = cowherd?.functionNum?.toIntOrNull(),
                 type = "cowherd"
             )
@@ -249,7 +249,7 @@ class LeYuanViewModel : BaseViewModel() {
                 "织女鹊",
                 weaver?.functionIcon,
                 bFunction = "和牛郎鹊一起放飞，获得88元零钱奖励。",
-                source = "两个lv37小鹊合并，有机会获得。两个神秘鹊合并，有机会获得。",
+                source = "两个lv37小鹊合并，有机会获得。\n两个神秘鹊合并，有机会获得。",
                 num = weaver?.functionNum?.toIntOrNull(),
                 type = "weaver"
             )

@@ -6,6 +6,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.events.HideBirdAwardViewEvent
 import com.julun.huanque.common.bean.forms.RandomRoomForm
 import com.julun.huanque.common.bean.forms.TaskBirdActiveReceive
 import com.julun.huanque.common.bean.forms.TaskBirdReceive
@@ -16,6 +17,7 @@ import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.BalanceUtils
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 /**
  *
@@ -60,6 +62,7 @@ class BirdTaskViewModel : BaseViewModel() {
             request({
                 val result = service.receiveTaskAward(TaskBirdReceive(code)).dataConvert()
                 receiveTaskResult.value = result.convertRtData()
+                EventBus.getDefault().post(HideBirdAwardViewEvent())
             }, error = {
                 receiveTaskResult.value = it.convertError()
             })

@@ -84,6 +84,13 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         })
     }
 
+    private fun locationToCanBuyMaxLevel() {
+        val index=birdAdapter.data.indexOfFirst { !it.unlocked }-4
+        if(index>0&&birdAdapter.itemCount>0){
+            birdsList.scrollToPosition(index)
+        }
+    }
+
     override fun showLoadState(state: NetState) {
         when (state.state) {
             NetStateType.SUCCESS -> {//showSuccess()
@@ -94,6 +101,8 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
                         requireContext()
                     )
                 )
+                //第一次定位到最高可买
+                locationToCanBuyMaxLevel()
 
             }
             NetStateType.LOADING -> {//showLoading()

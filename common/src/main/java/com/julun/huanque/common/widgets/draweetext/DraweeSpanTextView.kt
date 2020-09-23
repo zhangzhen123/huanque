@@ -70,12 +70,14 @@ class DraweeSpanTextView @JvmOverloads constructor(
     /**
      * 是否需要彩虹屁
      */
-    fun setNeedRainbow(need: Boolean) {
+    private fun setNeedRainbow(need: Boolean) {
         hasRainbow = need
     }
 
     fun render(item: TplBean, specifiedColor: String = DEFAULT_TEXT_BG_COLOR, finalColor: String? = null) {//原来的颜色   21ad79
         data = item
+        //每次渲染新内容时先重置彩虹状态
+        setNeedRainbow(false)
         //添加聊天模式标识
         //聊条模式标记位添加的标识 (消息由标识位，并且是主播身份)
         val chatModeFlag = false
@@ -86,7 +88,6 @@ class DraweeSpanTextView @JvmOverloads constructor(
         } else {
             item.realTxt
         }
-
         val builder = DraweeSpanStringBuilder(realText)
 
         setTextColor(Color.parseColor(specifiedColor))

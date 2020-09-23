@@ -25,12 +25,13 @@
     <style name="LiveTheme" parent="BaseAppTheme">
         <item name="android:windowBackground">@null</item>
     </style>
-   <!-- 首页主题 状态栏透明-->
+    <!-- 首页主题 状态栏透明-->
     <style name="MainPageTheme" parent="BaseAppTheme">
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
-<!--        <item name="android:statusBarColor">@color/transparent</item>-->
+        <!--        <item name="android:statusBarColor">@color/transparent</item>-->
     </style>
+
     <style name="RadiobuttonStyle">
         <item name="android:gravity">center</item>
         <item name="android:textSize">16sp</item>
@@ -98,12 +99,14 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/transparent</item>
     </style>
+
     <style name="ShareTheme" parent="@style/CustomToolBarThemeTran">
         <!--状态栏设置纯白色-->
         <item name="colorPrimaryDark">@color/percent80translucentBlack</item>
         <!--6.0以上状态栏设置亮色主题-->
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
+
     <style name="mediumCustomProgressBar">
         <item name="android:indeterminateDrawable">@drawable/progress_medium_holo</item>
     </style>
@@ -124,6 +127,7 @@
         </item>
         <item name="android:progressDrawable">@drawable/progress_drawable_video</item>
     </style>
+
     <style name="dialog_bottom_bottom_style" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/dialog_bottom_enter</item>
         <item name="android:windowExitAnimation">@anim/dialog_bottom_exit</item>
@@ -214,6 +218,7 @@
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
     </style>
+
     <style name="DialogTransparent" parent="@android:style/Theme.Dialog">
         <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
         <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
@@ -224,7 +229,9 @@
         <item name="android:windowNoTitle">true</item><!--无标题-->
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="p">shortEdges</item>
     </style>
+
     <style name="dialog_fullScreen" parent="BottomDialogTransparent">
         <item name="android:windowTranslucentStatus" tools:ignore="NewApi">true</item>
         <item name="android:windowFullscreen">true</item>
@@ -374,6 +381,7 @@
         <item name="picture.style.album.showImage">false</item>
 
     </style>
+
     <style name="picture.me.style_multi" parent="picture.me.style_single">
         <item name="picture.checked.style">@drawable/selector_pic_checkbox_num</item>
         <!--开启图片列表勾选数字模式,开启的话勾选样式要换-->

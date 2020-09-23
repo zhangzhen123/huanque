@@ -221,7 +221,7 @@ class VideoActivity : BaseActivity() {
             }
 
         }
-        mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL
+        mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FIT
 
         //禁用硬解码
 //        mAliPlayer?.enableHardwareDecoder(false)
