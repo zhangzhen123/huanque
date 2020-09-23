@@ -41,7 +41,7 @@ class UpdateInformationForm(
     var jobId: Int? = null,
     //邀请码
     var invitationCode: String? = null,
-    var headPic : String = ""
+    var headPic: String = ""
 )
 
 /**
@@ -63,9 +63,14 @@ class AgreementResultForm(var result: String = "True", var agreementCode: String
 
 class UpdateHeadForm(var headPic: String)
 
-class UserOnlineHeartForm(var programId: Long?=null,var onlineId:String?=null)
+class UserOnlineHeartForm(var programId: Long? = null, var onlineId: String? = null)
 
 /**
  * 检查隐私协议的From
  */
 class CheckProtocolForm(var targetType: String) : Serializable
+
+/**
+ * 修改在线状态Form
+ */
+class LineStatusForm(var onlineStatus : String = "") : Serializable

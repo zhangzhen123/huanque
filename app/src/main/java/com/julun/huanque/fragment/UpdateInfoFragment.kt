@@ -75,6 +75,7 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
     override fun getLayoutId() = R.layout.fragment_update_info
 
     override fun initViews() {
+        logger.info("Main UpdateInfoFragment act = ${requireActivity()}")
         initEvents()
         initTimePicker()
         initViewModel()

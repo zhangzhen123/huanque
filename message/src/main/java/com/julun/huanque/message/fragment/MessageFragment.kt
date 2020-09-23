@@ -1,29 +1,33 @@
 package com.julun.huanque.message.fragment
 
+import android.animation.ObjectAnimator
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
+import android.widget.PopupWindow
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.GenericLifecycleObserver
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
+import com.julun.huanque.common.bean.beans.ChatRoomBean
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.viewmodel.PlayerMessageViewModel
-import com.julun.huanque.message.BuildConfig
 import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.*
 import com.julun.huanque.message.adapter.ConversationListAdapter
@@ -36,9 +40,7 @@ import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_message.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.topPadding
+import org.jetbrains.anko.*
 
 /**
  *@创建者   dong
@@ -53,6 +55,30 @@ class MessageFragment : BaseFragment() {
     private val mPlayerMessageViewModel: PlayerMessageViewModel by activityViewModels<PlayerMessageViewModel>()
 
     private var mAdapter = ConversationListAdapter()
+
+    //是否选中了缘分布局
+    private var isclick = false
+
+    //touch事件的开始时间
+    private var startTime: Long = 0
+
+    //touch事件的结束时间
+    private var endTime: Long = 0
+
+    //距离屏幕的间距
+    private val mMargin = 40
+
+    //x最小值
+    private val xMin = mMargin
+
+    //X最大值
+    private var xMax = ScreenUtils.getScreenWidth() - mMargin - dp2px(61)
+
+    //y最小值
+    private val yMin = StatusBarUtil.getStatusBarHeight(CommonInit.getInstance().getContext())
+
+    //y最大值
+    private var yMax = ScreenUtils.getScreenHeight() - dp2px(60)
 
 
     companion object {
@@ -288,6 +314,12 @@ class MessageFragment : BaseFragment() {
                 } else {
                     tv_yuanfen_count.hide()
                 }
+                val onLineResource = if (it.onlineStatus == ChatRoomBean.Online) {
+                    R.mipmap.icon_online
+                } else {
+                    R.mipmap.icon_unline
+                }
+                iv_online_status.imageResource = onLineResource
             }
         })
 
@@ -362,9 +394,15 @@ class MessageFragment : BaseFragment() {
         }
 
         rl_yuanfen.onClickNew {
-            YuanFenActivity.newInstance(requireActivity(),mMessageViewModel.chatRoomData.value?.fateNoReplyNum ?: 0)
+            YuanFenActivity.newInstance(requireActivity(), mMessageViewModel.chatRoomData.value?.fateNoReplyNum ?: 0)
         }
 
+        rl_online.onClickNew {
+            //在线按钮
+            if (mOnLineStatusSettingPopupWindow?.isShowing != true) {
+                showOnLinePopupWindow()
+            }
+        }
 //        if(BuildConfig.DEBUG){
 //            tv_message_unread.onClickNew {
 //                activity?.let { act ->
@@ -373,6 +411,133 @@ class MessageFragment : BaseFragment() {
 //                }
 //            }
 //        }
+
+        rl_yuanfen.setOnTouchListener(object : View.OnTouchListener {
+            private var x = 0f
+            private var y = 0f
+            override fun onTouch(view: View?, event: MotionEvent): Boolean {
+                if (view == null) {
+                    return false
+                }
+                when (event.getAction()) {
+                    MotionEvent.ACTION_DOWN -> {
+                        x = event.getRawX()
+                        y = event.getRawY()
+                        isclick = false //当按下的时候设置isclick为false
+                        startTime = System.currentTimeMillis()
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        isclick = true //当按钮被移动的时候设置isclick为true
+                        val nowX = event.getRawX()
+                        val nowY = event.getRawY()
+                        val movedX = nowX - x
+                        val movedY = nowY - y
+                        x = nowX
+                        y = nowY
+                        var tempX = (view.x + movedX).toInt()
+                        if (tempX < xMin) {
+                            tempX = xMin
+                        } else if (tempX > xMax) {
+                            tempX = xMax
+                        }
+                        view.x = tempX.toFloat()
+
+                        var tempY = view.y + movedY.toInt()
+                        if (tempY < yMin) {
+                            tempY = yMin.toFloat()
+                        } else if (tempY > yMax) {
+                            tempY = yMax.toFloat()
+                        }
+                        view.y = tempY
+//                        windowManager?.updateViewLayout(view, layoutParams)
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        endTime = System.currentTimeMillis()
+                        //当从点击到弹起小于半秒的时候,则判断为点击,如果超过则不响应点击事件
+                        if (endTime - startTime > 0.1 * 1000L) {
+                            isclick = true
+                        } else {
+                            isclick = false
+                        }
+                        if (isclick) {
+                            yuanFenAnimationToSide()
+                        }
+                    }
+                }
+
+                return isclick
+            }
+        })
+
+
+    }
+
+    //设置在线状态的PopupWindow
+    private var mOnLineStatusSettingPopupWindow: PopupWindow? = null
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            mOnLineStatusSettingPopupWindow?.dismiss()
+        }
+    }
+
+    //缘分View 移动动画
+    private var mYuanFenTranslationAnimation: ObjectAnimator? = null
+
+    /**
+     * 缘分图标  动画移动到屏幕边侧
+     */
+    private fun yuanFenAnimationToSide() {
+        val screenMiddleX = ScreenUtils.getScreenWidth() / 2
+        val viewMiddleX = rl_yuanfen.x + rl_yuanfen.width / 2
+        val targetX = if (viewMiddleX > screenMiddleX) {
+            //View在屏幕右侧
+            xMax
+        } else {
+            //View在屏幕左侧
+            xMin
+        }
+        mYuanFenTranslationAnimation?.cancel()
+        mYuanFenTranslationAnimation = ObjectAnimator.ofFloat(rl_yuanfen, "x", rl_yuanfen.x, targetX.toFloat())
+        mYuanFenTranslationAnimation?.duration = 200
+        mYuanFenTranslationAnimation?.start()
+    }
+
+    /**
+     * 显示切换的PopopWindow
+     */
+    private fun showOnLinePopupWindow() {
+        val status = mMessageViewModel.chatRoomData.value
+
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.view_online, null)
+        mOnLineStatusSettingPopupWindow = PopupWindow(view, dp2px(90), dp2px(79))
+        val drawable = GlobalUtils.getDrawable(R.drawable.bg_online_setting)
+        mOnLineStatusSettingPopupWindow?.setBackgroundDrawable(drawable)
+        mOnLineStatusSettingPopupWindow?.isOutsideTouchable = true
+        val tv_unline = view.findViewById<View>(R.id.tv_unline)
+        val tv_online = view.findViewById<View>(R.id.tv_online)
+        if (status?.onlineStatus == ChatRoomBean.Invisible) {
+            //不在线
+            tv_unline.isSelected = true
+        } else {
+            tv_online.isSelected = true
+        }
+        tv_unline.onClickNew {
+            //设置隐身
+            mMessageViewModel.updateOnlineStatus(false)
+            mOnLineStatusSettingPopupWindow?.dismiss()
+        }
+        tv_online.onClickNew {
+            //设置在线
+            mMessageViewModel.updateOnlineStatus(true)
+            mOnLineStatusSettingPopupWindow?.dismiss()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mOnLineStatusSettingPopupWindow?.showAsDropDown(iv_online_arrow, 26, 5, Gravity.BOTTOM or Gravity.RIGHT)
+        } else {
+            mOnLineStatusSettingPopupWindow?.showAsDropDown(iv_online_arrow)
+        }
 
     }
 
@@ -445,5 +610,10 @@ class MessageFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mYuanFenTranslationAnimation?.cancel()
     }
 }

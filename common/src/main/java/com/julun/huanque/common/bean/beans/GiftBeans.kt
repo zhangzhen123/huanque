@@ -376,7 +376,15 @@ data class ChatRoomBean(
     var fateNoReplyNum: Int = 0,
     //在线状态
     var onlineStatus: String = ""
-) : Serializable
+) : Serializable {
+    companion object {
+        //在线
+        const val Online = "Online"
+
+        //隐身
+        const val Invisible = "Invisible"
+    }
+}
 
 /**
  * 派单数据

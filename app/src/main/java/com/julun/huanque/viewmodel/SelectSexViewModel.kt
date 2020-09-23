@@ -38,6 +38,7 @@ class SelectSexViewModel : BaseViewModel() {
                 }
                 val result = userService.initInfoBySex(SexForm(maleStr)).dataConvert()
                 infoBean.value = result
+                SessionUtils.setInviteCode(result.invitationCode)
                 SessionUtils.setNickName(result.nickname)
                 SessionUtils.setHeaderPic(result.headPic)
                 if (result.sex.isNotEmpty()) {

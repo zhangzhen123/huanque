@@ -59,7 +59,9 @@ data class UpdateSexBean(
     //用户头像
     var headPic: String = "",
     //生日
-    var birthday: String = ""
+    var birthday: String = "",
+    //邀请码
+    var invitationCode: String = ""
 )
 
 data class VoiceSignPointBean(
