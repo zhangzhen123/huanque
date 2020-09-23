@@ -1,10 +1,13 @@
 package com.julun.huanque.message.fragment
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.GenericLifecycleObserver
 import androidx.lifecycle.LifecycleEventObserver
@@ -14,13 +17,11 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
+import com.julun.huanque.common.bean.beans.ChatRoomBean
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.viewmodel.PlayerMessageViewModel
 import com.julun.huanque.message.BuildConfig
@@ -32,13 +33,12 @@ import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import com.luck.picture.lib.tools.StatusBarUtil
 import io.rong.imlib.RongIMClient
+import io.rong.imlib.model.ChatRoomInfo
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_message.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.topPadding
+import org.jetbrains.anko.*
 
 /**
  *@创建者   dong
@@ -53,6 +53,9 @@ class MessageFragment : BaseFragment() {
     private val mPlayerMessageViewModel: PlayerMessageViewModel by activityViewModels<PlayerMessageViewModel>()
 
     private var mAdapter = ConversationListAdapter()
+
+//    //用户在线状态设置弹窗
+//    private var mOnLineDialogFragment : OnLineDialogFragment? = null
 
 
     companion object {
@@ -288,6 +291,12 @@ class MessageFragment : BaseFragment() {
                 } else {
                     tv_yuanfen_count.hide()
                 }
+                val onLineResource = if (it.onlineStatus == ChatRoomBean.Online) {
+                    R.mipmap.icon_online
+                } else {
+                    R.mipmap.icon_unline
+                }
+                iv_online_status.imageResource = onLineResource
             }
         })
 
@@ -362,9 +371,15 @@ class MessageFragment : BaseFragment() {
         }
 
         rl_yuanfen.onClickNew {
-            YuanFenActivity.newInstance(requireActivity(),mMessageViewModel.chatRoomData.value?.fateNoReplyNum ?: 0)
+            YuanFenActivity.newInstance(requireActivity(), mMessageViewModel.chatRoomData.value?.fateNoReplyNum ?: 0)
         }
 
+        rl_online.onClickNew {
+            //在线按钮
+            if (mOnLineStatusSettingPopupWindow?.isShowing != true) {
+                showOnLinePopupWindow()
+            }
+        }
 //        if(BuildConfig.DEBUG){
 //            tv_message_unread.onClickNew {
 //                activity?.let { act ->
@@ -373,6 +388,53 @@ class MessageFragment : BaseFragment() {
 //                }
 //            }
 //        }
+
+    }
+
+    //设置在线状态的PopupWindow
+    private var mOnLineStatusSettingPopupWindow: PopupWindow? = null
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            mOnLineStatusSettingPopupWindow?.dismiss()
+        }
+    }
+
+    /**
+     * 显示切换的PopopWindow
+     */
+    private fun showOnLinePopupWindow() {
+        val status = mMessageViewModel.chatRoomData.value
+
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.view_online, null)
+        mOnLineStatusSettingPopupWindow = PopupWindow(view, dp2px(90), dp2px(79))
+        val drawable = GlobalUtils.getDrawable(R.drawable.bg_online_setting)
+        mOnLineStatusSettingPopupWindow?.setBackgroundDrawable(drawable)
+        mOnLineStatusSettingPopupWindow?.isOutsideTouchable = true
+        val tv_unline = view.findViewById<View>(R.id.tv_unline)
+        val tv_online = view.findViewById<View>(R.id.tv_online)
+        if (status?.onlineStatus == ChatRoomBean.Invisible) {
+            //不在线
+            tv_unline.isSelected = true
+        } else {
+            tv_online.isSelected = true
+        }
+        tv_unline.onClickNew {
+            //设置隐身
+            mMessageViewModel.updateOnlineStatus(false)
+            mOnLineStatusSettingPopupWindow?.dismiss()
+        }
+        tv_online.onClickNew {
+            //设置在线
+            mMessageViewModel.updateOnlineStatus(true)
+            mOnLineStatusSettingPopupWindow?.dismiss()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mOnLineStatusSettingPopupWindow?.showAsDropDown(iv_online_arrow, 26, 5, Gravity.BOTTOM or Gravity.RIGHT)
+        } else {
+            mOnLineStatusSettingPopupWindow?.showAsDropDown(iv_online_arrow)
+        }
 
     }
 

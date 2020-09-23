@@ -219,4 +219,10 @@ interface UserService {
      */
     @POST("user/acct/info/checkProtocol")
     suspend fun checkProtocol(@Body form: CheckProtocolForm): Root<AgreementData>
+
+    /**
+     * 修改在线状态
+     */
+    @POST("user/acct/info/onlineStatus")
+    suspend fun updateOnlineStatus(@Body form: LineStatusForm): Root<VoidResult>
 }

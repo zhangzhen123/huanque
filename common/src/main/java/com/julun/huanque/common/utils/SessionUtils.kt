@@ -60,7 +60,6 @@ object SessionUtils {
         setRongImToken(session.imToken)
         setIsRegUser(session.regUser)
         setSex(session.sex)
-        setInviteCode(session.invitationCode)
     }
 
     fun getSession(): Session {

@@ -8,6 +8,7 @@ import com.julun.huanque.common.bean.beans.ChatRoomBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
+import com.julun.huanque.common.bean.forms.LineStatusForm
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -17,6 +18,7 @@ import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
+import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
@@ -40,6 +42,7 @@ import java.util.*
  */
 class MessageViewModel : BaseViewModel() {
     private val socialService: SocialService by lazy { Requests.create(SocialService::class.java) }
+    private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
     //获取数据的标记位
     val queryDataFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -806,6 +809,23 @@ class MessageViewModel : BaseViewModel() {
                 val result = socialService.chatHome().dataConvert()
                 chatRoomData.value = result
             }, {})
+        }
+    }
+
+    //更新在线状态
+    fun updateOnlineStatus(onLine: Boolean) {
+        viewModelScope.launch {
+            request({
+                val status = if (onLine) {
+                    ChatRoomBean.Online
+                } else {
+                    ChatRoomBean.Invisible
+                }
+                val result = userService.updateOnlineStatus(LineStatusForm(status)).dataConvert()
+                val bean = chatRoomData.value ?: ChatRoomBean()
+                bean.onlineStatus = status
+                chatRoomData.value = bean
+            })
         }
     }
 
