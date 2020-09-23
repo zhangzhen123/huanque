@@ -25,24 +25,24 @@
         android:id="@+id/sdw_flower"
         android:layout_width="@dimen/dimen_32"
         android:layout_height="@dimen/dimen_32"
-        android:visibility="gone"
+        android:layout_marginBottom="@dimen/dimen_6"
         app:actualImageScaleType="fitCenter"
-        app:layout_constraintEnd_toEndOf="@+id/iv_flower_fg"
-        app:layout_constraintStart_toStartOf="@+id/iv_flower_fg"
-        app:layout_constraintTop_toTopOf="@+id/iv_flower_fg"
-        android:layout_marginTop="@dimen/dimen_2"
-        app:roundAsCircle="true"
-        tools:visibility="visible" />
+        app:actualImageResource="@mipmap/icon_home_flower_top"
+        android:layout_marginEnd="@dimen/dimen_20"
+        app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/magic_indicator" />
 
     <ImageView
         android:id="@+id/iv_flower_fg"
         android:layout_width="@dimen/dimen_42"
-        android:layout_height="@dimen/dimen_36"
-        android:layout_marginEnd="@dimen/dimen_15"
+        android:layout_height="@dimen/dimen_28"
         android:scaleType="centerInside"
         android:src="@mipmap/fg_home_flower_top"
-        app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"
-        app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@+id/magic_indicator" />
+        app:layout_constraintEnd_toEndOf="@+id/sdw_flower"
+        app:layout_constraintStart_toStartOf="@+id/sdw_flower"
+        app:layout_constraintTop_toTopOf="@+id/sdw_flower"
+        android:layout_marginTop="@dimen/dimen_10"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -432,7 +432,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         })
         mViewModel.flowerPic.observe(viewLifecycleOwner, Observer {
             //
-            mHomeViewModel.flowerPic.value=it?:return@Observer
+            mHomeViewModel.flowerPic.value=it
         })
 
     }

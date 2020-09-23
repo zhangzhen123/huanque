@@ -53,13 +53,11 @@
         app:layout_constraintBottom_toBottomOf="@+id/header_pic"
         app:layout_constraintEnd_toEndOf="@+id/header_pic"
         app:layout_constraintStart_toStartOf="@+id/header_pic" />
-
     <TextView
         android:id="@+id/tv_mkf_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_15"
-        android:layout_marginEnd="@dimen/dimen_15"
         android:includeFontPadding="false"
         android:maxLines="1"
         android:textColor="@color/black_333"
@@ -68,24 +66,27 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_sex"
         app:layout_constraintStart_toEndOf="@+id/header_pic"
         app:layout_constraintTop_toTopOf="@+id/header_pic"
+        app:layout_constraintEnd_toStartOf="@+id/tv_online_status"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:text="你的名字很长" />
+        tools:text="你的名字很长你的名字" />
+
     <TextView
         android:id="@+id/tv_online_status"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_6"
         android:gravity="center"
+        android:maxLines="1"
         android:paddingLeft="@dimen/dimen_5"
         android:paddingTop="@dimen/dimen_1"
         android:paddingRight="@dimen/dimen_5"
         android:paddingBottom="@dimen/dimen_1"
         android:textColor="#C5C5C5"
         android:textSize="@dimen/sp_10"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_mkf_name"
         app:layout_constraintStart_toEndOf="@+id/tv_mkf_name"
         app:layout_constraintTop_toTopOf="@+id/tv_mkf_name"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_mkf_name"
-        tools:text="在线" />
+        tools:text="在线在线" />
 
     <TextView
         android:id="@+id/tv_sex"
@@ -123,7 +124,6 @@
         android:paddingBottom="@dimen/dimen_1"
         android:textColor="#82ABD1"
         android:textSize="@dimen/sp_10"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/tv_sex"
         app:layout_constraintStart_toEndOf="@+id/tv_sex"
         app:layout_constraintTop_toTopOf="@+id/tv_sex"

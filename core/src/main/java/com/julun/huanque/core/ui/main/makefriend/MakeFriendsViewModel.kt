@@ -55,7 +55,7 @@ class MakeFriendsViewModel : BaseViewModel() {
     //记录全部的列表
     private var totalList = mutableListOf<HomeRecomItem>()
 
-    val flowerPic:MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val flowerPic: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
     val stateList: LiveData<ReactiveData<RootListData<HomeItemBean>>> = queryState.switchMap { type ->
         liveData {
@@ -88,9 +88,7 @@ class MakeFriendsViewModel : BaseViewModel() {
                     if (!guideCloseByUser2) {
                         needGuide2 = true
                     }
-                    if(homeListData.flowerPic!=null){
-                        flowerPic.value=homeListData.flowerPic
-                    }
+                    flowerPic.value = homeListData.flowerPic
                 } else {
                     resultList.forEach {
                         list.add(HomeItemBean(HomeItemBean.NORMAL, it))

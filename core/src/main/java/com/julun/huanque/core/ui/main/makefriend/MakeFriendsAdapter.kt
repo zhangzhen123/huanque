@@ -112,8 +112,8 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 ImageHelper.setDefaultHeaderPic(headPic, bean.sex)
 
                 headPic.loadImage(bean.headPic + BusiConstant.OSS_160, 66f, 66f)
-                val name = if (bean.nickname.length > 5) {
-                    "${bean.nickname.substring(0, 5)}…"
+                val name = if (bean.nickname.length > 8) {
+                    "${bean.nickname.substring(0, 8)}…"
                 } else {
                     bean.nickname
                 }
