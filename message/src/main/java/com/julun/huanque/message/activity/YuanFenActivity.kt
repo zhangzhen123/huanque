@@ -119,7 +119,7 @@ class YuanFenActivity : BaseActivity() {
                 NetStateType.LOADING -> {
                     //加载中
                     if (mAdapter.itemCount <= 0) {
-                        commonView.showLoading("加载中~！")
+                        commonView.showLoading()
                     }
                 }
                 NetStateType.SUCCESS -> {
@@ -153,9 +153,7 @@ class YuanFenActivity : BaseActivity() {
                     mAdapter.loadMoreModule.loadMoreComplete()
                 }
             } else {
-//                commonView.showEmpty(false, R.mipmap.icon_default_empty, "暂未关注主播，快去热门看看吧~", View.OnClickListener {
-//                    ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).navigation()
-//                }, "去看看")
+                commonView.showEmpty(false, R.mipmap.icon_default_empty, "暂无数据", null, "去看看")
             }
         })
 

@@ -34,6 +34,7 @@ class PicContentActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val url = intent?.getStringExtra(ParamConstant.RULE_PIC_URL) ?: ""
         ImageUtils.loadImageWithWidth(sdv, url, ScreenUtils.getScreenWidth())
+        header_page.textTitle.text = "缘分速配说明 "
     }
 
     override fun initEvents(rootView: View) {

@@ -149,7 +149,6 @@ class MainActivity : BaseActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ checkPermission() }, { it.printStackTrace() })
 
-        mMessageViewModel.chatRoom()
     }
 
     /**
@@ -164,6 +163,7 @@ class MainActivity : BaseActivity() {
      * 判断是否显示更新用户数据弹窗
      */
     private fun judgeUpdateInfoFragment(intent: Intent) {
+        mMessageViewModel.chatRoom()
         //判断是否领取了礼包
         if (!SPUtils.getBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), false)) {
             mMainViewModel.getNewUserGift()
@@ -236,6 +236,7 @@ class MainActivity : BaseActivity() {
                 }
 
                 if (it.videoUrl.isNotEmpty()) {
+                    SPUtils.commitBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), true)
                     //显示女性弹窗
                     val newUserGiftFragment = NewUserFeMaleFragment()
                     addOrderDialog(newUserGiftFragment)
@@ -269,11 +270,11 @@ class MainActivity : BaseActivity() {
             }
         })
 
-        mMessageViewModel.chatRoomData.observe(this, Observer {
-            if (it != null) {
-                mMessageViewModel?.getUnreadCount()
-            }
-        })
+//        mMessageViewModel.chatRoomData.observe(this, Observer {
+//            if (it != null) {
+//                mMessageViewModel?.getUnreadCount()
+//            }
+//        })
 
         mFillInformationViewModel.openPicFlag.observe(this, Observer {
             if (it == true) {
@@ -574,6 +575,7 @@ class MainActivity : BaseActivity() {
                 val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
                 bean.fateNoReplyNum = data.noReplyNum
                 mMessageViewModel.chatRoomData.value = bean
+                mMessageViewModel.getUnreadCount()
                 EventBus.getDefault().post(FateQuickMatchChangeBean(noReplyNum = data.noReplyNum))
             }
         })
@@ -584,6 +586,7 @@ class MainActivity : BaseActivity() {
                 val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
                 bean.fateNoReplyNum = data.noReplyNum
                 mMessageViewModel.chatRoomData.value = bean
+                mMessageViewModel.getUnreadCount()
                 //发送EventBus
                 EventBus.getDefault().post(data)
             }

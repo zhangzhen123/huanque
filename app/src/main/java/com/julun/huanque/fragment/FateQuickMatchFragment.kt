@@ -22,6 +22,7 @@ import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_paidan.*
@@ -86,7 +87,7 @@ class FateQuickMatchFragment : BaseDialogFragment() {
                         val moveY = ev.getRawY() - y
                         if (abs(moveY) > abs(moveX) && moveY < -50) {
                             //隐藏
-                            dismiss()
+                            mHuanQueViewModel.clearFateData()
                         }
                     }
                 }
@@ -124,12 +125,12 @@ class FateQuickMatchFragment : BaseDialogFragment() {
         //性别
         when (sex) {
             Sex.MALE -> {
-                tv_sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
+                tv_sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male_fate
                 sexDrawable = GlobalUtils.getDrawable(R.mipmap.icon_sex_male)
                 tv_sex.textColor = Color.parseColor("#58CEFF")
             }
             Sex.FEMALE -> {
-                tv_sex.backgroundResource = R.drawable.bg_shape_mkf_sex_female
+                tv_sex.backgroundResource = R.drawable.bg_shape_mkf_sex_female_fate
                 sexDrawable = GlobalUtils.getDrawable(R.mipmap.icon_sex_female)
                 tv_sex.textColor = Color.parseColor("#FF9BC5")
             }
@@ -167,7 +168,7 @@ class FateQuickMatchFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.TOP, 0)
+        setDialogSize(Gravity.TOP, 0, 192)
 
         val params = dialog?.window?.attributes
         params?.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; //这条就是控制点击背景的时候  如果被覆盖的view有点击事件那么就会直接触发(dialog消失并且触发背景下面view的点击事件)

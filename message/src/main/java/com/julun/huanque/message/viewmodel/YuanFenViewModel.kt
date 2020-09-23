@@ -64,7 +64,11 @@ class YuanFenViewModel : BaseViewModel() {
                         change = true
                     }
                 }
-                refreshFlag.postValue(change)
+                if(change){
+                    refreshFlag.postValue(true)
+                }else{
+                    mDisposable?.dispose()
+                }
             }, {})
     }
 
@@ -84,7 +88,7 @@ class YuanFenViewModel : BaseViewModel() {
 
             }
         }
-        refreshFlag.postValue(change)
+        refreshFlag.value = change
     }
 
     override fun onCleared() {

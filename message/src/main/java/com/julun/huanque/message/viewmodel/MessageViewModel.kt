@@ -810,6 +810,7 @@ class MessageViewModel : BaseViewModel() {
             request({
                 val result = socialService.chatHome().dataConvert()
                 chatRoomData.value = result
+                getUnreadCount()
             }, {})
         }
     }
@@ -839,8 +840,9 @@ class MessageViewModel : BaseViewModel() {
         RongIMClient.getInstance()
             .getUnreadCount(typeList, false, object : RongIMClient.ResultCallback<Int>() {
                 override fun onSuccess(p0: Int?) {
-                    unreadMsgCount.value = (p0 ?: 0) + (chatRoomData.value?.fateNoReplyNum ?: 0)
-                    EventBus.getDefault().post(UnreadCountEvent(p0 ?: 0, false))
+                    val count = (p0 ?: 0) + (chatRoomData.value?.fateNoReplyNum ?: 0)
+                    unreadMsgCount.value = count
+                    EventBus.getDefault().post(UnreadCountEvent(count, false))
                 }
 
                 override fun onError(p0: RongIMClient.ErrorCode?) {
