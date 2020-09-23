@@ -1,16 +1,16 @@
 package com.julun.huanque.message.fragment
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.PopupWindow
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.GenericLifecycleObserver
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -20,11 +20,14 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.ChatRoomBean
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.viewmodel.PlayerMessageViewModel
-import com.julun.huanque.message.BuildConfig
 import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.*
 import com.julun.huanque.message.adapter.ConversationListAdapter
@@ -33,7 +36,6 @@ import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import com.luck.picture.lib.tools.StatusBarUtil
 import io.rong.imlib.RongIMClient
-import io.rong.imlib.model.ChatRoomInfo
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_message.*
 import org.greenrobot.eventbus.Subscribe
@@ -54,8 +56,29 @@ class MessageFragment : BaseFragment() {
 
     private var mAdapter = ConversationListAdapter()
 
-//    //用户在线状态设置弹窗
-//    private var mOnLineDialogFragment : OnLineDialogFragment? = null
+    //是否选中了缘分布局
+    private var isclick = false
+
+    //touch事件的开始时间
+    private var startTime: Long = 0
+
+    //touch事件的结束时间
+    private var endTime: Long = 0
+
+    //距离屏幕的间距
+    private val mMargin = 40
+
+    //x最小值
+    private val xMin = mMargin
+
+    //X最大值
+    private var xMax = ScreenUtils.getScreenWidth() - mMargin - dp2px(61)
+
+    //y最小值
+    private val yMin = StatusBarUtil.getStatusBarHeight(CommonInit.getInstance().getContext())
+
+    //y最大值
+    private var yMax = ScreenUtils.getScreenHeight() - dp2px(60)
 
 
     companion object {
@@ -389,6 +412,64 @@ class MessageFragment : BaseFragment() {
 //            }
 //        }
 
+        rl_yuanfen.setOnTouchListener(object : View.OnTouchListener {
+            private var x = 0f
+            private var y = 0f
+            override fun onTouch(view: View?, event: MotionEvent): Boolean {
+                if (view == null) {
+                    return false
+                }
+                when (event.getAction()) {
+                    MotionEvent.ACTION_DOWN -> {
+                        x = event.getRawX()
+                        y = event.getRawY()
+                        isclick = false //当按下的时候设置isclick为false
+                        startTime = System.currentTimeMillis()
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        isclick = true //当按钮被移动的时候设置isclick为true
+                        val nowX = event.getRawX()
+                        val nowY = event.getRawY()
+                        val movedX = nowX - x
+                        val movedY = nowY - y
+                        x = nowX
+                        y = nowY
+                        var tempX = (view.x + movedX).toInt()
+                        if (tempX < xMin) {
+                            tempX = xMin
+                        } else if (tempX > xMax) {
+                            tempX = xMax
+                        }
+                        view.x = tempX.toFloat()
+
+                        var tempY = view.y + movedY.toInt()
+                        if (tempY < yMin) {
+                            tempY = yMin.toFloat()
+                        } else if (tempY > yMax) {
+                            tempY = yMax.toFloat()
+                        }
+                        view.y = tempY
+//                        windowManager?.updateViewLayout(view, layoutParams)
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        endTime = System.currentTimeMillis()
+                        //当从点击到弹起小于半秒的时候,则判断为点击,如果超过则不响应点击事件
+                        if (endTime - startTime > 0.1 * 1000L) {
+                            isclick = true
+                        } else {
+                            isclick = false
+                        }
+                        if (isclick) {
+                            yuanFenAnimationToSide()
+                        }
+                    }
+                }
+
+                return isclick
+            }
+        })
+
+
     }
 
     //设置在线状态的PopupWindow
@@ -399,6 +480,28 @@ class MessageFragment : BaseFragment() {
         if (hidden) {
             mOnLineStatusSettingPopupWindow?.dismiss()
         }
+    }
+
+    //缘分View 移动动画
+    private var mYuanFenTranslationAnimation: ObjectAnimator? = null
+
+    /**
+     * 缘分图标  动画移动到屏幕边侧
+     */
+    private fun yuanFenAnimationToSide() {
+        val screenMiddleX = ScreenUtils.getScreenWidth() / 2
+        val viewMiddleX = rl_yuanfen.x + rl_yuanfen.width / 2
+        val targetX = if (viewMiddleX > screenMiddleX) {
+            //View在屏幕右侧
+            xMax
+        } else {
+            //View在屏幕左侧
+            xMin
+        }
+        mYuanFenTranslationAnimation?.cancel()
+        mYuanFenTranslationAnimation = ObjectAnimator.ofFloat(rl_yuanfen, "x", rl_yuanfen.x, targetX.toFloat())
+        mYuanFenTranslationAnimation?.duration = 200
+        mYuanFenTranslationAnimation?.start()
     }
 
     /**
@@ -507,5 +610,10 @@ class MessageFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mYuanFenTranslationAnimation?.cancel()
     }
 }
