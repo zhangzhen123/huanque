@@ -24,7 +24,6 @@ import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
-import com.julun.huanque.common.manager.OrderDialogManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
@@ -34,12 +33,10 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.manager.FloatingManager
-import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.support.LoginManager
-import com.julun.huanque.core.ui.main.bird.LeYuanFragment
 import com.julun.huanque.fragment.NewUserFeMaleFragment
 import com.julun.huanque.fragment.NewUserMaleFragment
 import com.julun.huanque.fragment.PersonalInformationProtectionFragment
@@ -128,7 +125,6 @@ class MainActivity : BaseActivity() {
         judgeUpdateInfoFragment(intent)
 
         CommonInit.getInstance().setMainActivity(this)
-        logger.info("DXC  userID = ${SessionUtils.getUserId()}，header = ${SessionUtils.getHeaderPic()}")
         initViewModel()
         val targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, 0) ?: 0
         mMainViewModel.indexData.value = targetIndex
@@ -168,7 +164,6 @@ class MainActivity : BaseActivity() {
      * 判断是否显示更新用户数据弹窗
      */
     private fun judgeUpdateInfoFragment(intent: Intent) {
-
         //判断是否领取了礼包
         if (!SPUtils.getBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), false)) {
             mMainViewModel.getNewUserGift()
@@ -179,7 +174,7 @@ class MainActivity : BaseActivity() {
         val birthday = intent.getStringExtra(ParamConstant.Birthday)
         if (birthday?.isNotEmpty() == true) {
             val mUpdateInfoFragment = UpdateInfoFragment.newInstance(birthday)
-            OrderDialogManager.addGlobalOrderDialog(mUpdateInfoFragment)
+            addOrderDialog(mUpdateInfoFragment)
         }
 
     }
@@ -248,13 +243,13 @@ class MainActivity : BaseActivity() {
                 if (it.bagList.isNotEmpty()) {
                     //显示新手礼包弹窗
                     val newUserGiftFragment = NewUserMaleFragment()
-                    OrderDialogManager.addGlobalOrderDialog(newUserGiftFragment)
+                    addOrderDialog(newUserGiftFragment)
                 }
 
                 if (it.videoUrl.isNotEmpty()) {
                     //显示女性弹窗
                     val newUserGiftFragment = NewUserFeMaleFragment()
-                    OrderDialogManager.addGlobalOrderDialog(newUserGiftFragment)
+                    addOrderDialog(newUserGiftFragment)
                 }
             }
         })
@@ -263,7 +258,7 @@ class MainActivity : BaseActivity() {
             if (it != BusiConstant.True) {
                 //显示弹窗
                 val mProtectionFragment = PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
-                OrderDialogManager.addGlobalOrderDialog(mProtectionFragment)
+                addOrderDialog(mProtectionFragment)
             }
         })
 
