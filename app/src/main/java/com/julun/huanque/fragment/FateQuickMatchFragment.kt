@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.WindowManager
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -14,17 +15,20 @@ import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
+import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_paidan.*
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
+import kotlin.math.abs
 
 /**
  *@创建者   dong
@@ -33,12 +37,12 @@ import org.jetbrains.anko.textColor
  */
 @Route(path = ARouterConstant.FATE_QUICK_MATCH_FRAGMENT)
 class FateQuickMatchFragment : BaseDialogFragment() {
-
     private val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
     override fun getLayoutId() = R.layout.fragment_paidan
 
 
     override fun initViews() {
+        val enable = arguments?.getBoolean(ParamConstant.ENABLE_ACTION, true) ?: true
         iv_close.onClickNew {
             //关闭弹窗
             mHuanQueViewModel.clearFateData()
@@ -57,12 +61,40 @@ class FateQuickMatchFragment : BaseDialogFragment() {
             mHuanQueViewModel.clearFateData()
         }
 
-        sdv_header.onClickNew {
-            RNPageActivity.start(
-                requireActivity(),
-                RnConstant.PERSONAL_HOMEPAGE,
-                Bundle().apply { putLong("userId", mHuanQueViewModel.fateQuickMatchData.value?.userInfo?.userId ?: return@onClickNew) })
+        if (enable) {
+            sdv_header.onClickNew {
+                RNPageActivity.start(
+                    requireActivity(),
+                    RnConstant.PERSONAL_HOMEPAGE,
+                    Bundle().apply { putLong("userId", mHuanQueViewModel.fateQuickMatchData.value?.userInfo?.userId ?: return@onClickNew) })
+            }
         }
+
+        rl_root.mEventListener = object : EventListener {
+            private var x = 0f
+            private var y = 0f
+            override fun onDispatch(ev: MotionEvent?) {
+                if (ev == null) {
+                    return
+                }
+                when (ev.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        x = ev.rawX
+                        y = ev.rawY
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        val moveX = ev.getRawX() - x
+                        val moveY = ev.getRawY() - y
+                        if (abs(moveY) > abs(moveX) && moveY < -50) {
+                            //隐藏
+                            mHuanQueViewModel.clearFateData()
+                        }
+                    }
+                }
+            }
+
+        }
+
     }
 
     /**
@@ -93,12 +125,12 @@ class FateQuickMatchFragment : BaseDialogFragment() {
         //性别
         when (sex) {
             Sex.MALE -> {
-                tv_sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
+                tv_sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male_fate
                 sexDrawable = GlobalUtils.getDrawable(R.mipmap.icon_sex_male)
                 tv_sex.textColor = Color.parseColor("#58CEFF")
             }
             Sex.FEMALE -> {
-                tv_sex.backgroundResource = R.drawable.bg_shape_mkf_sex_female
+                tv_sex.backgroundResource = R.drawable.bg_shape_mkf_sex_female_fate
                 sexDrawable = GlobalUtils.getDrawable(R.mipmap.icon_sex_female)
                 tv_sex.textColor = Color.parseColor("#FF9BC5")
             }
@@ -136,7 +168,7 @@ class FateQuickMatchFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.TOP, 0)
+        setDialogSize(Gravity.TOP, 0, 192)
 
         val params = dialog?.window?.attributes
         params?.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; //这条就是控制点击背景的时候  如果被覆盖的view有点击事件那么就会直接触发(dialog消失并且触发背景下面view的点击事件)

@@ -375,7 +375,9 @@ data class ChatRoomBean(
     //派单未回复数量
     var fateNoReplyNum: Int = 0,
     //在线状态
-    var onlineStatus: String = ""
+    var onlineStatus: String = "",
+    //显示缘分入口
+    var showFate: String = ""
 ) : Serializable {
     companion object {
         //在线

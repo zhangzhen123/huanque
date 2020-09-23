@@ -7,10 +7,13 @@ import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.core.ui.video.VideoActivity
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -35,13 +38,16 @@ class NewUserFeMaleFragment : BaseDialogFragment() {
             RNPageActivity.start(requireActivity(), RnConstant.CHAT_COLLEGE_PAGE)
             dismiss()
         }
-        iv_close.onClickNew { dismiss() }
-        iv_player.onClickNew {
+        iv_close.onClickNew {
+            ToastUtils.show("您可以在聊主学院中学到更多赚钱小窍门")
+            dismiss()
+        }
+        sdv.onClickNew {
             //开始播放
-            iv_player.hide()
             view_shader.hide()
-            svv.play(StringHelper.getOssVideoUrl(playerUrl))
-            SPUtils.commitBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), true)
+//            svv.play(StringHelper.getOssVideoUrl(playerUrl))
+            VideoActivity.start(requireActivity(), StringHelper.getOssVideoUrl(playerUrl))
+            dismiss()
         }
         initViewModel()
     }
@@ -49,7 +55,8 @@ class NewUserFeMaleFragment : BaseDialogFragment() {
     private fun initViewModel() {
         mMainViewModel.newUserBean.observe(this, Observer {
             if (it != null) {
-                svv.showCover(it.videoCover)
+//                svv.showCover(it.videoCover)
+                sdv.loadImage(it.videoCover, 265f, 130f)
                 playerUrl = it.videoUrl
             }
         })

@@ -38,8 +38,8 @@ class MainViewModel : BaseViewModel() {
 
     private val socialService: SocialService by lazy { Requests.create(SocialService::class.java) }
 
-    //未读消息数量
-    val unreadMsgCount: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
+//    //未读消息数量
+//    val unreadMsgCount: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     val newUserBean: MutableLiveData<NewUserGiftBean> by lazy { MutableLiveData<NewUserGiftBean>() }
 
@@ -235,23 +235,23 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * 获取未读数
-     */
-    fun getUnreadCount() {
-        val typeList = arrayOf(Conversation.ConversationType.PRIVATE)
-        RongIMClient.getInstance()
-            .getUnreadCount(typeList, false, object : RongIMClient.ResultCallback<Int>() {
-                override fun onSuccess(p0: Int?) {
-                    unreadMsgCount.value = p0 ?: 0
-                    EventBus.getDefault().post(UnreadCountEvent(p0 ?: 0, false))
-                }
-
-                override fun onError(p0: RongIMClient.ErrorCode?) {
-                }
-
-            })
-    }
+//    /**
+//     * 获取未读数
+//     */
+//    fun getUnreadCount() {
+//        val typeList = arrayOf(Conversation.ConversationType.PRIVATE)
+//        RongIMClient.getInstance()
+//            .getUnreadCount(typeList, false, object : RongIMClient.ResultCallback<Int>() {
+//                override fun onSuccess(p0: Int?) {
+//                    unreadMsgCount.value = p0 ?: 0
+//                    EventBus.getDefault().post(UnreadCountEvent(p0 ?: 0, false))
+//                }
+//
+//                override fun onError(p0: RongIMClient.ErrorCode?) {
+//                }
+//
+//            })
+//    }
 
 
     /**

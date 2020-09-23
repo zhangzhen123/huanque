@@ -7,6 +7,7 @@ import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.bean.beans.ChatRoomBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
+import com.julun.huanque.common.bean.events.UnreadCountEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.forms.LineStatusForm
 import com.julun.huanque.common.bean.message.CustomMessage
@@ -33,6 +34,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -808,6 +810,7 @@ class MessageViewModel : BaseViewModel() {
             request({
                 val result = socialService.chatHome().dataConvert()
                 chatRoomData.value = result
+                getUnreadCount()
             }, {})
         }
     }
@@ -827,6 +830,25 @@ class MessageViewModel : BaseViewModel() {
                 chatRoomData.value = bean
             })
         }
+    }
+
+    /**
+     * 获取未读数
+     */
+    fun getUnreadCount() {
+        val typeList = arrayOf(Conversation.ConversationType.PRIVATE)
+        RongIMClient.getInstance()
+            .getUnreadCount(typeList, false, object : RongIMClient.ResultCallback<Int>() {
+                override fun onSuccess(p0: Int?) {
+                    val count = (p0 ?: 0) + (chatRoomData.value?.fateNoReplyNum ?: 0)
+                    unreadMsgCount.value = count
+                    EventBus.getDefault().post(UnreadCountEvent(count, false))
+                }
+
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                }
+
+            })
     }
 
 }
