@@ -139,4 +139,10 @@ object ParamConstant {
 
     //直播间观看奖励需要倒计时
     const val BIRD_AWARD_INFO = "BIRD_AWARD_FINO"
+
+    //图片规则地址
+    const val RULE_PIC_URL = "RULE_PIC_URL"
+
+    //是否允许执行操作
+    const val ENABLE_ACTION = "ENABLE_ACTION"
 }

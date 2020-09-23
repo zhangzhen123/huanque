@@ -65,6 +65,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     }
 
     protected val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
+    private var moduleName = ""
+    private var mBundle: Bundle? = null
 
     private var mFragment: BaseDialogFragment? = null
 
@@ -81,6 +83,8 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             val intent = intent
             val moduleName = intent.getStringExtra(RnConstant.MODULE_NAME)
             val initialProperties = intent.getBundleExtra(RnConstant.INITIAL_PROPERTIES)
+            this.moduleName = moduleName
+            mBundle = initialProperties
             goHome = intent.getBooleanExtra(IntentParamKey.EXTRA_FLAG_GO_HOME.name, false)
             RnManager.curActivity = this
 
@@ -129,7 +133,11 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     private fun initHuanQueViewModel() {
         mHuanQueViewModel.fateQuickMatchData.observe(this, Observer<FateQuickMatchBean> { it ->
             if (it != null) {
-                showPaidanFragment()
+                if (moduleName == RnConstant.PERSONAL_HOMEPAGE && mBundle?.getLong("userId") == it.userInfo.userId) {
+                    showPaidanFragment(false)
+                } else {
+                    showPaidanFragment()
+                }
             }
         })
     }
@@ -137,9 +145,13 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     /**
      * 显示派单Fragment
      */
-    private fun showPaidanFragment() {
+    private fun showPaidanFragment(enable: Boolean? = null) {
         mFragment?.dismiss()
-        mFragment = ARouter.getInstance().build(ARouterConstant.FATE_QUICK_MATCH_FRAGMENT).navigation() as? BaseDialogFragment
+        mFragment = ARouter.getInstance().build(ARouterConstant.FATE_QUICK_MATCH_FRAGMENT).apply {
+            if (enable != null) {
+                withBoolean(ParamConstant.ENABLE_ACTION, enable)
+            }
+        }.navigation() as? BaseDialogFragment
         mFragment?.show(supportFragmentManager, "PaidanFragment")
     }
 

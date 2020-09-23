@@ -29,5 +29,8 @@
         <activity
             android:name=".activity.YuanFenActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PicContentActivity"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

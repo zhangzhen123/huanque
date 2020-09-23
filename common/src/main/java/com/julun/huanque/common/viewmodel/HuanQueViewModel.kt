@@ -31,7 +31,7 @@ class HuanQueViewModel(application: Application) : AndroidViewModel(application)
     fun setFateData(bean: FateQuickMatchBean) {
         fateQuickMatchData.value = bean
         mPaidanDisposable?.dispose()
-        val count = (bean.expTime - System.currentTimeMillis()) % 1000
+        val count = (bean.expTime - System.currentTimeMillis()) / 1000
         mPaidanDisposable = Observable.intervalRange(0, count + 1, 0, 1, TimeUnit.SECONDS)
             .map { count - it }
             .observeOn(AndroidSchedulers.mainThread())

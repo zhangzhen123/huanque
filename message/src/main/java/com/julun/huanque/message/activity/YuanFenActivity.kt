@@ -14,14 +14,18 @@ import com.julun.huanque.common.bean.beans.FateQuickMatchChangeBean
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.YuanFenAdapter
 import com.julun.huanque.message.viewmodel.YuanFenViewModel
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.act_yuanfen.*
 import kotlinx.android.synthetic.main.act_yuanfen.commonView
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.imageResource
 
 /**
  *@创建者   dong
@@ -42,6 +46,9 @@ class YuanFenActivity : BaseActivity() {
     }
 
     private val mAdapter = YuanFenAdapter()
+
+    //规则图片地址
+    private var rulePicUrl = ""
     private val mViewModel: YuanFenViewModel by viewModels()
 
     override fun getLayoutId() = R.layout.act_yuanfen
@@ -51,6 +58,8 @@ class YuanFenActivity : BaseActivity() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val count = intent?.getIntExtra(ParamConstant.FATE_UNREPLY, 0) ?: 0
         updateTitle(count)
+        header_page.imageOperation.show()
+        header_page.imageOperation.imageResource = R.mipmap.icon_fate_help
 
         initRecyclerview()
         initViewModel()
@@ -60,12 +69,15 @@ class YuanFenActivity : BaseActivity() {
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
         header_page.imageViewBack.onClickNew { finish() }
+        header_page.imageOperation.onClickNew {
+            PicContentActivity.newInstance(this, rulePicUrl)
+        }
     }
 
     /**
      * 更新标题
      */
-    private fun updateTitle(count : Int) {
+    private fun updateTitle(count: Int) {
         val title = if (count > 0) {
             "缘分($count)"
         } else {
@@ -87,6 +99,13 @@ class YuanFenActivity : BaseActivity() {
         mAdapter.setOnItemClickListener { adapter, view, position ->
             val fateInfo = adapter.getItem(position) as? FateInfo ?: return@setOnItemClickListener
             PrivateConversationActivity.newInstance(this, fateInfo.userId, fateInfo.nickname, fateInfo.headPic)
+        }
+        mAdapter.setOnItemChildClickListener { adapter, view, position ->
+            val tempData = mAdapter.getItem(position)
+            RNPageActivity.start(
+                this,
+                RnConstant.PERSONAL_HOMEPAGE,
+                Bundle().apply { putLong("userId", tempData.userId) })
         }
     }
 
@@ -120,6 +139,7 @@ class YuanFenActivity : BaseActivity() {
         })
         mViewModel?.result?.observe(this, Observer {
             it ?: return@Observer
+            rulePicUrl = it.extData?.ruleUrl ?: ""
             if (it.list.isNotEmpty()) {
                 commonView.hide()
                 if (it.isPull) {

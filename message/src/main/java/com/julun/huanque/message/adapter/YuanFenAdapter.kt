@@ -25,6 +25,11 @@ import org.jetbrains.anko.textColor
  *@描述 缘分页面使用
  */
 class YuanFenAdapter : BaseQuickAdapter<FateInfo, BaseViewHolder>(R.layout.recycler_item_yuanfen), LoadMoreModule {
+
+    init {
+        addChildClickViewIds(R.id.sdv_header)
+    }
+
     override fun convert(holder: BaseViewHolder, item: FateInfo) {
         val tvMatchTime = holder.getView<TextView>(R.id.tv_match_time)
         tvMatchTime.text = "缘分时刻：${item.matchTime}"

@@ -141,7 +141,7 @@ class MainActivity : BaseActivity() {
         //查询未读数
         if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
             //融云已经连接
-            mMainViewModel.getUnreadCount()
+            mMessageViewModel.getUnreadCount()
         }
         //延迟获取定位权限
         Observable.timer(3, TimeUnit.SECONDS)
@@ -226,17 +226,6 @@ class MainActivity : BaseActivity() {
                 goToTab(it)
             }
         })
-        mMainViewModel.unreadMsgCount.observe(this, Observer {
-            if (it != null) {
-                mMessageViewModel.unreadMsgCount.value = it
-                tv_unread_count.text = if (it <= 99) {
-                    "$it"
-                } else {
-                    "99+"
-                }
-                showUnreadCount()
-            }
-        })
 
         mMainViewModel.newUserBean.observe(this, Observer {
             if (it != null) {
@@ -262,10 +251,27 @@ class MainActivity : BaseActivity() {
             }
         })
 
+        mMessageViewModel.unreadMsgCount.observe(this, Observer {
+            if (it != null) {
+                tv_unread_count.text = if (it <= 99) {
+                    "$it"
+                } else {
+                    "99+"
+                }
+                showUnreadCount()
+            }
+        })
+
         mMessageViewModel.queryUnreadCountFlag.observe(this, Observer {
             if (it == true) {
-                mMainViewModel.getUnreadCount()
+                mMessageViewModel.getUnreadCount()
                 mMessageViewModel.queryUnreadCountFlag.value = false
+            }
+        })
+
+        mMessageViewModel.chatRoomData.observe(this, Observer {
+            if (it != null) {
+                mMessageViewModel?.getUnreadCount()
             }
         })
 
@@ -416,7 +422,7 @@ class MainActivity : BaseActivity() {
      * 显示未读数
      */
     private fun showUnreadCount() {
-        val unreadCount = mMainViewModel.unreadMsgCount.value ?: 0
+        val unreadCount = mMessageViewModel.unreadMsgCount.value ?: 0
         if (!item_message.isSelected && unreadCount > 0) {
             //未选中消息模块，同时未读数大于0(显示)
             tv_unread_count.show()
@@ -596,7 +602,7 @@ class MainActivity : BaseActivity() {
             mLocationService.registerListener(mLocationListener)
             mLocationService.start()
         } else {
-            mMainViewModel.unreadMsgCount.value = 0
+            mMessageViewModel.unreadMsgCount.value = 0
         }
 
     }
@@ -604,14 +610,14 @@ class MainActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun privateMessageReceive(bean: EventMessageBean) {
         //接收到私聊消息
-        mMainViewModel.getUnreadCount()
+        mMessageViewModel.getUnreadCount()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun unreadCount(bean: QueryUnreadCountEvent) {
         if (!bean.player) {
             EventBus.getDefault()
-                .postSticky(UnreadCountEvent(mMainViewModel.unreadMsgCount.value ?: 0, false))
+                .postSticky(UnreadCountEvent(mMessageViewModel.unreadMsgCount.value ?: 0, false))
         }
     }
 
@@ -620,7 +626,7 @@ class MainActivity : BaseActivity() {
         if (RongCloudManager.RONG_CONNECTED == event.state) {
             //融云连接成功，查询未读数
             //查询免打扰列表
-            mMainViewModel.getUnreadCount()
+            mMessageViewModel.getUnreadCount()
             mMainViewModel.refreshMessage()
         }
     }
