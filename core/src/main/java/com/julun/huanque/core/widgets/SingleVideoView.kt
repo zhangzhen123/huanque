@@ -264,7 +264,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     fun initPlayer() {
         ULog.i("PlayerLine 创建播放器")
         mAliPlayer = AliPlayerFactory.createAliPlayer(context.applicationContext)
-        mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL;
+//        mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL;
         ULog.i("PlayerLine 设置监听事件")
         mAliPlayer?.setOnCompletionListener {
             //播放完成事件

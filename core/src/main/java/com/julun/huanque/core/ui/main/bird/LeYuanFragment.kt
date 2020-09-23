@@ -588,7 +588,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     }
 
     private fun gotoWithdraw() {
-        requireActivity().startActivity<WithdrawActivity>()
+//        requireActivity().startActivity<WithdrawActivity>()
+        RNPageActivity.start(requireActivity(), RnConstant.SmallChangePage)
     }
 
     private fun initMusic() {
