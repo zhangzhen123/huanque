@@ -179,7 +179,10 @@ class FastLoginEvent() : Serializable
  * 关闭养鸟
  */
 class HideBirdEvent() : Serializable
-
+/**
+ * 关闭养鸟引导领取
+ */
+class HideBirdAwardViewEvent() : Serializable
 /**
  * 刷新语音券消息
  */

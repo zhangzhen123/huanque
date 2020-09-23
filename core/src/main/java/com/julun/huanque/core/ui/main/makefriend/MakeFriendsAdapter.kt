@@ -112,8 +112,8 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 ImageHelper.setDefaultHeaderPic(headPic, bean.sex)
 
                 headPic.loadImage(bean.headPic + BusiConstant.OSS_160, 66f, 66f)
-                val name = if (bean.nickname.length > 8) {
-                    "${bean.nickname.substring(0, 8)}…"
+                val name = if (bean.nickname.length > 10) {
+                    "${bean.nickname.substring(0, 10)}…"
                 } else {
                     bean.nickname
                 }
@@ -130,9 +130,9 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 }else{
                     val second=(System.currentTimeMillis()-bean.lastOfflineTime)/1000L
                     if(bean.sex== Sex.FEMALE){
-                        holder.setText(R.id.tv_online_status, TimeUtils.formatLostTime2(second))
-                    }else{
                         holder.setText(R.id.tv_online_status, TimeUtils.formatLostTime1(second))
+                    }else{
+                        holder.setText(R.id.tv_online_status, TimeUtils.formatLostTime2(second))
                     }
 
                     holder.setGone(R.id.view_online,true)

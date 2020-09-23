@@ -2315,4 +2315,11 @@ class PlayerActivity : BaseActivity() {
             finish()
         }
     }
+    /**
+     * 收到封禁通知关闭直播间
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun hideBirdAwardView(event: HideBirdAwardViewEvent) {
+        bird_count_view.resetView()
+    }
 }

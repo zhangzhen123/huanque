@@ -15,7 +15,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseVMDialogFragment
-import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
@@ -27,6 +26,7 @@ import com.julun.huanque.common.bean.events.HideBirdEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.manager.audio.SoundPoolManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
@@ -69,7 +69,7 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         ivClose.onClickNew {
             dismiss()
         }
-        taskAdapter.addFooterView(LayoutInflater.from(context).inflate(R.layout.view_bottom_holder,null))
+        taskAdapter.addFooterView(LayoutInflater.from(context).inflate(R.layout.view_bottom_holder, null))
         taskAdapter.setOnItemChildClickListener { _, _, position ->
             currentItem = null
             val item = taskAdapter.getItemOrNull(position) ?: return@setOnItemChildClickListener
@@ -95,6 +95,12 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
                                 .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MESSAGE_FRAGMENT_INDEX).navigation()
                             this@BirdTaskDialogFragment.dismiss()
                             EventBus.getDefault().post(HideBirdEvent())
+                        }
+                        BirdTaskJump.AnonyVoiceCall -> {
+                            ARouter.getInstance().build(ARouterConstant.ANONYMOUS_VOICE_ACTIVITY).navigation()
+                            this@BirdTaskDialogFragment.dismiss()
+                            EventBus.getDefault().post(HideBirdEvent())
+
                         }
 
                     }
@@ -162,6 +168,10 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
                 val content = "恭喜您成功领取了\n ${StringHelper.formatBigNum(it.requireT().awardCoins)}金币"
                 val dialog = BirdGotMoneyDialogFragment.newInstance(content)
                 dialog.show(requireActivity(), "BirdGotMoneyDialogFragment")
+                if (activity !is PlayerActivity) {
+                    SoundPoolManager.instance.play(LeYuanFragment.BIRD_COIN)
+                }
+
                 mViewModel.queryInfo(QueryType.REFRESH)
                 leYuanViewModel.refreshCoins()
             } else if (it.state == NetStateType.ERROR) {

@@ -737,8 +737,15 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                         //手动更改余额 减去功能鹊数目
                         val info = mViewModel.homeInfo.value?.getT()
                         if (info != null) {
+
                             tv_cash.text = "${info.cash.add(data.cash)}元"
                             val fInfo = data.functionNumInfo ?: return@Observer
+                            //将值回传给viewModel刷新数据
+                            mViewModel.currentInfo?.functionInfo?.cowherd?.functionNum=fInfo.cowherd
+                            mViewModel.currentInfo?.functionInfo?.wealth?.functionNum=fInfo.wealth
+                            mViewModel.currentInfo?.functionInfo?.weaver?.functionNum=fInfo.weaver
+                            mViewModel.currentInfo?.functionInfo?.mystical?.functionNum=fInfo.mystical
+                            mViewModel.currentInfo?.functionInfo?.redpacket?.functionNum=fInfo.redpacket
                             if (fInfo.wealth.isNotEmpty() && fInfo.wealth != "0") {
                                 tv_cai_shen.text = fInfo.wealth
                                 tv_cai_shen.show()
