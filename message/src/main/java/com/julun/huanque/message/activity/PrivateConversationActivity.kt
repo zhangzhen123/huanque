@@ -566,7 +566,7 @@ class PrivateConversationActivity : BaseActivity() {
         tv_send.onClickNew {
             //发送按钮
             val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
-            if (msgFee != null && msgFee > 0 && !feeDialogShow) {
+            if (msgFee != null && msgFee > 0 && !feeDialogShow && (mPrivateConversationViewModel?.propData?.value?.chatTicketCnt ?: 0) <= 0) {
                 //消息需要付费
                 showMessageFeeDialog(Message_Text, msgFee)
                 return@onClickNew

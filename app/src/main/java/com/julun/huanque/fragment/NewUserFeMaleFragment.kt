@@ -48,7 +48,7 @@ class NewUserFeMaleFragment : BaseDialogFragment() {
             view_shader.hide()
 //            svv.play(StringHelper.getOssVideoUrl(playerUrl))
             VideoActivity.start(requireActivity(), StringHelper.getOssVideoUrl(playerUrl))
-            dismiss()
+//            dismiss()
         }
         initViewModel()
 

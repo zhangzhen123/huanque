@@ -419,6 +419,7 @@ class PlayerViewModel : BaseViewModel() {
                 baseData.value = result
                 startLookTime = System.currentTimeMillis()
             }, error = {
+                baseData.postValue(null)
                 errorState.value = 1
                 if (it is ResponseError) {
 

@@ -74,7 +74,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
             mPlayerMessageViewModel.anchorData.value = it
 //            liveFollowListViewModel.requestFollowLivingList(mPlayerViewModel.programId, true)
             //不再直播的
-            if(!it.isLiving){
+            if(it?.isLiving != true){
                 mPlayerViewModel.squareView.value = true
             }
         })
