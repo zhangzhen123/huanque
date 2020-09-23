@@ -15,63 +15,26 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/view_top"
+
+    <ImageView
+        android:id="@+id/iv_top"
         android:layout_width="0px"
-        android:layout_height="115dp"
-        android:layout_marginLeft="35dp"
+        android:layout_height="0px"
         android:layout_marginTop="30dp"
-        android:layout_marginRight="35dp"
+        android:src="@mipmap/pic_top_female"
+        app:layout_constraintDimensionRatio="1125:345"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:layout_width="0px"
-        android:layout_height="95dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/bg_top_female_gift"
-        app:layout_constraintBottom_toBottomOf="@id/view_top"
-        app:layout_constraintLeft_toLeftOf="@id/view_top"
-        app:layout_constraintRight_toRightOf="@id/view_top" />
-
-    <View
-        android:id="@+id/view_line"
-        android:layout_width="1px"
-        android:layout_height="1px"
-        android:layout_marginLeft="49px"
-        app:layout_constraintLeft_toRightOf="@id/view_top"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/que_qiche"
-        app:layout_constraintBottom_toBottomOf="@id/view_top"
-        app:layout_constraintRight_toLeftOf="@id/view_line" />
-
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="37dp"
-        android:src="@mipmap/text_top_female_gift"
-        app:layout_constraintLeft_toLeftOf="@id/view_top"
-        app:layout_constraintTop_toTopOf="@id/view_top" />
-
 
     <View
         android:id="@+id/view_bottom"
         android:layout_width="0px"
         android:layout_height="230dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="35dp"
         android:background="@drawable/bg_new_user_bottom"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_top" />
+        app:layout_constraintTop_toBottomOf="@id/iv_top" />
 
     <ImageView
         android:id="@+id/iv_get"
@@ -90,7 +53,7 @@
         app:layout_constraintBottom_toTopOf="@id/iv_get"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_top">
+        app:layout_constraintTop_toBottomOf="@id/iv_top">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv"

@@ -1,6 +1,7 @@
 package com.julun.huanque.fragment
 
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
@@ -9,11 +10,9 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.SingleNewUserGiftBean
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.loadImage
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.fragment_newuser_male.*
 
@@ -33,6 +32,10 @@ class NewUserMaleFragment : BaseDialogFragment() {
             mMainViewModel.receiveNewUserBag()
             dismiss()
         }
+        val params = view_bottom.layoutParams
+        params.width = ScreenUtils.getScreenWidth() * 305 / 375
+        view_bottom.layoutParams = params
+
         initViewModel()
     }
 
@@ -86,5 +89,10 @@ class NewUserMaleFragment : BaseDialogFragment() {
     override fun onStart() {
         super.onStart()
         setDialogSize(Gravity.CENTER, 0)
+        dialog?.setCancelable(false)
+        dialog?.setCanceledOnTouchOutside(false)
+        dialog?.setOnKeyListener { _, keyCode, _ ->
+            keyCode == KeyEvent.KEYCODE_BACK
+        }
     }
 }
