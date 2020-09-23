@@ -267,7 +267,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 }
                 R.id.ll_balance -> {
                     logger.info("零钱")
-                    requireActivity().startActivity<WithdrawActivity>()
+//                    requireActivity().startActivity<WithdrawActivity>()
+                    RNPageActivity.start(requireActivity(), RnConstant.SmallChangePage)
                 }
                 R.id.ll_task -> {
                     logger.info("去赚钱")
@@ -285,7 +286,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         }
         ll_balance_h.onClickNew {
             logger.info("零钱")
-            requireActivity().startActivity<WithdrawActivity>()
+//            requireActivity().startActivity<WithdrawActivity>()
+            RNPageActivity.start(requireActivity(), RnConstant.SmallChangePage)
         }
         ll_task_h.onClickNew {
             logger.info("去赚钱")
@@ -432,7 +434,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         })
         mViewModel.flowerPic.observe(viewLifecycleOwner, Observer {
             //
-            mHomeViewModel.flowerPic.value=it?:return@Observer
+            mHomeViewModel.flowerPic.value=it
         })
 
     }

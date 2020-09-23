@@ -89,9 +89,6 @@
         <item name="android:windowBackground">@drawable/bg_start_up</item>
     </style>
 
-    <style name="AppLauncher" parent="@android:style/Theme.NoTitleBar.Fullscreen">
-        <item name="android:windowBackground">@drawable/bitmap_startup_top</item>
-    </style>
     <!--从底部进入的activity主题-->
     <style name="BottomInTheme" parent="@style/CustomToolBarTheme">
         <item name="android:windowAnimationStyle">@style/BottomInWindowAnim</item>
@@ -120,6 +117,13 @@
         <item name="android:maxHeight">50dp</item>
     </style>
 
+    <style name="ProgressBar_player" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">
+            @android:drawable/progress_indeterminate_horizontal
+        </item>
+        <item name="android:progressDrawable">@drawable/progress_drawable_video</item>
+    </style>
     <style name="dialog_bottom_bottom_style" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/dialog_bottom_enter</item>
         <item name="android:windowExitAnimation">@anim/dialog_bottom_exit</item>

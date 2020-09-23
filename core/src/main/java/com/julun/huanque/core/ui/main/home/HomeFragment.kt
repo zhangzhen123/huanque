@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.facebook.drawee.generic.RoundingParams
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.init.CommonInit
@@ -71,7 +72,7 @@ class HomeFragment : BaseFragment() {
         home_container.post {
             RnManager.createReactInstanceManager(CommonInit.getInstance().getApp())
         }
-        iv_flower_fg.onClickNew {
+        sdw_flower.onClickNew {
             activity?.let { act ->
                 val intent = Intent(act, PlumFlowerActivity::class.java)
                 if (ForceUtils.activityMatch(intent)) {
@@ -103,14 +104,15 @@ class HomeFragment : BaseFragment() {
         viewModel.flowerPic.observe(viewLifecycleOwner, Observer {
             //
             if(it!=null){
-                sdw_flower.show()
                 iv_flower_fg.show()
+                val roundingParams: RoundingParams = RoundingParams.asCircle()
+                sdw_flower.hierarchy.roundingParams = roundingParams
                 sdw_flower.loadImage(it,32f,32f)
                 iv_flower_fg.imageResource=R.mipmap.fg_home_flower_top
             }else{
-                sdw_flower.hide()
-                iv_flower_fg.show()
-                iv_flower_fg.imageResource=R.mipmap.icon_home_flower_top
+                iv_flower_fg.hide()
+                sdw_flower.hierarchy.roundingParams?.roundAsCircle=false
+                sdw_flower.loadImageLocal(R.mipmap.icon_home_flower_top)
             }
         })
     }

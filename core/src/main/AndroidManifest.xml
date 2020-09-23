@@ -105,7 +105,7 @@
             android:theme="@style/CustomToolBarTheme" />
         <activity android:name=".ui.video.VideoActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomToolBarTheme"/>
+            android:theme="@style/LiveTheme"/>
 
         <service android:name=".service.FloatingService" />
     </application>
