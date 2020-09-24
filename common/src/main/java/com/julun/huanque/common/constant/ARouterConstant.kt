@@ -40,6 +40,9 @@ object ARouterConstant {
 
     const val MAIN_ACTIVITY = "/$APP$PREFIX_ACTIVITY/MAIN_ACTIVITY"
 
+    //直播设置页面
+    const val PLAYER_SETTING_ACTIVITY = "/$APP$PREFIX_ACTIVITY/PlayerSettingActivity"
+
     //派单弹窗
     const val FATE_QUICK_MATCH_FRAGMENT = "/$APP$PREFIX_FRAGMENT/FateQuickMatchFragment"
 

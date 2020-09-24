@@ -610,7 +610,7 @@ class PlayerActivity : BaseActivity() {
             //没有悬浮窗权限,添加该权限
             viewModel.mPermissionJumpType = type
             MyAlertDialog(this).showAlertWithOKAndCancel(
-                "悬浮窗权限未开启，请到设置中授予欢鹊悬浮窗权限",
+                "悬浮窗权限被禁用，请到设置中授予欢鹊悬浮窗权限",
                 MyAlertDialog.MyDialogCallback(onRight = {
                     val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
                     intent.data = Uri.parse("package:$packageName")
@@ -1942,6 +1942,7 @@ class PlayerActivity : BaseActivity() {
         val baseData = viewModel.baseData.value
         if (!isBanned && SessionUtils.getSessionId()
                 .isNotEmpty() && PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null
+            && SPUtils.getBoolean(SPParamKey.Player_Close_Floating_Show, true)
         ) {
             FloatingManager.showFloatingView(
                 GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
@@ -2315,6 +2316,7 @@ class PlayerActivity : BaseActivity() {
             finish()
         }
     }
+
     /**
      * 收到封禁通知关闭直播间
      */
