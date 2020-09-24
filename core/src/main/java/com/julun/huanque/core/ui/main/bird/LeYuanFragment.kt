@@ -41,8 +41,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.guide.LottieComponent
 import com.julun.huanque.core.ui.main.bird.guide.LottieComponent2
-import com.julun.huanque.core.ui.video.VideoActivity
-import com.julun.huanque.core.ui.withdraw.WithdrawActivity
+import com.julun.huanque.common.ui.video.VideoActivity
 import com.julun.huanque.core.widgets.DispatchRecyclerView
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -54,7 +53,6 @@ import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.sdk23.listeners.onTouch
-import org.jetbrains.anko.startActivity
 import java.math.BigInteger
 import java.util.concurrent.TimeUnit
 

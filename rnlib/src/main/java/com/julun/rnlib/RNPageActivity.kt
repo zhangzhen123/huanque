@@ -27,6 +27,7 @@ import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.ui.image.ImageActivity
+import com.julun.huanque.common.ui.video.VideoActivity
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.FileUtils
 import com.julun.huanque.common.utils.NetUtils
@@ -654,8 +655,9 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 }
 
                 RnConstant.HQ_PARADISE_PAGE -> {
-                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                        .withInt(IntentParamKey.TARGET_INDEX.name, 1).navigation()
+//                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+//                        .withInt(IntentParamKey.TARGET_INDEX.name, 1).navigation()
+                    ARouter.getInstance().build(ARouterConstant.LEYUAN_BIRD_ACTIVITY).navigation()
                     finish()
                 }
                 RnConstant.MAKE_FRIENDS_PAGE -> {
@@ -710,7 +712,20 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         startActivity(intent)
                     }
                 }
-
+                RnConstant.VIDEO_PLAYER_PAGE -> {
+                    //访问webActivity
+                    var url = ""
+                    if (params?.hasKey("url") == true) {
+                        url = params.getString("url") ?: ""
+                    }
+                    if (url.isNotEmpty()) {
+                        val extra = Bundle()
+                        extra.putString(BusiConstant.WEB_URL, url)
+                        var intent = Intent(this, VideoActivity::class.java)
+                        intent.putExtras(extra)
+                        startActivity(intent)
+                    }
+                }
             }
 
         }

@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.video
+package com.julun.huanque.common.ui.video
 
 import android.app.Activity
 import android.content.Intent
@@ -12,6 +12,7 @@ import com.aliyun.player.AliPlayerFactory
 import com.aliyun.player.IPlayer
 import com.aliyun.player.bean.InfoCode
 import com.aliyun.player.source.UrlSource
+import com.julun.huanque.common.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.suger.hide
@@ -21,9 +22,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.common.utils.TimeUtils
 import com.julun.huanque.common.utils.ULog
-import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.activity_video.*
-import kotlinx.android.synthetic.main.view_single_video.view.*
 import org.jetbrains.anko.imageResource
 
 /**
