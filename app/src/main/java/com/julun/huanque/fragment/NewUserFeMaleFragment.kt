@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_newuser_female.view_bottom
  */
 class NewUserFeMaleFragment : BaseDialogFragment() {
 
+    private var videoId: Long =0L
     private val mMainViewModel: MainViewModel by activityViewModels()
 
     private var playerUrl = ""
@@ -47,7 +48,7 @@ class NewUserFeMaleFragment : BaseDialogFragment() {
             //开始播放
             view_shader.hide()
 //            svv.play(StringHelper.getOssVideoUrl(playerUrl))
-            VideoActivity.start(requireActivity(), StringHelper.getOssVideoUrl(playerUrl))
+            VideoActivity.start(requireActivity(), StringHelper.getOssVideoUrl(playerUrl),videoId = videoId,operate = VideoActivity.SAVE_LOG)
 //            dismiss()
         }
         initViewModel()
@@ -63,6 +64,7 @@ class NewUserFeMaleFragment : BaseDialogFragment() {
 //                svv.showCover(it.videoCover)
                 sdv.loadImage(it.videoCover, 265f, 130f)
                 playerUrl = it.videoUrl
+                videoId=it.videoId
             }
         })
     }

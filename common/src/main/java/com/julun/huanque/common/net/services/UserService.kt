@@ -225,4 +225,11 @@ interface UserService {
      */
     @POST("user/acct/info/onlineStatus")
     suspend fun updateOnlineStatus(@Body form: LineStatusForm): Root<VoidResult>
+
+    /**
+     * 修改在线状态
+     */
+    @POST("user/task/saveTeachVideo")
+    suspend fun saveTeachVideo(@Body form: SaveTeachVideoForm): Root<VoidResult>
+
 }
