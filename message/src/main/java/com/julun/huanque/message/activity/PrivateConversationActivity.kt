@@ -603,7 +603,7 @@ class PrivateConversationActivity : BaseActivity() {
         iv_pic.onClickNew {
             val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
 
-            if (msgFee != null && msgFee > 0 && !feeDialogShow) {
+            if (msgFee != null && msgFee > 0 && !feeDialogShow && (mPrivateConversationViewModel?.propData?.value?.chatTicketCnt ?: 0) <= 0) {
                 //消息需要付费
                 showMessageFeeDialog(Message_Pic, msgFee)
                 return@onClickNew
@@ -736,7 +736,9 @@ class PrivateConversationActivity : BaseActivity() {
                         //特权表情,直接发送
                         val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
 
-                        if (msgFee != null && msgFee > 0 && !feeDialogShow) {
+                        if (msgFee != null && msgFee > 0 && !feeDialogShow && (mPrivateConversationViewModel?.propData?.value?.chatTicketCnt
+                                ?: 0) <= 0
+                        ) {
                             //消息需要付费
                             MyAlertDialog(this@PrivateConversationActivity).showAlertWithOKAndCancel(
                                 "私信消息${msgFee}鹊币/条",
@@ -765,7 +767,9 @@ class PrivateConversationActivity : BaseActivity() {
                                 ?: ""
 
                         val msgFee = mPrivateConversationViewModel?.msgFeeData?.value
-                        if (msgFee != null && msgFee > 0 && !feeDialogShow) {
+                        if (msgFee != null && msgFee > 0 && !feeDialogShow && (mPrivateConversationViewModel?.propData?.value?.chatTicketCnt
+                                ?: 0) <= 0
+                        ) {
                             //消息需要付费
                             MyAlertDialog(this@PrivateConversationActivity).showAlertWithOKAndCancel(
                                 "私信消息${msgFee}鹊币/条",

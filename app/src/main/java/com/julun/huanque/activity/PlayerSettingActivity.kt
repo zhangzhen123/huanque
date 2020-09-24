@@ -64,7 +64,7 @@ class PlayerSettingActivity : BaseActivity() {
         iv_floating.onClickNew {
             if (iv_floating.isSelected) {
                 iv_floating.isSelected = false
-                SPUtils.getBoolean(SPParamKey.Player_Close_Floating_Show, false)
+                SPUtils.commitBoolean(SPParamKey.Player_Close_Floating_Show, false)
             } else {
                 //检查权限
                 val enable = PermissionUtils.checkFloatPermission(this)

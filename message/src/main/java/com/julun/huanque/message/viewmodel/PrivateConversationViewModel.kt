@@ -423,6 +423,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     msgFeeData.value = result.consumeBeans
                 }
                 basicBean.value?.chatTicketCnt = result.chatTicketCnt
+                propData.value = PropBean(result.chatTicketCnt, result.voiceTicketCnt)
                 uploader?.success(Uri.parse(content))
             }, {
                 if (it !is ResponseError) {
@@ -453,6 +454,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     msgFeeData.value = result.consumeBeans
                 }
                 basicBean.value?.chatTicketCnt = result.chatTicketCnt
+                propData.value = PropBean(result.chatTicketCnt, result.voiceTicketCnt)
                 try {
                     val cMessage = localMsg.content as? CustomMessage
 
@@ -491,6 +493,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     msgFeeData.value = result.consumeBeans
                 }
                 basicBean.value?.chatTicketCnt = result.chatTicketCnt
+                propData.value = PropBean(result.chatTicketCnt, result.voiceTicketCnt)
                 try {
                     val cMessage = localMsg.content as? CustomMessage
 
