@@ -321,10 +321,10 @@ class MessageFragment : BaseFragment() {
                 }
                 iv_online_status.imageResource = onLineResource
 
-                if (it.showFate == BusiConstant.False || mMessageViewModel.player) {
-                    rl_yuanfen.hide()
-                } else {
+                if (it.showFate == BusiConstant.True && !mMessageViewModel.player) {
                     rl_yuanfen.show()
+                } else {
+                    rl_yuanfen.hide()
                 }
             }
         })

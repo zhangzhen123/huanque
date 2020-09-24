@@ -65,11 +65,6 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
 
     override fun onResume() {
         super.onResume()
-        sdv_gift_icon.hide()
-        tv_gift_name.hide()
-        sdv_gift.hide()
-        con_root?.alpha = 1.0f
-
         initViewModel()
     }
 
@@ -392,8 +387,10 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
 
     override fun onDestroyView() {
         super.onDestroyView()
-        sdv_gift.hide()
         tv_gift_name.hide()
+        sdv_gift_icon.hide()
+        sdv_gift.hide()
+        con_root?.alpha = 1.0f
         mPrivateAnimationViewModel.stopPlayer()
         mAnimator?.cancel()
     }

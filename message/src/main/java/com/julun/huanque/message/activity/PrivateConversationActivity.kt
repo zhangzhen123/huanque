@@ -1165,7 +1165,7 @@ class PrivateConversationActivity : BaseActivity() {
                         }
                     }
                     addSingleMessage(msg)
-//                    mPrivateConversationViewModel?.addMessage(msg)
+                    mPrivateConversationViewModel?.doWithReceiveMessage(msg)
 //                    scrollToBottom()
                 }
             }

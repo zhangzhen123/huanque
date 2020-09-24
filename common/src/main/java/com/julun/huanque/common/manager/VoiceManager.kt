@@ -49,7 +49,7 @@ object VoiceManager {
      * 播放结束音效
      */
     fun playFinish() {
-        playerAudio("finish.mp3")
+        playerAudio("finish.mp3",false)
     }
 
     /**
@@ -101,7 +101,7 @@ object VoiceManager {
     /**
      * 播放音效
      */
-    private fun playerAudio(audioName: String) {
+    private fun playerAudio(audioName: String,loop : Boolean = true) {
         checkAudioManageAndService()
         basicSetting()
 
@@ -119,6 +119,7 @@ object VoiceManager {
         val afd = CommonInit.getInstance().getApp().assets.openFd(audioName)
         mPlayer?.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
         mPlayer?.prepare()
+        mPlayer?.isLooping = loop
         val mFocusLock = Any()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mListenerHandler = Handler()
