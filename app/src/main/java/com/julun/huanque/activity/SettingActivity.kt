@@ -157,6 +157,11 @@ class SettingActivity : BaseActivity() {
             //主播管理规范
             WebActivity.startWeb(this, Agreement.AnchorAgreement)
         }
+
+        view_common.onClickNew {
+            //通用
+
+        }
     }
 
     /**
