@@ -161,13 +161,44 @@
                 app:layout_constraintTop_toTopOf="@id/view_juvenile" />
 
             <View
+                android:id="@+id/view_common"
+                android:layout_width="0px"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_privacy" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0px"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:text="通用"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/view_common"
+                app:layout_constraintLeft_toLeftOf="@id/view_common"
+                app:layout_constraintTop_toTopOf="@id/view_common" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/icon_arrow_msg_setting"
+                app:layout_constraintBottom_toBottomOf="@id/view_common"
+                app:layout_constraintRight_toRightOf="@id/view_common"
+                app:layout_constraintTop_toTopOf="@id/view_common" />
+
+
+            <View
                 android:id="@+id/view_divider"
                 android:layout_width="0px"
                 android:layout_height="5dp"
                 android:background="#F3F4F5"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_juvenile" />
+                app:layout_constraintTop_toBottomOf="@id/view_common" />
 
             <View
                 android:id="@+id/view_anchor_agreement"

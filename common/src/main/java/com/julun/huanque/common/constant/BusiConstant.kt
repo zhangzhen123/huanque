@@ -93,6 +93,9 @@ object SPParamKey {
 
     //激活接口调用标记位
     const val APP_START = "APP_START"
+
+    //直播间关闭，悬浮窗是否显示标识位
+    const val Player_Close_Floating_Show = "Player_Close_Floating_Show"
 }
 
 /**
@@ -863,6 +866,7 @@ object PlayerFrom {
     const val DESTROY_ACCOUNT = "destroyAccount"
 
     const val Push = "Push"
+
     //养鹊
     const val Magpie = "Magpie"
 }

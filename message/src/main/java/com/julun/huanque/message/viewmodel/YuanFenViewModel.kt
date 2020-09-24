@@ -8,6 +8,7 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -39,9 +40,6 @@ class YuanFenViewModel : BaseViewModel() {
                 val data =
                     socialService.fateList(OffsetForm(offset = offset))
                         .dataConvert()
-                if (offset == 0) {
-                    countDown()
-                }
                 offset += data.list.size
                 data.isPull = it
                 emit(data)
@@ -52,21 +50,22 @@ class YuanFenViewModel : BaseViewModel() {
     /**
      * 开始倒计时
      */
-    private fun countDown() {
+    fun countDown() {
         mDisposable?.dispose()
         mDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
             .subscribe({
                 var change = false
-                result.value?.list?.forEach {
+                val list = result.value?.list ?: return@subscribe
+                list.forEach {
                     val ttl = it.ttl
                     if (ttl > 0) {
                         it.ttl = ttl - 1
                         change = true
                     }
                 }
-                if(change){
+                if (change) {
                     refreshFlag.postValue(true)
-                }else{
+                } else {
                     mDisposable?.dispose()
                 }
             }, {})
@@ -78,7 +77,7 @@ class YuanFenViewModel : BaseViewModel() {
     fun updateFate(map: HashMap<String, String>) {
         var change = false
         val keyList = map.keys
-        if(keyList.isEmpty()){
+        if (keyList.isEmpty()) {
             return
         }
         result.value?.list?.forEach {

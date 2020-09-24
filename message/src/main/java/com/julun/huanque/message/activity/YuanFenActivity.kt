@@ -12,6 +12,7 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.FateInfo
 import com.julun.huanque.common.bean.beans.FateQuickMatchChangeBean
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -23,6 +24,8 @@ import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.act_yuanfen.*
 import kotlinx.android.synthetic.main.act_yuanfen.commonView
+import kotlinx.android.synthetic.main.act_yuanfen.rlRefreshView
+import kotlinx.android.synthetic.main.activity_live_remind.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.imageResource
@@ -61,6 +64,8 @@ class YuanFenActivity : BaseActivity() {
         header_page.imageOperation.show()
         header_page.imageOperation.imageResource = R.mipmap.icon_fate_help
 
+        MixedHelper.setSwipeRefreshStyle(rlRefreshView)
+
         initRecyclerview()
         initViewModel()
         mViewModel.queryData.value = true
@@ -72,6 +77,10 @@ class YuanFenActivity : BaseActivity() {
         header_page.imageOperation.onClickNew {
             PicContentActivity.newInstance(this, rulePicUrl)
         }
+
+        rlRefreshView.setOnRefreshListener {
+            mViewModel?.queryData?.value = true
+        }
     }
 
     /**
@@ -79,7 +88,7 @@ class YuanFenActivity : BaseActivity() {
      */
     private fun updateTitle(count: Int) {
         val title = if (count > 0) {
-            "缘分($count)"
+            "缘分（$count）"
         } else {
             "缘分"
         }
@@ -143,7 +152,9 @@ class YuanFenActivity : BaseActivity() {
             if (it.list.isNotEmpty()) {
                 commonView.hide()
                 if (it.isPull) {
+                    rlRefreshView.isRefreshing = false
                     mAdapter.setList(it.list)
+                    mViewModel.countDown()
                 } else {
                     mAdapter.addData(it.list)
                 }
