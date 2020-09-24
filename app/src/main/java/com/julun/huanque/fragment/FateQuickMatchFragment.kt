@@ -85,7 +85,7 @@ class FateQuickMatchFragment : BaseDialogFragment() {
                     MotionEvent.ACTION_UP -> {
                         val moveX = ev.getRawX() - x
                         val moveY = ev.getRawY() - y
-                        if (abs(moveY) > abs(moveX) && moveY < -50) {
+                        if (abs(moveY) > abs(moveX) && moveY < -20) {
                             //隐藏
                             mHuanQueViewModel.clearFateData()
                         }
@@ -163,12 +163,12 @@ class FateQuickMatchFragment : BaseDialogFragment() {
      * 显示当前倒计时
      */
     private fun showTime(time: Long) {
-        tv_time.text = "缘分来了(${time}s)"
+        tv_time.text = "缘分来了（${time}s）"
     }
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.TOP, 0, 192)
+        setDialogSize(Gravity.TOP, 0, 222)
 
         val params = dialog?.window?.attributes
         params?.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; //这条就是控制点击背景的时候  如果被覆盖的view有点击事件那么就会直接触发(dialog消失并且触发背景下面view的点击事件)
