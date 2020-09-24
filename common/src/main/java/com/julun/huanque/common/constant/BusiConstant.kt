@@ -99,6 +99,9 @@ object SPParamKey {
 
     //手机关闭悬浮窗标记位
     const val First_Close_Floating = "First_Close_Floating"
+
+    //是否同意隐私协议
+    const val AgreeUp = "AgreeUp"
 }
 
 /**

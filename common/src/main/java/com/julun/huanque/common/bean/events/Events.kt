@@ -99,6 +99,11 @@ class UserInfoEditEvent(
 class RPVerifyResult(val result: String)
 
 /**
+ * 视频播放完成事件
+ */
+class VideoResult()
+
+/**
  * 头像认证结果的广播
  */
 class RHVerifyResult(val result: String)
@@ -179,10 +184,12 @@ class FastLoginEvent() : Serializable
  * 关闭养鸟
  */
 class HideBirdEvent() : Serializable
+
 /**
  * 关闭养鸟引导领取
  */
 class HideBirdAwardViewEvent() : Serializable
+
 /**
  * 刷新语音券消息
  */

@@ -46,7 +46,7 @@ class NewUserFeMaleFragment : BaseDialogFragment() {
         }
         sdv.onClickNew {
             //开始播放
-            view_shader.hide()
+//            view_shader.hide()
 //            svv.play(StringHelper.getOssVideoUrl(playerUrl))
             VideoActivity.start(requireActivity(), StringHelper.getOssVideoUrl(playerUrl),videoId = videoId,operate = VideoActivity.SAVE_LOG)
 //            dismiss()
