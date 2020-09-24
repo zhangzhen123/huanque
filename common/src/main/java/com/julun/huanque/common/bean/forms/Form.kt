@@ -138,3 +138,8 @@ class SexForm(var sexType: String = "")
  * 需要使用offset的form
  */
 class OffsetForm(var offset: Int = 0)
+
+/**
+ *
+ */
+class SaveTeachVideoForm(var videoId: Long = 0)

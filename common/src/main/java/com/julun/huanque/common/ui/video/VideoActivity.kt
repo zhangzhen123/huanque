@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.SurfaceHolder
 import android.view.View
 import android.widget.SeekBar
+import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import com.aliyun.player.AliPlayer
 import com.aliyun.player.AliPlayerFactory
@@ -37,25 +38,33 @@ import org.jetbrains.anko.imageResource
 class VideoActivity : BaseActivity() {
 
     companion object {
+        //观看完毕需要上报
+        const val SAVE_LOG = "save_log"
+
         /**
          * [activity]起始页面
          * [media]视频地址
+         * [videoId]视频id
          * 其他
          *[operate]要做的操作
          */
         fun start(
             activity: Activity,
             media: String,
+            videoId: Long? = null,
             operate: String? = null,
             from: String? = null
         ) {
             val intent = Intent(activity, VideoActivity::class.java)
             intent.putExtra(IntentParamKey.URL.name, media)
+            intent.putExtra(IntentParamKey.ID.name, videoId)
             intent.putExtra(IntentParamKey.OPERATE.name, operate)
             intent.putExtra(IntentParamKey.SOURCE.name, from)
             activity.startActivity(intent)
         }
     }
+
+    val mVideoPageModel: VideoPageModel by viewModels<VideoPageModel>()
 
     //log输出标识位
     private var mLogEnable = true
@@ -65,14 +74,13 @@ class VideoActivity : BaseActivity() {
     private var mAliPlayer: AliPlayer? = null
     private var operate: String = ""
     private var url: String = ""
+    private var mVideoId: Long = 0L
     private var from: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
-//        postId = intent.getLongExtra(POST_ID, 0)
-//        mUserId = intent.getLongExtra(IntentParamKey.ID.name, 0)
-//        operate = intent.getStringExtra(IntentParamKey.OPERATE.name) ?: ""
+        mVideoId = intent.getLongExtra(IntentParamKey.ID.name, 0)
+        operate = intent.getStringExtra(IntentParamKey.OPERATE.name) ?: ""
 //        from = intent.getStringExtra(IntentParamKey.SOURCE.name) ?: ""
         url = intent.getStringExtra(IntentParamKey.URL.name) ?: ""
-//        PictureSelector.create(this).themeStyle(R.style.picture_me_style_multi)
         super.onCreate(savedInstanceState)
         StatusBarUtil.setTransparent(this)
 
@@ -192,10 +200,12 @@ class VideoActivity : BaseActivity() {
         mAliPlayer?.setOnLoadingStatusListener(object : IPlayer.OnLoadingStatusListener {
             override fun onLoadingEnd() {
                 ULog.i("Player onLoadingEnd")
+                loading.hide()
             }
 
             override fun onLoadingBegin() {
                 ULog.i("Player onLoadingBegin")
+                loading.show()
             }
 
             override fun onLoadingProgress(p0: Int, p1: Float) {
@@ -217,6 +227,14 @@ class VideoActivity : BaseActivity() {
                 isComplete = true
                 rlTitleRootView.show()
                 iv_player_pause.show()
+            }
+            if (it == IPlayer.completion) {
+                when (operate) {
+                    SAVE_LOG -> {
+                        if (mVideoId != 0L)
+                            mVideoPageModel.saveTeachVideo(mVideoId)
+                    }
+                }
             }
 
         }

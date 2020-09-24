@@ -28,6 +28,7 @@
         app:actualImageScaleType="fitCenter"
         app:actualImageResource="@mipmap/icon_home_flower_top"
         android:layout_marginEnd="@dimen/dimen_28"
+        app:placeholderImage="@mipmap/logo_placeholder_small"
         app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/magic_indicator" />
