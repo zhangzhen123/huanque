@@ -96,6 +96,9 @@ object SPParamKey {
 
     //直播间关闭，悬浮窗是否显示标识位
     const val Player_Close_Floating_Show = "Player_Close_Floating_Show"
+
+    //手机关闭悬浮窗标记位
+    const val First_Close_Floating = "First_Close_Floating"
 }
 
 /**

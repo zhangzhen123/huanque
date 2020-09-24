@@ -160,7 +160,10 @@ class SettingActivity : BaseActivity() {
 
         view_common.onClickNew {
             //通用
-
+            val intent = Intent(this, PlayerSettingActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
         }
     }
 

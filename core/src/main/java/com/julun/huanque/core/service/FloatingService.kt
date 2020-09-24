@@ -6,14 +6,18 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Outline
 import android.graphics.PixelFormat
+import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.events.FloatingCloseEvent
 import com.julun.huanque.common.bean.forms.ProgramIdForm
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.constant.SPParamKey
@@ -27,6 +31,7 @@ import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.permission.PermissionUtils
@@ -197,6 +202,21 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
             R.id.iv_close -> {
                 //关闭
                 FloatingManager.hideFloatingView()
+                if (SPUtils.getBoolean(SPParamKey.First_Close_Floating, true)) {
+                    val act = CommonInit.getInstance().getCurrentActivity() ?: return
+                    if ("com.julun.huanque.activity.MainActivity".contains(act.localClassName)) {
+                        //首次在首页关闭悬浮窗
+                        SPUtils.commitBoolean(SPParamKey.First_Close_Floating, false)
+
+                        MyAlertDialog(act).showAlertWithOKAndCancel(
+                            "关闭直播间不希望小窗播放，可以在我的>设置>通用中关闭哦",
+                            MyAlertDialog.MyDialogCallback(onRight = {
+                                ARouter.getInstance().build(ARouterConstant.PLAYER_SETTING_ACTIVITY).navigation()
+                            }), "设置提醒", "去设置"
+                        )
+                    }
+
+                }
             }
             R.id.view_floating -> {
                 //跳转直播间
