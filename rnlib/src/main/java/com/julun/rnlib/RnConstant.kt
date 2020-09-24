@@ -83,5 +83,6 @@ object RnConstant {
     const val IMAGE_PAGE:String="PicturePreviewPage"
     //web页面
     const val WEBVIEW_PAGE:String="WebViewPage"
-
+    //视频播放
+    const val VIDEO_PLAYER_PAGE:String="VideoPlayerPage"
 }

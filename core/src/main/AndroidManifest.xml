@@ -112,7 +112,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
         <activity
-            android:name=".ui.video.VideoActivity"
+            android:name="com.julun.huanque.common.ui.video.VideoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/LiveTheme" />
 

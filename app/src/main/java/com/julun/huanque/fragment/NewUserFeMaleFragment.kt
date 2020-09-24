@@ -9,11 +9,8 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.SPUtils
-import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.core.ui.video.VideoActivity
+import com.julun.huanque.common.ui.video.VideoActivity
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
