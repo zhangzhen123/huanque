@@ -85,7 +85,7 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
     }
 
     private fun locationToCanBuyMaxLevel() {
-        val index=birdAdapter.data.indexOfFirst { !it.unlocked }-4
+        val index=birdAdapter.data.indexOfFirst { !it.unlocked }-1
         if(index>0&&birdAdapter.itemCount>0){
             birdsList.scrollToPosition(index)
         }

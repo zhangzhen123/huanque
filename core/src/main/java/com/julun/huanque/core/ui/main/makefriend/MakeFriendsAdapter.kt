@@ -124,18 +124,23 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 }
                 holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_mkf_sign, sign)
                     .setText(R.id.tv_location, bean.city)
-                if(bean.onlineStatus== HomePageOnlineStatus.Online){
+                if (bean.onlineStatus == HomePageOnlineStatus.Online) {
                     holder.setText(R.id.tv_online_status, "在线")
-                    holder.setGone(R.id.view_online,false)
-                }else{
-                    val second=(System.currentTimeMillis()-bean.lastOfflineTime)/1000L
-                    if(bean.sex== Sex.FEMALE){
-                        holder.setText(R.id.tv_online_status, TimeUtils.formatLostTime1(second))
-                    }else{
-                        holder.setText(R.id.tv_online_status, TimeUtils.formatLostTime2(second))
-                    }
+                    holder.setGone(R.id.view_online, false)
+                } else {
 
-                    holder.setGone(R.id.view_online,true)
+                    if (bean.lastOfflineTime == 0L) {
+                        holder.setGone(R.id.tv_online_status, true)
+                    } else {
+                        holder.setGone(R.id.tv_online_status, false)
+                        val second = (System.currentTimeMillis() - bean.lastOfflineTime) / 1000L
+                        if (bean.sex == Sex.FEMALE) {
+                            holder.setText(R.id.tv_online_status, TimeUtils.formatLostTime1(second))
+                        } else {
+                            holder.setText(R.id.tv_online_status, TimeUtils.formatLostTime2(second))
+                        }
+                    }
+                    holder.setGone(R.id.view_online, true)
                 }
                 if (bean.city.isEmpty()) {
                     holder.setGone(R.id.tv_location, true)
@@ -269,9 +274,9 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val sp = SpannableString(content)
                 sp.setSpan(styleSpan1A, 0, start, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
                 tvTask.text = sp
-                if(headerInfo.moduleList.size<=3){
+                if (headerInfo.moduleList.size <= 3) {
                     rv.layoutManager = GridLayoutManager(context, headerInfo.moduleList.size)
-                }else{
+                } else {
                     rv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
                 }
                 val mHeaderNavAdapter: HeaderNavAdapter
@@ -279,18 +284,18 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                     mHeaderNavAdapter = rv.adapter as HeaderNavAdapter
                 } else {
                     val rvParams = rv.layoutParams as ConstraintLayout.LayoutParams
-                    if(headerInfo.moduleList.size<=3){
+                    if (headerInfo.moduleList.size <= 3) {
                         //动态计算的宽高
                         //图片宽度
                         val singlePicWidth = (ScreenUtils.getScreenWidth() - dp2px(48)) / 3
                         val tempHeight = ceil(singlePicWidth * 210 / 327.0 + dp2px(8)).toInt()
                         rvParams.height = tempHeight
-                        rvParams.marginEnd=dp2px(10)
+                        rvParams.marginEnd = dp2px(10)
                         mHeaderNavAdapter = HeaderNavAdapter(ViewGroup.LayoutParams.MATCH_PARENT)
-                    }else{
+                    } else {
                         //宽度固定100dp 高度自适应
-                        rvParams.height=ViewGroup.LayoutParams.WRAP_CONTENT
-                        rvParams.marginEnd=0
+                        rvParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                        rvParams.marginEnd = 0
                         mHeaderNavAdapter = HeaderNavAdapter(dp2px(105))
                     }
                     rv.requestLayout()
