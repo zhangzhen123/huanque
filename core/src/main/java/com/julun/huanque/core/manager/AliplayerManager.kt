@@ -99,14 +99,13 @@ object AliplayerManager {
             }
             if (it == IPlayer.completion || it == IPlayer.error) {
                 //CDN切换的时候会触发此回调，重新调用播放方法
-                if (stoped|| BuildConfig.DEBUG) {
+                if (stoped) {
                     return@setOnStateChangedListener
                 }
                 Observable.timer(2, TimeUnit.SECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        if (!stoped && !mRendered) {
-                            stoped = false
+                        if (!stoped) {
                             mAliPlayer?.prepare()
                         }
                     }, {}, {})

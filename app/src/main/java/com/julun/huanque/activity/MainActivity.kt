@@ -8,6 +8,8 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenResumed
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.location.BDAbstractLocationListener
@@ -126,8 +128,12 @@ class MainActivity : BaseActivity() {
 
         CommonInit.getInstance().setMainActivity(this)
         initViewModel()
-        val targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, 0) ?: 0
-        mMainViewModel.indexData.value = targetIndex
+
+        lifecycleScope.launchWhenResumed {
+            val targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, 0) ?: 0
+            mMainViewModel.indexData.value = targetIndex
+        }
+
 
 
         mLocationService = LocationService(this.applicationContext)
@@ -365,6 +371,7 @@ class MainActivity : BaseActivity() {
             } else {
                 lottieAnimationView.cancelAnimation()
                 lottieAnimationView.progress = 0f
+                lottieAnimationView.requestLayout()
                 textList[position].isSelected = false
             }
         }
