@@ -15,6 +15,7 @@ import com.aliyun.player.bean.InfoCode
 import com.aliyun.player.source.UrlSource
 import com.julun.huanque.common.R
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.bean.events.VideoResult
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -24,6 +25,7 @@ import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.common.utils.TimeUtils
 import com.julun.huanque.common.utils.ULog
 import kotlinx.android.synthetic.main.activity_video.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.imageResource
 
 /**
@@ -40,6 +42,9 @@ class VideoActivity : BaseActivity() {
     companion object {
         //观看完毕需要上报
         const val SAVE_LOG = "save_log"
+
+        //通知RN页面
+        const val RN_EVENT = "Rn_Event"
 
         /**
          * [activity]起始页面
@@ -153,10 +158,10 @@ class VideoActivity : BaseActivity() {
     private fun initPlayer() {
         ULog.i("PlayerLine 创建播放器")
         mAliPlayer = AliPlayerFactory.createAliPlayer(this.applicationContext)
-//        mAliPlayer?.setOnCompletionListener {
-//            //播放完成事件
-//            logger.info("播放完成了")
-//        }
+        mAliPlayer?.setOnCompletionListener {
+            //播放完成事件
+            logger.info("播放完成了")
+        }
         mAliPlayer?.setOnErrorListener {
             //出错事件
             if (mLogEnable) {
@@ -213,6 +218,7 @@ class VideoActivity : BaseActivity() {
             }
 
         })
+
         mAliPlayer?.setOnStateChangedListener {
             //播放器状态改变事件
             if (mLogEnable) {
@@ -233,6 +239,9 @@ class VideoActivity : BaseActivity() {
                     SAVE_LOG -> {
                         if (mVideoId != 0L)
                             mVideoPageModel.saveTeachVideo(mVideoId)
+                    }
+                    RN_EVENT -> {
+                        EventBus.getDefault().post(VideoResult())
                     }
                 }
             }

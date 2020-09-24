@@ -22,10 +22,7 @@ import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.ui.web.WebActivity
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.LoginStatusUtils
-import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.viewmodel.PersonalInformationProtectionViewModel
 import io.rong.imlib.RongIMClient
@@ -103,6 +100,7 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
                 SharedPreferencesUtils.commitBoolean(SPParamKey.Welcome_privacy_Fragment, true)
                 dismiss()
             } else {
+                SPUtils.commitString(SPParamKey.AgreeUp,BusiConstant.True)
                 mViewModel.agree(XYCode.YHYSXY)
             }
 

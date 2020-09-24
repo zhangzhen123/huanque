@@ -200,9 +200,9 @@ class CheckAppVersionTask(
                 isForce = isForce, callback = VersionUpdateDialog.MyDialogCallback(
                     onCancel = {
                         //仅限开发用
-                        if (BuildConfig.DEBUG) {
-                            SPUtils.commitString(UpgradeApkService.IGNORED_VERSION, data.newVersion.replace(".", ""))
-                        }
+//                        if (BuildConfig.DEBUG) {
+//                            SPUtils.commitString(UpgradeApkService.IGNORED_VERSION, data.newVersion.replace(".", ""))
+//                        }
                         callback(false)
                     },
                     onOk = {

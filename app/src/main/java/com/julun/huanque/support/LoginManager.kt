@@ -9,6 +9,7 @@ import com.julun.huanque.common.bean.forms.MobileLoginForm
 import com.julun.huanque.common.bean.forms.MobileQuickForm
 import com.julun.huanque.common.bean.forms.WeiXinForm
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.interfaces.routerservice.AppCommonService
 import com.julun.huanque.common.manager.RongCloudManager
@@ -16,11 +17,8 @@ import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.net.NError
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.utils.LoginStatusUtils
-import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.utils.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
@@ -176,6 +174,7 @@ object LoginManager {
     ) {
         SessionUtils.setSession(session)
         //如果登录的账号是注册完整的 就执行完整的登录后续操作（心跳，融云等等）
+        SPUtils.commitString(SPParamKey.AgreeUp,session.agreeUp)
         if (session.regComplete) {
             (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
                 .navigation() as? AppCommonService)?.loginSuccess(session)

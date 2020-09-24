@@ -713,16 +713,17 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     }
                 }
                 RnConstant.VIDEO_PLAYER_PAGE -> {
-                    //访问webActivity
+                    //访问VideoActivity
                     var url = ""
                     if (params?.hasKey("url") == true) {
                         url = params.getString("url") ?: ""
                     }
                     if (url.isNotEmpty()) {
                         val extra = Bundle()
-                        extra.putString(BusiConstant.WEB_URL, url)
+                        extra.putString(IntentParamKey.URL.name, url)
                         var intent = Intent(this, VideoActivity::class.java)
                         intent.putExtras(extra)
+                        intent.putExtra(IntentParamKey.OPERATE.name, VideoActivity.RN_EVENT)
                         startActivity(intent)
                     }
                 }
@@ -756,6 +757,15 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         } else {
             RnManager.promiseMap[RnConstant.REAL_NAME_AUTH_PAGE]?.resolve(false)
         }
+    }
+
+    /**
+     * 实名认证结果返回
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun videoComplete(event: VideoResult) {
+        logger("收到视频播放完成消息")
+        RnManager.promiseMap[RnConstant.VIDEO_PLAYER_PAGE]?.resolve(true)
     }
 
     /**

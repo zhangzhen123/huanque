@@ -163,19 +163,27 @@ class MainActivity : BaseActivity() {
      * 判断是否显示更新用户数据弹窗
      */
     private fun judgeUpdateInfoFragment(intent: Intent) {
-        mMessageViewModel.chatRoom()
-        //判断是否领取了礼包
-        if (!SPUtils.getBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), false)) {
-            mMainViewModel.getNewUserGift()
+        if (SPUtils.getString(SPParamKey.AgreeUp, BusiConstant.True) != BusiConstant.True) {
+            //直接显示隐私弹窗
+            //显示弹窗
+            val mProtectionFragment = PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
+            addOrderDialog(mProtectionFragment)
+        } else {
+            mMainViewModel.checkProtocol(AgreementType.UserPrivacy)
         }
 
-        mMainViewModel.checkProtocol(AgreementType.UserPrivacy)
+        mMessageViewModel.chatRoom()
 
         val birthday = intent.getStringExtra(ParamConstant.Birthday)
         if (birthday?.isNotEmpty() == true) {
             val mUpdateInfoFragment = UpdateInfoFragment.newInstance(birthday)
             addOrderDialog(mUpdateInfoFragment)
         }
+        //判断是否领取了礼包
+        if (!SPUtils.getBoolean(GlobalUtils.getNewUserKey(SessionUtils.getUserId()), false)) {
+            mMainViewModel.getNewUserGift()
+        }
+
 
     }
 
