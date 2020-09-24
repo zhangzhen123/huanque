@@ -57,7 +57,7 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
     override fun onStart() {
         super.onStart()
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
-        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+//        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     private var isInLivePage = false

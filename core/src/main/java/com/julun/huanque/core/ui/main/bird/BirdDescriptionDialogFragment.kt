@@ -47,7 +47,7 @@ class BirdDescriptionDialogFragment(private val leYuanViewModel: LeYuanViewModel
     override fun onStart() {
         super.onStart()
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
-        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+//        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     override fun initViews() {
