@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
+import com.julun.huanque.common.bean.events.PayResultEvent
 import com.julun.huanque.common.bean.forms.NicknameForm
 import com.julun.huanque.common.bean.forms.UpdateInformationForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.PayResult
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
@@ -18,6 +20,7 @@ import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.support.LoginManager
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -49,7 +52,7 @@ class FillInformationViewModel : BaseViewModel() {
     //打开相册的标记位
     val openPicFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-    val headerPicData : MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val headerPicData: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
 //    /**
 //     * 上传昵称之类的 状态
@@ -166,6 +169,8 @@ class FillInformationViewModel : BaseViewModel() {
                 SessionUtils.setNickName(result.nickname)
                 SessionUtils.setHeaderPic(result.headPic)
                 updateSuccessFlag.value = true
+                //刷新我的页面
+                EventBus.getDefault().post(PayResultEvent(PayResult.PAY_SUCCESS, ""))
             })
         }
     }

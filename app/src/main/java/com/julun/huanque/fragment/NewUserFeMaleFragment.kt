@@ -1,6 +1,7 @@
 package com.julun.huanque.fragment
 
 import android.view.Gravity
+import android.view.KeyEvent
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.R
@@ -11,10 +12,13 @@ import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.ui.video.VideoActivity
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_newuser_female.*
+import kotlinx.android.synthetic.main.fragment_newuser_female.iv_get
+import kotlinx.android.synthetic.main.fragment_newuser_female.view_bottom
 
 /**
  *@创建者   dong
@@ -44,9 +48,13 @@ class NewUserFeMaleFragment : BaseDialogFragment() {
             view_shader.hide()
 //            svv.play(StringHelper.getOssVideoUrl(playerUrl))
             VideoActivity.start(requireActivity(), StringHelper.getOssVideoUrl(playerUrl))
-            dismiss()
+//            dismiss()
         }
         initViewModel()
+
+        val params = view_bottom.layoutParams
+        params.width = ScreenUtils.getScreenWidth() * 305 / 375
+        view_bottom.layoutParams = params
     }
 
     private fun initViewModel() {
@@ -64,5 +72,10 @@ class NewUserFeMaleFragment : BaseDialogFragment() {
     override fun onStart() {
         super.onStart()
         setDialogSize(Gravity.CENTER, 0)
+        dialog?.setCancelable(false)
+        dialog?.setCanceledOnTouchOutside(false)
+        dialog?.setOnKeyListener { _, keyCode, _ ->
+            keyCode == KeyEvent.KEYCODE_BACK
+        }
     }
 }
