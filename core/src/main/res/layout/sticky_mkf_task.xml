@@ -67,6 +67,7 @@
             android:includeFontPadding="false"
             android:text="@string/go_make_money"
             android:textColor="@color/black_333"
-            android:textSize="11sp" />
+            android:textSize="11sp"
+            android:textStyle="bold" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
