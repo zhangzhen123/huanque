@@ -205,7 +205,7 @@ class ContactsActivity : BaseActivity() {
      * 初始化指示器
      */
     private fun initMagicIndicator() {
-        magic_indicator.setBackgroundColor(Color.parseColor("#fafafa"))
+//        magic_indicator.setBackgroundColor(Color.parseColor("#fafafa"))
         mCommonNavigator = CommonNavigator(this)
         mCommonNavigator.isEnablePivotScroll
         mCommonNavigator.scrollPivotX = 0.65f
