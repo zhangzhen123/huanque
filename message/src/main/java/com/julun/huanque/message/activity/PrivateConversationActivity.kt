@@ -376,6 +376,7 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.basicBean?.observe(this, Observer {
             if (it != null) {
+                showTitleView(it.friendUser.nickname, it.meetStatus)
                 when (mPrivateConversationViewModel?.operationType) {
                     OperationType.OPEN_GIFT -> {
                         //打开礼物
@@ -394,7 +395,6 @@ class PrivateConversationActivity : BaseActivity() {
                 tv_intimate.text = "lv.${it.intimate.intimateLevel}"
 
             } else {
-                showTitleView(it?.friendUser?.nickname ?: "", it?.meetStatus ?: "")
                 mIntimateDetailViewModel?.basicBean?.value = it
             }
         })
