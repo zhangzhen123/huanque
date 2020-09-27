@@ -60,7 +60,7 @@ ext {
             JPUSH_KEY_HQ     : "79e280b3b945c631a53c54d3",
 
             //OpenInstall
-            //羚萌直播
+            //欢鹊交友
             OIL_KEY_LM       : "rqorrx",
             OIL_SCHEME_LM    : "opnnhsp8",
             //番茄直播
@@ -68,7 +68,7 @@ ext {
             OIL_SCHEME_FQ    : "mn9xou",
 
             //Bugly
-            //羚萌直播
+            //欢鹊交友
             BUGLY_KEY_TEST_LM: "b22253194f",
             BUGLY_KEY_LM     : "72d593787c",
             //番茄直播
@@ -79,7 +79,7 @@ ext {
             BUGLY_KEY_CK     : "d992eeb69d",
 
 //            //GrowingIO
-//            //羚萌直播
+//            //欢鹊交友
 //            GIO_KEY_TEST_LM   : "839eaa91a8b81d91",
 //            GIO_SCHEME_TEST_LM: "growing.b1a4c32675761aa4",
 //            GIO_KEY_LM        : "8c8cf599cdd779fa",

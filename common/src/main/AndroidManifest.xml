@@ -55,11 +55,17 @@
         <activity
             android:name=".ui.image.ImageActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/CustomToolBarTheme" />
         <activity
             android:name=".ui.web.WebActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name="com.julun.huanque.common.ui.video.VideoActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:theme="@style/LiveTheme" />
     </application>
 
 </manifest>

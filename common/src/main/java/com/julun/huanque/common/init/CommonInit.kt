@@ -163,7 +163,7 @@ class CommonInit {
                     params.width = phoneNumWidthPx
                     phoneView.layoutParams = params
                     //获取隐私栏
-//                    val privacyView = getMatchTextView(contentView, "登录即为同意羚萌") ?: return
+//                    val privacyView = getMatchTextView(contentView, "登录即为同意欢鹊") ?: return
 //                    val privacyText = privacyView.text
 //                    if(privacyText is SpannableString){
 //                        privacyText.getSpans()
@@ -357,7 +357,7 @@ class CommonInit {
                     params.width = phoneNumWidthPx
                     phoneView.layoutParams = params
                     //获取隐私栏
-//                    val privacyView = getMatchTextView(contentView, "登录即为同意羚萌") ?: return
+//                    val privacyView = getMatchTextView(contentView, "登录即为同意欢鹊") ?: return
 //                    val privacyText = privacyView.text
 //                    if(privacyText is SpannableString){
 //                        privacyText.getSpans()

@@ -1,7 +1,7 @@
 package com.julun.huanque.common.net
 
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.JsonParseException
+import com.alibaba.fastjson.JSONException
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -39,7 +39,7 @@ object NetExceptionHandle {
                 is UnknownHostException -> {
                     loadNetState.postValue(NetState(NetStateType.NETWORK_ERROR))
                 }
-                is JsonParseException -> {
+                is JSONException -> {
                     loadNetState.postValue(NetState(NetStateType.NETWORK_ERROR))
                 }
                 else->{

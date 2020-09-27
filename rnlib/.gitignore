@@ -12,7 +12,7 @@ yarn.lock
 *.lock
 .gitattributes
 *.md
-*.png
+#*.png
 *.jpg
 *.css
 *.html

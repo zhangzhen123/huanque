@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import com.alibaba.android.arouter.launcher.ARouter
-import com.google.gson.JsonObject
 import com.julun.huanque.common.bean.message.PushAppData
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.reportCrash
