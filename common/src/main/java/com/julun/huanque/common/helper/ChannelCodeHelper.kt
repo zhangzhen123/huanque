@@ -4,7 +4,9 @@ import android.util.Log
 import com.fm.openinstall.OpenInstall
 import com.fm.openinstall.listener.AppInstallListener
 import com.julun.huanque.common.constant.MetaKey
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.utils.JsonUtil
+import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ULog
 
@@ -118,6 +120,7 @@ object ChannelCodeHelper {
 
     //参数渠道号设置 通过前端传参配置的渠道号  hqChannelCode
     private fun setChannelParam(channelParams: String) {
+        SPUtils.commitBoolean(SPParamKey.QueryGuessYouLike, false)
         SharedPreferencesUtils.commitString(CHANNELPARAM, channelParams)
     }
 

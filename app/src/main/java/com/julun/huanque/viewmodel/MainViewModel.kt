@@ -6,19 +6,18 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.bean.beans.NewUserGiftBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
+import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.bean.events.UnreadCountEvent
-import com.julun.huanque.common.bean.forms.CheckProtocolForm
-import com.julun.huanque.common.bean.forms.FriendIdForm
-import com.julun.huanque.common.bean.forms.NetcallIdForm
-import com.julun.huanque.common.bean.forms.SaveLocationForm
+import com.julun.huanque.common.bean.forms.*
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
@@ -37,6 +36,11 @@ class MainViewModel : BaseViewModel() {
     val indexData: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     private val socialService: SocialService by lazy { Requests.create(SocialService::class.java) }
+
+    private val liveRoomService: LiveRoomService by lazy { Requests.create(LiveRoomService::class.java) }
+
+    //进入直播间之前的基础信息
+    val baseData: MutableLiveData<UserEnterRoomRespBase> by lazy { MutableLiveData<UserEnterRoomRespBase>() }
 
 //    //未读消息数量
 //    val unreadMsgCount: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
@@ -298,6 +302,24 @@ class MainViewModel : BaseViewModel() {
             request({
                 val result = userService.checkProtocol(CheckProtocolForm(protocol)).dataConvert()
                 userProtocolSignFlag.value = result.sign
+            }, {})
+        }
+    }
+
+    /**
+     * 获取上次观看数据
+     */
+    fun lastWatch(programId: Long) {
+        viewModelScope.launch {
+            request({
+
+                val form = if (programId == 0L) {
+                    ProgramIdForm()
+                } else {
+                    ProgramIdForm(programId)
+                }
+                val result = liveRoomService.getLivRoomBase(form).dataConvert(intArrayOf(1201, 1202))
+                baseData.value = result
             }, {})
         }
     }
