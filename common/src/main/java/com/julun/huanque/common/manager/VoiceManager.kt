@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
+import android.media.AudioManager.STREAM_MUSIC
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Handler
@@ -49,7 +50,7 @@ object VoiceManager {
      * 播放结束音效
      */
     fun playFinish() {
-        playerAudio("finish.mp3",false)
+        playerAudio("finish.mp3", false)
     }
 
     /**
@@ -58,6 +59,13 @@ object VoiceManager {
     fun playMatch() {
         playerAudio("anonymous_match.mp3")
 
+    }
+
+    /**
+     * 播放缘分来了音效
+     */
+    fun playYuanFen() {
+        playerAudio("yuanfen.mp3", false, false)
     }
 
 
@@ -101,19 +109,31 @@ object VoiceManager {
     /**
      * 播放音效
      */
-    private fun playerAudio(audioName: String,loop : Boolean = true) {
+    private fun playerAudio(audioName: String, loop: Boolean = true, quietOther: Boolean = true) {
         checkAudioManageAndService()
-        basicSetting()
+        if (quietOther) {
+            basicSetting()
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mPlaybackAttributes = AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ALARM)
+                .apply {
+                    if(quietOther){
+                        setUsage(AudioAttributes.USAGE_ALARM)
+                    }else{
+                        setUsage(AudioAttributes.USAGE_MEDIA)
+                    }
+                }
                 .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                 .build()
 
             mPlayer?.setAudioAttributes(mPlaybackAttributes)
         } else {
-            mPlayer?.setAudioStreamType(AudioManager.STREAM_ALARM);//音量跟随闹钟音量
+            if(quietOther){
+                mPlayer?.setAudioStreamType(AudioManager.STREAM_ALARM);//音量跟随闹钟音量
+            }else{
+                mPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC);//音量跟随闹钟音量
+            }
         }
 
         val afd = CommonInit.getInstance().getApp().assets.openFd(audioName)

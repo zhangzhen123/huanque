@@ -29,6 +29,8 @@ import com.julun.huanque.common.suger.removeScope
 import com.julun.huanque.common.utils.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.rong.imlib.IRongCallback
@@ -779,11 +781,10 @@ object RongCloudManager {
         //        if (TextUtils.isEmpty(roomId)) return
         val content: MessageContent? = message.content
         val isRetrieved = message.receivedStatus.isRetrieved
-        val className = CommonInit.getInstance().getCurrentActivity()?.localClassName ?: ""
-        if (message.conversationType == Conversation.ConversationType.PRIVATE && !className.contains("PlayerActivity")) {
-            //自定义消息，并且不在直播间
-            VibratorUtil.Vibrate(200)
+        if (message.conversationType == Conversation.ConversationType.PRIVATE && content !is CommandMessage) {
+            doWithVibrate(message)
         }
+
         when (content) {
             is CommandCustomMessage -> {
                 //自定义的command消息
@@ -911,6 +912,41 @@ object RongCloudManager {
             }
         }
     }
+
+    /**
+     * 处理震动
+     */
+    private fun doWithVibrate(message: Message) {
+        Observable.create<Void> {
+            //判断sendUserId 是否为kong
+            val sendUserId = message.senderUserId ?: return@create
+            //判断targetId是否为kong
+            val targetId = message.targetId ?: return@create
+            //判断用户是否在直播间
+            val className = CommonInit.getInstance().getCurrentActivity()?.localClassName ?: return@create
+            if (className.contains("PlayerActivity")) {
+                return@create
+            }
+            //判断是否添加到免打扰列表
+            if (HuanViewModelManager.blockList.contains(targetId)) {
+                return@create
+            }
+            //判断是否是本人发送的消息
+            if (sendUserId == "${SessionUtils.getUserId()}") {
+                return@create
+            }
+
+            //判断陌生人相关
+            if (SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false) && GlobalUtils.getStrangerType(message)) {
+                //开启了陌生人折叠，并且是陌生人消息
+                return@create
+            }
+            //私聊消息，未添加到免打扰列表，非本人消息，并且用户不在直播间
+            VibratorUtil.Vibrate(200)
+        }.subscribeOn(Schedulers.io())
+            .subscribe({}, {})
+    }
+
 
     /**
      * 处理自定义消息发送过来的command消息
