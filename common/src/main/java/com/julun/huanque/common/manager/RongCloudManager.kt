@@ -779,6 +779,11 @@ object RongCloudManager {
         //        if (TextUtils.isEmpty(roomId)) return
         val content: MessageContent? = message.content
         val isRetrieved = message.receivedStatus.isRetrieved
+        val className = CommonInit.getInstance().getCurrentActivity()?.localClassName ?: ""
+        if (message.conversationType == Conversation.ConversationType.PRIVATE && !className.contains("PlayerActivity")) {
+            //自定义消息，并且不在直播间
+            VibratorUtil.Vibrate(200)
+        }
         when (content) {
             is CommandCustomMessage -> {
                 //自定义的command消息

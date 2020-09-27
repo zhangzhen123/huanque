@@ -146,6 +146,7 @@ class MainActivity : BaseActivity() {
         if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
             //融云已经连接
             mMessageViewModel.getUnreadCount()
+            mMainViewModel.getBlockedConversationList()
         }
         //延迟获取定位权限
         Observable.timer(3, TimeUnit.SECONDS)
@@ -614,7 +615,7 @@ class MainActivity : BaseActivity() {
                     //消息已经过期
                     return
                 }
-                VibratorUtil.Vibrate(this@MainActivity, 200)
+                VibratorUtil.Vibrate(200)
                 mHuanQueViewModel.setFateData(data)
 
                 val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
@@ -676,6 +677,7 @@ class MainActivity : BaseActivity() {
             //查询免打扰列表
             mMessageViewModel.getUnreadCount()
             mMainViewModel.refreshMessage()
+            mMainViewModel.getBlockedConversationList()
         }
     }
 

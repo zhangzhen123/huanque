@@ -1,34 +1,36 @@
 package com.julun.huanque.viewmodel
 
 import android.os.Bundle
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.bean.beans.NewUserGiftBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.TargetUserObj
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
-import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.net.services.UserService
-import com.julun.huanque.common.bean.events.UnreadCountEvent
 import com.julun.huanque.common.bean.forms.*
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.net.services.SocialService
-import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.viewmodel.HuanQueViewModel
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import java.lang.Exception
 
 class MainViewModel : BaseViewModel() {
 
@@ -324,5 +326,23 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
+    /**
+     * 获取免打扰会话列表
+     */
+    fun getBlockedConversationList() {
+        RongIMClient.getInstance().getBlockedConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
+            override fun onSuccess(list: List<Conversation>?) {
+                //保存在数据库
+                val targetList = mutableListOf<String>()
+                list?.forEach { targetList.add(it.targetId) }
+                HuanViewModelManager.blockList = targetList
+            }
+
+            override fun onError(errorCode: RongIMClient.ErrorCode?) {
+                logger("errorCode = $errorCode")
+            }
+
+        }, Conversation.ConversationType.PRIVATE)
+    }
 
 }

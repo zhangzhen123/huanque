@@ -3,6 +3,7 @@ package com.julun.huanque.common.utils
 import android.app.Service
 import android.content.Context
 import android.os.Vibrator
+import com.julun.huanque.common.init.CommonInit
 
 /**
  *@创建者   dong
@@ -11,8 +12,9 @@ import android.os.Vibrator
  */
 object VibratorUtil {
 
-    fun Vibrate(activity: Context, milliseconds: Long) {
-        val vib = activity.getSystemService(Service.VIBRATOR_SERVICE) as? Vibrator
+    fun Vibrate(milliseconds: Long) {
+        val act = CommonInit.getInstance().getCurrentActivity() ?: return
+        val vib = act.getSystemService(Service.VIBRATOR_SERVICE) as? Vibrator
         vib?.vibrate(milliseconds)
     }
 
