@@ -26,13 +26,13 @@ object NotifyManager {
      */
     fun checkNotifyOpen(activity: Activity): Boolean {
         if (!NotificationManagerCompat.from(activity).areNotificationsEnabled()) {
-            MyAlertDialog(activity).showAlertWithOKAndCancel("羚萌直播会用通知消息不定期给您送福利。请打开系统通知，不让福利溜走。", MyAlertDialog.MyDialogCallback({
+            MyAlertDialog(activity).showAlertWithOKAndCancel("欢鹊交友会用通知消息不定期给您送福利。请打开系统通知，不让福利溜走。", MyAlertDialog.MyDialogCallback({
 
             }, {
                 val intent = NotificationUtils.gotoNotificationSetting(activity)
                 activity.startActivity(intent)
             }),
-                    "羚萌提醒", "马上设置", "不要福利")
+                    "欢鹊提醒", "马上设置", "不要福利")
             return true
         }
         return false

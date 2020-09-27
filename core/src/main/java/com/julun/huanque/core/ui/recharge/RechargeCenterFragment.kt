@@ -287,11 +287,11 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
                 mUserIdForRecharge = searchKeyWord
                 queryAppChannelRule(QueryType.REFRESH)
             } else {
-                ToastUtils.show("请输入正确的羚萌ID")
+                ToastUtils.show("请输入正确的欢鹊ID")
             }
         } catch (e: Exception) {
             editText.setText("")
-            ToastUtils.show("请输入正确的羚萌ID")
+            ToastUtils.show("请输入正确的欢鹊ID")
         }
     }
 

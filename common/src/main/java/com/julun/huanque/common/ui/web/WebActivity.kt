@@ -51,9 +51,6 @@ import java.io.File
 @Route(path = ARouterConstant.WEB_ACTIVITY)
 class WebActivity : BaseActivity() {
     companion object {
-        //        羚萌公约
-//        val LM_PUBLIC_RULE = LMUtils.getDomainName(CommonInit.getInstance().getApp().getString(R.string.html_spec))
-
         fun startWeb(mActivity: Activity, url: String) {
             val extra = Bundle()
             extra.putString(BusiConstant.WEB_URL, url)

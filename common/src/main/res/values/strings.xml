@@ -215,7 +215,7 @@
     <string name="pk_refuse">残忍拒绝</string>
     <string name="pk_agree">同意</string>
     <string name="no_pk_data">暂无PK数据哦~</string>
-    <string name="pk_title">羚萌PK</string>
+    <string name="pk_title">欢鹊PK</string>
     <string name="hang_pk">结束PK</string>
     <string name="pk_progress">正在PK</string>
     <string name="setting_pk_time">设置时长</string>
@@ -531,7 +531,7 @@
     <string name="register_rule_02">《服务协议》</string>
     <string name="register_rule_01_fragment">登录即视为同意</string>
 
-    <!-- 羚萌公约 -->
+    <!-- 欢鹊公约 -->
     <string name="html_spec">rules/mgrSpec.html</string>
     <!-- 用户注册协议 -->
     <string name="html_user_reg">rules/protocolUserReg.html</string>
@@ -569,7 +569,7 @@
     <string name="receive_one_yuan_private">领取首充礼包，即可私信主播</string>
     <string name="receive_immediately">立即领取</string>
     <string name="rule_award">奖励规则</string>
-    <string name="title_header_info">羚萌头条榜</string>
+    <string name="title_header_info">欢鹊头条榜</string>
     <string name="stream_template">rtmp://%1$s-rtmp.ihuanque.com%2$s</string>
     <string name="address_header_info">/newheadline</string>
     <string name="address_header_info_rule">/newheadline/rule</string>
@@ -579,7 +579,7 @@
     <string name="package_owner">背包</string>
     <string name="discount_content">折扣券</string>
     <string name="handbook">图鉴</string>
-    <string name="handbook_huanque">羚萌图鉴</string>
+    <string name="handbook_huanque">欢鹊图鉴</string>
     <string name="empty_bag">背包空空如也</string>
     <string name="recommend">推荐</string>
     <string name="star_lucky">幸运星球</string>

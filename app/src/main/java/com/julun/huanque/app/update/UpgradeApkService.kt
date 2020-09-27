@@ -225,8 +225,8 @@ class UpgradeApkService : Service() {
 //        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,targetFileName)
         // 设置允许使用的网络类型，这里是移动网络和wifi都可以
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-        request.setTitle("羚萌应用更新-V-${data.newVersion}")
-        request.setDescription("羚萌应用更新下载")
+        request.setTitle("欢鹊应用更新-V-${data.newVersion}")
+        request.setDescription("欢鹊应用更新下载")
         ULog.i("下载监控..... 开始下载 ...")
         // 将下载请求放入队列
         val downLoadId: Long = manager.enqueue(request)

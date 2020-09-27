@@ -2070,8 +2070,17 @@ class PlayerActivity : BaseActivity() {
         mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
         mBirdAwardCountInfo = intent.getSerializableExtra(ParamConstant.BIRD_AWARD_INFO) as? BirdLiveAward
         if (program != 0L) {
-            //直播间切换
-            checkoutRoom(program)
+            if(program==programId){
+                //对于切换直播间id相同的不再执行切换操作 在这里直接做相应额外操作
+                if (mBirdAwardCountInfo != null) {
+                    bird_count_view.showCounting(mBirdAwardCountInfo!!)
+                    mBirdAwardCountInfo = null
+                }
+            }else{
+                //直播间切换
+                checkoutRoom(program)
+            }
+
         } else {
             //传递数据
             //主播信息
