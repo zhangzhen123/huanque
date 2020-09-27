@@ -614,6 +614,7 @@ class MainActivity : BaseActivity() {
                     //消息已经过期
                     return
                 }
+                VibratorUtil.Vibrate(this@MainActivity, 200)
                 mHuanQueViewModel.setFateData(data)
 
                 val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
