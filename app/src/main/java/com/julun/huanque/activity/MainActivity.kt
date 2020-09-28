@@ -9,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.whenResumed
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.location.BDAbstractLocationListener
@@ -58,7 +57,6 @@ import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
@@ -117,9 +115,9 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        UserHeartManager.startCheckOnline()
         if (SessionUtils.getIsRegUser() && SessionUtils.getSessionId().isNotEmpty()) {
             AppChecker.startCheck(true)
-//            UserHeartManager.startOnline()
         } else {
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         }

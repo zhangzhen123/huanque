@@ -32,11 +32,11 @@ import com.julun.huanque.common.bean.forms.PKInfoForm
 import com.julun.huanque.common.bean.forms.UserEnterRoomForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StorageHelper
-import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
@@ -242,7 +242,8 @@ class PlayerActivity : BaseActivity() {
         if (ScreenUtils.isSoftInputShow(this)) {
             ScreenUtils.hideSoftInput(this)
         }
-
+        //由于直播间心跳比较重要 每次打开就手动检查心跳
+        UserHeartManager.startCheckOnline()
         //移除activity栈里面的私聊页面
         ActivitiesManager.INSTANCE.removeActivity("com.julun.huanque.message.activity.PrivateConversationActivity")
 
