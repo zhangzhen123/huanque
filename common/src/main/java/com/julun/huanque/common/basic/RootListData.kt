@@ -1,7 +1,5 @@
 package com.julun.huanque.common.basic
 
-import java.io.Serializable
-
 /**
  *
  *@author zhangzhen
@@ -12,13 +10,6 @@ import java.io.Serializable
 open class RootListData<T>(
     var isPull: Boolean = false,
     var list: MutableList<T> = mutableListOf(),
-    var hasMore: Boolean = false,
-    var extDataJson: String? = null,
-    var extData: ExtDataBean? = null
+    var hasMore: Boolean = false
 )
 
-
-data class ExtDataBean(
-    //规则图片地址
-    var ruleUrl: String = ""
-) : Serializable

@@ -7,6 +7,9 @@ import android.view.ViewConfiguration;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+/**
+ * 这个下拉加载处理与横向滑动冲突的问题
+ */
 public class VpSwipeRefreshLayout extends SwipeRefreshLayout {
 
     private float startY;

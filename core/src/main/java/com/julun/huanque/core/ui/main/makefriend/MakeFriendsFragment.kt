@@ -24,16 +24,17 @@ import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.events.UserInfoEditEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
+import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.manager.NotifyManager
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
-import com.julun.huanque.common.utils.ForceUtils
-import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
+import com.julun.huanque.core.dialog.TodayFateDialogFragment
 import com.julun.huanque.core.manager.AliplayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
@@ -53,6 +54,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     companion object {
         fun newInstance() = MakeFriendsFragment()
     }
+
+
     private val mHomeViewModel: HomeViewModel by activityViewModels()
     private val mAdapter: MakeFriendsAdapter by lazy { MakeFriendsAdapter() }
     override fun lazyLoadData() {
@@ -64,6 +67,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     }
 
     override fun isRegisterEventBus(): Boolean = true
+
+    private var mTodayFateDialogFragment: TodayFateDialogFragment? = null
 
     private val audioPlayerManager: AudioPlayerManager by lazy { AudioPlayerManager(requireContext()) }
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -322,6 +327,12 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val viewHead: View? = linearLayoutManager.findViewByPosition(0)
                 val view: View? = linearLayoutManager.findViewByPosition(1)
+                val lastPosition = linearLayoutManager.findLastVisibleItemPosition()
+                logger.info("当前的位置=$lastPosition")
+                if (lastPosition == 11) {
+                    checkShouldShowFate()
+                }
+
 //                logger.info("viewHead=${viewHead?.id}  view=$view ")
                 if (viewHead == null || view == null) {
                     if (!ic_sticky_mkf_task.isVisible() && isUserDo) {
@@ -339,9 +350,35 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                         ic_sticky_mkf_task.hide()
                     }
                 }
+
             }
         })
 
+    }
+
+    private fun checkShouldShowFate() {
+        //todo
+        if (!mViewModel.hasShowTodayFate) {
+            mViewModel.hasShowTodayFate = true
+
+            val date = StorageHelper.getLastTodayFateTime()
+
+            val today = DateHelper.formatNow()
+
+            val diff = if (date.isNotEmpty()) {
+                DateHelper.getDifferDays(date, today)
+            } else {
+                -1
+            }
+            ULog.i("今日缘分间隔时间：$diff")
+            if (diff == -1 || diff >= 1) {
+                mTodayFateDialogFragment = mTodayFateDialogFragment ?: TodayFateDialogFragment()
+                mTodayFateDialogFragment?.show(requireActivity(), "TodayFateDialogFragment")
+                //todo test
+//                StorageHelper.setLastTodayFateTime(today)
+            }
+
+        }
     }
 
     private fun gotoMakeMoney() {
@@ -434,7 +471,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         })
         mViewModel.flowerPic.observe(viewLifecycleOwner, Observer {
             //
-            mHomeViewModel.flowerPic.value=it
+            mHomeViewModel.flowerPic.value = it
         })
 
     }

@@ -28,6 +28,8 @@ object StorageHelper {
     private const val WITHDRAW_TYPE = "WITHDRAW_TYPE"
 
     private const val NEED_GUIDE_TO__PLAY_BIRD = "need_guide_to_play_bird"
+    //上一次的今日缘分弹出时间
+    private const val LAST_TODAY_FATE_TIME = "last_today_fate_time"
     /**
      * 保存ad
      */
@@ -93,4 +95,10 @@ object StorageHelper {
         val userId:Long=SessionUtils.getUserId()
         return SPUtils.getBoolean("${NEED_GUIDE_TO__PLAY_BIRD}-${userId}", true)
     }
+
+    fun setLastTodayFateTime(date: String) {
+        SPUtils.commitString(LAST_TODAY_FATE_TIME, date)
+    }
+    fun getLastTodayFateTime() = SPUtils.getString(LAST_TODAY_FATE_TIME, "")
+
 }

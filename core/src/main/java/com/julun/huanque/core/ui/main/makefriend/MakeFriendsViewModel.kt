@@ -52,6 +52,8 @@ class MakeFriendsViewModel : BaseViewModel() {
     var guideCloseByUser1 = false
     var guideCloseByUser2 = false
 
+    //是否已经触发过今日缘分
+    var hasShowTodayFate: Boolean = false
     //记录全部的列表
     private var totalList = mutableListOf<HomeRecomItem>()
 
@@ -94,7 +96,9 @@ class MakeFriendsViewModel : BaseViewModel() {
                         list.add(HomeItemBean(HomeItemBean.NORMAL, it))
                     }
                 }
-
+                if(type==QueryType.INIT){
+                    hasShowTodayFate=false
+                }
                 //处理引导插入
                 if (totalList.size >= GUIDE_INDEX_01) {
                     if (curRemind?.coverRemind == true) {

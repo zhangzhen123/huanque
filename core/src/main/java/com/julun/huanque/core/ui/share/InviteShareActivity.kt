@@ -411,7 +411,6 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
             init {
                 addItemType(1, R.layout.item_invite_share)
                 addItemType(2, R.layout.item_live_share)
-                addItemType(3, R.layout.item_live_share)
             }
 
             override fun convert(holder: BaseViewHolder, item: SharePoster) {

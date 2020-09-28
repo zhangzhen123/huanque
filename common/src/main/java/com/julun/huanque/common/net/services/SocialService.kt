@@ -269,5 +269,5 @@ interface SocialService {
      * 派单列表
      */
     @POST("social/friend/chat/fateList")
-    suspend fun fateList(@Body form : OffsetForm) : Root<RootListData<FateInfo>>
+    suspend fun fateList(@Body form : OffsetForm) : Root<FateListInfo<FateInfo>>
 }

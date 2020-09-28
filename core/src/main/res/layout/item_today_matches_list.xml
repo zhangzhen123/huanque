@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/anchorPicture"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:actualImageScaleType="focusCrop"
+        app:failureImage="@mipmap/logo_placeholder_medium"
+        app:failureImageScaleType="fitCenter"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="fitCenter"
+        app:roundedCornerRadius="6dp" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/bg_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:actualImageScaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/anchorPicture"
+        app:roundedCornerRadius="6dp" />
+
+    <TextView
+        android:id="@+id/anchor_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_5"
+        android:layout_marginBottom="@dimen/dimen_7"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxEms="8"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_sex"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:text="无名" />
+
+    <TextView
+        android:id="@+id/anchor_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_6"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxEms="8"
+        android:singleLine="true"
+        android:textColor="#D7E9F4"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_sex"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_sex"
+        app:layout_constraintTop_toTopOf="@+id/tv_sex"
+        tools:text="地名" />
+
+    <TextView
+        android:id="@+id/tv_sex"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_16"
+        android:layout_marginBottom="@dimen/dimen_5"
+        android:background="@drawable/bg_shape_mkf_sex_female"
+        android:drawableStart="@mipmap/icon_sex_female"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dimen_5"
+        android:paddingTop="@dimen/dimen_1"
+        android:paddingRight="@dimen/dimen_5"
+        android:paddingBottom="@dimen/dimen_1"
+        android:textColor="#FF9BC5"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/anchor_nickname"
+        tools:text="女" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sd_auth_tag"
+        android:layout_width="@dimen/dimen_53"
+        android:layout_height="@dimen/dimen_14"
+        android:layout_marginStart="@dimen/dimen_5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_select"
+        android:layout_width="@dimen/dimen_16"
+        android:layout_height="@dimen/dimen_16"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginEnd="@dimen/dimen_5"
+        android:src="@drawable/selector_check_01"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

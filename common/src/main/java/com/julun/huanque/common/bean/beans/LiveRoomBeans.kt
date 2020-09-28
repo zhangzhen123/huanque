@@ -1802,12 +1802,8 @@ data class OnlineUserInfo(
  * 在线用户信息
  * @author WanZhiYuan
  */
-class OnlineListData<T>(
-    isPull: Boolean = false,
-    hasMore: Boolean = false,
-    extDataJson: String? = null
-) :
-    RootListData<T>(isPull, arrayListOf(), hasMore, extDataJson) {
+class OnlineListData<T> :
+    RootListData<T>() {
     var royalHonorList: MutableList<T> = mutableListOf()
 
     //贵族说明
