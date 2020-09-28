@@ -142,7 +142,7 @@ open class HuanQueApp : Application() {
 //                logger("launch init---${Thread.currentThread()} duration=${System.currentTimeMillis()-time}")
             }
 
-            val jPush = async(Dispatchers.Default) {
+//            val jPush = async(Dispatchers.Default) {
 //                val time=System.currentTimeMillis()
                 //不再使用jPush
 //                JPushInterface.setDebugMode(BuildConfig.DEBUG)    // 设置开启日志,发布时请关闭日志
@@ -150,7 +150,7 @@ open class HuanQueApp : Application() {
 
 
 //                logger("launch jPush---${Thread.currentThread()} duration=${System.currentTimeMillis()-time}")
-            }
+//            }
             val tx = async(Dispatchers.Default) {
 //                val time=System.currentTimeMillis()
                 wxApi = WXApiManager.initWeiXin(this@HuanQueApp.applicationContext, BuildConfig.WX_APP_ID)
@@ -173,7 +173,7 @@ open class HuanQueApp : Application() {
             }
 
             init.await()
-            jPush.await()
+//            jPush.await()
             tx.await()
             shuMei.await()
             agora.await()

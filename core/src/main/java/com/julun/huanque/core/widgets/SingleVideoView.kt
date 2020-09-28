@@ -247,15 +247,19 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 
     /**
      * 显示封面
+     * @param blur 是否需要模糊效果
      */
-    fun showCover(picUrl: String) {
+    fun showCover(picUrl: String, blur: Boolean = true) {
         if (useManager && AliplayerManager.mRendered) {
             //播放器处于拉流状态，不显示封面
             return
         }
         posterImage.show()
-//        ImageUtils.loadImage(posterImage, picUrl)
-        ImageUtils.loadImageWithBlur(posterImage, picUrl, 3, 13)
+        if (blur) {
+            ImageUtils.loadImageWithBlur(posterImage, picUrl, 3, 13)
+        } else {
+            ImageUtils.loadImage(posterImage, picUrl)
+        }
     }
 
     /**

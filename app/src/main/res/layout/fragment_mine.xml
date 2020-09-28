@@ -113,10 +113,10 @@
                         app:layout_constraintEnd_toEndOf="@+id/headImage"
                         app:layout_constraintStart_toStartOf="@+id/headImage" />
 
-                    <ImageView
-                        android:id="@+id/ivReal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/sdv_real"
+                        android:layout_width="53dp"
+                        android:layout_height="16dp"
                         android:src="@mipmap/icon_real_man"
                         app:layout_constraintBottom_toBottomOf="@+id/headImage"
                         app:layout_constraintEnd_toEndOf="@+id/tvCertification"

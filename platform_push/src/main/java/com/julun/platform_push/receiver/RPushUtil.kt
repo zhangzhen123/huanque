@@ -4,17 +4,16 @@ package com.julun.platform_push.receiver
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.bean.message.PushAppData
 import com.julun.huanque.common.constant.*
-import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.JsonUtil
@@ -24,7 +23,6 @@ import com.julun.rnlib.RnConstant
 import io.rong.push.RongPushClient
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 
 
 object RPushUtil {
@@ -74,14 +72,16 @@ object RPushUtil {
         return result
     }
 
-    private fun checkNeedConnectRongCloud() {
+    private fun checkNeedConnectRongCloudAndHeartBeat() {
         RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
+        //每次从推送启动后 都手动调用一次心跳 防止心跳没开启
+        UserHeartManager.startCheckOnline()
     }
 
     //这里统一处理所有的推送消息
     fun parseJson(jsonString: String, context: Context) {
         try {
-            checkNeedConnectRongCloud()
+            checkNeedConnectRongCloudAndHeartBeat()
             val bean = JsonUtil.deserializeAsObject<PushAppData>(jsonString, PushAppData::class.java)
 
             when (bean.touchType) {

@@ -93,6 +93,9 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
     //点击跳转直播间标识位
     private var jumpToPlayer = false
 
+    //直播间草稿数据
+    private var mDraft: String = ""
+
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -142,6 +145,7 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
 //        videView?.play("rtmp://aliyun-rtmp.51lm.tv/lingmeng/16611", false)
         mProgramId = intent?.getLongExtra(ParamConstant.PROGRAM_ID, 0) ?: 0
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, mProgramId)
+        mDraft = intent?.getStringExtra(ParamConstant.Program_Draft) ?: ""
         UserHeartManager.setProgramId(mProgramId)
         return super.onStartCommand(intent, flags, startId)
     }
@@ -222,7 +226,7 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
                 //跳转直播间
                 jumpToPlayer = true
                 CommonInit.getInstance().getCurrentActivity()?.let { act ->
-                    PlayerActivity.start(act, programId = mProgramId, from = PlayerFrom.FloatWindow)
+                    PlayerActivity.start(act, programId = mProgramId, from = PlayerFrom.FloatWindow,draft = mDraft)
                 }
 
             }

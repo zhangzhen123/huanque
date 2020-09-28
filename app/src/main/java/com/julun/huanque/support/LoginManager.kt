@@ -180,7 +180,7 @@ object LoginManager {
                 .navigation() as? AppCommonService)?.loginSuccess(session)
             EventBus.getDefault().post(LoginEvent(true))
             LoginStatusUtils.loginSuccess()
-            UserHeartManager.startOnline()
+            UserHeartManager.startCheckOnline(true)
             processRongYun(session, success)
         } else {
             //如果没有注册完成标志 也通知回调 让登录页做后续操作
@@ -201,7 +201,7 @@ object LoginManager {
         LoginStatusUtils.loginSuccess()
         //连接融云
         RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
-        UserHeartManager.startOnline()
+        UserHeartManager.startCheckOnline(true)
     }
 
     fun doLoginOut(success: () -> Unit, error: NError? = null) {

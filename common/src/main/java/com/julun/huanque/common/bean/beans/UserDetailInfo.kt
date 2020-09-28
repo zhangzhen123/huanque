@@ -30,7 +30,9 @@ data class UserBasic(
     var userId: Long = 0L,
     var userLevel: Int = 0,
     var userType: String = "",
-    var age: Int = 0
+    var age: Int = 0,
+    //真人图片地址
+    var authMark: String = ""
 )
 
 data class UserTool(

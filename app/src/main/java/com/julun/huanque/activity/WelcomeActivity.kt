@@ -4,16 +4,13 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.fm.openinstall.OpenInstall
 import com.fm.openinstall.listener.AppWakeUpAdapter
 import com.fm.openinstall.model.AppData
 import com.julun.huanque.R
-import com.julun.huanque.activity.MainActivity
 import com.julun.huanque.common.base.BaseActivity
-import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.beans.OpenInstallParamsBean
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.ChannelCodeHelper
@@ -22,7 +19,6 @@ import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.utils.SPUtils
-import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
@@ -206,7 +202,7 @@ class WelcomeActivity : BaseActivity() {
         val registerUser = SessionUtils.getIsRegUser()
         val intent = if (registerUser && SessionUtils.getRegComplete()) {
             RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
-            UserHeartManager.startOnline()
+//            UserHeartManager.startOnline()
             //登录成功并且数据已经填写完成
             Intent(this, MainActivity::class.java)
         } else {

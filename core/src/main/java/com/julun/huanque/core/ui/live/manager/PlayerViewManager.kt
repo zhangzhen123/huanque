@@ -1091,6 +1091,7 @@ class PlayerViewManager(val context: PlayerActivity) {
         mDialogManager.hideAllDialog()
         context.ll_input.show()
         context.actionView.hide()
+        val et = context.edit_text
 
         val deC = if (innerActionType == ClickType.SEND_MESSAGE) {
             //发言功能
@@ -1103,10 +1104,12 @@ class PlayerViewManager(val context: PlayerActivity) {
                 ""
             }
         }
-        context.edit_text.setText(deC)
+        if(deC.isNotEmpty()){
+            et.setText(deC)
+        }
         //
-        context.edit_text.setSelection(deC.length)
-        context.edit_text.requestFocus()
+        et.setSelection(et.text.length)
+        et.requestFocus()
 //        logger.info("Player publicMessageView x = ${context.publicMessageView.x},y = ${context.publicMessageView.y},width = ${context.publicMessageView.width},height = ${context.publicMessageView.height}")
 //
 //            //引导发言取消还没显示的不再显示 已经显示的隐藏掉

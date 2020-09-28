@@ -16,6 +16,7 @@ import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.utils.NetUtils
 import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.interfaces.routerservice.IMSAService
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import java.net.URLEncoder
 import java.util.*
@@ -145,6 +146,7 @@ object HeaderInfoHelper {
 //        }
         val oaid = (ARouter.getInstance().build(ARouterConstant.MSA_SERVICE)
             .navigation() as? IMSAService)?.getOaid()
+        logger("Welcome oaid = $oaid")
         if (!oaid.isNullOrEmpty()) {
             map["w"] = oaid
         }

@@ -9,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.whenResumed
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.baidu.location.BDAbstractLocationListener
@@ -24,10 +23,12 @@ import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
+import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -36,13 +37,10 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.ui.main.home.HomeFragment
+import com.julun.huanque.fragment.*
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
 import com.julun.huanque.support.LoginManager
-import com.julun.huanque.fragment.NewUserFeMaleFragment
-import com.julun.huanque.fragment.NewUserMaleFragment
-import com.julun.huanque.fragment.PersonalInformationProtectionFragment
-import com.julun.huanque.fragment.UpdateInfoFragment
 import com.julun.huanque.ui.main.MineFragment
 import com.julun.huanque.viewmodel.FillInformationViewModel
 import com.julun.huanque.viewmodel.MainViewModel
@@ -59,7 +57,6 @@ import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
@@ -118,14 +115,14 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        UserHeartManager.startCheckOnline()
         if (SessionUtils.getIsRegUser() && SessionUtils.getSessionId().isNotEmpty()) {
             AppChecker.startCheck(true)
-//            UserHeartManager.startOnline()
         } else {
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         }
         judgeUpdateInfoFragment(intent)
-
+        doWithChannel()
         CommonInit.getInstance().setMainActivity(this)
         initViewModel()
 
@@ -148,6 +145,7 @@ class MainActivity : BaseActivity() {
         if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
             //融云已经连接
             mMessageViewModel.getUnreadCount()
+            mMainViewModel.getBlockedConversationList()
         }
         //延迟获取定位权限
         Observable.timer(3, TimeUnit.SECONDS)
@@ -155,6 +153,29 @@ class MainActivity : BaseActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ checkPermission() }, { it.printStackTrace() })
 
+    }
+
+    /**
+     * 根据channel判断是否需要跳转直播间
+     */
+    private fun doWithChannel() {
+        if (!SessionUtils.getIsRegUser() || SPUtils.getBoolean(SPParamKey.QueryGuessYouLike, false)) {
+            return
+        }
+        val key = "pid"
+        SPUtils.commitBoolean(SPParamKey.QueryGuessYouLike, true)
+        val channel = ChannelCodeHelper.getExternalChannel() ?: return
+        logger.info("channel = $channel")
+        if (channel.contains(key)) {
+            val mapTemp = GlobalUtils.channel2Map(channel)
+            val pid = mapTemp[key] ?: ""
+            val roomId: Long? = try {
+                pid.toLong()
+            } catch (e: NumberFormatException) {
+                null
+            }
+            mMainViewModel.lastWatch(roomId ?: return)
+        }
     }
 
     /**
@@ -263,6 +284,14 @@ class MainActivity : BaseActivity() {
                 //显示弹窗
                 val mProtectionFragment = PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
                 addOrderDialog(mProtectionFragment)
+            }
+        })
+
+        mMainViewModel.baseData.observe(this, Observer {
+            if (it != null) {
+                //显示上次观看弹窗
+                val lastWatchFragment = LastWatchFragment.newInstance(it)
+                addOrderDialog(lastWatchFragment)
             }
         })
 
@@ -585,7 +614,9 @@ class MainActivity : BaseActivity() {
                     //消息已经过期
                     return
                 }
+                VibratorUtil.Vibrate(200)
                 mHuanQueViewModel.setFateData(data)
+                VoiceManager.playYuanFen()
 
                 val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
                 bean.fateNoReplyNum = data.noReplyNum
@@ -646,6 +677,7 @@ class MainActivity : BaseActivity() {
             //查询免打扰列表
             mMessageViewModel.getUnreadCount()
             mMainViewModel.refreshMessage()
+            mMainViewModel.getBlockedConversationList()
         }
     }
 
