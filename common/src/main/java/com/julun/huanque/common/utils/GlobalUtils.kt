@@ -616,5 +616,18 @@ object GlobalUtils {
      */
     fun getNewUserKey(userId: Long) = "NewUser-$userId"
 
+    /**
+     * 获取草稿的key
+     * @param targetID
+     * @param private 是否是私聊
+     */
+    fun getChatRoomDraftKey(targetID: String, private: Boolean): String {
+        return if (private) {
+            "ChatRoom-${SessionUtils.getUserId()}-$targetID"
+        } else {
+            "Private-${SessionUtils.getUserId()}-$targetID"
+        }
+    }
+
 
 }

@@ -59,6 +59,8 @@ import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
+import io.rong.imlib.RongIMClient
+import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.activity_live_room.*
 import kotlinx.android.synthetic.main.frame_danmu.*
 import kotlinx.android.synthetic.main.view_live_header.*
@@ -185,11 +187,13 @@ class PlayerActivity : BaseActivity() {
 
         /**
          * @param activity 源Activity
+         * @param draft 草稿数据
          */
         fun start(
             activity: Activity, programId: Long,
             prePic: String? = null,
-            from: String = ""
+            from: String = "",
+            draft: String = ""
         ) {
             val intent = Intent(activity, PlayerActivity::class.java)
             val bundle = Bundle()
@@ -198,6 +202,9 @@ class PlayerActivity : BaseActivity() {
                 bundle.putString(IntentParamKey.IMAGE.name, it)
             }
             bundle.putString(ParamConstant.FROM, from)
+            if (draft.isNotEmpty()) {
+                bundle.putString(ParamConstant.Program_Draft, draft)
+            }
             intent.putExtras(bundle)
             activity.startActivity(intent)
         }
@@ -362,6 +369,8 @@ class PlayerActivity : BaseActivity() {
                 //在获取消息前清空私聊红点
                 actionView.togglePrivateRedPointView(0)
                 playerMessageViewModel.queryRongPrivateCount()
+                edit_text.setText(intent?.getStringExtra(ParamConstant.Program_Draft) ?: "")
+
             } else {
                 viewModel.errorState.value = 2
             }
@@ -384,6 +393,12 @@ class PlayerActivity : BaseActivity() {
                 finish()
             }
         })
+
+//        viewModel.mDraft.observe(this, Observer {
+//            if (it != null) {
+//                edit_text.setText(it)
+//            }
+//        })
 
         viewModel.alertViewMsg.observe(this, Observer {
             if (it?.isNotEmpty() == true) {
@@ -1944,11 +1959,15 @@ class PlayerActivity : BaseActivity() {
                 .isNotEmpty() && PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null
             && SPUtils.getBoolean(SPParamKey.Player_Close_Floating_Show, true)
         ) {
+            //草稿数据
+            val etContent = edit_text.text.toString()
+
             FloatingManager.showFloatingView(
                 GlobalUtils.getPlayUrl(baseData.playInfo ?: return),
                 viewModel.programId,
                 baseData.prePic,
-                !baseData.isLandscape
+                !baseData.isLandscape,
+                etContent
             )
         } else {
             AliplayerManager.stop()
@@ -2070,13 +2089,13 @@ class PlayerActivity : BaseActivity() {
         mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
         mBirdAwardCountInfo = intent.getSerializableExtra(ParamConstant.BIRD_AWARD_INFO) as? BirdLiveAward
         if (program != 0L) {
-            if(program==programId){
+            if (program == programId) {
                 //对于切换直播间id相同的不再执行切换操作 在这里直接做相应额外操作
                 if (mBirdAwardCountInfo != null) {
                     bird_count_view.showCounting(mBirdAwardCountInfo!!)
                     mBirdAwardCountInfo = null
                 }
-            }else{
+            } else {
                 //直播间切换
                 checkoutRoom(program)
             }
