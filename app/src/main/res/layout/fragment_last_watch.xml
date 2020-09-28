@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/con"
+    android:layout_width="match_parent"
+    android:layout_height="333dp"
+    android:background="@drawable/bg_last_watch">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="上次观看"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/dimen_20"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="7dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/icon_close_last_watch"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_continue"
+        android:layout_width="0px"
+        android:layout_height="40dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_last_watch_continue"
+        android:gravity="center"
+        android:text="继续看"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_continue"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title">
+
+        <com.julun.huanque.core.widgets.SingleVideoView
+            android:id="@+id/svv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:placeholderImage="@mipmap/logo_placeholder_medium"
+            app:placeholderImageScaleType="centerCrop" />
+
+        <View
+            android:id="@+id/view_shader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_last_watch_shader"
+            app:layout_constraintBottom_toBottomOf="@id/cardView"
+            app:layout_constraintLeft_toLeftOf="@id/cardView"
+            app:layout_constraintRight_toRightOf="@id/cardView"
+            app:layout_constraintTop_toTopOf="@id/cardView" />
+
+        <ImageView
+            android:id="@+id/iv_play"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/icon_new_userplayer" />
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:layout_marginLeft="12dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold"
+            tools:text="了好几年的给" />
+
+
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

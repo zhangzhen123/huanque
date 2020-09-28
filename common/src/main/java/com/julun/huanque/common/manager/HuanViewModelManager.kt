@@ -10,4 +10,7 @@ import com.julun.huanque.common.viewmodel.HuanQueViewModel
  */
 object HuanViewModelManager {
     var huanQueViewModel = HuanQueViewModel(CommonInit.getInstance().getApp())
+
+    //免打扰列表
+    var blockList = mutableListOf<String>()
 }

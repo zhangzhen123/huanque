@@ -4,6 +4,8 @@
     <!-- 融云 Permissions Required -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application>
         <!-- imlib config begin -->
         <!-- 融云相关    SDK核心功能  必选 -->

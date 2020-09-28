@@ -12,6 +12,7 @@ import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.constant.SystemTargetId
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
@@ -225,6 +226,8 @@ class PlayerMessageViewModel : BaseViewModel() {
                 list?.forEach {
                     blockedIdList.add(it.targetId)
                 }
+                HuanViewModelManager.blockList = blockedIdList
+
                 blockListData.value = blockedIdList
                 if (needQuerUnreadCount) {
                     needQuerUnreadCount = false

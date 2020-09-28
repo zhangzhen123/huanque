@@ -193,10 +193,11 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
         if (info.userBasic.headRealPeople) {
             tvCertification.hide()
-            ivReal.show()
+            sdv_real.loadImage(info.userBasic.authMark, 53f, 16f)
+            sdv_real.show()
         } else {
             tvCertification.show()
-            ivReal.hide()
+            sdv_real.hide()
         }
 //        sd_wealth.loadImage(info.userBasic.royalLevel)
 //        if (info.userBasic.sex == Sex.FEMALE) {
