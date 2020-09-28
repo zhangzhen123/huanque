@@ -5,6 +5,7 @@ package com.julun.huanque.common.utils
  */
 
 import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONException
 import com.alibaba.fastjson.TypeReference
 import com.alibaba.fastjson.parser.deserializer.ExtraProcessor
 import com.alibaba.fastjson.serializer.SerializerFeature
@@ -20,7 +21,7 @@ object JsonUtil {
 
     private val FJU = object {
 
-        private val styleParamProcessor: ExtraProcessor = ExtraProcessor { bean, key, value ->
+//        private val styleParamProcessor: ExtraProcessor = ExtraProcessor { bean, key, value ->
 //            if (bean is TplBean) {
 //                val string: String? = value?.toString()
 //                if ("styleParams" == key && StringHelper.isNotEmpty(string)) {
@@ -39,7 +40,7 @@ object JsonUtil {
 //                    bean.oppoOrderInfo = JsonUtil.deserializeAsObject(JsonUtil.seriazileAsString(value), OppoPayInfo::class.java)
 //                }
 //            }
-        }
+//        }
 
         /**
          * java-object as json-string
@@ -54,7 +55,7 @@ object JsonUtil {
             try {
                 return JSON.toJSONString(obj, *features)
             } catch (ex: Exception) {
-                throw Exception("Could not write JSON: " + ex.message, ex)
+                throw JSONException("Could not write JSON: " + ex.message, ex)
             }
 
         }
@@ -75,7 +76,7 @@ object JsonUtil {
             try {
                 return JSON.parseObject<T>(jsonString, clazz/*, styleParamProcessor*/)
             } catch (ex: Exception) {
-                throw Exception("Could not write JSON: " + ex.message, ex)
+                throw JSONException("Could not write JSON: " + ex.message, ex)
             }
 
         }
@@ -112,7 +113,7 @@ object JsonUtil {
         try {
             return JSON.parseArray<T>(jsonString, type)
         } catch (ex: Exception) {
-            throw Exception("Could not write JSON: " + ex.message, ex)
+            throw JSONException("Could not write JSON: " + ex.message, ex)
         }
 
     }

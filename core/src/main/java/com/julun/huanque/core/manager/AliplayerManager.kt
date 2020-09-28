@@ -102,6 +102,9 @@ object AliplayerManager {
                 if (stoped) {
                     return@setOnStateChangedListener
                 }
+                if (BuildConfig.DEBUG) {
+                    return@setOnStateChangedListener
+                }
                 Observable.timer(2, TimeUnit.SECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
