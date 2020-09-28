@@ -10,6 +10,7 @@ import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.helper.DefaultRxTransformer
 import com.julun.huanque.common.helper.RunOnMainSchedulerTransformer
 import com.julun.huanque.common.helper.reportCrash
+import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.net.CancelableObservableSubscriber
@@ -121,6 +122,7 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
             LoginStatusUtils.logout()
             //跳转登录页面
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+            ActivitiesManager.INSTANCE.finishActivityExcept("com.julun.huanque.activity.LoginActivity")
         }
 
         // 系统异常
