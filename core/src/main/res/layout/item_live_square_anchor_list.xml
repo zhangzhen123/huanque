@@ -71,45 +71,48 @@
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="17sp"
-        app:layout_goneMarginEnd="@dimen/dimen_6"
-        tools:text="99"
         app:layout_constraintBottom_toBottomOf="@+id/anchorPicture"
-        app:layout_constraintRight_toLeftOf="@+id/user_count_w" />
+        app:layout_constraintRight_toLeftOf="@+id/user_count_w"
+        app:layout_goneMarginEnd="@dimen/dimen_6"
+        tools:text="99" />
+
     <TextView
         android:id="@+id/user_count_w"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
+        android:layout_marginEnd="@dimen/dimen_6"
         android:layout_marginBottom="5dp"
         android:gravity="center"
         android:singleLine="true"
+        android:text="万"
         android:textColor="@color/white"
         android:textSize="12sp"
-        android:text="万"
         app:layout_constraintBottom_toBottomOf="@+id/anchorPicture"
-        android:layout_marginEnd="@dimen/dimen_6"
         app:layout_constraintRight_toRightOf="parent" />
 
 
-<!--    <TextView-->
-<!--        android:id="@+id/tv_author_status"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="@dimen/dimen_5"-->
-<!--        android:layout_marginEnd="5dp"-->
-<!--        android:layout_marginBottom="5dp"-->
-<!--        android:background="@drawable/bg_live_square_status"-->
-<!--        android:gravity="center"-->
-<!--        android:includeFontPadding="false"-->
-<!--        android:paddingStart="@dimen/dimen_5"-->
-<!--        android:paddingTop="@dimen/dimen_3"-->
-<!--        android:paddingEnd="@dimen/dimen_5"-->
-<!--        android:paddingBottom="@dimen/dimen_3"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:textSize="10sp"-->
-<!--        app:layout_constraintRight_toRightOf="@+id/anchorPicture"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/anchorPicture"-->
-<!--        tools:text="休息中" />-->
+    <TextView
+        android:id="@+id/tv_author_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_7"
+        android:layout_marginRight="@dimen/dimen_7"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/bg_live_square_status"
+        android:drawableLeft="@drawable/bg_square_living"
+        android:drawablePadding="3dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingStart="@dimen/dimen_5"
+        android:paddingTop="@dimen/dimen_3"
+        android:paddingEnd="@dimen/dimen_5"
+        android:paddingBottom="@dimen/dimen_3"
+        android:text="直播中"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        app:layout_constraintRight_toRightOf="@+id/anchorPicture"
+        app:layout_constraintTop_toTopOf="@+id/anchorPicture" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

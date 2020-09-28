@@ -61,6 +61,11 @@ class WeiXinCodeEvent(val code: String)
 class MessageBlockEvent()
 
 /**
+ * 草稿变动事件
+ */
+class DraftEvent(val userId: Long)
+
+/**
  * 打开私聊页
  */
 class OpenPrivateChatRoomEvent(var userId: Long, var nickname: String, var headPic: String)

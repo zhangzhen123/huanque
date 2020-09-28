@@ -494,16 +494,16 @@ class UserCardFragment : BaseDialogFragment() {
                     ll_leyuan.addView(sdv)
                 }
             }
-            //添加箭头
-            val iv_arrow = ImageView(activity)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            lp.gravity = Gravity.CENTER_VERTICAL
-            iv_arrow.layoutParams = lp
-            iv_arrow.setImageResource(R.mipmap.icon_arrow_msg_setting)
-            ll_leyuan.addView(iv_arrow)
+//            //添加箭头
+//            val iv_arrow = ImageView(activity)
+//            val lp = LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.WRAP_CONTENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//            )
+//            lp.gravity = Gravity.CENTER_VERTICAL
+//            iv_arrow.layoutParams = lp
+//            iv_arrow.setImageResource(R.mipmap.icon_arrow_msg_setting)
+//            ll_leyuan.addView(iv_arrow)
         }
     }
 

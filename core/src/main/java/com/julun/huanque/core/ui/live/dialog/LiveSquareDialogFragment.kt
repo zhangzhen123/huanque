@@ -291,11 +291,11 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                     holder.setText(R.id.anchor_city, item.city)
                 }
                 ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
-//                if (item.isLiving) {
-//                    holder.setText(R.id.tv_author_status, "直播中")
-//                } else {
-//                    holder.setText(R.id.tv_author_status, "休息中")
-//                }
+                if (item.isLiving) {
+                    holder.setVisible(R.id.tv_author_status, true)
+                } else {
+                    holder.setGone(R.id.tv_author_status, true)
+                }
             }
         }
 

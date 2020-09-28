@@ -851,4 +851,21 @@ class MessageViewModel : BaseViewModel() {
             })
     }
 
+    /**
+     * 更新草稿数据
+     */
+    fun updateDraft(userId: Long) {
+        val conversationList = conversationListData.value ?: return
+        var targetIndex = -1
+        conversationList.forEachIndexed { index, localConversation ->
+            if (localConversation.conversation.targetId == "$userId") {
+                targetIndex = index
+                return@forEachIndexed
+            }
+        }
+        if (targetIndex >= 0) {
+            changePosition.value = targetIndex
+        }
+    }
+
 }
