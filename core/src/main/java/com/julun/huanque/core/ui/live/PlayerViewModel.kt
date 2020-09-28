@@ -31,6 +31,7 @@ import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.utils.SPUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
+import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -90,6 +91,9 @@ class PlayerViewModel : BaseViewModel() {
 
     //重置弹窗
     val resetDialog: MutableLiveData<Class<out DialogFragment>> by lazy { MutableLiveData<Class<out DialogFragment>>() }
+
+    //草稿
+    val mDraft: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
     //是否是主播
     var isAnchor = false
@@ -510,6 +514,7 @@ class PlayerViewModel : BaseViewModel() {
             })
         }
     }
+
     //因为已经销毁了界面不在生命周期内 使用viewModelScope不会执行
     fun leave() {
         logger("leave")
@@ -736,7 +741,7 @@ class PlayerViewModel : BaseViewModel() {
         return false
     }
 
-     fun requestBubble() {
+    fun requestBubble() {
         viewModelScope.launch {
             request({
                 var bubbleInfo = SPUtils.getObject<ChatBubble>(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble::class.java)
@@ -769,5 +774,40 @@ class PlayerViewModel : BaseViewModel() {
 
         }
     }
+
+//    /**
+//     * 保存草稿
+//     */
+//    fun saveDraft(content: String) {
+//        logger("draft saveDraft target = $programId")
+//        RongIMClient.getInstance()
+//            .saveTextMessageDraft(Conversation.ConversationType.CHATROOM, "$programId", content, object : RongIMClient.ResultCallback<Boolean>() {
+//                override fun onSuccess(p0: Boolean?) {
+//                    logger("draft result = $p0")
+//                    getDraft()
+//                }
+//
+//                override fun onError(p0: RongIMClient.ErrorCode?) {
+//                }
+//
+//            })
+//    }
+//
+//    /**
+//     * 获取草稿
+//     */
+//    fun getDraft() {
+//        logger("draft getDraft target = $programId")
+//        RongIMClient.getInstance()
+//            .getTextMessageDraft(Conversation.ConversationType.CHATROOM, "$programId", object : RongIMClient.ResultCallback<String>() {
+//                override fun onSuccess(p0: String?) {
+//                    mDraft.postValue(p0)
+//                }
+//
+//                override fun onError(p0: RongIMClient.ErrorCode?) {
+//                }
+//            })
+//    }
+
 
 }

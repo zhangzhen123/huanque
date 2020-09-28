@@ -145,4 +145,7 @@ object ParamConstant {
 
     //是否允许执行操作
     const val ENABLE_ACTION = "ENABLE_ACTION"
+
+    //直播间草稿数据
+    const val Program_Draft = "Program_Draft"
 }

@@ -19,13 +19,14 @@ object FloatingManager {
      * @param programId 直播间Id
      * @param bgPic 背景图
      */
-    fun showFloatingView(playInfo: String, programId: Long, bgPic: String, vertical: Boolean = false) {
+    fun showFloatingView(playInfo: String, programId: Long, bgPic: String, vertical: Boolean = false, draft: String = "") {
         CommonInit.getInstance().getCurrentActivity()?.let { act ->
             val intent = Intent(act, FloatingService::class.java)
             intent.putExtra(ParamConstant.PROGRAM_ID, programId)
             intent.putExtra(ParamConstant.PLAY_INFO, playInfo)
             intent.putExtra(ParamConstant.PIC, bgPic)
             intent.putExtra(ParamConstant.FLOATING_VERTICAL, vertical)
+            intent.putExtra(ParamConstant.Program_Draft, draft)
             //使用Intent传值
             act.startService(intent)
         }
