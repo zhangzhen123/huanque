@@ -76,6 +76,9 @@ object RnManager {
                     override fun onReactContextInitialized(context: ReactContext) {
                         mReactInstanceManager!!.removeReactInstanceEventListener(this)
                         logger("ReactInstanceManager 加载完成了")
+                        if(BuildConfig.DEBUG){
+                            mReactInstanceManager?.devSupportManager?.devSupportEnabled=false
+                        }
                     }
                 })
                 mReactInstanceManager!!.createReactContextInBackground()

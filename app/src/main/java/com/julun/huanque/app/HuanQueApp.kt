@@ -1,5 +1,7 @@
 package com.julun.huanque.app
 
+//import cn.jpush.android.api.JPushInterface
+//import com.julun.jpushlib.TagAliasOperatorHelper
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
@@ -10,7 +12,6 @@ import android.util.Log
 import android.widget.Toast
 import cn.jiguang.verifysdk.api.JVerificationInterface
 import com.fm.openinstall.OpenInstall
-//import cn.jpush.android.api.JPushInterface
 import com.ishumei.smantifraud.SmAntiFraud
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.julun.huanque.BuildConfig
@@ -20,7 +21,6 @@ import com.julun.huanque.agora.AgoraManager
 import com.julun.huanque.common.constant.MMKVConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.ChannelCodeHelper
-import com.julun.huanque.common.helper.ChannelCodeHelper.getInstallData
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.logger
@@ -30,7 +30,6 @@ import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.init.HuanQueInit
 import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.ui.cockroach.DebugSafeModeTipActivity
-//import com.julun.jpushlib.TagAliasOperatorHelper
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mmkv.MMKV

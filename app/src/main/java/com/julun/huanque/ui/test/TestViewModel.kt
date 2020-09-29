@@ -1,6 +1,7 @@
 package com.julun.huanque.ui.test
 
 import androidx.lifecycle.*
+import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.bean.forms.SessionForm
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.UserService
@@ -72,7 +73,9 @@ class TestViewModel : BaseViewModel() {
 
     //传统的rx请求模式
     fun getUserLevelByRx() {
-        userService.queryUserLevelInfoBasic(SessionForm()).handleResponse(makeSubscriber<UserLevelInfo> {
+        userService.queryUserLevelInfoBasic(SessionForm()).map {
+            logger("当前的线程=${Thread.currentThread().name}")
+            it }.handleResponse(makeSubscriber<UserLevelInfo> {
             logger("请求成功结果：it")
             userLevelInfo.value = it
         }.ifError {

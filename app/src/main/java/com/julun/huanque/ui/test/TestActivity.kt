@@ -95,8 +95,8 @@ class TestActivity : BaseActivity() {
             viewModel.getInfo()
         }
         test_rxjava.onClickNew {
-//            viewModel.getUserLevelByRx()
-            viewModel.getUserLevelByRx2()
+            viewModel.getUserLevelByRx()
+//            viewModel.getUserLevelByRx2()
 
         }
 
