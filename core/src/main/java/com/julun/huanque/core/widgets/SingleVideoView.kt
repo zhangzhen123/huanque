@@ -469,7 +469,9 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         if (!useManager) {
             mAliPlayer?.release();
         } else {
-            AliplayerManager.mRenderListener = null
+            if(AliplayerManager.mRenderListener == mRenderListener){
+                AliplayerManager.mRenderListener = null
+            }
         }
         mAliPlayer = null
 //        Completable.complete()
