@@ -241,6 +241,11 @@ class PrivateConversationViewModel : BaseViewModel() {
      * 获取私聊基础信息
      */
     fun chatBasic(targetId: Long) {
+        logger("Private targetUserID = $targetId")
+        if (targetId <= 0) {
+            //用户Id异常
+            return
+        }
         viewModelScope.launch {
             request({
                 val result = socialService.chatBasic(FriendIdForm(targetId)).dataConvert()
