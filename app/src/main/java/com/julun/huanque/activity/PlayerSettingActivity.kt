@@ -81,7 +81,7 @@ class PlayerSettingActivity : BaseActivity() {
                     )
                 } else {
                     iv_floating.isSelected = true
-                    SPUtils.getBoolean(SPParamKey.Player_Close_Floating_Show, true)
+                    SPUtils.commitBoolean(SPParamKey.Player_Close_Floating_Show, true)
                 }
 
             }
