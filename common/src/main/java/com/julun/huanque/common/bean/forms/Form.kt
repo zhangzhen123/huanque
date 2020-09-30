@@ -143,3 +143,9 @@ class OffsetForm(var offset: Int = 0)
  *
  */
 class SaveTeachVideoForm(var videoId: Long = 0)
+
+
+/**
+ *
+ */
+class QuickAccostForm(var userIds: String = "")

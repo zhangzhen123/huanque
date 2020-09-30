@@ -44,7 +44,7 @@ class PhotosAdapter : BaseQuickAdapter<PhotoBean, BaseViewHolder>(R.layout.item_
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        logger("PhotosAdapter onCreateViewHolder viewType=$viewType")
+//        logger("PhotosAdapter onCreateViewHolder viewType=$viewType")
         return super.onCreateViewHolder(parent, viewType)
 
     }

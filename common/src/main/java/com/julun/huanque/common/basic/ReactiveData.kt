@@ -14,7 +14,7 @@ import java.lang.Exception
 open class ReactiveData<T>(
     var state: NetStateType = NetStateType.IDLE,
     private var data: T? = null,
-    private var queryType:QueryType=QueryType.INIT,//记录该次请求的类型 默认也就三种 初始化 刷新 加载更多
+    var queryType:QueryType=QueryType.INIT,//记录该次请求的类型 默认也就三种 初始化 刷新 加载更多 一般加载错误时才用到
     var error: ResponseError? = null
 ) {
 

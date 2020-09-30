@@ -105,10 +105,12 @@ data class ExtDataBean(
     var ruleUrl: String = ""
 ) : Serializable
 
-//Todo
-class TodayFateInfo<T> : RootListData<T>() {
-    var price: Long = 0L
-    var discount: String = ""
+class TodayFateInfo {
+    var fateList: MutableList<TodayFateItem> = mutableListOf()
+    var originalPrice: Long = 0
+    var showTodayFate: Boolean = false
+    var unitPrice: Long = 0
+    var beans: Long = 0
 }
 
 data class TodayFateItem(
@@ -117,7 +119,7 @@ data class TodayFateItem(
     //城市
     var city: String = "",
     //订单Id
-    var fateId: String = "",
+    var userId: String = "",
     //匹配时间
     var matchTime: String = "",
     //用户头像
@@ -125,11 +127,35 @@ data class TodayFateItem(
     //用户昵称
     var nickname: String = "",
     //性别：男(M)、女(F)(可选项：Male、Female、Unknow)
-    var sexType: String = "",
+    var sex: String = "Female",
 
     var authMark: String = "",
     var select: Boolean = true
 
+)
+
+data class QuickAccostResult(
+    var msgList: List<AccostMsg> = listOf()
+)
+
+data class AccostMsg(
+    var consumeBeans: Long = 0L,
+    var content: String = "",
+    var contentType: String = "",
+    var relationId: String = "",
+    var stranger: Boolean = false,
+    var targetUserInfo: AccostTargetUserInfo = AccostTargetUserInfo()
+)
+
+data class AccostTargetUserInfo(
+    var fee: Long = 0L,
+    var headPic: String = "",
+    var intimateLevel: Int = 0,
+    var meetStatus: String = "",
+    var nickname: String = "",
+    var sexType: String = "",
+    var stranger: Boolean = false,
+    var userId: Long = 0L
 )
 
 

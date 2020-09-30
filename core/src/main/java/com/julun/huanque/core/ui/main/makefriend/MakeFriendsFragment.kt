@@ -40,6 +40,7 @@ import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.ui.main.home.HomeViewModel
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
+import com.julun.huanque.core.viewmodel.TodayFateViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_make_friend.*
@@ -57,6 +58,9 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
 
     private val mHomeViewModel: HomeViewModel by activityViewModels()
+
+    private val mTodayFateViewModel: TodayFateViewModel by activityViewModels()
+
     private val mAdapter: MakeFriendsAdapter by lazy { MakeFriendsAdapter() }
     override fun lazyLoadData() {
         mViewModel.queryInfo()
@@ -327,10 +331,13 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val viewHead: View? = linearLayoutManager.findViewByPosition(0)
                 val view: View? = linearLayoutManager.findViewByPosition(1)
-                val lastPosition = linearLayoutManager.findLastVisibleItemPosition()
-                logger.info("当前的位置=$lastPosition")
-                if (lastPosition == 11) {
-                    checkShouldShowFate()
+
+                if (!mTodayFateViewModel.hasShowTodayFate&&isUserDo) {
+                    val lastPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition()
+                    logger.info("当前的位置=$lastPosition")
+                    if (lastPosition in 11..30) {
+                        checkShouldShowFate()
+                    }
                 }
 
 //                logger.info("viewHead=${viewHead?.id}  view=$view ")
@@ -357,9 +364,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
     }
 
     private fun checkShouldShowFate() {
-        //todo
-        if (!mViewModel.hasShowTodayFate) {
-            mViewModel.hasShowTodayFate = true
+        if (!mTodayFateViewModel.hasShowTodayFate) {
+            mTodayFateViewModel.hasShowTodayFate = true
 
             val date = StorageHelper.getLastTodayFateTime()
 
@@ -372,10 +378,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
             ULog.i("今日缘分间隔时间：$diff")
             if (diff == -1 || diff >= 1) {
-                mTodayFateDialogFragment = mTodayFateDialogFragment ?: TodayFateDialogFragment()
-                mTodayFateDialogFragment?.show(requireActivity(), "TodayFateDialogFragment")
-                //todo test
-//                StorageHelper.setLastTodayFateTime(today)
+                mTodayFateViewModel.requestInfo()
             }
 
         }
@@ -468,10 +471,25 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             } else if (it.state == NetStateType.ERROR) {
                 loadFail(it.isRefresh())
             }
+            if (it.queryType == QueryType.INIT) {
+                mTodayFateViewModel.hasShowTodayFate = false
+            }
         })
         mViewModel.flowerPic.observe(viewLifecycleOwner, Observer {
             //
             mHomeViewModel.flowerPic.value = it
+        })
+
+        mTodayFateViewModel.matchesInfo.observe(this, Observer {
+            it ?: return@Observer
+            if (it.isSuccess()) {
+                if (it.requireT().showTodayFate) {
+                    mTodayFateDialogFragment = mTodayFateDialogFragment ?: TodayFateDialogFragment()
+                    mTodayFateDialogFragment?.show(requireActivity(), "TodayFateDialogFragment")
+                    //todo test
+//                StorageHelper.setLastTodayFateTime(today)
+                }
+            }
         })
 
     }

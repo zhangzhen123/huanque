@@ -1,17 +1,20 @@
 package com.julun.huanque.core.dialog
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.BaseVMDialogFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -21,6 +24,7 @@ import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -40,8 +44,9 @@ import org.jetbrains.anko.textColor
  *@Description: 今日缘分配对
  *
  */
-class TodayFateDialogFragment : BaseVMDialogFragment<TodayFateViewModel>() {
+class TodayFateDialogFragment : BaseDialogFragment() {
 
+    val mViewModel: TodayFateViewModel by activityViewModels()
 
     override fun getLayoutId(): Int = R.layout.dialog_today_fate_girl
 
@@ -53,7 +58,7 @@ class TodayFateDialogFragment : BaseVMDialogFragment<TodayFateViewModel>() {
 
     override fun initViews() {
 
-
+        isCancelable = false
         girlList.layoutManager = GridLayoutManager(requireContext(), 2)
         initViewModel()
         girlList.adapter = matchesAdapter
@@ -65,38 +70,89 @@ class TodayFateDialogFragment : BaseVMDialogFragment<TodayFateViewModel>() {
             if (item != null) {
                 item.select = !item.select
                 matchesAdapter.notifyItemChanged(position)
+                upgradePrice()
             }
         }
+        tv_price.paint.flags = Paint.STRIKE_THRU_TEXT_FLAG//中划线
+        tv_price.paint.isAntiAlias = true
+        close.onClickNew {
+            dismiss()
+        }
+        go_action.onClickNew {
+            currentFateInfo ?: return@onClickNew
+            val list = currentFateInfo!!.fateList.filter { it.select }
+            var ids = ""
+            list.forEachIndexed { index, item ->
+                if (index != list.size - 1) {
+                    ids += item.userId + ","
+                } else {
+                    ids += item.userId
+                }
 
-        mViewModel.requestInfo()
+            }
+            if (list.isEmpty()) {
+                ToastUtils.show2("请勾选要宠幸的妹子哦")
+            } else {
+                mViewModel.quickAccost(ids)
+            }
+
+        }
+//        mViewModel.requestInfo()
+
     }
 
     private fun initViewModel() {
 
         mViewModel.matchesInfo.observe(this, Observer {
+            it ?: return@Observer
             if (it.isSuccess()) {
-              loadDataSuccess(it.requireT())
+                loadDataSuccess(it.requireT())
             } else if (it.state == NetStateType.ERROR) {
                 loadDataFail()
             }
         })
+        mViewModel.close.observe(this, Observer {
+            if (it != null) {
+                dismiss()
+                mViewModel.close.value = null
+            }
+        })
+
     }
-    private fun loadDataSuccess(data: TodayFateInfo<TodayFateItem>) {
-        matchesAdapter.setNewInstance(data.list)
-        tv_price.text="${data.price}"
-        tv_discount.text="${data.discount}"
+
+    private var currentFateInfo: TodayFateInfo? = null
+    private fun loadDataSuccess(data: TodayFateInfo) {
+        currentFateInfo = data
+        matchesAdapter.setNewInstance(data.fateList)
+        upgradePrice()
+
     }
+
     private fun loadDataFail() {
         ToastUtils.show("刷新失败")
     }
 
-
-    override fun showLoadState(state: NetState) {
-
+    private fun upgradePrice() {
+        currentFateInfo ?: return
+        val price: Long = currentFateInfo!!.originalPrice
+        val discount: Long = currentFateInfo!!.unitPrice
+        val fateList: MutableList<TodayFateItem> = currentFateInfo!!.fateList
+        val size = fateList.filter { it.select }.size
+        tv_price.text = "${price * size}鹊币"
+        if (discount == 0L) {
+            tv_discount.text = "限时免费"
+        } else {
+            tv_discount.text = "限时${discount * size}"
+        }
     }
 
     override fun setWindowAnimations() {
         dialog?.window?.setWindowAnimations(com.julun.huanque.common.R.style.dialog_center_open_ani)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mViewModel.matchesInfo.value = null
     }
 
     private val matchesAdapter =
@@ -116,7 +172,7 @@ class TodayFateDialogFragment : BaseVMDialogFragment<TodayFateViewModel>() {
                 }
                 val sex = holder.getView<TextView>(R.id.tv_sex)
                 sex.text = "${item.age}"
-                when (item.sexType) {//Male、Female、Unknow
+                when (item.sex) {//Male、Female、Unknow
 
                     Sex.FEMALE -> {
                         val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_sex_female)

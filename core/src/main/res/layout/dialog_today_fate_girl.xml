@@ -33,11 +33,12 @@
             android:textSize="14sp" />
 
         <ImageView
+            android:id="@+id/close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_margin="8dp"
+            android:layout_margin="12dp"
             android:src="@mipmap/icon_close_grey_01" />
     </RelativeLayout>
 
@@ -52,6 +53,7 @@
         android:layout_weight="1" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/go_action"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_46"
         android:layout_marginStart="@dimen/dimen_35"

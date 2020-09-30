@@ -84,6 +84,7 @@
         android:layout_width="@dimen/dimen_53"
         android:layout_height="@dimen/dimen_14"
         android:layout_marginStart="@dimen/dimen_5"
+        android:layout_marginTop="@dimen/dimen_5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

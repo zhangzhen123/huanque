@@ -270,4 +270,18 @@ interface SocialService {
      */
     @POST("social/friend/chat/fateList")
     suspend fun fateList(@Body form : OffsetForm) : Root<FateListInfo<FateInfo>>
+
+    /**
+     * 今日派单列表
+     */
+    @POST("social/friend/chat/todayFate")
+    suspend fun todayFate(@Body form : EmptyForm = EmptyForm()) : Root<TodayFateInfo>
+
+    /**
+     * 一键快速搭讪
+     */
+    @POST("social/friend/chat/quickAccost")
+    suspend fun quickAccost(@Body form : QuickAccostForm ) : Root<QuickAccostResult>
+
+
 }
