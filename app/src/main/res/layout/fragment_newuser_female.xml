@@ -11,7 +11,7 @@
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_marginRight="35dp"
-        android:src="@mipmap/icon_new_user_close"
+        android:src="@mipmap/icon_close_round_02"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

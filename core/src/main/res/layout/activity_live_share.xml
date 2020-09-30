@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_share"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/percent40translucentBlack">
+
+    <FrameLayout
+        android:id="@+id/fl_holder"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_500"
+        android:scrollX="500dp" />
+
+    <LinearLayout
+        android:id="@+id/share_img_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/dimen_30"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:layout_marginEnd="@dimen/dimen_30"
+        android:background="@drawable/bg_shape_white2"
+        android:gravity="bottom|center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_share_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_20"
+            android:layout_marginTop="@dimen/dimen_20"
+            android:layout_marginEnd="@dimen/dimen_20"
+            app:cardCornerRadius="@dimen/dimen_10"
+            app:cardElevation="@dimen/dimen_3">
+
+            <include
+                layout="@layout/item_live_share"
+                android:layout_width="match_parent"
+                android:layout_height="339dp"
+                android:layout_gravity="center" />
+        </androidx.cardview.widget.CardView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_20"
+            android:layout_marginEnd="@dimen/dimen_20"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_1"
+                android:layout_weight="1"
+                android:background="@color/black_999" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_46"
+                android:layout_marginStart="@dimen/dimen_10"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:gravity="center"
+                android:text="分享到"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/size_16"
+                android:textStyle="bold" />
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_1"
+                android:layout_weight="1"
+                android:background="@color/black_999" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_share_types_img"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:layout_marginBottom="@dimen/dimen_10" />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/share_Img_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/share_img_container"
+        android:layout_alignEnd="@+id/share_img_container"
+        android:src="@mipmap/icon_close_round_02"
+        android:visibility="gone" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/dimen_15"
+        android:background="@drawable/bg_shape_top_white1"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_share_types"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="@dimen/dimen_7"
+            android:layout_marginTop="@dimen/dimen_15" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1"
+            android:background="#F3F4F5" />
+
+        <TextView
+            android:id="@+id/tv_cancel_share"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_46"
+            android:gravity="center"
+            android:text="取消分享"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/size_16"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</RelativeLayout>
+

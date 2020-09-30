@@ -85,7 +85,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
 
         rv_share_types.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         rv_share_types.adapter = shareAdapter
-        rv_share_types.addItemDecoration(HorizontalItemDecoration(dp2px(13)))
+        rv_share_types.addItemDecoration(HorizontalItemDecoration(dp2px(20)))
         initViewModel()
         when (applyModule) {
             ShareFromModule.Program -> {
@@ -99,7 +99,7 @@ class InviteShareActivity : BaseVMActivity<InviteShareViewModel>() {
             }
         }
 
-        mViewModel.queryShareType()
+        mViewModel.queryShareType(applyModule)
         val rsLP = rv_share_contents.layoutParams as LinearLayout.LayoutParams
         when (applyModule) {
             ShareFromModule.Program -> {

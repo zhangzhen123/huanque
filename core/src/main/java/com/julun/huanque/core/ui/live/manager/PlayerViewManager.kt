@@ -2,6 +2,7 @@ package com.julun.huanque.core.ui.live.manager
 
 import android.animation.*
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.view.ViewGroup
@@ -39,6 +40,7 @@ import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.BirdDialogFragment
 import com.julun.huanque.core.ui.live.fragment.BalanceNotEnoughFragment
 import com.julun.huanque.core.ui.live.fragment.PrivateFragment
+import com.julun.huanque.core.ui.share.LiveShareActivity
 import com.julun.huanque.core.viewmodel.AnchorNoLiveViewModel
 import com.julun.huanque.core.viewmodel.OrientationViewModel
 import com.julun.huanque.core.viewmodel.PropViewModel
@@ -199,7 +201,8 @@ class PlayerViewManager(val context: PlayerActivity) {
     }
 
     private fun initViewModel() {
-        viewModel.userInfo.observe(context, Observer { refreshUserViewData(it ?: return@Observer)
+        viewModel.userInfo.observe(context, Observer {
+            refreshUserViewData(it ?: return@Observer)
         })
         propViewModel.colorfulState.observe(context, Observer {
 //            if (it == true) {
@@ -328,15 +331,22 @@ class PlayerViewManager(val context: PlayerActivity) {
 //                        mDialogManager.showUserMoreSetting()
                         //打开分享
                         val baseData = viewModel.roomBaseData ?: return@Observer
-                        ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY)
-                            .withString(IntentParamKey.TYPE.name, ShareFromModule.Program).withSerializable(
-                                IntentParamKey.LIVE_INFO.name,
-                                MicAnchor(prePic = baseData.prePic).apply {
-                                    programName = baseData.programName
-                                    programId = baseData.programId
-                                    headPic = baseData.headPic
-                                }
-                            ).navigation()
+//                        ARouter.getInstance().build(ARouterConstant.INVITE_SHARE_ACTIVITY)
+//                            .withString(IntentParamKey.TYPE.name, ShareFromModule.Program).withSerializable(
+//                                IntentParamKey.LIVE_INFO.name,
+//                                MicAnchor(prePic = baseData.prePic).apply {
+//                                    programName = baseData.programName
+//                                    programId = baseData.programId
+//                                    headPic = baseData.headPic
+//                                }
+//                            ).navigation()
+                        context.startActivity(Intent(context, LiveShareActivity::class.java).apply {
+                            putExtra(IntentParamKey.LIVE_INFO.name, MicAnchor(prePic = baseData.prePic).apply {
+                                programName = baseData.programName
+                                programId = baseData.programId
+                                headPic = baseData.headPic
+                            })
+                        })
                     }
                     ClickType.ANCHOR_MORE_SETTING -> {
                         //主播更多页面
@@ -670,7 +680,11 @@ class PlayerViewManager(val context: PlayerActivity) {
     fun showNotEnoughBalanceAlert(bean: NotEnoughBalanceBean) {
 //        ToastUtils.show(R.string.balance_not_enough)
 //            if (!mDialogManager.isFragmentShow(RechargeDialogFragment::class.java)) {
-        mDialogManager.openDialog(BalanceNotEnoughFragment::class.java, builder = { BalanceNotEnoughFragment.newInstance(true) }, reuse = true)
+        mDialogManager.openDialog(
+            BalanceNotEnoughFragment::class.java,
+            builder = { BalanceNotEnoughFragment.newInstance(true) },
+            reuse = true
+        )
 //
 //            }
 
@@ -1104,7 +1118,7 @@ class PlayerViewManager(val context: PlayerActivity) {
                 ""
             }
         }
-        if(deC.isNotEmpty()){
+        if (deC.isNotEmpty()) {
             et.setText(deC)
         }
         //

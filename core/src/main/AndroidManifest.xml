@@ -101,6 +101,9 @@
             android:name=".ui.share.InviteShareActivity"
             android:theme="@style/ShareTheme" />
         <activity
+            android:name=".ui.share.LiveShareActivity"
+            android:theme="@style/ShareTheme" />
+        <activity
             android:name=".ui.live.PlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
@@ -109,8 +112,8 @@
             android:windowSoftInputMode="adjustResize|stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".ui.main.bird.LeYuanBirdActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
 
 

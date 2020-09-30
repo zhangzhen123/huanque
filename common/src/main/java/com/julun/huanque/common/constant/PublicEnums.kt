@@ -393,6 +393,7 @@ object ShareTypeEnum {
     const val WeChat = "WeChat"
     const val FriendCircle = "FriendCircle"
     const val Sina = "Sina"
+    const val ShareImage = "ShareImage"
     const val SaveImage = "SaveImage"
 }
 

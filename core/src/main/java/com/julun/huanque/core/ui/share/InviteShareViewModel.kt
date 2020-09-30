@@ -36,8 +36,10 @@ class InviteShareViewModel : BaseViewModel() {
 
     val shares: MutableLiveData<ReactiveData<MutableList<ShareType>>> by lazy { MutableLiveData<ReactiveData<MutableList<ShareType>>>() }
 
+    val liveShareInfo: MutableLiveData<ReactiveData<ShareObject>> by lazy { MutableLiveData<ReactiveData<ShareObject>>() }
+
     var programInfo: MicAnchor? = null
-    fun queryShareType() {
+    fun queryShareType(applyModule: String) {
         shares.value = mutableListOf<ShareType>().apply {
             add(ShareType().apply {
                 this.res = R.mipmap.icon_share_wx
@@ -54,14 +56,55 @@ class InviteShareViewModel : BaseViewModel() {
                 this.title = "微博"
                 this.type = ShareTypeEnum.Sina
             })
-            add(ShareType().apply {
-                this.res = R.mipmap.icon_share_save_image
-                this.title = "保存图片"
-                this.type = ShareTypeEnum.SaveImage
-            })
+            if(ShareFromModule.Program==applyModule){
+                add(ShareType().apply {
+                    this.res = R.mipmap.icon_share_image
+                    this.title = "分享图片"
+                    this.type = ShareTypeEnum.ShareImage
+                })
+            }else{
+                add(ShareType().apply {
+                    this.res = R.mipmap.icon_share_save_image
+                    this.title = "保存图片"
+                    this.type = ShareTypeEnum.SaveImage
+                })
+            }
+
         }.convertRtData()
     }
+    fun getShareType(shareImg: Boolean):MutableList<ShareType> {
+        return mutableListOf<ShareType>().apply {
+            add(ShareType().apply {
+                this.res = R.mipmap.icon_share_wx
+                this.title = "微信好友"
+                this.type = ShareTypeEnum.WeChat
+            })
+            add(ShareType().apply {
+                this.res = R.mipmap.icon_share_pyq
+                this.title = "朋友圈"
+                this.type = ShareTypeEnum.FriendCircle
+            })
+            add(ShareType().apply {
+                this.res = R.mipmap.icon_share_wb
+                this.title = "微博"
+                this.type = ShareTypeEnum.Sina
+            })
+            if(shareImg){
+                add(ShareType().apply {
+                    this.res = R.mipmap.icon_share_image
+                    this.title = "分享图片"
+                    this.type = ShareTypeEnum.ShareImage
+                })
+            }else{
+                add(ShareType().apply {
+                    this.res = R.mipmap.icon_share_save_image
+                    this.title = "保存图片"
+                    this.type = ShareTypeEnum.SaveImage
+                })
+            }
 
+        }
+    }
     fun querySharePoster(applyModule: String) {
         viewModelScope.launch {
             request({
@@ -116,5 +159,22 @@ class InviteShareViewModel : BaseViewModel() {
 
         }
     }
+
+    fun queryLiveShareInfo() {
+        viewModelScope.launch {
+            request({
+                val url = programInfo?.headPic ?: return@request
+                val form = SharePosterImageForm(programId = programInfo?.programId ?: return@request)
+                val result = service.programShareInfo(form).dataConvert()
+
+                liveShareInfo.value = result.convertRtData()
+            }, error = { e ->
+                logger("报错了：$e")
+                liveShareInfo.value = e.convertError()
+            })
+
+        }
+    }
+
 
 }
