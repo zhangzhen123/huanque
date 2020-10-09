@@ -70,8 +70,6 @@ class WelcomeActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_welcome
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        startActivity(Intent(this, MainActivity::class.java))
-        return
         //开始预取号
         FastLoginManager.mPreListener = mLocalPreLoginListener
         FastLoginManager.preLogin()
