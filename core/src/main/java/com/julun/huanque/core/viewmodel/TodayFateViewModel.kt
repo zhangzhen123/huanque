@@ -39,10 +39,15 @@ class TodayFateViewModel : BaseViewModel() {
 
     val quickAccostResult: MutableLiveData<QuickAccostResult> by lazy { MutableLiveData<QuickAccostResult>() }
 
-    val close: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val closeFateDialog: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    //关闭弹窗标记
+    val closeFateDialogTag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    //展示今日缘分弹窗
+    val showFateDialog: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     //是否已经触发过今日缘分
     var hasShowTodayFate: Boolean = false
-
+    //今日缘分是否已经完成 没有完成 每次关闭时 显示拖拽图标
+    var isComplete: Boolean = false
 
     fun requestInfo() {
 
@@ -65,7 +70,8 @@ class TodayFateViewModel : BaseViewModel() {
             request({
                 val result = socialService.quickAccost(QuickAccostForm(userIds)).dataConvert()
                 quickAccostResult.value = result
-                close.value=true
+                isComplete=true
+                closeFateDialog.value = true
             }, error = {
 //                quickAccostResult.value = it.convertError()
             })

@@ -1,7 +1,9 @@
 package com.julun.huanque.core.dialog
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -50,15 +52,16 @@ class TodayFateDialogFragment : BaseDialogFragment() {
 
     override fun getLayoutId(): Int = R.layout.dialog_today_fate_girl
 
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        isCancelable = false
+        super.onCreate(savedInstanceState)
+    }
     override fun onStart() {
         super.onStart()
         setDialogSize(gravity = Gravity.CENTER, marginWidth = 28, height = ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     override fun initViews() {
-
-        isCancelable = false
         girlList.layoutManager = GridLayoutManager(requireContext(), 2)
         initViewModel()
         girlList.adapter = matchesAdapter
@@ -101,6 +104,9 @@ class TodayFateDialogFragment : BaseDialogFragment() {
 
     }
 
+    override fun reCoverView() {
+        initViewModel()
+    }
     private fun initViewModel() {
 
         mViewModel.matchesInfo.observe(this, Observer {
@@ -111,10 +117,10 @@ class TodayFateDialogFragment : BaseDialogFragment() {
                 loadDataFail()
             }
         })
-        mViewModel.close.observe(this, Observer {
+        mViewModel.closeFateDialog.observe(this, Observer {
             if (it != null) {
                 dismiss()
-                mViewModel.close.value = null
+                mViewModel.closeFateDialog.value = null
             }
         })
 
@@ -153,6 +159,8 @@ class TodayFateDialogFragment : BaseDialogFragment() {
     override fun onDestroy() {
         super.onDestroy()
         mViewModel.matchesInfo.value = null
+        mViewModel.closeFateDialog.value = null
+        mViewModel.closeFateDialogTag.value = true
     }
 
     private val matchesAdapter =

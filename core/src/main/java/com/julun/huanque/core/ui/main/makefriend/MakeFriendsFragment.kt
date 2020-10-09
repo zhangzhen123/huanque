@@ -332,7 +332,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 val viewHead: View? = linearLayoutManager.findViewByPosition(0)
                 val view: View? = linearLayoutManager.findViewByPosition(1)
 
-                if (!mTodayFateViewModel.hasShowTodayFate&&isUserDo) {
+                if (!mTodayFateViewModel.hasShowTodayFate && isUserDo) {
                     val lastPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition()
                     logger.info("当前的位置=$lastPosition")
                     if (lastPosition in 11..30) {
@@ -489,6 +489,14 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     //todo test
 //                StorageHelper.setLastTodayFateTime(today)
                 }
+            }
+        })
+        mTodayFateViewModel.showFateDialog.observe(this, Observer {
+            it ?: return@Observer
+            if (it) {
+                mTodayFateViewModel.showFateDialog.value = null
+                mTodayFateDialogFragment = mTodayFateDialogFragment ?: TodayFateDialogFragment()
+                mTodayFateDialogFragment?.show(requireActivity(), "TodayFateDialogFragment")
             }
         })
 
