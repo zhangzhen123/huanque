@@ -144,7 +144,8 @@ data class AccostMsg(
     var contentType: String = "",
     var relationId: String = "",
     var stranger: Boolean = false,
-    var targetUserInfo: AccostTargetUserInfo = AccostTargetUserInfo()
+    var targetUserInfo: TargetUserObj = TargetUserObj(),
+    var gift: ChatGift = ChatGift()
 )
 
 data class AccostTargetUserInfo(

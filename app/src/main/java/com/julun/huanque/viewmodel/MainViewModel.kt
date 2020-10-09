@@ -4,10 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.alibaba.android.arouter.launcher.ARouter
-import com.julun.huanque.common.bean.beans.NewUserGiftBean
-import com.julun.huanque.common.bean.beans.RoomUserChatExtra
-import com.julun.huanque.common.bean.beans.TargetUserObj
-import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.*
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
@@ -23,14 +20,14 @@ import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.JsonUtil
-import com.julun.huanque.common.utils.SPUtils
-import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.viewmodel.HuanQueViewModel
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class MainViewModel : BaseViewModel() {
 
@@ -345,4 +342,60 @@ class MainViewModel : BaseViewModel() {
         }, Conversation.ConversationType.PRIVATE)
     }
 
+    //发送搭讪消息使用的Disposable
+    private var mSendAccountDisposable: Disposable? = null
+
+    /**
+     * 发送搭讪消息的定时器
+     */
+    fun accostMessageInterval(bean: QuickAccostResult) {
+        mSendAccountDisposable?.dispose()
+        val msgList = bean.msgList
+        mSendAccountDisposable = Observable.interval(200, TimeUnit.MILLISECONDS)
+            .take(msgList.size.toLong())
+            .subscribe({
+                val index = it.toInt()
+                if (ForceUtils.isIndexNotOutOfBounds(index, msgList)) {
+                    sendAccostMessage(msgList[index])
+                }
+            }, {})
+    }
+
+    /**
+     * 发送消息
+     */
+    private fun sendAccostMessage(accostMsg: AccostMsg) {
+        val targetUser = accostMsg.targetUserInfo
+        //设置本人数据
+        val user = RoomUserChatExtra().apply {
+            headPic = SessionUtils.getHeaderPic()
+            senderId = SessionUtils.getUserId()
+            nickname = SessionUtils.getNickName()
+            sex = SessionUtils.getSex()
+            chatBubble = if (targetUser.intimateLevel >= 4) {
+                //亲密度达到4级，有气泡权限
+                SPUtils.getObject<ChatBubble>(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble::class.java)
+            } else {
+                null
+            }
+        }
+        //设置本人数据
+        RongCloudManager.resetUSerInfoPrivate(user)
+
+        if (accostMsg.contentType == "Text") {
+            //文本消息
+            RongCloudManager.send(accostMsg.content, "${targetUser.userId}", targetUserObj = targetUser.apply { fee = accostMsg.consumeBeans })
+        } else if (accostMsg.contentType == "Gift") {
+            //送礼消息
+            val msg = RongCloudManager.obtainCustomMessage(
+                "${targetUser.userId}",
+                targetUser,
+                Conversation.ConversationType.PRIVATE,
+                MessageCustomBeanType.Gift,
+                accostMsg.gift
+            )
+            RongCloudManager.sendCustomMessage(msg)
+        }
+
+    }
 }

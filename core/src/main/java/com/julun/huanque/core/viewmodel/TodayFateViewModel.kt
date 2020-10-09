@@ -8,6 +8,8 @@ import com.julun.huanque.common.bean.beans.TodayFateInfo
 import com.julun.huanque.common.bean.beans.TodayFateItem
 import com.julun.huanque.common.bean.forms.QuickAccostForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.MessageFailType
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.ProgramService
 import com.julun.huanque.common.net.services.SocialService
@@ -15,7 +17,9 @@ import com.julun.huanque.common.suger.convertError
 import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -32,8 +36,8 @@ class TodayFateViewModel : BaseViewModel() {
     private val socialService: SocialService by lazy { Requests.create(SocialService::class.java) }
 
     val matchesInfo: MutableLiveData<ReactiveData<TodayFateInfo>> by lazy { MutableLiveData<ReactiveData<TodayFateInfo>>() }
-    //todo 返回数据待使用
-    val quickAccostResult: MutableLiveData<ReactiveData<QuickAccostResult>> by lazy { MutableLiveData<ReactiveData<QuickAccostResult>>() }
+
+    val quickAccostResult: MutableLiveData<QuickAccostResult> by lazy { MutableLiveData<QuickAccostResult>() }
 
     val close: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     //是否已经触发过今日缘分
@@ -60,12 +64,11 @@ class TodayFateViewModel : BaseViewModel() {
 
             request({
                 val result = socialService.quickAccost(QuickAccostForm(userIds)).dataConvert()
-                quickAccostResult.value = result.convertRtData()
+                quickAccostResult.value = result
                 close.value=true
             }, error = {
-                quickAccostResult.value = it.convertError()
+//                quickAccostResult.value = it.convertError()
             })
         }
     }
-
 }

@@ -37,6 +37,7 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.ui.main.home.HomeFragment
+import com.julun.huanque.core.viewmodel.TodayFateViewModel
 import com.julun.huanque.fragment.*
 import com.julun.huanque.message.fragment.MessageFragment
 import com.julun.huanque.message.viewmodel.MessageViewModel
@@ -76,6 +77,9 @@ class MainActivity : BaseActivity() {
     private val mMainViewModel: MainViewModel by viewModels()
 
     private val mMessageViewModel: MessageViewModel by viewModels()
+
+    //今日缘分ViewModel（男性）
+    private val mTodayFateViewModel: TodayFateViewModel by viewModels()
 
     private val mFillInformationViewModel: FillInformationViewModel by viewModels()
 
@@ -328,6 +332,15 @@ class MainActivity : BaseActivity() {
         mFillInformationViewModel.headerPicData.observe(this, Observer {
             if (it != null) {
                 mLoadingDialog.dismiss()
+            }
+        })
+
+        mTodayFateViewModel.quickAccostResult.observe(this, Observer {
+            logger.info("RongStatus status = ${RongIMClient.getInstance().currentConnectionStatus}")
+            if (it != null && RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
+                //发送消息数据  融云已经连接 直接发送
+                mMainViewModel.accostMessageInterval(it)
+                mTodayFateViewModel.quickAccostResult.value = null
             }
         })
 
@@ -678,6 +691,10 @@ class MainActivity : BaseActivity() {
             mMessageViewModel.getUnreadCount()
             mMainViewModel.refreshMessage()
             mMainViewModel.getBlockedConversationList()
+            //发送搭讪消息
+            val msgList = mTodayFateViewModel.quickAccostResult.value ?: return
+            mMainViewModel.accostMessageInterval(msgList)
+            mTodayFateViewModel.quickAccostResult.value = null
         }
     }
 
