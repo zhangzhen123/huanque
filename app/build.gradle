@@ -9,6 +9,12 @@ kapt {
         arg('eventBusIndex', 'com.julun.huanque.core.AppEventBusIndex')
     }
 }
+
+//欢鹊交友版本号信息
+def versionMajor = 1
+def versionMinor = 3
+def versionPatch = 0
+
 android {
     compileSdkVersion hq.compileSdkVersion
     buildToolsVersion hq.buildToolsVersion
@@ -42,8 +48,10 @@ android {
         applicationId "com.julun.huanque"
         minSdkVersion hq.minSdkVersion
         targetSdkVersion hq.targetSdkVersion
-        versionCode 12000
-        versionName "1.2.0"
+        // 1.3.1 ->1003001
+        // 1.30.1->1030001
+        versionCode versionMajor * 1000000 + versionMinor * 1000 + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         multiDexEnabled true
 
@@ -56,28 +64,28 @@ android {
         buildConfigField "String", "WX_APP_ID", "\"${sdk.WX_KEY_HQ}\""
 
         manifestPlaceholders = [
-                packagename       : rootProject.ext.packageType,
-                HUAWEI_APPID      : "appid=102845793",// 华为平台注册的appid
+                packagename     : rootProject.ext.packageType,
+                HUAWEI_APPID    : "appid=102845793",// 华为平台注册的appid
 
-                XIAOMI_APPKEY     : "MI-5161864536858", // 小米平台注册的appkey
-                XIAOMI_APPID      : "MI-2882303761518645858", // 小米平台注册的appid
+                XIAOMI_APPKEY   : "MI-5161864536858", // 小米平台注册的appkey
+                XIAOMI_APPID    : "MI-2882303761518645858", // 小米平台注册的appid
 
-                OPPO_APPKEY       : "OP-2c8b8dc3d9b04392884e8bc83fed73fd", // OPPO平台注册的appkey
-                OPPO_APPID        : "OP-30339257", // OPPO平台注册的appid
-                OPPO_APPSECRET    : "OP-2087b5267b324ff499a4a1c7616498c8",//OPPO平台注册的appsecret
+                OPPO_APPKEY     : "OP-2c8b8dc3d9b04392884e8bc83fed73fd", // OPPO平台注册的appkey
+                OPPO_APPID      : "OP-30339257", // OPPO平台注册的appid
+                OPPO_APPSECRET  : "OP-2087b5267b324ff499a4a1c7616498c8",//OPPO平台注册的appsecret
 
-                VIVO_APPKEY       : "3abc3373c8c587cb9b1600cb8c5522bc", // VIVO平台注册的appkey
-                VIVO_APPID        : "104396366", // VIVO平台注册的appid
+                VIVO_APPKEY     : "3abc3373c8c587cb9b1600cb8c5522bc", // VIVO平台注册的appkey
+                VIVO_APPID      : "104396366", // VIVO平台注册的appid
 
-                HUAWEI_APPID_P     : "102845793",// 华为平台注册的appid
+                HUAWEI_APPID_P  : "102845793",// 华为平台注册的appid
 
 
-                OPPO_APPKEY_P      : "2c8b8dc3d9b04392884e8bc83fed73fd", // OPPO平台注册的appkey
-                OPPO_APPID_P         : "30339257", // OPPO平台注册的appid
-                OPPO_APPSECRET_P     : "2087b5267b324ff499a4a1c7616498c8",//OPPO平台注册的appsecret
+                OPPO_APPKEY_P   : "2c8b8dc3d9b04392884e8bc83fed73fd", // OPPO平台注册的appkey
+                OPPO_APPID_P    : "30339257", // OPPO平台注册的appid
+                OPPO_APPSECRET_P: "2087b5267b324ff499a4a1c7616498c8",//OPPO平台注册的appsecret
 
-                VIVO_APPKEY_P        : "3abc3373c8c587cb9b1600cb8c5522bc", // VIVO平台注册的appkey
-                VIVO_APPID_P         : "104396366", // VIVO平台注册的appid
+                VIVO_APPKEY_P   : "3abc3373c8c587cb9b1600cb8c5522bc", // VIVO平台注册的appkey
+                VIVO_APPID_P    : "104396366", // VIVO平台注册的appid
         ]
 
         ndk {
@@ -111,7 +119,7 @@ android {
 
     }
 
-    sourceSets{
+    sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
         }
