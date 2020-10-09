@@ -8,6 +8,7 @@ import com.julun.huanque.common.bean.beans.TodayFateInfo
 import com.julun.huanque.common.bean.beans.TodayFateItem
 import com.julun.huanque.common.bean.forms.QuickAccostForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.MessageFailType
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
@@ -39,6 +40,8 @@ class TodayFateViewModel : BaseViewModel() {
 
     val quickAccostResult: MutableLiveData<QuickAccostResult> by lazy { MutableLiveData<QuickAccostResult>() }
 
+    val quickAccostError: MutableLiveData<Throwable> by lazy { MutableLiveData<Throwable>() }
+
     val closeFateDialog: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     //关闭弹窗标记
     val closeFateDialogTag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -68,12 +71,13 @@ class TodayFateViewModel : BaseViewModel() {
         viewModelScope.launch {
 
             request({
-                val result = socialService.quickAccost(QuickAccostForm(userIds)).dataConvert()
+                val result = socialService.quickAccost(QuickAccostForm(userIds)).dataConvert(intArrayOf(ErrorCodes.BALANCE_NOT_ENOUGH))
                 quickAccostResult.value = result
                 isComplete=true
                 closeFateDialog.value = true
             }, error = {
 //                quickAccostResult.value = it.convertError()
+                quickAccostError.value=it
             })
         }
     }

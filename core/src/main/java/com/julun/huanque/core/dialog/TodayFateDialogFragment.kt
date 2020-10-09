@@ -20,9 +20,11 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.BaseVMDialogFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.TodayFateInfo
 import com.julun.huanque.common.bean.beans.TodayFateItem
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -32,6 +34,7 @@ import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.live.fragment.BalanceNotEnoughFragment
 import com.julun.huanque.core.viewmodel.TodayFateViewModel
 import kotlinx.android.synthetic.main.dialog_today_fate_girl.*
 import org.jetbrains.anko.backgroundResource
@@ -56,6 +59,7 @@ class TodayFateDialogFragment : BaseDialogFragment() {
         isCancelable = false
         super.onCreate(savedInstanceState)
     }
+
     override fun onStart() {
         super.onStart()
         setDialogSize(gravity = Gravity.CENTER, marginWidth = 28, height = ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -107,6 +111,7 @@ class TodayFateDialogFragment : BaseDialogFragment() {
     override fun reCoverView() {
         initViewModel()
     }
+
     private fun initViewModel() {
 
         mViewModel.matchesInfo.observe(this, Observer {
@@ -121,6 +126,20 @@ class TodayFateDialogFragment : BaseDialogFragment() {
             if (it != null) {
                 dismiss()
                 mViewModel.closeFateDialog.value = null
+            }
+        })
+
+        mViewModel.quickAccostError.observe(this, Observer {
+            if (it != null) {
+                mViewModel.quickAccostError.value = null
+                if (it is ResponseError) {
+                    when (it.busiCode) {
+                        ErrorCodes.BALANCE_NOT_ENOUGH -> {
+                            dismiss()
+                            BalanceNotEnoughFragment.newInstance(false).show(requireActivity(), "BalanceNotEnoughFragment")
+                        }
+                    }
+                }
             }
         })
 

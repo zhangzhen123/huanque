@@ -486,8 +486,8 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 if (it.requireT().showTodayFate) {
                     mTodayFateDialogFragment = mTodayFateDialogFragment ?: TodayFateDialogFragment()
                     mTodayFateDialogFragment?.show(requireActivity(), "TodayFateDialogFragment")
-                    //todo test
-//                StorageHelper.setLastTodayFateTime(today)
+                    val today = DateHelper.formatNow()
+                    StorageHelper.setLastTodayFateTime(today)
                 }
             }
         })
