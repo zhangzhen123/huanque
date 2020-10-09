@@ -16,6 +16,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
+import com.facebook.drawee.drawable.ScalingUtils
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.basic.NetStateType
@@ -485,10 +487,14 @@ class UserCardFragment : BaseDialogFragment() {
             queList.asSequence().take(3).forEach {
                 if (it != null) {
                     val sdv = SimpleDraweeView(activity)
-                    sdv.padding = dp2px(5)
                     val lp = LinearLayout.LayoutParams(dp2px(40), dp2px(40))
                     lp.gravity = Gravity.CENTER_VERTICAL
                     sdv.layoutParams = lp
+//                    val builder = GenericDraweeHierarchyBuilder(resources)
+//                    val hierarchy = builder
+//                        .setActualImageScaleType(ScalingUtils.ScaleType.FIT_XY)
+//                        .build()
+//                    sdv.hierarchy = hierarchy
 //                    ImageUtils.loadImage(iv, it, 15f, 15f)
                     ImageUtils.loadImage(sdv, it, 40f, 40f)
                     ll_leyuan.addView(sdv)
