@@ -112,6 +112,9 @@ class PrivateConversationViewModel : BaseViewModel() {
     //道具数据
     val propData: MutableLiveData<PropBean> by lazy { MutableLiveData<PropBean>() }
 
+    //上一次的草稿数据
+    var mDraft = ""
+
     //操作类型
     var operationType = ""
 
@@ -238,6 +241,11 @@ class PrivateConversationViewModel : BaseViewModel() {
      * 获取私聊基础信息
      */
     fun chatBasic(targetId: Long) {
+        logger("Private targetUserID = $targetId")
+        if (targetId <= 0) {
+            //用户Id异常
+            return
+        }
         viewModelScope.launch {
             request({
                 val result = socialService.chatBasic(FriendIdForm(targetId)).dataConvert()
@@ -637,6 +645,24 @@ class PrivateConversationViewModel : BaseViewModel() {
                 basicBean.value?.chatTicketCnt = result.chatTicketCnt
             })
         }
+    }
+
+    /**
+     * 保存草稿
+     */
+    fun saveDraft(content: String) {
+        SPUtils.commitString(GlobalUtils.getDraftKey("${targetIdData.value}", true), content)
+    }
+
+    /**
+     * 获取草稿
+     */
+    fun getDraft(): String {
+        val key = GlobalUtils.getDraftKey("${targetIdData.value}", true)
+        val draft = SPUtils.getString(key, "")
+        SPUtils.remove(key)
+        mDraft = draft
+        return draft
     }
 
 

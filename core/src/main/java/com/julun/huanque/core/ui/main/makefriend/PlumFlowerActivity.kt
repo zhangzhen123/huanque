@@ -46,6 +46,10 @@ class PlumFlowerActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_plum_flower
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            super.finish()
+            return
+        }
         val type = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
         val barHeight = StatusBarUtil.getStatusBarHeight(this)
         val params = view_top.layoutParams as? ConstraintLayout.LayoutParams

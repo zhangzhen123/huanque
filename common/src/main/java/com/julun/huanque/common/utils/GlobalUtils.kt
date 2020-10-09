@@ -621,7 +621,7 @@ object GlobalUtils {
      * @param targetID
      * @param private 是否是私聊
      */
-    fun getChatRoomDraftKey(targetID: String, private: Boolean): String {
+    fun getDraftKey(targetID: String, private: Boolean): String {
         return if (private) {
             "ChatRoom-${SessionUtils.getUserId()}-$targetID"
         } else {

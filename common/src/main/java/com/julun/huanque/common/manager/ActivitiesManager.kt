@@ -2,6 +2,7 @@ package com.julun.huanque.common.manager
 
 import android.app.Activity
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.suger.logger
 import java.util.*
 
 /**
@@ -66,6 +67,19 @@ class ActivitiesManager private constructor() {
             }
         }
         act?.finish()
+    }
+
+    /**
+     * 关闭特定页面之外的其他页面
+     */
+    fun finishActivityExcept(className: String) {
+        activities.forEach {
+            if (!className.contains(it.localClassName)) {
+                it.finish()
+            } else {
+                logger("Except localClassName = ${it.localClassName}")
+            }
+        }
     }
 
     /**

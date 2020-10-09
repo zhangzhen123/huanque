@@ -1152,6 +1152,8 @@ object RongCloudManager {
                     LoginStatusUtils.logout()
                     //跳转登录页面
                     ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+                    ActivitiesManager.INSTANCE.finishActivityExcept("com.julun.huanque.activity.LoginActivity")
+
                 }
                 RongIMClient.ConnectionStatusListener.ConnectionStatus.DISCONNECTED -> {
                     val loginOutSuccess = System.currentTimeMillis()

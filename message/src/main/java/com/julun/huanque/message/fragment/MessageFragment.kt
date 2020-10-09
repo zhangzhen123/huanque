@@ -605,6 +605,12 @@ class MessageFragment : BaseFragment() {
         mPlayerMessageViewModel.getBlockedConversationList()
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun draftChange(event: DraftEvent) {
+        //刷新草稿数据
+        mMessageViewModel.updateDraft(event.userId)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {

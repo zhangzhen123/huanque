@@ -475,6 +475,7 @@ class LoginActivity : BaseActivity() {
             //隐藏所有的TextView
             hideAllTextView(fastContentView)
         }
+        JVerificationInterface.clearPreLoginCache()
         JVerificationInterface.dismissLoginAuthActivity()
     }
 

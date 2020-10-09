@@ -65,6 +65,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
         val ivHuanyu = helper.getView<ImageView>(R.id.iv_huanyu)
         //官方图标
         val ivPic = helper.getView<ImageView>(R.id.iv_pic)
+        val tv_draft = helper.getView<View>(R.id.tv_draft)
 
         if (item.showUserInfo != null) {
             //存在用户信息
@@ -116,6 +117,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 //陌生人消息
                 var time = 0L
                 var unreadCount = 0
+                tv_draft.hide()
                 try {
                     time = info[LocalConversation.TIME]?.toLong() ?: 0
                     unreadCount = info[LocalConversation.UNREADCOUNT]?.toInt() ?: 0
@@ -153,66 +155,79 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 //文本消息
                 when (targetId) {
                     SystemTargetId.systemNoticeSender -> {
+                        tv_draft.hide()
                         val msgConent = MessageFormatUtils.formatSysMsgContent(msg.content)
                         helper.setText(R.id.tv_content, msgConent?.context?.body ?: "")
                     }
                     SystemTargetId.friendNoticeSender -> {
+                        tv_draft.hide()
                         val msgConent: FriendContent? = MessageFormatUtils.parseJsonFromTextMessage(FriendContent::class.java, msg.content)
                         MessageFormatUtils.renderImage(helper.getView(R.id.tv_content), msgConent?.context ?: return, true)
                     }
                     else -> {
-                        helper.setText(R.id.tv_content, EmojiSpanBuilder.buildEmotionSpannable(context, msg.content))
+                        if (!showDraftView(helper, targetId)) {
+                            helper.setText(R.id.tv_content, EmojiSpanBuilder.buildEmotionSpannable(context, msg.content))
+                        }
+
                     }
                 }
             }
             is ImageMessage -> {
                 //图片消息
-                helper.setText(R.id.tv_content, "[图片]")
+                if (!showDraftView(helper, targetId)) {
+                    helper.setText(R.id.tv_content, "[图片]")
+                }
             }
             is CustomMessage -> {
-                when (msg.type) {
-                    MessageCustomBeanType.Gift -> {
-                        helper.setText(R.id.tv_content, "[私信礼物]")
-                    }
-                    MessageCustomBeanType.Expression_Privilege -> {
-                        helper.setText(R.id.tv_content, "[表情]")
-                    }
-                    MessageCustomBeanType.Expression_Animation -> {
-                        helper.setText(R.id.tv_content, "[表情]")
-                    }
-                    MessageCustomBeanType.SendRoom -> {
-                        helper.setText(R.id.tv_content, "[传送门]")
-                    }
-                    else -> {
-                        helper.setText(R.id.tv_content, "")
+                if (!showDraftView(helper, targetId)) {
+                    when (msg.type) {
+                        MessageCustomBeanType.Gift -> {
+                            helper.setText(R.id.tv_content, "[私信礼物]")
+                        }
+                        MessageCustomBeanType.Expression_Privilege -> {
+                            helper.setText(R.id.tv_content, "[表情]")
+                        }
+                        MessageCustomBeanType.Expression_Animation -> {
+                            helper.setText(R.id.tv_content, "[表情]")
+                        }
+                        MessageCustomBeanType.SendRoom -> {
+                            helper.setText(R.id.tv_content, "[传送门]")
+                        }
+                        else -> {
+                            helper.setText(R.id.tv_content, "")
+                        }
                     }
                 }
             }
             is CustomSimulateMessage -> {
-                when (msg.type) {
-                    MessageCustomBeanType.Voice_Conmmunication_Simulate -> {
-                        //语音通话消息
-                        helper.setText(R.id.tv_content, "[语音通话]")
-                    }
-                    MessageCustomBeanType.SYSTEM_MESSAGE -> {
-                        //模拟系统消息
-                        helper.setText(R.id.tv_content, "暂无新消息")
-                    }
-                    MessageCustomBeanType.FRIEND_MESSAGE -> {
-                        //模拟好友消息
-                        helper.setText(R.id.tv_content, "暂无新消息")
-                    }
-                    else -> {
-                        helper.setText(R.id.tv_content, "")
+                if (!showDraftView(helper, targetId)) {
+                    when (msg.type) {
+                        MessageCustomBeanType.Voice_Conmmunication_Simulate -> {
+                            //语音通话消息
+                            helper.setText(R.id.tv_content, "[语音通话]")
+                        }
+                        MessageCustomBeanType.SYSTEM_MESSAGE -> {
+                            //模拟系统消息
+                            helper.setText(R.id.tv_content, "暂无新消息")
+                        }
+                        MessageCustomBeanType.FRIEND_MESSAGE -> {
+                            //模拟好友消息
+                            helper.setText(R.id.tv_content, "暂无新消息")
+                        }
+                        else -> {
+                            helper.setText(R.id.tv_content, "")
+                        }
                     }
                 }
             }
             else -> {
-                if (targetId?.isNotEmpty() == true) {
-                    helper.setText(R.id.tv_content, "")
-                }
-                if (targetId == curAnchorId) {
-                    helper.setText(R.id.tv_content, "hi，我是${item.showUserInfo?.nickname}，快来和我聊天吧！")
+                if (!showDraftView(helper, targetId)) {
+                    if (targetId?.isNotEmpty() == true) {
+                        helper.setText(R.id.tv_content, "")
+                    }
+                    if (targetId == curAnchorId) {
+                        helper.setText(R.id.tv_content, "hi，我是${item.showUserInfo?.nickname}，快来和我聊天吧！")
+                    }
                 }
             }
         }
@@ -242,6 +257,25 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             //存在会话消息，显示常规的布局
             helper.setVisible(R.id.tv_time, true)
                 .setGone(R.id.tv_chat, true)
+        }
+    }
+
+    /**
+     * 显示草稿数据
+     * @return 是否显示了草稿
+     */
+    private fun showDraftView(helper: BaseViewHolder, targetId: String): Boolean {
+        val key = GlobalUtils.getDraftKey(targetId, true)
+        val draft = SPUtils.getString(key, "")
+        val tv_draft = helper.getView<View>(R.id.tv_draft)
+        if (draft.isEmpty()) {
+            tv_draft.hide()
+            return false
+        } else {
+            //显示草稿数据
+            tv_draft.show()
+            helper.setText(R.id.tv_content, EmojiSpanBuilder.buildEmotionSpannable(context, draft))
+            return true
         }
     }
 }

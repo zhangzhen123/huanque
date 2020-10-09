@@ -42,6 +42,8 @@ import java.util.concurrent.TimeUnit
  */
 class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
 
+    constructor() : this("", 60)
+
     companion object {
         //今日
         val TODAY = "TODAY"

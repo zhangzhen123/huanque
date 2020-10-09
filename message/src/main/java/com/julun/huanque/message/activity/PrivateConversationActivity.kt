@@ -174,6 +174,9 @@ class PrivateConversationActivity : BaseActivity() {
     //为回复倒计时
     private var mNoReceiveDisposable: Disposable? = null
 
+    //需要显示键盘的标识位
+    private var mNeedShowKeyBoard = false
+
     override fun isRegisterEventBus() = true
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -221,6 +224,18 @@ class PrivateConversationActivity : BaseActivity() {
         mAdapter.otherUserInfo = ChatUser(header)
         showTitleView(nickName, meetStatus)
         mPrivateConversationViewModel?.targetIdData?.value = targetID
+
+        //显示草稿
+        val draft = mPrivateConversationViewModel?.getDraft() ?: ""
+        if (draft.isNotEmpty()) {
+            edit_text.setText(draft)
+            tv_send.isEnabled = true
+            if (mHelper == null) {
+                mNeedShowKeyBoard = true
+            } else {
+                mHelper?.toKeyboardState(true)
+            }
+        }
 
         mPrivateConversationViewModel?.operationType =
             intent?.getStringExtra(ParamConstant.OPERATION) ?: ""
@@ -1271,6 +1286,11 @@ class PrivateConversationActivity : BaseActivity() {
                 }
             })
         }
+
+        if (mNeedShowKeyBoard) {
+            mHelper?.toKeyboardState(true)
+            mNeedShowKeyBoard = false
+        }
     }
 
     private
@@ -2108,5 +2128,19 @@ class PrivateConversationActivity : BaseActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         initBasic(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //草稿数据
+        val draft = edit_text.text.toString()
+        if (draft.isNotEmpty()) {
+            //保存草稿数据
+            mPrivateConversationViewModel?.saveDraft(draft)
+        }
+        if (draft != mPrivateConversationViewModel?.mDraft) {
+            //草稿数据有变化，需要刷新列表
+            EventBus.getDefault().post(DraftEvent(mPrivateConversationViewModel?.targetIdData?.value ?: return))
+        }
     }
 }

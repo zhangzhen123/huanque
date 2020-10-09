@@ -80,10 +80,6 @@ class WelcomeActivity : BaseActivity() {
         mShowFragment =
             SharedPreferencesUtils.getBoolean(SPParamKey.Welcome_privacy_Fragment, false)
         initViewModel()
-        if (!SPUtils.getBoolean(SPParamKey.APP_START, false)) {
-            //调用激活接口
-            viewModel?.appStart()
-        }
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         //移除缓存的私信气泡数据
@@ -152,6 +148,10 @@ class WelcomeActivity : BaseActivity() {
             )
             .subscribe { permission ->
                 //申请存储权限，无论成功还是失败，直接跳转
+                if (!SPUtils.getBoolean(SPParamKey.APP_START, false) && !SharedPreferencesUtils.getBoolean(SPParamKey.Support_Oaid, false)) {
+                    //调用激活接口  oaid不支持无需等待接口返回
+                    viewModel?.appStart()
+                }
                 viewModel?.initUUID()
                 mLogicSuccess = true
                 startActivity()
