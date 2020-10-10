@@ -1744,6 +1744,18 @@ class PlayerActivity : BaseActivity() {
                 }
             }
         })
+        //主播被封禁提示
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.BlockProgramProcessor {
+            override fun process(data: OperatorMessageBean) {
+                MyAlertDialog(this@PlayerActivity).showAlertWithOK(
+                    "该主播因严重违反欢鹊社区规范，已被执行封号处罚",
+                    okText = "知道了",
+                    callback = MyAlertDialog.MyDialogCallback(onRight = {
+                        finish()
+                    })
+                )
+            }
+        })
 
 
         /**

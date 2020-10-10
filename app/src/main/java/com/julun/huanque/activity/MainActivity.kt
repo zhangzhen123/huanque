@@ -18,6 +18,7 @@ import com.julun.huanque.agora.activity.AnonymousVoiceActivity
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.*
@@ -197,7 +198,8 @@ class MainActivity : BaseActivity() {
         if (SPUtils.getString(SPParamKey.AgreeUp, BusiConstant.True) != BusiConstant.True) {
             //直接显示隐私弹窗
             //显示弹窗
-            val mProtectionFragment = PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
+            val mProtectionFragment =
+                PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
             addOrderDialog(mProtectionFragment)
         } else {
             mMainViewModel.checkProtocol(AgreementType.UserPrivacy)
@@ -593,12 +595,16 @@ class MainActivity : BaseActivity() {
         //封禁账户消息
         MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserProcessor {
             override fun process(data: OperatorMessageBean) {
-                ToastUtils.show("您已被封禁账号")
-                FloatingManager.hideFloatingView()
-                EventBus.getDefault().post(BannedAndClosePlayer())
-                EventBus.getDefault().post(LoginOutEvent())
+                doBanAction(false)
             }
         })
+        //封禁设备
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserDeviceProcessor {
+            override fun process(data: OperatorMessageBean) {
+                doBanAction(true)
+            }
+        })
+
         //直播封禁（用户不允许进入任何直播间）
         MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserLivingProcessor {
             override fun process(data: OperatorMessageBean) {
@@ -655,6 +661,35 @@ class MainActivity : BaseActivity() {
 
     }
 
+    /**
+     * 处理用户/设备被封操作
+     */
+    private fun doBanAction(isDevice: Boolean) {
+        FloatingManager.hideFloatingView()
+        EventBus.getDefault().post(BannedAndClosePlayer())
+        //清空session
+        SessionUtils.clearSession()
+        //登出融云
+        if (RongIMClient.getInstance().currentConnectionStatus == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED) {
+            RongCloudManager.logout()
+        }
+        UserHeartManager.stopBeat()
+        LoginStatusUtils.logout()
+        val message = if (isDevice) {
+            "您的设备因多次严重违反欢鹊社区规范，已被执行永久封禁设备处罚，请使用其他设备并规范个人行为"
+        } else {
+            "您的账号因严重违反欢鹊社区规范，已被执行永久封号处罚，请使用其他账号并规范个人行为"
+        }
+        MyAlertDialog(this@MainActivity, false).showAlertWithOK(
+            message = message,
+            okText = "知道了", callback = MyAlertDialog.MyDialogCallback(onRight = {
+                finish()
+                //跳转登录页面
+                ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+            })
+        )
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")
@@ -702,6 +737,7 @@ class MainActivity : BaseActivity() {
     fun loginOut(event: LoginOutEvent) {
         //登录通知
         LoginManager.doLoginOut({
+            finish()
             //退出登录成功
             ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
         })

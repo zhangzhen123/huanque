@@ -9,6 +9,7 @@ import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
+import com.julun.huanque.common.bean.events.LoginOutEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.constant.ParamConstant
@@ -24,6 +25,7 @@ import com.julun.huanque.message.activity.MessageSettingActivity
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
 import kotlinx.android.synthetic.main.act_setting.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -80,11 +82,12 @@ class SettingActivity : BaseActivity() {
             MyAlertDialog(this).showAlertWithOKAndCancel(
                 "退出登录后将无法收到TA的消息了，确定退出吗？",
                 MyAlertDialog.MyDialogCallback(onRight = {
-                    LoginManager.doLoginOut({
-                        //退出登录成功
-                        val intent = Intent(this, LoginActivity::class.java)
-                        startActivity(intent)
-                    })
+                    EventBus.getDefault().post(LoginOutEvent())
+//                    LoginManager.doLoginOut({
+//                        //退出登录成功
+//                        val intent = Intent(this, LoginActivity::class.java)
+//                        startActivity(intent)
+//                    })
                 }, onCancel = {
                 }), "退出提示", "确定"
             )

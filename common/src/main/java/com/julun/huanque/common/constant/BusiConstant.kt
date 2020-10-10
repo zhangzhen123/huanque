@@ -172,6 +172,10 @@ object ErrorCodes {
 
     //已经绑定其他账号
     const val HAS_BIND_OTHER = 1016
+    //账号已经被封禁
+    const val ACCOUNT_HAS_BLOCK = 1018
+
+
 
 }
 

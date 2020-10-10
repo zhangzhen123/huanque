@@ -2,6 +2,7 @@ package com.julun.huanque.common.suger
 
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.BuildConfig
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.basic.Root
@@ -10,6 +11,7 @@ import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.helper.DefaultRxTransformer
 import com.julun.huanque.common.helper.RunOnMainSchedulerTransformer
 import com.julun.huanque.common.helper.reportCrash
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
@@ -146,6 +148,14 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
 //        ErrorCodes.BALANCE_NOT_ENOUGH -> {
 //
 //        }
+        //账号已经被封禁
+        ErrorCodes.ACCOUNT_HAS_BLOCK -> {
+            val activity = CommonInit.getInstance().getCurrentActivity()
+            if (activity != null)
+                MyAlertDialog(activity, false).showAlertWithOK(
+                    it.message.toString(), okText = "知道了"
+                )
+        }
         // 其他系统定义错误代码
         else -> {
             ToastUtils.show2(it.message.toString())
