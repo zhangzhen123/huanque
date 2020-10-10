@@ -8,4 +8,4 @@
     app:viewAspectRatio="1"
     app:actualImageScaleType="centerCrop"
     app:placeholderImageScaleType="fitXY"
-    app:placeholderImage="@drawable/logo_placeholder_bg_m" />
+    app:placeholderImage="@mipmap/logo_placeholder_medium" />
