@@ -47,7 +47,7 @@ class TodayFateViewModel : BaseViewModel() {
     //关闭弹窗标记
     val closeFateDialogTag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     //展示今日缘分弹窗
-    val showFateDialog: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+//    val showFateDialog: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     //是否已经触发过今日缘分
     var hasShowTodayFate: Boolean = false
     //今日缘分是否已经完成 没有完成 每次关闭时 显示拖拽图标

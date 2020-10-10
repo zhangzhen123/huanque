@@ -22,11 +22,13 @@ import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.events.UserInfoEditEvent
-import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.HomeMakeMoneyType
+import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.manager.NotifyManager
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
@@ -34,12 +36,10 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
-import com.julun.huanque.core.dialog.TodayFateDialogFragment
 import com.julun.huanque.core.manager.AliplayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.ui.main.home.HomeViewModel
-import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.huanque.core.viewmodel.TodayFateViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -72,7 +72,6 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
     override fun isRegisterEventBus(): Boolean = true
 
-    private var mTodayFateDialogFragment: TodayFateDialogFragment? = null
 
     private val audioPlayerManager: AudioPlayerManager by lazy { AudioPlayerManager(requireContext()) }
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -334,7 +333,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
                 if (!mTodayFateViewModel.hasShowTodayFate && isUserDo) {
                     val lastPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition()
-                    logger.info("当前的位置=$lastPosition")
+//                    logger.info("当前的位置=$lastPosition")
                     if (lastPosition in 11..30) {
                         checkShouldShowFate()
                     }
@@ -380,7 +379,6 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             if (diff == -1 || diff >= 1) {
                 mTodayFateViewModel.requestInfo()
             }
-
         }
     }
 
@@ -480,23 +478,6 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             mHomeViewModel.flowerPic.value = it
         })
 
-        mTodayFateViewModel.matchesInfo.observe(this, Observer {
-            it ?: return@Observer
-            if (it.isSuccess()) {
-                if (it.requireT().showTodayFate) {
-                    mTodayFateDialogFragment = mTodayFateDialogFragment ?: TodayFateDialogFragment()
-                    mTodayFateDialogFragment?.show(requireActivity(), "TodayFateDialogFragment")
-                }
-            }
-        })
-        mTodayFateViewModel.showFateDialog.observe(this, Observer {
-            it ?: return@Observer
-            if (it) {
-                mTodayFateViewModel.showFateDialog.value = null
-                mTodayFateDialogFragment = mTodayFateDialogFragment ?: TodayFateDialogFragment()
-                mTodayFateDialogFragment?.show(requireActivity(), "TodayFateDialogFragment")
-            }
-        })
 
     }
 

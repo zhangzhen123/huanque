@@ -104,6 +104,7 @@ object StorageHelper {
         return SPUtils.getBoolean("${NEED_GUIDE_TO__PLAY_BIRD}-${userId}", true)
     }
 
+    //只代表今日缘分完成逻辑
     fun setLastTodayFateTime() {
         val today = DateHelper.formatNow()
         val userId: Long = SessionUtils.getUserId()
@@ -115,4 +116,15 @@ object StorageHelper {
         return SPUtils.getString("$LAST_TODAY_FATE_TIME-${userId}", "")
     }
 
+    //只记录今日缘分弹框逻辑 一天只弹一次
+    fun setLastTodayFateDialogTime() {
+        val today = DateHelper.formatNow()
+        val userId: Long = SessionUtils.getUserId()
+        SPUtils.commitString("$LAST_TODAY_FATE_TIME-dialog-${userId}", today)
+    }
+
+    fun getLastTodayFateDialogTime(): String {
+        val userId: Long = SessionUtils.getUserId()
+        return SPUtils.getString("$LAST_TODAY_FATE_TIME-dialog-${userId}", "")
+    }
 }
