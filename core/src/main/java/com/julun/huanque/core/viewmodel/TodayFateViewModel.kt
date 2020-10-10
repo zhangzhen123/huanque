@@ -10,6 +10,7 @@ import com.julun.huanque.common.bean.forms.QuickAccostForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.MessageFailType
+import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.ProgramService
@@ -75,6 +76,8 @@ class TodayFateViewModel : BaseViewModel() {
                 quickAccostResult.value = result
                 isComplete=true
                 closeFateDialog.value = true
+                //记录缘分来了完成标记 不再重复弹出
+                StorageHelper.setLastTodayFateTime()
             }, error = {
 //                quickAccostResult.value = it.convertError()
                 quickAccostError.value=it
