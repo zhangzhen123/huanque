@@ -149,3 +149,18 @@ class SaveTeachVideoForm(var videoId: Long = 0)
  *
  */
 class QuickAccostForm(var userIds: String = "")
+
+/**
+ * 新增搭讪常用语的form
+ */
+class AddWordsForm(var words: String) : Serializable
+
+/**
+ * 修改搭讪常用语的form
+ */
+class UpdateWordsForm(var words: String,var wordsId : Long)
+
+/**
+ * 删除搭讪常用语
+ */
+class WordsIdForm(var wordsId : Long)

@@ -81,6 +81,9 @@ class YuanFenActivity : BaseActivity() {
         rlRefreshView.setOnRefreshListener {
             mViewModel?.queryData?.value = true
         }
+        tv_word.onClickNew {
+            UsefulWordActivity.newInstance(this)
+        }
     }
 
     /**

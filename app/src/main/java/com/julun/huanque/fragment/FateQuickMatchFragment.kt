@@ -6,15 +6,15 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.WindowManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.ParamConstant
-import com.julun.huanque.common.constant.Sex
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.hide
@@ -22,7 +22,8 @@ import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.message.activity.UsefulWordActivity
+import com.julun.huanque.viewmodel.FateQuickMatchViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_paidan.*
@@ -38,6 +39,9 @@ import kotlin.math.abs
 @Route(path = ARouterConstant.FATE_QUICK_MATCH_FRAGMENT)
 class FateQuickMatchFragment : BaseDialogFragment() {
     private val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
+
+    //快捷回复需要使用的ViewModel
+    private val mFateQuickMatchViewModel: FateQuickMatchViewModel by viewModels()
     override fun getLayoutId() = R.layout.fragment_paidan
 
 
@@ -59,6 +63,16 @@ class FateQuickMatchFragment : BaseDialogFragment() {
             ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
                 .navigation()
             mHuanQueViewModel.clearFateData()
+        }
+
+        iv_chat_small.onClickNew {
+            tv_chat.performClick()
+        }
+
+        iv_fate_accost.onClickNew {
+            //快捷回复
+            val fateBean = mHuanQueViewModel.fateQuickMatchData.value ?: return@onClickNew
+            mFateQuickMatchViewModel.getRandomWords("${fateBean.userInfo.userId}")
         }
 
         if (enable) {
@@ -104,6 +118,7 @@ class FateQuickMatchFragment : BaseDialogFragment() {
         mHuanQueViewModel.fateQuickMatchData.observe(this, Observer {
             if (it != null) {
                 showViewByData(it.userInfo)
+                showChatView(it.quickChat)
             } else {
                 dismiss()
             }
@@ -113,6 +128,40 @@ class FateQuickMatchFragment : BaseDialogFragment() {
                 showTime(it)
             }
         })
+
+        mFateQuickMatchViewModel.msgData.observe(this, Observer {
+            if (it != null) {
+                //发言
+            }
+        })
+        mFateQuickMatchViewModel.showAlertFlag.observe(this, Observer {
+            if (it == true) {
+                //引导添加常用语
+                MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
+                    "您还没有添加搭讪常用语，快去添加吧",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        UsefulWordActivity.newInstance(requireActivity())
+                    }), "提示", "去添加"
+                )
+                mFateQuickMatchViewModel.showAlertFlag.value = null
+            }
+        })
+    }
+
+    /**
+     * 显示搭讪聊天视图
+     */
+    private fun showChatView(quickChat: String) {
+        if (quickChat == BusiConstant.True) {
+            //显示快捷回复视图
+            tv_chat.hide()
+            iv_chat_small.show()
+            iv_fate_accost.show()
+        } else {
+            tv_chat.show()
+            iv_chat_small.hide()
+            iv_fate_accost.hide()
+        }
     }
 
 
@@ -120,6 +169,11 @@ class FateQuickMatchFragment : BaseDialogFragment() {
      * 根据数据显示页面
      */
     private fun showViewByData(bean: UserInfoInRoom) {
+        if (bean.newUser == BusiConstant.True) {
+            iv_new_user.show()
+        } else {
+            iv_new_user.hide()
+        }
         val sex = bean.sex
         var sexDrawable: Drawable? = null
         //性别

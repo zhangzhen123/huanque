@@ -1163,11 +1163,13 @@ class FateQuickMatchBean(
     //用户数据
     var userInfo: UserInfoInRoom = UserInfoInRoom(),
     //未回复数量
-    var noReplyNum : Int = 0,
+    var noReplyNum: Int = 0,
     //订单ID
     var fateId: String = "",
     //过期时间
-    var expTime: Long = 0L
+    var expTime: Long = 0L,
+    //是否显示快捷搭讪
+    var quickChat: String = ""
 )
 
 /**
