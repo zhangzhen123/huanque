@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.FateInfo
 import com.julun.huanque.common.bean.beans.FateQuickMatchChangeBean
@@ -19,6 +20,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.YuanFenAdapter
+import com.julun.huanque.message.viewmodel.FateQuickMatchViewModel
 import com.julun.huanque.message.viewmodel.YuanFenViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -54,6 +56,8 @@ class YuanFenActivity : BaseActivity() {
     private var rulePicUrl = ""
     private val mViewModel: YuanFenViewModel by viewModels()
 
+    private val mFateQuickMatchViewModel: FateQuickMatchViewModel by viewModels()
+
     override fun getLayoutId() = R.layout.act_yuanfen
 
     override fun isRegisterEventBus() = true
@@ -81,7 +85,7 @@ class YuanFenActivity : BaseActivity() {
         rlRefreshView.setOnRefreshListener {
             mViewModel?.queryData?.value = true
         }
-        tv_word.onClickNew {
+        iv_word.onClickNew {
             UsefulWordActivity.newInstance(this)
         }
     }
@@ -114,10 +118,21 @@ class YuanFenActivity : BaseActivity() {
         }
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
             val tempData = mAdapter.getItem(position)
-            RNPageActivity.start(
-                this,
-                RnConstant.PERSONAL_HOMEPAGE,
-                Bundle().apply { putLong("userId", tempData.userId) })
+            when (view.id) {
+                R.id.iv_reply -> {
+                    mFateQuickMatchViewModel.getRandomWords(tempData.userId)
+                }
+                R.id.sdv_header -> {
+                    RNPageActivity.start(
+                        this,
+                        RnConstant.PERSONAL_HOMEPAGE,
+                        Bundle().apply { putLong("userId", tempData.userId) })
+                }
+                else -> {
+                }
+            }
+
+
         }
     }
 
@@ -174,6 +189,23 @@ class YuanFenActivity : BaseActivity() {
         mViewModel.refreshFlag.observe(this, Observer {
             if (it == true) {
                 mAdapter.notifyDataSetChanged()
+            }
+        })
+        mFateQuickMatchViewModel.msgData.observe(this, Observer {
+            if (it != null) {
+                //发言
+            }
+        })
+        mFateQuickMatchViewModel.showAlertFlag.observe(this, Observer {
+            if (it == true) {
+                //引导添加常用语
+                MyAlertDialog(this).showAlertWithOKAndCancel(
+                    "您还没有添加搭讪常用语，快去添加吧",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        UsefulWordActivity.newInstance(this)
+                    }), "提示", "去添加"
+                )
+                mFateQuickMatchViewModel.showAlertFlag.value = null
             }
         })
     }

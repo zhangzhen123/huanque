@@ -138,11 +138,24 @@
         app:layout_constraintLeft_toRightOf="@id/sdv_caifu_level" />
 
     <ImageView
+        android:id="@+id/iv_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:layout_marginRight="15dp"
         android:src="@mipmap/icon_arrow_right_gray"
+        app:layout_constraintBottom_toBottomOf="@id/view_bg"
+        app:layout_constraintRight_toRightOf="@id/view_bg"
+        app:layout_constraintTop_toTopOf="@id/view_divider" />
+
+    <ImageView
+        android:id="@+id/iv_reply"
+        android:layout_width="20dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_fast_reply"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/view_bg"
         app:layout_constraintRight_toRightOf="@id/view_bg"
         app:layout_constraintTop_toTopOf="@id/view_divider" />

@@ -23,7 +23,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.message.activity.UsefulWordActivity
-import com.julun.huanque.viewmodel.FateQuickMatchViewModel
+import com.julun.huanque.message.viewmodel.FateQuickMatchViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_paidan.*
@@ -72,7 +72,7 @@ class FateQuickMatchFragment : BaseDialogFragment() {
         iv_fate_accost.onClickNew {
             //快捷回复
             val fateBean = mHuanQueViewModel.fateQuickMatchData.value ?: return@onClickNew
-            mFateQuickMatchViewModel.getRandomWords("${fateBean.userInfo.userId}")
+            mFateQuickMatchViewModel.getRandomWords(fateBean.userInfo.userId)
         }
 
         if (enable) {

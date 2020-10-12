@@ -1,9 +1,10 @@
-package com.julun.huanque.viewmodel
+package com.julun.huanque.message.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.AccostMsg
+import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.QuickAccostForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -29,10 +30,10 @@ class FateQuickMatchViewModel : BaseViewModel() {
     /**
      * 随机获取一条常用语
      */
-    fun getRandomWords(userId: String) {
+    fun getRandomWords(userId: Long) {
         viewModelScope.launch {
             request({
-                val result = socialService.chatWordsRandom(QuickAccostForm(userId)).dataConvert(intArrayOf(204))
+                val result = socialService.chatWordsRandom(FriendIdForm(userId)).dataConvert(intArrayOf(204))
                 msgData.value = result
             }, {
                 if (it is ResponseError && it.busiCode == 204) {

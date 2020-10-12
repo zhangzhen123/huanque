@@ -1,6 +1,7 @@
 package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.basic.VoidForm
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.ChatUser
@@ -286,13 +287,13 @@ interface SocialService {
      * 随机一条搭讪常用语
      */
     @POST("social/friend/chat/fateAccost")
-    suspend fun chatWordsRandom(@Body form: QuickAccostForm): Root<AccostMsg>
+    suspend fun chatWordsRandom(@Body form: FriendIdForm): Root<AccostMsg>
 
     /**
      * 搭讪常用语列表
      */
     @POST("social/friend/chatwords/list")
-    suspend fun chatWordsList(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
+    suspend fun chatWordsList(@Body form: EmptyForm = EmptyForm()): Root<RootListData<SingleUsefulWords>>
 
     /**
      * 新增搭讪常用语

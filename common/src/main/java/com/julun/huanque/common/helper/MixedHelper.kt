@@ -103,7 +103,8 @@ object MixedHelper {
         msg: String = "",
         btnTex: String = "",
         showImage: Boolean = true,
-        onClick: View.OnClickListener = View.OnClickListener { }
+        onClick: View.OnClickListener = View.OnClickListener { },
+        showBtn : Boolean = true
     ): View {
 
         val mErrorView: View = LayoutInflater.from(ctx).inflate(R.layout.layout_network_unable, null)
@@ -121,6 +122,11 @@ object MixedHelper {
             btn.text = btnTex
         } else {
             btn.text = ctx.resources.getString(R.string.reload)
+        }
+        if(!showBtn){
+            btn.hide()
+        }else{
+            btn.show()
         }
         btn.setOnClickListener(onClick)
         if (showImage) {
