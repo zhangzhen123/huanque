@@ -282,13 +282,14 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     MyAlertDialog.MyDialogCallback(onRight = {
                         (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
                             .navigation() as? IRealNameService)?.checkRealHead { e ->
-                            if (e is ResponseError) {
+                            if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
                                 MyAlertDialog(requireActivity(), false).showAlertWithOKAndCancel(
                                     e.busiMessage.toString(),
+                                    title = "修改提示",
                                     okText = "修改头像",
                                     noText = "取消",
                                     callback = MyAlertDialog.MyDialogCallback(onRight = {
-                                        RNPageActivity.start(requireActivity(),RnConstant.EDIT_MINE_HOMEPAGE)
+                                        RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
                                     })
                                 )
 

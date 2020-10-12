@@ -153,7 +153,12 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
             val activity = CommonInit.getInstance().getCurrentActivity()
             if (activity != null)
                 MyAlertDialog(activity, false).showAlertWithOK(
-                    it.message.toString(), okText = "知道了"
+                    it.message.toString(), okText = "知道了",
+                    callback = MyAlertDialog.MyDialogCallback(onRight = {
+                        if ("PrivateConversationActivity" == activity.localClassName) {
+                            activity.finish()
+                        }
+                    })
                 )
         }
         // 其他系统定义错误代码

@@ -59,8 +59,6 @@ import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.rong.imlib.RongIMClient
-import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.activity_live_room.*
 import kotlinx.android.synthetic.main.frame_danmu.*
 import kotlinx.android.synthetic.main.view_live_header.*
@@ -252,7 +250,7 @@ class PlayerActivity : BaseActivity() {
         //由于直播间心跳比较重要 每次打开就手动检查心跳
         UserHeartManager.startCheckOnline()
         //移除activity栈里面的私聊页面
-        ActivitiesManager.INSTANCE.removeActivity("com.julun.huanque.message.activity.PrivateConversationActivity")
+        ActivitiesManager.INSTANCE.finishActivity("com.julun.huanque.message.activity.PrivateConversationActivity")
 
         if (savedInstanceState == null) {
             //重置token失效连接次数
