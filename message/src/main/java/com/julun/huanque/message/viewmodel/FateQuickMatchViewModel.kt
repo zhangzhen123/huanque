@@ -4,13 +4,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.AccostMsg
+import com.julun.huanque.common.bean.beans.ChatBubble
+import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.QuickAccostForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.MessageCustomBeanType
+import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.SPUtils
+import com.julun.huanque.common.utils.SessionUtils
+import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.launch
 
 /**
@@ -34,6 +42,7 @@ class FateQuickMatchViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = socialService.chatWordsRandom(FriendIdForm(userId)).dataConvert(intArrayOf(204))
+                sendAccostMessage(result)
                 msgData.value = result
             }, {
                 if (it is ResponseError && it.busiCode == 204) {
@@ -41,6 +50,44 @@ class FateQuickMatchViewModel : BaseViewModel() {
                 }
             })
         }
+    }
+
+    /**
+     * 发送消息
+     */
+    private fun sendAccostMessage(accostMsg: AccostMsg) {
+        val targetUser = accostMsg.targetUserInfo
+        //设置本人数据
+        val user = RoomUserChatExtra().apply {
+            headPic = SessionUtils.getHeaderPic()
+            senderId = SessionUtils.getUserId()
+            nickname = SessionUtils.getNickName()
+            sex = SessionUtils.getSex()
+            chatBubble = if (targetUser.intimateLevel >= 4) {
+                //亲密度达到4级，有气泡权限
+                SPUtils.getObject<ChatBubble>(SPParamKey.PRIVATE_CHAT_BUBBLE, ChatBubble::class.java)
+            } else {
+                null
+            }
+        }
+        //设置本人数据
+        RongCloudManager.resetUSerInfoPrivate(user)
+
+        if (accostMsg.contentType == "Text") {
+            //文本消息
+            RongCloudManager.send(accostMsg.content, "${targetUser.userId}", targetUserObj = targetUser.apply { fee = accostMsg.consumeBeans })
+        } else if (accostMsg.contentType == "Gift") {
+            //送礼消息
+            val msg = RongCloudManager.obtainCustomMessage(
+                "${targetUser.userId}",
+                targetUser,
+                Conversation.ConversationType.PRIVATE,
+                MessageCustomBeanType.Gift,
+                accostMsg.gift
+            )
+            RongCloudManager.sendCustomMessage(msg)
+        }
+
     }
 
 }

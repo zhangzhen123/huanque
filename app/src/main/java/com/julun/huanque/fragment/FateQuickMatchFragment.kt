@@ -132,6 +132,7 @@ class FateQuickMatchFragment : BaseDialogFragment() {
         mFateQuickMatchViewModel.msgData.observe(this, Observer {
             if (it != null) {
                 //发言
+                mHuanQueViewModel.clearFateData()
             }
         })
         mFateQuickMatchViewModel.showAlertFlag.observe(this, Observer {
