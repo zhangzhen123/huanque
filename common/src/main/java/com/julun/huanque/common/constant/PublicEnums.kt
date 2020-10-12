@@ -82,8 +82,8 @@ object TextTouch {
 
     //打开礼物面板并切换到背包
     const val OPEN_BAG = "OpenBag"
-
-    val Empty = ""
+    //打开养鹊
+    const val Magpie = "Magpie"
 }
 
 object EnterType {

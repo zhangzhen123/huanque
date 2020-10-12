@@ -29,6 +29,7 @@ import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.utils.SPUtils
+import com.julun.huanque.core.ui.live.dialog.BirdDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.RongIMClient
@@ -90,7 +91,7 @@ class PlayerViewModel : BaseViewModel() {
     val showDialog: MutableLiveData<Class<out DialogFragment>> by lazy { MutableLiveData<Class<out DialogFragment>>() }
 
     //重置弹窗
-    val resetDialog: MutableLiveData<Class<out DialogFragment>> by lazy { MutableLiveData<Class<out DialogFragment>>() }
+    val refreshDialog: MutableLiveData<Class<out DialogFragment>> by lazy { MutableLiveData<Class<out DialogFragment>>() }
 
     //草稿
     val mDraft: MutableLiveData<String> by lazy { MutableLiveData<String>() }
@@ -653,6 +654,9 @@ class PlayerViewModel : BaseViewModel() {
             TextTouch.OPEN_BAG -> {
                 //打开礼物面板并切换到背包
                 openGiftAndSelPack.value = true
+            }
+            TextTouch.Magpie -> {
+                showDialog.value=BirdDialogFragment::class.java
             }
             else -> {
                 logger("注意 ！！该点击事件没有执行")
