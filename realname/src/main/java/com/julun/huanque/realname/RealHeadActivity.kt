@@ -49,7 +49,7 @@ class RealHeadActivity : BaseActivity() {
                             //认证失败 or 认证网络请求异常
                             ToastUtils.show(des)
                         }
-                        else -> {
+                        RealNameConstants.TYPE_CANCEL-> {
                             //认证取消
                             ToastUtils.show(
                                 if (des.isNotEmpty()) {

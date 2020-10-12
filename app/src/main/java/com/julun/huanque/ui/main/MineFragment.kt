@@ -23,6 +23,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.RechargeAdInfo
 import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
@@ -280,7 +281,19 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
                     MyAlertDialog.MyDialogCallback(onRight = {
                         (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
-                            .navigation() as? IRealNameService)?.checkRealHead()
+                            .navigation() as? IRealNameService)?.checkRealHead { e ->
+                            if (e is ResponseError) {
+                                MyAlertDialog(requireActivity(), false).showAlertWithOKAndCancel(
+                                    e.busiMessage.toString(),
+                                    okText = "修改头像",
+                                    noText = "取消",
+                                    callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                        RNPageActivity.start(requireActivity(),RnConstant.EDIT_MINE_HOMEPAGE)
+                                    })
+                                )
+
+                            }
+                        }
                     }), "真人照片未认证", okText = "去认证", noText = "取消"
                 )
             }

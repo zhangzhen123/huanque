@@ -174,6 +174,9 @@ object ErrorCodes {
     const val HAS_BIND_OTHER = 1016
     //账号已经被封禁
     const val ACCOUNT_HAS_BLOCK = 1018
+    //头像认证出错
+    const val REAL_HEAD_ERROR = 1301
+
 
 
 

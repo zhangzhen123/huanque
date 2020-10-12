@@ -3,7 +3,6 @@ package com.julun.huanque.message.activity
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -16,13 +15,11 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.android.arouter.facade.annotation.Param
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
@@ -764,7 +761,7 @@ class PrivateConversationActivity : BaseActivity() {
                                 }, onCancel = {
                                     SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
                                     feeDialogShow = true
-                                }, onDissmiss = {
+                                }, onDismiss = {
                                     SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
                                     feeDialogShow = true
                                 }), "私信消息费用", "继续发送"
@@ -799,7 +796,7 @@ class PrivateConversationActivity : BaseActivity() {
                                 }, onCancel = {
                                     SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
                                     feeDialogShow = true
-                                }, onDissmiss = {
+                                }, onDismiss = {
                                     SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
                                     feeDialogShow = true
                                 }), "私信消息费用", "继续发送"
@@ -940,7 +937,7 @@ class PrivateConversationActivity : BaseActivity() {
                 }, onCancel = {
                     SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
                     feeDialogShow = true
-                }, onDissmiss = {
+                }, onDismiss = {
                     SharedPreferencesUtils.commitBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, true)
                     feeDialogShow = true
                 }), "私信消息费用", "继续发送"

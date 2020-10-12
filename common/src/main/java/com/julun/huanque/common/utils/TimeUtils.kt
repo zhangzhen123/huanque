@@ -674,8 +674,8 @@ object TimeUtils {
 
         var formatStr: String = ""
         when {
-            day > 30 -> {
-                formatStr = "1个月前"
+            day > 3 -> {
+                formatStr = "3天前"
             }
             day > 1 -> {
                 formatStr = "${day}天前"
