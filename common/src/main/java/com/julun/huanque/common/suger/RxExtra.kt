@@ -155,7 +155,7 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
                 MyAlertDialog(activity, false).showAlertWithOK(
                     it.message.toString(), okText = "知道了",
                     callback = MyAlertDialog.MyDialogCallback(onRight = {
-                        if ("PrivateConversationActivity" == activity.localClassName) {
+                        if (activity.localClassName.contains("PrivateConversationActivity")) {
                             activity.finish()
                         }
                     })
