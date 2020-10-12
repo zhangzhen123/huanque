@@ -20,6 +20,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.YuanFenAdapter
+import com.julun.huanque.message.fragment.FateWeekDetailFragment
 import com.julun.huanque.message.viewmodel.FateQuickMatchViewModel
 import com.julun.huanque.message.viewmodel.YuanFenViewModel
 import com.julun.rnlib.RNPageActivity
@@ -58,6 +59,8 @@ class YuanFenActivity : BaseActivity() {
 
     private val mFateQuickMatchViewModel: FateQuickMatchViewModel by viewModels()
 
+    private val mFateWeekDetailFragment = FateWeekDetailFragment()
+
     override fun getLayoutId() = R.layout.act_yuanfen
 
     override fun isRegisterEventBus() = true
@@ -73,6 +76,7 @@ class YuanFenActivity : BaseActivity() {
         initRecyclerview()
         initViewModel()
         mViewModel.queryData.value = true
+        mViewModel.getFateDetail()
     }
 
     override fun initEvents(rootView: View) {
@@ -87,6 +91,13 @@ class YuanFenActivity : BaseActivity() {
         }
         iv_word.onClickNew {
             UsefulWordActivity.newInstance(this)
+        }
+        iv_arrow_up.onClickNew {
+            view_performance.performClick()
+        }
+        view_performance.onClickNew {
+            //显示弹窗
+            mFateWeekDetailFragment.show(supportFragmentManager, "FateWeekDetailFragment")
         }
     }
 
@@ -131,8 +142,6 @@ class YuanFenActivity : BaseActivity() {
                 else -> {
                 }
             }
-
-
         }
     }
 
@@ -191,9 +200,17 @@ class YuanFenActivity : BaseActivity() {
                 mAdapter.notifyDataSetChanged()
             }
         })
+        mViewModel.fateWeekInfoBean.observe(this, Observer {
+            if (it != null) {
+                tv_left.text = it.result
+                tv_middle.text = "${it.totalNum}"
+                tv_right.text = "${it.replyNum}"
+            }
+        })
         mFateQuickMatchViewModel.msgData.observe(this, Observer {
             if (it != null) {
                 //发言
+                mViewModel.getFateDetail()
             }
         })
         mFateQuickMatchViewModel.showAlertFlag.observe(this, Observer {

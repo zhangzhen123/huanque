@@ -323,5 +323,5 @@ interface SocialService {
      * 缘分速配统计信息
      */
     @POST("social/friend/chat/fateStat")
-    suspend fun fateStat(@Body form: EmptyForm = EmptyForm()) : Root<VoidResult>
+    suspend fun fateStat(@Body form: EmptyForm = EmptyForm()) : Root<FateWeekInfo>
 }

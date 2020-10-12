@@ -66,6 +66,16 @@
         app:placeholderImageScaleType="fitCenter"
         app:roundAsCircle="true" />
 
+    <ImageView
+        android:id="@+id/iv_new_user"
+        android:layout_width="28dp"
+        android:layout_height="12dp"
+        android:src="@mipmap/icon_new_user_list"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_header"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_header"
+        app:layout_constraintRight_toRightOf="@id/sdv_header" />
+
     <TextView
         android:id="@+id/tv_nickname"
         android:layout_width="wrap_content"
@@ -150,10 +160,11 @@
 
     <ImageView
         android:id="@+id/iv_reply"
-        android:layout_width="20dp"
-        android:layout_height="18dp"
+        android:layout_width="40dp"
+        android:layout_height="38dp"
         android:layout_marginTop="3dp"
         android:layout_marginRight="15dp"
+        android:padding="10dp"
         android:src="@mipmap/icon_fast_reply"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/view_bg"
