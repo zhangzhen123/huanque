@@ -10,6 +10,7 @@ import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
+import androidx.multidex.MultiDexApplication
 import cn.jiguang.verifysdk.api.JVerificationInterface
 import com.fm.openinstall.OpenInstall
 import com.ishumei.smantifraud.SmAntiFraud
@@ -45,7 +46,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
-open class HuanQueApp : Application() {
+open class HuanQueApp : MultiDexApplication() {
     companion object {
         var wxApi: IWXAPI? = null
 
