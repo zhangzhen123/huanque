@@ -19,7 +19,6 @@ import com.julun.huanque.common.viewmodel.VideoChangeViewModel
 import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
-import com.julun.huanque.core.ui.live.dialog.GuideFollowFragment
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.dialog.OnlineDialogFragment
 import com.julun.huanque.core.ui.live.dialog.ScoreDialogFragment
@@ -85,9 +84,20 @@ class PlayerDialogManager(val context: PlayerActivity) {
     }
 
     private fun prepareViewModel() {
-
-        playerViewModel.topDialog?.observe(context, Observer { it?.let { iit -> openTopDialog(iit.content, iit.drawable) } })
-        playerViewModel.recommendView?.observe(context, Observer {
+        playerViewModel.refreshDialog.observe(context, Observer {
+            it ?: return@Observer
+            refreshDialog(it)
+        })
+        playerViewModel.showDialog.observe(context, Observer {
+            it ?: return@Observer
+            showDialog(it)
+        })
+        playerViewModel.closeDialog.observe(context, Observer {
+            it ?: return@Observer
+            hideFragment(it)
+        })
+        playerViewModel.topDialog.observe(context, Observer { it?.let { iit -> openTopDialog(iit.content, iit.drawable) } })
+        playerViewModel.recommendView.observe(context, Observer {
             val programId = playerViewModel.programId
 //                openDialog(clazz = RecommendFragment::class.java, builder = {
 //                    RecommendFragment.newInstance(programId)
@@ -135,7 +145,7 @@ class PlayerDialogManager(val context: PlayerActivity) {
 
         playerViewModel.squareView.observe(context, Observer {
             if (it == true) {
-                if(!isFragmentShow(LiveSquareDialogFragment::class.java)){
+                if (!isFragmentShow(LiveSquareDialogFragment::class.java)) {
                     openDialog(LiveSquareDialogFragment::class.java)
                 }
 
