@@ -80,6 +80,8 @@ data class FateInfo(
     var userLevel: Int = 0,
     //当前状态
     var status: String = "",
+    //是否是新用户
+    var newUser : String = "",
     //倒计时
     var ttl: Int = 0
 ) : Serializable {
@@ -159,4 +161,13 @@ data class AccostTargetUserInfo(
     var userId: Long = 0L
 )
 
+/**
+ * 常用语对象
+ */
+data class SingleUsefulWords(
+    //内容
+    var words: String = "",
+    //常用语ID
+    var wordsId: Long = 0
+) : Serializable
 

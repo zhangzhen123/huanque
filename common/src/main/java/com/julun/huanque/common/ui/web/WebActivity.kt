@@ -20,6 +20,7 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.permission.PermissionUtils
@@ -211,6 +212,22 @@ class WebActivity : BaseActivity() {
                                 EventBus.getDefault()
                                     .post(PayResultEvent(PayResult.IS_PAY, PayType.WXPayH5))
                                 finish()
+                            }
+                        }
+                    }
+                    BaseWebView.OPEN_URL_BY_BROWSER -> {
+                        //打开系统浏览器
+                        if (actionBean.param?.isNullOrEmpty() == false) {
+                            (actionBean.param?.get("url") as? String)?.let {
+                                if (it.isNotEmpty()) {
+                                    val intent = Intent()
+                                    intent.action = Intent.ACTION_VIEW
+                                    val content_url = Uri.parse(it)
+                                    intent.data = content_url
+                                    if (ForceUtils.activityMatch(intent)) {
+                                        startActivity(Intent.createChooser(intent, "请选择浏览器"))
+                                    }
+                                }
                             }
                         }
                     }

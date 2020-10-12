@@ -649,6 +649,8 @@ class UserInfoInRoom : Serializable {
     //标签
     var userTags: List<String> = mutableListOf()
 
+    //是否是新用户
+    var newUser : String = ""
 
     /**是否显示加好友**/
     var showAddFriend: Boolean = false

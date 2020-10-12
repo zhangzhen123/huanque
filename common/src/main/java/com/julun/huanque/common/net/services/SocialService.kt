@@ -269,19 +269,59 @@ interface SocialService {
      * 派单列表
      */
     @POST("social/friend/chat/fateList")
-    suspend fun fateList(@Body form : OffsetForm) : Root<FateListInfo<FateInfo>>
+    suspend fun fateList(@Body form: OffsetForm): Root<FateListInfo<FateInfo>>
 
     /**
      * 今日派单列表
      */
     @POST("social/friend/chat/todayFate")
-    suspend fun todayFate(@Body form : EmptyForm = EmptyForm()) : Root<TodayFateInfo>
+    suspend fun todayFate(@Body form: EmptyForm = EmptyForm()): Root<TodayFateInfo>
 
     /**
      * 一键快速搭讪
      */
     @POST("social/friend/chat/quickAccost")
-    suspend fun quickAccost(@Body form : QuickAccostForm ) : Root<QuickAccostResult>
+    suspend fun quickAccost(@Body form: QuickAccostForm): Root<QuickAccostResult>
 
+    /**
+     * 随机一条搭讪常用语
+     */
+    @POST("social/friend/chat/fateAccost")
+    suspend fun chatWordsRandom(@Body form: FriendIdForm): Root<AccostMsg>
 
+    /**
+     * 搭讪常用语列表
+     */
+    @POST("social/friend/chatwords/list")
+    suspend fun chatWordsList(@Body form: EmptyForm = EmptyForm()): Root<RootListData<SingleUsefulWords>>
+
+    /**
+     * 新增搭讪常用语
+     */
+    @POST("social/friend/chatwords/add")
+    suspend fun chatwordsAdd(@Body form: AddWordsForm): Root<VoidResult>
+
+    /**
+     * 修改搭讪常用语
+     */
+    @POST("social/friend/chatwords/update")
+    suspend fun chatwordsUpdate(@Body form: UpdateWordsForm): Root<VoidResult>
+
+    /**
+     * 删除搭讪常用语
+     */
+    @POST("social/friend/chatwords/del")
+    suspend fun chatwordsDelete(@Body form: WordsIdForm) : Root<VoidResult>
+
+    /**
+     * 快捷回复消息
+     */
+    @POST("social/friend/chat/sendMsg")
+    suspend fun chatWordsSendMsg(@Body form: WordsIdForm) : Root<VoidResult>
+
+    /**
+     * 缘分速配统计信息
+     */
+    @POST("social/friend/chat/fateStat")
+    suspend fun fateStat(@Body form: EmptyForm = EmptyForm()) : Root<VoidResult>
 }

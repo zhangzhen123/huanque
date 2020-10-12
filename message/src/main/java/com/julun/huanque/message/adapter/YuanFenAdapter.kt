@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.FateInfo
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
@@ -27,7 +28,7 @@ import org.jetbrains.anko.textColor
 class YuanFenAdapter : BaseQuickAdapter<FateInfo, BaseViewHolder>(R.layout.recycler_item_yuanfen), LoadMoreModule {
 
     init {
-        addChildClickViewIds(R.id.sdv_header)
+        addChildClickViewIds(R.id.sdv_header,R.id.iv_reply)
     }
 
     override fun convert(holder: BaseViewHolder, item: FateInfo) {
@@ -81,6 +82,14 @@ class YuanFenAdapter : BaseQuickAdapter<FateInfo, BaseViewHolder>(R.layout.recyc
         val ttl = item.ttl
         val tv_status = holder.getView<TextView>(R.id.tv_status)
         tvMatchTime.textColor = GlobalUtils.getColor(R.color.black_999)
+        if (item.newUser == BusiConstant.True && item.status == FateInfo.Wait) {
+            //新用户并且未回复
+            holder.setGone(R.id.iv_arrow, true)
+                .setVisible(R.id.iv_reply, true)
+        } else {
+            holder.setGone(R.id.iv_reply, true)
+                .setVisible(R.id.iv_arrow, true)
+        }
         when (item.status) {
             FateInfo.Wait -> {
                 //等待回复
