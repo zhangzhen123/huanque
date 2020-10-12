@@ -58,12 +58,14 @@ class ActivitiesManager private constructor() {
     /**
      * 移除特定的Activity
      */
-    fun removeActivity(className: String) {
+    fun finishActivity(className: String) {
         var act: Activity? = null
-        activities.forEach {
-            if (className.contains(it.localClassName)) {
-                act = it
-                return@forEach
+        run {
+            activities.forEach {
+                if (className.contains(it.localClassName)) {
+                    act = it
+                    return@run
+                }
             }
         }
         act?.finish()

@@ -278,9 +278,9 @@ class PhoneNumLoginViewModel : BaseViewModel() {
             LoginManager.loginByMobile(phoneNum, code, success = { result ->
                 loginData.postValue(result)
             }, error = {
-                if (it is ResponseError) {
-                    ToastUtils.show(it.busiMessage)
-                }
+//                if (it is ResponseError) {
+//                    ToastUtils.show(it.busiMessage)
+//                }
             })
         }
 

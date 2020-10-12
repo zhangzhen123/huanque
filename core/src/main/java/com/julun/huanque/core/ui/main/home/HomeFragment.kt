@@ -19,11 +19,15 @@ import androidx.lifecycle.Observer
 import com.facebook.drawee.generic.RoundingParams
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.DateHelper
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.R
+import com.julun.huanque.core.dialog.TodayFateDialogFragment
 import com.julun.huanque.core.ui.main.makefriend.MakeFriendsFragment
 import com.julun.huanque.core.ui.main.makefriend.PlumFlowerActivity
 import com.julun.huanque.core.viewmodel.TodayFateViewModel
@@ -59,6 +63,7 @@ class HomeFragment : BaseFragment() {
         private const val mMargin = 40
 
     }
+    private var mTodayFateDialogFragment: TodayFateDialogFragment? = null
 
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
@@ -159,7 +164,8 @@ class HomeFragment : BaseFragment() {
                             yuanFenAnimationToSide()
                         } else {
                             logger.info("点击处理")
-                            mTodayFateViewModel.showFateDialog.value = true
+                            mTodayFateDialogFragment = mTodayFateDialogFragment ?: TodayFateDialogFragment()
+                            mTodayFateDialogFragment?.show(requireActivity(), "TodayFateDialogFragment")
                         }
 
                     }
@@ -236,6 +242,35 @@ class HomeFragment : BaseFragment() {
                     rl_fate.show()
                 } else {
                     rl_fate.hide()
+                }
+            }
+        })
+
+
+        mTodayFateViewModel.matchesInfo.observe(this, Observer {
+            it ?: return@Observer
+            if (it.isSuccess()) {
+                if (it.requireT().showTodayFate) {
+
+                    val date = StorageHelper.getLastTodayFateDialogTime()
+
+                    val today = DateHelper.formatNow()
+
+                    val diff = if (date.isNotEmpty()) {
+                        DateHelper.getDifferDays(date, today)
+                    } else {
+                        -1
+                    }
+                    ULog.i("今日缘分弹窗间隔时间：$diff")
+                    if (diff == -1 || diff >= 1) {
+                        mTodayFateDialogFragment = mTodayFateDialogFragment ?: TodayFateDialogFragment()
+                        mTodayFateDialogFragment?.show(requireActivity(), "TodayFateDialogFragment")
+                        //弹过就不再重复弹出
+                        StorageHelper.setLastTodayFateDialogTime()
+                    }else{
+                        rl_fate.show()
+                    }
+
                 }
             }
         })

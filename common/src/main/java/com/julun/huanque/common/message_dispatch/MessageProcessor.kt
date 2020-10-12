@@ -1175,11 +1175,25 @@ object MessageProcessor {
     }
 
     /**
+     * 封禁设备消息
+     */
+    interface BanUserDeviceProcessor : EventMessageProcessor<OperatorMessageBean> {
+        override fun getEventType() = EventMessageType.BanUserDevice
+        override fun isGlobal() = true
+    }
+    /**
      * 直播封禁（用户不允许进入任何直播间）
      */
     interface BanUserLivingProcessor : EventMessageProcessor<OperatorMessageBean> {
         override fun getEventType() = EventMessageType.BanUserLiving
         override fun isGlobal() = true
+    }
+
+    /**
+     * 直播封禁（主播被封 给用户弹窗提示）
+     */
+    interface BlockProgramProcessor : EventMessageProcessor<OperatorMessageBean> {
+        override fun getEventType() = EventMessageType.BlockProgram
     }
 
     //直播间热度变化
@@ -1593,8 +1607,14 @@ enum class EventMessageType(val klass: Class<*>) {
     //封禁账户消息
     BanUser(OperatorMessageBean::class.java),
 
+    //封禁设备消息
+    BanUserDevice(OperatorMessageBean::class.java),
+
     //直播封禁（用户不允许进入任何直播间）
     BanUserLiving(OperatorMessageBean::class.java),
+
+    //直播主播被封禁的事件
+    BlockProgram(VoidResult::class.java),
 
     //直播间热度变动消息
     RoomHeatChange(RoomHeatChangeBean::class.java),

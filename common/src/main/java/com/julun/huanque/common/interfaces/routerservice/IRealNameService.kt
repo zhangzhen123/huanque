@@ -2,6 +2,7 @@ package com.julun.huanque.common.interfaces.routerservice
 
 import android.app.Activity
 import com.alibaba.android.arouter.facade.template.IProvider
+import com.julun.huanque.common.net.NError
 
 /**
  * @author WanZhiYuan
@@ -22,7 +23,7 @@ interface IRealNameService : IProvider {
     /**
      * 检查是否要打开头像认证
      */
-    fun checkRealHead()
+    fun checkRealHead(callback: NError?=null)
 
     //销毁
     fun release()

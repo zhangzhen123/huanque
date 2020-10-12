@@ -43,9 +43,9 @@ class LoginViewModel : BaseViewModel() {
 //                loginData.postValue(result)
                 EventBus.getDefault().post(result)
             }, error = {
-                if (it is ResponseError) {
-                    ToastUtils.show(it.busiMessage)
-                }
+//                if (it is ResponseError) {
+//                    ToastUtils.show(it.busiMessage)
+//                }
             })
         }
     }

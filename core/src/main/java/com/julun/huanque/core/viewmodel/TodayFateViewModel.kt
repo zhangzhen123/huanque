@@ -10,6 +10,7 @@ import com.julun.huanque.common.bean.forms.QuickAccostForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.MessageFailType
+import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.ProgramService
@@ -46,7 +47,7 @@ class TodayFateViewModel : BaseViewModel() {
     //关闭弹窗标记
     val closeFateDialogTag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     //展示今日缘分弹窗
-    val showFateDialog: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+//    val showFateDialog: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     //是否已经触发过今日缘分
     var hasShowTodayFate: Boolean = false
     //今日缘分是否已经完成 没有完成 每次关闭时 显示拖拽图标
@@ -75,6 +76,8 @@ class TodayFateViewModel : BaseViewModel() {
                 quickAccostResult.value = result
                 isComplete=true
                 closeFateDialog.value = true
+                //记录缘分来了完成标记 不再重复弹出
+                StorageHelper.setLastTodayFateTime()
             }, error = {
 //                quickAccostResult.value = it.convertError()
                 quickAccostError.value=it

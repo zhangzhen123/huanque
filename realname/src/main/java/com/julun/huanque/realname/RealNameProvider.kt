@@ -8,12 +8,16 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.security.realidentity.RPEventListener
 import com.alibaba.security.realidentity.RPResult
 import com.alibaba.security.realidentity.RPVerify
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.events.RHVerifyResult
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.RealNameConstants
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.interfaces.routerservice.RealNameCallback
+import com.julun.huanque.common.net.NError
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.utils.ToastUtils
@@ -172,7 +176,7 @@ class RealNameProvider : IRealNameService {
                             realName = realName,
                             certNum = realIdCard
                         )
-                    ).dataConvert()
+                    ).dataConvert(intArrayOf(501,1301))
                 //协程并未取消，那么就可以继续往下执行
                 if (mTokenJob?.isActive == true) {
                     //获取token并打开人脸识别页面
@@ -183,7 +187,7 @@ class RealNameProvider : IRealNameService {
             } catch (e: Throwable) {
                 e.printStackTrace()
                 if (e is ResponseError) {
-                    callback(RealNameConstants.TYPE_ERROR, "")
+                    callback(RealNameConstants.TYPE_ERROR, e.busiMessage)
                 } else {
                     callback(RealNameConstants.TYPE_ERROR, "网络异常，请稍后重试！")
                 }
@@ -233,7 +237,7 @@ class RealNameProvider : IRealNameService {
         }
     }
 
-    override fun checkRealHead() {
+    override fun checkRealHead(callback: NError?) {
         if (mIsRequesting) {
             return
         }
@@ -247,7 +251,7 @@ class RealNameProvider : IRealNameService {
                             realName = null,
                             certNum = null
                         )
-                    ).dataConvert()
+                    ).dataConvert(intArrayOf(ErrorCodes.REAL_HEAD_ERROR))
                 if (info.need) {
                     ARouter.getInstance().build(ARouterConstant.REAL_HEAD_ACTIVITY).navigation()
                 } else {
@@ -255,8 +259,11 @@ class RealNameProvider : IRealNameService {
                 }
             } catch (e: Throwable) {
                 e.printStackTrace()
+                callback?.invoke(e)
                 if (e is ResponseError) {
-                    ToastUtils.show("${e.busiMessage}")
+                    if (e.busiCode != ErrorCodes.REAL_HEAD_ERROR) {
+                        ToastUtils.show("${e.busiMessage}")
+                    }
                 } else {
                     ToastUtils.show("网络异常，请稍后重试！")
                 }

@@ -136,7 +136,7 @@ class TodayFateDialogFragment : BaseDialogFragment() {
                     when (it.busiCode) {
                         ErrorCodes.BALANCE_NOT_ENOUGH -> {
                             dismiss()
-                            BalanceNotEnoughFragment.newInstance(false).show(requireActivity(), "BalanceNotEnoughFragment")
+                            BalanceNotEnoughFragment.newInstance(true).show(requireActivity(), "BalanceNotEnoughFragment")
                         }
                     }
                 }

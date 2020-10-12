@@ -1,5 +1,6 @@
 package com.julun.huanque.common.helper
 
+import com.julun.huanque.common.utils.DateHelper
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
@@ -24,12 +25,15 @@ object StorageHelper {
     private const val NOTIFY_REFRESH_DATE = "notify_refresh_date"
 
     private const val NEED_GUIDE_TO_SPEAK = "NEED_GUIDE_TO_SPEAK"
+
     //提现方式
     private const val WITHDRAW_TYPE = "WITHDRAW_TYPE"
 
     private const val NEED_GUIDE_TO__PLAY_BIRD = "need_guide_to_play_bird"
+
     //上一次的今日缘分弹出时间
     private const val LAST_TODAY_FATE_TIME = "last_today_fate_time"
+
     /**
      * 保存ad
      */
@@ -53,20 +57,22 @@ object StorageHelper {
     fun setLiveShowFollow(status: Boolean) {
         SPUtils.commitBoolean(FIRST_LIVE_SHOW_FOLLOW, status)
     }
-    fun getLiveShowFollowStatus() = SPUtils.getBoolean(FIRST_LIVE_SHOW_FOLLOW, true)
 
+    fun getLiveShowFollowStatus() = SPUtils.getBoolean(FIRST_LIVE_SHOW_FOLLOW, true)
 
 
     //直播间是否展示手势引导
     fun setLiveFirstGestureGuide(status: Boolean) {
         SPUtils.commitBoolean(FIRST_LIVE_GUIDE_GESTURE, status)
     }
+
     fun getLiveFirstGestureGuideStatus() = SPUtils.getBoolean(FIRST_LIVE_GUIDE_GESTURE, true)
 
 
     fun setNotifyRefreshDate(date: String) {
         SPUtils.commitString(NOTIFY_REFRESH_DATE, date)
     }
+
     fun getNotifyRefreshDate() = SPUtils.getString(NOTIFY_REFRESH_DATE, "")
 
     //是否需要引导发言
@@ -80,25 +86,45 @@ object StorageHelper {
     fun setWithdrawType(date: String) {
         SPUtils.commitString(WITHDRAW_TYPE, date)
     }
+
     fun getWithdrawType() = SPUtils.getString(WITHDRAW_TYPE, "")
 
 
-    fun setNeedBirdGuide(need:Boolean){
-        val userId:Long=SessionUtils.getUserId()
-        if(userId==0L){
+    fun setNeedBirdGuide(need: Boolean) {
+        val userId: Long = SessionUtils.getUserId()
+        if (userId == 0L) {
             return
         }
         SPUtils.commitBoolean("${NEED_GUIDE_TO__PLAY_BIRD}-${userId}", need)
     }
+
     //带上用户Id
-    fun getNeedBirdGuide():Boolean{
-        val userId:Long=SessionUtils.getUserId()
+    fun getNeedBirdGuide(): Boolean {
+        val userId: Long = SessionUtils.getUserId()
         return SPUtils.getBoolean("${NEED_GUIDE_TO__PLAY_BIRD}-${userId}", true)
     }
 
-    fun setLastTodayFateTime(date: String) {
-        SPUtils.commitString(LAST_TODAY_FATE_TIME, date)
+    //只代表今日缘分完成逻辑
+    fun setLastTodayFateTime() {
+        val today = DateHelper.formatNow()
+        val userId: Long = SessionUtils.getUserId()
+        SPUtils.commitString("$LAST_TODAY_FATE_TIME-${userId}", today)
     }
-    fun getLastTodayFateTime() = SPUtils.getString(LAST_TODAY_FATE_TIME, "")
 
+    fun getLastTodayFateTime(): String {
+        val userId: Long = SessionUtils.getUserId()
+        return SPUtils.getString("$LAST_TODAY_FATE_TIME-${userId}", "")
+    }
+
+    //只记录今日缘分弹框逻辑 一天只弹一次
+    fun setLastTodayFateDialogTime() {
+        val today = DateHelper.formatNow()
+        val userId: Long = SessionUtils.getUserId()
+        SPUtils.commitString("$LAST_TODAY_FATE_TIME-dialog-${userId}", today)
+    }
+
+    fun getLastTodayFateDialogTime(): String {
+        val userId: Long = SessionUtils.getUserId()
+        return SPUtils.getString("$LAST_TODAY_FATE_TIME-dialog-${userId}", "")
+    }
 }

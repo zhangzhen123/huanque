@@ -111,8 +111,10 @@ dependencies {
     api "com.squareup.retrofit2:adapter-rxjava3:2.9.0"
 //    api 'com.squareup.retrofit2:converter-gson:2.9.0'
     api 'com.google.code.gson:gson:2.8.1'
-
-    api "com.squareup.okhttp3:okhttp:3.14.9"
+    //强制使用okHttp3.12.*版本 兼容Android5.0一下
+    api("com.squareup.okhttp3:okhttp") {
+        version { strictly "3.12.12" }
+    }
     api 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     /* 这里注意高版本解析kotlin会报错不能随便升级*/
     api "com.alibaba:fastjson:1.1.57.android"

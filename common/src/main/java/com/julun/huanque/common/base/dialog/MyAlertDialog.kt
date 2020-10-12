@@ -274,9 +274,9 @@ class MyAlertDialog : AppBaseDialog {
     override fun initEvents() {
         cancelText!!.setOnClickListener(this)
         rightText!!.setOnClickListener(this)
-        this.setOnCancelListener {
+        this.setOnDismissListener {
             if (this.callback != null) {
-                this.callback!!.onDissmiss()
+                this.callback!!.onDismiss()
             }
         }
     }
@@ -293,6 +293,6 @@ class MyAlertDialog : AppBaseDialog {
         this.dismiss()
     }
 
-    class MyDialogCallback(val onCancel: () -> Unit = {}, val onRight: () -> Unit = {}, val onDissmiss: () -> Unit = {})
+    class MyDialogCallback(val onCancel: () -> Unit = {}, val onRight: () -> Unit = {}, val onDismiss: () -> Unit = {})
 
 }

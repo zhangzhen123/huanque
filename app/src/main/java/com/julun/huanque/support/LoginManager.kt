@@ -91,14 +91,14 @@ object LoginManager {
 
         } catch (e: Exception) {
             e.printStackTrace()
-            var message = "${e.message}"
-            if (e is SocketTimeoutException) {
-                message = "连接超时,可能是网络不太好,您可以稍后重试"
-            }
-            if (e is ResponseError) {
-                message = e.busiMessage
-            }
-            ToastUtils.show("登陆出错!\n $message ")
+//            var message = "${e.message}"
+//            if (e is SocketTimeoutException) {
+//                message = "连接超时,可能是网络不太好,您可以稍后重试"
+//            }
+//            if (e is ResponseError) {
+//                message = e.busiMessage
+//            }
+//            ToastUtils.show("登陆出错!\n $message ")
         } finally {
             isLogging = false
         }
