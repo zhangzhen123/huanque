@@ -86,6 +86,9 @@ class BaseWebView : WebView {
 
         //打开萌币商城
         const val OPEN_COINS_SHOP = "openCoinsShop"
+
+        //打开系统浏览器
+        const val OPEN_URL_BY_BROWSER = "openUrlByBrowser"
     }
 
 
