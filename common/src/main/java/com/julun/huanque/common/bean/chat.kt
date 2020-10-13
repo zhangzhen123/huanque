@@ -27,7 +27,9 @@ data class ChatUser(
     //是否是陌生人
     var stranger: Boolean = false,
     //聊天背景
-    var backPic: String = ""
+    var backPic: String = "",
+    //用户类型
+    var userType: String = ""
 ) : Serializable {
 
 

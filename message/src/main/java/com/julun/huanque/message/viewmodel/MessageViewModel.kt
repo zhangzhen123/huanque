@@ -532,6 +532,7 @@ class MessageViewModel : BaseViewModel() {
                     //用户性别
                     sex = user.targetUserObj?.sex ?: ""
                     stranger = GlobalUtils.getStrangerBoolean(user.targetUserObj?.stranger ?: "")
+                    userType = user.userType
                 }
             } else {
                 //对方发送消息
@@ -546,6 +547,7 @@ class MessageViewModel : BaseViewModel() {
                     //用户性别
                     sex = user.sex
                     stranger = GlobalUtils.getStrangerBoolean(user.targetUserObj?.stranger ?: "")
+                    userType = user.userType
                 }
             }
 

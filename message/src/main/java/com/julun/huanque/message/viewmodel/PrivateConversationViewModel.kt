@@ -256,6 +256,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     senderId = mineInfo.userId
                     nickname = mineInfo.nickname
                     sex = mineInfo.sex
+                    userType = mineInfo.userType
                     chatBubble = if (result.intimate.intimateLevel >= 4) {
                         //亲密度达到4级，有气泡权限
                         bubbleData.value
@@ -294,6 +295,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                     nickname = SessionUtils.getNickName()
                     sex = SessionUtils.getSex()
                     chatBubble = bubbleData.value
+                    userType = SessionUtils.getUserType()
                 }
                 RongCloudManager.resetUSerInfoPrivate(user)
             })

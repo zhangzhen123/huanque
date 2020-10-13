@@ -11,10 +11,7 @@ import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.bean.beans.FriendContent
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.MessageCustomBeanType
-import com.julun.huanque.common.constant.Sex
-import com.julun.huanque.common.constant.SystemTargetId
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
@@ -73,25 +70,32 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             //设置默认头像
             ImageUtils.loadImage(sdvHeader, "${item.showUserInfo?.headPic ?: ""}${BusiConstant.OSS_160}", 56f, 56f)
             helper.setText(R.id.tv_nickname, item.showUserInfo?.nickname ?: "")
-            //欢遇状态
-            val meetResource = ImageHelper.getMeetStatusResource(item.showUserInfo?.meetStatus ?: "")
-            if (SessionUtils.getSex() == Sex.FEMALE && meetResource > 0) {
-                //当前用户为女性，并且和对方存在欢遇标识 显示图标
-                ivHuanyu.show()
-                ivHuanyu.setImageResource(meetResource)
-            } else {
-                //隐藏图标
-                ivHuanyu.hide()
-            }
-            //亲密度等级
-            val level = item.showUserInfo?.intimateLevel ?: 0
-            val levelPic = ImageHelper.getIntimateLevelPic(level)
-
-            if (levelPic > 0) {
+            if (item.showUserInfo?.userType == UserType.Manager) {
+                //官方
                 ivPic.show()
-                ivPic.imageResource = levelPic
+                ivPic.imageResource = R.mipmap.icon_guan
+                ivHuanyu.hide()
             } else {
-                ivPic.hide()
+                //欢遇状态
+                val meetResource = ImageHelper.getMeetStatusResource(item.showUserInfo?.meetStatus ?: "")
+                if (SessionUtils.getSex() == Sex.FEMALE && meetResource > 0) {
+                    //当前用户为女性，并且和对方存在欢遇标识 显示图标
+                    ivHuanyu.show()
+                    ivHuanyu.setImageResource(meetResource)
+                } else {
+                    //隐藏图标
+                    ivHuanyu.hide()
+                }
+                //亲密度等级
+                val level = item.showUserInfo?.intimateLevel ?: 0
+                val levelPic = ImageHelper.getIntimateLevelPic(level)
+
+                if (levelPic > 0) {
+                    ivPic.show()
+                    ivPic.imageResource = levelPic
+                } else {
+                    ivPic.hide()
+                }
             }
         } else {
             //用户数据为空，判断是否是系统和鹊友会话
