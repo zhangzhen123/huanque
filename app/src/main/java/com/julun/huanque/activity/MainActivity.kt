@@ -101,7 +101,7 @@ class MainActivity : BaseActivity() {
                     SaveLocationForm(
                         "${location.latitude}",
                         "${location.longitude}",
-                        location.city,
+                        location.city?:"",
                         location.province,
                         location.district
                     )

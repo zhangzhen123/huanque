@@ -29,6 +29,8 @@ class ContactsActivityViewModel : BaseViewModel() {
 
     //顶部tab数据
     val tabListData: MutableLiveData<MutableList<UserDataTab>> by lazy { MutableLiveData<MutableList<UserDataTab>>() }
+    //官方运营id
+    val officialUserId: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
 
     val socialListData: MutableLiveData<SocialListBean> by lazy { MutableLiveData<SocialListBean>() }
 
@@ -50,6 +52,7 @@ class ContactsActivityViewModel : BaseViewModel() {
                 val contactsData = service.socialList(ContactsForm()).dataConvert()
                 tabListData.value = contactsData.userDataTabList
                 socialListData.value = contactsData
+                officialUserId.value = contactsData.officialUserId
             }, {
                 if (it is ResponseError) {
                     ToastUtils.show(it.busiMessage)

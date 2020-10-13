@@ -70,6 +70,9 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         mAdapter.type = mViewModel.mType
 
         initRecyclerView()
+
+    }
+    override fun lazyLoadData() {
         //加载数据
         val socialList = mActivityViewModel.socialListData.value
         val list = socialList?.linkList
@@ -79,9 +82,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
             //从后台获取数据
             mViewModel.queryInfo(QueryType.REFRESH)
         }
-
     }
-
     override fun initEvents(rootView: View) {
         swiperefreshlayout.setOnRefreshListener {
             mViewModel.queryInfo(QueryType.REFRESH)
@@ -366,6 +367,5 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         }
     }
 
-    override fun lazyLoadData() {
-    }
+
 }

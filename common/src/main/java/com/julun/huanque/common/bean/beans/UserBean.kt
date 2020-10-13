@@ -62,7 +62,9 @@ class SocialListBean(
     //资料完善度
     var perfection: Int = 0,
     //是否有更多数据
-    var hasMore: Boolean = false
+    var hasMore: Boolean = false,
+
+    var officialUserId: Long? = null
 )
 
 /**

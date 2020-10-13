@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +22,9 @@ import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
 import com.julun.huanque.message.R
@@ -35,6 +38,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
+import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.textSizeDimen
 
 /**
@@ -90,6 +94,20 @@ class ContactsActivity : BaseActivity() {
         })
     }
 
+    private fun showOperateIcon(officialUserId: Long?) {
+        val ivOperation = view_top.findViewById<ImageView>(R.id.ivOperation)
+        if (officialUserId != null) {
+            ivOperation.imageResource = R.mipmap.icon_official_operation
+            ivOperation.show()
+            ivOperation.onClickNew {
+                PrivateConversationActivity.newInstance(this, officialUserId, "官方运营")
+            }
+        } else {
+            ivOperation.hide()
+        }
+
+    }
+
     /**
      * 初始化ViewModel
      */
@@ -105,6 +123,10 @@ class ContactsActivity : BaseActivity() {
                     }
                 }
             }
+        })
+
+        mActivityViewModel?.officialUserId?.observe(this, Observer {
+            showOperateIcon(it)
         })
 
         mActivityViewModel?.followChangeFlag?.observe(this, Observer {
