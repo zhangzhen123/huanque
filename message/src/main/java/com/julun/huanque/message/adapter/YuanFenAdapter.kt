@@ -28,7 +28,7 @@ import org.jetbrains.anko.textColor
 class YuanFenAdapter : BaseQuickAdapter<FateInfo, BaseViewHolder>(R.layout.recycler_item_yuanfen), LoadMoreModule {
 
     init {
-        addChildClickViewIds(R.id.sdv_header,R.id.iv_reply)
+        addChildClickViewIds(R.id.sdv_header, R.id.iv_reply)
     }
 
     override fun convert(holder: BaseViewHolder, item: FateInfo) {
@@ -82,7 +82,7 @@ class YuanFenAdapter : BaseQuickAdapter<FateInfo, BaseViewHolder>(R.layout.recyc
         val ttl = item.ttl
         val tv_status = holder.getView<TextView>(R.id.tv_status)
         tvMatchTime.textColor = GlobalUtils.getColor(R.color.black_999)
-        if (item.newUser == BusiConstant.True && item.status == FateInfo.Wait) {
+        if (item.quickChat == BusiConstant.True && item.status == FateInfo.Wait) {
             //新用户并且未回复
             holder.setGone(R.id.iv_arrow, true)
                 .setVisible(R.id.iv_reply, true)
@@ -119,6 +119,9 @@ class YuanFenAdapter : BaseQuickAdapter<FateInfo, BaseViewHolder>(R.layout.recyc
             else -> {
             }
         }
+
+        holder.setVisible(R.id.iv_new_user, item.newUser == BusiConstant.True)
+
         if (statusDrawable != null) {
             statusDrawable.setBounds(0, 0, statusDrawable.minimumWidth, statusDrawable.minimumHeight)
             tv_status.setCompoundDrawables(statusDrawable, null, null, null)

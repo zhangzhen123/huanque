@@ -3,6 +3,8 @@ package com.julun.huanque.message.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
+import com.julun.huanque.common.bean.beans.FateWeekInfo
 import com.julun.huanque.common.bean.forms.OffsetForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -12,6 +14,7 @@ import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 /**
@@ -27,6 +30,8 @@ class YuanFenViewModel : BaseViewModel() {
     val queryData = MutableLiveData<Boolean>()
 
     val refreshFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    //派单7日周数据
+    val fateWeekInfoBean : MutableLiveData<FateWeekInfo> by lazy { MutableLiveData<FateWeekInfo>() }
 
     private var offset = 0
 
@@ -84,11 +89,23 @@ class YuanFenViewModel : BaseViewModel() {
             if (keyList.contains(it.fateId)) {
                 it.status = map[it.fateId] ?: ""
                 change = true
-
             }
         }
         refreshFlag.value = change
     }
+
+    /**
+     * 获取派单近一周的数据
+     */
+    fun getFateDetail() {
+        viewModelScope.launch {
+            request({
+                val result = socialService.fateStat().dataConvert()
+                fateWeekInfoBean.value = result
+            })
+        }
+    }
+
 
     override fun onCleared() {
         super.onCleared()

@@ -28,7 +28,6 @@ class LastWatchFragment : BaseDialogFragment() {
             }
             return fragment
         }
-
     }
 
     private var mData: UserEnterRoomRespBase? = null
@@ -38,7 +37,7 @@ class LastWatchFragment : BaseDialogFragment() {
     override fun initViews() {
         mData = arguments?.getSerializable(Last_Watch) as? UserEnterRoomRespBase
         tv_nickname.text = mData?.programName
-        svv.showCover(mData?.prePic ?: "")
+        svv.showCover(mData?.prePic ?: "",false)
         val playinfo = mData?.playInfo
         if (mData?.isLiving == true && playinfo != null) {
             //直播中

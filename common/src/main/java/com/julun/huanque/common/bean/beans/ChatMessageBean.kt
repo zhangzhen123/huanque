@@ -81,7 +81,9 @@ data class FateInfo(
     //当前状态
     var status: String = "",
     //是否是新用户
-    var newUser : String = "",
+    var newUser: String = "",
+    //是否显示快捷回复
+    var quickChat: String = "",
     //倒计时
     var ttl: Int = 0
 ) : Serializable {
@@ -171,3 +173,28 @@ data class SingleUsefulWords(
     var wordsId: Long = 0
 ) : Serializable
 
+/**
+ * 派单数据  单日
+ */
+data class FateState(
+    //统计日期
+    var dateStr: String = "",
+    //缘分总次数
+    var totalNum: Long = 0,
+    //准备回复数
+    var replyNum: Long = 0
+) : Serializable
+
+/**
+ * 派单周数据
+ */
+data class FateWeekInfo(
+    //结果
+    var result: String = "",
+    //缘分总次数
+    var totalNum: Long = 0,
+    //准时回复次数
+    var replyNum: Long = 0,
+    //近7日详情
+    var itemList: MutableList<FateState> = mutableListOf()
+) : Serializable
