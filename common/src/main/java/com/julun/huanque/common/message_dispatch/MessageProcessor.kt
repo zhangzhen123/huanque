@@ -1614,7 +1614,7 @@ enum class EventMessageType(val klass: Class<*>) {
     BanUserLiving(OperatorMessageBean::class.java),
 
     //直播主播被封禁的事件
-    BlockProgram(VoidResult::class.java),
+    BlockProgram(OperatorMessageBean::class.java),
 
     //直播间热度变动消息
     RoomHeatChange(RoomHeatChangeBean::class.java),

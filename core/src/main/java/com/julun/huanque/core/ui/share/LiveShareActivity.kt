@@ -150,6 +150,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                             this.platForm = ShareTypeEnum.FriendCircle
                             this.shareKeyType = mShareKeyType
                             this.shareKeyId = mShareKeyId
+                            this.platForm = ShareTypeEnum.FriendCircle
                         })
                         finish()
                     }
@@ -165,6 +166,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                             this.platForm = ShareTypeEnum.WeChat
                             this.shareKeyType = mShareKeyType
                             this.shareKeyId = mShareKeyId
+                            this.platForm = ShareTypeEnum.WeChat
                         })
                         finish()
                     }
