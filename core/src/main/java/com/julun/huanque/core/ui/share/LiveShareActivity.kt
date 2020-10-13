@@ -232,6 +232,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                 if (wxService?.checkWeixinInstalled(this) == true) {
                     shareObject.shareType=WeiXinShareType.WXWeb
                     shareObject.shareWay = ShareWayEnum.WXSceneTimeline
+                    shareObject.platForm = ShareTypeEnum.FriendCircle
                     wxService?.weiXinShare(this,shareObject )
                     finish()
                 }
@@ -241,12 +242,14 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                 if (wxService?.checkWeixinInstalled(this) == true) {
                     shareObject.shareType=WeiXinShareType.WXWeb
                     shareObject.shareWay = ShareWayEnum.WXSceneSession
+                    shareObject.platForm = ShareTypeEnum.WeChat
                     wxService?.weiXinShare(this, shareObject)
                     finish()
                 }
             }
             ShareTypeEnum.Sina -> {
                 shareObject.shareType= WeiBoShareType.WbWeb
+                shareObject.platForm = ShareTypeEnum.Sina
                 wxService?.weiBoShare(this, shareObject)
             }
             ShareTypeEnum.ShareImage -> {
