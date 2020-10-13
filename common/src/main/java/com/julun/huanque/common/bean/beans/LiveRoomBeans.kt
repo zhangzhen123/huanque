@@ -622,6 +622,9 @@ class UserInfoInRoom : Serializable {
     //小鹊数据
     var magpieList: List<String> = mutableListOf()
 
+    //小鹊数量
+    var magpieCnt: Int = 0
+
     //个性签名
     var mySign: String = ""
 
@@ -650,7 +653,7 @@ class UserInfoInRoom : Serializable {
     var userTags: List<String> = mutableListOf()
 
     //是否是新用户
-    var newUser : String = ""
+    var newUser: String = ""
 
     /**是否显示加好友**/
     var showAddFriend: Boolean = false

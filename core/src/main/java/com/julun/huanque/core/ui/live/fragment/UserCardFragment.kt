@@ -372,7 +372,7 @@ class UserCardFragment : BaseDialogFragment() {
         //勋章
         showXunZhang(data.badgesPic)
         //显示小鹊列表
-        showXiaoQue(data.magpieList)
+        showXiaoQue(data.magpieList, data.magpieCnt)
         //显示标签
         showTags(data.userTags)
 
@@ -474,7 +474,7 @@ class UserCardFragment : BaseDialogFragment() {
     /**
      * 显示小鹊列表
      */
-    private fun showXiaoQue(queList: List<String>) {
+    private fun showXiaoQue(queList: List<String>, queCount: Int) {
         if (queList.isEmpty()) {
             //没有小鹊数据
             tv_leyuan.hide()
@@ -483,7 +483,7 @@ class UserCardFragment : BaseDialogFragment() {
             //显示小鹊相关
             tv_leyuan.show()
             ll_leyuan.show()
-            tv_que_count.text = "共${queList.size}只小鹊"
+            tv_que_count.text = "共${queCount}只小鹊"
             queList.asSequence().take(3).forEach {
                 if (it != null) {
                     val sdv = SimpleDraweeView(activity)

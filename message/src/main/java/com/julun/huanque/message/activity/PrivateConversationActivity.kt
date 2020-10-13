@@ -226,6 +226,7 @@ class PrivateConversationActivity : BaseActivity() {
         val draft = mPrivateConversationViewModel?.getDraft() ?: ""
         if (draft.isNotEmpty()) {
             edit_text.setText(draft)
+            edit_text.setSelection(edit_text.text.toString().length)
             tv_send.isEnabled = true
             if (mHelper == null) {
                 mNeedShowKeyBoard = true
@@ -2134,10 +2135,11 @@ class PrivateConversationActivity : BaseActivity() {
         if (draft.isNotEmpty()) {
             //保存草稿数据
             mPrivateConversationViewModel?.saveDraft(draft)
-        }
-        if (draft != mPrivateConversationViewModel?.mDraft) {
-            //草稿数据有变化，需要刷新列表
             EventBus.getDefault().post(DraftEvent(mPrivateConversationViewModel?.targetIdData?.value ?: return))
         }
+//        if (draft != mPrivateConversationViewModel?.mDraft) {
+        //草稿数据有变化，需要刷新列表
+
+//        }
     }
 }

@@ -221,7 +221,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 }
             }
             else -> {
-                if (!showDraftView(helper, targetId)) {
+                if (targetId != null && !showDraftView(helper, targetId)) {
                     if (targetId?.isNotEmpty() == true) {
                         helper.setText(R.id.tv_content, "")
                     }
