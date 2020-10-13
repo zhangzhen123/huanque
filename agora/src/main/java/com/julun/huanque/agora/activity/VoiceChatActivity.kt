@@ -4,6 +4,7 @@ import android.Manifest
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.se.omapi.Session
 import android.speech.tts.Voice
 import android.view.View
 import android.view.WindowManager
@@ -68,11 +69,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     private var mCallingContentDisposable: Disposable? = null
 
 
-
     //对方是否加入频道的标记位
     private var otherJoinChannel = false
-
-
 
 
     override fun getLayoutId() = R.layout.act_voice_chat
@@ -661,6 +659,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 meetStatus = targetChatInfo.meetStatus
                 sex = targetChatInfo.sex
                 userId = targetChatInfo.userId
+                userType = targetChatInfo.userType
             }
             chatExtra.apply {
                 headPic = SessionUtils.getHeaderPic()
@@ -669,6 +668,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 sex = SessionUtils.getSex()
                 targetUserObj = targetUser
                 userAbcd = AppHelper.getMD5(sId)
+                userType = SessionUtils.getUserType()
             }
         } else {
             //本人是被叫（插入接收消息）
@@ -679,6 +679,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 meetStatus = targetChatInfo.meetStatus
                 userId = SessionUtils.getUserId()
                 sex = SessionUtils.getSex()
+                userType = SessionUtils.getUserType()
             }
             chatExtra.apply {
                 headPic = targetChatInfo.headPic
@@ -687,6 +688,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 sex = targetChatInfo.sex
                 targetUserObj = targetUser
                 userAbcd = AppHelper.getMD5(sId)
+                userType = targetChatInfo.userType
             }
         }
 

@@ -81,7 +81,9 @@ class RoomUserChatExtra(
     //msgType= 1 表示为系统消息
     var msgType: Int = 0,
     //显示气泡
-    var chatBubble: ChatBubble? = null
+    var chatBubble: ChatBubble? = null,
+    //用户类型
+    var userType: String = ""
 )
 
 /**
@@ -105,7 +107,9 @@ class TargetUserObj(
     //本地图片地址（图片消息使用）
     var localPic: String = "",
     //是否是陌生人
-    var stranger: String = ""
+    var stranger: String = "",
+    //用户类型
+    var userType: String = ""
 )
 
 /**

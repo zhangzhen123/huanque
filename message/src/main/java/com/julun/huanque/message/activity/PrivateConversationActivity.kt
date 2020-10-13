@@ -163,6 +163,9 @@ class PrivateConversationActivity : BaseActivity() {
     //是否显示过付费弹窗
     private var feeDialogShow = false
 
+    //是否有官方用户（对方或者自己是官方，都是true）
+    private var hasManager = false
+
     override fun getLayoutId() = R.layout.act_private_chat
 
     //首次进入私聊详情的倒计时
@@ -219,7 +222,7 @@ class PrivateConversationActivity : BaseActivity() {
         val meetStatus = intent?.getStringExtra(ParamConstant.MEET_STATUS) ?: ""
         val header = intent?.getStringExtra(ParamConstant.HeaderPic) ?: ""
         mAdapter.otherUserInfo = ChatUser(header)
-        showTitleView(nickName, meetStatus)
+        showTitleView(nickName, meetStatus, "")
         mPrivateConversationViewModel?.targetIdData?.value = targetID
 
         //显示草稿
@@ -258,25 +261,36 @@ class PrivateConversationActivity : BaseActivity() {
     /**
      * 显示标题
      */
-    private fun showTitleView(nickname: String, meetStatus: String) {
+    private fun showTitleView(nickname: String, meetStatus: String, userType: String) {
         val title = header_view.textTitle
         if (nickname.isEmpty()) {
             title.text = "欢鹊"
         } else {
             title.text = nickname
         }
-        val meetResource = ImageHelper.getMeetStatusResource(meetStatus)
 
-        if (SessionUtils.getSex() == Sex.FEMALE && meetResource > 0) {
-            //女性 有欢遇标识
-            title.setCompoundDrawablesWithIntrinsicBounds(0, 0, meetResource, 0)
+        if (userType == UserType.Manager) {
+            //有官方标识 隐藏亲密度和欢遇标识
+            title.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.icon_manager, 0)
             title.compoundDrawablePadding = 5
+            iv_intimate.hide()
+            tv_intimate.hide()
         } else {
-            title.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-            title.compoundDrawablePadding = 0
+            //非官方
+            iv_intimate.show()
+            tv_intimate.show()
+
+            val meetResource = ImageHelper.getMeetStatusResource(meetStatus)
+
+            if (SessionUtils.getSex() == Sex.FEMALE && meetResource > 0) {
+                //女性 有欢遇标识
+                title.setCompoundDrawablesWithIntrinsicBounds(0, 0, meetResource, 0)
+                title.compoundDrawablePadding = 5
+            } else {
+                title.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                title.compoundDrawablePadding = 0
+            }
         }
-
-
     }
 
 
@@ -389,7 +403,10 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.basicBean?.observe(this, Observer {
             if (it != null) {
-                showTitleView(it.friendUser.nickname, it.meetStatus)
+                //更新用户信息
+                SessionUtils.setUserType(it.usr.userType)
+                hasManager = it.friendUser.userType == UserType.Manager || it.usr.userType == UserType.Manager
+                showTitleView(it.friendUser.nickname, it.meetStatus, it.friendUser.userType)
                 when (mPrivateConversationViewModel?.operationType) {
                     OperationType.OPEN_GIFT -> {
                         //打开礼物
@@ -1664,6 +1681,7 @@ class PrivateConversationActivity : BaseActivity() {
             meetStatus = targetChatInfo.meetStatus
             userId = targetChatInfo.userId
             stranger = GlobalUtils.getStrangerString(targetChatInfo.stranger)
+            userType = targetChatInfo.userType
         }
 
         if (targetChatInfo.userId == SessionUtils.getUserId()) {
@@ -1874,7 +1892,7 @@ class PrivateConversationActivity : BaseActivity() {
                     permission.granted -> {
                         logger.info("获取权限成功")
                         //判断亲密特权
-                        val result = judgeIntimate("FSTP", "亲密等级达到lv2才能发送图片哦")
+                        val result = hasManager || judgeIntimate("FSTP", "亲密等级达到lv2才能发送图片哦")
                         if (result) {
                             goToPictureSelectPager()
                         }

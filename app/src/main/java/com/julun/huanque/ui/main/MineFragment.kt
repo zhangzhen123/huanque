@@ -190,7 +190,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             tv_author_privilege.show()
             sdv_author_level.hide()
         }
-
+        //更新用户信息
+        SessionUtils.setUserType(info.userBasic.userType)
 
         if (info.userBasic.headRealPeople) {
             tvCertification.hide()

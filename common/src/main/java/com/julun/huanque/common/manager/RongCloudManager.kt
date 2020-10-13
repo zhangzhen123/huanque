@@ -736,6 +736,7 @@ object RongCloudManager {
         } else {
             //更新聊天框数据
             currentUserObj?.chatBubble = userObj.chatBubble
+            currentUserObj?.userType = userObj.userType
         }
     }
 
