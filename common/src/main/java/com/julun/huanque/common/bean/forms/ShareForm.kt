@@ -2,6 +2,7 @@ package com.julun.huanque.common.bean.forms
 
 
 import com.julun.huanque.common.bean.beans.ShareObject
+import com.julun.huanque.common.constant.BooleanType
 import java.io.Serializable
 
 /**
@@ -49,6 +50,11 @@ class SharePosterQueryForm(var applyModule: String)
  * 传个图片地址 生成一个二维码返回
  */
 class SharePosterImageForm(var programId: Long)
+
+/**
+ *
+ */
+class ShareLiveForm(var programId: Long, var sharePic: String = BooleanType.FALSE)
 
 enum class ShareWay {
     WXFriends,

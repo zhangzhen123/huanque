@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.ShareLiveForm
 import com.julun.huanque.common.bean.forms.SharePosterImageForm
 import com.julun.huanque.common.bean.forms.SharePosterQueryForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -164,7 +165,7 @@ class InviteShareViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val url = programInfo?.headPic ?: return@request
-                val form = SharePosterImageForm(programId = programInfo?.programId ?: return@request)
+                val form = ShareLiveForm(programId = programInfo?.programId ?: return@request)
                 val result = service.programShareInfo(form).dataConvert()
 
                 liveShareInfo.value = result.convertRtData()

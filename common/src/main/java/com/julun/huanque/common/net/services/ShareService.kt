@@ -3,6 +3,7 @@ package com.julun.huanque.common.net.services
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.bean.beans.ShareObject
 import com.julun.huanque.common.bean.beans.SharePosterInfo
+import com.julun.huanque.common.bean.forms.ShareLiveForm
 import com.julun.huanque.common.bean.forms.SharePosterImageForm
 import com.julun.huanque.common.bean.forms.SharePosterQueryForm
 import retrofit2.http.Body
@@ -28,8 +29,9 @@ interface ShareService {
 
     @POST("user/share/programShare")
     suspend fun programShare(@Body form: SharePosterImageForm): Root<String>
+
     //获取直播间链接分享信息
     @POST("user/share/room")
-    suspend fun programShareInfo(@Body form: SharePosterImageForm): Root<ShareObject>
+    suspend fun programShareInfo(@Body form: ShareLiveForm): Root<ShareObject>
 
 }

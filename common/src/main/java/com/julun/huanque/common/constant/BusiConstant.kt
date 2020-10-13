@@ -38,9 +38,9 @@ object BusiConstant {
     //广场封面大小
     const val OSS_350 = "!350"
 
-    var DESTROY_ACCOUNT_RESULT_CODE = 502 //注销账号result_code
+    const val DESTROY_ACCOUNT_RESULT_CODE = 502 //注销账号result_code
 
-    var EMPTY_GIFT = -100
+    const val EMPTY_GIFT = -100
 }
 
 /**
@@ -721,8 +721,8 @@ object FingerGuessingResult {
 }
 
 object BooleanType {
-    val TRUE = "True"
-    val FALSE = "False"
+    const val TRUE = "True"
+    const val FALSE = "False"
 }
 
 /**
