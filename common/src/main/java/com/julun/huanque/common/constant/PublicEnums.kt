@@ -25,51 +25,40 @@ class AnimationTypes {
 
 /** 动画资源类型 **/
 object AnimEventItemTypes {
-    val OTHERS = "OTHERS" //其他的自定义的东西,客户端定义,不是从后台传来
-    val none = "none"
-    val playSeconds = "playSeconds"
-    val width = "width"
-    val height = "height"
-    val top = "top"
-    val left = "left"
-    val GIF = "GIF"
-    val PNG = "PNG"
-    val WEBP: String = "Webp"
-    val SVGA: String = "Svga"
+    const val OTHERS = "OTHERS" //其他的自定义的东西,客户端定义,不是从后台传来
+    const val none = "none"
+    const val playSeconds = "playSeconds"
+    const val width = "width"
+    const val height = "height"
+    const val top = "top"
+    const val left = "left"
+    const val GIF = "GIF"
+    const val PNG = "PNG"
+    const val WEBP: String = "Webp"
+    const val SVGA: String = "Svga"
 
 }
 
 //公聊消息的点击触发
 object TextTouch {
-    //打开深海游戏
-    val OpenDeepSeaGame = "OpenDeepSeaGame"
 
     //打开游戏面板
-    val OpenGameView = "OpenGameView"
+    const val OpenGameView = "OpenGameView"
 
     //切换直播间
-    val OpenLiveRoom = "OpenLiveRoom"
+    const val OpenLiveRoom = "OpenLiveRoom"
 
     //打开h5
-    val OpenUrlView = "OpenUrlView"
+    const val OpenUrlView = "OpenUrlView"
 
     //打开卡片
-    val OpenUserCard = "OpenUserCard"
+    const val OpenUserCard = "OpenUserCard"
 
     //打开送礼面板
-    val OpenSendGiftView = "OpenSendGiftView"
+    const val OpenSendGiftView = "OpenSendGiftView"
 
     //打开分享
-    val OpenShareView = "OpenShareView"
-
-    //打开豪车工厂
-    val OpenFactoryCarView = "OpenFactoryCarViewV2"
-
-    //打开锦鲤池
-    val OpenWishView = "OpenWishView"
-
-    //打开携手闯情关 since4.19.0
-    val OpenPassLevelView = "OpenPassLevelView"
+    const val OpenShareView = "OpenShareView"
 
     //打开幸运转盘
     const val OPEN_BIG_WHEEL = "OpenBigWheel"
@@ -77,11 +66,9 @@ object TextTouch {
     //打开PK段位赛 since 4.23.0
     const val OPEN_PK_RANK = "OpenStagePk"
 
-    //跳转目标直播间并打开星球霸主
-    const val OpenLiveRoomAndPlanet = "OpenLiveRoomAndPlanet"
-
     //打开礼物面板并切换到背包
     const val OPEN_BAG = "OpenBag"
+
     //打开养鹊
     const val Magpie = "Magpie"
 }
@@ -100,9 +87,9 @@ object StopType {
  * 直播间用户列表变化时通知类型
  */
 object UserChangeType {
-    val New = "New"
-    val Del = "Del"
-    val Mod = "Mod"
+    const val New = "New"
+    const val Del = "Del"
+    const val Mod = "Mod"
 }
 
 /** 消息平台  */
@@ -125,17 +112,6 @@ object ScreenType {
 
 //游戏类型
 object GameType {
-    //深海秘境
-    val DeepSea = "DeepSea"
-
-    //选票
-    val XuanPiao = "XuanPiao"
-
-    //世界杯竞猜
-    val WorldCupGuess = "WorldCupGuess"
-
-    //豪车工厂
-    val FactoryCar = "FactoryCar"
 
     //星球霸主
     const val Planet = "Planet"
@@ -184,13 +160,12 @@ object ClickType {
     //打开游戏面板
     const val GAME = "GAME"
 
-    //豪车工厂
-    const val LUXURY_CAR = "LUXURY_CAR"
-
     //星球霸主
     const val PLANTE = "PLANTE"
+
     //养鹊
     const val BIRD = "BIRD"
+
     //推流设置页面
     const val PUBLISH_SETTING = "PUBLISH_SETTING"
 
@@ -284,6 +259,7 @@ object DialogOrderNumber {
 
     //局部弹窗的排序  目前不需要优先级排序 默认就排到尾端 这里设置一个固定大值
     const val LOCAL_DIALOG = 9999 //
+
     //后续如果局部弹窗需要排序 从1000开始定义
     const val LOCAL_DIALOG_PRIORITY_01 = 1000
 }
@@ -594,6 +570,7 @@ object PushDataActionType {
     const val PlumFlower = "PlumFlower"//（跳转到今日花魁）
 
 }
+
 object HomePageOnlineStatus {
     const val Online = "Online"
     const val Offline = "Offline"

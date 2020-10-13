@@ -326,9 +326,6 @@ class PlayerViewModel : BaseViewModel() {
     //开启弹窗
     val openOnlineDialog: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
-    //打开锦鲤池
-    val openWishKoiDialog: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
     //打开节目单界面 true代表自动弹出需要排序  false代表用户手动打开
     val openThemeProgram: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -591,9 +588,6 @@ class PlayerViewModel : BaseViewModel() {
 //                }
             }
 
-            TextTouch.OpenDeepSeaGame -> {
-                openGame.value = SingleGame(gameCode = GameType.DeepSea)
-            }
             TextTouch.OpenGameView -> {
                 actionBeanData.value = BottomActionBean(ClickType.GAME)
             }
@@ -632,13 +626,6 @@ class PlayerViewModel : BaseViewModel() {
                         userInfoView.value = userInfo
                     }
                 }
-            }
-            TextTouch.OpenWishView -> {
-                if (isAnchor) {
-                    return
-                }
-                //打开锦鲤池
-                openWishKoiDialog.value = true
             }
             TextTouch.OPEN_BIG_WHEEL -> {
                 //打开幸运转盘

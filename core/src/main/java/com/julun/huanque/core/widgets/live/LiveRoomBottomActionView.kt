@@ -96,10 +96,6 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
             R.id.gameImage -> {
                 if (!ClickListenerUtils.isDoubleClick) {
                     when (mGameType) {
-                        GameType.FactoryCar -> {
-                            //豪车工厂
-                            bean.type = ClickType.LUXURY_CAR
-                        }
                         GameType.Planet -> {
                             //星球争霸
                             bean.type = ClickType.PLANTE

@@ -135,13 +135,6 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
                 "系统异常"
             }
             ToastUtils.show2(message)
-//            Observable.just(message).compose(DefaultRxTransformer<String>()).subscribe {
-//                try {
-//                    ToastUtils.show(it)
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                }
-//            }
         }
 
 //        // 余额不足
@@ -149,30 +142,21 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
 //
 //        }
         //账号已经被封禁
-        ErrorCodes.ACCOUNT_HAS_BLOCK -> {
-            val activity = CommonInit.getInstance().getCurrentActivity()
-            if (activity != null)
-                MyAlertDialog(activity, false).showAlertWithOK(
-                    it.message.toString(), okText = "知道了",
-                    callback = MyAlertDialog.MyDialogCallback(onRight = {
-                        if (activity.localClassName.contains("PrivateConversationActivity")) {
-                            activity.finish()
-                        }
-                    })
-                )
-        }
+//        ErrorCodes.ACCOUNT_HAS_BLOCK -> {
+//            val activity = CommonInit.getInstance().getCurrentActivity()
+//            if (activity != null)
+//                MyAlertDialog(activity, false).showAlertWithOK(
+//                    it.message.toString(), okText = "知道了",
+//                    callback = MyAlertDialog.MyDialogCallback(onRight = {
+//                        if (activity.localClassName.contains("PrivateConversationActivity")) {
+//                            activity.finish()
+//                        }
+//                    })
+//                )
+//        }
         // 其他系统定义错误代码
         else -> {
             ToastUtils.show2(it.message.toString())
-//            Observable.just(it.message.toString()).compose(DefaultRxTransformer<String>()).subscribe {
-//                try {
-//
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                    reportCrash("弹出窗口出错", e)
-//                }
-//            }
-
         }
     }
 
