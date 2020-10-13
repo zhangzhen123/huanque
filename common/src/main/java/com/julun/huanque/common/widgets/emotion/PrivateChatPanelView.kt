@@ -64,6 +64,9 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
 
     private var mCurrentLevel = 0
 
+    //是否包含官方
+    private var hasManager: Boolean = false
+
     fun setListener(l: EmojiInputListener) {
         mListener = l
         mAdapter?.outEmojiInputListener = l
@@ -111,7 +114,7 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
                     val tempView = viewPager.getChildAt(position)
                     if (tempView is SinglePanelView && tempView.type == EmojiType.PREROGATIVE) {
                         //亲密度表情
-                        tempView.setIntimate(mNeedLevel, mCurrentLevel)
+                        tempView.setIntimate(mNeedLevel, mCurrentLevel,hasManager)
                     }
                 }
             }
@@ -124,14 +127,15 @@ class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView
      * @param needLevel 解锁专属表情所需等级
      * @param currentLevel 当前两人的亲密度等级
      */
-    fun setIntimate(needLevel: Int, currentLevel: Int) {
+    fun setIntimate(needLevel: Int, currentLevel: Int, hasManager: Boolean) {
         mNeedLevel = needLevel
         mCurrentLevel = currentLevel
+        this.hasManager = hasManager
         val childCount = viewPager.childCount
         (0 until childCount).forEach {
             val tempView = viewPager.getChildAt(it)
             if (tempView is SinglePanelView && tempView.type == EmojiType.PREROGATIVE) {
-                tempView.setIntimate(needLevel, currentLevel)
+                tempView.setIntimate(needLevel, currentLevel,hasManager)
                 return@forEach
             }
         }
