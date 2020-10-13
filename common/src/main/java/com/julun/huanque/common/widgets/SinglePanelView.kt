@@ -40,6 +40,8 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
 
     private var mCurrentLevel = 0
 
+    private var hasManager : Boolean = false
+
     init {
         context?.let { con ->
             LayoutInflater.from(con).inflate(R.layout.panel_single_emoji, this)
@@ -112,9 +114,10 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
      * @param needLevel 解锁专属表情所需等级
      * @param currentLevel 当前两人的亲密度等级
      */
-    fun setIntimate(needLevel: Int, currentLevel: Int) {
+    fun setIntimate(needLevel: Int, currentLevel: Int,hasManager : Boolean = false) {
         mNeedLevel = needLevel
         mCurrentLevel = currentLevel
+        this.hasManager = hasManager
 
         showPrivilegeShade()
     }
@@ -123,23 +126,11 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
      * 特权表情的遮罩是否显示
      */
     private fun showPrivilegeShade() {
-        if (type == EmojiType.PREROGATIVE && mNeedLevel > mCurrentLevel) {
+        if (!hasManager &&  type == EmojiType.PREROGATIVE && mNeedLevel > mCurrentLevel) {
             //需要显示特权表情遮罩
             view_shade.show()
             tv_privilege_attetnion.show()
             tv_privilege_attetnion.text = "亲密等级Lv4可解锁"
-
-//            val str = "亲密度等级$mNeedLevel，立即解锁"
-//            val spannableString = SpannableString(str)
-//            val colorText = "立即解锁"
-//            val index = str.indexOf(colorText)
-//            spannableString.setSpan(
-//                ForegroundColorSpan(GlobalUtils.getColor(R.color.send_private_chat)),
-//                index,
-//                index + colorText.length,
-//                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-//            );
-//            tv_privilege_attetnion.text = spannableString
 
         } else {
             view_shade.hide()

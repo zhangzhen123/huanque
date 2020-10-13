@@ -564,7 +564,7 @@ class PrivateConversationActivity : BaseActivity() {
         IntimateUtil.intimatePrivilegeList.forEach {
             if (it.key == "ZSBQ") {
                 val emojiLevel = it.minLevel
-                panel_emotion.setIntimate(emojiLevel, currentLent)
+                panel_emotion.setIntimate(emojiLevel, currentLent,hasManager)
                 return
             }
         }
@@ -719,7 +719,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         iv_share.onClickNew {
             //传送门
-            val result = judgeIntimate("CSM", "亲密等级达到lv3才能发送传送门哦")
+            val result = hasManager || judgeIntimate("CSM", "亲密等级达到lv3才能发送传送门哦")
             if (result) {
                 //有权限
                 val programId = UserHeartManager.getProgramId() ?: 0
