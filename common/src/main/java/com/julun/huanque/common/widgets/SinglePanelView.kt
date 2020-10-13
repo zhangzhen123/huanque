@@ -126,7 +126,7 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
      * 特权表情的遮罩是否显示
      */
     private fun showPrivilegeShade() {
-        if (!hasManager &&  type == EmojiType.PREROGATIVE && mNeedLevel > mCurrentLevel) {
+        if (!hasManager &&  type == EmojiType.PREROGATIVE && (mNeedLevel > mCurrentLevel || mCurrentLevel == 0)) {
             //需要显示特权表情遮罩
             view_shade.show()
             tv_privilege_attetnion.show()

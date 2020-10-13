@@ -264,7 +264,7 @@ class PrivateConversationActivity : BaseActivity() {
     private fun showTitleView(nickname: String, meetStatus: String, userType: String) {
         val title = header_view.textTitle
         if (nickname.isEmpty()) {
-            title.text = "欢鹊"
+            title.text = "欢鹊宝宝"
         } else {
             title.text = nickname
         }
@@ -564,7 +564,7 @@ class PrivateConversationActivity : BaseActivity() {
         IntimateUtil.intimatePrivilegeList.forEach {
             if (it.key == "ZSBQ") {
                 val emojiLevel = it.minLevel
-                panel_emotion.setIntimate(emojiLevel, currentLent,hasManager)
+                panel_emotion.setIntimate(emojiLevel, currentLent, hasManager)
                 return
             }
         }
@@ -1105,7 +1105,7 @@ class PrivateConversationActivity : BaseActivity() {
     private fun judgeIntimate(key: String, toastContent: String = ""): Boolean {
         val intimate = mPrivateConversationViewModel?.basicBean?.value?.intimate
         if (intimate == null) {
-            Toast.makeText(this, "缺少亲密度等级数据", Toast.LENGTH_SHORT).show()
+            ToastUtils.show(toastContent)
             return false
         }
         val currentLevel = intimate.intimateLevel
@@ -1671,6 +1671,11 @@ class PrivateConversationActivity : BaseActivity() {
         }
         mPrivateConversationViewModel?.sendRoomIndoData?.value = null
 
+        val chatInfo = mPrivateConversationViewModel?.chatInfoData?.value
+        if (chatInfo == null) {
+            ToastUtils.show(mPrivateConversationViewModel?.errorMessage ?: "")
+            return
+        }
 
         val targetChatInfo = mPrivateConversationViewModel?.chatInfoData?.value ?: return
         val targetUser = TargetUserObj().apply {
