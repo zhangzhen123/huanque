@@ -692,14 +692,18 @@ class MainActivity : BaseActivity() {
         } else {
             "您的账号因严重违反欢鹊社区规范，已被执行永久封号处罚，请使用其他账号并规范个人行为"
         }
-        MyAlertDialog(this@MainActivity, false).showAlertWithOK(
-            message = message,
-            okText = "知道了", callback = MyAlertDialog.MyDialogCallback(onRight = {
-                finish()
-                //跳转登录页面
-                ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
-            })
-        )
+        ToastUtils.show(message)
+        finish()
+        //跳转登录页面
+        ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+//        MyAlertDialog(this@MainActivity, false).showAlertWithOK(
+//            message = message,
+//            okText = "知道了", callback = MyAlertDialog.MyDialogCallback(onRight = {
+//                finish()
+//                //跳转登录页面
+//                ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+//            })
+//        )
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

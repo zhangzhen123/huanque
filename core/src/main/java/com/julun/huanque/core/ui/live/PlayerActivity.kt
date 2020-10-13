@@ -1746,6 +1746,7 @@ class PlayerActivity : BaseActivity() {
         MessageProcessor.registerEventProcessor(object : MessageProcessor.BlockProgramProcessor {
             override fun process(data: OperatorMessageBean) {
                 ToastUtils.show("该主播因严重违反欢鹊社区规范，已被执行封号处罚")
+                isBanned = true
                 finish()
             }
         })

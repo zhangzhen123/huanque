@@ -15,7 +15,9 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.nothing
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.bitmap.BitmapUtil
 import com.sina.weibo.sdk.api.*
 import com.sina.weibo.sdk.auth.AuthInfo
 import com.sina.weibo.sdk.common.UiError
@@ -89,6 +91,16 @@ object WeiBoApiManager {
                 webObject.defaultText = shareObj.shareTitle
                 message.mediaObject = webObject
                 mShareClientOnly = true
+                //单纯分享链接太单调 这里带上相关图片
+                if (shareObj.bigPic.isEmpty()) {
+                    val imageObject = ImageObject()
+                    imageObject.setImageData(bitmap)
+                    message.imageObject = imageObject
+                } else {
+                    loadNetworkImg(shareObj.bigPic, message, mShareClientOnly)
+                    return
+                }
+
             }
             WeiBoShareType.WbVideo -> {
                 // 分享视频
@@ -124,6 +136,37 @@ object WeiBoApiManager {
 
         wbApi?.shareMessage(message, mShareClientOnly)
 
+
+    }
+
+    private fun loadNetworkImg(
+        url: String,
+        message: WeiboMultiMessage,
+        mShareClientOnly: Boolean
+    ) {
+        var shareClientOnly = mShareClientOnly
+        ImageUtils.requestImageForBitmap(url, {
+            //如果btimap 被回收了,那么可能造成的是发送的消息里没有图片缩略图
+            if (it != null && !it.isRecycled) {
+                //不为空,还不能是回收掉的
+                val imageObject = ImageObject()
+                imageObject.setImageData(it)
+                message.imageObject = imageObject
+
+                //Android9.0以上只使用客户端分享
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    shareClientOnly = true
+                    if (wbApi?.isWBAppInstalled == false) {
+                        ToastUtils.show("请先安装微博客户端再分享")
+                        return@requestImageForBitmap
+                    }
+
+                }
+
+                wbApi?.shareMessage(message, shareClientOnly)
+            }
+
+        }, R.mipmap.ic_launcher)
 
     }
 

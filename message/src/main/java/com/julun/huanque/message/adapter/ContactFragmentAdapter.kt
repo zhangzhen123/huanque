@@ -1,5 +1,6 @@
 package com.julun.huanque.message.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -14,7 +15,8 @@ import kotlin.collections.HashMap
  * Created by zz on 2016/1/6.
  * 主页面界面的适配器
  */
-class ProgramFragmentAdapter(fm: FragmentManager,var context: Context) : FragmentPagerAdapter(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+@SuppressLint("WrongConstant")
+class ContactFragmentAdapter(fm: FragmentManager, var context: Context) : FragmentPagerAdapter(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     private var fragmentMap = HashMap<Int, ContactsFragment>()
     private var typeList: List<UserDataTab> = ArrayList()//当前分类的列表

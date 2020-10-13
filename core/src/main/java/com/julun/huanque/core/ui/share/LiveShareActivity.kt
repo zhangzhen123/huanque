@@ -150,6 +150,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                             this.platForm = ShareTypeEnum.FriendCircle
                             this.shareKeyType = mShareKeyType
                             this.shareKeyId = mShareKeyId
+                            this.platForm = ShareTypeEnum.FriendCircle
                         })
                         finish()
                     }
@@ -165,6 +166,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                             this.platForm = ShareTypeEnum.WeChat
                             this.shareKeyType = mShareKeyType
                             this.shareKeyId = mShareKeyId
+                            this.platForm = ShareTypeEnum.WeChat
                         })
                         finish()
                     }
@@ -223,24 +225,32 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
     }
 
     private fun shareLive(type: String) {
-
+        val shareObject=mViewModel.liveShareInfo.value?.getT() ?: return
         when (type) {
             ShareTypeEnum.FriendCircle -> {
                 //朋友圈
                 if (wxService?.checkWeixinInstalled(this) == true) {
-                    wxService?.weiXinShare(this, mViewModel.liveShareInfo.value?.getT() ?: return)
+                    shareObject.shareType=WeiXinShareType.WXWeb
+                    shareObject.shareWay = ShareWayEnum.WXSceneTimeline
+                    shareObject.platForm = ShareTypeEnum.FriendCircle
+                    wxService?.weiXinShare(this,shareObject )
                     finish()
                 }
             }
             ShareTypeEnum.WeChat -> {
                 //微信
                 if (wxService?.checkWeixinInstalled(this) == true) {
-                    wxService?.weiXinShare(this, mViewModel.liveShareInfo.value?.getT() ?: return)
+                    shareObject.shareType=WeiXinShareType.WXWeb
+                    shareObject.shareWay = ShareWayEnum.WXSceneSession
+                    shareObject.platForm = ShareTypeEnum.WeChat
+                    wxService?.weiXinShare(this, shareObject)
                     finish()
                 }
             }
             ShareTypeEnum.Sina -> {
-                wxService?.weiBoShare(this, mViewModel.liveShareInfo.value?.getT() ?: return)
+                shareObject.shareType= WeiBoShareType.WbWeb
+                shareObject.platForm = ShareTypeEnum.Sina
+                wxService?.weiBoShare(this, shareObject)
             }
             ShareTypeEnum.ShareImage -> {
                 mViewModel.queryLiveQrCode()

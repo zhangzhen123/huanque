@@ -54,7 +54,7 @@ class SharePosterImageForm(var programId: Long)
 /**
  *
  */
-class ShareLiveForm(var programId: Long, var sharePic: String = BooleanType.FALSE)
+class ShareLiveForm(var programId: Long)
 
 enum class ShareWay {
     WXFriends,
