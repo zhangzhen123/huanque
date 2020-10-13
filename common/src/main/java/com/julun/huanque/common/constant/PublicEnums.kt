@@ -409,6 +409,9 @@ object WeiXinShareType {
 
     //视频类型分享
     const val WXVideo = "WXVideo"
+
+    //网页链接
+    const val WXWeb = "WXWeb"
 }
 
 object WeiBoShareType {

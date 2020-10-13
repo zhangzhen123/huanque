@@ -3,7 +3,6 @@ package com.julun.huanque.message.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
@@ -28,7 +27,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
 import com.julun.huanque.message.R
-import com.julun.huanque.message.adapter.ProgramFragmentAdapter
+import com.julun.huanque.message.adapter.ContactFragmentAdapter
 import com.julun.huanque.message.viewmodel.ContactsActivityViewModel
 import kotlinx.android.synthetic.main.act_contacts.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
@@ -58,7 +57,7 @@ class ContactsActivity : BaseActivity() {
 
     private lateinit var mCommonNavigator: CommonNavigator
     private var mActivityViewModel: ContactsActivityViewModel? = null
-    private var mPagerAdapter: ProgramFragmentAdapter? = null
+    private var mPagerAdapter: ContactFragmentAdapter? = null
 
     //默认选中的tab标识
     private var mDefaultType = ""
@@ -73,7 +72,7 @@ class ContactsActivity : BaseActivity() {
         findViewById<TextView>(R.id.tvTitle).text = "联系人"
         initViewModel()
         mActivityViewModel?.getContacts()
-        mPagerAdapter = ProgramFragmentAdapter(supportFragmentManager, this)
+        mPagerAdapter = ContactFragmentAdapter(supportFragmentManager, this)
         pager.adapter = mPagerAdapter
         initMagicIndicator()
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {

@@ -8,6 +8,7 @@ import java.io.Serializable
 /**
  * 分享实体类
  * Created by djp on 2016/11/16.
+ *  注意shareWay shareType 必须赋值 不然不知道分享类型 和 分享方式
  */
 open class ShareObject : Serializable {
     var shareUrl: String? = null
@@ -44,8 +45,8 @@ open class ShareObject : Serializable {
     /** 小程序id **/
     var miniUserName: String = ""
 
-    /** 分享到小程序大图 **/
-    var shareBigPic: String = ""
+    /** 分享到小程序/微博大图 **/
+    var bigPic: String = ""
 
     /** 分享类型 **/
     var touchType: String = ""

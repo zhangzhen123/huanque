@@ -135,7 +135,15 @@ object WXApiManager {
         }
         if (checkWXInstalled(context)) {
             when (shareObj.shareType) {
-                WeiXinShareType.WXText -> {
+                WeiXinShareType.WXText-> {
+                    val wxTxt = WXTextObject(shareObj.shareContent)
+                    val msg = WXMediaMessage(wxTxt)
+                    msg.title = shareObj.shareTitle
+                    msg.description = shareObj.shareContent
+                    sendToWX(context,msg,scene)
+                }
+
+                WeiXinShareType.WXWeb -> {
                     val webpage = WXWebpageObject()
                     webpage.webpageUrl = shareObj.shareUrl
 

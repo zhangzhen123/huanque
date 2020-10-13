@@ -223,24 +223,29 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
     }
 
     private fun shareLive(type: String) {
-
+        val shareObject=mViewModel.liveShareInfo.value?.getT() ?: return
         when (type) {
             ShareTypeEnum.FriendCircle -> {
                 //朋友圈
                 if (wxService?.checkWeixinInstalled(this) == true) {
-                    wxService?.weiXinShare(this, mViewModel.liveShareInfo.value?.getT() ?: return)
+                    shareObject.shareType=WeiXinShareType.WXWeb
+                    shareObject.shareWay = ShareWayEnum.WXSceneTimeline
+                    wxService?.weiXinShare(this,shareObject )
                     finish()
                 }
             }
             ShareTypeEnum.WeChat -> {
                 //微信
                 if (wxService?.checkWeixinInstalled(this) == true) {
-                    wxService?.weiXinShare(this, mViewModel.liveShareInfo.value?.getT() ?: return)
+                    shareObject.shareType=WeiXinShareType.WXWeb
+                    shareObject.shareWay = ShareWayEnum.WXSceneSession
+                    wxService?.weiXinShare(this, shareObject)
                     finish()
                 }
             }
             ShareTypeEnum.Sina -> {
-                wxService?.weiBoShare(this, mViewModel.liveShareInfo.value?.getT() ?: return)
+                shareObject.shareType= WeiBoShareType.WbWeb
+                wxService?.weiBoShare(this, shareObject)
             }
             ShareTypeEnum.ShareImage -> {
                 mViewModel.queryLiveQrCode()
