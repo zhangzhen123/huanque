@@ -64,7 +64,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initViewModel()
-        showEmptyView()
+//        showEmptyView()
         state_pager_view.show()
         mViewModel.mType = arguments?.getString(ParamConstant.TYPE, "") ?: ""
         mAdapter.type = mViewModel.mType
@@ -80,9 +80,10 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
 
         } else {
             //从后台获取数据
-            mViewModel.queryInfo(QueryType.REFRESH)
+            mViewModel.queryInfo(QueryType.INIT)
         }
     }
+
     override fun initEvents(rootView: View) {
         swiperefreshlayout.setOnRefreshListener {
             mViewModel.queryInfo(QueryType.REFRESH)
@@ -185,7 +186,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
             if (it == true && mViewModel.mType == ContactsTabType.Follow) {
                 //需要刷新关注列表
                 swiperefreshlayout.isRefreshing = true
-                mViewModel.queryInfo(QueryType.LOAD_MORE)
+                mViewModel.queryInfo(QueryType.REFRESH)
             }
         })
 
@@ -246,19 +247,21 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
                 ""
             }
         }
-        val btnText = if (mViewModel.mType == ContactsTabType.Fan && (mActivityViewModel.socialListData.value?.perfection ?: 0) < 100) {
-            //粉丝页面，资料完善度小于100
-            "去提升"
-        } else {
-            "去看看"
-        }
+        val btnText =
+            if (mViewModel.mType == ContactsTabType.Fan && (mActivityViewModel.socialListData.value?.perfection ?: 0) < 100) {
+                //粉丝页面，资料完善度小于100
+                "去提升"
+            } else {
+                "去看看"
+            }
         state_pager_view.showEmpty(false, R.mipmap.icon_default_empty, emptyContent, View.OnClickListener {
             if (mViewModel.mType == ContactsTabType.Fan && (mActivityViewModel.socialListData.value?.perfection ?: 0) < 100) {
                 //跳转编辑资料
                 RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
             } else {
                 //跳转交友
-                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, 0)
+                    .navigation()
             }
         }, btnText)
     }
@@ -309,9 +312,9 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
             mAdapter.addData(stateList.list)
         }
 
-        if (stateList.list.isNotEmpty()) {
-            state_pager_view.showSuccess()
-        }
+//        if (stateList.list.isNotEmpty()) {
+//            state_pager_view.showSuccess()
+//        }
 
         if (stateList.hasMore) {
 //            mAdapter.loadMoreComplete()
@@ -337,31 +340,40 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
 
     override fun showLoadState(state: NetState) {
         when (state.state) {
-            NetStateType.SUCCESS -> {//showSuccess()
+            NetStateType.SUCCESS -> {
+//                state_pager_view.showSuccess()
             }
-            NetStateType.LOADING -> {//showLoading()
-                mAdapter.setEmptyView(MixedHelper.getLoadingView(requireContext()))
+            NetStateType.LOADING -> {
+                state_pager_view.showLoading()
             }
             NetStateType.ERROR -> {
-                mAdapter.setEmptyView(
-                    MixedHelper.getErrorView(
-                        ctx = requireContext(),
-                        msg = state.message,
-                        onClick = View.OnClickListener {
-                            mViewModel.queryInfo(QueryType.INIT)
-                        })
-                )
+                state_pager_view.showError(errorTxt = state.message,
+                    btnClick = View.OnClickListener {
+                        mViewModel.queryInfo(QueryType.INIT)
+                    })
+//                mAdapter.setEmptyView(
+//                    MixedHelper.getErrorView(
+//                        ctx = requireContext(),
+//                        msg = state.message,
+//                        onClick = View.OnClickListener {
+//                            mViewModel.queryInfo(QueryType.INIT)
+//                        })
+//                )
 
             }
             NetStateType.NETWORK_ERROR -> {
-                mAdapter.setEmptyView(
-                    MixedHelper.getErrorView(
-                        ctx = requireContext(),
-                        msg = "网络错误",
-                        onClick = View.OnClickListener {
-                            mViewModel.queryInfo(QueryType.INIT)
-                        })
-                )
+                state_pager_view.showError(errorTxt = "网络错误",
+                    btnClick = View.OnClickListener {
+                        mViewModel.queryInfo(QueryType.INIT)
+                    })
+//                mAdapter.setEmptyView(
+//                    MixedHelper.getErrorView(
+//                        ctx = requireContext(),
+//                        msg = "网络错误",
+//                        onClick = View.OnClickListener {
+//                            mViewModel.queryInfo(QueryType.INIT)
+//                        })
+//                )
 
             }
         }
