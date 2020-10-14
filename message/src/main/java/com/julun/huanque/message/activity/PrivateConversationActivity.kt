@@ -2155,14 +2155,14 @@ class PrivateConversationActivity : BaseActivity() {
         super.onDestroy()
         //草稿数据
         val draft = edit_text.text.toString()
-        if (draft.isNotEmpty()) {
-            //保存草稿数据
-            mPrivateConversationViewModel?.saveDraft(draft)
+//        if (draft.isNotEmpty()) {
+        //保存草稿数据
+        mPrivateConversationViewModel?.saveDraft(draft)
+//        }
+
+        if (draft != mPrivateConversationViewModel?.mDraft) {
+            //草稿数据有变化，需要刷新列表
             EventBus.getDefault().post(DraftEvent(mPrivateConversationViewModel?.targetIdData?.value ?: return))
         }
-//        if (draft != mPrivateConversationViewModel?.mDraft) {
-        //草稿数据有变化，需要刷新列表
-
-//        }
     }
 }
