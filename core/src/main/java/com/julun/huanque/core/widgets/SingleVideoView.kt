@@ -434,8 +434,10 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun clip(radius: Float) {
-        this.outlineProvider = SurfaceVideoViewOutlineProvider(radius);
-        this.clipToOutline = true;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            this.outlineProvider = SurfaceVideoViewOutlineProvider(radius);
+            this.clipToOutline = true;
+        }
     }
 
 
