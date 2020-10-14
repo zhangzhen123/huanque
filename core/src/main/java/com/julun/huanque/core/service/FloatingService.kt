@@ -182,8 +182,11 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
 //            display?.getBackground()?.setAlpha(0)
             windowManager?.addView(display, layoutParams)
 
-            videoView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
-            videoView?.clipToOutline = true;
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                videoView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
+                videoView?.clipToOutline = true;
+            }
+
 
             display?.setOnTouchListener(FloatingOnTouchListener())
             display?.findViewById<View>(R.id.view_floating)?.setOnClickListener(this)

@@ -118,5 +118,6 @@
 
 
         <service android:name=".service.FloatingService" />
+        <service android:name=".service.BadgeIntentService"/>
     </application>
 </manifest>

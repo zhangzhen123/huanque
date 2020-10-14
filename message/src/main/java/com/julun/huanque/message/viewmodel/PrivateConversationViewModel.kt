@@ -112,6 +112,8 @@ class PrivateConversationViewModel : BaseViewModel() {
     //道具数据
     val propData: MutableLiveData<PropBean> by lazy { MutableLiveData<PropBean>() }
 
+    var errorMessage = ""
+
     //上一次的草稿数据
     var mDraft = ""
 
@@ -298,6 +300,9 @@ class PrivateConversationViewModel : BaseViewModel() {
                     userType = SessionUtils.getUserType()
                 }
                 RongCloudManager.resetUSerInfoPrivate(user)
+                if (it is ResponseError) {
+                    errorMessage = it.message ?: ""
+                }
             })
         }
 

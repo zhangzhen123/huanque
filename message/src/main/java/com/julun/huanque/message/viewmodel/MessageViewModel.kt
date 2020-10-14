@@ -1,5 +1,14 @@
 package com.julun.huanque.message.viewmodel
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.graphics.Color
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.ChatUser
@@ -16,16 +25,17 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.database.HuanQueDatabase
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.message.R
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.message.ImageMessage
@@ -36,6 +46,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import java.util.*
+
 
 /**
  *@创建者   dong
@@ -869,5 +880,37 @@ class MessageViewModel : BaseViewModel() {
             changePosition.value = targetIndex
         }
     }
+
+//    /**
+//     * 显示桌面未读数量
+//     */
+//    fun showLogoCount() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            val mNotificationManager = CommonInit.getInstance().getContext().getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+//            val channelId = getChannelId(mNotificationManager ?: return) ?: return
+//            val builder = NotificationCompat.Builder(CommonInit.getInstance().getContext(), channelId)
+//            builder.setSmallIcon(R.mipmap.ic_launcher)
+//                .setDefaults(Notification.DEFAULT_ALL)
+//                .setTicker("title")
+//                .setAutoCancel(true)
+//                .setContentTitle("contentTitle")
+//                .setContentText("contentText")
+//
+//            mNotificationManager.notify(123, builder.build());
+//        }
+//    }
+//
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    fun getChannelId(mNotificationManager: NotificationManager): String? {
+//
+//        val channelId = "1"
+//        val channelName = "com.julun.huanque"
+//        val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT)
+//        channel.enableLights(true) //显示桌面红点
+//        channel.lightColor = Color.RED
+//        channel.setShowBadge(true)
+//        mNotificationManager?.createNotificationChannel(channel)
+//        return channel.id
+//    }
 
 }

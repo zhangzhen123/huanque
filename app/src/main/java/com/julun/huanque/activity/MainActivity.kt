@@ -2,6 +2,7 @@ package com.julun.huanque.activity
 
 import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -37,6 +38,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.manager.FloatingManager
+import com.julun.huanque.core.service.BadgeIntentService
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.core.viewmodel.TodayFateViewModel
 import com.julun.huanque.fragment.*
@@ -56,11 +58,13 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
 import kotlinx.android.synthetic.main.main_activity.*
+import me.leolin.shortcutbadger.ShortcutBadger
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
+import kotlin.math.min
 
 
 @Route(path = ARouterConstant.MAIN_ACTIVITY)
@@ -101,7 +105,7 @@ class MainActivity : BaseActivity() {
                     SaveLocationForm(
                         "${location.latitude}",
                         "${location.longitude}",
-                        location.city?:"",
+                        location.city ?: "",
                         location.province,
                         location.district
                     )
@@ -309,6 +313,14 @@ class MainActivity : BaseActivity() {
                     "99+"
                 }
                 showUnreadCount()
+
+                if (Build.MANUFACTURER.toLowerCase() == "huawei" && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val badgeCount = min(it, 99)
+                    ShortcutBadger.applyCount(this, badgeCount) //for 1.1.4+
+//                    startService(Intent(this@MainActivity, BadgeIntentService::class.java).putExtra("badgeCount", badgeCount))
+                }
+
+//                mMessageViewModel.showLogoCount()
             }
         })
 
