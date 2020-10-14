@@ -337,6 +337,9 @@ object MessageConstants {
 
     //花魁榜
     const val PlumFlower = "PlumFlower"
+    
+    //搭讪常用语页面
+    const val AccostWords = "AccostWords"
 
 
 }

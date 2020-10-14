@@ -21,7 +21,7 @@ class MaxSizeScrollView(context: Context?, attrs: AttributeSet?, defStyleAttr: I
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var heightMeasureSpec = heightMeasureSpec
         //最大高度为249dp
-        val maxHeight = dp2px(240)
+        val maxHeight = dp2px(290)
         //此处是关键，设置控件高度不能超过屏幕高度一半（d.heightPixels / 2）（在此替换成自己需要的高度）
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST)
         //重新计算控件高、宽

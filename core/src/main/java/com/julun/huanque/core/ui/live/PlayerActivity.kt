@@ -2072,6 +2072,7 @@ class PlayerActivity : BaseActivity() {
     override fun onNewIntent(intent: Intent) {
         logger.info("onNewIntent")
         super.onNewIntent(intent)
+        AliplayerManager.stop()
         setIntent(intent)
         //每次回来重置显隐 防止异常回来没有触发显示
         liveViewManager.showOrHideContentView(hide = false, needAnimator = false)
