@@ -16,16 +16,17 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMActivity
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
 import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.FileUtils
-import com.julun.huanque.common.utils.StatusBarUtil
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.bitmap.BitmapUtil
+import com.julun.huanque.common.utils.device.PhoneUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
@@ -216,8 +217,25 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         ToastUtils.show("权限无法获取")
                     else -> {
                         logger("获取权限被永久拒绝")
-                        val message = "无法获取到录音权限，请手动到设置中开启"
-                        ToastUtils.show(message)
+                        val message = "存储权限被禁用，请到设置中授予欢鹊存储权限"
+                        MyAlertDialog(this).showAlertWithOKAndCancel(message = message,
+                            title = "设置提醒",
+                            noText = "取消",
+                            okText = "去设置",
+                            callback = MyAlertDialog.MyDialogCallback(
+                                onRight = {
+                                    PhoneUtils.getPermissionSetting(packageName).let {
+                                        if (ForceUtils.activityMatch(it)) {
+                                            try {
+                                                startActivity(it)
+                                            } catch (e: Exception) {
+                                                reportCrash("跳转权限或者默认设置页失败", e)
+                                            }
+                                        }
+                                    }
+
+                                }
+                            ))
                     }
                 }
 
@@ -225,22 +243,22 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
     }
 
     private fun shareLive(type: String) {
-        val shareObject=mViewModel.liveShareInfo.value?.getT() ?: return
+        val shareObject = mViewModel.liveShareInfo.value?.getT() ?: return
         when (type) {
             ShareTypeEnum.FriendCircle -> {
                 //朋友圈
                 if (wxService?.checkWeixinInstalled(this) == true) {
-                    shareObject.shareType=WeiXinShareType.WXWeb
+                    shareObject.shareType = WeiXinShareType.WXWeb
                     shareObject.shareWay = ShareWayEnum.WXSceneTimeline
                     shareObject.platForm = ShareTypeEnum.FriendCircle
-                    wxService?.weiXinShare(this,shareObject )
+                    wxService?.weiXinShare(this, shareObject)
                     finish()
                 }
             }
             ShareTypeEnum.WeChat -> {
                 //微信
                 if (wxService?.checkWeixinInstalled(this) == true) {
-                    shareObject.shareType=WeiXinShareType.WXWeb
+                    shareObject.shareType = WeiXinShareType.WXWeb
                     shareObject.shareWay = ShareWayEnum.WXSceneSession
                     shareObject.platForm = ShareTypeEnum.WeChat
                     wxService?.weiXinShare(this, shareObject)
@@ -248,7 +266,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                 }
             }
             ShareTypeEnum.Sina -> {
-                shareObject.shareType= WeiBoShareType.WbWeb
+                shareObject.shareType = WeiBoShareType.WbWeb
                 shareObject.platForm = ShareTypeEnum.Sina
                 wxService?.weiBoShare(this, shareObject)
             }

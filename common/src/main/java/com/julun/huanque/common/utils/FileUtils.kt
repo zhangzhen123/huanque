@@ -644,7 +644,7 @@ object FileUtils {
             e.printStackTrace()
         }
 
-        return FormetFileSize(blockSize, sizeType)
+        return formatFileSize(blockSize, sizeType)
     }
 
     /**
@@ -666,7 +666,7 @@ object FileUtils {
             e.printStackTrace()
         }
 
-        return FormetFileSize(blockSize)
+        return formatFileSize(blockSize)
     }
 
     /**
@@ -716,7 +716,7 @@ object FileUtils {
      * @param fileS
      * @return
      */
-    private fun FormetFileSize(fileS: Long): String {
+    private fun formatFileSize(fileS: Long): String {
         val df = DecimalFormat("#.00")
         var fileSizeString = ""
         val wrongSize = "0B"
@@ -742,14 +742,14 @@ object FileUtils {
      * @param sizeType
      * @return
      */
-    private fun FormetFileSize(fileS: Long, sizeType: Int): Double {
+    private fun formatFileSize(fileS: Long, sizeType: Int): Double {
         val df = DecimalFormat("#.00")
         var fileSizeLong = 0.0
         when (sizeType) {
-            SIZETYPE_B -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble()))!!
-            SIZETYPE_KB -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble() / 1024))!!
-            SIZETYPE_MB -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble() / 1048576))!!
-            SIZETYPE_GB -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble() / 1073741824))!!
+            SIZETYPE_B -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble()))
+            SIZETYPE_KB -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble() / 1024))
+            SIZETYPE_MB -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble() / 1048576))
+            SIZETYPE_GB -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble() / 1073741824))
             else -> {
             }
         }
@@ -782,7 +782,7 @@ object FileUtils {
             //            return isTrue;
         } else {
             Log.v("saveBitmap brand", "" + brand)
-            File(fileName)
+            createFile(fileName)?:File(fileName)
         }
         if (file.exists()) {
             file.delete()

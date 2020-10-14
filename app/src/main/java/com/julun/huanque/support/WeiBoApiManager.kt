@@ -90,7 +90,7 @@ object WeiBoApiManager {
                 webObject.actionUrl = shareObj.shareUrl
                 webObject.defaultText = shareObj.shareTitle
                 message.mediaObject = webObject
-                mShareClientOnly = true
+                mShareClientOnly = false
                 //单纯分享链接太单调 这里带上相关图片
                 if (shareObj.bigPic.isEmpty()) {
                     val imageObject = ImageObject()
