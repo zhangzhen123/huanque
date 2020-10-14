@@ -239,6 +239,10 @@ class SysMsgActivity : BaseActivity() {
                 bundle.putString(ParamConstant.TYPE, sysBean.touchValue)
                 ARouter.getInstance().build(ARouterConstant.PLUM_FLOWER_ACTIVITY).with(bundle).navigation()
             }
+            MessageConstants.AccostWords->{
+                //搭讪常用语
+                UsefulWordActivity.newInstance(this)
+            }
 //            else -> {
 //                ToastUtils.show("没有记录的action类型 -> ${touchType}")
 //            }
