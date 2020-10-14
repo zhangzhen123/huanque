@@ -74,6 +74,65 @@ import kotlin.properties.Delegates
 @Route(path = ARouterConstant.PLAYER_ACTIVITY)
 class PlayerActivity : BaseActivity() {
 
+    companion object {
+        //主播开播之前数据
+        const val AnchorData = "AnchorData"
+        private const val PERMISSIONALERT_WINDOW_CODE = 123
+
+        /**
+         * @param activity 源Activity
+         * @param draft 草稿数据
+         */
+        fun start(
+            activity: Activity, programId: Long,
+            prePic: String? = null,
+            from: String = "",
+            draft: String = ""
+        ) {
+            val intent = Intent(activity, PlayerActivity::class.java)
+            val bundle = Bundle()
+            bundle.putLong(IntentParamKey.PROGRAM_ID.name, programId)
+            prePic?.let {
+                bundle.putString(IntentParamKey.IMAGE.name, it)
+            }
+            bundle.putString(ParamConstant.FROM, from)
+            if (draft.isNotEmpty()) {
+                bundle.putString(ParamConstant.Program_Draft, draft)
+            }
+            intent.putExtras(bundle)
+            activity.startActivity(intent)
+        }
+
+        /**
+         * @param activity 源Activity
+         * @param isAnchor 是不是主播进入
+         */
+        fun authorStart(
+            activity: Activity, isAnchor: Boolean = false, programId: Long? = null,
+            streamId: String? = null, prePic: String? = null, against: GuardAgainst? = null,
+            from: String = ""
+        ) {
+            val intent = Intent(activity, PlayerActivity::class.java)
+            val bundle = Bundle()
+            intent.putExtra(UserType.Anchor, isAnchor)
+            programId?.let {
+                bundle.putLong(IntentParamKey.PROGRAM_ID.name, it)
+            }
+            streamId?.let {
+                bundle.putString(IntentParamKey.STREAM_ID.name, it)
+            }
+            prePic?.let {
+                bundle.putString(IntentParamKey.IMAGE.name, it)
+            }
+            against?.let {
+                bundle.putSerializable(AnchorData, it)
+            }
+            bundle.putString(ParamConstant.FROM, from)
+            intent.putExtras(bundle)
+            activity.startActivity(intent)
+        }
+    }
+
     private lateinit var liveViewManager: PlayerViewManager
     private lateinit var transformManager: PlayerTransformManager
 
@@ -177,65 +236,6 @@ class PlayerActivity : BaseActivity() {
 
     //是否被封禁了
     private var isBanned: Boolean = false
-
-    companion object {
-        //主播开播之前数据
-        const val AnchorData = "AnchorData"
-        private const val PERMISSIONALERT_WINDOW_CODE = 123
-
-        /**
-         * @param activity 源Activity
-         * @param draft 草稿数据
-         */
-        fun start(
-            activity: Activity, programId: Long,
-            prePic: String? = null,
-            from: String = "",
-            draft: String = ""
-        ) {
-            val intent = Intent(activity, PlayerActivity::class.java)
-            val bundle = Bundle()
-            bundle.putLong(IntentParamKey.PROGRAM_ID.name, programId)
-            prePic?.let {
-                bundle.putString(IntentParamKey.IMAGE.name, it)
-            }
-            bundle.putString(ParamConstant.FROM, from)
-            if (draft.isNotEmpty()) {
-                bundle.putString(ParamConstant.Program_Draft, draft)
-            }
-            intent.putExtras(bundle)
-            activity.startActivity(intent)
-        }
-
-        /**
-         * @param activity 源Activity
-         * @param isAnchor 是不是主播进入
-         */
-        fun authorStart(
-            activity: Activity, isAnchor: Boolean = false, programId: Long? = null,
-            streamId: String? = null, prePic: String? = null, against: GuardAgainst? = null,
-            from: String = ""
-        ) {
-            val intent = Intent(activity, PlayerActivity::class.java)
-            val bundle = Bundle()
-            intent.putExtra(UserType.Anchor, isAnchor)
-            programId?.let {
-                bundle.putLong(IntentParamKey.PROGRAM_ID.name, it)
-            }
-            streamId?.let {
-                bundle.putString(IntentParamKey.STREAM_ID.name, it)
-            }
-            prePic?.let {
-                bundle.putString(IntentParamKey.IMAGE.name, it)
-            }
-            against?.let {
-                bundle.putSerializable(AnchorData, it)
-            }
-            bundle.putString(ParamConstant.FROM, from)
-            intent.putExtras(bundle)
-            activity.startActivity(intent)
-        }
-    }
 
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -401,7 +401,11 @@ class PlayerActivity : BaseActivity() {
 
         viewModel.alertViewMsg.observe(this, Observer {
             if (it?.isNotEmpty() == true) {
-//                showAlertViewWithCallback(it) { finish() }
+                MyAlertDialog(this@PlayerActivity).showAlertWithOK(
+                    it, MyAlertDialog.MyDialogCallback(onDismiss = {
+                        finish()
+                    })
+                )
             }
         })
         viewModel.stopLiveData.observe(this, Observer {
@@ -1138,26 +1142,6 @@ class PlayerActivity : BaseActivity() {
 
         // 初始化headerView数据
         liveHeader.initData(data)
-        //todo
-//        chatInputView.setFreeDanMu(data.user?.hasFreeDanMu ?: false, data.user?.danMuCard ?: 0)
-//        //贵族弹幕输入初始化
-//        chatInputView.initRoyalDanmu(data.user?.royalLevel ?: 0)
-//        val anchorData = viewModel.baseData.value
-//        anchorData?.let {
-//            chatInputView.setAnchorIdAndProgramId(it.anchorId, it.programId)
-//        }
-//
-//        data.anchor?.let {
-//            chatInputView.setAnchorIdAndProgramId(it.anchorId, it.programId)
-//        }
-
-        // 设置聊天框最大字数限制
-//        val speakCount = if (data.user?.mystery == true) {
-//            40
-//        } else {
-//            GlobalUtils.speakCount(isAnchor, data?.user)
-//        }
-//        chatInputView.setInputTextMaxSize(speakCount)
         if (publishFragment != null) {
             //todo 流名
 //            publishFragment?.mPublishStramTitle = viewModel.baseData.value?.programName ?: ""
@@ -2099,6 +2083,8 @@ class PlayerActivity : BaseActivity() {
             if (program == programId) {
                 //对于切换直播间id相同的不再执行切换操作 在这里直接做相应额外操作
                 if (mBirdAwardCountInfo != null) {
+                    //通知后台标记任务开始
+                    viewModel.markBirdTask()
                     bird_count_view.showCounting(mBirdAwardCountInfo!!)
                     mBirdAwardCountInfo = null
                 }

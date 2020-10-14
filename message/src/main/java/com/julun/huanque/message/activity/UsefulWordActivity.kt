@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.view.panel.PanelView
@@ -22,6 +23,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.SingleUsefulWords
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.EmojiType
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
@@ -47,6 +49,7 @@ import org.jetbrains.anko.imageResource
  *@创建时间 2020/10/10 17:27
  *@描述 常用语页面
  */
+@Route(path = ARouterConstant.USE_FUL_WORD_ACTIVITY)
 class UsefulWordActivity : BaseActivity() {
 
     companion object {

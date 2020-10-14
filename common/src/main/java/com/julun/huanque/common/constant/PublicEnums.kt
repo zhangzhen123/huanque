@@ -575,6 +575,7 @@ object PushDataActionType {
     //Famous: 名人榜单Tab
     const val PlumFlower = "PlumFlower"//（跳转到今日花魁）
 
+    const val AccostWords = "AccostWords"//定位到搭讪常用语页面
 }
 
 object HomePageOnlineStatus {
