@@ -140,9 +140,18 @@ interface LiveRoomService {
      */
     @POST("live/room/info/randomRoom")
     suspend fun randomRoom(@Body form: RandomRoomForm): Root<ProgramRoomBean>
+
+    /**
+     * 请求标记直播间欢鹊领取任务
+     */
+    @POST("social/magpie/watchStart")
+    suspend fun watchStart(@Body form: ProgramIdForm): Root<VoidResult>
+
     /**
      * 观看直播任务结束
      */
     @POST("social/magpie/watchLive")
     suspend fun watchLiveEnd(@Body form: ProgramIdForm): Root<VoidResult>
+
+
 }

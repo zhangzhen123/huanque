@@ -70,6 +70,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         mAdapter.type = mViewModel.mType
 
         initRecyclerView()
+        MixedHelper.setSwipeRefreshStyle(swiperefreshlayout)
 
     }
     override fun lazyLoadData() {

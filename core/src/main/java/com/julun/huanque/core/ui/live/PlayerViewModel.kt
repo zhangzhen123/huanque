@@ -140,9 +140,6 @@ class PlayerViewModel : BaseViewModel() {
     //显示余额不足页面
     val notEnoughBalance: MutableLiveData<NotEnoughBalanceBean> by lazy { MutableLiveData<NotEnoughBalanceBean>() }
 
-    //显示停播弹窗
-    val closeView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
     val recommendView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //显示警告弹窗
@@ -151,9 +148,6 @@ class PlayerViewModel : BaseViewModel() {
 
     //显示开通守护弹窗
     val guardView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-    //显示普通管理弹窗
-    val masterView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //打开相应功能的简单设置（合并一些只需要传Boolean值的设置）
     val actionBeanData: MutableLiveData<BottomActionBean> by lazy { MutableLiveData<BottomActionBean>() }
@@ -255,8 +249,6 @@ class PlayerViewModel : BaseViewModel() {
 
     //确定弹窗文本
     val alertViewMsg: MutableLiveData<String> by lazy { MutableLiveData<String>() }
-
-    val dismissStatus: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //打开红包弹窗
     val openRPFragment: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -501,10 +493,7 @@ class PlayerViewModel : BaseViewModel() {
                 it.printStackTrace()
                 errorState.value = 3
                 if (it is ResponseError) {
-                    when (it.busiCode) {
-                        -1 -> alertViewMsg.value =
-                            CommonInit.getInstance().getContext().resources.getString(R.string.system_error)
-                    }
+                    alertViewMsg.value = CommonInit.getInstance().getContext().resources.getString(R.string.system_error)
                 } else {
                     ToastUtils.show(it.message)
                     finishState.value = true
@@ -643,7 +632,7 @@ class PlayerViewModel : BaseViewModel() {
                 openGiftAndSelPack.value = true
             }
             TextTouch.Magpie -> {
-                showDialog.value=BirdDialogFragment::class.java
+                showDialog.value = BirdDialogFragment::class.java
             }
             else -> {
                 logger("注意 ！！该点击事件没有执行")
@@ -747,6 +736,18 @@ class PlayerViewModel : BaseViewModel() {
 
                 }
                 RongCloudManager.updateChatBubble(bubbleInfo)
+            }, {
+                it.printStackTrace()
+            })
+
+        }
+    }
+
+    //请求标记养鹊任务 对于切换领取任务的直播间还是当前直播间时 直接请求标记后台
+    fun markBirdTask() {
+        viewModelScope.launch {
+            request({
+                val result = liveService.watchStart(ProgramIdForm(programId)).dataConvert()
             }, {
                 it.printStackTrace()
             })
