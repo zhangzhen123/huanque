@@ -296,7 +296,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 }
                 showMessageView(helper, TEXT_MESSAGE, helper.itemViewType, user?.chatBubble)
                 //是否显示大表情
-                val bigEmoji = EmojiSpanBuilder.allEmoji(context, content.content)
+                val bigEmoji = EmojiSpanBuilder.allEmoji(context, content.content ?: "")
                 val sdv_mark = helper.getView<SimpleDraweeView>(R.id.sdv_mark)
 
                 if (bigEmoji) {
@@ -312,7 +312,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     }
                     tvContent.setPadding(dp2px(15), dp2px(10), dp2px(15), dp2px(10))
                 }
-                tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content, bigEmoji)
+                tvContent.text = EmojiSpanBuilder.buildEmotionSpannable(context, content.content ?: "", bigEmoji)
 //                    EmojiUtil.message2emoji(content.content)
                 //判断是否显示文本鹊币
 //                if (helper.itemViewType == OTHER) {

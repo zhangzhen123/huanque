@@ -138,7 +138,7 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun initEvents(rootView: View) {
-        con.onClickNew {
+        con.onClick {
             if (BuildConfig.DEBUG) {
                 //切换环境
                 val intent = Intent(this, EnvironmentConfigurationActivity::class.java)
