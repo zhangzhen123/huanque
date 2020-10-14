@@ -2072,7 +2072,6 @@ class PlayerActivity : BaseActivity() {
     override fun onNewIntent(intent: Intent) {
         logger.info("onNewIntent")
         super.onNewIntent(intent)
-        AliplayerManager.stop()
         setIntent(intent)
         //每次回来重置显隐 防止异常回来没有触发显示
         liveViewManager.showOrHideContentView(hide = false, needAnimator = false)
@@ -2127,6 +2126,7 @@ class PlayerActivity : BaseActivity() {
     private fun checkoutRoom(program: Long) {
         //如果当前是主播推流 禁止一切切换房间
         if (!isAnchor && program != 0L && this@PlayerActivity.programId != program) {
+//            AliplayerManager.stop()
             viewModel.anchorProgramId.value = program
             //通过viewModel设置ProgramId会有延迟，不能保证实时更新ProgramId
             this@PlayerActivity.programId = program

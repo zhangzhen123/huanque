@@ -145,6 +145,7 @@ open class LivePlayerFragment : BaseFragment() {
 
         mVideoViewModel.stopAllStreamState.observe(this, Observer {
             if (it == true) {
+                AliplayerManager.stop()
                 stopAllStream()
                 mVideoViewModel.stopAllStreamState.value = null
             }
