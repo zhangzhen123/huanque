@@ -73,6 +73,9 @@ object ARouterConstant {
 
     const val SysMsgActivity = "/$MESSAGE$PREFIX_ACTIVITY/SysMsgActivity"
 
+    //搭讪常用语页面
+    const val USE_FUL_WORD_ACTIVITY = "/$MESSAGE$PREFIX_ACTIVITY/UsefulWordActivity"
+
     //亲密特权弹窗
     const val SINGLE_INTIMATE_PRIVILEGE_FRAGMENT = "/$MESSAGE$PREFIX_FRAGMENT/SingleIntimateprivilegeFragment"
 

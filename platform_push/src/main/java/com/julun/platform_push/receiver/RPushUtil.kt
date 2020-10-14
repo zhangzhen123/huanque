@@ -133,6 +133,10 @@ object RPushUtil {
                         this.putLong(ParamConstant.TARGET_USER_ID, targetId)
                     }, goHome = true)
                 }
+                PushDataActionType.AccostWords ->{
+                    startActivityByARouter(context, ARouterConstant.USE_FUL_WORD_ACTIVITY, goHome = true)
+
+                }
                 else -> {
                     shouldOpenMain(context = context)
                 }
