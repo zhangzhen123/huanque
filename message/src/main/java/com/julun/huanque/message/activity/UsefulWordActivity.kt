@@ -125,6 +125,7 @@ class UsefulWordActivity : BaseActivity() {
                 val bean = mUsefulWordViewModel.currentWordsBean ?: return@Observer
                 if (it == UsefulWordViewModel.ACTION_EDIT) {
                     //编辑
+                    ll_input.show()
                     mHelper?.toKeyboardState(true)
                     edit_text.requestFocus()
                     edit_text.setText(bean.words)
