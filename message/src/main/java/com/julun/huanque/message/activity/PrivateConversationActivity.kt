@@ -227,8 +227,8 @@ class PrivateConversationActivity : BaseActivity() {
 
         //显示草稿
         val draft = mPrivateConversationViewModel?.getDraft() ?: ""
+        edit_text.setText(draft)
         if (draft.isNotEmpty()) {
-            edit_text.setText(draft)
             edit_text.setSelection(edit_text.text.toString().length)
             tv_send.isEnabled = true
             if (mHelper == null) {
