@@ -69,6 +69,17 @@ open class ProgramLiveInfo : Serializable {
 
     //播放数据
     var playInfo: PlayInfo? = null
+    //去重需要
+    override fun equals(other: Any?): Boolean {
+        if (other is ProgramLiveInfo) {
+            return this.programId == other.programId
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return programId.toInt()
+    }
 }
 
 class ProgramLiveIndexInfo : ProgramLiveInfo() {

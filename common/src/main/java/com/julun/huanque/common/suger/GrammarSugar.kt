@@ -389,7 +389,7 @@ fun <E> LinkedHashSet<E>.removeScope(range: Int) {
 /**
  * list去重操作 (对象去重必须重写equals和hashcode两方法)
  */
-fun <T> ArrayList<T>.removeDuplicate() {
+fun <T> MutableList<T>.removeDuplicate() {
     val set = LinkedHashSet<T>(this.size)
     set.addAll(this)
     this.clear()

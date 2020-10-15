@@ -27,10 +27,7 @@ import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.setTFDinCdc2
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
@@ -173,6 +170,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
     private fun renderHotData(listData: RootListData<ProgramLiveInfo>) {
 
         if (listData.isPull) {
+            listData.list.removeDuplicate()
             authorAdapter.setList(listData.list)
             if (listData.list.isNotEmpty()) {
                 headerLayout.hotTitle.show()
@@ -199,7 +197,8 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
 
             }
         } else {
-            authorAdapter.addData(listData.list)
+            val list=listData.list.removeDuplicate(authorAdapter.data)
+            authorAdapter.addData(list)
         }
         if (listData.hasMore) {
             //如果下拉加载更多时 返回的列表为空 会触发死循环 这里直接设置加载完毕状态
