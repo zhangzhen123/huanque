@@ -170,8 +170,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
     private fun renderHotData(listData: RootListData<ProgramLiveInfo>) {
 
         if (listData.isPull) {
-            listData.list.removeDuplicate()
-            authorAdapter.setList(listData.list)
+            authorAdapter.setList(listData.list.distinct())
             if (listData.list.isNotEmpty()) {
                 headerLayout.hotTitle.show()
             } else {
@@ -197,8 +196,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
 
             }
         } else {
-            val list=listData.list.removeDuplicate(authorAdapter.data)
-            authorAdapter.addData(list)
+            authorAdapter.addNoDuplicate(listData.list)
         }
         if (listData.hasMore) {
             //如果下拉加载更多时 返回的列表为空 会触发死循环 这里直接设置加载完毕状态

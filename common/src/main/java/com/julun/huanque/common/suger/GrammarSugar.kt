@@ -388,6 +388,8 @@ fun <E> LinkedHashSet<E>.removeScope(range: Int) {
 
 /**
  * list去重操作 (对象去重必须重写equals和hashcode两方法)
+ *
+ * 单纯的去重还可以使用官方的api [Iterable.distinct] 这个效率更高
  */
 fun <T> MutableList<T>.removeDuplicate() {
     val set = LinkedHashSet<T>(this.size)
