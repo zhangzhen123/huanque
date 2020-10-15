@@ -138,13 +138,13 @@ object AliplayerManager {
         config.mNetworkTimeout = 2000;
         config.mNetworkRetryCount = 100;
         //最大延迟。注意：直播有效。当延时比较大时，播放器sdk内部会追帧等，保证播放器的延时在这个范围内。
-        config.mMaxDelayTime = 3000;
+        config.mMaxDelayTime = 5000;
 // 最大缓冲区时长。单位ms。播放器每次最多加载这么长时间的缓冲数据。
-//        config.mMaxBufferDuration = 50000;
+        config.mMaxBufferDuration = 50000;
 //高缓冲时长。单位ms。当网络不好导致加载数据时，如果加载的缓冲时长到达这个值，结束加载状态。
-//        config.mHighBufferDuration = 3000;
+        config.mHighBufferDuration = 3000;
 // 起播缓冲区时长。单位ms。这个时间设置越短，起播越快。也可能会导致播放之后很快就会进入加载状态。
-//        config.mStartBufferDuration = 500;
+        config.mStartBufferDuration = 500;
         mAliPlayer?.config = config
     }
 

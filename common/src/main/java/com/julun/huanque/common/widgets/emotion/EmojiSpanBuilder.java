@@ -28,6 +28,9 @@ public class EmojiSpanBuilder {
      * @return
      */
     public static boolean allEmoji(Context context, String text) {
+        if(text == null){
+            return false;
+        }
         Matcher matcherEmotion = sPatternEmotion.matcher(text);
         int keyLengh = 0;
 
@@ -55,6 +58,9 @@ public class EmojiSpanBuilder {
      * @return
      */
     public static Spannable buildEmotionSpannable(Context context, String text, Boolean big) {
+        if(text == null){
+            return new SpannableString("");
+        }
         int border = DensityHelper.dp2px(20f);
         if (big) {
             border = DensityHelper.dp2px(46f);

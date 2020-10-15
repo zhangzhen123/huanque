@@ -830,7 +830,7 @@ object RongCloudManager {
                     return
                 }
                 logger.info("收到文本消息 ${JsonUtil.serializeAsString(content)}")
-                val bean = TplBean(textTpl = content.content)
+                val bean = TplBean(textTpl = content.content ?: "")
 
                 if (message.conversationType == Conversation.ConversationType.PRIVATE) {
                     //私聊消息  前期模拟数据  直接return

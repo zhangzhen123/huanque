@@ -227,8 +227,8 @@ class PrivateConversationActivity : BaseActivity() {
 
         //显示草稿
         val draft = mPrivateConversationViewModel?.getDraft() ?: ""
+        edit_text.setText(draft)
         if (draft.isNotEmpty()) {
-            edit_text.setText(draft)
             edit_text.setSelection(edit_text.text.toString().length)
             tv_send.isEnabled = true
             if (mHelper == null) {
@@ -1425,7 +1425,7 @@ class PrivateConversationActivity : BaseActivity() {
                     val content = tempData.content
                     if (content is TextMessage) {
                         //显示复制弹窗
-                        showCopyView(view, content.content)
+                        showCopyView(view, content.content ?: "")
                     }
                 }
                 else -> {
@@ -1493,7 +1493,7 @@ class PrivateConversationActivity : BaseActivity() {
                 when (content) {
                     is TextMessage -> {
                         //重发文本消息
-                        sendChatMessage(content.content, messageType = Message_Text)
+                        sendChatMessage(content.content ?: "", messageType = Message_Text)
                     }
                     is CustomMessage -> {
                         //自定义消息重发

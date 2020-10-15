@@ -8,6 +8,8 @@ import com.julun.huanque.common.helper.UnExpectedCrashExceptionForhuanqueApp
 import com.julun.huanque.common.interfaces.routerservice.AppCommonService
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.suger.logger
+import com.tencent.bugly.crashreport.CrashReport
+
 //import com.julun.jpushlib.TagAliasOperatorHelper
 
 @Route(path = ARouterConstant.APP_COMMON_SERVICE)
@@ -31,6 +33,7 @@ class AppCommonServiceImpl : AppCommonService {
 //        tagAliasBean.isAliasAction = true
 //        tagAliasBean.alias = userId
 //        TagAliasOperatorHelper.getInstance().handleAction(tagAliasBean)
+        CrashReport.setUserId("${session.userId}")
     }
 
     override fun logout() {

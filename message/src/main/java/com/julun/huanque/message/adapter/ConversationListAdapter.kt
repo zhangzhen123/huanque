@@ -160,17 +160,17 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 when (targetId) {
                     SystemTargetId.systemNoticeSender -> {
                         tv_draft.hide()
-                        val msgConent = MessageFormatUtils.formatSysMsgContent(msg.content)
+                        val msgConent = MessageFormatUtils.formatSysMsgContent(msg.content ?: "")
                         helper.setText(R.id.tv_content, msgConent?.context?.body ?: "")
                     }
                     SystemTargetId.friendNoticeSender -> {
                         tv_draft.hide()
-                        val msgConent: FriendContent? = MessageFormatUtils.parseJsonFromTextMessage(FriendContent::class.java, msg.content)
+                        val msgConent: FriendContent? = MessageFormatUtils.parseJsonFromTextMessage(FriendContent::class.java, msg.content ?: "")
                         MessageFormatUtils.renderImage(helper.getView(R.id.tv_content), msgConent?.context ?: return, true)
                     }
                     else -> {
                         if (!showDraftView(helper, targetId)) {
-                            helper.setText(R.id.tv_content, EmojiSpanBuilder.buildEmotionSpannable(context, msg.content))
+                            helper.setText(R.id.tv_content, EmojiSpanBuilder.buildEmotionSpannable(context, msg.content ?: ""))
                         }
 
                     }

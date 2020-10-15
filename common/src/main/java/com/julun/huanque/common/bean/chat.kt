@@ -34,7 +34,7 @@ data class ChatUser(
 
 
     override fun toString(): String {
-        return "ChatUser(headPic='$headPic', nickname='$nickname', userId=$userId, intimateLevel=$intimateLevel, meetStatus='$meetStatus', sex='$sex', mineUserId=$mineUserId, stranger=$stranger, backPic='$backPic')"
+        return "ChatUser(headPic='$headPic', nickname='$nickname', userId=$userId, intimateLevel=$intimateLevel, meetStatus='$meetStatus', sex='$sex', mineUserId=$mineUserId, stranger=$stranger, backPic='$backPic',userType='$userType')"
     }
 
 }

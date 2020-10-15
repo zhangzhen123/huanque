@@ -41,7 +41,7 @@ class FriendsAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.item_f
         val item = info.content as? TextMessage
         item?.let {
             val customBean: FriendContent? =
-                MessageFormatUtils.parseJsonFromTextMessage(FriendContent::class.java, item.content)
+                MessageFormatUtils.parseJsonFromTextMessage(FriendContent::class.java, item.content ?: "")
 
             val itemInfo = customBean?.context
 

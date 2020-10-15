@@ -15,6 +15,7 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.hide
@@ -141,7 +142,10 @@ class FateQuickMatchFragment : BaseDialogFragment() {
                 MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
                     "您还没有添加搭讪常用语，快去添加吧",
                     MyAlertDialog.MyDialogCallback(onRight = {
-                        UsefulWordActivity.newInstance(requireActivity())
+                        CommonInit.getInstance().getCurrentActivity()?.let {
+                            UsefulWordActivity.newInstance(it)
+                        }
+
                     }), "提示", "去添加"
                 )
                 mFateQuickMatchViewModel.showAlertFlag.value = null
