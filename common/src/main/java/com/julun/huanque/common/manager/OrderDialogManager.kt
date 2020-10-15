@@ -30,16 +30,17 @@ class OrderDialogManager(val act: BaseActivity) {
 
     companion object {
 
-        const val USER_POSITIVE=-2//用户手动打开（对于有排队可能的弹窗）
-        const val NO_ORDER=-1//无排序
-        const val LOCAL_ORDER=0//局部页面排队
-        const val GLOBAL_ORDER=1//全局排队
+        const val USER_POSITIVE = -2//用户手动打开（对于有排队可能的弹窗）
+        const val NO_ORDER = -1//无排序
+        const val LOCAL_ORDER = 0//局部页面排队
+        const val GLOBAL_ORDER = 1//全局排队
 
         //全局的Dialog对象使用的数据对象 注 这里类型只接受Dialog或者DialogFragment
         private val mGlobalDialogOrderList = LinkedList<BaseDialogFragment>()
 
         //记录当前有焦点的act的弹窗管理器
         private var currentManager: OrderDialogManager? = null
+
         //记录上次弹出是否失败 失败的话打开新界面时直接触发
         private var lastPopFailed = false
 
@@ -54,6 +55,14 @@ class OrderDialogManager(val act: BaseActivity) {
                 currentManager?.popData()
             }
 
+        }
+
+        /**
+         * 由于是静态变量引用的manager引用act 所以在主页关闭时释放相应引用防止泄漏
+         */
+        fun release() {
+            mGlobalDialogOrderList.clear()
+            currentManager = null
         }
 
         fun addGlobalOrderDialog(data: BaseDialogFragment?) {
@@ -86,6 +95,7 @@ class OrderDialogManager(val act: BaseActivity) {
     private val mDialogOrderList = LinkedList<BaseDialogFragment>()
 
     private val logger: Logger = ULog.getLogger("OrderDialogManager")
+
     //弹窗排序使用的ViewModel
     private var mOrderViewModel = ViewModelProviders.of(act).get(OrderViewModel::class.java)
 
@@ -102,21 +112,6 @@ class OrderDialogManager(val act: BaseActivity) {
                 mOrderViewModel.dialog.value = null
             }
         })
-//        act.lifecycle.addObserver(GenericLifecycleObserver { _, event ->
-//            when (event) {
-//
-//                Lifecycle.Event.ON_CREATE -> {
-//
-//                }
-//                Lifecycle.Event.ON_RESUME -> {
-//                    startManager(this)
-//                }
-//                Lifecycle.Event.ON_DESTROY -> {
-////                    act.lifecycle.removeObserver(this@GenericLifecycleObserver)
-//                    clear()
-//                }
-//            }
-//        })
         act.lifecycle.addObserver(@SuppressLint("RestrictedApi")
         object : GenericLifecycleObserver {
             override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {

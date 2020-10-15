@@ -15,6 +15,8 @@ ext {
             AROUTER_COMPILER             : 'com.alibaba:arouter-compiler:1.2.0',
             BUGLY_CRASHREPORT            : 'com.tencent.bugly:crashreport:3.0.0',
             BUGLY_NATIVECRASHREPORT      : 'com.tencent.bugly:nativecrashreport:3.7.1',
+            //内存泄漏检测 2.0以上无需配置任何代码
+            LEAKCANARY_ANDROID_DEBUG     : 'com.squareup.leakcanary:leakcanary-android:2.5',
             //Lottit动画库
             LOTTIE                       : 'com.airbnb.android:lottie:3.3.0',
             //声网SDK

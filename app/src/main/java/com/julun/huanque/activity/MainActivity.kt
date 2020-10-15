@@ -27,10 +27,7 @@ import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.manager.ActivitiesManager
-import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.manager.UserHeartManager
-import com.julun.huanque.common.manager.VoiceManager
+import com.julun.huanque.common.manager.*
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -266,6 +263,9 @@ class MainActivity : BaseActivity() {
         super.onDestroy()
         UserHeartManager.stopBeat()
         RongIMClient.getInstance().disconnect()
+        //内存泄漏相关优化
+        OrderDialogManager.release()
+        MessageProcessor.clearProcessors(true)
     }
 
 
