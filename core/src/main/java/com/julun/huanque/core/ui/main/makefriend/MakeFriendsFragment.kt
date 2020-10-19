@@ -36,7 +36,7 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
-import com.julun.huanque.core.manager.AliplayerManager
+import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.ui.main.home.HomeViewModel
@@ -97,17 +97,17 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
             override fun resume() {
                 logger.info("resume")
-                AliplayerManager.soundOff()
+                AliPlayerManager.soundOff()
             }
 
             override fun pause() {
                 logger.info("pause")
-                AliplayerManager.soundOn()
+                AliPlayerManager.soundOn()
             }
 
             override fun stop() {
                 logger.info("stop")
-                AliplayerManager.soundOn()
+                AliPlayerManager.soundOn()
             }
 
 

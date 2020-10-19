@@ -45,7 +45,7 @@ import com.julun.huanque.common.viewmodel.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.core.R
-import com.julun.huanque.core.manager.AliplayerManager
+import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
@@ -262,7 +262,7 @@ class PlayerActivity : BaseActivity() {
             mShareUSerId = intent.getStringExtra(ParamConstant.ShareUserId) ?: ""
             mBirdAwardCountInfo = intent.getSerializableExtra(ParamConstant.BIRD_AWARD_INFO) as? BirdLiveAward
             if (mFrom != PlayerFrom.FloatWindow) {
-                AliplayerManager.stop()
+                AliPlayerManager.stop()
             }
 //            isFromSquare = intent.getBooleanExtra(FromPager.FROM_SQUARE, false)
             //gift=-1代表无效
@@ -1455,7 +1455,7 @@ class PlayerActivity : BaseActivity() {
      * 如果收到关播指令 先关闭当前播放
      */
     private fun closeVideoPlayer() {
-        mVideoViewModel?.stopAllStreamState?.value = true
+        mVideoViewModel.stopAllStreamState.value = true
     }
 
     private var roomDataFetchedFromServer: Boolean = false //房间信息的http请求是否已经正确返回
@@ -1666,7 +1666,7 @@ class PlayerActivity : BaseActivity() {
                     )
                 } else {
                     //收到停播消息，设置上次开播时间为刚刚
-                    AliplayerManager.stop()
+//                    AliPlayerManager.stop()
                     showOriView()
                     mVideoViewModel.logout.postValue(true)
                     viewModel.baseData.value?.lastShowTimeDiffText = "刚刚"
@@ -1926,7 +1926,7 @@ class PlayerActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         FloatingManager.hideFloatingView()
-        AliplayerManager.soundOn()
+        AliPlayerManager.soundOn()
         //从其他页面回来，获取气泡数据
         viewModel.requestBubble()
         //处理支付刷新
@@ -1961,7 +1961,8 @@ class PlayerActivity : BaseActivity() {
                 etContent
             )
         } else {
-            AliplayerManager.stop()
+//            AliPlayerManager.stop()
+            AliPlayerManager.destroy()
             viewModel.leave()
         }
         exitLiveRoom()
@@ -1979,12 +1980,12 @@ class PlayerActivity : BaseActivity() {
         if (isBanned) {
             if (isAnchor) {
                 stopPublish()
-            } else {
+            }/* else {
 //                if (goHome) {
 //                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
 //                }
-                AliplayerManager.stop()
-            }
+//                AliPlayerManager.stop()
+            }*/
             super.finish()
             return
         }
@@ -2035,10 +2036,11 @@ class PlayerActivity : BaseActivity() {
     //主播关播
     fun stopPublish() {
         closable = true
-        if (publishFragment != null && mVideoViewModel?.anchorIsPublishing) {
+        if (publishFragment != null && mVideoViewModel.anchorIsPublishing) {
             //todo
 //            viewModel.appStopLiving(programId.toLong())
-            mVideoViewModel?.stopAllStreamState?.value = true
+//            mVideoViewModel.stopAllStreamState.value = true
+            closeVideoPlayer()
         } else {
             super.finish()
         }
@@ -2048,10 +2050,11 @@ class PlayerActivity : BaseActivity() {
     fun forceStopPublish() {
         closable = true
 
-        if (publishFragment != null && mVideoViewModel?.anchorIsPublishing) {
+        if (publishFragment != null && mVideoViewModel.anchorIsPublishing) {
             //todo
 //            viewModel.todayStat(programId)
-            mVideoViewModel?.stopAllStreamState?.value = true
+//            mVideoViewModel.stopAllStreamState.value = true
+            closeVideoPlayer()
         } else {
             super.finish()
         }

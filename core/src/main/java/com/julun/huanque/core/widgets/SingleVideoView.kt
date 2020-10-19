@@ -22,12 +22,13 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.MicAnchor
 import com.julun.huanque.common.interfaces.PlayStateListener
 import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.R
-import com.julun.huanque.core.manager.AliplayerManager
+import com.julun.huanque.core.manager.AliPlayerManager
 import com.trello.rxlifecycle4.kotlin.bindToLifecycle
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -41,7 +42,8 @@ import java.util.concurrent.TimeUnit
  *@描述  地址播放器使用的拉流view
  * @param useManager true 使用 AliplayerManager内的播放器    false  创建一个新的播放器
  */
-class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Boolean = false) : ConstraintLayout(context, attrs) {
+class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Boolean = false) :
+    ConstraintLayout(context, attrs) {
 
     constructor(context: Context, useManager: Boolean = false) : this(context, null, useManager)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, false)
@@ -51,6 +53,8 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 
     //surfaceview是否已经创建
     private var created = false
+
+    private val logger = ULog.getLogger("SingleVideoView")
 
     //播放地址
     private var mUrl = ""
@@ -78,10 +82,13 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 
     private var mRenderListener = IPlayer.OnRenderingStartListener {
         mRenderTime = System.currentTimeMillis()
+        if (useManager) {
+            AliPlayerManager.mRendered = true
+        }
         //首帧渲染显示事件,隐藏封面
         if (mLogEnable) {
-            ULog.i("${this} DXCPlayer 首帧渲染显示事件")
-            ULog.i("${this} DXCPlayer  时间  started时间 = ${mPlayTime - mSetTime},renderTime = ${mRenderTime - mSetTime},mAutoPlayTime = ${mAutoPlayTime - mSetTime}")
+            logger.info("${this} DXCPlayer 首帧渲染显示事件")
+            logger.info("${this} DXCPlayer  时间  started时间 = ${mPlayTime - mSetTime},renderTime = ${mRenderTime - mSetTime},mAutoPlayTime = ${mAutoPlayTime - mSetTime}")
         }
         posterImage.hide()
         mPlayStateListener?.onFirstRenderListener()
@@ -112,43 +119,57 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             }
         })
         initViewModel()
-        if (useManager) {
-            mAliPlayer = AliplayerManager.mAliPlayer
-//            AliplayerManager.mRenderListener = mRenderListener
-            if (AliplayerManager.mRendered) {
-                posterImage.hide()
-            }
-
-        } else {
-            initPlayer()
-        }
-
-        surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-            override fun surfaceCreated(holder: SurfaceHolder) {
-                created = true
-                mAliPlayer?.setDisplay(holder)
-                //防止黑屏
-                mAliPlayer?.redraw()
-                mSurfaceHolder = holder
-            }
-
-            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-                mAliPlayer?.redraw()
-            }
-
-            override fun surfaceDestroyed(holder: SurfaceHolder) {
-                if (!useManager) {
-                    mAliPlayer?.setDisplay(null)
-                }
-            }
-        })
-
-//        if (BuildConfig.APP_TYPE.isEmpty()) {
-//            //主包  显示水印
-//            iv_watermark.show()
+        initPlayer()
+//        if (useManager) {
+//            mAliPlayer = AliPlayerManager.mAliPlayer
+//
+////            AliplayerManager.mRenderListener = mRenderListener
+//            if (AliPlayerManager.mRendered) {
+//                posterImage.hide()
+//            }
+//            surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
+//                override fun surfaceCreated(holder: SurfaceHolder) {
+//                    logger("AliPlayerManager surfaceCreated=${holder.hashCode()}")
+//                    created = true
+//                    mAliPlayer?.setDisplay(holder)
+//                    //防止黑屏
+//                    mAliPlayer?.redraw()
+//                    mSurfaceHolder = holder
+//                }
+//
+//                override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+//                    mAliPlayer?.redraw()
+//                }
+//
+//                override fun surfaceDestroyed(holder: SurfaceHolder) {
+//                    logger("AliPlayerManager surfaceDestroyed=${holder.hashCode()}")
+////                    mAliPlayer?.setDisplay(null)
+//                }
+//            })
 //        } else {
-//            iv_watermark.hide()
+//            initPlayer()
 //        }
+
+//        surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
+//            override fun surfaceCreated(holder: SurfaceHolder) {
+//                created = true
+//                mAliPlayer?.setDisplay(holder)
+//                //防止黑屏
+//                mAliPlayer?.redraw()
+//                mSurfaceHolder = holder
+//            }
+//
+//            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+//                mAliPlayer?.redraw()
+//            }
+//
+//            override fun surfaceDestroyed(holder: SurfaceHolder) {
+//                if (!useManager) {
+//                    mAliPlayer?.setDisplay(null)
+//                }
+//            }
+//        })
+
     }
 
     private fun initViewModel() {
@@ -166,7 +187,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     fun play(url: String, main: Boolean = false) {
         mSetTime = System.currentTimeMillis()
         if (mLogEnable) {
-            ULog.i("DXCplayer  开始播放 时间 time = $mSetTime")
+            logger.info("DXCplayer  开始播放 时间 time = $mSetTime")
         }
 //        if (!main) {
         //非主播放器，需要做校验
@@ -176,17 +197,19 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 //        }
         isFree = false
         this.mUrl = url
-        ULog.i("DXCplayer set 1")
+        logger.info("DXCplayer set 1")
         playStream()
     }
 
     /**
-     * 释放流相关
+     * 是否播放器相关 用于播放器视图销毁时 如果当前使用的单例播放器则不做处理
      */
-    fun release() {
+    private fun release() {
+        logger.info("release")
         mUrl = ""
         if (!useManager) {
             mAliPlayer?.stop()
+            mAliPlayer?.release()
             this.hide()
         }
         isFree = true
@@ -206,28 +229,50 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
      */
     fun resume() {
         if (mLogEnable)
-            ULog.i("DXCPlayer 恢复播放resume")
+            logger.info("DXCPlayer 恢复播放resume")
         if (mUrl.isNotEmpty()) {
             mAliPlayer?.start()
         }
     }
 
     /**
-     * 关闭
+     * 停止播放器[stopAll]停止所有播放器 无论单例还是常规
      */
-    fun stop() {
+    fun stop(stopAll: Boolean = false) {
+        logger.info("stop stopAll=$stopAll")
         if (!created) {
             return
         }
         if (useManager) {
-            AliplayerManager.stop()
+            if (stopAll)
+                AliPlayerManager.stop()
         } else {
-            mUrl = ""
-            isFree = true
             mAliPlayer?.stop()
+            anchor_info.visibility = View.GONE
         }
+        playerInfo = null
+        mUrl = ""
+        isFree = true
     }
 
+
+    /**
+     * 用于彻底销毁播放器 无论是单例播放器还是常规的播放器
+     * 单例播放器停止并且初始化一些监听器和断开渲染视图
+     * 常规播放器停止并收回
+     */
+    fun destroy() {
+        if (useManager) {
+            AliPlayerManager.destroy()
+        } else {
+            mAliPlayer?.stop()
+            mAliPlayer?.release()
+
+        }
+        isFree = true
+        mUrl = ""
+        playerInfo = null
+    }
 
     fun getStreamID(): String {
         return if (playerInfo != null) {
@@ -238,11 +283,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     }
 
     fun getStreamUrl(): String {
-        return if (useManager) {
-            AliplayerManager.mUrl
-        } else {
-            mUrl
-        }
+        return mUrl
     }
 
     /**
@@ -250,7 +291,8 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
      * @param blur 是否需要模糊效果
      */
     fun showCover(picUrl: String, blur: Boolean = true) {
-        if (useManager && AliplayerManager.mRendered) {
+        logger("showCover mRendered=${AliPlayerManager.mRendered}")
+        if (useManager && AliPlayerManager.mRendered) {
             //播放器处于拉流状态，不显示封面
             return
         }
@@ -266,34 +308,35 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
      * 初始化播放器
      */
     fun initPlayer() {
-        ULog.i("PlayerLine 创建播放器")
-        mAliPlayer = AliPlayerFactory.createAliPlayer(context.applicationContext)
-//        mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL;
-        ULog.i("PlayerLine 设置监听事件")
-        mAliPlayer?.setOnCompletionListener {
-            //播放完成事件
+        logger.info("PlayerLine 创建播放器")
+        if (useManager) {
+            initSingleModePlayer()
+            return
+        } else {
+            mAliPlayer = AliPlayerFactory.createAliPlayer(context.applicationContext)
         }
+
+//        mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL;
+        logger.info("PlayerLine 设置监听事件")
+//        mAliPlayer?.setOnCompletionListener {
+//            //播放完成事件
+//        }
         mAliPlayer?.setOnErrorListener {
             //出错事件
             if (mLogEnable) {
-                ULog.i("${this} DXCPlayer 出错事件 =${it.code}")
+                logger.info("${this} DXCPlayer 出错事件 =${it.code}")
             }
-//            Observable.timer(2, TimeUnit.SECONDS)
-//                    .bindToLifecycle(this)
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe({ playStream() }, {}, {})
-
         }
         mAliPlayer?.setOnPreparedListener {
             //准备成功事件
             if (mLogEnable) {
-                ULog.i("${this} DXCPlayer 准备成功事件")
+                logger.info("${this} DXCPlayer 准备成功事件")
             }
         }
         mAliPlayer?.setOnVideoSizeChangedListener { width, height ->
             //视频分辨率变化回调
             if (mLogEnable) {
-                ULog.i("${this} DXCPlayer 视频分辨率变化回调")
+                logger.info("${this} DXCPlayer 视频分辨率变化回调")
             }
             mAliPlayer?.redraw()
         }
@@ -303,24 +346,24 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             if (it.code == InfoCode.AutoPlayStart) {
                 mAutoPlayTime = System.currentTimeMillis()
                 if (mLogEnable) {
-                    ULog.i("${this} DXCPlayer 自动播放回调")
+                    logger.info("${this} DXCPlayer 自动播放回调")
                 }
             }
 //            if(it.code != InfoCode.CurrentPosition && it.code != InfoCode.BufferedPosition){
-//                ULog.i("${this} DXCPlayer 其他信息的事件 code = ${it.code},msg = ${it.extraMsg},value = ${it.extraValue}")
+//                logger.info("${this} DXCPlayer 其他信息的事件 code = ${it.code},msg = ${it.extraMsg},value = ${it.extraValue}")
 //            }
         }
 //        mAliPlayer?.setOnLoadingStatusListener(object : IPlayer.OnLoadingStatusListener {
 //            override fun onLoadingEnd() {
-//                ULog.i("${this} DXCPlayer onLoadingEnd")
+//                logger.info("${this} DXCPlayer onLoadingEnd")
 //            }
 //
 //            override fun onLoadingBegin() {
-//                ULog.i("${this} DXCPlayer onLoadingBegin")
+//                logger.info("${this} DXCPlayer onLoadingBegin")
 //            }
 //
 //            override fun onLoadingProgress(p0: Int, p1: Float) {
-//                ULog.i("${this} DXCPlayer onLoadingProgress")
+//                logger.info("${this} DXCPlayer onLoadingProgress")
 //            }
 //
 //        })
@@ -336,7 +379,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         mAliPlayer?.setOnStateChangedListener {
             //播放器状态改变事件
             if (mLogEnable) {
-                ULog.i("${this} DXCPlayer 播放器状态改变事件 it = $it")
+                logger.info("${this} DXCPlayer 播放器状态改变事件 it = $it")
             }
             if (it == IPlayer.started) {
                 mPlayTime = System.currentTimeMillis()
@@ -347,7 +390,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                     .bindToLifecycle(this)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        //                            ULog.i("DXCplayer set 2 it = $it")
+                        //                            logger.info("DXCplayer set 2 it = $it")
                         mAliPlayer?.prepare()
                     }, {}, {})
             }
@@ -355,6 +398,25 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         }
         mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL
 
+        surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
+            override fun surfaceCreated(holder: SurfaceHolder) {
+                logger("surfaceCreated=${holder.hashCode()}")
+                created = true
+                mAliPlayer?.setDisplay(holder)
+                //防止黑屏
+                mAliPlayer?.redraw()
+                mSurfaceHolder = holder
+            }
+
+            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+                mAliPlayer?.redraw()
+            }
+
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+                logger("surfaceDestroyed=${holder.hashCode()} useManager=$useManager")
+                mAliPlayer?.setDisplay(null)
+            }
+        })
         //禁用硬解码
 //        mAliPlayer?.enableHardwareDecoder(false)
         val config = mAliPlayer?.config ?: return
@@ -369,6 +431,35 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 // 起播缓冲区时长。单位ms。这个时间设置越短，起播越快。也可能会导致播放之后很快就会进入加载状态。
 //        config.mStartBufferDuration = 500;
         mAliPlayer?.config = config
+    }
+
+    private fun initSingleModePlayer() {
+        mAliPlayer = AliPlayerManager.mAliPlayer
+
+        if (AliPlayerManager.mRendered) {
+            posterImage.hide()
+        }
+        logger("initSingleModePlayer setOnRenderingStartListener")
+        mAliPlayer?.setOnRenderingStartListener(mRenderListener)
+        surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
+            override fun surfaceCreated(holder: SurfaceHolder) {
+                logger("AliPlayerManager surfaceCreated=${holder.hashCode()}")
+                created = true
+                mAliPlayer?.setDisplay(holder)
+                //防止黑屏
+                mAliPlayer?.redraw()
+                mSurfaceHolder = holder
+            }
+
+            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+                mAliPlayer?.redraw()
+            }
+
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+                logger("AliPlayerManager surfaceDestroyed=${holder.hashCode()} useManager=$useManager")
+            }
+        })
+
     }
 
     /**
@@ -409,24 +500,29 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
      * 真正的播放方法
      */
     fun playStream() {
+        if (mLogEnable) {
+            logger.info("DXCPlayer 开始播放playStream")
+        }
         //聊天模式 不需要播放视频   && NetUtils.isNetConnected()
         if (mUrl.isNotEmpty() && !mChatMode) {
             val urlSource = UrlSource()
             urlSource.uri = mUrl
-//            ULog.i("PlayerLine 创建播放源")
+            if (useManager && AliPlayerManager.mRendered) {
+                logger.info("已经存在单例播放流 不再重复播放")
+                return
+            }
             mAliPlayer?.setDataSource(urlSource)
             mAliPlayer?.isAutoPlay = true
-//            ULog.i("PlayerLine 准备播放器")
-            if (useManager) {
-                AliplayerManager.mRenderListener = mRenderListener
-                AliplayerManager.mUrl = mUrl
-                AliplayerManager.mRendered = false
-                AliplayerManager.stoped = false
-            }
+//            logger.info("PlayerLine 准备播放器")
+//            if (useManager) {
+//                AliPlayerManager.mRenderListener = mRenderListener
+////                AliplayerManager.mUrl = mUrl
+//                AliPlayerManager.mRendered = false
+//                AliPlayerManager.stoped = false
+//            }
             mAliPlayer?.prepare()
 //            mAliPlayer?.start()
         }
-//        ULog.i("DXCPlayer 开始播放playStream")
     }
 
     /**
@@ -434,7 +530,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun clip(radius: Float) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.outlineProvider = SurfaceVideoViewOutlineProvider(radius);
             this.clipToOutline = true;
         }
@@ -475,15 +571,13 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         if (!useManager) {
             mAliPlayer?.release();
         } else {
-            if(AliplayerManager.mRenderListener == mRenderListener){
-                AliplayerManager.mRenderListener = null
-            }
+//            if (AliPlayerManager.mRenderListener == mRenderListener) {
+//                AliPlayerManager.mRenderListener = null
+//            }
+            logger("onDetachedFromWindow setOnRenderingStartListener(null) ")
+//            mAliPlayer?.setOnRenderingStartListener(null)
         }
         mAliPlayer = null
-//        Completable.complete()
-//                .subscribeOn(Schedulers.io())
-//                .subscribe({ mAliPlayer?.release() }, {})
-
     }
 
     /**
@@ -495,6 +589,10 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             //防止黑屏
             mAliPlayer?.redraw()
         }
+    }
+
+    fun clearHolder() {
+        mAliPlayer?.setDisplay(null)
     }
 
     fun getPlayerVideo(): AliPlayer? {

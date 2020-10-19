@@ -1,6 +1,5 @@
 package com.julun.huanque.core.ui.live.fragment
 
-import android.media.AudioManager
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -8,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.bean.beans.BottomActionBean
@@ -21,14 +21,13 @@ import com.julun.huanque.common.constant.ScreenType
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.viewmodel.VideoChangeViewModel
 import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
-import com.julun.huanque.core.manager.AliplayerManager
+import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.OrientationViewModel
 import com.julun.huanque.core.widgets.SingleVideoView
@@ -145,8 +144,9 @@ open class LivePlayerFragment : BaseFragment() {
 
         mVideoViewModel.stopAllStreamState.observe(this, Observer {
             if (it == true) {
-                AliplayerManager.stop()
-                stopAllStream()
+//                AliPlayerManager.stop()
+                //切换直播间时关闭所有类型的流
+                stopAllStream(true)
                 mVideoViewModel.stopAllStreamState.value = null
             }
         })
@@ -206,7 +206,7 @@ open class LivePlayerFragment : BaseFragment() {
             logger.info("播放的流地址一致")
             return
         }
-        AliplayerManager.stop()
+//        AliPlayerManager.stop()
         // 设置流信息
         mMainVideoView?.let { main ->
             main.setPlayInfo(MicAnchor().apply {
@@ -357,7 +357,8 @@ open class LivePlayerFragment : BaseFragment() {
         mViewList.forEach { view ->
             if (view.getStreamID() == streamID) {
                 //找到对应的视图
-                view.release()
+//                view.release()
+                view.stop(true)
             }
         }
     }
@@ -481,16 +482,11 @@ open class LivePlayerFragment : BaseFragment() {
 
     /**
      * 清空所有流
+     * [stopAll]是否需要关闭所有流（单例和常规）
      */
-    private fun stopAllStream() {
+    private fun stopAllStream(stopAll:Boolean) {
         mViewList.forEach {
-            it.release()
-//            if (it == mMainVideoView) {
-//                //主流不要release，会影响下次播放
-//                it.stop()
-//            } else {
-//                it.release()
-//            }
+            it.stop(stopAll)
         }
         if (mRankRootView != null) {
             mRankRootView?.hide()
@@ -516,11 +512,17 @@ open class LivePlayerFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun floatingClose(bean: FloatingCloseEvent) {
-        mMainVideoView?.resetHolder()
+        if(lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)){
+            mMainVideoView?.resetHolder()
+        }else{
+            //如果当前的页面不在焦点 先设置null 防止底层获取不到渲染视图而一直报错
+            mMainVideoView?.clearHolder()
+        }
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        stopAllStream()
+        stopAllStream(false)
     }
 }

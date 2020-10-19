@@ -301,7 +301,8 @@ class FloatingService : Service(), View.OnClickListener, RequestCaller {
         if (windowManager != null && display != null) {
             if (!jumpToPlayer && !ActivitiesManager.INSTANCE.hasActivity("com.julun.huanque.core.ui.live.PlayerActivity")) {
                 UserHeartManager.setProgramId(null)
-                videoView?.stop()
+//                videoView?.stop()
+                videoView?.destroy()
                 GlobalScope.launch {
                     kotlin.runCatching {
                         withContext(Dispatchers.IO) {

@@ -1,5 +1,7 @@
 package com.julun.huanque.core.manager
 
+import android.view.SurfaceHolder
+import com.aliyun.player.AliPlayer
 import com.aliyun.player.AliPlayerFactory
 import com.aliyun.player.IPlayer
 import com.aliyun.player.bean.ErrorInfo
@@ -16,17 +18,39 @@ import java.util.concurrent.TimeUnit
  *@创建时间 2020/8/26 14:33
  *@描述 单例的阿里播放器，直播间主流和悬浮窗使用
  */
-object AliplayerManager {
+object AliPlayerManager {
     //阿里播放器
-    var mAliPlayer = AliPlayerFactory.createAliPlayer(CommonInit.getInstance().getContext())
+    val mAliPlayer: AliPlayer by lazy { AliPlayerFactory.createAliPlayer(CommonInit.getInstance().getContext()) }
 
     //log输出标识位
     private var mLogEnable = true
 
-    var mRenderListener: IPlayer.OnRenderingStartListener? = null
+    private val logger = ULog.getLogger("AliPlayerManager")
 
+//    var mRenderListener: IPlayer.OnRenderingStartListener? = null
+
+    //SurfaceHolder.Callback唯一
+//    private val mHolderCallback: SurfaceHolder.Callback by lazy {
+//        object : SurfaceHolder.Callback {
+//            override fun surfaceCreated(holder: SurfaceHolder) {
+//                logger.info("surfaceCreated=${holder.hashCode()}")
+//                mAliPlayer.setDisplay(holder)
+//                //防止黑屏
+//                mAliPlayer.redraw()
+//            }
+//
+//            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+//                mAliPlayer.redraw()
+//            }
+//
+//            override fun surfaceDestroyed(holder: SurfaceHolder) {
+//                logger.info("surfaceDestroyed=${holder.hashCode()}")
+////                mAliPlayer.setDisplay(null)
+//            }
+//        }
+//    }
     //当前播放的流地址
-    var mUrl = ""
+//    var mUrl = ""
 
     //调用了stop方法
     var stoped = false
@@ -35,6 +59,7 @@ object AliplayerManager {
     var mRendered = false
 
     init {
+        logger.info("AliPlayerManager init")
         initPlayer()
     }
 
@@ -46,10 +71,10 @@ object AliplayerManager {
         mAliPlayer.setOnCompletionListener {
             //播放完成事件
         }
-        mAliPlayer?.setOnErrorListener {
+        mAliPlayer.setOnErrorListener {
             //出错事件
             if (mLogEnable) {
-                ULog.i("${this} DXCPlayer 出错事件 =${it.code}")
+                logger.info("${this} DXCPlayer 出错事件 =${it.code}")
             }
 //            Observable.timer(2, TimeUnit.SECONDS)
 //                    .bindToLifecycle(this)
@@ -57,33 +82,33 @@ object AliplayerManager {
 //                    .subscribe({ playStream() }, {}, {})
 
         }
-        mAliPlayer?.setOnPreparedListener {
+        mAliPlayer.setOnPreparedListener {
             //准备成功事件
             if (mLogEnable) {
-                ULog.i("${this} DXCPlayer 准备成功事件")
+                logger.info("${this} DXCPlayer 准备成功事件")
             }
         }
-        mAliPlayer?.setOnVideoSizeChangedListener { width, height ->
+        mAliPlayer.setOnVideoSizeChangedListener { width, height ->
             //视频分辨率变化回调
             if (mLogEnable) {
-                ULog.i("${this} DXCPlayer 视频分辨率变化回调")
+                logger.info("${this} DXCPlayer 视频分辨率变化回调")
             }
-            mAliPlayer?.redraw()
+            mAliPlayer.redraw()
         }
-        mAliPlayer?.setOnRenderingStartListener {
-            //首帧渲染显示事件,隐藏封面
-            mRendered = true
-            mRenderListener?.onRenderingStart()
-        }
-        mAliPlayer?.setOnInfoListener {
+//        mAliPlayer.setOnRenderingStartListener {
+//            //首帧渲染显示事件,隐藏封面
+//            mRendered = true
+//            mRenderListener?.onRenderingStart()
+//        }
+        mAliPlayer.setOnInfoListener {
             //其他信息的事件，type包括了：循环播放开始，缓冲位置，当前播放位置，自动播放开始等
 //            if (it.code == InfoCode.AutoPlayStart) {
             if (mLogEnable) {
-//                ULog.i("${this} DXCPlayer code = ${it.code},msg = ${it.extraMsg}")
+//                 logger.info("${this} DXCPlayer code = ${it.code},msg = ${it.extraMsg}")
             }
 //            }
         }
-        mAliPlayer?.setOnTrackChangedListener(object : IPlayer.OnTrackChangedListener {
+        mAliPlayer.setOnTrackChangedListener(object : IPlayer.OnTrackChangedListener {
             override fun onChangedSuccess(trackInfo: TrackInfo) {
                 //切换音视频流或者清晰度成功
             }
@@ -92,49 +117,49 @@ object AliplayerManager {
                 //切换音视频流或者清晰度失败
             }
         })
-        mAliPlayer?.setOnStateChangedListener {
+        mAliPlayer.setOnStateChangedListener {
             //播放器状态改变事件
             if (mLogEnable) {
-                ULog.i("${this} DXCPlayer 播放器状态改变事件 it = $it")
+                logger.info("${this} DXCPlayer 播放器状态改变事件 it = $it")
             }
             if (it == IPlayer.completion || it == IPlayer.error) {
                 //CDN切换的时候会触发此回调，重新调用播放方法
                 if (stoped) {
                     return@setOnStateChangedListener
                 }
-                if (BuildConfig.DEBUG) {
-                    return@setOnStateChangedListener
-                }
+//                if (BuildConfig.DEBUG) {
+//                    return@setOnStateChangedListener
+//                }
                 Observable.timer(2, TimeUnit.SECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         if (!stoped) {
-                            mAliPlayer?.prepare()
+                            mAliPlayer.prepare()
                         }
                     }, {}, {})
             }
         }
-        mAliPlayer?.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL
+        mAliPlayer.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL
 
 //        surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
 //            override fun surfaceCreated(holder: SurfaceHolder) {
 //                created = true
-//                mAliPlayer?.setDisplay(holder)
+//                mAliPlayer.setDisplay(holder)
 //                //防止黑屏
-//                mAliPlayer?.redraw()
+//                mAliPlayer.redraw()
 //            }
 //
 //            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-//                mAliPlayer?.redraw()
+//                mAliPlayer.redraw()
 //            }
 //
 //            override fun surfaceDestroyed(holder: SurfaceHolder) {
-//                mAliPlayer?.setDisplay(null)
+//                mAliPlayer.setDisplay(null)
 //            }
 //        })
         //禁用硬解码
-//        mAliPlayer?.enableHardwareDecoder(false)
-        val config = mAliPlayer?.config ?: return
+//        mAliPlayer.enableHardwareDecoder(false)
+        val config = mAliPlayer.config ?: return
         config.mNetworkTimeout = 2000;
         config.mNetworkRetryCount = 100;
         //最大延迟。注意：直播有效。当延时比较大时，播放器sdk内部会追帧等，保证播放器的延时在这个范围内。
@@ -145,14 +170,25 @@ object AliplayerManager {
         config.mHighBufferDuration = 3000;
 // 起播缓冲区时长。单位ms。这个时间设置越短，起播越快。也可能会导致播放之后很快就会进入加载状态。
         config.mStartBufferDuration = 500;
-        mAliPlayer?.config = config
+        mAliPlayer.config = config
     }
 
     fun stop() {
-        mUrl = ""
+//        mUrl = ""
+        logger.info("stop")
         mRendered = false
-        mAliPlayer?.stop()
+        mAliPlayer.stop()
         stoped = true
+    }
+
+    //彻底关闭播放器 并且断开播放器与视图的一切关联 当直播间和悬浮窗都关闭时调用
+    fun destroy() {
+        logger.info("destroy")
+        mRendered = false
+        mAliPlayer.stop()
+        stoped = true
+        mAliPlayer.setDisplay(null)
+        mAliPlayer.setOnRenderingStartListener(null)
     }
 
     /**
@@ -160,7 +196,7 @@ object AliplayerManager {
      */
     fun soundOff() {
 //        mAgoaraMediaPlayer?.adjustPlaybackSignalVolume(0)
-        mAliPlayer?.isMute = true
+        mAliPlayer.isMute = true
     }
 
     /**
@@ -168,6 +204,6 @@ object AliplayerManager {
      */
     fun soundOn() {
 //        mAgoaraMediaPlayer?.adjustPlaybackSignalVolume(400)
-        mAliPlayer?.isMute = false
+        mAliPlayer.isMute = false
     }
 }

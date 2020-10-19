@@ -347,9 +347,9 @@ class PlayerTransformManager(val act: PlayerActivity) {
 //                    mPlayerViewModel.queryGuestList(false)
                     //如果下一个上场的主播没有流 关闭正在播的流
                     if (data.playInfo == null) {
-                        mVideoViewModel?.stopAllStreamState?.value = true
+                        mVideoViewModel.stopAllStreamState.value = true
                     } else {
-                        mVideoViewModel?.playerData?.value = LiveBean().apply {
+                        mVideoViewModel.playerData.value = LiveBean().apply {
                             programPoster = data.prePic
                             programId = data.themeSessionId
                             isAppShow = mPlayerViewModel.isAppShow
@@ -359,7 +359,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
                     //修改聊天赠送id
 //                    chatInputView.acceptProgramId = data.themeShowingProgramId
                 } else if (data.programId == mPlayerViewModel.programId) {
-                    mVideoViewModel?.playInfoData?.value = data.playInfo
+                    mVideoViewModel.playInfoData.value = data.playInfo
 
                 }
             }
