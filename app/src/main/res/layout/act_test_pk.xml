@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CCBB66">
+
+    <com.julun.huanque.core.widgets.live.pk.PkStartAnimationView
+        android:id="@+id/pk_start_view"
+        android:layout_width="0px"
+        android:layout_height="280dp"
+        android:layout_marginTop="50dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_start"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="50dp"
+        android:background="@color/primary_color"
+        android:gravity="center"
+        android:text="开始动画"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_win"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="50dp"
+        android:background="@color/primary_color"
+        android:gravity="center"
+        android:text="胜利动画"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_start" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
