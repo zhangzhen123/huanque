@@ -127,9 +127,9 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
     private fun registerMessage() {
-        MessageProcessor.clearProcessors(false)
+        MessageProcessor.removeProcessors(this)
         //语音通话开始消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallAcceptProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallAcceptProcessor {
             override fun process(data: NetCallAcceptBean) {
                 //接通消息
                 if (data.callId != mVoiceChatViewModel?.callId) {
@@ -147,7 +147,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         })
 
         //语音开始消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallAcceptProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallAcceptProcessor {
             override fun process(data: NetCallAcceptBean) {
                 //接通消息
                 //开始计时
@@ -164,7 +164,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             }
         })
         //主叫取消会话消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallCancelProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallCancelProcessor {
             override fun process(data: NetCallReceiveBean) {
                 if (data.callId != mVoiceChatViewModel?.callId) {
                     //不是当前语音通话的消息
@@ -179,7 +179,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             }
         })
         //挂断消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallHangUpProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallHangUpProcessor {
             override fun process(data: NetCallHangUpBean) {
                 if (data.callId != mVoiceChatViewModel?.callId) {
                     //不是当前语音通话的消息
@@ -204,7 +204,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             }
         })
         //被叫拒绝消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallRefuseProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallRefuseProcessor {
             override fun process(data: NetCallReceiveBean) {
                 if (data.callId != mVoiceChatViewModel?.callId) {
                     //不是当前语音通话的消息
@@ -219,7 +219,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             }
         })
         //服务端断开消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallDisconnectProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallDisconnectProcessor {
             override fun process(data: VoidResult) {
                 if (mVoiceChatViewModel?.waitingClose == true) {
                     return
@@ -231,14 +231,14 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             }
         })
         //余额不足提醒消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallBalanceRemindProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallBalanceRemindProcessor {
             override fun process(data: NetCallBalanceRemindBean) {
                 showBalanceNotEnoughView(data)
             }
         })
 
         //对方忙
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallBusyProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallBusyProcessor {
             override fun process(data: NetCallReceiveBean) {
                 if (data.callId != mVoiceChatViewModel?.callId) {
                     //不是当前语音通话的消息
@@ -869,7 +869,7 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 
     override fun onDestroy() {
         super.onDestroy()
-        MessageProcessor.clearProcessors(false)
+        MessageProcessor.removeProcessors(this)
         //发送事件，通知刷新语音券
         EventBus.getDefault().post(RefreshVoiceCardEvent())
     }

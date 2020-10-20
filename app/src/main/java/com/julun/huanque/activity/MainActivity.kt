@@ -265,7 +265,7 @@ class MainActivity : BaseActivity() {
         RongIMClient.getInstance().disconnect()
         //内存泄漏相关优化
         OrderDialogManager.release()
-        MessageProcessor.clearProcessors(true)
+        MessageProcessor.clearProcessors()
     }
 
 
@@ -296,7 +296,8 @@ class MainActivity : BaseActivity() {
         mMainViewModel.userProtocolSignFlag.observe(this, Observer {
             if (it != BusiConstant.True) {
                 //显示弹窗
-                val mProtectionFragment = PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
+                val mProtectionFragment =
+                    PersonalInformationProtectionFragment.newInstance(PersonalInformationProtectionFragment.MainActivity)
                 addOrderDialog(mProtectionFragment)
             }
         })
@@ -547,8 +548,8 @@ class MainActivity : BaseActivity() {
     }
 
     private fun registerMessage() {
-        MessageProcessor.clearProcessors(true)
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.NetCallReceiveProcessor {
+        MessageProcessor.removeProcessors(this)
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallReceiveProcessor {
             override fun process(data: NetCallReceiveBean) {
                 val onLine = SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)
                 if (onLine) {
@@ -563,7 +564,7 @@ class MainActivity : BaseActivity() {
         })
 
         //亲密度变化消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.IntimateChangeProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.IntimateChangeProcessor {
             override fun process(data: IntimateBean) {
                 //发送消息，私信列表接收
                 EventBus.getDefault().post(data)
@@ -583,7 +584,7 @@ class MainActivity : BaseActivity() {
         })
 
         //邀请匿名语音消息
-        MessageProcessor.registerEventProcessor(object :
+        MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.AnonyVoiceInviteProcessor {
             override fun process(data: AnonyVoiceInviteBean) {
                 if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
@@ -602,27 +603,27 @@ class MainActivity : BaseActivity() {
             }
         })
 
-        MessageProcessor.registerEventProcessor(object :
+        MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.RefreshUserSettingProcessor {
             override fun process(data: VoidResult) {
                 mMainViewModel.getSetting()
             }
         })
         //封禁账户消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.BanUserProcessor {
             override fun process(data: OperatorMessageBean) {
                 doBanAction(false)
             }
         })
         //封禁设备
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserDeviceProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.BanUserDeviceProcessor {
             override fun process(data: OperatorMessageBean) {
                 doBanAction(true)
             }
         })
 
         //直播封禁（用户不允许进入任何直播间）
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.BanUserLivingProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.BanUserLivingProcessor {
             override fun process(data: OperatorMessageBean) {
                 ToastUtils.show("您已无法访问直播功能")
                 EventBus.getDefault().post(BannedAndClosePlayer())
@@ -630,7 +631,7 @@ class MainActivity : BaseActivity() {
             }
         })
         //踢人消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.KickUserProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.KickUserProcessor {
             override fun process(data: OperatorMessageBean) {
                 EventBus.getDefault().post(BannedAndClosePlayer(data.programId))
                 val programId = SharedPreferencesUtils.getLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
@@ -642,7 +643,7 @@ class MainActivity : BaseActivity() {
         })
 
         //派单消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.FateQuickMatchProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.FateQuickMatchProcessor {
             override fun process(data: FateQuickMatchBean) {
                 val splTime = data.expTime - System.currentTimeMillis()
                 if (splTime <= 0) {
@@ -662,7 +663,7 @@ class MainActivity : BaseActivity() {
         })
 
         //派单状态变化消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.FateQuickMatchChangeProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.FateQuickMatchChangeProcessor {
             override fun process(data: FateQuickMatchChangeBean) {
                 val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
                 bean.fateNoReplyNum = data.noReplyNum

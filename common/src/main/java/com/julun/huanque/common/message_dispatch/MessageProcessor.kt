@@ -30,32 +30,41 @@ object MessageProcessor {
     private val logger = ULog.getLogger("MessageProcess")
     const val EVENT_CODE = "eventCode"
     const val EVENT_CONTEXT = "context"
-    private val textProcessors: MutableList<MessageReceiver> = mutableListOf()
-    private val eventProcessors: MutableList<EventMessageProcessor<*>> = mutableListOf()
+    private val textProcessors: HashMap<String, MutableList<MessageReceiver>> = hashMapOf()
+    private val eventProcessors: HashMap<String, MutableList<EventMessageProcessor<*>>> = hashMapOf()
 
-    //专门放置全局事件 不会被清除
-//    private val globalEventProcessors: MutableList<EventMessageProcessor<*>> = mutableListOf()
 
     //私聊会话使用
     var privateTextProcessor: PrivateMessageReceiver? = null
 
     /**
-     * 清空全部订阅消息 [total]是否清空全部 true代表把包括全局的事件处理订阅一起清理掉
+     * 清空全部订阅消息
      */
 
-    fun clearProcessors(total: Boolean) {
-        if (total) {
-            textProcessors.clear()
-            eventProcessors.clear()
-        } else {
-            textProcessors.removeAll(textProcessors.filter { !it.isGlobal() })
-            eventProcessors.removeAll(eventProcessors.filter { !it.isGlobal() })
-        }
-
+    fun clearProcessors() {
+        textProcessors.clear()
+        eventProcessors.clear()
     }
 
-    fun registerTxtProcessor(processor: MessageReceiver): Unit {
-        textProcessors.add(processor)
+    fun removeProcessors(holder: Any) {
+        val identityId = holder.javaClass.name
+        textProcessors.remove(identityId)
+        eventProcessors.remove(identityId)
+    }
+
+    fun registerTxtProcessor(holder: Any, processor: MessageReceiver): Unit {
+        val identityId = holder.javaClass.name
+        val list = textProcessors[identityId] ?: mutableListOf<MessageReceiver>()
+        list.add(processor)
+        textProcessors[identityId] = list
+    }
+
+    fun registerEventProcessor(holder: Any, processor: EventMessageProcessor<*>): Unit {
+//        eventProcessors.add(processor)
+        val identityId = holder.javaClass.name
+        val list = eventProcessors[identityId] ?: mutableListOf<EventMessageProcessor<*>>()
+        list.add(processor)
+        eventProcessors[identityId] = list
     }
 
     fun processTextMessage(beanList: List<TplBean>, messageType: TextMessageType) {
@@ -63,9 +72,11 @@ object MessageProcessor {
             beanList.forEach {
                 it.preProcess()
             }
-            textProcessors.forEach {
-                if (it.getMessageType() == messageType) {
-                    it.processMessage(beanList)
+            textProcessors.forEach { pair ->
+                pair.value.forEach {
+                    if (it.getMessageType() == messageType) {
+                        it.processMessage(beanList)
+                    }
                 }
 
             }
@@ -219,45 +230,42 @@ object MessageProcessor {
         }.subscribe()
     }
 
-    fun registerEventProcessor(processor: EventMessageProcessor<*>): Unit {
-        eventProcessors.add(processor)
-    }
 
 
-    /**
-     * 移除单个EventProcessor
-     */
-    fun removeEventProcessor(processor: EventMessageProcessor<*>) {
-        eventProcessors.remove(processor)
-    }
 
     fun processEventMessage(data: Any?, eventCode: String) {
         try {
             if (data is String && !TextUtils.isEmpty(data)) {
-                eventProcessors.forEach {
+                eventProcessors.forEach { pair ->
 //                    if (it.getEventType().name == "BannerMessage") {
 //                        //直播间banner消息，直接传递
 //                        it.processBridge(data)
 //                        return
 //                    }
-                    if (it.getEventType().name == eventCode) {
-                        val raw: Any? = wrapEvent(data, EventMessageType.valueOf(eventCode))
-                        if (raw != null) {
-                            it.processBridge(raw)
-                        } else {
-                            it.processBridge()
+                    pair.value.forEach {
+                        if (it.getEventType().name == eventCode) {
+                            val raw: Any? = wrapEvent(data, EventMessageType.valueOf(eventCode))
+                            if (raw != null) {
+                                it.processBridge(raw)
+                            } else {
+                                it.processBridge()
+                            }
                         }
+
                     }
 
                 }
 
             } else {
-                eventProcessors.filter { it.getEventType().name == eventCode }.forEach {
-                    if (data != null) {
-                        it.processBridge(data)
-                    } else {
-                        it.processBridge()
+                eventProcessors.forEach { pair ->
+                    pair.value.filter { it.getEventType().name == eventCode }.forEach {
+                        if (data != null) {
+                            it.processBridge(data)
+                        } else {
+                            it.processBridge()
+                        }
                     }
+
                 }
             }
         } catch (e: Exception) {
@@ -1181,6 +1189,7 @@ object MessageProcessor {
         override fun getEventType() = EventMessageType.BanUserDevice
         override fun isGlobal() = true
     }
+
     /**
      * 直播封禁（用户不允许进入任何直播间）
      */

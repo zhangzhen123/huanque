@@ -611,8 +611,9 @@ class AnimationFragment : BaseFragment() {
 
     @SuppressLint("CheckResult")
     fun registerMessageEventProcessor() {
+        MessageProcessor.removeProcessors(this)
         //主播升级进度
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnchorLevelProgressProcessor {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.AnchorLevelProgressProcessor {
             override fun process(data: AnchorLevelProgressEvent) {
 //                if (!data.show) {//此时表示已经升级了......
 //                    author_progress_up?.upSuccessAndHide()
@@ -623,7 +624,7 @@ class AnimationFragment : BaseFragment() {
             }
         })
         //送礼消息的处理 普通礼物
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.GiftMessageProcessor {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.GiftMessageProcessor {
             override fun process(data: SendGiftEvent) {
                 data.isMyself = if (data.userId == SessionUtils.getUserId()) 1 else 0
                 //只有界面展示时才接收消息
@@ -639,13 +640,13 @@ class AnimationFragment : BaseFragment() {
             }
         })
         // 清除高级动画事件
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.ClearAnimationMessageProcessor {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.ClearAnimationMessageProcessor {
             override fun process(data: VoidResult) {
                 clearAllAnim()
             }
         })
         //入场特效
-        MessageProcessor.registerTxtProcessor(object : MessageProcessor.WelcomeMessageReceiver {
+        MessageProcessor.registerTxtProcessor(this,object : MessageProcessor.WelcomeMessageReceiver {
             override fun processMessage(messageList: List<TplBean>) {
                 if (mHideEnter) {
                     return
@@ -662,14 +663,14 @@ class AnimationFragment : BaseFragment() {
                 }
             }
         })
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.DanMuProcessor {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.DanMuProcessor {
 
             override fun process(data: BarrageEvent) {
                 data.eventCode = EventMessageType.SendDanmu.name
                 barrage_view?.playBarrageAnimator(data)
             }
         })
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.BRDanMuProcessor {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.BRDanMuProcessor {
 
             override fun process(data: BarrageEvent) {
                 data.eventCode = EventMessageType.BROADCAST.name
@@ -680,7 +681,7 @@ class AnimationFragment : BaseFragment() {
 
 
         //PK比分变化
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PKScoreChangeMessageProcess {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PKScoreChangeMessageProcess {
             override fun process(data: PKScoreChangeEvent) {
                 if (data.pkInfo != null) {
                     connectMicroViewModel.inPk.value = true
@@ -692,7 +693,7 @@ class AnimationFragment : BaseFragment() {
             }
         })
         //PK结果
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PKResultMessageProcess {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PKResultMessageProcess {
             @SuppressLint("CheckResult")
             override fun process(data: PKResultEvent) {
 //                mPKPropNotifyDialog?.dismiss()
@@ -710,7 +711,7 @@ class AnimationFragment : BaseFragment() {
 
         })
         //PK道具
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PkPropMessageProcess {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PkPropMessageProcess {
             override fun process(data: PkPropEvent) {
 
                 if (data.programIds.contains(programId)) {
@@ -720,7 +721,7 @@ class AnimationFragment : BaseFragment() {
             }
         })
         //PK道具使用提醒
-//        MessageProcessor.registerEventProcessor(object : MessageProcessor.PkPropUseWarnMessageProcess {
+//        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PkPropUseWarnMessageProcess {
 //            override fun process(data: PkPropUseWarnEvent) {
 //                data?.propUseWarnInfo?.let { info ->
 //                    if (mPKPropNotifyDialog?.isAdded == true) {
@@ -733,7 +734,7 @@ class AnimationFragment : BaseFragment() {
 //            }
 //        })
         //PK礼物任务
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PkTaskMessageProcess {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PkTaskMessageProcess {
             override fun process(data: PkTaskEvent) {
 
                 if (programId == data.programId) {
@@ -743,7 +744,7 @@ class AnimationFragment : BaseFragment() {
             }
         })
         //PK积分任务
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PkScoreTaskMessageProcess {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PkScoreTaskMessageProcess {
             override fun process(data: PkScoreEvent) {
 
                 if (programId == data.programId) {
@@ -755,7 +756,7 @@ class AnimationFragment : BaseFragment() {
         /**
          * banner消息相关
          */
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.RoomBannerMessageProcessor {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.RoomBannerMessageProcessor {
             override fun process(data: String) {
                 bannerWebView.showMessage(data)
 //                if (data.contains(BusiConstant.PopupShow_RoomHeadLine)) {
@@ -771,7 +772,7 @@ class AnimationFragment : BaseFragment() {
         /**
          * PK竞猜赔率发生变化
          */
-//        MessageProcessor.registerEventProcessor(object : MessageProcessor.PkGuessOddsChangeMessageProcessor {
+//        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PkGuessOddsChangeMessageProcessor {
 //            override fun process(data: VoidResult) {
 //                pkGuessViewModel.regreshState.value = true
 //            }
@@ -779,7 +780,7 @@ class AnimationFragment : BaseFragment() {
         /**
          * PK竞猜结果
          */
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PkGuessEndMessageProcessor {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PkGuessEndMessageProcessor {
             override fun process(data: PkGuessResult) {
                 ToastUtils.show(data.pkGuessResult)
             }
@@ -811,6 +812,7 @@ class AnimationFragment : BaseFragment() {
 
 
     fun resetView() {
+        MessageProcessor.removeProcessors(this)
 //        bannerView?.clearData()
 //        gdavGameBanner?.removeAll()
 //        rp_grouper_view?.clearAll()
@@ -881,4 +883,8 @@ class AnimationFragment : BaseFragment() {
         super.onDestroyView()
     }
 
+    override fun onDestroy() {
+        MessageProcessor.removeProcessors(this)
+        super.onDestroy()
+    }
 }

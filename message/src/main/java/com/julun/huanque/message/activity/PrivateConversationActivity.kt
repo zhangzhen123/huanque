@@ -1205,7 +1205,7 @@ class PrivateConversationActivity : BaseActivity() {
             }
         }
         //用户经验变动消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.UserExpChangeMessageProcessor {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.UserExpChangeMessageProcessor {
             override fun process(data: UserExpChangeEvent) {
                 mPrivateConversationViewModel?.userExpChangeEvent?.value = data
             }
@@ -2153,6 +2153,7 @@ class PrivateConversationActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        MessageProcessor.removeProcessors(this)
         //草稿数据
         val draft = edit_text.text.toString()
 //        if (draft.isNotEmpty()) {

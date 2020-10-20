@@ -74,7 +74,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
             mPlayerMessageViewModel.anchorData.value = it
 //            liveFollowListViewModel.requestFollowLivingList(mPlayerViewModel.programId, true)
             //不再直播的
-            if(it?.isLiving != true){
+            if (it?.isLiving != true) {
                 mPlayerViewModel.squareView.value = true
             }
         })
@@ -170,7 +170,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
      */
     fun registerMessage() {
         // 用户经验变化
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.UserExpChangeMessageProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.UserExpChangeMessageProcessor {
             override fun process(data: UserExpChangeEvent) {
                 mPlayerViewModel.userExpChangeEvent.value = data
             }
@@ -179,7 +179,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         /**
          * 本场贡献榜变化消息
          */
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.ContributionProcess {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.ContributionProcess {
             override fun process(data: ContributionEvent) {
                 if (!act.isFinishing) {
                     mPlayerViewModel.contributionSum.postValue(data.score)
@@ -188,7 +188,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         })
 
         // 豪车大亨消息
-        MessageProcessor.registerTxtProcessor(object : MessageProcessor.HuxuryCarMessageReceiver {
+        MessageProcessor.registerTxtProcessor(act, object : MessageProcessor.HuxuryCarMessageReceiver {
             override fun processMessage(messageList: List<TplBean>) {
                 logger("DXC  收到豪车消息")
 //                playerDinosaurViewModel.carMessage.value = messageList
@@ -199,7 +199,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 //         * 任务完成消息  FinishMission
 //         * 现在代表总任务
 //         */
-//        MessageProcessor.registerEventProcessor(object : MessageProcessor.FinishMissionMessageProcessor {
+//        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.FinishMissionMessageProcessor {
 //            override fun process(data: FinishMissionBean) {
 //                taskViewModel.showReceive.value = true
 //            }
@@ -210,7 +210,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 //        /**
 //         * 异步红包变更通知
 //         */
-//        MessageProcessor.registerEventProcessor(object : MessageProcessor.SyncRPChangeMessageProcessor {
+//        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.SyncRPChangeMessageProcessor {
 //            override fun process(redpacket: YearRedPackageResult) {
 //                redPackageViewModel.disposeMsg(redpacket)
 //            }
@@ -220,7 +220,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         /**
          * 刷新段位赛通知
          */
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PkRanRefreshProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.PkRanRefreshProcessor {
             override fun process(data: VoidResult) {
 //                mPlayerViewModel.resetDialog.value = DialogTypes.DIALOG_PK_RANK
 //                mPlayerViewModel.resetDialog.value = PkRankMainDialogFragment::class.java
@@ -230,7 +230,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 //        /**
 //         * 最高分用户变更事件
 //         */
-//        MessageProcessor.registerEventProcessor(object : MessageProcessor.PlanetCasualTopRefreshProcessor {
+//        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PlanetCasualTopRefreshProcessor {
 //            override fun process(data: TopUserInfo) {
 ////                mPlanetViewModel.mTopUserInRelaxation.value = data
 //            }
@@ -239,7 +239,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         /**
          * 直播间Banner变化消息
          */
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.RoomBannerChangeProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.RoomBannerChangeProcessor {
             override fun process(data: RoomBannerChangeBean) {
                 val tempRoomBanner = data.bannerInfo ?: return
 //                val bannerList = playerBannerViewModel.roomBannerData.value
@@ -277,7 +277,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
 
         //直播间数据变化
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.GetDanmuCardProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.GetDanmuCardProcessor {
             override fun process(data: PlayerDataChanged) {
 //                val enterData = mPlayerViewModel.loginSuccessData.value ?: return
 //                enterData.user?.danMuCard = data.danmuCardNum
@@ -288,7 +288,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
 
         //刷新用户信息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.RefreshUserMessageProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.RefreshUserMessageProcessor {
             override fun process(data: VoidResult) {
                 mPlayerViewModel.refreshUserInfoData()
             }
@@ -297,7 +297,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         /**
          * 粉丝特权变化
          */
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.UserFansLevelChangeProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.UserFansLevelChangeProcessor {
             override fun process(data: VoidResult) {
                 //刷新用户信息
 //                mPlayerViewModel.refreshUserInfoData()
@@ -305,7 +305,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
         })
         //主播嘉宾名单变更消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.GuestStatusProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.GuestStatusProcessor {
             override fun process(data: VoidResult) {
                 //重新请求嘉宾列表
 //                mPlayerViewModel.queryGuestList(false)
@@ -315,7 +315,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         /**
          * 横竖屏切换消息
          */
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.RoomCutoverScreenTypeProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.RoomCutoverScreenTypeProcessor {
             override fun process(data: SwitchScreen) {
 //                if (data.programId != mPlayerViewModel.programId) {
 //                    //不是当前直播间消息，直接返回
@@ -339,7 +339,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         })
 
         //CDN切换成功消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.ToggleCDNSuccProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.ToggleCDNSuccProcessor {
             override fun process(data: PlayInfoBean) {
                 //如果是主题房切换的  逻辑处理
                 if (mPlayerViewModel.isThemeRoom) {
@@ -366,7 +366,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         })
 
         //连麦操作事件
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.MicOperateProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.MicOperateProcessor {
             override fun process(data: MicOperateBean) {
                 when (data.action) {
                     ConnectMicroOperate.Create -> {
@@ -398,7 +398,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
         })
         //连麦开始
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.MicStartingProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.MicStartingProcessor {
             override fun process(data: MicActionBean) {
                 logger("连麦状态 1 true")
                 connectMicroViewModel.inMicro.value = true
@@ -411,14 +411,14 @@ class PlayerTransformManager(val act: PlayerActivity) {
             }
         })
         //连麦中切换CDN消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.MicToggleProviderProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.MicToggleProviderProcessor {
             override fun process(data: MicActionBean) {
                 addVideoPlayer(data.micInfo.joinList)
                 connectMicroViewModel.notarizeShowState.value = null
             }
         })
         //连麦断开
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.MicDisconnectProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.MicDisconnectProcessor {
             override fun process(data: MicActionBean) {
                 logger("连麦状态 2 null")
                 connectMicroViewModel.inMicro.value = null
@@ -431,7 +431,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
         })
         //连麦结束
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.MicFinishProcessor {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.MicFinishProcessor {
             override fun process(data: MicActionBean) {
                 logger("连麦状态 3 null")
                 connectMicroViewModel.inMicro.value = null
@@ -444,7 +444,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
         })
         //PK开始
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PKStartMessageProcess {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.PKStartMessageProcess {
             override fun process(data: PKStartEvent) {
                 if (mPlayerViewModel.isAnchor) {
                     ToastUtils.show(act.resources.getString(R.string.connect_pk_success))
@@ -458,20 +458,20 @@ class PlayerTransformManager(val act: PlayerActivity) {
             }
         })
         //PK过程中切换CDN消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PkToggleProviderMessageProcess {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.PkToggleProviderMessageProcess {
             override fun process(data: PKStartEvent) {
                 addPkVideoPlayer(data.pkInfo ?: return, false)
             }
         })
         //pk邀请消息处理
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PKCreateMessageProcess {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.PKCreateMessageProcess {
             override fun process(data: PKCreateEvent) {
                 dealWithPkCreate(data)
             }
         })
 
         //PK结束
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PKFinishMessageProcess {
+        MessageProcessor.registerEventProcessor(act, object : MessageProcessor.PKFinishMessageProcess {
             override fun process(data: PKFinishEvent) {
                 logger("PKFinishMessage:${data.programIds.size}")
                 connectMicroViewModel.inPk.value = null
@@ -491,50 +491,50 @@ class PlayerTransformManager(val act: PlayerActivity) {
         if (mPlayerViewModel.isAnchor) {
             //主播端特有消息
             //单流切换CDN消息
-            MessageProcessor.registerEventProcessor(object : MessageProcessor.ToggleCDNProcessor {
+            MessageProcessor.registerEventProcessor(act, object : MessageProcessor.ToggleCDNProcessor {
                 override fun process(data: SwitchPublishBaseData) {
                     mVideoViewModel?.toggleCDNState?.value = true
                     mVideoViewModel?.switchPublishData?.value = data
                 }
             })//PK开始消息
-            MessageProcessor.registerEventProcessor(object : MessageProcessor.AnchorPkStartingProcessor {
+            MessageProcessor.registerEventProcessor(act, object : MessageProcessor.AnchorPkStartingProcessor {
                 override fun process(data: AnchorPKStartEvent) {
                     doWithPK(data.pkInfo?.detailList, GuardAgainst.Multi, true)
                 }
             })
             //PK过程中切换CDN消息
-            MessageProcessor.registerEventProcessor(object : MessageProcessor.AnchorPkToggleProviderProcessor {
+            MessageProcessor.registerEventProcessor(act, object : MessageProcessor.AnchorPkToggleProviderProcessor {
                 override fun process(data: AnchorPKStartEvent) {
                     doWithPK(data.pkInfo?.detailList, GuardAgainst.Multi, true)
                 }
             })
 
             //PK结束消息
-            MessageProcessor.registerEventProcessor(object : MessageProcessor.AnchorPkFinishProcessor {
+            MessageProcessor.registerEventProcessor(act, object : MessageProcessor.AnchorPkFinishProcessor {
                 override fun process(data: AnchorPKStartEvent) {
                     doWithPK(data.pkInfo?.detailList, GuardAgainst.Single, false)
                 }
             })
             //连麦开始消息
-            MessageProcessor.registerEventProcessor(object : MessageProcessor.AnchorMicStartingProcessor {
+            MessageProcessor.registerEventProcessor(act, object : MessageProcessor.AnchorMicStartingProcessor {
                 override fun process(data: MicActionBean) {
                     doWithMic(data.micInfo.joinList, GuardAgainst.Multi)
                 }
             })
             //连麦过程中CDN切换消息
-            MessageProcessor.registerEventProcessor(object : MessageProcessor.AnchorMicToggleProviderProcessor {
+            MessageProcessor.registerEventProcessor(act, object : MessageProcessor.AnchorMicToggleProviderProcessor {
                 override fun process(data: MicActionBean) {
                     doWithMic(data.micInfo.joinList, GuardAgainst.Multi)
                 }
             })
             //连麦结束消息
-            MessageProcessor.registerEventProcessor(object : MessageProcessor.AnchorMicFinishedProcessor {
+            MessageProcessor.registerEventProcessor(act, object : MessageProcessor.AnchorMicFinishedProcessor {
                 override fun process(data: MicActionBean) {
                     doWithMic(data.micInfo.joinList, GuardAgainst.Single, null)
                 }
             })
             //连麦断开消息
-            MessageProcessor.registerEventProcessor(object : MessageProcessor.AnchorMicDisconnectProcessor {
+            MessageProcessor.registerEventProcessor(act, object : MessageProcessor.AnchorMicDisconnectProcessor {
                 override fun process(data: MicActionBean) {
                     doWithMic(data.micInfo.joinList, GuardAgainst.Single, null)
                 }

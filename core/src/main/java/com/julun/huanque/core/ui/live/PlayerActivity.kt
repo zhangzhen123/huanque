@@ -1487,12 +1487,12 @@ class PlayerActivity : BaseActivity() {
      * 融云接收的直播间各种消息事件
      */
     private fun registerMessageEventProcessor() {
-        MessageProcessor.clearProcessors(false)
+        MessageProcessor.removeProcessors(this)
 
         animationFragment.registerMessageEventProcessor()
         transformManager.registerMessage()
         // 公聊消息
-        MessageProcessor.registerTxtProcessor(object : MessageProcessor.TextMessageReceiver {
+        MessageProcessor.registerTxtProcessor(this, object : MessageProcessor.TextMessageReceiver {
             override fun processMessage(messageList: List<TplBean>) {
                 publicMessageView.addMessages(messageList)
                 if (mConfigViewModel?.horizonState?.value == true && !isAnchor) {
@@ -1503,7 +1503,7 @@ class PlayerActivity : BaseActivity() {
         })
 
         // 跑道消息
-        MessageProcessor.registerTxtProcessor(object : MessageProcessor.RunwayMessageReceiver {
+        MessageProcessor.registerTxtProcessor(this, object : MessageProcessor.RunwayMessageReceiver {
             override fun processMessage(messageList: List<TplBean>) {
                 val bean = messageList[0]
                 liveViewManager.startRunwayAnimation(bean)
@@ -1511,7 +1511,7 @@ class PlayerActivity : BaseActivity() {
         })
 
         //处理排行榜变更
-//        MessageProcessor.registerEventProcessor(object : MessageProcessor.RankMessageProcessor {
+//        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.RankMessageProcessor {
 //            override fun process(data: RankingEvent) {
 //                logger.info("收到榜单数据变化通知${JsonUtil.seriazileAsString(data)}")
 //                liveHeader.handleTop2Change(data.resultList)
@@ -1519,26 +1519,26 @@ class PlayerActivity : BaseActivity() {
 //        })
 
         //直播间在线用户变更....
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.RoomUserMessageProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.RoomUserMessageProcessor {
             override fun process(data: RoomUserChangeEvent) {
                 liveHeader.handleRoomUserChange(data)
             }
         })
 
         //开通守护
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.OpenGuardProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.OpenGuardProcessor {
             override fun process(data: OpenGuardEvent) = openGuard(data)
         })
 
         //开通临时守护
-        MessageProcessor.registerEventProcessor(object :
+        MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.OpenExperienceGuardProcessor {
             override fun process(data: OpenGuardEvent) = openGuard(data)
         })
 
 
         //幸运礼物
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.LuckGiftMessageProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.LuckGiftMessageProcessor {
             override fun process(data: LuckGiftEvent) = playAnimation(AnimModel().apply {
                 logger.info("收到幸运动画 ${JsonUtil.serializeAsString(data)}")
                 this.animType = AnimationTypes.LUCKY
@@ -1552,7 +1552,7 @@ class PlayerActivity : BaseActivity() {
         })
 
         //超级幸运礼物
-        MessageProcessor.registerEventProcessor(object :
+        MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.SuperLuckGiftMessageProcessor {
             override fun process(data: SuperLuckGiftEvent) = playAnimation(AnimModel().apply {
                 logger.info("收到幸运动画 ${JsonUtil.serializeAsString(data)}")
@@ -1569,7 +1569,7 @@ class PlayerActivity : BaseActivity() {
         })
 
         //动画礼物
-        MessageProcessor.registerEventProcessor(object :
+        MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.AnimationMessageProcessor {
             override fun process(data: AnimEventBean) = playAnimation(AnimModel().apply {
                 logger.info("收到GIF动画")
@@ -1580,7 +1580,7 @@ class PlayerActivity : BaseActivity() {
 
 
         // 用户等级升级动画
-        MessageProcessor.registerEventProcessor(object :
+        MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.UserLevelChangeMessageProcessor {
             override fun process(data: UserUpgradeEvent) {
                 logger.info("收到升级动画 ${JsonUtil.serializeAsString(data)}")
@@ -1602,7 +1602,7 @@ class PlayerActivity : BaseActivity() {
         })
 
         //主播等级升级动画
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnchorUpLevelProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnchorUpLevelProcessor {
             override fun process(data: AnchorUpgradeEvent) {
                 //
 //                playAnimation(AnimModel().apply {
@@ -1614,7 +1614,7 @@ class PlayerActivity : BaseActivity() {
             }
         })
         // 开播
-        MessageProcessor.registerEventProcessor(object :
+        MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.StartLivingMessageProcessor {
             override fun process(data: OpenShowEvent) {
 //                logger.info("OpenShowEvent isPcLive:${data.isPcLive}")
@@ -1649,7 +1649,7 @@ class PlayerActivity : BaseActivity() {
             }
         })
         // 停播
-        MessageProcessor.registerEventProcessor(object :
+        MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.StopLivingMessageProcessor {
             override fun process(data: CloseShowEvent) {
                 logger.info("Player 接受到停播消息")
@@ -1680,14 +1680,14 @@ class PlayerActivity : BaseActivity() {
             }
         })
 
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.PKFinishMessageProcess {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.PKFinishMessageProcess {
             override fun process(data: PKFinishEvent) {
                 logger.info("PKFinishMessage:${data.programIds.size}")
                 animationFragment.closePk()
             }
         })
 
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.RoomHeatChangeProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.RoomHeatChangeProcessor {
             override fun process(data: RoomHeatChangeBean) {
                 liveHeader.updateHeatValue(data.heatValue)
             }
@@ -1695,7 +1695,7 @@ class PlayerActivity : BaseActivity() {
         })
 
         // 周星通知
-        MessageProcessor.registerTxtProcessor(object : MessageProcessor.WeekStarMessageReceiver {
+        MessageProcessor.registerTxtProcessor(this, object : MessageProcessor.WeekStarMessageReceiver {
             override fun processMessage(messageList: List<TplBean>) {
                 val bean = messageList[0]
                 bean.beanType = WeekType.WEEK
@@ -1705,7 +1705,7 @@ class PlayerActivity : BaseActivity() {
             }
         })
         // 头条榜消息
-        MessageProcessor.registerTxtProcessor(object : MessageProcessor.HeadlineMessageReceiver {
+        MessageProcessor.registerTxtProcessor(this, object : MessageProcessor.HeadlineMessageReceiver {
             override fun processMessage(messageList: List<TplBean>) {
                 // 需要做排队
                 if (ForceUtils.isIndexNotOutOfBounds(0, messageList)) {
@@ -1717,7 +1717,7 @@ class PlayerActivity : BaseActivity() {
         })
 
         //红包通知
-        MessageProcessor.registerTxtProcessor(object : MessageProcessor.RedPacketMessageReceiver {
+        MessageProcessor.registerTxtProcessor(this, object : MessageProcessor.RedPacketMessageReceiver {
             override fun processMessage(messageList: List<TplBean>) {
                 if (ForceUtils.isIndexNotOutOfBounds(0, messageList)) {
                     val bean = messageList[0]
@@ -1727,7 +1727,7 @@ class PlayerActivity : BaseActivity() {
             }
         })
         //主播被封禁提示
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.BlockProgramProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.BlockProgramProcessor {
             override fun process(data: OperatorMessageBean) {
                 ToastUtils.show("该主播因严重违反欢鹊社区规范，已被执行封号处罚")
                 isBanned = true
@@ -1739,7 +1739,7 @@ class PlayerActivity : BaseActivity() {
         /**
          * 额外公聊样式消息
          */
-//        MessageProcessor.registerEventProcessor(object : MessageProcessor.PublicCustomMsgProcessor {
+//        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PublicCustomMsgProcessor {
 //            override fun process(data: PublicCustomMsgBean) {
 //                when (data.actionType) {
 //                    PublicCustomType.TreasureBox -> {
@@ -1775,7 +1775,7 @@ class PlayerActivity : BaseActivity() {
 //        })
 
 //        //禁言消息
-//        MessageProcessor.registerEventProcessor(object : MessageProcessor.MuteUserProcessor {
+//        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.MuteUserProcessor {
 //            override fun process(data: OperatorMessageBean) {
 //                ToastUtils.show("${data.nickname}给了${data.targetNickname}一个${data.time}禁言套餐")
 //            }
@@ -1799,7 +1799,7 @@ class PlayerActivity : BaseActivity() {
         RongCloudManager.quitAllChatRoom(true)
         RongCloudManager.destroyMessageConsumer()
         // 退出直播间
-        MessageProcessor.clearProcessors(false)
+        MessageProcessor.removeProcessors(this)
         animationFragment.destroyResource()
         programId = 0
         //每次退出统一关闭zego回调
@@ -2152,7 +2152,7 @@ class PlayerActivity : BaseActivity() {
      */
     private fun resetRoom(loginStateChange: Boolean = false) {
         //在这里就先把注册的事件监听全部注销 因为到切换后请求base+连接融云+enter有时间间隔 期间会继续收到消息 导致一系列问题
-        MessageProcessor.clearProcessors(false)
+        MessageProcessor.removeProcessors(this)
         //重新换成默认背景色
         main_content.backgroundResource = R.color.live_bg_color
 

@@ -392,7 +392,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                     .subscribe({
                         //                            logger.info("DXCplayer set 2 it = $it")
                         mAliPlayer?.prepare()
-                    }, {}, {})
+                    }, { it.printStackTrace() })
             }
             mPlayStateListener?.playState(it)
         }
@@ -591,6 +591,9 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         }
     }
 
+    /**
+     * 断开播放器与渲染视图的连接 防止一直报错
+     */
     fun clearHolder() {
         mAliPlayer?.setDisplay(null)
     }

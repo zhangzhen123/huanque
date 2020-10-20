@@ -158,9 +158,9 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
 
     private fun registerMessage() {
-        MessageProcessor.clearProcessors(false)
+        MessageProcessor.removeProcessors(this)
         //匹配超时消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceTimeoutProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceTimeoutProcessor {
             override fun process(data: UserIdListBean) {
                 if (data.userIds.contains(SessionUtils.getUserId())) {
                     //当前用户的匹配超时
@@ -170,7 +170,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             }
         })
         //匹配成功消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceConnectProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceConnectProcessor {
             override fun process(data: AnonyVoiceSuccess) {
                 if (data.userIds.contains(SessionUtils.getUserId())) {
                     //当前用户匹配成功
@@ -190,7 +190,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         })
 
         //匿名语音挂断消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceHangUpProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceHangUpProcessor {
             override fun process(data: AnonyVoiceHangUpBean) {
                 if (data.callId == mAnonymousVoiceViewModel?.callId && data.userId == SessionUtils.getUserId()) {
                     //当前匿名语音被挂断
@@ -200,19 +200,19 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         })
 
         //公开身份消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceOpenProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceOpenProcessor {
             override fun process(data: UserInfoInRoom) {
                 showUserInfo(data)
             }
         })
         //揭秘身份消息
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceUnveilProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceUnveilProcessor {
             override fun process(data: UserInfoInRoom) {
                 showUserInfo(data)
             }
         })
 
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.AnonyVoiceCancelProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceCancelProcessor {
             override fun process(data: AnonyVoiceCancelBean) {
                 if (data.inviteUserId == mAnonymousVoiceViewModel?.inviteUserId && mAnonymousVoiceViewModel?.currentState?.value == AnonymousVoiceViewModel.WAIT_ACCEPT) {
                     //匿名语音取消消息
@@ -988,7 +988,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
     override fun onDestroy() {
         super.onDestroy()
-        MessageProcessor.clearProcessors(false)
+        MessageProcessor.removeProcessors(this)
     }
 
     override fun onRemoteAudioStats(stats: IRtcEngineEventHandler.RemoteAudioStats?) {
