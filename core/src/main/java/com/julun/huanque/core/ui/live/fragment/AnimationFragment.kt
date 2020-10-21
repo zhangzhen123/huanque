@@ -535,7 +535,7 @@ class AnimationFragment : BaseFragment() {
 //        alLp.topMargin = (HEADER_HEIGHT + DensityHelper.dp2px(34)).toInt()
 
 
-        val extendHigh = resources.getDimensionPixelSize(R.dimen.pk_extend_high)
+        val extendHigh = resources.getDimensionPixelSize(R.dimen.pk_process_high)
         pkMicView.layoutParams.height = PlayerViewManager.LIVE_HEIGHT + extendHigh
         logger.info("pkMicView h=${PlayerViewManager.LIVE_HEIGHT + extendHigh}")
 
@@ -695,7 +695,7 @@ class AnimationFragment : BaseFragment() {
         //PK结果
         MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PKResultMessageProcess {
             @SuppressLint("CheckResult")
-            override fun process(data: PKResultEvent) {
+            override fun process(data: PKResultEventNew) {
 //                mPKPropNotifyDialog?.dismiss()
                 Observable.timer(1500, TimeUnit.MILLISECONDS)
                     .bindUntilEvent(this@AnimationFragment, FragmentEvent.DESTROY)
@@ -703,7 +703,7 @@ class AnimationFragment : BaseFragment() {
 //                            pkGuessViewModel.regreshState?.postValue(true)
                     }, { it.printStackTrace() })
                 pKViewModel.pkState.value = 2
-                if (data?.detailList != null) {
+                if (data.pkInfo?.detailList != null) {
                     showPKResult(data)
                 }
 //                playerViewModel.resetDialog.value = PkRankMainDialogFragment::class.java
@@ -794,7 +794,7 @@ class AnimationFragment : BaseFragment() {
         pkMicView?.resetPkView()
     }
 
-    private fun showPKResult(data: PKResultEvent) {
+    private fun showPKResult(data: PKResultEventNew) {
         //pk结束后将额外属性去除 防止影响下次的pk的界面设置
         pkMicView?.showPkResult(data)
     }

@@ -459,7 +459,7 @@ object MessageProcessor {
     /**
      * PK结果
      */
-    interface PKResultMessageProcess : EventMessageProcessor<PKResultEvent> {
+    interface PKResultMessageProcess : EventMessageProcessor<PKResultEventNew> {
         override fun getEventType(): EventMessageType = EventMessageType.PkResult
     }
 

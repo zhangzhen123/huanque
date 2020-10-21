@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--新版pk-->
-    <color name="pk_color_01">#EC4F87</color>
+    <color name="pk_color_01">#FF8700</color>
     <color name="pk_color_02">#9C4FEC</color>
-    <color name="pk_color_03">#18D7F6</color>
+    <color name="pk_color_03">#0ECAFF</color>
     <color name="pk_color_bg_01">#B33B66</color>
     <color name="pk_color_bg_02">#6A2D9F</color>
     <color name="pk_color_bg_03">#14A0B7</color>

@@ -5,10 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--    <include-->
-<!--        android:id="@+id/landlordView"-->
-<!--        layout="@layout/view_landlords_mic"-->
-<!--        android:visibility="gone" />-->
+    <!--    <include-->
+    <!--        android:id="@+id/landlordView"-->
+    <!--        layout="@layout/view_landlords_mic"-->
+    <!--        android:visibility="gone" />-->
+    <TextView
+        android:id="@+id/pk_title"
+        android:layout_width="@dimen/dimen_120"
+        android:layout_height="@dimen/dimen_38"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_6"
+        android:background="@drawable/pk_title"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        tools:text="第一小局开始" />
 
     <LinearLayout
         android:id="@+id/pk_props_layout"
@@ -42,9 +53,9 @@
         android:id="@+id/pk_time_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
-        android:layout_marginTop="@dimen/dimen_42"
-        android:background="@drawable/pk_mic_title_bg"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="@dimen/dimen_26"
+        android:background="@mipmap/bg_pk_title"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/dimen_10"
@@ -52,20 +63,13 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <ImageView
-            android:id="@+id/pk_title_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/pk_title_two" />
-
         <TextView
             android:id="@+id/pk_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4.1dp"
-            android:text="00:00"
             android:textColor="@color/white"
-            android:textSize="@dimen/dimen_12" />
+            android:textSize="12sp"
+            tools:text="第一轮：00:00" />
     </LinearLayout>
 
     <com.julun.huanque.core.widgets.live.pk.PkPropsPanelView
@@ -73,95 +77,242 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_42"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/pk_result_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="42dp"
         android:orientation="horizontal"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:visibility="visible">
 
-        <FrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pk_win_layout_01"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dimen_31"
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/pk_win_logo_01"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:layout_margin="8.5dp"
-                android:visibility="gone" />
+                android:id="@+id/pk_iv_big_cup_01"
+                android:layout_width="@dimen/dimen_58"
+                android:layout_height="@dimen/dimen_48"
+                android:layout_marginBottom="@dimen/dimen_50"
+                android:src="@mipmap/icon_pk_cup"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="visible" />
 
-            <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
-                android:id="@+id/pk_win_sign_01"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_6"
-                android:layout_marginLeft="@dimen/dimen_6"
-                android:scaleType="fitCenter"
-                app:antiAlias="true"
-                app:clearsAfterStop="true"
-                app:loopCount="1" />
-        </FrameLayout>
+            <LinearLayout
+                android:id="@+id/pk_ll_cups_01"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_24"
+                android:gravity="start"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-        <FrameLayout
+                <ImageView
+                    android:id="@+id/pk_iv_cup_11"
+                    android:layout_width="@dimen/dimen_29"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_5"
+                    android:src="@mipmap/icon_pk_cup"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/pk_iv_cup_12"
+                    android:layout_width="@dimen/dimen_29"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_5"
+                    android:src="@mipmap/icon_pk_cup"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/pk_iv_cup_13"
+                    android:layout_width="@dimen/dimen_29"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_5"
+                    android:src="@mipmap/icon_pk_cup"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/pk_iv_result_bg_01"
+                android:layout_width="@dimen/dimen_130"
+                android:layout_height="@dimen/dimen_130"
+                app:layout_constraintBottom_toBottomOf="@+id/pk_iv_result_logo_01"
+                app:layout_constraintEnd_toEndOf="@+id/pk_iv_result_logo_01"
+                app:layout_constraintStart_toStartOf="@+id/pk_iv_result_logo_01"
+                app:layout_constraintTop_toTopOf="@+id/pk_iv_result_logo_01"
+                android:visibility="gone"
+                tools:src="@mipmap/bg_pk_result_win" />
+
+            <ImageView
+                android:id="@+id/pk_iv_result_logo_01"
+                android:layout_width="@dimen/dimen_115"
+                android:layout_height="@dimen/dimen_115"
+                android:layout_marginBottom="@dimen/dimen_50"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"
+                tools:src="@mipmap/icon_pk_result_win" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pk_win_layout_02"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dimen_31"
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/pk_win_logo_02"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:layout_margin="8.5dp"
-                android:visibility="gone" />
+                android:id="@+id/pk_iv_big_cup_02"
+                android:layout_width="@dimen/dimen_58"
+                android:layout_height="@dimen/dimen_48"
+                android:layout_marginBottom="@dimen/dimen_50"
+                android:src="@mipmap/icon_pk_cup"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="visible" />
 
-            <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
-                android:id="@+id/pk_win_sign_02"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_6"
-                android:layout_marginLeft="@dimen/dimen_6"
-                android:scaleType="fitCenter"
-                app:antiAlias="true"
-                app:clearsAfterStop="true"
-                app:loopCount="1" />
-        </FrameLayout>
+            <LinearLayout
+                android:id="@+id/pk_ll_cups_02"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_24"
+                android:gravity="end"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-        <FrameLayout
+                <ImageView
+                    android:id="@+id/pk_iv_cup_21"
+                    android:layout_width="@dimen/dimen_29"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_5"
+                    android:src="@mipmap/icon_pk_cup"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/pk_iv_cup_22"
+                    android:layout_width="@dimen/dimen_29"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_5"
+                    android:src="@mipmap/icon_pk_cup"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/pk_iv_cup_23"
+                    android:layout_width="@dimen/dimen_29"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_5"
+                    android:src="@mipmap/icon_pk_cup"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/pk_iv_result_bg_02"
+                android:layout_width="@dimen/dimen_130"
+                android:layout_height="@dimen/dimen_130"
+                app:layout_constraintBottom_toBottomOf="@+id/pk_iv_result_logo_02"
+                app:layout_constraintEnd_toEndOf="@+id/pk_iv_result_logo_02"
+                app:layout_constraintStart_toStartOf="@+id/pk_iv_result_logo_02"
+                app:layout_constraintTop_toTopOf="@+id/pk_iv_result_logo_02"
+                tools:src="@mipmap/bg_pk_result_draw" />
+
+            <ImageView
+                android:id="@+id/pk_iv_result_logo_02"
+                android:layout_width="@dimen/dimen_115"
+                android:layout_height="@dimen/dimen_115"
+                android:layout_marginBottom="@dimen/dimen_50"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@mipmap/icon_pk_result_draw" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pk_win_layout_03"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dimen_31"
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/pk_win_logo_03"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:layout_margin="8.5dp"
-                android:visibility="gone" />
+                android:id="@+id/pk_iv_big_cup_03"
+                android:layout_width="@dimen/dimen_58"
+                android:layout_height="@dimen/dimen_48"
+                android:layout_marginBottom="@dimen/dimen_50"
+                android:src="@mipmap/icon_pk_cup"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="visible" />
 
-            <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
-                android:id="@+id/pk_win_sign_03"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_6"
-                android:layout_marginLeft="@dimen/dimen_6"
-                android:scaleType="fitCenter"
-                app:antiAlias="true"
-                app:clearsAfterStop="true"
-                app:loopCount="1" />
-        </FrameLayout>
+            <LinearLayout
+                android:id="@+id/pk_ll_cups_03"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_24"
+                android:gravity="start"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <ImageView
+                    android:id="@+id/pk_iv_cup_31"
+                    android:layout_width="@dimen/dimen_29"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_5"
+                    android:src="@mipmap/icon_pk_cup"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/pk_iv_cup_32"
+                    android:layout_width="@dimen/dimen_29"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_5"
+                    android:src="@mipmap/icon_pk_cup"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/pk_iv_cup_33"
+                    android:layout_width="@dimen/dimen_29"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_5"
+                    android:src="@mipmap/icon_pk_cup"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/pk_iv_result_bg_03"
+                android:layout_width="@dimen/dimen_130"
+                android:layout_height="@dimen/dimen_130"
+                app:layout_constraintBottom_toBottomOf="@+id/pk_iv_result_logo_03"
+                app:layout_constraintEnd_toEndOf="@+id/pk_iv_result_logo_03"
+                app:layout_constraintStart_toStartOf="@+id/pk_iv_result_logo_03"
+                app:layout_constraintTop_toTopOf="@+id/pk_iv_result_logo_03"
+                tools:src="@mipmap/bg_pk_result_lose" />
+
+            <ImageView
+                android:id="@+id/pk_iv_result_logo_03"
+                android:layout_width="@dimen/dimen_115"
+                android:layout_height="@dimen/dimen_115"
+                android:layout_marginBottom="@dimen/dimen_50"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@mipmap/icon_pk_result_lose" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
@@ -171,7 +322,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/pk_process_high"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:visibility="gone">
 
         <com.julun.huanque.core.widgets.bezierview.BezierView
             android:id="@+id/bezier_01"
@@ -202,7 +354,8 @@
         app:antiAlias="true"
         app:clearsAfterStop="true"
         app:loopCount="1"
-        app:source="svga/vs.svga" />
+        app:source="svga/vs.svga"
+        tools:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/two_pk_container"
@@ -331,24 +484,12 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/pk2_title_img"
-        android:layout_width="54dp"
-        android:layout_height="38dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="@dimen/dimen_2"
-        android:visibility="gone"
-        app:actualImageScaleType="fitCenter"
-        app:failureImageScaleType="fitCenter"
-        app:placeholderImage="@mipmap/pk_normal_flag"
-        app:placeholderImageScaleType="fitCenter"
-        tools:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/pk2_process"
         android:layout_width="match_parent"
         android:layout_height="@dimen/pk_process_high"
-        android:layout_gravity="top"
+        android:layout_gravity="bottom"
         android:layout_marginTop="@dimen/dimen_12"
         android:visibility="gone"
         tools:visibility="visible">
@@ -719,7 +860,7 @@
         android:id="@+id/pk3_process"
         android:layout_width="match_parent"
         android:layout_height="@dimen/pk_process_high"
-        android:layout_gravity="top"
+        android:layout_gravity="bottom"
         android:layout_marginTop="@dimen/dimen_12"
         android:background="@drawable/pk_process_bg_main"
         android:gravity="center_vertical"
@@ -817,8 +958,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/pk_cloud_high"
         android:background="@color/percent50translucentBlack"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:visibility="gone">
 
         <com.julun.huanque.common.widgets.live.WebpGifView
             android:id="@+id/pk_dan_bg_ani"

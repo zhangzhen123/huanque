@@ -1,23 +1,28 @@
 package com.julun.huanque.common.bean.beans
+
 import java.io.Serializable
 
 /**
  * pk用户
  */
-class PKUser(var creator: Boolean = false,
-             var nickname: String = "",
-             var headPic: String = "",
-             var status: String = "",
-             var anchorLevel: Int = 0,
-             var playInfo: PlayInfo? = null,
-             var pushUrl: String = "",
-             var sdkParams: SdkParam? = null,
-             var sdkProvider: String = "") : ProgramAnchor() {
-    var giftPic: String? = null
-    var score: Long? = null
+class PKUser(
+    var creator: Boolean = false,
+    var nickname: String = "",
+    var headPic: String = "",
+    var status: String = "",
+    var anchorLevel: Int = 0,
+    var playInfo: PlayInfo? = null,
+    var pushUrl: String = "",
+    var sdkParams: SdkParam? = null,
+    var winRound: Int = -1,//获胜回合数
+    var roundResult:String ="",
+    var finalResult:String ="",
+    var scoreTime:Long =-1,
+    var sdkProvider: String = ""
+) : ProgramAnchor() {
+    var roundScore: Long? = null
     var propScore: Long? = null
     var prePic: String? = null
-    var result: String? = null
 
     //4.30新增字段
     //是否是地主
@@ -28,11 +33,11 @@ class PKUser(var creator: Boolean = false,
     var previousScore: Int? = null
     var previousScoreRatio: Float? = null
     override fun toString(): String {
-        return "PKUser(pid=$programId, score=$score,propScore=$propScore nickname=$nickname, picId=$giftPic, scoreRatio=$scoreRatio, previousScore=$previousScore, previousScoreRatio=$previousScoreRatio)"
+        return "PKUser(pid=$programId, score=$roundScore,propScore=$propScore nickname=$nickname, scoreRatio=$scoreRatio, previousScore=$previousScore, previousScoreRatio=$previousScoreRatio)"
     }
 
     fun toStringNoPrevious(): String {
-        return "PKUser(pid=$programId, score=$score, nickname=$nickname, picId=$giftPic"
+        return "PKUser(pid=$programId, score=$roundScore, nickname=$nickname"
     }
 
 }
@@ -45,15 +50,19 @@ class PKInfoBean : Serializable {
     var seconds: Int? = null
     var closeSeconds: Int? = null
     var totalScore: Long? = null
-
+    var detailList: ArrayList<PKUser>? = null
+    var pkId: Long = 0L
+    var currRound: Int = -1 //当前的回合数1,2,3
+    var punish:Boolean =false//todo 惩罚标志
+    var roundFinish:Boolean =false
+    var finalResult:Any? =null//代表最终PK胜负结果
     //新增PK道具字段
     var totalPropScore: Long? = null
-    var detailList: ArrayList<PKUser>? = null
     var stageList: ArrayList<PkStage>? = null
-    var endTime: String? = null
+    var endTime: Long? = null
     var pkType: String? = null
     var logoPic: String? = null
-    var needAnim: Boolean = false//是否需要飘星动画的标识
+
     var template: PKExtra? = null//额外属性
     var propInfo: PkPropInfo? = null
     var giftTaskInfo: PkGiftTaskInfo? = null
@@ -69,6 +78,8 @@ class PKInfoBean : Serializable {
 
     //地主分
     var landlordScore: Long = 0
+    //本地字段
+    var needAnim: Boolean = false//是否需要飘星动画的标识
     override fun toString(): String {
         return "PKInfoBean(seconds=$seconds, totalScore=$totalScore, detail=$detailList, endTime=$endTime, pkType=$pkType, template=$template)"
     }
@@ -239,13 +250,15 @@ class MyPk {
 }
 
 //发起PK者
-class Participator(var anchorId: Int = 0,
-                   var nickname: String = "",
-                   var headPic: String = "",
-                   var giftPic: String? = null,
-                   var status: String = "",
-                   var programId: Long = 0,
-                   var score: Int = 0) {
+class Participator(
+    var anchorId: Int = 0,
+    var nickname: String = "",
+    var headPic: String = "",
+    var giftPic: String? = null,
+    var status: String = "",
+    var programId: Long = 0,
+    var score: Int = 0
+) {
     //目的是去重 以anchorId为准
     override fun hashCode(): Int {
         return programId.hashCode()
@@ -259,8 +272,9 @@ class Participator(var anchorId: Int = 0,
 //PK战绩
 class PKHistory(var hasMore: Boolean = false, var list: ArrayList<PKHistoryBean> = arrayListOf())
 
-class PKHistoryBean(var startTime: String = "",
-                    var participators: ArrayList<Participator> = ArrayList()
+class PKHistoryBean(
+    var startTime: String = "",
+    var participators: ArrayList<Participator> = ArrayList()
 )
 
 /**

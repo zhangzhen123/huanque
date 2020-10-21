@@ -1257,19 +1257,21 @@ class PlayerViewManager(val context: PlayerActivity) {
 //                playerPanel.setPadding(0, 0, 0, 0)
             } else {
                 if (isInPk) {
-                    val topMarginPk = HEADER_HEIGHT + PK_PROCESS_HEIGHT + STATUS_TOP - context.dip(4)
-                    ppLp.topMargin = topMarginPk
-                    anoLp.topMargin = topMarginPk
+//                    val topMarginPk = HEADER_HEIGHT + PK_PROCESS_HEIGHT + STATUS_TOP - context.dip(4)
+//                    ppLp.topMargin = topMarginPk
+//                    anoLp.topMargin = topMarginPk
 //                    trLp?.topMargin = topMarginPk
                     publicView.topPadding = PK_PROCESS_HEIGHT
 //                    bubbleView.topMargin = PK_RROCESS_HEIGHT
                 } else {
-                    ppLp.topMargin = HEADER_HEIGHT + STATUS_TOP
-                    anoLp.topMargin = HEADER_HEIGHT + STATUS_TOP
+//                    ppLp.topMargin = HEADER_HEIGHT + STATUS_TOP
+//                    anoLp.topMargin = HEADER_HEIGHT + STATUS_TOP
 //                    trLp?.topMargin = HEADER_HEIGHT
                     publicView.topPadding = 0
 //                    bubbleView.topMargin = 0
                 }
+                ppLp.topMargin = HEADER_HEIGHT + STATUS_TOP
+                anoLp.topMargin = HEADER_HEIGHT + STATUS_TOP
                 val realHeight = if (screenType == ScreenType.HP) {
                     LIVE_HEIGHT_NARROW
                 } else {

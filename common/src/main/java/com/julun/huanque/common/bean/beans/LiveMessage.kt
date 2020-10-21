@@ -95,8 +95,7 @@ class LuckGiftEvent(
 /**PK开始**/
 class PKStartEvent(
     var pkInfo: PKInfoBean? = null,
-    //推流相关数据
-    var pushData: HashMap<String, PlayInfoAdd> = hashMapOf()
+    var programIds: List<Long>? = null
 )
 
 /**
@@ -146,8 +145,9 @@ class PKFinishEvent(
 class PlayInfoAdd(var playInfo: PlayInfo? = null)
 
 /***PK比分变化*/
-class PKScoreChangeEvent(var pkInfo: PKInfoBean? = null)
-
+class PKScoreChangeEvent(var pkInfo: PKInfoBean? = null,var programIds:List<Long>?=null)
+//PK结果 最新版
+class PKResultEventNew(var pkInfo: PKInfoBean? = null,var programIds:List<Long>?=null)
 /**PK结果  4.30.0新增PK段位字段[stageDetailList]**/
 class PKResultEvent(
     var detailList: ArrayList<PKResultUser>? = null, var pkType: String = "",

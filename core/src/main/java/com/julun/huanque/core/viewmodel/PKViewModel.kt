@@ -47,7 +47,7 @@ class PKViewModel : BaseViewModel() {
     val openPropWindowData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
 //    private var closeDispose: Disposable? = null
-
+    val pkTime: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     //获取PK信息
     fun getPkInfo(info: PKInfoForm) {
         Requests.create(PkMicService::class.java)
@@ -71,47 +71,35 @@ class PKViewModel : BaseViewModel() {
         }
     }
 
-    @NonNull
-    fun getShowTime(totalCount: Int?): String {
-        return if (totalCount == null || totalCount <= 0) "00:00" else {
-            "剩余:${showMin(totalCount)}:${showSecond(totalCount)}"
-        }
+    fun getShowTime(totalCount: Int): String {
+       return "${currentTimeTitle}：${totalCount}s"
 
     }
 
-    fun showMin(totalCount: Int): String {
+    private fun showMin(totalCount: Int): String {
         return if (totalCount / 60 > 9) "${totalCount / 60}" else {
             "0${totalCount / 60}"
         }
     }
 
-    fun showSecond(totalCount: Int): String {
+    private fun showSecond(totalCount: Int): String {
         return if (totalCount % 60 > 9) "${totalCount % 60}" else {
             "0${totalCount % 60}"
         }
     }
 
-    @NonNull
     private fun getShowTimeNew(totalCount: Int?): String {
         return if (totalCount == null || totalCount <= 0) "00:00" else {
             "${showMin(totalCount)}:${showSecond(totalCount)}"
         }
 
     }
-
-    //新版本分钟
-    private fun showMinNew(totalCount: Int) = "${totalCount / 60}:"
-
-    //新版本秒
-    private fun showSecondNew(totalCount: Int): String {
-        return if (totalCount % 60 > 9) "${totalCount % 60}" else {
-            "0${totalCount % 60}"
-        }
-    }
-
-
-    fun countDown(@NonNull textView: TextView, totalCount: Int?, pkType: String? = PKType.PK) {
-        textView.text = getShowTimeNew(totalCount)
+    //当前时间标题
+    var currentTimeTitle:String = ""
+    fun countDown(title:String,totalCount: Int?) {
+        currentTimeTitle=title
+//        textView.text = getShowTimeNew(totalCount)
+        pkTime.postValue(getShowTime(totalCount?:0))
         if (totalCount == null || totalCount <= 0) {
             return
         }
@@ -130,7 +118,8 @@ class PKViewModel : BaseViewModel() {
                     if (count == 0) {
                         disposable!!.dispose()
                     }
-                    textView.text = getShowTimeNew(count)
+                    pkTime.postValue(getShowTime(count))
+//                    textView.text = getShowTimeNew(count)
 
                     count--
                 }

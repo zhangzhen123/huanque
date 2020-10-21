@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
@@ -42,8 +43,10 @@ import com.opensource.svgaplayer.SVGACallback
 import com.opensource.svgaplayer.SVGAParser
 import com.opensource.svgaplayer.SVGAVideoEntity
 import kotlinx.android.synthetic.main.view_pk_mic.view.*
+import org.jetbrains.anko.backgroundColorResource
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.imageResource
 import java.util.*
 
 /**
@@ -57,7 +60,8 @@ import java.util.*
  * @date 2020/04/15
  * @detail 增加斗地主连麦PK功能
  **/
-class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+class PkMicView @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
     private val logger = ULog.getLogger("PkMicView")
 
@@ -79,14 +83,18 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         const val THREE_PK = 3
         const val LANDLORD = 4
         const val VS_PLAY_TIME = 1930L
+
         //乌云动画时间
         const val CLOUD_PLAY_TIME = 666L
+
         //加速火箭动画时间
         const val SPEED_PLAY_TIME = 400L
     }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_pk_mic, this)
+        //todo
+        backgroundColorResource = R.color.percent50translucentBlack
         initViewModel()
         val listener = object : PkPropView.Listener {
             override fun callback(programId: Long) {
@@ -120,20 +128,19 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         pk_dan_level_img02.onClickNew {
 //            playerViewModel.showDialog.value = PkRankMainDialogFragment::class.java
         }
-//        this.onClickNew {
-//            val stageDetailList = arrayListOf<PkStageDetail>()
-//            stageDetailList.add(PkStageDetail(result = PKResultType.WIN, stagePkLevel = 3, stagePkScore = 3,
-//                    mvpNickName = "张三的大粉丝",
-//                    mvpHeadPic = "lm/program/cover/c887c06a0d7f4daeb8ab826e2156fdeb.jpg",
-//                    resultAnimBgUrl = "lm/config/anim/PkWinAnimBg.webp",
-//                    resultAnimForeUrl = "lm/config/anim/PkWinAnimFore3.webp",
-//                    bigIcon = "lm/config/game/BigGold4.png"
-//            ))
-//            stageDetailList.add(PkStageDetail(result = PKResultType.LOSE, stagePkLevel = 3, stagePkScore = -2,
-//                    resultAnimBgUrl = "lm/config/anim/PkLoseAnimBg.webp",
-//                    bigIcon = "lm/config/game/BigGold4.png"))
-//            playDanResultAnimation(stageDetailList.random())
-//        }
+        var index = 1
+        this.onClickNew {
+            //todo test
+            pk_result_layout.show()
+            pk_win_layout_03.hide()
+            currentPkType = TWO_PK
+//            playCupAni(2, index)
+            playFinalResultAni(1, PKResultType.LOSE)
+            playFinalResultAni(2, PKResultType.WIN)
+            index++
+            if (index == 4)
+                index = 0
+        }
 
         pk_props_panel.onClickNew {
             playerViewModel.gotoWeb.value = GoToUrl(false, AppHelper.getDomainName(context.getString(R.string.pk_prop_address)))
@@ -157,7 +164,7 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             if (it != null) {
                 //-2代表计时结束
                 when (it.pkType) {
-                   PKType.LANDLORD -> {
+                    PKType.LANDLORD -> {
 //                        if (it.seconds == -2) {
 //                            landlordsEnd(it)
 //                        } else {
@@ -186,6 +193,10 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         })
         playerViewModel.chatModeState.observe(activity, Observer {
             showPkTitleImg()
+        })
+
+        pKViewModel.pkTime.observe(activity, Observer {
+            pk_time.text = it ?: return@Observer
         })
 //            pKViewModel.pkData.observe(it, Observer {
 //                if (it != null) {
@@ -231,13 +242,13 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         data.needAnim = false
         justSetPk(data)
         //设置pk结果显示
-        pk_win_logo_01.hide()
-        pk_win_logo_02.hide()
-        pk_win_logo_03.hide()
+        pk_iv_result_logo_01.hide()
+        pk_iv_result_logo_02.hide()
+        pk_iv_result_logo_03.hide()
 
-        pk_win_sign_01.hide()
-        pk_win_sign_02.hide()
-        pk_win_sign_03.hide()
+        pk_iv_result_bg_01.hide()
+        pk_iv_result_bg_02.hide()
+        pk_iv_result_bg_03.hide()
 
         when (currentPkType) {
             TWO_PK -> {
@@ -245,19 +256,20 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 if (data.detailList != null && data.detailList!!.size >= 2) {
                     val pkresult1 = data.detailList!![0]
                     val pkresult2 = data.detailList!![1]
-                    if (PKResultType.WIN == pkresult1.result) {
-                        pk_win_logo_01.show()
-                        pk_win_logo_01.setImageResource(R.mipmap.pk_logo_win)
-                    } else if (PKResultType.WIN == pkresult2.result) {
-                        pk_win_logo_02.show()
-                        pk_win_logo_02.setImageResource(R.mipmap.pk_logo_win)
-                    } else if (PKResultType.DRAW == pkresult1.result) {
-                        //平局
-                        pk_win_logo_01.show()
-                        pk_win_logo_01.setImageResource(R.mipmap.pk_logo_draw)
-                        pk_win_logo_02.show()
-                        pk_win_logo_02.setImageResource(R.mipmap.pk_logo_draw)
-                    }
+                    //todo
+//                    if (PKResultType.WIN == pkresult1.result) {
+//                        pk_win_logo_01.show()
+//                        pk_win_logo_01.setImageResource(R.mipmap.pk_logo_win)
+//                    } else if (PKResultType.WIN == pkresult2.result) {
+//                        pk_win_logo_02.show()
+//                        pk_win_logo_02.setImageResource(R.mipmap.pk_logo_win)
+//                    } else if (PKResultType.DRAW == pkresult1.result) {
+//                        //平局
+//                        pk_win_logo_01.show()
+//                        pk_win_logo_01.setImageResource(R.mipmap.pk_logo_draw)
+//                        pk_win_logo_02.show()
+//                        pk_win_logo_02.setImageResource(R.mipmap.pk_logo_draw)
+//                    }
                 }
 
             }
@@ -267,27 +279,28 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     val pkresult1 = data.detailList!![0]
                     val pkresult2 = data.detailList!![1]
                     val pkresult3 = data.detailList!![2]
-                    if (PKResultType.WIN == pkresult1.result) {
-                        pk_win_logo_01.show()
-                        pk_win_logo_01.setImageResource(R.mipmap.pk_logo_win)
-                    }
-                    if (PKResultType.WIN == pkresult2.result) {
-                        pk_win_logo_02.show()
-                        pk_win_logo_02.setImageResource(R.mipmap.pk_logo_win)
-                    }
-                    if (PKResultType.WIN == pkresult3.result) {
-                        pk_win_logo_03.show()
-                        pk_win_logo_03.setImageResource(R.mipmap.pk_logo_win)
-                    }
-                    if (PKResultType.DRAW == pkresult1.result) {
-                        //平局
-                        pk_win_logo_01.show()
-                        pk_win_logo_01.setImageResource(R.mipmap.pk_logo_draw)
-                        pk_win_logo_02.show()
-                        pk_win_logo_02.setImageResource(R.mipmap.pk_logo_draw)
-                        pk_win_logo_03.show()
-                        pk_win_logo_03.setImageResource(R.mipmap.pk_logo_draw)
-                    }
+                    //todo
+//                    if (PKResultType.WIN == pkresult1.result) {
+//                        pk_win_logo_01.show()
+//                        pk_win_logo_01.setImageResource(R.mipmap.pk_logo_win)
+//                    }
+//                    if (PKResultType.WIN == pkresult2.result) {
+//                        pk_win_logo_02.show()
+//                        pk_win_logo_02.setImageResource(R.mipmap.pk_logo_win)
+//                    }
+//                    if (PKResultType.WIN == pkresult3.result) {
+//                        pk_win_logo_03.show()
+//                        pk_win_logo_03.setImageResource(R.mipmap.pk_logo_win)
+//                    }
+//                    if (PKResultType.DRAW == pkresult1.result) {
+//                        //平局
+//                        pk_win_logo_01.show()
+//                        pk_win_logo_01.setImageResource(R.mipmap.pk_logo_draw)
+//                        pk_win_logo_02.show()
+//                        pk_win_logo_02.setImageResource(R.mipmap.pk_logo_draw)
+//                        pk_win_logo_03.show()
+//                        pk_win_logo_03.setImageResource(R.mipmap.pk_logo_draw)
+//                    }
                 }
 
             }
@@ -304,13 +317,17 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
      * 总的入口1 开始pk
      */
     private fun playPkStarting(pkinfo: PKInfoBean) {
+        this.show()
         pkinfo.needAnim = false
         currentPKData = pkinfo
         logger.info("开始播放pkStarting")
         //对于上一次PK没正常结束的情况
-        if (pk_result_layout.isVisible())
-            pk_result_layout.hide()
-        this.show()
+        if (pkinfo.currRound == 1) {
+            if (pk_result_layout.isVisible())
+                pk_result_layout.hide()
+        }
+
+
         currentPkType = pkinfo.detailList?.size ?: -1
         if (currentPkType <= 0) {
             logger.info("pk参数有误")
@@ -346,7 +363,7 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             //设置定时器 先不展示 动画完成再展示
 //            pk_time_layout.show()
             pKViewModel.closeCountDown()
-            pKViewModel.countDown(pk_time, pkinfo.seconds)
+            pKViewModel.countDown(getTimeTitle(pkinfo), pkinfo.seconds)
         }
 
         when (currentPkType) {
@@ -406,7 +423,7 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             //设置定时器
             pk_time_layout.show()
             pKViewModel.closeCountDown()
-            pKViewModel.countDown(pk_time, pkData.seconds)
+            pKViewModel.countDown(getTimeTitle(pkData), pkData.seconds)
         } else {
             pk_time_layout.hide()
         }
@@ -414,33 +431,34 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             TWO_PK -> {
                 pk2_process.show()
                 pk3_process.hide()
-                pk_title_img.setImageResource(R.mipmap.pk_title_two)
+//                pk_title_img.setImageResource(R.mipmap.pk_title_two)
                 val stageList = pkData.stageList
                 setStageData(stageList)
             }
             THREE_PK -> {
                 pk2_process.hide()
                 pk3_process.show()
-                pk_title_img.setImageResource(R.mipmap.pk_title_three)
+//                pk_title_img.setImageResource(R.mipmap.pk_title_three)
             }
         }
         queueNotifyPk(pkData)
     }
 
     //展示pk结果
-    fun showPkResult(data: PKResultEvent) {
-        if (data.pkType == PKType.LANDLORD) {
+    fun showPkResult(data: PKResultEventNew) {
+        val info = data.pkInfo ?: return
+        if (info.pkType == PKType.LANDLORD) {
 //            landlordsResult(data)
             return
         }
         logger.info("展示pk结果")
-        pk_win_logo_01.hide()
-        pk_win_logo_02.hide()
-        pk_win_logo_03.hide()
+        pk_iv_result_logo_01.hide()
+        pk_iv_result_logo_02.hide()
+        pk_iv_result_logo_03.hide()
 
-        pk_win_sign_01.hide()
-        pk_win_sign_02.hide()
-        pk_win_sign_03.hide()
+        pk_iv_result_bg_01.hide()
+        pk_iv_result_bg_02.hide()
+        pk_iv_result_bg_03.hide()
         //防止pk动画还没完成但是结果已经来了(取消动画 隐藏布局)
         pk2Set?.cancel()
         pk3Set?.cancel()
@@ -460,91 +478,113 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
         //注意   每次一定先把本主播排在首位
         val curProgramId = playerViewModel.programId
-        var self: PKResultUser? = null
-        data.detailList?.forEach { it ->
+        var self: PKUser? = null
+        info.detailList?.forEach { it ->
             if (it.programId == curProgramId)
                 self = it
         }
         if (self != null) {
-            data.detailList?.remove(self!!)
-            data.detailList?.add(0, self!!)
+            info.detailList?.remove(self!!)
+            info.detailList?.add(0, self!!)
         }
         //做PK段位结果动画
-        var showDanResult = false
-        data.stageDetailList?.let { stageList ->
-            var stageSelf: PkStageDetail? = null
-            run outs@{
-                stageList.forEach {
-                    if (it.programId == curProgramId) {
-                        stageSelf = it
-                        return@outs
-                    }
-                }
-            }
-            if (stageSelf != null) {
-                showDanResult = true
-                playDanResultAnimation(stageSelf!!)
-            }
-        }
+//        var showDanResult = false
+//        data.stageDetailList?.let { stageList ->
+//            var stageSelf: PkStageDetail? = null
+//            run outs@{
+//                stageList.forEach {
+//                    if (it.programId == curProgramId) {
+//                        stageSelf = it
+//                        return@outs
+//                    }
+//                }
+//            }
+//            if (stageSelf != null) {
+//                showDanResult = true
+//                playDanResultAnimation(stageSelf!!)
+//            }
+//        }
         //这里将pk结果转化成pk变化 再刷新下pk值
-        val pkData = PKInfoBean().apply {
-            detailList = arrayListOf()
-            var total = 0L
-            data.detailList?.forEach { user ->
-                val newUser = PKUser()
-                newUser.score = user.score
-                detailList?.add(newUser)
-                total += user.score
-            }
-            totalScore = total
-        }
-        queueNotifyPk(pkData)
-        //
-        when (currentPkType) {
-            TWO_PK -> {
-                pk_win_layout_03.hide()
-                pk_win_layout_01.visibility = View.VISIBLE
-                pk_win_layout_02.visibility = View.VISIBLE
-                if (data.detailList != null && data.detailList!!.size >= 2) {
-                    val pkresult1 = data.detailList!![0]
-                    val pkresult2 = data.detailList!![1]
-                    if (PKResultType.WIN == pkresult1.result) {
-                        startPlaySvga(pk_win_logo_01, pk_win_sign_01, R.mipmap.pk_logo_win, "svga/pk_win.svga", !showDanResult)
-                    } else if (PKResultType.WIN == pkresult2.result) {
-                        startPlaySvga(pk_win_logo_02, pk_win_sign_02, R.mipmap.pk_logo_win, "svga/pk_win.svga", !showDanResult)
-                    } else if (PKResultType.DRAW == pkresult1.result) {
-                        //平局
-                        startPlaySvga(pk_win_logo_01, pk_win_sign_01, R.mipmap.pk_logo_draw, "svga/pk_draw.svga", !showDanResult)
-                        startPlaySvga(pk_win_logo_02, pk_win_sign_02, R.mipmap.pk_logo_draw, "svga/pk_draw.svga", !showDanResult)
-                    }
-                }
-
-            }
-            THREE_PK -> {
-                pk_win_layout_03.show()
-                if (data.detailList != null && data.detailList!!.size >= 3) {
-                    val pkresult1 = data.detailList!![0]
-                    val pkresult2 = data.detailList!![1]
-                    val pkresult3 = data.detailList!![2]
-                    if (PKResultType.WIN == pkresult1.result) {
-                        startPlaySvga(pk_win_logo_01, pk_win_sign_01, R.mipmap.pk_logo_win, "svga/pk_win.svga", !showDanResult)
-                    }
-                    if (PKResultType.WIN == pkresult2.result) {
-                        startPlaySvga(pk_win_logo_02, pk_win_sign_02, R.mipmap.pk_logo_win, "svga/pk_win.svga", !showDanResult)
-                    }
-                    if (PKResultType.WIN == pkresult3.result) {
-                        startPlaySvga(pk_win_logo_03, pk_win_sign_03, R.mipmap.pk_logo_win, "svga/pk_win.svga", !showDanResult)
-                    }
-                    if (PKResultType.DRAW == pkresult1.result) {
-                        //平局
-                        startPlaySvga(pk_win_logo_01, pk_win_sign_01, R.mipmap.pk_logo_draw, "svga/pk_draw.svga", !showDanResult)
-                        startPlaySvga(pk_win_logo_02, pk_win_sign_02, R.mipmap.pk_logo_draw, "svga/pk_draw.svga", !showDanResult)
-                        startPlaySvga(pk_win_logo_03, pk_win_sign_03, R.mipmap.pk_logo_draw, "svga/pk_draw.svga", !showDanResult)
+//        val pkData = PKInfoBean().apply {
+//            detailList = arrayListOf()
+//            var total = 0L
+//            info.detailList?.forEach { user ->
+//                val newUser = PKUser()
+//                newUser.roundScore = user.score
+//                detailList?.add(newUser)
+//                total += user.score
+//            }
+//            totalScore = total
+//        }
+        queueNotifyPk(info)
+        if (info.roundFinish) {
+            when (currentPkType) {
+                TWO_PK -> {
+                    pk_win_layout_03.hide()
+                    if (info.detailList != null && info.detailList!!.size >= 2) {
+                        info.detailList!!.forEachIndexed { index, item ->
+                            playFinalResultAni(index + 1, item.finalResult)
+                        }
                     }
 
                 }
+                THREE_PK -> {
+                    pk_win_layout_03.show()
+                    if (info.detailList != null && info.detailList!!.size >= 3) {
+                        info.detailList!!.forEachIndexed { index, item ->
+                            playFinalResultAni(index + 1, item.finalResult)
+                        }
 
+                    }
+
+                }
             }
+
+        } else {
+            when (currentPkType) {
+                TWO_PK -> {
+                    pk_win_layout_03.hide()
+                    pk_win_layout_01.visibility = View.VISIBLE
+                    pk_win_layout_02.visibility = View.VISIBLE
+                    if (info.detailList != null && info.detailList!!.size >= 2) {
+                        val pkresult1 = info.detailList!![0]
+                        val pkresult2 = info.detailList!![1]
+                        if (PKResultType.WIN == pkresult1.roundResult) {
+                            playCupAni(1, pkresult1.winRound)
+                        } else if (PKResultType.WIN == pkresult2.roundResult) {
+                            playCupAni(2, pkresult2.winRound)
+                        }
+                    }
+
+                }
+                THREE_PK -> {
+                    //todo
+//                pk_win_layout_03.show()
+//                if (data.detailList != null && data.detailList!!.size >= 3) {
+//                    val pkresult1 = data.detailList!![0]
+//                    val pkresult2 = data.detailList!![1]
+//                    val pkresult3 = data.detailList!![2]
+//                    if (PKResultType.WIN == pkresult1.result) {
+//                        startPlaySvga(pk_win_logo_01, pk_win_sign_01, R.mipmap.pk_logo_win, "svga/pk_win.svga", !showDanResult)
+//                    }
+//                    if (PKResultType.WIN == pkresult2.result) {
+//                        startPlaySvga(pk_win_logo_02, pk_win_sign_02, R.mipmap.pk_logo_win, "svga/pk_win.svga", !showDanResult)
+//                    }
+//                    if (PKResultType.WIN == pkresult3.result) {
+//                        startPlaySvga(pk_win_logo_03, pk_win_sign_03, R.mipmap.pk_logo_win, "svga/pk_win.svga", !showDanResult)
+//                    }
+//                    if (PKResultType.DRAW == pkresult1.result) {
+//                        //平局
+//                        startPlaySvga(pk_win_logo_01, pk_win_sign_01, R.mipmap.pk_logo_draw, "svga/pk_draw.svga", !showDanResult)
+//                        startPlaySvga(pk_win_logo_02, pk_win_sign_02, R.mipmap.pk_logo_draw, "svga/pk_draw.svga", !showDanResult)
+//                        startPlaySvga(pk_win_logo_03, pk_win_sign_03, R.mipmap.pk_logo_draw, "svga/pk_draw.svga", !showDanResult)
+//                    }
+//
+//                }
+
+                }
+            }
+
         }
         pk_result_layout.show()
 
@@ -616,15 +656,237 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         SVGAHelper.startParse(url, callbacks)
     }
 
+    /**
+     * 播放最终胜负结果[index] 1,2,3 注意从1开始
+     */
+    private fun playFinalResultAni(index: Int, result: String) {
+        var targetView: ImageView? = null
+        var bgView: ImageView? = null
+        when (index) {
+            1 -> {
+                targetView = pk_iv_result_logo_01
+                bgView = pk_iv_result_bg_01
+            }
+            2 -> {
+                targetView = pk_iv_result_logo_02
+                bgView = pk_iv_result_bg_02
+            }
+            3 -> {
+                targetView = pk_iv_result_logo_03
+                bgView = pk_iv_result_bg_03
+            }
+        }
+        targetView ?: return
+        bgView ?: return
+        targetView.show()
+        bgView.show()
+        targetView.translationY = 0f
+        bgView.translationY = 0f
+        when (result) {
+            PKResultType.WIN -> {
+                targetView.imageResource = R.mipmap.icon_pk_result_win
+                bgView.imageResource = R.mipmap.bg_pk_result_win
+            }
+            PKResultType.DRAW -> {
+                targetView.imageResource = R.mipmap.icon_pk_result_draw
+                bgView.imageResource = R.mipmap.bg_pk_result_draw
+            }
+
+            PKResultType.LOSE -> {
+                targetView.imageResource = R.mipmap.icon_pk_result_lose
+                bgView.imageResource = R.mipmap.bg_pk_result_lose
+            }
+
+        }
+
+        val ani11 = ObjectAnimator.ofFloat(targetView, View.SCALE_X, 0f, 1.2f, 1.0f)
+        val ani12 = ObjectAnimator.ofFloat(targetView, View.SCALE_Y, 0f, 1.2f, 1.0f)
+        val ani13 = ObjectAnimator.ofFloat(bgView, View.SCALE_X, 0f, 1.2f, 1.0f)
+        val ani14 = ObjectAnimator.ofFloat(bgView, View.SCALE_Y, 0f, 1.2f, 1.0f)
+        val ani1 = AnimatorSet()
+        ani1.interpolator = AccelerateInterpolator()
+        ani1.duration = 750
+        ani1.playTogether(ani11, ani12, ani13, ani14)
+
+        val ani2 = ObjectAnimator.ofFloat(bgView, View.ROTATION, 0f, 360f).apply {
+            this.repeatMode = ValueAnimator.RESTART
+            this.repeatCount = ValueAnimator.INFINITE
+            this.interpolator = LinearInterpolator()
+            this.duration = 5000L
+        }
+        val ani31 = ObjectAnimator.ofFloat(targetView, View.ALPHA, 0f, 1f)
+        val ani32 = ObjectAnimator.ofFloat(bgView, View.ALPHA, 0f, 1f)
+        val ani3 = AnimatorSet()
+        ani3.playTogether(ani31, ani32)
+        ani3.duration = 500
+
+        val ani41 = ObjectAnimator.ofFloat(targetView, View.TRANSLATION_Y, 0f, dp2pxf(100))
+        val ani42 = ObjectAnimator.ofFloat(bgView, View.TRANSLATION_Y, 0f, dp2pxf(100))
+        val ani4 = AnimatorSet()
+        ani4.playTogether(ani41, ani42)
+        ani4.startDelay = 1450
+        ani4.duration = 300
+        ani4.addListener(onEnd = {
+            ani2.cancel()
+            bgView?.hide()
+        })
+        val aniSet = AnimatorSet()
+        aniSet.play(ani1).with(ani2).with(ani3).before(ani4)
+        aniSet.start()
+    }
+
+    /**
+     *  播放一轮胜利后获取奖杯的动画
+     *  [index] 1,2,3 注意从1开始 要做动画的位置
+     *  [winRound]当前获取到的奖杯数
+     */
+    private fun playCupAni(index: Int, winRound: Int) {
+        post {
+
+            logger.info("playCupAni index=$index winRound=$winRound")
+            var targetView: ImageView? = null
+            var bigImageView: ImageView? = null
+            when (index) {
+                1 -> {
+                    bigImageView = pk_iv_big_cup_01
+                    when (winRound) {
+                        1 -> {
+                            targetView = pk_iv_cup_11
+                        }
+                        2 -> {
+                            pk_iv_cup_11.show()
+                            targetView = pk_iv_cup_12
+                        }
+                        3 -> {
+                            pk_iv_cup_11.show()
+                            pk_iv_cup_12.show()
+                            targetView = pk_iv_cup_13
+                        }
+                    }
+
+                }
+                2 -> {
+                    bigImageView = pk_iv_big_cup_02
+                    when (winRound) {
+                        1 -> {
+                            if (currentPkType == TWO_PK) {
+                                targetView = pk_iv_cup_23
+                            } else {
+                                targetView = pk_iv_cup_21
+                            }
+
+                        }
+                        2 -> {
+                            if (currentPkType == TWO_PK) {
+                                pk_iv_cup_23.show()
+                            } else {
+                                pk_iv_cup_21.show()
+                            }
+                            targetView = pk_iv_cup_22
+                        }
+                        3 -> {
+                            if (currentPkType == TWO_PK) {
+                                pk_iv_cup_23.show()
+                                pk_iv_cup_22.show()
+                                targetView = pk_iv_cup_21
+                            } else {
+                                pk_iv_cup_21.show()
+                                pk_iv_cup_22.show()
+                                targetView = pk_iv_cup_23
+                            }
+
+                        }
+                    }
+
+                }
+                3 -> {
+                    bigImageView = pk_iv_big_cup_03
+                    when (winRound) {
+                        1 -> {
+                            targetView = pk_iv_cup_31
+                        }
+                        2 -> {
+                            pk_iv_cup_31.show()
+                            targetView = pk_iv_cup_32
+                        }
+                        3 -> {
+                            pk_iv_cup_31.show()
+                            pk_iv_cup_32.show()
+                            targetView = pk_iv_cup_33
+                        }
+                    }
+
+                }
+            }
+            bigImageView ?: return@post
+            targetView ?: return@post
+            bigImageView.show()
+            //重置偏移量 以及缩放值
+            bigImageView.translationX = 0f
+            bigImageView.translationY = 0f
+            bigImageView.scaleX = 1f
+            bigImageView.scaleY = 1f
+            val ani11 = ObjectAnimator.ofFloat(bigImageView, View.SCALE_X, 0f, 1.1f, 1.0f)
+            val ani12 = ObjectAnimator.ofFloat(bigImageView, View.SCALE_Y, 0f, 1.1f, 1.0f)
+            val ani1 = AnimatorSet()
+            ani1.interpolator = AccelerateInterpolator()
+            ani1.duration = 650
+            ani1.playTogether(ani11, ani12)
+
+
+            val location1 = IntArray(2)
+            bigImageView.getLocationOnScreen(location1)
+            val location2 = IntArray(2)
+            targetView.getLocationOnScreen(location2)
+            val dx = location1[0] - location2[0] + (bigImageView.width - targetView.width) / 2
+            val dy = location1[1] - location2[1] + (bigImageView.height - targetView.height) / 2
+
+            logger.info("当前奖杯的坐标---x=${location1[0]} y=${location1[1]} ")
+            logger.info("当前奖杯平移---dx=${dx} dy=${dy} ")
+//            val scale = targetView.width.toFloat() / bigImageView.width
+            val ani21 = ObjectAnimator.ofFloat(bigImageView, View.TRANSLATION_X, 0f, -dx.toFloat())
+            val ani22 = ObjectAnimator.ofFloat(bigImageView, View.TRANSLATION_Y, 0f, -dy.toFloat())
+
+//            val anim21 = ValueAnimator.ofInt(dp2px(50), dp2px(5))
+//            val bllp = bigImageView.layoutParams as ConstraintLayout.LayoutParams
+//            anim21.addUpdateListener { valueAnimate ->
+//                logger.info("anim21 ${valueAnimate.animatedValue}")
+//                bllp.bottomMargin = valueAnimate.animatedValue as Int
+//                bigImageView.requestLayout()
+//            }
+//            val anim22 = ValueAnimator.ofInt(originLeftMargn, dp2px(5 + (5 + 29) * (winRound-1)))
+//            anim22.addUpdateListener { valueAnimate ->
+//                logger.info("anim22 ${valueAnimate.animatedValue}")
+//                bllp.leftMargin = valueAnimate.animatedValue as Int
+//                bigImageView.requestLayout()
+//            }
+            val ani23 = ObjectAnimator.ofFloat(bigImageView, View.SCALE_X, 1.0f, 0.5f)
+            val ani24 = ObjectAnimator.ofFloat(bigImageView, View.SCALE_Y, 1.0f, 0.5f)
+            val ani2 = AnimatorSet()
+            ani2.duration = 500 * 2
+            ani2.startDelay = 450
+            ani2.playTogether(ani21, ani22, ani23, ani24)
+
+            val set = AnimatorSet()
+            set.playSequentially(ani1, ani2)
+            set.addListener( onEnd = {
+                bigImageView?.hide()
+//                targetView.imageResource = R.mipmap.icon_pk_cup
+                targetView?.show()
+            })
+            set.start()
+
+        }
+    }
 
     //防止泄露
     private fun releasePkView() {
         pk2Set?.cancel()
         pk3Set?.cancel()
-        pKViewModel?.closeCountDown()
-        pk_win_sign_01.callback = null
-        pk_win_sign_02.callback = null
-        pk_win_sign_03.callback = null
+        pKViewModel.closeCountDown()
+//        pk_win_sign_01.callback = null
+//        pk_win_sign_02.callback = null
+//        pk_win_sign_03.callback = null
         pk_vs_ani.callback = null
         isNotify = false
         myHandler.removeCallbacksAndMessages(null)
@@ -666,7 +928,7 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         pk2_process.hide()
         pk3_process.hide()
         pk_time_layout.hide()
-        pk2_title_img.hide()
+//        pk2_title_img.hide()
 
         two_pk_container.hide()
         three_pk_container.hide()
@@ -688,9 +950,9 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         resetSpeed()
         this.hide()
         //关闭正在播放的结果动画
-        pk_win_sign_01.stopAnimation()
-        pk_win_sign_02.stopAnimation()
-        pk_win_sign_03.stopAnimation()
+//        pk_win_sign_01.stopAnimation()
+//        pk_win_sign_02.stopAnimation()
+//        pk_win_sign_03.stopAnimation()
         //隐藏左右两个段位赛图标
         pk_dan_level_img01?.hide()
         pk_dan_level_img02?.hide()
@@ -706,7 +968,7 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
         two_pk_container.show()
         three_pk_container.hide()
-        pk_title_img.setImageResource(R.mipmap.pk_title_two)
+//        pk_title_img.setImageResource(R.mipmap.pk_title_two)
 
         //赋值
         pkinfo.detailList?.let { list ->
@@ -843,7 +1105,7 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private fun startThreePkAnimator(pkinfo: PKInfoBean) {
         two_pk_container.hide()
         three_pk_container.show()
-        pk_title_img.setImageResource(R.mipmap.pk_title_three)
+//        pk_title_img.setImageResource(R.mipmap.pk_title_three)
         //赋值
         pkinfo.detailList?.let { list ->
             if (list.size >= 3) {
@@ -934,22 +1196,41 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     private fun showPkTitleImg() {
-        when (currentPkType) {
-            THREE_PK, LANDLORD -> {
-                pk2_title_img.hide()
+//        when (currentPkType) {
+//            THREE_PK, LANDLORD -> {
+//                pk2_title_img.hide()
+//            }
+//            TWO_PK -> {
+//                if (currentPKData?.logoPic != null)
+//                    ImageUtils.loadImage(pk2_title_img, currentPKData!!.logoPic!!, 54f, 38f)
+//                else
+//                    ImageUtils.loadImageLocal(pk2_title_img, R.mipmap.pk_normal_flag)
+//                if (playerViewModel?.chatModeState?.value != true) {
+//                    pk2_title_img.show()
+//                } else {
+//                    pk2_title_img.hide()
+//                }
+//            }
+//        }
+    }
+
+    private fun getTimeTitle(pkData: PKInfoBean): String {
+        var title = ""
+        when (pkData.currRound) {
+            1 -> {
+                title = "第一轮"
             }
-            TWO_PK -> {
-                if (currentPKData?.logoPic != null)
-                    ImageUtils.loadImage(pk2_title_img, currentPKData!!.logoPic!!, 54f, 38f)
-                else
-                    ImageUtils.loadImageLocal(pk2_title_img, R.mipmap.pk_normal_flag)
-                if (playerViewModel?.chatModeState?.value != true) {
-                    pk2_title_img.show()
-                } else {
-                    pk2_title_img.hide()
-                }
+            2 -> {
+                title = "第二轮"
+            }
+            3 -> {
+                title = "第三轮"
             }
         }
+        if (pkData.punish) {
+            title = "惩罚"
+        }
+        return title
     }
 
     private val pkDateList: LinkedList<PKInfoBean> = LinkedList()    //等待播放的队列
@@ -970,6 +1251,7 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     private var lastDataOfPk: PKInfoBean? = null//记录上一次的数据
+
     //改变pk数值
     private fun notifyPkProcess() {
 //        playSpeedAnimation(80,1111)
@@ -1021,10 +1303,10 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 }
 
                 if (player1 != null && player2 != null) {
-                    val playerScore1 = player1?.score ?: 0
-                    val playerScore2 = player2?.score ?: 0
-                    val lastPlayerScore1 = lastPlayer1?.score ?: 0
-                    val lastPlayerScore2 = lastPlayer2?.score ?: 0
+                    val playerScore1 = player1?.roundScore ?: 0
+                    val playerScore2 = player2?.roundScore ?: 0
+                    val lastPlayerScore1 = lastPlayer1?.roundScore ?: 0
+                    val lastPlayerScore2 = lastPlayer2?.roundScore ?: 0
                     pk2_process_text01.setNumberString("$lastPlayerScore1", "$playerScore1")
                     pk2_process_text02.setNumberString("$lastPlayerScore2", "$playerScore2")
 
@@ -1115,13 +1397,13 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     }
                 }
                 if (player1 != null && player2 != null && player3 != null) {
-                    val playerScore1 = player1?.score ?: 0
-                    val playerScore2 = player2?.score ?: 0
-                    val playerScore3 = player3?.score ?: 0
+                    val playerScore1 = player1?.roundScore ?: 0
+                    val playerScore2 = player2?.roundScore ?: 0
+                    val playerScore3 = player3?.roundScore ?: 0
 
-                    val lastPlayerScore1 = lastPlayer1?.score ?: 0
-                    val lastPlayerScore2 = lastPlayer2?.score ?: 0
-                    val lastPlayerScore3 = lastPlayer3?.score ?: 0
+                    val lastPlayerScore1 = lastPlayer1?.roundScore ?: 0
+                    val lastPlayerScore2 = lastPlayer2?.roundScore ?: 0
+                    val lastPlayerScore3 = lastPlayer3?.roundScore ?: 0
 
                     pk3_process_text_01.setNumberString("$lastPlayerScore1", "$playerScore1")
                     pk3_process_text_02.setNumberString("$lastPlayerScore2", "$playerScore2")
@@ -1197,8 +1479,8 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                         }
                     }
                     val difScore3 = playerScore3 - lastPlayerScore3
-                    val width3 = if (player3?.score != null && total != null) {
-                        dip(16) + (player3!!.score!!.toFloat() / total.toFloat() * maxProcessWidth).toInt()
+                    val width3 = if (player3?.roundScore != null && total != null) {
+                        dip(16) + (player3!!.roundScore!!.toFloat() / total.toFloat() * maxProcessWidth).toInt()
                     } else {
                         dip(16)
                     }
@@ -1523,8 +1805,12 @@ class PkMicView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         pk_dan_bg_ani.setURI(StringHelper.getOssImgUrl(pkStageDetail.resultAnimBgUrl ?: return), 1)
         if (win) {
             pk_dan_fg_ani.show()
-            pk_dan_fg_ani.setURI(StringHelper.getOssImgUrl(pkStageDetail.resultAnimForeUrl
-                    ?: return), 1)
+            pk_dan_fg_ani.setURI(
+                StringHelper.getOssImgUrl(
+                    pkStageDetail.resultAnimForeUrl
+                        ?: return
+                ), 1
+            )
         } else {
             pk_dan_fg_ani.hide()
         }

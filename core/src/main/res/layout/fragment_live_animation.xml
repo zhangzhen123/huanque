@@ -25,7 +25,7 @@
             android:id="@+id/pkMicView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/dimen_73" />
+            android:layout_marginTop="@dimen/live_header_height" />
 
         <com.julun.huanque.core.widgets.live.banner.BannerWebView
             android:id="@+id/bannerWebView"
