@@ -71,6 +71,12 @@ object TextTouch {
 
     //打开养鹊
     const val Magpie = "Magpie"
+
+    //打开H5页面
+    const val OpenUrlPage = "OpenUrlPage"
+
+    //打开贵族页面
+    const val OpenRoyalPage = "OpenRoyalPage"
 }
 
 object EnterType {
@@ -337,7 +343,7 @@ object MessageConstants {
 
     //花魁榜
     const val PlumFlower = "PlumFlower"
-    
+
     //搭讪常用语页面
     const val AccostWords = "AccostWords"
 

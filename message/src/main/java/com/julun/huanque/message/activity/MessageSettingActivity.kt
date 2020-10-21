@@ -137,7 +137,7 @@ class MessageSettingActivity : BaseActivity() {
         iv_fate_voice.onClickNew {
             //缘分来了铃声
             iv_fate_voice.isSelected = !iv_fate_voice.isSelected
-            SPUtils.commitBoolean(SPParamKey.Fate_Voice_Open, iv_fold_stranger_msg.isSelected)
+            SPUtils.commitBoolean(SPParamKey.Fate_Voice_Open, iv_fate_voice.isSelected)
         }
     }
 

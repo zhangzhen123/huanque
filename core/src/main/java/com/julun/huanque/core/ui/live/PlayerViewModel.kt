@@ -576,6 +576,13 @@ class PlayerViewModel : BaseViewModel() {
                 }
 //                }
             }
+            TextTouch.OpenUrlPage -> {
+                //打开H5页面
+            }
+
+            TextTouch.OpenRoyalPage -> {
+                //打开贵族页面
+            }
 
             TextTouch.OpenGameView -> {
                 actionBeanData.value = BottomActionBean(ClickType.GAME)
