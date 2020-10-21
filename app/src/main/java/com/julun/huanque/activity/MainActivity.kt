@@ -774,6 +774,7 @@ class MainActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loginOut(event: LoginOutEvent) {
         //登录通知
+        mMainViewModel.showMineRedPoint.value = false
         LoginManager.doLoginOut({
             finish()
             //退出登录成功

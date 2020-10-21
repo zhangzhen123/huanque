@@ -1,6 +1,7 @@
 package com.julun.huanque.message.fragment
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.res.Configuration
 import android.graphics.Typeface
 import android.os.Bundle
@@ -10,9 +11,11 @@ import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.launcher.ARouter
+import com.julun.huanque.common.adapter.GiftCountAdapter
 import com.julun.huanque.common.adapter.PrivateGiftAdapter
 import com.julun.huanque.common.adapter.SimplePagerAdapter
 import com.julun.huanque.common.base.BaseDialogFragment
@@ -26,6 +29,7 @@ import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.GiftTitleView
@@ -72,6 +76,13 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
 
     private var currentGiftAdapter: PrivateGiftAdapter? = null
 
+    // 选中礼物可选数量adapter
+    private val selectCountAdapter = GiftCountAdapter()
+
+    // 当前选中礼物可选数量
+    private var optionCountList: List<GoodsOptionCount> = mutableListOf()
+    private var currentSelectCount: Int = 0//记录当前的选中数目
+
     // 所有礼物面板数据
     private var goodsCfgData: ChatGiftInfo? = null
 
@@ -107,7 +118,25 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
         giftViewPager?.adapter = viewPagerAdapter
         giftViewPager?.addOnPageChangeListener(viewPagerChangeListener)
 
+        selectCountListView.layoutManager = LinearLayoutManager(context)
+        selectCountListView?.adapter = selectCountAdapter
+
         doLoadGiftData()
+
+        // 数量选择列表
+        selectCountAdapter.setOnItemClickListener { adapter, view, position ->
+            if (!ForceUtils.isIndexNotOutOfBounds(position, optionCountList)) {
+                return@setOnItemClickListener
+            }
+            currentSelectCount = optionCountList[position].countValue
+            sendCountLabel?.text = currentSelectCount.toString()
+            selectCountListView?.visibility = View.GONE
+
+            refreshProcessDataPreview(selectedGift?.userExp ?: 0L, currentSelectCount)
+        }
+
+        // 数量选择视图默认为禁用样式
+        changeCountViewToDisable()
 
     }
 
@@ -134,10 +163,22 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
             ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
         }
 
-//        svga_player?.onClick {
-//            activity.startActivityForResult(Intent(activity, RechargeCenterActivity::class.java), LiveBusiConstant.RECHARGE_REQUEST_CODE)
-//            dismiss()
-//        }
+        // 礼物数量容器控制 数量listview显示隐藏
+        sendCountLayout?.onTouch { view, motionEvent ->
+            if (motionEvent.action === MotionEvent.ACTION_DOWN) {
+                if (selectedGift != null) {
+                    doCountListLoadData()
+                    return@onTouch true
+                }
+            }
+            return@onTouch false
+        }
+
+// 根容器，数量选择视图隐藏
+        send_gift_container?.setOnClickListener {
+            hideCountListView()
+        }
+
         mengdou_icon.onClickNew {
             ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
         }
@@ -219,7 +260,7 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
                         currentExpRefreshTime = it.time
                         refreshProcessDataPreview(
                             selectedGift?.userExp
-                                ?: return@Observer
+                                ?: return@Observer, currentSelectCount
                         )
                     } else {
                         logger.info("消息过时了：${it.time}")
@@ -303,10 +344,14 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
     }
 
 
-    /**
-     * 选中背包
-     */
-    private fun selPackage(sel: Boolean) {
+    // 激活发送礼物布局框
+    private fun changeCountViewToEnable() {
+        sendCountLayout?.isEnabled = true
+    }
+
+    // 禁用发送礼物布局框
+    private fun changeCountViewToDisable() {
+        sendCountLayout?.isEnabled = false
     }
 
     //根据tab获取 该tab第一页的位置
@@ -448,9 +493,9 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
     private var mMCBubble: BubbleDialog? = null
     private var mMCDispose: Disposable? = null
 
-    private fun refreshProcessDataPreview(userExp: Long) {
+    private fun refreshProcessDataPreview(userExp: Long, count: Int) {
         goodsCfgData?.let { giftData ->
-            val previewNum = userExp
+            val previewNum = userExp * count
             var process = 0
             var secProcess = 0
             //已有的经验值 * 100 /总经验值 = 进度条展示的百分比长度
@@ -577,7 +622,7 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
                 ToastUtils.show("选择要送出的礼物喔~")
                 return@OnClickListener
             }
-
+            hideCountListView()
             realSendGift(selectedGift ?: return@OnClickListener)
         }
     }
@@ -598,30 +643,34 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
             ToastUtils.show("没有可赠送目标")
             return
         }
-        viewModel.sendGift(targetId, selectedGift ?: return, fateId = mPrivateConversationViewModel.mFateID)
+        if (currentSelectCount == 0) {
+            ToastUtils.show("请选择数量")
+            return
+        }
+        viewModel.sendGift(targetId, selectedGift ?: return, count = currentSelectCount, fateId = mPrivateConversationViewModel.mFateID)
     }
 
     private fun sendGiftSuccess(data: SendGiftResult, form: ConsumeForm) {
-        //异常收集
-        if (balanceLabel == null || sendActionBtn == null) {
-            reportCrash("当前的fragment生命周期:$currentLife goodsCfgData是不是空:${goodsCfgData == null}")
-        }
-        val wealth = data.beans
-        balanceLabel?.text = "$wealth"
-        goodsCfgData?.beans = wealth
-
-        //手动改变经验属性
-        if (goodsCfgData != null && curGiftIsSending != null) {
-            val addExp = curGiftIsSending!!.userExp * form.count
-            val expShort = goodsCfgData!!.needExp - goodsCfgData!!.userExp
-            if (expShort <= addExp) {
-                //用户升级了
-            } else {
-                goodsCfgData!!.userExp = goodsCfgData!!.userExp + addExp
-                //刷新本次经验进度条 可不要 现在统一后台推送刷新
-                refreshProcessDataPreview(curGiftIsSending!!.userExp)
-            }
-        }
+//        //异常收集
+//        if (balanceLabel == null || sendActionBtn == null) {
+//            reportCrash("当前的fragment生命周期:$currentLife goodsCfgData是不是空:${goodsCfgData == null}")
+//        }
+//        val wealth = data.beans
+//        balanceLabel?.text = "$wealth"
+//        goodsCfgData?.beans = wealth
+//
+//        //手动改变经验属性
+//        if (goodsCfgData != null && curGiftIsSending != null) {
+//            val addExp = curGiftIsSending!!.userExp * form.count
+//            val expShort = goodsCfgData!!.needExp - goodsCfgData!!.userExp
+//            if (expShort <= addExp) {
+//                //用户升级了
+//            } else {
+//                goodsCfgData!!.userExp = goodsCfgData!!.userExp + addExp
+//                //刷新本次经验进度条 可不要 现在统一后台推送刷新
+//                refreshProcessDataPreview(curGiftIsSending!!.userExp)
+//            }
+//        }
     }
 
     private fun resetData() {
@@ -632,7 +681,39 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
 
     // 选中礼物
     fun selectedCurrentGift(isByUser: Boolean = true) {
-        refreshProcessDataPreview(selectedGift?.userExp ?: 0L)
+        hideCountListView()
+
+        // 可选数量集合(倒序：数量最大的在最上面)
+        optionCountList = selectedGift?.countItemList ?: return
+        if (optionCountList.isEmpty()) {
+            return
+        }
+        // 默认选中第1个数量值
+        val defaultPosition = optionCountList.size - 1
+        if (defaultPosition >= 0) {
+            currentSelectCount = optionCountList[defaultPosition].countValue
+            sendCountLabel!!.text = currentSelectCount.toString()
+        }
+        refreshProcessDataPreview(selectedGift?.userExp ?: 0L, currentSelectCount)
+
+        changeCountViewToEnable()
+    }
+
+    // 加载礼物数量列表
+    private fun doCountListLoadData() {
+        if (selectCountListView?.visibility != View.GONE) {
+            selectCountListView?.visibility = View.GONE
+        } else {
+            selectCountAdapter.setList(optionCountList)
+            selectCountListView?.visibility = View.VISIBLE
+        }
+    }
+
+    // 隐藏选择数量的视图
+    private fun hideCountListView() {
+        if (selectCountListView?.visibility != View.GONE) {
+            selectCountListView?.visibility = View.GONE
+        }
     }
 
     /**
@@ -642,6 +723,14 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
         selectedGift = dto
         sendActionBtn.isEnabled = selectedGift != null
         PrivateGiftAdapter.selectedGift = dto
+
+        if (selectedGift == null) {
+            sendCountLayout.hide()
+            sendActionBtn.isEnabled = false
+        } else {
+            sendCountLayout.show()
+            sendActionBtn.isEnabled = true
+        }
     }
 
 
@@ -665,7 +754,7 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
         }
         mAdapter.setOnItemClickListener { adapter, itemView, position ->
             try {
-
+                hideCountListView()
                 val currentGift = mAdapter.data[position]
                 if (currentGift.chatGiftId == BusiConstant.EMPTY_GIFT) {
                     return@setOnItemClickListener
@@ -690,6 +779,16 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
         mAdapter?.setList(giftList)
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        logger.info("onDismiss")
+        hideCountListView()
+        super.onDismiss(dialog)
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        hideCountListView()
+        super.onCancel(dialog)
+    }
 
     private val viewPagerAdapter: SimplePagerAdapter<PrivateGroupInfo, RecyclerView> by lazy {
         object : SimplePagerAdapter<PrivateGroupInfo, RecyclerView>(R.layout.view_cmp_just_grid) {
@@ -708,6 +807,7 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                hideCountListView()
             }
 
             override fun onPageSelected(position: Int) {

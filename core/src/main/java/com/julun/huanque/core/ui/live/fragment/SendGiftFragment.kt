@@ -35,7 +35,7 @@ import com.julun.huanque.common.widgets.happybubble.BubbleDialog
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
 import com.julun.huanque.common.adapter.GiftAdapter
-import com.julun.huanque.core.adapter.GiftCountAdapter
+import com.julun.huanque.common.adapter.GiftCountAdapter
 import com.julun.huanque.common.adapter.SimplePagerAdapter
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.EggSettingViewModel

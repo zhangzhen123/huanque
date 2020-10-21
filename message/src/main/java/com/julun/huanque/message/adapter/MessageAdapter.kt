@@ -2,12 +2,13 @@ package com.julun.huanque.message.adapter
 
 import android.graphics.Color
 import android.net.Uri
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
@@ -26,16 +27,18 @@ import com.julun.huanque.common.bean.beans.ChatBubble
 import com.julun.huanque.common.bean.beans.ChatGift
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.SendRoomInfo
-import com.julun.huanque.common.bean.message.ExpressionAnimationBean
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
+import com.julun.huanque.common.bean.message.ExpressionAnimationBean
 import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
-import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.FingerGuessingResult
+import com.julun.huanque.common.constant.MessageCustomBeanType
+import com.julun.huanque.common.constant.VoiceResultType
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.WebpAnimatorListener
-import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
@@ -514,7 +517,15 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         try {
             val chatGift = JsonUtil.deserializeAsObject<ChatGift>(str, ChatGift::class.java)
             ImageUtils.loadImage(helper.getView(R.id.sdv_gift_pic), chatGift.selPic, 50f, 50f)
-            helper.setText(R.id.tv_gift_content, "送你一${chatGift.giftUnit}${chatGift.giftName}")
+            val count = max(1, chatGift.giftCount)
+            val style = SpannableStringBuilder("送你${count}${chatGift.giftUnit}${chatGift.giftName}")
+            style.setSpan(
+                ForegroundColorSpan(GlobalUtils.formatColor("#FF5757")),
+                2,
+                2 + "$count".length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            helper.setText(R.id.tv_gift_content, style)
             if (started) {
                 helper.setText(R.id.tv_detail, "${chatGift.beans}鹊币")
             } else {
