@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="280dp">
+
+    <View
+        android:id="@+id/view_bg"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:alpha="1"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/con_left"
+        android:layout_width="232dp"
+        android:layout_height="70dp"
+        android:background="@mipmap/bg_pk_left"
+        app:layout_constraintBottom_toTopOf="@+id/con_right"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_pk_left"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImage="@mipmap/logo_placeholder_medium"
+            app:roundAsCircle="true"
+            app:roundingBorderColor="@color/primary_color"
+            app:roundingBorderWidth="2px" />
+
+        <TextView
+            android:id="@+id/tv_pk_nickname_left"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="68dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/sdv_pk_left"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="肯定会的那个" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/con_right"
+        android:layout_width="232dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="14dp"
+        android:background="@mipmap/bg_pk_right"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/con_left">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_pk_right"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginRight="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImage="@mipmap/logo_placeholder_medium"
+            app:roundAsCircle="true"
+            app:roundingBorderColor="@color/primary_color"
+            app:roundingBorderWidth="2px" />
+
+        <TextView
+            android:id="@+id/tv_pk_nickname_right"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="68dp"
+            android:layout_marginRight="10dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/sdv_pk_right"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="肯定会的那个" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view_left_point"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="26dp"
+        app:layout_constraintBottom_toBottomOf="@id/con_left"
+        app:layout_constraintRight_toRightOf="@id/con_left"
+        app:layout_constraintTop_toTopOf="@id/con_left" />
+
+    <ImageView
+        android:id="@+id/iv_light_left"
+        android:layout_width="90dp"
+        android:layout_height="124dp"
+        android:src="@mipmap/light_pk"
+        app:layout_constraintBottom_toBottomOf="@id/view_left_point"
+        app:layout_constraintLeft_toLeftOf="@id/view_left_point"
+        app:layout_constraintRight_toRightOf="@id/view_left_point"
+        app:layout_constraintTop_toTopOf="@id/view_left_point" />
+
+
+    <View
+        android:id="@+id/view_right_point"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="26dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/con_right"
+        app:layout_constraintLeft_toLeftOf="@id/con_right"
+        app:layout_constraintTop_toTopOf="@id/con_right" />
+
+
+    <ImageView
+        android:id="@+id/iv_light_right"
+        android:layout_width="90dp"
+        android:layout_height="124dp"
+        android:src="@mipmap/light_pk"
+        app:layout_constraintBottom_toBottomOf="@id/view_right_point"
+        app:layout_constraintLeft_toLeftOf="@id/view_right_point"
+        app:layout_constraintRight_toRightOf="@id/view_right_point"
+        app:layout_constraintTop_toTopOf="@id/view_right_point" />
+
+    <ImageView
+        android:id="@+id/iv_vs"
+        android:layout_width="99dp"
+        android:layout_height="69dp"
+        android:alpha="0"
+        android:src="@mipmap/icon_pk_vs"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <ImageView
+        android:id="@+id/iv_win"
+        android:layout_width="58dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="50dp"
+        android:src="@mipmap/icon_win"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/guideline2" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

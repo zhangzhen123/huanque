@@ -139,6 +139,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:theme="@style/ActivityDialogStyle"></activity>
+        <activity android:name=".ui.test.TestPKActivity" />
 
         <meta-data
             android:name="com.openinstall.APP_KEY"
