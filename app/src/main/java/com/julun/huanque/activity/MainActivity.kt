@@ -309,6 +309,10 @@ class MainActivity : BaseActivity() {
             }
         })
 
+        mMainViewModel.showMineRedPoint.observe(this, Observer {
+            showMinePoint()
+        })
+
         mMessageViewModel.unreadMsgCount.observe(this, Observer {
             if (it != null) {
                 tv_unread_count.text = if (it <= 99) {
@@ -436,6 +440,7 @@ class MainActivity : BaseActivity() {
             }
         }
         showUnreadCount()
+        showMinePoint()
     }
 
 
@@ -504,6 +509,19 @@ class MainActivity : BaseActivity() {
             tv_unread_count.show()
         } else {
             tv_unread_count.hide()
+        }
+
+    }
+
+    /**
+     * 显示我的红点
+     */
+    private fun showMinePoint() {
+        val showFlag = mMainViewModel.showMineRedPoint.value
+        if (!item_mine.isSelected && showFlag == true) {
+            tv_red_point.show()
+        }else{
+            tv_red_point.hide()
         }
 
     }

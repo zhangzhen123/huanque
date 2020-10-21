@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,6 +43,7 @@ import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.huanque.message.activity.ContactsActivity
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
+import com.julun.huanque.viewmodel.MainViewModel
 import com.julun.huanque.viewmodel.MineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -66,6 +69,11 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             .navigation() as IRealNameService
     }
 
+    private val mMainViewModel: MainViewModel by activityViewModels()
+
+    //是否需要刷新数据
+    private var mNeedRefresh = false
+
     override fun getLayoutId() = R.layout.fragment_mine
 
     override fun isRegisterEventBus(): Boolean = true
@@ -89,6 +97,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     if (userDataTab.userDataTabType == ContactsTabType.Visit) {
                         userDataTab.addCount = 0
                         infoTabAdapter.notifyItemChanged(index)
+                        judgeRedPoint()
                         return@forEachIndexed
                     }
                 }
@@ -153,6 +162,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     }
 
     private fun loadData(info: UserDetailInfo) {
+        judgeRedPoint()
         SharedPreferencesUtils.commitString(SPParamKey.CUSTOMER_URL, info.customerUrl)
         headImage.loadImage(info.userBasic.headPic + BusiConstant.OSS_160, 60f, 60f)
         tvNickName.text = info.userBasic.nickname
@@ -337,6 +347,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                     RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
                 }
                 MineToolType.ToMaster -> {//聊主学院
+                    mNeedRefresh = true
                     RNPageActivity.start(requireActivity(), RnConstant.CHAT_COLLEGE_PAGE)
                 }
                 MineToolType.ToAnchor -> {
@@ -404,12 +415,45 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
             }
 
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        if (mNeedRefresh) {
+            mNeedRefresh = false
+            mViewModel.queryInfo(QueryType.REFRESH)
+        }
     }
 
     override fun lazyLoadData() {
         mViewModel.queryInfo()
     }
+
+    /**
+     * 判断是否需要显示我的红点
+     */
+    private fun judgeRedPoint() {
+        //聊主学院数量
+        var messageCount = 0
+        mViewModel.userInfo.value?.getT()?.tools?.forEach {
+            if (it.toolType == MineToolType.ToMaster) {
+                messageCount = it.messageCount
+                return@forEach
+            }
+        }
+        //访客数量
+        var visitorCount = 0
+        mViewModel.userInfo.value?.getT()?.userDataTabList?.forEach {
+            if (it.userDataTabType == ContactsTabType.Visit) {
+                visitorCount = it.addCount
+                return@forEach
+            }
+        }
+
+        mMainViewModel.showMineRedPoint.value = !(visitorCount <= 0 && messageCount <= 0)
+
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun receiveLoginCode(event: LoginEvent) {
@@ -480,6 +524,13 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
                 val sdvTool = holder.getView<SimpleDraweeView>(R.id.sdv_tool)
                 sdvTool.loadImage(item.icon, 34f, 34f)
                 holder.setText(R.id.tvTitle, item.name)
+                val messageCount = item.messageCount
+                if (messageCount > 0) {
+                    holder.setVisible(R.id.tv_count, true)
+                        .setText(R.id.tv_count, "${item.messageCount}")
+                } else {
+                    holder.setGone(R.id.tv_count, true)
+                }
 
             }
         }

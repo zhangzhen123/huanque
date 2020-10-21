@@ -224,6 +224,22 @@
             android:textColor="@color/selector_home_tab_text_color"
             android:textSize="10sp" />
 
+        <TextView
+            android:id="@+id/tv_red_point"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="33dp"
+            android:background="@drawable/bg_unread_count"
+            android:layout_marginRight="6dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
