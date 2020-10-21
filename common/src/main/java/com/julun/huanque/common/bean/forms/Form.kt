@@ -158,9 +158,14 @@ class AddWordsForm(var words: String) : Serializable
 /**
  * 修改搭讪常用语的form
  */
-class UpdateWordsForm(var words: String,var wordsId : Long)
+class UpdateWordsForm(var words: String, var wordsId: Long)
 
 /**
  * 删除搭讪常用语
  */
-class WordsIdForm(var wordsId : Long)
+class WordsIdForm(var wordsId: Long)
+
+/**
+ * 状态的form
+ */
+class StatusForm(var status: String = "")

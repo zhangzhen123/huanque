@@ -4,15 +4,19 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.permission.PermissionUtils
+import com.julun.huanque.viewmodel.CommonSettingViewModel
 import kotlinx.android.synthetic.main.act_player_setting.*
 
 /**
@@ -21,7 +25,10 @@ import kotlinx.android.synthetic.main.act_player_setting.*
  *@描述 直播设置页面
  */
 @Route(path = ARouterConstant.PLAYER_SETTING_ACTIVITY)
-class PlayerSettingActivity : BaseActivity() {
+class CommonSettingActivity : BaseActivity() {
+
+    private val mCommonSettingViewModel: CommonSettingViewModel by viewModels()
+
     //用户点击去设置跳转到权限设置页面
     private var mUserAction = false
 
@@ -32,9 +39,22 @@ class PlayerSettingActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_player_setting
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        initViewModel()
         header_page.textTitle.text = "直播设置"
         showDefaultView()
+
+        mCommonSettingViewModel.getHideLocationState()
     }
+
+    /**
+     * 初始化ViewModel
+     */
+    private fun initViewModel() {
+        mCommonSettingViewModel.hideLocationState.observe(this, Observer {
+            iv_hide_location.isSelected = it == BusiConstant.True
+        })
+    }
+
 
     /**
      * 显示默认布局，请求权限回来刷新布局
@@ -85,6 +105,14 @@ class PlayerSettingActivity : BaseActivity() {
                 }
 
             }
+        }
+        iv_hide_location.onClickNew {
+            val status = if (iv_hide_location.isSelected) {
+                BusiConstant.False
+            } else {
+                BusiConstant.True
+            }
+            mCommonSettingViewModel.saveHideLocation(status)
         }
     }
 

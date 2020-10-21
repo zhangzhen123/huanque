@@ -217,7 +217,9 @@ data class UserSecurityInfo(
     var bindAliPay: Boolean = false,
     var bindWeChat: Boolean = false,
     var mobile: String = "",
-    var security: Boolean = false
+    var security: Boolean = false,
+    //是否实名认证
+    var hasRealName: String = ""
 )
 
 /**

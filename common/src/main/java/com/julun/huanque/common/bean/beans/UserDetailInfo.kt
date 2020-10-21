@@ -44,7 +44,9 @@ data class UserTool(
 data class UserLevelInfo(
     var needExp: Long = 0,
     var userExp: Long = 0,
-    var userLevel: Int = 0
+    var userLevel: Int = 0,
+    //红点数量
+    var messageCount: Int = 0
 )
 
 /**

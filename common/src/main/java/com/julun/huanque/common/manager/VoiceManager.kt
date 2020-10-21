@@ -12,10 +12,12 @@ import com.aliyun.player.AliPlayer
 import com.aliyun.player.AliPlayerFactory
 import com.aliyun.player.nativeclass.CacheConfig
 import com.aliyun.player.source.UrlSource
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.FileUtils
+import com.julun.huanque.common.utils.SPUtils
 
 /**
  *@创建者   dong
@@ -65,7 +67,9 @@ object VoiceManager {
      * 播放缘分来了音效
      */
     fun playYuanFen() {
-        playerAudio("yuanfen.mp3", false, false)
+        if (SPUtils.getBoolean(SPParamKey.Fate_Voice_Open, true)) {
+            playerAudio("yuanfen.mp3", false, false)
+        }
     }
 
 
@@ -118,9 +122,9 @@ object VoiceManager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mPlaybackAttributes = AudioAttributes.Builder()
                 .apply {
-                    if(quietOther){
+                    if (quietOther) {
                         setUsage(AudioAttributes.USAGE_ALARM)
-                    }else{
+                    } else {
                         setUsage(AudioAttributes.USAGE_MEDIA)
                     }
                 }
@@ -129,9 +133,9 @@ object VoiceManager {
 
             mPlayer?.setAudioAttributes(mPlaybackAttributes)
         } else {
-            if(quietOther){
+            if (quietOther) {
                 mPlayer?.setAudioStreamType(AudioManager.STREAM_ALARM);//音量跟随闹钟音量
-            }else{
+            } else {
                 mPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC);//音量跟随闹钟音量
             }
         }
