@@ -70,7 +70,9 @@ class PKViewModel : BaseViewModel() {
     }
 
     fun getShowTime(totalCount: Int): String {
-        return "${currentTimeTitle}：${totalCount}s"
+        return if (totalCount <= 0) "$currentTimeTitle 00:00" else {
+            "$currentTimeTitle  ${showMin(totalCount)}:${showSecond(totalCount)}"
+        }
 
     }
 
@@ -84,13 +86,6 @@ class PKViewModel : BaseViewModel() {
         return if (totalCount % 60 > 9) "${totalCount % 60}" else {
             "0${totalCount % 60}"
         }
-    }
-
-    private fun getShowTimeNew(totalCount: Int?): String {
-        return if (totalCount == null || totalCount <= 0) "00:00" else {
-            "${showMin(totalCount)}:${showSecond(totalCount)}"
-        }
-
     }
 
     //当前时间标题

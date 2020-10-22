@@ -33,8 +33,8 @@ class VideoViewModel : BaseViewModel() {
     val playInfoData: MutableLiveData<PlayInfo> by lazy { MutableLiveData<PlayInfo>() }
     //主播加入房间成功
     val anchorLoginRoomSuccess: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-    //清空所有的流
-    val stopAllStreamState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    //清空所有的流 1代表常规关闭 2代表关闭所有（常规和单例播放器）  3代表关闭所有 同时单例播放器断开视图连接
+    val stopAllStreamState: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
     //主播端是否在推流
     var anchorIsPublishing = false
 

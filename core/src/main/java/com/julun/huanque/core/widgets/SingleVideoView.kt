@@ -52,7 +52,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     private var mSurfaceHolder: SurfaceHolder? = null
 
     //surfaceview是否已经创建
-    private var created = false
+//    private var created = false
 
     private val logger = ULog.getLogger("SingleVideoView")
 
@@ -153,7 +153,12 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             mAliPlayer?.stop()
             mAliPlayer?.release()
             this.hide()
+        }else {
+            //使用单例的播放器 手动置空相关监听器
+            mAliPlayer?.setOnRenderingStartListener(null)
+            logger("onDetachedFromWindow setOnRenderingStartListener(null) ")
         }
+        mAliPlayer = null
         isFree = true
         playerInfo = null
         anchor_info.visibility = View.GONE
@@ -179,20 +184,22 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 
     /**
      * 停止播放器[stopAll]停止所有播放器 无论单例还是常规 基本上代表该播放要关闭 并且重置视图内容 隐藏视图
+     * [needDisConnect]是否需要播放器与视图断开 对于有些情况 比如关闭时播放器surface被未开播界面覆盖 这时需要手动断开 不然会一直报错
      */
-    fun stop(stopAll: Boolean = false) {
+    fun stop(stopAll: Boolean = false,needDisConnect:Boolean=false) {
         logger.info("stop stopAll=$stopAll")
-        if (!created) {
-            return
-        }
         if (useManager) {
             if (stopAll)
                 AliPlayerManager.stop()
+            if(needDisConnect){
+                AliPlayerManager.mAliPlayer.setDisplay(null)
+            }
         } else {
             mAliPlayer?.stop()
         }
-        anchor_info.visibility = View.GONE
-        if(stopAll){
+        anchor_info.hide()
+        posterImage.hide()
+        if (stopAll) {
             this.hide()
         }
         playerInfo = null
@@ -330,7 +337,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                 mPlayTime = System.currentTimeMillis()
             }
             if (it == IPlayer.completion || it == IPlayer.error) {
-                if(BuildConfig.DEBUG){
+                if (BuildConfig.DEBUG) {
                     return@setOnStateChangedListener
                 }
                 //CDN切换的时候会触发此回调，重新调用播放方法
@@ -349,7 +356,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) {
                 logger("surfaceCreated=${holder.hashCode()}")
-                created = true
+//                created = true
                 mAliPlayer?.setDisplay(holder)
                 //防止黑屏
                 mAliPlayer?.redraw()
@@ -392,7 +399,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) {
                 logger("AliPlayerManager surfaceCreated=${holder.hashCode()}")
-                created = true
+//                created = true
                 mAliPlayer?.setDisplay(holder)
                 //防止黑屏
                 mAliPlayer?.redraw()
@@ -514,18 +521,8 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         mSurfaceHolder = null
-        release()
         //释放播放器
-        if (!useManager) {
-            mAliPlayer?.release();
-        } else {
-//            if (AliPlayerManager.mRenderListener == mRenderListener) {
-//                AliPlayerManager.mRenderListener = null
-//            }
-            logger("onDetachedFromWindow setOnRenderingStartListener(null) ")
-//            mAliPlayer?.setOnRenderingStartListener(null)
-        }
-        mAliPlayer = null
+        release()
     }
 
     /**

@@ -350,7 +350,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 //                    mPlayerViewModel.queryGuestList(false)
                     //如果下一个上场的主播没有流 关闭正在播的流
                     if (data.playInfo == null) {
-                        mVideoViewModel.stopAllStreamState.value = true
+                        mVideoViewModel.stopAllStreamState.value = StopAllStreamState.StopAll
                     } else {
                         mVideoViewModel.playerData.value = LiveBean().apply {
                             programPoster = data.prePic

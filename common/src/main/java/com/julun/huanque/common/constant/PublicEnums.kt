@@ -337,7 +337,7 @@ object MessageConstants {
 
     //花魁榜
     const val PlumFlower = "PlumFlower"
-    
+
     //搭讪常用语页面
     const val AccostWords = "AccostWords"
 
@@ -581,4 +581,20 @@ object PushDataActionType {
 object HomePageOnlineStatus {
     const val Online = "Online"
     const val Offline = "Offline"
+}
+
+/**
+ * 关闭流的类型
+ */
+object StopAllStreamState {
+    //初始状态 不做任何操作
+    const val Nothing = 0
+    //1代表常规关闭
+    const val StopNormal = 1
+
+    //2代表关闭所有（常规和单例播放器）
+    const val StopAll = 2
+
+    //3代表关闭所有 同时单例播放器断开视图连接
+    const val StopAllWithDisConnect = 3
 }

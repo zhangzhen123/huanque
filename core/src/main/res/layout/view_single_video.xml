@@ -72,32 +72,32 @@
             android:src="@mipmap/icon_forward_grey_01" />
     </LinearLayout>
 
+<!--暂时不需要 直接注释-->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/anchor_loading"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="vertical"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        tools:visibility="visible">-->
 
-    <LinearLayout
-        android:id="@+id/anchor_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible">
+<!--        <com.julun.huanque.common.widgets.bounceview.BounceView-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="30dp" />-->
 
-        <com.julun.huanque.common.widgets.bounceview.BounceView
-            android:layout_width="50dp"
-            android:layout_height="30dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_5"
-            android:text="@string/video_loading"
-            android:textColor="@color/white" />
-    </LinearLayout>
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="@dimen/dimen_5"-->
+<!--            android:text="@string/video_loading"-->
+<!--            android:textColor="@color/white" />-->
+<!--    </LinearLayout>-->
 
 </FrameLayout>

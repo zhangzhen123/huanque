@@ -198,7 +198,7 @@ class PkMicView @JvmOverloads constructor(
 //                        }
                     }
                     else -> {
-                        if (it.seconds == -2) {
+                        if (it.seconds == -2 || it.endRound) {
                             showPkStatic(it)
                         } else {
                             playPkStarting(it)
@@ -247,7 +247,7 @@ class PkMicView @JvmOverloads constructor(
         if (visibility == View.VISIBLE) {
             pk2_process_01.post { pk2_process_01.requestLayout() }
             pk2_process_02.post { pk2_process_02.requestLayout() }
-            logger.info("更新布局  weight = ${(pk2_process_01.layoutParams as? ConstraintLayout.LayoutParams)?.horizontalWeight}")
+//            logger.info("更新布局  weight = ${(pk2_process_01.layoutParams as? ConstraintLayout.LayoutParams)?.horizontalWeight}")
         }
     }
 
@@ -326,7 +326,7 @@ class PkMicView @JvmOverloads constructor(
         //现在分三小局 每一小局开始都要重置PK条以及PK条相关缓存数据
         pkDateList.clear()
         //置0是为了防止过滤掉新一轮的消息
-        lastDataOfPk?.totalScore=0L
+        lastDataOfPk?.totalScore = 0L
 
         //每次一定先把本主播排在首位
         val curProgramId = playerViewModel.programId
@@ -448,6 +448,21 @@ class PkMicView @JvmOverloads constructor(
         queueNotifyPk(pkData)
     }
 
+    //展示PK结束环节
+    fun showPkEndRound(info: PKInfoBean) {
+        playTitleAni(info, true)
+        //第一时间进行倒计时 动画做完再开始就延迟了
+        if (info.seconds != null && info.seconds!! > 0) {
+            //设置定时器
+            pk_time_layout.show()
+            pKViewModel.closeCountDown()
+            pKViewModel.countDown(getTimeTitle(info), info.seconds)
+        } else {
+            pk_time_layout.hide()
+        }
+
+    }
+
     //展示pk结果
     fun showPkResult(data: PKResultEventNew) {
         val info = data.pkInfo ?: return
@@ -523,20 +538,30 @@ class PkMicView @JvmOverloads constructor(
             TWO_PK -> {
                 pk_win_layout_03.hide()
                 //播放奖杯获取动画
+                var hasCupAni = false
                 if (info.detailList != null && info.detailList!!.size >= 2) {
                     info.detailList!!.forEachIndexed { index, item ->
                         if (item.roundResult == PKResultType.WIN) {
+                            hasCupAni = true
                             playCupAni(1 + index, item.winRound)
                         }
                     }
                 }
                 //播放结果动画
                 if (info.roundFinish) {
-                    if (info.detailList != null && info.detailList!!.size >= 2) {
-                        info.detailList!!.forEachIndexed { index, item ->
-                            playFinalResultAni(index + 1, item.finalResult)
-                        }
+                    var delay = 0L
+                    //如果当前有奖杯要播 延迟执行
+                    if (hasCupAni) {
+                        delay = 500L
                     }
+                    myHandler.postDelayed({
+                        if (info.detailList != null && info.detailList!!.size >= 2) {
+                            info.detailList!!.forEachIndexed { index, item ->
+                                playFinalResultAni(index + 1, item.finalResult)
+                            }
+                        }
+
+                    }, delay)
                 }
 
             }
@@ -967,6 +992,9 @@ class PkMicView @JvmOverloads constructor(
                 title = "我方主播接受惩罚"
             }
         }
+        if (info.endRound) {
+            title = "即将退出PK"
+        }
         pk_title.text = title
         pk_title.show()
         if (titleAniSet == null) {
@@ -1200,7 +1228,7 @@ class PkMicView @JvmOverloads constructor(
                 pk3_container_03.hide()
 
 
-
+                playTitleAni(pkinfo, true)
                 showViewAfterAni()
             }
         })
@@ -1240,17 +1268,20 @@ class PkMicView @JvmOverloads constructor(
         var title = ""
         when (pkData.currRound) {
             1 -> {
-                title = "第一轮"
+                title = "R1"
             }
             2 -> {
-                title = "第二轮"
+                title = "R2"
             }
             3 -> {
-                title = "第三轮"
+                title = "R3"
             }
         }
         if (pkData.punishRound) {
             title = "惩罚"
+        }
+        if (pkData.endRound) {
+            title = "结束"
         }
         return title
     }
@@ -1273,6 +1304,7 @@ class PkMicView @JvmOverloads constructor(
     }
 
     private var lastDataOfPk: PKInfoBean? = null//记录上一次的数据
+
     //改变pk数值
     private fun notifyPkProcess() {
 //        playSpeedAnimation(80,1111)

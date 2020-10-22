@@ -75,7 +75,6 @@ class AnimationFragment : BaseFragment() {
     private val connectMicroViewModel: ConnectMicroViewModel by activityViewModels()
     private val entranceViewModel: EntranceViewModel by activityViewModels()
 
-    //    private var pkGuessViewModel: PkGuessViewModel by activityViewModels()
     //新版PK
     private val pKViewModel: PKViewModel by activityViewModels()
 
@@ -697,16 +696,27 @@ class AnimationFragment : BaseFragment() {
             @SuppressLint("CheckResult")
             override fun process(data: PKResultEventNew) {
 //                mPKPropNotifyDialog?.dismiss()
-                Observable.timer(1500, TimeUnit.MILLISECONDS)
-                    .bindUntilEvent(this@AnimationFragment, FragmentEvent.DESTROY)
-                    .subscribe({
-//                            pkGuessViewModel.regreshState?.postValue(true)
-                    }, { it.printStackTrace() })
+//                Observable.timer(1500, TimeUnit.MILLISECONDS)
+//                    .bindUntilEvent(this@AnimationFragment, FragmentEvent.DESTROY)
+//                    .subscribe({
+////                            pkGuessViewModel.regreshState?.postValue(true)
+//                    }, { it.printStackTrace() })
                 pKViewModel.pkState.value = 2
                 if (data.pkInfo?.detailList != null) {
                     showPKResult(data)
                 }
 //                playerViewModel.resetDialog.value = PkRankMainDialogFragment::class.java
+            }
+
+        })
+        //PK结束阶段
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.PkEndRoundMessageProcess {
+            @SuppressLint("CheckResult")
+            override fun process(data: PKStartEvent) {
+                pKViewModel.pkState.value = 3
+                if (data.pkInfo!= null) {
+                    pkMicView?.showPkEndRound(data.pkInfo!!)
+                }
             }
 
         })

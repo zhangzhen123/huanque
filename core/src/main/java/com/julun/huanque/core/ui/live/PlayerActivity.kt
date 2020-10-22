@@ -1386,7 +1386,7 @@ class PlayerActivity : BaseActivity() {
             }
         } else {
             //主播不在线，直接请求推荐列表
-            closeVideoPlayer()
+            mVideoViewModel.stopAllStreamState.value = StopAllStreamState.StopAllWithDisConnect
             addAnchorIsNotOnlineFragment()
             anchorNoLiveViewModel.showRecommendProgram.value = true
             anchorNoLiveViewModel.recommendProgram.value = null
@@ -1449,13 +1449,6 @@ class PlayerActivity : BaseActivity() {
 //        } else {
 //            Toast.makeText(this@PlayerActivity, "该版本不支持开播，请联系所属公会或官方运营，提供最新的实名认证安装包。", Toast.LENGTH_SHORT).show()
 //        }
-    }
-
-    /**
-     * 如果收到关播指令 先关闭当前播放
-     */
-    private fun closeVideoPlayer() {
-        mVideoViewModel.stopAllStreamState.value = true
     }
 
     private var roomDataFetchedFromServer: Boolean = false //房间信息的http请求是否已经正确返回
@@ -2040,7 +2033,7 @@ class PlayerActivity : BaseActivity() {
             //todo
 //            viewModel.appStopLiving(programId.toLong())
 //            mVideoViewModel.stopAllStreamState.value = true
-            closeVideoPlayer()
+            mVideoViewModel.stopAllStreamState.value = StopAllStreamState.StopAllWithDisConnect
         } else {
             super.finish()
         }
@@ -2054,7 +2047,7 @@ class PlayerActivity : BaseActivity() {
             //todo
 //            viewModel.todayStat(programId)
 //            mVideoViewModel.stopAllStreamState.value = true
-            closeVideoPlayer()
+            mVideoViewModel.stopAllStreamState.value = StopAllStreamState.StopAllWithDisConnect
         } else {
             super.finish()
         }
@@ -2180,7 +2173,7 @@ class PlayerActivity : BaseActivity() {
         surface_view.visibility = View.INVISIBLE
 //        chatInputView.resetView()
         bird_count_view?.resetView()
-        closeVideoPlayer()
+        mVideoViewModel.stopAllStreamState.value = StopAllStreamState.StopAll
         //去除之前直播间的高级动画
         highly_anim.clearWebpResource()
         viewModel.getLivRoomBase(programId)

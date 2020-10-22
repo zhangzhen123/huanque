@@ -55,6 +55,7 @@ class PKInfoBean : Serializable {
     var currRound: Int = -1 //当前的回合数1,2,3
     var punishRound: Boolean = false
     var roundFinish: Boolean = false
+    var endRound: Boolean = false//是不是结束阶段的标识
 
     //新增PK道具字段
     var totalPropScore: Long? = null

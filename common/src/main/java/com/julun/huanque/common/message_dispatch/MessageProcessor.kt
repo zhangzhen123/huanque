@@ -456,6 +456,7 @@ object MessageProcessor {
         override fun getEventType(): EventMessageType = EventMessageType.PkScoreChange
     }
 
+
     /**
      * PK结果
      */
@@ -463,6 +464,12 @@ object MessageProcessor {
         override fun getEventType(): EventMessageType = EventMessageType.PkResult
     }
 
+    /**
+     * PK结束环节 一个产品拍脑袋想出的牛逼的环节 持续10秒 倒计时
+     */
+    interface PkEndRoundMessageProcess : EventMessageProcessor<PKStartEvent> {
+        override fun getEventType(): EventMessageType = EventMessageType.PkEndRound
+    }
     /**
      * PK结束 真正的结束
      */
@@ -1347,7 +1354,8 @@ enum class EventMessageType(val klass: Class<*>) {
 
     /**PK分数变化**/
     PkScoreChange(PKScoreChangeEvent::class.java),
-
+    /*PK结束环节*/
+    PkEndRound(PKStartEvent::class.java),
     /**PK结果**/
     PkResult(PKResultEventNew::class.java),
 

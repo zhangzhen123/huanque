@@ -18,6 +18,7 @@ import com.julun.huanque.common.bean.events.VideoPlayerEvent
 import com.julun.huanque.common.constant.ClickType
 import com.julun.huanque.common.constant.PKType
 import com.julun.huanque.common.constant.ScreenType
+import com.julun.huanque.common.constant.StopAllStreamState
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.hide
@@ -101,12 +102,12 @@ open class LivePlayerFragment : BaseFragment() {
     private fun initViewModel() {
         //有可能在该播放界面没创建时 有未执行的缓存stopAllStreamState数据
         // 对于新创建的界面来说没有用而且会引起错误逻辑 在这里每次新创建时把该状态值清空
-        mVideoViewModel.stopAllStreamState.value = null
+        mVideoViewModel.stopAllStreamState.value = StopAllStreamState.Nothing
 
         //这个一定要放在前面 不然会后响应 执行顺序就乱了
         mVideoViewModel.playerData.observe(this, Observer {
             if (it != null) {
-                mVideoViewModel.stopAllStreamState.value = null
+                mVideoViewModel.stopAllStreamState.value = StopAllStreamState.Nothing
                 startPlayMain(it.programPoster, it.playinfo)
             }
         })
@@ -143,11 +144,22 @@ open class LivePlayerFragment : BaseFragment() {
         })
 
         mVideoViewModel.stopAllStreamState.observe(this, Observer {
-            if (it == true) {
+            if (it > 0) {
 //                AliPlayerManager.stop()
                 //切换直播间时关闭所有类型的流
-                stopAllStream(true)
-                mVideoViewModel.stopAllStreamState.value = null
+                when (it) {
+                    StopAllStreamState.StopNormal -> {
+                        stopAllStream(false, needDisConnect = false)
+                    }
+                    StopAllStreamState.StopAll -> {
+                        stopAllStream(true, needDisConnect = false)
+                    }
+                    StopAllStreamState.StopAllWithDisConnect -> {
+                        stopAllStream(true, needDisConnect = true)
+                    }
+                }
+
+                mVideoViewModel.stopAllStreamState.value = StopAllStreamState.Nothing
             }
         })
 
@@ -229,20 +241,23 @@ open class LivePlayerFragment : BaseFragment() {
      * 房间内用户创建流. 主流播放不会变化 这里只处理其他流
      */
     private fun handleStreamAdded(infoList: List<MicAnchor>) {
+        logger.info("handleStreamAdded：${infoList}")
         infoList.forEach { info ->
-            logger.info("新增流消息${info.streamID}")
+
             if (info.streamID == mMainVideoView?.getStreamID()) {
                 //主流
+                logger.info("跟主流一致${info.streamID}")
                 startPlayMain(info.prePic, info.playInfo)
                 return@forEach
             }
             if (info.streamID.isNotEmpty() && isStreamExisted(info.streamID)) {
                 //流存在，走replace流程
-                handleStreamReplace(info)
                 logger.info("流已经存在或者空串${info.streamID}")
+                handleStreamReplace(info)
                 return@forEach
             } else {
                 //流不存在，走新增流程
+                logger.info("流不存在，走新增流程${info.streamID}")
                 //播放其他流
                 val freeView = if (info.pkType == PKType.LANDLORD) {
                     getRankFreeViewLine()
@@ -484,9 +499,9 @@ open class LivePlayerFragment : BaseFragment() {
      * 清空所有流
      * [stopAll]是否需要关闭所有流（单例和常规）
      */
-    private fun stopAllStream(stopAll:Boolean) {
+    private fun stopAllStream(stopAll: Boolean, needDisConnect: Boolean = false) {
         mViewList.forEach {
-            it.stop(stopAll)
+            it.stop(stopAll, needDisConnect)
         }
         if (mRankRootView != null) {
             mRankRootView?.hide()
@@ -512,9 +527,9 @@ open class LivePlayerFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun floatingClose(bean: FloatingCloseEvent) {
-        if(lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)){
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             mMainVideoView?.resetHolder()
-        }else{
+        } else {
             //如果当前的页面不在焦点 先设置null 防止底层获取不到渲染视图而一直报错
             mMainVideoView?.clearHolder()
         }
