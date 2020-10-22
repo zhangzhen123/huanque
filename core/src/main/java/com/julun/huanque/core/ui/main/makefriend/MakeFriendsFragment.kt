@@ -604,6 +604,6 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             }
 
         }
-        mAdapter.notifyItemRemoved(mAdapter.data.indexOfFirst { it.showType == HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION })
+        mAdapter.notifyItemChanged(mAdapter.data.indexOfFirst { it.showType == HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION })
     }
 }

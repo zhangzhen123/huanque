@@ -1359,15 +1359,15 @@ class PlayerActivity : BaseActivity() {
             }
 
             mVideoViewModel.playerData.value = liveModel
-            baseData.roomMicInfo?.joinList?.let { playerList ->
-                if (playerList.isNotEmpty()) {
-                    videoPlayerViewModel.checkExit()
-                    playerList.forEach {
-                        it.isAnchor = isAnchor
-                    }
-                    videoPlayerViewModel.addPlayer(playerList)
-                }
-            }
+//            baseData.roomMicInfo?.joinList?.let { playerList ->
+//                if (playerList.isNotEmpty()) {
+//                    videoPlayerViewModel.checkExit()
+//                    playerList.forEach {
+//                        it.isAnchor = isAnchor
+//                    }
+//                    videoPlayerViewModel.addPlayer(playerList)
+//                }
+//            }
 
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
                 val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -1638,7 +1638,7 @@ class PlayerActivity : BaseActivity() {
                     })
                     if (viewModel.loginSuccessData.value?.pking == true) {
                         val push = if (isAnchor) (BooleanType.TRUE) else {
-                            BooleanType.TRUE
+                            BooleanType.FALSE
                         }
                         pKViewModel.getPkInfo(PKInfoForm().apply {
                             programId = this@PlayerActivity.programId

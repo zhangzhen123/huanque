@@ -30,7 +30,7 @@ fun TextView.bold(): TextView {
 }
 
 //TextView 计算文字占用的宽度
-fun TextView.calculateTextLength(text:String): Float {
+fun TextView.calculateTextLength(text: String): Float {
     val measureText: Float = paint.measureText(text)
     return measureText
 }
@@ -40,17 +40,19 @@ fun View.hide(): View {
     this.visibility = View.GONE
     return this
 }
-fun <T: View> View.hideAsRealType():T  {
+
+fun <T : View> View.hideAsRealType(): T {
     this.visibility = View.GONE
     return this as T
 }
+
 //不显示,但是占位
 fun View.inVisible(): View {
     this.visibility = View.INVISIBLE
     return this
 }
 
-fun <T: View> View.inVisiableAsRealType():T  {
+fun <T : View> View.inVisiableAsRealType(): T {
     this.visibility = View.INVISIBLE
     return this as T
 }
@@ -59,8 +61,9 @@ fun View.show(): View {
     this.visibility = View.VISIBLE
     return this
 }
+
 //显示并且返回原本的类型
-fun <T: View> View.showAsRealType():T  {
+fun <T : View> View.showAsRealType(): T {
     this.visibility = View.VISIBLE
     return this as T
 }
@@ -69,26 +72,42 @@ fun <T: View> View.showAsRealType():T  {
  * 显示或者隐藏
  * @param condition 如果条件满足,则显示,否则隐藏
  */
-fun View.showIf(condition:Boolean):View  = if (condition) { this.show() } else { this.hide() }
-fun <T: View> View.showIfAsRealType(condition:Boolean):T  = if (condition) { this.show() } else { this.hide() } as T
-
-//以下四个方法用于隐藏或者显示viewgroup里的子view,参数为 id或者 view,y意义参考函数名
-fun ViewGroup.showOnly(id:Int):Unit  {
-    (0..this.childCount-1).map { getChildAt(it) }.forEach { it.showIf(it.id == id) }
+fun View.showIf(condition: Boolean): View = if (condition) {
+    this.show()
+} else {
+    this.hide()
 }
 
-fun ViewGroup.showOnly(view: View):Unit  {
-    (0..this.childCount-1).map { getChildAt(it) }.forEach {
+fun <T : View> View.showIfAsRealType(condition: Boolean): T = if (condition) {
+    this.show()
+} else {
+    this.hide()
+} as T
+
+//以下四个方法用于隐藏或者显示viewgroup里的子view,参数为 id或者 view,y意义参考函数名
+fun ViewGroup.showOnly(id: Int): Unit {
+    (0..this.childCount - 1).map { getChildAt(it) }.forEach { it.showIf(it.id == id) }
+}
+
+fun ViewGroup.showOnly(view: View): Unit {
+    (0..this.childCount - 1).map { getChildAt(it) }.forEach {
         it.showIf(it.id == view.id)
     }
 }
 
-fun ViewGroup.hideOnly(id:Int):Unit  {
-    (0..this.childCount-1).map { getChildAt(it) }.forEach { it.showIf(it.id != id)  }
+fun ViewGroup.hideOnly(id: Int): Unit {
+    (0..this.childCount - 1).map { getChildAt(it) }.forEach { it.showIf(it.id != id) }
 }
 
-fun ViewGroup.hideOnly(view: View):Unit  {
-    (0..this.childCount-1).map { getChildAt(it) }.forEach { it.showIf(it.id != view.id) }
+fun ViewGroup.hideOnly(view: View): Unit {
+    (0..this.childCount - 1).map { getChildAt(it) }.forEach { it.showIf(it.id != view.id) }
+}
+
+/**
+ * 不可见容器内的所有子控件
+ */
+fun ViewGroup.inVisibleAll(): Unit {
+    (0 until this.childCount).map { getChildAt(it) }.forEach { it.inVisible() }
 }
 
 /**
@@ -117,37 +136,40 @@ fun <T, K : BaseViewHolder> BaseQuickAdapter<T, K>.onAdapterChildClickNew(l: (ad
  * 防止连续过快点击造成的重复提交
  */
 fun android.view.View.onClickNew(l: (v: android.view.View?) -> Unit) {
-    setOnClickListener(object : NoDoubleClickListener(){
+    setOnClickListener(object : NoDoubleClickListener() {
         override fun onNoDoubleClick(v: View) {
             l(v)
         }
     })
 }
-fun android.view.View.onClick( l: (v: android.view.View?) -> Unit) {
+
+fun android.view.View.onClick(l: (v: android.view.View?) -> Unit) {
     setOnClickListener(l)
 }
-fun android.view.View.onTouch( l: (v: android.view.View, event: android.view.MotionEvent) -> Boolean) {
+
+fun android.view.View.onTouch(l: (v: android.view.View, event: android.view.MotionEvent) -> Boolean) {
     setOnTouchListener(l)
 }
+
 /**
  * SimpleDraweeView的加载图片资源的扩展
  */
-fun SimpleDraweeView.loadImage(url:String,width:Float=50f,height: Float=50f){
-    ImageUtils.loadImage(this,url,width,height)
+fun SimpleDraweeView.loadImage(url: String, width: Float = 50f, height: Float = 50f) {
+    ImageUtils.loadImage(this, url, width, height)
 }
 
 /**
  * 加载资源 不裁剪
  */
-fun SimpleDraweeView.loadImageNoResize(url:String){
-    ImageUtils.loadImageNoResize(this,url)
+fun SimpleDraweeView.loadImageNoResize(url: String) {
+    ImageUtils.loadImageNoResize(this, url)
 }
 
-fun SimpleDraweeView.loadImageInPx( url: String,width:Int,height: Int){
-    ImageUtils.loadImageInPx(this,url,width,height)
+fun SimpleDraweeView.loadImageInPx(url: String, width: Int, height: Int) {
+    ImageUtils.loadImageInPx(this, url, width, height)
 }
 
-fun SimpleDraweeView.loadImageLocal(placeHolderResId: Int){
+fun SimpleDraweeView.loadImageLocal(placeHolderResId: Int) {
     ImageUtils.loadImageLocal(this, placeHolderResId)
 }
 
@@ -161,6 +183,7 @@ abstract class NoDoubleClickListener : View.OnClickListener {
             onNoDoubleClick(v)
         }
     }
+
     abstract fun onNoDoubleClick(v: View)
 
     companion object {
@@ -180,6 +203,7 @@ abstract class NoDoubleAdapterClickListener : OnItemClickListener {
             onNoDoubleAdapterChildClick(adapter, view, position)
         }
     }
+
     abstract fun onNoDoubleAdapterChildClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int)
 }
 
@@ -194,6 +218,7 @@ abstract class NoDoubleAdapterChildClickListener : OnItemChildClickListener {
             onNoDoubleAdapterChildClick(adapter, view, position)
         }
     }
+
     abstract fun onNoDoubleAdapterChildClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int)
 }
 
@@ -211,6 +236,7 @@ val fugazOneTypeFace: Typeface by lazy {
 val tfDinCdb: Typeface by lazy {
     Typeface.createFromAsset(CommonInit.getInstance().getContext().assets, "fonts/DIN Condensed Bold.ttf")
 }
+
 //给文本设置自定义字体
 fun TextView.setTFDinCdc2() {
     this.typeface = tfDinCdc2

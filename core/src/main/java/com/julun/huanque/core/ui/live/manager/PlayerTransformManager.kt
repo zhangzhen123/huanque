@@ -87,12 +87,15 @@ class PlayerTransformManager(val act: PlayerActivity) {
                     logger("连麦状态 5 true")
                     connectMicroViewModel.inMicro.value = true
                     connectMicroViewModel.inPk.value = null
-                    addVideoPlayer(list)
+                    if (list.isNotEmpty()) {
+                        addVideoPlayer(list)
+                    }
+
                     doWithMic(it.roomMicInfo?.joinList, GuardAgainst.Multi)
                 }
                 if (it.pking) {
                     val push = if (mPlayerViewModel.isAnchor) (BooleanType.TRUE) else {
-                        BooleanType.TRUE
+                        BooleanType.FALSE
                     }
                     pKViewModel.getPkInfo(PKInfoForm().apply {
                         programId = mPlayerViewModel.programId
@@ -143,7 +146,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
         })
 
-        pKViewModel.remotoPkData.observe(act, Observer {
+        pKViewModel.remotePkData.observe(act, Observer {
             if (it != null && mPlayerViewModel.isAnchor) {
                 //主播身份，切换重推
                 it.detailList?.forEach { user ->
@@ -453,6 +456,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
                 connectMicroViewModel.notarizePKShowState.value = null
                 if (data.pkInfo != null) {
                     //
+                    data.pkInfo!!.needAddMic = data.pkInfo!!.currRound==1
                     pKViewModel.setPkStart(data.pkInfo ?: return)
                 }
             }
@@ -627,7 +631,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
      * @param refreshView 是否需要刷新视图。PK过程当中切换CDN，不需要刷新（传值为false）
      */
     private fun addPkVideoPlayer(pkInfo: PKInfoBean, refreshView: Boolean = true) {
-        videoPlayerViewModel.checkExit()
+
         val micList: ArrayList<MicAnchor> = arrayListOf()
         pkInfo.detailList?.forEach { anchor ->
             micList.add(MicAnchor().apply {
@@ -665,8 +669,13 @@ class PlayerTransformManager(val act: PlayerActivity) {
             }
         }
 
-        if (micList.size > 0)
-            videoPlayerViewModel.addPlayer(micList)
+        if (micList.size > 0) {
+            if (pkInfo.needAddMic) {
+                videoPlayerViewModel.checkExit()
+                videoPlayerViewModel.addPlayer(micList)
+            }
+        }
+
         if (refreshView) {
             when (pkInfo.pkType) {
                 PKType.LANDLORD -> {

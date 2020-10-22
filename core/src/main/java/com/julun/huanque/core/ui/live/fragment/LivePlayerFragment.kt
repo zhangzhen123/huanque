@@ -203,14 +203,14 @@ open class LivePlayerFragment : BaseFragment() {
             return
         }
         if (mMainVideoView?.getStreamUrl() == GlobalUtils.getPlayUrl(playInfo)) {
-            logger.info("播放的流地址一致")
+            logger.info("主流播放的流地址一致")
             return
         }
 //        AliPlayerManager.stop()
         // 设置流信息
         mMainVideoView?.let { main ->
             main.setPlayInfo(MicAnchor().apply {
-                this.streamID = "${mVideoViewModel.programId}"
+                this.streamID = "${mPlayerViewModel.programId}"
                 //这里isAnchor = true只是为了方便隐藏主播信息视图 会理解有歧义
                 this.isAnchor = true
             })
@@ -337,9 +337,9 @@ open class LivePlayerFragment : BaseFragment() {
      */
     private fun handleStreamDeleted(infoList: List<MicAnchor>) {
         infoList.forEach { info ->
-            if (info.streamID == "${mVideoViewModel.programId}") {
+            if (info.streamID == "${mPlayerViewModel.programId}") {
                 logger.info("宿主流不能关${info.streamID}")
-                playByInfo(info.playInfo ?: return, mMainVideoView ?: return)
+//                playByInfo(info.playInfo ?: return, mMainVideoView ?: return)
             } else {
                 logger.info("删除流消息${info.streamID}")
                 stopPlay(info.streamID)

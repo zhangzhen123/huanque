@@ -120,7 +120,12 @@
                 android:layout_height="40dp"
                 android:gravity="center"
                 android:text="测试加载中" />
-
+            <Button
+                android:id="@+id/test_goto_live"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="跳转直播间" />
         </LinearLayout>
 
     </ScrollView>

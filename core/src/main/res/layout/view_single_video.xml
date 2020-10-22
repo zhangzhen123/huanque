@@ -30,11 +30,11 @@
 
     <LinearLayout
         android:id="@+id/anchor_info"
-        android:layout_width="@dimen/dimen_85"
-        android:layout_height="@dimen/dimen_28"
-        android:layout_gravity="right|bottom"
-        android:layout_marginRight="@dimen/dimen_4"
-        android:layout_marginBottom="@dimen/dimen_4"
+        android:layout_width="@dimen/dimen_88"
+        android:layout_height="@dimen/dimen_26"
+        android:layout_gravity="start|top"
+        android:layout_marginStart="@dimen/dimen_6"
+        android:layout_marginTop="@dimen/dimen_6"
         android:background="@drawable/bg_shape_black_p20"
         android:gravity="center"
         android:orientation="horizontal"
@@ -43,9 +43,9 @@
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/anchor_header_image"
-            android:layout_width="@dimen/dimen_24"
-            android:layout_height="@dimen/dimen_24"
-            android:layout_marginLeft="@dimen/dimen_2"
+            android:layout_width="@dimen/dimen_22"
+            android:layout_height="@dimen/dimen_22"
+            android:layout_marginStart="@dimen/dimen_2"
             app:failureImage="@mipmap/logo_placeholder_small"
             app:failureImageScaleType="fitCenter"
             app:placeholderImage="@mipmap/logo_placeholder_small"
@@ -60,7 +60,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="@dimen/sp_11"
+            android:textSize="@dimen/sp_12"
             tools:text="主播昵称"
             android:textColor="@color/white" />
 

@@ -12,20 +12,23 @@ import android.view.animation.OvershootInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.core.R
 import com.luck.picture.lib.tools.ScreenUtils
-import kotlinx.android.synthetic.main.view_pk_start.view.*
+import kotlinx.android.synthetic.main.view_pk2_start.view.*
+import org.jetbrains.anko.backgroundColorResource
 
 /**
  *@创建者   dong
  *@创建时间 2020/10/20 10:09
  *@描述 PK 开始动画
+ * 2人PK开场动画
  */
-class PkStartAnimationView(context: Context?, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+class Pk2StartAnimationView(context: Context?, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
     init {
         if (context != null) {
-            LayoutInflater.from(context).inflate(R.layout.view_pk_start, this)
+            LayoutInflater.from(context).inflate(R.layout.view_pk2_start, this)
         }
     }
 
@@ -57,7 +60,7 @@ class PkStartAnimationView(context: Context?, attrs: AttributeSet?) : Constraint
      * 显示左侧的视图
      */
     fun setLeftViewData(header: String, nickname: String) {
-        sdv_pk_left.loadImage("${StringHelper.getOssImgUrl(header)}${BusiConstant.OSS_160}")
+        sdv_pk_left.loadImage("${header}${BusiConstant.OSS_160}")
         tv_pk_nickname_left.text = nickname
     }
 
@@ -65,38 +68,42 @@ class PkStartAnimationView(context: Context?, attrs: AttributeSet?) : Constraint
      * 显示右侧的视图
      */
     fun setRightViewData(header: String, nickname: String) {
-        sdv_pk_right.loadImage("${StringHelper.getOssImgUrl(header)}${BusiConstant.OSS_160}")
+        sdv_pk_right.loadImage("${header}${BusiConstant.OSS_160}")
         tv_pk_nickname_right.text = nickname
     }
 
 
     /**
      * 开始动画
+     * [onAniEnd]新增动画完成回调
      */
-    fun startAnimation() {
+    fun startAnimation(onAniEnd: NAction? = null) {
         //透明度动画
-        this@PkStartAnimationView.show()
+        this@Pk2StartAnimationView.show()
         mViewAlphaSet?.cancel()
 
         if (mViewAlphaSet == null) {
             mViewAlphaSet = AnimatorSet()
             val alphaAnimation1 = ObjectAnimator.ofFloat(view_bg, "alpha", 0f, 0.4f).apply { duration = 300 }
             val alphaAnimation2 = ObjectAnimator.ofFloat(view_bg, "alpha", 0.4f, 0.4f).apply { duration = 1400 }
-            val alphaAnimation3 = ObjectAnimator.ofFloat(this@PkStartAnimationView, "alpha", 0.4f, 0f).apply { duration = 300 }
+            val alphaAnimation3 = ObjectAnimator.ofFloat(this@Pk2StartAnimationView, "alpha", 0.4f, 0f).apply { duration = 300 }
             mViewAlphaSet!!.playSequentially(alphaAnimation1, alphaAnimation2, alphaAnimation3)
             mViewAlphaSet!!.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(animation: Animator?) {
                 }
 
                 override fun onAnimationEnd(animation: Animator?) {
-                    this@PkStartAnimationView.hide()
+                    this@Pk2StartAnimationView.hide()
+                    onAniEnd?.invoke()
                 }
 
                 override fun onAnimationCancel(animation: Animator?) {
                 }
 
                 override fun onAnimationStart(animation: Animator?) {
-                    this@PkStartAnimationView.alpha = 1f
+                    this@Pk2StartAnimationView.alpha = 1f
+                    iv_light_left.alpha = 0f
+                    iv_light_right.alpha = 0f
                 }
             })
 
@@ -126,7 +133,12 @@ class PkStartAnimationView(context: Context?, attrs: AttributeSet?) : Constraint
                 }
 
             mTranslationAnimatorSet = AnimatorSet()
-            mTranslationAnimatorSet?.playTogether(leftTranslationAnimator, leftAlphaAnimator, rightTranslationAnimator, rightAlphaAnimator)
+            mTranslationAnimatorSet?.playTogether(
+                leftTranslationAnimator,
+                leftAlphaAnimator,
+                rightTranslationAnimator,
+                rightAlphaAnimator
+            )
         }
 
         mTranslationAnimatorSet?.start()

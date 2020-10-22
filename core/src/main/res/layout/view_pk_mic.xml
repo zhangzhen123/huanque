@@ -9,17 +9,6 @@
     <!--        android:id="@+id/landlordView"-->
     <!--        layout="@layout/view_landlords_mic"-->
     <!--        android:visibility="gone" />-->
-    <TextView
-        android:id="@+id/pk_title"
-        android:layout_width="@dimen/dimen_120"
-        android:layout_height="@dimen/dimen_38"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dimen_6"
-        android:background="@drawable/pk_title"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        tools:text="第一小局开始" />
 
     <LinearLayout
         android:id="@+id/pk_props_layout"
@@ -84,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -110,6 +99,7 @@
                 android:id="@+id/pk_ll_cups_01"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_24"
+                android:layout_marginBottom="@dimen/dimen_5"
                 android:gravity="start"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent">
@@ -144,23 +134,22 @@
                 android:id="@+id/pk_iv_result_bg_01"
                 android:layout_width="@dimen/dimen_130"
                 android:layout_height="@dimen/dimen_130"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/pk_iv_result_logo_01"
                 app:layout_constraintEnd_toEndOf="@+id/pk_iv_result_logo_01"
                 app:layout_constraintStart_toStartOf="@+id/pk_iv_result_logo_01"
                 app:layout_constraintTop_toTopOf="@+id/pk_iv_result_logo_01"
-                android:visibility="gone"
                 tools:src="@mipmap/bg_pk_result_win" />
 
             <ImageView
                 android:id="@+id/pk_iv_result_logo_01"
                 android:layout_width="@dimen/dimen_115"
                 android:layout_height="@dimen/dimen_115"
-                android:layout_marginBottom="@dimen/dimen_50"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:visibility="gone"
                 tools:src="@mipmap/icon_pk_result_win" />
 
 
@@ -189,6 +178,7 @@
                 android:id="@+id/pk_ll_cups_02"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_24"
+                android:layout_marginBottom="@dimen/dimen_5"
                 android:gravity="end"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent">
@@ -222,6 +212,7 @@
                 android:id="@+id/pk_iv_result_bg_02"
                 android:layout_width="@dimen/dimen_130"
                 android:layout_height="@dimen/dimen_130"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/pk_iv_result_logo_02"
                 app:layout_constraintEnd_toEndOf="@+id/pk_iv_result_logo_02"
                 app:layout_constraintStart_toStartOf="@+id/pk_iv_result_logo_02"
@@ -232,7 +223,7 @@
                 android:id="@+id/pk_iv_result_logo_02"
                 android:layout_width="@dimen/dimen_115"
                 android:layout_height="@dimen/dimen_115"
-                android:layout_marginBottom="@dimen/dimen_50"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -263,6 +254,7 @@
                 android:id="@+id/pk_ll_cups_03"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_24"
+                android:layout_marginBottom="@dimen/dimen_5"
                 android:gravity="start"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent">
@@ -296,6 +288,7 @@
                 android:id="@+id/pk_iv_result_bg_03"
                 android:layout_width="@dimen/dimen_130"
                 android:layout_height="@dimen/dimen_130"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/pk_iv_result_logo_03"
                 app:layout_constraintEnd_toEndOf="@+id/pk_iv_result_logo_03"
                 app:layout_constraintStart_toStartOf="@+id/pk_iv_result_logo_03"
@@ -306,7 +299,7 @@
                 android:id="@+id/pk_iv_result_logo_03"
                 android:layout_width="@dimen/dimen_115"
                 android:layout_height="@dimen/dimen_115"
-                android:layout_marginBottom="@dimen/dimen_50"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -357,133 +350,12 @@
         app:source="svga/vs.svga"
         tools:visibility="visible" />
 
-    <LinearLayout
+    <com.julun.huanque.core.widgets.live.pk.Pk2StartAnimationView
         android:id="@+id/two_pk_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_44"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="38dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <RelativeLayout
-            android:id="@+id/pk2_container_1"
-            android:layout_width="@dimen/dimen_44"
-            android:layout_height="match_parent"
-            android:background="@drawable/pk_anchor_bg_01"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp">
-
-            <View
-                android:id="@+id/pk2_stub_01"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_centerVertical="true" />
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/pk2_anchor_img01"
-                android:layout_width="@dimen/pk_img_size"
-                android:layout_height="@dimen/pk_img_size"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/pk2_stub_01"
-                android:layout_toRightOf="@+id/pk2_stub_01"
-                app:failureImage="@mipmap/logo_placeholder_small"
-                app:failureImageScaleType="fitCenter"
-                app:placeholderImage="@mipmap/logo_placeholder_small"
-                app:roundAsCircle="true"
-                app:roundingBorderColor="@color/white"
-                app:roundingBorderWidth="2dp" />
-
-            <TextView
-                android:id="@+id/pk2_anchor_name_01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_5"
-                android:layout_marginLeft="@dimen/dimen_5"
-                android:layout_marginTop="@dimen/dimen_6"
-                android:layout_toEndOf="@+id/pk2_anchor_img01"
-                android:layout_toRightOf="@+id/pk2_anchor_img01"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/white"
-                android:textSize="@dimen/pk_name_size" />
-
-            <TextView
-                android:id="@+id/pk2_text01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/pk2_anchor_name_01"
-                android:layout_marginStart="@dimen/dimen_5"
-                android:layout_marginLeft="@dimen/dimen_5"
-                android:layout_toEndOf="@+id/pk2_anchor_img01"
-                android:layout_toRightOf="@+id/pk2_anchor_img01"
-                android:maxLines="1"
-                android:text="我方"
-                android:textColor="@color/white"
-                android:textSize="@dimen/pk_tx_size" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/pk2_container_2"
-            android:layout_width="@dimen/dimen_44"
-            android:layout_height="match_parent"
-            android:background="@drawable/pk_anchor_bg_03"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp">
-
-
-            <View
-                android:id="@+id/pk2_stub_02"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true" />
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/pk2_anchor_img02"
-                android:layout_width="@dimen/pk_img_size"
-                android:layout_height="@dimen/pk_img_size"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/pk2_stub_02"
-                android:layout_toLeftOf="@+id/pk2_stub_02"
-                app:failureImage="@mipmap/logo_placeholder_small"
-                app:failureImageScaleType="fitCenter"
-                app:placeholderImage="@mipmap/logo_placeholder_small"
-                app:roundAsCircle="true"
-                app:roundingBorderColor="@color/white"
-                app:roundingBorderWidth="2dp" />
-
-            <TextView
-                android:id="@+id/pk2_anchor_name02"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_6"
-                android:layout_marginEnd="@dimen/dimen_5"
-                android:layout_marginRight="@dimen/dimen_5"
-                android:layout_toStartOf="@+id/pk2_anchor_img02"
-                android:layout_toLeftOf="@+id/pk2_anchor_img02"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/white"
-                android:textSize="@dimen/pk_name_size" />
-
-            <TextView
-                android:id="@+id/pk2_text02"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/pk2_anchor_name02"
-                android:layout_alignRight="@+id/pk2_anchor_name02"
-                android:maxLines="1"
-                android:text="对方"
-                android:textColor="@color/white"
-                android:textSize="@dimen/pk_tx_size" />
-
-        </RelativeLayout>
-    </LinearLayout>
-
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/pk_process_high"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/pk2_process"
@@ -507,10 +379,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="@dimen/pk_process_high"
-            android:layout_marginLeft="@dimen/dimen_5"
-            android:layout_marginRight="@dimen/dimen_5"
             android:layout_weight="1"
-            android:background="@drawable/pk_process_bg_main"
+            android:background="@color/percent60translucentBlack"
             android:orientation="horizontal"
             android:paddingLeft="3dp"
             android:paddingRight="3dp">
@@ -938,6 +808,23 @@
                 android:textColor="@color/white" />
         </FrameLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/pk_title"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_38"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_6"
+        android:background="@drawable/pk_title"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dimen_15"
+        android:paddingRight="@dimen/dimen_15"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="第一小局开始"
+        tools:visibility="visible" />
 
     <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
         android:id="@+id/pk_cloud"

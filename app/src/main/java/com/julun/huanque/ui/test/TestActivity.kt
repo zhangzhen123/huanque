@@ -35,6 +35,7 @@ import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.draweetext.AnimatedRainbowSpan
+import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.message.activity.PrivateConversationActivity
@@ -248,7 +249,9 @@ class TestActivity : BaseActivity() {
                 .bindUntilEvent(this, ActivityEvent.DESTROY)
                 .subscribe({ startAnimation() }, {})
         }
-
+        test_goto_live.onClickNew {
+            PlayerActivity.start(this, 12975, from = PlayerFrom.Social)
+        }
         val spannableString = DraweeSpanStringBuilder("1234567一句带彩虹屁的文本还带动效一句带彩虹色的文本还带动效 WWWWAAAA243555")
         val start = 10
         val end = 20

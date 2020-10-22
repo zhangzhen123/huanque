@@ -15,9 +15,9 @@ class PKUser(
     var pushUrl: String = "",
     var sdkParams: SdkParam? = null,
     var winRound: Int = -1,//获胜回合数
-    var roundResult:String ="",
-    var finalResult:String ="",
-    var scoreTime:Long =-1,
+    var roundResult: String = "",
+    var finalResult: String = "",//代表最终PK胜负结果
+    var scoreTime: Long = -1,
     var sdkProvider: String = ""
 ) : ProgramAnchor() {
     var roundScore: Long? = null
@@ -53,9 +53,9 @@ class PKInfoBean : Serializable {
     var detailList: ArrayList<PKUser>? = null
     var pkId: Long = 0L
     var currRound: Int = -1 //当前的回合数1,2,3
-    var punish:Boolean =false//todo 惩罚标志
-    var roundFinish:Boolean =false
-    var finalResult:Any? =null//代表最终PK胜负结果
+    var punishRound: Boolean = false
+    var roundFinish: Boolean = false
+
     //新增PK道具字段
     var totalPropScore: Long? = null
     var stageList: ArrayList<PkStage>? = null
@@ -78,8 +78,10 @@ class PKInfoBean : Serializable {
 
     //地主分
     var landlordScore: Long = 0
+
     //本地字段
     var needAnim: Boolean = false//是否需要飘星动画的标识
+    var needAddMic: Boolean = true //是否需要连麦操作 根据情况进行区分 防止重复添加视频流 视频流重复也影响不大 下游也会判断重复流
     override fun toString(): String {
         return "PKInfoBean(seconds=$seconds, totalScore=$totalScore, detail=$detailList, endTime=$endTime, pkType=$pkType, template=$template)"
     }

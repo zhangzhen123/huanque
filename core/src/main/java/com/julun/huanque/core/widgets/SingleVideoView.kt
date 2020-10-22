@@ -18,7 +18,6 @@ import com.aliyun.player.bean.ErrorInfo
 import com.aliyun.player.bean.InfoCode
 import com.aliyun.player.nativeclass.TrackInfo
 import com.aliyun.player.source.UrlSource
-import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.MicAnchor
 import com.julun.huanque.common.interfaces.PlayStateListener
 import com.julun.huanque.common.suger.hide
@@ -27,6 +26,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
+import com.julun.huanque.core.BuildConfig
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.AliPlayerManager
 import com.trello.rxlifecycle4.kotlin.bindToLifecycle
@@ -118,65 +118,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                 mOnVideoListener?.onClickAuthorInfo(playerInfo ?: return@OnClickListener)
             }
         })
-        initViewModel()
         initPlayer()
-//        if (useManager) {
-//            mAliPlayer = AliPlayerManager.mAliPlayer
-//
-////            AliplayerManager.mRenderListener = mRenderListener
-//            if (AliPlayerManager.mRendered) {
-//                posterImage.hide()
-//            }
-//            surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-//                override fun surfaceCreated(holder: SurfaceHolder) {
-//                    logger("AliPlayerManager surfaceCreated=${holder.hashCode()}")
-//                    created = true
-//                    mAliPlayer?.setDisplay(holder)
-//                    //防止黑屏
-//                    mAliPlayer?.redraw()
-//                    mSurfaceHolder = holder
-//                }
-//
-//                override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-//                    mAliPlayer?.redraw()
-//                }
-//
-//                override fun surfaceDestroyed(holder: SurfaceHolder) {
-//                    logger("AliPlayerManager surfaceDestroyed=${holder.hashCode()}")
-////                    mAliPlayer?.setDisplay(null)
-//                }
-//            })
-//        } else {
-//            initPlayer()
-//        }
-
-//        surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-//            override fun surfaceCreated(holder: SurfaceHolder) {
-//                created = true
-//                mAliPlayer?.setDisplay(holder)
-//                //防止黑屏
-//                mAliPlayer?.redraw()
-//                mSurfaceHolder = holder
-//            }
-//
-//            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-//                mAliPlayer?.redraw()
-//            }
-//
-//            override fun surfaceDestroyed(holder: SurfaceHolder) {
-//                if (!useManager) {
-//                    mAliPlayer?.setDisplay(null)
-//                }
-//            }
-//        })
-
-    }
-
-    private fun initViewModel() {
-        val var10001 = this.context
-        if (var10001 is BaseActivity) {
-            //当前处于PlayerActivity
-        }
     }
 
     /**
@@ -236,7 +178,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     }
 
     /**
-     * 停止播放器[stopAll]停止所有播放器 无论单例还是常规
+     * 停止播放器[stopAll]停止所有播放器 无论单例还是常规 基本上代表该播放要关闭 并且重置视图内容 隐藏视图
      */
     fun stop(stopAll: Boolean = false) {
         logger.info("stop stopAll=$stopAll")
@@ -248,7 +190,10 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                 AliPlayerManager.stop()
         } else {
             mAliPlayer?.stop()
-            anchor_info.visibility = View.GONE
+        }
+        anchor_info.visibility = View.GONE
+        if(stopAll){
+            this.hide()
         }
         playerInfo = null
         mUrl = ""
@@ -385,6 +330,9 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                 mPlayTime = System.currentTimeMillis()
             }
             if (it == IPlayer.completion || it == IPlayer.error) {
+                if(BuildConfig.DEBUG){
+                    return@setOnStateChangedListener
+                }
                 //CDN切换的时候会触发此回调，重新调用播放方法
                 Observable.timer(2, TimeUnit.SECONDS)
                     .bindToLifecycle(this)

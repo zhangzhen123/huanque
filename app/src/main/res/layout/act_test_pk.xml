@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#CCBB66">
 
-    <com.julun.huanque.core.widgets.live.pk.PkStartAnimationView
+    <com.julun.huanque.core.widgets.live.pk.Pk2StartAnimationView
         android:id="@+id/pk_start_view"
         android:layout_width="0px"
         android:layout_height="280dp"

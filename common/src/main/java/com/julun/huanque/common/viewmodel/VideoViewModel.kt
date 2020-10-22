@@ -12,8 +12,6 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 class VideoViewModel : BaseViewModel() {
     //是否是声网推流
     var agora = false
-    //直播间ID
-    var programId = 0L
     //切换房间
     val checkoutRoom: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
     //登录状态

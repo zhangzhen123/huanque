@@ -1,15 +1,11 @@
 package com.julun.huanque.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import androidx.annotation.NonNull
-import android.widget.TextView
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.PKInfoBean
 import com.julun.huanque.common.bean.forms.PKInfoForm
 import com.julun.huanque.common.bean.forms.ProgramIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.PKType
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.PkMicService
 import com.julun.huanque.common.suger.handleResponse
@@ -41,20 +37,22 @@ class PKViewModel : BaseViewModel() {
     val pkNum: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     //调用接口获取的PK数据
-    val remotoPkData: MutableLiveData<PKInfoBean> by lazy { MutableLiveData<PKInfoBean>() }
+    val remotePkData: MutableLiveData<PKInfoBean> by lazy { MutableLiveData<PKInfoBean>() }
 
     //显示PK道具入口的标识位
     val openPropWindowData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-//    private var closeDispose: Disposable? = null
+    //    private var closeDispose: Disposable? = null
     val pkTime: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
     //获取PK信息
     fun getPkInfo(info: PKInfoForm) {
         Requests.create(PkMicService::class.java)
             .roomPkInfo(info)
             .handleResponse(makeSubscriber<PKInfoBean> {
+                it.needAddMic = true
                 setPkStart(it)
-                remotoPkData.value = it
+                remotePkData.value = it
             })
     }
 
@@ -72,7 +70,7 @@ class PKViewModel : BaseViewModel() {
     }
 
     fun getShowTime(totalCount: Int): String {
-       return "${currentTimeTitle}：${totalCount}s"
+        return "${currentTimeTitle}：${totalCount}s"
 
     }
 
@@ -94,12 +92,13 @@ class PKViewModel : BaseViewModel() {
         }
 
     }
+
     //当前时间标题
-    var currentTimeTitle:String = ""
-    fun countDown(title:String,totalCount: Int?) {
-        currentTimeTitle=title
+    var currentTimeTitle: String = ""
+    fun countDown(title: String, totalCount: Int?) {
+        currentTimeTitle = title
 //        textView.text = getShowTimeNew(totalCount)
-        pkTime.postValue(getShowTime(totalCount?:0))
+        pkTime.postValue(getShowTime(totalCount ?: 0))
         if (totalCount == null || totalCount <= 0) {
             return
         }

@@ -197,7 +197,7 @@ class DraweeSpanTextView @JvmOverloads constructor(
 
 
         builder.setDraweeSpanChangedListener { bd -> this.setDraweeSpanStringBuilder(bd) }
-        logger.info("builder = $builder")
+//        logger.info("builder = $builder")
         this.setDraweeSpanStringBuilder(builder)
 
 //        this.movementMethod = LinkMovementMethod.getInstance() //开始响应点击事件

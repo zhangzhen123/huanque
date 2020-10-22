@@ -1349,7 +1349,7 @@ enum class EventMessageType(val klass: Class<*>) {
     PkScoreChange(PKScoreChangeEvent::class.java),
 
     /**PK结果**/
-    PkResult(PKResultEvent::class.java),
+    PkResult(PKResultEventNew::class.java),
 
     /**pk创建的消息**/
     PkOperate(PKCreateEvent::class.java),

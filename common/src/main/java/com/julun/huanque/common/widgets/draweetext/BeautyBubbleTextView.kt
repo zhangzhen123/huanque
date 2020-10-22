@@ -82,7 +82,7 @@ class BeautyBubbleTextView @JvmOverloads constructor(context: Context, attrs: At
 //            it.rb = "config/anim/84805b5eeb4d4a588ebc4512c675a4b9.webp"
 //            it.lt = "config/anim/84805b5eeb4d4a588ebc4512c675a4b9.webp"
 //        }
-        logger.info("tpl=${tplBean.realTxt}chatBubble=${tplBean.userInfo?.chatBubble}")
+//        logger.info("tpl=${tplBean.realTxt}chatBubble=${tplBean.userInfo?.chatBubble}")
         //渲染文字
         draweeSpanTv.render(tplBean)
 
@@ -95,7 +95,7 @@ class BeautyBubbleTextView @JvmOverloads constructor(context: Context, attrs: At
 //            }
             val dlp = draweeSpanTv.layoutParams as LayoutParams
             if (chatBubble == null || chatBubble.bgc.isEmpty()) {
-                logger.info("没有气泡配置")
+//                logger.info("没有气泡配置")
                 //默认填充背景色
 //                chatBubble.bgc = "${MessageHelper.MESSAGE_BG}-${MessageHelper.MESSAGE_BG}"
                 val gDrawable = GradientDrawable()
