@@ -260,9 +260,18 @@ class SendGiftFragment : BaseDialogFragment() {
 
         iv_first_recharge.onClickNew {
             //显示首充
-            val bean = BottomActionBean()
-            bean.type = ClickType.FIRST_RECHARGE
-            playerViewModel?.actionBeanData?.value = bean
+            if (mFirstRechargeViewModel.firstRechargeFlag.value == true) {
+                //首充
+                val bean = BottomActionBean()
+                bean.type = ClickType.FIRST_RECHARGE
+                playerViewModel?.actionBeanData?.value = bean
+            } else {
+                //开通贵族
+                val bundle = Bundle()
+                bundle.putLong("programId", playerViewModel.programId)
+                RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE, bundle)
+            }
+
         }
     }
 
@@ -399,9 +408,9 @@ class SendGiftFragment : BaseDialogFragment() {
         })
         mFirstRechargeViewModel.firstRechargeFlag.observe(this, Observer {
             if (it == true) {
-                iv_first_recharge.show()
+                iv_first_recharge.imageResource = R.mipmap.icon_send_gift_first_recharge
             } else {
-                iv_first_recharge.hide()
+                iv_first_recharge.imageResource = R.mipmap.icon_gift_royal
             }
         })
 

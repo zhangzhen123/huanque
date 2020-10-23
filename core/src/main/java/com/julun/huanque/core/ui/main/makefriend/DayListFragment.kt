@@ -319,7 +319,8 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
             }
         }
         val normalList = mutableListOf<SingleFlowerDayListBean>()
-        bean.rankList.forEachIndexed { index, data ->
+        val rankList = bean.rankList
+        rankList.forEachIndexed { index, data ->
             if (index >= 3) {
                 normalList.add(data)
             }
@@ -331,7 +332,22 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
         } else {
             tv_empty_content.show()
             if (type == TODAY) {
-                tv_empty_content.text = "榜单上还差个你，快去努力吧！"
+                if (rankList.size <= 3) {
+                    var hasSelf = false
+                    rankList.forEach {
+                        if (it.userId == SessionUtils.getUserId()) {
+                            //包含自己
+                            hasSelf = true
+                        }
+                    }
+                    if (hasSelf) {
+                        tv_empty_content.text = "恭喜你上榜，再接再厉哦！"
+                    } else {
+                        tv_empty_content.text = "榜单上还差个你，快去努力吧！"
+                    }
+                } else {
+                    tv_empty_content.text = "榜单上还差个你，快去努力吧！"
+                }
             } else if (type == YESTERDAY) {
                 tv_empty_content.text = "没有更多的人上榜了"
             }

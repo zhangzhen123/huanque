@@ -323,19 +323,17 @@
 
                 <ImageView
                     android:id="@+id/iv_first_recharge"
-                    android:layout_width="77dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="3dp"
                     android:layout_toRightOf="@id/balance_layout"
-                    android:visibility="gone"
-                    tools:visibility="visible"
                     android:gravity="center"
                     android:includeFontPadding="false"
-                    android:src="@mipmap/icon_send_gift_first_recharge"
-                    android:text="首充"
+                    android:src="@mipmap/icon_gift_royal"
                     android:textColor="#FFBB00"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="@dimen/sp_14"
+                    tools:visibility="visible" />
 
             </RelativeLayout>
 
