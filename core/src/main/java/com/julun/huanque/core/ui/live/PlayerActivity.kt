@@ -237,6 +237,10 @@ class PlayerActivity : BaseActivity() {
     //是否被封禁了
     private var isBanned: Boolean = false
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        //直播间禁止重建 //会有各种问题
+        super.onCreate(null)
+    }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

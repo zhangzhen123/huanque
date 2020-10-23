@@ -27,7 +27,10 @@ import org.greenrobot.eventbus.ThreadMode
 class LeYuanBirdActivity : BaseActivity() {
     private val leYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
     override fun getLayoutId() = R.layout.activity_le_yuan_bird
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        //乐园禁止重建 乐园这块有一部分弹窗构造不和规范 无法重建 这里直接舍弃重建
+        super.onCreate(null)
+    }
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         StatusBarUtil.setTransparent(this)
         logger.info("WelcomeActivity initViews")
