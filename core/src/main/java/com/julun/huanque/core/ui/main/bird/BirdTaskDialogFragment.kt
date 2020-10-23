@@ -45,8 +45,9 @@ import org.jetbrains.anko.backgroundColor
 /**
  * [leYuanViewModel]将主面板的viewModel传过来
  */
-class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : BaseVMDialogFragment<BirdTaskViewModel>() {
+class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel?) : BaseVMDialogFragment<BirdTaskViewModel>() {
 
+    constructor() : this(null)
 
     private var currentItem: BirdTask? = null
     private val taskAdapter: BirdTaskAdapter by lazy { BirdTaskAdapter() }
@@ -173,7 +174,7 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
                 }
 
                 mViewModel.queryInfo(QueryType.REFRESH)
-                leYuanViewModel.refreshCoins()
+                leYuanViewModel?.refreshCoins()
             } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show("${it.error?.busiMessage}")
             }
@@ -181,7 +182,7 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         mViewModel.receiveActiveAward.observe(this, Observer {
             if (it.isSuccess()) {
                 mViewModel.queryInfo(QueryType.REFRESH)
-                leYuanViewModel.refreshCoins()
+                leYuanViewModel?.refreshCoins()
             } else if (it.state == NetStateType.ERROR) {
                 ToastUtils.show("${it.error?.busiMessage}")
             }

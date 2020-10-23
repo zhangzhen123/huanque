@@ -32,6 +32,7 @@ import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.SessionUtils
@@ -46,6 +47,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import java.util.*
+import kotlin.math.ceil
 
 
 /**
@@ -97,41 +99,43 @@ class MessageViewModel : BaseViewModel() {
      * 删除会话
      */
     fun removeConversation(cId: String, type: Conversation.ConversationType) {
-        RongIMClient.getInstance().removeConversation(type, cId, object : RongIMClient.ResultCallback<Boolean>() {
-            override fun onSuccess(p0: Boolean?) {
-                //刷新会话列表
-                val list = conversationListData.value
-                if (list == null || list.isEmpty()) {
-                    return
-                }
-                var tempData: LocalConversation? = null
-                list.forEach {
-                    if (it.conversation.targetId == cId) {
-                        //匹配到自己
-                        tempData = it
-                        return@forEach
+        RongIMClient.getInstance()
+            .removeConversation(type, cId, object : RongIMClient.ResultCallback<Boolean>() {
+                override fun onSuccess(p0: Boolean?) {
+                    //刷新会话列表
+                    val list = conversationListData.value
+                    if (list == null || list.isEmpty()) {
+                        return
+                    }
+                    var tempData: LocalConversation? = null
+                    list.forEach {
+                        if (it.conversation.targetId == cId) {
+                            //匹配到自己
+                            tempData = it
+                            return@forEach
+                        }
+                    }
+                    tempData?.let {
+                        list.remove(it)
+                        //
+                        conversationListData.value = removeDuplicates(list)
                     }
                 }
-                tempData?.let {
-                    list.remove(it)
-                    //
-                    conversationListData.value = removeDuplicates(list)
-                }
-            }
 
-            override fun onError(p0: RongIMClient.ErrorCode?) {
-            }
-        })
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                }
+            })
 
         //删除会话当中消息
-        RongIMClient.getInstance().clearMessages(type, cId, object : RongIMClient.ResultCallback<Boolean>() {
-            override fun onSuccess(p0: Boolean?) {
-            }
+        RongIMClient.getInstance()
+            .clearMessages(type, cId, object : RongIMClient.ResultCallback<Boolean>() {
+                override fun onSuccess(p0: Boolean?) {
+                }
 
-            override fun onError(p0: RongIMClient.ErrorCode?) {
-            }
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                }
 
-        })
+            })
         //删除用户数据
         try {
             HuanQueDatabase.getInstance().chatUserDao().removeSingleChatUser(cId.toLong())
@@ -165,23 +169,24 @@ class MessageViewModel : BaseViewModel() {
             needQueryConversation = true
             return
         }
-        RongIMClient.getInstance().getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
-            override fun onSuccess(p0: List<Conversation>?) {
+        RongIMClient.getInstance()
+            .getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
+                override fun onSuccess(p0: List<Conversation>?) {
 //                if (!mStranger && !player) {
 //                    dealWithStableConversation(p0)
 //                }
-                if ((p0 == null || p0.isEmpty()) && !player) {
-                    conversationListData.value = null
-                    return
+                    if ((p0 == null || p0.isEmpty()) && !player) {
+                        conversationListData.value = null
+                        return
+                    }
+                    showConversation(p0 ?: mutableListOf<Conversation>())
+
                 }
-                showConversation(p0 ?: mutableListOf<Conversation>())
 
-            }
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                }
 
-            override fun onError(p0: RongIMClient.ErrorCode?) {
-            }
-
-        }, Conversation.ConversationType.PRIVATE)
+            }, Conversation.ConversationType.PRIVATE)
     }
 
 //    /**
@@ -260,27 +265,30 @@ class MessageViewModel : BaseViewModel() {
      */
     fun refreshUnreadCount(targetId: String) {
         RongIMClient.getInstance()
-            .getConversation(Conversation.ConversationType.PRIVATE, targetId, object : RongIMClient.ResultCallback<Conversation>() {
-                override fun onSuccess(p0: Conversation?) {
-                    p0 ?: return
-                    var realIndex = -1
-                    conversationListData.value?.forEachIndexed { index, localConversation ->
-                        if (localConversation.conversation.targetId == targetId) {
-                            realIndex = index
-                            localConversation.conversation = p0
-                            return@forEachIndexed
+            .getConversation(
+                Conversation.ConversationType.PRIVATE,
+                targetId,
+                object : RongIMClient.ResultCallback<Conversation>() {
+                    override fun onSuccess(p0: Conversation?) {
+                        p0 ?: return
+                        var realIndex = -1
+                        conversationListData.value?.forEachIndexed { index, localConversation ->
+                            if (localConversation.conversation.targetId == targetId) {
+                                realIndex = index
+                                localConversation.conversation = p0
+                                return@forEachIndexed
+                            }
+                        }
+
+                        if (realIndex >= 0) {
+                            changePosition.value = realIndex
                         }
                     }
 
-                    if (realIndex >= 0) {
-                        changePosition.value = realIndex
+                    override fun onError(p0: RongIMClient.ErrorCode?) {
                     }
-                }
 
-                override fun onError(p0: RongIMClient.ErrorCode?) {
-                }
-
-            })
+                })
     }
 
 
@@ -296,56 +304,59 @@ class MessageViewModel : BaseViewModel() {
 //        }
 
         RongIMClient.getInstance()
-            .getConversation(Conversation.ConversationType.PRIVATE, targerId, object : RongIMClient.ResultCallback<Conversation>() {
-                override fun onSuccess(p0: Conversation?) {
-                    if (p0 == null) {
-                        return
-                    }
-
-                    val oriList = conversationListData.value
-                    oriList?.forEachIndexed { index, lmc ->
-                        if (lmc.conversation.targetId == targerId) {
-                            lmc.conversation = p0
-                            //刷新列表（重新排序）
-                            if (foldStrangerMsg && stranger != lmc.showUserInfo?.stranger && (targerId != SystemTargetId.systemNoticeSender && targerId != SystemTargetId.friendNoticeSender)) {
-                                //折叠消息开启,陌生人状态有变更，需要在会话列表中删除当前会话
-                                try {
-                                    updataStrangerData(targerId.toLong(), stranger)
-                                    getConversationList()
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-
-                            } else {
-                                refreshConversationList(oriList)
-                            }
+            .getConversation(
+                Conversation.ConversationType.PRIVATE,
+                targerId,
+                object : RongIMClient.ResultCallback<Conversation>() {
+                    override fun onSuccess(p0: Conversation?) {
+                        if (p0 == null) {
                             return
                         }
-                    }
 
-                    //走到这里，标识之前的列表里面没有该会话
-                    if (foldStrangerMsg && stranger == mStranger) {
-                        //开启陌生人折叠，标识相同，需要在当前会话列表中添加改会话
-                        try {
-                            if (targerId != SystemTargetId.systemNoticeSender && targerId != SystemTargetId.friendNoticeSender) {
-                                updataStrangerData(targerId.toLong(), stranger)
+                        val oriList = conversationListData.value
+                        oriList?.forEachIndexed { index, lmc ->
+                            if (lmc.conversation.targetId == targerId) {
+                                lmc.conversation = p0
+                                //刷新列表（重新排序）
+                                if (foldStrangerMsg && stranger != lmc.showUserInfo?.stranger && (targerId != SystemTargetId.systemNoticeSender && targerId != SystemTargetId.friendNoticeSender)) {
+                                    //折叠消息开启,陌生人状态有变更，需要在会话列表中删除当前会话
+                                    try {
+                                        updataStrangerData(targerId.toLong(), stranger)
+                                        getConversationList()
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+
+                                } else {
+                                    refreshConversationList(oriList)
+                                }
+                                return
                             }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
                         }
-                        return getConversationList()
+
+                        //走到这里，标识之前的列表里面没有该会话
+                        if (foldStrangerMsg && stranger == mStranger) {
+                            //开启陌生人折叠，标识相同，需要在当前会话列表中添加改会话
+                            try {
+                                if (targerId != SystemTargetId.systemNoticeSender && targerId != SystemTargetId.friendNoticeSender) {
+                                    updataStrangerData(targerId.toLong(), stranger)
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                            return getConversationList()
+                        }
+
+                        val singleList = mutableListOf<Conversation>().apply {
+                            add(p0)
+                        }
+                        showConversation(singleList, true)
                     }
 
-                    val singleList = mutableListOf<Conversation>().apply {
-                        add(p0)
+                    override fun onError(p0: RongIMClient.ErrorCode?) {
                     }
-                    showConversation(singleList, true)
-                }
 
-                override fun onError(p0: RongIMClient.ErrorCode?) {
-                }
-
-            })
+                })
     }
 
 
@@ -395,7 +406,23 @@ class MessageViewModel : BaseViewModel() {
                 //排序后的conversation
                 //对应的用户数据
                 val userList = async {
-                    HuanQueDatabase.getInstance().chatUserDao().queryUsers(idList)
+                    val tempUserList = mutableListOf<ChatUser>()
+                    val idCount = idList.size
+                    val count = ceil(idCount / 20.toDouble()).toInt()
+                    (0 until count).forEach { outIndex ->
+                        val tempIdList = mutableListOf<Long>()
+                        (0 until 20).forEach { inIndex ->
+                            val index = outIndex * 20 + inIndex
+                            if(ForceUtils.isIndexNotOutOfBounds(index,idList)){
+                                tempIdList.add(idList[index])
+                            }
+                        }
+                        HuanQueDatabase.getInstance().chatUserDao().queryUsers(tempIdList)?.let {
+                            tempUserList.addAll(it)
+                        }
+
+                    }
+                    tempUserList
                 }
                 //组装数据
                 val localConversationList = mutableListOf<LocalConversation>()
@@ -586,7 +613,10 @@ class MessageViewModel : BaseViewModel() {
      * 直播间内做一些处理 直播间内，不显示 系统通知，鹊友消息，陌生人消息
      * 插入模拟主播会话
      */
-    private fun doWithPlayer(list: MutableList<LocalConversation>, anchorInfo: UserEnterRoomRespBase) {
+    private fun doWithPlayer(
+        list: MutableList<LocalConversation>,
+        anchorInfo: UserEnterRoomRespBase
+    ) {
         //直播间内，不显示 系统通知，鹊友消息，陌生人消息
         val deleteList = mutableListOf<LocalConversation>()
         list.forEach {
@@ -750,14 +780,20 @@ class MessageViewModel : BaseViewModel() {
                 //没有陌生人消息会话，添加陌生人消息会话
                 val info = hashMapOf<String, String>()
 
-                info.put(LocalConversation.TIME, "${strangerConversation?.conversation?.sentTime ?: 0}")
+                info.put(
+                    LocalConversation.TIME,
+                    "${strangerConversation?.conversation?.sentTime ?: 0}"
+                )
                 val unreadCount = if (blockListData?.contains("$userId") == true) {
                     0
                 } else {
                     strangerConversation?.conversation?.unreadMessageCount ?: 0
                 }
                 info.put(LocalConversation.UNREADCOUNT, "$unreadCount")
-                info.put(LocalConversation.NICKNAME, "${strangerConversation?.showUserInfo?.nickname}")
+                info.put(
+                    LocalConversation.NICKNAME,
+                    "${strangerConversation?.showUserInfo?.nickname}"
+                )
                 val strangerConversation = LocalConversation().apply {
                     strangerInfo = info
                 }
@@ -791,7 +827,8 @@ class MessageViewModel : BaseViewModel() {
             if (index >= 0) {
                 //1列表当中存在当前会话,刷新用户数据
                 withContext(Dispatchers.IO) {
-                    val user = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(userId) ?: return@withContext
+                    val user = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(userId)
+                        ?: return@withContext
                     tempConversation?.showUserInfo = user
                     changePosition.postValue(index)
                 }
@@ -799,20 +836,23 @@ class MessageViewModel : BaseViewModel() {
             } else {
                 //2列表当中不存在当前会话,不存在  判断本地是否有当前会话(存在本地数据，需要刷新整个列表)
                 RongIMClient.getInstance()
-                    .getConversation(Conversation.ConversationType.PRIVATE, "$userId", object : RongIMClient.ResultCallback<Conversation>() {
-                        override fun onSuccess(p0: Conversation?) {
-                            if (p0 == null) {
-                                //不存在本地会话，什么都不用处理
-                                return
-                            } else {
-                                //存在本地会话，需要刷新整个列表
-                                getConversationList()
+                    .getConversation(
+                        Conversation.ConversationType.PRIVATE,
+                        "$userId",
+                        object : RongIMClient.ResultCallback<Conversation>() {
+                            override fun onSuccess(p0: Conversation?) {
+                                if (p0 == null) {
+                                    //不存在本地会话，什么都不用处理
+                                    return
+                                } else {
+                                    //存在本地会话，需要刷新整个列表
+                                    getConversationList()
+                                }
                             }
-                        }
 
-                        override fun onError(p0: RongIMClient.ErrorCode?) {
-                        }
-                    })
+                            override fun onError(p0: RongIMClient.ErrorCode?) {
+                            }
+                        })
             }
         }
     }
