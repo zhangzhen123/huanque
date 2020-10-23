@@ -45,11 +45,7 @@ import com.julun.huanque.core.widgets.live.message.UserEnterAnimatorView
 import com.opensource.svgaplayer.SVGACallback
 import com.opensource.svgaplayer.SVGAParser
 import com.opensource.svgaplayer.SVGAVideoEntity
-import com.trello.rxlifecycle4.android.FragmentEvent
-import com.trello.rxlifecycle4.kotlin.bindUntilEvent
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.fragment_live_animation.*
-import java.util.concurrent.TimeUnit
 
 /**
  *
@@ -685,7 +681,8 @@ class AnimationFragment : BaseFragment() {
                 if (data.pkInfo != null) {
                     connectMicroViewModel.inPk.value = true
 //                    pKViewModel.pkData.value = data.pkInfo
-                    data.pkInfo!!.needAnim = true
+                    //todo 需要再放开
+                    data.pkInfo!!.needFloatAnim = false
                     pkMicView?.justSetPk(data.pkInfo!!)
                     connectMicroViewModel.inMicro.value = null
                 }

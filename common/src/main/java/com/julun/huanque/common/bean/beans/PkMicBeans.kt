@@ -81,8 +81,9 @@ class PKInfoBean : Serializable {
     var landlordScore: Long = 0
 
     //本地字段
-    var needAnim: Boolean = false//是否需要飘星动画的标识
+    var needFloatAnim: Boolean = false//是否需要飘星动画的标识
     var needAddMic: Boolean = true //是否需要连麦操作 根据情况进行区分 防止重复添加视频流 视频流重复也影响不大 下游也会判断重复流
+    var needJustPlayStartAni =false //是否需要仅仅只播放开始动画 进入直播间时需要
     override fun toString(): String {
         return "PKInfoBean(seconds=$seconds, totalScore=$totalScore, detail=$detailList, endTime=$endTime, pkType=$pkType, template=$template)"
     }

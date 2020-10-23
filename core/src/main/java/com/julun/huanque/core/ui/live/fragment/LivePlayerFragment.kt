@@ -373,7 +373,7 @@ open class LivePlayerFragment : BaseFragment() {
             if (view.getStreamID() == streamID) {
                 //找到对应的视图
 //                view.release()
-                view.stop(true)
+                view.stop(stopAll = true,needDisConnect = false)
             }
         }
     }

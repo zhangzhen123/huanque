@@ -1614,7 +1614,7 @@ class PlayerActivity : BaseActivity() {
         MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.StartLivingMessageProcessor {
             override fun process(data: OpenShowEvent) {
-//                logger.info("OpenShowEvent isPcLive:${data.isPcLive}")
+                logger.info("OpenShowEvent isPcLive:${data.isPcLive}")
                 //获取直播的类型
                 liveViewManager.mDialogManager.hideFragment(LiveSquareDialogFragment::class.java)
                 isAppShow = !data.isLandscape

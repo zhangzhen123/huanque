@@ -26,7 +26,8 @@ object AliPlayerManager {
     private var mLogEnable = true
 
     private val logger = ULog.getLogger("AliPlayerManager")
-
+    //重试次数 debug模式用到
+    private var retryCount=0
 //    var mRenderListener: IPlayer.OnRenderingStartListener? = null
 
     //SurfaceHolder.Callback唯一
@@ -127,8 +128,14 @@ object AliPlayerManager {
                 if (stoped) {
                     return@setOnStateChangedListener
                 }
+                retryCount++
                 if (BuildConfig.DEBUG) {
-                    return@setOnStateChangedListener
+                    if(retryCount>2){
+                        logger.info("重试${retryCount}次 不再重试")
+                        retryCount=0
+                        return@setOnStateChangedListener
+                    }
+
                 }
                 Observable.timer(2, TimeUnit.SECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -136,7 +143,7 @@ object AliPlayerManager {
                         if (!stoped) {
                             mAliPlayer.prepare()
                         }
-                    }, {}, {})
+                    }, { e -> e.printStackTrace() })
             }
         }
         mAliPlayer.scaleMode = IPlayer.ScaleMode.SCALE_ASPECT_FILL

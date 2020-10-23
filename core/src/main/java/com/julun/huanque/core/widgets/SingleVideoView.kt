@@ -154,9 +154,9 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             mAliPlayer?.release()
             this.hide()
         }else {
-            //使用单例的播放器 手动置空相关监听器
-            mAliPlayer?.setOnRenderingStartListener(null)
-            logger("onDetachedFromWindow setOnRenderingStartListener(null) ")
+            //使用单例的播放器 不做任何处理 单例播放器的监听统一在destroy中处理 destroy会在合适的时机调用
+//            mAliPlayer?.setOnRenderingStartListener(null)
+//            logger("onDetachedFromWindow setOnRenderingStartListener(null) ")
         }
         mAliPlayer = null
         isFree = true
@@ -469,12 +469,10 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             mAliPlayer?.setDataSource(urlSource)
             mAliPlayer?.isAutoPlay = true
 //            logger.info("PlayerLine 准备播放器")
-//            if (useManager) {
+            if (useManager) {
 //                AliPlayerManager.mRenderListener = mRenderListener
-////                AliplayerManager.mUrl = mUrl
-//                AliPlayerManager.mRendered = false
-//                AliPlayerManager.stoped = false
-//            }
+                AliPlayerManager.stoped = false
+            }
             mAliPlayer?.prepare()
 //            mAliPlayer?.start()
         }

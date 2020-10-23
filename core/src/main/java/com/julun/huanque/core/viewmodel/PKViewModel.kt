@@ -29,7 +29,7 @@ class PKViewModel : BaseViewModel() {
     //网络请求的pkStarting状态或者im消息的
     val pkStarting: MutableLiveData<PKInfoBean> by lazy { MutableLiveData<PKInfoBean>() }
 
-    //pk状态  1 进行中  2 惩罚中   3 结束
+    //pk状态  1 进行中  2 惩罚中   3 结束中 4 结束
     val pkState: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
 
     //    val pkClose: MutableLiveData<List<Int>> by lazy { MutableLiveData<List<Int>>() }
@@ -51,13 +51,28 @@ class PKViewModel : BaseViewModel() {
             .roomPkInfo(info)
             .handleResponse(makeSubscriber<PKInfoBean> {
                 it.needAddMic = true
+                it.needJustPlayStartAni = true
                 setPkStart(it)
                 remotePkData.value = it
             })
     }
 
     fun setPkStart(start: PKInfoBean) {
-        val state = if ((start.seconds ?: 0) > 0) 1 else 2
+        //pk状态  1 进行中  2 惩罚中   3 结束中 4 结束
+        val state = when {
+            !start.roundFinish -> {
+                1
+            }
+            start.punishRound -> {
+                2
+            }
+            start.endRound -> {
+                3
+            }
+            else -> {
+                0
+            }
+        }
         pkState.postValue(state)
         pkStarting.value = start
         pkNum.value = start.detailList?.size
@@ -70,7 +85,7 @@ class PKViewModel : BaseViewModel() {
     }
 
     fun getShowTime(totalCount: Int): String {
-        return if (totalCount <= 0) "$currentTimeTitle 00:00" else {
+        return if (totalCount <= 0) "$currentTimeTitle  00:00" else {
             "$currentTimeTitle  ${showMin(totalCount)}:${showSecond(totalCount)}"
         }
 
@@ -89,7 +104,7 @@ class PKViewModel : BaseViewModel() {
     }
 
     //当前时间标题
-    var currentTimeTitle: String = ""
+    private var currentTimeTitle: String = ""
     fun countDown(title: String, totalCount: Int?) {
         currentTimeTitle = title
 //        textView.text = getShowTimeNew(totalCount)

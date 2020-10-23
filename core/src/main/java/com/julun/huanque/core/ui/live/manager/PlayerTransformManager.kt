@@ -102,7 +102,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
                         setIsPush(push)
                     })
                 } else {
-                    pKViewModel.pkState.postValue(3)
+                    pKViewModel.pkState.postValue(4)
                 }
 
 
@@ -138,7 +138,12 @@ class PlayerTransformManager(val act: PlayerActivity) {
         pKViewModel.pkStarting.observe(act, Observer {
             if (it != null) {
                 logger("连麦状态 6 null")
-                addPkVideoPlayer(it)
+                if(mPlayerViewModel.isLiving){
+                    addPkVideoPlayer(it)
+                }else{
+                    logger("不在直播 不视频连麦")
+                }
+
                 connectMicroViewModel.inPk.value = true
                 connectMicroViewModel.inMicro.value = null
                 pKViewModel.openPropWindowData.value = it?.openPropWindow
@@ -485,10 +490,10 @@ class PlayerTransformManager(val act: PlayerActivity) {
                 //防止界面暂停时 pk都结束了pkStarting还未分发
                 pKViewModel.pkStarting.value = null
 //               animationFragment.closePk()
-                pKViewModel.pkState.postValue(3)
+                pKViewModel.pkState.postValue(4)
                 //移除多余的流
                 removePkVideoPlayer(data)
-
+                mPlayerViewModel.bgChange.value = LiveBgType.NORMAL
             }
         })
 

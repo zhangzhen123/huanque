@@ -74,7 +74,7 @@ class PkMicView @JvmOverloads constructor(
     private val myHandler: Handler by lazy { Handler() }
 
     //PK结果图标下移距离
-    val pkResultIconDy = PlayerViewManager.LIVE_HEIGHT / 2 - dp2pxf(115) / 2 - dp2pxf(25)
+    val pkResultIconDy = PlayerViewManager.LIVE_HEIGHT / 2 - dp2pxf(115) / 2 - dp2pxf(15)
 
     companion object {
         const val TWO_PK = 2
@@ -198,7 +198,7 @@ class PkMicView @JvmOverloads constructor(
 //                        }
                     }
                     else -> {
-                        if (it.seconds == -2 || it.endRound) {
+                        if (it.roundFinish || it.endRound) {
                             showPkStatic(it)
                         } else {
                             playPkStarting(it)
@@ -260,7 +260,7 @@ class PkMicView @JvmOverloads constructor(
         this.show()
         logger.info("展示结果 不做动画")
         //设置pk数据
-        data.needAnim = false
+        data.needFloatAnim = false
         justSetPk(data)
         //设置pk结果显示
         resetPkResultView()
@@ -296,6 +296,9 @@ class PkMicView @JvmOverloads constructor(
 
         //展示其他内容
 //        showPkTitleImg()
+        if (data.punishRound) {
+            playTitleAni(data, false)
+        }
         myHandler.postDelayed({
             videoViewModel.showVideoInfo.value = true
         }, VS_PLAY_TIME)
@@ -307,7 +310,7 @@ class PkMicView @JvmOverloads constructor(
      */
     private fun playPkStarting(pkinfo: PKInfoBean) {
         this.show()
-        pkinfo.needAnim = false
+        pkinfo.needFloatAnim = false
         currentPKData = pkinfo
         logger.info("开始播放pkStarting")
         //对于上一次PK没正常结束的情况
@@ -366,7 +369,7 @@ class PkMicView @JvmOverloads constructor(
                 pk3_process.hide()
                 setStageData(pkinfo.stageList)
                 queueNotifyPk(currentPKData ?: return)
-                if (pkinfo.currRound == 1) {
+                if (pkinfo.currRound == 1 || pkinfo.needJustPlayStartAni) {
                     startTwoPkAnimator(pkinfo)
                 } else {
                     playTitleAni(pkinfo, true)
@@ -481,7 +484,7 @@ class PkMicView @JvmOverloads constructor(
 
         //关闭倒计时
         pKViewModel.closeCountDown()
-        pk_time_layout.hide()
+//        pk_time_layout.hide()
         //隐藏道具
         pk_props_layout.hide()
         //隐藏道具面板
@@ -533,61 +536,40 @@ class PkMicView @JvmOverloads constructor(
         queueNotifyPk(info)
         playTitleAni(info, false)
 
-
         when (currentPkType) {
             TWO_PK -> {
                 pk_win_layout_03.hide()
-                //播放奖杯获取动画
-                var hasCupAni = false
-                if (info.detailList != null && info.detailList!!.size >= 2) {
-                    info.detailList!!.forEachIndexed { index, item ->
-                        if (item.roundResult == PKResultType.WIN) {
-                            hasCupAni = true
-                            playCupAni(1 + index, item.winRound)
-                        }
-                    }
-                }
-                //播放结果动画
-                if (info.roundFinish) {
-                    var delay = 0L
-                    //如果当前有奖杯要播 延迟执行
-                    if (hasCupAni) {
-                        delay = 500L
-                    }
-                    myHandler.postDelayed({
-                        if (info.detailList != null && info.detailList!!.size >= 2) {
-                            info.detailList!!.forEachIndexed { index, item ->
-                                playFinalResultAni(index + 1, item.finalResult)
-                            }
-                        }
-
-                    }, delay)
-                }
-
             }
             THREE_PK -> {
                 pk_win_layout_03.show()
-                //播放奖杯获取动画
-                if (info.detailList != null && info.detailList!!.size >= 3) {
-                    info.detailList!!.forEachIndexed { index, item ->
-                        if (item.roundResult == PKResultType.WIN) {
-                            playCupAni(1 + index, item.winRound)
-                        }
-                    }
-                }
-                //播放结果动画
-                if (info.roundFinish) {
-                    if (info.detailList != null && info.detailList!!.size >= 3) {
-                        info.detailList!!.forEachIndexed { index, item ->
-                            playFinalResultAni(index + 1, item.finalResult)
-                        }
-                    }
-                }
-
             }
         }
+        //播放奖杯获取动画
+        var hasCupAni = false
+        if (info.detailList != null) {
+            info.detailList!!.forEachIndexed { index, item ->
+                if (item.roundResult == PKResultType.WIN) {
+                    hasCupAni = true
+                    playCupAni(1 + index, item.winRound)
+                }
+            }
+        }
+        //播放结果动画
+        if (info.roundFinish) {
+            var delay = 0L
+            //如果当前有奖杯要播 延迟执行
+            if (hasCupAni) {
+                delay = 500L
+            }
+            myHandler.postDelayed({
+                if (info.detailList != null) {
+                    info.detailList!!.forEachIndexed { index, item ->
+                        playFinalResultAni(index + 1, item.finalResult)
+                    }
+                }
 
-
+            }, delay)
+        }
 
 
         pk_result_layout.show()
@@ -726,9 +708,15 @@ class PkMicView @JvmOverloads constructor(
 
 //        logger.info("结果图标下移=${pkResultIconDy}")
         val ani41 = ObjectAnimator.ofFloat(targetView, View.TRANSLATION_Y, 0f, pkResultIconDy)
+        val ani411 = ObjectAnimator.ofFloat(targetView, View.SCALE_X, 1.0f, 0.6f)
+        val ani412 = ObjectAnimator.ofFloat(targetView, View.SCALE_Y, 1.0f, 0.6f)
         val ani42 = ObjectAnimator.ofFloat(bgView, View.TRANSLATION_Y, 0f, pkResultIconDy)
+        val ani421 = ObjectAnimator.ofFloat(bgView, View.SCALE_X, 1.0f, 0.6f)
+        val ani422 = ObjectAnimator.ofFloat(bgView, View.SCALE_Y, 1.0f, 0.6f)
+
+
         val ani4 = AnimatorSet()
-        ani4.playTogether(ani41, ani42)
+        ani4.playTogether(ani41, ani411, ani412, ani42, ani421, ani422)
         ani4.startDelay = 1450
         ani4.duration = 300
         ani4.addListener(onEnd = {
@@ -760,6 +748,8 @@ class PkMicView @JvmOverloads constructor(
         targetView ?: return
         targetView.show()
         targetView.translationY = pkResultIconDy
+        targetView.scaleX = 0.6f
+        targetView.scaleY = 0.6f
         when (result) {
             PKResultType.WIN -> {
                 targetView.imageResource = R.mipmap.icon_pk_result_win
@@ -985,6 +975,19 @@ class PkMicView @JvmOverloads constructor(
             }
 
         }
+        if (info.roundFinish) {
+            title = when (first.finalResult) {
+                PKResultType.WIN -> {
+                    "本场PK我方获胜"
+                }
+                PKResultType.LOSE -> {
+                    "本场PK对方获胜"
+                }
+                else -> {
+                    "本场PK双方平局"
+                }
+            }
+        }
         if (info.punishRound) {
             if (first.finalResult == PKResultType.WIN) {
                 title = "对方主播接受惩罚"
@@ -994,6 +997,10 @@ class PkMicView @JvmOverloads constructor(
         }
         if (info.endRound) {
             title = "即将退出PK"
+        }
+        logger.info("playTitleAni=$title")
+        if(title.isEmpty()){
+            return
         }
         pk_title.text = title
         pk_title.show()
@@ -1143,7 +1150,10 @@ class PkMicView @JvmOverloads constructor(
                 two_pk_container.setLeftViewData(list[0].headPic, list[0].nickname)
                 two_pk_container.setRightViewData(list[1].headPic, list[1].nickname)
                 two_pk_container.startAnimation {
-                    playTitleAni(pkinfo, true)
+                    if (!pkinfo.needJustPlayStartAni) {
+                        playTitleAni(pkinfo, true)
+                    }
+
                     showViewAfterAni()
                 }
             }
@@ -1401,9 +1411,9 @@ class PkMicView @JvmOverloads constructor(
                     val difScore2 = playerScore2 - lastPlayerScore2
 
                     //飘数字
-                    if (difScore1 > 0 && pkData.needAnim)
+                    if (difScore1 > 0 && pkData.needFloatAnim)
                         bezier_01.addNumberView(difScore1, ContextCompat.getColor(context, R.color.pk_color_01))
-                    if (difScore2 > 0 && pkData.needAnim)
+                    if (difScore2 > 0 && pkData.needFloatAnim)
                         bezier_03.addNumberView(difScore2, ContextCompat.getColor(context, R.color.pk_color_03))
                     //新增PK道具变化
                     val playerPropScore1 = player1?.propScore ?: 0L
@@ -1493,7 +1503,7 @@ class PkMicView @JvmOverloads constructor(
                     ani1.duration = 200
                     ani1.start()
                     //飘数字
-                    if (difScore1 > 0 && pkData.needAnim)
+                    if (difScore1 > 0 && pkData.needFloatAnim)
                         bezier_01.addNumberView(difScore1, ContextCompat.getColor(context, R.color.pk_color_01))
                     //22222222222222222222222222-------------------------------------------------------------------
                     //占满了换背景
@@ -1519,7 +1529,7 @@ class PkMicView @JvmOverloads constructor(
                     }
                     ani2.duration = 200
                     ani2.start()
-                    if (difScore2 > 0 && pkData.needAnim)
+                    if (difScore2 > 0 && pkData.needFloatAnim)
                         bezier_02.addNumberView(difScore2, ContextCompat.getColor(context, R.color.pk_color_02))
                     //3333333333333333333333333-----------------------------------------------------------------------
                     //占满了换背景
@@ -1552,7 +1562,7 @@ class PkMicView @JvmOverloads constructor(
                         }
                     })
                     ani3.start()
-                    if (difScore3 > 0 && pkData.needAnim)
+                    if (difScore3 > 0 && pkData.needFloatAnim)
                         bezier_03.addNumberView(difScore3, ContextCompat.getColor(context, R.color.pk_color_03))
 
                 }

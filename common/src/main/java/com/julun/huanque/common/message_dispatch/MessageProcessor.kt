@@ -439,7 +439,7 @@ object MessageProcessor {
      * PK开始的处理
      */
     interface PKStartMessageProcess : EventMessageProcessor<PKStartEvent> {
-        override fun getEventType(): EventMessageType = EventMessageType.PkStarting
+        override fun getEventType(): EventMessageType = EventMessageType.HQPkStarting
     }
 
     /**
@@ -453,7 +453,7 @@ object MessageProcessor {
      * PK比分变化的处理
      */
     interface PKScoreChangeMessageProcess : EventMessageProcessor<PKScoreChangeEvent> {
-        override fun getEventType(): EventMessageType = EventMessageType.PkScoreChange
+        override fun getEventType(): EventMessageType = EventMessageType.HQPkScoreChange
     }
 
 
@@ -461,20 +461,20 @@ object MessageProcessor {
      * PK结果
      */
     interface PKResultMessageProcess : EventMessageProcessor<PKResultEventNew> {
-        override fun getEventType(): EventMessageType = EventMessageType.PkResult
+        override fun getEventType(): EventMessageType = EventMessageType.HQPkResult
     }
 
     /**
      * PK结束环节 一个产品拍脑袋想出的牛逼的环节 持续10秒 倒计时
      */
     interface PkEndRoundMessageProcess : EventMessageProcessor<PKStartEvent> {
-        override fun getEventType(): EventMessageType = EventMessageType.PkEndRound
+        override fun getEventType(): EventMessageType = EventMessageType.HQPkEndRound
     }
     /**
      * PK结束 真正的结束
      */
     interface PKFinishMessageProcess : EventMessageProcessor<PKFinishEvent> {
-        override fun getEventType(): EventMessageType = EventMessageType.PkFinish
+        override fun getEventType(): EventMessageType = EventMessageType.HQPkFinish
     }
 
     /**
@@ -1347,22 +1347,22 @@ enum class EventMessageType(val klass: Class<*>) {
     StopLiving(CloseShowEvent::class.java),
 
     /**PK开始**/
-    PkStarting(PKStartEvent::class.java),
+    HQPkStarting(PKStartEvent::class.java),
 
     /**PK过程中切换CDN**/
     PkToggleProvider(PKStartEvent::class.java),
 
     /**PK分数变化**/
-    PkScoreChange(PKScoreChangeEvent::class.java),
+    HQPkScoreChange(PKScoreChangeEvent::class.java),
     /*PK结束环节*/
-    PkEndRound(PKStartEvent::class.java),
+    HQPkEndRound(PKStartEvent::class.java),
     /**PK结果**/
-    PkResult(PKResultEventNew::class.java),
+    HQPkResult(PKResultEventNew::class.java),
 
     /**pk创建的消息**/
     PkOperate(PKCreateEvent::class.java),
 
-    PkFinish(PKFinishEvent::class.java),
+    HQPkFinish(PKFinishEvent::class.java),
 
     /**PK道具消息**/
     PkProp(PkPropEvent::class.java),
