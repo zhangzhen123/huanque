@@ -168,7 +168,9 @@ class VoiceChatViewModel : BaseViewModel() {
                 voiceBeanData.value = VoiceConmmunicationSimulate(
                     VoiceResultType.CONMMUNICATION_FINISH,
                     duration,
-                    totalBeans = 0
+                    totalBeans = 0,
+                    needRefresh = true,
+                    callId = callId
                 )
             }, { currentVoiceState.value = VOICE_CLOSE })
         }
