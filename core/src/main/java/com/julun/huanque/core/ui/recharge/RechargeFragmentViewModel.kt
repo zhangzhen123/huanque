@@ -15,7 +15,7 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.BalanceUtils
-import com.julun.huanque.core.net.RechargeService
+import com.julun.huanque.common.net.services.RechargeService
 
 
 /**

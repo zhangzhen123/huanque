@@ -100,7 +100,7 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
     private fun initListener() {
         tv_privilege_attetnion.onClickNew {
             //弹窗说明弹窗
-            ToastUtils.show("亲密等级达到Lv4才能发送专属表情哦")
+            ToastUtils.show("亲密等级达到Lv3才能发送专属表情哦")
         }
 
         view_shade.onClickNew {
@@ -130,7 +130,7 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
             //需要显示特权表情遮罩
             view_shade.show()
             tv_privilege_attetnion.show()
-            tv_privilege_attetnion.text = "亲密等级Lv4可解锁"
+            tv_privilege_attetnion.text = "亲密等级Lv3可解锁"
 
         } else {
             view_shade.hide()

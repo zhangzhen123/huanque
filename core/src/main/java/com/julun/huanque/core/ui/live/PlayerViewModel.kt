@@ -1,10 +1,13 @@
 package com.julun.huanque.core.ui.live
 
 import android.animation.ValueAnimator
+import android.os.Bundle
 import android.os.SystemClock
+import androidx.activity.ComponentActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.ResponseError
@@ -28,8 +31,12 @@ import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.core.ui.live.dialog.BirdDialogFragment
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.RongIMClient
@@ -37,6 +44,7 @@ import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
+import java.util.concurrent.TimeUnit
 
 /**
  *
@@ -208,6 +216,9 @@ class PlayerViewModel : BaseViewModel() {
     //魔法礼物赠送奖励列表
     val eggResultData: MutableLiveData<EggHitSumResult> by lazy { MutableLiveData<EggHitSumResult>() }
 
+    //是否有首充
+    val firstRechargeFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
 
     //主播直播间ID
     val anchorProgramId: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
@@ -240,9 +251,6 @@ class PlayerViewModel : BaseViewModel() {
     //进入直播间异常状态 basic异常1  chat异常2 enter异常3
     val errorState: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
     val contributionSum: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
-
-    //是否是首充
-    val firstRecharge: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //余额变动
     val balanceChange: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -489,6 +497,8 @@ class PlayerViewModel : BaseViewModel() {
                 bagChangeFlag.value = result.user?.bagChange ?: false
                 //获取bubble放在拿到用户信息后
                 requestBubble()
+                val activityBean = result.activity
+                firstRechargeFlag.value = activityBean.firstCharge == BusiConstant.True
             }, error = {
                 it.printStackTrace()
                 errorState.value = 3
@@ -501,6 +511,7 @@ class PlayerViewModel : BaseViewModel() {
             })
         }
     }
+
 
     //因为已经销毁了界面不在生命周期内 使用viewModelScope不会执行
     fun leave() {
@@ -582,6 +593,12 @@ class PlayerViewModel : BaseViewModel() {
 
             TextTouch.OpenRoyalPage -> {
                 //打开贵族页面
+                (CommonInit.getInstance().getCurrentActivity() as? ComponentActivity)?.let { act ->
+                    RNPageActivity.start(act, RnConstant.ROYAL_PAGE)
+                    val bundle = Bundle()
+                    bundle.putLong("programId", programId)
+                }
+
             }
 
             TextTouch.OpenGameView -> {
@@ -772,6 +789,36 @@ class PlayerViewModel : BaseViewModel() {
             })
 
         }
+    }
+
+    //首充自动显示倒计时
+    var mFirstRechargeDisposable: Disposable? = null
+
+    /**
+     * 首充自定显示倒计时
+     */
+    fun firstRechargeCountDown() {
+        //当日是否已经显示过
+        val todayShow = SPUtils.getBoolean(GlobalUtils.getFirstRechargeKey(), false)
+        if (todayShow) {
+            return
+        }
+        mFirstRechargeDisposable?.dispose()
+        mFirstRechargeDisposable = Observable.timer(2, TimeUnit.MINUTES)
+            .subscribe {
+                val todayShow = SPUtils.getBoolean(GlobalUtils.getFirstRechargeKey(), false)
+                if (!todayShow) {
+                    val bean = BottomActionBean()
+                    bean.type = ClickType.FIRST_RECHARGE
+                    actionBeanData.postValue(bean)
+                }
+            }
+    }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        mFirstRechargeDisposable?.dispose()
     }
 
 //    /**

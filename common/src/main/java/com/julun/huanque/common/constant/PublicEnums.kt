@@ -208,6 +208,9 @@ object ClickType {
 
     //打开聊天输入框  发言
     const val SEND_MESSAGE = "SEND_MESSAGE"
+
+    //首充
+    const val FIRST_RECHARGE = "FIRST_RECHARGE"
 }
 
 /**

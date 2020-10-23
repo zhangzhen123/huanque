@@ -1,7 +1,6 @@
 package com.julun.huanque.common.bean.beans
 
 import android.app.Activity
-import android.graphics.drawable.LevelListDrawable
 import android.os.Bundle
 import com.alibaba.fastjson.annotation.JSONField
 import com.julun.huanque.common.basic.RootListData
@@ -383,7 +382,15 @@ class UserEnterRoomRespDto : Serializable {
     var gameList: MutableList<SingleGame> = mutableListOf()
 
     var heatValue: Long = 0L
+
+    //活动状态对象
+    var activity: ActivityBean = ActivityBean()
 }
+
+/**
+ * 进入直播间使用的 活动对象
+ */
+data class ActivityBean(var firstCharge: String = "") : Serializable
 
 /**
  * 播间底部气泡提示相关信息
@@ -407,7 +414,7 @@ data class EnterExt(
     //发言模板
     var words: List<SingleWord> = listOf(),
     //一元首充数据
-    var firstRecharge: OneYuanInfo? = null,
+    var firstRecharge: FirstRechargeInfo? = null,
     //主播头条数据
     var headlineInfo: HeaderInfo? = null,
     //体验守护
@@ -1094,44 +1101,14 @@ data class NewUserGiftInfo(
 ) : Serializable
 
 /**
- * 一元礼包信息
- * [status]
-领取状态枚举：
-/** 待领取 */
-Unclaimed,
-/** 已支付 */
-Paid,
-/** 已发放 */
-Granted,
-/** 已确认 */
-Confirmed;
+ * 首充礼包数据
  */
-data class OneYuanInfo(
-    var status: String = "",
-    //礼物面板提示文案
-    var giftRemind: String = "",
-    //是否自动弹窗
-    var autoPopup: Boolean = false,
-    var coupon: Coupon? = null,
+data class FirstRechargeInfo(
+    //说明图片地址
+    var explainPic: String = "",
     //奖励列表
-    var packs: MutableList<SinglePack> = mutableListOf(),
-    //获奖用户
-    var users: MutableList<SingleOneYuanUser> = mutableListOf(),
-    //奖励内容
-    var awards: MutableList<GiftIcon> = mutableListOf(),
-    //本地字段是否是自动弹出的
-    var isAuto: Boolean = false
-) : BaseDialogBean() {
-    companion object {
-        const val Unclaimed = "Unclaimed"
-        const val Paid = "Paid"
-        const val Granted = "Granted"
-        const val Confirmed = "Confirmed"
-
-        //没有礼包了
-        const val None = "None"
-    }
-}
+    var packetList: MutableList<SinglePack> = mutableListOf()
+) : Serializable
 
 /**
  * 主播头条数据
@@ -1155,24 +1132,23 @@ data class HeaderInfoExt(var RoomData: HashMap<String, String> = hashMapOf()) : 
  * 单个礼包相关数据
  */
 data class SinglePack(
+    //说明图片地址
+    var explainPic: String = "",
+    //奖励的Code
+    var awardCode: String = "",
     //单个礼包内容
-    var icons: MutableList<GiftIcon> = mutableListOf(),
-    //是否选中
+    var awardDetails: MutableList<GiftIcon> = mutableListOf(),
+    //金额
+    var money: Int = 0,
+    //是否默认选中
     var selected: Boolean = false,
-    //Tag相关
-    var tag: String = "",
-    //标题
-    var title: String = ""
-) : Serializable {
-    companion object {
-        //超值豪礼
-        const val Super = "Super"
-
-        //Hot
-        const val Hot = "Hot"
-    }
-}
-
+    //副标题
+    var subtitle: String = "",
+    //价值金额
+    var valueMoney: Int = 0,
+    //充值模板
+    var tplId: Int = 0
+) : Serializable
 
 /**
  * 一元首充，单个中奖用户
@@ -1187,6 +1163,9 @@ data class SingleOneYuanUser(
  */
 data class GiftIcon(
     var pic: String = "",
+    //数量
+    var count: String = "",
+    //名称
     var name: String = "",
     //描述
     var desc: String = ""

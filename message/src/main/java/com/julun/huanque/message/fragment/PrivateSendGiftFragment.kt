@@ -32,6 +32,7 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.viewmodel.FirstRechargeViewModel
 import com.julun.huanque.common.widgets.GiftTitleView
 import com.julun.huanque.common.widgets.happybubble.BubbleDialog
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
@@ -61,6 +62,7 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
 
     private val mPrivateConversationViewModel: PrivateConversationViewModel by activityViewModels()
 
+    private val mFirstRechargeViewModel: FirstRechargeViewModel by activityViewModels()
 
     // 每页显示10个礼物
     private val pageLimit = 8
@@ -179,6 +181,16 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
             hideCountListView()
         }
 
+        iv_first_recharge.onClickNew {
+            //跳转首充
+            val firstRechargeBean = mFirstRechargeViewModel.firstRechargeBean.value
+            if (firstRechargeBean == null) {
+                mFirstRechargeViewModel.getFirstRechargeData()
+            } else {
+                mFirstRechargeViewModel.firstRechargeBean.value = firstRechargeBean
+            }
+        }
+
         mengdou_icon.onClickNew {
             ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
         }
@@ -266,6 +278,20 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
                         logger.info("消息过时了：${it.time}")
                     }
                 }
+            }
+        })
+
+        mFirstRechargeViewModel.firstRechargeFlag.observe(this, Observer {
+            if (it == true) {
+                iv_first_recharge.show()
+            } else {
+                iv_first_recharge.hide()
+            }
+        })
+        mFirstRechargeViewModel.firstRechargeBean.observe(this, Observer {
+            if (it != null) {
+                val fragment = ARouter.getInstance().build(ARouterConstant.FIRST_RECHARGE_FRAGMENT).navigation() as? BaseDialogFragment
+                fragment?.show(requireActivity().supportFragmentManager, "FirstRechargeFragment")
             }
         })
     }
@@ -408,6 +434,7 @@ class PrivateSendGiftFragment : BaseDialogFragment() {
             reportCrash("SendGiftFragment当前的生命周期$currentLife 此时根view:${view} :${balanceLabel}----${loadingText}--${dotter}")
             return
         }
+        mFirstRechargeViewModel.firstRechargeFlag.value = giftDataDto.firstCharge
 
         viewPagerAdapter.clear()
         dotter.removeAllViews()

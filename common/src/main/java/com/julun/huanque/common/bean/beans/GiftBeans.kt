@@ -175,6 +175,8 @@ data class ProcessInfo(
 )
 
 data class ChatGiftInfo(
+    //首充数据
+    var firstCharge: Boolean = false,
     var beans: Long = 0,
     var giftList: List<ChatGift> = listOf(),
     var tips: String = "",

@@ -65,6 +65,7 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
         iv_shield.setOnClickListener(this)
 
         rl_welfare.setOnClickListener(this)
+        iv_first_recharge.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -156,6 +157,12 @@ class LiveRoomBottomActionView @JvmOverloads constructor(context: Context, attrs
             R.id.rl_welfare -> {
 //                playerViewModel?.taskView?.value = ""
 
+            }
+            R.id.iv_first_recharge -> {
+                //首充
+                if (!ClickListenerUtils.isDoubleClick) {
+                    bean.type = ClickType.FIRST_RECHARGE
+                }
             }
             else -> {
             }

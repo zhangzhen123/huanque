@@ -66,6 +66,14 @@
 
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/iv_first_recharge"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@mipmap/icon_first_recharge"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <RelativeLayout
         android:id="@+id/giftImage"
         android:layout_width="36dp"
@@ -96,8 +104,8 @@
             android:layout_width="6dp"
             android:layout_height="6dp"
             android:layout_alignParentRight="true"
-            android:visibility="gone"
-            android:background="@drawable/bg_live_red_point" />
+            android:background="@drawable/bg_live_red_point"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

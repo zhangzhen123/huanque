@@ -39,6 +39,7 @@ import com.julun.huanque.common.adapter.GiftCountAdapter
 import com.julun.huanque.common.adapter.SimplePagerAdapter
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.EggSettingViewModel
+import com.julun.huanque.common.viewmodel.FirstRechargeViewModel
 import com.julun.huanque.core.viewmodel.SendGiftViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -73,6 +74,7 @@ class SendGiftFragment : BaseDialogFragment() {
     private var viewModel: SendGiftViewModel? = null
     private val playerViewModel: PlayerViewModel by activityViewModels()
     private val mEggSettingViewModel: EggSettingViewModel by activityViewModels()
+    private val mFirstRechargeViewModel: FirstRechargeViewModel by activityViewModels()
 
 
     // 每页显示10个礼物
@@ -255,6 +257,13 @@ class SendGiftFragment : BaseDialogFragment() {
                 hideLiansong()
             }
         })
+
+        iv_first_recharge.onClickNew {
+            //显示首充
+            val bean = BottomActionBean()
+            bean.type = ClickType.FIRST_RECHARGE
+            playerViewModel?.actionBeanData?.value = bean
+        }
     }
 
     private fun refreshPackage() {
@@ -387,6 +396,13 @@ class SendGiftFragment : BaseDialogFragment() {
         playerViewModel?.balance?.observe(this, Observer {
             logger.info("Player balance = $it")
             setBalanceLabelValue(it ?: return@Observer)
+        })
+        mFirstRechargeViewModel.firstRechargeFlag.observe(this, Observer {
+            if (it == true) {
+                iv_first_recharge.show()
+            } else {
+                iv_first_recharge.hide()
+            }
         })
 
         if (playerViewModel?.loginState?.value != true) {

@@ -37,6 +37,7 @@ import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.VoiceResultType
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.WebpAnimatorListener
 import com.julun.huanque.common.suger.*
@@ -527,7 +528,8 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             )
             helper.setText(R.id.tv_gift_content, style)
             if (started) {
-                helper.setText(R.id.tv_detail, "${chatGift.beans}鹊币")
+                val totalBiCount = chatGift.beans * count
+                helper.setText(R.id.tv_detail, "${StringHelper.formatNumWithTwoDecimals(totalBiCount.toLong())}鹊币")
             } else {
                 helper.setText(R.id.tv_detail, "点击查看")
             }

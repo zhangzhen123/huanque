@@ -13,7 +13,6 @@ import androidx.activity.viewModels
 import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
-import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.fastjson.JSONObject
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.BaseData
@@ -25,7 +24,6 @@ import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.TplHelper
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.manager.NotifyManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
@@ -39,9 +37,11 @@ import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.BirdDialogFragment
 import com.julun.huanque.core.ui.live.fragment.BalanceNotEnoughFragment
+import com.julun.huanque.core.ui.live.fragment.FirstRechargeFragment
 import com.julun.huanque.core.ui.live.fragment.PrivateFragment
 import com.julun.huanque.core.ui.share.LiveShareActivity
 import com.julun.huanque.core.viewmodel.AnchorNoLiveViewModel
+import com.julun.huanque.common.viewmodel.FirstRechargeViewModel
 import com.julun.huanque.core.viewmodel.OrientationViewModel
 import com.julun.huanque.core.viewmodel.PropViewModel
 import com.julun.huanque.core.widgets.live.LiveRunwayView
@@ -51,6 +51,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_live_room.*
 import kotlinx.android.synthetic.main.player_gesture_guide.*
+import kotlinx.android.synthetic.main.view_live_bottom_action.view.*
 import kotlinx.android.synthetic.main.view_live_header.*
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.startActivity
@@ -107,6 +108,9 @@ class PlayerViewManager(val context: PlayerActivity) {
 
 
     private val viewModel: PlayerViewModel by context.viewModels()
+
+    //首充ViewModel
+    private val mFirstRechargeViewModel: FirstRechargeViewModel by context.viewModels()
 
     //    private var conversationViewModel: ConversationViewModel by context.viewModels()
 
@@ -254,6 +258,18 @@ class PlayerViewManager(val context: PlayerActivity) {
             )
         })
 
+        mFirstRechargeViewModel.firstRechargeFlag.observe(context, Observer {
+            if (it == true) {
+                //首充按钮
+                context.actionView.iv_first_recharge.show()
+                //开始倒计时
+                viewModel.firstRechargeCountDown()
+            } else {
+                context.actionView.iv_first_recharge.hide()
+                viewModel.mFirstRechargeDisposable?.dispose()
+            }
+        })
+
         viewModel.notEnoughBalance.observe(context, Observer {
             if (CommonInit.getInstance().inSDK) {
                 //todo
@@ -381,6 +397,15 @@ class PlayerViewManager(val context: PlayerActivity) {
                             if (isAnchorSelf) {
 //                                viewModel.cutoverScreenType(screenType)
                             }
+                        }
+                    }
+                    ClickType.FIRST_RECHARGE -> {
+                        //首充
+                        val firstRechargeBean = mFirstRechargeViewModel.firstRechargeBean.value
+                        if (firstRechargeBean == null) {
+                            mFirstRechargeViewModel.getFirstRechargeData()
+                        } else {
+                            mFirstRechargeViewModel.firstRechargeBean.value = firstRechargeBean
                         }
                     }
 //                    ClickType.SHIELD -> {
@@ -525,6 +550,12 @@ class PlayerViewManager(val context: PlayerActivity) {
 //            openGiftView()
         })
 
+
+        mFirstRechargeViewModel.firstRechargeBean.observe(context, Observer {
+            if (it != null) {
+                FirstRechargeFragment().show(context.supportFragmentManager, "FirstRechargeFragment")
+            }
+        })
 
     }
 

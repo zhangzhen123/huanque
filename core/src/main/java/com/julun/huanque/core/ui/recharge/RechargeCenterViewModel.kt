@@ -15,7 +15,7 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.core.net.RechargeService
+import com.julun.huanque.common.net.services.RechargeService
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

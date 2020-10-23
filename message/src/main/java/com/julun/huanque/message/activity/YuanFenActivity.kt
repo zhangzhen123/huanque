@@ -83,7 +83,7 @@ class YuanFenActivity : BaseActivity() {
         super.initEvents(rootView)
         header_page.imageViewBack.onClickNew { finish() }
         header_page.imageOperation.onClickNew {
-            PicContentActivity.newInstance(this, rulePicUrl)
+            PicContentActivity.newInstance(this, rulePicUrl,"缘分速配说明")
         }
 
         rlRefreshView.setOnRefreshListener {
