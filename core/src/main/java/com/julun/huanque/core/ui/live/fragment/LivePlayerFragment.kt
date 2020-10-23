@@ -28,7 +28,6 @@ import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.viewmodel.VideoChangeViewModel
 import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
-import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.OrientationViewModel
 import com.julun.huanque.core.widgets.SingleVideoView
@@ -56,6 +55,11 @@ open class LivePlayerFragment : BaseFragment() {
             override fun onClickAuthorInfo(authorInfo: MicAnchor) {
                 logger.info("点击了主播信息$authorInfo")
                 mPlayerViewModel.checkoutRoom.value = authorInfo.programId
+            }
+
+            override fun onClickAuthorFollow(authorInfo: MicAnchor) {
+                logger.info("点击了关注主播$authorInfo")
+                mPlayerViewModel.follow(authorInfo.programId)
             }
         }
     }
@@ -203,6 +207,27 @@ open class LivePlayerFragment : BaseFragment() {
                     sv.playStream()
                 }
             }
+        })
+
+        mPlayerViewModel.followStatusData.observe(this, Observer {
+            logger.info("Player 关注状态 status = $it")
+            if (it.isSuccess()) {
+                mViewList.forEach { view ->
+                    val info = view.playerInfo ?: return@forEach
+                    if (view != mMainVideoView && !view.isFree && info.programId == it.requireT().userId) {
+
+                        logger.info("匹配到相应view${view.playerInfo?.programId}")
+                        //刷新主播信息
+                        info.follow = true
+                        info.showInfo=true
+                        view.setPlayInfo(info)
+                        return@Observer
+                    }
+
+                }
+            }
+
+
         })
     }
 
@@ -373,7 +398,7 @@ open class LivePlayerFragment : BaseFragment() {
             if (view.getStreamID() == streamID) {
                 //找到对应的视图
 //                view.release()
-                view.stop(stopAll = true,needDisConnect = false)
+                view.stop(stopAll = true, needDisConnect = false)
             }
         }
     }

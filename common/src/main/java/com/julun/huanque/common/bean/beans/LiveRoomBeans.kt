@@ -475,6 +475,9 @@ open class AnchorBasicInfo : ProgramAnchor(), Serializable {
 open class ProgramAnchor : Serializable {
     /** 节目id **/
     var programId: Long = 0
+
+    /**是否关注  注意 推送的消息没有该字段 所以可空**/
+    var follow: Boolean? = null
 }
 
 /**

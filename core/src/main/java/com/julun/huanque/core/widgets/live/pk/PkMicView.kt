@@ -363,6 +363,23 @@ class PkMicView @JvmOverloads constructor(
             pKViewModel.closeCountDown()
             pKViewModel.countDown(getTimeTitle(pkinfo), pkinfo.seconds)
         }
+        //展示奖杯 如果中途进入直播间的 需要展示奖杯
+        pk_result_layout.show()
+        when (currentPkType) {
+            TWO_PK -> {
+                pk_win_layout_03.hide()
+            }
+            THREE_PK -> {
+                pk_win_layout_03.show()
+            }
+        }
+        if (pkinfo.detailList != null) {
+            pkinfo.detailList!!.forEachIndexed { index, item ->
+                if (PKResultType.WIN == item.roundResult) {
+                    playCupAni(1 + index, item.winRound, false)
+                }
+            }
+        }
         when (currentPkType) {
             TWO_PK -> {
                 pk2_process.show()
@@ -536,6 +553,7 @@ class PkMicView @JvmOverloads constructor(
         queueNotifyPk(info)
         playTitleAni(info, false)
 
+        pk_result_layout.show()
         when (currentPkType) {
             TWO_PK -> {
                 pk_win_layout_03.hide()
@@ -559,7 +577,7 @@ class PkMicView @JvmOverloads constructor(
             var delay = 0L
             //如果当前有奖杯要播 延迟执行
             if (hasCupAni) {
-                delay = 500L
+                delay = 1200L
             }
             myHandler.postDelayed({
                 if (info.detailList != null) {
@@ -572,7 +590,7 @@ class PkMicView @JvmOverloads constructor(
         }
 
 
-        pk_result_layout.show()
+
 
     }
 
@@ -892,23 +910,10 @@ class PkMicView @JvmOverloads constructor(
             val ani21 = ObjectAnimator.ofFloat(bigImageView, View.TRANSLATION_X, 0f, -dx.toFloat())
             val ani22 = ObjectAnimator.ofFloat(bigImageView, View.TRANSLATION_Y, 0f, -dy.toFloat())
 
-//            val anim21 = ValueAnimator.ofInt(dp2px(50), dp2px(5))
-//            val bllp = bigImageView.layoutParams as ConstraintLayout.LayoutParams
-//            anim21.addUpdateListener { valueAnimate ->
-//                logger.info("anim21 ${valueAnimate.animatedValue}")
-//                bllp.bottomMargin = valueAnimate.animatedValue as Int
-//                bigImageView.requestLayout()
-//            }
-//            val anim22 = ValueAnimator.ofInt(originLeftMargn, dp2px(5 + (5 + 29) * (winRound-1)))
-//            anim22.addUpdateListener { valueAnimate ->
-//                logger.info("anim22 ${valueAnimate.animatedValue}")
-//                bllp.leftMargin = valueAnimate.animatedValue as Int
-//                bigImageView.requestLayout()
-//            }
             val ani23 = ObjectAnimator.ofFloat(bigImageView, View.SCALE_X, 1.0f, 0.5f)
             val ani24 = ObjectAnimator.ofFloat(bigImageView, View.SCALE_Y, 1.0f, 0.5f)
             val ani2 = AnimatorSet()
-            ani2.duration = 500 * 2
+            ani2.duration = 500
             ani2.startDelay = 450
             ani2.playTogether(ani21, ani22, ani23, ani24)
             val cupAniAniSet = AnimatorSet()
@@ -1015,7 +1020,7 @@ class PkMicView @JvmOverloads constructor(
             ani2.duration = 400
 
             val ani3 = ObjectAnimator.ofFloat(pk_title, View.ALPHA, 1f, 0f)
-            ani3.startDelay = 900
+            ani3.startDelay = 1900
             ani3.duration = 400
             titleAniSet = AnimatorSet()
             titleAniSet!!.play(ani2).with(ani1).before(ani3)

@@ -138,9 +138,9 @@ class PlayerTransformManager(val act: PlayerActivity) {
         pKViewModel.pkStarting.observe(act, Observer {
             if (it != null) {
                 logger("连麦状态 6 null")
-                if(mPlayerViewModel.isLiving){
+                if (mPlayerViewModel.isLiving) {
                     addPkVideoPlayer(it)
-                }else{
+                } else {
                     logger("不在直播 不视频连麦")
                 }
 
@@ -461,7 +461,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
                 connectMicroViewModel.notarizePKShowState.value = null
                 if (data.pkInfo != null) {
                     //
-                    data.pkInfo!!.needAddMic = data.pkInfo!!.currRound==1
+                    data.pkInfo!!.needAddMic = data.pkInfo!!.currRound == 1
                     pKViewModel.setPkStart(data.pkInfo ?: return)
                 }
             }
@@ -650,6 +650,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
                 this.playInfo = anchor.playInfo
 //                this.landlord = anchor.landlord
                 this.pkType = pkInfo.pkType
+                this.follow = anchor.follow
             })
         }
         when (pkInfo.pkType) {

@@ -526,7 +526,7 @@ class PlayerViewModel : BaseViewModel() {
             request({
                 val follow = mSocialService.follow(FriendIdForm(userId)).dataConvert()
                 val followBean = FollowResultBean(follow = follow.follow, userId = userId)
-                followStatusData.value = followBean.convertRtData()
+//                followStatusData.value = followBean.convertRtData()
                 EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
                 EventBus.getDefault()
                     .post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))

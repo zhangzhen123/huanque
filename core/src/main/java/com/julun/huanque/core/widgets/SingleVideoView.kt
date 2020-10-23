@@ -71,7 +71,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     var mOnVideoListener: OnVideoListener? = null
 
     //播放信息
-    private var playerInfo: MicAnchor? = null
+    var playerInfo: MicAnchor? = null
     private var mSetTime = 0L
     private var mPlayTime = 0L
     private var mAutoPlayTime = 0L
@@ -118,6 +118,11 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                 mOnVideoListener?.onClickAuthorInfo(playerInfo ?: return@OnClickListener)
             }
         })
+        follow.setOnClickListener(OnClickListener {
+            if (playerInfo != null) {
+                mOnVideoListener?.onClickAuthorFollow(playerInfo!!)
+            }
+        })
         initPlayer()
     }
 
@@ -153,7 +158,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             mAliPlayer?.stop()
             mAliPlayer?.release()
             this.hide()
-        }else {
+        } else {
             //使用单例的播放器 不做任何处理 单例播放器的监听统一在destroy中处理 destroy会在合适的时机调用
 //            mAliPlayer?.setOnRenderingStartListener(null)
 //            logger("onDetachedFromWindow setOnRenderingStartListener(null) ")
@@ -186,12 +191,12 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
      * 停止播放器[stopAll]停止所有播放器 无论单例还是常规 基本上代表该播放要关闭 并且重置视图内容 隐藏视图
      * [needDisConnect]是否需要播放器与视图断开 对于有些情况 比如关闭时播放器surface被未开播界面覆盖 这时需要手动断开 不然会一直报错
      */
-    fun stop(stopAll: Boolean = false,needDisConnect:Boolean=false) {
+    fun stop(stopAll: Boolean = false, needDisConnect: Boolean = false) {
         logger.info("stop stopAll=$stopAll")
         if (useManager) {
             if (stopAll)
                 AliPlayerManager.stop()
-            if(needDisConnect){
+            if (needDisConnect) {
                 AliPlayerManager.mAliPlayer.setDisplay(null)
             }
         } else {
@@ -442,6 +447,11 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             if (anchor_name != null) {
                 anchor_name?.text = info.programName
             }
+            if (info.follow == null || info.follow == true) {
+                follow.hide()
+            } else {
+                follow.show()
+            }
         }
     }
 
@@ -547,5 +557,6 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 
     interface OnVideoListener {
         fun onClickAuthorInfo(authorInfo: MicAnchor)
+        fun onClickAuthorFollow(authorInfo: MicAnchor)
     }
 }
