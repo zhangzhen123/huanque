@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.withdraw
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -19,8 +20,10 @@ import com.julun.huanque.common.bean.beans.WithdrawRecord
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import kotlinx.android.synthetic.main.activity_withdraw_history.*
 import kotlinx.android.synthetic.main.activity_withdraw_history.mRecyclerView
 import org.jetbrains.anko.textColor
@@ -152,11 +155,13 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
                         btnTex = "去赚钱",
                         showImage = true,
                         onClick = View.OnClickListener {
-                            if(SessionUtils.getSex() == Sex.MALE){
-                                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                                    .withInt(IntentParamKey.TARGET_INDEX.name, 1).navigation()
+                            if (SessionUtils.getSex() == Sex.MALE) {
+                                val intent = Intent(this, LeYuanBirdActivity::class.java)
+                                if (ForceUtils.activityMatch(intent)) {
+                                    startActivity(intent)
+                                }
                                 finish()
-                            }else{
+                            } else {
                                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
                                     .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
                                 finish()

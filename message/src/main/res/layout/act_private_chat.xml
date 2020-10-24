@@ -7,13 +7,61 @@
     android:background="@color/color_gray_three"
     android:orientation="vertical">
 
-    <com.julun.huanque.common.widgets.HeaderPageView
+    <View
         android:id="@+id/header_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0px"
+        android:layout_height="44dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivback"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:padding="8dp"
+        android:scaleType="fitStart"
+        android:src="@mipmap/icon_back_black_01"
+        app:layout_constraintBottom_toBottomOf="@id/header_view"
+        app:layout_constraintLeft_toLeftOf="@id/header_view"
+        app:layout_constraintTop_toTopOf="@id/header_view" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginLeft="102dp"
+        android:layout_marginRight="102dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="欢雀"
+        android:textColor="@color/black_333"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/header_view"
+        app:layout_constraintLeft_toLeftOf="@id/header_view"
+        app:layout_constraintRight_toRightOf="@id/header_view"
+        app:layout_constraintTop_toTopOf="@id/header_view" />
+
+    <ImageView
+        android:id="@+id/ivOperation"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical|end"
+        android:padding="10dp"
+        android:scaleType="centerInside"
+        android:src="@mipmap/icon_conversation_setting"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/header_view"
+        app:layout_constraintRight_toRightOf="@id/header_view"
+        app:layout_constraintTop_toTopOf="@id/header_view"
+        tools:visibility="visible" />
+
 
     <ImageView
         android:id="@+id/iv_intimate"
@@ -295,9 +343,9 @@
                     android:gravity="center"
                     android:text="免费"
                     android:textColor="@color/white"
-                    android:visibility="gone"
                     android:textSize="@dimen/sp_10"
                     android:translationY="-2dp"
+                    android:visibility="gone"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_send" />
 

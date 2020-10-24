@@ -239,9 +239,23 @@ class SysMsgActivity : BaseActivity() {
                 bundle.putString(ParamConstant.TYPE, sysBean.touchValue)
                 ARouter.getInstance().build(ARouterConstant.PLUM_FLOWER_ACTIVITY).with(bundle).navigation()
             }
-            MessageConstants.AccostWords->{
+            MessageConstants.AccostWords -> {
                 //搭讪常用语
                 UsefulWordActivity.newInstance(this)
+            }
+            MessageConstants.FateCome -> {
+                //缘分来了页面
+                YuanFenActivity.newInstance(this,0)
+            }
+            MessageConstants.Message -> {
+                //消息列表页面
+                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                    .withInt(IntentParamKey.TARGET_INDEX.name, 1).navigation()
+            }
+            MessageConstants.FriendHome -> {
+                //交友页面
+                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                    .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
             }
 //            else -> {
 //                ToastUtils.show("没有记录的action类型 -> ${touchType}")

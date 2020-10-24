@@ -290,11 +290,20 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                     holder.setText(R.id.anchor_city, item.city)
                 }
                 ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
-                if (item.isLiving) {
-                    holder.setVisible(R.id.tv_author_status,true).setText(R.id.tv_author_status, "直播中")
+                val sdv_pic = holder.getView<SimpleDraweeView>(R.id.sdv_pic)
+                val tv_author_status = holder.getView<TextView>(R.id.tv_author_status)
+
+                if (item.rightTopTag.isNotEmpty()) {
+                    sdv_pic.show()
+                    ImageUtils.loadImageWithHeight_2(sdv_pic, StringHelper.getOssImgUrl(item.rightTopTag), dp2px(16))
+                    tv_author_status.hide()
                 } else {
-                    holder.setGone(R.id.tv_author_status,true)
-//                    setText(R.id.tv_author_status, "休息中")
+                    sdv_pic.hide()
+                    if (item.isLiving) {
+                        holder.setVisible(R.id.tv_author_status, true).setText(R.id.tv_author_status, "直播中")
+                    } else {
+                        holder.setGone(R.id.tv_author_status, true)
+                    }
                 }
             }
         }

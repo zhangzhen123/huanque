@@ -1521,7 +1521,7 @@ class SendGiftFragment : BaseDialogFragment() {
                     return@setOnItemClickListener
                 }
                 //设置连送按钮
-                if (currentGift.giftId != selectedGift?.giftId) {
+                if (currentGift.giftId != selectedGift?.giftId && currentGift.bag == selectedGift?.bag && currentGift.prodType == selectedGift?.prodType) {
                     hideLiansong()
                 }
                 if (selectedGift == null || (selectedGift?.giftId != null && (selectedGift?.giftId != currentGift.giftId || selectedGift?.bag != currentGift.bag))) {

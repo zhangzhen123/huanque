@@ -47,7 +47,7 @@ class GiftAdapter : BaseQuickAdapter<LiveGiftDto, BaseViewHolder>(R.layout.item_
         val rootView = vh.itemView
         val llTag = vh.getView<LinearLayout>(R.id.ll_tag)
         //判断内存地址
-        if (selectedGift === item) {
+        if (item.giftId == selectedGift?.giftId && item.prodType == selectedGift?.prodType && selectedGift?.bag == item.bag) {
             rootView.backgroundDrawable = GlobalUtils.getDrawable(R.drawable.shape_gift_selected_bg)
         } else {
             rootView.backgroundDrawable = GlobalUtils.getDrawable(R.drawable.bg_gift_item_bg)

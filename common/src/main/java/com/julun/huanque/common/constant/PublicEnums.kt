@@ -350,6 +350,14 @@ object MessageConstants {
     //搭讪常用语页面
     const val AccostWords = "AccostWords"
 
+    //缘分来了页面
+    const val FateCome = "FateCome"
+
+    //消息页面
+    const val Message = "Message"
+
+    //交友页面
+    const val FriendHome = "FriendHome"
 
 }
 

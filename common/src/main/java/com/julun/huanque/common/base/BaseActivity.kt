@@ -13,6 +13,7 @@ import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.interfaces.routerservice.AppCommonService
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.OrderDialogManager
+import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hideDialogs
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.permission.data.PermissionRequest
@@ -36,6 +37,9 @@ abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
     protected val logger = ULog.getLogger(this.javaClass.name)
     protected val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
     private var mFragment: DialogFragment? = null
+
+    //当前页面注册的事件消息，页面finish的时候移除掉
+    protected var mEventMessageProcessorList = mutableListOf<MessageProcessor.EventMessageProcessor<*>>()
 
     //不需要显示派单弹窗的页面列表
     private val mNoFateActivityList = mutableListOf<String>("com.julun.huanque.agora.activity.VoiceChatActivity")
@@ -184,10 +188,18 @@ abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
     }
 
     override fun finish() {
+
         if (goHome) {
             //如果有特殊标记返回首页,则返回首页
             ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
         }
         super.finish()
+    }
+
+    override fun onViewDestroy() {
+        super.onViewDestroy()
+        mEventMessageProcessorList.forEach {
+            MessageProcessor.removeEventProcessor(it)
+        }
     }
 }

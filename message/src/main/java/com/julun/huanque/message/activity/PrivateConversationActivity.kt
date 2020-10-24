@@ -183,8 +183,6 @@ class PrivateConversationActivity : BaseActivity() {
         val bgColor = GlobalUtils.getColor(R.color.color_gray_three)
         StatusBarUtil.setColor(this, bgColor)
         header_view.backgroundColor = bgColor
-        header_view.imageOperation.imageResource = R.mipmap.icon_conversation_setting
-        header_view.imageOperation.show()
         initViewModel()
         initRecyclerView()
         feeDialogShow = SharedPreferencesUtils.getBoolean(SPParamKey.MESSAGE_FEE_DIALOG_SHOW, false)
@@ -262,7 +260,7 @@ class PrivateConversationActivity : BaseActivity() {
      * 显示标题
      */
     private fun showTitleView(nickname: String, meetStatus: String, userType: String) {
-        val title = header_view.textTitle
+        val title = tvTitle
         if (nickname.isEmpty()) {
             title.text = "欢鹊宝宝"
         } else {
@@ -572,13 +570,13 @@ class PrivateConversationActivity : BaseActivity() {
 
 
     override fun initEvents(rootView: View) {
-        header_view.imageViewBack.onClickNew {
+        ivback.onClickNew {
             finish()
         }
         tv_unread_count.onClickNew {
             finish()
         }
-        header_view.imageOperation.onClickNew {
+        ivOperation.onClickNew {
             //打开会话设置
             val chatUserBean =
                 mPrivateConversationViewModel?.chatInfoData?.value ?: return@onClickNew
