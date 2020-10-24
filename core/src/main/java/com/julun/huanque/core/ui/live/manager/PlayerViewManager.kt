@@ -4,6 +4,7 @@ import android.animation.*
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.os.Build
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -100,6 +101,8 @@ class PlayerViewManager(val context: PlayerActivity) {
         val PUBLIC_CHAT_CLIENT_WIDTH =
             (SCREEN_WIDTH - CommonInit.getInstance()
                 .getContext().resources.getDimensionPixelSize(R.dimen.pk_width) - DensityHelper.dp2px(8f))
+
+        val DARK_COLOR = Color.parseColor("#80000000")
 
     }
 
@@ -1648,7 +1651,7 @@ class PlayerViewManager(val context: PlayerActivity) {
      *
      */
     fun loadBlurImage(sdw: SimpleDraweeView, url: String?) {
-        ImageUtils.loadImageWithBlur(sdw, url ?: return, 3, 13/*,screenWidth/2,screenHeight/2*/)
+        ImageUtils.loadImageWithBlur(sdw, url ?: return, 3, 23/*,screenWidth/2,screenHeight/2*/, colors = intArrayOf(DARK_COLOR))
     }
 
     /**

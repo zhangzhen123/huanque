@@ -1,9 +1,6 @@
 package com.julun.huanque.common.utils
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
+import android.graphics.*
 import android.graphics.drawable.Animatable
 import android.net.Uri
 import android.text.TextUtils
@@ -34,6 +31,7 @@ import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.WebpAnimatorListener
 import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.utils.fresco.BlurAndColorPostProcessor
 import com.julun.huanque.common.utils.fresco.LoopCountModifyingBackend
 import com.julun.huanque.common.utils.fresco.ColorPostprocessor
 import com.julun.huanque.common.widgets.live.WebpGifView
@@ -236,13 +234,14 @@ object ImageUtils {
         iterations: Int,
         blurRadius: Int,
         width: Int = 0,
-        height: Int = 0
+        height: Int = 0,
+        colors: IntArray? = null
     ) {
 
         val builder = ImageRequestBuilder
             .newBuilderWithSource(Uri.parse(StringHelper.getOssImgUrl(url)))
             .setProgressiveRenderingEnabled(true)
-            .setPostprocessor(IterativeBoxBlurPostProcessor(iterations, blurRadius))
+            .setPostprocessor(BlurAndColorPostProcessor(iterations, blurRadius, colors))
         if (width != 0 && height != 0) {
             builder.resizeOptions = ResizeOptions(width, height)
         }
