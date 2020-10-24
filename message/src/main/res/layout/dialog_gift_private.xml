@@ -6,12 +6,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rootView"
+        app:actualImageResource="@mipmap/bg_gift_fragment"
+        android:scaleType="centerCrop"
+        app:roundTopLeft="true"
+        app:roundTopRight="true"
+        app:roundedCornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rootView"/>
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rootView"
         android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_private_gift_panel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">

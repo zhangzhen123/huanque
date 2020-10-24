@@ -31,6 +31,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
@@ -824,7 +825,7 @@ class MessageViewModel : BaseViewModel() {
                 val result = socialService.chatHome().dataConvert()
                 chatRoomData.value = result
                 getUnreadCount()
-            }, {})
+            }, {}, needLoadState = true)
         }
     }
 

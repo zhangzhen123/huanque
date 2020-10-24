@@ -14,7 +14,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recyclerview" />
+        app:layout_constraintTop_toTopOf="@+id/swipe_refresh" />
 
     <View
         android:id="@+id/view_top"
@@ -139,16 +139,49 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrier" />
+        app:layout_constraintTop_toBottomOf="@id/barrier">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.julun.huanque.common.widgets.bgabanner.BGABanner
+                android:id="@+id/bannerAD"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="@dimen/dimen_15"
+                android:layout_marginRight="@dimen/dimen_15"
+                android:layout_marginBottom="@dimen/dimen_10"
+                android:visibility="gone"
+                app:banner_indicatorGravity="bottom|right"
+                app:banner_isNeedShowIndicatorOnOnlyOnePage="false"
+                app:banner_pageChangeDuration="1000"
+                app:banner_pointContainerBackground="@color/transparent"
+                app:banner_pointContainerLeftRightPadding="5dp"
+                app:banner_pointDrawable="@drawable/bga_banner_selector_point_home"
+                app:banner_pointLeftRightMargin="2dp"
+                app:banner_tipTextSize="12sp"
+                tools:visibility="visible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
+
+        </LinearLayout>
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <com.julun.huanque.common.widgets.statepage.StatePageView
         android:id="@+id/pageView"

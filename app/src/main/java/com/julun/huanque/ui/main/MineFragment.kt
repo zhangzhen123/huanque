@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
+import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
@@ -40,7 +41,6 @@ import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
-import com.julun.huanque.core.ui.withdraw.WithdrawActivity
 import com.julun.huanque.message.activity.ContactsActivity
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
 import com.julun.huanque.viewmodel.MainViewModel
@@ -539,6 +539,10 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
     private val bannerAdapter by lazy {
         BGABanner.Adapter<SimpleDraweeView, RechargeAdInfo> { _, itemView, model, _ ->
+            val hierarchy = GenericDraweeHierarchyBuilder.newInstance(resources)
+                .setRoundingParams(RoundingParams.fromCornersRadius(dp2pxf(10)))
+                .build()
+            itemView.hierarchy = hierarchy
             when (model?.resType) {
                 BannerResType.Pic -> {
                     val screenWidth = ScreenUtils.screenWidthFloat.toInt() - dp2px(15f) * 2

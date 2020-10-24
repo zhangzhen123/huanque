@@ -44,7 +44,9 @@ data class ChatRoomBean(
     //在线状态
     var onlineStatus: String = "",
     //显示缘分入口
-    var showFate: String = ""
+    var showFate: String = "",
+    //广告列表
+    var adList: MutableList<RechargeAdInfo>? = null
 ) : Serializable {
     companion object {
         //在线

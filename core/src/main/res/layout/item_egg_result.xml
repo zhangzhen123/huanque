@@ -10,7 +10,7 @@
         android:id="@+id/view"
         android:layout_width="78dp"
         android:layout_height="0px"
-        android:background="@mipmap/bg_gift"
+        android:background="@mipmap/bg_gift_fragment"
         app:layout_constraintBottom_toTopOf="@+id/tv_gift_name"
         app:layout_constraintDimensionRatio="234:231"
         app:layout_constraintLeft_toLeftOf="parent"
