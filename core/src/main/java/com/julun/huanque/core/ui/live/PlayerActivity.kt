@@ -487,12 +487,12 @@ class PlayerActivity : BaseActivity() {
             }
             publicMessageView.clearMessages()
             currentLiveBgUrl = it.prePic
-            if (it.isLiving) {
-                cur_live_bg.hide()
-            } else {
+//            if (it.isLiving) {
+//                cur_live_bg.hide()
+//            } else {
                 cur_live_bg.show()
                 liveViewManager.loadBlurImage(cur_live_bg, it.prePic)
-            }
+//            }
 
 //            conversationListViewModel?.anchorData = it
             //每次进入直播间 请求数据后 首先判断直播类型
@@ -533,20 +533,25 @@ class PlayerActivity : BaseActivity() {
             }
         })
         viewModel.bgChange.observe(this, Observer {
+            cur_live_bg.show()
             when (it) {
                 LiveBgType.NORMAL -> {
                     //重新换成默认背景色
-                    main_content.backgroundResource = R.color.live_bg_color
+//                    main_content.backgroundResource = R.color.live_bg_color
+                    liveViewManager.loadBlurImage(cur_live_bg, currentLiveBgUrl)
                 }
                 //todo
                 LiveBgType.PK_TWO -> {
-                    main_content.backgroundResource = R.mipmap.pk_two_bg
+//                    main_content.backgroundResource = R.mipmap.pk_two_bg
+                    cur_live_bg.loadImageLocal(R.mipmap.pk_two_bg)
                 }
                 LiveBgType.PK_THREE -> {
-                    main_content.backgroundResource = R.mipmap.pk_two_bg
+//                    main_content.backgroundResource = R.mipmap.pk_two_bg
+                    cur_live_bg.loadImageLocal(R.mipmap.pk_two_bg)
                 }
                 LiveBgType.PK_LANDLORD -> {
-                    main_content.backgroundResource = R.mipmap.pk_two_bg
+//                    main_content.backgroundResource = R.mipmap.pk_two_bg
+                    cur_live_bg.loadImageLocal(R.mipmap.pk_two_bg)
                 }
             }
         })
@@ -1624,7 +1629,7 @@ class PlayerActivity : BaseActivity() {
                 if (!liveViewManager.isHorizontal && !isAnchor) {
                     surface_view?.scrollEnable = true
                 }
-                cur_live_bg.hide()
+//                cur_live_bg.hide()
                 if (data.programId == programId) {
                     val baseData: UserEnterRoomRespBase = viewModel.baseData.value ?: return
                     addPlayFragment(true, LiveBean().apply {
@@ -1668,10 +1673,10 @@ class PlayerActivity : BaseActivity() {
                     mVideoViewModel.logout.postValue(true)
                     viewModel.baseData.value?.lastShowTimeDiffText = "刚刚"
 //                    surface_view?.scrollEnable = false
-                    currentLiveBgUrl?.let {
-                        cur_live_bg.show()
-                        liveViewManager.loadBlurImage(cur_live_bg, it)
-                    }
+//                    currentLiveBgUrl?.let {
+//                        cur_live_bg.show()
+//                        liveViewManager.loadBlurImage(cur_live_bg, it)
+//                    }
                     viewModel.showNoOpenFragment.value = true
                 }
             }
@@ -2151,7 +2156,7 @@ class PlayerActivity : BaseActivity() {
         //在这里就先把注册的事件监听全部注销 因为到切换后请求base+连接融云+enter有时间间隔 期间会继续收到消息 导致一系列问题
         MessageProcessor.removeProcessors(this)
         //重新换成默认背景色
-        main_content.backgroundResource = R.color.live_bg_color
+//        main_content.backgroundResource = R.color.live_bg_color
 
         anchorNoLiveViewModel.recommendProgram.value = null
         //重置连麦数目
