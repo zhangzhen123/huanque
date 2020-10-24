@@ -1154,6 +1154,7 @@ class PkMicView @JvmOverloads constructor(
             if (list.size >= 2) {
                 two_pk_container.setLeftViewData(list[0].headPic, list[0].nickname)
                 two_pk_container.setRightViewData(list[1].headPic, list[1].nickname)
+                //注意callback赋值机制是否正常
                 two_pk_container.startAnimation {
                     if (!pkinfo.needJustPlayStartAni) {
                         playTitleAni(pkinfo, true)
@@ -1242,9 +1243,8 @@ class PkMicView @JvmOverloads constructor(
                 pk3_container_02.hide()
                 pk3_container_03.hide()
 
-
-                playTitleAni(pkinfo, true)
                 showViewAfterAni()
+                playTitleAni(currentPKData?:return, true)
             }
         })
         pk3Set = AnimatorSet()

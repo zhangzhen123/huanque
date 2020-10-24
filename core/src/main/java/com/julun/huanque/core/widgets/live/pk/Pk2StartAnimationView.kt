@@ -72,12 +72,14 @@ class Pk2StartAnimationView(context: Context?, attrs: AttributeSet?) : Constrain
         tv_pk_nickname_right.text = nickname
     }
 
-
+    private var onAniEndCallback:NAction?=null
     /**
      * 开始动画
-     * [onAniEnd]新增动画完成回调
+     * [onAniEnd]新增动画完成回调  因为动画是复用的 这里回调会只执行第一次的赋值callback就有问题了 所以保存作为全局变量
+     *
      */
     fun startAnimation(onAniEnd: NAction? = null) {
+        onAniEndCallback=onAniEnd
         //透明度动画
         this@Pk2StartAnimationView.show()
         mViewAlphaSet?.cancel()
@@ -94,7 +96,7 @@ class Pk2StartAnimationView(context: Context?, attrs: AttributeSet?) : Constrain
 
                 override fun onAnimationEnd(animation: Animator?) {
                     this@Pk2StartAnimationView.hide()
-                    onAniEnd?.invoke()
+                    onAniEndCallback?.invoke()
                 }
 
                 override fun onAnimationCancel(animation: Animator?) {
