@@ -554,10 +554,6 @@ class TplBeanExtraContext(
     var userId: Long = 0,
     //调整直播间时用到
     var roomId: Long = 0,
-    //礼盒价值
-    var giftBeans: Long = 0,
-    //礼盒类型
-    var runwayType: String = "",
     //打开h5需要
     var url: String = "",
     var needLogin: String = "",//T/F

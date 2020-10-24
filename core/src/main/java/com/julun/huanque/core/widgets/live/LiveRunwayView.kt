@@ -530,12 +530,11 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
         val runwayMessageContext = runwayMessage.context
         if (runwayMessageContext != null) {// context 为空的 消息直接忽略
-            //todo 不要缓存
-//            if (runwayMessageContext.cacheIt) {
-//                cachedRunwayMessage = runwayMessage
-//                //缓存发生变化
-//                cachedMessageChangesListener?.onCachedMessageChanges(cachedRunwayMessage!!.context!!)
-//            }
+            if (runwayMessageContext.cacheIt) {
+                cachedRunwayMessage = runwayMessage
+                //缓存发生变化
+                cachedMessageChangesListener?.onCachedMessageChanges(cachedRunwayMessage!!.context!!)
+            }
 
             if (!isMessagePlay) {
                 justRenderMessageAndPlay(runwayMessage, delaySeconds)
