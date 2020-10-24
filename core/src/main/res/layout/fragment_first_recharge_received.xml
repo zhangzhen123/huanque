@@ -52,29 +52,26 @@
         app:layout_constraintLeft_toLeftOf="@id/guideline_left"
         app:layout_constraintTop_toBottomOf="@id/view_holder" />
 
-    <com.julun.huanque.common.widgets.GradientVerticalTextView
-        android:id="@+id/tv_title"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableRight="@mipmap/icon_first_recharge_received_title"
-        android:gravity="center"
-        android:textSize="45sp"
-        android:textStyle="bold"
+        android:layout_height="35dp"
         app:layout_constraintLeft_toLeftOf="@+id/ivNewUserBg"
         app:layout_constraintRight_toRightOf="@+id/ivNewUserBg"
         app:layout_constraintTop_toBottomOf="@id/view_holder"
-        tools:text="6" />
+        />
 
     <TextView
         android:id="@+id/tv_subhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="以下奖励已发放至您的账户"
+        android:layout_marginTop="2dp"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintTop_toBottomOf="@id/sdv_title" />
 
 
     <ImageView
@@ -92,7 +89,7 @@
         android:layout_width="0dp"
         android:layout_height="127dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         android:layout_marginRight="15dp"
         android:background="@drawable/bg_first_recharge_received_gift"
         app:layout_constraintLeft_toLeftOf="@id/guideline_left"

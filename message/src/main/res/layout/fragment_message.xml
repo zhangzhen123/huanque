@@ -157,8 +157,6 @@
                 android:id="@+id/bannerAD"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginLeft="@dimen/dimen_15"
-                android:layout_marginRight="@dimen/dimen_15"
                 android:layout_marginBottom="@dimen/dimen_10"
                 android:visibility="gone"
                 app:banner_indicatorGravity="bottom|right"

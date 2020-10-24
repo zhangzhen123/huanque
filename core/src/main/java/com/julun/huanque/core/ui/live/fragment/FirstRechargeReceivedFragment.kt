@@ -10,9 +10,11 @@ import com.julun.huanque.common.bean.beans.GiftIcon
 import com.julun.huanque.common.bean.beans.SinglePack
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.adapter.FirstRechargeGiftAdapter
@@ -22,7 +24,6 @@ import kotlinx.android.synthetic.main.fragment_first_recharge_received.ivClose
 import kotlinx.android.synthetic.main.fragment_first_recharge_received.iv_helper
 import kotlinx.android.synthetic.main.fragment_first_recharge_received.iv_recharge
 import kotlinx.android.synthetic.main.fragment_first_recharge_received.rvNewUserGift
-import kotlinx.android.synthetic.main.fragment_first_recharge_received.tv_title
 
 /**
  *@创建者   dong
@@ -51,11 +52,7 @@ class FirstRechargeReceivedFragment : BaseDialogFragment() {
             return
         }
 
-
-        tv_title?.mColorArray = intArrayOf(GlobalUtils.formatColor("#FFFCED"), GlobalUtils.formatColor("#FFDA03"))
-        tv_title?.mPositionArray = floatArrayOf(0f, 1f)
-        tv_title.text = "${packBean.money}"
-
+        ImageUtils.loadImageWithHeight_2(sdv_title, StringHelper.getOssImgUrl(packBean.valuePic), dp2px(35))
         val giftList = packBean.awardDetails
         initRecyclerView(giftList.size)
         mGridLayoutManager?.spanCount = giftList.size
@@ -69,7 +66,7 @@ class FirstRechargeReceivedFragment : BaseDialogFragment() {
             dismiss()
         }
         iv_helper.onClickNew {
-            WebActivity.startWeb(requireActivity(), StringHelper.getOssImgUrl(packBean.explainPic), "首充送豪礼")
+            WebActivity.startWeb(requireActivity(), packBean.explainPic, "首充送豪礼")
         }
     }
 

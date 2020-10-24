@@ -543,7 +543,7 @@ class MessageFragment : BaseFragment() {
         BGABanner.Adapter<SimpleDraweeView, RechargeAdInfo> { _, itemView, model, _ ->
             when (model?.resType) {
                 BannerResType.Pic -> {
-                    val screenWidth = ScreenUtils.screenWidthFloat.toInt() - dp2px(15f) * 2
+                    val screenWidth = ScreenUtils.screenWidthFloat.toInt()
                     val height = dp2px(72f)
                     ImageUtils.loadImageInPx(itemView, model.resUrl, screenWidth, height)
                 }
@@ -663,6 +663,14 @@ class MessageFragment : BaseFragment() {
         mMessageViewModel.userInfoUpdate(bean)
     }
 
+    /**
+     * 刷新系统消息和鹊友消息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun refreshSystemMsg(bean : SystemMessageRefreshBean) {
+        mMessageViewModel.refreshSysMessage(bean.targetId)
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loginChange(event: LoginEvent) {
@@ -698,18 +706,18 @@ class MessageFragment : BaseFragment() {
         mMessageViewModel.updateDraft(event.userId)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            ActivityCodes.REQUEST_CODE_NORMAL -> {
-                if (resultCode == ActivityCodes.RESPONSE_CODE_REFRESH) {
-                    //也许是从系统消息页面返回，刷新列表一次
-                    mMessageViewModel.getConversationList()
-                    mMessageViewModel.queryRongPrivateCount()
-                }
-            }
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        when (requestCode) {
+//            ActivityCodes.REQUEST_CODE_NORMAL -> {
+//                if (resultCode == ActivityCodes.RESPONSE_CODE_REFRESH) {
+//                    //也许是从系统消息页面返回，刷新列表一次
+//                    mMessageViewModel.getConversationList()
+//                    mMessageViewModel.queryRongPrivateCount()
+//                }
+//            }
+//        }
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

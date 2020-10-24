@@ -56,7 +56,6 @@
         android:padding="10dp"
         android:scaleType="centerInside"
         android:src="@mipmap/icon_conversation_setting"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/header_view"
         app:layout_constraintRight_toRightOf="@id/header_view"
         app:layout_constraintTop_toTopOf="@id/header_view"

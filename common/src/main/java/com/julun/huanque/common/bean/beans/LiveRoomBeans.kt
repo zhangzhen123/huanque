@@ -1147,7 +1147,9 @@ data class SinglePack(
     //价值金额
     var valueMoney: Int = 0,
     //充值模板
-    var tplId: Int = 0
+    var tplId: Int = 0,
+    //礼包价值
+    var valuePic: String = ""
 ) : Serializable
 
 /**
