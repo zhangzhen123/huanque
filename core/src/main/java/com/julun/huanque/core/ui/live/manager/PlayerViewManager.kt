@@ -1230,7 +1230,6 @@ class PlayerViewManager(val context: PlayerActivity) {
             }
             shadowView.hide()
         } else {
-            surfaceView.topPadding = 0
             noNeedPublicView = false
             publicView.show()
             shadowView.show()
@@ -1245,51 +1244,39 @@ class PlayerViewManager(val context: PlayerActivity) {
             if (verticalFullScreen) {
                 ppLp.height = screenHeight /*- STATUS_TOP*/
                 ppLp.topMargin = 0
-                publicView.topPadding = 0
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //                    StatusBarUtil.setColor(context, ContextCompat.getColor(context, R.color.black))
                     StatusBarUtil.setTransparent(context)
                     surfaceView.topPadding = STATUS_TOP
+                    anoLp.topMargin = HEADER_HEIGHT + STATUS_TOP
                 } else {
                     surfaceView.topPadding = 0
+                    anoLp.topMargin = HEADER_HEIGHT
                 }
-//                bubbleView.topMargin = 0
-//                playerPanel.setPadding(0, 0, 0, 0)
             } else {
-                if (isInPk) {
-//                    val topMarginPk = HEADER_HEIGHT + PK_PROCESS_HEIGHT + STATUS_TOP - context.dip(4)
-//                    ppLp.topMargin = topMarginPk
-//                    anoLp.topMargin = topMarginPk
-//                    trLp?.topMargin = topMarginPk
-                    publicView.topPadding = PK_PROCESS_HEIGHT
-//                    bubbleView.topMargin = PK_RROCESS_HEIGHT
-                } else {
-//                    ppLp.topMargin = HEADER_HEIGHT + STATUS_TOP
-//                    anoLp.topMargin = HEADER_HEIGHT + STATUS_TOP
-//                    trLp?.topMargin = HEADER_HEIGHT
-                    publicView.topPadding = 0
-//                    bubbleView.topMargin = 0
-                }
-                ppLp.topMargin = HEADER_HEIGHT + STATUS_TOP
-                anoLp.topMargin = HEADER_HEIGHT + STATUS_TOP
                 val realHeight = if (screenType == ScreenType.HP) {
                     LIVE_HEIGHT_NARROW
                 } else {
                     LIVE_HEIGHT
                 }
                 ppLp.height = realHeight
-//                ppLp.width = ScreenUtils.getScreenWidth()
-//                val verticalPaddding = (LIVE_HEIGHT - realHeight) / 2
-                //设置padding
-//                playerPanel.setPadding(0, verticalPaddding, 0, verticalPaddding)
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //                    StatusBarUtil.setColor(context, ContextCompat.getColor(context, R.color.black))
                     StatusBarUtil.setTransparent(context)
                     surfaceView.topPadding = STATUS_TOP
+                    ppLp.topMargin = HEADER_HEIGHT + STATUS_TOP
+                    anoLp.topMargin = HEADER_HEIGHT + STATUS_TOP
                 } else {
                     surfaceView.topPadding = 0
+                    ppLp.topMargin = HEADER_HEIGHT
+                    anoLp.topMargin = HEADER_HEIGHT
                 }
+            }
+
+            if (isInPk) {
+                publicView.topPadding = PK_PROCESS_HEIGHT
+            } else {
+                publicView.topPadding = 0
             }
             //改变公聊高度
             changePublicChatHeight(true)
@@ -1297,8 +1284,7 @@ class PlayerViewManager(val context: PlayerActivity) {
         if (viewModel.chatModeState.value == true) {
             switchChatMode(true)
         }
-        playerPanel.requestLayout()
-        logger.info("DXCP 修改布局 1")
+        context.main_content.requestLayout()
     }
 
     //软键盘高度
@@ -1396,9 +1382,6 @@ class PlayerViewManager(val context: PlayerActivity) {
             }
             //
             usableHeightPrevious = viewHeight
-            if (viewModel.chatModeState.value == true) {
-                switchChatMode(true)
-            }
         }
 
     }
