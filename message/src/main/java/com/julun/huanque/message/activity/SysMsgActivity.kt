@@ -254,12 +254,12 @@ class SysMsgActivity : BaseActivity() {
             MessageConstants.Message -> {
                 //消息列表页面
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                    .withInt(IntentParamKey.TARGET_INDEX.name, 1).navigation()
+                    .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MESSAGE_FRAGMENT_INDEX).navigation()
             }
             MessageConstants.FriendHome -> {
                 //交友页面
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                    .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+                    .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
             }
 //            else -> {
 //                ToastUtils.show("没有记录的action类型 -> ${touchType}")

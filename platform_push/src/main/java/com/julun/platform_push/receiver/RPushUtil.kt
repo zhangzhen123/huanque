@@ -133,9 +133,25 @@ object RPushUtil {
                         this.putLong(ParamConstant.TARGET_USER_ID, targetId)
                     }, goHome = true)
                 }
-                PushDataActionType.AccostWords ->{
+                PushDataActionType.AccostWords -> {
                     startActivityByARouter(context, ARouterConstant.USE_FUL_WORD_ACTIVITY, goHome = true)
 
+                }
+                PushDataActionType.FateCome -> {
+                    //缘分页面
+                    startActivityByARouter(context, ARouterConstant.YUAN_FEN_ACTIVITY, goHome = true)
+                }
+                PushDataActionType.Message -> {
+                    //消息列表
+                    val bundle = Bundle()
+                    bundle.putInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MESSAGE_FRAGMENT_INDEX)
+                    startActivityByARouter(context, ARouterConstant.MAIN_ACTIVITY, bundle = bundle, goHome = false)
+                }
+                PushDataActionType.FriendHome -> {
+                    //交友页面
+                    val bundle = Bundle()
+                    bundle.putInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX)
+                    startActivityByARouter(context, ARouterConstant.MAIN_ACTIVITY, bundle = bundle, goHome = false)
                 }
                 else -> {
                     shouldOpenMain(context = context)

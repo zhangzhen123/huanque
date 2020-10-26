@@ -593,6 +593,15 @@ object PushDataActionType {
     const val PlumFlower = "PlumFlower"//（跳转到今日花魁）
 
     const val AccostWords = "AccostWords"//定位到搭讪常用语页面
+
+    //缘分来了
+    const val FateCome = "FateCome"
+
+    //消息列表
+    const val Message = "Message"
+
+    //交友页面
+    const val FriendHome = "FriendHome"
 }
 
 object HomePageOnlineStatus {
@@ -606,6 +615,7 @@ object HomePageOnlineStatus {
 object StopAllStreamState {
     //初始状态 不做任何操作
     const val Nothing = 0
+
     //1代表常规关闭
     const val StopNormal = 1
 

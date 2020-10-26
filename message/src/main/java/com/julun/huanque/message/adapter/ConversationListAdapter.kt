@@ -104,7 +104,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             if (targetId == SystemTargetId.systemNoticeSender) {
                 //系统通知
                 ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_system)
-                helper.setText(R.id.tv_nickname, "系统消息")
+                helper.setText(R.id.tv_nickname, "系统通知")
                 ivPic.show()
                 ivPic.imageResource = R.mipmap.icon_guan
             } else {

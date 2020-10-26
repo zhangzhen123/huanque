@@ -7,11 +7,13 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.FateInfo
 import com.julun.huanque.common.bean.beans.FateQuickMatchChangeBean
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.MixedHelper
@@ -40,6 +42,7 @@ import org.jetbrains.anko.imageResource
  *@创建时间 2020/9/22 11:14
  *@描述 缘分页面
  */
+@Route(path = ARouterConstant.YUAN_FEN_ACTIVITY)
 class YuanFenActivity : BaseActivity() {
 
     companion object {
