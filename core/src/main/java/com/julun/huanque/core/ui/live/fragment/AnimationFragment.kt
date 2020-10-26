@@ -5,8 +5,6 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -21,8 +19,6 @@ import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.DensityHelper
-import com.julun.huanque.common.helper.MixedHelper
-import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.message_dispatch.EventMessageType
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
@@ -33,7 +29,6 @@ import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.svga.SVGAHelper
 import com.julun.huanque.common.viewmodel.ConnectMicroViewModel
-import com.julun.huanque.common.widgets.live.WebpGifView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
@@ -41,7 +36,6 @@ import com.julun.huanque.core.ui.live.manager.PlayerViewManager
 import com.julun.huanque.core.viewmodel.*
 import com.julun.huanque.core.widgets.live.HighlyAnimationView
 import com.julun.huanque.core.widgets.live.banner.BannerListener
-import com.julun.huanque.core.widgets.live.message.UserEnterAnimatorView
 import com.opensource.svgaplayer.SVGACallback
 import com.opensource.svgaplayer.SVGAParser
 import com.opensource.svgaplayer.SVGAVideoEntity
@@ -69,7 +63,7 @@ class AnimationFragment : BaseFragment() {
 
     //    private var pkResultViewModel: PkResultViewModel = null
     private val connectMicroViewModel: ConnectMicroViewModel by activityViewModels()
-    private val entranceViewModel: EntranceViewModel by activityViewModels()
+//    private val entranceViewModel: EntranceViewModel by activityViewModels()
 
     //新版PK
     private val pKViewModel: PKViewModel by activityViewModels()
@@ -83,7 +77,6 @@ class AnimationFragment : BaseFragment() {
 
     private var mHighlyAnimation: HighlyAnimationView? = null
 
-    private var enterAnimatorView: UserEnterAnimatorView? = null
 
 
     //节目id
@@ -130,7 +123,6 @@ class AnimationFragment : BaseFragment() {
         programId = arguments?.getLong(PROGRAM_ID, 0L) ?: 0L
         bannerWebView.programId = "$programId"
         mHighlyAnimation = rootView.findViewById(R.id.highlyAnimation)
-        enterAnimatorView = rootView.findViewById(R.id.user_enter_view)
 
         initViewHeight()
         simpleGift?.resetView()
@@ -167,29 +159,6 @@ class AnimationFragment : BaseFragment() {
             }
 
         }
-        luxury_enter.setCallBack(object : WebpGifView.GiftViewPlayCallBack {
-            override fun onStart() {
-
-                if (!isLuxuryPlay) {
-                    luxuryAnimatorSet?.start()
-                    entranceViewModel.animatorState.value = true
-                }
-            }
-
-            override fun onError() {
-                entranceViewModel.animatorState.value = true
-
-            }
-
-            override fun onEnd() {
-                logger.info("luxury_enter webp end")
-            }
-
-            override fun onRelease() {
-            }
-
-        }
-        )
         bannerWebView.bannerListener = object : BannerListener {
             override fun doAction(roomBean: RoomBanner) {
                 when (roomBean.touchType) {
@@ -280,26 +249,26 @@ class AnimationFragment : BaseFragment() {
         setUserEnterLayout()
         showGiftEffectNormal()
 //        val leLp = luxury_enter.layoutParams as FrameLayout.LayoutParams
-        val uecLp = user_enter_container?.layoutParams ?: return
+//        val uecLp = user_enter_view?.layoutParams ?: return
         if (isHorizontal) {
             vertical_container.hide()
             horizontal_container.show()
             //横屏主播端处理
-            if (playerViewModel.isAnchor == true) {
+            if (playerViewModel.isAnchor) {
                 anchor_horizontal_container.show()
                 val ahcLP = anchor_horizontal_container.layoutParams
                 ahcLP.width = PlayerViewManager.SCREEN_WIDTH
-                uecLp.width = PlayerViewManager.SCREEN_WIDTH
+//                uecLp.width = PlayerViewManager.SCREEN_WIDTH
             } else {
-                user_enter_container.hide()
+                user_enter_view.hide()
                 anchor_horizontal_container.hide()
             }
         } else {
             vertical_container.show()
             horizontal_container.hide()
             anchor_horizontal_container.hide()
-            uecLp.width = ViewGroup.LayoutParams.MATCH_PARENT
-            user_enter_container.show()
+//            uecLp.width = ViewGroup.LayoutParams.MATCH_PARENT
+            user_enter_view.show()
         }
 //        setAnchorShieldViews(isHorizontal, playerViewModel.shieldSetting.value ?: return)
     }
@@ -309,46 +278,6 @@ class AnimationFragment : BaseFragment() {
         bannerWebView.programId = "$programId"
     }
 
-    private var luxuryAnimatorSet: AnimatorSet? = null
-    private var isLuxuryPlay = false
-    private fun playLuxuryAnimator(webp: String) {
-        val str2s = webp.split("?")
-        var webpUrl = ""
-        if (str2s.isNotEmpty()) {
-            webpUrl = str2s[0]
-        }
-        val webpMap = MixedHelper.getParseMap(webp)
-        val start: Float = webpMap["in"] ?: 1.260f
-        val stop = webpMap["stop"] ?: 6.510f
-        val out = webpMap["out"] ?: 1.540f
-
-        //屏幕宽度
-        val screenWidth = ScreenUtils.screenWidthFloat
-        val animatorEnter = ObjectAnimator.ofFloat(luxury_enter, "translationX", screenWidth, 0f)
-        animatorEnter.duration = (start * 1000).toLong()
-        animatorEnter.interpolator = LinearInterpolator()
-
-        val animatorExit = ObjectAnimator.ofFloat(luxury_enter, "translationX", 0f, -screenWidth)
-        animatorExit.duration = (out * 1000).toLong()
-        animatorExit.startDelay = (stop * 1000).toLong()
-        animatorExit.interpolator = LinearInterpolator()
-        luxuryAnimatorSet = AnimatorSet()
-        luxuryAnimatorSet?.play(animatorExit)?.after(animatorEnter)
-        luxuryAnimatorSet?.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationStart(animation: Animator) {
-                isLuxuryPlay = true
-                logger.info("startluxury_enter")
-            }
-
-            override fun onAnimationEnd(animation: Animator) {
-                logger.info("endluxury_enter")
-                isLuxuryPlay = false
-                luxury_enter?.hide()
-            }
-        })
-        luxury_enter?.show()
-        luxury_enter.setURI(StringHelper.getOssImgUrl(webpUrl), 1)
-    }
 
     private fun initViewModel() {
 
@@ -398,12 +327,12 @@ class AnimationFragment : BaseFragment() {
             }
         })
 
-        entranceViewModel.messageState.observe(this, Observer {
-            if (it != null) {
-                logger.info("收到豪华入场$it")
-                playLuxuryAnimator(it)
-            }
-        })
+//        entranceViewModel.messageState.observe(this, Observer {
+//            if (it != null) {
+//                logger.info("收到豪华入场$it")
+//                playLuxuryAnimator(it)
+//            }
+//        })
 
 
         playerBannerViewModel.popCode.observe(this, Observer {
@@ -548,13 +477,13 @@ class AnimationFragment : BaseFragment() {
     private fun setUserEnterLayout() {
         val ueLp = (user_enter_view?.layoutParams as? FrameLayout.LayoutParams) ?: return
         if (!isHorizontal) {
-            ueLp.topMargin = container001Top + DensityHelper.dp2px(56f)
+//            ueLp.topMargin = container001Top + DensityHelper.dp2px(56f)
             ueLp.width = PlayerViewManager.SCREEN_WIDTH
         } else {
-            ueLp.topMargin = DensityHelper.dp2px(150f)
+//            ueLp.topMargin = DensityHelper.dp2px(150f)
             ueLp.width = PlayerViewManager.SCREEN_WIDTH
         }
-
+        user_enter_view.setUserEnterMiniLayout(isHorizontal)
     }
 
 
@@ -648,14 +577,19 @@ class AnimationFragment : BaseFragment() {
                 }
                 val bean = messageList[0]
                 if (bean != null) {
-                    val beanType = TplTypeBean(TplTypeBean.GUARD, bean)
+                    val beanType = EnterTypeBean(EnterTypeBean.COMMON_ENTER, bean)
                     if (isHorizontal && playerViewModel.isAnchor) {
                         //主播端横屏时不使用豪华入场
                         bean.context!!.webp = ""
                     }
-                    enterAnimatorView?.playWelcomeAnimator(beanType)
+                    user_enter_view?.playEnterAnimator(beanType)
 
                 }
+            }
+        })
+        MessageProcessor.registerEventProcessor(this, object :MessageProcessor.RoyalChangeAnimationProcessor{
+            override fun process(data: RoyalChangeEventBean) {
+                user_enter_view?.playEnterAnimator( EnterTypeBean(EnterTypeBean.OPEN_ROYAL, data))
             }
         })
         MessageProcessor.registerEventProcessor(this,object : MessageProcessor.DanMuProcessor {
@@ -830,11 +764,11 @@ class AnimationFragment : BaseFragment() {
 //        runOnMain(VoidResult()) {
 //            hideGifViews()
 //        }
-        luxury_enter?.hide()
-        luxuryAnimatorSet?.cancel()
-        luxury_enter?.resetView()
+//        luxury_enter?.hide()
+//        luxuryAnimatorSet?.cancel()
+//        luxury_enter?.resetView()
 
-        enterAnimatorView?.resetView()
+        user_enter_view?.resetView()
         simpleGift?.resetView()
 //        duanwu_view?.reset()
 //        author_progress_up?.upSuccessAndHide()//目的时为了在切换时重置状态
@@ -879,7 +813,8 @@ class AnimationFragment : BaseFragment() {
     override fun onStop() {
         super.onStop()
         questionAnimator?.cancel()
-        luxuryAnimatorSet?.cancel()
+//        luxuryAnimatorSet?.cancel()
+        user_enter_view?.cancelLuxuryEnter()
     }
 
     override fun onDestroyView() {

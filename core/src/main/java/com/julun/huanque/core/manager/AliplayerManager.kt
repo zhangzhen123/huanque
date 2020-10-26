@@ -130,7 +130,7 @@ object AliPlayerManager {
                 }
                 retryCount++
                 if (BuildConfig.DEBUG) {
-                    if(retryCount>5){
+                    if(retryCount>3){
                         logger.info("重试${retryCount}次 不再重试")
                         retryCount=0
                         return@setOnStateChangedListener

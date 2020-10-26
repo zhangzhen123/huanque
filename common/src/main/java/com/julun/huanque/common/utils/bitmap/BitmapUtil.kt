@@ -177,4 +177,31 @@ object BitmapUtil {
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
         return originalBitmap
     }
+    fun addGradient2(originalBitmap: Bitmap, sColors: IntArray?=null): Bitmap? { //给originalBitmap着渐变色
+        var colors = sColors
+        if (colors == null || colors.isEmpty()) { //默认色处理
+            colors = intArrayOf(Color.BLACK, Color.BLACK)
+        } else if (colors.size == 1) { //单色处理
+            val newColor = intArrayOf(colors[0], colors[0])
+            colors = newColor
+        }
+        val width = originalBitmap.width
+        val height = originalBitmap.height
+        val canvas = Canvas(originalBitmap) //Canvas中Bitmap是用来保存像素，相当于画纸
+        val paint = Paint()
+        val shader = LinearGradient(
+            0f,
+            0f,
+            width.toFloat(),
+            height.toFloat(),
+            colors,
+            null,
+            Shader.TileMode.CLAMP
+        ) //shader:着色器，线性着色器设置渐变从左上坐标到右下坐标
+        paint.shader = shader //设置着色器
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_OVER) //设置图像混合模式
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        return originalBitmap
+    }
+
 }

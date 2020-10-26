@@ -145,15 +145,17 @@ class PlayerTransformManager(val act: PlayerActivity) {
         //当pk开始时统一处理
         pKViewModel.pkStarting.observe(act, Observer {
             if (it != null) {
+
+                connectMicroViewModel.inPk.value = true
+                connectMicroViewModel.inMicro.value = null
                 logger("连麦状态 6 null")
                 if (mPlayerViewModel.isLiving) {
                     addPkVideoPlayer(it)
                 } else {
-                    logger("不在直播 不视频连麦")
+                    videoPlayerViewModel.refreshLayout.value = true
+                    logger("不在直播 不视频连麦 只刷新布局")
                 }
 
-                connectMicroViewModel.inPk.value = true
-                connectMicroViewModel.inMicro.value = null
                 pKViewModel.openPropWindowData.value = it?.openPropWindow
             }
 
