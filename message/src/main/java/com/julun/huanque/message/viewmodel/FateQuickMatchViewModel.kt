@@ -35,10 +35,17 @@ class FateQuickMatchViewModel : BaseViewModel() {
     //显示alert标识
     val showAlertFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //获取常用语接口调用的标识位
+    private var randomWordsing = false
+
     /**
      * 随机获取一条常用语
      */
     fun getRandomWords(userId: Long) {
+        if(randomWordsing){
+            return
+        }
+        randomWordsing = true
         viewModelScope.launch {
             request({
                 val result = socialService.chatWordsRandom(FriendIdForm(userId)).dataConvert(intArrayOf(204))
@@ -48,6 +55,8 @@ class FateQuickMatchViewModel : BaseViewModel() {
                 if (it is ResponseError && it.busiCode == 204) {
                     showAlertFlag.value = true
                 }
+            },{
+                randomWordsing = false
             })
         }
     }

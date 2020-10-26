@@ -61,6 +61,18 @@ object IntimateUtil {
         )
         intimatePrivilegeList.add(
             IntimatePrivilege(
+                "专属表情",
+                "config/icon/color_ZSBQ.png",
+                "config/icon/gay_ZSBQ.png",
+                "config/icon/color_privilege_MY.png",
+                "ZSBQ",
+                3,
+                "这么有趣的表情，怎么能不发？",
+                "比翼双飞"
+            )
+        )
+        intimatePrivilegeList.add(
+            IntimatePrivilege(
                 "聊天气泡",
                 "config/icon/color_LTQP.png",
                 "config/icon/gay_LTQP.png",
@@ -68,18 +80,6 @@ object IntimateUtil {
                 "LTQP",
                 4,
                 "我说话的时候必须带点个性的。",
-                "比翼双飞"
-            )
-        )
-        intimatePrivilegeList.add(
-            IntimatePrivilege(
-                "专属表情",
-                "config/icon/color_ZSBQ.png",
-                "config/icon/gay_ZSBQ.png",
-                "config/icon/color_privilege_MY.png",
-                "ZSBQ",
-                4,
-                "这么有趣的表情，怎么能不发？",
                 "比翼双飞"
             )
         )

@@ -71,6 +71,12 @@ object TextTouch {
 
     //打开养鹊
     const val Magpie = "Magpie"
+
+    //打开H5页面
+    const val OpenUrlPage = "OpenUrlPage"
+
+    //打开贵族页面
+    const val OpenRoyalPage = "OpenRoyalPage"
 }
 
 object EnterType {
@@ -202,6 +208,9 @@ object ClickType {
 
     //打开聊天输入框  发言
     const val SEND_MESSAGE = "SEND_MESSAGE"
+
+    //首充
+    const val FIRST_RECHARGE = "FIRST_RECHARGE"
 }
 
 /**
@@ -341,6 +350,14 @@ object MessageConstants {
     //搭讪常用语页面
     const val AccostWords = "AccostWords"
 
+    //缘分来了页面
+    const val FateCome = "FateCome"
+
+    //消息页面
+    const val Message = "Message"
+
+    //交友页面
+    const val FriendHome = "FriendHome"
 
 }
 

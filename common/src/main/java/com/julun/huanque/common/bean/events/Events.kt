@@ -13,8 +13,12 @@ class EventMessageBean(
     var targetId: String = "",
     var stranger: Boolean = false,
     var onlyRefreshUnReadCount: Boolean = false
-) :
-    Serializable
+) : Serializable
+
+/**
+ * 系统消息刷新通知
+ */
+class SystemMessageRefreshBean(var targetId : String = "") : Serializable
 
 /**
  * 信息填写完成事件

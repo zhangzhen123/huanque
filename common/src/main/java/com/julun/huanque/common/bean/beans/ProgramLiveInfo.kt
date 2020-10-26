@@ -67,8 +67,12 @@ open class ProgramLiveInfo : Serializable {
     //4.24新增字段
     var positionIndex: Int? = null
 
+    //直播广场使用
+    var rightTopTag: String = ""
+
     //播放数据
     var playInfo: PlayInfo? = null
+
     //去重需要
     override fun equals(other: Any?): Boolean {
         if (other is ProgramLiveInfo) {

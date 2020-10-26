@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/con"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="38dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="38dp" />
+
+    <ImageView
+        android:id="@+id/ivNewUserBg"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="19dp"
+        android:layout_marginRight="19dp"
+        android:src="@mipmap/bg_first_recharge"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1008:1251"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_holder"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintDimensionRatio="336:82"
+        app:layout_constraintLeft_toLeftOf="@id/ivNewUserBg"
+        app:layout_constraintRight_toRightOf="@id/ivNewUserBg"
+        app:layout_constraintTop_toTopOf="@id/ivNewUserBg" />
+
+    <ImageView
+        android:id="@+id/iv_helper"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="15dp"
+        android:src="@mipmap/icon_first_recharge_help"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@id/view_holder" />
+
+    <ImageView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="12dp"
+        android:src="@mipmap/content_first_recharge"
+        app:layout_constraintLeft_toLeftOf="@+id/ivNewUserBg"
+        app:layout_constraintRight_toRightOf="@+id/ivNewUserBg"
+        app:layout_constraintTop_toBottomOf="@id/view_holder" />
+
+    <TextView
+        android:id="@+id/tv_subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="充值9元送22元豪礼" />
+
+    <TextView
+        android:id="@+id/tv_left"
+        android:layout_width="0px"
+        android:layout_height="34dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_yellow_left"
+        android:gravity="center"
+        android:textColor="#A54100"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/guideline_left"
+        app:layout_constraintRight_toLeftOf="@id/tv_middle"
+        app:layout_constraintTop_toBottomOf="@id/tv_subhead"
+        tools:text="9元" />
+
+    <TextView
+        android:id="@+id/tv_left_sel"
+        android:layout_width="0px"
+        android:layout_height="37dp"
+        android:background="@drawable/bg_red_left"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_17"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_left"
+        app:layout_constraintLeft_toLeftOf="@id/tv_left"
+        app:layout_constraintRight_toRightOf="@id/tv_left"
+        tools:text="9元" />
+
+    <TextView
+        android:id="@+id/tv_middle"
+        android:layout_width="0px"
+        android:layout_height="34dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_yellow_middle"
+        android:gravity="center"
+        android:textColor="#A54100"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/tv_left"
+        app:layout_constraintRight_toLeftOf="@id/tv_right"
+        app:layout_constraintTop_toBottomOf="@id/tv_subhead"
+        tools:text="99元" />
+
+    <TextView
+        android:id="@+id/tv_middle_sel"
+        android:layout_width="0px"
+        android:layout_height="37dp"
+        android:background="@drawable/bg_red_middle"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_17"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_middle"
+        app:layout_constraintLeft_toLeftOf="@id/tv_middle"
+        app:layout_constraintRight_toRightOf="@id/tv_middle"
+        tools:text="9元" />
+
+
+    <TextView
+        android:id="@+id/tv_right"
+        android:layout_width="0px"
+        android:layout_height="34dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/bg_yellow_right"
+        android:gravity="center"
+        android:textColor="#A54100"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/tv_middle"
+        app:layout_constraintRight_toLeftOf="@id/guideline_right"
+        app:layout_constraintTop_toBottomOf="@id/tv_subhead"
+        tools:text="199元" />
+
+    <TextView
+        android:id="@+id/tv_right_sel"
+        android:layout_width="0px"
+        android:layout_height="37dp"
+        android:background="@drawable/bg_red_right"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_17"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_right"
+        app:layout_constraintLeft_toLeftOf="@id/tv_right"
+        app:layout_constraintRight_toRightOf="@id/tv_right"
+        tools:text="9元" />
+
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/icon_close_first_recharge"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivNewUserBg" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvNewUserGift"
+        android:layout_width="0dp"
+        android:layout_height="127dp"
+        android:background="@drawable/bg_first_recharge_gift"
+        android:overScrollMode="never"
+        app:layout_constraintLeft_toLeftOf="@+id/tv_left"
+        app:layout_constraintRight_toRightOf="@+id/tv_right"
+        app:layout_constraintTop_toBottomOf="@id/tv_left" />
+
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_15"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@+id/ivNewUserBg"
+        app:layout_constraintLeft_toLeftOf="@+id/ivNewUserBg"
+        app:layout_constraintRight_toRightOf="@+id/ivNewUserBg"
+        tools:text="限时：23:23:23" />
+
+    <ImageView
+        android:id="@+id/iv_recharge"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="54dp"
+        android:layout_marginRight="54dp"
+        android:layout_marginBottom="35dp"
+        android:src="@mipmap/pic_first_recharge_recharge"
+        app:layout_constraintBottom_toBottomOf="@+id/ivNewUserBg"
+        app:layout_constraintDimensionRatio="579:147"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintRight_toRightOf="@id/guideline_right" />
+
+    <TextView
+        android:id="@+id/tv_recharge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:textColor="#6D4914"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/iv_recharge"
+        app:layout_constraintLeft_toLeftOf="@id/iv_recharge"
+        app:layout_constraintRight_toRightOf="@id/iv_recharge"
+        app:layout_constraintTop_toTopOf="@id/iv_recharge"
+        tools:text="立即充值9元" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

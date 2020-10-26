@@ -101,6 +101,7 @@
             android:drawableLeft="@mipmap/icon_location_fate"
             android:drawablePadding="3dp"
             android:gravity="center"
+            android:maxLength="4"
             android:paddingLeft="5dp"
             android:paddingRight="6dp"
             android:textColor="#D7E9F4"

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/view_gift"
+        android:layout_width="66dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_first_recharge_gift_top"
+        app:layout_constraintBottom_toTopOf="@+id/tv_price"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdvGiftImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:failureImage="@mipmap/logo_placeholder_medium"
+        app:failureImageScaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@id/view_gift"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_gift"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="0px"
+        android:layout_height="16dp"
+        android:background="@drawable/bg_first_recharge_gift_price"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_08"
+        app:layout_constraintBottom_toTopOf="@id/tvGiftMsg"
+        app:layout_constraintLeft_toLeftOf="@id/view_gift"
+        app:layout_constraintRight_toRightOf="@id/view_gift"
+        app:layout_constraintTop_toBottomOf="@id/view_gift"
+        tools:text="科恒的空间" />
+
+    <TextView
+        android:id="@+id/tvGiftMsg"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="@color/black_333"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/tv_count"
+        app:layout_constraintLeft_toLeftOf="@id/view_gift"
+        app:layout_constraintRight_toRightOf="@id/view_gift"
+        app:layout_constraintTop_toBottomOf="@id/tv_price"
+        tools:text="爱的看来二分" />
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="#FC6B7D"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/view_gift"
+        app:layout_constraintRight_toRightOf="@id/view_gift"
+        app:layout_constraintTop_toBottomOf="@id/tvGiftMsg"
+        tools:text="了u合法化" />
+</androidx.constraintlayout.widget.ConstraintLayout>

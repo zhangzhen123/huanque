@@ -6,12 +6,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rootView"
+        app:actualImageResource="@mipmap/bg_gift_fragment"
+        android:scaleType="centerCrop"
+        app:roundTopLeft="true"
+        app:roundTopRight="true"
+        app:roundedCornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rootView"/>
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rootView"
         android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_private_gift_panel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
@@ -184,6 +197,44 @@
                 android:layout_height="44dp"
                 android:layout_gravity="right">
 
+                <LinearLayout
+                    android:id="@+id/sendCountLayout"
+                    android:layout_width="72dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/sendActionBtn"
+                    android:layout_alignBottom="@+id/sendActionBtn"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="63dp"
+                    android:background="@drawable/selector_send_count_bg_gray"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingRight="15dp">
+
+                    <TextView
+                        android:id="@+id/sendCountLabel"
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="4dp"
+                        android:text="9999"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="8dp"
+                        android:src="@mipmap/icon_forward_white_01" />
+
+                </LinearLayout>
+
 
                 <Button
                     android:id="@+id/sendActionBtn"
@@ -239,6 +290,21 @@
 
                 </RelativeLayout>
 
+                <ImageView
+                    android:id="@+id/iv_first_recharge"
+                    android:layout_width="77dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="3dp"
+                    android:layout_toRightOf="@id/balance_layout"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:src="@mipmap/icon_send_gift_first_recharge"
+                    android:text="首充"
+                    android:textColor="#FFBB00"
+                    android:textSize="@dimen/sp_14" />
+
+
             </RelativeLayout>
 
 
@@ -255,6 +321,21 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/selectCountListView"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dimen_15"
+        android:layout_marginBottom="@dimen/dimen_44"
+        android:background="@drawable/bg_gift_select_count"
+        android:divider="@null"
+        android:listSelector="@color/transparent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 
 </com.julun.huanque.common.widgets.EventConstraintLayout>

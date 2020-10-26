@@ -18,9 +18,11 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.UserSecurityInfo
 import com.julun.huanque.common.bean.events.AliAuthCodeEvent
 import com.julun.huanque.common.bean.events.BindPhoneSuccessEvent
+import com.julun.huanque.common.bean.events.RPVerifyResult
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.manager.AliPayManager
@@ -55,6 +57,7 @@ class AccountAndSecurityActivity : BaseVMActivity<AccountAndSecurityViewModel>()
     override fun isRegisterEventBus(): Boolean {
         return true
     }
+
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         header_view.textTitle.text = "账号与安全"
         initViewModel()
@@ -110,6 +113,15 @@ class AccountAndSecurityActivity : BaseVMActivity<AccountAndSecurityViewModel>()
     private fun renderData(securityInfo: UserSecurityInfo) {
         mSecurityInfo = securityInfo
         tv_security_level.text = if (securityInfo.security) "安全等级：高" else "安全等级：低"
+
+        if (securityInfo.hasRealName == BusiConstant.True) {
+            tv_real_name_type.text = "已认证"
+            tv_real_name_type.textColor = Color.parseColor("#11D713")
+        } else {
+            tv_real_name_type.text = "未认证"
+            tv_real_name_type.textColor = Color.parseColor("#FF5757")
+        }
+
         if (securityInfo.mobile.isNotEmpty()) {
             tv_phone_binding_type.text = securityInfo.mobile
             tv_phone_binding_type.textColor = Color.parseColor("#333333")
@@ -166,9 +178,18 @@ class AccountAndSecurityActivity : BaseVMActivity<AccountAndSecurityViewModel>()
             }
         }
         view_log_off.onClickNew {
-            startActivityForResult(Intent(this,DestroyAccountActivity::class.java),BusiConstant.DESTROY_ACCOUNT_RESULT_CODE)
+            startActivityForResult(Intent(this, DestroyAccountActivity::class.java), BusiConstant.DESTROY_ACCOUNT_RESULT_CODE)
         }
+
+        view_real_name.onClickNew {
+            if (mSecurityInfo?.hasRealName != BusiConstant.True) {
+                ARouter.getInstance().build(ARouterConstant.REAL_NAME_MAIN_ACTIVITY)
+                    .navigation()
+            }
+        }
+
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == BusiConstant.DESTROY_ACCOUNT_RESULT_CODE) {
@@ -199,6 +220,19 @@ class AccountAndSecurityActivity : BaseVMActivity<AccountAndSecurityViewModel>()
 
     override fun showLoadState(state: NetState) {
 
+    }
+
+    /**
+     * 实名认证结果返回
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveRP(event: RPVerifyResult) {
+        logger("收到实名认证结果：${event.result}")
+        if (event.result == RealNameConstants.TYPE_SUCCESS) {
+            tv_real_name_type.text = "已认证"
+            tv_real_name_type.textColor = Color.parseColor("#11D713")
+            mSecurityInfo?.hasRealName = BusiConstant.True
+        }
     }
 
 }

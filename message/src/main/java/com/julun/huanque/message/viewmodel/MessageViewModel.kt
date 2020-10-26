@@ -31,6 +31,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.GlobalUtils
@@ -750,6 +751,34 @@ class MessageViewModel : BaseViewModel() {
     }
 
     /**
+     * 刷新系统和鹊友消息(鹊友和系统消息)
+     */
+    fun refreshSysMessage(targetId: String) {
+        RongIMClient.getInstance()
+            .getConversation(Conversation.ConversationType.PRIVATE, targetId, object : RongIMClient.ResultCallback<Conversation>() {
+                override fun onSuccess(p0: Conversation?) {
+                    p0 ?: return
+                    var realIndex = -1
+                    conversationListData.value?.forEachIndexed { index, localConversation ->
+                        if (localConversation.conversation.targetId == targetId) {
+                            realIndex = index
+                            localConversation.conversation = p0
+                            return@forEachIndexed
+                        }
+                    }
+
+                    if (realIndex >= 0) {
+                        changePosition.value = realIndex
+                    }
+                }
+
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                }
+
+            })
+    }
+
+    /**
      * 接收到互斥消息处理
      * 折叠消息开启   1 消息页面接受到陌生人变动消息   2 陌生人会话页面 接收到好友变动消息
      */
@@ -864,7 +893,7 @@ class MessageViewModel : BaseViewModel() {
                 val result = socialService.chatHome().dataConvert()
                 chatRoomData.value = result
                 getUnreadCount()
-            }, {})
+            }, {}, needLoadState = true)
         }
     }
 

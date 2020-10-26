@@ -8,7 +8,7 @@
     android:layout_marginTop="@dimen/dimen_11"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_42"
         android:background="@drawable/hq_message_bg_shape_gray"
@@ -19,10 +19,13 @@
             android:layout_width="@dimen/dimen_24"
             android:layout_height="@dimen/dimen_24"
             android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dimen_15"
             app:failureImage="@mipmap/icon_logo_avatar_yellow"
             app:failureImageScaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:placeholderImage="@mipmap/logo_placeholder"
             app:placeholderImageScaleType="centerCrop"
             app:roundAsCircle="true" />
@@ -30,27 +33,34 @@
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_height="0px"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dimen_6"
-            android:layout_toRightOf="@+id/ivTitle"
-            android:textStyle="bold"
             android:text="小鹊提醒"
+            android:singleLine="true"
             android:textColor="@color/black_333"
-            android:textSize="@dimen/sp_16" />
+            android:gravity="center_vertical"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/ivTitle"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0px"
             android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dimen_20"
-            android:gravity="right"
-            tools:text="下午4:59"
+            android:gravity="center_vertical"
             android:textColor="@color/black_999"
-            android:textSize="@dimen/sp_12" />
-    </RelativeLayout>
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="下午4:59" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,15 +68,15 @@
         android:background="@drawable/hq_message_bg_shape_white"
         android:orientation="vertical">
 
-<!--        <TextView-->
-<!--            android:id="@+id/tvSubTitle"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="@dimen/dimen_15"-->
-<!--            android:layout_marginTop="@dimen/dimen_20"-->
-<!--            android:text="欢迎注册"-->
-<!--            android:textColor="@color/black_333"-->
-<!--            android:textSize="@dimen/sp_18" />-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvSubTitle"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginLeft="@dimen/dimen_15"-->
+        <!--            android:layout_marginTop="@dimen/dimen_20"-->
+        <!--            android:text="欢迎注册"-->
+        <!--            android:textColor="@color/black_333"-->
+        <!--            android:textSize="@dimen/sp_18" />-->
 
         <TextView
             android:id="@+id/tvBody"
@@ -75,11 +85,11 @@
             android:layout_marginLeft="@dimen/dimen_15"
             android:layout_marginTop="@dimen/dimen_5"
             android:layout_marginRight="@dimen/dimen_15"
-            android:gravity="left"
-            tools:text="恭喜注册成功，完成绑定手机号码，成为欢鹊的成员，恭喜您完成注册，开启的您的欢鹊之旅，恭喜恭喜恭喜恭喜。"
-            android:textColor="@color/black_666"
             android:layout_marginBottom="@dimen/dimen_20"
-            android:textSize="@dimen/sp_14" />
+            android:gravity="left"
+            android:textColor="@color/black_666"
+            android:textSize="@dimen/sp_14"
+            tools:text="恭喜注册成功，完成绑定手机号码，成为欢鹊的成员，恭喜您完成注册，开启的您的欢鹊之旅，恭喜恭喜恭喜恭喜。" />
 
         <View
             android:id="@+id/vLine"
@@ -94,10 +104,10 @@
             android:layout_marginLeft="@dimen/dimen_15"
             android:layout_marginTop="@dimen/dimen_18"
             android:layout_marginRight="@dimen/dimen_15"
+            android:layout_marginBottom="@dimen/dimen_18"
             android:drawableRight="@mipmap/icon_arrow_msg_setting"
             android:gravity="center_vertical"
             android:text="查看详情"
-            android:layout_marginBottom="@dimen/dimen_18"
             android:textColor="@color/black_999"
             android:textSize="@dimen/sp_14" />
     </LinearLayout>

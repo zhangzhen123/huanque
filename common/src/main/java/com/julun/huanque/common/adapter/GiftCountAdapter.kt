@@ -1,9 +1,9 @@
-package com.julun.huanque.core.adapter
+package com.julun.huanque.common.adapter
 
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.julun.huanque.common.R
 import com.julun.huanque.common.bean.beans.GoodsOptionCount
-import com.julun.huanque.core.R
 
 /**
  *@创建者   dong

@@ -521,6 +521,20 @@ object StringHelper {
     }
 
     /**
+     * 格式化数字 保留两位小数
+     */
+    fun formatNumWithTwoDecimals(num: Long): String {
+        if (num < 10000) {
+            return num.toString()
+        }
+//        if (num < 10000) {
+//            return DecimalFormat("#.#").format((num / 1000.0)) + "k"
+//        }
+        return DecimalFormat("#.00").format((num / 10000.0)) + "W"
+    }
+
+
+    /**
      * 格式化大数字整数型
      */
     fun formatBigNum(num: BigInteger): String {
@@ -601,6 +615,7 @@ object StringHelper {
             name
         }
     }
+
     /**
      * 对请求的body进行处理
      */

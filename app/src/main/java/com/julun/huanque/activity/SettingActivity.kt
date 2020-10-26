@@ -22,7 +22,6 @@ import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.message.activity.MessageSettingActivity
-import com.julun.huanque.support.LoginManager
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
 import kotlinx.android.synthetic.main.act_setting.*
 import org.greenrobot.eventbus.EventBus
@@ -163,7 +162,7 @@ class SettingActivity : BaseActivity() {
 
         view_common.onClickNew {
             //通用
-            val intent = Intent(this, PlayerSettingActivity::class.java)
+            val intent = Intent(this, CommonSettingActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
                 startActivity(intent)
             }

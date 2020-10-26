@@ -19,6 +19,7 @@ import com.julun.huanque.common.viewmodel.VideoViewModel
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
+import com.julun.huanque.common.viewmodel.FirstRechargeViewModel
 import com.julun.huanque.core.viewmodel.PKViewModel
 
 /**
@@ -50,6 +51,9 @@ class PlayerTransformManager(val act: PlayerActivity) {
     //    private var mBasePlayerViewModel: BasePlayerViewModel? = null
 //    private lateinit var anchorNoLiveViewModel: AnchorNoLiveViewModel
     private val videoPlayerViewModel: VideoChangeViewModel by act.viewModels()
+
+    //首充ViewModel
+    private val mFirstRechargeViewModel: FirstRechargeViewModel by act.viewModels()
 
     //    private val mConfigViewModel: PlayerConfigViewModel by lazy { ViewModelProviders.of(context).get(PlayerConfigViewModel::class.java) }
     //连麦ViewModel
@@ -112,6 +116,10 @@ class PlayerTransformManager(val act: PlayerActivity) {
             mVideoViewModel.loginState.value = it
         })
 
+
+        mPlayerViewModel.firstRechargeFlag.observe(act, Observer {
+            mFirstRechargeViewModel.firstRechargeFlag.value = it
+        })
 
         //VideoViewModel - > PlayerViewModel
         mVideoViewModel.checkoutRoom.observe(act, Observer {

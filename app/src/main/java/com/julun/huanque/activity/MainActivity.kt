@@ -36,6 +36,7 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.service.BadgeIntentService
+import com.julun.huanque.core.ui.live.fragment.FirstRechargeReceivedFragment
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.core.viewmodel.TodayFateViewModel
 import com.julun.huanque.fragment.*
@@ -310,6 +311,10 @@ class MainActivity : BaseActivity() {
             }
         })
 
+        mMainViewModel.showMineRedPoint.observe(this, Observer {
+            showMinePoint()
+        })
+
         mMessageViewModel.unreadMsgCount.observe(this, Observer {
             if (it != null) {
                 tv_unread_count.text = if (it <= 99) {
@@ -437,6 +442,7 @@ class MainActivity : BaseActivity() {
             }
         }
         showUnreadCount()
+        showMinePoint()
     }
 
 
@@ -505,6 +511,19 @@ class MainActivity : BaseActivity() {
             tv_unread_count.show()
         } else {
             tv_unread_count.hide()
+        }
+
+    }
+
+    /**
+     * 显示我的红点
+     */
+    private fun showMinePoint() {
+        val showFlag = mMainViewModel.showMineRedPoint.value
+        if (!item_mine.isSelected && showFlag == true) {
+            tv_red_point.show()
+        } else {
+            tv_red_point.hide()
         }
 
     }
@@ -675,6 +694,26 @@ class MainActivity : BaseActivity() {
 
         })
 
+        //首充结果
+        MessageProcessor.registerEventProcessor(object : MessageProcessor.FirstChargeResultProcessor {
+            override fun process(data: SinglePack) {
+                //直播间   私信页面   充值页面
+                val activityList = mutableListOf<String>(
+                    "com.julun.huanque.core.ui.live.PlayerActivity", "com.julun.huanque.message.activity.PrivateConversationActivity"
+                    , "com.julun.huanque.core.ui.recharge.RechargeCenterActivity"
+                )
+                (CommonInit.getInstance().getCurrentActivity() as? BaseActivity)?.let { act ->
+                    activityList.forEach {
+                        if (it.contains(act.localClassName)) {
+                            FirstRechargeReceivedFragment.newInstance(data).show(act.supportFragmentManager, "FirstRechargeReceivedFragment")
+                            return
+                        }
+                    }
+
+                }
+
+            }
+        })
 
     }
 
@@ -757,6 +796,7 @@ class MainActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loginOut(event: LoginOutEvent) {
         //登录通知
+        mMainViewModel.showMineRedPoint.value = false
         LoginManager.doLoginOut({
             finish()
             //退出登录成功

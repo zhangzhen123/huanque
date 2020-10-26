@@ -41,7 +41,7 @@
         android:layout_above="@+id/gift_name"
         android:layout_centerHorizontal="true"
         app:actualImageScaleType="fitCenter"
-        app:failureImage="@mipmap/logo_placeholder_medium" />
+        app:failureImage="@mipmap/logo_placeholder_medium_gift" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/leftTipImage"
@@ -87,8 +87,8 @@
         android:layout_height="6dp"
         android:layout_alignParentRight="true"
         android:layout_margin="2dp"
-        android:visibility="gone"
-        android:background="@drawable/bg_gift_count_change" />
+        android:background="@drawable/bg_gift_count_change"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

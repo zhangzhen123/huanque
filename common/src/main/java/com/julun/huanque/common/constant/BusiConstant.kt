@@ -108,6 +108,9 @@ object SPParamKey {
 
     //oaid是否支持
     const val Support_Oaid = "Support_Oaid"
+
+    //缘分来了铃声是否开启
+    const val Fate_Voice_Open = "Fate_Voice_Open"
 }
 
 /**
@@ -172,12 +175,12 @@ object ErrorCodes {
 
     //已经绑定其他账号
     const val HAS_BIND_OTHER = 1016
+
     //账号已经被封禁
     const val ACCOUNT_HAS_BLOCK = 1018
+
     //头像认证出错
     const val REAL_HEAD_ERROR = 1301
-
-
 
 
 }

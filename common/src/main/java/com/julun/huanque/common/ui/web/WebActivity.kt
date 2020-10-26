@@ -52,9 +52,10 @@ import java.io.File
 @Route(path = ARouterConstant.WEB_ACTIVITY)
 class WebActivity : BaseActivity() {
     companion object {
-        fun startWeb(mActivity: Activity, url: String) {
+        fun startWeb(mActivity: Activity, url: String, title: String = "") {
             val extra = Bundle()
             extra.putString(BusiConstant.WEB_URL, url)
+            extra.putString(ParamConstant.Title, title)
 //            extra.putBoolean(IntentParamKey.EXTRA_FLAG_GO_HOME.name, true)
             val intent = Intent(mActivity, WebActivity::class.java)
             intent.putExtras(extra)
@@ -74,9 +75,13 @@ class WebActivity : BaseActivity() {
     //右上角操作
     private var operate: String? = ""
 
+    //标题
+    private var mTitle = ""
+
     override fun getLayoutId(): Int = R.layout.activity_web
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        mTitle = intent?.getStringExtra(ParamConstant.Title) ?: ""
         initWebView()
         initData()
     }
@@ -84,7 +89,9 @@ class WebActivity : BaseActivity() {
     private fun initWebView() {
         webView.setWebViewListener(object : WebViewAdapter() {
             override fun titleChange(title: String) {
-                this@WebActivity.tvTitle?.text = title
+                if(mTitle.isEmpty()){
+                    this@WebActivity.tvTitle?.text = title
+                }
             }
 
             override fun onUrlAction(url: String) {
@@ -318,7 +325,11 @@ class WebActivity : BaseActivity() {
         ULog.i("当前的url:$url")
         //这个是否返回首页不太一样 默认就是返回
 //        goHome = intent.getBooleanExtra(IntentParamKey.EXTRA_FLAG_GO_HOME.name, true)
-        tvTitle.text = "欢鹊"
+        if(mTitle.isEmpty()){
+            tvTitle.text = "欢鹊"
+        }else{
+            tvTitle.text = mTitle
+        }
 //        tvTitle.onClick {   startActivity(Intent(this@WebActivity, MainActivity::class.java)) }
         ivBack.onClickNew { onBackPressed() }
         ivClose.onClickNew { super.onBackPressed() }

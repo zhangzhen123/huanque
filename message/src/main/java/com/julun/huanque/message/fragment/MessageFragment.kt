@@ -15,19 +15,25 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
+import com.facebook.drawee.generic.RoundingParams
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
+import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.ChatRoomBean
+import com.julun.huanque.common.bean.beans.RechargeAdInfo
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.viewmodel.PlayerMessageViewModel
+import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.message.R
 import com.julun.huanque.message.activity.*
 import com.julun.huanque.message.adapter.ConversationListAdapter
@@ -97,6 +103,7 @@ class MessageFragment : BaseFragment() {
     override fun getLayoutId() = R.layout.fragment_message
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        MixedHelper.setSwipeRefreshStyle(swipe_refresh)
         initViewModel()
         initRecyclerView()
 //        initEvents()
@@ -246,11 +253,15 @@ class MessageFragment : BaseFragment() {
     private fun initViewModel() {
         mMessageViewModel.queryDataFlag.observe(this, Observer {
             if (it == true) {
-                pageView.showLoading()
+                if (mAdapter.itemCount == 0) {
+                    pageView.showLoading()
+                }
                 if (RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED == RongIMClient.getInstance().currentConnectionStatus) {
                     //融云已经连接
                     //查询会话列表和免打扰列表
-                    mPlayerMessageViewModel.getBlockedConversationList()
+                    if (mAdapter.itemCount == 0) {
+                        mPlayerMessageViewModel.getBlockedConversationList()
+                    }
                     mMessageViewModel.getConversationList()
                 } else if (RongCloudUtils.RongCloudNeedConnectedManually()) {
                     //手动连接一次
@@ -325,6 +336,16 @@ class MessageFragment : BaseFragment() {
                     rl_yuanfen.show()
                 } else {
                     rl_yuanfen.hide()
+                }
+                //显示广告
+                loadAd(it.adList)
+            }
+        })
+
+        mMessageViewModel.loadState.observe(this, Observer {
+            if (it != null) {
+                if (it.state == NetStateType.SUCCESS) {
+                    swipe_refresh.isRefreshing = false
                 }
             }
         })
@@ -409,6 +430,11 @@ class MessageFragment : BaseFragment() {
                 showOnLinePopupWindow()
             }
         }
+
+        swipe_refresh.setOnRefreshListener {
+            mMessageViewModel.chatRoom()
+            mMessageViewModel.queryDataFlag.value = true
+        }
 //        if(BuildConfig.DEBUG){
 //            tv_message_unread.onClickNew {
 //                activity?.let { act ->
@@ -485,6 +511,67 @@ class MessageFragment : BaseFragment() {
         super.onHiddenChanged(hidden)
         if (hidden) {
             mOnLineStatusSettingPopupWindow?.dismiss()
+        }
+    }
+
+    private fun loadAd(adList: MutableList<RechargeAdInfo>?) {
+        if (adList != null) {
+            if (adList.isEmpty()) {
+                if (bannerAD.isVisible()) {
+                    bannerAD?.setAutoPlayAble(false)
+                    bannerAD?.setAllowUserScrollable(false)
+                    bannerAD?.setData(adList, null)
+                    bannerAD.hide()
+                }
+                return
+            }
+            bannerAD.show()
+            bannerAD?.setAdapter(bannerAdapter)
+            bannerAD?.setDelegate(bannerItemClick)
+            bannerAD?.setData(adList, null)
+            bannerAD?.setAutoPlayAble(adList.size > 1)
+            bannerAD?.viewPager?.pageMargin = dp2px(10)
+            if (adList.size > 1) {
+                bannerAD?.currentItem = 0
+            }
+        } else {
+            bannerAD?.hide()
+        }
+    }
+
+    private val bannerAdapter by lazy {
+        BGABanner.Adapter<SimpleDraweeView, RechargeAdInfo> { _, itemView, model, _ ->
+            when (model?.resType) {
+                BannerResType.Pic -> {
+                    val screenWidth = ScreenUtils.screenWidthFloat.toInt()
+                    val height = dp2px(72f)
+                    ImageUtils.loadImageInPx(itemView, model.resUrl, screenWidth, height)
+                }
+            }
+
+        }
+    }
+
+    private val bannerItemClick by lazy {
+        BGABanner.Delegate<SimpleDraweeView, RechargeAdInfo> { _, _, model, _ ->
+            when (model?.touchType) {
+                BannerTouchType.Url -> {
+                    val extra = Bundle()
+                    extra.putString(BusiConstant.WEB_URL, model.touchValue)
+                    extra.putBoolean(IntentParamKey.EXTRA_FLAG_GO_HOME.name, false)
+                    jump(WebActivity::class.java, extra = extra)
+                }
+                BannerTouchType.Recharge -> {
+                    //充值页面
+                    ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
+                }
+                BannerTouchType.InviteFriend -> {
+                    //邀请好友
+                    RNPageActivity.start(requireActivity(), RnConstant.INVITE_FRIENDS_PAGE)
+                }
+                else -> {
+                }
+            }
         }
     }
 
@@ -576,6 +663,14 @@ class MessageFragment : BaseFragment() {
         mMessageViewModel.userInfoUpdate(bean)
     }
 
+    /**
+     * 刷新系统消息和鹊友消息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun refreshSystemMsg(bean : SystemMessageRefreshBean) {
+        mMessageViewModel.refreshSysMessage(bean.targetId)
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loginChange(event: LoginEvent) {
@@ -611,18 +706,18 @@ class MessageFragment : BaseFragment() {
         mMessageViewModel.updateDraft(event.userId)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            ActivityCodes.REQUEST_CODE_NORMAL -> {
-                if (resultCode == ActivityCodes.RESPONSE_CODE_REFRESH) {
-                    //也许是从系统消息页面返回，刷新列表一次
-                    mMessageViewModel.getConversationList()
-                    mMessageViewModel.queryRongPrivateCount()
-                }
-            }
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        when (requestCode) {
+//            ActivityCodes.REQUEST_CODE_NORMAL -> {
+//                if (resultCode == ActivityCodes.RESPONSE_CODE_REFRESH) {
+//                    //也许是从系统消息页面返回，刷新列表一次
+//                    mMessageViewModel.getConversationList()
+//                    mMessageViewModel.queryRongPrivateCount()
+//                }
+//            }
+//        }
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

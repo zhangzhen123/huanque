@@ -148,4 +148,13 @@ object ParamConstant {
 
     //直播间草稿数据
     const val Program_Draft = "Program_Draft"
+
+    //首充数据
+    const val First_Recharge_Info = "First_Recharge_Info"
+
+    //首充奖励数据
+    const val First_Recharge_Received = "First_Recharge_Received"
+
+    //标题
+    const val Title = "Title"
 }

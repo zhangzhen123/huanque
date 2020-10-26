@@ -232,4 +232,22 @@ interface UserService {
     @POST("user/task/saveTeachVideo")
     suspend fun saveTeachVideo(@Body form: SaveTeachVideoForm): Root<VoidResult>
 
+    /**
+     * 隐藏位置状态
+     */
+    @POST("user/acct/data/hideLocation")
+    suspend fun hideLocation(@Body form: EmptyForm = EmptyForm()): Root<StatusForm>
+
+    /**
+     * 报错隐藏位置状态
+     */
+    @POST("user/acct/data/saveHideLocation")
+    suspend fun saveHideLocation(@Body form: StatusForm): Root<VoidResult>
+
+    /**
+     * 获取首充数据
+     */
+    @POST("user/welfare/firstChargeBag")
+    suspend fun firstChargeBag(@Body form: EmptyForm = EmptyForm()): Root<FirstRechargeInfo>
+
 }

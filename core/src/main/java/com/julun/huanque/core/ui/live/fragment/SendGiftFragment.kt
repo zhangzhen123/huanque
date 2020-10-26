@@ -35,10 +35,11 @@ import com.julun.huanque.common.widgets.happybubble.BubbleDialog
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
 import com.julun.huanque.common.adapter.GiftAdapter
-import com.julun.huanque.core.adapter.GiftCountAdapter
+import com.julun.huanque.common.adapter.GiftCountAdapter
 import com.julun.huanque.common.adapter.SimplePagerAdapter
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.EggSettingViewModel
+import com.julun.huanque.common.viewmodel.FirstRechargeViewModel
 import com.julun.huanque.core.viewmodel.SendGiftViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -73,6 +74,7 @@ class SendGiftFragment : BaseDialogFragment() {
     private var viewModel: SendGiftViewModel? = null
     private val playerViewModel: PlayerViewModel by activityViewModels()
     private val mEggSettingViewModel: EggSettingViewModel by activityViewModels()
+    private val mFirstRechargeViewModel: FirstRechargeViewModel by activityViewModels()
 
 
     // 每页显示10个礼物
@@ -255,6 +257,22 @@ class SendGiftFragment : BaseDialogFragment() {
                 hideLiansong()
             }
         })
+
+        iv_first_recharge.onClickNew {
+            //显示首充
+            if (mFirstRechargeViewModel.firstRechargeFlag.value == true) {
+                //首充
+                val bean = BottomActionBean()
+                bean.type = ClickType.FIRST_RECHARGE
+                playerViewModel?.actionBeanData?.value = bean
+            } else {
+                //开通贵族
+                val bundle = Bundle()
+                bundle.putLong("programId", playerViewModel.programId)
+                RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE, bundle)
+            }
+
+        }
     }
 
     private fun refreshPackage() {
@@ -387,6 +405,13 @@ class SendGiftFragment : BaseDialogFragment() {
         playerViewModel?.balance?.observe(this, Observer {
             logger.info("Player balance = $it")
             setBalanceLabelValue(it ?: return@Observer)
+        })
+        mFirstRechargeViewModel.firstRechargeFlag.observe(this, Observer {
+            if (it == true) {
+                iv_first_recharge.imageResource = R.mipmap.icon_send_gift_first_recharge
+            } else {
+                iv_first_recharge.imageResource = R.mipmap.icon_gift_royal
+            }
         })
 
         if (playerViewModel?.loginState?.value != true) {
@@ -1496,7 +1521,7 @@ class SendGiftFragment : BaseDialogFragment() {
                     return@setOnItemClickListener
                 }
                 //设置连送按钮
-                if (currentGift.giftId != selectedGift?.giftId) {
+                if (currentGift.giftId != selectedGift?.giftId && currentGift.bag == selectedGift?.bag && currentGift.prodType == selectedGift?.prodType) {
                     hideLiansong()
                 }
                 if (selectedGift == null || (selectedGift?.giftId != null && (selectedGift?.giftId != currentGift.giftId || selectedGift?.bag != currentGift.bag))) {

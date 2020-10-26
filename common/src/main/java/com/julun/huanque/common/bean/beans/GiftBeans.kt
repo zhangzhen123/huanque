@@ -175,6 +175,8 @@ data class ProcessInfo(
 )
 
 data class ChatGiftInfo(
+    //首充数据
+    var firstCharge: Boolean = false,
     var beans: Long = 0,
     var giftList: List<ChatGift> = listOf(),
     var tips: String = "",
@@ -231,7 +233,9 @@ data class ChatGift(
     //用户经验
     var userExp: Long = 0,
     //本地字段 送礼数量，发送自定义消息场景下使用
-    var giftCount: Int = 1
+    var giftCount: Int = 1,
+    //可选数量列表
+    var countItemList: List<GoodsOptionCount> = listOf()
 ) {
     companion object {
         //动画类型

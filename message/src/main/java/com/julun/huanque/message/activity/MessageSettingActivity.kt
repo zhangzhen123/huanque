@@ -20,10 +20,7 @@ import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
-import com.julun.huanque.common.utils.ForceUtils
-import com.julun.huanque.common.utils.NotificationUtils
-import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.message.R
 import com.julun.huanque.message.fragment.PrivateChargeDialogFragment
 import com.julun.huanque.message.viewmodel.MessageSettingViewModel
@@ -53,6 +50,15 @@ class MessageSettingActivity : BaseActivity() {
         //折叠陌生人消息
         val folderMsg = SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)
         iv_fold_stranger_msg.isSelected = folderMsg
+        //铃声来了铃声
+        if (SessionUtils.getSex() == Sex.FEMALE) {
+            //女性
+            view_fate_voice.show()
+            tv_fate_title.show()
+            iv_fate_voice.show()
+            iv_fate_voice.isSelected = SPUtils.getBoolean(SPParamKey.Fate_Voice_Open, true)
+        }
+
         showPriceSetView(SessionUtils.getSex() == Sex.FEMALE)
     }
 
@@ -127,6 +133,11 @@ class MessageSettingActivity : BaseActivity() {
         view_start_live.onClickNew {
             //开播提醒
             startActivityForResult(LiveRemindActivity::class.java, ActivityCodes.REQUEST_CODE_NORMAL)
+        }
+        iv_fate_voice.onClickNew {
+            //缘分来了铃声
+            iv_fate_voice.isSelected = !iv_fate_voice.isSelected
+            SPUtils.commitBoolean(SPParamKey.Fate_Voice_Open, iv_fate_voice.isSelected)
         }
     }
 

@@ -49,6 +49,9 @@ class MainViewModel : BaseViewModel() {
     //用户隐私协议是否签署
     val userProtocolSignFlag: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
+    //是否显示个人 红点的标识位
+    val showMineRedPoint: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     private val userService: UserService by lazy {
         Requests.create(UserService::class.java)
     }

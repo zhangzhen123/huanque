@@ -13,6 +13,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.FriendBean
 import com.julun.huanque.common.bean.beans.SysMsgBean
+import com.julun.huanque.common.bean.events.SystemMessageRefreshBean
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.message_dispatch.MessageProcessor
@@ -29,6 +30,7 @@ import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
 import kotlinx.android.synthetic.main.activity_sys_msg.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundResource
 
 /**
@@ -77,6 +79,8 @@ class SysMsgActivity : BaseActivity() {
         //清除该会话所有未读消息
         RongIMClient.getInstance()
             .clearMessagesUnreadStatus(Conversation.ConversationType.PRIVATE, targetId, null)
+        //通知列表  刷新系统和鹊友通知
+        EventBus.getDefault().post(SystemMessageRefreshBean(targetId))
     }
 
     override fun initEvents(rootView: View) {
@@ -239,9 +243,23 @@ class SysMsgActivity : BaseActivity() {
                 bundle.putString(ParamConstant.TYPE, sysBean.touchValue)
                 ARouter.getInstance().build(ARouterConstant.PLUM_FLOWER_ACTIVITY).with(bundle).navigation()
             }
-            MessageConstants.AccostWords->{
+            MessageConstants.AccostWords -> {
                 //搭讪常用语
                 UsefulWordActivity.newInstance(this)
+            }
+            MessageConstants.FateCome -> {
+                //缘分来了页面
+                YuanFenActivity.newInstance(this, 0)
+            }
+            MessageConstants.Message -> {
+                //消息列表页面
+                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                    .withInt(IntentParamKey.TARGET_INDEX.name, 1).navigation()
+            }
+            MessageConstants.FriendHome -> {
+                //交友页面
+                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                    .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
             }
 //            else -> {
 //                ToastUtils.show("没有记录的action类型 -> ${touchType}")
@@ -301,11 +319,5 @@ class SysMsgActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         MessageProcessor.privateTextProcessor = null
-        setResult(ActivityCodes.RESPONSE_CODE_REFRESH)
-    }
-
-    override fun onBackPressed() {
-        setResult(ActivityCodes.RESPONSE_CODE_REFRESH)
-        super.onBackPressed()
     }
 }

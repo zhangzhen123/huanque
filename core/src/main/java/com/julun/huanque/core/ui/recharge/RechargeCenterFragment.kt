@@ -11,6 +11,8 @@ import android.widget.EditText
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
+import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
@@ -172,7 +174,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
             }
         }
 
-        btn_ensure.post{
+        btn_ensure.post {
             checkPayType(PayType.WXPayApp)
         }
     }
@@ -252,7 +254,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
             banner?.setDelegate(bannerItemCick)
             banner?.setData(adList, null)
             banner?.setAutoPlayAble(adList.size > 1)
-            banner?.viewPager?.pageMargin=dp2px(10)
+            banner?.viewPager?.pageMargin = dp2px(10)
             if (adList.size > 1) {
                 banner?.currentItem = 0
             }
@@ -495,6 +497,11 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
 
     private val bannerAdapter by lazy {
         BGABanner.Adapter<SimpleDraweeView, RechargeAdInfo> { _, itemView, model, _ ->
+            val hierarchy = GenericDraweeHierarchyBuilder.newInstance(resources)
+                .setRoundingParams(RoundingParams.fromCornersRadius(dp2pxf(10)))
+                .build()
+            itemView.hierarchy = hierarchy
+
             when (model?.resType) {
                 BannerResType.Pic -> {
                     val screenWidth = ScreenUtils.screenWidthFloat.toInt() - dp2px(15f) * 2

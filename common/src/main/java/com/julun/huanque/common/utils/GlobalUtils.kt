@@ -629,5 +629,11 @@ object GlobalUtils {
         }
     }
 
+    /**
+     * 获取首充的key（结合当天日期）
+     */
+    fun getFirstRechargeKey(): String {
+         return "${TimeUtils.getTimeShowDate()}-FirstRecharge"
+    }
 
 }

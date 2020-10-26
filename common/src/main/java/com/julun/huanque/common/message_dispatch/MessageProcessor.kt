@@ -1289,6 +1289,14 @@ object MessageProcessor {
         override fun isGlobal() = true
     }
 
+    /**
+     * 派单状态变化消息
+     */
+    interface FirstChargeResultProcessor : EventMessageProcessor<SinglePack> {
+        override fun getEventType() = EventMessageType.FirstChargeResult
+        override fun isGlobal() = true
+    }
+
 
 }
 
@@ -1664,7 +1672,10 @@ enum class EventMessageType(val klass: Class<*>) {
     FateQuickMatch(FateQuickMatchBean::class.java),
 
     //派单未回复数量变化
-    FateQuickMatchChange(FateQuickMatchChangeBean::class.java)
+    FateQuickMatchChange(FateQuickMatchChangeBean::class.java),
+
+    //首充结果
+    FirstChargeResult(SinglePack::class.java)
 //inviteUserId
     //禁言消息
 //    MuteUser(OperatorMessageBean::class.java),
