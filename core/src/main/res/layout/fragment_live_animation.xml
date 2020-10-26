@@ -74,29 +74,9 @@
                 android:id="@+id/barrage_view"
                 android:layout_width="match_parent"
                 android:layout_height="36dp" />
-            <!--入场动画-->
-            <!--<com.julun.huanque.lmcore.basic.widgets.live.message.UserEnterAnimatorView-->
-            <!--android:id="@+id/user_enter_view"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="150dp"-->
-            <!--tools:visibility="visible"-->
-            <!--android:visibility="gone" />-->
         </LinearLayout>
 
-        <!--入场动画-->
-        <FrameLayout
-            android:id="@+id/user_enter_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end">
 
-            <com.julun.huanque.core.widgets.live.message.UserEnterAnimatorView
-                android:id="@+id/user_enter_view"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </FrameLayout>
 
         <!-- 各种高级动画（中奖、开守护等） -->
         <com.julun.huanque.core.widgets.live.HighlyAnimationView
@@ -113,11 +93,11 @@
             app:clearsAfterStop="true"
             app:loopCount="1" />
 
-        <com.julun.huanque.common.widgets.live.WebpGifView
-            android:id="@+id/luxury_enter"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dimen_45" />
+        <!--        <com.julun.huanque.common.widgets.live.WebpGifView-->
+        <!--            android:id="@+id/luxury_enter"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_marginBottom="@dimen/dimen_45" />-->
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -177,7 +157,19 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/simple_gift_container_height"
             android:layout_gravity="bottom" />
+        <!--入场动画-->
+        <!--        <FrameLayout-->
+        <!--            android:id="@+id/user_enter_container"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_gravity="end">-->
 
+        <com.julun.huanque.core.widgets.live.message.UserEnterAnimatorView
+            android:id="@+id/user_enter_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"/>
+        <!--        </FrameLayout>-->
 
     </FrameLayout>
 </FrameLayout>

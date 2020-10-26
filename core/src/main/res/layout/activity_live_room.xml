@@ -10,8 +10,7 @@
     <com.julun.huanque.core.widgets.live.slide.ScrollVerticalContainer
         android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/live_bg_color">
+        android:layout_height="match_parent">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/cur_live_bg"
@@ -68,9 +67,10 @@
                 <View
                     android:id="@+id/app_bottom_shadow"
                     android:layout_width="0px"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0px"
                     android:background="@mipmap/bottom_shadow"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/publicMessageView"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 

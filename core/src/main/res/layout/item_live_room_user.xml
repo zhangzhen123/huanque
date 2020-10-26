@@ -20,8 +20,6 @@
         android:layout_alignBottom="@+id/headerImage"
         android:layout_marginEnd="@dimen/dimen_3"
         android:layout_marginBottom="@dimen/dimen_7"
-        app:actualImageScaleType="fitCenter"
-        app:failureImageScaleType="fitCenter"
-        app:placeholderImageScaleType="fitCenter" />
+        app:actualImageScaleType="fitCenter" />
 
 </RelativeLayout>

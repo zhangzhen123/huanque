@@ -616,8 +616,8 @@ object MessageProcessor {
     /**
      * 主播、用户升级
      */
-    interface RoyalUpLevelChangeMessageProcessor : EventMessageProcessor<RoyalUpLevelEvent> {
-        override fun getEventType() = EventMessageType.RoyalUpLevel
+    interface RoyalChangeAnimationProcessor : EventMessageProcessor<RoyalChangeEventBean> {
+        override fun getEventType() = EventMessageType.RoyalChangeAnimation
     }
 
     /**
@@ -1313,8 +1313,8 @@ enum class EventMessageType(val klass: Class<*>) {
     ,
     UserUpLevel(UserUpgradeEvent::class.java),
 
-    /** 贵族升级 **/
-    RoyalUpLevel(RoyalUpLevelEvent::class.java),
+    /** 贵族开通或者续费动画 **/
+    RoyalChangeAnimation(RoyalChangeEventBean::class.java),
 
     UserExpChange(UserExpChangeEvent::class.java)
     /** 用户列表 **/
