@@ -93,7 +93,7 @@ class UserEnterAnimatorView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         //todo test
-//        repeat(1) {
+//        repeat(2) {
 //            playEnterAnimator(
 //                EnterTypeBean(
 //                    EnterTypeBean.OPEN_ROYAL, RoyalChangeEventBean(
@@ -408,8 +408,9 @@ class UserEnterAnimatorView @JvmOverloads constructor(
                 }
                 if (colorInts.size > 1) {
                     val gDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colorInts.toIntArray())
-                    gDrawable.cornerRadius = DensityHelper.dp2pxf(14)
+                    gDrawable.cornerRadius = DensityHelper.dp2pxf(15)
                     gDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
+                    gDrawable.setStroke(dp2px(1f), GlobalUtils.formatColor("#B3FFFFFF"))
                     if (alpha != null) {
                         gDrawable.alpha = (alpha * 255).toInt()
                     }

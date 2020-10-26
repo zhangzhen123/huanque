@@ -222,7 +222,7 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     private fun cleanMessageAll() {
-        ULog.i("清空所有跑道消息")
+//        logger.info("清空所有跑道消息")
         slideOut()
         currentRunwayMessage = null
         cachedRunwayMessage = null
@@ -262,14 +262,18 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
                 needEffects = runwayMessageContext.cacheIt
                 canOnlyPlayOneTime = runwayMessageContext.canOnlyPlayOneTime
             }
-
+            //todo 暂时不需要特效 这里写死
+            needEffects=false
 
             if (!isFirstRun) {
                 slideOut(start = {
                     //缓存消息和第三档不需要播放svg特效
                     if (!isCache && level >= 1 && needEffects && !canOnlyPlayOneTime) {
 //                        logger.info("下一条不是缓存 且等级达到特效 而且有特效 且不是直播间数据附带的跑道")
-                        playSvgAnimation(level)
+                        myHandler.postDelayed({
+                            playSvgAnimation(level)
+                        }, SLIDE_OUT_DURATION+100)//这里延迟 防止划入动画比划出动画播的早
+
                     }
                 }, end = {
                     if (isCache || level <= 0 || !needEffects || canOnlyPlayOneTime) {
@@ -449,7 +453,7 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
      */
 
     private fun slideIn() {
-//        logger.info("跑道飞机一起走")
+//        logger.info("slideIn")
         //跑道飞机一起走
         if (enterAllSet == null) {
             enterAllSet = AnimatorSet()
@@ -626,11 +630,11 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
                         if (currentRunwayMessage?.randomGeneratedId.equals(cachedRunwayMessage?.randomGeneratedId)
                             && cachedRunwayMessage?.context!!.isOld
                         ) {
-                            ULog.i("缓存的消息就是当前消息 而且已经老了 继续播")
+//                            logger.info("缓存的消息就是当前消息 而且已经老了 继续播")
                             animation?.startDelay = 10L
                             animation?.start()
                         } else {
-                            ULog.i("继续播放当前缓存消息")
+//                            logger.info("继续播放当前缓存消息")
                             if (cachedRunwayMessage != null)
                                 justRenderMessageAndPlay(cachedRunwayMessage!!, 0, true)
                         }
