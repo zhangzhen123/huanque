@@ -606,10 +606,10 @@ class PlayerViewModel : BaseViewModel() {
                     return
                 }
                 (CommonInit.getInstance().getCurrentActivity() as? ComponentActivity)?.let { act ->
-                    RNPageActivity.start(act, RnConstant.ROYAL_PAGE)
                     val bundle = Bundle()
                     bundle.putInt("royalLevel", royalLevel)
                     bundle.putLong("programId", programId)
+                    RNPageActivity.start(act, RnConstant.ROYAL_PAGE, bundle)
                 }
 
             }
