@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.collection.LruCache
 import androidx.fragment.app.activityViewModels
@@ -30,6 +31,7 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.PhotoHeadView
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration
@@ -39,6 +41,7 @@ import com.julun.huanque.core.viewmodel.OnLineViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.fragment_online_list.*
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
 import java.lang.ref.SoftReference
 
@@ -97,6 +100,10 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
         adapter.headerWithEmptyEnable = true
         MixedHelper.setSwipeRefreshStyle(lmrlRefreshView)
         prepareViewModel()
+
+        val headerTipsParams = header_tips.layoutParams
+        headerTipsParams.height = ((ScreenUtils.getScreenWidth() - dp2pxf(20)) * 102 / 1068).toInt()
+        header_tips.layoutParams = headerTipsParams
     }
 
     override fun showLoadState(state: NetState) {
@@ -244,10 +251,19 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                     mRoyalUrl = data.royalLevelUrl
 
                     setHeadViews(data)
-                    tv_head_tips.text = data.royalTips
+
                     if (data.royaling) {
-                        tv_head_action.text = "立即续费>"
-                        tv_head_action.onClickNew {
+                        //续费样式
+                        header_tips.backgroundResource = R.mipmap.bg_renew_royal
+                        tv_head_tips.show()
+                        tv_head_tips.text = data.royalTips
+                        tv_head_tips.textColor = GlobalUtils.formatColor("#FAE1BF")
+                        val headerTipsParams = tv_head_tips.layoutParams as? RelativeLayout.LayoutParams
+                        headerTipsParams?.leftMargin = dp2px(24f)
+                        tv_head_tips.layoutParams = headerTipsParams
+
+//                        tv_head_action.text = "立即续费>"
+                        header_tips.onClickNew {
                             val bundle = Bundle()
                             bundle.putLong("programId", mPlayerViewModel.programId)
                             RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE, bundle)
@@ -255,8 +271,10 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                         }
 
                     } else {
-                        tv_head_action.text = "开通贵族>"
-                        tv_head_action.onClickNew {
+                        //开通样式
+                        header_tips.backgroundResource = R.mipmap.bg_open_royal
+                        tv_head_tips.hide()
+                        header_tips.onClickNew {
                             val bundle = Bundle()
                             bundle.putLong("programId", mPlayerViewModel.programId)
                             RNPageActivity.start(requireActivity(), RnConstant.ROYAL_PAGE, bundle)
@@ -271,8 +289,17 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                     setHeadViews(data)
                 }
                 else -> {
+                    //热度样式
+                    header_tips.backgroundResource = R.mipmap.bg_hot
                     tv_head_tips.text = data.heatTips
+                    tv_head_tips.show()
                     tv_head_action.hide()
+
+                    tv_head_tips.textColor = GlobalUtils.formatColor("#A46B6B")
+                    val headerTipsParams = tv_head_tips.layoutParams as? RelativeLayout.LayoutParams
+                    headerTipsParams?.leftMargin = dp2px(44f)
+                    tv_head_tips.layoutParams = headerTipsParams
+
                     //观众 or 管理
                     userNum = if (mPageTag == TabTags.TAB_TAG_MANAGER) {
                         data.managerCount

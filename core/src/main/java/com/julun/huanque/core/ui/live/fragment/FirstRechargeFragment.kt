@@ -115,7 +115,7 @@ class FirstRechargeFragment : BaseDialogFragment() {
             mChoosePayTypeFragment?.show(childFragmentManager, "ChooseRechargeTypeFragment")
         }
         iv_helper.onClickNew {
-            WebActivity.startWeb(requireActivity(), mFirstRechargeInfo?.explainPic ?: "", "首充送豪礼")
+            WebActivity.startWeb(requireActivity(), mFirstRechargeInfo?.explain ?: "", "首充送豪礼")
         }
 
     }

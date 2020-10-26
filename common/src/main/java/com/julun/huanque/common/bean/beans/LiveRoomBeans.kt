@@ -1108,7 +1108,7 @@ data class NewUserGiftInfo(
  */
 data class FirstRechargeInfo(
     //说明图片地址
-    var explainPic: String = "",
+    var explain: String = "",
     //奖励列表
     var packetList: MutableList<SinglePack> = mutableListOf()
 ) : Serializable
@@ -1136,7 +1136,7 @@ data class HeaderInfoExt(var RoomData: HashMap<String, String> = hashMapOf()) : 
  */
 data class SinglePack(
     //说明图片地址
-    var explainPic: String = "",
+    var explain: String = "",
     //奖励的Code
     var awardCode: String = "",
     //单个礼包内容

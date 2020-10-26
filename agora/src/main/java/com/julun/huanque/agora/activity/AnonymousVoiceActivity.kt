@@ -158,8 +158,9 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
 
     private fun registerMessage() {
+        MessageProcessor.removeProcessors(this)
         //匹配超时消息
-        val anonyVoiceTimeoutMessage = object : MessageProcessor.AnonyVoiceTimeoutProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceTimeoutProcessor {
             override fun process(data: UserIdListBean) {
                 if (data.userIds.contains(SessionUtils.getUserId())) {
                     //当前用户的匹配超时
@@ -167,12 +168,9 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                     mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT
                 }
             }
-        }
-        MessageProcessor.registerEventProcessor(anonyVoiceTimeoutMessage)
-        mEventMessageProcessorList.add(anonyVoiceTimeoutMessage)
-
+        })
         //匹配成功消息
-        val anonyVoiceConnectMessage = object : MessageProcessor.AnonyVoiceConnectProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceConnectProcessor {
             override fun process(data: AnonyVoiceSuccess) {
                 if (data.userIds.contains(SessionUtils.getUserId())) {
                     //当前用户匹配成功
@@ -189,51 +187,39 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                 }
             }
 
-        }
-        MessageProcessor.registerEventProcessor(anonyVoiceConnectMessage)
-        mEventMessageProcessorList.add(anonyVoiceConnectMessage)
+        })
 
         //匿名语音挂断消息
-        val anonyVoiceHangUpMessage = object : MessageProcessor.AnonyVoiceHangUpProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceHangUpProcessor {
             override fun process(data: AnonyVoiceHangUpBean) {
                 if (data.callId == mAnonymousVoiceViewModel?.callId && data.userId == SessionUtils.getUserId()) {
                     //当前匿名语音被挂断
                     mAnonymousVoiceViewModel?.voiceEndFlag?.value = true
                 }
             }
-        }
-        MessageProcessor.registerEventProcessor(anonyVoiceHangUpMessage)
-        mEventMessageProcessorList.add(anonyVoiceHangUpMessage)
+        })
 
         //公开身份消息
-        val anonyVoiceOpenMessage = object : MessageProcessor.AnonyVoiceOpenProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceOpenProcessor {
             override fun process(data: UserInfoInRoom) {
                 showUserInfo(data)
             }
-        }
-        MessageProcessor.registerEventProcessor(anonyVoiceOpenMessage)
-        mEventMessageProcessorList.add(anonyVoiceOpenMessage)
-
+        })
         //揭秘身份消息
-        val anonyVoiceUnveilMessage = object : MessageProcessor.AnonyVoiceUnveilProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceUnveilProcessor {
             override fun process(data: UserInfoInRoom) {
                 showUserInfo(data)
             }
-        }
-        MessageProcessor.registerEventProcessor(anonyVoiceUnveilMessage)
-        mEventMessageProcessorList.add(anonyVoiceUnveilMessage)
+        })
 
-        //匿名语言取消消息
-        val anonyVoiceCancelMessage = object : MessageProcessor.AnonyVoiceCancelProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.AnonyVoiceCancelProcessor {
             override fun process(data: AnonyVoiceCancelBean) {
                 if (data.inviteUserId == mAnonymousVoiceViewModel?.inviteUserId && mAnonymousVoiceViewModel?.currentState?.value == AnonymousVoiceViewModel.WAIT_ACCEPT) {
                     //匿名语音取消消息
                     mAnonymousVoiceViewModel?.voiceEndFlag?.value = true
                 }
             }
-        }
-        MessageProcessor.registerEventProcessor(anonyVoiceCancelMessage)
-        mEventMessageProcessorList.add(anonyVoiceCancelMessage)
+        })
 
     }
 
@@ -1000,6 +986,10 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        MessageProcessor.removeProcessors(this)
+    }
 
     override fun onRemoteAudioStats(stats: IRtcEngineEventHandler.RemoteAudioStats?) {
     }

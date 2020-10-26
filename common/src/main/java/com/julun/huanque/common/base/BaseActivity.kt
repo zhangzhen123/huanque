@@ -38,9 +38,6 @@ abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
     protected val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
     private var mFragment: DialogFragment? = null
 
-    //当前页面注册的事件消息，页面finish的时候移除掉
-    protected var mEventMessageProcessorList = mutableListOf<MessageProcessor.EventMessageProcessor<*>>()
-
     //不需要显示派单弹窗的页面列表
     private val mNoFateActivityList = mutableListOf<String>("com.julun.huanque.agora.activity.VoiceChatActivity")
 
@@ -194,12 +191,5 @@ abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
             ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).navigation()
         }
         super.finish()
-    }
-
-    override fun onViewDestroy() {
-        super.onViewDestroy()
-        mEventMessageProcessorList.forEach {
-            MessageProcessor.removeEventProcessor(it)
-        }
     }
 }

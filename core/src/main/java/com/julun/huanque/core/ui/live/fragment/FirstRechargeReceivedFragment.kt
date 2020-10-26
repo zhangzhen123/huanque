@@ -66,7 +66,7 @@ class FirstRechargeReceivedFragment : BaseDialogFragment() {
             dismiss()
         }
         iv_helper.onClickNew {
-            WebActivity.startWeb(requireActivity(), packBean.explainPic, "首充送豪礼")
+            WebActivity.startWeb(requireActivity(), packBean.explain, "首充送豪礼")
         }
     }
 

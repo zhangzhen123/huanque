@@ -695,7 +695,7 @@ class MainActivity : BaseActivity() {
         })
 
         //首充结果
-        MessageProcessor.registerEventProcessor(object : MessageProcessor.FirstChargeResultProcessor {
+        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.FirstChargeResultProcessor {
             override fun process(data: SinglePack) {
                 //直播间   私信页面   充值页面
                 val activityList = mutableListOf<String>(

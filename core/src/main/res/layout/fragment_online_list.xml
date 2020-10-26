@@ -31,6 +31,9 @@
                     android:id="@+id/header_tips"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_29"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
                     android:background="#FFFAEE"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -61,7 +64,7 @@
                     android:id="@+id/rvList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="29dp" />
+                    android:layout_marginTop="39dp" />
             </FrameLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
