@@ -707,7 +707,10 @@ class MainActivity : BaseActivity() {
                 (CommonInit.getInstance().getCurrentActivity() as? BaseActivity)?.let { act ->
                     activityList.forEach {
                         if (it.contains(act.localClassName)) {
-                            FirstRechargeReceivedFragment.newInstance(data).show(act.supportFragmentManager, "FirstRechargeReceivedFragment")
+                            act?.lifecycleScope?.launchWhenResumed {
+                                FirstRechargeReceivedFragment.newInstance(data).show(act.supportFragmentManager, "FirstRechargeReceivedFragment")
+                            }
+
                             return
                         }
                     }
