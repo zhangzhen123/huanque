@@ -1,28 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
-
-    <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
-        android:id="@+id/enter_text_view"
+    <RelativeLayout
+        android:id="@+id/open_royal_layout"
         android:layout_width="wrap_content"
-        android:layout_height="28dp"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom|center"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:includeFontPadding="false"
-        android:maxLines="1"
-        android:paddingLeft="@dimen/dimen_10"
-        android:paddingRight="@dimen/dimen_10"
-        android:paddingStart="@dimen/dimen_10"
-        android:textSize="@dimen/normal_size" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-    <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
-        android:id="@+id/enter_bg_svga"
+        <TextView
+            android:id="@+id/tv_open_royal"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dimen_24"
+            android:background="@color/color_coffee"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:paddingStart="@dimen/dimen_32"
+            android:paddingEnd="@dimen/dimen_10"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:text="恭喜波波乐四五六七八九十开通了帝皇" />
+
+        <com.julun.huanque.common.widgets.PhotoHeadView
+            android:id="@+id/mPhotoHeadView"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/miniRoyal"
+            android:layout_width="@dimen/dimen_16"
+            android:layout_height="@dimen/dimen_16"
+            android:layout_alignEnd="@+id/mPhotoHeadView"
+            android:layout_alignBottom="@+id/mPhotoHeadView"
+            android:layout_marginEnd="@dimen/dimen_3"
+            android:layout_marginBottom="@dimen/dimen_7"
+            app:actualImageScaleType="fitCenter" />
+
+    </RelativeLayout>
+
+    <com.julun.huanque.common.widgets.live.WebpGifView
+        android:id="@+id/luxury_enter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="bottom|center"
-        android:scaleType="fitCenter" />
+        app:actualImageScaleType="fitCenter" />
+
+    <FrameLayout
+        android:id="@+id/enter_mini_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
+            android:id="@+id/enter_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_gravity="bottom|center"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:paddingStart="@dimen/dimen_10"
+            android:paddingLeft="@dimen/dimen_10"
+            android:paddingRight="@dimen/dimen_10"
+            android:textSize="@dimen/normal_size"
+            tools:text="入场消息" />
+
+        <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
+            android:id="@+id/enter_bg_svga"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|center"
+            android:scaleType="fitCenter" />
+    </FrameLayout>
+
 </merge>

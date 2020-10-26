@@ -22,8 +22,11 @@ import java.util.Locale;
 import javax.annotation.Nullable;
 
 /**
- * A fast and memory-efficient post processor performing an iterative box blur. For details see
- * {@link NativeBlurFilter#iterativeBoxBlur(Bitmap, int, int)}.
+ * @Anchor: zhangzhen
+ * @Date: 2020/10/24 17:30
+ * @Description: BlurAndColorPostProcessor
+ * 模仿 {@link com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor}
+ * 在模糊基础上加上着色
  */
 public class BlurAndColorPostProcessor extends BasePostprocessor {
 
@@ -50,7 +53,8 @@ public class BlurAndColorPostProcessor extends BasePostprocessor {
     public void process(Bitmap bitmap) {
         if (mColors != null && mColors.length > 0) {
             Bitmap bp = BitmapUtil.INSTANCE.addGradient2(bitmap, mColors);
-            NativeBlurFilter.iterativeBoxBlur(bp, mIterations, mBlurRadius);
+            if (bp != null)
+                NativeBlurFilter.iterativeBoxBlur(bp, mIterations, mBlurRadius);
         } else {
             NativeBlurFilter.iterativeBoxBlur(bitmap, mIterations, mBlurRadius);
         }

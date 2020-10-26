@@ -296,7 +296,22 @@ data class RoyalUpLevelEvent(
 //        /** 是否展示引导贵族月卡弹窗 **/
 //        var rechargeMonthCardMsg: String? = null
 ) : Serializable
-
+//开通贵族动画或者贵族续费动画
+data class RoyalChangeEventBean(
+    var bgColor: String = "",
+    var display: String = "",
+    var headFrame: String = "",
+    var headPic: String = "",
+    var nickname: String = "",
+    var programId: Int = 0,
+    var programName: String = "",
+    var royalChangeTypeText: String = "",
+    var royalLevelName: String = "",
+    var royalPic: String = "",
+    var royalSpecialText: String = "",
+    var svgaUrl: String = "",
+    var webUrl: String = ""
+):Serializable
 class GrantInfo : Serializable {
     /** 商品ID  */
     private val prodId: Int? = null
@@ -603,14 +618,11 @@ class TplBeanExtraContext(
 )
 
 
-class TplCmdBean(var cmd: String = "", var content: TplBean? = null)
 
-class TplTypeBean(var type: String = "", var content: TplBean? = null) {
+class EnterTypeBean(var type: String = "", var content: Any? = null) {
     companion object {
-        val RIDE = "RIDE"
-        val ROYAL = "ROYAL"
-        val GUARD = "GUARD"
-        val COMMON = "COMMON"
+        const val COMMON_ENTER = "COMMON"//普通入场特效
+        const val OPEN_ROYAL = "OPEN_ROYAL"//开通贵族动画
     }
 }
 
