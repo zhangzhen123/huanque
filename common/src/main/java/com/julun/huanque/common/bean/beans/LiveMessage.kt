@@ -145,9 +145,11 @@ class PKFinishEvent(
 class PlayInfoAdd(var playInfo: PlayInfo? = null)
 
 /***PK比分变化*/
-class PKScoreChangeEvent(var pkInfo: PKInfoBean? = null,var programIds:List<Long>?=null)
+class PKScoreChangeEvent(var pkInfo: PKInfoBean? = null, var programIds: List<Long>? = null)
+
 //PK结果 最新版
-class PKResultEventNew(var pkInfo: PKInfoBean? = null,var programIds:List<Long>?=null)
+class PKResultEventNew(var pkInfo: PKInfoBean? = null, var programIds: List<Long>? = null)
+
 /**PK结果  4.30.0新增PK段位字段[stageDetailList]**/
 class PKResultEvent(
     var detailList: ArrayList<PKResultUser>? = null, var pkType: String = "",
@@ -561,6 +563,8 @@ class TplBeanExtraContext(
     //打开h5需要
     var url: String = "",
     var needLogin: String = "",//T/F
+    //贵族等级
+    var royalLevel: Int = 0,
 
     /**
      * 新版入场特效字段

@@ -31,6 +31,7 @@ import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.core.ui.live.dialog.BirdDialogFragment
@@ -589,13 +590,25 @@ class PlayerViewModel : BaseViewModel() {
             }
             TextTouch.OpenUrlPage -> {
                 //打开H5页面
+                val url = tplBean.context?.url ?: return
+                if (url.isNotEmpty()) {
+                    //url不为空
+                    CommonInit.getInstance().getCurrentActivity()?.let {
+                        WebActivity.startWeb(it, url)
+                    }
+                }
             }
 
             TextTouch.OpenRoyalPage -> {
                 //打开贵族页面
+                val royalLevel = tplBean.context?.royalLevel ?: return
+                if (royalLevel <= 0) {
+                    return
+                }
                 (CommonInit.getInstance().getCurrentActivity() as? ComponentActivity)?.let { act ->
                     RNPageActivity.start(act, RnConstant.ROYAL_PAGE)
                     val bundle = Bundle()
+                    bundle.putInt("royalLevel", royalLevel)
                     bundle.putLong("programId", programId)
                 }
 
