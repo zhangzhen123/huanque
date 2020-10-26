@@ -169,27 +169,33 @@
                 app:banner_tipTextSize="12sp"
                 tools:visibility="visible" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never" />
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never" />
+
+                <com.julun.huanque.common.widgets.statepage.StatePageView
+                    android:id="@+id/pageView"
+                    android:layout_width="0px"
+                    android:layout_height="0px"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </LinearLayout>
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
-    <com.julun.huanque.common.widgets.statepage.StatePageView
-        android:id="@+id/pageView"
-        android:layout_width="0px"
-        android:layout_height="0px"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrier" />
-
 
     <RelativeLayout
         android:id="@+id/rl_yuanfen"
