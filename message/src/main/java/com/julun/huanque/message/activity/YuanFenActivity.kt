@@ -13,11 +13,13 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.FateInfo
 import com.julun.huanque.common.bean.beans.FateQuickMatchChangeBean
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.YuanFenAdapter
 import com.julun.huanque.message.fragment.FateWeekDetailFragment
@@ -66,7 +68,7 @@ class YuanFenActivity : BaseActivity() {
     override fun isRegisterEventBus() = true
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        val count = intent?.getIntExtra(ParamConstant.FATE_UNREPLY, 0) ?: 0
+        val count = SPUtils.getInt(SPParamKey.Fate_No_Reply_Count, 0)
         updateTitle(count)
         header_page.imageOperation.show()
         header_page.imageOperation.imageResource = R.mipmap.icon_fate_help
@@ -83,7 +85,7 @@ class YuanFenActivity : BaseActivity() {
         super.initEvents(rootView)
         header_page.imageViewBack.onClickNew { finish() }
         header_page.imageOperation.onClickNew {
-            PicContentActivity.newInstance(this, rulePicUrl,"缘分速配说明")
+            PicContentActivity.newInstance(this, rulePicUrl, "缘分速配说明")
         }
 
         rlRefreshView.setOnRefreshListener {

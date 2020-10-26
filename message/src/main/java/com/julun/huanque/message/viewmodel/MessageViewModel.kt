@@ -23,6 +23,7 @@ import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.MessageCustomBeanType
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.init.CommonInit
@@ -33,10 +34,7 @@ import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
-import com.julun.huanque.common.utils.ForceUtils
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.JsonUtil
-import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.message.R
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
@@ -414,7 +412,7 @@ class MessageViewModel : BaseViewModel() {
                         val tempIdList = mutableListOf<Long>()
                         (0 until 20).forEach { inIndex ->
                             val index = outIndex * 20 + inIndex
-                            if(ForceUtils.isIndexNotOutOfBounds(index,idList)){
+                            if (ForceUtils.isIndexNotOutOfBounds(index, idList)) {
                                 tempIdList.add(idList[index])
                             }
                         }
@@ -892,6 +890,7 @@ class MessageViewModel : BaseViewModel() {
             request({
                 val result = socialService.chatHome().dataConvert()
                 chatRoomData.value = result
+                SPUtils.commitInt(SPParamKey.Fate_No_Reply_Count, result.fateNoReplyNum)
                 getUnreadCount()
             }, {}, needLoadState = true)
         }
@@ -910,6 +909,7 @@ class MessageViewModel : BaseViewModel() {
                 val bean = chatRoomData.value ?: ChatRoomBean()
                 bean.onlineStatus = status
                 chatRoomData.value = bean
+                SPUtils.commitInt(SPParamKey.Fate_No_Reply_Count, bean.fateNoReplyNum)
             })
         }
     }

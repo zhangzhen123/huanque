@@ -675,6 +675,7 @@ class MainActivity : BaseActivity() {
 
                 val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
                 bean.fateNoReplyNum = data.noReplyNum
+                SPUtils.commitInt(SPParamKey.Fate_No_Reply_Count, bean.fateNoReplyNum)
                 mMessageViewModel.chatRoomData.value = bean
                 mMessageViewModel.getUnreadCount()
                 EventBus.getDefault().post(FateQuickMatchChangeBean(noReplyNum = data.noReplyNum))
@@ -687,6 +688,7 @@ class MainActivity : BaseActivity() {
                 val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()
                 bean.fateNoReplyNum = data.noReplyNum
                 mMessageViewModel.chatRoomData.value = bean
+                SPUtils.commitInt(SPParamKey.Fate_No_Reply_Count, bean.fateNoReplyNum)
                 mMessageViewModel.getUnreadCount()
                 //发送EventBus
                 EventBus.getDefault().post(data)
@@ -695,7 +697,7 @@ class MainActivity : BaseActivity() {
         })
 
         //首充结果
-        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.FirstChargeResultProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.FirstChargeResultProcessor {
             override fun process(data: SinglePack) {
                 //直播间   私信页面   充值页面
                 val activityList = mutableListOf<String>(

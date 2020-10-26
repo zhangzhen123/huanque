@@ -548,7 +548,6 @@ class MessageFragment : BaseFragment() {
                     ImageUtils.loadImageInPx(itemView, model.resUrl, screenWidth, height)
                 }
             }
-
         }
     }
 
