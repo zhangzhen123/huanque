@@ -2,12 +2,14 @@ package com.julun.huanque.message.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.bean.events.SystemMessageRefreshBean
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.manager.RongCloudManager
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
+import org.greenrobot.eventbus.EventBus
 
 
 /**
@@ -96,4 +98,46 @@ class SysMsgViewModel : BaseViewModel() {
                 }
             })
     }
+
+    /**
+     * 清除未读数
+     */
+    fun clearUnReadCount(targetId: String) {
+        RongIMClient.getInstance()
+            .getConversation(Conversation.ConversationType.PRIVATE, targetId, object : RongIMClient.ResultCallback<Conversation>() {
+                override fun onSuccess(conversation: Conversation?) {
+                    if (conversation == null) {
+                        return
+                    }
+                    val unreadCount = conversation.unreadMessageCount
+                    if (unreadCount > 0) {
+                        //有未读数 //清除该会话所有未读消息
+                        RongIMClient.getInstance()
+                            .clearMessagesUnreadStatus(
+                                Conversation.ConversationType.PRIVATE,
+                                targetId,
+                                object : RongIMClient.ResultCallback<Boolean>() {
+                                    override fun onSuccess(p0: Boolean?) {
+                                        if (p0 == true) {
+                                            //通知列表  刷新系统和鹊友通知
+                                            EventBus.getDefault().post(SystemMessageRefreshBean(targetId))
+                                        }
+                                    }
+
+                                    override fun onError(p0: RongIMClient.ErrorCode?) {
+                                    }
+                                })
+                    }
+
+
+                }
+
+                override fun onError(p0: RongIMClient.ErrorCode?) {
+                }
+
+            })
+
+
+    }
 }
+

@@ -75,12 +75,7 @@ class SysMsgActivity : BaseActivity() {
         prepareViewModel()
         queryData(true, targetId)
         registerMessageEventProcessor()
-
-        //清除该会话所有未读消息
-        RongIMClient.getInstance()
-            .clearMessagesUnreadStatus(Conversation.ConversationType.PRIVATE, targetId, null)
-        //通知列表  刷新系统和鹊友通知
-        EventBus.getDefault().post(SystemMessageRefreshBean(targetId))
+        mViewModel?.clearUnReadCount(targetId)
     }
 
     override fun initEvents(rootView: View) {

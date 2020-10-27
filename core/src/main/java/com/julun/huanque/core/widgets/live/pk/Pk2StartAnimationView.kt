@@ -12,8 +12,10 @@ import android.view.animation.OvershootInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.core.R
 import com.luck.picture.lib.tools.ScreenUtils
 import kotlinx.android.synthetic.main.view_pk2_start.view.*
@@ -45,9 +47,9 @@ class Pk2StartAnimationView(context: Context?, attrs: AttributeSet?) : Constrain
     //View整体的透明度动画
     private var mViewAlphaSet: AnimatorSet? = null
 
-
-    //VS动画
-    private var mVsSet: AnimatorSet? = null
+//
+//    //VS动画
+//    private var mVsSet: AnimatorSet? = null
 
     //胜利动画
     private var mWinScaleXSet: AnimatorSet? = null
@@ -72,14 +74,15 @@ class Pk2StartAnimationView(context: Context?, attrs: AttributeSet?) : Constrain
         tv_pk_nickname_right.text = nickname
     }
 
-    private var onAniEndCallback:NAction?=null
+    private var onAniEndCallback: NAction? = null
+
     /**
      * 开始动画
      * [onAniEnd]新增动画完成回调  因为动画是复用的 这里回调会只执行第一次的赋值callback就有问题了 所以保存作为全局变量
      *
      */
     fun startAnimation(onAniEnd: NAction? = null) {
-        onAniEndCallback=onAniEnd
+        onAniEndCallback = onAniEnd
         //透明度动画
         this@Pk2StartAnimationView.show()
         mViewAlphaSet?.cancel()
@@ -106,6 +109,7 @@ class Pk2StartAnimationView(context: Context?, attrs: AttributeSet?) : Constrain
                     this@Pk2StartAnimationView.alpha = 1f
                     iv_light_left.alpha = 0f
                     iv_light_right.alpha = 0f
+                    iv_vs.hide()
                 }
             })
 
@@ -226,25 +230,26 @@ class Pk2StartAnimationView(context: Context?, attrs: AttributeSet?) : Constrain
         mLeftLightAlphaSet?.start()
         mRightLightAlphaSet?.start()
 
-        mVsSet?.cancel()
-        if (mVsSet == null) {
-            mVsSet = AnimatorSet()
-            val vsXScaleAnimation = ObjectAnimator.ofFloat(iv_vs, "scaleX", 1.5f, 1f)
-                .apply {
-                    interpolator = OvershootInterpolator()
-                }
-            val vsYScaleAnimation = ObjectAnimator.ofFloat(iv_vs, "scaleY", 1.5f, 1f)
-                .apply {
-                    interpolator = OvershootInterpolator()
-                }
-
-            val vsAlphaAnimation = ObjectAnimator.ofFloat(iv_vs, "alpha", 0f, 1f)
-
-            mVsSet?.playTogether(vsXScaleAnimation, vsYScaleAnimation, vsAlphaAnimation)
-            mVsSet?.duration = 900
-        }
-        mVsSet?.start()
-
+//        mVsSet?.cancel()
+//        if (mVsSet == null) {
+//            mVsSet = AnimatorSet()
+//            val vsXScaleAnimation = ObjectAnimator.ofFloat(iv_vs, "scaleX", 1.5f, 1f)
+//                .apply {
+//                    interpolator = OvershootInterpolator()
+//                }
+//            val vsYScaleAnimation = ObjectAnimator.ofFloat(iv_vs, "scaleY", 1.5f, 1f)
+//                .apply {
+//                    interpolator = OvershootInterpolator()
+//                }
+//
+//            val vsAlphaAnimation = ObjectAnimator.ofFloat(iv_vs, "alpha", 0f, 1f)
+//
+//            mVsSet?.playTogether(vsXScaleAnimation, vsYScaleAnimation, vsAlphaAnimation)
+//            mVsSet?.duration = 900
+//        }
+//        mVsSet?.start()
+        ImageUtils.showAnimator(iv_vs, "asset://${CommonInit.getInstance().getApp().assets}/webp/pk_vs_2.webp",1)
+        iv_vs.show()
 
     }
 
@@ -322,7 +327,7 @@ class Pk2StartAnimationView(context: Context?, attrs: AttributeSet?) : Constrain
         mLightTranslateSet?.cancel()
         mLeftLightAlphaSet?.cancel()
         mRightLightAlphaSet?.cancel()
-        mVsSet?.cancel()
+//        mVsSet?.cancel()
         mWinScaleYSet?.cancel()
         mWinTranslateSet?.cancel()
     }
