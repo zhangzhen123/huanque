@@ -530,7 +530,7 @@ class MessageFragment : BaseFragment() {
             bannerAD?.setDelegate(bannerItemClick)
             bannerAD?.setData(adList, null)
             bannerAD?.setAutoPlayAble(adList.size > 1)
-            bannerAD?.viewPager?.pageMargin = dp2px(10)
+//            bannerAD?.viewPager?.pageMargin = dp2px(10)
             if (adList.size > 1) {
                 bannerAD?.currentItem = 0
             }

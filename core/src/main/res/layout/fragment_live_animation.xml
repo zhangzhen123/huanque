@@ -33,7 +33,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginBottom="42dp" />
 
         <!--        <com.julun.huanque.lmcore.basic.widgets.GameBannerView-->
