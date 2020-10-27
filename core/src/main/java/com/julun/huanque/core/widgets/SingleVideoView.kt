@@ -161,7 +161,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         } else {
             //使用单例的播放器 不做任何处理 单例播放器的监听统一在destroy中处理 destroy会在合适的时机调用
 //            mAliPlayer?.setOnRenderingStartListener(null)
-//            logger("onDetachedFromWindow setOnRenderingStartListener(null) ")
+//            logger.info("onDetachedFromWindow setOnRenderingStartListener(null) ")
         }
         mAliPlayer = null
         isFree = true
@@ -248,7 +248,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
      * @param blur 是否需要模糊效果
      */
     fun showCover(picUrl: String, blur: Boolean = true) {
-        logger("showCover mRendered=${AliPlayerManager.mRendered}")
+        logger.info("showCover mRendered=${AliPlayerManager.mRendered}")
         if (useManager && AliPlayerManager.mRendered) {
             //播放器处于拉流状态，不显示封面
             return
@@ -360,7 +360,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) {
-                logger("surfaceCreated=${holder.hashCode()}")
+                logger.info("surfaceCreated=${holder.hashCode()}")
 //                created = true
                 mAliPlayer?.setDisplay(holder)
                 //防止黑屏
@@ -373,7 +373,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             }
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
-                logger("surfaceDestroyed=${holder.hashCode()} useManager=$useManager")
+                logger.info("surfaceDestroyed=${holder.hashCode()} useManager=$useManager")
                 mAliPlayer?.setDisplay(null)
             }
         })
@@ -399,11 +399,11 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
         if (AliPlayerManager.mRendered) {
             posterImage.hide()
         }
-        logger("initSingleModePlayer setOnRenderingStartListener")
+        logger.info("initSingleModePlayer setOnRenderingStartListener")
         mAliPlayer?.setOnRenderingStartListener(mRenderListener)
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) {
-                logger("AliPlayerManager surfaceCreated=${holder.hashCode()}")
+                logger.info("AliPlayerManager surfaceCreated=${holder.hashCode()}")
 //                created = true
                 mAliPlayer?.setDisplay(holder)
                 //防止黑屏
@@ -416,7 +416,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             }
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
-                logger("AliPlayerManager surfaceDestroyed=${holder.hashCode()} useManager=$useManager")
+                logger.info("AliPlayerManager surfaceDestroyed=${holder.hashCode()} useManager=$useManager")
             }
         })
 

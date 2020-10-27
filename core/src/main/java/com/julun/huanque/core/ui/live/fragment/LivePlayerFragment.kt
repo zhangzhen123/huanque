@@ -113,6 +113,7 @@ open class LivePlayerFragment : BaseFragment() {
             if (it != null) {
                 mVideoViewModel.stopAllStreamState.value = StopAllStreamState.Nothing
                 startPlayMain(it.programPoster, it.playinfo)
+                mVideoViewModel.playerData.value = null
             }
         })
 
@@ -121,6 +122,7 @@ open class LivePlayerFragment : BaseFragment() {
 //                mMainVideoView?.mProgramID = mVideoViewModel?.programId ?: 0
 //                playByInfo(it, mMainVideoView ?: return@Observer)
                 startPlayMain(playInfo = it)
+                mVideoViewModel.playInfoData.value = null
             }
         })
 
@@ -219,7 +221,7 @@ open class LivePlayerFragment : BaseFragment() {
                         logger.info("匹配到相应view${view.playerInfo?.programId}")
                         //刷新主播信息
                         info.follow = true
-                        info.showInfo=true
+                        info.showInfo = true
                         view.setPlayInfo(info)
                         return@Observer
                     }
@@ -251,14 +253,15 @@ open class LivePlayerFragment : BaseFragment() {
                 //这里isAnchor = true只是为了方便隐藏主播信息视图 会理解有歧义
                 this.isAnchor = true
             })
-            main.show()
+
             //显示封面
             posterUrl?.let {
-                mMainVideoView?.showCover(posterUrl)
+                main.showCover(posterUrl)
             }
+            main.show()
             //播放流
-            playByInfo(playInfo, mMainVideoView ?: return)
-            mVideoViewModel.playerData.value = null
+            playByInfo(playInfo, main)
+
         }
     }
 

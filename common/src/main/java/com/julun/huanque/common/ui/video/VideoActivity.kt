@@ -78,14 +78,14 @@ class VideoActivity : BaseActivity() {
     //阿里播放器
     private var mAliPlayer: AliPlayer? = null
     private var operate: String = ""
-    private var url: String = ""
+    private var mUrl: String = ""
     private var mVideoId: Long = 0L
     private var from: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         mVideoId = intent.getLongExtra(IntentParamKey.ID.name, 0)
         operate = intent.getStringExtra(IntentParamKey.OPERATE.name) ?: ""
 //        from = intent.getStringExtra(IntentParamKey.SOURCE.name) ?: ""
-        url = intent.getStringExtra(IntentParamKey.URL.name) ?: ""
+        mUrl = intent.getStringExtra(IntentParamKey.URL.name) ?: ""
         super.onCreate(savedInstanceState)
         StatusBarUtil.setTransparent(this)
 
@@ -151,7 +151,7 @@ class VideoActivity : BaseActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
 
-        play(url)
+        play(mUrl)
     }
 
     private var isComplete: Boolean = false
@@ -282,7 +282,7 @@ class VideoActivity : BaseActivity() {
     private fun playStream() {
         //聊天模式 不需要播放视频   && NetUtils.isNetConnected()
         val urlSource = UrlSource()
-        urlSource.uri = url
+        urlSource.uri = mUrl
 //            ULog.i("PlayerLine 创建播放源")
         mAliPlayer?.setDataSource(urlSource)
         mAliPlayer?.isAutoPlay = true
@@ -296,7 +296,7 @@ class VideoActivity : BaseActivity() {
      * 释放流相关
      */
     private fun release() {
-        url = ""
+        mUrl = ""
         mAliPlayer?.stop()
         mAliPlayer?.release()
     }
@@ -314,7 +314,7 @@ class VideoActivity : BaseActivity() {
     private fun resume() {
         if (mLogEnable)
             ULog.i("DXCPlayer 恢复播放resume")
-        if (url.isNotEmpty()) {
+        if (mUrl.isNotEmpty()) {
             mAliPlayer?.start()
         }
     }
