@@ -101,7 +101,7 @@ class PlayerViewManager(val context: PlayerActivity) {
         // 公聊区宽度
         val PUBLIC_CHAT_CLIENT_WIDTH =
             (SCREEN_WIDTH - CommonInit.getInstance()
-                .getContext().resources.getDimensionPixelSize(R.dimen.pk_width) - DensityHelper.dp2px(8f))
+                .getContext().resources.getDimensionPixelSize(R.dimen.pk_width) - DensityHelper.dp2px(15f))
 
         val DARK_COLOR = Color.parseColor("#80000000")
 
