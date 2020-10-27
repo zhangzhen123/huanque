@@ -3,6 +3,7 @@ package com.julun.huanque.ui.safe
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ReactiveData
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -36,10 +37,15 @@ class DestroyAccountModel : BaseViewModel() {
     fun destroyAccount() {
         viewModelScope.launch {
             request({
-                val result = userService.destroyAccount().dataConvert(intArrayOf(1304,1305))
+                val result = userService.destroyAccount().dataConvert(intArrayOf(1304, 1305))
                 applyResult.value = result.convertRtData()
             }, error = {
-                applyResult.value = it.convertError()
+                if (it is ResponseError) {
+                    val errorCode = it.busiCode
+                    if (errorCode == 1304 || errorCode == 1305) {
+                        applyResult.value = it.convertError()
+                    }
+                }
             })
         }
 
