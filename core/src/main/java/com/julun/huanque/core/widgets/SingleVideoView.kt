@@ -390,6 +390,8 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 //        config.mHighBufferDuration = 3000;
 // 起播缓冲区时长。单位ms。这个时间设置越短，起播越快。也可能会导致播放之后很快就会进入加载状态。
 //        config.mStartBufferDuration = 500;
+        //停止播放时 去除最后一帧的残留
+        config.mClearFrameWhenStop=true
         mAliPlayer?.config = config
     }
 
