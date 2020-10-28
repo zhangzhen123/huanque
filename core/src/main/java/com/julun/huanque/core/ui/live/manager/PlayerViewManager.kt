@@ -1343,7 +1343,7 @@ class PlayerViewManager(val context: PlayerActivity) {
     private fun changePublicChatHeight(needChange: Boolean) {
         val publicMessageView = context.publicMessageView
         val rootContainer = context.rootContainer
-        val appBottomShadow = context.app_bottom_shadow
+//        val appBottomShadow = context.app_bottom_shadow
 
         val isLiving = viewModel.isLiving
         var viewHeight = ScreenUtils.computeUsableHeight(rootContainer)
@@ -1380,11 +1380,11 @@ class PlayerViewManager(val context: PlayerActivity) {
                     previousHeight = previousHeight * 75 / 100
                 }
             }
-            if (appBottomShadow.isVisible()) {
-                val params = appBottomShadow.layoutParams
-                params?.height = public_chat_height + ACTION_HEIGHT
-                appBottomShadow.requestLayout()
-            }
+//            if (appBottomShadow.isVisible()) {
+//                val params = appBottomShadow.layoutParams
+//                params?.height = public_chat_height + ACTION_HEIGHT
+//                appBottomShadow.requestLayout()
+//            }
             logger.info("当前的公聊高度previousHeight:$previousHeight public_chat_height=$public_chat_height isLiving=$isLiving")
             //如果previousHeight值是负的 直接赋值0
             if (previousHeight < 0) {
