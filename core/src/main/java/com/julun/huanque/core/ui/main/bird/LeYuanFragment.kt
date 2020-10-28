@@ -132,7 +132,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             programId = pid
         }
         val activity = requireActivity()
-        if (activity is PlayerActivity) {
+        if (activity is PlayerActivity || activity.localClassName.contains("PrivateConversationActivity")) {
+            //直播间或者私聊页面隐藏头部
             isInLivePage = true
             csl_top.inVisible()
             view_top_holder.show()
@@ -227,8 +228,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         }
         iv_bird_guide.onClickNew {
             logger.info("点击了规则")
-            val url = mViewModel.homeInfo.value?.getT()?.teachVideoUrl?:return@onClickNew
-            VideoActivity.start(requireActivity(),StringHelper.getOssImgUrl(url))
+            val url = mViewModel.homeInfo.value?.getT()?.teachVideoUrl ?: return@onClickNew
+            VideoActivity.start(requireActivity(), StringHelper.getOssImgUrl(url))
 
         }
         iv_bottom_02.onClickNew {
@@ -448,8 +449,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
     /**
      * [hasPlay]如果当前的返回的棋盘不是一级或者棋盘有鹊时代表以经玩过
      */
-    private fun initGuideView1(hasPlay:Boolean) {
-        if(hasPlay){
+    private fun initGuideView1(hasPlay: Boolean) {
+        if (hasPlay) {
             logger.info("已经玩过 不再需要引导")
             return
         }
@@ -739,11 +740,11 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                             tv_cash.text = "${info.cash.add(data.cash)}元"
                             val fInfo = data.functionNumInfo ?: return@Observer
                             //将值回传给viewModel刷新数据
-                            mViewModel.currentInfo?.functionInfo?.cowherd?.functionNum=fInfo.cowherd
-                            mViewModel.currentInfo?.functionInfo?.wealth?.functionNum=fInfo.wealth
-                            mViewModel.currentInfo?.functionInfo?.weaver?.functionNum=fInfo.weaver
-                            mViewModel.currentInfo?.functionInfo?.mystical?.functionNum=fInfo.mystical
-                            mViewModel.currentInfo?.functionInfo?.redpacket?.functionNum=fInfo.redpacket
+                            mViewModel.currentInfo?.functionInfo?.cowherd?.functionNum = fInfo.cowherd
+                            mViewModel.currentInfo?.functionInfo?.wealth?.functionNum = fInfo.wealth
+                            mViewModel.currentInfo?.functionInfo?.weaver?.functionNum = fInfo.weaver
+                            mViewModel.currentInfo?.functionInfo?.mystical?.functionNum = fInfo.mystical
+                            mViewModel.currentInfo?.functionInfo?.redpacket?.functionNum = fInfo.redpacket
                             if (fInfo.wealth.isNotEmpty() && fInfo.wealth != "0") {
                                 tv_cai_shen.text = fInfo.wealth
                                 tv_cai_shen.show()
@@ -808,7 +809,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         set.playSequentially(aniText1, aniText2)
         set.addListener(onEnd = {
 //                    logger("数字执行完成  开始隐藏")
-            if(lifecycle.currentState<= Lifecycle.State.INITIALIZED){
+            if (lifecycle.currentState <= Lifecycle.State.INITIALIZED) {
                 return@addListener
             }
             tv_recycler_coin?.hide()
@@ -965,8 +966,8 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         startAniInterval()
         if (requireActivity() is LeYuanBirdActivity) {
             rv_bird_packet.postDelayed({
-                val hasBird= info.upgradeList.any { it.upgradeId != null }
-                val hasPlay=info.unlockUpgrade.upgradeLevel>1||hasBird
+                val hasBird = info.upgradeList.any { it.upgradeId != null }
+                val hasPlay = info.unlockUpgrade.upgradeLevel > 1 || hasBird
                 initGuideView1(hasPlay)
             }, 100)
         }
@@ -1054,7 +1055,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
             set.duration = 300
             set.playTogether(anim1, anim2)
             set.addListener(onEnd = {
-                if(lifecycle.currentState<= Lifecycle.State.INITIALIZED){
+                if (lifecycle.currentState <= Lifecycle.State.INITIALIZED) {
                     return@addListener
                 }
                 recoveryItemBird()
@@ -1133,7 +1134,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         //(3)
         anim02.addListener(onEnd = {
             //一定要判断生命周期销毁时 不然会报找不到view
-            if(lifecycle.currentState<= Lifecycle.State.INITIALIZED){
+            if (lifecycle.currentState <= Lifecycle.State.INITIALIZED) {
                 isActionDoing = false
                 return@addListener
             }
@@ -1228,7 +1229,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
         anim02.playTogether(anim0201, anim0202)
         //(3)靠拢后 播放合体特效
         anim02.addListener(onEnd = {
-            if(lifecycle.currentState<= Lifecycle.State.INITIALIZED){
+            if (lifecycle.currentState <= Lifecycle.State.INITIALIZED) {
                 isActionDoing = false
                 return@addListener
             }

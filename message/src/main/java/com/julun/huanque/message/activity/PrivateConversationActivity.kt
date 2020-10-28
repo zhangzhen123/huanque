@@ -731,6 +731,12 @@ class PrivateConversationActivity : BaseActivity() {
             }
         }
 
+        iv_game.onClickNew {
+            //显示小鹊游戏
+            (ARouter.getInstance().build(ARouterConstant.BIRD_DIALOG_FRAGMENT).navigation() as? BaseDialogFragment)
+                ?.show(supportFragmentManager, "BIRD_DIALOG_FRAGMENT")
+        }
+
         recyclerview.mEventListener = object : EventListener {
             override fun onDispatch(ev: MotionEvent?) {
                 if (ev?.action == MotionEvent.ACTION_DOWN) {
@@ -1203,7 +1209,7 @@ class PrivateConversationActivity : BaseActivity() {
             }
         }
         //用户经验变动消息
-        MessageProcessor.registerEventProcessor(this,object : MessageProcessor.UserExpChangeMessageProcessor {
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.UserExpChangeMessageProcessor {
             override fun process(data: UserExpChangeEvent) {
                 mPrivateConversationViewModel?.userExpChangeEvent?.value = data
             }
