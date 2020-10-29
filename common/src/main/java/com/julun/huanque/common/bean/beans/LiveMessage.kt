@@ -298,6 +298,7 @@ data class RoyalUpLevelEvent(
 //        /** 是否展示引导贵族月卡弹窗 **/
 //        var rechargeMonthCardMsg: String? = null
 ) : Serializable
+
 //开通贵族动画或者贵族续费动画
 data class RoyalChangeEventBean(
     var bgColor: String = "",
@@ -313,7 +314,8 @@ data class RoyalChangeEventBean(
     var royalSpecialText: String = "",
     var svgaUrl: String = "",
     var webUrl: String = ""
-):Serializable
+) : Serializable
+
 class GrantInfo : Serializable {
     /** 商品ID  */
     private val prodId: Int? = null
@@ -603,6 +605,13 @@ class TplBeanExtraContext(
 
     var runwayPic: String = "",
 
+    //盲盒礼物数据
+    var giftId: Long = 0,
+    //单价
+    var beans: Long = 0,
+    //礼物名称
+    var giftName: String = "",
+
 
     /**
      * --------------------------------------------------------
@@ -620,7 +629,6 @@ class TplBeanExtraContext(
     var msgId: String = ""
 
 )
-
 
 
 class EnterTypeBean(var type: String = "", var content: Any? = null) {

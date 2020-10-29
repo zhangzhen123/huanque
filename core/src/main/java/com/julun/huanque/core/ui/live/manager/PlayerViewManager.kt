@@ -37,12 +37,10 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.BirdDialogFragment
-import com.julun.huanque.core.ui.live.fragment.BalanceNotEnoughFragment
-import com.julun.huanque.core.ui.live.fragment.FirstRechargeFragment
-import com.julun.huanque.core.ui.live.fragment.PrivateFragment
 import com.julun.huanque.core.ui.share.LiveShareActivity
 import com.julun.huanque.core.viewmodel.AnchorNoLiveViewModel
 import com.julun.huanque.common.viewmodel.FirstRechargeViewModel
+import com.julun.huanque.core.ui.live.fragment.*
 import com.julun.huanque.core.viewmodel.OrientationViewModel
 import com.julun.huanque.core.viewmodel.PropViewModel
 import com.julun.huanque.core.widgets.live.LiveRunwayView
@@ -259,6 +257,31 @@ class PlayerViewManager(val context: PlayerActivity) {
                 "${SessionUtils.getUserId()}${ParamConstant.CHAT_MODE}", it
                     ?: false
             )
+        })
+        /**
+         * 盲盒规则页面
+         */
+        viewModel.blindBoxBeanData.observe(context, Observer {
+            if (it != null) {
+                mDialogManager.openDialog(BlindBoxRuleFragment::class.java)
+            }
+        })
+        /**
+         * 魔法礼物结果页面
+         */
+        viewModel.eggResultData.observe(context, Observer {
+            if (it != null) {
+                mDialogManager.openDialog(EggResultFragment::class.java, reuse = true)
+            }
+        })
+
+        /**
+         * 盲盒礼物结果页面
+         */
+        viewModel.sendBlindBoxResultData.observe(context, Observer {
+            if(it != null){
+                mDialogManager.openDialog(BlindBoxResultFragment::class.java, reuse = true)
+            }
         })
 
         mFirstRechargeViewModel.firstRechargeFlag.observe(context, Observer {

@@ -77,6 +77,9 @@ object TextTouch {
 
     //打开贵族页面
     const val OpenRoyalPage = "OpenRoyalPage"
+
+    //打开盲盒礼物规则页面
+    const val BlindRulePage = "BlindRulePage"
 }
 
 object EnterType {

@@ -1,5 +1,6 @@
 package com.julun.huanque.common.bean.forms
 
+import com.julun.huanque.common.constant.ProdType
 import java.io.Serializable
 
 
@@ -39,8 +40,13 @@ class UserEnterRoomForm(
     programId: Long,
     var positionIndex: Int? = null,
     var fromType: String? = null,
-    var shareUserId : String = ""
+    var shareUserId: String = ""
 ) : ProgramIdForm(programId)
+
+/**
+ * 查询礼物规则的form
+ */
+class GiftRuleForm(var giftId: Long, var prodType: String = ProdType.Gift) : Serializable
 
 class RecommendProgramForm(var programId: Long? = null) : SessionForm()
 

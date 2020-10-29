@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="210dp"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingDefaultResource">
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@drawable/bg_gift_explain"
+        app:layout_constraintBottom_toBottomOf="@+id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_gift_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/pk_name_size"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="棒棒糖" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_tag"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="15dp"
+        android:divider="@drawable/divider_gift_tag"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:showDividers="middle"
+        app:layout_constraintBottom_toBottomOf="@id/tv_gift_name"
+        app:layout_constraintLeft_toRightOf="@id/tv_gift_name"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_gift_name" />
+
+    <TextView
+        android:id="@+id/tv_explain"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_4"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/text_10size"
+        app:layout_constraintLeft_toLeftOf="@id/tv_gift_name"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_gift_name"
+        tools:text="结合力客户案例回放的回复的落后三分来划分的是发" />
+
+
+    <View
+        android:id="@+id/view_content"
+        android:layout_width="0px"
+        android:layout_height="1px"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="15dp"
+        android:background="#0DFFFFFF"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_explain" />
+
+
+    <View
+        android:id="@+id/view_jump"
+        android:layout_width="0px"
+        android:layout_height="40dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_content" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_jump"
+        android:layout_width="60dp"
+        android:layout_height="20dp"
+        android:layout_marginRight="15dp"
+        app:actualImageResource="@mipmap/icon_gift_rule"
+        app:layout_constraintBottom_toBottomOf="@id/view_jump"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_jump"
+        tools:visibility="visible" />
+
+    <View
+        android:id="@+id/view_bottom"
+        android:layout_width="0px"
+        android:layout_height="1px"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_jump" />
+
+
+    <ImageView
+        android:id="@+id/iv_arrow_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/gift_arrow_bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_bottom" />
+
+    <ImageView
+        android:id="@+id/iv_arrow_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/gift_arrow_bottom"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_bottom"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

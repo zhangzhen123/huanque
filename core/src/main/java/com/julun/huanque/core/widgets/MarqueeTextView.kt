@@ -2,6 +2,7 @@ package com.julun.huanque.core.widgets
 
 import android.content.Context
 import android.graphics.Rect
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.widget.TextView
 
@@ -10,17 +11,32 @@ import android.widget.TextView
  * 不被任何外界事物影响的跑马灯
  */
 class MarqueeTextView(context: Context, attrs: AttributeSet?) : androidx.appcompat.widget.AppCompatTextView(context, attrs) {
+    private var isMarqueeEnable = false
+
+
+    fun setMarqueeEnable(marqueEnable: Boolean) {
+        if (marqueEnable != isMarqueeEnable) {
+            isMarqueeEnable = marqueEnable
+            ellipsize = if (isMarqueeEnable) {
+                TextUtils.TruncateAt.MARQUEE
+            } else {
+                TextUtils.TruncateAt.END
+            }
+            onWindowFocusChanged(marqueEnable)
+        }
+    }
 
     override fun isFocused(): Boolean {
-        return true
+        return isMarqueeEnable
     }
 
     override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
-//        super.onFocusChanged(focused, direction, previouslyFocusedRect)
+        super.onFocusChanged(focused, direction, previouslyFocusedRect)
     }
 
     override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
-//        super.onWindowFocusChanged(hasWindowFocus)
+        super.onWindowFocusChanged(hasWindowFocus)
     }
+
 
 }

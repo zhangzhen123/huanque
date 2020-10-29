@@ -179,6 +179,8 @@ class PlayerViewModel : BaseViewModel() {
     //贡献榜关闭标识
     val scoreDismissFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //打开盲盒规则弹窗的bean
+    val blindBoxBeanData: MutableLiveData<BlindBoxBean> by lazy { MutableLiveData<BlindBoxBean>() }
 
 //    //显示在线列表视图
 //    val onlineView: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
@@ -216,6 +218,9 @@ class PlayerViewModel : BaseViewModel() {
 
     //魔法礼物赠送奖励列表
     val eggResultData: MutableLiveData<EggHitSumResult> by lazy { MutableLiveData<EggHitSumResult>() }
+
+    //送盲盒的结果
+    val sendBlindBoxResultData: MutableLiveData<SendGiftResult> by lazy { MutableLiveData<SendGiftResult>() }
 
     //是否有首充
     val firstRechargeFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -670,6 +675,12 @@ class PlayerViewModel : BaseViewModel() {
             }
             TextTouch.Magpie -> {
                 showDialog.value = BirdDialogFragment::class.java
+            }
+            TextTouch.BlindRulePage -> {
+                //打开盲盒规则
+                val messageContext = tplBean.context ?: return       //需要url
+                val blindBoxBean = BlindBoxBean(messageContext.giftName, messageContext.beans, messageContext.giftId)
+                blindBoxBeanData.value = blindBoxBean
             }
             else -> {
                 logger("注意 ！！该点击事件没有执行")

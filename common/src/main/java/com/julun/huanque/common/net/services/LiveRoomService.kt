@@ -133,6 +133,13 @@ interface LiveRoomService {
     @POST("live/room/info/refreshUser")
     suspend fun getRoomUserInfo(@Body form: UserEnterRoomForm): Root<UserInfo>
 
+    /**
+     * 获取礼物的规则数据
+     */
+    @POST("live/room/consume/giftRule")
+    suspend fun giftRule(@Body form: GiftRuleForm): Root<GiftRuleBean>
+
+
     //===================================== 管理相关接口 end ========================================
 
     /**

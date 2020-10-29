@@ -1,14 +1,16 @@
 package com.julun.huanque.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.julun.huanque.common.bean.beans.Handbook
-import com.julun.huanque.common.bean.beans.LastShowGiftStateBean
-import com.julun.huanque.common.bean.beans.LiveGiftDto
-import com.julun.huanque.common.bean.beans.SingleTipsUpdate
+import androidx.lifecycle.viewModelScope
+import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.GiftRuleForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.request
+import kotlinx.coroutines.launch
 
 /**
  *@创建者   dong
@@ -23,22 +25,38 @@ class EggSettingViewModel : BaseViewModel() {
     private val liveRoomService: LiveRoomService by lazy {
         Requests.create(LiveRoomService::class.java)
     }
+
     //当前送礼面板选中的礼物
     val mSelectGiftData: MutableLiveData<LiveGiftDto> by lazy { MutableLiveData<LiveGiftDto>() }
+
     //按钮状态 开启还是关闭
     val anonymousState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //砸蛋模式 true表示为幸运模式，false表示为高爆模式
     val eggLuckyState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //需要更新的tips列表
     val updateTipsData: MutableLiveData<List<SingleTipsUpdate>> by lazy { MutableLiveData<List<SingleTipsUpdate>>() }
+
     //视图位置
     val locationData: MutableLiveData<IntArray> by lazy { MutableLiveData<IntArray>() }
+
     //折扣券状态（优先折扣券 or 优先背包）
-    val discountStatus : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val discountStatus: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //图鉴数据
     val handbookData: MutableLiveData<MutableList<Handbook>> by lazy { MutableLiveData<MutableList<Handbook>>() }
+
     //当前礼物上次点击是否显示过说明弹窗
-    val mCurrentGiftLastClickShowExplainBean : MutableLiveData<LastShowGiftStateBean> by lazy { MutableLiveData<LastShowGiftStateBean>() }
+    val mCurrentGiftLastClickShowExplainBean: MutableLiveData<LastShowGiftStateBean> by lazy { MutableLiveData<LastShowGiftStateBean>() }
+
+    //礼物规则数据
+    val mRuleGiftBean: MutableLiveData<GiftRuleBean> by lazy { MutableLiveData<GiftRuleBean>() }
+
+    //缓存的消息
+    val barrages: MutableLiveData<List<String>> by lazy { MutableLiveData<List<String>>() }
+
+
     /**
      *更新匿名
      */
@@ -79,6 +97,19 @@ class EggSettingViewModel : BaseViewModel() {
 //                .handleResponse(makeSubscriber {
 //                    handbookData.value = it
 //                })
+    }
+
+    /**
+     * 查询规则详情
+     */
+    fun giftRule(giftId: Long) {
+        viewModelScope.launch {
+            request({
+                val result = liveRoomService.giftRule(GiftRuleForm(giftId)).dataConvert()
+                mRuleGiftBean.value = result
+                barrages.value = result.msgList
+            })
+        }
     }
 
 }

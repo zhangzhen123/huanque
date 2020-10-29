@@ -419,7 +419,10 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
                 RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
             } else {
                 //跳转他人主页
-                RNPageActivity.start(requireActivity(), RnConstant.PERSONAL_HOMEPAGE, Bundle().apply { putLong("userId", userId) })
+                RNPageActivity.start(requireActivity(), RnConstant.PERSONAL_HOMEPAGE, Bundle().apply {
+                    putLong("userId", userId)
+                    putString("homeSourceType", "FlowerRank")
+                })
             }
         }
     }

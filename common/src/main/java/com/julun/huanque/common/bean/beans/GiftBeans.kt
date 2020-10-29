@@ -59,8 +59,7 @@ class LiveGiftDto {
 
 
     //守护卡类型
-    var tips: String? = null
-
+    var tips: GiftTips? = null
 
     //是否有表白功能
     var showLove: Boolean = true
@@ -91,9 +90,36 @@ class LiveGiftDto {
 
     /** 折扣券数量 */
     var discountCount: Int? = null
-
-
 }
+
+/**
+ * 礼物的操作相关数据
+ */
+class GiftTips(//礼物说明
+    var text: String = "",
+
+    //规则页点击类型
+    var ruleTouchType: String = "",
+
+    //规则页点击value
+    var ruleTouchValue: String = ""
+) : Serializable
+
+/**
+ * 传递给盲盒规则弹窗的对象
+ */
+class BlindBoxBean(
+    //礼物名称
+    var giftName: String = "",
+    //礼物价格
+    var giftPrice: Long = 0,
+    //礼物ID
+    var giftId: Long = 0,
+    //是否是从背包送出
+    var fromBag: Boolean = false,
+    //商品类型
+    var prodType: String = ""
+) : Serializable
 
 // 当前礼物可选数量（一见钟情，十全十美）
 class GoodsOptionCount {

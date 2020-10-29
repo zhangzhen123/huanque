@@ -37,6 +37,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.common.adapter.GiftAdapter
 import com.julun.huanque.common.adapter.GiftCountAdapter
 import com.julun.huanque.common.adapter.SimplePagerAdapter
+import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.EggSettingViewModel
 import com.julun.huanque.common.viewmodel.FirstRechargeViewModel
@@ -51,6 +52,7 @@ import io.reactivex.rxjava3.core.Observable.*
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_gift.*
+import kotlinx.android.synthetic.main.fragment_eggresult.*
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
@@ -108,7 +110,11 @@ class SendGiftFragment : BaseDialogFragment() {
 
     private var expRatio: Double = 1.0 //当前的经验倍数 默认1.0
 
+    //魔法礼物结果弹窗
     private var resultFragment: EggResultFragment? = null
+
+    //盲盒礼物结果弹窗
+    private var mBlindBoxResultFragment: BlindBoxResultFragment? = null
 
     private var tabList: ArrayList<TabItemInfo> = arrayListOf()//记录大tab标签的
     private var currentPagePosition: Int = 0//记录当前的需要主动刷新全局数据后 主动切换到指定位置
@@ -123,6 +129,9 @@ class SendGiftFragment : BaseDialogFragment() {
 
     //背包需要刷新标记位
     private var bagNeedRefresh = false
+
+    //礼物说明弹窗
+    private var mGiftExplainFragment: GiftExplainFragment? = null
 
 
     companion object {
@@ -231,6 +240,14 @@ class SendGiftFragment : BaseDialogFragment() {
         send_gift_container?.setOnClickListener {
             hideCountListView()
         }
+        send_gift_container?.mEventListener = object : EventListener {
+            override fun onDispatch(ev: MotionEvent?) {
+                if (ev?.action == MotionEvent.ACTION_DOWN) {
+                    //隐藏礼物说明弹窗
+                    mGiftExplainFragment?.dismiss()
+                }
+            }
+        }
         // 跳转到充值界面
         balance_layout?.onClickNew {
 
@@ -282,6 +299,39 @@ class SendGiftFragment : BaseDialogFragment() {
         }
         //直接触发刷新操作
         viewModel?.getBagData(playerViewModel.programId)
+    }
+
+    /**
+     * 显示礼物说明弹窗
+     * @param gift 当前选中的礼物
+     * @param view 当前选中的视图
+     */
+    private fun showGiftExplain(view: View) {
+        var lastShowBean = mEggSettingViewModel?.mCurrentGiftLastClickShowExplainBean?.value
+        if (lastShowBean != null && lastShowBean.giftId == selectedGift?.giftId && lastShowBean.showed) {
+            //当前礼物上次点击，显示过说明弹弹窗
+            //标识位标记为未显示
+            lastShowBean.showed = false
+            return
+        } else {
+            lastShowBean = lastShowBean ?: LastShowGiftStateBean()
+            lastShowBean.giftId = selectedGift?.giftId ?: 0
+            lastShowBean.showed = true
+        }
+
+        mEggSettingViewModel?.mCurrentGiftLastClickShowExplainBean?.value = lastShowBean
+        val location = IntArray(2)
+        view.getLocationOnScreen(location)
+
+        val localParams = IntArray(4)
+        localParams[0] = location[0]
+        localParams[1] = location[1]
+        localParams[2] = view.width
+        localParams[3] = view.height
+        mEggSettingViewModel?.locationData?.value = localParams
+
+        mGiftExplainFragment = mGiftExplainFragment ?: GiftExplainFragment()
+        mGiftExplainFragment?.show(childFragmentManager, "GiftExplainFragment")
     }
 
     /**
@@ -354,7 +404,7 @@ class SendGiftFragment : BaseDialogFragment() {
                 it.feedbackList?.let { list ->
                     if (list.isNotEmpty()) {
                         refreshNewGiftCount(it)
-                        showBoxReward(list)
+                        showBoxReward(it)
                     }
                 }
                 viewModel?.sendGiftSuccess?.value = null
@@ -381,8 +431,8 @@ class SendGiftFragment : BaseDialogFragment() {
                         for (gift in group.giftList) {
                             val gId = gift.giftId
                             if (gId != null && giftIds.contains(gId)) {
-                                //检索到需要刷新的礼物，更新tips
-                                gift.tips = tipsMap[gId]
+//                                //检索到需要刷新的礼物，更新tips
+//                                gift.tips = tipsMap[gId]
                                 //移除对应的礼物ID
                                 giftIds.remove(gId)
                                 if (gId == selectedGift?.giftId) {
@@ -405,6 +455,12 @@ class SendGiftFragment : BaseDialogFragment() {
         playerViewModel?.balance?.observe(this, Observer {
             logger.info("Player balance = $it")
             setBalanceLabelValue(it ?: return@Observer)
+        })
+        playerViewModel.sendGiftFragmentDismissState.observe(this, Observer {
+            if (it == true) {
+                dismiss()
+                playerViewModel.sendGiftFragmentDismissState.value = null
+            }
         })
         mFirstRechargeViewModel.firstRechargeFlag.observe(this, Observer {
             if (it == true) {
@@ -1244,9 +1300,6 @@ class SendGiftFragment : BaseDialogFragment() {
             return
         }
         playerViewModel.eggResultData.value = result
-        resultFragment = resultFragment ?: EggResultFragment()
-
-        resultFragment?.show(childFragmentManager, "EggResultFragment")
 
         timer(500L, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
@@ -1257,10 +1310,18 @@ class SendGiftFragment : BaseDialogFragment() {
     /**
      * 显示礼盒奖励
      */
-    private fun showBoxReward(list: ArrayList<BoxGainGift>) {
+    private fun showBoxReward(result: SendGiftResult) {
         if (!lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             return
         }
+        if (SPUtils.getBoolean(SPParamKey.Blind_Box_Show, true)) {
+            playerViewModel.sendBlindBoxResultData.value = result
+        }
+
+        timer(500L, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .bindUntilEvent(this, FragmentEvent.DESTROY)
+            .subscribe { resetData() }
     }
 
     /**
@@ -1521,8 +1582,16 @@ class SendGiftFragment : BaseDialogFragment() {
                     return@setOnItemClickListener
                 }
                 //设置连送按钮
-                if (currentGift.giftId != selectedGift?.giftId && currentGift.bag == selectedGift?.bag && currentGift.prodType == selectedGift?.prodType) {
+                if (currentGift.giftId == selectedGift?.giftId && currentGift.bag == selectedGift?.bag && currentGift.prodType == selectedGift?.prodType) {
+                    //再次点击选中的礼物,显示礼物说明弹窗
+                    if (currentGift.tips != null) {
+                        showGiftExplain(itemView)
+                    }
+                    return@setOnItemClickListener
+
+                } else {
                     hideLiansong()
+                    mGiftExplainFragment?.dismiss()
                 }
                 if (selectedGift == null || (selectedGift?.giftId != null && (selectedGift?.giftId != currentGift.giftId || selectedGift?.bag != currentGift.bag))) {
                     setSelectGiftFunction(currentGift)
