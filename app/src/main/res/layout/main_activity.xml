@@ -41,14 +41,13 @@
         android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
         app:layout_constraintLeft_toLeftOf="@id/view_bottom"
-        app:layout_constraintRight_toLeftOf="@+id/view_leyuan"
+        app:layout_constraintRight_toLeftOf="@+id/view_program"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />
 
     <View
-        android:id="@+id/view_leyuan"
+        android:id="@+id/view_program"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
         app:layout_constraintLeft_toRightOf="@id/view_make_friends"
         app:layout_constraintRight_toLeftOf="@+id/view_message"
@@ -59,7 +58,7 @@
         android:layout_width="0px"
         android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
-        app:layout_constraintLeft_toRightOf="@id/view_leyuan"
+        app:layout_constraintLeft_toRightOf="@+id/view_program"
         app:layout_constraintRight_toLeftOf="@+id/view_mine"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />
 
@@ -110,10 +109,9 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="top"
         android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/view_leyuan"
-        app:layout_constraintLeft_toLeftOf="@id/view_leyuan"
-        app:layout_constraintRight_toRightOf="@id/view_leyuan">
+        app:layout_constraintBottom_toBottomOf="@id/view_program"
+        app:layout_constraintLeft_toLeftOf="@id/view_program"
+        app:layout_constraintRight_toRightOf="@id/view_program">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_leyuan"
@@ -133,7 +131,7 @@
             android:layout_marginBottom="4dp"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:text="乐园"
+            android:text="直播"
             android:textColor="@color/selector_home_tab_text_color"
             android:textSize="10sp" />
 

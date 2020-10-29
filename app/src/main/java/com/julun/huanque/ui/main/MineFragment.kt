@@ -27,7 +27,7 @@ import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.RechargeAdInfo
+import com.julun.huanque.common.bean.beans.AdInfoBean
 import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.beans.UserDetailInfo
 import com.julun.huanque.common.bean.beans.UserTool
@@ -253,7 +253,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
         toolsAdapter.setNewInstance(info.tools)
     }
 
-    private fun loadAd(adList: MutableList<RechargeAdInfo>?) {
+    private fun loadAd(adList: MutableList<AdInfoBean>?) {
         if (adList != null) {
             if (adList.isEmpty()) {
                 if (bannerAD.isVisible()) {
@@ -538,7 +538,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
 
     private val bannerAdapter by lazy {
-        BGABanner.Adapter<SimpleDraweeView, RechargeAdInfo> { _, itemView, model, _ ->
+        BGABanner.Adapter<SimpleDraweeView, AdInfoBean> { _, itemView, model, _ ->
             val hierarchy = GenericDraweeHierarchyBuilder.newInstance(resources)
                 .setRoundingParams(RoundingParams.fromCornersRadius(dp2pxf(10)))
                 .build()
@@ -555,7 +555,7 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
     }
 
     private val bannerItemClick by lazy {
-        BGABanner.Delegate<SimpleDraweeView, RechargeAdInfo> { _, _, model, _ ->
+        BGABanner.Delegate<SimpleDraweeView, AdInfoBean> { _, _, model, _ ->
             when (model?.touchType) {
                 BannerTouchType.Url -> {
                     val extra = Bundle()

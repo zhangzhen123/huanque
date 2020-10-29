@@ -115,9 +115,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.main.follow.FollowActivity"
+            android:screenOrientation="portrait" />
 
 
         <service android:name=".service.FloatingService" />
-        <service android:name=".service.BadgeIntentService"/>
+        <service android:name=".service.BadgeIntentService" />
     </application>
 </manifest>

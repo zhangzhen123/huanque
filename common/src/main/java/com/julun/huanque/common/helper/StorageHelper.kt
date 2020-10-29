@@ -1,5 +1,6 @@
 package com.julun.huanque.common.helper
 
+import com.julun.huanque.common.bean.beans.HomePageTab
 import com.julun.huanque.common.utils.DateHelper
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.SessionUtils
@@ -33,6 +34,9 @@ object StorageHelper {
 
     //上一次的今日缘分弹出时间
     private const val LAST_TODAY_FATE_TIME = "last_today_fate_time"
+
+    private const val LATEST_HOME_CATEGORY_VERSION = "latestHomeCategoryVersion"
+    private const val HOME_CATEGORY = "HOME_CATEGORY"
 
     /**
      * 保存ad
@@ -126,5 +130,23 @@ object StorageHelper {
     fun getLastTodayFateDialogTime(): String {
         val userId: Long = SessionUtils.getUserId()
         return SPUtils.getString("$LAST_TODAY_FATE_TIME-dialog-${userId}", "")
+    }
+
+    //记录当前最新的首页tab版本号
+    fun setLatestHomeCategoryVersion(version: String) {
+        SPUtils.commitString(LATEST_HOME_CATEGORY_VERSION, version)
+    }
+
+    fun getLatestHomeCategoryVersion(): String {
+        return SPUtils.getString(LATEST_HOME_CATEGORY_VERSION, "")
+    }
+
+    //记录当前最新的首页tab列表对象
+    fun setProgramTabObj(tab: HomePageTab) {
+        SPUtils.commitObject(HOME_CATEGORY, tab)
+    }
+
+    fun getProgramTabObj(): HomePageTab? {
+        return SPUtils.getObject<HomePageTab>(HOME_CATEGORY, HomePageTab::class.java)
     }
 }

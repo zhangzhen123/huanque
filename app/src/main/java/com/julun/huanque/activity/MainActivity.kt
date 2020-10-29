@@ -19,7 +19,6 @@ import com.julun.huanque.agora.activity.AnonymousVoiceActivity
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
-import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.*
@@ -35,9 +34,9 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.manager.FloatingManager
-import com.julun.huanque.core.service.BadgeIntentService
 import com.julun.huanque.core.ui.live.fragment.FirstRechargeReceivedFragment
 import com.julun.huanque.core.ui.main.home.HomeFragment
+import com.julun.huanque.core.ui.main.program.HomeProgramFragment
 import com.julun.huanque.core.viewmodel.TodayFateViewModel
 import com.julun.huanque.fragment.*
 import com.julun.huanque.message.fragment.MessageFragment
@@ -70,12 +69,10 @@ class MainActivity : BaseActivity() {
 
     private val mHomeFragment: HomeFragment by lazy { HomeFragment.newInstance() }
 //    private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
+    private val mProgramFragment: HomeProgramFragment by lazy { HomeProgramFragment.newInstance() }
 
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
     private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
-
-    //    private val mMineFragment: Fragment by lazy { RNPageFragment.start("PH") }
-
 
     private val mMainViewModel: MainViewModel by viewModels()
 
@@ -373,30 +370,27 @@ class MainActivity : BaseActivity() {
     override fun initEvents(rootView: View) {
         view_make_friends.onClickNew {
             //交友
-            if (getCurrentFragment() != mHomeFragment) {
-                tabIconAnimation(MainPageIndexConst.MAIN_FRAGMENT_INDEX)
-            } else {
+            if (getCurrentFragment() == mHomeFragment) {
                 mHomeFragment.scrollToTop()
             }
             showFragmentNew(MainPageIndexConst.MAIN_FRAGMENT_INDEX)
         }
-//        view_leyuan.onClickNew {
-//            //乐园
-//            startActivity<LeYuanBirdActivity>()
-//
-//        }
+        view_program.onClickNew {
+            //直播
+            showFragmentNew(MainPageIndexConst.PROGRAM_FRAGMENT_INDEX)
+        }
         view_message.onClickNew {
             //消息
-            if (getCurrentFragment() != mMessageFragment) {
-                tabIconAnimation(MainPageIndexConst.MESSAGE_FRAGMENT_INDEX)
-            }
+//            if (getCurrentFragment() != mMessageFragment) {
+//                tabIconAnimation(MainPageIndexConst.MESSAGE_FRAGMENT_INDEX)
+//            }
             showFragmentNew(MainPageIndexConst.MESSAGE_FRAGMENT_INDEX)
         }
         view_mine.onClickNew {
             //我的
-            if (getCurrentFragment() != mMineFragment) {
-                tabIconAnimation(MainPageIndexConst.MINE_FRAGMENT_INDEX)
-            }
+//            if (getCurrentFragment() != mMineFragment) {
+//                tabIconAnimation(MainPageIndexConst.MINE_FRAGMENT_INDEX)
+//            }
             showFragmentNew(MainPageIndexConst.MINE_FRAGMENT_INDEX)
         }
     }
@@ -409,8 +403,8 @@ class MainActivity : BaseActivity() {
             MainPageIndexConst.MAIN_FRAGMENT_INDEX -> {
                 view_make_friends.performClick()
             }
-            MainPageIndexConst.LEYUAN_FRAGMENT_INDEX -> {
-                view_leyuan.performClick()
+            MainPageIndexConst.PROGRAM_FRAGMENT_INDEX -> {
+                view_program.performClick()
             }
             MainPageIndexConst.MESSAGE_FRAGMENT_INDEX -> {
                 view_message.performClick()
@@ -450,9 +444,14 @@ class MainActivity : BaseActivity() {
      * 切换fragment
      */
     private fun showFragmentNew(index: Int): Boolean {
+
         //切换我的收藏和个人中心时1,2前检测登录状态
         val oldFragment: Fragment? = getCurrentFragment()
         val newFragment: Fragment = getFragmentByIndex(index) ?: return false
+        //只有当前要显示的fragment不同时 才做动画
+        if (oldFragment != newFragment) {
+            tabIconAnimation(index)
+        }
         // 新的framgnet已经显示了（比如loginFragment，未登录时从个人中心切换到关注）
         val transaction = supportFragmentManager.beginTransaction()
         if (oldFragment != null) {
@@ -473,7 +472,7 @@ class MainActivity : BaseActivity() {
     private fun getFragmentByIndex(index: Int): Fragment? {
         return when (index) {
             MainPageIndexConst.MAIN_FRAGMENT_INDEX -> mHomeFragment
-//            MainPageIndexConst.LEYUAN_FRAGMENT_INDEX -> mLeYuanFragment
+            MainPageIndexConst.PROGRAM_FRAGMENT_INDEX -> mProgramFragment
             MainPageIndexConst.MESSAGE_FRAGMENT_INDEX -> mMessageFragment
             MainPageIndexConst.MINE_FRAGMENT_INDEX -> mMineFragment
             else -> {
@@ -489,9 +488,9 @@ class MainActivity : BaseActivity() {
         if (mHomeFragment.isVisible) {
             return mHomeFragment
         }
-//        if (mLeYuanFragment.isVisible) {
-//            return mLeYuanFragment
-//        }
+        if (mProgramFragment.isVisible) {
+            return mProgramFragment
+        }
         if (mMessageFragment.isVisible) {
             return mMessageFragment
         }
@@ -701,14 +700,17 @@ class MainActivity : BaseActivity() {
             override fun process(data: SinglePack) {
                 //直播间   私信页面   充值页面
                 val activityList = mutableListOf<String>(
-                    "com.julun.huanque.core.ui.live.PlayerActivity", "com.julun.huanque.message.activity.PrivateConversationActivity"
-                    , "com.julun.huanque.core.ui.recharge.RechargeCenterActivity"
+                    "com.julun.huanque.core.ui.live.PlayerActivity",
+                    "com.julun.huanque.message.activity.PrivateConversationActivity"
+                    ,
+                    "com.julun.huanque.core.ui.recharge.RechargeCenterActivity"
                 )
                 (CommonInit.getInstance().getCurrentActivity() as? BaseActivity)?.let { act ->
                     activityList.forEach {
                         if (it.contains(act.localClassName)) {
                             act?.lifecycleScope?.launchWhenResumed {
-                                FirstRechargeReceivedFragment.newInstance(data).show(act.supportFragmentManager, "FirstRechargeReceivedFragment")
+                                FirstRechargeReceivedFragment.newInstance(data)
+                                    .show(act.supportFragmentManager, "FirstRechargeReceivedFragment")
                             }
 
                             return

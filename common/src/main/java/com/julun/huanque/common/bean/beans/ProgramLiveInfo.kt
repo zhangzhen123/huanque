@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import com.alibaba.fastjson.annotation.JSONField
+import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.julun.huanque.common.basic.RootListData
 import java.io.Serializable
 
@@ -439,3 +440,26 @@ data class LiveRemindBeans(
         return programId.hashCode()
     }
 }
+
+data class ProgramListInfo(
+    var adList: MutableList<AdInfoBean>? = null,
+    var defaultCategory: String = "",
+    var hasMore: Boolean = false,
+    var programList: MutableList<ProgramLiveInfo> = mutableListOf(),
+    var isPull: Boolean = false
+)
+
+data class FollowProgramInfo(
+    var recomList: MutableList<ProgramLiveInfo>? = null,
+    var hasMore: Boolean = false,
+    var followList: MutableList<ProgramLiveInfo> = mutableListOf(),
+    var isPull: Boolean = false
+)
+
+
+
+
+/**
+ * 通用的MultiItemEntity
+ */
+class MultiBean(override var itemType: Int, var content: Any) : MultiItemEntity

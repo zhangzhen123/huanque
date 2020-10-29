@@ -9,21 +9,17 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.PopupWindow
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
-import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.ChatRoomBean
-import com.julun.huanque.common.bean.beans.RechargeAdInfo
+import com.julun.huanque.common.bean.beans.AdInfoBean
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
@@ -514,7 +510,7 @@ class MessageFragment : BaseFragment() {
         }
     }
 
-    private fun loadAd(adList: MutableList<RechargeAdInfo>?) {
+    private fun loadAd(adList: MutableList<AdInfoBean>?) {
         if (adList != null) {
             if (adList.isEmpty()) {
                 if (bannerAD.isVisible()) {
@@ -540,7 +536,7 @@ class MessageFragment : BaseFragment() {
     }
 
     private val bannerAdapter by lazy {
-        BGABanner.Adapter<SimpleDraweeView, RechargeAdInfo> { _, itemView, model, _ ->
+        BGABanner.Adapter<SimpleDraweeView, AdInfoBean> { _, itemView, model, _ ->
             when (model?.resType) {
                 BannerResType.Pic -> {
                     val screenWidth = ScreenUtils.screenWidthFloat.toInt()
@@ -552,7 +548,7 @@ class MessageFragment : BaseFragment() {
     }
 
     private val bannerItemClick by lazy {
-        BGABanner.Delegate<SimpleDraweeView, RechargeAdInfo> { _, _, model, _ ->
+        BGABanner.Delegate<SimpleDraweeView, AdInfoBean> { _, _, model, _ ->
             when (model?.touchType) {
                 BannerTouchType.Url -> {
                     val extra = Bundle()

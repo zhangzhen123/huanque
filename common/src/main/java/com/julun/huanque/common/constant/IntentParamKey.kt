@@ -77,4 +77,6 @@ enum class IntentParamKey {
     OPEN_OPERATE //打开操作
     ,
     SYS_MSG_ID//系统消息id
+    ,
+    TAB_TYPE//直播tab类型
 }

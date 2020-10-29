@@ -18,7 +18,7 @@ import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.RechargeAdInfo
+import com.julun.huanque.common.bean.beans.AdInfoBean
 import com.julun.huanque.common.bean.beans.RechargeRespDto
 import com.julun.huanque.common.bean.beans.RechargeTpl
 import com.julun.huanque.common.bean.forms.PayForm
@@ -232,7 +232,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
 
     }
 
-    private fun loadAd(adList: MutableList<RechargeAdInfo>?) {
+    private fun loadAd(adList: MutableList<AdInfoBean>?) {
         if (adList != null) {
             if (mTabPosition != 0) {
                 if (banner.isVisible()) {
@@ -496,7 +496,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
     }
 
     private val bannerAdapter by lazy {
-        BGABanner.Adapter<SimpleDraweeView, RechargeAdInfo> { _, itemView, model, _ ->
+        BGABanner.Adapter<SimpleDraweeView, AdInfoBean> { _, itemView, model, _ ->
             val hierarchy = GenericDraweeHierarchyBuilder.newInstance(resources)
                 .setRoundingParams(RoundingParams.fromCornersRadius(dp2pxf(10)))
                 .build()
@@ -514,7 +514,7 @@ class RechargeCenterFragment : BaseVMFragment<RechargeFragmentViewModel>() {
     }
 
     private val bannerItemCick by lazy {
-        BGABanner.Delegate<SimpleDraweeView, RechargeAdInfo> { _, _, model, _ ->
+        BGABanner.Delegate<SimpleDraweeView, AdInfoBean> { _, _, model, _ ->
             when (model?.touchType) {
                 BannerTouchType.Url -> {
                     val extra = Bundle()

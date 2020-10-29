@@ -2,9 +2,7 @@ package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
-import com.julun.huanque.common.bean.beans.AuthorFollowBean
-import com.julun.huanque.common.bean.beans.LiveFollowListData
-import com.julun.huanque.common.bean.beans.ProgramLiveInfo
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.LiveFollowForm
 import com.julun.huanque.common.bean.forms.ProgramListForm
 import io.reactivex.rxjava3.core.Observable
@@ -35,4 +33,16 @@ interface ProgramService {
     @POST("live/program/info/heatList")
     suspend fun squareHeatList(@Body form: ProgramListForm): Root<RootListData<ProgramLiveInfo>>
 
+
+    /**
+     * 获取直播列表
+     */
+    @POST("live/program/info/list")
+    suspend fun programList(@Body form: ProgramListForm): Root<ProgramListInfo>
+
+    /**
+     * 获取直播列表
+     */
+    @POST("live/program/info/followPrograms")
+    suspend fun followPrograms(@Body form: LiveFollowForm): Root<FollowProgramInfo>
 }

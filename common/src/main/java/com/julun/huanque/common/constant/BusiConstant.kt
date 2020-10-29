@@ -615,7 +615,7 @@ object BannerTouchType {
     val Url = "Url"
 
     //直播间
-    val Room = "Room"
+    val Room = "LiveRoom"
 
     //充值
     val Recharge = "Recharge"
