@@ -15,7 +15,6 @@
             android:id="@+id/view_top"
             android:layout_width="0px"
             android:layout_height="0px"
-            android:background="@mipmap/bg_blind_box"
             app:layout_constraintDimensionRatio="1125:1161"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
