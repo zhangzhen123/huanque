@@ -124,10 +124,10 @@ class LiveRunwayView @JvmOverloads constructor(context: Context, attrs: Attribut
 //            weekStarAnimPlay()
         }
 
-        tv_live_square.onClickNew {
-            playerViewModel?.squareView?.value = true
-
-        }
+//        tv_live_square.onClickNew {
+////            playerViewModel?.squareView?.value = true
+//
+//        }
 
         week_star_layout.setOnTouchListener { _, event ->
             logger.info("touch week_star_layout")

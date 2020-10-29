@@ -175,14 +175,17 @@ class StartAdsResult : Serializable {
 }
 
 class RecommendInfo : Serializable {
-    var anchorId: Int = 0
-    var defaultPlaySeconds: Int = 8
-    var headPic: String = ""
+    //城市
+    var city: String = ""
+
+    //封面
+    var coverPic: String = ""
+
+    //热度值
+    var heatValue: Long = 0
     var nickname: String = ""
     var programId: Long = 0
-
-    /**新增的标签**/
-    var bodyTagContentTpl: String = ""
+    var programName: String = ""
 
     //播放数据
     var playInfo: PlayInfo? = null

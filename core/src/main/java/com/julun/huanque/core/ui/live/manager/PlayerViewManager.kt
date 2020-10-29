@@ -279,7 +279,7 @@ class PlayerViewManager(val context: PlayerActivity) {
          * 盲盒礼物结果页面
          */
         viewModel.sendBlindBoxResultData.observe(context, Observer {
-            if(it != null){
+            if (it != null) {
                 mDialogManager.openDialog(BlindBoxResultFragment::class.java, reuse = true)
             }
         })
@@ -580,6 +580,12 @@ class PlayerViewManager(val context: PlayerActivity) {
         mFirstRechargeViewModel.firstRechargeBean.observe(context, Observer {
             if (it != null) {
                 FirstRechargeFragment().show(context.supportFragmentManager, "FirstRechargeFragment")
+            }
+        })
+
+        anchorNoLiveViewModel.recommendProgram.observe(context, Observer {
+            if (it != null) {
+                mDialogManager.openDialog(RecommendFragment::class.java, reuse = false)
             }
         })
 

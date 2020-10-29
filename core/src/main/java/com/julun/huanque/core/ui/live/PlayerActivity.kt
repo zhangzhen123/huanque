@@ -491,8 +491,8 @@ class PlayerActivity : BaseActivity() {
 //            if (it.isLiving) {
 //                cur_live_bg.hide()
 //            } else {
-                cur_live_bg.show()
-                liveViewManager.loadBlurImage(cur_live_bg, it.prePic)
+            cur_live_bg.show()
+            liveViewManager.loadBlurImage(cur_live_bg, it.prePic)
 //            }
 
 //            conversationListViewModel?.anchorData = it
@@ -1622,7 +1622,7 @@ class PlayerActivity : BaseActivity() {
             override fun process(data: OpenShowEvent) {
                 logger.info("OpenShowEvent isPcLive:${data.isPcLive}")
                 //获取直播的类型
-                liveViewManager.mDialogManager.hideFragment(LiveSquareDialogFragment::class.java)
+//                liveViewManager.mDialogManager.hideFragment(LiveSquareDialogFragment::class.java)
                 isAppShow = !data.isLandscape
                 viewModel.baseData.value?.isPcLive = data.isPcLive
                 viewModel.baseData.value?.isLandscape = data.isLandscape
@@ -1656,7 +1656,6 @@ class PlayerActivity : BaseActivity() {
             MessageProcessor.StopLivingMessageProcessor {
             override fun process(data: CloseShowEvent) {
                 logger.info("Player 接受到停播消息")
-                viewModel.squareView.value = true
                 liveViewManager.switchToVertical()
                 //只有非NormalStop才关播
                 if (isAnchor && data.stopType != StopType.NORMALSTOP) {

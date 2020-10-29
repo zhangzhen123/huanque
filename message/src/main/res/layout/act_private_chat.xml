@@ -248,7 +248,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:scaleType="centerInside"
-                    android:src="@mipmap/icon_live_game"
+                    android:src="@mipmap/icon_leyuan_private"
                     app:layout_constraintBottom_toBottomOf="@id/view_input_bottom"
                     app:layout_constraintLeft_toRightOf="@id/iv_phone"
                     app:layout_constraintRight_toLeftOf="@id/iv_gift"
