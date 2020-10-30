@@ -36,7 +36,12 @@ object StorageHelper {
     private const val LAST_TODAY_FATE_TIME = "last_today_fate_time"
 
     private const val LATEST_HOME_CATEGORY_VERSION = "latestHomeCategoryVersion"
+
+    //首页的直播节目单tab分类
     private const val HOME_CATEGORY = "HOME_CATEGORY"
+
+    //默认的首页定位tab
+    private const val DEFAULT_HOME_TAB = "DefaultHomeTab"
 
     /**
      * 保存ad
@@ -149,4 +154,14 @@ object StorageHelper {
     fun getProgramTabObj(): HomePageTab? {
         return SPUtils.getObject<HomePageTab>(HOME_CATEGORY, HomePageTab::class.java)
     }
+
+
+    //设置默认首页定位tab
+    fun setDefaultHomeTab(tab: String) {
+        if (tab.isNotEmpty()) {
+            SharedPreferencesUtils.commitString(DEFAULT_HOME_TAB, tab)
+        }
+    }
+
+    fun getDefaultHomeTab() = SharedPreferencesUtils.getString(DEFAULT_HOME_TAB, "")
 }

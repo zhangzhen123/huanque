@@ -25,6 +25,7 @@ import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ChannelCodeHelper
+import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.*
 import com.julun.huanque.common.message_dispatch.MessageProcessor
@@ -68,7 +69,8 @@ import kotlin.math.min
 class MainActivity : BaseActivity() {
 
     private val mHomeFragment: HomeFragment by lazy { HomeFragment.newInstance() }
-//    private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
+
+    //    private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
     private val mProgramFragment: HomeProgramFragment by lazy { HomeProgramFragment.newInstance() }
 
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
@@ -131,8 +133,22 @@ class MainActivity : BaseActivity() {
         initViewModel()
 
         lifecycleScope.launchWhenResumed {
-            val targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, 0) ?: 0
-            mMainViewModel.indexData.value = targetIndex
+            //默认定位的位置 优先以TARGET_INDEX 再根据getDefaultHomeTab
+            var targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, -1)
+            if (targetIndex == null || targetIndex == -1) {
+                when (StorageHelper.getDefaultHomeTab()) {
+                    DefaultHomeTab.Live -> {
+                        targetIndex = MainPageIndexConst.PROGRAM_FRAGMENT_INDEX
+                    }
+                    DefaultHomeTab.Social -> {
+                        targetIndex = MainPageIndexConst.MAIN_FRAGMENT_INDEX
+                    }
+                }
+            }
+            if (targetIndex != null && targetIndex != -1) {
+                mMainViewModel.indexData.value = targetIndex
+            }
+
         }
 
 
@@ -376,6 +392,9 @@ class MainActivity : BaseActivity() {
             showFragmentNew(MainPageIndexConst.MAIN_FRAGMENT_INDEX)
         }
         view_program.onClickNew {
+            if (getCurrentFragment() == mProgramFragment) {
+                mProgramFragment.scrollToTop()
+            }
             //直播
             showFragmentNew(MainPageIndexConst.PROGRAM_FRAGMENT_INDEX)
         }
@@ -537,7 +556,7 @@ class MainActivity : BaseActivity() {
      */
     private fun exit() {
         if (!mHomeFragment.isVisible) {
-            mMainViewModel.indexData.value = 0
+            mMainViewModel.indexData.value = MainPageIndexConst.MAIN_FRAGMENT_INDEX
             return
         }
         val secondTime = System.currentTimeMillis()
@@ -553,8 +572,11 @@ class MainActivity : BaseActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        val targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, 0) ?: 0
-        mMainViewModel.indexData.value = targetIndex
+        val targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, -1)
+        if (targetIndex != null && targetIndex != -1) {
+            mMainViewModel.indexData.value = targetIndex
+        }
+
         if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
             intent?.let {
                 judgeUpdateInfoFragment(it)
@@ -778,7 +800,7 @@ class MainActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun systemMessageUnreadRefresh(bean : SystemMessageRefreshBean){
+    fun systemMessageUnreadRefresh(bean: SystemMessageRefreshBean) {
         //系统消息变更，刷新未读数
         mMessageViewModel.getUnreadCount()
     }

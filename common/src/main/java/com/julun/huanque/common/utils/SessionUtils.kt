@@ -7,40 +7,41 @@ import com.julun.huanque.common.helper.StorageHelper
  * 重要的信息和启动配参放在这里 不重要的参数放在[com.julun.huanque.common.helper.StorageHelper]中 以提高初始化效率
  */
 object SessionUtils {
-    private val SESSION_ID: String = "SESSION_ID"
+    private const val SESSION_ID: String = "SESSION_ID"
 
     //登录用户id
-    private val USER_ID: String = "USER_ID"
+    private const val USER_ID: String = "USER_ID"
 
     //用户昵称
-    private val NICK_NAME: String = "NICK_NAME"
+    private const val NICK_NAME: String = "NICK_NAME"
 
     //头像
-    private val HEAD_PIC: String = "HEAD_PIC"
+    private const val HEAD_PIC: String = "HEAD_PIC"
 
     //用户类型
-    private val USER_TYPE = "USER_TYPE"
+    private const val USER_TYPE = "USER_TYPE"
 
     //声网token
-    private val VOICE_TOKEN = "VOICE_TOKEN"
+    private const val VOICE_TOKEN = "VOICE_TOKEN"
 
     //是否是新用户
-    private val NEW_USER = "NEW_USER"
+    private const val NEW_USER = "NEW_USER"
 
     //数据是否完整
-    private val REG_COMPLETE = "REG_COMPLETE"
+    private const val REG_COMPLETE = "REG_COMPLETE"
 
     //融云聊天token
-    private var RONG_IM_TOKEN: String = "RONG_IM_TOKEN"
+    private const val  RONG_IM_TOKEN: String = "RONG_IM_TOKEN"
 
     //是否注册用户
-    private var REG_USER = "REG_USER"
+    private const val REG_USER = "REG_USER"
 
     //用户性别
-    private var SEX = "SEX"
+    private const val SEX = "SEX"
 
     //邀请码
-    private val INVITE_CODE = "INVITE_CODE"
+    private const val INVITE_CODE = "INVITE_CODE"
+
 
     //是否验证过session
     var isCheckSession = false
@@ -196,5 +197,6 @@ object SessionUtils {
     }
 
     fun getInviteCode() = SharedPreferencesUtils.getString(INVITE_CODE,"")
+
 
 }
