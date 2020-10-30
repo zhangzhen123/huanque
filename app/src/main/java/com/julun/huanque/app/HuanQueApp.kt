@@ -144,7 +144,7 @@ open class HuanQueApp : MultiDexApplication() {
 
 //            val jPush = async(Dispatchers.Default) {
 //                val time=System.currentTimeMillis()
-                //不再使用jPush
+            //不再使用jPush
 //                JPushInterface.setDebugMode(BuildConfig.DEBUG)    // 设置开启日志,发布时请关闭日志
 //                JPushInterface.init(this@HuanQueApp.applicationContext)            // 初始化 JPush
 
@@ -197,7 +197,13 @@ open class HuanQueApp : MultiDexApplication() {
         strategy.appVersion = BuildConfig.VERSION_NAME
 //        strategy.appVersion = "1.0.0"
         //                CrashReport.initCrashReport(applicationContext, strategy)
-        CrashReport.initCrashReport(applicationContext, "381c225d86", false, strategy)
+        if (BuildConfig.DEBUG) {
+            //测试环境
+            CrashReport.initCrashReport(applicationContext, "efb30cd873", false, strategy)
+        } else {
+            //线上环境
+            CrashReport.initCrashReport(applicationContext, "381c225d86", false, strategy)
+        }
 
         CrashReport.setIsDevelopmentDevice(applicationContext, BuildConfig.DEBUG)
 

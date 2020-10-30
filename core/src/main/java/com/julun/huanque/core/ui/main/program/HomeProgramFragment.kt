@@ -308,7 +308,7 @@ class HomeProgramFragment : BaseFragment() {
                     sdv_header.imageBitmap = bitmap
                 })
                 tv_nickname.text = it.programName
-                tv_type.text = "关注的人"
+                tv_type.text = "推荐关注"
                 view_flipper.addView(view)
             }
             if (recommendList.size > 1) {
