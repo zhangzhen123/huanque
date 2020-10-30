@@ -15,6 +15,7 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.BaseData
 import com.julun.huanque.common.bean.TplBean
+import com.julun.huanque.common.bean.beans.BlindBoxBean
 import com.julun.huanque.common.bean.beans.GiftRuleAward
 import com.julun.huanque.common.bean.beans.GiftRuleBean
 import com.julun.huanque.common.bean.beans.NotEnoughBalanceBean
@@ -35,6 +36,7 @@ import com.julun.huanque.core.ui.live.Transformer
 import com.julun.huanque.core.ui.live.adapter.BlindBoxRuleGiftAdapter
 import com.julun.huanque.core.viewmodel.EggSettingViewModel
 import com.julun.huanque.core.viewmodel.SendGiftViewModel
+import com.julun.huanque.core.widgets.CusGalleryLayoutManager
 import com.julun.huanque.core.widgets.MarqueeTextView
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
 import github.hellocsl.layoutmanager.gallery.GalleryLayoutManager
@@ -45,6 +47,7 @@ import kotlinx.android.synthetic.main.fragment_blind_box_rule.*
 import org.jetbrains.anko.singleLine
 import org.jetbrains.anko.textColor
 import java.lang.StringBuilder
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -63,7 +66,9 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
     private var mCurrentGiftRuleAward: GiftRuleAward? = null
 
     //画廊Manager
-    private var mGalleryLayoutManager: GalleryLayoutManager? = null
+    private var mGalleryLayoutManager: CusGalleryLayoutManager? = null
+
+    private var mBlindBoxBean: BlindBoxBean? = null
 
 
     //可以获得的礼物Adapter
@@ -80,8 +85,8 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
                 ConsumeForm(
                     mPlayerViewModel.programId,
                     1,
-                    (mPlayerViewModel.blindBoxBeanData.value?.giftId ?: 0).toInt(),
-                    BusiConstant.False, mPlayerViewModel.blindBoxBeanData.value?.prodType ?: ProdType.Gift
+                    (mBlindBoxBean?.giftId ?: 0).toInt(),
+                    BusiConstant.False, mBlindBoxBean?.prodType ?: ProdType.Gift
                 )
             )
             tv_send.isEnabled = false
@@ -104,9 +109,11 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
     private fun initViewModel() {
         mPlayerViewModel.blindBoxBeanData.observe(this, androidx.lifecycle.Observer {
             if (it != null) {
+                mBlindBoxBean = it
                 showSendBtn(it.giftName, it.giftPrice)
                 //调用接口获取数据
                 mGiftExplainViewModel.giftRule(it.giftId)
+                mPlayerViewModel.blindBoxBeanData.value = null
             }
         })
 
@@ -114,6 +121,7 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
             if (it != null) {
                 //显示数据
                 showViewByData(it)
+                mGiftExplainViewModel.mRuleGiftBean.value = null
             }
         })
 
@@ -177,7 +185,7 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     //停止
                     val position = mGalleryLayoutManager?.curSelectedPosition ?: return
-                    setSelectPosition(position)
+                    setSelectPosition(position % mAdapter.data.size)
                 }
 
             }
@@ -185,11 +193,11 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val position = mGalleryLayoutManager?.curSelectedPosition ?: return
-                setSelectPosition(position)
+                setSelectPosition(position % mAdapter.data.size)
             }
         })
 
-        mGalleryLayoutManager = GalleryLayoutManager(GalleryLayoutManager.HORIZONTAL)
+        mGalleryLayoutManager = CusGalleryLayoutManager(GalleryLayoutManager.HORIZONTAL)
         mGalleryLayoutManager?.attach(recyclerView)
         //设置滑动缩放效果
         mGalleryLayoutManager?.setItemTransformer(Transformer())
@@ -227,10 +235,29 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
     private fun showViewByData(bean: GiftRuleBean) {
         ImageUtils.loadImageWithWidth(sdv_bg, StringHelper.getOssImgUrl(bean.ruleBgPic), ScreenUtils.getScreenWidth())
         mAdapter.setList(bean.awardList)
-        if (bean.awardList.isNotEmpty()) {
-            //显示第一个礼物
-            setSelectPosition(0)
-        }
+        val index = 50 - 50 % bean.awardList.size + 1
+//        val index = 7
+        recyclerView.smoothScrollToPosition(index)
+        logger.info("index = ${index}")
+
+//        Observable.timer(3000, TimeUnit.MILLISECONDS)
+//            .bindUntilEvent(this, Lifecycle.Event.ON_DESTROY)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({
+//                //选中当前礼物
+//
+//                val currentPosition = Int.MAX_VALUE / 2 - Int.MAX_VALUE % bean.awardList.size
+////                recyclerView.smoothScrollToPosition(currentPosition)
+//                recyclerView.scrollToPosition(3)
+//                mGalleryLayoutManager?.scrollToPosition(currentPosition)
+//                logger.info("Position = ${currentPosition}")
+//            }, {})
+
+
+//        if (bean.awardList.isNotEmpty()) {
+//            //显示第一个礼物
+//            setSelectPosition(currentPosition % bean.awardList.size)
+//        }
     }
 
     /**

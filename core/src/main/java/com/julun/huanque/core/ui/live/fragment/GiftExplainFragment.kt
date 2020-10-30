@@ -214,6 +214,11 @@ class GiftExplainFragment : BaseDialogFragment() {
             tagView.setData(it)
         }
         tv_explain.text = data.tips?.text ?: ""
+        if(data.tips?.ruleTouchType?.isNotEmpty() == true){
+            sdv_jump.show()
+        }else{
+            sdv_jump.hide()
+        }
 //        dealWithTips(data.tips ?: "", data.ruleUrl)
 //        if ((data.discount ?: 0) > 0 || (data.anonymous && data.anonymous) || data.luckyOrHigh) {
 //            view_content.show()
