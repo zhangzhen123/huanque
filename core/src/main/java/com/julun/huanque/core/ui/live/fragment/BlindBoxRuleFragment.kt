@@ -201,7 +201,7 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
      */
     private fun setSelectPosition(position: Int) {
         val currentBean = mAdapter.getItemOrNull(position) ?: return
-        if (currentBean.awardName == mCurrentGiftRuleAward?.awardName) {
+        if (currentBean.awardName == mCurrentGiftRuleAward?.awardName && currentBean.count == mCurrentGiftRuleAward?.count) {
             //同样的礼物
             return
         }
