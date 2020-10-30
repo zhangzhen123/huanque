@@ -5,7 +5,6 @@ import com.julun.huanque.common.basic.VoidForm
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.*
-import com.julun.huanque.common.bean.beans.ProgramLiveIndexInfo
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -105,7 +104,7 @@ interface PkMicService {
      * 获取最近连麦主播列表
      */
     @POST("live/room/mic/queryRecent")
-    fun queryRecent(@Body form: SessionForm): Observable<Root<ArrayList<ProgramLiveIndexInfo>>>
+    fun queryRecent(@Body form: SessionForm): Observable<Root<ArrayList<ProgramLiveInfo>>>
 
     /**
      * 获取主播连麦信息

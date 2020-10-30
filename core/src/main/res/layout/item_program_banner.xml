@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.julun.huanque.common.widgets.bgabanner.BGABanner xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/banner"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:banner_indicatorGravity="bottom|right"
+    app:banner_isNeedShowIndicatorOnOnlyOnePage="false"
+    app:banner_pageChangeDuration="1000"
+    app:banner_pointContainerBackground="@color/transparent"
+    app:banner_pointContainerLeftRightPadding="0dp"
+    app:banner_pointDrawable="@drawable/bga_banner_selector_point_home"
+    app:banner_pointLeftRightMargin="2dp"
+    app:banner_tipTextSize="12sp" />
+
+

@@ -46,7 +46,7 @@ data class ChatRoomBean(
     //显示缘分入口
     var showFate: String = "",
     //广告列表
-    var adList: MutableList<RechargeAdInfo>? = null
+    var adList: MutableList<AdInfoBean>? = null
 ) : Serializable {
     companion object {
         //在线

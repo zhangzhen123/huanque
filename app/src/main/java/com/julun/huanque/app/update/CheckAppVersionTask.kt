@@ -17,6 +17,7 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.AppService
 import com.julun.huanque.common.suger.handleWithResponse
 import com.julun.huanque.common.suger.installApk
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.MD5Util
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -107,6 +108,14 @@ class CheckAppVersionTask(
                 request = false
                 if (it.refreshStartAds) {
                     //todo 刷新广告
+                }
+                if (it.homeCategory != null) {
+                    val latestHomeCategoryVersion = StorageHelper.getLatestHomeCategoryVersion()
+                    if (latestHomeCategoryVersion < it.homeCategory!!.latestHomeCategoryVersion) {
+                        logger("需要更新tab列表 ${it.homeCategory!!.latestHomeCategoryVersion}")
+                        StorageHelper.setProgramTabObj(it.homeCategory!!)
+                        StorageHelper.setLatestHomeCategoryVersion(it.homeCategory!!.latestHomeCategoryVersion)
+                    }
                 }
                 process(it.version)
 

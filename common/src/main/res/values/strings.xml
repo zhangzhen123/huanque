@@ -358,7 +358,7 @@
     <string name="connect_micro_timeout">连麦超时</string>
     <string name="search_result">搜索结果</string>
     <string name="recent_anchor">最近主播</string>
-    <string name="search_result_kong">空空如也</string>
+    <string name="search_result_kong">搜不到匹配的主播，换个词试试吧～</string>
     <string name="connnect_micro_inpk">PK结束后才能发起连麦哦</string>
     <string name="create_pk_inmicro">连麦结束后才能发起PK哦</string>
     <string name="anchor_search_attention">输入主播名称或房间号</string>

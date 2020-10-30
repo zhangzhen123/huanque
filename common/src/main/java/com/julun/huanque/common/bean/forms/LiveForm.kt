@@ -223,7 +223,7 @@ class ScoreRankResultForm(
 /**
  * 直播间侧滑关注列表
  */
-class LiveFollowForm(var offset: Int = 0, var programId: Long = 0)
+class LiveFollowForm(var offset: Int? = null, var programId: Long = 0)
 
 /**
  * 上下切换表单
@@ -322,3 +322,5 @@ data class CardManagerForm(
 class RandomRoomForm(
     var sourceType: String? = null
 )
+//搜索参数
+class KeyWordForm(var searchKey: String = "")

@@ -572,7 +572,7 @@ object BirdTaskAwardType {
 
 object MainPageIndexConst {
     const val MAIN_FRAGMENT_INDEX = 0
-    const val LEYUAN_FRAGMENT_INDEX = 1
+    const val PROGRAM_FRAGMENT_INDEX = 1
     const val MESSAGE_FRAGMENT_INDEX = 2
     const val MINE_FRAGMENT_INDEX = 3
 }

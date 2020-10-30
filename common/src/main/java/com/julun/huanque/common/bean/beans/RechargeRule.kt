@@ -1,11 +1,10 @@
 package com.julun.huanque.common.bean.beans
 
 import java.io.Serializable
-import kotlin.collections.ArrayList
 
 
 data class RechargeRespDto(
-    var adList: MutableList<RechargeAdInfo> = mutableListOf(),
+    var adList: MutableList<AdInfoBean> = mutableListOf(),
     var beans: Long = 0,
     var headPic: String = "",
     var helpUrl: String = "",
@@ -34,7 +33,7 @@ data class RechargeTpl(
  * @author WanZhiYuan
  * @iterativeVersion 4.19.1
  */
-class RechargeAdInfo : Serializable {
+class AdInfoBean : Serializable {
     /** 引导广告代码 **/
     var adCode: String = ""
 
@@ -52,4 +51,6 @@ class RechargeAdInfo : Serializable {
 
     /** 打开类型值 **/
     var touchValue: String = ""
+
+    var canShare: Boolean = false
 }

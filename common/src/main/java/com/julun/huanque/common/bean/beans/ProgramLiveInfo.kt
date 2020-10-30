@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import com.alibaba.fastjson.annotation.JSONField
+import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.julun.huanque.common.basic.RootListData
 import java.io.Serializable
 
@@ -30,9 +31,6 @@ open class ProgramLiveInfo : Serializable {
     /** 节目名称 **/
     var programName: String = ""
 
-    /** 主播id **/
-    var anchorId: Int = -1
-
     /** 头像 **/
     var headPic: String = ""
 
@@ -41,6 +39,12 @@ open class ProgramLiveInfo : Serializable {
     var isPcLive: Boolean = false
 
     var city: String = ""
+
+    var lastShowTime: String = ""
+
+    var anchorLevel: Int = 0
+
+    var anchorLevelPic: String = ""
 
     /** 角标图片或文字 **/
     var tagContentTpl: String = ""
@@ -84,17 +88,6 @@ open class ProgramLiveInfo : Serializable {
     override fun hashCode(): Int {
         return programId.toInt()
     }
-}
-
-class ProgramLiveIndexInfo : ProgramLiveInfo() {
-    //主播等级
-    var anchorLevel: Int = 0
-
-    //粉丝数
-    var fansNum: Long = 0L
-
-    /** 最后直播时间 **/
-    var lastShowTime: String = ""
 }
 
 /**
@@ -442,3 +435,24 @@ data class LiveRemindBeans(
         return programId.hashCode()
     }
 }
+
+data class ProgramListInfo(
+    var adList: MutableList<AdInfoBean>? = null,
+    var defaultCategory: String = "",
+    var hasMore: Boolean = false,
+    var programList: MutableList<ProgramLiveInfo> = mutableListOf(),
+    var isPull: Boolean = false
+)
+
+data class FollowProgramInfo(
+    var recomList: MutableList<ProgramLiveInfo>? = null,
+    var hasMore: Boolean = false,
+    var followList: MutableList<ProgramLiveInfo> = mutableListOf(),
+    var isPull: Boolean = false
+)
+
+
+/**
+ * 通用的MultiItemEntity
+ */
+class MultiBean(override var itemType: Int, var content: Any) : MultiItemEntity

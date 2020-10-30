@@ -1,10 +1,9 @@
 package com.julun.huanque.common.bean.beans
 
 import java.io.Serializable
-import java.math.BigDecimal
 
 data class UserDetailInfo(
-    var adList: MutableList<RechargeAdInfo>? = null,
+    var adList: MutableList<AdInfoBean>? = null,
     var tools: MutableList<UserTool> = mutableListOf(),
     var userBasic: UserBasic = UserBasic(),
     var userDataTabList: MutableList<UserDataTab> = mutableListOf(),

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="82dp"
+    android:background="@color/white">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/headImage"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:layout_marginStart="15dp"
+        app:failureImage="@mipmap/logo_placeholder_small"
+        app:failureImageScaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@mipmap/logo_placeholder_small"
+        app:placeholderImageScaleType="fitCenter"
+        app:roundAsCircle="true" />
+
+    <View
+        android:id="@+id/living_fg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/fg_shape_mkf_head"
+        app:layout_constraintBottom_toBottomOf="@+id/headImage"
+        app:layout_constraintEnd_toEndOf="@+id/headImage"
+        app:layout_constraintStart_toStartOf="@+id/headImage"
+        app:layout_constraintTop_toTopOf="@+id/headImage" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/living_tag"
+        android:layout_width="@dimen/dimen_27"
+        android:layout_height="@dimen/dimen_18"
+        android:layout_marginBottom="@dimen/dimen_3"
+        app:actualImageScaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/headImage"
+        app:layout_constraintEnd_toEndOf="@+id/headImage"
+        app:layout_constraintStart_toStartOf="@+id/headImage" />
+
+    <LinearLayout
+        android:id="@+id/llNicknameRoot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="@dimen/dimen_6"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/tvDes"
+        app:layout_constraintLeft_toRightOf="@+id/headImage"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/tvNickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/black_333"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="主播名称" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/levelIcon"
+            android:layout_width="35dp"
+            android:layout_height="@dimen/dimen_16"
+            android:layout_marginStart="@dimen/dimen_10" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvDes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/black_999"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/llNicknameRoot"
+        app:layout_constraintRight_toRightOf="@+id/llNicknameRoot"
+        app:layout_constraintTop_toBottomOf="@+id/llNicknameRoot"
+        tools:text="详情" />
+
+    <View
+        android:id="@+id/vLine"
+        android:layout_width="0dp"
+        android:layout_height="1px"
+        android:background="@color/divide_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/llNicknameRoot" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
