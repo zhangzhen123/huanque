@@ -43,7 +43,7 @@ class SearchResultAdapter : BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>(R.
 
         holder.setText(R.id.tvNickname, item.programName)
 
-        ImageUtils.loadImage(holder.getView(R.id.headImage), item.coverPic, 50f, 50f)
+        ImageUtils.loadImage(holder.getView(R.id.headImage), item.headPic, 50f, 50f)
         ImageUtils.loadImageWithHeight_2(holder.getView(R.id.levelIcon), item.anchorLevelPic, dp2px(16))
 
 
