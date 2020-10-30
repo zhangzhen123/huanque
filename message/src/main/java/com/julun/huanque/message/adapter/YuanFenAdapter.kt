@@ -11,6 +11,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.FateInfo
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.Sex
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.show
@@ -120,6 +121,13 @@ class YuanFenAdapter : BaseQuickAdapter<FateInfo, BaseViewHolder>(R.layout.recyc
             }
         }
 
+        val iv_new_user = holder.getView<SimpleDraweeView>(R.id.iv_new_user)
+        if (item.userTag.isNotEmpty()) {
+            iv_new_user.show()
+            iv_new_user.loadImage(item.userTag, 28f, 12f)
+        } else {
+            iv_new_user.hide()
+        }
         holder.setVisible(R.id.iv_new_user, item.newUser == BusiConstant.True)
 
         if (statusDrawable != null) {

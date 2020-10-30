@@ -1,11 +1,14 @@
 package com.julun.huanque.core.ui.main.program
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.SparseArray
+import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.util.forEach
@@ -14,19 +17,27 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
+import com.julun.huanque.common.bean.beans.FollowProgramInfo
 import com.julun.huanque.common.bean.beans.ProgramTab
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.HomeTabType
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.follow.FollowActivity
 import com.julun.huanque.core.ui.main.follow.FollowViewModel
 import com.julun.huanque.core.ui.main.makefriend.MakeFriendsFragment
 import com.julun.huanque.core.ui.search.SearchActivity
+import com.julun.huanque.core.widgets.SurfaceVideoViewOutlineProvider
 import com.julun.rnlib.RnManager
 import com.luck.picture.lib.tools.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_program_container.*
@@ -37,6 +48,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.CommonPagerTitleView
+import org.jetbrains.anko.imageBitmap
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.topPadding
 
@@ -85,7 +97,7 @@ class HomeProgramFragment : BaseFragment() {
         }
 
 
-        follow_layout.onClickNew {
+        view_flipper.onClickNew {
             requireActivity().startActivity<FollowActivity>()
         }
 
@@ -110,7 +122,10 @@ class HomeProgramFragment : BaseFragment() {
 
         })
         followViewModel.followInfo.observe(viewLifecycleOwner, Observer {
-
+            if (it.state == NetStateType.SUCCESS) {
+                val result = it.getT()
+                showViewFlipper(result)
+            }
         })
 
         viewModel.queryInfo()
@@ -233,6 +248,76 @@ class HomeProgramFragment : BaseFragment() {
         if (count >= position) {
             view_pager.currentItem = position
         }
+    }
+
+    /**
+     * 显示入口数据
+     */
+    private fun showViewFlipper(followProgramInfo: FollowProgramInfo?) {
+        view_flipper.removeAllViews()
+        if (followProgramInfo == null) {
+            view_flipper.hide()
+            return
+        }
+        //关注列表
+        val followList = followProgramInfo.followList
+        if (followList.isNotEmpty()) {
+            followList.forEach {
+                val view = LayoutInflater.from(requireContext()).inflate(R.layout.view_program_follow_and_recommend, null)
+                val sdv_header = view.findViewById<ImageView>(R.id.sdv_header) ?: return
+                val tv_nickname = view.findViewById<TextView>(R.id.tv_nickname) ?: return
+                val tv_type = view.findViewById<TextView>(R.id.tv_type) ?: return
+//                sdv_header.loadImage("${StringHelper.getOssImgUrl(it.headPic)}${BusiConstant.OSS_160}")
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    sdv_header?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(16));
+                    sdv_header?.clipToOutline = true;
+                }
+
+                ImageUtils.requestImageForBitmap("${StringHelper.getOssImgUrl(it.headPic)}${BusiConstant.OSS_160}", { bitmap ->
+                    sdv_header.imageBitmap = bitmap
+                })
+                tv_nickname.text = it.programName
+                tv_type.text = "关注的人"
+                view_flipper.addView(view)
+            }
+            if (followList.size > 1) {
+                view_flipper.startFlipping()
+            } else {
+                view_flipper.stopFlipping()
+            }
+            return
+        }
+        //推荐列表
+        val recommendList = followProgramInfo.recomList
+        if (recommendList?.isNotEmpty() == true) {
+            recommendList.forEach {
+                val view = LayoutInflater.from(requireContext()).inflate(R.layout.view_program_follow_and_recommend, null)
+                val sdv_header = view.findViewById<ImageView>(R.id.sdv_header) ?: return
+                val tv_nickname = view.findViewById<TextView>(R.id.tv_nickname) ?: return
+                val tv_type = view.findViewById<TextView>(R.id.tv_type) ?: return
+//                sdv_header.loadImage("${StringHelper.getOssImgUrl(it.headPic)}${BusiConstant.OSS_160}")
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    sdv_header?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(16));
+                    sdv_header?.clipToOutline = true;
+                }
+
+                ImageUtils.requestImageForBitmap("${StringHelper.getOssImgUrl(it.headPic)}${BusiConstant.OSS_160}", { bitmap ->
+                    sdv_header.imageBitmap = bitmap
+                })
+                tv_nickname.text = it.programName
+                tv_type.text = "关注的人"
+                view_flipper.addView(view)
+            }
+            if (recommendList.size > 1) {
+                view_flipper.startFlipping()
+            } else {
+                view_flipper.stopFlipping()
+            }
+            return
+        }
+        //执行到这行代码，表示关注和推荐都没有数据
+        view_flipper.hide()
+
     }
 
     /**

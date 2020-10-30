@@ -84,6 +84,8 @@ data class FateInfo(
     var status: String = "",
     //是否是新用户
     var newUser: String = "",
+    //用户标签
+    var userTag: String = "",
     //是否显示快捷回复
     var quickChat: String = "",
     //倒计时

@@ -66,11 +66,10 @@
         app:placeholderImageScaleType="fitCenter"
         app:roundAsCircle="true" />
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/iv_new_user"
         android:layout_width="28dp"
         android:layout_height="12dp"
-        android:src="@mipmap/icon_new_user_list"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/sdv_header"
         app:layout_constraintLeft_toLeftOf="@id/sdv_header"

@@ -12,7 +12,7 @@ kapt {
 
 //欢鹊交友版本号信息
 def versionMajor = 1
-def versionMinor = 5
+def versionMinor = 6
 def versionPatch = 0
 
 android {
