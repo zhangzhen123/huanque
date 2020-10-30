@@ -15,6 +15,7 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.manager.HuanViewModelManager
@@ -174,10 +175,11 @@ class FateQuickMatchFragment : BaseDialogFragment() {
      * 根据数据显示页面
      */
     private fun showViewByData(bean: UserInfoInRoom) {
-        if (bean.newUser == BusiConstant.True) {
-            iv_new_user.show()
+        if (bean.userTag.isNotEmpty()) {
+            sdv_tag.show()
+            sdv_tag.loadImage(StringHelper.getOssImgUrl(bean.userTag), 34f, 14f)
         } else {
-            iv_new_user.hide()
+            sdv_tag.hide()
         }
         val sex = bean.sex
         var sexDrawable: Drawable? = null
