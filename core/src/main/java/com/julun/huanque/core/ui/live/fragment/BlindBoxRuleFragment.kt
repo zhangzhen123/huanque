@@ -25,6 +25,7 @@ import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.ProdType
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
@@ -43,6 +44,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_blind_box_rule.*
 import org.jetbrains.anko.singleLine
 import org.jetbrains.anko.textColor
+import java.lang.StringBuilder
 
 
 /**
@@ -91,7 +93,7 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
         super.onStart()
         tv_send.isEnabled = true
         initViewModel()
-        this.setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
+        this.setDialogSize(Gravity.BOTTOM, 0, 440)
         //不需要半透明遮罩层
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
@@ -150,7 +152,7 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
                     //背包需要刷新
                     mPlayerViewModel.refreshGift.value = true
                 }
-                if (SPUtils.getBoolean(SPParamKey.Blind_Box_Show, true)) {
+                if (SPUtils.getBoolean(SPParamKey.Blind_Box_Show, true) && it.feedbackList?.isNotEmpty() == true) {
                     mPlayerViewModel.sendBlindBoxResultData.value = it
                 }
                 //赠送按钮可以使用
@@ -235,13 +237,20 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
      * 显示提示视图
      */
     private fun showAttentionView(tplList: MutableList<TplBean>) {
+        val barrierBuilder = StringBuilder()
         tplList.take(5).forEach {
-            val tvContent = LayoutInflater.from(requireContext()).inflate(R.layout.tv_blind_rule_attention, null) as? MarqueeTextView
-            tvContent?.text = it.realTxt
-            tvContent?.setMarqueeEnable(true)
-            view_flipper.addView(tvContent)
+//            val tvContent = LayoutInflater.from(requireContext()).inflate(R.layout.tv_blind_rule_attention, null) as? MarqueeTextView
+//            tvContent?.text = it.realTxt
+//            tvContent?.setMarqueeEnable(true)
+//            view_flipper.addView(tvContent)
+            if (barrierBuilder.isNotEmpty()) {
+                barrierBuilder.append("     ")
+            }
+            barrierBuilder.append(it.realTxt)
         }
-        view_flipper.startFlipping()
+//        view_flipper.startFlipping()
+        tv_barrier.text = barrierBuilder.toString()
+        tv_barrier.setMarqueeEnable(true)
     }
 
     /**
