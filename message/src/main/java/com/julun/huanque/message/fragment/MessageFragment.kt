@@ -103,6 +103,9 @@ class MessageFragment : BaseFragment() {
         initViewModel()
         initRecyclerView()
 //        initEvents()
+        if(mMessageViewModel.player){
+            bannerAD.hide()
+        }
         mMessageViewModel.foldStrangerMsg = SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)
         mMessageViewModel.mStranger = arguments?.getBoolean(ParamConstant.STRANGER, false) ?: false
         mMessageViewModel.player = arguments?.getBoolean(ParamConstant.PLAYER, false) ?: false
@@ -334,7 +337,9 @@ class MessageFragment : BaseFragment() {
                     rl_yuanfen.hide()
                 }
                 //显示广告
-                loadAd(it.adList)
+                if(!mMessageViewModel.player){
+                    loadAd(it.adList)
+                }
             }
         })
 

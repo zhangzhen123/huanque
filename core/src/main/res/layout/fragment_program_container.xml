@@ -25,50 +25,26 @@
         android:id="@+id/iv_search"
         android:layout_width="@dimen/dimen_32"
         android:layout_height="@dimen/dimen_32"
-        android:src="@mipmap/icon_search_big_01"
-        android:scaleType="centerInside"
         android:layout_marginEnd="@dimen/dimen_15"
+        android:scaleType="centerInside"
+        android:src="@mipmap/icon_search_big_01"
         app:layout_constraintBottom_toBottomOf="@+id/magic_indicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/magic_indicator" />
 
-    <FrameLayout
-        android:id="@+id/follow_layout"
+
+    <ViewFlipper
+        android:id="@+id/view_flipper"
         android:layout_width="140dp"
-        android:layout_height="@dimen/dimen_40"
-        android:layout_marginBottom="@dimen/dimen_50"
-        android:background="@color/color_coffee"
-        android:layout_marginEnd="@dimen/dimen_10"
+        android:layout_height="40dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="40dp"
+        android:background="@mipmap/bg_program_enter"
+        android:flipInterval="3000"
+        android:inAnimation="@anim/lm_anim_come_in"
+        android:outAnimation="@anim/lm_anim_get_out"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/view_pager" >
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/author_pic"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="4dp"
-            app:failureImage="@mipmap/logo_placeholder_small"
-            app:failureImageScaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:placeholderImage="@mipmap/logo_placeholder_small"
-            app:placeholderImageScaleType="fitCenter"
-            app:roundingBorderColor="@color/white"
-            app:roundingBorderWidth="@dimen/dimen_1"
-            app:roundAsCircle="true" />
-        <TextView
-            android:id="@+id/tvNickname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textColor="@color/black_333"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="主播名称" />
-
-    </FrameLayout>
-
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_goneMarginRight="10dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
