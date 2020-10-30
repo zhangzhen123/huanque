@@ -176,7 +176,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
     //
     fun scrollToTopAndRefresh() {
         authorList.smoothScrollToPosition(0)
-        mViewModel.queryInfo(QueryType.REFRESH)
+        mViewModel.requestProgramList(QueryType.REFRESH)
     }
 
     override fun showLoadState(state: NetState) {

@@ -32,6 +32,8 @@ data class Session(
     //性别
     var sex: String = "",
     //是否同意了协议
-    var agreeUp: String = ""
+    var agreeUp: String = "",
+    //1.6新增登陆后返回首页默认定位的位置
+    var defaultHomeTab: String = ""
 
 )

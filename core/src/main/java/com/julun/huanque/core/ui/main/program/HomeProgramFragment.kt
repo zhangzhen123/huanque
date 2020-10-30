@@ -117,7 +117,7 @@ class HomeProgramFragment : BaseFragment() {
             if (it.state == NetStateType.SUCCESS) {
                 mTabTitles.clear()
                 mTabTitles.addAll(it.requireT())
-                refreshTabList("推荐")
+                refreshTabList()
             }
 
         })
@@ -206,7 +206,10 @@ class HomeProgramFragment : BaseFragment() {
         ViewPagerHelper.bind(magic_indicator, view_pager)
     }
 
-    private fun refreshTabList(currentTab: String) {
+    /**
+     * 刷新tab数据 并且切换到指定tab
+     */
+    private fun refreshTabList(currentTab: String? = null) {
         if (mTabTitles.isNotEmpty()) {
 //            if (mTabTitles.size > 4) {
 //                mCommonNavigator.isAdjustMode = false
@@ -222,7 +225,7 @@ class HomeProgramFragment : BaseFragment() {
 //            }
 
 
-            if (currentTab.isNotEmpty()) {
+            if (!currentTab.isNullOrEmpty()) {
                 switchToTab(currentTab)
             }
         } else {
