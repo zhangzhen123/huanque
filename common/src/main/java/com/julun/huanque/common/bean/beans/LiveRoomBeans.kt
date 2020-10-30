@@ -666,8 +666,9 @@ class UserInfoInRoom : Serializable {
     //标签
     var userTags: List<String> = mutableListOf()
 
-    //是否是新用户
-    var newUser: String = ""
+
+    //用户标签
+    var userTag : String = ""
 
     /**是否显示加好友**/
     var showAddFriend: Boolean = false
@@ -851,10 +852,18 @@ data class SendGiftResult(
 
 //礼盒奖励礼物
 data class BoxGainGift(
-    var fromUserName: String = "",
-    var goodsCnt: Int = 0,
-    var goodsName: String = "",
-    var goodsPic: String = ""
+    //价格
+    var beans: Long = 0,
+    //数量
+    var prodCnt: Int = 0,
+    //ID
+    var prodId: Long = 0,
+    //名称
+    var prodName: String = "",
+    //图片
+    var prodPic: String = "",
+    //总价格
+    var totalBeans: Long = 0
 ) : Serializable
 
 

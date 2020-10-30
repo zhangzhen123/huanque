@@ -48,11 +48,10 @@
             app:roundingBorderColor="@color/white"
             app:roundingBorderWidth="1dp" />
 
-        <ImageView
-            android:id="@+id/iv_new_user"
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_tag"
             android:layout_width="34dp"
             android:layout_height="14dp"
-            android:src="@mipmap/icon_fate_newuser_dialog"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/sdv_header"
             app:layout_constraintLeft_toLeftOf="@id/sdv_header"

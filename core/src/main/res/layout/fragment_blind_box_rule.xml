@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="440dp"
+    android:overScrollMode="never"
+    android:scrollbars="none">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/view_top"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            app:layout_constraintDimensionRatio="1125:1161"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_bg"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <View
+            android:id="@+id/view_award"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="83dp"
+            android:layout_marginRight="15dp"
+            android:background="@mipmap/bg_blind_box_award"
+            app:layout_constraintDimensionRatio="1035:78"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+<!--        <ViewFlipper-->
+<!--            android:id="@+id/view_flipper"-->
+<!--            android:layout_width="0px"-->
+<!--            android:layout_height="0px"-->
+<!--            android:layout_marginLeft="30dp"-->
+<!--            android:layout_marginRight="30dp"-->
+<!--            android:flipInterval="3000"-->
+<!--            android:inAnimation="@anim/lm_anim_come_in"-->
+<!--            android:outAnimation="@anim/lm_anim_get_out"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/view_award"-->
+<!--            app:layout_constraintLeft_toLeftOf="@id/view_award"-->
+<!--            app:layout_constraintRight_toRightOf="@id/view_award"-->
+<!--            app:layout_constraintTop_toTopOf="@id/view_award" />-->
+
+        <com.julun.huanque.core.widgets.MarqueeTextView
+            android:id="@+id/tv_barrier"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center_vertical|left"
+            android:marqueeRepeatLimit="-1"
+            android:singleLine="true"
+            android:textColor="#FFF5A9"
+            android:textSize="12sp"
+            tools:text="金额和"
+            app:layout_constraintBottom_toBottomOf="@id/view_award"
+            app:layout_constraintLeft_toLeftOf="@id/view_award"
+            app:layout_constraintRight_toRightOf="@id/view_award"
+            app:layout_constraintTop_toTopOf="@id/view_award" />
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="0px"
+            android:layout_height="150dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toTopOf="@+id/tv_gift_count"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_award"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_gift_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_value"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recyclerView"
+            tools:text="棒棒糖*3" />
+
+        <TextView
+            android:id="@+id/tv_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#B2FFFFFF"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_probability"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_gift_count"
+            tools:text="价值：300鹊币" />
+
+        <TextView
+            android:id="@+id/tv_probability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:textColor="#B2FFFFFF"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tv_send"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_value"
+            tools:text="概率：0.3%" />
+
+
+        <TextView
+            android:id="@+id/tv_send"
+            android:layout_width="0px"
+            android:layout_height="40dp"
+            android:layout_marginLeft="63dp"
+            android:layout_marginRight="63dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/bg_blind_box_send"
+            android:gravity="center"
+            android:shadowColor="#5B0000"
+            android:shadowDy="4"
+            android:shadowRadius="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/view_top"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="测试效果" />
+
+        <!--        <View-->
+        <!--            android:id="@+id/view_bottom"-->
+        <!--            android:layout_width="0px"-->
+        <!--            android:layout_height="0px"-->
+        <!--            android:background="@drawable/bg_blind_box_bottom"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@id/view_final"-->
+        <!--            app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--            app:layout_constraintRight_toRightOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/view_top" />-->
+
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_title_rule"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="10dp"-->
+        <!--            android:textColor="#B2FFFFFF"-->
+        <!--            android:textSize="@dimen/sp_14"-->
+        <!--            android:textStyle="bold"-->
+        <!--            app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--            app:layout_constraintRight_toRightOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="@id/view_bottom"-->
+        <!--            tools:text="欢乐盲盒规则" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_rule"-->
+        <!--            android:layout_width="0px"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:paddingLeft="15dp"-->
+        <!--            android:paddingTop="5dp"-->
+        <!--            android:paddingRight="15dp"-->
+        <!--            android:paddingBottom="5dp"-->
+        <!--            android:textColor="#B2FFFFFF"-->
+        <!--            android:textSize="@dimen/sp_12"-->
+        <!--            app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--            app:layout_constraintRight_toRightOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/tv_title_rule"-->
+        <!--            tools:text="1.考虑离开酒店发泼额外加分饥饿反\n2.了发过来了发过来二walk积分而离开房间了发过来二walk积分而离开房间二walk积分而离开房间\n3.看额外内容跟你讲嗯嗯" />-->
+
+        <!--        <View-->
+        <!--            android:id="@+id/view_final"-->
+        <!--            android:layout_width="1px"-->
+        <!--            android:layout_height="1px"-->
+        <!--            android:layout_marginTop="15dp"-->
+        <!--            app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/tv_rule" />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

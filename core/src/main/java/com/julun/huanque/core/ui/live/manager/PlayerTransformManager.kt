@@ -77,10 +77,10 @@ class PlayerTransformManager(val act: PlayerActivity) {
             mVideoViewModel.baseData.value = it
             mPlayerMessageViewModel.anchorData.value = it
 //            liveFollowListViewModel.requestFollowLivingList(mPlayerViewModel.programId, true)
-            //不再直播的
-            if (it?.isLiving != true) {
-                mPlayerViewModel.squareView.value = true
-            }
+//            //不再直播的
+//            if (it?.isLiving != true) {
+//                mPlayerViewModel.squareView.value = true
+//            }
         })
 
         mPlayerViewModel.loginSuccessData.observe(act, Observer { dto ->

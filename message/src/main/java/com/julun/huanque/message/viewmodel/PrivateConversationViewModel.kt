@@ -321,24 +321,38 @@ class PrivateConversationViewModel : BaseViewModel() {
                     val unreadCount = conversation.unreadMessageCount
                     if (unreadCount > 0) {
                         //未读数大于0，需要设置所有消息已读
-                        RongIMClient.getInstance().clearMessagesUnreadStatus(Conversation.ConversationType.PRIVATE, targerId)
-                        viewModelScope.launch {
-                            withContext(Dispatchers.IO) {
-                                try {
-                                    var stranged = false
-                                    val userData = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(targerId.toLong())
-                                    if (userData == null) {
-                                        val userInfo = GlobalUtils.getUserInfoFromMessage(conversation.latestMessage ?: return@withContext)
-                                        stranged = userInfo?.stranger ?: false
-                                    } else {
-                                        stranged = userData?.stranger ?: false
+                        RongIMClient.getInstance().clearMessagesUnreadStatus(
+                            Conversation.ConversationType.PRIVATE,
+                            targerId,
+                            object : RongIMClient.ResultCallback<Boolean>() {
+                                override fun onSuccess(p0: Boolean?) {
+                                    if (p0 == true) {
+                                        viewModelScope.launch {
+                                            withContext(Dispatchers.IO) {
+                                                try {
+                                                    var stranged = false
+                                                    val userData = HuanQueDatabase.getInstance().chatUserDao().querySingleUser(targerId.toLong())
+                                                    if (userData == null) {
+                                                        val userInfo =
+                                                            GlobalUtils.getUserInfoFromMessage(conversation.latestMessage ?: return@withContext)
+                                                        stranged = userInfo?.stranger ?: false
+                                                    } else {
+                                                        stranged = userData?.stranger ?: false
+                                                    }
+                                                    EventBus.getDefault().post(EventMessageBean(targerId, stranged, onlyRefreshUnReadCount = true))
+                                                } catch (e: Exception) {
+                                                    e.printStackTrace()
+                                                }
+                                            }
+                                        }
                                     }
-                                    EventBus.getDefault().post(EventMessageBean(targerId, stranged, onlyRefreshUnReadCount = true))
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
                                 }
-                            }
-                        }
+
+                                override fun onError(p0: RongIMClient.ErrorCode?) {
+                                }
+
+                            })
+
                     }
                 }
 

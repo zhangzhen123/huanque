@@ -139,12 +139,12 @@
         app:layout_constraintRight_toRightOf="@id/view_right_point"
         app:layout_constraintTop_toTopOf="@id/view_right_point" />
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/iv_vs"
         android:layout_width="99dp"
         android:layout_height="69dp"
-        android:alpha="0"
         android:src="@mipmap/icon_pk_vs"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

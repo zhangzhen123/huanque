@@ -252,6 +252,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                     AnonymousVoiceViewModel.WAIT -> {
                         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
                         mDisposable?.dispose()
+                        mOtherNoJoinDisposable?.dispose()
 
                         stopMatch()
                         con_voice.hide()
@@ -393,6 +394,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                 }
             } else {
                 mAnonymousVoiceViewModel?.hangUp()
+                logger.info("DXC hangup 1")
             }
         }
 
@@ -677,6 +679,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             .bindUntilEvent(this, ActivityEvent.DESTROY)
             .subscribe({
                 mAnonymousVoiceViewModel?.hangUp()
+                logger.info("DXC hangup 2")
             }, {})
 
     }
@@ -836,6 +839,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                 tv_reminder_time.text = "剩余时间 ${TimeUtils.countDownTimeFormat1(communicationTime - it)}"
             }, {}, {
                 mAnonymousVoiceViewModel?.hangUp()
+                logger.info("DXC hangup 3")
                 leaveChannel()
             })
 
@@ -887,6 +891,8 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     private fun showWaitAccept() {
         ll_close.show()
         ll_voice_accept.show()
+        ll_quiet.hide()
+        ll_hands_free.hide()
     }
 
     /**
@@ -1023,6 +1029,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     override fun onUserOffline(uid: Int, reason: Int) {
         logger.info("AGORA Message 用户掉线")
         mAnonymousVoiceViewModel?.hangUp()
+        logger.info("DXC hangup 4")
 //        mAnonymousVoiceViewModel?.currentState?.postValue(AnonymousVoiceViewModel.WAIT)
     }
 
@@ -1056,6 +1063,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     override fun onConnectionStateChanged(state: Int, reason: Int) {
         if (reason == Constants.CONNECTION_CHANGED_BANNED_BY_SERVER) {
             mAnonymousVoiceViewModel?.hangUp()
+            logger.info("DXC hangup 5")
 //            mAnonymousVoiceViewModel?.currentState?.value = AnonymousVoiceViewModel.WAIT
         }
     }
@@ -1087,6 +1095,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         if (result != 0) {
             //joinchannel失败
             mAnonymousVoiceViewModel?.hangUp()
+            logger.info("DXC hangup 6")
         }
 //        logger.info("$TAG joinResult = $result")
     }

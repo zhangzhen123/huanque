@@ -5,14 +5,17 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.events.HideBirdEvent
+import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.main.bird.LeYuanFragment
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@Route(path = ARouterConstant.BIRD_DIALOG_FRAGMENT)
 class BirdDialogFragment : BaseDialogFragment() {
 
     private var playerViewModel: PlayerViewModel? = null

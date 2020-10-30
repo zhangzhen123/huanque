@@ -114,6 +114,9 @@ object SPParamKey {
 
     //缘分未回复数量
     const val Fate_No_Reply_Count = "Fate_No_Reply_Count"
+
+    //盲盒是否显示的标记位
+    const val Blind_Box_Show = "Blind_Box_Show"
 }
 
 /**
@@ -924,4 +927,16 @@ object RNMessageConst {
 
 object MetaKey {
     const val DOWNLOAD_CHANNEL = "UMENG_CHANNEL"//渠道链接  2018/2/26修改本地渠道链接标识DOWNLOAD_CHANNEL为UMENG_CHANNEL
+}
+
+//礼物说明  规则查看按钮  点击类型
+object RuleTouchType {
+    //地址
+    const val Url = "Url"
+
+    //魔法礼物
+    const val MagicRulePage = "MagicRulePage"
+
+    //盲盒礼物
+    const val BlindRulePage = "BlindRulePage"
 }

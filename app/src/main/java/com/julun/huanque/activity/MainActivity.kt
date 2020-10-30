@@ -776,6 +776,13 @@ class MainActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    fun systemMessageUnreadRefresh(bean : SystemMessageRefreshBean){
+        //系统消息变更，刷新未读数
+        mMessageViewModel.getUnreadCount()
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun unreadCount(bean: QueryUnreadCountEvent) {
         if (!bean.player) {
             EventBus.getDefault()

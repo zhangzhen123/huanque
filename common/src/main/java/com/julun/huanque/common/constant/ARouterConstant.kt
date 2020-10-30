@@ -65,6 +65,7 @@ object ARouterConstant {
     //message模块
     const val PRIVATE_CONVERSATION_ACTIVITY = "/$MESSAGE$PREFIX_ACTIVITY/PrivateConversationActivity"
     const val PIC_CONTENT_ACTIVITY = "/$MESSAGE$PREFIX_ACTIVITY/PicContentActivity"
+
     //缘分页面
     const val YUAN_FEN_ACTIVITY = "/$MESSAGE$PREFIX_ACTIVITY/YuanFenActivity"
 
@@ -96,6 +97,9 @@ object ARouterConstant {
 
     //首充弹窗
     const val FIRST_RECHARGE_FRAGMENT = "/$CORE$PREFIX_FRAGMENT/FirstRechargeFragment"
+
+    //乐园弹窗
+    const val BIRD_DIALOG_FRAGMENT = "/$CORE$PREFIX_FRAGMENT/BirdDialogFragment"
 
 
     //语音签名界面
