@@ -5,7 +5,6 @@
     android:id="@+id/activity_anchor_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_bg"
     android:orientation="vertical"
     tools:context=".ui.search.SearchActivity">
 
@@ -71,8 +70,8 @@
         android:id="@+id/ll_search_big_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_15"
-        android:layout_marginEnd="@dimen/dimen_15"
+        android:paddingStart="@dimen/dimen_15"
+        android:paddingEnd="@dimen/dimen_15"
         android:background="@color/white"
         android:orientation="vertical"
         android:visibility="gone"
@@ -125,6 +124,7 @@
         android:background="@color/white"
         android:overScrollMode="never"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -146,9 +146,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:background="@color/white"
-            android:orientation="vertical"
-            android:paddingStart="@dimen/dimen_15"
-            android:paddingEnd="@dimen/dimen_10">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/search_history_layout"
@@ -160,7 +158,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:background="@color/white"
+                    android:layout_marginStart="@dimen/dimen_15"
+                    android:layout_marginEnd="@dimen/dimen_10"
                     android:gravity="center_vertical">
 
                     <TextView
@@ -186,6 +185,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/search_history"
                     android:layout_width="match_parent"
+                    android:layout_marginStart="@dimen/dimen_8"
+                    android:layout_marginEnd="@dimen/dimen_3"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
@@ -195,6 +196,7 @@
                 android:id="@+id/recommend_tips"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_15"
                 android:orientation="vertical">
 
                 <TextView
@@ -218,7 +220,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dimen_10"
-                android:visibility="gone" />
+                android:layout_marginStart="@dimen/dimen_15"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:visibility="gone"
+                tools:visibility="visible"/>
 
         </LinearLayout>
 
