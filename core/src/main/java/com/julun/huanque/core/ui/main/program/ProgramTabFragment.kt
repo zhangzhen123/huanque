@@ -2,6 +2,7 @@ package com.julun.huanque.core.ui.main.program
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
@@ -19,6 +20,7 @@ import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemD
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.ProgramAdapter
 import com.julun.huanque.core.ui.live.PlayerActivity
+import com.julun.huanque.core.ui.main.follow.FollowViewModel
 import kotlinx.android.synthetic.main.fragment_program_tab.*
 
 /**
@@ -42,6 +44,8 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             }
         }
     }
+
+    private val followViewModel: FollowViewModel by activityViewModels()
 
     private var currentTab: ProgramTab? = null
     override fun getLayoutId(): Int = R.layout.fragment_program_tab
@@ -80,6 +84,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
         }
         mRefreshLayout.setOnRefreshListener {
             mViewModel.requestProgramList(QueryType.REFRESH)
+            followViewModel.requestProgramList(QueryType.REFRESH)
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
 

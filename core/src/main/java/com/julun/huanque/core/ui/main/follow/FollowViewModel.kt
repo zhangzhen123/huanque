@@ -28,8 +28,8 @@ class FollowViewModel : BaseViewModel() {
     val followInfo: MutableLiveData<ReactiveData<FollowProgramInfo>> by lazy { MutableLiveData<ReactiveData<FollowProgramInfo>>() }
 
 
-    private var offset = 0
-    fun requestProgramList(queryType: QueryType) {
+    private var offset: Int = 0
+    fun requestProgramList(queryType: QueryType, isNullOffset: Boolean = false) {
 
         viewModelScope.launch {
             if (queryType == QueryType.REFRESH) {
@@ -37,8 +37,13 @@ class FollowViewModel : BaseViewModel() {
             }
 
             request({
+                val form = if (isNullOffset) {
+                    LiveFollowForm(offset = null)
+                } else {
+                    LiveFollowForm(offset = offset)
+                }
                 val result =
-                    programService.followPrograms(LiveFollowForm(offset = offset)).dataConvert()
+                    programService.followPrograms(form).dataConvert()
                 offset += result.followList.size
                 result.isPull = queryType != QueryType.LOAD_MORE
                 followInfo.value = result.convertRtData()

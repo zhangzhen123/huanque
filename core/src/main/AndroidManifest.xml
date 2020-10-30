@@ -118,6 +118,9 @@
         <activity
             android:name=".ui.main.follow.FollowActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:screenOrientation="portrait" />
 
 
         <service android:name=".service.FloatingService" />

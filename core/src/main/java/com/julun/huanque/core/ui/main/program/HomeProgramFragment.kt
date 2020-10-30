@@ -11,10 +11,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.util.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.ProgramTab
 import com.julun.huanque.common.constant.HomeTabType
 import com.julun.huanque.common.init.CommonInit
@@ -22,7 +24,9 @@ import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.follow.FollowActivity
+import com.julun.huanque.core.ui.main.follow.FollowViewModel
 import com.julun.huanque.core.ui.main.makefriend.MakeFriendsFragment
+import com.julun.huanque.core.ui.search.SearchActivity
 import com.julun.rnlib.RnManager
 import com.luck.picture.lib.tools.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_program_container.*
@@ -61,6 +65,8 @@ class HomeProgramFragment : BaseFragment() {
 
     private val viewModel: ProgramViewModel by viewModels()
 
+    private val followViewModel: FollowViewModel by activityViewModels()
+
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
 
         //
@@ -75,13 +81,15 @@ class HomeProgramFragment : BaseFragment() {
         }
 
         iv_search.onClickNew {
-            //todo
+            requireActivity().startActivity<SearchActivity>()
         }
 
 
         follow_layout.onClickNew {
             requireActivity().startActivity<FollowActivity>()
         }
+
+
     }
 
     private fun initViewPager() {
@@ -101,7 +109,13 @@ class HomeProgramFragment : BaseFragment() {
             }
 
         })
+        followViewModel.followInfo.observe(viewLifecycleOwner, Observer {
+
+        })
+
         viewModel.queryInfo()
+
+        followViewModel.requestProgramList(QueryType.INIT)
     }
 
     /**
