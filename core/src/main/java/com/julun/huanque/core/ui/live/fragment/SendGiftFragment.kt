@@ -397,16 +397,18 @@ class SendGiftFragment : BaseDialogFragment() {
                         //没有新的背包礼物产生，直接更新背包数据
                         refreshNewGiftCount(it)
                     }
+                } else if (it.feedbackList?.isNotEmpty() == true) {
+                    it.feedbackList?.let { list ->
+                        if (list.isNotEmpty()) {
+                            refreshNewGiftCount(it)
+                            showBoxReward(it)
+                        }
+                    }
                 } else {
                     //不是砸蛋的情况下，直接回复默认状态
                     resetData()
                 }
-                it.feedbackList?.let { list ->
-                    if (list.isNotEmpty()) {
-                        refreshNewGiftCount(it)
-                        showBoxReward(it)
-                    }
-                }
+
                 viewModel?.sendGiftSuccess?.value = null
             }
         })
