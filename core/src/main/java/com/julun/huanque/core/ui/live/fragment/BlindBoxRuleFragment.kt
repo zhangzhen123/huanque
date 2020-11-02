@@ -209,12 +209,12 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
      */
     private fun setSelectPosition(position: Int) {
         val currentBean = mAdapter.getItemOrNull(position) ?: return
-        if (currentBean.awardName == mCurrentGiftRuleAward?.awardName && currentBean.count == mCurrentGiftRuleAward?.count) {
+        if (currentBean.awardName == mCurrentGiftRuleAward?.awardName) {
             //同样的礼物
             return
         }
 
-        tv_gift_count.text = "${currentBean.awardName}*${currentBean.count}"
+        tv_gift_count.text = currentBean.awardName
         tv_value.text = "价值：${currentBean.beans}鹊币"
         tv_probability.text = "概率：${currentBean.awardRatio}"
 

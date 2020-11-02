@@ -29,8 +29,6 @@ class GiftRuleAward(
     var awardRatio: String = "",
     //奖励的总价值
     var beans: Long = 0,
-    //礼物数量
-    var count: Int = 0,
     //礼物图片
     var pic: String = ""
 ) : Serializable
