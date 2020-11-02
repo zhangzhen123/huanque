@@ -17,10 +17,7 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.BlindBoxBean
 import com.julun.huanque.common.bean.beans.LiveGiftDto
 import com.julun.huanque.common.constant.RuleTouchType
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
@@ -214,10 +211,14 @@ class GiftExplainFragment : BaseDialogFragment() {
             tagView.setData(it)
         }
         tv_explain.text = data.tips?.text ?: ""
-        if(data.tips?.ruleTouchType?.isNotEmpty() == true){
+        if (data.tips?.ruleTouchType?.isNotEmpty() == true) {
             sdv_jump.show()
-        }else{
+            view_jump.show()
+            view_content.show()
+        } else {
             sdv_jump.hide()
+            view_jump.hide()
+            view_content.inVisible()
         }
 //        dealWithTips(data.tips ?: "", data.ruleUrl)
 //        if ((data.discount ?: 0) > 0 || (data.anonymous && data.anonymous) || data.luckyOrHigh) {
