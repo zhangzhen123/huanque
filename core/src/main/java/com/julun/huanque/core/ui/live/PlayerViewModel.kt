@@ -192,7 +192,7 @@ class PlayerViewModel : BaseViewModel() {
     val onLineDismissFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //打开广场直播
-//    val squareView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val squareView: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //显示私聊页面
     val privateMessageView: MutableLiveData<PrivateMessageBean> by lazy { MutableLiveData<PrivateMessageBean>() }

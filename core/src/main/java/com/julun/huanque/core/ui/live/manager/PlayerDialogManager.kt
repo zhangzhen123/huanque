@@ -143,6 +143,15 @@ class PlayerDialogManager(val context: PlayerActivity) {
             }
         })
 
+        playerViewModel.squareView.observe(context, Observer {
+            if (it == true) {
+                if (!isFragmentShow(LiveSquareDialogFragment::class.java)) {
+                    openDialog(LiveSquareDialogFragment::class.java)
+                }
+
+            }
+        })
+
 
         playerViewModel.scoreView.observe(context, Observer {
             openDialog(ScoreDialogFragment::class.java, builder = { ScoreDialogFragment.newInstance(playerViewModel.programId) })

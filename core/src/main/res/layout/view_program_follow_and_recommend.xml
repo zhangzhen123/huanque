@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="140dp"
-    android:layout_height="40dp"
+    android:layout_height="32dp"
     tools:background="@color/gray">
 
     <ImageView

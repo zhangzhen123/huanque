@@ -158,7 +158,7 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
                 if (it.prizeBeans > 0 && it.prizeList.isNotEmpty()) {
                     mPlayerViewModel.eggResultData.value = it
                     //背包需要刷新
-                    mPlayerViewModel.refreshGift.value = true
+                    mPlayerViewModel.refreshGiftPackage.value = true
                 }
                 if (SPUtils.getBoolean(SPParamKey.Blind_Box_Show, true) && it.feedbackList?.isNotEmpty() == true) {
                     mPlayerViewModel.sendBlindBoxResultData.value = it

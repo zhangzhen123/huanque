@@ -7,10 +7,7 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.RecommendInfo
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.loadImage
-import com.julun.huanque.common.suger.loadImageInPx
-import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.AnchorNoLiveViewModel
@@ -37,6 +34,8 @@ class RecommendFragment : BaseDialogFragment() {
             val bean = mAnchorNoLiveViewModel.recommendProgram.value ?: return@onClickNew
             mPlayerViewModel.checkoutRoom.value = bean.programId
         }
+        tv_hot.setTFDinCdc2()
+
     }
 
     override fun onStart() {
