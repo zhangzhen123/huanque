@@ -274,7 +274,6 @@ class HomeProgramFragment : BaseFragment() {
                 val sdv_header = view.findViewById<ImageView>(R.id.sdv_header) ?: return
                 val tv_nickname = view.findViewById<TextView>(R.id.tv_nickname) ?: return
                 val tv_type = view.findViewById<TextView>(R.id.tv_type) ?: return
-//                sdv_header.loadImage("${StringHelper.getOssImgUrl(it.headPic)}${BusiConstant.OSS_160}")
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     sdv_header?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(16));
@@ -285,18 +284,6 @@ class HomeProgramFragment : BaseFragment() {
                     activity?.runOnUiThread {
                         if (bitmap != null && bitmap?.isRecycled == false) {
                             val tempBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-////            bitmap2 = mFaceBitmap.createBitmap(  //这是另一种方法同样可以复制位图
-////                    mFaceBitmap.getWidth(), mFaceBitmap.getHeight(), mFaceBitmap.getConfig());
-////            // 拿着可以被修改的图片创建一个画布.
-////            Canvas canvas = new Canvas(bitmap2);
-////            Paint paint = new Paint();
-////
-////            canvas.drawBitmap(mFaceBitmap, new Matrix(), paint);
-//
-//                            bitmap1 = bitmap2.createBitmap(bitmap2, x0, y0, x1 - x0, y1 - y0);
-//                            faceImageView.setImageBitmap(bitmap1);
-
                             sdv_header.imageBitmap = tempBitmap
                         }
                     }
@@ -322,14 +309,20 @@ class HomeProgramFragment : BaseFragment() {
                 val sdv_header = view.findViewById<ImageView>(R.id.sdv_header) ?: return
                 val tv_nickname = view.findViewById<TextView>(R.id.tv_nickname) ?: return
                 val tv_type = view.findViewById<TextView>(R.id.tv_type) ?: return
-//                sdv_header.loadImage("${StringHelper.getOssImgUrl(it.headPic)}${BusiConstant.OSS_160}")
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     sdv_header?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(16));
                     sdv_header?.clipToOutline = true;
                 }
 
                 ImageUtils.requestImageForBitmap("${StringHelper.getOssImgUrl(it.headPic)}${BusiConstant.OSS_160}", { bitmap ->
-                    sdv_header.imageBitmap = bitmap
+                    activity?.runOnUiThread {
+                        if (bitmap != null && bitmap?.isRecycled == false) {
+                            val tempBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight());
+                            sdv_header.imageBitmap = tempBitmap
+                        }
+                    }
+
                 })
                 tv_nickname.text = it.programName
                 tv_type.text = "推荐关注"
