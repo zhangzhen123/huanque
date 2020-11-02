@@ -11,10 +11,18 @@ import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.bean.beans.MultiBean
+import com.julun.huanque.common.bean.beans.ProgramListInfo
+import com.julun.huanque.common.bean.beans.ProgramLiveInfo
+import com.julun.huanque.common.bean.beans.ProgramTab
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.ProgramItemType
 import com.julun.huanque.common.helper.MixedHelper
-import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.removeDuplicate
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
@@ -176,7 +184,9 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
     //
     fun scrollToTopAndRefresh() {
         authorList.smoothScrollToPosition(0)
-        mViewModel.requestProgramList(QueryType.REFRESH, currentTab?.typeCode)
+        authorList.postDelayed({
+            mViewModel.requestProgramList(QueryType.REFRESH, currentTab?.typeCode)
+        },100)
     }
 
     override fun showLoadState(state: NetState) {
