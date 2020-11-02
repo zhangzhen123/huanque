@@ -108,7 +108,7 @@
         android:paddingTop="@dimen/dimen_3"
         android:paddingEnd="@dimen/dimen_5"
         android:paddingBottom="@dimen/dimen_3"
-        android:textColor="@color/white"
+        android:textColor="#F5FFFD"
         android:textSize="10sp"
         app:layout_constraintRight_toRightOf="@+id/anchorPicture"
         app:layout_constraintTop_toTopOf="@+id/anchorPicture"
