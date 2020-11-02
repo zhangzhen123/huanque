@@ -84,7 +84,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
         }
         mRefreshLayout.setOnRefreshListener {
             mViewModel.requestProgramList(QueryType.REFRESH, currentTab?.typeCode)
-            followViewModel.requestProgramList(QueryType.REFRESH)
+            followViewModel.requestProgramList(QueryType.REFRESH,isNullOffset = true)
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
 
