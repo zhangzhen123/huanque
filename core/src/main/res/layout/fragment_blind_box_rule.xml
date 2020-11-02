@@ -81,7 +81,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="0px"
-            android:layout_height="150dp"
+            android:layout_height="130dp"
             android:overScrollMode="never"
             app:layout_constraintBottom_toTopOf="@+id/tv_gift_count"
             app:layout_constraintLeft_toLeftOf="parent"

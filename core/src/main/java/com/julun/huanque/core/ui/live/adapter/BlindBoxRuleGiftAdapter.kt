@@ -25,7 +25,7 @@ class BlindBoxRuleGiftAdapter : BaseQuickAdapter<GiftRuleAward, BaseViewHolder>(
             sdv_pic.hide()
         } else {
             sdv_pic.show()
-            sdv_pic.loadImage(StringHelper.getOssImgUrl(item.pic), 150f, 150f)
+            sdv_pic.loadImage(StringHelper.getOssImgUrl(item.pic), 130f, 130f)
         }
     }
 
