@@ -1,6 +1,7 @@
 package com.julun.rnlib
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -54,7 +55,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
          * [moduleName]需要打开的rn模块
          */
         fun start(
-            activity: ComponentActivity,
+            activity: Activity,
             moduleName: String,
             initialProperties: Bundle? = null
         ) {

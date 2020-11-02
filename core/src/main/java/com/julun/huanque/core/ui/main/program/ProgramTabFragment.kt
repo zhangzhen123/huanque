@@ -178,6 +178,8 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
                     ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
                         .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
                 })
+        }else{
+            state_pager_view.showSuccess()
         }
     }
 
@@ -192,7 +194,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
     override fun showLoadState(state: NetState) {
         when (state.state) {
             NetStateType.SUCCESS -> {//showSuccess()
-                state_pager_view.showSuccess()
+//                state_pager_view.showSuccess()
                 mRefreshLayout.show()
             }
             NetStateType.LOADING -> {//showLoading()

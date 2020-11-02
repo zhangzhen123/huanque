@@ -16,12 +16,15 @@ import com.julun.huanque.common.bean.beans.MultiBean
 import com.julun.huanque.common.bean.beans.ProgramLiveInfo
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.core.R
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -79,7 +82,7 @@ class ProgramAdapter : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), L
     }
 
     private fun convertNormal(holder: BaseViewHolder, item: ProgramLiveInfo) {
-        holder.setText(R.id.anchor_nickname, item.programName)
+        holder.setText(R.id.anchor_nickname, item.programName+"很长很长的字")
         val textHot = holder.getView<TextView>(R.id.user_count)
         textHot.setTFDinCdc2()
         if (item.heatValue < 10000) {
@@ -165,6 +168,10 @@ class ProgramAdapter : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), L
                     if (roomId != null)
                         extra.putLong(IntentParamKey.PROGRAM_ID.name, roomId)
                     ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(extra).navigation()
+                }
+                BannerTouchType.InviteFriend -> {
+                    //邀请好友
+                    RNPageActivity.start(CommonInit.getInstance().getCurrentActivity()?:return@Delegate, RnConstant.INVITE_FRIENDS_PAGE)
                 }
             }
         }
