@@ -65,8 +65,8 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
     private val recentAdapter by lazy { SearchRecentAdapter() }
     private val historyAdapter by lazy {
         object : BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_search_history) {
-            override fun convert(h: BaseViewHolder, s: String) {
-                h.setText(R.id.history_anchor_name, s)
+            override fun convert(holder: BaseViewHolder, item: String) {
+                holder.setText(R.id.history_anchor_name, item)
             }
 
         }
@@ -151,7 +151,7 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
                 val flexBoxLayoutManager = FlexboxLayoutManager(this)
                 search_history.layoutManager = flexBoxLayoutManager
                 search_history.adapter = historyAdapter
-                historyAdapter.replaceData(list)
+                historyAdapter.setList(list)
             } else {
                 search_history_layout.hide()
             }
@@ -159,6 +159,23 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
             search_recommends.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(5)))
             search_recommends.adapter = recommendAdapter
             search_recommends.setHasFixedSize(true)
+            recommendAdapter.setOnItemClickListener { adapter, view, position ->
+                if (ScreenUtils.isSoftInputShow(this@SearchActivity)) {
+                    closeKeyBoard()//每次隐藏软键盘 不然跳转后新的activity会有问题
+                }
+
+                val data = (search_result_list.adapter as? BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>
+                    ?: return@setOnItemClickListener).getItem(position)
+                    ?: return@setOnItemClickListener
+                val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
+                intent.putExtra(IntentParamKey.PROGRAM_ID.name, data.programId)
+                //无字段  搜索页面，不传封面，直播间使用默认背景
+//                        val picUrl = data?.coverPic
+//                        intent.putExtra(LiveBusiConstant.PICID, picUrl)
+                this@SearchActivity.startActivity(intent)
+
+
+            }
 //            recommendAdapter.setSpanSizeLookup { _, position ->
 //                when {
 //                    recommendAdapter.data[position].type == ProgramAdapterNew.BANNER -> return@setSpanSizeLookup 2
@@ -185,13 +202,13 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
 
         })
         mViewModel.recentData.observe(this, androidx.lifecycle.Observer {
-            if (it != null&&it.isSuccess()) {
+            if (it != null && it.isSuccess()) {
                 showRecentAnchor(it.requireT())
                 mViewModel.recentData.value = null
             }
         })
         mViewModel.recommendData.observe(this, androidx.lifecycle.Observer {
-            if (it != null && it.isSuccess()&&it.requireT().isNotEmpty()) {
+            if (it != null && it.isSuccess() && it.requireT().isNotEmpty()) {
                 search_recommends.show()
                 recommend_tips.show()
                 recommendAdapter.setList(it.requireT())
@@ -268,14 +285,14 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
             text
         } else {
             val strList = oldString.split("__")
-            if (strList.size >= 10) {
+            if (strList.size >= 5) {
                 val newList = arrayListOf<String>()
 //                val dif = strList.size - 9
 //                repeat(dif) {
 //                    strList.removeAt(strList.size - 1)
 //                }
                 //只要前9个
-                for (i in 0..8) {
+                for (i in 0..3) {
                     newList.add(strList[i])
                 }
                 val sb = StringBuilder()
@@ -433,7 +450,7 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
 
         search_result_list.show()
         search_result_list.adapter = listAdapter
-        listAdapter.replaceData(indexInfoList)
+        listAdapter.setList(indexInfoList)
         if (indexInfoList.size == 0) {
             showQueryError()
         }

@@ -32,7 +32,7 @@ class ProgramTabViewModel : BaseViewModel() {
 
 
     private var offsetHot = 0
-    fun requestProgramList(queryType: QueryType) {
+    fun requestProgramList(queryType: QueryType,typeCode:String?) {
 
         viewModelScope.launch {
             if (queryType == QueryType.REFRESH) {
@@ -41,7 +41,7 @@ class ProgramTabViewModel : BaseViewModel() {
 
             request({
                 val result =
-                    programService.programList(ProgramListForm(offset = offsetHot)).dataConvert()
+                    programService.programList(ProgramListForm(offset = offsetHot,typeCode = typeCode)).dataConvert()
                 offsetHot += result.programList.size
                 result.isPull = queryType != QueryType.LOAD_MORE
                 dataList.value = result.convertRtData()

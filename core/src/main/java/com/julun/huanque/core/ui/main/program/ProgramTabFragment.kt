@@ -61,7 +61,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             logger.info(" authorList.stopScroll()")
             authorList.stopScroll()
             logger.info("authorAdapter loadMoreModule 加载更多")
-            mViewModel.requestProgramList(QueryType.LOAD_MORE)
+            mViewModel.requestProgramList(QueryType.LOAD_MORE, currentTab?.typeCode)
         }
         authorAdapter.setGridSpanSizeLookup(GridSpanSizeLookup { gridLayoutManager, viewType, position ->
             return@GridSpanSizeLookup when (viewType) {
@@ -83,7 +83,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             }
         }
         mRefreshLayout.setOnRefreshListener {
-            mViewModel.requestProgramList(QueryType.REFRESH)
+            mViewModel.requestProgramList(QueryType.REFRESH, currentTab?.typeCode)
             followViewModel.requestProgramList(QueryType.REFRESH)
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
@@ -91,7 +91,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
     }
 
     override fun lazyLoadData() {
-        mViewModel.requestProgramList(QueryType.INIT)
+        mViewModel.requestProgramList(QueryType.INIT, currentTab?.typeCode)
     }
 
     private fun initViewModel() {
@@ -176,7 +176,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
     //
     fun scrollToTopAndRefresh() {
         authorList.smoothScrollToPosition(0)
-        mViewModel.requestProgramList(QueryType.REFRESH)
+        mViewModel.requestProgramList(QueryType.REFRESH, currentTab?.typeCode)
     }
 
     override fun showLoadState(state: NetState) {
@@ -191,7 +191,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             }
             NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
                 state_pager_view.showError(showBtn = true, btnClick = View.OnClickListener {
-                    mViewModel.requestProgramList(QueryType.INIT)
+                    mViewModel.requestProgramList(QueryType.INIT, currentTab?.typeCode)
                 })
             }
 
@@ -199,104 +199,6 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
 
     }
 
-    private val authorAdapter =ProgramAdapter()
-//        object : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), LoadMoreModule {
-//            init {
-//                addItemType(ProgramItemType.BANNER, R.layout.item_program_banner)
-//                addItemType(ProgramItemType.NORMAL, R.layout.item_live_square_anchor_list)
-//
-//            }
-//
-//            override fun convert(holder: BaseViewHolder, item: MultiBean) {
-//                when (holder.itemViewType) {
-//                    ProgramItemType.NORMAL -> {
-//                        val bean = item.content
-//                        if (bean is ProgramLiveInfo) {
-//                            convertNormal(holder, bean)
-//                        }
-//
-//                    }
-//                    ProgramItemType.BANNER -> {
-//                        val bean = item.content
-//                        if (bean is MutableList<*>) {
-//                            val list = mutableListOf<AdInfoBean>()
-//                            bean.forEach { ad ->
-//                                if (ad is AdInfoBean) {
-//                                    list.add(ad)
-//                                }
-//                            }
-//                            convertBanner(holder, list)
-//                        }
-//                    }
-//                }
-//            }
-//
-//            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-//                logger("onCreateViewHolder itemViewType:$viewType")
-//                val holder = super.onCreateViewHolder(parent, viewType)
-//                if (viewType == ProgramItemType.BANNER) {
-//                    val banner = holder.getView<BGABanner>(R.id.banner)
-//                    val screenWidth = ScreenUtils.getScreenWidth() - dp2px(10) * 2
-//                    //修改banner高度原来0.3022 现在0.38356
-//                    val lp = banner.layoutParams
-//                    lp.height = (screenWidth * 0.38356).toInt()
-////                lp.width = screenWidth
-//                }
-//                return holder
-//            }
-//
-//            private fun convertBanner(holder: BaseViewHolder, ads: MutableList<AdInfoBean>) {
-//                val banner = holder.getView<BGABanner>(R.id.banner)
-//                banner.setAdapter(bannerAdapter)
-//                banner.setDelegate(bannerItemCick)
-//                banner.setData(ads, null)
-//                // 默认是自动轮播的，当只有一条广告数据时，就不轮播了
-//                banner.setAutoPlayAble(ads.size > 1)
-//            }
-//
-//            private fun convertNormal(holder: BaseViewHolder, item: ProgramLiveInfo) {
-//                holder.setText(R.id.anchor_nickname, item.programName)
-//                val textHot = holder.getView<TextView>(R.id.user_count)
-//                textHot.setTFDinCdc2()
-//                if (item.heatValue < 10000) {
-//                    textHot.text = "${item.heatValue}"
-//                    holder.setGone(R.id.user_count_w, true)
-//                } else {
-//                    val format = DecimalFormat("#.0")
-//                    format.roundingMode = RoundingMode.HALF_UP
-//                    textHot.text = "${format.format((item.heatValue / 10000.0))}"
-//                    holder.setGone(R.id.user_count_w, false)
-//                }
-//                ImageUtils.loadImage(
-//                    holder.getView(R.id.anchorPicture)
-//                        ?: return, item.coverPic + BusiConstant.OSS_350, 150f, 150f
-//                )
-//                if (item.city.isEmpty()) {
-//                    holder.setGone(R.id.anchor_city, true)
-//                } else {
-//                    holder.setGone(R.id.anchor_city, false)
-//
-//                    holder.setText(R.id.anchor_city, item.city)
-//                }
-//                ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
-//                val sdv_pic = holder.getView<SimpleDraweeView>(R.id.sdv_pic)
-//                val tv_author_status = holder.getView<TextView>(R.id.tv_author_status)
-//
-//                if (item.rightTopTag.isNotEmpty()) {
-//                    sdv_pic.show()
-//                    ImageUtils.loadImageWithHeight_2(sdv_pic, StringHelper.getOssImgUrl(item.rightTopTag), dp2px(16))
-//                    tv_author_status.hide()
-//                } else {
-//                    sdv_pic.hide()
-//                    if (item.isLiving) {
-//                        holder.setVisible(R.id.tv_author_status, true).setText(R.id.tv_author_status, "直播中")
-//                    } else {
-//                        holder.setGone(R.id.tv_author_status, true)
-//                    }
-//                }
-//            }
-//
-//        }
-
+    private val authorAdapter = ProgramAdapter()
 
 }

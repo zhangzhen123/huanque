@@ -22,6 +22,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.ProgramAdapter
 import com.julun.huanque.core.ui.live.PlayerActivity
 import kotlinx.android.synthetic.main.activity_follow.*
+import kotlinx.android.synthetic.main.activity_follow.mRefreshLayout
 import kotlinx.android.synthetic.main.layout_bottom_follow_recommend.view.*
 
 /**
@@ -54,7 +55,7 @@ class FollowActivity : BaseVMActivity<FollowViewModel>() {
         bottomLayout.recommendList.adapter = recommendAdapter
         bottomLayout.recommendList.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(5)))
         recommendAdapter.setOnItemClickListener { adapter, view, position ->
-            val item = authorAdapter.getItemOrNull(position)
+            val item = recommendAdapter.getItemOrNull(position)
             val content = item?.content
             if (item != null && content is ProgramLiveInfo) {
                 logger.info("跳转直播间${content.programId}")
@@ -138,6 +139,9 @@ class FollowActivity : BaseVMActivity<FollowViewModel>() {
                 bottomLayout.title.hide()
                 bottomLayout.recommendList.hide()
             }
+            rv_follows.post {
+                rv_follows.scrollToPosition(0)
+            }
         } else {
             val programList = listData.followList.removeDuplicate(totalList)
             totalList.addAll(programList)
@@ -154,7 +158,6 @@ class FollowActivity : BaseVMActivity<FollowViewModel>() {
             } else {
                 authorAdapter.loadMoreModule.loadMoreComplete()
             }
-
         } else {
             //防止底部没有边距
             authorAdapter.loadMoreModule.loadMoreEnd()
@@ -203,7 +206,8 @@ class FollowActivity : BaseVMActivity<FollowViewModel>() {
 //        }
         when (state.state) {
             NetStateType.SUCCESS -> {
-                authorAdapter.setEmptyView(MixedHelper.getEmptyView(this))
+                //由于上面在renderData中已经设置了空白页 这里不需要了
+//                authorAdapter.setEmptyView(MixedHelper.getEmptyView(this))
             }
             NetStateType.LOADING -> {
                 authorAdapter.setEmptyView(MixedHelper.getLoadingView(this))
