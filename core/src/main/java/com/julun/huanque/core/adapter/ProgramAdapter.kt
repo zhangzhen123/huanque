@@ -82,7 +82,7 @@ class ProgramAdapter : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), L
     }
 
     private fun convertNormal(holder: BaseViewHolder, item: ProgramLiveInfo) {
-        holder.setText(R.id.anchor_nickname, item.programName+"很长很长的字")
+        holder.setText(R.id.anchor_nickname, item.programName)
         val textHot = holder.getView<TextView>(R.id.user_count)
         textHot.setTFDinCdc2()
         if (item.heatValue < 10000) {
@@ -134,8 +134,8 @@ class ProgramAdapter : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), L
             when (model?.resType) {
                 BannerResType.Pic -> {
                     val screenWidth = ScreenUtils.screenWidthFloat.toInt() - dp2px(15f) * 2
-                    val height = dp2px(72f)
-                    ImageUtils.loadImageInPx(itemView, model.resUrl, screenWidth, height)
+                    val height = screenWidth*120.0f/355
+                    ImageUtils.loadImageInPx(itemView, model.resUrl, screenWidth, height.toInt())
                 }
             }
 

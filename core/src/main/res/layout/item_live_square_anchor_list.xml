@@ -30,19 +30,21 @@
 
     <TextView
         android:id="@+id/anchor_nickname"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
+        android:layout_marginEnd="@dimen/dimen_6"
         android:layout_marginBottom="6dp"
         android:ellipsize="end"
         android:includeFontPadding="false"
-        android:maxEms="8"
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/anchorPicture"
+        app:layout_constraintEnd_toStartOf="@+id/user_count"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         tools:text="无名" />
 
     <TextView
@@ -53,7 +55,7 @@
         android:layout_marginBottom="@dimen/dimen_6"
         android:ellipsize="end"
         android:includeFontPadding="false"
-        android:maxEms="8"
+        android:maxLength="8"
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="13sp"
