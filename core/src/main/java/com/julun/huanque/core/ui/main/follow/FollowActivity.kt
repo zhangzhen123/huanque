@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -21,6 +22,7 @@ import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemD
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.ProgramAdapter
 import com.julun.huanque.core.ui.live.PlayerActivity
+import com.julun.huanque.core.ui.search.SearchResultAdapter
 import kotlinx.android.synthetic.main.activity_follow.*
 import kotlinx.android.synthetic.main.activity_follow.mRefreshLayout
 import kotlinx.android.synthetic.main.layout_bottom_follow_recommend.view.*
@@ -39,7 +41,7 @@ class FollowActivity : BaseVMActivity<FollowViewModel>() {
 
     override fun getLayoutId(): Int = R.layout.activity_follow
 
-    private val authorAdapter = ProgramAdapter()
+    private val authorAdapter = SearchResultAdapter(needLine = true)
     private val recommendAdapter = ProgramAdapter()
     private val bottomLayout: View by lazy {
         LayoutInflater.from(this).inflate(R.layout.layout_bottom_follow_recommend, null)
@@ -63,25 +65,28 @@ class FollowActivity : BaseVMActivity<FollowViewModel>() {
             }
 
         }
-        rv_follows.layoutManager = GridLayoutManager(this, 2)
+        // rv_follows.layoutManager = GridLayoutManager(this, 2)
+        // rv_follows.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(5)))
+        rv_follows.layoutManager = LinearLayoutManager(this)
         initViewModel()
         authorAdapter.addFooterView(bottomLayout)
 
         authorAdapter.footerWithEmptyEnable = true
         rv_follows.adapter = authorAdapter
-        rv_follows.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(5)))
+
         rv_follows.isNestedScrollingEnabled = false
 
         authorAdapter.setOnItemClickListener { _, _, position ->
             val item = authorAdapter.getItemOrNull(position)
-            val content = item?.content
-            if (item != null && content is ProgramLiveInfo) {
-                logger.info("跳转直播间${content.programId}")
-                PlayerActivity.start(this, programId = content.programId, prePic = content.coverPic)
+            if (item != null) {
+                logger.info("跳转直播间${item.programId}")
+                PlayerActivity.start(this, programId = item.programId, prePic = item.coverPic)
             }
         }
 
-
+        authorAdapter.loadMoreModule.setOnLoadMoreListener {
+            mViewModel.requestProgramList(QueryType.LOAD_MORE)
+        }
 
         mRefreshLayout.setOnRefreshListener {
             mViewModel.requestProgramList(QueryType.REFRESH)
@@ -119,12 +124,12 @@ class FollowActivity : BaseVMActivity<FollowViewModel>() {
             val programList = listData.followList.distinct()
             totalList.clear()
             totalList.addAll(programList)
-            val list = mutableListOf<MultiBean>()
-            programList.forEach {
-                list.add(MultiBean(ProgramItemType.NORMAL, it))
-            }
+//            val list = mutableListOf<MultiBean>()
+//            programList.forEach {
+//                list.add(MultiBean(ProgramItemType.NORMAL, it))
+//            }
 
-            authorAdapter.setList(list)
+            authorAdapter.setList(programList)
 
             if (!listData.recomList.isNullOrEmpty()) {
                 bottomLayout.title.show()
@@ -145,11 +150,11 @@ class FollowActivity : BaseVMActivity<FollowViewModel>() {
         } else {
             val programList = listData.followList.removeDuplicate(totalList)
             totalList.addAll(programList)
-            val list = mutableListOf<MultiBean>()
-            programList.forEach {
-                list.add(MultiBean(ProgramItemType.NORMAL, it))
-            }
-            authorAdapter.addData(list)
+//            val list = mutableListOf<MultiBean>()
+//            programList.forEach {
+//                list.add(MultiBean(ProgramItemType.NORMAL, it))
+//            }
+            authorAdapter.addData(programList)
         }
         if (listData.hasMore) {
             //如果下拉加载更多时 返回的列表为空 会触发死循环 这里直接设置加载完毕状态

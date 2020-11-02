@@ -183,7 +183,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
 
     //
     fun scrollToTopAndRefresh() {
-        authorList.smoothScrollToPosition(0)
+        authorList.scrollToPosition(0)
         authorList.postDelayed({
             mViewModel.requestProgramList(QueryType.REFRESH, currentTab?.typeCode)
         },100)
