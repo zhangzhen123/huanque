@@ -341,6 +341,7 @@ object ImageUtils {
                     "res://${CommonInit.getInstance().getApp().packageName}/$placeHolderResId"
                 )
             )//设置uri
+            .setOldController(imgView.controller)
             .build()
         imgView.controller = draweeController
 
