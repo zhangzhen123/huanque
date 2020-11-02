@@ -40,7 +40,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="40dp"
-        android:background="@mipmap/bg_program_enter"
+        android:background="@mipmap/bg_program_enter_attention"
         android:flipInterval="3000"
         android:inAnimation="@anim/lm_anim_come_in"
         android:outAnimation="@anim/lm_anim_get_out"

@@ -50,6 +50,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.CommonPagerTitleView
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.imageBitmap
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.topPadding
@@ -267,6 +268,7 @@ class HomeProgramFragment : BaseFragment() {
         //关注列表
         val followList = followProgramInfo.followList
         if (followList.isNotEmpty()) {
+            view_flipper.backgroundResource = R.mipmap.bg_program_enter_attention
             followList.forEach {
                 val view = LayoutInflater.from(requireContext()).inflate(R.layout.view_program_follow_and_recommend, null)
                 val sdv_header = view.findViewById<ImageView>(R.id.sdv_header) ?: return
@@ -314,6 +316,7 @@ class HomeProgramFragment : BaseFragment() {
         //推荐列表
         val recommendList = followProgramInfo.recomList
         if (recommendList?.isNotEmpty() == true) {
+            view_flipper.backgroundResource = R.mipmap.bg_program_enter_recom
             recommendList.forEach {
                 val view = LayoutInflater.from(requireContext()).inflate(R.layout.view_program_follow_and_recommend, null)
                 val sdv_header = view.findViewById<ImageView>(R.id.sdv_header) ?: return
