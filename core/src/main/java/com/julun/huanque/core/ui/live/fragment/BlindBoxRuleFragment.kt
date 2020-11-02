@@ -98,7 +98,7 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
         super.onStart()
         tv_send.isEnabled = true
         initViewModel()
-        this.setDialogSize(Gravity.BOTTOM, 0, 440)
+        this.setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
         //不需要半透明遮罩层
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }

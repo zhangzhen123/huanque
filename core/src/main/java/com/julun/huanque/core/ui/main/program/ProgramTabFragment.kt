@@ -133,7 +133,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
                 list.add(MultiBean(ProgramItemType.NORMAL, it))
             }
 
-            if (listData.adList != null) {
+            if (listData.adList != null && list.isNotEmpty()) {
                 if (list.size > BANNER_POSITION) {
                     list.add(BANNER_POSITION, MultiBean(ProgramItemType.BANNER, listData.adList!!))
                 } else {
