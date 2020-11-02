@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.HomeItemBean
@@ -22,7 +23,8 @@ import com.julun.huanque.core.R
  *@Description: SearchResultAdapter
  *
  */
-class SearchResultAdapter : BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>(R.layout.item_search_result) {
+class SearchResultAdapter(var needLine: Boolean = false) :
+    BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>(R.layout.item_search_result), LoadMoreModule {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val holder = super.onCreateViewHolder(parent, viewType)
         val living = holder.getViewOrNull<SimpleDraweeView>(R.id.living_tag)
@@ -57,7 +59,12 @@ class SearchResultAdapter : BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>(R.
         if ((this.data.size - 1) == holder.adapterPosition) {
             holder.getView<View>(R.id.vLine).hide()
         } else {
-            holder.getView<View>(R.id.vLine).hide()
+            if (needLine) {
+                holder.getView<View>(R.id.vLine).show()
+            } else {
+                holder.getView<View>(R.id.vLine).hide()
+            }
+
         }
 
     }

@@ -328,7 +328,12 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
             search_result_list.hide()
             history_and_recommend.show()
             val list = getSearchHistory()
-            historyAdapter.setList(list)
+            if (list.isNotEmpty()) {
+                search_history_layout.show()
+                historyAdapter.setList(list)
+            } else {
+                search_history_layout.hide()
+            }
         }
         activity_anchor_search.onClick {
             closeKeyBoard()
