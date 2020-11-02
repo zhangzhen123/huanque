@@ -65,8 +65,8 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
     private val recentAdapter by lazy { SearchRecentAdapter() }
     private val historyAdapter by lazy {
         object : BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_search_history) {
-            override fun convert(h: BaseViewHolder, s: String) {
-                h.setText(R.id.history_anchor_name, s)
+            override fun convert(holder: BaseViewHolder, item: String) {
+                holder.setText(R.id.history_anchor_name, item)
             }
 
         }
@@ -83,13 +83,14 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
         initViewModel()
 //        isSelectAnchor = intent.getBooleanExtra(PK_SELECT_ANCHOR, false)
         action = intent?.getStringExtra(AnchorSearch.TYPE)
-        iv_delete.onClickNew {
-            search_text.setText("")
-        }
+
         initRecyclerView()
         showKeyBoardDispose = Observable.timer(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe {
             val systemService: InputMethodManager =
                 this@SearchActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            search_text.isFocusable = true
+            search_text.isFocusableInTouchMode = true
+            search_text.requestFocus()
             systemService.showSoftInput(search_text, 0)
         }
         if (AnchorSearch.CONNECT_MICRO == action) {
@@ -144,14 +145,14 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
         recentAdapter.setOnItemClickListener(listener = listener)
         if (action.isNullOrEmpty()) {
             history_and_recommend.show()
+            val flexBoxLayoutManager = FlexboxLayoutManager(this)
+            search_history.layoutManager = flexBoxLayoutManager
+            search_history.adapter = historyAdapter
             //历史推荐
             val list = getSearchHistory()
             if (list.isNotEmpty()) {
                 search_history_layout.show()
-                val flexBoxLayoutManager = FlexboxLayoutManager(this)
-                search_history.layoutManager = flexBoxLayoutManager
-                search_history.adapter = historyAdapter
-                historyAdapter.replaceData(list)
+                historyAdapter.setList(list)
             } else {
                 search_history_layout.hide()
             }
@@ -159,6 +160,23 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
             search_recommends.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(5)))
             search_recommends.adapter = recommendAdapter
             search_recommends.setHasFixedSize(true)
+            recommendAdapter.setOnItemClickListener { adapter, view, position ->
+                if (ScreenUtils.isSoftInputShow(this@SearchActivity)) {
+                    closeKeyBoard()//每次隐藏软键盘 不然跳转后新的activity会有问题
+                }
+
+                val data = (search_result_list.adapter as? BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>
+                    ?: return@setOnItemClickListener).getItem(position)
+                    ?: return@setOnItemClickListener
+                val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
+                intent.putExtra(IntentParamKey.PROGRAM_ID.name, data.programId)
+                //无字段  搜索页面，不传封面，直播间使用默认背景
+//                        val picUrl = data?.coverPic
+//                        intent.putExtra(LiveBusiConstant.PICID, picUrl)
+                this@SearchActivity.startActivity(intent)
+
+
+            }
 //            recommendAdapter.setSpanSizeLookup { _, position ->
 //                when {
 //                    recommendAdapter.data[position].type == ProgramAdapterNew.BANNER -> return@setSpanSizeLookup 2
@@ -185,13 +203,13 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
 
         })
         mViewModel.recentData.observe(this, androidx.lifecycle.Observer {
-            if (it != null&&it.isSuccess()) {
+            if (it != null && it.isSuccess()) {
                 showRecentAnchor(it.requireT())
                 mViewModel.recentData.value = null
             }
         })
         mViewModel.recommendData.observe(this, androidx.lifecycle.Observer {
-            if (it != null && it.isSuccess()&&it.requireT().isNotEmpty()) {
+            if (it != null && it.isSuccess() && it.requireT().isNotEmpty()) {
                 search_recommends.show()
                 recommend_tips.show()
                 recommendAdapter.setList(it.requireT())
@@ -221,7 +239,7 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
         search_result_list.setPadding(dp2px(20), 0, 0, 0)
         //当前需求  最多展示5个
         if (list.size <= 5) {
-            recentAdapter.replaceData(list)
+            recentAdapter.setList(list)
         } else {
             val anchors = ArrayList<ProgramLiveInfo>()
             list.forEachIndexed { index, data ->
@@ -233,7 +251,7 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
         }
     }
 
-    private fun searchDatas(searchKeyWork: CharSequence) {
+    private fun searchData(searchKeyWork: CharSequence) {
         val keyWord = searchKeyWork.trim().toString()
         if (keyWord.trim().isEmpty()) {
             ToastUtils.show("请输入关键字之后再查询")
@@ -268,14 +286,14 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
             text
         } else {
             val strList = oldString.split("__")
-            if (strList.size >= 10) {
+            if (strList.size >= 5) {
                 val newList = arrayListOf<String>()
 //                val dif = strList.size - 9
 //                repeat(dif) {
 //                    strList.removeAt(strList.size - 1)
 //                }
                 //只要前9个
-                for (i in 0..8) {
+                for (i in 0..3) {
                     newList.add(strList[i])
                 }
                 val sb = StringBuilder()
@@ -303,7 +321,15 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
             closeKeyBoard()
             finish()
         }
+        iv_delete.onClickNew {
+            search_text.setText("")
+            tv_attention.hide()
 
+            search_result_list.hide()
+            history_and_recommend.show()
+            val list = getSearchHistory()
+            historyAdapter.setList(list)
+        }
         activity_anchor_search.onClick {
             closeKeyBoard()
         }
@@ -338,7 +364,7 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
                         KeyEvent.ACTION_DOWN -> {//只在按下调用,回车事件会在up and down各执行一次
                             val searchKeyWork: CharSequence = "${view.text}"
                             closeKeyBoard()
-                            searchDatas(searchKeyWork)
+                            searchData(searchKeyWork)
                             return@OnEditorActionListener true
                         }
                     }
@@ -371,7 +397,7 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
         ll_search_big_button.onClickNew {
             val searchKeyWork: CharSequence = "${search_text.text}"
             closeKeyBoard()
-            searchDatas(searchKeyWork)
+            searchData(searchKeyWork)
         }
         clear_history.onClickNew {
             deleteHistory()
@@ -382,7 +408,7 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
             if (item != null) {
                 search_text.setText(item.toString())
                 search_text.setSelection(item.toString().length)
-                searchDatas(item.toString())
+                searchData(item.toString())
             }
         }
         //添加点击事件
@@ -433,7 +459,7 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
 
         search_result_list.show()
         search_result_list.adapter = listAdapter
-        listAdapter.replaceData(indexInfoList)
+        listAdapter.setList(indexInfoList)
         if (indexInfoList.size == 0) {
             showQueryError()
         }

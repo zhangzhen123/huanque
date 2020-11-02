@@ -130,7 +130,7 @@ class HomeProgramFragment : BaseFragment() {
 
         viewModel.queryInfo()
 
-        followViewModel.requestProgramList(QueryType.INIT)
+        followViewModel.requestProgramList(QueryType.INIT,isNullOffset = true)
     }
 
     /**
