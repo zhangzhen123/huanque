@@ -308,7 +308,7 @@ object ByteConstants {
  */
 object MessageConstants {
     //跳转H5
-    const val ACTION_URL = "URL"
+    const val ACTION_URL = "Url"
 
     //跳转主页
     const val ACTION_MAIN_PAGE = "main_page"

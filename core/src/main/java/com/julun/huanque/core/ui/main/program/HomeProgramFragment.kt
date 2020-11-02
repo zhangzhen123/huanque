@@ -277,7 +277,9 @@ class HomeProgramFragment : BaseFragment() {
                 }
 
                 ImageUtils.requestImageForBitmap("${StringHelper.getOssImgUrl(it.headPic)}${BusiConstant.OSS_160}", { bitmap ->
-                    sdv_header.imageBitmap = bitmap
+                    activity?.runOnUiThread {
+                        sdv_header.imageBitmap = bitmap
+                    }
                 })
                 tv_nickname.text = it.programName
                 tv_type.text = "关注的人"
