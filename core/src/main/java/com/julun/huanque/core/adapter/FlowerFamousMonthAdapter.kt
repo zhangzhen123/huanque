@@ -295,7 +295,10 @@ class FlowerFamousMonthAdapter : BaseMultiItemQuickAdapter<FamousListMultiBean, 
                 RNPageActivity.start(act, RnConstant.MINE_HOMEPAGE)
             } else {
                 //跳转他人主页
-                RNPageActivity.start(act, RnConstant.PERSONAL_HOMEPAGE, Bundle().apply { putLong("userId", userId) })
+                RNPageActivity.start(act, RnConstant.PERSONAL_HOMEPAGE, Bundle().apply {
+                    putLong("userId", userId)
+                    putString("homeSourceType", "FlowerRank")
+                })
             }
         }
     }

@@ -235,10 +235,10 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
     private fun showViewByData(bean: GiftRuleBean) {
         ImageUtils.loadImageWithWidth(sdv_bg, StringHelper.getOssImgUrl(bean.ruleBgPic), ScreenUtils.getScreenWidth())
         mAdapter.setList(bean.awardList)
-        val index = 50 - 50 % bean.awardList.size + 1
+//        val index = 50 - 50 % bean.awardList.size + 1
 //        val index = 7
-        recyclerView.smoothScrollToPosition(index)
-        logger.info("index = ${index}")
+//        recyclerView.smoothScrollToPosition(index)
+//        logger.info("index = ${index}")
 
 //        Observable.timer(3000, TimeUnit.MILLISECONDS)
 //            .bindUntilEvent(this, Lifecycle.Event.ON_DESTROY)
