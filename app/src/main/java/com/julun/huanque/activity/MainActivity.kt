@@ -145,10 +145,10 @@ class MainActivity : BaseActivity() {
                     }
                 }
             }
-            if (targetIndex != null && targetIndex != -1) {
-                mMainViewModel.indexData.value = targetIndex
+            if (targetIndex == null || targetIndex == -1) {
+                targetIndex=0
             }
-
+            mMainViewModel.indexData.value = targetIndex
         }
 
 
