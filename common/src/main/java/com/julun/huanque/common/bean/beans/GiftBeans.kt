@@ -313,7 +313,9 @@ data class SendMsgBean(
     //聊天券数量
     var chatTicketCnt: Int = 0,
     //语音券数量
-    var voiceTicketCnt: Int = 0
+    var voiceTicketCnt: Int = 0,
+    var resultCode: String = "",
+    var newContent: String? = null
 )
 
 /**

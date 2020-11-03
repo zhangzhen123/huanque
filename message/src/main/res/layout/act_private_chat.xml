@@ -27,24 +27,31 @@
         app:layout_constraintLeft_toLeftOf="@id/header_view"
         app:layout_constraintTop_toTopOf="@id/header_view" />
 
-    <TextView
-        android:id="@+id/tvTitle"
+    <RelativeLayout
         android:layout_width="0px"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
+        android:layout_height="0px"
         android:layout_marginLeft="102dp"
         android:layout_marginRight="102dp"
-        android:gravity="center"
-        android:singleLine="true"
-        android:text="欢雀"
-        android:textColor="@color/black_333"
-        android:textSize="18sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/header_view"
         app:layout_constraintLeft_toLeftOf="@id/header_view"
         app:layout_constraintRight_toRightOf="@id/header_view"
-        app:layout_constraintTop_toTopOf="@id/header_view" />
+        app:layout_constraintTop_toTopOf="@id/header_view">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="欢雀"
+            android:textColor="@color/black_333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
 
     <ImageView
         android:id="@+id/ivOperation"

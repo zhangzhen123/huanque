@@ -220,8 +220,8 @@ class CommonInit {
 //        BuildConfig.SERVICE_BASE_URL_PRODUCT
 //    }
     fun getBaseUrl(): String {
-//        return mBaseUrl ?: BuildConfig.SERVICE_BASE_URL_PRODUCT
-        return BuildConfig.SERVICE_BASE_URL_PRODUCT
+        return mBaseUrl ?: BuildConfig.SERVICE_BASE_URL_PRODUCT
+//        return BuildConfig.SERVICE_BASE_URL_PRODUCT
     }
 
     private var mBaseUrl: String? = null //内部用

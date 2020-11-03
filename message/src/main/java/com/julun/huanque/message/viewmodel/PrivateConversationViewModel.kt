@@ -391,18 +391,29 @@ class PrivateConversationViewModel : BaseViewModel() {
                 basicBean.value?.chatTicketCnt = result.chatTicketCnt
                 propData.value = PropBean(result.chatTicketCnt, result.voiceTicketCnt)
                 if (type.isEmpty()) {
-                    localMsg?.sentStatus = Message.SentStatus.SENT
-                    msgData.value = localMsg
-                    RongCloudManager.send(content, "$targetId", targetUserObj = targetUser.apply { fee = result.consumeBeans }) { result, message ->
-                        if (!result) {
-                            //发送失败
-                            localMsg?.messageId = message.messageId
-                            sendMessageFail(localMsg ?: return@send, MessageFailType.RONG_CLOUD)
-                        } else {
-                            localMsg?.sentStatus = message.sentStatus
-                            msgData.value = localMsg
+                    if (result.resultCode == ValidateResult.PASS) {
+                        localMsg?.sentStatus = Message.SentStatus.SENT
+                        msgData.value = localMsg
+                        RongCloudManager.send(
+                            content,
+                            "$targetId",
+                            targetUserObj = targetUser.apply { fee = result.consumeBeans }) { result, message ->
+                            if (!result) {
+                                //发送失败
+                                localMsg?.messageId = message.messageId
+                                sendMessageFail(localMsg ?: return@send, MessageFailType.RONG_CLOUD)
+                            } else {
+                                localMsg?.sentStatus = message.sentStatus
+                                msgData.value = localMsg
+                            }
                         }
+                    } else if (result.resultCode == ValidateResult.ONLY) {
+                        //仅自己可见,插入模拟数据
+                        RongCloudManager.insertComingMessage("$targetId", "${SessionUtils.getUserId()}", localMsg?.content ?: return@request)
+                        localMsg?.sentStatus = Message.SentStatus.SENT
+                        msgData.value = localMsg
                     }
+
                 } else {
                     //发送特权表情消息
                     RongCloudManager.sendCustomMessage(

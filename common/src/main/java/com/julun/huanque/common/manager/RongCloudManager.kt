@@ -317,6 +317,33 @@ object RongCloudManager {
     }
 
     /**
+     * 插入模拟消息(本人显示,私聊显示)
+     */
+    fun insertComingMessage(targetId: String, senderId: String = "", messageContent: MessageContent) {
+        RongIMClient.getInstance()
+            .insertIncomingMessage(
+                Conversation.ConversationType.PRIVATE,
+                targetId,
+                senderId,
+                Message.ReceivedStatus(1),
+                messageContent,
+                System.currentTimeMillis(), object : RongIMClient.ResultCallback<Message>() {
+                    override fun onSuccess(message: Message?) {
+                        if(message == null){
+                            return
+                        }
+                        EventBus.getDefault()
+                            .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
+                    }
+
+                    override fun onError(p0: ErrorCode?) {
+                    }
+
+                }
+            )
+    }
+
+    /**
      * 发送自定义消息
      */
     fun sendCustomMessage(msg: Message, callback: (Boolean, Message) -> Unit = { result, msg -> }) {
