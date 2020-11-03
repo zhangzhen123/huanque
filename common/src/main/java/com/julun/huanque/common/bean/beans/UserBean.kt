@@ -197,7 +197,9 @@ class NetcallBean(
     //价格（如果大于0，标识位付费方）
     var beans: Long = 0,
     //是否显示过确认弹窗
-    var unconfirmed: Boolean = false
+    var unconfirmed: Boolean = false,
+    //是否取消
+    var canceled: String = ""
 ) : Serializable
 
 /**

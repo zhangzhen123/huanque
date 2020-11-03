@@ -98,11 +98,64 @@ class MainViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = socialService.voiceCallInfo(NetcallIdForm(callId)).dataConvert()
-                val bundle = Bundle()
-                bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLED)
-                bundle.putSerializable(ParamConstant.NetCallBean, result)
-                ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle)
-                    .navigation()
+                if(result.canceled == BusiConstant.True){
+                    //语音已经取消,插入模拟消息
+                    val bean = VoiceConmmunicationSimulate().apply {
+                        type = VoiceResultType.CANCEL
+                    }
+                    val targetUser = TargetUserObj()
+
+                    val createUserId = result.callerInfo.userId
+                    bean.createUserID = createUserId
+
+                    val chatExtra = RoomUserChatExtra()
+                    val sId = "${result.callerInfo.userId}"
+                    val tId = "${result.callerInfo.userId}"
+
+                        //本人是被叫（插入接收消息）
+                        targetUser.apply {
+                            headPic = SessionUtils.getHeaderPic()
+                            nickname = SessionUtils.getNickName()
+                            userId = SessionUtils.getUserId()
+                            sex = SessionUtils.getSex()
+                            userType = SessionUtils.getUserType()
+                        }
+                        chatExtra.apply {
+                            headPic = result.callerInfo.headPic
+                            senderId = result.callerInfo.userId
+                            nickname = result.callerInfo.nickname
+                            sex = result.callerInfo.sex
+                            targetUserObj = targetUser
+                            userAbcd = AppHelper.getMD5(sId)
+                            userType = result.callerInfo.userType
+                        }
+
+                    chatExtra.targetUserObj?.intimateLevel = result.relationInfo.intimateLevel
+                    chatExtra.targetUserObj?.stranger = GlobalUtils.getStrangerString(result.relationInfo.stranger)
+
+                    val conversationType = if (bean.needRefresh) {
+                        Conversation.ConversationType.GROUP
+                    } else {
+                        Conversation.ConversationType.PRIVATE
+                    }
+
+                    RongCloudManager.sendSimulateMessage(
+                        tId,
+                        sId,
+                        chatExtra,
+                        conversationType,
+                        MessageCustomBeanType.Voice_Conmmunication_Simulate,
+                        bean,
+                        sId == tId
+                    )
+                }else{
+                    val bundle = Bundle()
+                    bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLED)
+                    bundle.putSerializable(ParamConstant.NetCallBean, result)
+                    ARouter.getInstance().build(ARouterConstant.VOICE_CHAT_ACTIVITY).with(bundle)
+                        .navigation()
+                }
+
 
             })
         }

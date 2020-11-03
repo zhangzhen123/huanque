@@ -808,7 +808,7 @@ object RongCloudManager {
         //        logger.info("当前线程：${Thread.currentThread()}")
         //        if (TextUtils.isEmpty(roomId)) return
         val content: MessageContent? = message.content
-        val isRetrieved = message.receivedStatus.isRetrieved
+//        val isRetrieved = message.receivedStatus.isRetrieved
         if (message.conversationType == Conversation.ConversationType.PRIVATE && content !is CommandMessage) {
             doWithVibrate(message)
         }
@@ -842,7 +842,7 @@ object RongCloudManager {
             }
             is TextMessage -> {
                 //TextUtils.isEmpty(roomId) ||  首页里面没有roomId
-                if (isRetrieved) return
+//                if (isRetrieved) return
 
 
                 //文本消息还是需要透过融云的id去重判断
@@ -898,7 +898,7 @@ object RongCloudManager {
                 baseList?.forEach {
                     // 消息类型
                     val msgType = it.msgType
-                    if (!checkMessage(it, isRetrieved)) return@forEach
+                    if (!checkMessage(it)) return@forEach
                     if (it.data == null) return@forEach
                     val jsonObject = it.data as JSONObject
                     val jsonString = jsonObject.toJSONString()
@@ -912,10 +912,10 @@ object RongCloudManager {
                         MessageProcessor.MessageType.Event.name -> {
                             val eventCode = jsonObject.getString(MessageProcessor.EVENT_CODE)
                             if (!TextUtils.isEmpty(eventCode)) {
-                                if (message.receivedStatus.isRetrieved) {
-                                    //如果这条消息被被其他登录的多端收取过，那么直接丢弃
-                                    return@forEach
-                                }
+//                                if (message.receivedStatus.isRetrieved) {
+//                                    //如果这条消息被被其他登录的多端收取过，那么直接丢弃
+//                                    return@forEach
+//                                }
                                 //                                MessageProcessor.parseEventMessage(jsonObject)
                                 //                                return@forEach
                             }
@@ -980,7 +980,7 @@ object RongCloudManager {
      * 处理自定义消息发送过来的command消息
      */
     private fun doWithCommandCustomMessage(message: Message, content: CommandCustomMessage) {
-        val isRetrieved = message.receivedStatus.isRetrieved
+//        val isRetrieved = message.receivedStatus.isRetrieved
         logger.info("收到CommandMessage消息 ${JsonUtil.serializeAsString(content)}")
         // 将数据解析为字典对象
         val dataString = content.data
@@ -989,7 +989,7 @@ object RongCloudManager {
         baseList?.forEach {
             // 消息类型
             val msgType = it.msgType
-            if (!checkMessage(it, isRetrieved)) return@forEach
+            if (!checkMessage(it)) return@forEach
             if (it.data == null) return@forEach
             val jsonObject = it.data as JSONObject
             val jsonString = jsonObject.toJSONString()
@@ -1003,10 +1003,10 @@ object RongCloudManager {
                 MessageProcessor.MessageType.Event.name -> {
                     val eventCode = jsonObject.getString(MessageProcessor.EVENT_CODE)
                     if (!TextUtils.isEmpty(eventCode)) {
-                        if (message.receivedStatus.isRetrieved) {
-                            //如果这条消息被被其他登录的多端收取过，那么直接丢弃
-                            return@forEach
-                        }
+//                        if (message.receivedStatus.isRetrieved) {
+//                            //如果这条消息被被其他登录的多端收取过，那么直接丢弃
+//                            return@forEach
+//                        }
                         //                                MessageProcessor.parseEventMessage(jsonObject)
                         //                                return@forEach
                     }
@@ -1035,7 +1035,7 @@ object RongCloudManager {
      * 检查消息的安全性  是不是串消息  是不是重复消息
      * true 代表消息正常
      */
-    private fun checkMessage(message: BaseData, isRetrieved: Boolean): Boolean {
+    private fun checkMessage(message: BaseData): Boolean {
         //如果没有msgId的直接过滤
         if (message.msgId.isEmpty()) return false
 
@@ -1060,10 +1060,10 @@ object RongCloudManager {
                 }
             }
             MessageProcessor.TargetType.User.name -> {
-                if (isRetrieved) {
-                    //其它设备消息
-                    return false
-                }
+//                if (isRetrieved) {
+//                    //其它设备消息
+//                    return false
+//                }
                 //针对部分消息在快速切换房间时重复发送的问题进行过滤
                 if (message.roomIds != null && !message.roomIds!!.contains(roomId)) {
                     logger.info("TargetType.User 消息串了")
