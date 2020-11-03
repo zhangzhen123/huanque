@@ -411,6 +411,9 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                 //防止黑屏
                 mAliPlayer?.redraw()
                 mSurfaceHolder = holder
+                //对于全局单例的播放器 这里因为会频繁切换渲染surfaceView
+                // 会导致设置的mRenderListener会被挤掉 所以每次这里重新创建时重新赋予RenderListener
+                mAliPlayer?.setOnRenderingStartListener(mRenderListener)
             }
 
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -419,6 +422,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 logger.info("AliPlayerManager surfaceDestroyed=${holder.hashCode()} useManager=$useManager")
+//                mAliPlayer?.setOnRenderingStartListener(null)
             }
         })
 

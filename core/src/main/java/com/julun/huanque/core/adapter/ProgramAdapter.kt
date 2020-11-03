@@ -64,9 +64,8 @@ class ProgramAdapter : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), L
         if (viewType == ProgramItemType.BANNER) {
             val banner = holder.getView<BGABanner>(R.id.banner)
             val screenWidth = ScreenUtils.getScreenWidth() - dp2px(10) * 2
-            //修改banner高度原来0.3022 现在0.38356
             val lp = banner.layoutParams
-            lp.height = (screenWidth * 0.38356).toInt()
+            lp.height = (screenWidth*120.0f/355.0f).toInt()
 //                lp.width = screenWidth
         }
         return holder
@@ -133,8 +132,8 @@ class ProgramAdapter : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), L
 
             when (model?.resType) {
                 BannerResType.Pic -> {
-                    val screenWidth = ScreenUtils.screenWidthFloat.toInt() - dp2px(15f) * 2
-                    val height = screenWidth*120.0f/355
+                    val screenWidth = ScreenUtils.screenWidthFloat.toInt() - dp2px(10f) * 2
+                    val height = screenWidth*120.0f/355.0f
                     ImageUtils.loadImageInPx(itemView, model.resUrl, screenWidth, height.toInt())
                 }
             }

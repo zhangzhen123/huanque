@@ -134,6 +134,7 @@ class MainActivity : BaseActivity() {
 
         lifecycleScope.launchWhenResumed {
             //默认定位的位置 优先以TARGET_INDEX 再根据getDefaultHomeTab
+            //如果都没有命中默认打开到首页
             var targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, -1)
             if (targetIndex == null || targetIndex == -1) {
                 when (StorageHelper.getDefaultHomeTab()) {
@@ -146,7 +147,7 @@ class MainActivity : BaseActivity() {
                 }
             }
             if (targetIndex == null || targetIndex == -1) {
-                targetIndex=0
+                targetIndex=MainPageIndexConst.MAIN_FRAGMENT_INDEX
             }
             mMainViewModel.indexData.value = targetIndex
         }
