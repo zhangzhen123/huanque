@@ -643,7 +643,16 @@ class PlayerActivity : BaseActivity() {
                     val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
                     intent.data = Uri.parse("package:$packageName")
                     startActivityForResult(intent, PERMISSIONALERT_WINDOW_CODE)
-                }, onCancel = { viewModel.mPermissionJumpType = "" }), "设置提醒", "去设置"
+                }, onCancel = {
+                    when (type) {
+                        PermissionJumpType.Contacts -> {
+                            openContacts()
+                        }
+                        PermissionJumpType.PrivateChat -> {
+                            openPrivateConversation()
+                        }
+                    }
+                }), "设置提醒", "去设置"
             )
             false
         }
@@ -683,10 +692,13 @@ class PlayerActivity : BaseActivity() {
             val bundler = Bundle()
             bundler.putString(ParamConstant.DEFAULT_TYPE, ContactsTabType.Intimate)
             ARouter.getInstance().build(ARouterConstant.ContactsActivity).with(bundler).navigation()
-            FloatingManager.showFloatingView(
-                GlobalUtils.getPlayUrl(baseData.playInfo ?: return@launchWhenResumed),
-                viewModel.programId, baseData.prePic, !baseData.isLandscape
-            )
+            if (PermissionUtils.checkFloatPermission(this@PlayerActivity)) {
+                FloatingManager.showFloatingView(
+                    GlobalUtils.getPlayUrl(baseData.playInfo ?: return@launchWhenResumed),
+                    viewModel.programId, baseData.prePic, !baseData.isLandscape
+                )
+            }
+
         }
     }
 
@@ -1812,17 +1824,17 @@ class PlayerActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PERMISSIONALERT_WINDOW_CODE) {
-            if (PermissionUtils.checkFloatPermission(this)) {
-                when (viewModel.mPermissionJumpType) {
-                    PermissionJumpType.Contacts -> {
-                        openContacts()
-                    }
-                    PermissionJumpType.PrivateChat -> {
-                        openPrivateConversation()
-                    }
-                    else -> {
-                    }
+//            if (PermissionUtils.checkFloatPermission(this)) {
+            when (viewModel.mPermissionJumpType) {
+                PermissionJumpType.Contacts -> {
+                    openContacts()
                 }
+                PermissionJumpType.PrivateChat -> {
+                    openPrivateConversation()
+                }
+                else -> {
+                }
+//                }
             }
         }
     }

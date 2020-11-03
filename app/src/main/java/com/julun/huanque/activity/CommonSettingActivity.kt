@@ -40,7 +40,7 @@ class CommonSettingActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initViewModel()
-        header_page.textTitle.text = "直播设置"
+        header_page.textTitle.text = "通用设置"
         showDefaultView()
 
         mCommonSettingViewModel.getHideLocationState()

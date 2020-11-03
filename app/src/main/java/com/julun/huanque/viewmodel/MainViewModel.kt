@@ -102,6 +102,7 @@ class MainViewModel : BaseViewModel() {
                     //语音已经取消,插入模拟消息
                     val bean = VoiceConmmunicationSimulate().apply {
                         type = VoiceResultType.CANCEL
+                        createUserID = result.callerInfo.userId
                     }
                     val targetUser = TargetUserObj()
 
