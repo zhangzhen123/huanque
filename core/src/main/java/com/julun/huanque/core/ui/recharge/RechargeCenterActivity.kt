@@ -26,7 +26,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
+import com.julun.huanque.common.widgets.indicator.ColorFlipPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.AliPayManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -179,7 +179,8 @@ class RechargeCenterActivity : BaseActivity() {
             }
 
             override fun getTitleView(context: Context, index: Int): IPagerTitleView {
-                val simplePagerTitleView = ColorFlipPagerTitleView(context)
+                val simplePagerTitleView =
+                    ColorFlipPagerTitleView(context)
                 simplePagerTitleView.textSizeDimen = R.dimen.text_size_big
                 simplePagerTitleView.text = list[index]
                 simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_666)

@@ -1,4 +1,4 @@
-package com.julun.huanque.common.widgets;
+package com.julun.huanque.common.widgets.indicator;
 
 import android.content.Context;
 import android.graphics.Typeface;

@@ -17,7 +17,7 @@ import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.StatusBarUtil
-import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
+import com.julun.huanque.common.widgets.indicator.ColorFlipPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.PlumFlowerFragmentAdapter
 import kotlinx.android.synthetic.main.act_plum_flower.*
@@ -102,7 +102,8 @@ class PlumFlowerActivity : BaseActivity() {
                 }
 
                 override fun getTitleView(context: Context, index: Int): IPagerTitleView {
-                    val simplePagerTitleView = ColorFlipPagerTitleView(context)
+                    val simplePagerTitleView =
+                        ColorFlipPagerTitleView(context)
                     simplePagerTitleView.textSizeDimen = R.dimen.text_size_big
                     simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                     simplePagerTitleView.backgroundColor = Color.TRANSPARENT

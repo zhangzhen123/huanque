@@ -25,7 +25,7 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
+import com.julun.huanque.common.widgets.indicator.ColorFlipPagerTitleView
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.ContactFragmentAdapter
 import com.julun.huanque.message.viewmodel.ContactsActivityViewModel
@@ -239,7 +239,8 @@ class ContactsActivity : BaseActivity() {
                 }
 
                 override fun getTitleView(context: Context, index: Int): IPagerTitleView {
-                    val simplePagerTitleView = ColorFlipPagerTitleView(context)
+                    val simplePagerTitleView =
+                        ColorFlipPagerTitleView(context)
                     simplePagerTitleView.textSizeDimen = R.dimen.text_size_big
                     val userTab = it.getTypeList()[index]
                     val count = userTab.count
