@@ -128,7 +128,6 @@ class YuanFenAdapter : BaseQuickAdapter<FateInfo, BaseViewHolder>(R.layout.recyc
         } else {
             iv_new_user.hide()
         }
-        holder.setVisible(R.id.iv_new_user, item.newUser == BusiConstant.True)
 
         if (statusDrawable != null) {
             statusDrawable.setBounds(0, 0, statusDrawable.minimumWidth, statusDrawable.minimumHeight)
