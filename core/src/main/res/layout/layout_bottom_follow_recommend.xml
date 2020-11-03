@@ -12,6 +12,7 @@
         android:text="为你推荐"
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_14"
+        android:visibility="gone"
         android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView

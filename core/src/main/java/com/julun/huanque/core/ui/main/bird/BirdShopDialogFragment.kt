@@ -59,7 +59,7 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         ivClose.onClickNew {
             dismiss()
         }
-        state_pager_view.backgroundColor= Color.TRANSPARENT
+        state_pager_view.backgroundColor = Color.TRANSPARENT
         mRefreshLayout.setOnRefreshListener {
             mViewModel.queryShop(QueryType.REFRESH)
         }
@@ -71,6 +71,7 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         initViewModel()
         mViewModel.queryShop()
     }
+
     private fun initViewModel() {
         leYuanViewModel.totalCoin.observe(this, Observer {
             totalCoin.text = "${StringHelper.formatBigNum(it)}"
@@ -82,11 +83,29 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
             }
 
         })
+
+        leYuanViewModel.buyResult.observe(this, Observer {
+            if (it.isSuccess()) {
+                val bird = it.requireT()
+                if (bird.hasEnough == true && bird.unlockUpgrade != null) {
+                    val index = birdAdapter.data.indexOfFirst { item ->
+                        item.upgradeLevel == bird.unlockUpgrade!!.upgradeLevel
+                    }
+                    if (index >= 0) {
+                        logger.info("匹配到刷新的鸟=${index}")
+                        birdAdapter.data.getOrNull(index)?.upgradeCoins = bird.unlockUpgrade!!.upgradeCoins
+                        birdAdapter.notifyItemChanged(index)
+                    }
+                }
+
+            }
+        })
+
     }
 
     private fun locationToCanBuyMaxLevel() {
-        val index=birdAdapter.data.indexOfFirst { !it.unlocked }-1
-        if(index>0&&birdAdapter.itemCount>0){
+        val index = birdAdapter.data.indexOfFirst { !it.unlocked } - 1
+        if (index > 0 && birdAdapter.itemCount > 0) {
             birdsList.scrollToPosition(index)
         }
     }
