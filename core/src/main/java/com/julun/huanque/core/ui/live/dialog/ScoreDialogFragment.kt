@@ -10,9 +10,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.PrivateMessageBean
-import com.julun.huanque.common.bean.beans.UserInfoBean
 import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
+import com.julun.huanque.common.widgets.indicator.ColorFlipPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.fragment.ScoreFragment
@@ -123,7 +122,8 @@ class ScoreDialogFragment : BaseDialogFragment() {
                 }
 
                 override fun getTitleView(context: Context, index: Int): IPagerTitleView {
-                    val simplePagerTitleView = ColorFlipPagerTitleView(context)
+                    val simplePagerTitleView =
+                        ColorFlipPagerTitleView(context)
                     simplePagerTitleView.textSizeDimen = R.dimen.text_size_big
                     simplePagerTitleView.text = tabTitles[index]
                     simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_999)

@@ -20,7 +20,7 @@ import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.widgets.ColorFlipPagerTitleView
+import com.julun.huanque.common.widgets.indicator.ColorFlipPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.fragment.OnlineListFragment
@@ -160,7 +160,8 @@ class OnlineDialogFragment : BaseDialogFragment() {
                     if (mTabs.isEmpty() || mTabs.size <= index) {
                         return null
                     }
-                    val simplePagerTitleView = ColorFlipPagerTitleView(context)
+                    val simplePagerTitleView =
+                        ColorFlipPagerTitleView(context)
                     simplePagerTitleView.textSizeDimen = R.dimen.sp_16
                     simplePagerTitleView.text = mTabs[index].title
                     simplePagerTitleView.selectedColor = GlobalUtils.getColor(R.color.black_333)

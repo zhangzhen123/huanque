@@ -2,7 +2,7 @@ package com.julun.huanque.core.ui.main.program
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.util.SparseArray
@@ -19,7 +19,6 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
@@ -31,9 +30,9 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.follow.FollowActivity
 import com.julun.huanque.core.ui.main.follow.FollowViewModel
@@ -49,7 +48,6 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.CommonPagerTitleView
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.imageBitmap
 import org.jetbrains.anko.startActivity
@@ -150,41 +148,60 @@ class HomeProgramFragment : BaseFragment() {
 
             override fun getTitleView(context: Context, index: Int): IPagerTitleView {
                 logger.info("getTitleView：$index")
-                val simplePagerTitleView = CommonPagerTitleView(context)
-                simplePagerTitleView.setContentView(R.layout.view_home_tab_title)
+//                val simplePagerTitleView = CommonPagerTitleView(context)
+//                simplePagerTitleView.setContentView(R.layout.view_home_tab_title)
+//
+////                val container = simplePagerTitleView.findViewById<RelativeLayout>(R.id.tab_container)
+//                val tabTitle = simplePagerTitleView.findViewById<TextView>(R.id.tvTabTitle)
+////                val dot = simplePagerTitleView.findViewById<ImageView>(R.id.tab_dot)
+//                simplePagerTitleView.onPagerTitleChangeListener = object : CommonPagerTitleView.OnPagerTitleChangeListener {
+//                    override fun onDeselected(index: Int, totalCount: Int) {
+////                            tabTitle.typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
+//                        logger.info("onDeselected:$index")
+//                        tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_666))
+//                        tabTitle.textSize = 14f
+//                    }
+//
+//                    override fun onSelected(index: Int, totalCount: Int) {
+//                        logger.info("onSelected:$index")
+//                        tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_333))
+//                        tabTitle.textSize = 24f
+//
+//                    }
+//
+//                    override fun onLeave(index: Int, totalCount: Int, leavePercent: Float, leftToRight: Boolean) {
+//                    }
+//
+//                    override fun onEnter(index: Int, totalCount: Int, enterPercent: Float, leftToRight: Boolean) {
+//                    }
+//                }
+//                tabTitle.text = mTabTitles[index].typeName
+//                simplePagerTitleView.setOnClickListener { view_pager.currentItem = index }
+//                if (view_pager.currentItem == index) {
+//                    tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_333))
+//                    tabTitle.textSize = 24f
+//                } else {
+//                    tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_666))
+//                    tabTitle.textSize = 14f
+//                }
+//                return simplePagerTitleView
 
-//                val container = simplePagerTitleView.findViewById<RelativeLayout>(R.id.tab_container)
-                val tabTitle = simplePagerTitleView.findViewById<TextView>(R.id.tvTabTitle)
-//                val dot = simplePagerTitleView.findViewById<ImageView>(R.id.tab_dot)
-                simplePagerTitleView.onPagerTitleChangeListener = object : CommonPagerTitleView.OnPagerTitleChangeListener {
-                    override fun onDeselected(index: Int, totalCount: Int) {
-//                            tabTitle.typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
-                        logger.info("onDeselected:$index")
-                        tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_666))
-                        tabTitle.textSize = 14f
-                    }
-
-                    override fun onSelected(index: Int, totalCount: Int) {
-                        logger.info("onSelected:$index")
-                        tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_333))
-                        tabTitle.textSize = 24f
-
-                    }
-
-                    override fun onLeave(index: Int, totalCount: Int, leavePercent: Float, leftToRight: Boolean) {
-                    }
-
-                    override fun onEnter(index: Int, totalCount: Int, enterPercent: Float, leftToRight: Boolean) {
-                    }
-                }
-                tabTitle.text = mTabTitles[index].typeName
+                val simplePagerTitleView: ScaleTransitionPagerTitleView = ScaleTransitionPagerTitleView(context)
+                simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+                simplePagerTitleView.minScale = 0.583f
+                simplePagerTitleView.text = mTabTitles[index].typeName
+                simplePagerTitleView.textSize = 24f
+                simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_666)
+                simplePagerTitleView.selectedColor = ContextCompat.getColor(context, R.color.black_333)
                 simplePagerTitleView.setOnClickListener { view_pager.currentItem = index }
                 if (view_pager.currentItem == index) {
-                    tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_333))
-                    tabTitle.textSize = 24f
+                    simplePagerTitleView.setTextColor(ContextCompat.getColor(context, R.color.black_333))
+                    simplePagerTitleView.scaleX = 1.0f
+                    simplePagerTitleView.scaleY = 1.0f
                 } else {
-                    tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_666))
-                    tabTitle.textSize = 14f
+                    simplePagerTitleView.setTextColor(ContextCompat.getColor(context, R.color.black_666))
+                    simplePagerTitleView.scaleX = 0.583f
+                    simplePagerTitleView.scaleY = 0.583f
                 }
                 return simplePagerTitleView
             }
