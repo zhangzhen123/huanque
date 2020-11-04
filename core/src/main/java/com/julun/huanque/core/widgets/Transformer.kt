@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.live
+package com.julun.huanque.core.widgets
 
 import android.view.View
 import github.hellocsl.layoutmanager.gallery.GalleryLayoutManager
