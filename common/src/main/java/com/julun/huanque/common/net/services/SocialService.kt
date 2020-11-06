@@ -324,4 +324,16 @@ interface SocialService {
      */
     @POST("social/friend/chat/fateStat")
     suspend fun fateStat(@Body form: EmptyForm = EmptyForm()) : Root<FateWeekInfo>
+
+    /**
+     * 获取评价标签列表
+     */
+    @POST("social/friend/relation/evaluateTags")
+    suspend fun evaluateTags(@Body form : FriendIdForm) : Root<EvaluateTags>
+
+    /**
+     * 密友评价
+     */
+    @POST("social/friend/relation/evaluate")
+    suspend fun relationEvaluate(@Body form : EvaluateForm) : Root<RootListData<AppraiseBean>>
 }

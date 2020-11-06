@@ -185,7 +185,10 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     //停止
                     val position = mGalleryLayoutManager?.curSelectedPosition ?: return
-                    setSelectPosition(position % mAdapter.data.size)
+                    val count = mAdapter.data.size
+                    if(count != 0){
+                        setSelectPosition(position % count)
+                    }
                 }
 
             }
@@ -193,7 +196,10 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val position = mGalleryLayoutManager?.curSelectedPosition ?: return
-                setSelectPosition(position % mAdapter.data.size)
+                val count = mAdapter.data.size
+                if(count != 0){
+                    setSelectPosition(position % count)
+                }
             }
         })
 

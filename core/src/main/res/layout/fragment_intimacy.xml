@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/view_top"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@mipmap/bg_intimacy_list"
+        app:layout_constraintDimensionRatio="1125:711"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_top" />
+
+    <ImageView
+        android:id="@+id/iv_title"
+        android:layout_width="162dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="15dp"
+        android:src="@mipmap/content_intimacy_list"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_help"
+        android:layout_width="21dp"
+        android:layout_height="21dp"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_help_intimacy_list"
+        app:layout_constraintBottom_toBottomOf="@id/iv_title"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_title" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_header"
+        android:layout_width="108dp"
+        android:layout_height="121dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/view_top"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_top"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="fitCenter" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_header_border"
+        android:layout_width="108dp"
+        android:layout_height="121dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_header"
+        app:layout_constraintLeft_toLeftOf="@id/sdv_header"
+        app:layout_constraintRight_toRightOf="@id/sdv_header"
+        app:layout_constraintTop_toTopOf="@id/sdv_header" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0px"
+        android:layout_height="198dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_top" />
+
+    <View
+        android:id="@+id/view_bottom"
+        android:layout_width="0px"
+        android:layout_height="66dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="0px"
+        android:layout_marginLeft="15dp"
+        android:gravity="center"
+        android:text="可还是"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="@id/view_bottom"
+        app:layout_constraintTop_toTopOf="@id/view_bottom" />
+
+    <TextView
+        android:id="@+id/tv_jump"
+        android:layout_width="82dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/bg_enable"
+        android:gravity="center"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintRight_toRightOf="@id/view_bottom"
+        app:layout_constraintTop_toTopOf="@id/view_bottom"
+        tools:text="取代榜一" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

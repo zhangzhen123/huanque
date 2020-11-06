@@ -37,6 +37,7 @@ import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.AliPlayerManager
+import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.ui.main.home.HomeViewModel
@@ -179,10 +180,11 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     if (bean.userId == SessionUtils.getUserId()) {
                         RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
                     } else {
-                        RNPageActivity.start(
-                            requireActivity(),
-                            RnConstant.PERSONAL_HOMEPAGE,
-                            Bundle().apply { putLong("userId", bean.userId) })
+//                        RNPageActivity.start(
+//                            requireActivity(),
+//                            RnConstant.PERSONAL_HOMEPAGE,
+//                            Bundle().apply { putLong("userId", bean.userId) })
+                        HomePageActivity.newInstance(requireActivity(), bean.userId)
                     }
 
                 }

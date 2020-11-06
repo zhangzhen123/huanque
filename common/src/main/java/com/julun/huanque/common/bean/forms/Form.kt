@@ -169,3 +169,13 @@ class WordsIdForm(var wordsId: Long)
  * 状态的form
  */
 class StatusForm(var status: String = "")
+
+/**
+ * 用户ID的form
+ */
+class UserIdForm(val userId: Long? = null) : Serializable
+
+/**
+ * 评价Form
+ */
+class EvaluateForm(var friendId: Long, var content: String) : Serializable

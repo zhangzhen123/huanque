@@ -456,3 +456,200 @@ data class FollowProgramInfo(
  * 通用的MultiItemEntity
  */
 class MultiBean(override var itemType: Int, var content: Any) : MultiItemEntity
+
+/**
+ * 主页使用的性格数据
+ */
+data class CharacterTag(
+    //性格
+    var characterTagList: MutableList<String> = mutableListOf(),
+    //我喜欢的列表
+    var favoriteTagList: MutableList<String> = mutableListOf()
+) : Serializable
+
+data class CityBean(
+    //城市ID
+    var cityId: Long = 0,
+    //城市名称
+    var cityName: String = "",
+    //城市类型（故乡，足迹，常驻地）
+    var cityType: String = "",
+    //省名称
+    var provinceName: String = ""
+) : Serializable {
+    companion object {
+        //故乡
+        const val Home = "Home"
+
+        //常驻地
+        const val Resident = "Resident"
+
+        //足迹
+        const val Foot = "Foot"
+    }
+}
+
+/**
+ * 主页中的语音数据
+ */
+data class VoiceBean(
+    //语音时长
+    var length: Int = 0,
+    //语音状态
+    var voiceStatus: String = "",
+    //语音连接
+    var voiceUrl: String = ""
+
+) : Serializable {
+    companion object {
+        //等待审核
+        const val Wait = "Wait"
+
+        //被拒绝
+        const val Reject = "Reject"
+
+        //审核通过
+        const val Pass = "Pass"
+    }
+}
+
+/**
+ * 评论的对象
+ */
+data class AppraiseBean(
+    //同意的数量
+    var agreeNum: Int = 0,
+    //评论内容
+    var content: String = "",
+    //评价ID
+    var recordId: Long = 0
+) : Serializable
+
+/**
+ * 直播信息对象
+ */
+data class ProgramInfoHomePage(
+    //直播间ID
+    var programId: Long = 0,
+    //直播间封面
+    var programCover: String = "",
+    //是否开播
+    var living: String = ""
+) : Serializable
+
+/**
+ * 主页相关数据
+ */
+data class HomePageInfo(
+    //年龄
+    var age: Int = 0,
+    //评价列表
+    var appraiseList: MutableList<AppraiseBean> = mutableListOf(),
+    //真人标识
+    var authMark: String = "",
+    //生日
+    var birthday: String = "",
+    //主播的直播信息,如果不是主播则不返回
+    var programInfo: ProgramInfoHomePage? = null,
+    //是否拉黑
+    var black: String = "",
+    //性格数据
+    var characterTag: CharacterTag = CharacterTag(),
+    //城市列表
+    var cityList: MutableList<CityBean> = mutableListOf(),
+    //星座
+    var constellation: String = "",
+    //当前城市
+    var currentCity: String = "",
+    //是否关注
+    var follow: String = "",
+    //头像
+    var headPic: String = "",
+    //是否是真人
+    var headRealPeople: String = "",
+    //身高
+    var height: Int = 0,
+    //是否是密友
+    var intimate: String = "",
+    //职业ID
+    var jobId: Int = 0,
+    //职业名称
+    var jobName: String = "",
+    //我的性格列表(相同点判断)
+    var myCharacterTag: MutableList<String> = mutableListOf(),
+    //我的城市列表
+    var myCityList: MutableList<CityBean> = mutableListOf(),
+    //我的签名
+    var mySign: String = "签名不足以表达我自己，找我私聊吧~",
+    //昵称
+    var nickname: String = "",
+    //勋章列表
+    var officeMedal: MutableList<String> = mutableListOf(),
+    //乐园是否开启
+    var paradiseSwitch: String = "",
+    //封面列表
+    var picList: MutableList<String> = mutableListOf(),
+    //贵族等级
+    var royalLevel: Int = 0,
+    //性别
+    var sex: String = "",
+    //用户ID
+    var userId: Long = 0L,
+    //用户等级
+    var userLevel: Int = 0,
+    //用户类型
+    var userType: String = "",
+    //语音签名对象
+    var voice: VoiceBean = VoiceBean(),
+    //体重
+    var weight: Int = 0,
+    //密友评价是否还有更多
+    var hasMore: String = "",
+    //资料完成度 百分比
+    var perfection: Int = 0,
+    //主播等级
+    var anchorLevel: Int = 0,
+    //贵族等级图标
+    var royalPic: String = "",
+    //是否显示亲密知己
+    var showCloseConfidant: String = "",
+    //亲密知己对象
+    var closeConfidant: IntimBeanFriendBean = IntimBeanFriendBean()
+
+) : Serializable
+
+/**
+ * 亲密知己对象
+ */
+data class IntimBeanFriendBean(
+    //用户ID
+    var userId: Long = 0,
+    //用户头像
+    var headPic: String = "",
+    //差值
+    var diffValue: Long = 0
+) : Serializable
+
+/**
+ * 评价列表
+ */
+data class EvaluateTags(
+    //最大评论数量
+    var maxEvaluateCnt: Int = 0,
+    //我的评论列表
+    var myEvaluateTagList: MutableList<String> = mutableListOf(),
+    //推荐评论列表
+    var recomTagList: MutableList<String> = mutableListOf()
+) : Serializable
+
+/**
+ * 主页图片对象
+ */
+data class HomePagePicBean(
+    //图片地址
+    var pic: String = "",
+    //真人水印
+    var realPic: String = "",
+    //是否选中
+    var selected: String = ""
+) : Serializable
