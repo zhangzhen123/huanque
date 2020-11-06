@@ -30,31 +30,31 @@ import kotlin.math.ceil
 class FlowerFamousMonthAdapter : BaseMultiItemQuickAdapter<FamousListMultiBean, BaseViewHolder>(null) {
 
     //小头像的边框宽度
-    private val smallBorder = ((ScreenUtils.getScreenWidth() - dp2pxf(60 + 30)) / 3).toInt()
+    private val smallBorder = ((ScreenUtils.getScreenWidth() - dp2pxf(50 + 10)) / 2).toInt()
 
     //间隔宽度
     private val dividerWidth = dp2px(10)
 
     init {
-        addItemType(FamousListMultiBean.HeaderView, R.layout.recycler_item_famous_month_header)
+//        addItemType(FamousListMultiBean.HeaderView, R.layout.recycler_item_famous_month_header)
         addItemType(FamousListMultiBean.Content, R.layout.recycler_item_famous_month)
     }
 
 
     override fun convert(holder: BaseViewHolder, multiBean: FamousListMultiBean) {
-        if (multiBean.itemType == FamousListMultiBean.HeaderView) {
-            //头部
-            val item = "${multiBean.content}"
-            val content = if (item == BusiConstant.True) {
-                //本人在名人榜
-                "恭喜你荣登名人榜"
-            } else {
-                //本人不在名人榜
-                "很遗憾你没有入榜"
-            }
-            holder.setText(R.id.tv_title, content)
-            return
-        }
+//        if (multiBean.itemType == FamousListMultiBean.HeaderView) {
+//            //头部
+//            val item = "${multiBean.content}"
+//            val content = if (item == BusiConstant.True) {
+//                //本人在名人榜
+//                "恭喜你荣登名人榜"
+//            } else {
+//                //本人不在名人榜
+//                "很遗憾你没有入榜"
+//            }
+//            holder.setText(R.id.tv_title, content)
+//            return
+//        }
         val item = multiBean.content
         if (item !is SingleFamousMonth) {
             return
@@ -70,21 +70,21 @@ class FlowerFamousMonthAdapter : BaseMultiItemQuickAdapter<FamousListMultiBean, 
         tvMonth.setTFDINCondensedBold()
         val recyclerViewInner = holder.getView<RecyclerView>(R.id.recyclerView_inner)
         val layoutPosition = holder.layoutPosition - 1
-        ViewUtils.updateViewWidth(recyclerViewInner, (smallBorder + dividerWidth) * 3)
+        ViewUtils.updateViewWidth(recyclerViewInner, (smallBorder + dividerWidth) * 2)
 
 
 
         if (recyclerViewInner.adapter == null) {
             //未设置过Adapter
-            recyclerViewInner.layoutManager = GridLayoutManager(context, 3)
+            recyclerViewInner.layoutManager = GridLayoutManager(context, 2)
 
             recyclerViewInner.adapter = FlowerFamousUserAdapter(smallBorder + dividerWidth).apply {
-                if (layoutPosition == 0) {
-                    val headeView = LayoutInflater.from(context).inflate(R.layout.view_famous_header, null)
-                    if (headeView != null) {
-                        addHeaderView(headeView)
-                    }
-                }
+//                if (layoutPosition == 0) {
+//                    val headeView = LayoutInflater.from(context).inflate(R.layout.view_famous_header, null)
+//                    if (headeView != null) {
+//                        addHeaderView(headeView)
+//                    }
+//                }
             }
         }
 
@@ -217,17 +217,17 @@ class FlowerFamousMonthAdapter : BaseMultiItemQuickAdapter<FamousListMultiBean, 
             }
         }
 
-        val adapterData = mutableListOf<FamousUser>()
-        dataList.forEachIndexed { index, data ->
-            if (layoutPosition == 0) {
-                if (index >= 3) {
-                    adapterData.add(data)
-                }
-            } else {
-                adapterData.add(data)
-            }
-        }
-        adapter.setList(adapterData)
+//        val adapterData = mutableListOf<FamousUser>()
+//        dataList.forEachIndexed { index, data ->
+//            if (layoutPosition == 0) {
+//                if (index >= 3) {
+//                    adapterData.add(data)
+//                }
+//            } else {
+//                adapterData.add(data)
+//            }
+//        }
+        adapter.setList(dataList)
 
         adapter.setOnItemClickListener { adap, view, position ->
             val data = adap.getItem(position) as? FamousUser

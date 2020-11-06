@@ -94,27 +94,20 @@
         app:layout_constraintRight_toRightOf="parent" />
 
 
-    <TextView
+    <ImageView
         android:id="@+id/tv_author_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="47dp"
+        android:layout_height="16dp"
         android:layout_marginTop="@dimen/dimen_5"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
-        android:background="@drawable/bg_live_square_status"
-        android:drawableStart="@drawable/bg_dot2"
-        android:drawablePadding="@dimen/dimen_3"
-        android:gravity="center"
-        android:includeFontPadding="false"
+        android:scaleType="fitXY"
         android:paddingStart="@dimen/dimen_5"
         android:paddingTop="@dimen/dimen_3"
         android:paddingEnd="@dimen/dimen_5"
-        android:paddingBottom="@dimen/dimen_3"
-        android:textColor="#F5FFFD"
-        android:textSize="10sp"
+        android:src="@mipmap/icon_status_live"
         app:layout_constraintRight_toRightOf="@+id/anchorPicture"
-        app:layout_constraintTop_toTopOf="@+id/anchorPicture"
-        tools:text="休息中" />
+        app:layout_constraintTop_toTopOf="@+id/anchorPicture" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_pic"

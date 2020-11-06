@@ -291,7 +291,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                 }
                 ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
                 val sdv_pic = holder.getView<SimpleDraweeView>(R.id.sdv_pic)
-                val tv_author_status = holder.getView<TextView>(R.id.tv_author_status)
+                val tv_author_status = holder.getView<View>(R.id.tv_author_status)
 
                 if (item.rightTopTag.isNotEmpty()) {
                     sdv_pic.show()
@@ -300,7 +300,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                 } else {
                     sdv_pic.hide()
                     if (item.isLiving) {
-                        holder.setVisible(R.id.tv_author_status, true).setText(R.id.tv_author_status, "直播中")
+                        holder.setVisible(R.id.tv_author_status, true)
                     } else {
                         holder.setGone(R.id.tv_author_status, true)
                     }

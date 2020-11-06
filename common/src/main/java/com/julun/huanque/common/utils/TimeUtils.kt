@@ -13,40 +13,6 @@ private const val HOUR = 60 * MINUTE
 const val DAY = 24 * HOUR
 
 /**
- * 格式化剩余时间  eg:1天10:12:12
- * @param time 毫秒
- */
-fun formatPrivateExperienceTime(time: Long): String {
-    val fTime = StringBuilder()
-    //天
-    if (time > DAY) {
-        fTime.append("${time / DAY}").append("天")
-    }
-    //小时
-    val hourTime = time % DAY
-
-    val hour = hourTime / HOUR
-    if (hour <= 9) {
-        fTime.append("0")
-    }
-    fTime.append("$hour").append(":")
-    //分钟
-    val minute = time % HOUR / MINUTE
-    if (minute <= 9) {
-        fTime.append("0")
-    }
-    fTime.append("$minute").append(":")
-    //秒
-    val second = time % MINUTE / SECOND
-    if (second <= 9) {
-        fTime.append("0")
-    }
-    fTime.append("$second")
-
-    return fTime.toString()
-}
-
-/**
  * Created by dong on 2018/3/16.
  */
 object TimeUtils {
@@ -300,6 +266,40 @@ object TimeUtils {
             reportCrash("时间解析错误 + createTime = ${createTime}", e)
             return "刚刚"
         }
+    }
+
+    /**
+     * 格式化剩余时间  eg:1天10:12:12
+     * @param time 毫秒
+     */
+    fun formatPrivateExperienceTime(time: Long): String {
+        val fTime = StringBuilder()
+        //天
+        if (time > DAY) {
+            fTime.append("${time / DAY}").append("天")
+        }
+        //小时
+        val hourTime = time % DAY
+
+        val hour = hourTime / HOUR
+        if (hour <= 9) {
+            fTime.append("0")
+        }
+        fTime.append("$hour").append(":")
+        //分钟
+        val minute = time % HOUR / MINUTE
+        if (minute <= 9) {
+            fTime.append("0")
+        }
+        fTime.append("$minute").append(":")
+        //秒
+        val second = time % MINUTE / SECOND
+        if (second <= 9) {
+            fTime.append("0")
+        }
+        fTime.append("$second")
+
+        return fTime.toString()
     }
 
     /**

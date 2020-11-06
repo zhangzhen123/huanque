@@ -248,6 +248,12 @@ interface SocialService {
     suspend fun flowerToday(@Body form: EmptyForm = EmptyForm()): Root<FlowerDayListBean>
 
     /**
+     * 花魁 周榜
+     */
+    @POST("social/flower/rank/week")
+    suspend fun flowerWeek(@Body form: EmptyForm = EmptyForm()): Root<FlowerDayListBean>
+
+    /**
      * 名人榜
      */
     @POST("social/flower/rank/famous")
