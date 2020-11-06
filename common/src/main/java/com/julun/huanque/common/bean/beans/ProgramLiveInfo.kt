@@ -77,6 +77,8 @@ open class ProgramLiveInfo : Serializable {
     //播放数据
     var playInfo: PlayInfo? = null
 
+    //本地字段
+//    var isVideoPlaying:Boolean =false
     //去重需要
     override fun equals(other: Any?): Boolean {
         if (other is ProgramLiveInfo) {

@@ -6,6 +6,5 @@
     <item name="tag_pk_rank" type="id"/>
 
 
-
-
+    <item name="surface_container" type="id"/>
 </resources>

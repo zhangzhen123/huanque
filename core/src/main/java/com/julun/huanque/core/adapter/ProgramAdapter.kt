@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
@@ -29,9 +30,10 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 
 class ProgramAdapter : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), LoadMoreModule {
+
     init {
         addItemType(ProgramItemType.BANNER, R.layout.item_program_banner)
-        addItemType(ProgramItemType.NORMAL, R.layout.item_live_square_anchor_list)
+        addItemType(ProgramItemType.NORMAL, R.layout.item_program_list)
     }
 
     override fun convert(holder: BaseViewHolder, item: MultiBean) {
@@ -39,7 +41,7 @@ class ProgramAdapter : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), L
             ProgramItemType.NORMAL -> {
                 val bean = item.content
                 if (bean is ProgramLiveInfo) {
-                    convertNormal(holder, bean)
+                    ProgramNormalAdapter.convertNormal(holder, bean)
                 }
 
             }
@@ -80,47 +82,47 @@ class ProgramAdapter : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), L
         banner.setAutoPlayAble(ads.size > 1)
     }
 
-    private fun convertNormal(holder: BaseViewHolder, item: ProgramLiveInfo) {
-        holder.setText(R.id.anchor_nickname, item.programName)
-        val textHot = holder.getView<TextView>(R.id.user_count)
-        textHot.setTFDinCdc2()
-        if (item.heatValue < 10000) {
-            textHot.text = "${item.heatValue}"
-            holder.setGone(R.id.user_count_w, true)
-        } else {
-            val format = DecimalFormat("#.0")
-            format.roundingMode = RoundingMode.HALF_UP
-            textHot.text = "${format.format((item.heatValue / 10000.0))}"
-            holder.setGone(R.id.user_count_w, false)
-        }
-        ImageUtils.loadImage(
-            holder.getView(R.id.anchorPicture)
-                ?: return, item.coverPic + BusiConstant.OSS_350, 150f, 150f
-        )
-        if (item.city.isEmpty()) {
-            holder.setGone(R.id.anchor_city, true)
-        } else {
-            holder.setGone(R.id.anchor_city, false)
-
-            holder.setText(R.id.anchor_city, item.city)
-        }
-        ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
-        val sdv_pic = holder.getView<SimpleDraweeView>(R.id.sdv_pic)
-        val tv_author_status = holder.getView<TextView>(R.id.tv_author_status)
-
-        if (item.rightTopTag.isNotEmpty()) {
-            sdv_pic.show()
-            ImageUtils.loadImageWithHeight_2(sdv_pic, StringHelper.getOssImgUrl(item.rightTopTag), dp2px(16))
-            tv_author_status.hide()
-        } else {
-            sdv_pic.hide()
-            if (item.isLiving) {
-                holder.setVisible(R.id.tv_author_status, true).setText(R.id.tv_author_status, "直播中")
-            } else {
-                holder.setGone(R.id.tv_author_status, true)
-            }
-        }
-    }
+//    private fun convertNormal(holder: BaseViewHolder, item: ProgramLiveInfo) {
+//        holder.setText(R.id.anchor_nickname, item.programName)
+//        val textHot = holder.getView<TextView>(R.id.user_count)
+//        textHot.setTFDinCdc2()
+//        if (item.heatValue < 10000) {
+//            textHot.text = "${item.heatValue}"
+//            holder.setGone(R.id.user_count_w, true)
+//        } else {
+//            val format = DecimalFormat("#.0")
+//            format.roundingMode = RoundingMode.HALF_UP
+//            textHot.text = "${format.format((item.heatValue / 10000.0))}"
+//            holder.setGone(R.id.user_count_w, false)
+//        }
+//        ImageUtils.loadImage(
+//            holder.getView(R.id.anchorPicture)
+//                ?: return, item.coverPic + BusiConstant.OSS_350, 150f, 150f
+//        )
+//        if (item.city.isEmpty()) {
+//            holder.setGone(R.id.anchor_city, true)
+//        } else {
+//            holder.setGone(R.id.anchor_city, false)
+//
+//            holder.setText(R.id.anchor_city, item.city)
+//        }
+//        ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
+//        val sdv_right_top = holder.getView<SimpleDraweeView>(R.id.sdv_right_top)
+//        val tv_author_status = holder.getView<TextView>(R.id.tv_author_status)
+//
+//        if (item.rightTopTag.isNotEmpty()) {
+//            sdv_right_top.show()
+//            ImageUtils.loadImageWithHeight_2(sdv_right_top, StringHelper.getOssImgUrl(item.rightTopTag), dp2px(16))
+//            tv_author_status.hide()
+//        } else {
+//            sdv_right_top.hide()
+//            if (item.isLiving) {
+//                holder.setVisible(R.id.tv_author_status, true).setText(R.id.tv_author_status, "直播中")
+//            } else {
+//                holder.setGone(R.id.tv_author_status, true)
+//            }
+//        }
+//    }
 
     // 轮播adapter,填充广告图片数据3
     private val bannerAdapter by lazy {

@@ -5,6 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <View
+        android:id="@+id/holder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/anchorPicture"
@@ -13,9 +20,9 @@
         app:actualImageScaleType="focusCrop"
         app:failureImage="@mipmap/logo_placeholder_medium"
         app:failureImageScaleType="fitCenter"
-        app:layout_constraintDimensionRatio="h,1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/holder"
         app:placeholderImage="@mipmap/logo_placeholder_medium"
         app:placeholderImageScaleType="fitCenter"
         app:roundedCornerRadius="6dp" />
@@ -25,8 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         app:actualImageScaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="@+id/anchorPicture"
-        app:roundedCornerRadius="8dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:roundedCornerRadius="6dp" />
 
     <TextView
         android:id="@+id/anchor_nickname"
@@ -40,7 +47,7 @@
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/anchorPicture"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/user_count"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -73,7 +80,7 @@
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="17sp"
-        app:layout_constraintBottom_toBottomOf="@+id/anchorPicture"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/user_count_w"
         app:layout_goneMarginEnd="@dimen/dimen_6"
         tools:text="99" />
@@ -90,7 +97,7 @@
         android:text="万"
         android:textColor="@color/white"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/anchorPicture"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
 
@@ -112,20 +119,20 @@
         android:paddingBottom="@dimen/dimen_3"
         android:textColor="#F5FFFD"
         android:textSize="10sp"
-        app:layout_constraintRight_toRightOf="@+id/anchorPicture"
-        app:layout_constraintTop_toTopOf="@+id/anchorPicture"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="休息中" />
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_pic"
+        android:id="@+id/sdv_right_top"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_marginTop="@dimen/dimen_5"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
         android:visibility="gone"
-        app:layout_constraintRight_toRightOf="@+id/anchorPicture"
-        app:layout_constraintTop_toTopOf="@+id/anchorPicture" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

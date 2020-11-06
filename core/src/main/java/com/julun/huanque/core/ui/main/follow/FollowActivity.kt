@@ -20,11 +20,10 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
-import com.julun.huanque.core.adapter.ProgramAdapter
+import com.julun.huanque.core.adapter.ProgramNormalAdapter
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.search.SearchResultAdapter
 import kotlinx.android.synthetic.main.activity_follow.*
-import kotlinx.android.synthetic.main.activity_follow.mRefreshLayout
 import kotlinx.android.synthetic.main.layout_bottom_follow_recommend.view.*
 
 /**
@@ -42,7 +41,7 @@ class FollowActivity : BaseVMActivity<FollowViewModel>() {
     override fun getLayoutId(): Int = R.layout.activity_follow
 
     private val authorAdapter = SearchResultAdapter(needLine = true)
-    private val recommendAdapter = ProgramAdapter()
+    private val recommendAdapter = ProgramNormalAdapter()
     private val bottomLayout: View by lazy {
         LayoutInflater.from(this).inflate(R.layout.layout_bottom_follow_recommend, null)
     }
@@ -58,10 +57,9 @@ class FollowActivity : BaseVMActivity<FollowViewModel>() {
         bottomLayout.recommendList.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(5)))
         recommendAdapter.setOnItemClickListener { adapter, view, position ->
             val item = recommendAdapter.getItemOrNull(position)
-            val content = item?.content
-            if (item != null && content is ProgramLiveInfo) {
-                logger.info("跳转直播间${content.programId}")
-                PlayerActivity.start(this, programId = content.programId, prePic = content.coverPic)
+            if (item != null) {
+                logger.info("跳转直播间${item.programId}")
+                PlayerActivity.start(this, programId = item.programId, prePic = item.coverPic)
             }
 
         }
@@ -135,11 +133,11 @@ class FollowActivity : BaseVMActivity<FollowViewModel>() {
                 bottomLayout.title.show()
                 bottomLayout.recommendList.show()
                 val followList = listData.recomList!!.removeDuplicate(totalList)
-                val fList = mutableListOf<MultiBean>()
-                followList.forEach {
-                    fList.add(MultiBean(ProgramItemType.NORMAL, it))
-                }
-                recommendAdapter.setList(fList)
+//                val fList = mutableListOf<MultiBean>()
+//                followList.forEach {
+//                    fList.add(MultiBean(ProgramItemType.NORMAL, it))
+//                }
+                recommendAdapter.setList(followList)
             } else {
                 bottomLayout.title.hide()
                 bottomLayout.recommendList.hide()
