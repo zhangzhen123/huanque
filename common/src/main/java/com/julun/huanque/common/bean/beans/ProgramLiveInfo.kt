@@ -498,7 +498,12 @@ data class VoiceBean(
     //语音状态
     var voiceStatus: String = "",
     //语音连接
-    var voiceUrl: String = ""
+    var voiceUrl: String = "",
+    //是否点赞
+    var like: String = "",
+    //点赞数量
+    var likeCount: Int = 0
+
 
 ) : Serializable {
     companion object {
@@ -614,8 +619,96 @@ data class HomePageInfo(
     //是否显示亲密知己
     var showCloseConfidant: String = "",
     //亲密知己对象
-    var closeConfidant: IntimBeanFriendBean = IntimBeanFriendBean()
+    var closeConfidant: IntimBeanFriendBean = IntimBeanFriendBean(),
+    //亲密榜数据
+    var closeConfidantRank: CloseConfidantRankBean = CloseConfidantRankBean(),
+    //座驾数据
+    var carInfo: HomePageCarInfo = HomePageCarInfo(),
+    //tab相关数据
+    var userDataTabList: MutableList<UserDataTab> = mutableListOf(),
+    //播放数据
+    var playProgram: HomePageProgram = HomePageProgram(),
+    //养鹊相关数据
+    var playParadise: HomePagePlayParadise = HomePagePlayParadise(),
+    //足迹使用的对象
+    var homeCity: HomeCity = HomeCity(),
+    //勋章数据
+    var iconList: MutableList<String> = mutableListOf()
 
+) : Serializable
+
+/**
+ * 我的足迹使用的对象
+ */
+data class HomeCity(
+    //访问人的常驻地
+    var curryCityName: String = "",
+    //访问人的头像
+    var curryHeadPic: String = "",
+    //距离
+    var distance: Int = 0,
+    //主页用户常驻地
+    var homeCityName: String = "",
+    //主页用户头像
+    var homeHeadPic: String = ""
+
+) : Serializable
+
+/**
+ * 单个小鹊
+ */
+data class SingleMagpie(
+    //小鹊图标
+    var upgradeIcon: String = "",
+    //小鹊等级
+    var upgradeLevel: Int = 0
+) : Serializable
+
+/**
+ * 主页养鹊数据
+ */
+data class HomePagePlayParadise(
+    //小鹊列表
+    var magpieList: MutableList<SingleMagpie> = mutableListOf(),
+    //显示的文案
+    var showText: String = ""
+) : Serializable
+
+/**
+ * 主页相关 直播数据
+ */
+data class HomePageProgram(
+    //直播状态
+    var living: String = "",
+    //在线人数
+    var onlineUserNum: Int = 0,
+    //封面
+    var programCover: String = "",
+    //直播间ID
+    var programId: Long = 0
+) : Serializable
+
+
+/**
+ * 主页座驾数据
+ */
+data class HomePageCarInfo(
+    //座驾名称
+    var carName: String = "",
+    //座驾图标
+    var carPic: String = "",
+    //座驾类型
+    var carType: String = "",
+    //动效地址
+    var dynamicUrl: String = "",
+    //商品ID
+    var goodsId: Long = 0,
+    //佩戴所需最低贵族等级
+    var royalLevel: Int = 0,
+    //佩戴所需贵族名称
+    var royalName: String = "",
+    //显示的文案
+    var showMsg: String = ""
 ) : Serializable
 
 /**
@@ -629,6 +722,17 @@ data class IntimBeanFriendBean(
     //差值
     var diffValue: Long = 0
 ) : Serializable
+
+/**
+ * 亲密榜单数据
+ */
+data class CloseConfidantRankBean(
+    //前几名头像
+    var rankList: MutableList<String> = mutableListOf(),
+    //榜单显示总数
+    var rankNum: Int = 0
+) : Serializable
+
 
 /**
  * 评价列表
@@ -652,4 +756,18 @@ data class HomePagePicBean(
     var realPic: String = "",
     //是否选中
     var selected: String = ""
+) : Serializable
+
+/**
+ * 亲密榜单个对象
+ */
+data class CloseConfidantBean(
+    //头像
+    var headPic: String = "",
+    //昵称
+    var nickname: String = "",
+    //分数
+    var score: Long = 0,
+    //用户ID
+    var userId: Long = 0
 ) : Serializable

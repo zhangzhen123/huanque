@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseActivity
@@ -30,7 +32,6 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
-import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
@@ -42,8 +43,19 @@ import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
 import com.julun.huanque.core.manager.AliPlayerManager
+import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
+import com.julun.rnlib.RNPageActivity
+import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.act_home_page.*
+import kotlinx.android.synthetic.main.act_home_page.stv_medal
+import kotlinx.android.synthetic.main.act_home_page.tv_id
+import kotlinx.android.synthetic.main.act_home_page.tv_location
+import kotlinx.android.synthetic.main.act_home_page.tv_nickname
+import kotlinx.android.synthetic.main.act_home_page.tv_private_chat
+import kotlinx.android.synthetic.main.act_home_page.tv_sex
+import kotlinx.android.synthetic.main.act_home_page.tv_tag
+import kotlinx.android.synthetic.main.fragment_user_card.*
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.imageResource
@@ -55,6 +67,7 @@ import kotlin.math.ceil
  *@创建时间 2020/9/29 10:51
  *@描述 他人主页
  */
+@Route(path = ARouterConstant.HOME_PAGE_ACTIVITY)
 class HomePageActivity : BaseActivity() {
     companion object {
         fun newInstance(act: Activity, userId: Long) {
@@ -86,7 +99,10 @@ class HomePageActivity : BaseActivity() {
     private val mChangeDistance = 100
 
     //亲密知己弹窗
-    private val mIntimacyFragment = IntimacyFragment()
+    private val mIntimacyFragment: IntimacyFragment by lazy { IntimacyFragment() }
+
+    //座驾详情弹窗
+    private val mCarDetailFragment: CarDetailFragment by lazy { CarDetailFragment() }
 
     private val audioPlayerManager: AudioPlayerManager by lazy { AudioPlayerManager(this) }
 
@@ -171,7 +187,6 @@ class HomePageActivity : BaseActivity() {
 
         tv_time.setTFDinAltB()
         initRecyclerView()
-        showAttentionState()
         mHomePageViewModel.homeInfo()
     }
 
@@ -179,12 +194,12 @@ class HomePageActivity : BaseActivity() {
         super.initEvents(rootView)
         //关注
         tv_attention_home_page.onClickNew {
-            if (mHomePageViewModel.followStatus.value == BusiConstant.True) {
-                //关注状态  取消关注
-                mHomePageViewModel.unFollow()
-            } else {
+            if (mHomePageViewModel.followStatus.value == BusiConstant.False) {
                 //未关注状态   关注
                 mHomePageViewModel.follow()
+            } else {
+                //关注状态  取消关注
+                mHomePageViewModel.unFollow()
             }
         }
 
@@ -290,11 +305,9 @@ class HomePageActivity : BaseActivity() {
             //跳转直播间
         }
 
-        con_intim.onClickNew {
-            mIntimacyFragment.show(supportFragmentManager, "IntimacyFragment")
-        }
         sdv_intim_border.onClickNew {
-            mIntimacyFragment.show(supportFragmentManager, "IntimacyFragment")
+            mHomePageViewModel.closeConfidantRank()
+//            mIntimacyFragment.show(supportFragmentManager, "IntimacyFragment")
         }
         tv_time.onClickNew {
             //播放音效
@@ -310,6 +323,58 @@ class HomePageActivity : BaseActivity() {
                     audioPlayerManager.resume()
                 }
             }
+        }
+        tv_like.onClickNew {
+            //点赞语音
+            if (mHomePageViewModel.homeInfoBean.value?.voice?.like != BusiConstant.True) {
+                mHomePageViewModel.voicePraise()
+            }
+        }
+
+        sdv_vehicle.onClickNew {
+            //显示座驾
+            val carInfo = mHomePageViewModel.homeInfoBean.value?.carInfo ?: return@onClickNew
+            if (carInfo.dynamicUrl.isEmpty()) {
+                //座驾动画为空，跳转我的座驾页面
+                RNPageActivity.start(this, RnConstant.MY_CAR_PAGE)
+            } else {
+                //座驾动画不为空，显示动画弹窗
+                mCarDetailFragment.show(supportFragmentManager, "CarDetailFragment")
+            }
+        }
+        tv_vehicle.onClickNew {
+            sdv_vehicle.performClick()
+        }
+
+        con_live.onClickNew {
+            //跳转直播间
+            val programId = mHomePageViewModel.homeInfoBean.value?.programInfo?.programId ?: return@onClickNew
+            PlayerActivity.start(this, programId, PlayerFrom.UserHome)
+        }
+
+        con_intim.onClickNew {
+            //亲密榜
+            val intimList = mHomePageViewModel.homeInfoBean.value?.closeConfidantRank?.rankList
+            if (intimList?.isNotEmpty() == true) {
+                mHomePageViewModel.closeConfidantRank()
+            } else {
+                //跳转私信
+                val bundle = Bundle()
+                val homeBean = mHomePageViewModel.homeInfoBean.value
+                bundle.putLong(ParamConstant.TARGET_USER_ID, mHomePageViewModel.targetUserId)
+                bundle.putString(ParamConstant.NICKNAME, homeBean?.nickname ?: "")
+                bundle.putBoolean(ParamConstant.FROM, false)
+                bundle.putString(ParamConstant.HeaderPic, homeBean?.headPic)
+                ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle).navigation()
+            }
+        }
+        view_living.onClickNew {
+            //跳转直播间
+            val programId = mHomePageViewModel.homeInfoBean.value?.programInfo?.programId ?: return@onClickNew
+            PlayerActivity.start(this, programId, PlayerFrom.UserHome)
+        }
+        tv_black_status.onClickNew {
+            //屏蔽事件
         }
     }
 
@@ -348,16 +413,29 @@ class HomePageActivity : BaseActivity() {
             showViewByData(it ?: return@Observer)
         })
 
-        mHomePageViewModel.followStatus.observe(this, Observer {
+        mHomePageViewModel.praiseSuccessState.observe(this, Observer {
             if (it == BusiConstant.True) {
-                //关注状态
-                tv_attention_home_page.isSelected = false
-//                tv_attention_top.hide()
-//                tv_attention.hide()
+                //点赞成功
+                showPraise(mHomePageViewModel.homeInfoBean.value?.voice ?: return@Observer)
+            }
+        })
+
+        mHomePageViewModel.closeListData.observe(this, Observer {
+            if (it != null) {
+                //显示亲密榜单
+                mIntimacyFragment.show(supportFragmentManager, "IntimacyFragment")
+            }
+        })
+
+        mHomePageViewModel.followStatus.observe(this, Observer {
+            showAttentionState(it ?: return@Observer)
+        })
+        mHomePageViewModel.blackStatus.observe(this, Observer {
+            if (it == BusiConstant.True) {
+                //拉黑状态
+                tv_black_status.show()
             } else {
-                //未关注状态
-                tv_attention_home_page.isSelected = true
-//                tv_attention.show()
+                tv_black_status.hide()
             }
         })
 
@@ -432,9 +510,27 @@ class HomePageActivity : BaseActivity() {
     /**
      * 显示关注状态
      */
-    private fun showAttentionState() {
-        tv_attention_home_page
-
+    private fun showAttentionState(status: String) {
+        when (status) {
+            FollowStatus.False -> {
+                //未关注
+                tv_attention_home_page.isSelected = true
+                view_attention_home_page.isSelected = true
+                tv_attention_home_page.text = "未关注"
+            }
+            FollowStatus.True -> {
+                //已关注
+                tv_attention_home_page.isSelected = false
+                view_attention_home_page.isSelected = false
+                tv_attention_home_page.text = "已关注"
+            }
+            FollowStatus.Mutual -> {
+                //互相关注
+                tv_attention_home_page.isSelected = false
+                view_attention_home_page.isSelected = false
+                tv_attention_home_page.text = "互相关注"
+            }
+        }
     }
 
     /**
@@ -470,6 +566,7 @@ class HomePageActivity : BaseActivity() {
             sdv_intim_header.hide()
         }
 //        sdv_header.loadImage(bean.headPic, 70f, 70f)
+        showPraise(bean.voice)
         if (bean.voice.voiceStatus == VoiceBean.Pass) {
             //审核通过 显示语音签名
             tv_time.text = "${bean.voice.length}s"
@@ -480,6 +577,16 @@ class HomePageActivity : BaseActivity() {
             view_voice.hide()
             tv_time.hide()
         }
+
+        //显示座驾相关视图
+        val carInfo = bean.carInfo
+        sdv_vehicle.loadImage(StringHelper.getOssImgUrl(carInfo.carPic), 100f, 60f)
+        if (carInfo.dynamicUrl.isEmpty()) {
+            tv_vehicle.text = "${carInfo.showMsg}>"
+        } else {
+            tv_vehicle.text = "${carInfo.carName}>"
+        }
+
 
 //        //实人认证标识
 //        if (bean.headRealPeople == BusiConstant.True) {
@@ -563,8 +670,18 @@ class HomePageActivity : BaseActivity() {
 //        } else {
 //            tv_weight.text = "-"
 //        }
+        if (bean.weight == 0 || bean.height == 0) {
+            tv_weight_height.hide()
+        } else {
+            if (bean.weight != 0 && bean.height != 0) {
+                tv_weight_height.text = "${bean.height}cm|${bean.weight}kg"
+            } else if (bean.weight != 0 && bean.height == 0) {
+                tv_weight_height.text = "${bean.weight}kg"
+            } else {
+                tv_weight_height.text = "${bean.height}cm"
+            }
 
-        tv_weight_height.text = "${bean.height}cm|${bean.weight}kg"
+        }
 
 
 //        val profession = bean.jobName
@@ -577,25 +694,141 @@ class HomePageActivity : BaseActivity() {
 
         tv_sign_home.text = bean.mySign
 
-        val programInfo = bean.programInfo
-        if (programInfo != null) {
+        //显示关注，粉丝，访客数据
+        val tabList = bean.userDataTabList
+        tabList.forEach {
+            when (it.userDataTabType) {
+                "Follow" -> {
+                    //关注
+                    tv_attetnion_number.text = "关注 ${it.count}"
+                }
+                "Fan" -> {
+                    //粉丝
+                    tv_fans_number.text = "粉丝 ${it.count}"
+                }
+                "Visit" -> {
+                    //访客
+                    tv_visitor_number.text = "访客 ${it.count}"
+                }
+                else -> {
+                }
+            }
+        }
+
+        //直播相关
+        val playProgram = bean.playProgram
+        if (playProgram.programId != 0L) {
+            //主播
             con_live.show()
             view_live.show()
-            sdv_cover.loadImage(programInfo.programCover)
-            if (programInfo.living == BusiConstant.True) {
+            sdv_cover.loadImage(playProgram.programCover, 80f, 80f)
+            if (playProgram.living == BusiConstant.True) {
+                //开播中
                 tv_living.show()
                 sdv_living.show()
                 ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.gif_is_living01)
+                tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
+                tv_living.text = "直播中"
+            } else {
+                //未开播
+                tv_watch_count.text = "期待Ta的下一场直播"
+                sdv_living.hide()
+                tv_living.text = "暂未开播"
             }
         } else {
             con_live.hide()
             view_live.hide()
         }
-        showGuanfang()
+
+        //养鹊相关
+        val playParadise = bean.playParadise
+        if (playParadise.magpieList.isNotEmpty()) {
+            //有小鹊数据
+            ll_bird.show()
+            view_bird.show()
+            tv_fly_money.text = playParadise.showText
+            playParadise.magpieList.forEach {
+                val view = LayoutInflater.from(this).inflate(R.layout.view_bird_home_page, null)
+                view.findViewById<SimpleDraweeView>(R.id.sdv_bird).loadImage(StringHelper.getOssImgUrl(it.upgradeIcon), 40f, 37f)
+                view.findViewById<TextView>(R.id.tv_level).text = "${it.upgradeLevel}级"
+                ll_bird.addView(view)
+            }
+        } else {
+            //无小鹊数据
+            ll_bird.hide()
+            view_bird.hide()
+        }
+
+        //亲密榜相关
+        if (bean.sex == Sex.FEMALE) {
+            con_intim.show()
+            view_intim.show()
+            val closeConfidantRank = bean.closeConfidantRank
+            val viewList = mutableListOf<SimpleDraweeView>()
+            val count = closeConfidantRank.rankList.size
+            if (count > 0) {
+                //有亲密好友，添加视图
+                viewList.add(sdv_third)
+                if (count > 1) {
+                    viewList.add(sdv_second)
+                }
+                if (count > 2) {
+                    viewList.add(sdv_one)
+                }
+
+                closeConfidantRank.rankList.forEachIndexed { index, s ->
+                    if (ForceUtils.isIndexNotOutOfBounds(index, viewList)) {
+                        val tempView = viewList[index]
+                        tempView.show()
+                        tempView.loadImage(StringHelper.getOssImgUrl(s), 40f, 40f)
+                    }
+                }
+            } else {
+                //无亲密好友，显示空布局
+                tv_no_user.show()
+            }
+
+        } else {
+            con_intim.hide()
+            view_intim.hide()
+        }
+
+
+
+        showGuanfang(bean.iconList)
         showTags(bean.characterTag)
         showEvaluate(bean.appraiseList)
         showMap(bean.cityList, bean.myCityList)
+
+        //显示底部视图
+        val liveStatus = bean.programInfo?.living ?: ""
+        if (liveStatus == BusiConstant.True) {
+            //开播状态
+            tv_living_bottom.show()
+            sdv_living_bottom.show()
+            ImageUtils.loadGifImageLocal(sdv_living_bottom, R.mipmap.gif_is_living01)
+            view_living.show()
+            view_private_chat.hide()
+            tv_private_chat.hide()
+        } else {
+            //未处于开播状态
+            tv_living_bottom.hide()
+            sdv_living_bottom.hide()
+            view_living.hide()
+            view_private_chat.show()
+            tv_private_chat.show()
+        }
     }
+
+    /**
+     * 显示点赞视图
+     */
+    private fun showPraise(bean: VoiceBean) {
+        tv_like.isSelected = bean.like == BusiConstant.True
+        tv_like.text = "${bean.likeCount}"
+
+    }
+
 
     private val bannerAdapter by lazy {
         BGABanner.Adapter<SimpleDraweeView, HomePagePicBean> { _, itemView, model, _ ->
@@ -671,12 +904,29 @@ class HomePageActivity : BaseActivity() {
     }
 
     /**
-     * 显示官方认证数据
+     * 显示勋章数据
      */
-    private fun showGuanfang() {
-        tv_guanfang.hide()
-        iv_guanfang.hide()
-        recyclerView_guanfang.hide()
+    private fun showGuanfang(badges: MutableList<String>) {
+        if (badges.isEmpty()) {
+            //没有勋章，隐藏
+            stv_medal.hide()
+        } else {
+            val list = arrayListOf<TIBean>()
+            stv_medal.show()
+            badges.forEach {
+                if (!TextUtils.isEmpty(it)) {
+                    val image = TIBean()
+                    image.type = 1
+                    image.url = StringHelper.getOssImgUrl(it)
+                    image.height = dp2px(16)
+                    image.width = dp2px(66)
+                    list.add(image)
+                }
+            }
+
+            val textBean = ImageUtils.renderTextAndImage(list)
+            stv_medal.renderBaseText(textBean ?: return)
+        }
     }
 
 
@@ -786,13 +1036,15 @@ class HomePageActivity : BaseActivity() {
      * 显示地图数据
      */
     private fun showMap(cityList: MutableList<CityBean>, myCityList: MutableList<CityBean>) {
-        if (cityList.size <= 0) {
-            //没有足迹，隐藏
-            tv_footprint.hide()
-            hsv.hide()
-        } else {
-            tv_footprint.show()
-            hsv.show()
+//        if (cityList.size <= 0) {
+//            //没有足迹，隐藏
+//            tv_footprint.hide()
+//            hsv.hide()
+//        } else {
+        tv_footprint.show()
+        hsv.show()
+        if (false) {
+            //我的主页使用
             //添加一个待添加的城市
             cityList.add(CityBean())
             val count = ceil((cityList.size) / 5.toDouble()).toInt()
@@ -810,6 +1062,65 @@ class HomePageActivity : BaseActivity() {
                     myCityList,
                     lineBitmap
                 )
+            }
+        } else {
+            //他人主页使用
+            val otherMapView = LayoutInflater.from(this).inflate(R.layout.view_single_map_other, null)
+            val llParams =
+                LinearLayout.LayoutParams(innerWidth, ViewGroup.LayoutParams.MATCH_PARENT)
+            ll_map.addView(otherMapView, llParams)
+
+            //计算视图位置
+            val iv_owner = otherMapView.findViewById<ImageView>(R.id.iv_owner) ?: return
+            val iv_visitor = otherMapView.findViewById<ImageView>(R.id.iv_visitor) ?: return
+
+            //计算主页对象的位置
+            val ownerTopMargin = innerWidth * 20 / 345
+            val ownerLeftMargin = innerWidth * 65 / 345
+            val ownerParams = iv_owner.layoutParams as? ConstraintLayout.LayoutParams
+            ownerParams?.topMargin = ownerTopMargin
+            ownerParams?.leftMargin = ownerLeftMargin
+            iv_owner.layoutParams = ownerParams
+
+
+            //计算观看者的位置
+            val visitorTopMargin = innerWidth * 21 / 345
+            val visitorRightMargin = innerWidth * 82 / 345
+            val visitorParams = iv_visitor.layoutParams as? ConstraintLayout.LayoutParams
+            visitorParams?.topMargin = visitorTopMargin
+            visitorParams?.rightMargin = visitorRightMargin
+            iv_visitor.layoutParams = visitorParams
+
+            val homeCityInfo = mHomePageViewModel.homeInfoBean.value?.homeCity ?: return
+            //设置头像
+            otherMapView.findViewById<SimpleDraweeView>(R.id.sdv_owner_header)
+                ?.loadImage("${StringHelper.getOssImgUrl(homeCityInfo.homeHeadPic)}${BusiConstant.OSS_160}", 35f, 35f)
+            otherMapView.findViewById<SimpleDraweeView>(R.id.sdv_visitor_header)
+                ?.loadImage("${StringHelper.getOssImgUrl(homeCityInfo.curryHeadPic)}${BusiConstant.OSS_160}", 25f, 25f)
+
+            //设置位置和距离
+            val homeCityName = homeCityInfo.homeCityName
+            val currentCityName = homeCityInfo.curryCityName
+
+
+            otherMapView.findViewById<TextView>(R.id.tv_owner_cityname)?.text = if (homeCityName.isEmpty()) {
+                "未知星球"
+            } else {
+                homeCityName
+            }
+
+            otherMapView.findViewById<TextView>(R.id.tv_visitor_cityname)?.text = if (currentCityName.isEmpty()) {
+                "未知星球"
+            } else {
+                currentCityName
+            }
+
+            otherMapView.findViewById<TextView>(R.id.tv_distance)?.text = if (homeCityName.isEmpty() || currentCityName.isEmpty()) {
+                "相距?km"
+            } else if (currentCityName == homeCityName) {
+                "转角遇到Ta"
+            } else {
+                "${homeCityInfo.distance}km"
             }
         }
 

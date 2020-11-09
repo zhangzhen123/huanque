@@ -342,4 +342,16 @@ interface SocialService {
      */
     @POST("social/friend/relation/evaluate")
     suspend fun relationEvaluate(@Body form : EvaluateForm) : Root<RootListData<AppraiseBean>>
+
+    /**
+     * 语音点赞接口
+     */
+    @POST("social/friend/relation/voicePraise")
+    suspend fun voicePraise(@Body form : FriendIdForm) : Root<VoidResult>
+
+    /**
+     * 获取亲密榜数据
+     */
+    @POST("user/acct/info/closeConfidantRank")
+    suspend fun closeConfidantRank(@Body form : UserIdForm) : Root<MutableList<CloseConfidantBean>>
 }

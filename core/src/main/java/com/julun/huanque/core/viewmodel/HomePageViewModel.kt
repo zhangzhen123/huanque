@@ -2,9 +2,7 @@ package com.julun.huanque.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.julun.huanque.common.bean.beans.AppraiseBean
-import com.julun.huanque.common.bean.beans.EvaluateTags
-import com.julun.huanque.common.bean.beans.HomePageInfo
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.SendRNEvent
 import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.forms.EvaluateForm
@@ -42,6 +40,12 @@ class HomePageViewModel : BaseViewModel() {
 
     //主页数据
     val homeInfoBean: MutableLiveData<HomePageInfo> by lazy { MutableLiveData<HomePageInfo>() }
+
+    //语音点赞成功标记位
+    val praiseSuccessState: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
+    //亲密榜数据
+    val closeListData: MutableLiveData<MutableList<CloseConfidantBean>> by lazy { MutableLiveData<MutableList<CloseConfidantBean>>() }
 
     //拉黑状态
     val blackStatus: MutableLiveData<String> by lazy { MutableLiveData<String>() }
@@ -195,6 +199,34 @@ class HomePageViewModel : BaseViewModel() {
             }, {})
         }
 
+    }
+
+
+    /**
+     * 语音点赞接口
+     */
+    fun voicePraise() {
+        viewModelScope.launch {
+            request({
+                socialService.voicePraise(FriendIdForm(targetUserId)).dataConvert()
+                homeInfoBean.value?.voice?.apply {
+                    like = BusiConstant.True
+                    likeCount += 1
+                }
+                praiseSuccessState.value = BusiConstant.True
+            }, {})
+        }
+    }
+
+    /**
+     * 亲密榜列表
+     */
+    fun closeConfidantRank() {
+        viewModelScope.launch {
+            request({
+                closeListData.value = socialService.closeConfidantRank(UserIdForm(targetUserId)).dataConvert()
+            }, {})
+        }
     }
 
 }

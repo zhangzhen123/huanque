@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_home_page_distance"
+    tools:layout_height="360px"
+    tools:layout_width="1035px">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_owner_header"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintLeft_toLeftOf="@+id/iv_owner"
+        app:layout_constraintRight_toRightOf="@+id/iv_owner"
+        app:layout_constraintTop_toTopOf="@+id/iv_owner"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:roundAsCircle="true" />
+
+    <ImageView
+        android:id="@+id/iv_owner"
+        android:layout_width="40dp"
+        android:layout_height="55dp"
+        android:layout_marginLeft="65dp"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/icon_location_home_page_red_big"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_owner_cityname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toLeftOf="@id/iv_owner"
+        app:layout_constraintRight_toRightOf="@id/iv_owner"
+        app:layout_constraintTop_toBottomOf="@id/iv_owner"
+        tools:text="杭州" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_visitor_header"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        app:layout_constraintLeft_toLeftOf="@id/iv_visitor"
+        app:layout_constraintRight_toRightOf="@id/iv_visitor"
+        app:layout_constraintTop_toTopOf="@+id/iv_visitor"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:roundAsCircle="true" />
+
+    <ImageView
+        android:id="@+id/iv_visitor"
+        android:layout_width="28dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginRight="82dp"
+        android:src="@mipmap/icon_location_home_page_blue_big"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_visitor_cityname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toLeftOf="@id/iv_visitor"
+        app:layout_constraintRight_toRightOf="@id/iv_visitor"
+        app:layout_constraintTop_toBottomOf="@id/iv_visitor"
+        tools:text="杭州" />
+
+    <TextView
+        android:id="@+id/tv_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginBottom="27dp"
+        android:background="@drawable/bg_home_page_distance_number"
+        android:gravity="center"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2000km" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

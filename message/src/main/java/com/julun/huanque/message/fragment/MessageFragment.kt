@@ -103,7 +103,7 @@ class MessageFragment : BaseFragment() {
         initViewModel()
         initRecyclerView()
 //        initEvents()
-        if(mMessageViewModel.player){
+        if (mMessageViewModel.player) {
             bannerAD.hide()
         }
         mMessageViewModel.foldStrangerMsg = SharedPreferencesUtils.getBoolean(SPParamKey.FOLD_STRANGER_MSG, false)
@@ -200,10 +200,10 @@ class MessageFragment : BaseFragment() {
                         )
                     } else {
                         //他人主页
-                        RNPageActivity.start(
-                            requireActivity(),
-                            RnConstant.PERSONAL_HOMEPAGE,
-                            Bundle().apply { putLong("userId", longId) })
+                        val bundle = Bundle().apply {
+                            putLong(ParamConstant.UserId, longId)
+                        }
+                        ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                     }
                 }
             } catch (e: Exception) {
@@ -337,7 +337,7 @@ class MessageFragment : BaseFragment() {
                     rl_yuanfen.hide()
                 }
                 //显示广告
-                if(!mMessageViewModel.player){
+                if (!mMessageViewModel.player) {
                     loadAd(it.adList)
                 }
             }
@@ -667,7 +667,7 @@ class MessageFragment : BaseFragment() {
      * 刷新系统消息和鹊友消息
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun refreshSystemMsg(bean : SystemMessageRefreshBean) {
+    fun refreshSystemMsg(bean: SystemMessageRefreshBean) {
         mMessageViewModel.refreshSysMessage(bean.targetId)
     }
 
