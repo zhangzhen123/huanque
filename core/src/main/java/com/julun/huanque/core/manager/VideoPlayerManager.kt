@@ -1,5 +1,6 @@
 package com.julun.huanque.core.manager
 
+import android.graphics.SurfaceTexture
 import android.util.SparseArray
 import android.view.*
 import androidx.annotation.IdRes
@@ -59,14 +60,15 @@ object VideoPlayerManager {
         LayoutInflater.from(CommonInit.getInstance().getContext()).inflate(R.layout.layout_player_view, null)
     }
 
-    private val mSurfaceView: SurfaceView by lazy {
-        mPlayerViewContainer.findViewById<SurfaceView>(R.id.surfaceView)
+    private val mTextureView: TextureView by lazy {
+        mPlayerViewContainer.findViewById<TextureView>(R.id.mTextureView)
     }
 
     //SurfaceHolder.Callback唯一
     private val mHolderCallback: SurfaceHolder.Callback by lazy {
         object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) {
+                logger.info("surfaceCreated")
                 mAliPlayer?.setDisplay(holder)
                 //防止黑屏
                 mAliPlayer?.redraw()
@@ -78,12 +80,36 @@ object VideoPlayerManager {
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 mAliPlayer?.setDisplay(null)
+                logger.info("surfaceDestroyed")
             }
         }
     }
 
     init {
-        mSurfaceView.holder?.addCallback(mHolderCallback)
+//        mTextureView.holder?.addCallback(mHolderCallback)
+        mTextureView.setSurfaceTextureListener(object : TextureView.SurfaceTextureListener {
+            override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+                val mSurface = Surface(surface)
+                mAliPlayer?.setSurface(mSurface)
+                mAliPlayer?.redraw()
+
+            }
+
+            override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+
+                mAliPlayer?.redraw()
+
+            }
+
+            override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                mAliPlayer?.setSurface(null)
+
+                return true
+            }
+
+            override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {}
+        })
+
     }
 
     fun <T : View> getView(rootView: View?, @IdRes viewId: Int): T? {
@@ -223,7 +249,7 @@ object VideoPlayerManager {
 
 
         //禁用硬解码
-        //        mAliPlayer?.enableHardwareDecoder(false)
+//        mAliPlayer?.enableHardwareDecoder(true)
         val config = mAliPlayer?.config ?: return
         config.mNetworkTimeout = 2000
         config.mNetworkRetryCount = 100
@@ -287,11 +313,12 @@ object VideoPlayerManager {
             showCover()
             val itemView = playMap.remove(currentPlayUrl)
             itemView?.tag = null
-            mAliPlayer?.pause()
-            val parent = mPlayerViewContainer.parent
-            if (parent != null) {
-                (parent as ViewGroup).removeView(mPlayerViewContainer)
-            }
+            //改操作会卡顿 所以统一在下次start
+//            mAliPlayer?.pause()
+//            val parent = mPlayerViewContainer.parent
+//            if (parent != null) {
+//                (parent as ViewGroup).removeView(mPlayerViewContainer)
+//            }
             currentPlayUrl = ""
         }
     }

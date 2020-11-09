@@ -6,8 +6,8 @@
     app:cardElevation="0dp"
     android:layout_height="match_parent">
 
-    <SurfaceView
-        android:id="@+id/surfaceView"
+    <TextureView
+        android:id="@+id/mTextureView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
