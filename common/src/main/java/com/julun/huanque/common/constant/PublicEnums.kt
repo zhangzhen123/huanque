@@ -554,6 +554,8 @@ object BirdTaskJump {
     const val FriendHome = "FriendHome"
     const val Message = "Message"
     const val AnonyVoiceCall = "AnonyVoiceCall"
+    const val Recharge = "Recharge"
+
 
 }
 

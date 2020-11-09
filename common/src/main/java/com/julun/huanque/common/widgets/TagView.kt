@@ -75,12 +75,19 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
             analysisTag(tagStr, ctv)
         } else {
             ctv.hide()
-            if (tagStr.startsWith(ProgramTagType.IMG)) {
-                //图片标签   直接加载远程图片
-                sdv.show()
-                ImageUtils.loadImageWithHeight_2(sdv, tagStr.substring(ProgramTagType.IMG.length), sdvHeight)
-            } else {
-                sdv.hide()
+            when {
+                tagStr.startsWith(ProgramTagType.IMG) -> {
+                    //图片标签   直接加载远程图片
+                    sdv.show()
+                    ImageUtils.loadImageWithHeight_2(sdv, tagStr.substring(ProgramTagType.IMG.length), sdvHeight)
+                }
+                tagStr.isNotEmpty() -> {
+                    sdv.show()
+                    ImageUtils.loadImageWithHeight_2(sdv, tagStr, sdvHeight)
+                }
+                else -> {
+                    sdv.hide()
+                }
             }
         }
     }
@@ -98,7 +105,7 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
     private fun initProgramTagCTV() {
         if (isProgramTag) {
             radiusWrap = true
-            rightTop = true
+            leftTop = true
             rightBottom = true
 
             tPaddingLeft = 5
@@ -139,11 +146,11 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
 //        invalidate()
     }
 
-    //设置推荐标签
-    fun initReCommTagCTV() {
-        rightTop = true
+    //设置节目单左上角
+    fun initProgramLTV() {
+        rightTop = false
         rightBottom = true
-        leftBottom = true
+        leftBottom = false
         leftTop = true
 
         tPaddingLeft = 5
@@ -153,7 +160,7 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
         ctv.textSize = 12f
         ctv.setTextColor(Color.WHITE)
 
-        ctv.radius = dip(2).toFloat()
+        ctv.radius = dip(6).toFloat()
         ctv.leftTop = leftTop
         ctv.rightTop = rightTop
         ctv.leftBottom = leftBottom
@@ -186,7 +193,7 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
         if (isProgramTag) {
             //节目标签
 //            sdvWidth = dip(50)
-            sdvHeight = dip(17)
+            sdvHeight = dip(18)
             params.height = sdvHeight
         } else if (isGiftTag) {
             //礼物标签

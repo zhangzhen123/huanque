@@ -90,6 +90,12 @@ class BirdTaskGuideFragment : BaseVMDialogFragment<BirdTaskViewModel>() {
                     EventBus.getDefault().post(HideBirdEvent())
 
                 }
+                BirdTaskJump.Recharge -> {
+                    ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
+                    this@BirdTaskGuideFragment.dismiss()
+                    EventBus.getDefault().post(HideBirdEvent())
+
+                }
 
             }
 

@@ -13,6 +13,7 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.setTFDinCdc2
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.widgets.TagView
 import com.julun.huanque.core.R
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -48,21 +49,30 @@ class ProgramNormalAdapter : BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>(R
                 holder.setText(R.id.anchor_city, item.city)
             }
             ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
-            val sdv_right_top = holder.getView<SimpleDraweeView>(R.id.sdv_right_top)
+            val tag_right_top = holder.getView<TagView>(R.id.tag_right_top)
+            val tag_left_top = holder.getView<TagView>(R.id.tag_left_top)
             val tv_author_status = holder.getView<TextView>(R.id.tv_author_status)
 
             if (item.rightTopTag.isNotEmpty()) {
-                sdv_right_top.show()
-                ImageUtils.loadImageWithHeight_2(sdv_right_top, StringHelper.getOssImgUrl(item.rightTopTag), dp2px(16))
+                tag_right_top.show()
+                tag_right_top.setData(item.rightTopTag)
                 tv_author_status.hide()
             } else {
-                sdv_right_top.hide()
+                tag_right_top.hide()
                 if (item.isLiving) {
                     holder.setVisible(R.id.tv_author_status, true).setText(R.id.tv_author_status, "直播中")
                 } else {
                     holder.setGone(R.id.tv_author_status, true)
                 }
             }
+            if (item.leftTopTag.isNotEmpty()) {
+                tag_left_top.show()
+                tag_left_top.initProgramLTV()
+                tag_left_top.setData(item.leftTopTag)
+            } else {
+                tag_left_top.hide()
+            }
+
         }
     }
     override fun convert(holder: BaseViewHolder, item: ProgramLiveInfo) {

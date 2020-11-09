@@ -73,7 +73,8 @@ open class ProgramLiveInfo : Serializable {
 
     //直播广场使用
     var rightTopTag: String = ""
-
+    //左上角标
+    var leftTopTag: String = ""
     //播放数据
     var playInfo: PlayInfo? = null
 
