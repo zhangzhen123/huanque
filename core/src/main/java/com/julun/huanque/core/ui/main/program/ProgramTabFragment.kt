@@ -102,6 +102,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             followViewModel.requestProgramList(QueryType.REFRESH, isNullOffset = true)
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
+
     }
 
     /**
@@ -136,7 +137,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
                     val random = Random.nextBoolean()
                     val dif = if (random) 1 else 0
                     if (isUp) {
-                        currentMiddle = (positionFirst + positionLast) / 2-dif
+                        currentMiddle = (positionFirst + positionLast) / 2 - dif
                     } else {
                         currentMiddle = (positionFirst + positionLast) / 2 + 1
                     }
@@ -173,16 +174,15 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
     private fun removeItemPlay(view: View) {
 
         if (view.tag != null) {
-            val viewHolder = authorList.getChildViewHolder(view)
-            val item = authorAdapter.getItemOrNull(viewHolder.adapterPosition)
-//                        logger.info("获取到当前的item=${viewHolder.adapterPosition}")
-            val content = item?.content
-            if (content != null && content is ProgramLiveInfo) {
-                logger.info("当前的item停止播放 =${viewHolder.adapterPosition} name=${content.programName}")
-                var url = GlobalUtils.getPlayUrl(content.playInfo ?: return)
-//                url = "rtmp://aliyun-rtmp.ihuanque.com/hq/11016303"
-                VideoPlayerManager.removePlay(url)
-            }
+//            val viewHolder = authorList.getChildViewHolder(view)
+//            val item = authorAdapter.getItemOrNull(viewHolder.adapterPosition)
+//            val content = item?.content
+//            if (content != null && content is ProgramLiveInfo) {
+//                var url = GlobalUtils.getPlayUrl(content.playInfo ?: return)
+//                logger.info("当前的item停止播放 =${viewHolder.adapterPosition} url=${url}")
+//                VideoPlayerManager.removePlay()
+//            }
+            VideoPlayerManager.removePlay()
             currentPlayView = null
         }
     }
@@ -203,7 +203,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             var url = GlobalUtils.getPlayUrl(content.playInfo ?: return)
             //todo
             val itemView = viewHolder.getViewOrNull<FrameLayout>(R.id.program_container) ?: return
-//            url = "rtmp://aliyun-rtmp.ihuanque.com/hq/11016303"
+//            url = "rtmp://aliyun-rtmp.ihuanque.com/hq/11054583"
             if (VideoPlayerManager.startPlay(url, itemView)) {
                 currentPlayView = itemView
             }
@@ -222,6 +222,36 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             current++
         }
         return current
+    }
+
+    override fun onResume() {
+        logger.info("onResume =${currentTab?.typeName}")
+        super.onResume()
+        startPlayMidVideo()
+    }
+
+    override fun onPause() {
+        logger.info("onPause =${currentTab?.typeName}")
+        super.onPause()
+        if (currentPlayView != null) {
+//            removeItemPlay(currentPlayView!!)
+            VideoPlayerManager.stopPlay()
+        }
+    }
+
+    /**
+     * 该方法供父容器在显隐变化时调用
+     */
+    fun onParentHiddenChanged(hidden: Boolean) {
+        logger.info("当前的界面开始显隐=${currentTab?.typeName} hide=$hidden")
+        if (hidden) {
+            if (currentPlayView != null) {
+//                removeItemPlay(currentPlayView!!)
+                VideoPlayerManager.stopPlay()
+            }
+        } else {
+            startPlayMidVideo()
+        }
     }
 
     override fun lazyLoadData() {
@@ -268,14 +298,14 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             }
 
             authorAdapter.setList(list)
-            VideoPlayerManager.removePlay(VideoPlayerManager.currentPlayUrl)
+            VideoPlayerManager.removePlay()
             authorList.postDelayed({
                 if (totalList.size >= 3) {
                     currentMiddle = 2
                 } else if (totalList.size > 0) {
                     currentMiddle = totalList.size - 1
-                }else{
-                    currentMiddle=-1
+                } else {
+                    currentMiddle = -1
                 }
                 startPlayMidVideo()
             }, 100)

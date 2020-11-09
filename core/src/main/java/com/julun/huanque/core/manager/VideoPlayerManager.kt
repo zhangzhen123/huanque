@@ -6,9 +6,7 @@ import androidx.annotation.IdRes
 import com.aliyun.player.AliPlayer
 import com.aliyun.player.AliPlayerFactory
 import com.aliyun.player.IPlayer
-import com.aliyun.player.bean.ErrorInfo
 import com.aliyun.player.bean.InfoCode
-import com.aliyun.player.nativeclass.TrackInfo
 import com.aliyun.player.source.UrlSource
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.hide
@@ -46,7 +44,10 @@ object VideoPlayerManager {
     //log输出标识位
     private var mLogEnable = true
 
-    //缓存播放的item 这里是方便多个item播放的考虑
+    /**
+     *    最新的做法 这里只会保存一个播放的view 因为[mPlayerViewContainer]是单例唯一的
+     *    每次变化的只是这个mPlayerViewContainer被add的容器 所以容器只会同一时间存在一个
+     */
     private val playMap = hashMapOf<String, ViewGroup>()
 
 
@@ -101,32 +102,21 @@ object VideoPlayerManager {
         return view as? T
     }
 
-    private fun isCacheViewShow(): Boolean {
-        playMap.forEach {
-            val view: View = it.value
-            logger.info("view.isShown=${view.isShown}")
-            if (view.isShown) {
-                return true
-            }
-        }
-        return false
-    }
-
     /**
      * 开始播放的入口 [url]=""代表当前推荐的流不存在 直接关闭播放
      */
-    fun startPlay(url: String, view: ViewGroup):Boolean {
+    fun startPlay(url: String, view: ViewGroup): Boolean {
         logger.info("startPlay url=$url show=${view.isShown}")
-        if (playMap[url] != null || isCacheViewShow()) {
+        if (playMap.isNotEmpty()) {
             logger.info("有已经正在播放的视图 不在重复播放${view.hashCode()}")
             return false
         }
-        playMap[url] = view
+
         if (currentPlayUrl == url) {
-            //todo
-//            logger.info("已经存在 不再重复播放")
-//            return false
+            logger.info("已经存在 不再重复播放")
+            return false
         }
+        playMap[url] = view
         //复用播放器
         if (mAliPlayer == null) {
             initPlayer()
@@ -144,16 +134,6 @@ object VideoPlayerManager {
             0,
             ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         )
-//        view.addView(TextView(view.context).apply {
-//            text = "我是谁 我在哪 "
-//            textSize = 30f
-//        })
-        //删除上一个的surface_view holder的callback
-//        getView<SurfaceView>(playMap[currentPlayUrl], R.id.surface_view)?.holder?.removeCallback(mHolderCallback)
-        //渲染
-//        svv.holder.addCallback(mHolderCallback)
-//        showCover()
-
 
         if (url.isEmpty()) {
             mAliPlayer?.stop()
@@ -235,8 +215,6 @@ object VideoPlayerManager {
                         //                            ULog.i("DXCplayer set 2 it = $it")
                         playStream(currentPlayUrl)
                     }, {})
-            } else if (it == IPlayer.prepared) {
-//               mAliPlayer?.isMute=true
             } else if (it == IPlayer.started) {
                 hideCover()
             }
@@ -303,59 +281,25 @@ object VideoPlayerManager {
         anchorPicture?.show()
     }
 
-    /**
-     * 控制播放暂停 只针对已经播放的添加到map的进行处理
-     * @param play true 播放  false 暂停
-     * @param url 要切换的流地址
-     */
-    fun switchPlay(play: Boolean, url: String) {
-        logger.info("switchPlay:play=$play url=$url")
-        val itemView = playMap[url] ?: return
-//        val svv = getView<SurfaceView>(itemView, R.id.surface_view)
-        if (url.isNotEmpty()) {
-            val show = mSurfaceView?.isShown == true //每次播放判断当前的渲染view是否可见 不可见就不要播
-            //todo
-//            val cov = getView<ViewGroup>(itemView, R.id.first_item_content)
-//            cov?.show()
-            if (play) {
-
-                if (show) {
-                    //恢复播放
-                    if (url == currentPlayUrl) {
-                        mAliPlayer?.start()
-//                        playStream(url)
-                    } else {
-                        startPlay(url, itemView)
-                    }
-
-                }
-            } else {
-                //暂停播放
-                mAliPlayer?.pause()
-            }
-
-        }
-    }
-
-    fun removePlay(url: String) {
-        logger.info("removePlay:${url} time=${System.currentTimeMillis()}")
-        if (url.isNotEmpty()) {
+    fun removePlay() {
+        logger.info("removePlay url=$currentPlayUrl map=${playMap}")
+        if (currentPlayUrl.isNotEmpty()) {
             showCover()
-            val itemView = playMap.remove(url)
+            val itemView = playMap.remove(currentPlayUrl)
             itemView?.tag = null
             mAliPlayer?.pause()
             val parent = mPlayerViewContainer.parent
             if (parent != null) {
                 (parent as ViewGroup).removeView(mPlayerViewContainer)
             }
+            currentPlayUrl = ""
         }
-        logger.info("removePlay end time=${System.currentTimeMillis()}")
     }
 
     /**
-     * 因为stop是耗时操作 这里只会在界面stop时执行
+     * 因为stop是耗时操作 这里只会在界面生命周期暂停时执行
      */
-    fun stopPlay(){
+    fun stopPlay() {
         if (currentPlayUrl.isNotEmpty()) {
             showCover()
             val itemView = playMap.remove(currentPlayUrl)
@@ -365,9 +309,11 @@ object VideoPlayerManager {
             if (parent != null) {
                 (parent as ViewGroup).removeView(mPlayerViewContainer)
             }
+            currentPlayUrl = ""
         }
 
     }
+
     fun clear() {
         logger.info("reset")
         currentPlayUrl = ""
