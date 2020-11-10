@@ -19,6 +19,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.database.HuanQueDatabase
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
+import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
@@ -49,6 +50,8 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
+    private val liveRoomService: LiveRoomService by lazy { Requests.create(LiveRoomService::class.java) }
+
     //消息列表
     val messageListData: MutableLiveData<MutableList<Message>> by lazy { MutableLiveData<MutableList<Message>>() }
 
@@ -69,6 +72,12 @@ class PrivateConversationViewModel : BaseViewModel() {
 
     //对方ID
     val targetIdData: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+
+    //直播列表数据
+    val programListData: MutableLiveData<MutableList<SingleProgramInConversation>> by lazy { MutableLiveData<MutableList<SingleProgramInConversation>>() }
+
+    //直播信息(展示直播中图标)
+    val mProgramInfo: MutableLiveData<ProgramInfoInConversation> by lazy { MutableLiveData<ProgramInfoInConversation>() }
 
     // 对方数据
     val chatInfoData: MutableLiveData<ChatUser> by lazy { MutableLiveData<ChatUser>() }
@@ -272,6 +281,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                 intimateData.value = result.intimate
                 msgFeeData.value = result.msgFee
                 basicBean.value = result
+                timer(result.recomDelaySec)
                 propData.value = PropBean(result.chatTicketCnt, result.voiceTicketCnt)
                 BalanceUtils.saveBalance(result.beans)
 
@@ -567,6 +577,7 @@ class PrivateConversationViewModel : BaseViewModel() {
     override fun onCleared() {
         super.onCleared()
         mCoolingDisposable?.dispose()
+        mTimerDisposable?.dispose()
     }
 
 
@@ -695,6 +706,42 @@ class PrivateConversationViewModel : BaseViewModel() {
         SPUtils.remove(key)
         mDraft = draft
         return draft
+    }
+
+    private var mTimerDisposable: Disposable? = null
+
+    /**
+     * 定时器
+     */
+    private fun timer(time: Long) {
+        mTimerDisposable?.dispose()
+        mTimerDisposable = Observable.timer(time, TimeUnit.SECONDS)
+            .subscribe({
+                chatRecom()
+            }, {})
+    }
+
+    /**
+     * 私信推荐主播
+     */
+    fun chatRecom() {
+        val targetId = targetIdData.value ?: return
+        viewModelScope.launch {
+            request({
+                mProgramInfo.value = liveRoomService.chatRecom(FriendIdForm(targetId)).dataConvert()
+            }, {})
+        }
+    }
+
+    /**
+     * 获取直播列表
+     */
+    fun chatRecomList() {
+        viewModelScope.launch {
+            request({
+                programListData.value = liveRoomService.chatRecomList().dataConvert()
+            }, {})
+        }
     }
 
 

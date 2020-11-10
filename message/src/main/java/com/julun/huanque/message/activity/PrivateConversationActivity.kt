@@ -174,6 +174,9 @@ class PrivateConversationActivity : BaseActivity() {
     //为回复倒计时
     private var mNoReceiveDisposable: Disposable? = null
 
+    //直播列表
+    private val mProgramListChatFragment: ProgramListInChatFragment by lazy { ProgramListInChatFragment() }
+
     //需要显示键盘的标识位
     private var mNeedShowKeyBoard = false
 
@@ -332,6 +335,32 @@ class PrivateConversationActivity : BaseActivity() {
                 mPrivateConversationViewModel?.addMessageData?.value = null
             }
         })
+
+        mPrivateConversationViewModel?.mProgramInfo?.observe(this, Observer {
+            if (it != null) {
+                con_living.show()
+                sdv_anchor_header.loadImage("${StringHelper.getOssImgUrl(it.coverPic)}${BusiConstant.OSS_160}")
+            } else {
+                con_living.hide()
+            }
+        })
+
+        mPrivateConversationViewModel?.programListData?.observe(this, Observer {
+            if (it != null && it.isNotEmpty()) {
+                val firstData = it[0]
+                if (firstData.programId != mPrivateConversationViewModel?.mProgramInfo?.value?.programId) {
+                    val bean = ProgramInfoInConversation(
+                        firstData.coverPic,
+                        firstData.living,
+                        firstData.programId,
+                        mPrivateConversationViewModel?.mProgramInfo?.value?.viewMore ?: BusiConstant.False
+                    )
+                    mPrivateConversationViewModel?.mProgramInfo?.value = bean
+                }
+                mProgramListChatFragment.show(supportFragmentManager, "ProgramListInChatFragment")
+            }
+        })
+
 //        mPrivateConversationViewModel?.propListData?.observe(this, Observer {
 //            //道具列表
 //            if (it != null) {
@@ -875,6 +904,23 @@ class PrivateConversationActivity : BaseActivity() {
         sdv_second_prop.onClickNew {
             PropFragment.newInstance(false).show(supportFragmentManager, "PropFragment")
         }
+
+        con_living.onClickNew {
+            //直播信息视图点击
+            val programInfo = mPrivateConversationViewModel?.mProgramInfo?.value ?: return@onClickNew
+            if (programInfo.viewMore == BusiConstant.True) {
+                //显示弹窗
+                mPrivateConversationViewModel?.chatRecomList()
+            } else {
+                //跳转直播间
+                val bundle = Bundle()
+                bundle.putLong(IntentParamKey.PROGRAM_ID.name, programInfo.programId)
+                bundle.putString(ParamConstant.FROM, PlayerFrom.Chat)
+
+                ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle).navigation()
+            }
+
+        }
     }
 
     // 删除光标所在前一位(不考虑切换到emoji时的光标位置，直接删除最后一位)
@@ -1336,7 +1382,6 @@ class PrivateConversationActivity : BaseActivity() {
                     //查看图片
 
                     if (content is ImageMessage) {
-                        //todo 添加本地地址查看
                         ImageActivity.start(
                             this,
                             0,

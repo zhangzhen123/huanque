@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,7 +52,6 @@ class FamousListFragment : BaseFragment() {
     private val mViewModel: PlumFlowerViewModel by viewModels<PlumFlowerViewModel>()
 
     private val mAdapter = FlowerFamousMonthAdapter()
-    private var mHeaderView: View? = null
 
     override fun getLayoutId() = R.layout.fragment_famous_list
 
@@ -86,16 +87,19 @@ class FamousListFragment : BaseFragment() {
 
         mViewModel.famousListData.observe(this, Observer {
             if (it != null) {
-                if (it.monthList.isNotEmpty()) {
+                if (it.monthList.isNotEmpty() || it.lastWeekTop.userId != 0L) {
                     statePage.showSuccess()
                     val data = mutableListOf<FamousListMultiBean>()
 //                    data.add(FamousListMultiBean(FamousListMultiBean.HeaderView, it.inRank))
                     it.monthList.forEach { sfm ->
-                        data.add(FamousListMultiBean(FamousListMultiBean.Content, sfm))
+                        if (sfm.userList.isNotEmpty()) {
+                            data.add(FamousListMultiBean(FamousListMultiBean.Content, sfm))
+                        }
                     }
                     mAdapter.setList(data)
                     val weekInfo = it.lastWeekTop
-                    mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_header)?.loadImage(StringHelper.getOssImgUrl(weekInfo.headPic), 170f, 168f)
+                    sdv_header.loadImage(StringHelper.getOssImgUrl(weekInfo.headPic), 138f, 138f)
+                    tv_nickname.text = weekInfo.nickname
                 } else {
                     statePage.showEmpty(emptyTxt = "快去名人榜争得一席之地吧")
                 }
@@ -109,7 +113,7 @@ class FamousListFragment : BaseFragment() {
         swipeLayout.setOnRefreshListener {
             mViewModel.getFamousList()
         }
-        mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_header)?.onClickNew {
+        sdv_header.onClickNew {
             val weekBean = mViewModel.famousListData.value?.lastWeekTop ?: return@onClickNew
             if (weekBean.userId == SessionUtils.getUserId()) {
                 //跳转我的主页
@@ -128,13 +132,28 @@ class FamousListFragment : BaseFragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = mAdapter
 
-        mHeaderView = LayoutInflater.from(requireContext()).inflate(R.layout.view_daylist_header_famous, null)
-        mHeaderView?.let { view ->
-            mAdapter.addHeaderView(view)
-            val params = view.layoutParams
-            params.height = ScreenUtils.getScreenWidth() * 978 / 1125 - dp2px(44) - StatusBarUtil.getStatusBarHeight(requireContext())
-            view.layoutParams = params
-        }
+        //显示空页面
+        val emptyText = LayoutInflater.from(context).inflate(R.layout.tv_famous_list_empty, null)
+        emptyText.layoutParams = ViewGroup.LayoutParams(ScreenUtils.getScreenWidth(), dp2px(200))
+        mAdapter.setEmptyView(emptyText)
+
+
+        val params = con_top.layoutParams
+        val height = ScreenUtils.getScreenWidth() * 978 / 1125 - dp2px(44) - StatusBarUtil.getStatusBarHeight(requireContext())
+        params.height = height
+        con_top.layoutParams = params
+
+//        val recyclerParams = recyclerView.layoutParams as? ConstraintLayout.LayoutParams
+//        recyclerParams?.topMargin = height
+//        recyclerView.layoutParams = recyclerParams
+
+//        mHeaderView = LayoutInflater.from(requireContext()).inflate(R.layout.view_daylist_header_famous, null)
+//        mHeaderView?.let { view ->
+//            mAdapter.addHeaderView(view)
+//            val params = view.layoutParams
+//            params.height = ScreenUtils.getScreenWidth() * 978 / 1125 - dp2px(44) - StatusBarUtil.getStatusBarHeight(requireContext())
+//            view.layoutParams = params
+//        }
 
     }
 

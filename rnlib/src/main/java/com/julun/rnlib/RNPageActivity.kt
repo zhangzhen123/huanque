@@ -728,6 +728,20 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                         startActivity(intent)
                     }
                 }
+                RnConstant.OtherHomePage -> {
+                    //访问他人主页
+                    var userId = 0
+                    if (params?.hasKey("userId") == true) {
+                        userId = params.getInt("userId")
+                    }
+                    if (userId == 0) {
+                        return@runOnUiThread
+                    }
+                    val bundle = Bundle().apply {
+                        putLong(ParamConstant.UserId, userId.toLong())
+                    }
+                    ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
+                }
             }
 
         }

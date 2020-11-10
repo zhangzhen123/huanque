@@ -158,7 +158,9 @@ class ConversationBasicBean(
     //聊天券数量
     var chatTicketCnt: Int = 0,
     //语音券数量
-    var voiceTicketCnt: Int = 0
+    var voiceTicketCnt: Int = 0,
+    //直播显示倒计时
+    var recomDelaySec: Long = 0
 )
 
 /**
