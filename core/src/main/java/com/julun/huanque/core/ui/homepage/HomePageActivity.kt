@@ -47,6 +47,7 @@ import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
+import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.act_home_page.*
 import kotlinx.android.synthetic.main.act_home_page.stv_medal
 import kotlinx.android.synthetic.main.act_home_page.tv_id
@@ -137,6 +138,9 @@ class HomePageActivity : BaseActivity() {
 
             override fun start() {
                 logger.info("start 总长=${audioPlayerManager.getDuration()}")
+                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
+                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                tv_time.setCompoundDrawables(drawable, null, null, null)
                 //不使用实际的值
 //                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
 //                AliplayerManager.soundOff()
@@ -145,16 +149,25 @@ class HomePageActivity : BaseActivity() {
             override fun resume() {
                 logger.info("resume")
                 AliPlayerManager.soundOff()
+                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
+                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                tv_time.setCompoundDrawables(drawable, null, null, null)
             }
 
             override fun pause() {
                 logger.info("pause")
                 AliPlayerManager.soundOn()
+                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
+                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                tv_time.setCompoundDrawables(drawable, null, null, null)
             }
 
             override fun stop() {
                 logger.info("stop")
                 AliPlayerManager.soundOn()
+                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
+                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                tv_time.setCompoundDrawables(drawable, null, null, null)
             }
 
 
@@ -193,13 +206,18 @@ class HomePageActivity : BaseActivity() {
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
         //关注
-        tv_attention_home_page.onClickNew {
+        view_attention_home_page.onClickNew {
             if (mHomePageViewModel.followStatus.value == BusiConstant.False) {
                 //未关注状态   关注
                 mHomePageViewModel.follow()
             } else {
                 //关注状态  取消关注
-                mHomePageViewModel.unFollow()
+                MyAlertDialog(this).showAlertWithOKAndCancel(
+                    "确定不再关注Ta？",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        mHomePageViewModel.unFollow()
+                    })
+                )
             }
         }
 
@@ -217,6 +235,13 @@ class HomePageActivity : BaseActivity() {
         iv_more_black.onClickNew {
             //更多操作
             iv_more.performClick()
+        }
+
+        iv_close.onClickNew {
+            finish()
+        }
+        iv_close_black.onClickNew {
+            finish()
         }
 
 
@@ -299,7 +324,13 @@ class HomePageActivity : BaseActivity() {
 
         tv_evaluate.onClickNew {
             //评价
-            mHomePageViewModel.getEvaluateList()
+            val intimate = mHomePageViewModel.homeInfoBean.value?.intimate
+            if (intimate == BusiConstant.True) {
+                //密友
+                mHomePageViewModel.getEvaluateList()
+            } else {
+                ToastUtils.show("成为密友才能评价哦")
+            }
         }
         con_live.onClickNew {
             //跳转直播间
@@ -328,6 +359,8 @@ class HomePageActivity : BaseActivity() {
             //点赞语音
             if (mHomePageViewModel.homeInfoBean.value?.voice?.like != BusiConstant.True) {
                 mHomePageViewModel.voicePraise()
+            } else {
+                ToastUtils.show("你已经赞过了哦")
             }
         }
 
@@ -431,12 +464,13 @@ class HomePageActivity : BaseActivity() {
             showAttentionState(it ?: return@Observer)
         })
         mHomePageViewModel.blackStatus.observe(this, Observer {
-            if (it == BusiConstant.True) {
-                //拉黑状态
-                tv_black_status.show()
-            } else {
-                tv_black_status.hide()
-            }
+            val bean =
+                if (it == BusiConstant.True && mHomePageViewModel.homeInfoBean.value?.programInfo?.living != BusiConstant.True) {
+                    //拉黑状态
+                    tv_black_status.show()
+                } else {
+                    tv_black_status.hide()
+                }
         })
 
         mHomePageViewModel.actionData.observe(this, Observer {
@@ -516,7 +550,7 @@ class HomePageActivity : BaseActivity() {
                 //未关注
                 tv_attention_home_page.isSelected = true
                 view_attention_home_page.isSelected = true
-                tv_attention_home_page.text = "未关注"
+                tv_attention_home_page.text = "关注"
             }
             FollowStatus.True -> {
                 //已关注
@@ -528,7 +562,7 @@ class HomePageActivity : BaseActivity() {
                 //互相关注
                 tv_attention_home_page.isSelected = false
                 view_attention_home_page.isSelected = false
-                tv_attention_home_page.text = "互相关注"
+                tv_attention_home_page.text = "相互关注"
             }
         }
     }
@@ -566,9 +600,9 @@ class HomePageActivity : BaseActivity() {
             sdv_intim_header.hide()
         }
 //        sdv_header.loadImage(bean.headPic, 70f, 70f)
-        showPraise(bean.voice)
         if (bean.voice.voiceStatus == VoiceBean.Pass) {
             //审核通过 显示语音签名
+            showPraise(bean.voice)
             tv_time.text = "${bean.voice.length}s"
             view_voice.show()
             tv_time.show()
@@ -576,6 +610,9 @@ class HomePageActivity : BaseActivity() {
             //不显示语音签名
             view_voice.hide()
             tv_time.hide()
+            view_voice.hide()
+            view_voice_divider.hide()
+            tv_like.hide()
         }
 
         //显示座驾相关视图
@@ -655,7 +692,7 @@ class HomePageActivity : BaseActivity() {
 //        }
 
         //基础信息
-        tv_id.text = "欢鹊号：${bean.userId}"
+        tv_id.text = "欢鹊ID：${bean.userId}"
 
 //        val height = bean.height
 //        if (height != 0) {
@@ -732,6 +769,8 @@ class HomePageActivity : BaseActivity() {
             } else {
                 //未开播
                 tv_watch_count.text = "期待Ta的下一场直播"
+                tv_watch_count.textColor = GlobalUtils.getColor(R.color.black_999)
+                tv_floow_watch.hide()
                 sdv_living.hide()
                 tv_living.text = "暂未开播"
             }
@@ -770,10 +809,10 @@ class HomePageActivity : BaseActivity() {
                 //有亲密好友，添加视图
                 viewList.add(sdv_third)
                 if (count > 1) {
-                    viewList.add(sdv_second)
+                    viewList.add(0, sdv_second)
                 }
                 if (count > 2) {
-                    viewList.add(sdv_one)
+                    viewList.add(0, sdv_one)
                 }
 
                 closeConfidantRank.rankList.forEachIndexed { index, s ->
@@ -920,7 +959,7 @@ class HomePageActivity : BaseActivity() {
                     val image = TIBean()
                     image.type = 1
                     image.url = StringHelper.getOssImgUrl(it)
-                    image.height = dp2px(16)
+                    image.height = dp2px(18)
                     image.width = dp2px(66)
                     list.add(image)
                 }
@@ -953,13 +992,13 @@ class HomePageActivity : BaseActivity() {
                 val tv = TextView(this)
                     .apply {
                         text = tag
-                        if (favoriteTagList.contains(tag)) {
-                            backgroundResource = R.drawable.bg_tag_sel
-                            textColor = GlobalUtils.getColor(R.color.black_333)
-                        } else {
-                            backgroundResource = R.drawable.bg_tag_normal
-                            textColor = GlobalUtils.getColor(R.color.black_666)
-                        }
+//                        if (favoriteTagList.contains(tag)) {
+//                            backgroundResource = R.drawable.bg_tag_sel
+//                            textColor = GlobalUtils.getColor(R.color.black_333)
+//                        } else {
+                        backgroundResource = R.drawable.bg_tag_normal
+                        textColor = GlobalUtils.getColor(R.color.black_666)
+//                        }
                         textSize = 14f
                         gravity = Gravity.CENTER
                     }
@@ -1097,8 +1136,11 @@ class HomePageActivity : BaseActivity() {
             //设置头像
             otherMapView.findViewById<SimpleDraweeView>(R.id.sdv_owner_header)
                 ?.loadImage("${StringHelper.getOssImgUrl(homeCityInfo.homeHeadPic)}${BusiConstant.OSS_160}", 35f, 35f)
-            otherMapView.findViewById<SimpleDraweeView>(R.id.sdv_visitor_header)
-                ?.loadImage("${StringHelper.getOssImgUrl(homeCityInfo.curryHeadPic)}${BusiConstant.OSS_160}", 25f, 25f)
+            val sdv_visitor_header = otherMapView.findViewById<SimpleDraweeView>(R.id.sdv_visitor_header)
+            sdv_visitor_header?.loadImage("${StringHelper.getOssImgUrl(homeCityInfo.curryHeadPic)}${BusiConstant.OSS_160}", 25f, 25f)
+            sdv_visitor_header?.onClickNew {
+                RNPageActivity.start(this, RnConstant.MINE_HOMEPAGE)
+            }
 
             //设置位置和距离
             val homeCityName = homeCityInfo.homeCityName

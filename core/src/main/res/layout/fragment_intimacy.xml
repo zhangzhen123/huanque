@@ -97,7 +97,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="0px"
+            android:layout_width="match_parent"
             android:layout_height="198dp"
             android:overScrollMode="never"
             app:layout_constraintLeft_toLeftOf="parent"

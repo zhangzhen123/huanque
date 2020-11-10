@@ -17,6 +17,7 @@ import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
@@ -122,6 +123,7 @@ class HomePageViewModel : BaseViewModel() {
 //                val followBean = FollowResultBean(follow = follow.follow, userId = userId)
                 followStatus.value = follow.follow
                 homeInfoBean.value?.follow = follow.follow
+                ToastUtils.show("关注成功")
                 EventBus.getDefault()
                     .post(UserInfoChangeEvent(targetUserId, follow.stranger, follow.follow))
                 EventBus.getDefault()

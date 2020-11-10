@@ -35,7 +35,7 @@
         android:id="@+id/tv_content_first"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="本周内与之产生亲密度最高的用户。"
+        android:text="本周内与之产生亲密度最高的前10名用户。"
         android:textColor="@color/black_666"
         android:textSize="@dimen/sp_12"
         app:layout_constraintLeft_toLeftOf="@id/tv_section_first"
