@@ -43,10 +43,10 @@ class PhotosAdapter : BaseQuickAdapter<PhotoBean, BaseViewHolder>(R.layout.item_
 
         }
         if (living && holder.adapterPosition == 0) {
-            holder.setVisible(R.id.sdv_right_bottom_tag, true)
-            ImageUtils.loadGifImageLocal(holder.getView<SimpleDraweeView>(R.id.sdv_right_bottom_tag), R.mipmap.anim_living)
+            holder.setVisible(R.id.ll_right_bottom_tag, true)
+            ImageUtils.loadGifImageLocal(holder.getView<SimpleDraweeView>(R.id.sdv_right_bottom_tag), R.mipmap.anim_photo_living)
         } else {
-            holder.setGone(R.id.sdv_right_bottom_tag, true)
+            holder.setGone(R.id.ll_right_bottom_tag, true)
         }
     }
 

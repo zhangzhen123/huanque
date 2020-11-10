@@ -141,8 +141,6 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
                     } else {
                         currentMiddle = (positionFirst + positionLast) / 2 + 1
                     }
-//                    if(currentPlayView!=null)
-//                    removeItemPlay(currentPlayView!!)
                     startPlayMidVideo()
                 }
 
@@ -175,14 +173,6 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
     private fun removeItemPlay(view: View) {
 
         if (view.tag != null) {
-//            val viewHolder = authorList.getChildViewHolder(view)
-//            val item = authorAdapter.getItemOrNull(viewHolder.adapterPosition)
-//            val content = item?.content
-//            if (content != null && content is ProgramLiveInfo) {
-//                var url = GlobalUtils.getPlayUrl(content.playInfo ?: return)
-//                logger.info("当前的item停止播放 =${viewHolder.adapterPosition} url=${url}")
-//                VideoPlayerManager.removePlay()
-//            }
             VideoPlayerManager.removePlay()
             currentPlayView = null
         }
@@ -202,9 +192,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
 
         if (content != null && content is ProgramLiveInfo && viewHolder != null) {
             var url = GlobalUtils.getPlayUrl(content.playInfo ?: return)
-            //todo
             val itemView = viewHolder.getViewOrNull<FrameLayout>(R.id.program_container) ?: return
-//            url = "rtmp://aliyun-rtmp.ihuanque.com/hq/11054583"
             if (VideoPlayerManager.startPlay(url, itemView)) {
                 currentPlayView = itemView
             }
@@ -301,7 +289,13 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             authorAdapter.setList(list)
             VideoPlayerManager.removePlay()
             authorList.postDelayed({
-                if (totalList.size >= 3) {
+                if (totalList.size >= 4) {
+                    currentMiddle = if (Random.nextBoolean()) {
+                        2
+                    } else {
+                        3
+                    }
+                } else if (totalList.size >= 3) {
                     currentMiddle = 2
                 } else if (totalList.size > 0) {
                     currentMiddle = totalList.size - 1

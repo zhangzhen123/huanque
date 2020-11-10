@@ -13,13 +13,24 @@
         app:placeholderImageScaleType="fitXY"
         app:roundedCornerRadius="6dp"
         app:viewAspectRatio="1" />
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_right_bottom_tag"
-        android:layout_width="@dimen/dimen_36"
-        android:layout_height="18dp"
-        android:layout_marginBottom="@dimen/dimen_4"
+
+    <LinearLayout
+        android:id="@+id/ll_right_bottom_tag"
+        android:layout_width="@dimen/dimen_51"
+        android:layout_height="@dimen/dimen_18"
+        android:layout_gravity="end|bottom"
         android:layout_marginEnd="@dimen/dimen_4"
-        app:actualImageScaleType="fitCenter"
-        android:layout_gravity="end|bottom" />
+        android:layout_marginBottom="@dimen/dimen_4"
+        android:background="@mipmap/bg_tag_living"
+        android:gravity="center_vertical">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_right_bottom_tag"
+            android:layout_width="@dimen/dimen_10"
+            android:layout_height="@dimen/dimen_10"
+            android:layout_marginStart="@dimen/dimen_5"
+            app:actualImageScaleType="fitCenter" />
+
+    </LinearLayout>
 </FrameLayout>
 
