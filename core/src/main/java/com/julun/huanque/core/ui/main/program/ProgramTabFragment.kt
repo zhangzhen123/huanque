@@ -114,9 +114,9 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
         authorList.addOnChildAttachStateChangeListener(object :
             androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewDetachedFromWindow(view: View) {
-                if (view.id == R.id.program_container) {
-                    removeItemPlay(view)
-                }
+//                if (view.id == R.id.program_container) {
+//                    removeItemPlay(view)
+//                }
             }
 
             override fun onChildViewAttachedToWindow(view: View) {
@@ -151,22 +151,22 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 isUp = dy < 0
-//                if (currentPlayView != null) {
-//                    val viewRect = Rect()
-//                    currentPlayView!!.getLocalVisibleRect(viewRect)
-////                    logger.info("onScrolled dy=${dy} currentPlayView.top=${viewRect.top} currentPlayView.bottom=${viewRect.bottom} ")
-//                    if (dy > 0) {
-//                        if (viewRect.top > currentPlayView!!.height / 2) {
-//                            logger.info("向上已出一半")
-//                            removeItemPlay(currentPlayView!!)
-//                        }
-//                    } else if (dy < 0) {
-//                        if (viewRect.bottom < currentPlayView!!.height / 2) {
-//                            logger.info("向下已出一半")
-//                            removeItemPlay(currentPlayView!!)
-//                        }
-//                    }
-//                }
+                if (currentPlayView != null) {
+                    val viewRect = Rect()
+                    currentPlayView!!.getLocalVisibleRect(viewRect)
+//                    logger.info("onScrolled dy=${dy} currentPlayView.top=${viewRect.top} currentPlayView.bottom=${viewRect.bottom} ")
+                    if (dy > 0) {
+                        if (viewRect.top > currentPlayView!!.height / 2) {
+                            logger.info("向上已出一半")
+                            removeItemPlay(currentPlayView!!)
+                        }
+                    } else if (dy < 0) {
+                        if (viewRect.bottom < currentPlayView!!.height / 2) {
+                            logger.info("向下已出一半")
+                            removeItemPlay(currentPlayView!!)
+                        }
+                    }
+                }
             }
         })
 

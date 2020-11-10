@@ -110,8 +110,8 @@
         android:layout_marginBottom="5dp"
         android:scaleType="fitXY"
         android:src="@mipmap/icon_status_live"
-        app:layout_constraintRight_toRightOf="@+id/anchorPicture"
-        app:layout_constraintTop_toTopOf="@+id/anchorPicture" />
+        app:layout_constraintRight_toRightOf="@+id/holder"
+        app:layout_constraintTop_toTopOf="@+id/holder" />
 
     <com.julun.huanque.common.widgets.TagView
         android:id="@+id/tag_right_top"
