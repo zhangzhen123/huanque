@@ -85,4 +85,6 @@ object RnConstant {
     const val WEBVIEW_PAGE:String="WebViewPage"
     //视频播放
     const val VIDEO_PLAYER_PAGE:String="VideoPlayerPage"
+    //他人主页
+    const val OtherHomePage = "OtherHomePage"
 }
