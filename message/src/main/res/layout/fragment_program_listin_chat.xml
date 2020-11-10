@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/view_bg"
+        android:layout_width="231dp"
+        android:layout_height="0px"
+        android:layout_marginLeft="25dp"
+        android:background="#cc000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/icon_arrow_program_in_chat"
+        app:layout_constraintRight_toLeftOf="@id/view_bg"
+        app:layout_constraintTop_toTopOf="@id/view_bg" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:gravity="center"
+        android:text="一起看直播"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintLeft_toLeftOf="@id/view_bg"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="9dp"
+        app:layout_constraintBottom_toBottomOf="@id/view_bg"
+        app:layout_constraintLeft_toLeftOf="@id/view_bg"
+        app:layout_constraintRight_toRightOf="@id/view_bg"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

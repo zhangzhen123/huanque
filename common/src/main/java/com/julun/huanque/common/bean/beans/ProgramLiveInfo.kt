@@ -771,3 +771,35 @@ data class CloseConfidantBean(
     //用户ID
     var userId: Long = 0
 ) : Serializable
+
+/**
+ * 私信页面展示直播信息
+ */
+data class ProgramInfoInConversation(
+    //封面
+    var coverPic: String = "",
+    //是否开播
+//    var living: String = "",
+    //直播间ID
+    var programId: Long = 0,
+    //是否需要查看更多(查看推荐列表)
+    var viewMore: String = ""
+) : Serializable
+
+/**
+ * 私信页面  单个直播间对象
+ */
+data class SingleProgramInConversation(
+    //直播间ID
+    var programId: Long = 0,
+    //直播标题
+    var programName: String = "",
+    //封面
+    var coverPic: String = "",
+    //是否开播
+//    var living: String = "",
+    //所在城市
+    var city: String = "",
+    //热度值
+    var heatValue: Long = 0
+) : Serializable

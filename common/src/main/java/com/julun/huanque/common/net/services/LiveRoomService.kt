@@ -143,7 +143,19 @@ interface LiveRoomService {
      * 推荐主播信息
      */
     @POST("live/room/info/recommend")
-    suspend fun recommend(@Body form : EmptyForm = EmptyForm()) : Root<RecommendInfo>
+    suspend fun recommend(@Body form: EmptyForm = EmptyForm()): Root<RecommendInfo>
+
+    /**
+     * 私信推荐主播
+     */
+    @POST("live/program/info/chatRecom")
+    suspend fun chatRecom(@Body form: FriendIdForm): Root<ProgramInfoInConversation>
+
+    /**
+     * 获取私信列表接口
+     */
+    @POST("live/program/info/chatRecomList")
+    suspend fun chatRecomList(@Body form: EmptyForm = EmptyForm()): Root<MutableList<SingleProgramInConversation>>
 
 
     //===================================== 管理相关接口 end ========================================

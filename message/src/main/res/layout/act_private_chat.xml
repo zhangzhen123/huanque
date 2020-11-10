@@ -496,4 +496,50 @@
         </com.effective.android.panel.view.panel.PanelContainer>
     </com.effective.android.panel.view.PanelSwitchLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/con_living"
+        android:layout_width="72dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginRight="12dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:src="@mipmap/icon_chat_live"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_anchor_header"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImage="@mipmap/logo_placeholder_medium"
+            app:roundAsCircle="true"
+            app:roundingBorderColor="@color/white"
+            app:roundingBorderWidth="1px" />
+
+        <ImageView
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:src="@mipmap/icon_chat_live_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

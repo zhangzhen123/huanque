@@ -133,6 +133,12 @@
         <item name="android:windowExitAnimation">@anim/dialog_bottom_exit</item>
     </style>
 
+    <style name="dialog_right_right_style" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/anim_enter_right</item>
+        <item name="android:windowExitAnimation">@anim/anim_leave_right</item>
+    </style>
+
+
     <style name="dialog_bottom_enter_style" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/dialog_bottom_enter</item>
     </style>
