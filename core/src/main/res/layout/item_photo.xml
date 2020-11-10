@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.facebook.drawee.view.SimpleDraweeView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/sdv_photo"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:roundedCornerRadius="6dp"
-    app:viewAspectRatio="1"
-    app:actualImageScaleType="centerCrop"
-    app:placeholderImageScaleType="fitXY"
-    app:placeholderImage="@mipmap/logo_placeholder_medium" />
+    android:layout_height="wrap_content">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:actualImageScaleType="centerCrop"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="fitXY"
+        app:roundedCornerRadius="6dp"
+        app:viewAspectRatio="1" />
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_right_bottom_tag"
+        android:layout_width="@dimen/dimen_36"
+        android:layout_height="18dp"
+        android:layout_marginBottom="@dimen/dimen_4"
+        android:layout_marginEnd="@dimen/dimen_4"
+        app:actualImageScaleType="fitCenter"
+        android:layout_gravity="end|bottom" />
+</FrameLayout>
+

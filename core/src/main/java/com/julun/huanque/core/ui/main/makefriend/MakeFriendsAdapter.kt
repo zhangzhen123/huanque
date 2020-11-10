@@ -56,11 +56,10 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
         mPhotoViewPool.setMaxRecycledViews(0, 20)
 
         addChildClickViewIds(
-            R.id.ll_audio, R.id.btn_action,
+            R.id.ll_audio, /*R.id.btn_action,*/
             R.id.ll_task, R.id.ll_balance,
             R.id.iv_guide_tag_close,
-            R.id.iv_guide_info_close,
-            R.id.living_fg
+            R.id.iv_guide_info_close
         )
     }
 
@@ -71,7 +70,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
             holder.getView<TextView>(R.id.tv_balance).setTFDinCdc2()
         } else if (viewType == HomeItemBean.NORMAL) {
             holder.getView<TextView>(R.id.tv_audio_time).setTFDinAltB()
-            ImageUtils.loadGifImageLocal(holder.getView<SimpleDraweeView>(R.id.living_tag), R.mipmap.anim_living)
+//            ImageUtils.loadGifImageLocal(holder.getView<SimpleDraweeView>(R.id.living_tag), R.mipmap.anim_living)
         }
         return holder
     }
@@ -84,30 +83,35 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                 val bean = item.content as HomeRecomItem
 
                 val rl = bean.coverPicList.map { PhotoBean(url = it) }.toMutableList()
-                val list = if (rl.size > 4) {
-                    rl.subList(0, 4)
+                val list = if (rl.size > 3) {
+                    rl.subList(0, 3)
                 } else {
                     rl
                 }
                 val headPic = holder.getView<SimpleDraweeView>(R.id.header_pic)
 
-                holder.setGone(R.id.living_fg, !bean.living)
+//                holder.setGone(R.id.living_fg, !bean.living)
 
-                val livingTag = holder.getView<SimpleDraweeView>(R.id.living_tag)
+//                val livingTag = holder.getView<SimpleDraweeView>(R.id.living_tag)
                 val authTag = holder.getView<SimpleDraweeView>(R.id.sd_auth_tag)
-
-                if (bean.living) {
-                    livingTag.show()
-                    authTag.hide()
-
+//                if (bean.living) {
+//                    livingTag.show()
+//                    authTag.hide()
+//
+//                } else {
+//                    livingTag.hide()
+//                    if (bean.authMark.isNotEmpty()) {
+//                        authTag.show()
+//                        ImageUtils.loadImageWithHeight_2(authTag, bean.authMark, dp2px(13))
+//                    } else {
+//                        authTag.hide()
+//                    }
+//                }
+                if (bean.authMark.isNotEmpty()) {
+                    authTag.show()
+                    ImageUtils.loadImageWithHeight_2(authTag, bean.authMark, dp2px(13))
                 } else {
-                    livingTag.hide()
-                    if (bean.authMark.isNotEmpty()) {
-                        authTag.show()
-                        ImageUtils.loadImageWithHeight_2(authTag, bean.authMark, dp2px(13))
-                    } else {
-                        authTag.hide()
-                    }
+                    authTag.hide()
                 }
                 ImageHelper.setDefaultHeaderPic(headPic, bean.sex)
 
@@ -170,16 +174,16 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
                     }
                 }
-                val action = holder.getView<TextView>(R.id.btn_action)
-                if (bean.anchor && bean.living) {
-                    action.text = "围观"
-                    action.textColor = Color.parseColor("#FF8E8E")
-                    action.backgroundResource = R.drawable.bg_stroke_btn3
-                } else {
-                    action.text = "私信"
-                    action.textColor = Color.parseColor("#FFCC00")
-                    action.backgroundResource = R.drawable.bg_stroke_btn1
-                }
+//                val action = holder.getView<TextView>(R.id.btn_action)
+//                if (bean.anchor && bean.living) {
+//                    action.text = "围观"
+//                    action.textColor = Color.parseColor("#FF8E8E")
+//                    action.backgroundResource = R.drawable.bg_stroke_btn3
+//                } else {
+//                    action.text = "私信"
+//                    action.textColor = Color.parseColor("#FFCC00")
+//                    action.backgroundResource = R.drawable.bg_stroke_btn1
+//                }
                 when {
                     list.isNotEmpty() -> {
                         val rv = holder.getView<RecyclerView>(R.id.rv_photos)
@@ -191,11 +195,11 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         // if (rv.itemDecorationCount <= 0) {
 //                            rv.addItemDecoration(HorizontalItemDecoration(dp2px(5)))
 //                        }
-                        rv.layoutManager = GridLayoutManager(context, 4)
+                        rv.layoutManager = GridLayoutManager(context, 3)
                         if (rv.itemDecorationCount <= 0) {
                             rv.addItemDecoration(
                                 GridSpacingItemDecoration(
-                                    4,
+                                    3,
                                     dp2px(5), false
                                 )
                             )
@@ -212,6 +216,8 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
                         mPhotosAdapter.setList(list)
                         mPhotosAdapter.currentPosition = holder.layoutPosition
                         mPhotosAdapter.totalList = rl
+                        mPhotosAdapter.living = bean.living
+
                         mPhotosAdapter.setOnItemClickListener(this)
 //                        mPhotosAdapter.setOnItemClickListener { adapter, _, position ->
 //                            val adp=adapter as PhotosAdapter

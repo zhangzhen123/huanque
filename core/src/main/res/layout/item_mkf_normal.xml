@@ -16,15 +16,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:roundAsCircle="true" />
 
-    <View
-        android:id="@+id/living_fg"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/fg_shape_mkf_head"
-        app:layout_constraintBottom_toBottomOf="@+id/header_pic"
-        app:layout_constraintEnd_toEndOf="@+id/header_pic"
-        app:layout_constraintStart_toStartOf="@+id/header_pic"
-        app:layout_constraintTop_toTopOf="@+id/header_pic" />
+<!--    <View-->
+<!--        android:id="@+id/living_fg"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:background="@drawable/fg_shape_mkf_head"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/header_pic"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/header_pic"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/header_pic"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/header_pic" />-->
 
     <View
         android:id="@+id/view_online"
@@ -36,15 +36,15 @@
         app:layout_constraintEnd_toEndOf="@+id/header_pic"
         app:layout_constraintTop_toTopOf="@+id/header_pic" />
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/living_tag"
-        android:layout_width="@dimen/dimen_27"
-        android:layout_height="@dimen/dimen_18"
-        android:layout_marginBottom="@dimen/dimen_3"
-        app:actualImageScaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="@+id/header_pic"
-        app:layout_constraintEnd_toEndOf="@+id/header_pic"
-        app:layout_constraintStart_toStartOf="@+id/header_pic" />
+<!--    <com.facebook.drawee.view.SimpleDraweeView-->
+<!--        android:id="@+id/living_tag"-->
+<!--        android:layout_width="@dimen/dimen_27"-->
+<!--        android:layout_height="@dimen/dimen_18"-->
+<!--        android:layout_marginBottom="@dimen/dimen_3"-->
+<!--        app:actualImageScaleType="fitCenter"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/header_pic"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/header_pic"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/header_pic" />-->
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sd_auth_tag"
@@ -142,21 +142,21 @@
         app:layout_constraintStart_toEndOf="@+id/header_pic"
         app:layout_constraintTop_toBottomOf="@+id/tv_sex" />
 
-    <TextView
-        android:id="@+id/btn_action"
-        android:layout_width="@dimen/dimen_54"
-        android:layout_height="@dimen/dimen_30"
-        android:background="@drawable/bg_stroke_btn1"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:maxLength="15"
-        android:text="操作"
-        android:textColor="#FFCC00"
-        android:textSize="@dimen/sp_12"
-        app:layout_constraintBottom_toBottomOf="@+id/header_pic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/header_pic" />
+<!--    <TextView-->
+<!--        android:id="@+id/btn_action"-->
+<!--        android:layout_width="@dimen/dimen_54"-->
+<!--        android:layout_height="@dimen/dimen_30"-->
+<!--        android:background="@drawable/bg_stroke_btn1"-->
+<!--        android:ellipsize="end"-->
+<!--        android:gravity="center"-->
+<!--        android:includeFontPadding="false"-->
+<!--        android:maxLength="15"-->
+<!--        android:text="操作"-->
+<!--        android:textColor="#FFCC00"-->
+<!--        android:textSize="@dimen/sp_12"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/header_pic"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/header_pic" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_photos"

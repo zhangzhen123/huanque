@@ -177,14 +177,19 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                 }
                 HomeItemBean.NORMAL -> {
                     val bean = item.content as? HomeRecomItem ?: return@onAdapterClickNew
-                    if (bean.userId == SessionUtils.getUserId()) {
-                        RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
+                    if (bean.anchor && bean.living) {
+                        logger.info("点击进入直播间--$position")
+                        PlayerActivity.start(requireActivity(), programId = bean.userId, from = PlayerFrom.Home)
                     } else {
+                        if (bean.userId == SessionUtils.getUserId()) {
+                            RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
+                        } else {
 //                        RNPageActivity.start(
 //                            requireActivity(),
 //                            RnConstant.PERSONAL_HOMEPAGE,
 //                            Bundle().apply { putLong("userId", bean.userId) })
-                        HomePageActivity.newInstance(requireActivity(), bean.userId)
+                            HomePageActivity.newInstance(requireActivity(), bean.userId)
+                        }
                     }
 
                 }
@@ -199,12 +204,17 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
             ) {
                 logger.info("index=$index position=$position ")
                 val item = mAdapter.getItemOrNull(index)?.content as? HomeRecomItem
-                ImageActivity.start(
-                    requireActivity(),
-                    position,
-                    list.map { StringHelper.getOssImgUrl(it.url) },
-                    item?.userId
-                )
+                if (position == 0 && item?.living == true) {
+                    PlayerActivity.start(requireActivity(), programId = item.userId, from = PlayerFrom.Home)
+                } else {
+                    ImageActivity.start(
+                        requireActivity(),
+                        position,
+                        list.map { StringHelper.getOssImgUrl(it.url) },
+                        item?.userId
+                    )
+
+                }
             }
 
             override fun onHeadClick(item: HeadModule?) {
@@ -244,22 +254,23 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
         }
         mAdapter.onAdapterChildClickNew { _, view, position ->
             when (view.id) {
-                R.id.btn_action -> {
-
-                    val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@onAdapterChildClickNew
-                    if (bean.anchor && bean.living) {
-                        logger.info("点击围观--$position")
-                        PlayerActivity.start(requireActivity(), programId = bean.userId, from = PlayerFrom.Home)
-                    } else {
-                        logger.info("点击了私信--$position")
-                        val bundle = Bundle()
-                        bundle.putLong(ParamConstant.TARGET_USER_ID, bean.userId)
-                        bundle.putString(ParamConstant.NICKNAME, bean.nickname)
-                        bundle.putString(ParamConstant.HeaderPic, bean.headPic)
-                        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
-                            .navigation(requireActivity())
-                    }
-                }
+                //todo
+//                R.id.btn_action -> {
+//
+//                    val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@onAdapterChildClickNew
+//                    if (bean.anchor && bean.living) {
+//                        logger.info("点击围观--$position")
+//                        PlayerActivity.start(requireActivity(), programId = bean.userId, from = PlayerFrom.Home)
+//                    } else {
+//                        logger.info("点击了私信--$position")
+//                        val bundle = Bundle()
+//                        bundle.putLong(ParamConstant.TARGET_USER_ID, bean.userId)
+//                        bundle.putString(ParamConstant.NICKNAME, bean.nickname)
+//                        bundle.putString(ParamConstant.HeaderPic, bean.headPic)
+//                        ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle)
+//                            .navigation(requireActivity())
+//                    }
+//                }
                 R.id.ll_audio -> {
                     logger.info("点击了音频播放---$position")
                     val bean = mAdapter.getItem(position)?.content as? HomeRecomItem
@@ -284,14 +295,14 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                     logger.info("去赚钱")
                     gotoMakeMoney()
                 }
-                R.id.living_fg -> {
-                    //点击了开播的头像
-                    val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@onAdapterChildClickNew
-                    if (bean.anchor && bean.living) {
-                        logger.info("点击围观--$position")
-                        PlayerActivity.start(requireActivity(), programId = bean.userId, from = PlayerFrom.Home)
-                    }
-                }
+//                R.id.living_fg -> {
+//                    //点击了开播的头像
+//                    val bean = mAdapter.getItemOrNull(position)?.content as? HomeRecomItem ?: return@onAdapterChildClickNew
+//                    if (bean.anchor && bean.living) {
+//                        logger.info("点击围观--$position")
+//                        PlayerActivity.start(requireActivity(), programId = bean.userId, from = PlayerFrom.Home)
+//                    }
+//                }
             }
         }
         ll_balance_h.onClickNew {
@@ -607,7 +618,7 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 
         }
         val index = mAdapter.data.indexOfFirst { it.showType == HomeItemBean.GUIDE_TO_COMPLETE_INFORMATION }
-        if(index >= 0){
+        if (index >= 0) {
             mAdapter.notifyItemChanged(index)
         }
     }
