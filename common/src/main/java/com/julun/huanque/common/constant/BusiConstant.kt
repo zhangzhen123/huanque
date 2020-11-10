@@ -903,6 +903,9 @@ object PlayerFrom {
 
     //个人主页
     const val UserHome = "UserHome"
+
+    //私信跳转
+    const val Chat = "Chat"
 }
 
 /**

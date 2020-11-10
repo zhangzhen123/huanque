@@ -1,5 +1,6 @@
 package com.julun.huanque.message.fragment
 
+import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -8,10 +9,18 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.bean.beans.SingleProgramInConversation
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.PlayerFrom
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.widgets.recycler.decoration.VerticalItemDecoration
 import com.julun.huanque.message.R
+import com.julun.huanque.message.adapter.ProgramInChatAdapter
 import com.julun.huanque.message.viewmodel.PrivateConversationViewModel
 import com.luck.picture.lib.tools.ScreenUtils
 import kotlinx.android.synthetic.main.act_private_chat.view_bg
@@ -24,6 +33,7 @@ import kotlinx.android.synthetic.main.fragment_program_listin_chat.*
  */
 class ProgramListInChatFragment : BaseDialogFragment() {
     private val mPrivateConversationViewModel: PrivateConversationViewModel by activityViewModels()
+    private val mAdapter = ProgramInChatAdapter()
     override fun getLayoutId() = R.layout.fragment_program_listin_chat
 
     override fun initViews() {
@@ -46,7 +56,17 @@ class ProgramListInChatFragment : BaseDialogFragment() {
      */
     private fun initRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-//        recyclerView.adapter =
+        recyclerView.adapter = mAdapter
+        recyclerView.addItemDecoration(VerticalItemDecoration(dp2px(10)))
+        mAdapter.setOnItemClickListener { adapter, view, position ->
+            val tempBean = adapter.getItemOrNull(position) as? SingleProgramInConversation ?: return@setOnItemClickListener
+            val bundle = Bundle()
+            bundle.putLong(IntentParamKey.PROGRAM_ID.name, tempBean.programId)
+            bundle.putString(ParamConstant.FROM, PlayerFrom.Chat)
+
+            ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle).navigation()
+            dismiss()
+        }
     }
 
     override fun onStart() {
@@ -67,7 +87,7 @@ class ProgramListInChatFragment : BaseDialogFragment() {
     private fun initViewModel() {
         mPrivateConversationViewModel.programListData.observe(this, Observer {
             if (it != null) {
-
+                mAdapter.setList(it)
             }
         })
     }

@@ -73,8 +73,10 @@ open class ProgramLiveInfo : Serializable {
 
     //直播广场使用
     var rightTopTag: String = ""
+
     //左上角标
     var leftTopTag: String = ""
+
     //播放数据
     var playInfo: PlayInfo? = null
 
@@ -782,7 +784,7 @@ data class ProgramInfoInConversation(
     //封面
     var coverPic: String = "",
     //是否开播
-//    var living: String = "",
+    var living: String = "",
     //直播间ID
     var programId: Long = 0,
     //是否需要查看更多(查看推荐列表)
@@ -800,9 +802,11 @@ data class SingleProgramInConversation(
     //封面
     var coverPic: String = "",
     //是否开播
-//    var living: String = "",
+    var living: String = "",
     //所在城市
     var city: String = "",
     //热度值
-    var heatValue: Long = 0
+    var heatValue: Long = 0,
+    //标签
+    var rightTopTag: String = ""
 ) : Serializable

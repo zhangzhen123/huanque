@@ -281,8 +281,7 @@ class PrivateConversationViewModel : BaseViewModel() {
                 intimateData.value = result.intimate
                 msgFeeData.value = result.msgFee
                 basicBean.value = result
-//                timer(result.recomDelaySec)
-                timer(1)
+                timer(result.recomDelaySec)
                 propData.value = PropBean(result.chatTicketCnt, result.voiceTicketCnt)
                 BalanceUtils.saveBalance(result.beans)
 
@@ -718,14 +717,14 @@ class PrivateConversationViewModel : BaseViewModel() {
         mTimerDisposable?.dispose()
         mTimerDisposable = Observable.timer(time, TimeUnit.SECONDS)
             .subscribe({
-                chatRoom()
+                chatRecom()
             }, {})
     }
 
     /**
      * 私信推荐主播
      */
-    fun chatRoom() {
+    fun chatRecom() {
         val targetId = targetIdData.value ?: return
         viewModelScope.launch {
             request({

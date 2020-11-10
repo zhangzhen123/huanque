@@ -346,7 +346,17 @@ class PrivateConversationActivity : BaseActivity() {
         })
 
         mPrivateConversationViewModel?.programListData?.observe(this, Observer {
-            if (it != null) {
+            if (it != null && it.isNotEmpty()) {
+                val firstData = it[0]
+                if (firstData.programId != mPrivateConversationViewModel?.mProgramInfo?.value?.programId) {
+                    val bean = ProgramInfoInConversation(
+                        firstData.coverPic,
+                        firstData.living,
+                        firstData.programId,
+                        mPrivateConversationViewModel?.mProgramInfo?.value?.viewMore ?: BusiConstant.False
+                    )
+                    mPrivateConversationViewModel?.mProgramInfo?.value = bean
+                }
                 mProgramListChatFragment.show(supportFragmentManager, "ProgramListInChatFragment")
             }
         })
@@ -898,8 +908,18 @@ class PrivateConversationActivity : BaseActivity() {
         con_living.onClickNew {
             //直播信息视图点击
             val programInfo = mPrivateConversationViewModel?.mProgramInfo?.value ?: return@onClickNew
-            //显示弹窗
-            mPrivateConversationViewModel?.chatRecomList()
+            if (programInfo.viewMore == BusiConstant.True) {
+                //显示弹窗
+                mPrivateConversationViewModel?.chatRecomList()
+            } else {
+                //跳转直播间
+                val bundle = Bundle()
+                bundle.putLong(IntentParamKey.PROGRAM_ID.name, programInfo.programId)
+                bundle.putString(ParamConstant.FROM, PlayerFrom.Chat)
+
+                ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle).navigation()
+            }
+
         }
     }
 
