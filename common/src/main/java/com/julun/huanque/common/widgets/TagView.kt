@@ -21,6 +21,13 @@ import kotlin.properties.Delegates
  * Created by dong on 2018/4/10.
  */
 class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+    companion object {
+        const val LEFT_TOP = 1
+        const val RIGHT_TOP = 2
+        const val LEFT_BOTTOM = 3
+        const val RIGHT_BOTTOM = 4
+    }
+
     constructor(context: Context) : this(context, null)
 
     //是否是节目标签
@@ -104,16 +111,18 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
     /**初始化CircularCornerTextView**/
     private fun initProgramTagCTV() {
         if (isProgramTag) {
-            radiusWrap = true
-            leftTop = true
+            rightTop = false
             rightBottom = true
+            leftBottom = false
+            leftTop = true
 
             tPaddingLeft = 5
-            tPaddingTop = 3
-            tPaddingRight = 10
-            tPaddingBottom = 3
+            tPaddingTop = 2
+            tPaddingRight = 5
+            tPaddingBottom = 2
+            ctv.textSize = 12f
             ctv.setTextColor(Color.WHITE)
-            ctv.textSize = 11f
+            radius = 6f
         } else if (isGiftTag) {
             radiusWrap = true
             rightTop = true
@@ -147,11 +156,36 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
     }
 
     //设置节目单左上角
-    fun initProgramLTV() {
-        rightTop = false
-        rightBottom = true
-        leftBottom = false
-        leftTop = true
+    fun initProgramTag(type: Int) {
+        isProgramTag = true
+
+        when (type) {
+            LEFT_TOP -> {
+                rightTop = false
+                rightBottom = true
+                leftBottom = false
+                leftTop = true
+            }
+            RIGHT_TOP -> {
+                rightTop = true
+                rightBottom = false
+                leftBottom = true
+                leftTop = false
+            }
+            LEFT_BOTTOM -> {
+                rightTop = true
+                rightBottom = false
+                leftBottom = true
+                leftTop = false
+            }
+            RIGHT_BOTTOM -> {
+                rightTop = false
+                rightBottom = true
+                leftBottom = false
+                leftTop = true
+            }
+        }
+
 
         tPaddingLeft = 5
         tPaddingTop = 2
@@ -170,6 +204,7 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
 
         ctv.setPadding(dip(tPaddingLeft), dip(tPaddingTop), dip(tPaddingRight), dip(tPaddingBottom))
 //        invalidate()
+        initSimpleDraweeView()
     }
 
     //给文字添加固定的左图片
