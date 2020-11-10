@@ -11,40 +11,82 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent">-->
-
-        <!--            <TextView-->
-        <!--                android:id="@+id/tv_ranking"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginTop="10dp"-->
-        <!--                android:textColor="#FF5757"-->
-        <!--                android:textSize="@dimen/sp_12"-->
-        <!--                app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--                app:layout_constraintRight_toRightOf="parent"-->
-        <!--                app:layout_constraintTop_toTopOf="parent"-->
-        <!--                tools:text="的客户骄傲" />-->
-
-        <!--            <androidx.recyclerview.widget.RecyclerView-->
-        <!--                android:id="@+id/recyclerView"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="0px"-->
-        <!--                android:layout_marginTop="10dp"-->
-        <!--                android:overScrollMode="never"-->
-        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--                app:layout_constraintTop_toBottomOf="@id/tv_ranking" />-->
-
-        <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:descendantFocusability="beforeDescendants"
-            android:overScrollMode="never" />
+            android:layout_height="match_parent">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/con_top"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_top"
+                        android:layout_width="0px"
+                        android:layout_height="0px"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/bg_plum_flower_header_famous"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="1125:978"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/sdv_header"
+                        android:layout_width="138dp"
+                        android:layout_height="138dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_border"
+                        app:layout_constraintLeft_toLeftOf="@+id/iv_border"
+                        app:layout_constraintRight_toRightOf="@+id/iv_border"
+                        app:layout_constraintTop_toTopOf="@+id/iv_border"
+                        app:placeholderImage="@mipmap/logo_placeholder_medium"
+                        app:placeholderImageScaleType="centerCrop" />
+
+                    <ImageView
+                        android:id="@+id/iv_border"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_marginBottom="50dp"
+                        android:src="@mipmap/icon_day_list_famous_border"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_nickname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
+                        app:layout_constraintLeft_toLeftOf="@id/iv_border"
+                        app:layout_constraintRight_toRightOf="@id/iv_border"
+                        app:layout_constraintTop_toBottomOf="@id/iv_border"
+                        tools:text="可和你无关" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:descendantFocusability="beforeDescendants"
+                    android:overScrollMode="never"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/con_top" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
