@@ -55,6 +55,7 @@ import kotlin.math.ceil
  *@描述 会话列表ViewModel
  */
 class MessageViewModel : BaseViewModel() {
+
     private val socialService: SocialService by lazy { Requests.create(SocialService::class.java) }
     private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
@@ -163,29 +164,33 @@ class MessageViewModel : BaseViewModel() {
     /**
      * 获取本地会话列表
      */
+    private  var resultCallback: RongIMClient.ResultCallback<List<Conversation>>?=null
     fun getConversationList() {
         if (blockListData == null) {
             needQueryConversation = true
             return
         }
-        RongIMClient.getInstance()
-            .getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
-                override fun onSuccess(p0: List<Conversation>?) {
+        if(resultCallback!=null){
+            RongCloudManager.removeConversationCallback(resultCallback)
+        }
+        resultCallback=object : RongIMClient.ResultCallback<List<Conversation>>() {
+            override fun onSuccess(p0: List<Conversation>?) {
 //                if (!mStranger && !player) {
 //                    dealWithStableConversation(p0)
 //                }
-                    if ((p0 == null || p0.isEmpty()) && !player) {
-                        conversationListData.value = null
-                        return
-                    }
-                    showConversation(p0 ?: mutableListOf<Conversation>())
-
+                if ((p0 == null || p0.isEmpty()) && !player) {
+                    conversationListData.value = null
+                    return
                 }
+                showConversation(p0 ?: mutableListOf<Conversation>())
 
-                override fun onError(p0: RongIMClient.ErrorCode?) {
-                }
+            }
 
-            }, Conversation.ConversationType.PRIVATE)
+            override fun onError(p0: RongIMClient.ErrorCode?) {
+            }
+
+        }
+        RongCloudManager.queryConversationList(resultCallback!!, Conversation.ConversationType.PRIVATE)
     }
 
 //    /**
@@ -950,36 +955,8 @@ class MessageViewModel : BaseViewModel() {
         }
     }
 
-//    /**
-//     * 显示桌面未读数量
-//     */
-//    fun showLogoCount() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val mNotificationManager = CommonInit.getInstance().getContext().getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-//            val channelId = getChannelId(mNotificationManager ?: return) ?: return
-//            val builder = NotificationCompat.Builder(CommonInit.getInstance().getContext(), channelId)
-//            builder.setSmallIcon(R.mipmap.ic_launcher)
-//                .setDefaults(Notification.DEFAULT_ALL)
-//                .setTicker("title")
-//                .setAutoCancel(true)
-//                .setContentTitle("contentTitle")
-//                .setContentText("contentText")
-//
-//            mNotificationManager.notify(123, builder.build());
-//        }
-//    }
-//
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    fun getChannelId(mNotificationManager: NotificationManager): String? {
-//
-//        val channelId = "1"
-//        val channelName = "com.julun.huanque"
-//        val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT)
-//        channel.enableLights(true) //显示桌面红点
-//        channel.lightColor = Color.RED
-//        channel.setShowBadge(true)
-//        mNotificationManager?.createNotificationChannel(channel)
-//        return channel.id
-//    }
-
+    override fun onCleared() {
+        super.onCleared()
+        RongCloudManager.removeConversationCallback(resultCallback)
+    }
 }

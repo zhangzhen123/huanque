@@ -1,10 +1,8 @@
 package com.julun.huanque.core.ui.live.fragment
 
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -26,28 +24,22 @@ import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.constant.ProdType
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.*
-import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
-import com.julun.huanque.core.ui.live.Transformer
+import com.julun.huanque.core.widgets.Transformer
 import com.julun.huanque.core.ui.live.adapter.BlindBoxRuleGiftAdapter
 import com.julun.huanque.core.viewmodel.EggSettingViewModel
 import com.julun.huanque.core.viewmodel.SendGiftViewModel
 import com.julun.huanque.core.widgets.CusGalleryLayoutManager
-import com.julun.huanque.core.widgets.MarqueeTextView
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindUntilEvent
 import github.hellocsl.layoutmanager.gallery.GalleryLayoutManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_blind_box_rule.*
-import org.jetbrains.anko.singleLine
-import org.jetbrains.anko.textColor
 import java.lang.StringBuilder
-import java.util.concurrent.TimeUnit
 
 
 /**

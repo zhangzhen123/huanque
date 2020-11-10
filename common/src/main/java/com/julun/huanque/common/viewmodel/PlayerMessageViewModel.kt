@@ -13,6 +13,7 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.manager.HuanViewModelManager
+import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.JsonUtil
@@ -58,6 +59,7 @@ class PlayerMessageViewModel : BaseViewModel() {
     /**
      * 获取融云未读消息(直播间使用)
      */
+    private  var resultCallback: RongIMClient.ResultCallback<List<Conversation>>?=null
     fun queryRongPrivateCount(targetId: String = "") {
         if (blockListData.value == null) {
             //未获取到免打扰列表
@@ -69,7 +71,10 @@ class PlayerMessageViewModel : BaseViewModel() {
             realUnreadCount()
             return
         }
-        RongIMClient.getInstance().getConversationList(object : RongIMClient.ResultCallback<List<Conversation>>() {
+        if(resultCallback!=null){
+            RongCloudManager.removeConversationCallback(resultCallback)
+        }
+        resultCallback=object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(list: List<Conversation>?) {
                 if (list?.isNotEmpty() != true) {
                     return
@@ -132,7 +137,8 @@ class PlayerMessageViewModel : BaseViewModel() {
             override fun onError(p0: RongIMClient.ErrorCode?) {
             }
 
-        }, Conversation.ConversationType.PRIVATE)
+        }
+        RongCloudManager.queryConversationList(resultCallback!!, Conversation.ConversationType.PRIVATE)
     }
 
     /**
@@ -242,4 +248,8 @@ class PlayerMessageViewModel : BaseViewModel() {
         }, Conversation.ConversationType.PRIVATE)
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        RongCloudManager.removeConversationCallback(resultCallback)
+    }
 }

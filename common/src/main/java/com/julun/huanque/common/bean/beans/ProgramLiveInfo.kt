@@ -73,10 +73,13 @@ open class ProgramLiveInfo : Serializable {
 
     //直播广场使用
     var rightTopTag: String = ""
-
+    //左上角标
+    var leftTopTag: String = ""
     //播放数据
     var playInfo: PlayInfo? = null
 
+    //本地字段
+//    var isVideoPlaying:Boolean =false
     //去重需要
     override fun equals(other: Any?): Boolean {
         if (other is ProgramLiveInfo) {

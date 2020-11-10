@@ -312,7 +312,8 @@ object RongCloudManager {
                 .insertIncomingMessage(conversationType, targetId, senderId, receivedStatus, messageContent, sentTime, callback)
         } else {
             //插入发送消息
-            RongIMClient.getInstance().insertOutgoingMessage(conversationType, targetId, Message.SentStatus.SENT, messageContent, sentTime, callback)
+            RongIMClient.getInstance()
+                .insertOutgoingMessage(conversationType, targetId, Message.SentStatus.SENT, messageContent, sentTime, callback)
         }
     }
 
@@ -329,11 +330,16 @@ object RongCloudManager {
                 messageContent,
                 System.currentTimeMillis(), object : RongIMClient.ResultCallback<Message>() {
                     override fun onSuccess(message: Message?) {
-                        if(message == null){
+                        if (message == null) {
                             return
                         }
                         EventBus.getDefault()
-                            .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
+                            .post(
+                                EventMessageBean(
+                                    message.targetId,
+                                    GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")
+                                )
+                            )
                     }
 
                     override fun onError(p0: ErrorCode?) {
@@ -359,7 +365,12 @@ object RongCloudManager {
 //                }
                 if (message != null) {
                     EventBus.getDefault()
-                        .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
+                        .post(
+                            EventMessageBean(
+                                message.targetId,
+                                GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")
+                            )
+                        )
                 }
             }
 
@@ -378,7 +389,13 @@ object RongCloudManager {
                         //动画表情发送成功，设置数据库数据（设置动画已播放）
                         updateMessageExtra(
                             message.messageId,
-                            JsonUtil.serializeAsString(GlobalUtils.addExtra(msg.extra ?: "", ParamConstant.MSG_ANIMATION_STARTED, true))
+                            JsonUtil.serializeAsString(
+                                GlobalUtils.addExtra(
+                                    msg.extra ?: "",
+                                    ParamConstant.MSG_ANIMATION_STARTED,
+                                    true
+                                )
+                            )
                         )
                     }
                 }
@@ -488,60 +505,74 @@ object RongCloudManager {
         }
         targetUserObj ?: return
 
-        RongIMClient.getInstance().sendMediaMessage(localMessage, "你有一条新的信息", null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
-            override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
-                if (message != null) {
+        RongIMClient.getInstance()
+            .sendMediaMessage(localMessage, "你有一条新的信息", null, object : IRongCallback.ISendMediaMessageCallbackWithUploader {
+                override fun onAttached(message: Message?, uploader: IRongCallback.MediaMessageUploader?) {
+                    if (message != null) {
 //                    switchThread(message)
-                    EventBus.getDefault()
-                        .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
-                }
-                OssUpLoadManager.uploadFiles(arrayListOf(targetUserObj.localPic), OssUpLoadManager.MESSAGE_PIC) { code, list ->
-                    if (code == OssUpLoadManager.CODE_SUCCESS) {
-                        logger("DXC 头像上传oss成功：${list} localImage =")
-                        val headPic = list?.firstOrNull()
-                        if (headPic != null) {
-                            callback(message, uploader, headPic)
+                        EventBus.getDefault()
+                            .post(
+                                EventMessageBean(
+                                    message.targetId,
+                                    GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")
+                                )
+                            )
+                    }
+                    OssUpLoadManager.uploadFiles(
+                        arrayListOf(targetUserObj.localPic),
+                        OssUpLoadManager.MESSAGE_PIC
+                    ) { code, list ->
+                        if (code == OssUpLoadManager.CODE_SUCCESS) {
+                            logger("DXC 头像上传oss成功：${list} localImage =")
+                            val headPic = list?.firstOrNull()
+                            if (headPic != null) {
+                                callback(message, uploader, headPic)
 //                            uploader?.success(Uri.parse("$headPic"))
+                            }
+                        } else {
+                            uploader?.error()
                         }
-                    } else {
-                        uploader?.error()
                     }
                 }
-            }
 
-            override fun onSuccess(message: Message?) {
-                callback(message, null, null)
-            }
-
-            override fun onProgress(p0: Message?, p1: Int) {
-
-            }
-
-            override fun onCanceled(p0: Message?) {
-
-            }
-
-            override fun onError(message: Message?, p1: ErrorCode?) {
-                if (message != null) {
+                override fun onSuccess(message: Message?) {
                     callback(message, null, null)
-                    updateMessageExtra(
-                        message.messageId, JsonUtil.serializeAsString(
-                            GlobalUtils.addExtra(
-                                message.extra,
-                                ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
+                }
+
+                override fun onProgress(p0: Message?, p1: Int) {
+
+                }
+
+                override fun onCanceled(p0: Message?) {
+
+                }
+
+                override fun onError(message: Message?, p1: ErrorCode?) {
+                    if (message != null) {
+                        callback(message, null, null)
+                        updateMessageExtra(
+                            message.messageId, JsonUtil.serializeAsString(
+                                GlobalUtils.addExtra(
+                                    message.extra,
+                                    ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
+                                )
                             )
                         )
-                    )
+                    }
                 }
-            }
 
-        })
+            })
     }
 
     /**
      * 模拟生成图片消息
      */
-    fun obtainImageMessage(targetId: String, localImage: String, targetUserObj: TargetUserObj? = null, type: Conversation.ConversationType): Message {
+    fun obtainImageMessage(
+        targetId: String,
+        localImage: String,
+        targetUserObj: TargetUserObj? = null,
+        type: Conversation.ConversationType
+    ): Message {
         val prefix = "file://"
         val localUri = if (localImage.startsWith(prefix)) {
             Uri.parse(localImage)
@@ -603,7 +634,12 @@ object RongCloudManager {
                 override fun onAttached(message: Message?) {
                     if (message != null) {
                         EventBus.getDefault()
-                            .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
+                            .post(
+                                EventMessageBean(
+                                    message.targetId,
+                                    GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")
+                                )
+                            )
                     }
                 }
 
@@ -659,22 +695,23 @@ object RongCloudManager {
         chatMessage.extra = JsonUtil.serializeAsString(currentUserObj)
 
         var conversationType = Conversation.ConversationType.CHATROOM
-        RongIMClient.getInstance().sendMessage(conversationType, programId, chatMessage, null, null, object : IRongCallback.ISendMessageCallback {
-            override fun onAttached(message: Message?) {
-            }
-
-            override fun onSuccess(message: Message?) {
-                if (message != null) {
-                    switchThread(message)
+        RongIMClient.getInstance()
+            .sendMessage(conversationType, programId, chatMessage, null, null, object : IRongCallback.ISendMessageCallback {
+                override fun onAttached(message: Message?) {
                 }
-                callback(true)
-            }
 
-            override fun onError(message: Message?, p1: ErrorCode?) {
-                callback(false)
-            }
+                override fun onSuccess(message: Message?) {
+                    if (message != null) {
+                        switchThread(message)
+                    }
+                    callback(true)
+                }
 
-        })
+                override fun onError(message: Message?, p1: ErrorCode?) {
+                    callback(false)
+                }
+
+            })
     }
 
     /**
@@ -682,52 +719,58 @@ object RongCloudManager {
      */
     fun send(oMessage: Message, targetId: String, callback: (Boolean, Message) -> Unit = { result, msg -> }): Unit {
         //        EventBus.getDefault().post(EventMessageBean(targetId))
-        RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE, targetId, oMessage.content, "你有一条新的信息", null,
-            object : IRongCallback.ISendMessageCallback {
-                override fun onAttached(message: Message?) {
-                    if (message != null) {
-                        EventBus.getDefault()
-                            .post(EventMessageBean(message.targetId, GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")))
+        RongIMClient.getInstance()
+            .sendMessage(Conversation.ConversationType.PRIVATE, targetId, oMessage.content, "你有一条新的信息", null,
+                object : IRongCallback.ISendMessageCallback {
+                    override fun onAttached(message: Message?) {
+                        if (message != null) {
+                            EventBus.getDefault()
+                                .post(
+                                    EventMessageBean(
+                                        message.targetId,
+                                        GlobalUtils.getStrangerBoolean(currentUserObj?.targetUserObj?.stranger ?: "")
+                                    )
+                                )
+                        }
                     }
-                }
 
-                override fun onSuccess(message: Message?) {
-                    logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
-                    if (message != null) {
-                        callback(true, message)
-                        //                            try {
-                        //                                onReceived(message)
-                        //                            } catch (e: Exception) {
-                        //                                e.printStackTrace()
-                        //                            }
+                    override fun onSuccess(message: Message?) {
+                        logger.info("融云发送消息成功 ${message?.targetId} 当前的线程：${Thread.currentThread()}")
+                        if (message != null) {
+                            callback(true, message)
+                            //                            try {
+                            //                                onReceived(message)
+                            //                            } catch (e: Exception) {
+                            //                                e.printStackTrace()
+                            //                            }
 //                        switchThread(message)
-                    } else {
+                        } else {
+                        }
                     }
-                }
 
-                override fun onError(message: Message?, errorCode: ErrorCode?) {
+                    override fun onError(message: Message?, errorCode: ErrorCode?) {
 
-                    if (message != null) {
-                        //                            ChatUtils.deleteSingleMessage(message.messageId)
-                        callback(false, message)
-                        updateMessageExtra(
-                            message.messageId, JsonUtil.serializeAsString(
-                                GlobalUtils.addExtra(
-                                    message.extra,
-                                    ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
+                        if (message != null) {
+                            //                            ChatUtils.deleteSingleMessage(message.messageId)
+                            callback(false, message)
+                            updateMessageExtra(
+                                message.messageId, JsonUtil.serializeAsString(
+                                    GlobalUtils.addExtra(
+                                        message.extra,
+                                        ParamConstant.MSG_FAIL_TYPE, MessageFailType.RONG_CLOUD
+                                    )
                                 )
                             )
+                        }
+                        logger.info(
+                            "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.serializeAsString(
+                                message
+                            )}"
                         )
+                        handleErrorCode(errorCode, "sendMessage")
                     }
-                    logger.info(
-                        "融云消息发送失败 ${errorCode!!.message} ${JsonUtil.serializeAsString(
-                            message
-                        )}"
-                    )
-                    handleErrorCode(errorCode, "sendMessage")
-                }
 
-            })
+                })
 
     }
 
@@ -1246,6 +1289,41 @@ object RongCloudManager {
             }
 
         }, Conversation.ConversationType.PRIVATE)
+    }
+
+    /**
+     * 由于融云的getConversationList的callback会内存泄漏 这一套代码用于防止泄漏
+     * getConversationList使用一个单例的[resultCallback]统一监听消息 然后通过resultCallbacks整合所有的监听callback统一处理 使用完后一定要
+     * 调用[removeConversationCallback] 不然还是会泄漏
+     */
+    private var resultCallbacks: MutableList<RongIMClient.ResultCallback<List<Conversation>>> = mutableListOf()
+    private val resultCallback: RongIMClient.ResultCallback<List<Conversation>> by lazy {
+        object : RongIMClient.ResultCallback<List<Conversation>>() {
+            override fun onSuccess(p0: List<Conversation>?) {
+                resultCallbacks.forEach {
+                    it.onSuccess(p0)
+                }
+            }
+
+            override fun onError(p0: RongIMClient.ErrorCode?) {
+                resultCallbacks.forEach {
+                    it.onError(p0)
+                }
+            }
+
+        }
+    }
+
+    fun queryConversationList(
+        callback: RongIMClient.ResultCallback<List<Conversation>>,
+        conversationType: Conversation.ConversationType
+    ) {
+        resultCallbacks.add(callback)
+        RongIMClient.getInstance().getConversationList(resultCallback, conversationType)
+    }
+
+    fun removeConversationCallback(callback: RongIMClient.ResultCallback<List<Conversation>>?) {
+        resultCallbacks.remove(callback)
     }
 
     /**

@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class SearchViewModel : BaseViewModel() {
     val queryData: MutableLiveData<ReactiveData<MutableList<ProgramLiveInfo>>> by lazy { MutableLiveData<ReactiveData<MutableList<ProgramLiveInfo>>>() }
     val recentData: MutableLiveData<ReactiveData<MutableList<ProgramLiveInfo>>> by lazy { MutableLiveData<ReactiveData<MutableList<ProgramLiveInfo>>>() }
-    val recommendData: MutableLiveData<ReactiveData<MutableList<MultiBean>>> by lazy { MutableLiveData<ReactiveData<MutableList<MultiBean>>>() }
+    val recommendData: MutableLiveData<ReactiveData<MutableList<ProgramLiveInfo>>> by lazy { MutableLiveData<ReactiveData<MutableList<ProgramLiveInfo>>>() }
 
     private val service: ProgramService by lazy { Requests.create(ProgramService::class.java) }
 

@@ -1,12 +1,16 @@
 package com.julun.huanque.core.ui.main.program
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.listener.GridSpanSizeLookup
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -23,13 +27,16 @@ import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.removeDuplicate
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.ProgramAdapter
+import com.julun.huanque.core.manager.VideoPlayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.follow.FollowViewModel
 import kotlinx.android.synthetic.main.fragment_program_tab.*
+import kotlin.random.Random
 
 /**
  *
@@ -56,6 +63,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
     private val followViewModel: FollowViewModel by activityViewModels()
 
     private var currentTab: ProgramTab? = null
+
     override fun getLayoutId(): Int = R.layout.fragment_program_tab
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -63,7 +71,6 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
 
         authorList.layoutManager = GridLayoutManager(requireContext(), 2)
         initViewModel()
-
 
         authorAdapter.loadMoreModule.setOnLoadMoreListener {
             logger.info(" authorList.stopScroll()")
@@ -92,10 +99,160 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
         }
         mRefreshLayout.setOnRefreshListener {
             mViewModel.requestProgramList(QueryType.REFRESH, currentTab?.typeCode)
-            followViewModel.requestProgramList(QueryType.REFRESH,isNullOffset = true)
+            followViewModel.requestProgramList(QueryType.REFRESH, isNullOffset = true)
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
 
+    }
+
+    /**
+     * 记录当前的正中间的view
+     */
+    private var currentMiddle: Int = -1
+    override fun initEvents(rootView: View) {
+        super.initEvents(rootView)
+        authorList.addOnChildAttachStateChangeListener(object :
+            androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener {
+            override fun onChildViewDetachedFromWindow(view: View) {
+                if (view.id == R.id.program_container) {
+                    removeItemPlay(view)
+                }
+            }
+
+            override fun onChildViewAttachedToWindow(view: View) {
+//                if (view.id == R.id.program_layout) {
+//                    VideoPlayerManager.switchPlay(true, mAdapter.getPlayUrl() ?: return)
+//                }
+            }
+        })
+        authorList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            private var isUp: Boolean = false
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+//                logger.info("currentState=${newState}")
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                    val positionFirst = layoutManager.findFirstVisibleItemPosition()
+                    val positionLast = layoutManager.findLastVisibleItemPosition()
+                    val random = Random.nextBoolean()
+                    val dif = if (random) 1 else 0
+                    if (isUp) {
+                        currentMiddle = (positionFirst + positionLast) / 2 - dif
+                    } else {
+                        currentMiddle = (positionFirst + positionLast) / 2 + 1
+                    }
+//                    if(currentPlayView!=null)
+//                    removeItemPlay(currentPlayView!!)
+                    startPlayMidVideo()
+                }
+
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                isUp = dy < 0
+//                if (currentPlayView != null) {
+//                    val viewRect = Rect()
+//                    currentPlayView!!.getLocalVisibleRect(viewRect)
+////                    logger.info("onScrolled dy=${dy} currentPlayView.top=${viewRect.top} currentPlayView.bottom=${viewRect.bottom} ")
+//                    if (dy > 0) {
+//                        if (viewRect.top > currentPlayView!!.height / 2) {
+//                            logger.info("向上已出一半")
+//                            removeItemPlay(currentPlayView!!)
+//                        }
+//                    } else if (dy < 0) {
+//                        if (viewRect.bottom < currentPlayView!!.height / 2) {
+//                            logger.info("向下已出一半")
+//                            removeItemPlay(currentPlayView!!)
+//                        }
+//                    }
+//                }
+            }
+        })
+
+    }
+
+    private fun removeItemPlay(view: View) {
+
+        if (view.tag != null) {
+//            val viewHolder = authorList.getChildViewHolder(view)
+//            val item = authorAdapter.getItemOrNull(viewHolder.adapterPosition)
+//            val content = item?.content
+//            if (content != null && content is ProgramLiveInfo) {
+//                var url = GlobalUtils.getPlayUrl(content.playInfo ?: return)
+//                logger.info("当前的item停止播放 =${viewHolder.adapterPosition} url=${url}")
+//                VideoPlayerManager.removePlay()
+//            }
+            VideoPlayerManager.removePlay()
+            currentPlayView = null
+        }
+    }
+
+    private var currentPlayView: View? = null
+    private fun startPlayMidVideo() {
+        if (currentMiddle == -1) {
+            return
+        }
+        val current = getFitPosition()
+        logger.info("startPlayMidVideo:${current}  currentMiddle=$currentMiddle")
+        //接着播放新的item
+        val itemCurrent = authorAdapter.getItemOrNull(current)
+        val content = itemCurrent?.content
+        val viewHolder = authorList.findViewHolderForAdapterPosition(current) as? BaseViewHolder?
+
+        if (content != null && content is ProgramLiveInfo && viewHolder != null) {
+            var url = GlobalUtils.getPlayUrl(content.playInfo ?: return)
+            //todo
+            val itemView = viewHolder.getViewOrNull<FrameLayout>(R.id.program_container) ?: return
+//            url = "rtmp://aliyun-rtmp.ihuanque.com/hq/11054583"
+            if (VideoPlayerManager.startPlay(url, itemView)) {
+                currentPlayView = itemView
+            }
+        }
+    }
+
+    private fun getFitPosition(): Int {
+        var doing = true
+        var current = currentMiddle
+        while (doing) {
+            val itemCurrent = authorAdapter.getItemOrNull(current)
+            doing = itemCurrent?.content !is ProgramLiveInfo
+            if (!doing) {
+                break
+            }
+            current++
+        }
+        return current
+    }
+
+    override fun onResume() {
+        logger.info("onResume =${currentTab?.typeName}")
+        super.onResume()
+        startPlayMidVideo()
+    }
+
+    override fun onPause() {
+        logger.info("onPause =${currentTab?.typeName}")
+        super.onPause()
+        if (currentPlayView != null) {
+//            removeItemPlay(currentPlayView!!)
+            VideoPlayerManager.stopPlay()
+        }
+    }
+
+    /**
+     * 该方法供父容器在显隐变化时调用
+     */
+    fun onParentHiddenChanged(hidden: Boolean) {
+        logger.info("当前的界面开始显隐=${currentTab?.typeName} hide=$hidden")
+        if (hidden) {
+            if (currentPlayView != null) {
+//                removeItemPlay(currentPlayView!!)
+                VideoPlayerManager.stopPlay()
+            }
+        } else {
+            startPlayMidVideo()
+        }
     }
 
     override fun lazyLoadData() {
@@ -142,6 +299,17 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             }
 
             authorAdapter.setList(list)
+            VideoPlayerManager.removePlay()
+            authorList.postDelayed({
+                if (totalList.size >= 3) {
+                    currentMiddle = 2
+                } else if (totalList.size > 0) {
+                    currentMiddle = totalList.size - 1
+                } else {
+                    currentMiddle = -1
+                }
+                startPlayMidVideo()
+            }, 100)
 
         } else {
             val programList = listData.programList.removeDuplicate(totalList)
@@ -178,7 +346,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
                     ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
                         .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
                 })
-        }else{
+        } else {
             state_pager_view.showSuccess()
         }
     }
@@ -188,7 +356,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
         authorList.scrollToPosition(0)
         authorList.postDelayed({
             mViewModel.requestProgramList(QueryType.REFRESH, currentTab?.typeCode)
-        },100)
+        }, 100)
     }
 
     override fun showLoadState(state: NetState) {

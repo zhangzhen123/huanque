@@ -34,7 +34,7 @@ import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
-import com.julun.huanque.core.adapter.ProgramAdapter
+import com.julun.huanque.core.adapter.ProgramNormalAdapter
 import com.julun.huanque.core.ui.live.PlayerActivity
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -74,7 +74,7 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
 
     //布局跟首页一致
     private val recommendAdapter by lazy {
-        ProgramAdapter()
+        ProgramNormalAdapter()
     }
 
     private var showKeyBoardDispose: Disposable? = null
@@ -423,8 +423,8 @@ class SearchActivity : BaseVMActivity<SearchViewModel>() {
 //            if (CommonInit.getInstance().inSDK && !SessionUtils.getIsRegUser()) {
 //                return@setOnItemClickListener
 //            }
-            val data = recommendAdapter.getItem(position).content
-            if (data is ProgramLiveInfo) {
+            val data = recommendAdapter.getItemOrNull(position)
+            if (data !=null) {
                 val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
                 intent.putExtra(IntentParamKey.PROGRAM_ID.name, data.programId)
                 this@SearchActivity.startActivity(intent)

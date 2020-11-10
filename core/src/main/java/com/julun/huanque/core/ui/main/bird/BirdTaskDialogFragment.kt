@@ -103,6 +103,13 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel?) : Ba
                             EventBus.getDefault().post(HideBirdEvent())
 
                         }
+                        BirdTaskJump.Recharge -> {
+                            ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
+                            this@BirdTaskDialogFragment.dismiss()
+                            EventBus.getDefault().post(HideBirdEvent())
+
+                        }
+
 
                     }
 

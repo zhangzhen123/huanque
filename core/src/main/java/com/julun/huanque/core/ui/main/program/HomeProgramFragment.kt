@@ -374,12 +374,13 @@ class HomeProgramFragment : BaseFragment() {
     override fun onHiddenChanged(hidden: Boolean) {
         logger.info("onHiddenChanged=$hidden")
         super.onHiddenChanged(hidden)
-        if (hidden) {
-            mFragmentList.forEach { key, value ->
-                if (value is MakeFriendsFragment) {
-                    value.hideTodo()
-                }
+        val tempIndex = view_pager.currentItem
+        val tempFragment: androidx.fragment.app.Fragment? = mPagerAdapter.getItem(tempIndex)
+        tempFragment?.let {
+            if (it is ProgramTabFragment) {
+                it.onParentHiddenChanged(hidden)
             }
+
         }
     }
 
