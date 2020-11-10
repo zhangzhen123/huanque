@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="15dp"
-                android:drawableLeft="@mipmap/icon_play_home_page"
+                android:drawableLeft="@mipmap/icon_pause_home_page"
                 android:drawablePadding="4dp"
                 android:gravity="center_vertical"
                 android:textColor="@color/white"
@@ -98,6 +98,7 @@
                 tools:visibility="visible" />
 
             <View
+                android:id="@+id/view_voice_divider"
                 android:layout_width="2px"
                 android:layout_height="10dp"
                 android:layout_marginLeft="5dp"
@@ -352,6 +353,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="15dp"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_divider_num" />
 
@@ -679,7 +681,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
-                android:text="Ta还没有评价，快去添加吧！"
+                android:text="快去成为第一个评价Ta的人吧！"
                 android:textColor="@color/black_999"
                 android:textSize="11sp"
                 app:layout_constraintLeft_toLeftOf="parent"

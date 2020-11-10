@@ -1,5 +1,6 @@
 package com.julun.huanque.core.adapter
 
+import android.view.ViewGroup
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -20,13 +21,13 @@ class IntimacyListAdapter : BaseQuickAdapter<CloseConfidantBean, BaseViewHolder>
     override fun convert(holder: BaseViewHolder, item: CloseConfidantBean) {
         val position = holder.adapterPosition
         val tv_rank = holder.getView<TextView>(R.id.tv_rank)
-        tv_rank.text = "$position"
+        tv_rank.text = "${position + 2}"
         tv_rank.setTFDinCdc2()
 
         val sdv_header = holder.getView<SimpleDraweeView>(R.id.sdv_header)
         sdv_header.loadImage("${StringHelper.getOssImgUrl(item.headPic)}${BusiConstant.OSS_160}")
-        holder.setText(R.id.tv_nickname,item.nickname)
-            .setText(R.id.tv_score,StringHelper.formatNumber(item.score))
+        holder.setText(R.id.tv_nickname, item.nickname)
+            .setText(R.id.tv_score, StringHelper.formatNumber(item.score))
 
     }
 }

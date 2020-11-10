@@ -86,16 +86,16 @@ class IntimacyFragment : BaseDialogFragment() {
             sdv_header.loadImage(StringHelper.getOssImgUrl(firstUser.headPic), 90f, 90f)
             sdv_header_border.imageResource = R.mipmap.pic_intim_big
             tv_intim_name.text = firstUser.nickname
-            tv_intim_num.text = "亲密度${firstUser.score}"
-            if (firstUser.userId == SessionUtils.getUserId()) {
+            tv_intim_num.text = "亲密度${StringHelper.formatNumber(firstUser.score)}"
+            if (firstUser.userId != SessionUtils.getUserId()) {
                 tv_content.text = "取代榜一，成为Ta的亲密知己"
                 tv_jump.text = "取代榜一"
             } else {
-                tv_content.text = "恭喜你成为Ta最亲密的人，继续保持哦"
+                tv_content.text = "恭喜你成为亲密知己，继续保持哦"
                 tv_jump.text = "保持亲密"
             }
             if (list.size > 1) {
-                val listData = list.subList(1, list.size - 1)
+                val listData = list.subList(1, list.size)
                 mAdapter.setList(listData)
             }
         } else {
