@@ -29,9 +29,11 @@ import org.greenrobot.eventbus.EventBus
 class BirdTaskGuideFragment : BaseVMDialogFragment<BirdTaskViewModel>() {
 
     companion object {
-        fun newInstance(task: TaskGuideInfo): BirdTaskGuideFragment {
+        fun newInstance(task: TaskGuideInfo, programId: Long?): BirdTaskGuideFragment {
             val args = Bundle()
             args.putSerializable("task", task)
+            if (programId != null)
+                args.putLong("programId", programId)
             val fragment = BirdTaskGuideFragment()
             fragment.arguments = args
             return fragment
@@ -52,11 +54,13 @@ class BirdTaskGuideFragment : BaseVMDialogFragment<BirdTaskViewModel>() {
     }
 
     private var currentTask: TaskGuideInfo? = null
+    private var programId: Long? = null
     private var isInLivePage = false
     override fun initViews() {
         isInLivePage = requireActivity() is PlayerActivity
         initViewModel()
         currentTask = arguments?.getSerializable("task") as? TaskGuideInfo
+        programId = arguments?.getLong("programId")
         renderData(currentTask)
         close.onClickNew {
             dismiss()
@@ -76,7 +80,7 @@ class BirdTaskGuideFragment : BaseVMDialogFragment<BirdTaskViewModel>() {
                 }
 
                 BirdTaskJump.LiveRoom -> {
-                    mViewModel.randomLive()
+                    mViewModel.randomLive(item.taskCode, programId)
                 }
                 BirdTaskJump.Message -> {
                     ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
@@ -109,9 +113,11 @@ class BirdTaskGuideFragment : BaseVMDialogFragment<BirdTaskViewModel>() {
         currentTask = arguments?.getSerializable("task") as? TaskGuideInfo
         renderData(currentTask)
     }
+
     override fun setWindowAnimations() {
         dialog?.window?.setWindowAnimations(R.style.dialog_center_open_ani)
     }
+
     private fun renderData(data: TaskGuideInfo?) {
         data ?: return
         tv_title.text = data.taskGuideName

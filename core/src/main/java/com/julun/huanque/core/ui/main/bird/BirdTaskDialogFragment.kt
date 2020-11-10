@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
@@ -88,7 +87,7 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel?) : Ba
                         }
 
                         BirdTaskJump.LiveRoom -> {
-                            mViewModel.randomLive()
+                            mViewModel.randomLive(item.taskCode,leYuanViewModel?.programId)
                             currentItem = item
                         }
                         BirdTaskJump.Message -> {

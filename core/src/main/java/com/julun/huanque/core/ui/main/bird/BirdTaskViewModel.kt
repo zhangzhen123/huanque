@@ -15,7 +15,6 @@ import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LeYuanService
 import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.BalanceUtils
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
@@ -82,10 +81,13 @@ class BirdTaskViewModel : BaseViewModel() {
 
         }
     }
-    fun randomLive(){
+
+    fun randomLive(dataType: String? = null, programId: Long? = null) {
         viewModelScope.launch {
             request({
-                val result = liveService.randomRoom(RandomRoomForm("Magpie")).dataConvert()
+                val result =
+                    liveService.randomRoom(RandomRoomForm(programId = programId, sourceType = "Magpie", dataType = dataType))
+                        .dataConvert()
                 mRandomRoom.value = result.convertRtData()
             }, error = {
                 mRandomRoom.value = it.convertError()
