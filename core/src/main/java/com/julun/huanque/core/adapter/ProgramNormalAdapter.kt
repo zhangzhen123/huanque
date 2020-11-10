@@ -24,8 +24,8 @@ import java.text.DecimalFormat
  */
 class ProgramNormalAdapter : BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>(R.layout.item_live_square_anchor_list),
     LoadMoreModule {
-    companion object{
-        fun convertNormal(holder: BaseViewHolder, item: ProgramLiveInfo){
+    companion object {
+        fun convertNormal(holder: BaseViewHolder, item: ProgramLiveInfo) {
             holder.setText(R.id.anchor_nickname, item.programName)
             val textHot = holder.getView<TextView>(R.id.user_count)
             textHot.setTFDinCdc2()
@@ -52,7 +52,8 @@ class ProgramNormalAdapter : BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>(R
             ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
             val tag_right_top = holder.getView<TagView>(R.id.tag_right_top)
             val tag_left_top = holder.getView<TagView>(R.id.tag_left_top)
-
+            tag_right_top.isProgramTag = true
+            tag_left_top.isProgramTag = true
             if (item.rightTopTag.isNotEmpty()) {
                 tag_right_top.show()
                 tag_right_top.setData(item.rightTopTag)
@@ -75,6 +76,7 @@ class ProgramNormalAdapter : BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>(R
 
         }
     }
+
     override fun convert(holder: BaseViewHolder, item: ProgramLiveInfo) {
         convertNormal(holder, item)
     }

@@ -193,7 +193,7 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
         if (isProgramTag) {
             //节目标签
 //            sdvWidth = dip(50)
-            sdvHeight = dip(18)
+            sdvHeight = dip(20)
             params.height = sdvHeight
         } else if (isGiftTag) {
             //礼物标签
