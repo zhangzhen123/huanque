@@ -123,6 +123,11 @@
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.homepage.HomePageActivity"
+            android:screenOrientation="portrait" />
+
+
 
         <service android:name=".service.FloatingService" />
         <service android:name=".service.BadgeIntentService" />

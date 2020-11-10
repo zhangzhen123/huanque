@@ -70,6 +70,7 @@ public class Emotions {
         NORMAL_EMOTIONS.put("[投降]", R.drawable.touxiang);
         NORMAL_EMOTIONS.put("[困了]", R.drawable.kunle);
         NORMAL_EMOTIONS.put("[再见]", R.drawable.zaijian);
+        NORMAL_EMOTIONS.put("[鼓掌]", R.drawable.guzhang);
         NORMAL_EMOTIONS.put("[赞]", R.drawable.zan);
         NORMAL_EMOTIONS.put("[拜托]", R.drawable.baituo);
         NORMAL_EMOTIONS.put("[抱拳]", R.drawable.baoquan);

@@ -59,8 +59,8 @@ class PlumFlowerActivity : BaseActivity() {
         StatusBarUtil.setTransparent(this)
         val famousListFragment = FamousListFragment()
         val framList = mutableListOf<Fragment>()
-        framList.add(DayListFragment(DayListFragment.YESTERDAY, barHeight))
         framList.add(DayListFragment(DayListFragment.TODAY, barHeight))
+        framList.add(DayListFragment(DayListFragment.WEEK, barHeight))
         framList.add(famousListFragment)
         mPagerAdapter = PlumFlowerFragmentAdapter(framList, supportFragmentManager, this)
         pager.adapter = mPagerAdapter
@@ -69,7 +69,7 @@ class PlumFlowerActivity : BaseActivity() {
         if (type == "Famous") {
             pager.currentItem = 2
         } else {
-            pager.currentItem = 1
+            pager.currentItem = 0
         }
     }
 
@@ -109,10 +109,10 @@ class PlumFlowerActivity : BaseActivity() {
                     simplePagerTitleView.backgroundColor = Color.TRANSPARENT
                     val title = when (index) {
                         0 -> {
-                            "昨日榜"
+                            "日榜"
                         }
                         1 -> {
-                            "今日榜"
+                            "周榜"
                         }
                         else -> {
                             "名人榜"

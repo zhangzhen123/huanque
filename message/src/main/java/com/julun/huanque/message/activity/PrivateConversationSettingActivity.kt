@@ -132,10 +132,10 @@ class PrivateConversationSettingActivity : BaseActivity() {
         }
         view_info.onClickNew {
             //跳转主页
-            RNPageActivity.start(
-                this,
-                RnConstant.PERSONAL_HOMEPAGE,
-                Bundle().apply { putLong("userId", mPrivateConversationSettingViewModel?.targetId ?: 0) })
+            val bundle = Bundle().apply {
+                putLong(ParamConstant.UserId, mPrivateConversationSettingViewModel?.targetId ?: 0)
+            }
+            ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
         }
         view_report.onClickNew {
             val extra = Bundle()

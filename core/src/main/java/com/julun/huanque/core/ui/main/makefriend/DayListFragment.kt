@@ -23,6 +23,7 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.recycler.decoration.FlowerDecoration
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.PlumFlowerListAdapter
+import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.viewmodel.PlumFlowerViewModel
 import com.julun.rnlib.RNPageActivity
@@ -49,7 +50,7 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
         val TODAY = "TODAY"
 
         //昨日
-        val YESTERDAY = "YESTERDAY"
+        val WEEK = "WEEK"
     }
 
     //花魁ViewModel
@@ -88,6 +89,16 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
         initViewModel()
         initRecyclerView()
 
+        if(SessionUtils.getSex() == Sex.MALE){
+            //男性，隐藏底部视图
+            view_bottom.hide()
+            view_shader.hide()
+            tv_num.hide()
+            sdv_header.hide()
+            tv_nickname.hide()
+            tv_score.hide()
+        }
+
         sdvFirst = mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_first)
         viewForegroundFirst = mHeaderView?.findViewById<View>(R.id.view_foreground_first)
         tvNicknameFirst = mHeaderView?.findViewById<TextView>(R.id.tv_nickname_first)
@@ -111,8 +122,8 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
         showDefaultView()
         if (type == TODAY) {
             mViewModel.getToadyList()
-        } else if (type == YESTERDAY) {
-            mViewModel.getYesterdayList()
+        } else if (type == WEEK) {
+            mViewModel.getWeekList()
         }
 
 
@@ -122,8 +133,8 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
         swipeLayout.setOnRefreshListener {
             if (type == TODAY) {
                 mViewModel.getToadyList()
-            } else if (type == YESTERDAY) {
-                mViewModel.getYesterdayList()
+            } else if (type == WEEK) {
+                mViewModel.getWeekList()
             }
         }
         sdvFirst?.onClickNew {
@@ -167,8 +178,8 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
                         statePage.showLoading()
                         if (type == TODAY) {
                             mViewModel.getToadyList()
-                        } else if (type == YESTERDAY) {
-                            mViewModel.getYesterdayList()
+                        } else if (type == WEEK) {
+                            mViewModel.getWeekList()
                         }
                     })
                 }
@@ -188,10 +199,10 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
                 if (bean.rankList.isNotEmpty()) {
                     statePage.showSuccess()
                 } else {
-                    if (type == YESTERDAY) {
-                        statePage.showEmpty(emptyTxt = "昨日榜空空如也")
+                    if (type == WEEK) {
+                        statePage.showEmpty(emptyTxt = "周榜空空如也")
                     } else if (type == TODAY) {
-                        statePage.showEmpty(emptyTxt = "今日榜空空如也")
+                        statePage.showEmpty(emptyTxt = "日榜空空如也")
                     }
                 }
 //                }
@@ -219,15 +230,15 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
         ImageHelper.setDefaultHeaderPic(sdvThird ?: return, Sex.FEMALE)
         tvScoreThird?.text = "-"
 
-        if (type == YESTERDAY) {
-            tvNicknameFirst?.text = "无人上榜"
-            tvNicknameSecond?.text = "无人上榜"
-            tvNicknameThird?.text = "无人上榜"
-        } else if (type == TODAY) {
-            tvNicknameFirst?.text = "虚位以待"
-            tvNicknameSecond?.text = "虚位以待"
-            tvNicknameThird?.text = "虚位以待"
-        }
+//        if (type == WEEK) {
+//            tvNicknameFirst?.text = "无人上榜"
+//            tvNicknameSecond?.text = "无人上榜"
+//            tvNicknameThird?.text = "无人上榜"
+//        } else if (type == TODAY) {
+        tvNicknameFirst?.text = "虚位以待"
+        tvNicknameSecond?.text = "虚位以待"
+        tvNicknameThird?.text = "虚位以待"
+//        }
     }
 
     private fun getSingleData(index: Int): SingleFlowerDayListBean? {
@@ -250,18 +261,17 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
      */
     private fun showViewByData(bean: FlowerDayListBean) {
         val ranking = bean.rankInfo.ranking
-        if (type == TODAY) {
-            startTodayCountDown(bean.ttl)
-        }
+
+        startTodayCountDown(bean.ttl)
 
         if (ranking == "未上榜") {
-            if (type == YESTERDAY) {
-                tvRanking?.text = "很遗憾你没有入榜"
-            }
+            tvRanking?.text = "很遗憾你没有入榜"
             tv_num.text = "-"
         } else {
-            if (type == YESTERDAY) {
-                tvRanking?.text = "恭喜你荣获昨日榜第${ranking}名"
+            if (type == WEEK) {
+                tvRanking?.text = "恭喜你荣获周榜第${ranking}名"
+            } else {
+                tvRanking?.text = "恭喜你荣获日榜第${ranking}名"
             }
             tv_num.text = ranking
         }
@@ -331,26 +341,26 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
             tv_empty_content.hide()
         } else {
             tv_empty_content.show()
-            if (type == TODAY) {
-                if (rankList.size <= 3) {
-                    var hasSelf = false
-                    rankList.forEach {
-                        if (it.userId == SessionUtils.getUserId()) {
-                            //包含自己
-                            hasSelf = true
-                        }
+//            if (type == TODAY) {
+            if (rankList.size <= 3) {
+                var hasSelf = false
+                rankList.forEach {
+                    if (it.userId == SessionUtils.getUserId()) {
+                        //包含自己
+                        hasSelf = true
                     }
-                    if (hasSelf) {
-                        tv_empty_content.text = "恭喜你上榜，再接再厉哦！"
-                    } else {
-                        tv_empty_content.text = "榜单上还差个你，快去努力吧！"
-                    }
+                }
+                if (hasSelf) {
+                    tv_empty_content.text = "恭喜你上榜，再接再厉哦！"
                 } else {
                     tv_empty_content.text = "榜单上还差个你，快去努力吧！"
                 }
-            } else if (type == YESTERDAY) {
-                tv_empty_content.text = "没有更多的人上榜了"
+            } else {
+                tv_empty_content.text = "榜单上还差个你，快去努力吧！"
             }
+//            } else if (type == WEEK) {
+//                tv_empty_content.text = "没有更多的人上榜了"
+//            }
         }
     }
 
@@ -365,19 +375,27 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
             .doOnSubscribe {
                 val ranking = tvRanking ?: return@doOnSubscribe
                 val paint = ranking.paint
-                val content = "距离日榜截止： 99:99:99"
+                val content = if (type == TODAY) {
+                    "距离日榜截止： 99:99:99"
+                }else{
+                    "距离周榜截止： 6天99:99:99"
+                }
+
                 val width = paint.measureText(content)
                 val params = ranking.layoutParams
                 params.width = width.toInt()
                 ranking.layoutParams = params
                 ranking.gravity = Gravity.LEFT
-
             }
             .take(count + 1)
             .bindUntilEvent(this, FragmentEvent.DESTROY_VIEW)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                tvRanking?.text = "距离日榜截止： ${TimeUtils.countDownTimeFormat(count - it)}"
+                if (type == TODAY) {
+                    tvRanking?.text = "距离日榜截止： ${TimeUtils.countDownTimeFormat(count - it)}"
+                } else {
+                    tvRanking?.text = "距离周榜截止： ${TimeUtils.formatPrivateExperienceTime((count - it) * 1000)}"
+                }
             }, {})
     }
 
@@ -419,10 +437,7 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
                 RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
             } else {
                 //跳转他人主页
-                RNPageActivity.start(requireActivity(), RnConstant.PERSONAL_HOMEPAGE, Bundle().apply {
-                    putLong("userId", userId)
-                    putString("homeSourceType", "FlowerRank")
-                })
+                HomePageActivity.newInstance(requireActivity(), userId)
             }
         }
     }

@@ -89,6 +89,9 @@ object ARouterConstant {
     //充值页面
     const val RECHARGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/RechargeCenterActivity"
 
+    //主页页面
+    const val HOME_PAGE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/HomePageActivity"
+
     //花魁榜
     const val PLUM_FLOWER_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/PlumFlowerActivity"
 

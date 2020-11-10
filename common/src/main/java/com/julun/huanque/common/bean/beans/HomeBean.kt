@@ -64,7 +64,7 @@ class HomeListData<T> : RootListData<T>() {
     var remind: HomeRemind = HomeRemind()
     var taskBar: HomeTaskBar = HomeTaskBar()
     var offset: Int? = null
-    var flowerPic:String?=null
+    var flowerPic: String? = null
 }
 
 data class HomeRemind(
@@ -100,8 +100,8 @@ data class HomeRecomItem(
     var sex: String = "",
     var tagList: List<String> = listOf(),
     var userId: Long = 0,
-    var onlineStatus:String="",
-    var lastOfflineTime:Long=0L
+    var onlineStatus: String = "",
+    var lastOfflineTime: Long = 0L
 ) {
 
     //去重需要的重写
@@ -314,7 +314,20 @@ data class FamousListBean(
     //是否上榜
     var inRank: String = "",
     //名人榜数据
-    var monthList: MutableList<SingleFamousMonth> = mutableListOf()
+    var monthList: MutableList<SingleFamousMonth> = mutableListOf(),
+    //上周榜首
+    var lastWeekTop: LastWeekTop = LastWeekTop()
+) : Serializable
+
+/**
+ * 上周榜首
+ */
+data class LastWeekTop(
+    var day: Int = 0,
+    var dayStr: String = "",
+    var headPic: String = "",
+    var nickname: String = "",
+    var userId: Long = 0
 ) : Serializable
 
 /**

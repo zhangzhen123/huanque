@@ -3,8 +3,6 @@ package com.julun.huanque.core.adapter
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
@@ -16,18 +14,16 @@ import com.julun.huanque.common.bean.beans.AdInfoBean
 import com.julun.huanque.common.bean.beans.MultiBean
 import com.julun.huanque.common.bean.beans.ProgramLiveInfo
 import com.julun.huanque.common.constant.*
-import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
-import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.ui.web.WebActivity
+import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.core.R
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
-import java.math.RoundingMode
-import java.text.DecimalFormat
 
 class ProgramAdapter : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), LoadMoreModule {
 

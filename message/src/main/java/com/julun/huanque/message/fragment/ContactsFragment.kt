@@ -122,10 +122,10 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         }
         mAdapter.setOnItemClickListener { adapter, view, position ->
             val userId = mAdapter.getItem(position).userId
-            RNPageActivity.start(
-                requireActivity(),
-                RnConstant.PERSONAL_HOMEPAGE,
-                Bundle().apply { putLong("userId", userId) })
+            val bundle = Bundle().apply {
+                putLong(ParamConstant.UserId, userId)
+            }
+            ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
         }
 
         mAdapter.setOnItemChildClickListener { adapter, view, position ->

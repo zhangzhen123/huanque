@@ -1,5 +1,6 @@
 package com.julun.huanque.core.adapter
 
+import android.widget.ImageView
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
@@ -51,16 +52,15 @@ class ProgramNormalAdapter : BaseQuickAdapter<ProgramLiveInfo, BaseViewHolder>(R
             ImageUtils.loadImageLocal(holder.getView(R.id.bg_shadow), R.mipmap.bg_shadow_home_item)
             val tag_right_top = holder.getView<TagView>(R.id.tag_right_top)
             val tag_left_top = holder.getView<TagView>(R.id.tag_left_top)
-            val tv_author_status = holder.getView<TextView>(R.id.tv_author_status)
 
             if (item.rightTopTag.isNotEmpty()) {
                 tag_right_top.show()
                 tag_right_top.setData(item.rightTopTag)
-                tv_author_status.hide()
+                holder.setGone(R.id.tv_author_status, true)
             } else {
                 tag_right_top.hide()
                 if (item.isLiving) {
-                    holder.setVisible(R.id.tv_author_status, true).setText(R.id.tv_author_status, "直播中")
+                    holder.setVisible(R.id.tv_author_status, true)
                 } else {
                     holder.setGone(R.id.tv_author_status, true)
                 }

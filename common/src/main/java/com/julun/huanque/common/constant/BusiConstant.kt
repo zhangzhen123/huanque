@@ -900,6 +900,9 @@ object PlayerFrom {
 
     //养鹊
     const val Magpie = "Magpie"
+
+    //个人主页
+    const val UserHome = "UserHome"
 }
 
 /**

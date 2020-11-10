@@ -248,6 +248,12 @@ interface SocialService {
     suspend fun flowerToday(@Body form: EmptyForm = EmptyForm()): Root<FlowerDayListBean>
 
     /**
+     * 花魁 周榜
+     */
+    @POST("social/flower/rank/week")
+    suspend fun flowerWeek(@Body form: EmptyForm = EmptyForm()): Root<FlowerDayListBean>
+
+    /**
      * 名人榜
      */
     @POST("social/flower/rank/famous")
@@ -324,4 +330,28 @@ interface SocialService {
      */
     @POST("social/friend/chat/fateStat")
     suspend fun fateStat(@Body form: EmptyForm = EmptyForm()) : Root<FateWeekInfo>
+
+    /**
+     * 获取评价标签列表
+     */
+    @POST("social/friend/relation/evaluateTags")
+    suspend fun evaluateTags(@Body form : FriendIdForm) : Root<EvaluateTags>
+
+    /**
+     * 密友评价
+     */
+    @POST("social/friend/relation/evaluate")
+    suspend fun relationEvaluate(@Body form : EvaluateForm) : Root<RootListData<AppraiseBean>>
+
+    /**
+     * 语音点赞接口
+     */
+    @POST("social/friend/relation/voicePraise")
+    suspend fun voicePraise(@Body form : FriendIdForm) : Root<VoidResult>
+
+    /**
+     * 获取亲密榜数据
+     */
+    @POST("user/acct/info/closeConfidantRank")
+    suspend fun closeConfidantRank(@Body form : UserIdForm) : Root<MutableList<CloseConfidantBean>>
 }

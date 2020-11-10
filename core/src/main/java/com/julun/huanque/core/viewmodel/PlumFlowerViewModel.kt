@@ -38,10 +38,10 @@ class PlumFlowerViewModel : BaseViewModel() {
     /**
      * 获取昨日榜
      */
-    fun getYesterdayList() {
+    fun getWeekList() {
         viewModelScope.launch {
             request({
-                listData.value = socialService.flowerYesterday().dataConvert()
+                listData.value = socialService.flowerWeek().dataConvert()
             }, {}, {}, true)
         }
     }

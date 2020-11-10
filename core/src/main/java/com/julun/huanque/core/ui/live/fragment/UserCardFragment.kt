@@ -261,10 +261,14 @@ class UserCardFragment : BaseDialogFragment() {
                     Toast.makeText(context, "无法查看该用户的主页", Toast.LENGTH_SHORT).show()
                     return@onClickNew
                 }
-                RNPageActivity.start(
-                    requireActivity(),
-                    RnConstant.PERSONAL_HOMEPAGE,
-                    Bundle().apply { putLong("userId", mUserCardViewModel.mUserId) })
+                val bundle = Bundle().apply {
+                    putLong(ParamConstant.UserId, mUserCardViewModel.mUserId)
+                }
+                ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
+//                RNPageActivity.start(
+//                    requireActivity(),
+//                    RnConstant.PERSONAL_HOMEPAGE,
+//                    Bundle().apply { putLong("userId", mUserCardViewModel.mUserId) })
             }
         }
 

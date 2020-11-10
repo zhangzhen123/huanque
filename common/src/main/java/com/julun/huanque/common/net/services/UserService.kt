@@ -250,4 +250,11 @@ interface UserService {
     @POST("user/welfare/firstChargeBag")
     suspend fun firstChargeBag(@Body form: EmptyForm = EmptyForm()): Root<FirstRechargeInfo>
 
+    /**
+     * 主页信息
+     */
+    @POST("user/acct/info/home")
+    suspend fun homeInfo(@Body form : UserIdForm) : Root<HomePageInfo>
+
+
 }

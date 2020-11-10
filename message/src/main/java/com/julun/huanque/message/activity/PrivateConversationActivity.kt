@@ -1358,10 +1358,10 @@ class PrivateConversationActivity : BaseActivity() {
                     } else {
                         //对方发送消息
                         try {
-                            RNPageActivity.start(
-                                this,
-                                RnConstant.PERSONAL_HOMEPAGE,
-                                Bundle().apply { putLong("userId", tempData.targetId.toLong()) })
+                            val bundle = Bundle().apply {
+                                putLong(ParamConstant.UserId, tempData.targetId.toLong())
+                            }
+                            ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }

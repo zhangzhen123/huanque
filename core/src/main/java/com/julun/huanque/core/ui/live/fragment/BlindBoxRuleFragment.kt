@@ -177,7 +177,10 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     //停止
                     val position = mGalleryLayoutManager?.curSelectedPosition ?: return
-                    setSelectPosition(position % mAdapter.data.size)
+                    val count = mAdapter.data.size
+                    if(count != 0){
+                        setSelectPosition(position % count)
+                    }
                 }
 
             }
@@ -185,7 +188,10 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val position = mGalleryLayoutManager?.curSelectedPosition ?: return
-                setSelectPosition(position % mAdapter.data.size)
+                val count = mAdapter.data.size
+                if(count != 0){
+                    setSelectPosition(position % count)
+                }
             }
         })
 
@@ -227,10 +233,10 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
     private fun showViewByData(bean: GiftRuleBean) {
         ImageUtils.loadImageWithWidth(sdv_bg, StringHelper.getOssImgUrl(bean.ruleBgPic), ScreenUtils.getScreenWidth())
         mAdapter.setList(bean.awardList)
-        val index = 50 - 50 % bean.awardList.size + 1
+//        val index = 50 - 50 % bean.awardList.size + 1
 //        val index = 7
-        recyclerView.smoothScrollToPosition(index)
-        logger.info("index = ${index}")
+//        recyclerView.smoothScrollToPosition(index)
+//        logger.info("index = ${index}")
 
 //        Observable.timer(3000, TimeUnit.MILLISECONDS)
 //            .bindUntilEvent(this, Lifecycle.Event.ON_DESTROY)
