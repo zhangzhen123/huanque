@@ -23,6 +23,7 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.recycler.decoration.FlowerDecoration
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.PlumFlowerListAdapter
+import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.viewmodel.PlumFlowerViewModel
 import com.julun.rnlib.RNPageActivity
@@ -436,10 +437,7 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
                 RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
             } else {
                 //跳转他人主页
-                RNPageActivity.start(requireActivity(), RnConstant.PERSONAL_HOMEPAGE, Bundle().apply {
-                    putLong("userId", userId)
-                    putString("homeSourceType", "FlowerRank")
-                })
+                HomePageActivity.newInstance(requireActivity(), userId)
             }
         }
     }

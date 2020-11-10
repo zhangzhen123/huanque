@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
+import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.FamousListMultiBean
 import com.julun.huanque.common.bean.beans.FamousUser
 import com.julun.huanque.common.bean.beans.SingleFamousMonth
@@ -18,6 +19,7 @@ import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlin.math.ceil
@@ -295,10 +297,9 @@ class FlowerFamousMonthAdapter : BaseMultiItemQuickAdapter<FamousListMultiBean, 
                 RNPageActivity.start(act, RnConstant.MINE_HOMEPAGE)
             } else {
                 //跳转他人主页
-                RNPageActivity.start(act, RnConstant.PERSONAL_HOMEPAGE, Bundle().apply {
-                    putLong("userId", userId)
-                    putString("homeSourceType", "FlowerRank")
-                })
+                (context as? BaseActivity)?.let { act ->
+                    HomePageActivity.newInstance(act, userId)
+                }
             }
         }
     }

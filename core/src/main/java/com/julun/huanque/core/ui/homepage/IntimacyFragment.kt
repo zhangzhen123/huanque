@@ -94,9 +94,10 @@ class IntimacyFragment : BaseDialogFragment() {
                 tv_content.text = "恭喜你成为Ta最亲密的人，继续保持哦"
                 tv_jump.text = "保持亲密"
             }
-
-            val listData = list.subList(1, list.size - 1)
-            mAdapter.setList(listData)
+            if (list.size > 1) {
+                val listData = list.subList(1, list.size - 1)
+                mAdapter.setList(listData)
+            }
         } else {
             //显示缺省状态
             sdv_header_border.imageResource = R.mipmap.pic_no_intim_big

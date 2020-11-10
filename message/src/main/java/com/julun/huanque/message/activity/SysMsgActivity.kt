@@ -106,10 +106,10 @@ class SysMsgActivity : BaseActivity() {
                     val item = view.getTag(R.id.msg_bean_id) as? FriendBean
                     //打开他人主页
                     try {
-                        RNPageActivity.start(
-                            this,
-                            RnConstant.PERSONAL_HOMEPAGE,
-                            Bundle().apply { putLong("userId", item?.friendId?.toLong() ?: return@onAdapterChildClickNew) })
+                        val bundle = Bundle().apply {
+                            putLong(ParamConstant.UserId, item?.friendId?.toLong() ?: return@onAdapterChildClickNew)
+                        }
+                        ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

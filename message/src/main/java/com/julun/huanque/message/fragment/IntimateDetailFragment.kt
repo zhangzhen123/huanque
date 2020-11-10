@@ -8,8 +8,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.ConversationBasicBean
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.ui.web.WebActivity
@@ -48,10 +51,10 @@ class IntimateDetailFragment : BaseDialogFragment() {
 
         sdv_other.onClickNew {
             //打开他们主页
-            RNPageActivity.start(
-                requireActivity(),
-                RnConstant.PERSONAL_HOMEPAGE,
-                Bundle().apply { putLong("userId", mViewModel.basicBean?.value?.friendUser?.userId ?: return@onClickNew) })
+            val bundle = Bundle().apply {
+                putLong(ParamConstant.UserId, mViewModel.basicBean?.value?.friendUser?.userId ?: return@onClickNew)
+            }
+            ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
         }
 
         sdv_mine.onClickNew {

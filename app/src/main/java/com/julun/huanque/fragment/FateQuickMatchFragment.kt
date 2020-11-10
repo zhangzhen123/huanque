@@ -24,6 +24,7 @@ import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.message.activity.UsefulWordActivity
 import com.julun.huanque.message.viewmodel.FateQuickMatchViewModel
 import com.julun.rnlib.RNPageActivity
@@ -79,10 +80,7 @@ class FateQuickMatchFragment : BaseDialogFragment() {
 
         if (enable) {
             sdv_header.onClickNew {
-                RNPageActivity.start(
-                    requireActivity(),
-                    RnConstant.PERSONAL_HOMEPAGE,
-                    Bundle().apply { putLong("userId", mHuanQueViewModel.fateQuickMatchData.value?.userInfo?.userId ?: return@onClickNew) })
+                HomePageActivity.newInstance(requireActivity(), mHuanQueViewModel.fateQuickMatchData.value?.userInfo?.userId ?: return@onClickNew)
             }
         }
 

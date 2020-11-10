@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
@@ -139,10 +140,10 @@ class YuanFenActivity : BaseActivity() {
                     mFateQuickMatchViewModel.getRandomWords(tempData.userId)
                 }
                 R.id.sdv_header -> {
-                    RNPageActivity.start(
-                        this,
-                        RnConstant.PERSONAL_HOMEPAGE,
-                        Bundle().apply { putLong("userId", tempData.userId) })
+                    val bundle = Bundle().apply {
+                        putLong(ParamConstant.UserId, tempData.userId)
+                    }
+                    ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                 }
                 else -> {
                 }

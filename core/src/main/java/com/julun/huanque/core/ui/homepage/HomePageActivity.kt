@@ -783,9 +783,11 @@ class HomePageActivity : BaseActivity() {
                         tempView.loadImage(StringHelper.getOssImgUrl(s), 40f, 40f)
                     }
                 }
+                tv_intim.text = "本周亲密榜（${closeConfidantRank.rankNum}人）"
             } else {
                 //无亲密好友，显示空布局
                 tv_no_user.show()
+                tv_intim.text = "本周亲密榜（0人）"
             }
 
         } else {
