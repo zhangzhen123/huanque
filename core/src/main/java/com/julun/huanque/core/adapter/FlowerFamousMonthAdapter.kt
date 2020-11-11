@@ -240,7 +240,7 @@ class FlowerFamousMonthAdapter : BaseMultiItemQuickAdapter<FamousListMultiBean, 
         val position = holder.adapterPosition
         val view_line = holder.getView<View>(R.id.view_line)
         val lineParams = view_line.layoutParams as? ConstraintLayout.LayoutParams
-        if (position - 1 == 0) {
+        if (position == 0) {
             //第一个视图
             lineParams?.topMargin = dp2px(10)
         } else {

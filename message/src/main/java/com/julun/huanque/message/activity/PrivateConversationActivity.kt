@@ -340,6 +340,12 @@ class PrivateConversationActivity : BaseActivity() {
             if (it != null) {
                 con_living.show()
                 sdv_anchor_header.loadImage("${StringHelper.getOssImgUrl(it.coverPic)}${BusiConstant.OSS_160}")
+                if (it.living == BusiConstant.True) {
+                    sdv_living.show()
+                    ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_private_conversation)
+                } else {
+                    sdv_living.hide()
+                }
             } else {
                 con_living.hide()
             }
