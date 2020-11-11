@@ -9,7 +9,7 @@ package com.julun.huanque.common.bean.forms
  *@Description: 主页相关的请求form
  *
  */
-class RecomListForm(var offset: Int? = null)
+class RecomListForm(var offset: Int? = null, var realOffset: Int? = null)
 
 class BuyBirdForm(var programId: Long? = null, var upgradeLevel: Int)
 

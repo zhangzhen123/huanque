@@ -21,6 +21,13 @@ import kotlin.properties.Delegates
  * Created by dong on 2018/4/10.
  */
 class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+    companion object {
+        const val LEFT_TOP = 1
+        const val RIGHT_TOP = 2
+        const val LEFT_BOTTOM = 3
+        const val RIGHT_BOTTOM = 4
+    }
+
     constructor(context: Context) : this(context, null)
 
     //是否是节目标签
@@ -104,16 +111,18 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
     /**初始化CircularCornerTextView**/
     private fun initProgramTagCTV() {
         if (isProgramTag) {
-            radiusWrap = true
-            leftTop = true
+            rightTop = false
             rightBottom = true
+            leftBottom = false
+            leftTop = true
 
             tPaddingLeft = 5
-            tPaddingTop = 3
-            tPaddingRight = 10
-            tPaddingBottom = 3
+            tPaddingTop = 2
+            tPaddingRight = 5
+            tPaddingBottom = 2
+            ctv.textSize = 12f
             ctv.setTextColor(Color.WHITE)
-            ctv.textSize = 11f
+            radius = 6f
         } else if (isGiftTag) {
             radiusWrap = true
             rightTop = true
@@ -146,12 +155,46 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
 //        invalidate()
     }
 
-    //设置节目单左上角
-    fun initProgramLTV() {
-        rightTop = false
-        rightBottom = true
-        leftBottom = false
-        leftTop = true
+    /**
+     * 设置节目单角标[type]代表四个角的位置
+     */
+    fun initProgramTag(type: Int) {
+        isProgramTag = true
+        val params = sdv.layoutParams
+        when (type) {
+            LEFT_TOP -> {
+                rightTop = false
+                rightBottom = true
+                leftBottom = false
+                leftTop = true
+                sdvHeight = dip(20)
+                params.height = sdvHeight
+            }
+            RIGHT_TOP -> {
+                rightTop = true
+                rightBottom = false
+                leftBottom = true
+                leftTop = false
+                sdvHeight = dip(16)
+            }
+            LEFT_BOTTOM -> {
+                rightTop = true
+                rightBottom = false
+                leftBottom = true
+                leftTop = false
+                sdvHeight = dip(20)
+                params.height = sdvHeight
+            }
+            RIGHT_BOTTOM -> {
+                rightTop = false
+                rightBottom = true
+                leftBottom = false
+                leftTop = true
+                sdvHeight = dip(20)
+                params.height = sdvHeight
+            }
+        }
+
 
         tPaddingLeft = 5
         tPaddingTop = 2
@@ -170,6 +213,7 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
 
         ctv.setPadding(dip(tPaddingLeft), dip(tPaddingTop), dip(tPaddingRight), dip(tPaddingBottom))
 //        invalidate()
+        sdv.requestLayout()
     }
 
     //给文字添加固定的左图片
@@ -193,7 +237,7 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
         if (isProgramTag) {
             //节目标签
 //            sdvWidth = dip(50)
-            sdvHeight = dip(18)
+            sdvHeight = dip(20)
             params.height = sdvHeight
         } else if (isGiftTag) {
             //礼物标签
