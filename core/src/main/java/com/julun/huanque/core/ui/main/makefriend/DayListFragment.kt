@@ -191,6 +191,7 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
                 if (bean == null) {
                     return
                 }
+                (activity as? PlumFlowerActivity)?.mRule = bean.ruleUrl
                 bean.rankList.forEachIndexed { index, data ->
                     data.ranking = "${index + 1}"
                 }

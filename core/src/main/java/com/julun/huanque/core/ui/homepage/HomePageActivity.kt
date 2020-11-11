@@ -44,6 +44,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
 import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
+import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -57,10 +58,7 @@ import kotlinx.android.synthetic.main.act_home_page.tv_private_chat
 import kotlinx.android.synthetic.main.act_home_page.tv_sex
 import kotlinx.android.synthetic.main.act_home_page.tv_tag
 import kotlinx.android.synthetic.main.fragment_user_card.*
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.textColor
+import org.jetbrains.anko.*
 import kotlin.math.ceil
 
 /**
@@ -424,6 +422,13 @@ class HomePageActivity : BaseActivity() {
         }
         tv_black_status.onClickNew {
             //屏蔽事件
+        }
+        ll_bird.onClickNew {
+            //跳转养鹊乐园
+            val intent = Intent(this, LeYuanBirdActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
         }
     }
 

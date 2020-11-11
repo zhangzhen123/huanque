@@ -269,7 +269,9 @@ data class FlowerDayListBean(
     //列表信息
     var rankList: MutableList<SingleFlowerDayListBean> = mutableListOf(),
     //今日榜的倒计时
-    var ttl: Long = 0
+    var ttl: Long = 0,
+    //规则地址
+    var ruleUrl: String = ""
 ) : Serializable
 
 /**
@@ -318,7 +320,9 @@ data class FamousListBean(
     //名人榜数据
     var monthList: MutableList<SingleFamousMonth> = mutableListOf(),
     //上周榜首
-    var lastWeekTop: LastWeekTop = LastWeekTop()
+    var lastWeekTop: LastWeekTop = LastWeekTop(),
+    //规则地址
+    var ruleUrl: String = ""
 ) : Serializable
 
 /**

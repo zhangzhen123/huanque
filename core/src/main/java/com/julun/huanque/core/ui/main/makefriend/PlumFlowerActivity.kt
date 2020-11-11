@@ -15,6 +15,7 @@ import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.StatusBarUtil
 import com.julun.huanque.common.widgets.indicator.ColorFlipPagerTitleView
@@ -42,6 +43,9 @@ class PlumFlowerActivity : BaseActivity() {
     private lateinit var mCommonNavigator: CommonNavigator
     private var mPagerAdapter: PlumFlowerFragmentAdapter? = null
     private var mFlowerIntroductionFragment: FlowerIntroductionFragment? = null
+
+    //说明页地址
+    var mRule = ""
 
     override fun getLayoutId() = R.layout.act_plum_flower
 
@@ -80,8 +84,9 @@ class PlumFlowerActivity : BaseActivity() {
 
         iv_help.onClickNew {
             //显示说明弹窗
-            mFlowerIntroductionFragment = mFlowerIntroductionFragment ?: FlowerIntroductionFragment()
-            mFlowerIntroductionFragment?.show(supportFragmentManager, "FlowerIntroductionFragment")
+//            mFlowerIntroductionFragment = mFlowerIntroductionFragment ?: FlowerIntroductionFragment()
+//            mFlowerIntroductionFragment?.show(supportFragmentManager, "FlowerIntroductionFragment")
+            WebActivity.startWeb(this, mRule)
         }
 
     }
