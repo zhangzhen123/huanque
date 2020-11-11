@@ -187,7 +187,7 @@
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/sdv_vehicle"
                 android:layout_width="100dp"
-                android:layout_height="60dp"
+                android:layout_height="67dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="15dp"
                 app:layout_constraintRight_toRightOf="@id/view_bottom"
@@ -384,7 +384,6 @@
                 android:id="@+id/con_live"
                 android:layout_width="0px"
                 android:layout_height="120dp"
-                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_play">
@@ -416,7 +415,6 @@
                     android:layout_width="16dp"
                     android:layout_height="10dp"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="4dp"
                     android:layout_marginBottom="2dp"
                     android:visibility="gone"
                     app:actualImageScaleType="fitCenter"

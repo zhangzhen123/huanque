@@ -9,7 +9,10 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
+import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -594,7 +597,7 @@ class HomePageActivity : BaseActivity() {
     private fun showViewByData(bean: HomePageInfo) {
         tv_user_name.text = bean.nickname
         val picList = mutableListOf<HomePagePicBean>()
-        picList.add(HomePagePicBean(bean.headPic, "", BusiConstant.True))
+        picList.add(HomePagePicBean(bean.headPic, bean.headRealPeople, BusiConstant.True))
         bean.picList.forEach {
             picList.add(HomePagePicBean(it))
         }
@@ -681,7 +684,16 @@ class HomePageActivity : BaseActivity() {
             tv_sex.setCompoundDrawables(null, null, null, null)
         }
         //性别+星座
-        tv_sex.text = "${bean.age}|${bean.constellation}"
+        val sexContent = "${bean.age} | ${bean.constellation}"
+        val sexStringSpannable = SpannableStringBuilder(sexContent)
+        val sexStartIndex = "${bean.age} ".length
+        sexStringSpannable.setSpan(
+            ForegroundColorSpan(GlobalUtils.formatColor("#FCE5EB")),
+            sexStartIndex,
+            sexStartIndex + 1,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        tv_sex.text = sexStringSpannable
 
         val city = bean.currentCity
         if (city.isEmpty()) {
@@ -734,7 +746,18 @@ class HomePageActivity : BaseActivity() {
             tv_weight_height.hide()
         } else {
             if (bean.weight != 0 && bean.height != 0) {
-                tv_weight_height.text = "${bean.height}cm|${bean.weight}kg"
+                val weightContent = "${bean.height}cm | ${bean.weight}kg"
+                val weightStringSpannable = SpannableStringBuilder(weightContent)
+                val weightStartIndex = "${bean.height}cm ".length
+                weightStringSpannable.setSpan(
+                    ForegroundColorSpan(GlobalUtils.formatColor("#DAE8F3")),
+                    weightStartIndex,
+                    weightStartIndex + 1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                );
+
+                tv_weight_height.text = "${bean.height}cm | ${bean.weight}kg"
+
             } else if (bean.weight != 0 && bean.height == 0) {
                 tv_weight_height.text = "${bean.weight}kg"
             } else {
@@ -901,8 +924,16 @@ class HomePageActivity : BaseActivity() {
 
 
     private val bannerAdapter by lazy {
-        BGABanner.Adapter<SimpleDraweeView, HomePagePicBean> { _, itemView, model, _ ->
-            ImageUtils.loadImage(itemView, "${model?.pic}")
+        BGABanner.Adapter<View, HomePagePicBean> { _, itemView, model, _ ->
+            val pic = itemView?.findViewById<SimpleDraweeView>(R.id.sdv) ?: return@Adapter
+
+            ImageUtils.loadImage(pic, "${model?.pic}")
+            val icWater = itemView?.findViewById<ImageView>(R.id.iv_water) ?: return@Adapter
+            if (model?.realPic == BusiConstant.True) {
+                icWater.show()
+            } else {
+                icWater.hide()
+            }
         }
     }
 
@@ -934,7 +965,7 @@ class HomePageActivity : BaseActivity() {
             }
 
         })
-        bga_banner.setData(picList, null)
+        bga_banner.setData(R.layout.item_bga_banner_image_home_page, picList, null)
         bga_banner.setAutoPlayAble(false)
 //        bga_banner.startAutoPlay()
         bga_banner.currentItem = 0
