@@ -65,6 +65,7 @@ class HomeListData<T> : RootListData<T>() {
     var taskBar: HomeTaskBar = HomeTaskBar()
     var offset: Int? = null
     var flowerPic: String? = null
+    var realOffset: Int? = null
 }
 
 data class HomeRemind(
@@ -137,7 +138,8 @@ data class HomeRecomItem(
 /**
  * 邀请语音消息
  */
-data class NetCallReceiveBean(var callId: Long = 0, var userIds: LongArray = longArrayOf(), var callUserId: Long = 0) : Serializable
+data class NetCallReceiveBean(var callId: Long = 0, var userIds: LongArray = longArrayOf(), var callUserId: Long = 0) :
+    Serializable
 
 /**
  * 语音通话开始消息

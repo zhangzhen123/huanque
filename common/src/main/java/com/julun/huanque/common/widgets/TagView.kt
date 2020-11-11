@@ -155,34 +155,43 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
 //        invalidate()
     }
 
-    //设置节目单左上角
+    /**
+     * 设置节目单角标[type]代表四个角的位置
+     */
     fun initProgramTag(type: Int) {
         isProgramTag = true
-
+        val params = sdv.layoutParams
         when (type) {
             LEFT_TOP -> {
                 rightTop = false
                 rightBottom = true
                 leftBottom = false
                 leftTop = true
+                sdvHeight = dip(20)
+                params.height = sdvHeight
             }
             RIGHT_TOP -> {
                 rightTop = true
                 rightBottom = false
                 leftBottom = true
                 leftTop = false
+                sdvHeight = dip(16)
             }
             LEFT_BOTTOM -> {
                 rightTop = true
                 rightBottom = false
                 leftBottom = true
                 leftTop = false
+                sdvHeight = dip(20)
+                params.height = sdvHeight
             }
             RIGHT_BOTTOM -> {
                 rightTop = false
                 rightBottom = true
                 leftBottom = false
                 leftTop = true
+                sdvHeight = dip(20)
+                params.height = sdvHeight
             }
         }
 
@@ -204,7 +213,7 @@ class TagView(context: Context, attrs: AttributeSet?) : FrameLayout(context, att
 
         ctv.setPadding(dip(tPaddingLeft), dip(tPaddingTop), dip(tPaddingRight), dip(tPaddingBottom))
 //        invalidate()
-        initSimpleDraweeView()
+        sdv.requestLayout()
     }
 
     //给文字添加固定的左图片

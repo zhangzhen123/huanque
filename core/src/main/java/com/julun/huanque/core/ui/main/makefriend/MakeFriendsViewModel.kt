@@ -56,14 +56,14 @@ class MakeFriendsViewModel : BaseViewModel() {
     private var totalList = mutableListOf<HomeRecomItem>()
 
     val flowerPic: MutableLiveData<String> by lazy { MutableLiveData<String>() }
-
+    var currentRealOffset:Int?=null
     val stateList: LiveData<ReactiveData<RootListData<HomeItemBean>>> = queryState.switchMap { type ->
         liveData {
             val form: RecomListForm = if (type != QueryType.LOAD_MORE) {
                 totalList.clear()
                 RecomListForm()
             } else {
-                RecomListForm(offset)
+                RecomListForm(offset,currentRealOffset)
             }
 
             request({
@@ -125,6 +125,7 @@ class MakeFriendsViewModel : BaseViewModel() {
                 }
                 val rList = RootListData(isPull = type != QueryType.LOAD_MORE, list = list, hasMore = homeListData.hasMore)
                 offset = homeListData.offset
+                currentRealOffset=homeListData.realOffset
 
                 emit(ReactiveData(NetStateType.SUCCESS, rList,queryType = type))
             }, error = { e ->
