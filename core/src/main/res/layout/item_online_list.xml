@@ -35,8 +35,7 @@
         android:id="@+id/ivItemLevel"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dimen_16"
-        android:layout_marginTop="@dimen/dimen_9"
-        android:layout_marginBottom="@dimen/dimen_8"
+        android:layout_marginTop="@dimen/dimen_7"
         app:layout_constraintBottom_toBottomOf="@+id/sdvItemHead"
         app:layout_constraintLeft_toLeftOf="@+id/tvItemNickname"
         app:layout_constraintTop_toBottomOf="@+id/tvItemNickname" />
