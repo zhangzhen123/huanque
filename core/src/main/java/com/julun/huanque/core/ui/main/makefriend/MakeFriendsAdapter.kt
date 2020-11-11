@@ -109,7 +109,7 @@ class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolde
 //                }
                 if (bean.authMark.isNotEmpty()) {
                     authTag.show()
-                    ImageUtils.loadImageWithHeight_2(authTag, bean.authMark, dp2px(13))
+                    ImageUtils.loadImageWithHeight_2(authTag, bean.authMark, dp2px(16))
                 } else {
                     authTag.hide()
                 }
