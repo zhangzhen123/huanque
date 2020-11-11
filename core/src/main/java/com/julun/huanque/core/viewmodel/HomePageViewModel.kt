@@ -64,7 +64,7 @@ class HomePageViewModel : BaseViewModel() {
     val evaluateContent: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
     //评论数据
-    val appraiseListData: MutableLiveData<List<AppraiseBean>> by lazy { MutableLiveData<List<AppraiseBean>>() }
+    val appraiseListData: MutableLiveData<MutableList<AppraiseBean>> by lazy { MutableLiveData<MutableList<AppraiseBean>>() }
 
     //评价成功标识
     val evaluateFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }

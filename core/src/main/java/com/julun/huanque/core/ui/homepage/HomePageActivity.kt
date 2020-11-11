@@ -756,7 +756,7 @@ class HomePageActivity : BaseActivity() {
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 );
 
-                tv_weight_height.text = "${bean.height}cm | ${bean.weight}kg"
+                tv_weight_height.text = weightStringSpannable
 
             } else if (bean.weight != 0 && bean.height == 0) {
                 tv_weight_height.text = "${bean.weight}kg"
@@ -1089,47 +1089,61 @@ class HomePageActivity : BaseActivity() {
     /**
      * 显示评价
      */
-    private fun showEvaluate(appraiseList: List<AppraiseBean>) {
+    private fun showEvaluate(appraiseList: MutableList<AppraiseBean>) {
         linefeed_ll_evaluate.removeAllViews()
         if (appraiseList.isEmpty()) {
-            linefeed_ll_evaluate.hide()
             tv_empty_evaluate.show()
         } else {
-            linefeed_ll_evaluate.show()
             tv_empty_evaluate.hide()
-            //行数
-            var line = 1
-            var currentWidth = 0
-            appraiseList.forEach { appraise ->
-                val tv = TextView(this)
-                    .apply {
+        }
+        //添加元素
+        appraiseList.add(AppraiseBean(0, "评价Ta +"))
+        //行数
+        var line = 1
+        var currentWidth = 0
+        appraiseList.forEach { appraise ->
+            val num = appraise.agreeNum
+            val tv = TextView(this)
+                .apply {
+
+                    if (num == 0) {
+                        //评价元素
+                        text = appraise.content
+                        backgroundResource = R.drawable.bg_enable
+                        textColor = GlobalUtils.getColor(R.color.black_333)
+                    } else {
+                        //普通元素
                         text = "${appraise.content} ${appraise.agreeNum}"
                         backgroundResource = R.drawable.bg_appraise
                         textColor = GlobalUtils.getColor(R.color.black_666)
-                        textSize = 14f
-                        gravity = Gravity.CENTER
                     }
-                tv.setPadding(dp2px(15), 0, dp2px(15), 0)
-                val params =
-                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp2px(30f))
-                params.rightMargin = dp2px(15f)
-                params.topMargin = dp2px(12f)
-
-                val needWidth = ScreenUtils.getViewRealWidth(tv)
-                if (currentWidth + needWidth > innerWidth) {
-                    //换行
-                    line++
-                    currentWidth = 0
+                    textSize = 14f
+                    gravity = Gravity.CENTER
                 }
+            tv.setPadding(dp2px(15), 0, dp2px(15), 0)
+            val params =
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp2px(30f))
+            params.rightMargin = dp2px(15f)
+            params.topMargin = dp2px(15f)
 
-                currentWidth += needWidth + dp2px(15)
-                linefeed_ll_evaluate.addView(tv, params)
+            val needWidth = ScreenUtils.getViewRealWidth(tv)
+            if (currentWidth + needWidth > innerWidth) {
+                //换行
+                line++
+                currentWidth = 0
             }
 
-            val llParams = linefeed_ll_evaluate.layoutParams
-            llParams.height = dp2px(42) * line
-            linefeed_ll_evaluate.layoutParams = llParams
+            currentWidth += needWidth + dp2px(15)
+            linefeed_ll_evaluate.addView(tv, params)
+            if (num == 0) {
+                tv.onClickNew { tv_evaluate.performClick() }
+            }
+
+
         }
+        val llParams = linefeed_ll_evaluate.layoutParams
+        llParams.height = dp2px(45) * line
+        linefeed_ll_evaluate.layoutParams = llParams
     }
 
 
