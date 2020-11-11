@@ -64,7 +64,7 @@ class HomePageViewModel : BaseViewModel() {
     val evaluateContent: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
     //评论数据
-    val appraiseListData: MutableLiveData<List<AppraiseBean>> by lazy { MutableLiveData<List<AppraiseBean>>() }
+    val appraiseListData: MutableLiveData<MutableList<AppraiseBean>> by lazy { MutableLiveData<MutableList<AppraiseBean>>() }
 
     //评价成功标识
     val evaluateFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -123,7 +123,7 @@ class HomePageViewModel : BaseViewModel() {
 //                val followBean = FollowResultBean(follow = follow.follow, userId = userId)
                 followStatus.value = follow.follow
                 homeInfoBean.value?.follow = follow.follow
-                ToastUtils.show("关注成功")
+                ToastUtils.show(follow.toastMsg)
                 EventBus.getDefault()
                     .post(UserInfoChangeEvent(targetUserId, follow.stranger, follow.follow))
                 EventBus.getDefault()
@@ -148,6 +148,7 @@ class HomePageViewModel : BaseViewModel() {
 //                val followBean = FollowResultBean(follow = FollowStatus.False, userId = userId)
                 followStatus.value = FollowStatus.False
                 homeInfoBean.value?.follow = FollowStatus.False
+                ToastUtils.show("取消关注成功")
                 EventBus.getDefault()
                     .post(UserInfoChangeEvent(targetUserId, follow.stranger, follow.follow))
                 EventBus.getDefault()

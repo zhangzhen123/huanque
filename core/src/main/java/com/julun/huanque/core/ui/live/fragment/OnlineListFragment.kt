@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.collection.LruCache
@@ -290,6 +291,11 @@ class OnlineListFragment : BaseVMFragment<OnLineViewModel>() {
                 }
                 else -> {
                     //热度样式
+                    //修改列表的顶部距离
+                    val paraams = rvList.layoutParams as? FrameLayout.LayoutParams
+                    paraams?.topMargin = dp2px(49)
+                    rvList.layoutParams = paraams
+
                     header_tips.backgroundResource = R.mipmap.bg_hot
                     tv_head_tips.text = data.heatTips
                     tv_head_tips.show()

@@ -137,7 +137,7 @@ class YuanFenActivity : BaseActivity() {
             val tempData = mAdapter.getItem(position)
             when (view.id) {
                 R.id.iv_reply -> {
-                    mFateQuickMatchViewModel.getRandomWords(tempData.userId)
+                    mFateQuickMatchViewModel.getRandomWords(tempData.userId, tempData.fateId)
                 }
                 R.id.sdv_header -> {
                     val bundle = Bundle().apply {
@@ -229,6 +229,22 @@ class YuanFenActivity : BaseActivity() {
                     }), "提示", "去添加"
                 )
                 mFateQuickMatchViewModel.showAlertFlag.value = null
+            }
+        })
+        mFateQuickMatchViewModel.fateIdBean.observe(this, Observer {
+            if (it != null) {
+                var position = -1
+                mAdapter.data.forEachIndexed { index,fateInfo->
+                    if(fateInfo.fateId == it){
+                        //找到对应的派单对象
+                        position = index
+                        fateInfo.status = FateInfo.Finish
+                        return@forEachIndexed
+                    }
+                }
+                if(position > 0){
+                    mAdapter.notifyItemChanged(position)
+                }
             }
         })
     }

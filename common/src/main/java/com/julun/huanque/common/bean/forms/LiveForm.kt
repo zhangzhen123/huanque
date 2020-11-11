@@ -61,7 +61,9 @@ class ConsumeForm(
     //是否从背包赠送
     var fromBag: String,
     //物品类型
-    var prodType: String = ""
+    var prodType: String = "",
+    //分享用户的ID
+    var shareUserId: String = ""
 ) : ProgramIdForm(programId)
 
 ///**

@@ -78,7 +78,8 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
                     mPlayerViewModel.programId,
                     1,
                     (mBlindBoxBean?.giftId ?: 0).toInt(),
-                    BusiConstant.False, mBlindBoxBean?.prodType ?: ProdType.Gift
+                    BusiConstant.False, mBlindBoxBean?.prodType ?: ProdType.Gift,
+                    shareUserId = mPlayerViewModel.mShareUSerId
                 )
             )
             tv_send.isEnabled = false
@@ -178,7 +179,7 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
                     //停止
                     val position = mGalleryLayoutManager?.curSelectedPosition ?: return
                     val count = mAdapter.data.size
-                    if(count != 0){
+                    if (count != 0) {
                         setSelectPosition(position % count)
                     }
                 }
@@ -189,7 +190,7 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
                 super.onScrolled(recyclerView, dx, dy)
                 val position = mGalleryLayoutManager?.curSelectedPosition ?: return
                 val count = mAdapter.data.size
-                if(count != 0){
+                if (count != 0) {
                     setSelectPosition(position % count)
                 }
             }
@@ -252,10 +253,10 @@ class BlindBoxRuleFragment : BaseDialogFragment() {
 //            }, {})
 
 
-//        if (bean.awardList.isNotEmpty()) {
-//            //显示第一个礼物
-//            setSelectPosition(currentPosition % bean.awardList.size)
-//        }
+        if (bean.awardList.isNotEmpty()) {
+            //显示第一个礼物
+            setSelectPosition(0)
+        }
     }
 
     /**

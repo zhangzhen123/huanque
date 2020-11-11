@@ -7,14 +7,13 @@
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:clickable="true"
         app:actualImageScaleType="fitXY"
         app:failureImage="@drawable/logo_placeholder_bg_m"
         app:failureImageScaleType="centerCrop"
         app:placeholderImage="@drawable/logo_placeholder_bg_m"
-        app:placeholderImageScaleType="centerCrop"
-        app:viewAspectRatio="1.33" />
+        app:placeholderImageScaleType="centerCrop"/>
 
     <ImageView
         android:id="@+id/iv_water"

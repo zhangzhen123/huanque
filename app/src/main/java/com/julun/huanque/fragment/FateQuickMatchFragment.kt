@@ -75,7 +75,7 @@ class FateQuickMatchFragment : BaseDialogFragment() {
         iv_fate_accost.onClickNew {
             //快捷回复
             val fateBean = mHuanQueViewModel.fateQuickMatchData.value ?: return@onClickNew
-            mFateQuickMatchViewModel.getRandomWords(fateBean.userInfo.userId)
+            mFateQuickMatchViewModel.getRandomWords(fateBean.userInfo.userId,fateBean.fateId)
         }
 
         if (enable) {

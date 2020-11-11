@@ -186,9 +186,6 @@ class PlayerActivity : BaseActivity() {
     //来源
     private var mFrom = ""
 
-    //分享用户Id
-    private var mShareUSerId = ""
-
     //欢鹊领取倒计时
     private var mBirdAwardCountInfo: BirdLiveAward? = null
     override fun getLayoutId(): Int = R.layout.activity_live_room
@@ -264,7 +261,7 @@ class PlayerActivity : BaseActivity() {
             isAnchor = intent.getBooleanExtra(UserType.Anchor, false)
             streamId = intent.getStringExtra(IntentParamKey.STREAM_ID.name)
             mFrom = intent.getStringExtra(ParamConstant.FROM) ?: ""
-            mShareUSerId = intent.getStringExtra(ParamConstant.ShareUserId) ?: ""
+            viewModel.mShareUSerId = intent.getStringExtra(ParamConstant.ShareUserId) ?: ""
             mBirdAwardCountInfo = intent.getSerializableExtra(ParamConstant.BIRD_AWARD_INFO) as? BirdLiveAward
             if (mFrom != PlayerFrom.FloatWindow) {
                 AliPlayerManager.stop()
@@ -835,7 +832,7 @@ class PlayerActivity : BaseActivity() {
 //                GIODataPool.fromType = null
 //                val positionIndex = GIODataPool.positionIndex
 //                GIODataPool.positionIndex = null
-                form = UserEnterRoomForm(programId, fromType = mFrom, shareUserId = mShareUSerId)
+                form = UserEnterRoomForm(programId, fromType = mFrom, shareUserId = viewModel.mShareUSerId)
                 viewModel.enterLivRoom(form)
             }
         } else {
@@ -1051,7 +1048,6 @@ class PlayerActivity : BaseActivity() {
     private fun resetView() {
         //重置缓存数据
         mFrom = ""
-        mShareUSerId = ""
         //清空缓存的消息ID
         RongCloudManager.cacheList.clear()
         // 移除加载层
@@ -2162,6 +2158,8 @@ class PlayerActivity : BaseActivity() {
             }
             return
         }
+        //切换直播间之后，重置分享用户数据
+        viewModel.mShareUSerId = ""
         liveViewManager.closePassThroughDialog()
         resetRoom()
     }
