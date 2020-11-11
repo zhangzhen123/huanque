@@ -114,6 +114,9 @@ class PlayerViewModel : BaseViewModel() {
     //是不是手机直播
     var isAppShow: Boolean = false
 
+    //分享用户的ID
+    var mShareUSerId = ""
+
     //是不是在直播
     var isLiving: Boolean = false
 

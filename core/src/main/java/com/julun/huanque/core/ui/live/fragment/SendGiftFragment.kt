@@ -1217,7 +1217,8 @@ class SendGiftFragment : BaseDialogFragment() {
             count = count,
             programId = this.playerViewModel.programId,
             fromBag = fromBag,
-            prodType = gift.prodType
+            prodType = gift.prodType,
+            shareUserId = playerViewModel.mShareUSerId
         )
         sendPagerAdapter = lastPagerAdapter
         sendRequesting = true

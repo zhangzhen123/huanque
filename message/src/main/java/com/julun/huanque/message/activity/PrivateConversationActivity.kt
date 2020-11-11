@@ -922,6 +922,8 @@ class PrivateConversationActivity : BaseActivity() {
                 val bundle = Bundle()
                 bundle.putLong(IntentParamKey.PROGRAM_ID.name, programInfo.programId)
                 bundle.putString(ParamConstant.FROM, PlayerFrom.Chat)
+                val targetId = mPrivateConversationViewModel?.targetIdData?.value ?: 0L
+                bundle.putString(ParamConstant.ShareUserId, "${targetId}")
 
                 ARouter.getInstance().build(ARouterConstant.PLAYER_ACTIVITY).with(bundle).navigation()
             }
