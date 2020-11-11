@@ -643,7 +643,7 @@ class HomePageActivity : BaseActivity() {
 
         //显示座驾相关视图
         val carInfo = bean.carInfo
-        sdv_vehicle.loadImage(StringHelper.getOssImgUrl(carInfo.carPic), 100f, 60f)
+        sdv_vehicle.loadImage(StringHelper.getOssImgUrl(carInfo.carPic), 110f, 74f)
         if (carInfo.dynamicUrl.isEmpty()) {
             tv_vehicle.text = "${carInfo.showMsg}>"
         } else {
