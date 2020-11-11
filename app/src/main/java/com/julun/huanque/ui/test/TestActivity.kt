@@ -315,9 +315,10 @@ class TestActivity : BaseActivity() {
             if (requestCode == 1001) {
 
                 val selectList = PictureSelector.obtainMultipleResult(data)
-                logger("收到图片=$selectList")
+//                logger("收到图片=$selectList")
                 for (media in selectList) {
                     Log.i("图片-----》", media.path)
+                    Log.i("图片-----压缩》", media.compressPath)
                 }
                 if (selectList.size > 0) {
                     val pathList = mutableListOf<String>()
