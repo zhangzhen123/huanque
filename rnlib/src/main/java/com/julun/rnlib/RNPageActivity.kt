@@ -673,30 +673,40 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 }
 
                 RnConstant.IMAGE_PAGE -> {
-                    var list = arrayListOf<String>()
-                    var index = 0
-                    if (params?.hasKey("index") == true) {
-                        index = params.getInt("index")
-                    }
-                    var userId = 0
-                    if (params?.hasKey("userId") == true) {
-                        userId = params.getInt("userId")
-                    }
-                    if (params?.hasKey("list") == true) {
-                        val rrl = params.getArray("list") ?: return@runOnUiThread
-                        for (i in 0 until rrl.size()) {
-                            list.add(rrl.getString(i) ?: "")
+                    try {
+                        var list = arrayListOf<String>()
+                        var index = 0
+                        if (params?.hasKey("index") == true) {
+                            index = params.getInt("index")
                         }
-                    }
+                        val userIdStr = params?.getString("userId") ?: return@runOnUiThread
+                        var userId = userIdStr.toLong()
+                        val bundle = Bundle().apply {
+                            putLong(ParamConstant.UserId, userId)
+                        }
+                        ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
+//                    var userId = 0
+//                    if (params?.hasKey("userId") == true) {
+//                        userId = params.getInt("userId")
+//                    }
+                        if (params?.hasKey("list") == true) {
+                            val rrl = params.getArray("list") ?: return@runOnUiThread
+                            for (i in 0 until rrl.size()) {
+                                list.add(rrl.getString(i) ?: "")
+                            }
+                        }
 
-                    ImageActivity.start(
-                        this,
-                        index,
-                        list,
-                        from = ImageActivityFrom.RN,
-                        operate = ImageActivityOperate.REPORT,
-                        userId = userId.toLong()
-                    )
+                        ImageActivity.start(
+                            this,
+                            index,
+                            list,
+                            from = ImageActivityFrom.RN,
+                            operate = ImageActivityOperate.REPORT,
+                            userId = userId.toLong()
+                        )
+                    }catch (e : java.lang.Exception){
+                        e.printStackTrace()
+                    }
                 }
 
                 RnConstant.WEBVIEW_PAGE -> {
@@ -730,17 +740,16 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 }
                 RnConstant.OtherHomePage -> {
                     //访问他人主页
-                    var userId = 0
-                    if (params?.hasKey("userId") == true) {
-                        userId = params.getInt("userId")
+                    try {
+                        val userIdStr = params?.getString("userId") ?: return@runOnUiThread
+                        var userId = userIdStr.toLong()
+                        val bundle = Bundle().apply {
+                            putLong(ParamConstant.UserId, userId)
+                        }
+                        ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
+                    }catch (e : java.lang.Exception){
+                        e.printStackTrace()
                     }
-                    if (userId == 0) {
-                        return@runOnUiThread
-                    }
-                    val bundle = Bundle().apply {
-                        putLong(ParamConstant.UserId, userId.toLong())
-                    }
-                    ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                 }
             }
 
