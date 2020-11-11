@@ -86,9 +86,9 @@
                 android:layout_height="@dimen/run_way_height"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/shape_runway_1"
-                android:layout_marginStart="@dimen/dimen_6"
+                android:layout_marginStart="@dimen/dimen_8"
                 android:paddingEnd="10dp"
-                android:paddingStart="21dp"
+                android:paddingStart="26dp"
                 android:scrollbars="none"
                 tools:visibility="visible"
                 android:visibility="gone">
@@ -106,11 +106,12 @@
             </HorizontalScrollView>
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/runway_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="35dp"
+                android:layout_height="28dp"
                 tools:visibility="visible"
+                app:actualImageScaleType="centerInside"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="@dimen/dimen_2"
+                android:layout_marginBottom="@dimen/dimen_3"
                 android:visibility="gone" />
 
         </FrameLayout>
