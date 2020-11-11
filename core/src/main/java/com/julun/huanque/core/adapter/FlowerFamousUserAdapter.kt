@@ -39,11 +39,7 @@ class FlowerFamousUserAdapter(val border: Int) : BaseQuickAdapter<FamousUser, Ba
         }
         val tvDay = holder.getView<TextView>(R.id.tv_day)
         val day = item.day
-        val dayContent = if (day >= 10) {
-            "${day}日"
-        } else {
-            "0${day}日"
-        }
+        val dayContent = "${day}日"
         tvDay.setTFDINCondensedBold()
         tvDay.text = dayContent
         holder.setText(R.id.tv_nickname, item.nickname)
