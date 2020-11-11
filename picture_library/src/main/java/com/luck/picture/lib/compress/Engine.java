@@ -92,7 +92,7 @@ class Engine {
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
     tagBitmap = rotatingImage(tagBitmap);
-    tagBitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream);
+    tagBitmap.compress(Bitmap.CompressFormat.JPEG, 85, stream);
     tagBitmap.recycle();
 
     FileOutputStream fos = new FileOutputStream(tagImg);
