@@ -2075,7 +2075,7 @@ class PrivateConversationActivity : BaseActivity() {
                     }
                     logger.info("DXC  收到图片:$path，media.path = ${media.path}")
                     //media.path
-                    sendChatMessage(pic = path, localPic = media.path, messageType = Message_Pic)
+                    sendChatMessage(pic = path, localPic = path, messageType = Message_Pic)
 //                    if(!mLoadingDialog.isShowing){
 //                        mLoadingDialog.showDialog()
 //                    }

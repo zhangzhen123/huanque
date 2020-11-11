@@ -687,8 +687,13 @@ class HomePageActivity : BaseActivity() {
         val sexContent = "${bean.age} | ${bean.constellation}"
         val sexStringSpannable = SpannableStringBuilder(sexContent)
         val sexStartIndex = "${bean.age} ".length
+        val lightColor = if (sex == Sex.FEMALE) {
+            GlobalUtils.formatColor("#FCE5EB")
+        } else {
+            GlobalUtils.formatColor("#58CEFF")
+        }
         sexStringSpannable.setSpan(
-            ForegroundColorSpan(GlobalUtils.formatColor("#FCE5EB")),
+            ForegroundColorSpan(lightColor),
             sexStartIndex,
             sexStartIndex + 1,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -1037,7 +1042,14 @@ class HomePageActivity : BaseActivity() {
     private fun showTags(characterTag: CharacterTag) {
         val tagList = characterTag.characterTagList
         val favoriteTagList = characterTag.favoriteTagList
-        if (tagList.isEmpty()) {
+        val characterList = mutableListOf<String>()
+        characterList.addAll(tagList)
+        favoriteTagList.forEach {
+            if (!characterList.contains(it)) {
+                characterList.add(it)
+            }
+        }
+        if (characterList.isEmpty()) {
             //没有标签数据
             linefeed_ll_tag.hide()
             tv_tag.hide()
@@ -1048,7 +1060,7 @@ class HomePageActivity : BaseActivity() {
             var line = 1
             var currentWidth = 0
             //是否是当前行的第一个元素
-            tagList.forEach { tag ->
+            characterList.forEach { tag ->
                 val tv = TextView(this)
                     .apply {
                         text = tag
