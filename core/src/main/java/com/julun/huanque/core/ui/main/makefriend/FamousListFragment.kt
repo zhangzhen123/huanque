@@ -87,6 +87,7 @@ class FamousListFragment : BaseFragment() {
 
         mViewModel.famousListData.observe(this, Observer {
             if (it != null) {
+                (activity as? PlumFlowerActivity)?.mRule = it.ruleUrl
                 if (it.monthList.isNotEmpty() || it.lastWeekTop.userId != 0L) {
                     statePage.showSuccess()
                     val data = mutableListOf<FamousListMultiBean>()

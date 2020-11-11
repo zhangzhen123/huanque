@@ -9,7 +9,10 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
+import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -44,6 +47,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
 import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
+import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -57,10 +61,7 @@ import kotlinx.android.synthetic.main.act_home_page.tv_private_chat
 import kotlinx.android.synthetic.main.act_home_page.tv_sex
 import kotlinx.android.synthetic.main.act_home_page.tv_tag
 import kotlinx.android.synthetic.main.fragment_user_card.*
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.textColor
+import org.jetbrains.anko.*
 import kotlin.math.ceil
 
 /**
@@ -425,6 +426,13 @@ class HomePageActivity : BaseActivity() {
         tv_black_status.onClickNew {
             //屏蔽事件
         }
+        ll_bird.onClickNew {
+            //跳转养鹊乐园
+            val intent = Intent(this, LeYuanBirdActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
+        }
     }
 
     /**
@@ -589,7 +597,7 @@ class HomePageActivity : BaseActivity() {
     private fun showViewByData(bean: HomePageInfo) {
         tv_user_name.text = bean.nickname
         val picList = mutableListOf<HomePagePicBean>()
-        picList.add(HomePagePicBean(bean.headPic, "", BusiConstant.True))
+        picList.add(HomePagePicBean(bean.headPic, bean.headRealPeople, BusiConstant.True))
         bean.picList.forEach {
             picList.add(HomePagePicBean(it))
         }
@@ -622,6 +630,7 @@ class HomePageActivity : BaseActivity() {
             tv_time.text = "${bean.voice.length}s"
             view_voice.show()
             tv_time.show()
+            sdv_voice_state.show()
         } else {
             //不显示语音签名
             view_voice.hide()
@@ -629,6 +638,7 @@ class HomePageActivity : BaseActivity() {
             view_voice.hide()
             view_voice_divider.hide()
             tv_like.hide()
+            sdv_voice_state.hide()
         }
 
         //显示座驾相关视图
@@ -674,7 +684,16 @@ class HomePageActivity : BaseActivity() {
             tv_sex.setCompoundDrawables(null, null, null, null)
         }
         //性别+星座
-        tv_sex.text = "${bean.age}|${bean.constellation}"
+        val sexContent = "${bean.age} | ${bean.constellation}"
+        val sexStringSpannable = SpannableStringBuilder(sexContent)
+        val sexStartIndex = "${bean.age} ".length
+        sexStringSpannable.setSpan(
+            ForegroundColorSpan(GlobalUtils.formatColor("#FCE5EB")),
+            sexStartIndex,
+            sexStartIndex + 1,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        tv_sex.text = sexStringSpannable
 
         val city = bean.currentCity
         if (city.isEmpty()) {
@@ -727,7 +746,18 @@ class HomePageActivity : BaseActivity() {
             tv_weight_height.hide()
         } else {
             if (bean.weight != 0 && bean.height != 0) {
-                tv_weight_height.text = "${bean.height}cm|${bean.weight}kg"
+                val weightContent = "${bean.height}cm | ${bean.weight}kg"
+                val weightStringSpannable = SpannableStringBuilder(weightContent)
+                val weightStartIndex = "${bean.height}cm ".length
+                weightStringSpannable.setSpan(
+                    ForegroundColorSpan(GlobalUtils.formatColor("#DAE8F3")),
+                    weightStartIndex,
+                    weightStartIndex + 1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                );
+
+                tv_weight_height.text = "${bean.height}cm | ${bean.weight}kg"
+
             } else if (bean.weight != 0 && bean.height == 0) {
                 tv_weight_height.text = "${bean.weight}kg"
             } else {
@@ -850,6 +880,12 @@ class HomePageActivity : BaseActivity() {
             view_intim.hide()
         }
 
+        if (playProgram.programId == 0L && playParadise.magpieList.isEmpty() && bean.sex == Sex.MALE) {
+            tv_play.hide()
+        } else {
+            tv_play.show()
+        }
+
 
 
         showGuanfang(bean.iconList)
@@ -888,8 +924,16 @@ class HomePageActivity : BaseActivity() {
 
 
     private val bannerAdapter by lazy {
-        BGABanner.Adapter<SimpleDraweeView, HomePagePicBean> { _, itemView, model, _ ->
-            ImageUtils.loadImage(itemView, "${model?.pic}")
+        BGABanner.Adapter<View, HomePagePicBean> { _, itemView, model, _ ->
+            val pic = itemView?.findViewById<SimpleDraweeView>(R.id.sdv) ?: return@Adapter
+
+            ImageUtils.loadImage(pic, "${model?.pic}")
+            val icWater = itemView?.findViewById<ImageView>(R.id.iv_water) ?: return@Adapter
+            if (model?.realPic == BusiConstant.True) {
+                icWater.show()
+            } else {
+                icWater.hide()
+            }
         }
     }
 
@@ -921,7 +965,7 @@ class HomePageActivity : BaseActivity() {
             }
 
         })
-        bga_banner.setData(picList, null)
+        bga_banner.setData(R.layout.item_bga_banner_image_home_page, picList, null)
         bga_banner.setAutoPlayAble(false)
 //        bga_banner.startAutoPlay()
         bga_banner.currentItem = 0

@@ -24,13 +24,15 @@ class PlumFlowerViewModel : BaseViewModel() {
     //名人榜数据
     val famousListData: MutableLiveData<FamousListBean> by lazy { MutableLiveData<FamousListBean>() }
 
+
     /**
      * 获取今日榜
      */
     fun getToadyList() {
         viewModelScope.launch {
             request({
-                listData.value = socialService.flowerToday().dataConvert()
+                val result = socialService.flowerToday().dataConvert()
+                listData.value = result
             }, {}, {}, true)
         }
     }
@@ -41,7 +43,8 @@ class PlumFlowerViewModel : BaseViewModel() {
     fun getWeekList() {
         viewModelScope.launch {
             request({
-                listData.value = socialService.flowerWeek().dataConvert()
+                val result = socialService.flowerWeek().dataConvert()
+                listData.value = result
             }, {}, {}, true)
         }
     }
@@ -52,7 +55,8 @@ class PlumFlowerViewModel : BaseViewModel() {
     fun getFamousList() {
         viewModelScope.launch {
             request({
-                famousListData.value = socialService.flowerFamous().dataConvert()
+                val result = socialService.flowerFamous().dataConvert()
+                famousListData.value = result
             }, {}, {}, true)
         }
     }

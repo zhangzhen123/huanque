@@ -52,6 +52,10 @@ class HomePageEvaluateFragment : BaseDialogFragment() {
      */
     private fun initEvents() {
         tv_done.onClickNew {
+            if (mOriEvaluate.isEmpty() && mShowEvaluate.isEmpty()) {
+                ToastUtils.show("你还未添加任何评论哦")
+                return@onClickNew
+            }
             mHomePageViewModel.evaluteateFriend(mShowEvaluate)
         }
     }
