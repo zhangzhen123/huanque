@@ -45,6 +45,7 @@ class HomePageEvaluateFragment : BaseDialogFragment() {
     override fun initViews() {
         initRecyclerView()
         initEvents()
+        tv_done.isSelected = true
     }
 
     /**
@@ -83,7 +84,7 @@ class HomePageEvaluateFragment : BaseDialogFragment() {
                     adapter.notifyItemChanged(position)
                 }
                 updateCount()
-                judgeDoneEnable()
+//                judgeDoneEnable()
             }
         }
     }
@@ -134,7 +135,7 @@ class HomePageEvaluateFragment : BaseDialogFragment() {
         mRecomEvaluateAdapter.evaluateList = realMyTagList
         mRecomEvaluateAdapter.setList(recomTagList)
         updateCount()
-        judgeDoneEnable()
+//        judgeDoneEnable()
     }
 
 
@@ -142,23 +143,23 @@ class HomePageEvaluateFragment : BaseDialogFragment() {
      * 判断完成按钮是否可用
      */
     private fun judgeDoneEnable() {
-        if (mOriEvaluate.size != mShowEvaluate.size) {
-            tv_done.isSelected = true
-        }
-        //接下来判断是否相互包含
-        mOriEvaluate.forEach {
-            if (!mShowEvaluate.contains(it)) {
-                tv_done.isSelected = true
-                return
-            }
-        }
-        mShowEvaluate.forEach {
-            if (!mOriEvaluate.contains(it)) {
-                tv_done.isSelected = true
-                return
-            }
-        }
-        tv_done.isSelected = false
+//        if (mOriEvaluate.size != mShowEvaluate.size) {
+//            tv_done.isSelected = true
+//        }
+//        //接下来判断是否相互包含
+//        mOriEvaluate.forEach {
+//            if (!mShowEvaluate.contains(it)) {
+//                tv_done.isSelected = true
+//                return
+//            }
+//        }
+//        mShowEvaluate.forEach {
+//            if (!mOriEvaluate.contains(it)) {
+//                tv_done.isSelected = true
+//                return
+//            }
+//        }
+//        tv_done.isSelected = false
     }
 
     /**
