@@ -320,7 +320,10 @@ data class CardManagerForm(
  * 随机获取一个直播间
  */
 class RandomRoomForm(
-    var sourceType: String? = null
+    var programId: Long? = null,
+    var sourceType: String? = null,
+    var dataType: String? = null//dataType: 数据类型，如果sourceType为Magpie，则该值传任务的代码(taskCode)
 )
+
 //搜索参数
 class KeyWordForm(var searchKey: String = "")

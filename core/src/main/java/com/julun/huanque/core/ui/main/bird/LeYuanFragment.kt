@@ -632,7 +632,7 @@ class LeYuanFragment : BaseVMFragment<LeYuanViewModel>() {
                 val bird = it.requireT()
                 if (bird.hasEnough != null && bird.hasEnough == false) {
                     if (mBirdTaskGuideFragment == null) {
-                        mBirdTaskGuideFragment = BirdTaskGuideFragment.newInstance(task = bird.taskGuideInfo)
+                        mBirdTaskGuideFragment = BirdTaskGuideFragment.newInstance(task = bird.taskGuideInfo,programId = mViewModel.programId)
                     } else {
                         mBirdTaskGuideFragment?.setTask(bird.taskGuideInfo)
                     }

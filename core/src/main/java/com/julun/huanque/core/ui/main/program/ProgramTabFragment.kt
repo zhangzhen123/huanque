@@ -114,9 +114,9 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
         authorList.addOnChildAttachStateChangeListener(object :
             androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewDetachedFromWindow(view: View) {
-                if (view.id == R.id.program_container) {
-                    removeItemPlay(view)
-                }
+//                if (view.id == R.id.program_container) {
+//                    removeItemPlay(view)
+//                }
             }
 
             override fun onChildViewAttachedToWindow(view: View) {
@@ -141,8 +141,6 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
                     } else {
                         currentMiddle = (positionFirst + positionLast) / 2 + 1
                     }
-//                    if(currentPlayView!=null)
-//                    removeItemPlay(currentPlayView!!)
                     startPlayMidVideo()
                 }
 
@@ -151,22 +149,22 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 isUp = dy < 0
-//                if (currentPlayView != null) {
-//                    val viewRect = Rect()
-//                    currentPlayView!!.getLocalVisibleRect(viewRect)
-////                    logger.info("onScrolled dy=${dy} currentPlayView.top=${viewRect.top} currentPlayView.bottom=${viewRect.bottom} ")
-//                    if (dy > 0) {
-//                        if (viewRect.top > currentPlayView!!.height / 2) {
-//                            logger.info("向上已出一半")
-//                            removeItemPlay(currentPlayView!!)
-//                        }
-//                    } else if (dy < 0) {
-//                        if (viewRect.bottom < currentPlayView!!.height / 2) {
-//                            logger.info("向下已出一半")
-//                            removeItemPlay(currentPlayView!!)
-//                        }
-//                    }
-//                }
+                if (currentPlayView != null) {
+                    val viewRect = Rect()
+                    currentPlayView!!.getLocalVisibleRect(viewRect)
+//                    logger.info("onScrolled dy=${dy} currentPlayView.top=${viewRect.top} currentPlayView.bottom=${viewRect.bottom} ")
+                    if (dy > 0) {
+                        if (viewRect.top > currentPlayView!!.height / 2) {
+                            logger.info("向上已出一半")
+                            removeItemPlay(currentPlayView!!)
+                        }
+                    } else if (dy < 0) {
+                        if (viewRect.bottom < currentPlayView!!.height / 2) {
+                            logger.info("向下已出一半")
+                            removeItemPlay(currentPlayView!!)
+                        }
+                    }
+                }
             }
         })
 
@@ -175,14 +173,6 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
     private fun removeItemPlay(view: View) {
 
         if (view.tag != null) {
-//            val viewHolder = authorList.getChildViewHolder(view)
-//            val item = authorAdapter.getItemOrNull(viewHolder.adapterPosition)
-//            val content = item?.content
-//            if (content != null && content is ProgramLiveInfo) {
-//                var url = GlobalUtils.getPlayUrl(content.playInfo ?: return)
-//                logger.info("当前的item停止播放 =${viewHolder.adapterPosition} url=${url}")
-//                VideoPlayerManager.removePlay()
-//            }
             VideoPlayerManager.removePlay()
             currentPlayView = null
         }
@@ -202,9 +192,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
 
         if (content != null && content is ProgramLiveInfo && viewHolder != null) {
             var url = GlobalUtils.getPlayUrl(content.playInfo ?: return)
-            //todo
             val itemView = viewHolder.getViewOrNull<FrameLayout>(R.id.program_container) ?: return
-//            url = "rtmp://aliyun-rtmp.ihuanque.com/hq/11054583"
             if (VideoPlayerManager.startPlay(url, itemView)) {
                 currentPlayView = itemView
             }
@@ -301,7 +289,13 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
             authorAdapter.setList(list)
             VideoPlayerManager.removePlay()
             authorList.postDelayed({
-                if (totalList.size >= 3) {
+                if (totalList.size >= 4) {
+                    currentMiddle = if (Random.nextBoolean()) {
+                        2
+                    } else {
+                        3
+                    }
+                } else if (totalList.size >= 3) {
                     currentMiddle = 2
                 } else if (totalList.size > 0) {
                     currentMiddle = totalList.size - 1
