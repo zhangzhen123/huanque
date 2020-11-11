@@ -79,20 +79,30 @@
                 app:layout_constraintRight_toRightOf="@id/tv_like"
                 tools:visibility="visible" />
 
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/sdv_voice_state"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:background="@drawable/bg_enable"
+                android:layout_marginLeft="4dp"
+                app:actualImageResource="@mipmap/icon_pause_home_page"
+                app:layout_constraintBottom_toBottomOf="@id/view_voice"
+                app:layout_constraintLeft_toLeftOf="@id/view_voice"
+                app:layout_constraintTop_toTopOf="@id/view_voice" />
+
+
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
                 android:layout_marginRight="15dp"
-                android:drawableLeft="@mipmap/icon_pause_home_page"
-                android:drawablePadding="4dp"
                 android:gravity="center_vertical"
+                android:paddingLeft="4dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/view_voice"
-                app:layout_constraintLeft_toLeftOf="@id/view_voice"
+                app:layout_constraintLeft_toRightOf="@id/sdv_voice_state"
                 app:layout_constraintTop_toTopOf="@id/view_voice"
                 tools:text="55s"
                 tools:visibility="visible" />
@@ -353,8 +363,8 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="15dp"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_divider_num" />
 
             <TextView

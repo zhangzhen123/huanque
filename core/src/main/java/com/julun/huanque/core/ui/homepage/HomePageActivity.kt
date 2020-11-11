@@ -138,36 +138,46 @@ class HomePageActivity : BaseActivity() {
 
             override fun start() {
                 logger.info("start 总长=${audioPlayerManager.getDuration()}")
-                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
-                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-                tv_time.setCompoundDrawables(drawable, null, null, null)
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
                 //不使用实际的值
 //                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
 //                AliplayerManager.soundOff()
+                sdv_voice_state.setPadding(dp2px(5), dp2px(6), dp2px(5), dp2px(6))
+                ImageUtils.loadGifImageLocal(sdv_voice_state, R.mipmap.voice_home_page_playing)
             }
 
             override fun resume() {
                 logger.info("resume")
                 AliPlayerManager.soundOff()
-                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
-                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-                tv_time.setCompoundDrawables(drawable, null, null, null)
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
+                sdv_voice_state.setPadding(dp2px(5), dp2px(6), dp2px(5), dp2px(6))
+                ImageUtils.loadGifImageLocal(sdv_voice_state, R.mipmap.voice_home_page_playing)
             }
 
             override fun pause() {
                 logger.info("pause")
                 AliPlayerManager.soundOn()
-                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
-                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-                tv_time.setCompoundDrawables(drawable, null, null, null)
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
+                val padding = dp2px(0)
+                sdv_voice_state.setPadding(padding, padding, padding, padding)
+                ImageUtils.loadImageLocal(sdv_voice_state, R.mipmap.icon_pause_home_page)
             }
 
             override fun stop() {
                 logger.info("stop")
                 AliPlayerManager.soundOn()
-                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
-                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-                tv_time.setCompoundDrawables(drawable, null, null, null)
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
+                val padding = dp2px(0)
+                sdv_voice_state.setPadding(padding, padding, padding, padding)
+                ImageUtils.loadImageLocal(sdv_voice_state, R.mipmap.icon_pause_home_page)
             }
 
 
@@ -337,7 +347,10 @@ class HomePageActivity : BaseActivity() {
         }
 
         sdv_intim_border.onClickNew {
-            mHomePageViewModel.closeConfidantRank()
+            val bean = mHomePageViewModel.homeInfoBean.value?.closeConfidant ?: return@onClickNew
+            if (bean.userId != 0L) {
+                mHomePageViewModel.closeConfidantRank()
+            }
 //            mIntimacyFragment.show(supportFragmentManager, "IntimacyFragment")
         }
         tv_time.onClickNew {
@@ -354,6 +367,9 @@ class HomePageActivity : BaseActivity() {
                     audioPlayerManager.resume()
                 }
             }
+        }
+        sdv_voice_state.onClickNew {
+            tv_time.performClick()
         }
         tv_like.onClickNew {
             //点赞语音
@@ -763,7 +779,7 @@ class HomePageActivity : BaseActivity() {
                 //开播中
                 tv_living.show()
                 sdv_living.show()
-                ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.gif_is_living01)
+                ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
                 tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
                 tv_living.text = "直播中"
             } else {
@@ -847,7 +863,7 @@ class HomePageActivity : BaseActivity() {
             //开播状态
             tv_living_bottom.show()
             sdv_living_bottom.show()
-            ImageUtils.loadGifImageLocal(sdv_living_bottom, R.mipmap.gif_is_living01)
+            ImageUtils.loadGifImageLocal(sdv_living_bottom, R.mipmap.living_home_page_bottom)
             view_living.show()
             view_private_chat.hide()
             tv_private_chat.hide()

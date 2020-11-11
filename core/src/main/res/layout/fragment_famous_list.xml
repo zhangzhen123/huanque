@@ -13,7 +13,9 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
+            android:overScrollMode="never">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -80,7 +82,6 @@
                     android:id="@+id/recyclerView"
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
-                    android:descendantFocusability="beforeDescendants"
                     android:overScrollMode="never"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
