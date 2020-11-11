@@ -16,6 +16,7 @@ import com.julun.huanque.common.adapter.NormalEmojiAdapter
 import com.julun.huanque.common.adapter.PrerogativeEmojiAdapter
 import com.julun.huanque.common.constant.EmojiType
 import com.julun.huanque.common.interfaces.EmojiInputListener
+import com.julun.huanque.common.layoutmanager.WrapContentGridLayoutManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -63,17 +64,17 @@ class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?)
             EmojiType.PREROGATIVE -> {
                 //特权表情
                 adapter = AnimationAdapter().apply { setList(Emotions.getEmotions(EmojiType.PREROGATIVE)) }
-                GridLayoutManager(context, 4)
+                WrapContentGridLayoutManager(context, 4)
             }
             EmojiType.ANIMATION -> {
                 //动画表情
                 adapter = PrerogativeEmojiAdapter().apply { setList(Emotions.getEmotions(EmojiType.ANIMATION)) }
-                GridLayoutManager(context, 4)
+                WrapContentGridLayoutManager(context, 4)
             }
             else -> {
                 //普通表情
                 adapter = NormalEmojiAdapter().apply { setList(Emotions.getEmotions(EmojiType.NORMAL)) }
-                GridLayoutManager(context, 7)
+                WrapContentGridLayoutManager(context, 7)
             }
         }
         recyclerView.layoutManager = gridLayoutManager
