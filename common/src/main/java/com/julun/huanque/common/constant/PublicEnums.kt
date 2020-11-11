@@ -362,6 +362,9 @@ object MessageConstants {
     //交友页面
     const val FriendHome = "FriendHome"
 
+    //私信
+    const val PrivateChat = "PrivateChat"
+
 }
 
 /**
