@@ -2100,9 +2100,14 @@ class PlayerActivity : BaseActivity() {
             if (program == programId) {
                 //对于切换直播间id相同的不再执行切换操作 在这里直接做相应额外操作
                 if (mBirdAwardCountInfo != null) {
-                    //通知后台标记任务开始
-                    viewModel.markBirdTask()
-                    bird_count_view.showCounting(mBirdAwardCountInfo!!)
+
+                    if (bird_count_view.isDoing) {
+                        logger.info("当前正在进行 不处理")
+                    } else {
+                        //通知后台标记任务开始
+                        viewModel.markBirdTask()
+                        bird_count_view.showCounting(mBirdAwardCountInfo!!)
+                    }
                     mBirdAwardCountInfo = null
                 }
             } else {

@@ -17,7 +17,6 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.HomeService
 import com.julun.huanque.common.suger.*
-import kotlinx.coroutines.delay
 
 
 /**

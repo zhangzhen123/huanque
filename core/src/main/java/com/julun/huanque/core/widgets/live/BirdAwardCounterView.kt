@@ -52,9 +52,9 @@ class BirdAwardCounterView : ConstraintLayout {
     private var mPlayerViewModel: PlayerViewModel? = null
     private var mBirdTaskViewModel: BirdTaskViewModel? = null
 
-    private var hasInflate:Boolean=false
-    private fun initView(){
-        if(hasInflate){
+    private var hasInflate: Boolean = false
+    private fun initView() {
+        if (hasInflate) {
             logger.info("已经初始化过了")
             return
         }
@@ -79,7 +79,8 @@ class BirdAwardCounterView : ConstraintLayout {
                     ToastUtils.show("${it.error?.busiMessage}")
                 }
                 isEnabled = true
-                canReceive=false
+                isDoing = false
+                canReceive = false
             })
         }
         onClickNew {
@@ -88,16 +89,18 @@ class BirdAwardCounterView : ConstraintLayout {
                 mBirdTaskViewModel?.receiveTask(currentBirdLiveAward?.taskCode ?: return@onClickNew)
             }
         }
-        hasInflate=true
+        hasInflate = true
     }
 
     private var propCdDispose: Disposable? = null
 
     //
     private var time: Long = 0
-    private var canReceive=false
+    private var canReceive = false
+    var isDoing: Boolean = false
     private var currentBirdLiveAward: BirdLiveAward? = null
     fun showCounting(info: BirdLiveAward) {
+        isDoing = true
         this.show()
         initView()
         currentBirdLiveAward = info
@@ -111,7 +114,7 @@ class BirdAwardCounterView : ConstraintLayout {
                 time = totalTime - it
                 if (time <= 0L) {
                     mPlayerViewModel?.watchLiveEnd()
-                    canReceive=true
+                    canReceive = true
                     tv_tips.text = "领取"
                 } else {
                     tv_tips.text = "$time"
@@ -132,7 +135,6 @@ class BirdAwardCounterView : ConstraintLayout {
                 tv_title.text = "大量金币"
             }
         }
-
     }
 
     fun resetView() {
@@ -141,6 +143,8 @@ class BirdAwardCounterView : ConstraintLayout {
         }
         currentBirdLiveAward = null
         time = 0
+        canReceive = false
+        isDoing = false
         hide()
     }
 
