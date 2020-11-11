@@ -622,6 +622,7 @@ class HomePageActivity : BaseActivity() {
             tv_time.text = "${bean.voice.length}s"
             view_voice.show()
             tv_time.show()
+            sdv_voice_state.show()
         } else {
             //不显示语音签名
             view_voice.hide()
@@ -629,6 +630,7 @@ class HomePageActivity : BaseActivity() {
             view_voice.hide()
             view_voice_divider.hide()
             tv_like.hide()
+            sdv_voice_state.hide()
         }
 
         //显示座驾相关视图
@@ -848,6 +850,12 @@ class HomePageActivity : BaseActivity() {
         } else {
             con_intim.hide()
             view_intim.hide()
+        }
+
+        if (playProgram.programId == 0L && playParadise.magpieList.isEmpty() && bean.sex == Sex.MALE) {
+            tv_play.hide()
+        } else {
+            tv_play.show()
         }
 
 

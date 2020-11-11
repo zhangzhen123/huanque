@@ -198,6 +198,7 @@ class HomePageViewModel : BaseViewModel() {
                 if (list != null) {
                     homeInfoBean.value?.appraiseList = list
                 }
+                ToastUtils.show("添加评论成功")
             }, {})
         }
 
