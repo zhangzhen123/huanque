@@ -961,7 +961,12 @@ class HomePageActivity : BaseActivity() {
 //            val imageList = bean.picList.apply { add(bean.headPic) }
 //
 //            imageList.forEach { picList.add(StringHelper.getOssImgUrl(it)) }
-            ImageActivity.start(this, posisiton, picList)
+            ImageActivity.start(
+                this, posisiton, picList,
+                from = ImageActivityFrom.HOME,
+                operate = ImageActivityOperate.REPORT,
+                userId = mHomePageViewModel.targetUserId
+            )
         }
     }
 
@@ -1043,7 +1048,7 @@ class HomePageActivity : BaseActivity() {
                 }
             }
 
-            val textBean = ImageUtils.renderTextAndImage(list,"   ")
+            val textBean = ImageUtils.renderTextAndImage(list, "   ")
             stv_medal.renderBaseText(textBean ?: return)
         }
     }
