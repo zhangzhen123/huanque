@@ -74,6 +74,7 @@ class ProgramAdapter : BaseMultiItemQuickAdapter<MultiBean, BaseViewHolder>(), L
         banner.setAdapter(bannerAdapter)
         banner.setDelegate(bannerItemCick)
         banner.setData(ads, null)
+        banner?.viewPager?.pageMargin = dp2px(10)
         // 默认是自动轮播的，当只有一条广告数据时，就不轮播了
         banner.setAutoPlayAble(ads.size > 1)
     }
