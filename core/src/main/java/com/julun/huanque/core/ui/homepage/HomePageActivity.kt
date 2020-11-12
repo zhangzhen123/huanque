@@ -1043,7 +1043,7 @@ class HomePageActivity : BaseActivity() {
                 }
             }
 
-            val textBean = ImageUtils.renderTextAndImage(list)
+            val textBean = ImageUtils.renderTextAndImage(list,"   ")
             stv_medal.renderBaseText(textBean ?: return)
         }
     }

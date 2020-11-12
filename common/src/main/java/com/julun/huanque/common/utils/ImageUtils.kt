@@ -645,8 +645,9 @@ object ImageUtils {
      * @see demo
      * 图文混排工具
      * @param arrayList 传入对应混排list,使用方法 -> [demo]
+     * @param space 图标和之前内容之间的间距  默认 " "(一个空格)
      */
-    fun renderTextAndImage(arrayList: ArrayList<TIBean>): BaseTextBean? {
+    fun renderTextAndImage(arrayList: ArrayList<TIBean>,space : String = " "): BaseTextBean? {
         if (arrayList.isEmpty()) {
             return null
         }
@@ -689,8 +690,9 @@ object ImageUtils {
                         }
                         else -> {
                             val imgParam = copyImageParams(ImageParam(), bean) as ImageParam
-                            textIndex += 2
-                            text += " #"
+                            val imageSpaceStr = "${space}#"
+                            textIndex += imageSpaceStr.length
+                            text += imageSpaceStr
                             imgParam.index = textIndex
                             textBean.imgParams.add(imgParam)
                         }
