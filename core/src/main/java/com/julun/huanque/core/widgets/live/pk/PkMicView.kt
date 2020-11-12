@@ -269,7 +269,7 @@ class PkMicView @JvmOverloads constructor(
         //静态展示奖杯
         if (data.detailList != null) {
             data.detailList!!.forEachIndexed { index, item ->
-                if (PKResultType.WIN == item.roundResult) {
+                if (item.winRound > 0) {
                     playCupAni(1 + index, item.winRound, false)
                 }
             }
@@ -375,7 +375,7 @@ class PkMicView @JvmOverloads constructor(
         }
         if (pkinfo.detailList != null) {
             pkinfo.detailList!!.forEachIndexed { index, item ->
-                if (PKResultType.WIN == item.roundResult) {
+                if (item.winRound > 0) {
                     playCupAni(1 + index, item.winRound, false)
                 }
             }
@@ -566,7 +566,7 @@ class PkMicView @JvmOverloads constructor(
         var hasCupAni = false
         if (info.detailList != null) {
             info.detailList!!.forEachIndexed { index, item ->
-                if (item.roundResult == PKResultType.WIN) {
+                if (item.winRound > 0) {
                     hasCupAni = true
                     playCupAni(1 + index, item.winRound)
                 }
@@ -588,8 +588,6 @@ class PkMicView @JvmOverloads constructor(
 
             }, delay)
         }
-
-
 
 
     }
@@ -1004,7 +1002,7 @@ class PkMicView @JvmOverloads constructor(
             title = "即将退出PK"
         }
         logger.info("playTitleAni=$title")
-        if(title.isEmpty()){
+        if (title.isEmpty()) {
             return
         }
         pk_title.text = title
@@ -1244,7 +1242,7 @@ class PkMicView @JvmOverloads constructor(
                 pk3_container_03.hide()
 
                 showViewAfterAni()
-                playTitleAni(currentPKData?:return, true)
+                playTitleAni(currentPKData ?: return, true)
             }
         })
         pk3Set = AnimatorSet()
