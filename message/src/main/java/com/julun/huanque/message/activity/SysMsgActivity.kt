@@ -256,6 +256,14 @@ class SysMsgActivity : BaseActivity() {
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
                     .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
             }
+            MessageConstants.PrivateChat->{
+                //跳转私信
+                try {
+                    PrivateConversationActivity.newInstance(this,sysBean.touchValue.toLong())
+                }catch (e : java.lang.Exception){
+                    e.printStackTrace()
+                }
+            }
 //            else -> {
 //                ToastUtils.show("没有记录的action类型 -> ${touchType}")
 //            }

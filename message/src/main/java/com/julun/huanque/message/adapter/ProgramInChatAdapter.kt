@@ -48,6 +48,7 @@ class ProgramInChatAdapter : BaseQuickAdapter<SingleProgramInConversation, BaseV
         val tag_right_top = holder.getView<TagView>(R.id.tag_right_top)
         val tag_left_top = holder.getView<TagView>(R.id.tag_left_top)
 
+        tag_right_top.initProgramTag(TagView.RIGHT_TOP)
         if (item.rightTopTag.isNotEmpty()) {
             tag_right_top.show()
             tag_right_top.setData(item.rightTopTag)
@@ -60,6 +61,19 @@ class ProgramInChatAdapter : BaseQuickAdapter<SingleProgramInConversation, BaseV
                 holder.setGone(R.id.tv_author_status, true)
             }
         }
+//
+//        if (item.rightTopTag.isNotEmpty()) {
+//            tag_right_top.show()
+//            tag_right_top.setData(item.rightTopTag)
+//            holder.setGone(R.id.tv_author_status, true)
+//        } else {
+//            tag_right_top.hide()
+//            if (item.living == BusiConstant.True) {
+//                holder.setVisible(R.id.tv_author_status, true)
+//            } else {
+//                holder.setGone(R.id.tv_author_status, true)
+//            }
+//        }
 //        if (item.leftTopTag.isNotEmpty()) {
 //            tag_left_top.show()
 //            tag_left_top.initProgramLTV()

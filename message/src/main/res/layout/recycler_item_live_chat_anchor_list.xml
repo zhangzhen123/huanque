@@ -117,7 +117,7 @@
     <com.julun.huanque.common.widgets.TagView
         android:id="@+id/tag_right_top"
         android:layout_width="wrap_content"
-        android:layout_height="16dp"
+        android:layout_height="20dp"
         android:layout_marginTop="@dimen/dimen_5"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
