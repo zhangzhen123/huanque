@@ -40,6 +40,7 @@ import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
@@ -119,13 +120,12 @@ class HomePageActivity : BaseActivity() {
         StatusBarUtil.setColor(this, GlobalUtils.formatColor("#00FFFFFF"))
 
         val shaderParams = view_shader.layoutParams
-        shaderParams.height = statusHeight
+        shaderParams.height = statusHeight + dp2px(44)
         view_shader.layoutParams = shaderParams
 
         initViewModel()
-        val barHeight = StatusBarUtil.getStatusBarHeight(this)
         val params = view_top.layoutParams as? ConstraintLayout.LayoutParams
-        params?.topMargin = barHeight
+        params?.topMargin = statusHeight
         view_top.layoutParams = params
         val userID = intent?.getLongExtra(ParamConstant.UserId, 0) ?: 0
         mHomePageViewModel.targetUserId = userID
@@ -386,7 +386,7 @@ class HomePageActivity : BaseActivity() {
             val carInfo = mHomePageViewModel.homeInfoBean.value?.carInfo ?: return@onClickNew
             if (carInfo.dynamicUrl.isEmpty()) {
                 //座驾动画为空，跳转我的座驾页面
-                RNPageActivity.start(this, RnConstant.MY_CAR_PAGE)
+//                RNPageActivity.start(this, RnConstant.MY_CAR_PAGE)
             } else {
                 //座驾动画不为空，显示动画弹窗
                 mCarDetailFragment.show(supportFragmentManager, "CarDetailFragment")
@@ -843,6 +843,14 @@ class HomePageActivity : BaseActivity() {
                 view.findViewById<TextView>(R.id.tv_level).text = "${it.upgradeLevel}级"
                 ll_bird.addView(view)
             }
+
+            //添加箭头
+            val iv_arrow = ImageView(this)
+            val lp = LinearLayout.LayoutParams(dp2px(18), dp2px(18))
+            lp.gravity = Gravity.CENTER_VERTICAL
+            iv_arrow.layoutParams = lp
+            iv_arrow.setImageResource(R.mipmap.icon_arrow_home_page)
+            ll_bird.addView(iv_arrow)
         } else {
             //无小鹊数据
             ll_bird.hide()
@@ -943,12 +951,17 @@ class HomePageActivity : BaseActivity() {
     }
 
     private val bannerItemClick by lazy {
-        BGABanner.Delegate<SimpleDraweeView, HomePagePicBean> { _, _, model, posisiton ->
+        BGABanner.Delegate<View, HomePagePicBean> { _, _, model, posisiton ->
+            val picBeanList = mPicAdapter.data
+            val picList = mutableListOf<String>()
+            picBeanList.forEach {
+                picList.add(StringHelper.getOssImgUrl(it.pic))
+            }
 //            val bean = mHomePageViewModel.homeInfoBean.value ?: return@Delegate
 //            val imageList = bean.picList.apply { add(bean.headPic) }
-//            val picList = mutableListOf<String>()
+//
 //            imageList.forEach { picList.add(StringHelper.getOssImgUrl(it)) }
-//            ImageActivity.start(this, posisiton, picList)
+            ImageActivity.start(this, posisiton, picList)
         }
     }
 
