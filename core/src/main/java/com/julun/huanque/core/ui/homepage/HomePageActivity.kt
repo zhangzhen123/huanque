@@ -932,7 +932,7 @@ class HomePageActivity : BaseActivity() {
         BGABanner.Adapter<View, HomePagePicBean> { _, itemView, model, _ ->
             val pic = itemView?.findViewById<SimpleDraweeView>(R.id.sdv) ?: return@Adapter
 
-            ImageUtils.loadImage(pic, "${model?.pic}")
+            ImageUtils.loadImageNoResize(pic, "${model?.pic}")
             val icWater = itemView?.findViewById<ImageView>(R.id.iv_water) ?: return@Adapter
             if (model?.realPic == BusiConstant.True) {
                 icWater.show()

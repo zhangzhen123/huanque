@@ -32,6 +32,6 @@ class HomePagePicListAdapter : BaseQuickAdapter<HomePagePicBean, BaseViewHolder>
             .setRoundingParams(roundParams)
             .build()
         sdv.hierarchy = hierarchy
-        sdv.loadImage(StringHelper.getOssImgUrl(item.pic), 40f, 40f)
+        sdv.loadImage(item.pic, 40f, 40f)
     }
 }

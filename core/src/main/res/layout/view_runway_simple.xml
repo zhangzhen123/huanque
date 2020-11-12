@@ -86,9 +86,9 @@
                 android:layout_height="@dimen/run_way_height"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/shape_runway_1"
-                android:layout_marginStart="@dimen/dimen_8"
+                android:layout_marginStart="@dimen/dimen_9"
                 android:paddingEnd="10dp"
-                android:paddingStart="26dp"
+                android:paddingStart="23dp"
                 android:scrollbars="none"
                 tools:visibility="visible"
                 android:visibility="gone">

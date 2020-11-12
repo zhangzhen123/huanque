@@ -9,6 +9,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="left"
+        app:actualImageScaleType="centerCrop"
         app:placeholderImage="@mipmap/logo_placeholder_medium"
         app:roundedCornerRadius="4dp" />
 </LinearLayout>

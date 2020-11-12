@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        app:actualImageScaleType="fitXY"
+        app:actualImageScaleType="centerCrop"
         app:failureImage="@drawable/logo_placeholder_bg_m"
         app:failureImageScaleType="centerCrop"
         app:placeholderImage="@drawable/logo_placeholder_bg_m"
