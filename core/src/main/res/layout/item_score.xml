@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:layout_height="100dp">
 
     <FrameLayout
         android:id="@+id/leftContainer"
         android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/rankText"
@@ -33,7 +37,10 @@
         android:layout_height="74dp"
         android:layout_centerVertical="true"
         android:layout_marginStart="5dp"
-        android:layout_toEndOf="@+id/leftContainer" />
+        android:layout_toEndOf="@+id/leftContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/leftContainer"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!--<ImageView-->
     <!--android:id="@+id/userLevelImage"-->
@@ -58,7 +65,6 @@
         android:id="@+id/image_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/nickNameText"
         android:layout_marginLeft="@dimen/dimen_15"
         android:layout_marginTop="@dimen/dimen_10"
         android:layout_toRightOf="@+id/headImage"
@@ -69,32 +75,39 @@
         android:maxLines="2"
         android:minHeight="20dp"
         android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/headImage"
+        app:layout_constraintTop_toBottomOf="@+id/nickNameText"
         tools:text="勋章列表" />
 
 
     <TextView
         android:id="@+id/nickNameText"
-        android:layout_width="wrap_content"
+        android:layout_width="0px"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
-        android:layout_toRightOf="@+id/headImage"
+        android:layout_marginRight="110dp"
         android:ellipsize="end"
         android:includeFontPadding="false"
-        android:maxEms="10"
         android:maxLines="1"
         android:textColor="@color/black_333"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        app:layout_constraintLeft_toRightOf="@id/headImage"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/contributionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="13dp"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
         android:textColor="@color/black_999"
-        android:textSize="14sp" />
-</RelativeLayout>
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
