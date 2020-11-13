@@ -1,6 +1,7 @@
 package com.julun.huanque.core.manager
 
 import android.graphics.SurfaceTexture
+import android.util.LruCache
 import android.util.SparseArray
 import android.view.*
 import androidx.annotation.IdRes
@@ -52,8 +53,8 @@ object VideoPlayerManager {
     private val playMap = hashMapOf<String, ViewGroup>()
 
 
-    //性能第一 手动缓存  2元缓存  不同rootView源都有对应的自己的缓存列表
-    private val viewMaps: HashMap<View, SparseArray<View>> = hashMapOf()
+    //性能第一 手动缓存  2元缓存  不同rootView源都有对应的自己的缓存列表 默认最多缓存100个
+    private val viewMaps: LruCache<View, SparseArray<View>> = LruCache<View, SparseArray<View>>(100)
 
     //创造一个单例的播放器渲染view
     private val mPlayerViewContainer: View by lazy {
@@ -345,7 +346,7 @@ object VideoPlayerManager {
         logger.info("reset")
         currentPlayUrl = ""
         playMap.clear()
-        viewMaps.clear()
+        viewMaps.evictAll()
         mAliPlayer?.stop()
         mAliPlayer?.release()
         dispose?.dispose()
