@@ -52,7 +52,6 @@ import kotlinx.android.synthetic.main.activity_live_room.*
 import kotlinx.android.synthetic.main.player_gesture_guide.*
 import kotlinx.android.synthetic.main.view_live_bottom_action.view.*
 import kotlinx.android.synthetic.main.view_live_header.*
-import org.jetbrains.anko.dip
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.topPadding
 import java.util.concurrent.TimeUnit
@@ -92,8 +91,9 @@ class PlayerViewManager(val context: PlayerActivity) {
         val HEADER_HEIGHT: Int by lazy {
             CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.live_header_height)
         }
-        val PK_PROCESS_HEIGHT: Int by lazy {
+        val PK_EXTRA_HEIGHT: Int by lazy {
             CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.pk_process_high)
+            +CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.pk_extend_high)
         }
 
         // 公聊区宽度
@@ -1337,7 +1337,7 @@ class PlayerViewManager(val context: PlayerActivity) {
             }
 
             if (isInPk) {
-                publicView.topPadding = PK_PROCESS_HEIGHT
+                publicView.topPadding = PK_EXTRA_HEIGHT
             } else {
                 publicView.topPadding = 0
             }

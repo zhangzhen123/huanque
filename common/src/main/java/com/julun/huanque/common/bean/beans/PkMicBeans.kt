@@ -18,7 +18,8 @@ class PKUser(
     var roundResult: String = "",
     var finalResult: String = "",//代表最终PK胜负结果
     var scoreTime: Long = -1,
-    var sdkProvider: String = ""
+    var sdkProvider: String = "",
+    var rankList: MutableList<PkUserRankBean>? = null
 ) : ProgramAnchor() {
     var roundScore: Long? = null
     var propScore: Long? = null
@@ -35,12 +36,18 @@ class PKUser(
     override fun toString(): String {
         return "PKUser(pid=$programId, score=$roundScore,propScore=$propScore nickname=$nickname, scoreRatio=$scoreRatio, previousScore=$previousScore, previousScoreRatio=$previousScoreRatio)"
     }
-
-    fun toStringNoPrevious(): String {
-        return "PKUser(pid=$programId, score=$roundScore, nickname=$nickname"
-    }
-
 }
+
+data class PkUserRankBean(
+    var badgesPic: List<String> = listOf(),
+    var headPic: String = "",
+    var nickname: String = "",
+    var royalLevel: Int = 0,
+    var score: Long = 0L,
+    var userId: Long = 0L,
+    var userLevel: Int = 0,
+    var userType: String = ""
+)
 
 /**
  * pk信息对象
@@ -83,7 +90,7 @@ class PKInfoBean : Serializable {
     //本地字段
     var needFloatAnim: Boolean = false//是否需要飘星动画的标识
     var needAddMic: Boolean = true //是否需要连麦操作 根据情况进行区分 防止重复添加视频流 视频流重复也影响不大 下游也会判断重复流
-    var needJustPlayStartAni =false //是否需要仅仅只播放开始动画 进入直播间时需要
+    var needJustPlayStartAni = false //是否需要仅仅只播放开始动画 进入直播间时需要
     override fun toString(): String {
         return "PKInfoBean(seconds=$seconds, totalScore=$totalScore, detail=$detailList, endTime=$endTime, pkType=$pkType, template=$template)"
     }

@@ -35,6 +35,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.manager.FloatingManager
+import com.julun.huanque.core.manager.VideoPlayerManager
 import com.julun.huanque.core.ui.live.fragment.FirstRechargeReceivedFragment
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.core.ui.main.program.HomeProgramFragment
@@ -281,6 +282,7 @@ class MainActivity : BaseActivity() {
         //内存泄漏相关优化
         OrderDialogManager.release()
         MessageProcessor.clearProcessors()
+        VideoPlayerManager.clear()
     }
 
 
