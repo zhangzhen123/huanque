@@ -162,6 +162,9 @@ object AppHelper {
      * @param postfix 后缀
      */
     fun getDomainName(postfix: String): String {
+        if(StringHelper.isHttpUrl(postfix)){
+            return postfix
+        }
         //获取BaseUrl
         val baseUrl = CommonInit.getInstance().getBaseUrl()
         val header = if (TextUtils.isEmpty(baseUrl)) {

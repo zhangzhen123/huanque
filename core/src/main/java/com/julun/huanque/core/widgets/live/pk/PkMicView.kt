@@ -35,6 +35,7 @@ import com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
+import com.julun.huanque.core.ui.live.dialog.PkScoreDialogFragment
 import com.julun.huanque.core.ui.live.manager.PlayerViewManager
 import com.julun.huanque.core.viewmodel.PKViewModel
 import com.opensource.svgaplayer.SVGACallback
@@ -134,6 +135,24 @@ class PkMicView @JvmOverloads constructor(
         rankView_right_02.setIsLeft(false)
         rankView_right_03.setIsLeft(false)
         resetRankData()
+
+        ll_rank.onClickNew {
+            val activity = context as? PlayerActivity ?: return@onClickNew
+            if (currentPKData != null) {
+                activity.getDialogManager().openDialog(PkScoreDialogFragment::class.java, builder = {
+                    var pgId01 = 0L
+                    var pgId02 = 0L
+                    currentPKData!!.detailList?.let {
+                        if (it.size >= 2) {
+                            pgId01 = it[0].programId
+                            pgId02 = it[1].programId
+                        }
+                    }
+                    val programIds = longArrayOf(pgId01, pgId02)
+                    PkScoreDialogFragment.newInstance(programIds, currentPKData!!.pkId)
+                })
+            }
+        }
         //todo test
 //        var index = 1
 //        this.onClickNew {
@@ -889,8 +908,8 @@ class PkMicView @JvmOverloads constructor(
                 return@post
             }
             //如果目标view可见 就不做动画了
-            if(needAni){
-                if(targetView.isVisible()){
+            if (needAni) {
+                if (targetView.isVisible()) {
                     logger.info("已经显示 不再动画")
                     return@post
                 }
@@ -2040,14 +2059,15 @@ class PkMicView @JvmOverloads constructor(
 
         }
     }
-    private fun resetRankData(){
-        rankView_left_01.resetView( "1")
-        rankView_left_02.resetView( "2")
-        rankView_left_03.resetView( "3")
 
-        rankView_right_01.resetView( "1")
-        rankView_right_02.resetView( "2")
-        rankView_right_03.resetView( "3")
+    private fun resetRankData() {
+        rankView_left_01.resetView("1")
+        rankView_left_02.resetView("2")
+        rankView_left_03.resetView("3")
+
+        rankView_right_01.resetView("1")
+        rankView_right_02.resetView("2")
+        rankView_right_03.resetView("3")
     }
     //=========================================== 斗地主 ==============================================
 //    /**

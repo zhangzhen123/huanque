@@ -1,6 +1,7 @@
 package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.basic.VoidForm
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
@@ -138,11 +139,11 @@ interface PkMicService {
     fun pkPropInfo(@Body form: ProgramIdForm): Observable<Root<PKGiftBalanceBean>>
 
 
-
-
-
-
-
+    /**
+     * PK贡献榜
+     */
+    @POST("live/room/pk/rank")
+    suspend fun queryPkRank(@Body from: PKScoreRankResultForm): Root<PkUserRankInfo>
 
 
 

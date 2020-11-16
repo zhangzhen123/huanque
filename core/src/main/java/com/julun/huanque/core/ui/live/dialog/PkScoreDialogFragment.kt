@@ -2,20 +2,26 @@ package com.julun.huanque.core.ui.live.dialog
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseDialogFragment
-import com.julun.huanque.common.bean.beans.PrivateMessageBean
+import com.julun.huanque.common.base.dialog.WebDialogFragment
 import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.indicator.ColorFlipPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
-import com.julun.huanque.core.ui.live.fragment.ScoreFragment
-import kotlinx.android.synthetic.main.dialog_score.*
+import com.julun.huanque.core.ui.live.fragment.PkScoreFragment
+import kotlinx.android.synthetic.main.dialog_pk_score.*
+import kotlinx.android.synthetic.main.dialog_score.magic_indicator
+import kotlinx.android.synthetic.main.dialog_score.scoreViewPager
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.UIUtil
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -30,18 +36,19 @@ import java.util.*
  *
  *@Anchor: zhangzhen
  *
- *@Date: 2020/8/1 11:04
+ *@Date: 2020/11/16 14:51
  *
- *@Description: ScoreDialogFragment
+ *@Description: PK贡献榜
  *
  */
-class ScoreDialogFragment : BaseDialogFragment() {
+class PkScoreDialogFragment : BaseDialogFragment() {
 
     companion object {
-        fun newInstance(programId: Long): ScoreDialogFragment {
+        fun newInstance(programIds: LongArray, pkId: Long): PkScoreDialogFragment {
             val args = Bundle()
-            args.putLong(IntentParamKey.PROGRAM_ID.name, programId)
-            val fragment = ScoreDialogFragment()
+            args.putLongArray(IntentParamKey.PROGRAM_ID.name, programIds)
+            args.putLong(PkScoreFragment.PK_ID, pkId)
+            val fragment = PkScoreDialogFragment()
             fragment.arguments = args
             return fragment
         }
@@ -51,11 +58,11 @@ class ScoreDialogFragment : BaseDialogFragment() {
 
     private val playerViewModel: PlayerViewModel by activityViewModels()
 
-    private val tabRankIds = arrayListOf(10001, 10002, 10003)
-    private val tabTitles = arrayListOf("本场", "本周", "本月")
+    private var pkId: Long = 0L
+    private val tabTitles = arrayListOf("我方榜单", "对方榜单")
     private var fragmentList = ArrayList<androidx.fragment.app.Fragment>()
 
-    override fun getLayoutId(): Int = R.layout.dialog_score
+    override fun getLayoutId(): Int = R.layout.dialog_pk_score
     override fun onStart() {
         super.onStart()
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
@@ -64,19 +71,19 @@ class ScoreDialogFragment : BaseDialogFragment() {
     override fun initViews() {
 
         initViewModel()
-        val programId = arguments?.getLong(IntentParamKey.PROGRAM_ID.name, 0L) ?: return
-        fragmentList.add(ScoreFragment.newInstance().apply {
-            setArgument(programId, tabRankIds[0])
+        val programIds = arguments?.getLongArray(IntentParamKey.PROGRAM_ID.name) ?: return
+        pkId = arguments?.getLong(PkScoreFragment.PK_ID) ?: 0L
+        if (programIds.size < 2) {
+            ToastUtils.show2("参数无效")
+            dismiss()
+            return
+        }
+        fragmentList.add(PkScoreFragment.newInstance().apply {
+            setArgument(programIds[0], pkId)
         })
-        fragmentList.add(ScoreFragment.newInstance().apply {
-            setArgument(programId, tabRankIds[1])
+        fragmentList.add(PkScoreFragment.newInstance().apply {
+            setArgument(programIds[1], pkId)
         })
-        fragmentList.add(ScoreFragment.newInstance().apply {
-            setArgument(programId, tabRankIds[2])
-        })
-
-//        fragmentList.add(ScoreFragment(programId, tabRankIds[1]))
-//        fragmentList.add(ScoreFragment(programId, tabRankIds[2]))
 
         scoreViewPager.adapter = scorePagerAdapter
         scoreViewPager.offscreenPageLimit = fragmentList.size
@@ -84,6 +91,16 @@ class ScoreDialogFragment : BaseDialogFragment() {
 
 
         initMagicIndicator()
+
+        pk_help.onClickNew {
+            val webDialog = WebDialogFragment(playerViewModel.pkDesUrl)
+                .setViewParams(height = 300,width = 270, gravity = Gravity.CENTER,leftAndRightMargin = 15).isNeedBottomBtn("知道了")
+                .setDialogBg(R.drawable.bg_shape_white1)
+
+
+            webDialog.setListener(callback = WebDialogFragment.WebCallback(onBottom = { webDialog.dismiss() }))
+            webDialog.show(requireActivity(), "WebDialogFragment")
+        }
     }
 
 
@@ -91,19 +108,7 @@ class ScoreDialogFragment : BaseDialogFragment() {
      * 初始化ViewModel相关
      */
     private fun initViewModel() {
-//        playerViewModel.privateMessageView.observe(this, object : Observer<PrivateMessageBean> {
-//            override fun onChanged(t: PrivateMessageBean?) {
-//                //todo
-//            }
-//
-//        })
 
-        playerViewModel.scoreDismissFlag.observe(this, Observer {
-            if (it != null) {
-                playerViewModel.scoreDismissFlag.value = null
-                dismiss()
-            }
-        })
     }
 
     /**

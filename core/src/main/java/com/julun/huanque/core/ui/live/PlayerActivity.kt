@@ -52,6 +52,7 @@ import com.julun.huanque.core.ui.live.dialog.LiveSquareDialogFragment
 import com.julun.huanque.core.ui.live.fragment.AnchorIsNotOnlineFragment
 import com.julun.huanque.core.ui.live.fragment.AnimationFragment
 import com.julun.huanque.core.ui.live.fragment.LivePlayerFragment
+import com.julun.huanque.core.ui.live.manager.PlayerDialogManager
 import com.julun.huanque.core.ui.live.manager.PlayerTransformManager
 import com.julun.huanque.core.ui.live.manager.PlayerViewManager
 import com.julun.huanque.core.viewmodel.*
@@ -235,6 +236,12 @@ class PlayerActivity : BaseActivity() {
     //是否被封禁了
     private var isBanned: Boolean = false
 
+    /**
+     * 对外开放弹窗管理类 方便调用
+     */
+    fun getDialogManager():PlayerDialogManager{
+        return liveViewManager.mDialogManager
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         //直播间禁止重建 //会有各种问题
         super.onCreate(null)

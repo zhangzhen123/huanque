@@ -300,3 +300,5 @@ data class PKGiftBalanceBean(
 data class PKGiftBean(
     var gifts: MutableList<LiveGiftDto> = mutableListOf()
 ) : Serializable
+
+data class PkUserRankInfo(var rankList: MutableList<RankingsResult> = mutableListOf(), var ruleUrl: String = "")

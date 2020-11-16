@@ -41,7 +41,32 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/dimen_40"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/barrier"
         app:layout_constraintTop_toTopOf="parent"
         app:need_process_bar="false" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="tv_bottom" />
+
+    <TextView
+        android:id="@+id/tv_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_30"
+        android:layout_marginStart="@dimen/dimen_20"
+        android:layout_marginTop="@dimen/dimen_15"
+        android:layout_marginEnd="@dimen/dimen_20"
+        android:layout_marginBottom="@dimen/dimen_15"
+        android:background="@drawable/bg_solid_btn2"
+        android:gravity="center"
+        android:text="知道了"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/barrier" />
 </androidx.constraintlayout.widget.ConstraintLayout>

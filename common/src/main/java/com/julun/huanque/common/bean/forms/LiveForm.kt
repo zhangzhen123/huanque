@@ -220,7 +220,15 @@ class ScoreRankResultForm(
     //数据索引位置，从0开始
     var offset: Int = 0
 ) : Serializable
-
+/**
+ * PK贡献榜请求body
+ */
+class PKScoreRankResultForm(
+    var programId: Long? = null,
+    var pkId:Long?=null/*,
+    //数据索引位置，从0开始
+    var offset: Int = 0*/
+) : Serializable
 
 /**
  * 直播间侧滑关注列表

@@ -1,8 +1,8 @@
 package com.julun.huanque.common.base.dialog
 
-import android.graphics.Color
 import android.text.TextUtils
 import android.view.Gravity
+import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.NonNull
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -34,21 +34,29 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
     private var mTitle: String? = null
     private var mTextSize: Float? = null
     private var mTextColor: Int? = null
-    private var mWidth: Float = 0f
-    private var mHeight: Float = 0f
+    private var mWidth: Int = 0
+    private var mHeight: Int = 0
     private var mGravity: Int = Gravity.BOTTOM
-    private var mTopAndBottomMargin:Int = 0
-    private var mLeftAndRightMargin:Int = 0
-    private var mBg: Int = Color.WHITE
+    private var mTopAndBottomMargin: Int = 0
+    private var mLeftAndRightMargin: Int = 0
+    private var mBg: Int = R.color.white
     private var mLeftResid: Int? = null
     private var mRightResid: Int? = null
     private var mNeedAnimator: Boolean = false
 
+    private var mBottomBtn: String? = null
+
     private var mCallback: WebCallback? = null
 
-    class WebCallback(val onLeft: () -> Unit = {}, val onRight: (Boolean?) -> Unit = {})
+    class WebCallback(val onLeft: () -> Unit = {}, val onRight: (Boolean?) -> Unit = {}, val onBottom: () -> Unit = {})
 
-    fun setViewParams(width: Float, height: Float, gravity: Int,topAndBottomMargin:Int = 0,leftAndRightMargin:Int = 0): WebDialogFragment {
+    fun setViewParams(
+        width: Int = ViewGroup.LayoutParams.MATCH_PARENT,
+        height: Int = ViewGroup.LayoutParams.MATCH_PARENT,
+        gravity: Int = Gravity.BOTTOM,
+        topAndBottomMargin: Int = 0,
+        leftAndRightMargin: Int = 0
+    ): WebDialogFragment {
         mWidth = width
         mHeight = height
         mGravity = gravity
@@ -89,6 +97,11 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
         return this
     }
 
+    fun isNeedBottomBtn(text: String): WebDialogFragment {
+        mBottomBtn = text
+        return this
+    }
+
     fun setListener(callback: WebCallback) {
         this.mCallback = callback
     }
@@ -98,13 +111,13 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
     override fun onStart() {
         super.onStart()
         var width = WindowManager.LayoutParams.MATCH_PARENT
-        var height = WindowManager.LayoutParams.WRAP_CONTENT
+        var height = WindowManager.LayoutParams.MATCH_PARENT
         var gravity = Gravity.BOTTOM
-        if (mWidth != 0f) {
-            width = mWidth.toInt()
+        if (mWidth > 0) {
+            width = mWidth
         }
-        if (mHeight != 0f) {
-            height = mHeight.toInt()
+        if (mHeight > 0) {
+            height = mHeight
         }
         gravity = mGravity
         val params = dialog?.window?.attributes
@@ -123,6 +136,7 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
     override fun reCoverView() {
         prepareViews()
     }
+
     private fun prepareViews() {
         try {
             clWebRootiVew.backgroundResource = mBg
@@ -133,7 +147,7 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
                 tvWebTitle?.textSize = mTextSize!!
             }
             if (mTextColor == null || mTextColor == 0) {
-                tvWebTitle?.textColor = GlobalUtils.getColor(R.color.white)
+                tvWebTitle?.textColor = GlobalUtils.getColor(R.color.black_333)
             } else {
                 tvWebTitle?.textColor = GlobalUtils.getColor(mTextColor!!)
             }
@@ -149,15 +163,21 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
                 ivWebRight.show()
                 ivWebRight.imageResource = mRightResid!!
             }
+            if (mBottomBtn != null) {
+                tv_bottom.text = mBottomBtn
+                tv_bottom.show()
+            } else {
+                tv_bottom.hide()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
         val params = webView.layoutParams as? ConstraintLayout.LayoutParams
-        if(mTopAndBottomMargin > 0){
-            params?.topToBottom =  DensityHelper.dp2px(mTopAndBottomMargin).toInt()
-            params?.bottomMargin =  DensityHelper.dp2px(mTopAndBottomMargin).toInt()
+        if (mTopAndBottomMargin > 0) {
+            params?.topToBottom = DensityHelper.dp2px(mTopAndBottomMargin).toInt()
+            params?.bottomMargin = DensityHelper.dp2px(mTopAndBottomMargin).toInt()
         }
-        if(mLeftAndRightMargin > 0){
+        if (mLeftAndRightMargin > 0) {
             params?.leftMargin = DensityHelper.dp2px(mLeftAndRightMargin).toInt()
             params?.rightMargin = DensityHelper.dp2px(mLeftAndRightMargin).toInt()
         }
@@ -183,6 +203,12 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
             this.mCallback?.let {
                 it.onLeft()
             }
+        }
+        tv_bottom.onClickNew {
+            this.mCallback?.let {
+                it.onBottom()
+            }
+
         }
     }
 }

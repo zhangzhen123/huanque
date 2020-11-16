@@ -267,9 +267,6 @@ class PlayerViewModel : BaseViewModel() {
     //确定弹窗文本
     val alertViewMsg: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
-    //打开红包弹窗
-    val openRPFragment: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
 
     //每日任务红点的显示与隐藏的标识位
     val guideToFollow: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
@@ -417,6 +414,9 @@ class PlayerViewModel : BaseViewModel() {
 
     //处理直播间背景在pk时的切换 0初始样式 1 二人pk 2 三人pk 3斗地主
     val bgChange: MutableLiveData<Int> by lazy { MutableLiveData<Int>() }
+
+    //PK说明地址
+    var pkDesUrl: String = ""
     fun getLivRoomBase(programId: Long) {
         logger("getLivRoomBase")
         viewModelScope.launch {
