@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.bean.beans.FriendContent
+import com.julun.huanque.common.bean.beans.IntimateTouchBean
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.constant.*
@@ -217,6 +218,27 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                         MessageCustomBeanType.FRIEND_MESSAGE -> {
                             //模拟好友消息
                             helper.setText(R.id.tv_content, "暂无新消息")
+                        }
+                        MessageCustomBeanType.MessageFee -> {
+                            //付费数据
+                            val msgContext = msg.context
+                            try {
+                                val showContent = JsonUtil.deserializeAsObject<String>(msgContext, String::class.java)
+                                helper.setText(R.id.tv_content, showContent)
+                            } catch (e: java.lang.Exception) {
+                                e.printStackTrace()
+                            }
+
+                        }
+                        MessageCustomBeanType.Initim_Attention -> {
+                            //亲密度变动数据
+                            val msgContext = msg.context
+                            try {
+                                val showContent = JsonUtil.deserializeAsObject<IntimateTouchBean>(msgContext, IntimateTouchBean::class.java)
+                                helper.setText(R.id.tv_content, showContent.content)
+                            } catch (e: java.lang.Exception) {
+                                e.printStackTrace()
+                            }
                         }
                         else -> {
                             helper.setText(R.id.tv_content, "")

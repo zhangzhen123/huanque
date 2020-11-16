@@ -497,10 +497,12 @@ class PrivateConversationActivity : BaseActivity() {
             if (it != null) {
                 if (it == 0L && (SessionUtils.getSex() == Sex.MALE || (SessionUtils.getSex() == Sex.FEMALE && mPrivateConversationViewModel?.chatInfoData?.value?.sex == Sex.FEMALE))) {
                     //免费(男性  或者  自己和对方都是女性  显示标识)
-                    tv_free.show()
-                } else {
-                    //免费
                     tv_free.hide()
+                    edit_text.hint = "聊天免费，不消耗聊天券和鹊币"
+                } else {
+                    //不免费
+                    tv_free.hide()
+                    edit_text.hint = "聊点什么吧..."
                 }
             }
         })
@@ -565,37 +567,53 @@ class PrivateConversationActivity : BaseActivity() {
      * 更新道具视图
      */
     private fun updatePropView(voiceCount: Int, chatCount: Int) {
-        sdv_first_prop.hide()
-        tv_first_prop_count.hide()
-        sdv_second_prop.hide()
-        tv_second_prop_count.hide()
-
-        if (voiceCount > 0) {
-            //有语音券
-            sdv_first_prop.show()
-            sdv_first_prop.imageResource = R.mipmap.icon_voice_small
-            tv_first_prop_count.show()
-            tv_first_prop_count.text = "$voiceCount"
-        }
 
         if (chatCount > 0) {
             //有聊天券
-            val iv: ImageView
-            val tvCount: TextView
-            if (voiceCount <= 0) {
-                //使用First
-                iv = sdv_first_prop
-                tvCount = tv_first_prop_count
-            } else {
-                //使用second
-                iv = sdv_second_prop
-                tvCount = tv_second_prop_count
-            }
-            iv.show()
-            iv.imageResource = R.mipmap.icon_msg_small
-            tvCount.show()
-            tvCount.text = "$chatCount"
+            tv_msg_card_count.show()
+            tv_msg_card_count.text = "$chatCount"
+        } else {
+            tv_msg_card_count.hide()
         }
+
+        if (voiceCount > 0) {
+            //有语音券
+            tv_voice_card_count.show()
+            tv_voice_card_count.text = "$voiceCount"
+        } else {
+            tv_voice_card_count.hide()
+        }
+//        sdv_first_prop.hide()
+//        tv_first_prop_count.hide()
+//        sdv_second_prop.hide()
+//        tv_second_prop_count.hide()
+//
+//        if (voiceCount > 0) {
+//            //有语音券
+//            sdv_first_prop.show()
+//            sdv_first_prop.imageResource = R.mipmap.icon_voice_small
+//            tv_first_prop_count.show()
+//            tv_first_prop_count.text = "$voiceCount"
+//        }
+//
+//        if (chatCount > 0) {
+//            //有聊天券
+//            val iv: ImageView
+//            val tvCount: TextView
+//            if (voiceCount <= 0) {
+//                //使用First
+//                iv = sdv_first_prop
+//                tvCount = tv_first_prop_count
+//            } else {
+//                //使用second
+//                iv = sdv_second_prop
+//                tvCount = tv_second_prop_count
+//            }
+//            iv.show()
+//            iv.imageResource = R.mipmap.icon_msg_small
+//            tvCount.show()
+//            tvCount.text = "$chatCount"
+//        }
     }
 
     /**
@@ -711,8 +729,6 @@ class PrivateConversationActivity : BaseActivity() {
                 .subscribe({
                     smoothScrollToBottom()
                 }, {})
-
-
         }
 
         iv_xiaoque.onClickNew {
@@ -1857,6 +1873,7 @@ class PrivateConversationActivity : BaseActivity() {
             }
             mHeaderView?.layoutParams = params
         }
+        scrollToBottom()
     }
 
 

@@ -213,17 +213,68 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
-                <ImageView
-                    android:id="@+id/iv_emoji"
+                <View
+                    android:id="@+id/view_phone"
                     android:layout_width="0px"
                     android:layout_height="0px"
-                    android:layout_marginRight="10dp"
-                    android:scaleType="centerInside"
-                    android:src="@mipmap/icon_emoji"
                     app:layout_constraintBottom_toBottomOf="@id/view_input_bottom"
-                    app:layout_constraintLeft_toLeftOf="@id/view_input_bottom"
-                    app:layout_constraintRight_toLeftOf="@+id/iv_pic"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/view_pic"
                     app:layout_constraintTop_toTopOf="@id/view_input_bottom" />
+
+                <View
+                    android:id="@+id/view_pic"
+                    android:layout_width="0px"
+                    android:layout_height="0px"
+                    app:layout_constraintBottom_toBottomOf="@id/view_input_bottom"
+                    app:layout_constraintLeft_toRightOf="@id/view_phone"
+                    app:layout_constraintRight_toLeftOf="@+id/view_game"
+                    app:layout_constraintTop_toTopOf="@id/view_input_bottom" />
+
+                <View
+                    android:id="@+id/view_game"
+                    android:layout_width="0px"
+                    android:layout_height="0px"
+                    app:layout_constraintBottom_toBottomOf="@id/view_input_bottom"
+                    app:layout_constraintLeft_toRightOf="@id/view_pic"
+                    app:layout_constraintRight_toLeftOf="@+id/view_gift"
+                    app:layout_constraintTop_toTopOf="@id/view_input_bottom" />
+
+                <View
+                    android:id="@+id/view_gift"
+                    android:layout_width="0px"
+                    android:layout_height="0px"
+                    app:layout_constraintBottom_toBottomOf="@id/view_input_bottom"
+                    app:layout_constraintLeft_toRightOf="@id/view_game"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/view_input_bottom" />
+
+                <ImageView
+                    android:id="@+id/iv_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerInside"
+                    android:src="@mipmap/icon_phone"
+                    app:layout_constraintBottom_toBottomOf="@id/view_phone"
+                    app:layout_constraintLeft_toLeftOf="@id/view_phone"
+                    app:layout_constraintRight_toRightOf="@id/view_phone"
+                    app:layout_constraintTop_toTopOf="@id/view_phone" />
+
+                <TextView
+                    android:id="@+id/tv_voice_card_count"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/bg_num"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_10"
+                    android:translationY="-1dp"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toRightOf="@id/iv_phone"
+                    app:layout_constraintRight_toRightOf="@id/iv_phone"
+                    app:layout_constraintTop_toTopOf="@id/iv_phone" />
+
 
                 <ImageView
                     android:id="@+id/iv_pic"
@@ -233,23 +284,11 @@
                     android:layout_marginRight="10dp"
                     android:scaleType="centerInside"
                     android:src="@mipmap/icon_pic"
-                    app:layout_constraintBottom_toBottomOf="@id/view_input_bottom"
-                    app:layout_constraintLeft_toRightOf="@id/iv_emoji"
-                    app:layout_constraintRight_toLeftOf="@id/iv_phone"
-                    app:layout_constraintTop_toTopOf="@id/view_input_bottom" />
+                    app:layout_constraintBottom_toBottomOf="@id/view_pic"
+                    app:layout_constraintLeft_toLeftOf="@id/view_pic"
+                    app:layout_constraintRight_toRightOf="@id/view_pic"
+                    app:layout_constraintTop_toTopOf="@id/view_pic" />
 
-                <ImageView
-                    android:id="@+id/iv_phone"
-                    android:layout_width="0px"
-                    android:layout_height="0px"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:scaleType="centerInside"
-                    android:src="@mipmap/icon_phone"
-                    app:layout_constraintBottom_toBottomOf="@id/view_input_bottom"
-                    app:layout_constraintLeft_toRightOf="@id/iv_pic"
-                    app:layout_constraintRight_toLeftOf="@id/iv_game"
-                    app:layout_constraintTop_toTopOf="@id/view_input_bottom" />
 
                 <ImageView
                     android:id="@+id/iv_share"
@@ -273,10 +312,10 @@
                     android:layout_marginRight="10dp"
                     android:scaleType="centerInside"
                     android:src="@mipmap/icon_leyuan_private"
-                    app:layout_constraintBottom_toBottomOf="@id/view_input_bottom"
-                    app:layout_constraintLeft_toRightOf="@id/iv_phone"
-                    app:layout_constraintRight_toLeftOf="@id/iv_gift"
-                    app:layout_constraintTop_toTopOf="@id/view_input_bottom" />
+                    app:layout_constraintBottom_toBottomOf="@id/view_game"
+                    app:layout_constraintLeft_toLeftOf="@id/view_game"
+                    app:layout_constraintRight_toRightOf="@id/view_game"
+                    app:layout_constraintTop_toTopOf="@id/view_game" />
 
 
                 <ImageView
@@ -286,10 +325,10 @@
                     android:layout_marginLeft="10dp"
                     android:scaleType="centerInside"
                     android:src="@mipmap/icon_gift"
-                    app:layout_constraintBottom_toBottomOf="@id/view_input_bottom"
-                    app:layout_constraintLeft_toRightOf="@id/iv_game"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/view_input_bottom" />
+                    app:layout_constraintBottom_toBottomOf="@id/view_gift"
+                    app:layout_constraintLeft_toLeftOf="@id/view_gift"
+                    app:layout_constraintRight_toRightOf="@id/view_gift"
+                    app:layout_constraintTop_toTopOf="@id/view_gift" />
 
                 <ImageView
                     android:id="@+id/sdv_first_prop"
@@ -353,9 +392,11 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
                     android:src="@mipmap/pic_xiaoque_active"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="@id/edit_text"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/edit_text" />
+                    app:layout_constraintTop_toTopOf="@id/edit_text"
+                    tools:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_send"
@@ -371,6 +412,18 @@
                     app:layout_constraintBottom_toBottomOf="@id/edit_text"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/edit_text" />
+
+                <ImageView
+                    android:id="@+id/iv_emoji"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@mipmap/icon_emoji"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_send"
+                    app:layout_constraintRight_toLeftOf="@id/tv_send"
+                    app:layout_constraintTop_toTopOf="@id/tv_send" />
+
 
                 <TextView
                     android:id="@+id/tv_free"
@@ -400,14 +453,40 @@
                     android:hint="聊点什么吧..."
                     android:imeOptions="actionSearch"
                     android:minHeight="36dp"
-                    android:paddingLeft="15dp"
+                    android:paddingLeft="41dp"
                     android:paddingTop="7dp"
                     android:paddingRight="15dp"
                     android:paddingBottom="7dp"
                     android:textSize="@dimen/sp_16"
                     app:layout_constraintBottom_toTopOf="@id/view_input_bottom"
-                    app:layout_constraintLeft_toRightOf="@id/iv_xiaoque"
-                    app:layout_constraintRight_toLeftOf="@id/tv_send" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/iv_emoji" />
+
+                <ImageView
+                    android:id="@+id/iv_msg_card"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="7dp"
+                    android:src="@mipmap/icon_msg_card"
+                    app:layout_constraintBottom_toBottomOf="@id/edit_text"
+                    app:layout_constraintLeft_toLeftOf="@id/edit_text"
+                    app:layout_constraintTop_toTopOf="@id/edit_text" />
+
+                <TextView
+                    android:id="@+id/tv_msg_card_count"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/bg_num"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_10"
+                    android:visibility="gone"
+                    android:translationY="-1dp"
+                    app:layout_constraintLeft_toRightOf="@id/iv_msg_card"
+                    app:layout_constraintRight_toRightOf="@id/iv_msg_card"
+                    app:layout_constraintTop_toTopOf="@id/iv_msg_card" />
+
 
                 <View
                     android:id="@+id/view_xiaoque_top"
@@ -457,8 +536,7 @@
                     app:layout_constraintLeft_toLeftOf="@id/view_xiaoque"
                     app:layout_constraintRight_toRightOf="@id/view_xiaoque"
                     app:layout_constraintTop_toTopOf="@id/view_xiaoque"
-                    tools:text="肯德基嗯肯德基嗯"
-                    tools:visibility="visible" />
+                    tools:text="肯德基嗯肯德基嗯" />
 
                 <ImageView
                     android:id="@+id/iv_que_close"

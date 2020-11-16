@@ -72,7 +72,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     //私聊的情况下，保存对方的用户信息
     var otherUserInfo: ChatUser? = null
 
-    var mSystemMessageClickListener : SystemMessageClickListener? = null
+    var mSystemMessageClickListener: SystemMessageClickListener? = null
 
     init {
         addChildClickViewIds(R.id.sdv_image, R.id.tv_content, R.id.con_send_room, R.id.view_bg_gift)
@@ -966,9 +966,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 return@forEachIndexed
             }
         }
-        getViewByPosition(position, R.id.iv_send_fail)
-        val ivSendFail = getViewByPosition(position, R.id.iv_send_fail) ?: return
-        val sendProgress = getViewByPosition(position, R.id.send_progress) ?: return
+//        getViewByPosition(position, R.id.iv_send_fail)
+        val ivSendFail = getViewByPosition(position + headerLayoutCount, R.id.iv_send_fail) ?: return
+        val sendProgress = getViewByPosition(position + headerLayoutCount, R.id.send_progress) ?: return
         when (msg.sentStatus) {
             Message.SentStatus.FAILED -> {
                 //发送失败
