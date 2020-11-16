@@ -459,7 +459,7 @@ class AnimationFragment : BaseFragment() {
 //        alLp.topMargin = (HEADER_HEIGHT + DensityHelper.dp2px(34)).toInt()
 
 
-        val extendHigh = resources.getDimensionPixelSize(R.dimen.pk_process_high)
+        val extendHigh = resources.getDimensionPixelSize(R.dimen.pk_process_high)+resources.getDimensionPixelSize(R.dimen.pk_extend_high)
         pkMicView.layoutParams.height = PlayerViewManager.LIVE_HEIGHT + extendHigh
         logger.info("pkMicView h=${PlayerViewManager.LIVE_HEIGHT + extendHigh}")
 

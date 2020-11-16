@@ -126,7 +126,14 @@ class PkMicView @JvmOverloads constructor(
         pk_dan_level_img02.onClickNew {
 //            playerViewModel.showDialog.value = PkRankMainDialogFragment::class.java
         }
-
+        //PK rank相关
+        rankView_left_03.setIsLeft(true)
+        rankView_left_02.setIsLeft(true)
+        rankView_left_01.setIsLeft(true)
+        rankView_right_01.setIsLeft(false)
+        rankView_right_02.setIsLeft(false)
+        rankView_right_03.setIsLeft(false)
+        resetRankData()
         //todo test
 //        var index = 1
 //        this.onClickNew {
@@ -881,6 +888,14 @@ class PkMicView @JvmOverloads constructor(
                 targetView.show()
                 return@post
             }
+            //如果目标view可见 就不做动画了
+            if(needAni){
+                if(targetView.isVisible()){
+                    logger.info("已经显示 不再动画")
+                    return@post
+                }
+            }
+
             bigImageView.show()
             //重置偏移量 以及缩放值
             bigImageView.translationX = 0f
@@ -1109,6 +1124,7 @@ class PkMicView @JvmOverloads constructor(
         pk_dan_level_img01?.hide()
         pk_dan_level_img02?.hide()
 
+        resetRankData()
         //斗地主
 //        landlordView.hide()
         // 重置奖杯
@@ -1370,6 +1386,21 @@ class PkMicView @JvmOverloads constructor(
                 }
 
                 if (player1 != null && player2 != null) {
+                    val leftWin = if (player1!!.finalResult == PKResultType.WIN) {
+                        true
+                    } else {
+                        null
+                    }
+                    setRankData(0, player1!!.rankList, leftWin)
+
+                    val leftWin2 = if (player2!!.finalResult == PKResultType.WIN) {
+                        false
+                    } else {
+                        null
+                    }
+                    setRankData(1, player2!!.rankList, leftWin2)
+
+
                     val playerScore1 = player1?.roundScore ?: 0
                     val playerScore2 = player2?.roundScore ?: 0
                     val lastPlayerScore1 = lastPlayer1?.roundScore ?: 0
@@ -1957,6 +1988,67 @@ class PkMicView @JvmOverloads constructor(
         myHandler.postDelayed(speedRunnable, delay)
     }
 
+    /**
+     * [index]当前的PK的主播位置 二人就是0，1
+     * [rankList]该主播助攻榜
+     * [leftWin]是否是左侧主播胜利
+     */
+    private fun setRankData(index: Int, rankList: MutableList<PkUserRankBean>?, leftWin: Boolean?) {
+        when (index) {
+            0 -> {
+                if (rankList != null) {
+                    val left01 = rankList.getOrNull(0)
+                    val left02 = rankList.getOrNull(1)
+                    val left03 = rankList.getOrNull(2)
+                    if (left01 != null) {
+                        var tag = "1"
+                        if (leftWin == true) {
+                            tag = "MVP"
+                        }
+                        rankView_left_01.setData(left01, tag)
+                    }
+                    if (left02 != null) {
+                        rankView_left_02.setData(left02, "2")
+                    }
+                    if (left03 != null) {
+                        rankView_left_03.setData(left03, "3")
+                    }
+                }
+
+            }
+            1 -> {
+                if (rankList != null) {
+                    val right01 = rankList.getOrNull(0)
+                    val right02 = rankList.getOrNull(1)
+                    val right03 = rankList.getOrNull(2)
+                    if (right01 != null) {
+                        var tag = "1"
+                        if (leftWin == false) {
+                            tag = "MVP"
+                        }
+                        rankView_right_01.setData(right01, tag)
+                    }
+                    if (right02 != null) {
+                        rankView_right_02.setData(right02, "2")
+                    }
+                    if (right03 != null) {
+                        rankView_right_03.setData(right03, "3")
+                    }
+                }
+
+            }
+
+        }
+    }
+    private fun resetRankData(){
+        rankView_left_01.resetView( "1")
+        rankView_left_02.resetView( "2")
+        rankView_left_03.resetView( "3")
+
+        rankView_right_01.resetView( "1")
+        rankView_right_02.resetView( "2")
+        rankView_right_03.resetView( "3")
+    }
     //=========================================== 斗地主 ==============================================
 //    /**
 //     * 斗地主开始

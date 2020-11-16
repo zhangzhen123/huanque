@@ -16,7 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="42dp"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <com.julun.huanque.core.widgets.live.pk.PkPropView
             android:id="@+id/pk_prop_01"
@@ -43,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
-        android:layout_marginBottom="@dimen/dimen_26"
+        android:layout_marginBottom="@dimen/dimen_78"
         android:background="@mipmap/bg_pk_title"
         android:gravity="center"
         android:orientation="horizontal"
@@ -72,6 +73,7 @@
         android:id="@+id/pk_result_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dimen_78"
         android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible">
@@ -80,7 +82,6 @@
             android:id="@+id/pk_win_layout_01"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dimen_31"
             android:layout_weight="1">
 
             <ImageView
@@ -159,7 +160,6 @@
             android:id="@+id/pk_win_layout_02"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dimen_31"
             android:layout_weight="1">
 
             <ImageView
@@ -235,7 +235,6 @@
             android:id="@+id/pk_win_layout_03"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dimen_31"
             android:layout_weight="1">
 
             <ImageView
@@ -362,7 +361,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/pk_process_high"
         android:layout_gravity="bottom"
-        android:layout_marginTop="@dimen/dimen_12"
+        android:layout_marginBottom="@dimen/pk_extend_high"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -825,6 +824,67 @@
         android:visibility="gone"
         tools:text="第一小局开始"
         tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/ll_rank"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_36"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/dimen_10"
+        android:layout_marginEnd="@dimen/dimen_10"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:gravity="center">
+
+        <com.julun.huanque.core.widgets.live.pk.PkRankView
+            android:id="@+id/rankView_left_03"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_36"
+            android:layout_weight="1" />
+
+        <com.julun.huanque.core.widgets.live.pk.PkRankView
+            android:id="@+id/rankView_left_02"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_36"
+            android:layout_weight="1" />
+
+        <com.julun.huanque.core.widgets.live.pk.PkRankView
+            android:id="@+id/rankView_left_01"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_36"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_33"
+            android:layout_weight="1.2"
+            android:src="@mipmap/icon_pk_vs" />
+
+        <com.julun.huanque.core.widgets.live.pk.PkRankView
+            android:id="@+id/rankView_right_01"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_36"
+            android:layout_weight="1" />
+
+        <com.julun.huanque.core.widgets.live.pk.PkRankView
+            android:id="@+id/rankView_right_02"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_36"
+            android:layout_weight="1" />
+
+        <com.julun.huanque.core.widgets.live.pk.PkRankView
+            android:id="@+id/rankView_right_03"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_36"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_rank_bottom"
+        android:background="@drawable/shape_pk_rank_bottom"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_height="@dimen/dimen_1" />
 
     <com.julun.huanque.common.widgets.svgaView.SVGAPlayerView
         android:id="@+id/pk_cloud"

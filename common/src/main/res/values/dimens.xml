@@ -373,7 +373,7 @@
     <dimen name="pk_name_size">12sp</dimen>
     <dimen name="pk_tx_size">10sp</dimen>
     <dimen name="pk_img_size">32dp</dimen>
-    <dimen name="pk_extend_high">40dp</dimen>
+    <dimen name="pk_extend_high">53dp</dimen>
     <dimen name="pk_process_high">26dp</dimen>
     <dimen name="pk_cloud_high">38dp</dimen>
     <!--发布相关-->

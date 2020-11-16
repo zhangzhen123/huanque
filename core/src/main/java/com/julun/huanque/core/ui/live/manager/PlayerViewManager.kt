@@ -92,8 +92,8 @@ class PlayerViewManager(val context: PlayerActivity) {
             CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.live_header_height)
         }
         val PK_EXTRA_HEIGHT: Int by lazy {
-            CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.pk_process_high)
-            +CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.pk_extend_high)
+            (CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.pk_process_high)
+                    + CommonInit.getInstance().getContext().resources.getDimensionPixelSize(R.dimen.pk_extend_high))
         }
 
         // 公聊区宽度

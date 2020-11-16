@@ -1,14 +1,16 @@
 package com.julun.huanque.core.manager
 
-import android.view.SurfaceHolder
 import com.aliyun.player.AliPlayer
 import com.aliyun.player.AliPlayerFactory
 import com.aliyun.player.IPlayer
 import com.aliyun.player.bean.ErrorInfo
 import com.aliyun.player.nativeclass.TrackInfo
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.core.BuildConfig
+import com.julun.huanque.core.widgets.SingleVideoView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.TimeUnit
@@ -26,10 +28,24 @@ object AliPlayerManager {
     private var mLogEnable = true
 
     private val logger = ULog.getLogger("AliPlayerManager")
-    //重试次数 debug模式用到
-    private var retryCount=0
-//    var mRenderListener: IPlayer.OnRenderingStartListener? = null
 
+    //重试次数 debug模式用到
+    private var retryCount = 0
+
+    private val mRenderListener = IPlayer.OnRenderingStartListener {
+        //首帧渲染显示事件,隐藏封面
+        if (mLogEnable) {
+            logger.info("${this} DXCPlayer 首帧渲染显示事件")
+        }
+        mRendered = true
+        currentVideoView?.mPosterImage?.hide()
+        currentVideoView?.mPlayStateListener?.onFirstRenderListener()
+    }
+    private var currentVideoView: SingleVideoView? = null
+
+    fun bindVideoView(sv: SingleVideoView?) {
+        currentVideoView = sv
+    }
     //SurfaceHolder.Callback唯一
 //    private val mHolderCallback: SurfaceHolder.Callback by lazy {
 //        object : SurfaceHolder.Callback {
@@ -96,11 +112,7 @@ object AliPlayerManager {
             }
             mAliPlayer.redraw()
         }
-//        mAliPlayer.setOnRenderingStartListener {
-//            //首帧渲染显示事件,隐藏封面
-//            mRendered = true
-//            mRenderListener?.onRenderingStart()
-//        }
+        mAliPlayer.setOnRenderingStartListener(mRenderListener)
         mAliPlayer.setOnInfoListener {
             //其他信息的事件，type包括了：循环播放开始，缓冲位置，当前播放位置，自动播放开始等
 //            if (it.code == InfoCode.AutoPlayStart) {
@@ -118,10 +130,35 @@ object AliPlayerManager {
                 //切换音视频流或者清晰度失败
             }
         })
+        mAliPlayer.setOnLoadingStatusListener(object : IPlayer.OnLoadingStatusListener {
+            override fun onLoadingEnd() {
+                if (mLogEnable) {
+                    logger.info("onLoadingEnd")
+                }
+            }
+
+            override fun onLoadingBegin() {
+                if (mLogEnable) {
+                    logger.info("onLoadingBegin")
+                }
+
+            }
+
+            override fun onLoadingProgress(p0: Int, p1: Float) {
+                if (mLogEnable) {
+                    logger.info("onLoadingProgress p0=$p0  p1=$p1")
+                }
+
+            }
+
+        })
         mAliPlayer.setOnStateChangedListener {
             //播放器状态改变事件
             if (mLogEnable) {
                 logger.info("${this} DXCPlayer 播放器状态改变事件 it = $it")
+            }
+            if( it == IPlayer.error){
+                currentVideoView?.mPosterImage?.show()
             }
             if (it == IPlayer.completion || it == IPlayer.error) {
                 //CDN切换的时候会触发此回调，重新调用播放方法
@@ -130,9 +167,9 @@ object AliPlayerManager {
                 }
                 retryCount++
                 if (BuildConfig.DEBUG) {
-                    if(retryCount>3){
+                    if (retryCount > 3) {
                         logger.info("重试${retryCount}次 不再重试")
-                        retryCount=0
+                        retryCount = 0
                         return@setOnStateChangedListener
                     }
 
@@ -177,7 +214,7 @@ object AliPlayerManager {
         config.mHighBufferDuration = 3000;
 // 起播缓冲区时长。单位ms。这个时间设置越短，起播越快。也可能会导致播放之后很快就会进入加载状态。
         config.mStartBufferDuration = 500;
-        config.mClearFrameWhenStop=true
+        config.mClearFrameWhenStop = true
         mAliPlayer.config = config
     }
 
@@ -196,7 +233,7 @@ object AliPlayerManager {
         mAliPlayer.stop()
         stoped = true
         mAliPlayer.setDisplay(null)
-        mAliPlayer.setOnRenderingStartListener(null)
+//        mAliPlayer.setOnRenderingStartListener(null)
     }
 
     /**

@@ -18,6 +18,7 @@ import com.aliyun.player.bean.ErrorInfo
 import com.aliyun.player.bean.InfoCode
 import com.aliyun.player.nativeclass.TrackInfo
 import com.aliyun.player.source.UrlSource
+import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.MicAnchor
 import com.julun.huanque.common.interfaces.PlayStateListener
 import com.julun.huanque.common.suger.hide
@@ -79,8 +80,8 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     //渲染成功时间
     private var mRenderTime = 0L
 
-
-    private var mRenderListener = IPlayer.OnRenderingStartListener {
+    val mPosterImage: SimpleDraweeView by lazy { posterImage }
+    private val mRenderListener = IPlayer.OnRenderingStartListener {
         mRenderTime = System.currentTimeMillis()
         if (useManager) {
             AliPlayerManager.mRendered = true
@@ -162,6 +163,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             //使用单例的播放器 不做任何处理 单例播放器的监听统一在destroy中处理 destroy会在合适的时机调用
 //            mAliPlayer?.setOnRenderingStartListener(null)
 //            logger.info("onDetachedFromWindow setOnRenderingStartListener(null) ")
+            AliPlayerManager.bindVideoView(null)
         }
         mAliPlayer = null
         isFree = true
@@ -391,18 +393,18 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 // 起播缓冲区时长。单位ms。这个时间设置越短，起播越快。也可能会导致播放之后很快就会进入加载状态。
 //        config.mStartBufferDuration = 500;
         //停止播放时 去除最后一帧的残留
-        config.mClearFrameWhenStop=true
+        config.mClearFrameWhenStop = true
         mAliPlayer?.config = config
     }
 
     private fun initSingleModePlayer() {
         mAliPlayer = AliPlayerManager.mAliPlayer
-
+        AliPlayerManager.bindVideoView(this)
         if (AliPlayerManager.mRendered) {
             posterImage.hide()
         }
         logger.info("initSingleModePlayer setOnRenderingStartListener")
-        mAliPlayer?.setOnRenderingStartListener(mRenderListener)
+//        mAliPlayer?.setOnRenderingStartListener(mRenderListener)
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) {
                 logger.info("AliPlayerManager surfaceCreated=${holder.hashCode()}")
@@ -413,7 +415,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                 mSurfaceHolder = holder
                 //对于全局单例的播放器 这里因为会频繁切换渲染surfaceView
                 // 会导致设置的mRenderListener会被挤掉 所以每次这里重新创建时重新赋予RenderListener
-                mAliPlayer?.setOnRenderingStartListener(mRenderListener)
+//                mAliPlayer?.setOnRenderingStartListener(mRenderListener)
             }
 
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {

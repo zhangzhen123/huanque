@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_header"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:padding="@dimen/dimen_1"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/dimen_1"
+        app:placeholderImage="@mipmap/icon_pk_rank_empty"
+        app:placeholderImageScaleType="fitCenter"
+        tools:background="@drawable/shape_pk_rank_head_left"
+        app:roundAsCircle="true"
+        app:actualImageScaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/tv_tag"
+        android:layout_width="@dimen/dimen_23"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@drawable/shape_pk_rank_tag_left"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textSize="8sp"
+        tools:text="MVP" />
+
+
+</merge>
