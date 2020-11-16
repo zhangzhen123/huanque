@@ -209,7 +209,7 @@ class PrivateConversationViewModel : BaseViewModel() {
             type = MessageCustomBeanType.PrivateChatRiskWarning
             context = JsonUtil.serializeAsString("欢鹊提倡文明聊天，发布色情、欺骗、违法违规等内容，将被系统永久封禁账号。")
         }
-        return Message.obtain("", Conversation.ConversationType.PRIVATE, cusSimulateMessage).apply { senderUserId = "system" }
+        return Message.obtain("", Conversation.ConversationType.PRIVATE, cusSimulateMessage).apply { senderUserId = BusiConstant.System_Message }
     }
 
     /**

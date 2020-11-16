@@ -5,12 +5,16 @@ import android.net.Uri
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
 import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate
 import com.chad.library.adapter.base.module.UpFetchModule
@@ -23,10 +27,7 @@ import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.drawee.span.SimpleDraweeSpanTextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.ChatUser
-import com.julun.huanque.common.bean.beans.ChatBubble
-import com.julun.huanque.common.bean.beans.ChatGift
-import com.julun.huanque.common.bean.beans.RoomUserChatExtra
-import com.julun.huanque.common.bean.beans.SendRoomInfo
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.bean.message.ExpressionAnimationBean
@@ -39,8 +40,10 @@ import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.interfaces.SystemMessageClickListener
 import com.julun.huanque.common.interfaces.WebpAnimatorListener
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.message.R
@@ -68,6 +71,8 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
     //私聊的情况下，保存对方的用户信息
     var otherUserInfo: ChatUser? = null
+
+    var mSystemMessageClickListener : SystemMessageClickListener? = null
 
     init {
         addChildClickViewIds(R.id.sdv_image, R.id.tv_content, R.id.con_send_room, R.id.view_bg_gift)
@@ -107,16 +112,22 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     }
 
     init {
+        //系统type列表
+        val systemTypeList =
+            arrayOf(MessageCustomBeanType.PrivateChatRiskWarning, MessageCustomBeanType.MessageFee, MessageCustomBeanType.Initim_Attention)
         setMultiTypeDelegate(object : BaseMultiTypeDelegate<Message>() {
 
             override fun getItemType(data: List<Message>, position: Int): Int {
                 val t = data.getOrNull(position)
+                val content = t?.content
+                if (content is CustomSimulateMessage) {
+                    if (systemTypeList.contains(content.type)) {
+                        return SYSTEM
+                    }
+                }
                 return when (t?.senderUserId) {
                     "${SessionUtils.getUserId()}" -> {
                         MINE
-                    }
-                    "system" -> {
-                        SYSTEM
                     }
                     else -> {
                         OTHER
@@ -140,13 +151,83 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         val content = item.content
 
         if (helper.itemViewType == SYSTEM) {
-            //系统消息
-            if (content is CustomSimulateMessage) {
-                val msgContext = content.context
-                if (msgContext.isNotEmpty()) {
-                    val showContent = JsonUtil.deserializeAsObject<String>(content.context, String::class.java)
-                    helper.setText(R.id.tv_content, showContent)
+            try {
+                //系统消息
+                if (content is CustomSimulateMessage) {
+                    val msgContext = content.context
+                    if (msgContext.isEmpty()) {
+                        return
+                    }
+
+                    val tvContent = helper.getView<TextView>(R.id.tv_content_system)
+
+                    when (content.type) {
+                        MessageCustomBeanType.PrivateChatRiskWarning -> {
+                            //创建会话风险提示
+                            val showContent = JsonUtil.deserializeAsObject<String>(msgContext, String::class.java)
+                            tvContent.text = showContent
+                            tvContent.backgroundResource = R.drawable.bg_message_system_risk_warning
+                            tvContent.textColor = GlobalUtils.getColor(R.color.white)
+                        }
+                        MessageCustomBeanType.MessageFee -> {
+                            //收费提示视图
+                            val showContent = JsonUtil.deserializeAsObject<String>(msgContext, String::class.java)
+                            tvContent.text = showContent
+                            tvContent.backgroundResource = R.drawable.bg_message_system_attention_small
+                            tvContent.textColor = GlobalUtils.getColor(R.color.black_999)
+                        }
+                        MessageCustomBeanType.Initim_Attention -> {
+                            //亲密度变动触发的提示
+                            val intimBean = JsonUtil.deserializeAsObject<IntimateTouchBean>(msgContext, IntimateTouchBean::class.java)
+
+                            if (intimBean.touchType == IntimateTouchBean.NetCall) {
+                                //语音提示消息
+                                val spannableString = SpannableStringBuilder("${intimBean.content}语音通话")
+                                tvContent.backgroundResource = R.drawable.bg_message_system_attention_normal
+
+
+                                val clickableSpan: ClickableSpan = object : ClickableSpan() {
+                                    override fun onClick(textView: View) {
+//                                        WebActivity.startWeb(this@WithdrawActivity, protocolUrl)
+//                                        ToastUtils.show("语音通话")
+                                        mSystemMessageClickListener?.onClick(IntimateTouchBean.NetCall)
+                                        logger("语音通话")
+                                    }
+
+                                    override fun updateDrawState(ds: TextPaint) {
+                                        super.updateDrawState(ds)
+                                        ds.isUnderlineText = false
+                                    }
+                                }
+                                spannableString.setSpan(
+                                    clickableSpan, intimBean.content.length,
+                                    spannableString.length,
+                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                                )
+                                spannableString.setSpan(
+                                    ForegroundColorSpan(GlobalUtils.formatColor("#00AAFF")),
+                                    intimBean.content.length,
+                                    spannableString.length,
+                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                                )
+                                tvContent.movementMethod = LinkMovementMethod.getInstance();
+                                tvContent.text = spannableString
+                            } else {
+                                //普通提示消息
+                                tvContent.text = intimBean.content
+                                tvContent.backgroundResource = R.drawable.bg_message_system_attention_small
+                            }
+                            tvContent.textColor = GlobalUtils.getColor(R.color.black_999)
+
+
+                        }
+
+                    }
+
+
                 }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
             }
             return
         }

@@ -10,10 +10,10 @@
     android:paddingRight="20dp">
 
     <TextView
-        android:id="@+id/tv_content"
+        android:id="@+id/tv_content_system"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_message_system"
+        android:background="@drawable/bg_message_system_risk_warning"
         android:gravity="center_vertical|left"
         android:includeFontPadding="false"
         android:paddingLeft="10dp"

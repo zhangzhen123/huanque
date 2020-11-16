@@ -125,7 +125,8 @@
 
         <activity
             android:name=".ui.homepage.HomePageActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
 
 
 

@@ -108,7 +108,11 @@ class TargetUserObj(
     //是否是陌生人
     var stranger: String = "",
     //用户类型
-    var userType: String = ""
+    var userType: String = "",
+    //我是否是对方的陌生人
+    var strangerToOther: String = "",
+    //是否需要显示消息价格提示
+    var showMsgFee: String = ""
 )
 
 /**
@@ -668,7 +672,7 @@ class UserInfoInRoom : Serializable {
 
 
     //用户标签
-    var userTag : String = ""
+    var userTag: String = ""
 
     /**是否显示加好友**/
     var showAddFriend: Boolean = false

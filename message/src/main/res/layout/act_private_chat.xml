@@ -27,7 +27,7 @@
         app:layout_constraintLeft_toLeftOf="@id/header_view"
         app:layout_constraintTop_toTopOf="@id/header_view" />
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginLeft="102dp"
@@ -43,14 +43,31 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:singleLine="true"
             android:text="欢雀"
             android:textColor="@color/black_333"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/tv_online_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_999"
+            android:textSize="@dimen/sp_10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            tools:text="1小时前" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <ImageView
@@ -503,9 +520,9 @@
         android:layout_marginTop="72dp"
         android:layout_marginRight="12dp"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="0px"
@@ -544,9 +561,9 @@
             android:layout_width="9dp"
             android:layout_height="5dp"
             android:layout_marginBottom="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
