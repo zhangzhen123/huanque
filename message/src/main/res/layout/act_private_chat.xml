@@ -419,7 +419,7 @@
                     android:layout_height="28dp"
                     android:layout_marginRight="10dp"
                     android:scaleType="centerInside"
-                    android:src="@mipmap/icon_emoji"
+                    android:src="@drawable/sel_panel_switch"
                     app:layout_constraintBottom_toBottomOf="@id/tv_send"
                     app:layout_constraintRight_toLeftOf="@id/tv_send"
                     app:layout_constraintTop_toTopOf="@id/tv_send" />
@@ -457,7 +457,7 @@
                     android:paddingTop="7dp"
                     android:paddingRight="15dp"
                     android:paddingBottom="7dp"
-                    android:textSize="@dimen/sp_16"
+                    android:textSize="@dimen/sp_13"
                     app:layout_constraintBottom_toTopOf="@id/view_input_bottom"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/iv_emoji" />

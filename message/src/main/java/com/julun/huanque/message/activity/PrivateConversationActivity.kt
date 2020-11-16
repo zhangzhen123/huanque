@@ -54,6 +54,7 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
+import com.julun.huanque.common.widgets.emotion.PrivateChatPanelView
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.fragment.*
@@ -1342,7 +1343,7 @@ class PrivateConversationActivity : BaseActivity() {
                     }
                     onPanel { view ->
                         //可选实现，面板显示回调
-                        if (view is PanelView) {
+                        if (view is PrivateChatPanelView) {
                             iv_emoji.isSelected = view.id == R.id.panel_emotion
                             scrollToBottom()
                         }
