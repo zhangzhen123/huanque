@@ -170,6 +170,7 @@ dependencies {
     /* 阿里播放器*/
     api rootProject.ext.dependencies["ALIYUN_PLAYER"]
     api rootProject.ext.dependencies["ALI_VCCONAN"]
+    api rootProject.ext.dependencies["AGORA"]
     api 'com.plattysoft.leonids:LeonidsLib:1.3.2'
     api 'com.binioter:guideview:1.0.0'
     api "me.leolin:ShortcutBadger:1.1.22@aar"

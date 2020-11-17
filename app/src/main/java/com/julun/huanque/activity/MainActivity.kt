@@ -669,6 +669,7 @@ class MainActivity : BaseActivity() {
             }
         })
 
+
         MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.RefreshUserSettingProcessor {
             override fun process(data: VoidResult) {

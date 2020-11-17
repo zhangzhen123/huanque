@@ -221,7 +221,9 @@ class NetcallBean(
     //是否显示过确认弹窗
     var unconfirmed: Boolean = false,
     //是否取消
-    var canceled: String = ""
+    var canceled: String = "",
+    //语音卡数量
+    var ticketCnt: Int = 0
 ) : Serializable
 
 /**

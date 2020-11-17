@@ -34,7 +34,6 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    api rootProject.ext.dependencies["AGORA"]
     implementation project(path: ':common')
     kapt rootProject.ext.dependencies["AROUTER_COMPILER"]
 }

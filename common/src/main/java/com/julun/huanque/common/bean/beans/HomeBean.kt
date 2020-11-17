@@ -138,8 +138,26 @@ data class HomeRecomItem(
 /**
  * 邀请语音消息
  */
-data class NetCallReceiveBean(var callId: Long = 0, var userIds: LongArray = longArrayOf(), var callUserId: Long = 0) :
-    Serializable
+data class NetCallReceiveBean(
+    var callId: Long = 0,
+    var userIds: LongArray = longArrayOf(),
+    var callUserId: Long = 0,
+    //语音券数量
+    var ticketCount: Int = 0
+) : Serializable
+
+/**
+ * 语音券扣费消息
+ */
+data class NetCallDeductBeansDetail(
+    var totalBeans: Long = 0,
+    //剩余时间
+    var ticketTtl: Long = 0,
+    //语音券剩余数量
+    var ticketCount: Int = 0,
+    //用户ID
+    var userIds: LongArray = longArrayOf()
+) : Serializable
 
 /**
  * 语音通话开始消息
@@ -148,9 +166,20 @@ data class NetCallAcceptBean(
     var callId: Long = 0,
     var startTime: Long = 0,
     var billUserId: Long = 0,
-    var userIds: LongArray = longArrayOf()
-) :
-    Serializable
+    var userIds: LongArray = longArrayOf(),
+    //语音券相关数据
+    var ticketInfo: HashMap<String, VoiceTicketBean> = hashMapOf()
+) : Serializable
+
+/**
+ * 语音券相关数据
+ */
+data class VoiceTicketBean(
+    //语音券倒计时
+    var ticketTtl: Int = 0,
+    //语音券数量
+    var ticketCount: Int = 0
+) : Serializable
 
 /**
  * 语音结果

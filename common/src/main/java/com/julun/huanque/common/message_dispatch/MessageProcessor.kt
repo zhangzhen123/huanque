@@ -1145,6 +1145,13 @@ object MessageProcessor {
     }
 
     /**
+     * 语音扣费消息
+     */
+    interface NetCallDeductBeansProcessor : EventMessageProcessor<NetCallDeductBeansDetail> {
+        override fun getEventType() = EventMessageType.NetCallDeductBeans
+    }
+
+    /**
      * 挂断消息
      */
     interface NetCallHangUpProcessor : EventMessageProcessor<NetCallHangUpBean> {
@@ -1625,6 +1632,9 @@ enum class EventMessageType(val klass: Class<*>) {
 
     //主叫取消会话消息
     NetCallCancel(NetCallReceiveBean::class.java),
+
+    //语音券扣费消息
+    NetCallDeductBeans(NetCallDeductBeansDetail::class.java),
 
     //挂断消息
     NetCallHangUp(NetCallHangUpBean::class.java),

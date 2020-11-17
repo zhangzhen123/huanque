@@ -4,20 +4,16 @@ import android.Manifest
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
-import android.se.omapi.Session
-import android.speech.tts.Voice
 import android.view.View
 import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.julun.huanque.agora.AgoraManager
 import com.julun.huanque.agora.R
-import com.julun.huanque.agora.handler.EventHandler
-import com.julun.huanque.agora.viewmodel.VoiceChatViewModel
+import com.julun.huanque.common.agora.AgoraManager
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.ChatUser
@@ -27,7 +23,9 @@ import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.VoiceFloatingManager
 import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.dp2pxf
@@ -35,11 +33,12 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
+import com.julun.huanque.common.viewmodel.VoiceChatViewModel
 import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.agora.rtc.Constants
-import io.agora.rtc.IRtcEngineEventHandler
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -56,21 +55,14 @@ import java.util.concurrent.TimeUnit
  *@描述 1对1 语音页面
  */
 @Route(path = ARouterConstant.VOICE_CHAT_ACTIVITY)
-class VoiceChatActivity : BaseActivity(), EventHandler {
+class VoiceChatActivity : BaseActivity() {
     private val TAG = "VoiceChatActivity"
-    private var mVoiceChatViewModel: VoiceChatViewModel? = null
-
-
-    private var mType = ""
+    private val mVoiceChatViewModel = HuanViewModelManager.mVoiceChatViewModel
 
     //耳机是否插入
     private var mEarphone = false
 
     private var mCallingContentDisposable: Disposable? = null
-
-
-    //对方是否加入频道的标记位
-    private var otherJoinChannel = false
 
 
     override fun getLayoutId() = R.layout.act_voice_chat
@@ -84,16 +76,41 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         StatusBarUtil.setTransparent(this)
         initViewModel()
-        mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
+        mVoiceChatViewModel.waitingClose = false
         mEarphone = intent?.getBooleanExtra(ParamConstant.Earphone, false) ?: false
         ll_hands_free.isEnabled = !mEarphone
-//        sendMediaButton()
-//        requestAudioFocus()
-        val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
-        if (netCallBean == null) {
-            ToastUtils.show("没有对方数据")
-            return
+        if (intent?.getStringExtra(ParamConstant.From_Floating) != BusiConstant.True) {
+            //不是从悬浮窗跳转过来
+            mVoiceChatViewModel.mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
+            val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
+            if (netCallBean == null) {
+                ToastUtils.show("没有对方数据")
+                return
+            }
+            mVoiceChatViewModel?.netcallBeanData?.value = netCallBean
+            mVoiceChatViewModel.voiceCardCount.value = netCallBean.ticketCnt
+
+            if (mVoiceChatViewModel.mType == ConmmunicationUserType.CALLING) {
+                //主叫
+                mVoiceChatViewModel?.createUserId = SessionUtils.getUserId()
+                mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CALLING
+            } else if (mVoiceChatViewModel.mType == ConmmunicationUserType.CALLED) {
+                //被叫
+                mVoiceChatViewModel?.createUserId = netCallBean.callerInfo.userId
+                mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_WAIT_ACCEPT
+            }
+            VoiceManager.playRing()
+            if (mVoiceChatViewModel.mType == ConmmunicationUserType.CALLING) {
+                checkPermissions()
+                logger.info("Voice initViews = ${System.currentTimeMillis()}")
+            } else {
+                mVoiceChatViewModel.timer()
+            }
+            mVoiceChatViewModel.registerMessage()
         }
+
+
+
         waveView.setColor(Color.WHITE)
         waveView.setInitialRadius(dp2pxf(60))
         waveView.setMaxRadius(dp2pxf(105))
@@ -101,162 +118,8 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         waveView.setSpeed(750)
         waveView.setStyle(Paint.Style.STROKE)
         waveView.start()
-        mVoiceChatViewModel?.netcallBeanData?.value = netCallBean
-
-        if (mType == ConmmunicationUserType.CALLING) {
-            //主叫
-            mVoiceChatViewModel?.createUserId = SessionUtils.getUserId()
-            mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CALLING
-        } else if (mType == ConmmunicationUserType.CALLED) {
-            //被叫
-            mVoiceChatViewModel?.createUserId = netCallBean.callerInfo.userId
-            mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_WAIT_ACCEPT
-        }
-
-
-
-        AgoraManager.mHandler.addHandler(this)
-        VoiceManager.playRing()
-        if (mType == ConmmunicationUserType.CALLING) {
-            checkPermissions()
-            logger.info("Voice initViews = ${System.currentTimeMillis()}")
-        } else {
-            timer()
-        }
-        registerMessage()
     }
 
-    private fun registerMessage() {
-        MessageProcessor.removeProcessors(this)
-        //语音通话开始消息
-        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallAcceptProcessor {
-            override fun process(data: NetCallAcceptBean) {
-                //接通消息
-                if (data.callId != mVoiceChatViewModel?.callId) {
-                    //不是当前语音通话的消息
-                    return
-                }
-                //开始计时
-                recordCallDuration()
-                if (mType == ConmmunicationUserType.CALLING) {
-                    //主叫  加入channel
-                    joinChannel()
-                }
-                mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_ACCEPT
-            }
-        })
-
-        //语音开始消息
-        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallAcceptProcessor {
-            override fun process(data: NetCallAcceptBean) {
-                //接通消息
-                //开始计时
-                if (data.callId != mVoiceChatViewModel?.callId) {
-                    //不是当前语音通话的消息
-                    return
-                }
-                recordCallDuration()
-                if (mType == ConmmunicationUserType.CALLING) {
-                    //主叫  加入channel
-                    joinChannel()
-                }
-                mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_ACCEPT
-            }
-        })
-        //主叫取消会话消息
-        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallCancelProcessor {
-            override fun process(data: NetCallReceiveBean) {
-                if (data.callId != mVoiceChatViewModel?.callId) {
-                    //不是当前语音通话的消息
-                    return
-                }
-                if (mVoiceChatViewModel?.waitingClose == true) {
-                    return
-                }
-                mVoiceChatViewModel?.waitingClose = true
-                mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.CANCEL)
-                mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
-            }
-        })
-        //挂断消息
-        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallHangUpProcessor {
-            override fun process(data: NetCallHangUpBean) {
-                if (data.callId != mVoiceChatViewModel?.callId) {
-                    //不是当前语音通话的消息
-                    return
-                }
-                if (mVoiceChatViewModel?.waitingClose == true) {
-                    return
-                }
-                mVoiceChatViewModel?.waitingClose = true
-                if (data.hangUpId != SessionUtils.getUserId()) {
-                    //非本人挂断
-                    mVoiceChatViewModel?.voiceBeanData?.value =
-                        VoiceConmmunicationSimulate(
-                            VoiceResultType.CONMMUNICATION_FINISH,
-                            mVoiceChatViewModel?.duration ?: 0,
-                            0,
-                            data.billUserId,
-                            data.totalBeans
-                        )
-                }
-                mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
-            }
-        })
-        //被叫拒绝消息
-        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallRefuseProcessor {
-            override fun process(data: NetCallReceiveBean) {
-                if (data.callId != mVoiceChatViewModel?.callId) {
-                    //不是当前语音通话的消息
-                    return
-                }
-                if (mVoiceChatViewModel?.waitingClose == true) {
-                    return
-                }
-                mVoiceChatViewModel?.waitingClose = true
-                mVoiceChatViewModel?.voiceBeanData?.value = VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_REFUSE)
-                mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
-            }
-        })
-        //服务端断开消息
-        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallDisconnectProcessor {
-            override fun process(data: VoidResult) {
-                if (mVoiceChatViewModel?.waitingClose == true) {
-                    return
-                }
-                mVoiceChatViewModel?.waitingClose = true
-                mVoiceChatViewModel?.voiceBeanData?.value =
-                    VoiceConmmunicationSimulate(VoiceResultType.CONMMUNICATION_FINISH, mVoiceChatViewModel?.duration ?: 0)
-                mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
-            }
-        })
-        //余额不足提醒消息
-        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallBalanceRemindProcessor {
-            override fun process(data: NetCallBalanceRemindBean) {
-                showBalanceNotEnoughView(data)
-            }
-        })
-
-        //对方忙
-        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallBusyProcessor {
-            override fun process(data: NetCallReceiveBean) {
-                if (data.callId != mVoiceChatViewModel?.callId) {
-                    //不是当前语音通话的消息
-                    return
-                }
-                if (mVoiceChatViewModel?.waitingClose == true) {
-                    return
-                }
-                mVoiceChatViewModel?.waitingClose = true
-                ToastUtils.show("对方忙")
-                mVoiceChatViewModel?.voiceBeanData?.value =
-                    VoiceConmmunicationSimulate(VoiceResultType.RECEIVE_BUSY)
-                mVoiceChatViewModel?.currentVoiceState?.value = VoiceChatViewModel.VOICE_CLOSE
-            }
-
-        })
-
-    }
 
     override fun initEvents(rootView: View) {
         ll_voice_accept.onClickNew {
@@ -310,22 +173,19 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
         tv_recharge.onClickNew {
             ARouter.getInstance().build(ARouterConstant.RECHARGE_ACTIVITY).navigation()
         }
+
+        iv_close.onClickNew {
+            finish()
+        }
+        vew_voice_card.onClickNew {
+            val bundle = Bundle()
+            bundle.putBoolean("VOICE", true)
+            bundle.putInt("TICKET_COUNT", mVoiceChatViewModel.voiceCardCount.value ?: 0)
+            (ARouter.getInstance().build(ARouterConstant.PROP_FRAGMENT).with(bundle)
+                .navigation() as? BaseDialogFragment)?.show(supportFragmentManager, "PropFragment")
+        }
     }
 
-    /**
-     * 记录通话时长
-     */
-    private fun recordCallDuration() {
-        updataDurationParams(true)
-        ObservableTake.interval(0, 1, TimeUnit.SECONDS)
-            .map {
-                mVoiceChatViewModel?.duration = it
-                TimeUtils.countDownTimeFormat1(it)
-            }
-            .bindUntilEvent(this, ActivityEvent.DESTROY)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ tv_call_duration.text = "通话时长：$it" }, {})
-    }
 
     /**
      * 检查权限
@@ -338,13 +198,13 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 when {
                     permission.granted -> {
                         logger.info("获取权限成功")
-                        if (mType == ConmmunicationUserType.CALLING) {
-                            timer()
+                        if (mVoiceChatViewModel.mType == ConmmunicationUserType.CALLING) {
+                            mVoiceChatViewModel.timer()
                             logger.info("Voice checkPermissions = ${System.currentTimeMillis()}")
-                        } else if (mType == ConmmunicationUserType.CALLED) {
+                        } else if (mVoiceChatViewModel.mType == ConmmunicationUserType.CALLED) {
                             mVoiceChatViewModel?.acceptVoice()
                             //加入会话
-                            joinChannel()
+                            mVoiceChatViewModel.joinChannel()
                         }
                     }
                     permission.shouldShowRequestPermissionRationale -> // Oups permission denied
@@ -363,8 +223,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
      * 初始化ViewModel
      */
     private fun initViewModel() {
-        mVoiceChatViewModel = ViewModelProvider(this).get(VoiceChatViewModel::class.java)
-
         mVoiceChatViewModel?.currentVoiceState?.observe(this, Observer {
             if (it != null) {
                 when (it) {
@@ -395,24 +253,16 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
 //                        ll_hands_free.isEnabled = !GlobalUtils.getEarphoneLinkStatus()
                         ll_voice_accept.hide()
 
-                        VoiceManager.stop()
-
-                        //取消超时倒计时
-                        mDisposable?.dispose()
                         mCallingContentDisposable?.dispose()
                         //开始对方未加入倒计时
-                        otherNoJoinCountDown()
+                        mVoiceChatViewModel.otherNoJoinCountDown()
                     }
                     VoiceChatViewModel.VOICE_CLOSE -> {
                         //结束状态
-                        VoiceManager.stop()
-
-                        VoiceManager.playFinish()
                         //退出频道
 //                        leaveChannel()
 //                        ToastUtils.show("通话已结束")
-                        mDisposable?.dispose()
-                        mOtherNoJoinDisposable?.dispose()
+                        mVoiceChatViewModel.mOtherNoJoinDisposable?.dispose()
                         mDurationDisposable?.dispose()
                         mCallingContentDisposable?.dispose()
                         Observable.timer(1, TimeUnit.SECONDS)
@@ -427,14 +277,18 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                 }
             }
         })
-        mVoiceChatViewModel?.targetUserBean?.observe(this, Observer {
+        mVoiceChatViewModel.targetUserBean.observe(this, Observer {
             if (it != null) {
                 showViewByData(it)
             }
         })
 
-        mVoiceChatViewModel?.netcallBeanData?.observe(this, Observer { netCallBean ->
+        mVoiceChatViewModel.netcallBeanData.observe(this, Observer { netCallBean ->
             if (netCallBean != null) {
+                if (netCallBean.beans > 0) {
+                    tv_fee.show()
+                    tv_fee.text = "语音通话${netCallBean.beans}鹊币/分钟"
+                }
                 if (netCallBean.unconfirmed) {
                     //未确认付费，需要显示弹窗
                     mVoiceChatViewModel?.markFeeRemind()
@@ -451,18 +305,18 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
                     }
                 }
                 var backPic = ""
-                if (mType == ConmmunicationUserType.CALLING) {
+                if (mVoiceChatViewModel.mType == ConmmunicationUserType.CALLING) {
                     //主叫
                     mVoiceChatViewModel?.targetUserBean?.value = netCallBean.receiverInfo
                     backPic = netCallBean.receiverInfo.backPic
-                } else if (mType == ConmmunicationUserType.CALLED) {
+                } else if (mVoiceChatViewModel.mType == ConmmunicationUserType.CALLED) {
                     mVoiceChatViewModel?.targetUserBean?.value = netCallBean.callerInfo
                     backPic = netCallBean.callerInfo.backPic
                 }
                 mVoiceChatViewModel?.agoraToken = netCallBean.token
                 mVoiceChatViewModel?.channelId = netCallBean.channelId
                 mVoiceChatViewModel?.callId = netCallBean.callId
-                mVoiceChatViewModel?.duration = 0
+                mVoiceChatViewModel?.duration.value = 0
                 if (netCallBean.beans > 0) {
                     //付费方
                     tv_price.show()
@@ -475,33 +329,60 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
             }
         })
 
-        mVoiceChatViewModel?.voiceBeanData?.observe(this, Observer {
+        mVoiceChatViewModel.voiceCardCount.observe(this, Observer {
             if (it != null) {
-                sendSimulateMessage(
-                    it,
-                    mVoiceChatViewModel?.targetUserBean?.value ?: return@Observer,
-                    mVoiceChatViewModel?.netcallBeanData?.value?.relationInfo ?: return@Observer
-                )
+                if (it > 0) {
+                    vew_voice_card.show()
+                    iv_voice_card.show()
+                    tv_voice_card.show()
+                    tv_voice_card.text = "剩余：$it"
+                } else {
+                    vew_voice_card.hide()
+                    iv_voice_card.hide()
+                    tv_voice_card.hide()
+                }
+            }
+        })
+
+        mVoiceChatViewModel.handsFreeState.observe(this, Observer {
+            if (it != null) {
+                ll_hands_free.isEnabled = it
+                mVoiceChatViewModel.handsFreeState.value = null
+            }
+        })
+        mVoiceChatViewModel.updateDurationParamsFlag.observe(this, Observer {
+            if (it != null) {
+                updataDurationParams(it)
+            }
+        })
+        mVoiceChatViewModel.duration.observe(this, Observer {
+            if (it != null) {
+                tv_call_duration.text = "通话时长：${TimeUtils.countDownTimeFormat1(it)}"
+            }
+        })
+        mVoiceChatViewModel.notEnoughData.observe(this, Observer {
+            if (it != null) {
+                showBalanceNotEnoughView(it)
+            }
+        })
+
+        mVoiceChatViewModel.voiceCardDuration.observe(this, Observer {
+            if (it != null) {
+                //语音卡倒计时  剩余时间
+                if (it > 0) {
+                    bg_voice_time.show()
+                    tv_voice_time_attention.show()
+                    tv_voice_time.show()
+                    tv_voice_time.text = "${it}秒"
+                } else {
+                    bg_voice_time.hide()
+                    tv_voice_time_attention.hide()
+                    tv_voice_time.hide()
+                }
             }
         })
     }
 
-    /**
-     * 对方未加入频道 倒计时
-     */
-    private fun otherNoJoinCountDown() {
-        logger.info("AGORA Message 开始未加入频道倒计时：otherJoinChannel = $otherJoinChannel")
-        if (otherJoinChannel || mOtherNoJoinDisposable != null) {
-            //对方已经加入
-            return
-        }
-        mOtherNoJoinDisposable = Observable.timer(10, TimeUnit.SECONDS)
-            .bindUntilEvent(this, ActivityEvent.DESTROY)
-            .subscribe({
-                mVoiceChatViewModel?.hangUpVoice()
-            }, {})
-
-    }
 
     /**
      * 循环显示呼叫状态
@@ -593,237 +474,6 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     }
 
 
-    // Tutorial Step 2
-    private fun joinChannel() {
-        var accessToken = mVoiceChatViewModel?.agoraToken ?: ""
-        val channelId = mVoiceChatViewModel?.channelId ?: return
-        if (accessToken.isEmpty()) {
-            return
-        }
-        //设置为主播身份
-        AgoraManager.mRtcEngine?.setClientRole(Constants.CLIENT_ROLE_BROADCASTER)
-        AgoraManager.mRtcEngine?.enableAudio()
-        AgoraManager.mRtcEngine?.setDefaultAudioRoutetoSpeakerphone(false)
-        //默认开启声音
-        AgoraManager.mRtcEngine?.adjustRecordingSignalVolume(100)
-        //默认听筒
-        // Allows a user to join a channel.
-        val result = AgoraManager.mRtcEngine?.joinChannel(
-            accessToken,
-            channelId,
-            null,
-            SessionUtils.getUserId().toInt()
-        )
-        if (result != 0) {
-            //joinchannel失败
-            mVoiceChatViewModel?.hangUpVoice()
-        }
-        logger.info("$TAG joinResult = $result")
-    }
-
-
-    // Tutorial Step 3
-    private fun leaveChannel() {
-        AgoraManager.mRtcEngine?.leaveChannel()
-    }
-
-    // Tutorial Step 4
-    private fun onRemoteUserLeft(uid: Int, reason: Int) {
-        ToastUtils.show("语音已经挂断")
-    }
-
-    // Tutorial Step 6
-    private fun onRemoteUserVoiceMuted(uid: Int, muted: Boolean) {
-
-    }
-
-    /**
-     * 发送模拟消息
-     */
-    private fun sendSimulateMessage(bean: VoiceConmmunicationSimulate, targetChatInfo: ChatUser, relationInfo: RelationInfo) {
-        val targetUser = TargetUserObj()
-
-        val createUserId = mVoiceChatViewModel?.createUserId ?: return
-        bean.createUserID = createUserId
-
-        val chatExtra = RoomUserChatExtra()
-        val sId: String
-        val tId = "${targetChatInfo.userId}"
-
-        if (createUserId == SessionUtils.getUserId()) {
-            //本人是主叫(插入发送消息)
-            sId = "${SessionUtils.getUserId()}"
-            targetUser.apply {
-                headPic = targetChatInfo.headPic
-                nickname = targetChatInfo.nickname
-                meetStatus = targetChatInfo.meetStatus
-                sex = targetChatInfo.sex
-                userId = targetChatInfo.userId
-                userType = targetChatInfo.userType
-            }
-            chatExtra.apply {
-                headPic = SessionUtils.getHeaderPic()
-                senderId = SessionUtils.getUserId()
-                nickname = SessionUtils.getNickName()
-                sex = SessionUtils.getSex()
-                targetUserObj = targetUser
-                userAbcd = AppHelper.getMD5(sId)
-                userType = SessionUtils.getUserType()
-            }
-        } else {
-            //本人是被叫（插入接收消息）
-            sId = "${targetChatInfo.userId}"
-            targetUser.apply {
-                headPic = SessionUtils.getHeaderPic()
-                nickname = SessionUtils.getNickName()
-                meetStatus = targetChatInfo.meetStatus
-                userId = SessionUtils.getUserId()
-                sex = SessionUtils.getSex()
-                userType = SessionUtils.getUserType()
-            }
-            chatExtra.apply {
-                headPic = targetChatInfo.headPic
-                senderId = targetChatInfo.userId
-                nickname = targetChatInfo.nickname
-                sex = targetChatInfo.sex
-                targetUserObj = targetUser
-                userAbcd = AppHelper.getMD5(sId)
-                userType = targetChatInfo.userType
-            }
-        }
-
-        chatExtra.targetUserObj?.intimateLevel = relationInfo.intimateLevel
-        chatExtra.targetUserObj?.stranger = GlobalUtils.getStrangerString(relationInfo.stranger)
-
-        val conversationType = if (bean.needRefresh) {
-            Conversation.ConversationType.GROUP
-        } else {
-            Conversation.ConversationType.PRIVATE
-        }
-
-        RongCloudManager.sendSimulateMessage(
-            tId,
-            sId,
-            chatExtra,
-            conversationType,
-            MessageCustomBeanType.Voice_Conmmunication_Simulate,
-            bean,
-            sId == tId
-        )
-    }
-
-
-    private var mDisposable: Disposable? = null
-
-    //对方未加入直播间消息
-    private var mOtherNoJoinDisposable: Disposable? = null
-
-    /**
-     * 主叫或者被叫 的等待定时挂断方法
-     */
-    private fun timer() {
-//        mVoiceChatViewModel?.createConmmunication(mVoiceChatViewModel?.targetUserBean?.value?.userId ?: 0)
-        //超时计算
-        mDisposable = Observable.timer(60, TimeUnit.SECONDS)
-            .bindUntilEvent(this, ActivityEvent.DESTROY)
-            .subscribe({
-                if (mType == ConmmunicationUserType.CALLING) {
-                    mVoiceChatViewModel?.calcelVoice(CancelType.Timeout)
-                } else {
-//                    mVoiceChatViewModel?.refuseVoice(true)
-                    mVoiceChatViewModel?.voiceBeanData?.postValue(VoiceConmmunicationSimulate(VoiceResultType.CANCEL))
-                    mVoiceChatViewModel?.currentVoiceState?.postValue(VoiceChatViewModel.VOICE_CLOSE)
-                }
-
-            }, {})
-    }
-
-    override fun onRemoteAudioStats(stats: IRtcEngineEventHandler.RemoteAudioStats?) {
-    }
-
-    override fun onRtcStats(stats: IRtcEngineEventHandler.RtcStats?) {
-    }
-
-    override fun onUserJoined(uid: Int, elapsed: Int) {
-        logger.info("AGORA Message 用户加入频道消息 uid = $uid mOtherNoJoinDisposable = ${mOtherNoJoinDisposable?.isDisposed}")
-        if (uid.toLong() != SessionUtils.getUserId()) {
-            otherJoinChannel = true
-            mOtherNoJoinDisposable?.dispose()
-        }
-    }
-
-    override fun onLocalVideoStats(stats: IRtcEngineEventHandler.LocalVideoStats?) {
-    }
-
-    override fun onTokenPrivilegeWillExpire(token: String?) {
-    }
-
-    override fun onUserOffline(uid: Int, reason: Int) {
-        //用户掉线 挂断通话
-        logger.info("AGORA Message 用户掉线")
-        mVoiceChatViewModel?.hangUpVoice()
-    }
-
-    override fun onRemoteVideoStats(stats: IRtcEngineEventHandler.RemoteVideoStats?) {
-    }
-
-    override fun onNetworkQuality(uid: Int, txQuality: Int, rxQuality: Int) {
-    }
-
-    override fun onFirstLocalVideoFrame(width: Int, height: Int, elapsed: Int) {
-    }
-
-    override fun onLastmileProbeResult(result: IRtcEngineEventHandler.LastmileProbeResult?) {
-    }
-
-    override fun onJoinChannelSuccess(channel: String?, uid: Int, elapsed: Int) {
-        logger.info("$TAG 加入channel成功 channel = $channel,uid = $uid")
-    }
-
-    override fun onLastmileQuality(quality: Int) {
-    }
-
-    override fun onRequestToken() {
-    }
-
-    override fun onFirstRemoteVideoDecoded(uid: Int, width: Int, height: Int, elapsed: Int) {
-    }
-
-    override fun onLeaveChannel(stats: IRtcEngineEventHandler.RtcStats?) {
-        logger.info("AGORA Message onLeaveChannel stats = $stats")
-    }
-
-    override fun onConnectionStateChanged(state: Int, reason: Int) {
-        if (reason == Constants.CONNECTION_CHANGED_BANNED_BY_SERVER) {
-            //被服务端踢出（重连失败）
-            mVoiceChatViewModel?.hangUpVoice()
-        }
-        logger.info("AGORA Message onConnectionStateChanged state = $state,reason = $reason")
-    }
-
-    /**
-     * 网络连接中断，且 SDK 无法在 10 秒内连接服务器回调。
-     */
-    override fun onConnectionLost() {
-        logger.info("AGORA Message onConnectionLost")
-        val bean = VoiceConmmunicationSimulate(
-            VoiceResultType.CONMMUNICATION_FINISH,
-            mVoiceChatViewModel?.duration ?: 0,
-            totalBeans = 0, needRefresh = true, callId = mVoiceChatViewModel?.callId ?: 0
-        )
-        mVoiceChatViewModel?.voiceBeanData?.postValue(bean)
-        mVoiceChatViewModel?.currentVoiceState?.postValue(VoiceChatViewModel.VOICE_CLOSE)
-    }
-
-    override fun onAudioRouteChanged(routing: Int) {
-        ll_hands_free.isEnabled = !(routing == Constants.AUDIO_ROUTE_HEADSET || routing == Constants.AUDIO_ROUTE_HEADSETBLUETOOTH)
-    }
-
-    override fun onError(err: Int) {
-        logger.info("AGORA Message onError err = $err")
-    }
-
-
     //余额不足，剩余时间使用的定时器
     private var mDurationDisposable: Disposable? = null
 
@@ -862,24 +512,20 @@ class VoiceChatActivity : BaseActivity(), EventHandler {
     override fun onViewDestroy() {
         super.onViewDestroy()
         waveView.stopImmediately()
-        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
-        leaveChannel()
-        VoiceManager.destroy()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        MessageProcessor.removeProcessors(this)
         //发送事件，通知刷新语音券
         EventBus.getDefault().post(RefreshVoiceCardEvent())
+        if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+            //正在通话中，显示悬浮窗
+            if (PermissionUtils.checkFloatPermission(this)) {
+                //显示悬浮窗
+                VoiceFloatingManager.showFloatingView()
+            }
+        }
     }
-
-    override fun onBackPressed() {
-        //不允许返回键关闭该页面
-//        super.onBackPressed()
-    }
-
-    private var showToast = false
 
 
 }

@@ -44,6 +44,7 @@ import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.interfaces.SystemMessageClickListener
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
+import com.julun.huanque.common.manager.VoiceFloatingManager
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
@@ -51,6 +52,7 @@ import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
@@ -573,6 +575,7 @@ class PrivateConversationActivity : BaseActivity() {
             //有聊天券
             tv_msg_card_count.show()
             tv_msg_card_count.text = "$chatCount"
+            edit_text.hint = "聊天券剩余${chatCount}次"
         } else {
             tv_msg_card_count.hide()
         }
@@ -936,6 +939,12 @@ class PrivateConversationActivity : BaseActivity() {
         }
         sdv_second_prop.onClickNew {
             PropFragment.newInstance(false).show(supportFragmentManager, "PropFragment")
+        }
+
+        iv_msg_card.onClickNew {
+            //打开消息券弹窗
+            PropFragment.newInstance(false, mPrivateConversationViewModel.propData.value?.chatTicketCnt ?: 0)
+                .show(supportFragmentManager, "PropFragment")
         }
 
         con_living.onClickNew {

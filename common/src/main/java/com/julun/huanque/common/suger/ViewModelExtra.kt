@@ -2,6 +2,7 @@ package com.julun.huanque.common.suger
 
 import androidx.lifecycle.MutableLiveData
 import com.julun.huanque.common.basic.*
+import com.julun.huanque.common.commonviewmodel.BaseApplicationViewModel
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.net.NError
@@ -36,6 +37,40 @@ fun <T> Root<T>.dataConvert( intArray: IntArray? = null): T {
  *
  */
 suspend fun BaseViewModel.request(
+    block: SNAction,
+    error: SNError? = null,
+    final: SNAction? = null,
+    needLoadState: Boolean = false
+) {
+    if (needLoadState) {
+        loadState.postValue(NetState(state = NetStateType.LOADING))
+    }
+    try {
+        block()
+        if (needLoadState) {
+            loadState.postValue(NetState(state = NetStateType.SUCCESS))
+        }
+    } catch (e: Throwable) {
+        if (needLoadState) {
+            NetExceptionHandle.handleException(e, loadState)
+        }
+
+        error?.invoke(e)
+        e.printStackTrace()
+    } finally {
+        final?.invoke()
+    }
+}
+
+/**
+ * 协程请求的统一封装
+ * [block]要执行的block
+ * [error]错误返回
+ * [final]最终返回
+ *[needLoadState]是否需要初始化加载状态回调
+ *
+ */
+suspend fun BaseApplicationViewModel.request(
     block: SNAction,
     error: SNError? = null,
     final: SNAction? = null,
