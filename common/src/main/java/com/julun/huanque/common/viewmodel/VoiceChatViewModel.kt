@@ -268,6 +268,14 @@ class VoiceChatViewModel(application: Application) : BaseApplicationViewModel(ap
                 setVoiceAccept()
                 //取消超时倒计时
                 mDisposable?.dispose()
+                val currentTicketBean = data.ticketInfo["${SessionUtils.getUserId()}"]
+                currentTicketBean?.let { ticket ->
+                    //更新语音券数量
+                    voiceCardCount.value = ticket.ticketCount
+                    //更新语音券倒计时
+                    voiceCardCountDown(ticket.ticketTtl)
+                }
+
             }
         })
         //主叫取消会话消息
@@ -384,7 +392,7 @@ class VoiceChatViewModel(application: Application) : BaseApplicationViewModel(ap
         mVoiceCardDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
             .take(total)
             .subscribe({
-                voiceCardDuration.value = total - it
+                voiceCardDuration.postValue(total - it)
             }, {})
     }
 

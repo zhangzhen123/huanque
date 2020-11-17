@@ -335,14 +335,14 @@ class VoiceChatActivity : BaseActivity() {
         mVoiceChatViewModel.voiceCardCount.observe(this, Observer {
             if (it != null) {
                 if (it > 0) {
-                    vew_voice_card.show()
-                    iv_voice_card.show()
-                    tv_voice_card.show()
+//                    vew_voice_card.show()
+//                    iv_voice_card.show()
+//                    tv_voice_card.show()
                     tv_voice_card.text = "剩余：$it"
                 } else {
-                    vew_voice_card.hide()
-                    iv_voice_card.hide()
-                    tv_voice_card.hide()
+//                    vew_voice_card.hide()
+//                    iv_voice_card.hide()
+//                    tv_voice_card.hide()
                 }
             }
         })

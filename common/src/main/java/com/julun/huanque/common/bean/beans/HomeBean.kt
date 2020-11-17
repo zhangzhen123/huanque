@@ -176,7 +176,7 @@ data class NetCallAcceptBean(
  */
 data class VoiceTicketBean(
     //语音券倒计时
-    var ticketTtl: Int = 0,
+    var ticketTtl: Long = 0,
     //语音券数量
     var ticketCount: Int = 0
 ) : Serializable

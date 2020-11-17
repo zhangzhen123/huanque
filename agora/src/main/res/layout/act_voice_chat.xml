@@ -289,7 +289,6 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="175dp"
         android:background="@drawable/bg_voice_card_voice_activity"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:visibility="visible" />
@@ -299,7 +298,6 @@
         android:layout_width="50dp"
         android:layout_height="32dp"
         android:src="@mipmap/icon_voice_big"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_voice_card"
         app:layout_constraintLeft_toLeftOf="@id/vew_voice_card"
         app:layout_constraintRight_toRightOf="@id/vew_voice_card"
@@ -313,7 +311,6 @@
         android:layout_height="wrap_content"
         android:textColor="#DAA6FF"
         android:textSize="@dimen/sp_12"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/vew_voice_card"
         app:layout_constraintLeft_toLeftOf="@id/vew_voice_card"
         app:layout_constraintRight_toRightOf="@id/vew_voice_card"
