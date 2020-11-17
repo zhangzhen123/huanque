@@ -505,6 +505,10 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             .subscribe { permission ->
                 when {
                     permission.granted -> {
+                        if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                            ToastUtils.show("正在语音通话，请稍后再试")
+                            return@subscribe
+                        }
                         logger.info("获取权限成功")
                         if (mAnonymousVoiceViewModel?.basicData?.value == null) {
                             //未获取到数据

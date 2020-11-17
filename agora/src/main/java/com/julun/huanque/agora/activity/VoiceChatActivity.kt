@@ -1,8 +1,10 @@
 package com.julun.huanque.agora.activity
 
 import android.Manifest
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -63,6 +65,10 @@ class VoiceChatActivity : BaseActivity() {
     private var mEarphone = false
 
     private var mCallingContentDisposable: Disposable? = null
+
+    companion object {
+        const val PERMISSIONALERT_WINDOW_CODE_VOICE = 0x1111
+    }
 
 
     override fun getLayoutId() = R.layout.act_voice_chat
@@ -334,16 +340,17 @@ class VoiceChatActivity : BaseActivity() {
 
         mVoiceChatViewModel.voiceCardCount.observe(this, Observer {
             if (it != null) {
-                if (it > 0) {
-//                    vew_voice_card.show()
-//                    iv_voice_card.show()
-//                    tv_voice_card.show()
-                    tv_voice_card.text = "剩余：$it"
-                } else {
-//                    vew_voice_card.hide()
-//                    iv_voice_card.hide()
-//                    tv_voice_card.hide()
-                }
+                tv_voice_card.text = "剩余：$it"
+//                if (it > 0) {
+////                    vew_voice_card.show()
+////                    iv_voice_card.show()
+////                    tv_voice_card.show()
+//                    tv_voice_card.text = "剩余：$it"
+//                } else {
+////                    vew_voice_card.hide()
+////                    iv_voice_card.hide()
+////                    tv_voice_card.hide()
+//                }
             }
         })
 
@@ -531,6 +538,38 @@ class VoiceChatActivity : BaseActivity() {
                 VoiceFloatingManager.showFloatingView()
             }
         }
+    }
+
+
+    override fun onBackPressed() {
+        if (PermissionUtils.checkFloatPermission(this)) {
+            super.onBackPressed()
+        } else {
+            showPermissionDialog()
+        }
+    }
+
+    override fun finish() {
+        if (PermissionUtils.checkFloatPermission(this)) {
+            super.finish()
+        } else {
+            showPermissionDialog()
+        }
+    }
+
+    /**
+     * 显示授权提醒弹窗
+     */
+    private fun showPermissionDialog() {
+        MyAlertDialog(this).showAlertWithOKAndCancel(
+            "悬浮窗权限被禁用，请到设置中授予欢鹊悬浮窗权限",
+            MyAlertDialog.MyDialogCallback(onRight = {
+                val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
+                intent.data = Uri.parse("package:$packageName")
+//                startActivityForResult(intent, PERMISSIONALERT_WINDOW_CODE_VOICE)
+                startActivity(intent)
+            }), "设置提醒", "去设置"
+        )
     }
 
 

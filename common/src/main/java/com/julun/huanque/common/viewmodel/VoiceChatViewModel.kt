@@ -400,6 +400,10 @@ class VoiceChatViewModel(application: Application) : BaseApplicationViewModel(ap
      * 发送模拟消息
      */
     fun sendSimulateMessage(bean: VoiceConmmunicationSimulate) {
+        if (callId == 0L) {
+            //当前语音通话已经结束
+            return
+        }
         val targetChatInfo = targetUserBean?.value ?: return
         val relationInfo = netcallBeanData?.value?.relationInfo ?: return
         val targetUser = TargetUserObj()
@@ -494,6 +498,7 @@ class VoiceChatViewModel(application: Application) : BaseApplicationViewModel(ap
      * 设置语音结束
      */
     fun setVoiceFinish() {
+        callId = 0
         waitingClose = false
         currentVoiceState.value = VOICE_CLOSE
         VoiceManager.stop()

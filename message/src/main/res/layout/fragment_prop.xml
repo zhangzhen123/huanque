@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_prop_dialog">
 
     <View
@@ -14,13 +14,13 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <View-->
-<!--        android:id="@+id/view_close"-->
-<!--        android:layout_width="40dp"-->
-<!--        android:layout_height="40dp"-->
-<!--        android:background="@drawable/bg_prop_dialog_close"-->
-<!--        app:layout_constraintRight_toRightOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <!--    <View-->
+    <!--        android:id="@+id/view_close"-->
+    <!--        android:layout_width="40dp"-->
+    <!--        android:layout_height="40dp"-->
+    <!--        android:background="@drawable/bg_prop_dialog_close"-->
+    <!--        app:layout_constraintRight_toRightOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <View
         android:layout_width="40dp"
@@ -38,16 +38,16 @@
         app:layout_constraintLeft_toLeftOf="@id/view_top"
         app:layout_constraintRight_toRightOf="parent" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/iv_close"-->
-<!--        android:layout_width="0px"-->
-<!--        android:layout_height="0px"-->
-<!--        android:padding="8dp"-->
-<!--        android:src="@mipmap/icon_close_black_01"-->
-<!--        app:layout_constraintBottom_toBottomOf="@id/view_close"-->
-<!--        app:layout_constraintLeft_toLeftOf="@id/view_close"-->
-<!--        app:layout_constraintRight_toRightOf="@id/view_close"-->
-<!--        app:layout_constraintTop_toTopOf="@id/view_close" />-->
+    <!--    <ImageView-->
+    <!--        android:id="@+id/iv_close"-->
+    <!--        android:layout_width="0px"-->
+    <!--        android:layout_height="0px"-->
+    <!--        android:padding="8dp"-->
+    <!--        android:src="@mipmap/icon_close_black_01"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/view_close"-->
+    <!--        app:layout_constraintLeft_toLeftOf="@id/view_close"-->
+    <!--        app:layout_constraintRight_toRightOf="@id/view_close"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/view_close" />-->
 
     <TextView
         android:id="@+id/tv_title"
@@ -90,7 +90,7 @@
     <TextView
         android:id="@+id/tv_content"
         android:layout_width="0px"
-        android:layout_height="23dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="29dp"
         android:layout_marginTop="7dp"
         android:layout_marginRight="20dp"
@@ -100,7 +100,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_count"
-        tools:text="语音券可以抵扣语音通话1分钟，当你有优惠券时会优先使用。" />
+        tools:text="语音券可以抵扣语音通话1分钟，当你有优惠券时会优先使用可恨金额和集合基金会集合交换机。" />
 
     <View
         android:id="@+id/view_get"

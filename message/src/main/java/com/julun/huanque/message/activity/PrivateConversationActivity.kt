@@ -498,15 +498,16 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.msgFeeData?.observe(this, Observer {
             if (it != null) {
-                if (it == 0L && (SessionUtils.getSex() == Sex.MALE || (SessionUtils.getSex() == Sex.FEMALE && mPrivateConversationViewModel?.chatInfoData?.value?.sex == Sex.FEMALE))) {
-                    //免费(男性  或者  自己和对方都是女性  显示标识)
-                    tv_free.hide()
-                    edit_text.hint = "聊天免费，不消耗聊天券和鹊币"
-                } else {
-                    //不免费
-                    tv_free.hide()
-                    edit_text.hint = "聊点什么吧..."
-                }
+                showHint()
+//                if (it == 0L && (SessionUtils.getSex() == Sex.MALE || (SessionUtils.getSex() == Sex.FEMALE && mPrivateConversationViewModel?.chatInfoData?.value?.sex == Sex.FEMALE))) {
+//                    //免费(男性  或者  自己和对方都是女性  显示标识)
+//                    tv_free.hide()
+//                    edit_text.hint = "聊天免费，不消耗聊天券和鹊币"
+//                } else {
+//                    //不免费
+//                    tv_free.hide()
+//                    edit_text.hint = "聊点什么吧..."
+//                }
             }
         })
 
@@ -569,28 +570,39 @@ class PrivateConversationActivity : BaseActivity() {
     }
 
     /**
+     * 设置EditText提示文案
+     */
+    private fun showHint() {
+        val price = mPrivateConversationViewModel?.msgFeeData?.value ?: return
+        edit_text
+        if (price == 0L && (SessionUtils.getSex() == Sex.MALE || (SessionUtils.getSex() == Sex.FEMALE && mPrivateConversationViewModel?.chatInfoData?.value?.sex == Sex.FEMALE))) {
+            //免费(男性  或者  自己和对方都是女性  显示标识)
+            tv_free.hide()
+            edit_text.hint = "聊天免费，不消耗聊天券和鹊币"
+        } else {
+            //不免费
+            tv_free.hide()
+            val ticketCount = mPrivateConversationViewModel?.propData?.value?.chatTicketCnt ?: 0
+            if (ticketCount > 0) {
+                edit_text.hint = "聊天券剩余${ticketCount}次"
+            } else {
+                edit_text.hint = "聊点什么吧..."
+            }
+        }
+    }
+
+
+    /**
      * 更新道具视图
      */
     private fun updatePropView(voiceCount: Int, chatCount: Int) {
-
+        showHint()
         if (chatCount > 0) {
             //有聊天券
             tv_msg_card_count.show()
             tv_msg_card_count.text = "$chatCount"
-            edit_text.hint = "聊天券剩余${chatCount}次"
         } else {
             tv_msg_card_count.hide()
-            val price = mPrivateConversationViewModel?.msgFeeData?.value ?: return
-            mPrivateConversationViewModel?.msgFeeData?.value = price
-//            if (price == 0L && (SessionUtils.getSex() == Sex.MALE || (SessionUtils.getSex() == Sex.FEMALE && mPrivateConversationViewModel?.chatInfoData?.value?.sex == Sex.FEMALE))) {
-//                //免费(男性  或者  自己和对方都是女性  显示标识)
-//                tv_free.hide()
-//                edit_text.hint = "聊天免费，不消耗聊天券和鹊币"
-//            } else {
-//                //不免费
-//                tv_free.hide()
-//                edit_text.hint = "聊点什么吧..."
-//            }
         }
 
         if (voiceCount > 0) {

@@ -1,13 +1,17 @@
 package com.julun.huanque.message.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.message.R
 import kotlinx.android.synthetic.main.fragment_prop.*
 import org.jetbrains.anko.imageResource
@@ -23,11 +27,11 @@ class PropFragment : BaseDialogFragment() {
     companion object {
         val VOICE = "VOICE"
         val TICKET_COUNT = "TICKET_COUNT"
-        fun newInstance(voice: Boolean,count : Int = 0): PropFragment {
+        fun newInstance(voice: Boolean, count: Int = 0): PropFragment {
             val mFragment = PropFragment()
             val bundle = Bundle()
             bundle.putBoolean(VOICE, voice)
-            bundle.putInt(TICKET_COUNT,count)
+            bundle.putInt(TICKET_COUNT, count)
             mFragment.arguments = bundle
             return mFragment
         }
@@ -44,23 +48,45 @@ class PropFragment : BaseDialogFragment() {
             //语音券
             tv_title.text = "语音券"
             iv_prop.imageResource = R.mipmap.icon_voice_big
-            tv_content.text = "语音券可以抵扣语音通话1分钟，当你有优惠券时会优先使用"
-            tv_get_content.text = "语音券在欢鹊乐园活跃奖励中产出"
+            tv_content.text = "语音券可以抵扣语音通话1分钟，当你有优惠券时会优先使用。"
+            tv_get_content.text = "语音券在欢鹊乐园活跃奖励中产出。"
         } else {
             //聊天券
             tv_title.text = "聊天券"
             iv_prop.imageResource = R.mipmap.icon_msg_big
-            tv_content.text = "聊天券可抵扣一次付费信息聊天，当你有聊天券时会优先使用"
-            tv_get_content.text = "聊天券在欢鹊乐园活跃奖励中产出"
+            tv_content.text = "聊天券可抵扣一次付费信息聊天，当你有聊天券时会优先使用。"
+            tv_get_content.text = "聊天券在欢鹊乐园活跃奖励中产出。"
         }
 //        iv_close.onClickNew {
 //            dismiss()
 //        }
         tv_get.onClickNew {
-            ARouter.getInstance().build(ARouterConstant.LEYUAN_BIRD_ACTIVITY).navigation()
-            dismiss()
+            if (!mVoice) {
+                ARouter.getInstance().build(ARouterConstant.LEYUAN_BIRD_ACTIVITY).navigation()
+                dismiss()
+                return@onClickNew
+            }
+            val act = requireActivity()
+            if (PermissionUtils.checkFloatPermission(act)) {
+                ARouter.getInstance().build(ARouterConstant.LEYUAN_BIRD_ACTIVITY).navigation()
+                dismiss()
+                act.finish()
+            } else {
+                MyAlertDialog(act).showAlertWithOKAndCancel(
+                    "悬浮窗权限被禁用，请到设置中授予欢鹊悬浮窗权限",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
+                        intent.data = Uri.parse("package:${act.packageName}")
+//                startActivityForResult(intent, PERMISSIONALERT_WINDOW_CODE_VOICE)
+                        startActivity(intent)
+                    }), "设置提醒", "去设置"
+                )
+            }
+
         }
     }
+
+    override fun needEnterAnimation() = false
 
     override fun onStart() {
         super.onStart()

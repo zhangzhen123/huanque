@@ -56,6 +56,10 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
 
     override fun process(postcard: Postcard?, callback: InterceptorCallback?) {
         if ((postcard?.path ?: "") == ARouterConstant.VOICE_CHAT_ACTIVITY) {
+            if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                ToastUtils.show("正在语音通话，请稍后再试")
+                return
+            }
             //关闭悬浮窗
             EventBus.getDefault().post(HideFloatingEvent())
             VoiceFloatingManager.hideFloatingView()
@@ -177,8 +181,9 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
 //            ToastUtils.show("余额不足")
 
             val bundle = Bundle()
-            bundle.putString(ParamConstant.TYPE,BalanceNotEnoughType.Voice)
-            val dialogFragment = ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment).with(bundle).navigation() as? BaseDialogFragment
+            bundle.putString(ParamConstant.TYPE, BalanceNotEnoughType.Voice)
+            val dialogFragment =
+                ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment).with(bundle).navigation() as? BaseDialogFragment
             dialogFragment?.show(act.supportFragmentManager, "BalanceNotEnoughFragment")
         }
     }

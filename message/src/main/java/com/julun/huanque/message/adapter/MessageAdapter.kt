@@ -269,7 +269,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             ImageHelper.setDefaultHeaderPic(sdv_header, SessionUtils.getSex())
             ImageUtils.loadImage(sdv_header, SessionUtils.getHeaderPic(), 40f, 40f)
         }
-
+        val sdv_mark = helper.getView<SimpleDraweeView>(R.id.sdv_mark)
         if (content is CustomMessage) {
             //自定义消息
             when (content.type) {
@@ -342,8 +342,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 else -> {
                 }
             }
-
+            sdv_mark.hide()
         } else if (content is CustomSimulateMessage) {
+
             when (content.type) {
                 MessageCustomBeanType.Voice_Conmmunication_Simulate -> {
                     //语音消息
@@ -361,6 +362,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 else -> {
                 }
             }
+            sdv_mark.hide()
         } else {
             //通用内容处理
             val tvContent = helper.getView<TextView>(R.id.tv_content)
@@ -382,7 +384,6 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 showMessageView(helper, TEXT_MESSAGE, helper.itemViewType, user?.chatBubble)
                 //是否显示大表情
                 val bigEmoji = EmojiSpanBuilder.allEmoji(context, content.content ?: "")
-                val sdv_mark = helper.getView<SimpleDraweeView>(R.id.sdv_mark)
 
                 if (bigEmoji) {
                     tvContent.background = null

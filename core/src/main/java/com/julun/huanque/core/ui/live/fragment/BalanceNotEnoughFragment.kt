@@ -61,6 +61,7 @@ class BalanceNotEnoughFragment : BaseDialogFragment() {
         if (type == BalanceNotEnoughType.Voice) {
             //语音券跳转
             tv_attention_voice.show()
+            tv_attention_voice.text = "语音通话300鹊币/分钟"
             tv_task_content.text = "即可免费获得语音券"
 
         } else {
