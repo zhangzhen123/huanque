@@ -371,7 +371,6 @@ class VoiceChatViewModel(application: Application) : BaseApplicationViewModel(ap
                 //更新语音券倒计时
                 voiceCardCountDown(data.ticketTtl)
             }
-
         })
     }
 

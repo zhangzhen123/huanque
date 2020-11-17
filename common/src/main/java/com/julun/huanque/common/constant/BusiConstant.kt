@@ -955,3 +955,17 @@ object RuleTouchType {
     //盲盒礼物
     const val BlindRulePage = "BlindRulePage"
 }
+
+/**
+ * 余额不足弹窗显示
+ */
+object BalanceNotEnoughType {
+    //通用样式（3条任务）
+    const val Normal = "Normal"
+
+    //2条任务的样式
+    const val Small = "Small"
+
+    //VOICE（语音卡的样式）
+    const val Voice = "Voice"
+}

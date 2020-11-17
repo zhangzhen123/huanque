@@ -95,7 +95,7 @@
         android:drawablePadding="3dp"
         android:ellipsize="end"
         android:gravity="center"
-        android:maxLength="6"
+        android:maxLength="4"
         android:paddingLeft="5dp"
         android:paddingRight="6dp"
         android:textColor="#CB93E2"

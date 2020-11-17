@@ -11,7 +11,7 @@ data class ChatUser(
     //头像
     var headPic: String = "",
     //个性签名
-    var mySign: String = "",
+    var mySign: String = "签名不足以表达我自己，找我私聊吧~",
     //昵称
     var nickname: String = "",
     //用户ID

@@ -1,6 +1,5 @@
 package com.julun.huanque.core.dialog
 
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
@@ -17,14 +16,13 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseDialogFragment
-import com.julun.huanque.common.base.BaseVMDialogFragment
-import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.TodayFateInfo
 import com.julun.huanque.common.bean.beans.TodayFateItem
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ErrorCodes
+import com.julun.huanque.common.constant.BalanceNotEnoughType
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -136,7 +134,7 @@ class TodayFateDialogFragment : BaseDialogFragment() {
                     when (it.busiCode) {
                         ErrorCodes.BALANCE_NOT_ENOUGH -> {
                             dismiss()
-                            BalanceNotEnoughFragment.newInstance(true).show(requireActivity(), "BalanceNotEnoughFragment")
+                            BalanceNotEnoughFragment.newInstance(BalanceNotEnoughType.Small).show(requireActivity(), "BalanceNotEnoughFragment")
                         }
                     }
                 }

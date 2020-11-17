@@ -2,6 +2,7 @@ package com.julun.huanque.message.fragment
 
 import android.os.Bundle
 import android.view.Gravity
+import android.view.ViewGroup
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseDialogFragment
@@ -52,9 +53,9 @@ class PropFragment : BaseDialogFragment() {
             tv_content.text = "聊天券可抵扣一次付费信息聊天，当你有聊天券时会优先使用"
             tv_get_content.text = "聊天券在欢鹊乐园活跃奖励中产出"
         }
-        iv_close.onClickNew {
-            dismiss()
-        }
+//        iv_close.onClickNew {
+//            dismiss()
+//        }
         tv_get.onClickNew {
             ARouter.getInstance().build(ARouterConstant.LEYUAN_BIRD_ACTIVITY).navigation()
             dismiss()
@@ -63,7 +64,7 @@ class PropFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.BOTTOM, 0, 250)
+        setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
         tv_count.text = "剩余：${arguments?.getInt(TICKET_COUNT) ?: 0}张"
     }
 }

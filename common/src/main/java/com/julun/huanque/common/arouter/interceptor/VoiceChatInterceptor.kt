@@ -175,7 +175,10 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
         val act = CommonInit.getInstance().getCurrentActivity() as? AppCompatActivity
         if (act != null) {
 //            ToastUtils.show("余额不足")
-            val dialogFragment = ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment).navigation() as? BaseDialogFragment
+
+            val bundle = Bundle()
+            bundle.putString(ParamConstant.TYPE,BalanceNotEnoughType.Voice)
+            val dialogFragment = ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment).with(bundle).navigation() as? BaseDialogFragment
             dialogFragment?.show(act.supportFragmentManager, "BalanceNotEnoughFragment")
         }
     }

@@ -81,6 +81,9 @@ class VoiceChatActivity : BaseActivity() {
         ll_hands_free.isEnabled = !mEarphone
         if (intent?.getStringExtra(ParamConstant.From_Floating) != BusiConstant.True) {
             //不是从悬浮窗跳转过来
+            //清空余额不足数据
+            mVoiceChatViewModel.notEnoughData.value = null
+
             mVoiceChatViewModel.mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
             val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
             if (netCallBean == null) {
@@ -481,7 +484,7 @@ class VoiceChatActivity : BaseActivity() {
      * 显示余额不足弹窗
      */
     private fun showBalanceNotEnoughView(bean: NetCallBalanceRemindBean) {
-        if (bean.enough) {
+        if (bean.enough || (mVoiceChatViewModel.notEnoughData.value?.duration ?: 0) == 0L) {
             //隐藏视图
             mDurationDisposable?.dispose()
             view_balance.hide()
@@ -499,7 +502,10 @@ class VoiceChatActivity : BaseActivity() {
             val duration = bean.duration
             mDurationDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
                 .take(duration + 1)
-                .map { "${duration - it}" }
+                .map {
+                    mVoiceChatViewModel.notEnoughData.value?.duration = duration - it
+                    "${duration - it}"
+                }
                 .bindUntilEvent(this, ActivityEvent.DESTROY)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({

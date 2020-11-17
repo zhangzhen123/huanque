@@ -48,6 +48,17 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_header" />
 
+    <TextView
+        android:id="@+id/tv_attention_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toLeftOf="@id/tv_title"
+        app:layout_constraintRight_toRightOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="语音通话300鹊币/分钟" />
+
     <View
         android:id="@+id/view_recharge"
         android:layout_width="0px"
@@ -58,7 +69,7 @@
         android:background="@drawable/bg_balance_not_enough_item"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_attention_voice" />
 
 
     <ImageView

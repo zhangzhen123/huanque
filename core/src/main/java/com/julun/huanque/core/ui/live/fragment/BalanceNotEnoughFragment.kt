@@ -7,9 +7,11 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.BalanceNotEnoughType
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
@@ -26,10 +28,10 @@ import kotlinx.android.synthetic.main.fragment_balance_not_enough.*
 class BalanceNotEnoughFragment : BaseDialogFragment() {
 
     companion object {
-        fun newInstance(player: Boolean): BalanceNotEnoughFragment {
+        fun newInstance(from: String): BalanceNotEnoughFragment {
             val fragment = BalanceNotEnoughFragment()
             val bundle = Bundle()
-            bundle.putBoolean(ParamConstant.PLAYER, player)
+            bundle.putString(ParamConstant.TYPE, from)
             fragment.arguments = bundle
             return fragment
         }
@@ -41,9 +43,10 @@ class BalanceNotEnoughFragment : BaseDialogFragment() {
     override fun needEnterAnimation() = true
 
     override fun initViews() {
+        tv_attention_voice
         initEvents()
-        val player = arguments?.getBoolean(ParamConstant.PLAYER, false)
-        if (player == true) {
+        val type = arguments?.getString(ParamConstant.TYPE, "")
+        if (type == BalanceNotEnoughType.Small) {
             //直播间内显示
             tv_recharge_content.text = "送礼要趁热，别让Ta被人撩走"
             view_task.hide()
@@ -54,6 +57,15 @@ class BalanceNotEnoughFragment : BaseDialogFragment() {
         } else {
             //其他地方显示
             tv_recharge_content.text = "聊天要趁热，别让Ta被人撩走"
+        }
+        if (type == BalanceNotEnoughType.Voice) {
+            //语音券跳转
+            tv_attention_voice.show()
+            tv_task_content.text = "即可免费获得语音券"
+
+        } else {
+            tv_attention_voice.hide()
+            tv_task_content.text = "即可获得免费聊天券"
         }
     }
 
