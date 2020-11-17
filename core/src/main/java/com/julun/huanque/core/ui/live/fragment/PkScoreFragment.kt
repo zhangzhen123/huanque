@@ -171,7 +171,7 @@ class PkScoreFragment : BaseVMFragment<PkScoreViewModel>() {
                     nickNameText.textColor = GlobalUtils.getColor(R.color.black_333)
                 }
                 val position = holder.layoutPosition - headerLayoutCount
-                holder.setText(R.id.contributionText, "${StringHelper.formatNum(item.score)}鹊币")
+                holder.setText(R.id.contributionText, "${StringHelper.formatNum(item.score)}")
                 //勋章
                 renderImage(item, holder.getView<DraweeSpanTextView>(R.id.image_text))
 

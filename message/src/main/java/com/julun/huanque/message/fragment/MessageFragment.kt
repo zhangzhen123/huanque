@@ -395,7 +395,8 @@ class MessageFragment : BaseFragment() {
             R.mipmap.icon_default_empty,
             emptyTxt = "快去找个有趣的人聊吧~",
             onClick = View.OnClickListener {
-                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                    .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
             },
             btnTex = "去看看"
         )

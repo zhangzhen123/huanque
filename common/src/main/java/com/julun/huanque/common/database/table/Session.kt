@@ -34,6 +34,8 @@ data class Session(
     //是否同意了协议
     var agreeUp: String = "",
     //1.6新增登陆后返回首页默认定位的位置
-    var defaultHomeTab: String = ""
+    var defaultHomeTab: String = "",
+    //1.8新增是否隐藏首页的交友栏
+    var hideSocialTab: Boolean = false
 
 )

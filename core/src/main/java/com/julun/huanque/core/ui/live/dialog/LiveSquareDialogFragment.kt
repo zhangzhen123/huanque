@@ -21,10 +21,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.AuthorFollowBean
 import com.julun.huanque.common.bean.beans.ProgramLiveInfo
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.PlayerFrom
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.*
@@ -183,7 +180,7 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
                         onClick = View.OnClickListener {
                             logger.info("跳转到交友")
                             ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                                .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+                                .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
                         }).apply {
                         val lp = if (mViewModel.followList.value?.getT()?.list?.isNotEmpty() == true) {
                             ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(300))

@@ -132,7 +132,7 @@ class MainActivity : BaseActivity() {
         doWithChannel()
         CommonInit.getInstance().setMainActivity(this)
         initViewModel()
-
+        initBottomTab()
         lifecycleScope.launchWhenResumed {
             //默认定位的位置 优先以TARGET_INDEX 再根据getDefaultHomeTab
             //如果都没有命中默认打开到首页
@@ -147,8 +147,13 @@ class MainActivity : BaseActivity() {
                     }
                 }
             }
+            //如果没有目标tab 默认到首页tab
             if (targetIndex == null || targetIndex == -1) {
-                targetIndex=MainPageIndexConst.MAIN_FRAGMENT_INDEX
+                targetIndex = MainPageIndexConst.MAIN_FRAGMENT_INDEX
+            }
+            //如果是隐藏首页 这里就跳到第二栏
+            if (hideHome) {
+                targetIndex = MainPageIndexConst.PROGRAM_FRAGMENT_INDEX
             }
             mMainViewModel.indexData.value = targetIndex
         }
@@ -175,6 +180,22 @@ class MainActivity : BaseActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ checkPermission() }, { it.printStackTrace() })
 
+    }
+
+    private var hideHome: Boolean = false
+
+    /**
+     * 登录后 根据后台是否显示交友栏目
+     */
+    private fun initBottomTab() {
+        hideHome = StorageHelper.getHideSocialTab()
+        if (!hideHome) {
+            view_make_friends.show()
+            fl_make_friends.show()
+        } else {
+            view_make_friends.hide()
+            fl_make_friends.hide()
+        }
     }
 
     /**
@@ -418,7 +439,7 @@ class MainActivity : BaseActivity() {
     }
 
     /**
-     * 切换到指定[index]tab页
+     * 切换到指定[index]tab页 注意这里的[index]严格的只认MainPageIndexConst
      */
     private fun goToTab(index: Int) {
         when (index) {
@@ -558,8 +579,12 @@ class MainActivity : BaseActivity() {
      * 退出应用
      */
     private fun exit() {
-        if (!mHomeFragment.isVisible) {
+        if (!hideHome && !mHomeFragment.isVisible) {
             mMainViewModel.indexData.value = MainPageIndexConst.MAIN_FRAGMENT_INDEX
+            return
+        }
+        if (hideHome && !mProgramFragment.isVisible) {
+            mMainViewModel.indexData.value = MainPageIndexConst.PROGRAM_FRAGMENT_INDEX
             return
         }
         val secondTime = System.currentTimeMillis()

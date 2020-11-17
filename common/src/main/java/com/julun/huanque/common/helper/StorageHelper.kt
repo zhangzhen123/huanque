@@ -43,6 +43,9 @@ object StorageHelper {
     //默认的首页定位tab
     private const val DEFAULT_HOME_TAB = "DefaultHomeTab"
 
+    //是否展示首页的
+    private const val SHOW_SOCIAL_TAB = "showSocialTab"
+
     /**
      * 保存ad
      */
@@ -164,4 +167,11 @@ object StorageHelper {
     }
 
     fun getDefaultHomeTab() = SharedPreferencesUtils.getString(DEFAULT_HOME_TAB, "")
+
+    //设置默认首页定位tab
+    fun setHideSocialTab(show: Boolean) {
+        SharedPreferencesUtils.commitBoolean(SHOW_SOCIAL_TAB, show)
+    }
+
+    fun getHideSocialTab() = SharedPreferencesUtils.getBoolean(SHOW_SOCIAL_TAB, false)
 }

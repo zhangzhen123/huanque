@@ -21,6 +21,7 @@ import com.julun.huanque.common.bean.beans.ProgramLiveInfo
 import com.julun.huanque.common.bean.beans.ProgramTab
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.MainPageIndexConst
 import com.julun.huanque.common.constant.ProgramItemType
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.dp2px
@@ -338,7 +339,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
                 onClick = View.OnClickListener {
                     logger.info("跳转到交友")
                     ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                        .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+                        .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
                 })
         } else {
             state_pager_view.showSuccess()

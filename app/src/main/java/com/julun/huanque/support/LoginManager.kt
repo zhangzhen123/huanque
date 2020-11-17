@@ -3,7 +3,6 @@ package com.julun.huanque.support
 import com.alibaba.android.arouter.launcher.ARouter
 import com.ishumei.smantifraud.SmAntiFraud
 import com.julun.huanque.BuildConfig
-import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.forms.MobileLoginForm
 import com.julun.huanque.common.bean.forms.MobileQuickForm
@@ -25,7 +24,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
-import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 /**
@@ -177,6 +175,8 @@ object LoginManager {
         //如果登录的账号是注册完整的 就执行完整的登录后续操作（心跳，融云等等）
         SPUtils.commitString(SPParamKey.AgreeUp,session.agreeUp)
         StorageHelper.setDefaultHomeTab(session.defaultHomeTab)
+
+        StorageHelper.setHideSocialTab(session.hideSocialTab)
         if (session.regComplete) {
             (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
                 .navigation() as? AppCommonService)?.loginSuccess(session)

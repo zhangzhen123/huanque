@@ -163,7 +163,7 @@ class WithdrawHistoryActivity : BaseVMActivity<WithdrawHistoryViewModel>() {
                                 finish()
                             } else {
                                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                                    .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+                                    .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
                                 finish()
                             }
                         })

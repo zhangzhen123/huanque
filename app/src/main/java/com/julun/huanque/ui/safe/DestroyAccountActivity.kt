@@ -87,7 +87,7 @@ class DestroyAccountActivity : BaseVMActivity<DestroyAccountModel>() {
                         }
                         1304 -> {
                             ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                                .withInt(IntentParamKey.TARGET_INDEX.name, 0)
+                                .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX)
                                 .navigation()
                         }
                     }

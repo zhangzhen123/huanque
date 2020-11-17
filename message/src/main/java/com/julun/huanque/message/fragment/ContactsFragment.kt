@@ -73,6 +73,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         MixedHelper.setSwipeRefreshStyle(swiperefreshlayout)
 
     }
+
     override fun lazyLoadData() {
         //加载数据
         val socialList = mActivityViewModel.socialListData.value
@@ -261,7 +262,8 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
                 RNPageActivity.start(requireActivity(), RnConstant.EDIT_MINE_HOMEPAGE)
             } else {
                 //跳转交友
-                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY).withInt(IntentParamKey.TARGET_INDEX.name, 0)
+                ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                    .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX)
                     .navigation()
             }
         }, btnText)

@@ -663,12 +663,12 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                 }
                 RnConstant.MAKE_FRIENDS_PAGE -> {
                     ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                        .withInt(IntentParamKey.TARGET_INDEX.name, 0).navigation()
+                        .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
                     finish()
                 }
                 RnConstant.MESSAGE_PAGE -> {
                     ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                        .withInt(IntentParamKey.TARGET_INDEX.name, 2).navigation()
+                        .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MESSAGE_FRAGMENT_INDEX).navigation()
                     finish()
                 }
 
@@ -704,7 +704,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                             operate = ImageActivityOperate.REPORT,
                             userId = userId.toLong()
                         )
-                    }catch (e : java.lang.Exception){
+                    } catch (e: java.lang.Exception) {
                         e.printStackTrace()
                     }
                 }
@@ -747,7 +747,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                             putLong(ParamConstant.UserId, userId)
                         }
                         ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
-                    }catch (e : java.lang.Exception){
+                    } catch (e: java.lang.Exception) {
                         e.printStackTrace()
                     }
                 }
