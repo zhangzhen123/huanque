@@ -371,7 +371,7 @@ class VoiceChatActivity : BaseActivity() {
         })
         mVoiceChatViewModel.duration.observe(this, Observer {
             if (it != null) {
-                tv_call_duration.text = "通话时长：${TimeUtils.countDownTimeFormat1(it)}"
+                tv_call_duration.text = "通话时长 ${TimeUtils.countDownTimeFormat1(it)}"
             }
         })
         mVoiceChatViewModel.notEnoughData.observe(this, Observer {
