@@ -13,41 +13,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/result_layout"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/header"
-        android:layout_marginBottom="80dp"
-        android:orientation="vertical">
+        android:layout_marginBottom="80dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_15"
-            android:layout_marginLeft="@dimen/dimen_15"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:text="注销后，你的账号将："
-            android:textColor="@color/black_333"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/result_tips"
+        <LinearLayout
+            android:id="@+id/result_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_15"
-            android:layout_marginLeft="@dimen/dimen_15"
-            android:layout_marginTop="@dimen/dimen_11"
-            android:layout_marginEnd="@dimen/dimen_15"
-            android:layout_marginRight="@dimen/dimen_15"
-            android:lineSpacingExtra="@dimen/dimen_10"
-            android:text="@string/account_destroy_tips"
-            android:textColor="@color/black_666"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_15"
+                android:layout_marginLeft="@dimen/dimen_15"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:text="注销后，你的账号将："
+                android:textColor="@color/black_333"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/result_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_15"
+                android:layout_marginLeft="@dimen/dimen_15"
+                android:layout_marginTop="@dimen/dimen_11"
+                android:layout_marginEnd="@dimen/dimen_15"
+                android:layout_marginRight="@dimen/dimen_15"
+                android:lineSpacingExtra="@dimen/dimen_10"
+                android:text="@string/account_destroy_tips"
+                android:textColor="@color/black_666"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </ScrollView>
 
     <TextView
         android:id="@+id/apply_cancel"
