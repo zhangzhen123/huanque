@@ -316,6 +316,7 @@ class VoiceChatActivity : BaseActivity() {
                             }), "语音通话费用", "发起通话"
                         )
                     }
+                    mVoiceChatViewModel.netcallBeanData.value?.unconfirmed = false
                 }
                 var backPic = ""
                 if (mVoiceChatViewModel.mType == ConmmunicationUserType.CALLING) {

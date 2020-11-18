@@ -1316,15 +1316,20 @@ object RongCloudManager {
     private val resultCallback: RongIMClient.ResultCallback<List<Conversation>> by lazy {
         object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(p0: List<Conversation>?) {
-                resultCallbacks.forEach {
-                    it.onSuccess(p0)
+                if(p0 != null){
+                    resultCallbacks.forEach {
+                        it.onSuccess(p0)
+                    }
                 }
             }
 
             override fun onError(p0: RongIMClient.ErrorCode?) {
-                resultCallbacks.forEach {
-                    it.onError(p0)
+                if(p0 != null){
+                    resultCallbacks.forEach {
+                        it.onError(p0)
+                    }
                 }
+
             }
 
         }
