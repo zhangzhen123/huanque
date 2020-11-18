@@ -1001,6 +1001,10 @@ object RongCloudManager {
      */
     private fun doWithVibrate(message: Message) {
         Observable.create<Void> {
+            if (!SPUtils.getBoolean(SPParamKey.Msg_Vibrate, true)) {
+                //关闭了消息震动
+                return@create
+            }
             //判断sendUserId 是否为kong
             val sendUserId = message.senderUserId ?: return@create
             //判断targetId是否为kong

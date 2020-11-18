@@ -118,6 +118,9 @@ object SPParamKey {
     //缘分来了铃声是否开启
     const val Fate_Voice_Open = "Fate_Voice_Open"
 
+    //新消息震动是否开启
+    const val Msg_Vibrate = "Msg_Vibrate"
+
     //缘分未回复数量
     const val Fate_No_Reply_Count = "Fate_No_Reply_Count"
 

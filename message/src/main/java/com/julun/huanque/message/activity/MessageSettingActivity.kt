@@ -59,6 +59,8 @@ class MessageSettingActivity : BaseActivity() {
             iv_fate_voice.isSelected = SPUtils.getBoolean(SPParamKey.Fate_Voice_Open, true)
         }
 
+        iv_msg_vibrate.isSelected = SPUtils.getBoolean(SPParamKey.Msg_Vibrate, true)
+
         showPriceSetView(SessionUtils.getSex() == Sex.FEMALE)
     }
 
@@ -138,6 +140,11 @@ class MessageSettingActivity : BaseActivity() {
             //缘分来了铃声
             iv_fate_voice.isSelected = !iv_fate_voice.isSelected
             SPUtils.commitBoolean(SPParamKey.Fate_Voice_Open, iv_fate_voice.isSelected)
+        }
+        iv_msg_vibrate.onClickNew {
+            //新消息震动提醒
+            iv_msg_vibrate.isSelected = !iv_msg_vibrate.isSelected
+            SPUtils.commitBoolean(SPParamKey.Msg_Vibrate, iv_msg_vibrate.isSelected)
         }
     }
 
