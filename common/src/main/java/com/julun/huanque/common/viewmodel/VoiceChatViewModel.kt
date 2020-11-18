@@ -560,6 +560,7 @@ class VoiceChatViewModel(application: Application) : BaseApplicationViewModel(ap
 //        mVoiceChatViewModel?.createConmmunication(mVoiceChatViewModel?.targetUserBean?.value?.userId ?: 0)
         //超时计算
         mDisposable = Observable.timer(60, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 if (mType == ConmmunicationUserType.CALLING) {
                     calcelVoice(CancelType.Timeout)
