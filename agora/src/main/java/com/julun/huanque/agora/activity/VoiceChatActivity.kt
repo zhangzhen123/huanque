@@ -542,6 +542,11 @@ class VoiceChatActivity : BaseActivity() {
 
 
     override fun onBackPressed() {
+        if (!SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+            //语音通话已经结束
+            super.onBackPressed()
+            return
+        }
         if (PermissionUtils.checkFloatPermission(this)) {
             super.onBackPressed()
         } else {
@@ -550,6 +555,12 @@ class VoiceChatActivity : BaseActivity() {
     }
 
     override fun finish() {
+        logger.info("VOICE_ON_LINE = ${SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)}")
+        if (!SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+            //语音通话已经结束
+            super.finish()
+            return
+        }
         if (PermissionUtils.checkFloatPermission(this)) {
             super.finish()
         } else {
