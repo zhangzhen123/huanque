@@ -56,6 +56,15 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
 
     override fun process(postcard: Postcard?, callback: InterceptorCallback?) {
         if ((postcard?.path ?: "") == ARouterConstant.VOICE_CHAT_ACTIVITY) {
+            if (postcard?.extras?.getString(ParamConstant.From_Floating) == BusiConstant.True) {
+                //从悬浮窗点击进入的，直接跳转
+                //关闭悬浮窗
+                EventBus.getDefault().post(HideFloatingEvent())
+                VoiceFloatingManager.hideFloatingView()
+
+                callback?.onContinue(postcard)
+                return
+            }
             if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
                 ToastUtils.show("正在语音通话，请稍后再试")
                 return
@@ -75,11 +84,6 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
                 logger("Interceptor 耳机是否插入 earPhoneLinked = $earPhoneLinked")
                 bundle.putBoolean(ParamConstant.Earphone, earPhoneLinked)
 //                ToastUtils.show("耳机是否插入 $earPhoneLinked")
-                if (bundle.getString(ParamConstant.From_Floating) == BusiConstant.True) {
-                    //从悬浮窗点击进入的，直接跳转
-                    callback?.onContinue(postcard)
-                    return
-                }
             }
 
 

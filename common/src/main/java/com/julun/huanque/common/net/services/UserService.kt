@@ -173,6 +173,18 @@ interface UserService {
     suspend fun destroyAccount(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
 
     /**
+     * 注销前检测
+     */
+    @POST("user/acct/login/checkDestroy")
+    suspend fun checkDestroy(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
+
+    /**
+     * 注销账号
+     */
+    @POST("user/acct/login/destroyAccountV1")
+    suspend fun destroyAccountV1(@Body form: EmptyForm = EmptyForm()): Root<VoidResult>
+
+    /**
      *获取气泡配置
      */
     @POST("user/app/settings")
@@ -254,7 +266,7 @@ interface UserService {
      * 主页信息
      */
     @POST("user/acct/info/home")
-    suspend fun homeInfo(@Body form : UserIdForm) : Root<HomePageInfo>
+    suspend fun homeInfo(@Body form: UserIdForm): Root<HomePageInfo>
 
 
 }

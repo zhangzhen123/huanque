@@ -89,6 +89,10 @@ class VoiceChatActivity : BaseActivity() {
             //不是从悬浮窗跳转过来
             //清空余额不足数据
             mVoiceChatViewModel.notEnoughData.value = null
+            //清空语音时长
+            mVoiceChatViewModel.duration.value = null
+            //清空倒计时操作
+            mVoiceChatViewModel.voiceCardDuration.value = null
 
             mVoiceChatViewModel.mType = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
             val netCallBean = intent?.getSerializableExtra(ParamConstant.NetCallBean) as? NetcallBean
@@ -367,7 +371,7 @@ class VoiceChatActivity : BaseActivity() {
         })
         mVoiceChatViewModel.duration.observe(this, Observer {
             if (it != null) {
-                tv_call_duration.text = "通话时长：${TimeUtils.countDownTimeFormat1(it)}"
+                tv_call_duration.text = "通话时长 ${TimeUtils.countDownTimeFormat1(it)}"
             }
         })
         mVoiceChatViewModel.notEnoughData.observe(this, Observer {

@@ -178,7 +178,7 @@ data class VoiceTicketBean(
     //语音券倒计时
     var ticketTtl: Long = 0,
     //语音券数量
-    var ticketCount: Int = 0
+    var ticketCnt: Int = 0
 ) : Serializable
 
 /**

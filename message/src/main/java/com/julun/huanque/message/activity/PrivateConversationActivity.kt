@@ -1889,13 +1889,16 @@ class PrivateConversationActivity : BaseActivity() {
 
             val params = mHeaderView?.layoutParams
             val videoView = mHeaderView?.findViewById<View>(R.id.ll_audio)
+            val view_bg = mHeaderView?.findViewById<View>(R.id.view_bg)
             if (friendUser.voiceLength == 0) {
                 //没有语音，隐藏语音相关布局
                 videoView?.hide()
-                params?.height = dp2px(110)
+                params?.height = dp2px(111)
+                view_bg?.backgroundResource = R.mipmap.bg_user_info_chat_small
             } else {
                 videoView?.show()
                 params?.height = dp2px(145)
+                view_bg?.backgroundResource = R.mipmap.bg_user_info_chat
 
                 //显示语音相关布局
                 val tv_audio_time = mHeaderView?.findViewById<TextView>(R.id.tv_audio_time) ?: return

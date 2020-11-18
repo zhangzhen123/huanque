@@ -271,7 +271,7 @@ class VoiceChatViewModel(application: Application) : BaseApplicationViewModel(ap
                 val currentTicketBean = data.ticketInfo["${SessionUtils.getUserId()}"]
                 currentTicketBean?.let { ticket ->
                     //更新语音券数量
-                    voiceCardCount.value = ticket.ticketCount
+                    voiceCardCount.value = ticket.ticketCnt
                     //更新语音券倒计时
                     voiceCardCountDown(ticket.ticketTtl)
                 }

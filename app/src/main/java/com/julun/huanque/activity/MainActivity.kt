@@ -620,7 +620,9 @@ class MainActivity : BaseActivity() {
         MessageProcessor.removeProcessors(this)
         MessageProcessor.registerEventProcessor(this, object : MessageProcessor.NetCallReceiveProcessor {
             override fun process(data: NetCallReceiveBean) {
+                //匿名语音或者普通语音正在通话中
                 val onLine = SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)
+                        || SharedPreferencesUtils.getBoolean(SPParamKey.ANONYMOUS_VOICE_ON_LINE, false)
                 if (onLine) {
                     //正在通话中
                     mMainViewModel.busy(data.callId)
@@ -670,9 +672,7 @@ class MainActivity : BaseActivity() {
                             false, System.currentTimeMillis() + 1000
                         )
                     }
-
                 }
-
             }
         })
 
@@ -680,7 +680,10 @@ class MainActivity : BaseActivity() {
         MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.AnonyVoiceInviteProcessor {
             override fun process(data: AnonyVoiceInviteBean) {
-                if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                //正在通话中
+                val onLine = SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)
+                        || SharedPreferencesUtils.getBoolean(SPParamKey.ANONYMOUS_VOICE_ON_LINE, false)
+                if (onLine) {
                     return
                 }
                 if (abs(System.currentTimeMillis() - data.inviteTime) > 30 * 1000) {

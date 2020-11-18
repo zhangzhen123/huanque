@@ -249,7 +249,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                 VoiceManager.stop()
                 when (it) {
                     AnonymousVoiceViewModel.WAIT -> {
-                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
+                        SharedPreferencesUtils.commitBoolean(SPParamKey.ANONYMOUS_VOICE_ON_LINE, false)
                         mDisposable?.dispose()
                         mOtherNoJoinDisposable?.dispose()
 
@@ -261,12 +261,12 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                         voiceCompositeDisposable.clear()
                     }
                     AnonymousVoiceViewModel.MATCH -> {
-                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
+                        SharedPreferencesUtils.commitBoolean(SPParamKey.ANONYMOUS_VOICE_ON_LINE, true)
                         VoiceManager.playMatch()
                         startMatch()
                     }
                     AnonymousVoiceViewModel.VOICE -> {
-                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
+                        SharedPreferencesUtils.commitBoolean(SPParamKey.ANONYMOUS_VOICE_ON_LINE, true)
                         showMatchSuccessView()
                         startVoiceCountDown()
                         joinChannel()
@@ -274,7 +274,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
                     }
                     AnonymousVoiceViewModel.WAIT_ACCEPT -> {
                         //等待接听状态
-                        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, true)
+                        SharedPreferencesUtils.commitBoolean(SPParamKey.ANONYMOUS_VOICE_ON_LINE, true)
                         showMatchSuccessView()
                         showWaitAccept()
                     }
@@ -1116,7 +1116,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
 
     override fun onViewDestroy() {
         super.onViewDestroy()
-        SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
+        SharedPreferencesUtils.commitBoolean(SPParamKey.ANONYMOUS_VOICE_ON_LINE, false)
         leaveChannel()
         mDisposable?.dispose()
         VoiceManager.destroy()
