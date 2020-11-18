@@ -13,6 +13,7 @@ import com.julun.huanque.common.bean.events.LoginOutEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.constant.ParamConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.DataCleanManager
 import com.julun.huanque.common.suger.hide
@@ -20,6 +21,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ForceUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.message.activity.MessageSettingActivity
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
@@ -78,6 +80,10 @@ class SettingActivity : BaseActivity() {
 
         tv_logout.onClickNew {
             //退出登录
+            if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                ToastUtils.show("正在语音通话，请稍后再试")
+                return@onClickNew
+            }
             MyAlertDialog(this).showAlertWithOKAndCancel(
                 "退出登录后将无法收到TA的消息了，确定退出吗？",
                 MyAlertDialog.MyDialogCallback(onRight = {

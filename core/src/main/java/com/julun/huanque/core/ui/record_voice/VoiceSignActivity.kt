@@ -19,12 +19,14 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.SignPoint
 import com.julun.huanque.common.bean.events.VoiceSignEvent
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
 import com.julun.huanque.common.manager.audio_record.AudioRecordManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.R
@@ -154,6 +156,10 @@ class VoiceSignActivity : BaseVMActivity<VoiceSignViewModel>() {
         }
 
         iv_main_btn.setOnTouchListener { _, event ->
+            if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                ToastUtils.show("正在语音通话，请稍后再试")
+                return@setOnTouchListener false
+            }
             if (event.action == MotionEvent.ACTION_DOWN) {
                 if (recordState == 0) {
                     logger.info("事件-开始录制")

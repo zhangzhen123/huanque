@@ -14,6 +14,8 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.SharedPreferencesUtils
+import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.support.LoginManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -61,6 +63,10 @@ class DestroyAccountActivity : BaseVMActivity<DestroyAccountModel>() {
             finish()
         }
         apply_cancel.onClickNew {
+            if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                ToastUtils.show("正在语音通话，请稍后再试")
+                return@onClickNew
+            }
             mViewModel.destroyAccount()
         }
 
