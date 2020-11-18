@@ -1,4 +1,4 @@
-package com.julun.huanque.agora.handler;
+package com.julun.huanque.common.agora.handler;
 
 import io.agora.rtc.IRtcEngineEventHandler;
 

@@ -18,7 +18,7 @@ import com.jakewharton.processphoenix.ProcessPhoenix
 import com.julun.huanque.BuildConfig
 import com.julun.huanque.R
 import com.julun.huanque.activity.MainActivity
-import com.julun.huanque.agora.AgoraManager
+import com.julun.huanque.common.agora.AgoraManager
 import com.julun.huanque.common.constant.MMKVConstant
 import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.ChannelCodeHelper

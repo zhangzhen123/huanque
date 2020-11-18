@@ -41,6 +41,9 @@ object BusiConstant {
     const val DESTROY_ACCOUNT_RESULT_CODE = 502 //注销账号result_code
 
     const val EMPTY_GIFT = -100
+
+    //系统消息的ID
+    const val System_Message = "system_android"
 }
 
 /**
@@ -596,6 +599,12 @@ object MessageCustomBeanType {
 
     //创建会话风险提示
     const val PrivateChatRiskWarning = "PrivateChatRiskWarning"
+
+    //收费提示视图
+    const val MessageFee = "MessageFee"
+
+    //亲密度变动触发的提示
+    const val Initim_Attention = "Initim_Attention"
 }
 
 
@@ -945,4 +954,18 @@ object RuleTouchType {
 
     //盲盒礼物
     const val BlindRulePage = "BlindRulePage"
+}
+
+/**
+ * 余额不足弹窗显示
+ */
+object BalanceNotEnoughType {
+    //通用样式（3条任务）
+    const val Normal = "Normal"
+
+    //2条任务的样式
+    const val Small = "Small"
+
+    //VOICE（语音卡的样式）
+    const val Voice = "Voice"
 }

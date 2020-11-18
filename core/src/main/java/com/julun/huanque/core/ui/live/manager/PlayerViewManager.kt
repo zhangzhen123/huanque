@@ -745,7 +745,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 //            if (!mDialogManager.isFragmentShow(RechargeDialogFragment::class.java)) {
         mDialogManager.openDialog(
             BalanceNotEnoughFragment::class.java,
-            builder = { BalanceNotEnoughFragment.newInstance(true) },
+            builder = { BalanceNotEnoughFragment.newInstance(BalanceNotEnoughType.Small) },
             reuse = true
         )
 //

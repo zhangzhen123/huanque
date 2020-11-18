@@ -68,6 +68,8 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
             android:theme="@style/LiveTheme" />
+
+        <service android:name=".service.VoiceFloatingService"/>
     </application>
 
 </manifest>

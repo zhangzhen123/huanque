@@ -24,6 +24,7 @@ import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.manager.VoiceFloatingManager
 import com.julun.huanque.common.net.RequestCaller
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
@@ -55,8 +56,14 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
 
     override fun process(postcard: Postcard?, callback: InterceptorCallback?) {
         if ((postcard?.path ?: "") == ARouterConstant.VOICE_CHAT_ACTIVITY) {
+            if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                ToastUtils.show("正在语音通话，请稍后再试")
+                return
+            }
             //关闭悬浮窗
             EventBus.getDefault().post(HideFloatingEvent())
+            VoiceFloatingManager.hideFloatingView()
+
             mPostcard = postcard
             mCallback = callback
             //跳转语音会话页面
@@ -68,6 +75,11 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
                 logger("Interceptor 耳机是否插入 earPhoneLinked = $earPhoneLinked")
                 bundle.putBoolean(ParamConstant.Earphone, earPhoneLinked)
 //                ToastUtils.show("耳机是否插入 $earPhoneLinked")
+                if (bundle.getString(ParamConstant.From_Floating) == BusiConstant.True) {
+                    //从悬浮窗点击进入的，直接跳转
+                    callback?.onContinue(postcard)
+                    return
+                }
             }
 
 
@@ -167,7 +179,11 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
         val act = CommonInit.getInstance().getCurrentActivity() as? AppCompatActivity
         if (act != null) {
 //            ToastUtils.show("余额不足")
-            val dialogFragment = ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment).navigation() as? BaseDialogFragment
+
+            val bundle = Bundle()
+            bundle.putString(ParamConstant.TYPE, BalanceNotEnoughType.Voice)
+            val dialogFragment =
+                ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment).with(bundle).navigation() as? BaseDialogFragment
             dialogFragment?.show(act.supportFragmentManager, "BalanceNotEnoughFragment")
         }
     }

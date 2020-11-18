@@ -115,8 +115,26 @@ class IntimateBean(
     //是否是陌生人状态
     var stranger: HashMap<Long, Boolean> = hashMapOf(),
     //消息免费标识
-    var msgFree: Boolean = false
+    var msgFree: Boolean = false,
+    //亲密度变动,需要插入消息
+    var tips: MutableList<IntimateTouchBean> = mutableListOf()
 )
+
+/**
+ * 亲密度变动提示消息操作文案
+ */
+data class IntimateTouchBean(
+    //显示的内容
+    var content: String = "",
+    //点击类型
+    var touchType: String = ""
+) : Serializable {
+    companion object {
+        //语音电话
+        const val NetCall = "NetCall"
+    }
+
+}
 
 /**
  * 私聊道具
@@ -160,7 +178,9 @@ class ConversationBasicBean(
     //语音券数量
     var voiceTicketCnt: Int = 0,
     //直播显示倒计时
-    var recomDelaySec: Long = 0
+    var recomDelaySec: Long = 0,
+    //我是否是对方的陌生人
+    var strangerToOther: String = ""
 )
 
 /**
@@ -201,13 +221,15 @@ class NetcallBean(
     //是否显示过确认弹窗
     var unconfirmed: Boolean = false,
     //是否取消
-    var canceled: String = ""
+    var canceled: String = "",
+    //语音卡数量
+    var ticketCnt: Int = 0
 ) : Serializable
 
 /**
  * 关注返回的实体
  */
-class FollowBean(var follow: String = "", var stranger: Boolean = false,var toastMsg : String = "") : Serializable
+class FollowBean(var follow: String = "", var stranger: Boolean = false, var toastMsg: String = "") : Serializable
 
 data class AliAuthInfo(
     var authInfo: String = ""

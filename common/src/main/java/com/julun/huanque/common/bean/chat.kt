@@ -1,6 +1,7 @@
 package com.julun.huanque.common.bean
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import com.julun.huanque.common.utils.SessionUtils
 import io.rong.imlib.model.Conversation
 import java.io.Serializable
@@ -10,7 +11,7 @@ data class ChatUser(
     //头像
     var headPic: String = "",
     //个性签名
-    var mySign: String = "",
+    var mySign: String = "签名不足以表达我自己，找我私聊吧~",
     //昵称
     var nickname: String = "",
     //用户ID
@@ -29,7 +30,38 @@ data class ChatUser(
     //聊天背景
     var backPic: String = "",
     //用户类型
-    var userType: String = ""
+    var userType: String = "",
+
+    //我是否是对方的陌生人（发送消息的时候给对方传递）
+    @Ignore
+    var strangerToOther: String = "",
+    //年龄
+    @Ignore
+    var age: Int = 0,
+    //城市
+    @Ignore
+    var city: String = "",
+    //星座
+    @Ignore
+    var constellation: String = "",
+    //身高
+    @Ignore
+    var height: Int = 0,
+    //语音时长
+    @Ignore
+    var voiceLength: Int = 0,
+    //语音地址
+    @Ignore
+    var voiceUrl: String = "",
+    //体重
+    @Ignore
+    var weight: Int = 0,
+    //在线状态（直接显示）
+    @Ignore
+    var onlineStatusText: String = "",
+    //在线状态
+    @Ignore
+    var onlineStatus: String = ""
 ) : Serializable {
 
 

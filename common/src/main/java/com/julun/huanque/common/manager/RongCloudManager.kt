@@ -267,21 +267,33 @@ object RongCloudManager {
         conversationType: Conversation.ConversationType,
         customType: String,
         customBean: Any,
-        unreadCount: Boolean = false
+        unreadCount: Boolean = false,
+        customSendTime: Long = 0,
+        msgExtra: String = ""
     ) {
         val messageContent = CustomSimulateMessage.obtain().apply {
             type = customType
             context = JsonUtil.serializeAsString(customBean)
         }
-        var sentTime = System.currentTimeMillis()
+        var sentTime = if (customSendTime == 0L) {
+            System.currentTimeMillis()
+        } else {
+            customSendTime
+        }
+
 //        if (customBean is VoiceConmmunicationSimulate) {
 //            if (customBean.sentTime > 0) {
 //                sentTime = customBean.sentTime
 //            }
 //        }
 
-        if (extra != null) {
-            messageContent.extra = JsonUtil.serializeAsString(extra)
+        if (msgExtra.isNotEmpty()) {
+            messageContent.extra = msgExtra
+        } else {
+            if (extra != null) {
+                messageContent.extra = JsonUtil.serializeAsString(extra)
+            }
+
         }
 
         val callback = object : RongIMClient.ResultCallback<Message>() {

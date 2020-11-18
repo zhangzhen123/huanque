@@ -19,9 +19,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.drawee.view.SimpleDraweeView
-import com.julun.huanque.agora.AgoraManager
+import com.julun.huanque.common.agora.AgoraManager
 import com.julun.huanque.agora.R
-import com.julun.huanque.agora.handler.EventHandler
+import com.julun.huanque.common.agora.handler.EventHandler
 import com.julun.huanque.agora.viewmodel.AnonymousVoiceViewModel
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
@@ -505,6 +505,10 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             .subscribe { permission ->
                 when {
                     permission.granted -> {
+                        if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                            ToastUtils.show("正在语音通话，请稍后再试")
+                            return@subscribe
+                        }
                         logger.info("获取权限成功")
                         if (mAnonymousVoiceViewModel?.basicData?.value == null) {
                             //未获取到数据

@@ -8,15 +8,17 @@ import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
+import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.helper.TplHelper
 import com.julun.huanque.common.helper.reportCrash
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.JsonUtil
-import com.julun.huanque.common.utils.ULog
+import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.reflect.ReflectUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.rong.imlib.model.Conversation
 
 import io.rong.imlib.model.Message
 import org.greenrobot.eventbus.EventBus
@@ -95,10 +97,25 @@ object MessageProcessor {
             if ((targetId == SystemTargetId.systemNoticeSender || targetId == SystemTargetId.friendNoticeSender) && msg.content is CustomSimulateMessage) {
                 //模拟插入的系统消息或者好友通知(不做通知处理)
             } else {
+                //需要通知的私聊消息
+                val messageUser = GlobalUtils.getMessageUser(msg)
+                if (messageUser?.targetUserObj?.showMsgFee == BusiConstant.True) {
+                    //需要插入付费消息
+                    RongCloudManager.sendSimulateMessage(
+                        targetId,
+                        targetId,
+                        GlobalUtils.getMessageUser(msg)?.apply { targetUserObj?.showMsgFee = "" },
+                        Conversation.ConversationType.PRIVATE,
+                        MessageCustomBeanType.MessageFee,
+                        "私信消息30鹊币/条，亲密等级达到Lv6，可免费聊天",
+                        false,
+                        msg.sentTime + 1
+                    )
+                }
                 EventBus.getDefault().post(
                     EventMessageBean(
                         msg.targetId ?: "",
-                        GlobalUtils.getStrangerType(msg)
+                        GlobalUtils.getStrangerTypeByUser(messageUser, msg.senderUserId == SessionUtils.getSessionId())
                     )
                 )
             }
@@ -229,8 +246,6 @@ object MessageProcessor {
             callback()
         }.subscribe()
     }
-
-
 
 
     fun processEventMessage(data: Any?, eventCode: String) {
@@ -470,6 +485,7 @@ object MessageProcessor {
     interface PkEndRoundMessageProcess : EventMessageProcessor<PKStartEvent> {
         override fun getEventType(): EventMessageType = EventMessageType.HQPkEndRound
     }
+
     /**
      * PK结束 真正的结束
      */
@@ -1129,6 +1145,13 @@ object MessageProcessor {
     }
 
     /**
+     * 语音扣费消息
+     */
+    interface NetCallDeductBeansProcessor : EventMessageProcessor<NetCallDeductBeansDetail> {
+        override fun getEventType() = EventMessageType.NetCallDeductBeans
+    }
+
+    /**
      * 挂断消息
      */
     interface NetCallHangUpProcessor : EventMessageProcessor<NetCallHangUpBean> {
@@ -1362,8 +1385,10 @@ enum class EventMessageType(val klass: Class<*>) {
 
     /**PK分数变化**/
     HQPkScoreChange(PKScoreChangeEvent::class.java),
+
     /*PK结束环节*/
     HQPkEndRound(PKStartEvent::class.java),
+
     /**PK结果**/
     HQPkResult(PKResultEventNew::class.java),
 
@@ -1607,6 +1632,9 @@ enum class EventMessageType(val klass: Class<*>) {
 
     //主叫取消会话消息
     NetCallCancel(NetCallReceiveBean::class.java),
+
+    //语音券扣费消息
+    NetCallDeductBeans(NetCallDeductBeansDetail::class.java),
 
     //挂断消息
     NetCallHangUp(NetCallHangUpBean::class.java),

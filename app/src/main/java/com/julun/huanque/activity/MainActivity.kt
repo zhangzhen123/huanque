@@ -56,6 +56,7 @@ import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.rong.imlib.RongIMClient
+import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.main_activity.*
 import me.leolin.shortcutbadger.ShortcutBadger
 import org.greenrobot.eventbus.EventBus
@@ -648,6 +649,30 @@ class MainActivity : BaseActivity() {
                 val event = SendRNEvent(RNMessageConst.IntimateFriendChange, userMap)
                 //发送消息，通知RN
                 EventBus.getDefault().post(event)
+                val tips = data.tips
+                if (tips.isNotEmpty()) {
+                    var targetId = 0L
+                    data.userIds.forEach {
+                        if (it != SessionUtils.getUserId()) {
+                            targetId = it
+                            return@forEach
+                        }
+                    }
+
+                    tips.forEach {
+                        RongCloudManager.sendSimulateMessage(
+                            "$targetId",
+                            "$targetId",
+                            null,
+                            Conversation.ConversationType.PRIVATE,
+                            MessageCustomBeanType.Initim_Attention,
+                            it,
+                            false, System.currentTimeMillis() + 1000
+                        )
+                    }
+
+                }
+
             }
         })
 
@@ -670,6 +695,7 @@ class MainActivity : BaseActivity() {
                 }
             }
         })
+
 
         MessageProcessor.registerEventProcessor(this, object :
             MessageProcessor.RefreshUserSettingProcessor {

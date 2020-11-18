@@ -157,4 +157,10 @@ object ParamConstant {
 
     //标题
     const val Title = "Title"
+
+    //是否来源悬浮窗
+    const val From_Floating = "From_Floating"
+
+    //价格
+    const val Fee = "Fee"
 }

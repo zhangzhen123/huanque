@@ -2,6 +2,7 @@ package com.julun.huanque.common.manager
 
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.viewmodel.HuanQueViewModel
+import com.julun.huanque.common.viewmodel.VoiceChatViewModel
 
 /**
  *@创建者   dong
@@ -9,7 +10,11 @@ import com.julun.huanque.common.viewmodel.HuanQueViewModel
  *@描述 保存HuanqueViewModel的manager
  */
 object HuanViewModelManager {
-    var huanQueViewModel = HuanQueViewModel(CommonInit.getInstance().getApp())
+    //派单ViewModel
+    val huanQueViewModel = HuanQueViewModel(CommonInit.getInstance().getApp())
+
+    //语音ViewModel
+    val mVoiceChatViewModel: VoiceChatViewModel by lazy { VoiceChatViewModel(CommonInit.getInstance().getApp()) }
 
     //免打扰列表
     var blockList = mutableListOf<String>()

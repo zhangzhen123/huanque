@@ -3,11 +3,12 @@ package com.julun.huanque.message.activity
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.media.MediaPlayer
 import android.os.Bundle
-import android.text.Editable
-import android.text.Spannable
-import android.text.TextUtils
-import android.text.TextWatcher
+import android.text.*
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
@@ -40,15 +41,22 @@ import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventListener
+import com.julun.huanque.common.interfaces.SystemMessageClickListener
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
+import com.julun.huanque.common.manager.VoiceFloatingManager
+import com.julun.huanque.common.manager.audio.AudioPlayerManager
+import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
+import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
+import com.julun.huanque.common.widgets.emotion.PrivateChatPanelView
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.MessageAdapter
 import com.julun.huanque.message.fragment.*
@@ -74,10 +82,7 @@ import kotlinx.android.synthetic.main.act_private_chat.tv_unread_count
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.dip
-import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.px2dip
+import org.jetbrains.anko.*
 import java.util.concurrent.TimeUnit
 
 
@@ -134,7 +139,7 @@ class PrivateConversationActivity : BaseActivity() {
     //传送门消息
     private val Send_Room = "Send_Room"
 
-    private var mPrivateConversationViewModel: PrivateConversationViewModel? = null
+    private val mPrivateConversationViewModel: PrivateConversationViewModel by viewModels()
 
     private var mIntimateDetailViewModel: IntimateDetailViewModel? = null
 
@@ -179,6 +184,11 @@ class PrivateConversationActivity : BaseActivity() {
 
     //需要显示键盘的标识位
     private var mNeedShowKeyBoard = false
+
+    private val audioPlayerManager: AudioPlayerManager by lazy { AudioPlayerManager(this) }
+
+    //语音管理对象 是否初始化的标记位
+    private var voiceMamagerInited = false
 
     override fun isRegisterEventBus() = true
 
@@ -262,13 +272,14 @@ class PrivateConversationActivity : BaseActivity() {
     /**
      * 显示标题
      */
-    private fun showTitleView(nickname: String, meetStatus: String, userType: String) {
+    private fun showTitleView(nickname: String, meetStatus: String, userType: String, statusConent: String = "") {
         val title = tvTitle
         if (nickname.isEmpty()) {
             title.text = "欢鹊宝宝"
         } else {
             title.text = nickname
         }
+        tv_online_content.text = statusConent
 
         if (userType == UserType.Manager) {
             //有官方标识 隐藏亲密度和欢遇标识
@@ -299,8 +310,6 @@ class PrivateConversationActivity : BaseActivity() {
      * 初始化ViewModel
      */
     private fun initViewModel() {
-        mPrivateConversationViewModel =
-            ViewModelProvider(this).get(PrivateConversationViewModel::class.java)
         mIntimateDetailViewModel = ViewModelProvider(this).get(IntimateDetailViewModel::class.java)
 
         mPrivateConversationViewModel?.targetIdData?.observe(this, Observer {
@@ -323,7 +332,7 @@ class PrivateConversationActivity : BaseActivity() {
 
         mPrivateConversationViewModel?.messageListData?.observe(this, Observer {
             if (it != null) {
-                mAdapter.setNewData(it)
+                mAdapter.setList(it)
                 scrollToBottom(true)
                 showXiaoQueAuto()
             }
@@ -405,6 +414,9 @@ class PrivateConversationActivity : BaseActivity() {
             if (it != null) {
                 val messageList = mPrivateConversationViewModel?.changeMessageList ?: return@Observer
 
+                if (mPrivateConversationViewModel.noMoreState) {
+                    showTargetUserInformation()
+                }
                 if (it) {
                     //添加新消息
                     mAdapter.addData(messageList)
@@ -436,10 +448,11 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.basicBean?.observe(this, Observer {
             if (it != null) {
+                showTargetUserInformation()
                 //更新用户信息
                 SessionUtils.setUserType(it.usr.userType)
                 hasManager = it.friendUser.userType == UserType.Manager || it.usr.userType == UserType.Manager
-                showTitleView(it.friendUser.nickname, it.meetStatus, it.friendUser.userType)
+                showTitleView(it.friendUser.nickname, it.meetStatus, it.friendUser.userType, it.friendUser.onlineStatusText)
                 when (mPrivateConversationViewModel?.operationType) {
                     OperationType.OPEN_GIFT -> {
                         //打开礼物
@@ -485,21 +498,26 @@ class PrivateConversationActivity : BaseActivity() {
         })
         mPrivateConversationViewModel?.msgFeeData?.observe(this, Observer {
             if (it != null) {
-                if (it == 0L && (SessionUtils.getSex() == Sex.MALE || (SessionUtils.getSex() == Sex.FEMALE && mPrivateConversationViewModel?.chatInfoData?.value?.sex == Sex.FEMALE))) {
-                    //免费(男性  或者  自己和对方都是女性  显示标识)
-                    tv_free.show()
-                } else {
-                    //免费
-                    tv_free.hide()
-                }
+                showHint()
+//                if (it == 0L && (SessionUtils.getSex() == Sex.MALE || (SessionUtils.getSex() == Sex.FEMALE && mPrivateConversationViewModel?.chatInfoData?.value?.sex == Sex.FEMALE))) {
+//                    //免费(男性  或者  自己和对方都是女性  显示标识)
+//                    tv_free.hide()
+//                    edit_text.hint = "聊天免费，不消耗聊天券和鹊币"
+//                } else {
+//                    //不免费
+//                    tv_free.hide()
+//                    edit_text.hint = "聊点什么吧..."
+//                }
             }
         })
 
         mPrivateConversationViewModel?.balanceNotEnoughFlag?.observe(this, Observer {
             if (it == true) {
 //                ToastUtils.show("余额不足")
+                val bundle = Bundle()
+                bundle.putString(ParamConstant.TYPE, BalanceNotEnoughType.Normal)
                 mBalanceNotFoundFragment =
-                    mBalanceNotFoundFragment ?: ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment)
+                    mBalanceNotFoundFragment ?: ARouter.getInstance().build(ARouterConstant.BalanceNotEnoughFragment).with(bundle)
                         .navigation() as? BaseDialogFragment
                 mBalanceNotFoundFragment?.show(supportFragmentManager, "BalanceNotEnoughFragment")
             }
@@ -552,40 +570,79 @@ class PrivateConversationActivity : BaseActivity() {
     }
 
     /**
+     * 设置EditText提示文案
+     */
+    private fun showHint() {
+        val price = mPrivateConversationViewModel?.msgFeeData?.value ?: return
+        edit_text
+        if (price == 0L && (SessionUtils.getSex() == Sex.MALE || (SessionUtils.getSex() == Sex.FEMALE && mPrivateConversationViewModel?.chatInfoData?.value?.sex == Sex.FEMALE))) {
+            //免费(男性  或者  自己和对方都是女性  显示标识)
+            tv_free.hide()
+            edit_text.hint = "聊天免费，不消耗聊天券和鹊币"
+        } else {
+            //不免费
+            tv_free.hide()
+            val ticketCount = mPrivateConversationViewModel?.propData?.value?.chatTicketCnt ?: 0
+            if (ticketCount > 0) {
+                edit_text.hint = "聊天券剩余${ticketCount}次"
+            } else {
+                edit_text.hint = "聊点什么吧..."
+            }
+        }
+    }
+
+
+    /**
      * 更新道具视图
      */
     private fun updatePropView(voiceCount: Int, chatCount: Int) {
-        sdv_first_prop.hide()
-        tv_first_prop_count.hide()
-        sdv_second_prop.hide()
-        tv_second_prop_count.hide()
+        showHint()
+        if (chatCount > 0) {
+            //有聊天券
+            tv_msg_card_count.show()
+            tv_msg_card_count.text = "$chatCount"
+        } else {
+            tv_msg_card_count.hide()
+        }
 
         if (voiceCount > 0) {
             //有语音券
-            sdv_first_prop.show()
-            sdv_first_prop.imageResource = R.mipmap.icon_voice_small
-            tv_first_prop_count.show()
-            tv_first_prop_count.text = "$voiceCount"
+            tv_voice_card_count.show()
+            tv_voice_card_count.text = "$voiceCount"
+        } else {
+            tv_voice_card_count.hide()
         }
-
-        if (chatCount > 0) {
-            //有聊天券
-            val iv: ImageView
-            val tvCount: TextView
-            if (voiceCount <= 0) {
-                //使用First
-                iv = sdv_first_prop
-                tvCount = tv_first_prop_count
-            } else {
-                //使用second
-                iv = sdv_second_prop
-                tvCount = tv_second_prop_count
-            }
-            iv.show()
-            iv.imageResource = R.mipmap.icon_msg_small
-            tvCount.show()
-            tvCount.text = "$chatCount"
-        }
+//        sdv_first_prop.hide()
+//        tv_first_prop_count.hide()
+//        sdv_second_prop.hide()
+//        tv_second_prop_count.hide()
+//
+//        if (voiceCount > 0) {
+//            //有语音券
+//            sdv_first_prop.show()
+//            sdv_first_prop.imageResource = R.mipmap.icon_voice_small
+//            tv_first_prop_count.show()
+//            tv_first_prop_count.text = "$voiceCount"
+//        }
+//
+//        if (chatCount > 0) {
+//            //有聊天券
+//            val iv: ImageView
+//            val tvCount: TextView
+//            if (voiceCount <= 0) {
+//                //使用First
+//                iv = sdv_first_prop
+//                tvCount = tv_first_prop_count
+//            } else {
+//                //使用second
+//                iv = sdv_second_prop
+//                tvCount = tv_second_prop_count
+//            }
+//            iv.show()
+//            iv.imageResource = R.mipmap.icon_msg_small
+//            tvCount.show()
+//            tvCount.text = "$chatCount"
+//        }
     }
 
     /**
@@ -701,8 +758,6 @@ class PrivateConversationActivity : BaseActivity() {
                 .subscribe({
                     smoothScrollToBottom()
                 }, {})
-
-
         }
 
         iv_xiaoque.onClickNew {
@@ -911,6 +966,12 @@ class PrivateConversationActivity : BaseActivity() {
             PropFragment.newInstance(false).show(supportFragmentManager, "PropFragment")
         }
 
+        iv_msg_card.onClickNew {
+            //打开消息券弹窗
+            PropFragment.newInstance(false, mPrivateConversationViewModel.propData.value?.chatTicketCnt ?: 0)
+                .show(supportFragmentManager, "PropFragment")
+        }
+
         con_living.onClickNew {
             //直播信息视图点击
             val programInfo = mPrivateConversationViewModel?.mProgramInfo?.value ?: return@onClickNew
@@ -929,6 +990,17 @@ class PrivateConversationActivity : BaseActivity() {
             }
 
         }
+
+        mAdapter.mSystemMessageClickListener = object : SystemMessageClickListener {
+            override fun onClick(touchType: String) {
+                if (touchType == IntimateTouchBean.NetCall) {
+                    //语音通话
+                    iv_phone.performClick()
+                }
+            }
+
+        }
+
     }
 
     // 删除光标所在前一位(不考虑切换到emoji时的光标位置，直接删除最后一位)
@@ -1305,7 +1377,7 @@ class PrivateConversationActivity : BaseActivity() {
                     }
                     onPanel { view ->
                         //可选实现，面板显示回调
-                        if (view is PanelView) {
+                        if (view is PrivateChatPanelView) {
                             iv_emoji.isSelected = view.id == R.id.panel_emotion
                             scrollToBottom()
                         }
@@ -1497,7 +1569,7 @@ class PrivateConversationActivity : BaseActivity() {
         mAdapter.upFetchModule.startUpFetchPosition = 2
         mAdapter.upFetchModule.setOnUpFetchListener {
             val currLast = mAdapter.getItemOrNull(0)
-            if (currLast?.senderUserId == "system") {
+            if (currLast?.senderUserId == BusiConstant.System_Message) {
                 //系统提示
                 return@setOnUpFetchListener
             }
@@ -1688,6 +1760,157 @@ class PrivateConversationActivity : BaseActivity() {
 
     }
 
+    //他人基本信息
+    private var mHeaderView: View? = null
+
+    /**
+     * 显示对方用户信息
+     */
+    private fun showTargetUserInformation() {
+        if (mPrivateConversationViewModel.noMoreState) {
+            //已经获取全部消息
+            val friendUser = mPrivateConversationViewModel.basicBean.value?.friendUser ?: return
+            if (mHeaderView == null) {
+                mHeaderView = LayoutInflater.from(this).inflate(R.layout.layout_chat_header, null)
+                mAdapter.addHeaderView(mHeaderView!!)
+                //增加点击事件
+                val tv_audio_time = mHeaderView?.findViewById<TextView>(R.id.tv_audio_time) ?: return
+                tv_audio_time.setTFDinAltB()
+
+                val videoView = mHeaderView?.findViewById<View>(R.id.ll_audio)
+                videoView?.onClickNew {
+                    initVoiceManager()
+                    //播放语音
+                    if (audioPlayerManager.musicType == -1 || audioPlayerManager.mediaPlayer == null) {
+                        //未设置音频地址
+                        audioPlayerManager.setNetPath(
+                            StringHelper.getOssAudioUrl(
+                                mPrivateConversationViewModel.basicBean.value?.friendUser?.voiceUrl ?: ""
+                            )
+                        )
+                        audioPlayerManager.start(false)
+                    } else {
+                        //已设置音频地址
+                        if (audioPlayerManager.isPlaying) {
+                            audioPlayerManager.pause()
+                        } else {
+                            audioPlayerManager.resume()
+                        }
+                    }
+                }
+            }
+            mHeaderView?.onClickNew {
+                val bundle = Bundle().apply {
+                    putLong(ParamConstant.UserId, mPrivateConversationViewModel.targetIdData.value ?: return@onClickNew)
+                }
+                ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
+            }
+
+            mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_header)?.loadImage("${friendUser.headPic}${BusiConstant.OSS_160}", 70f, 70f)
+            mHeaderView?.findViewById<TextView>(R.id.tv_nickname)?.text = friendUser.nickname
+            val tv_sex = mHeaderView?.findViewById<TextView>(R.id.tv_sex) ?: return
+            val tv_location = mHeaderView?.findViewById<TextView>(R.id.tv_location) ?: return
+            val tv_weight_height = mHeaderView?.findViewById<TextView>(R.id.tv_weight_height) ?: return
+            val tv_sign = mHeaderView?.findViewById<TextView>(R.id.tv_sign) ?: return
+
+            val sex = friendUser.sex
+            var sexDrawable: Drawable? = null
+            //性别
+            when (sex) {
+                Sex.MALE -> {
+                    tv_sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
+                    sexDrawable = GlobalUtils.getDrawable(R.mipmap.icon_sex_male)
+                    tv_sex.textColor = Color.parseColor("#58CEFF")
+                }
+                Sex.FEMALE -> {
+                    tv_sex.backgroundResource = R.drawable.bg_shape_mkf_sex_female
+                    sexDrawable = GlobalUtils.getDrawable(R.mipmap.icon_sex_female)
+                    tv_sex.textColor = Color.parseColor("#FF9BC5")
+                }
+                else -> sexDrawable = null
+            }
+            if (sexDrawable != null) {
+                sexDrawable.setBounds(0, 0, sexDrawable.minimumWidth, sexDrawable.minimumHeight)
+                tv_sex.setCompoundDrawables(sexDrawable, null, null, null)
+            } else {
+                tv_sex.setCompoundDrawables(null, null, null, null)
+            }
+            //性别+星座
+            val sexContent = "${friendUser.age} | ${friendUser.constellation}"
+            val sexStringSpannable = SpannableStringBuilder(sexContent)
+            val sexStartIndex = "${friendUser.age} ".length
+            val lightColor = if (sex == Sex.FEMALE) {
+                GlobalUtils.formatColor("#FCE5EB")
+            } else {
+                GlobalUtils.formatColor("#58CEFF")
+            }
+            sexStringSpannable.setSpan(
+                ForegroundColorSpan(lightColor),
+                sexStartIndex,
+                sexStartIndex + 1,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            tv_sex.text = sexStringSpannable
+
+
+            if (friendUser.weight == 0 || friendUser.height == 0) {
+                tv_weight_height.hide()
+            } else {
+                if (friendUser.weight != 0 && friendUser.height != 0) {
+                    val weightContent = "${friendUser.height}cm | ${friendUser.weight}kg"
+                    val weightStringSpannable = SpannableStringBuilder(weightContent)
+                    val weightStartIndex = "${friendUser.height}cm ".length
+                    weightStringSpannable.setSpan(
+                        ForegroundColorSpan(GlobalUtils.formatColor("#DAE8F3")),
+                        weightStartIndex,
+                        weightStartIndex + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    );
+
+                    tv_weight_height.text = weightStringSpannable
+
+                } else if (friendUser.weight != 0 && friendUser.height == 0) {
+                    tv_weight_height.text = "${friendUser.weight}kg"
+                } else {
+                    tv_weight_height.text = "${friendUser.height}cm"
+                }
+            }
+
+
+            val city = friendUser.city
+            if (city.isEmpty()) {
+                tv_location.hide()
+            } else {
+                tv_location.show()
+                tv_location.text = city
+            }
+
+            tv_sign.text = friendUser.mySign
+
+            val params = mHeaderView?.layoutParams
+            val videoView = mHeaderView?.findViewById<View>(R.id.ll_audio)
+            if (friendUser.voiceLength == 0) {
+                //没有语音，隐藏语音相关布局
+                videoView?.hide()
+                params?.height = dp2px(110)
+            } else {
+                videoView?.show()
+                params?.height = dp2px(145)
+
+                //显示语音相关布局
+                val tv_audio_time = mHeaderView?.findViewById<TextView>(R.id.tv_audio_time) ?: return
+                tv_audio_time.text = "${friendUser.voiceLength}\""
+
+                val sdv_audio_state = mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_audio_state) ?: return
+                ImageUtils.loadImageLocal(sdv_audio_state, R.mipmap.anim_audio_playing)
+
+
+            }
+            mHeaderView?.layoutParams = params
+        }
+        scrollToBottom()
+    }
+
 
     /**
      * 发送消息
@@ -1744,6 +1967,11 @@ class PrivateConversationActivity : BaseActivity() {
             userId = targetChatInfo.userId
             stranger = GlobalUtils.getStrangerString(targetChatInfo.stranger)
             userType = targetChatInfo.userType
+            strangerToOther = targetChatInfo.strangerToOther
+        }
+        if (mPrivateConversationViewModel.noMoreState && mAdapter.data.size == 1 && (mAdapter.getItemOrNull(0)?.senderUserId == BusiConstant.System_Message)) {
+            //没有聊天记录(存在一条提示消息)
+            targetUser.showMsgFee = BusiConstant.True
         }
 
         if (targetChatInfo.userId == SessionUtils.getUserId()) {
@@ -1981,6 +2209,104 @@ class PrivateConversationActivity : BaseActivity() {
         scrollToBottom(true)
         showXiaoQueAuto()
     }
+
+    /**
+     * 初始化语音设置
+     */
+    private fun initVoiceManager() {
+        if (voiceMamagerInited) {
+            return
+        }
+        voiceMamagerInited = true
+        //半秒回调一次
+        audioPlayerManager.setSleep(500)
+        audioPlayerManager.setMediaPlayFunctionListener(object : MediaPlayFunctionListener {
+            override fun prepared() {
+                logger.info("prepared")
+            }
+
+            override fun start() {
+                logger.info("start 总长=${audioPlayerManager.getDuration()}")
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
+                //不使用实际的值
+//                currentPlayHomeRecomItem?.introduceVoiceLength = (audioPlayerManager.getDuration() / 1000)+1
+//                AliplayerManager.soundOff()
+                val iv_audio_play = mHeaderView?.findViewById<ImageView>(R.id.iv_audio_play)
+                iv_audio_play?.isActivated = true
+                val sdv_audio_state = mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_audio_state) ?: return
+                ImageUtils.loadGifImageLocal(sdv_audio_state, R.mipmap.anim_audio_playing)
+            }
+
+            override fun resume() {
+                logger.info("resume")
+                //todo 暂停直播间声音
+//                AliPlayerManager.soundOff()
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_play_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
+                val iv_audio_play = mHeaderView?.findViewById<ImageView>(R.id.iv_audio_play)
+                iv_audio_play?.isActivated = true
+                val sdv_audio_state = mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_audio_state) ?: return
+                ImageUtils.loadGifImageLocal(sdv_audio_state, R.mipmap.anim_audio_playing)
+            }
+
+            override fun pause() {
+                logger.info("pause")
+//                AliPlayerManager.soundOn()
+                //todo 恢复直播间声音
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
+                val iv_audio_play = mHeaderView?.findViewById<ImageView>(R.id.iv_audio_play)
+                iv_audio_play?.isActivated = false
+                val sdv_audio_state = mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_audio_state) ?: return
+                ImageUtils.loadImageLocal(sdv_audio_state, R.mipmap.anim_audio_playing)
+            }
+
+            override fun stop() {
+                logger.info("stop")
+                //todo 恢复直播间声音
+//                val drawable = GlobalUtils.getDrawable(R.mipmap.icon_pause_home_page)
+//                drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+//                tv_time.setCompoundDrawables(drawable, null, null, null)
+                val iv_audio_play = mHeaderView?.findViewById<ImageView>(R.id.iv_audio_play)
+                iv_audio_play?.isActivated = false
+                val sdv_audio_state = mHeaderView?.findViewById<SimpleDraweeView>(R.id.sdv_audio_state) ?: return
+                ImageUtils.loadImageLocal(sdv_audio_state, R.mipmap.anim_audio_playing)
+            }
+
+
+        })
+        audioPlayerManager.setMediaPlayInfoListener(object : MediaPlayInfoListener {
+            override fun onError(mp: MediaPlayer?, what: Int, extra: Int) {
+                logger.info("onError mediaPlayer=${mp.hashCode()} what=$what extra=$extra")
+            }
+
+            override fun onCompletion(mediaPlayer: MediaPlayer?) {
+                logger.info("onCompletion mediaPlayer=${mediaPlayer.hashCode()}")
+                val tv_audio_time = mHeaderView?.findViewById<TextView>(R.id.tv_audio_time) ?: return
+                tv_audio_time.text = "${mPrivateConversationViewModel.basicBean.value?.friendUser?.voiceLength ?: 0}\""
+            }
+
+            override fun onBufferingUpdate(mediaPlayer: MediaPlayer?, i: Int) {
+                logger.info("onBufferingUpdate mediaPlayer=${mediaPlayer.hashCode()} i=$i")
+            }
+
+            override fun onSeekComplete(mediaPlayer: MediaPlayer?) {
+                logger.info("onSeekComplete mediaPlayer=${mediaPlayer.hashCode()} ")
+            }
+
+            override fun onSeekBarProgress(progress: Int) {
+//                logger.info("onSeekBarProgress progress=${progress / 1000}")
+                val tv_audio_time = mHeaderView?.findViewById<TextView>(R.id.tv_audio_time) ?: return
+                val voiceLength = mPrivateConversationViewModel.basicBean.value?.friendUser?.voiceLength ?: return
+                tv_audio_time.text = "${voiceLength - progress / 1000}s"
+            }
+        })
+    }
+
 
     /**
      * 检查录音权限

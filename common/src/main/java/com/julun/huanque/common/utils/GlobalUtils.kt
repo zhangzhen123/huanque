@@ -242,6 +242,37 @@ object GlobalUtils {
 
 
     fun getStrangerType(msg: io.rong.imlib.model.Message): Boolean {
+        val user = getMessageUser(msg)
+        if (msg.senderUserId == SessionUtils.getSessionId()) {
+            //本人发送的消息，取stranger字段
+            return getStrangerBoolean(user?.targetUserObj?.stranger ?: "")
+        } else {
+            //发给我的消息，取strangerToOther字段
+            return getStrangerBoolean(user?.targetUserObj?.strangerToOther ?: "")
+        }
+    }
+
+    /**
+     * 获取陌生人状态（mine 是否是本人发送的消息）
+     * @param mine 是否是本人发送的消息
+     */
+    fun getStrangerTypeByUser(user: RoomUserChatExtra?, mine: Boolean): Boolean {
+        if (user == null) {
+            return false
+        }
+        if (mine) {
+            //本人发送的消息，取stranger字段
+            return getStrangerBoolean(user?.targetUserObj?.stranger ?: "")
+        } else {
+            //发给我的消息，取strangerToOther字段
+            return getStrangerBoolean(user?.targetUserObj?.strangerToOther ?: "")
+        }
+    }
+
+    /**
+     * 获取消息中携带的用户数据
+     */
+    fun getMessageUser(msg: io.rong.imlib.model.Message): RoomUserChatExtra? {
         var extra: String = ""
         val conent = msg.content
         when (conent) {
@@ -265,7 +296,7 @@ object GlobalUtils {
             }
         }
         if (extra.isEmpty()) {
-            return false
+            return null
         }
         var user: RoomUserChatExtra? = null
         try {
@@ -273,7 +304,36 @@ object GlobalUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return getStrangerBoolean(user?.targetUserObj?.stranger ?: "")
+        return user
+    }
+
+    /**
+     * 获取消息content携带的Extra数据
+     */
+    fun getMessageContentExtra(msg: io.rong.imlib.model.Message) : String {
+        var extra: String = ""
+        val conent = msg.content
+        when (conent) {
+            is ImageMessage -> {
+                //图片消息
+                extra = conent.extra ?: ""
+            }
+
+            is CustomMessage -> {
+                //自定义消息
+                extra = conent.extra ?: ""
+            }
+
+            is CustomSimulateMessage -> {
+                //模拟消息
+                extra = conent.extra ?: ""
+            }
+            is TextMessage -> {
+                //文本消息
+                extra = conent.extra ?: ""
+            }
+        }
+        return extra
     }
 
 
@@ -633,7 +693,7 @@ object GlobalUtils {
      * 获取首充的key（结合当天日期）
      */
     fun getFirstRechargeKey(): String {
-         return "${TimeUtils.getTimeShowDate()}-FirstRecharge"
+        return "${TimeUtils.getTimeShowDate()}-FirstRecharge"
     }
 
 

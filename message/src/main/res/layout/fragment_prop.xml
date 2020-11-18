@@ -3,37 +3,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_prop_dialog">
 
     <View
-        android:id="@+id/view_close"
-        android:layout_width="40dp"
+        android:id="@+id/view_top"
+        android:layout_width="0px"
         android:layout_height="40dp"
-        android:background="@drawable/bg_prop_dialog_close"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_close"
+    <!--    <View-->
+    <!--        android:id="@+id/view_close"-->
+    <!--        android:layout_width="40dp"-->
+    <!--        android:layout_height="40dp"-->
+    <!--        android:background="@drawable/bg_prop_dialog_close"-->
+    <!--        app:layout_constraintRight_toRightOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="3dp"
+        android:background="@color/primary_color"
+        app:layout_constraintBottom_toBottomOf="@id/view_top"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <View
         android:layout_width="0px"
-        android:layout_height="0px"
-        android:padding="8dp"
-        android:src="@mipmap/icon_close_black_01"
-        app:layout_constraintBottom_toBottomOf="@id/view_close"
-        app:layout_constraintLeft_toLeftOf="@id/view_close"
-        app:layout_constraintRight_toRightOf="@id/view_close"
-        app:layout_constraintTop_toTopOf="@id/view_close" />
+        android:layout_height="1dp"
+        android:background="@color/lines"
+        app:layout_constraintBottom_toBottomOf="@id/view_top"
+        app:layout_constraintLeft_toLeftOf="@id/view_top"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/iv_close"-->
+    <!--        android:layout_width="0px"-->
+    <!--        android:layout_height="0px"-->
+    <!--        android:padding="8dp"-->
+    <!--        android:src="@mipmap/icon_close_black_01"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/view_close"-->
+    <!--        app:layout_constraintLeft_toLeftOf="@id/view_close"-->
+    <!--        app:layout_constraintRight_toRightOf="@id/view_close"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/view_close" />-->
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="0px"
+        android:layout_marginBottom="3dp"
+        android:gravity="center"
         android:includeFontPadding="false"
         android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_18"
+        android:textSize="@dimen/sp_16"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/view_top"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -41,42 +67,81 @@
 
     <ImageView
         android:id="@+id/iv_prop"
-        android:layout_width="95dp"
-        android:layout_height="91dp"
-        android:layout_marginTop="50dp"
+        android:layout_width="92dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="wrap_content"
+        android:layout_height="23dp"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:text="剩余：0张"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintLeft_toLeftOf="@id/iv_prop"
+        app:layout_constraintRight_toRightOf="@id/iv_prop"
+        app:layout_constraintTop_toBottomOf="@id/iv_prop" />
+
+    <TextView
         android:id="@+id/tv_content"
         android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="11dp"
+        android:layout_marginLeft="29dp"
+        android:layout_marginTop="7dp"
         android:layout_marginRight="20dp"
-        android:textColor="@color/black_666"
+        android:gravity="center_vertical"
+        android:textColor="@color/black_999"
         android:textSize="@dimen/sp_12"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_prop"
-        tools:text="语音券可以抵扣语音通话1分钟，当你有语音券时会优先使用。语音券在养鹊乐园活跃奖励中产出。" />
+        app:layout_constraintTop_toBottomOf="@id/tv_count"
+        tools:text="语音券可以抵扣语音通话1分钟，当你有优惠券时会优先使用可恨金额和集合基金会集合交换机。" />
+
+    <View
+        android:id="@+id/view_get"
+        android:layout_width="0px"
+        android:layout_height="44dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="28dp"
+        android:background="@drawable/bg_prop_get"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_content" />
+
+    <TextView
+        android:id="@+id/tv_get_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_13"
+        app:layout_constraintBottom_toBottomOf="@id/view_get"
+        app:layout_constraintLeft_toLeftOf="@id/view_get"
+        app:layout_constraintTop_toBottomOf="@id/view_get"
+        app:layout_constraintTop_toTopOf="@id/view_get"
+        tools:text="语音券在欢鹊乐园活跃奖励中产出。" />
 
     <TextView
         android:id="@+id/tv_get"
-        android:layout_width="0px"
-        android:layout_height="40dp"
-        android:layout_marginLeft="45dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="45dp"
+        android:layout_width="72dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="9dp"
         android:background="@drawable/bg_enable"
         android:gravity="center"
+        android:text="免费获得"
         android:textColor="@color/black_333"
-        android:textSize="@dimen/sp_16"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/view_get"
+        app:layout_constraintRight_toRightOf="@id/view_get"
         app:layout_constraintTop_toBottomOf="@id/tv_content"
-        tools:text="的科技和你" />
+        app:layout_constraintTop_toTopOf="@id/view_get" />
 
     <View
         android:layout_width="1px"

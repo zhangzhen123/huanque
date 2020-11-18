@@ -3,7 +3,7 @@ package com.julun.huanque.app
 //import cn.jpush.android.api.JPushInterface
 import com.ishumei.smantifraud.SmAntiFraud
 import com.julun.huanque.BuildConfig
-import com.julun.huanque.agora.AgoraManager
+import com.julun.huanque.common.agora.AgoraManager
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.support.WXApiManager
 import org.jay.launchstarter.Task
