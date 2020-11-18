@@ -156,7 +156,6 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         }
     }
 
-
     private fun registerMessage() {
         MessageProcessor.removeProcessors(this)
         //匹配超时消息
@@ -999,6 +998,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     override fun onDestroy() {
         super.onDestroy()
         MessageProcessor.removeProcessors(this)
+        AgoraManager.mHandler.removeHandler(this)
     }
 
     override fun onRemoteAudioStats(stats: IRtcEngineEventHandler.RemoteAudioStats?) {
