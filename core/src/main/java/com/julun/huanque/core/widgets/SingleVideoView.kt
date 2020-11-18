@@ -163,7 +163,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
             //使用单例的播放器 不做任何处理 单例播放器的监听统一在destroy中处理 destroy会在合适的时机调用
 //            mAliPlayer?.setOnRenderingStartListener(null)
 //            logger.info("onDetachedFromWindow setOnRenderingStartListener(null) ")
-            AliPlayerManager.bindVideoView(null)
+//            AliPlayerManager.bindVideoView(null)
         }
         mAliPlayer = null
         isFree = true
@@ -399,7 +399,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
 
     private fun initSingleModePlayer() {
         mAliPlayer = AliPlayerManager.mAliPlayer
-        AliPlayerManager.bindVideoView(this)
+//        AliPlayerManager.bindVideoView(this)
         if (AliPlayerManager.mRendered) {
             posterImage.hide()
         }
@@ -416,6 +416,7 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
                 //对于全局单例的播放器 这里因为会频繁切换渲染surfaceView
                 // 会导致设置的mRenderListener会被挤掉 所以每次这里重新创建时重新赋予RenderListener
 //                mAliPlayer?.setOnRenderingStartListener(mRenderListener)
+                AliPlayerManager.bindVideoView(this@SingleVideoView)
             }
 
             override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {

@@ -175,7 +175,6 @@ object LoginManager {
         //如果登录的账号是注册完整的 就执行完整的登录后续操作（心跳，融云等等）
         SPUtils.commitString(SPParamKey.AgreeUp,session.agreeUp)
         StorageHelper.setDefaultHomeTab(session.defaultHomeTab)
-
         StorageHelper.setHideSocialTab(session.hideSocialTab)
         if (session.regComplete) {
             (ARouter.getInstance().build(ARouterConstant.APP_COMMON_SERVICE)
