@@ -220,27 +220,31 @@ class VoiceFloatingService : Service(), View.OnClickListener {
      * 缘分图标  动画移动到屏幕边侧
      */
     private fun animationToSide() {
-        val act = CommonInit.getInstance().getCurrentActivity() ?: return
-        val screenMiddleX = ScreenUtils.getScreenWidth(act) / 2
-        if (display == null) {
-            return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            val act = CommonInit.getInstance().getCurrentActivity() ?: return
+            val screenMiddleX = ScreenUtils.getScreenWidth(act) / 2
+            if (display?.isAttachedToWindow != true) {
+                return
+            }
+            val viewMiddleX = layoutParams.x + (display?.width ?: 0) / 2
+            val targetX = if (viewMiddleX > screenMiddleX) {
+                //View在屏幕右侧
+                ScreenUtils.getScreenWidth(act)
+            } else {
+                //View在屏幕左侧
+                0
+            }
+            sideAnimator?.cancel()
+            sideAnimator = ValueAnimator.ofInt(layoutParams.x, targetX)
+
+            sideAnimator?.addUpdateListener {
+                layoutParams.x = (it.animatedValue as? Int) ?: 0
+                windowManager?.updateViewLayout(display!!, layoutParams)
+            }
+            sideAnimator?.duration = 200
+            sideAnimator?.start()
         }
-        val viewMiddleX = layoutParams.x + (display?.width ?: 0) / 2
-        val targetX = if (viewMiddleX > screenMiddleX) {
-            //View在屏幕右侧
-            ScreenUtils.getScreenWidth(act)
-        } else {
-            //View在屏幕左侧
-            0
-        }
-        sideAnimator?.cancel()
-        sideAnimator = ValueAnimator.ofInt(layoutParams.x, targetX)
-        sideAnimator?.addUpdateListener {
-            layoutParams.x = (it.animatedValue as? Int) ?: 0
-            windowManager?.updateViewLayout(display!!, layoutParams)
-        }
-        sideAnimator?.duration = 200
-        sideAnimator?.start()
+
     }
 
     override fun onDestroy() {

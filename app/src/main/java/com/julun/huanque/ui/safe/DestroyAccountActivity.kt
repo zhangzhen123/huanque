@@ -67,7 +67,7 @@ class DestroyAccountActivity : BaseVMActivity<DestroyAccountModel>() {
                 ToastUtils.show("正在语音通话，请稍后再试")
                 return@onClickNew
             }
-            mViewModel.destroyAccount()
+            mViewModel.checkDestroy()
         }
 
     }
@@ -86,6 +86,11 @@ class DestroyAccountActivity : BaseVMActivity<DestroyAccountModel>() {
 
             } else if (it.state == NetStateType.ERROR) {
                 val error = it.error ?: return@Observer
+                val okText = if (error.busiCode == 1307) {
+                    "取消"
+                } else {
+                    "去使用"
+                }
                 MyAlertDialog(this).showAlertWithOKAndCancel(error.busiMessage, MyAlertDialog.MyDialogCallback(onRight = {
                     when (error.busiCode) {
                         1305 -> {
@@ -96,11 +101,17 @@ class DestroyAccountActivity : BaseVMActivity<DestroyAccountModel>() {
                                 .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX)
                                 .navigation()
                         }
+                        1307 -> {
+                            //什么都不操作
+                        }
                     }
                     setResult(BusiConstant.DESTROY_ACCOUNT_RESULT_CODE)
                     finish()
 
-                }), title = "温馨提示", okText = "去使用", noText = "取消")
+                }, onCancel = {
+                    //注销
+                    mViewModel.realDestroyAccount()
+                }), title = "温馨提示", okText = okText, noText = "注销")
 
             }
         })
