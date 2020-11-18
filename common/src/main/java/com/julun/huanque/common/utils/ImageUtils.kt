@@ -226,7 +226,7 @@ object ImageUtils {
      * @param url 路径
      * @param iterations 迭代次数，越大越模糊。
      * @param blurRadius 模糊图半径，必须大于0，越大越模糊。
-     *
+     * @param colors 图片处理时着色器需要的颜色集合
      */
     fun loadImageWithBlur(
         imgView: SimpleDraweeView,

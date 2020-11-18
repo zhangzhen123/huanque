@@ -45,10 +45,10 @@ object StringHelper {
     /**
      * 人民币元格式,带小数点后两位
      */
-    val RMB_FORMAT = DecimalFormat("¥ ####0.00")
-    val RMB_YUAN_FORMAT = DecimalFormat("####0.00")
-    val STRING_ZERO = "0"
-    val NORMAL_FORMAT = DecimalFormat("#,###")
+    private val RMB_FORMAT = DecimalFormat("¥ ####0.00")
+    private val RMB_YUAN_FORMAT = DecimalFormat("####0.00")
+    const val STRING_ZERO = "0"
+    private val NORMAL_FORMAT = DecimalFormat("#,###")
 
     /**
      * 一分钟几秒
@@ -517,7 +517,9 @@ object StringHelper {
 //        if (num < 10000) {
 //            return DecimalFormat("#.#").format((num / 1000.0)) + "k"
 //        }
-        return DecimalFormat("#.0").format((num / 10000.0)) + "W"
+        val format = DecimalFormat("#.0")
+        format.roundingMode = RoundingMode.DOWN
+        return format.format((num / 10000.0)) + "W"
     }
 
     /**
@@ -530,7 +532,9 @@ object StringHelper {
 //        if (num < 10000) {
 //            return DecimalFormat("#.#").format((num / 1000.0)) + "k"
 //        }
-        return DecimalFormat("#.00").format((num / 10000.0)) + "W"
+        val format = DecimalFormat("#.00")
+        format.roundingMode = RoundingMode.DOWN
+        return format.format((num / 10000.0)) + "W"
     }
 
 
