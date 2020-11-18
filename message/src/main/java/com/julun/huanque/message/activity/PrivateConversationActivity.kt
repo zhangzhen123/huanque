@@ -1779,6 +1779,10 @@ class PrivateConversationActivity : BaseActivity() {
 
                 val videoView = mHeaderView?.findViewById<View>(R.id.ll_audio)
                 videoView?.onClickNew {
+                    if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                        ToastUtils.show("正在语音通话，请稍后再试")
+                        return@onClickNew
+                    }
                     initVoiceManager()
                     //播放语音
                     if (audioPlayerManager.musicType == -1 || audioPlayerManager.mediaPlayer == null) {

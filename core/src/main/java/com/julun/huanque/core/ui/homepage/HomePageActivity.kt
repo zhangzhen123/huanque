@@ -355,6 +355,10 @@ class HomePageActivity : BaseActivity() {
 //            mIntimacyFragment.show(supportFragmentManager, "IntimacyFragment")
         }
         tv_time.onClickNew {
+            if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                ToastUtils.show("正在语音通话，请稍后再试")
+                return@onClickNew
+            }
             //播放音效
             if (audioPlayerManager.musicType == -1 || audioPlayerManager.mediaPlayer == null) {
                 //未设置音频地址

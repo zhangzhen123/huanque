@@ -22,10 +22,7 @@ import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.events.UserInfoEditEvent
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.HomeMakeMoneyType
-import com.julun.huanque.common.constant.ParamConstant
-import com.julun.huanque.common.constant.PlayerFrom
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.StringHelper
@@ -272,6 +269,10 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
 //                    }
 //                }
                 R.id.ll_audio -> {
+                    if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                        ToastUtils.show("正在语音通话，请稍后再试")
+                        return@onAdapterChildClickNew
+                    }
                     logger.info("点击了音频播放---$position")
                     val bean = mAdapter.getItem(position)?.content as? HomeRecomItem
                     switchAudio(position, bean)
