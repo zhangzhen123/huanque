@@ -43,6 +43,10 @@ object AliPlayerManager {
     }
     private var currentVideoView: SingleVideoView? = null
 
+    /**
+     * 说明  这个如果与渲染view的生命周期成对出现是有问题的 比如悬浮窗进入直播间时 悬浮窗的view移除可能会比直播间的创建更晚
+     * 就导致currentVideoView被二次置空
+     */
     fun bindVideoView(sv: SingleVideoView?) {
         currentVideoView = sv
     }
@@ -157,7 +161,7 @@ object AliPlayerManager {
             if (mLogEnable) {
                 logger.info("${this} DXCPlayer 播放器状态改变事件 it = $it")
             }
-            if( it == IPlayer.error){
+            if (it == IPlayer.error) {
                 currentVideoView?.mPosterImage?.show()
             }
             if (it == IPlayer.completion || it == IPlayer.error) {
@@ -234,6 +238,7 @@ object AliPlayerManager {
         stoped = true
         mAliPlayer.setDisplay(null)
 //        mAliPlayer.setOnRenderingStartListener(null)
+        bindVideoView(null)
     }
 
     /**

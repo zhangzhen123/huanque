@@ -152,11 +152,8 @@ class MainActivity : BaseActivity() {
             if (targetIndex == null || targetIndex == -1) {
                 targetIndex = MainPageIndexConst.MAIN_FRAGMENT_INDEX
             }
-            //如果是隐藏首页 这里就跳到第二栏
-            if (hideHome) {
-                targetIndex = MainPageIndexConst.PROGRAM_FRAGMENT_INDEX
-            }
-            mMainViewModel.indexData.value = targetIndex
+
+            filterIndexData(targetIndex)
         }
 
 
@@ -599,11 +596,23 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 如果是隐藏首页 对于跳转首页的[index]这里就跳到第二栏
+     */
+    private fun filterIndexData(index: Int) {
+
+        if (hideHome && index == MainPageIndexConst.MAIN_FRAGMENT_INDEX) {
+            mMainViewModel.indexData.value = MainPageIndexConst.PROGRAM_FRAGMENT_INDEX
+            return
+        }
+        mMainViewModel.indexData.value = index
+    }
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         val targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, -1)
         if (targetIndex != null && targetIndex != -1) {
-            mMainViewModel.indexData.value = targetIndex
+            filterIndexData(targetIndex)
         }
 
         if (SessionUtils.getIsRegUser() && SessionUtils.getRegComplete()) {
