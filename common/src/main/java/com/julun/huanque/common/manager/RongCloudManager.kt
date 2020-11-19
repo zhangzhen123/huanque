@@ -1001,6 +1001,10 @@ object RongCloudManager {
      */
     private fun doWithVibrate(message: Message) {
         Observable.create<Void> {
+            if (!SPUtils.getBoolean(SPParamKey.Msg_Vibrate, true)) {
+                //关闭了消息震动
+                return@create
+            }
             //判断sendUserId 是否为kong
             val sendUserId = message.senderUserId ?: return@create
             //判断targetId是否为kong
@@ -1312,15 +1316,20 @@ object RongCloudManager {
     private val resultCallback: RongIMClient.ResultCallback<List<Conversation>> by lazy {
         object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(p0: List<Conversation>?) {
-                resultCallbacks.forEach {
-                    it.onSuccess(p0)
+                if(p0 != null){
+                    resultCallbacks.forEach {
+                        it.onSuccess(p0)
+                    }
                 }
             }
 
             override fun onError(p0: RongIMClient.ErrorCode?) {
-                resultCallbacks.forEach {
-                    it.onError(p0)
+                if(p0 != null){
+                    resultCallbacks.forEach {
+                        it.onError(p0)
+                    }
                 }
+
             }
 
         }
