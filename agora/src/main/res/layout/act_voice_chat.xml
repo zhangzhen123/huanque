@@ -363,7 +363,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:text="鹊币余额不足，剩余通话时长"
+        android:text="鹊币不足，剩余时长"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
         android:visibility="gone"
