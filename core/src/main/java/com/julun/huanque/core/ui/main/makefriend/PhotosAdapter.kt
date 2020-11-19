@@ -25,7 +25,7 @@ class PhotosAdapter : BaseQuickAdapter<PhotoBean, BaseViewHolder>(R.layout.item_
     override fun convert(holder: BaseViewHolder, item: PhotoBean) {
         val imgView = holder.getView<SimpleDraweeView>(R.id.sdv_photo)
         if (item.url.isNotEmpty()) {
-            imgView.loadImage(item.url + BusiConstant.OSS_120, 60f, 60f)
+            imgView.loadImage(item.url + BusiConstant.OSS_120, 85f, 85f)
             imgView.hierarchy.actualImageScaleType = ScalingUtils.ScaleType.CENTER_CROP
         } else {
             imgView.hierarchy.actualImageScaleType = ScalingUtils.ScaleType.FIT_XY
