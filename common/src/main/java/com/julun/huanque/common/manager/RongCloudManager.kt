@@ -44,6 +44,7 @@ import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import org.greenrobot.eventbus.EventBus
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 
 /**
@@ -1312,22 +1313,18 @@ object RongCloudManager {
      * getConversationList使用一个单例的[resultCallback]统一监听消息 然后通过resultCallbacks整合所有的监听callback统一处理 使用完后一定要
      * 调用[removeConversationCallback] 不然还是会泄漏
      */
-    private var resultCallbacks: MutableList<RongIMClient.ResultCallback<List<Conversation>>> = mutableListOf()
+    private val resultCallbacks: CopyOnWriteArrayList<RongIMClient.ResultCallback<List<Conversation>>> = CopyOnWriteArrayList()
     private val resultCallback: RongIMClient.ResultCallback<List<Conversation>> by lazy {
         object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(p0: List<Conversation>?) {
-                if(p0 != null){
-                    resultCallbacks.forEach {
-                        it.onSuccess(p0)
-                    }
+                resultCallbacks.forEach {
+                    it.onSuccess(p0)
                 }
             }
 
             override fun onError(p0: RongIMClient.ErrorCode?) {
-                if(p0 != null){
-                    resultCallbacks.forEach {
-                        it.onError(p0)
-                    }
+                resultCallbacks.forEach {
+                    it.onError(p0)
                 }
 
             }

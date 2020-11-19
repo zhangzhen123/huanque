@@ -164,16 +164,17 @@ class MessageViewModel : BaseViewModel() {
     /**
      * 获取本地会话列表
      */
-    private  var resultCallback: RongIMClient.ResultCallback<List<Conversation>>?=null
+    private var resultCallback: RongIMClient.ResultCallback<List<Conversation>>? = null
     fun getConversationList() {
         if (blockListData == null) {
             needQueryConversation = true
             return
         }
-        if(resultCallback!=null){
+        needQueryConversation = false
+        if (resultCallback != null) {
             RongCloudManager.removeConversationCallback(resultCallback)
         }
-        resultCallback=object : RongIMClient.ResultCallback<List<Conversation>>() {
+        resultCallback = object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(p0: List<Conversation>?) {
 //                if (!mStranger && !player) {
 //                    dealWithStableConversation(p0)
@@ -187,6 +188,7 @@ class MessageViewModel : BaseViewModel() {
             }
 
             override fun onError(p0: RongIMClient.ErrorCode?) {
+                logger("p0 = ${p0?.message},value = ${p0?.value}")
             }
 
         }

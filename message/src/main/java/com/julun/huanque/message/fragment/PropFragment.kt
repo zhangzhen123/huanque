@@ -54,7 +54,7 @@ class PropFragment : BaseDialogFragment() {
             //聊天券
             tv_title.text = "聊天券"
             iv_prop.imageResource = R.mipmap.icon_msg_big
-            tv_content.text = "聊天券可抵扣一次付费信息聊天，当你有聊天券时会优先使用。"
+            tv_content.text = "聊天券可抵扣一次付费私信聊天，当你有聊天券时会优先使用。"
             tv_get_content.text = "聊天券在欢鹊乐园活跃奖励中产出。"
         }
 //        iv_close.onClickNew {
