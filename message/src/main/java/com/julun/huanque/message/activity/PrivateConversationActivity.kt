@@ -578,7 +578,7 @@ class PrivateConversationActivity : BaseActivity() {
         if (price == 0L && (SessionUtils.getSex() == Sex.MALE || (SessionUtils.getSex() == Sex.FEMALE && mPrivateConversationViewModel?.chatInfoData?.value?.sex == Sex.FEMALE))) {
             //免费(男性  或者  自己和对方都是女性  显示标识)
             tv_free.hide()
-            edit_text.hint = "聊天免费，不消耗聊天券和鹊币"
+            edit_text.hint = "聊天免费，不消耗券和鹊币"
         } else {
             //不免费
             tv_free.hide()
