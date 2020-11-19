@@ -365,7 +365,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         override fun convert(holder: BaseViewHolder, item: ShareType) {
             val sdvPic = holder.getView<SimpleDraweeView>(R.id.sdv_pic)
             if (item.url.isNotEmpty()) {
-                sdvPic.loadImage(item.url, 250f, 450f)
+                sdvPic.loadImage(item.url, 45f, 45f)
             } else if (item.res != -1) {
                 sdvPic.loadImageLocal(item.res)
             }
