@@ -1117,7 +1117,9 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     override fun onViewDestroy() {
         super.onViewDestroy()
         SharedPreferencesUtils.commitBoolean(SPParamKey.ANONYMOUS_VOICE_ON_LINE, false)
-        leaveChannel()
+        if (!SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+            leaveChannel()
+        }
         mDisposable?.dispose()
         VoiceManager.destroy()
     }
