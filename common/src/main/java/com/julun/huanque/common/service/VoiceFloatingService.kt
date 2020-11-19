@@ -220,7 +220,7 @@ class VoiceFloatingService : Service(), View.OnClickListener {
      * 缘分图标  动画移动到屏幕边侧
      */
     private fun animationToSide() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && mVoiceChatViewModel.mVoiceChangeListener != null) {
             val act = CommonInit.getInstance().getCurrentActivity() ?: return
             val screenMiddleX = ScreenUtils.getScreenWidth(act) / 2
             if (display?.isAttachedToWindow != true) {

@@ -104,6 +104,13 @@ class VoiceChatInterceptor : IInterceptor, RequestCaller {
                 //被叫直接跳转
                 callback?.onContinue(postcard)
             }
+        } else if ((postcard?.path ?: "") == ARouterConstant.ANONYMOUS_VOICE_ACTIVITY) {
+            //跳转匿名语音
+            if (SharedPreferencesUtils.getBoolean(SPParamKey.VOICE_ON_LINE, false)) {
+                ToastUtils.show("正在语音通话，请稍后再试")
+                return
+            }
+            callback?.onContinue(postcard)
         } else {
             callback?.onContinue(postcard)
         }

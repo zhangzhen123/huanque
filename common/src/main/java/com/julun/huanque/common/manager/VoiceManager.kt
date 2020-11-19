@@ -86,6 +86,7 @@ object VoiceManager {
      */
     fun destroy() {
         mPlayer?.stop()
+        mPlayer?.release();
         mPlayer = null
         releaseVideoFocus()
     }
@@ -114,65 +115,69 @@ object VoiceManager {
      * 播放音效
      */
     private fun playerAudio(audioName: String, loop: Boolean = true, quietOther: Boolean = true) {
-        checkAudioManageAndService()
-        if (quietOther) {
-            basicSetting()
-        }
+        try {
+            checkAudioManageAndService()
+            if (quietOther) {
+                basicSetting()
+            }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mPlaybackAttributes = AudioAttributes.Builder()
-                .apply {
-                    if (quietOther) {
-                        setUsage(AudioAttributes.USAGE_ALARM)
-                    } else {
-                        setUsage(AudioAttributes.USAGE_MEDIA)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mPlaybackAttributes = AudioAttributes.Builder()
+                    .apply {
+                        if (quietOther) {
+                            setUsage(AudioAttributes.USAGE_ALARM)
+                        } else {
+                            setUsage(AudioAttributes.USAGE_MEDIA)
+                        }
+                    }
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build()
+
+                mPlayer?.setAudioAttributes(mPlaybackAttributes)
+            } else {
+                if (quietOther) {
+                    mPlayer?.setAudioStreamType(AudioManager.STREAM_ALARM);//音量跟随闹钟音量
+                } else {
+                    mPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC);//音量跟随闹钟音量
+                }
+            }
+
+            val afd = CommonInit.getInstance().getApp().assets.openFd(audioName)
+            mPlayer?.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+            mPlayer?.prepare()
+            mPlayer?.isLooping = loop
+            val mFocusLock = Any()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mListenerHandler = Handler()
+                mFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
+                    .setAudioAttributes(mPlaybackAttributes!!)
+                    .setAcceptsDelayedFocusGain(true)
+                    .setWillPauseWhenDucked(true)
+                    .setOnAudioFocusChangeListener(mAudioListener, mListenerHandler!!)
+                    .build()
+
+                // requesting audio focus
+                val res = mAudioManager?.requestAudioFocus(mFocusRequest!!)
+                synchronized(mFocusLock) {
+                    if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                        mPlayer?.start()
                     }
                 }
-                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                .build()
-
-            mPlayer?.setAudioAttributes(mPlaybackAttributes)
-        } else {
-            if (quietOther) {
-                mPlayer?.setAudioStreamType(AudioManager.STREAM_ALARM);//音量跟随闹钟音量
             } else {
-                mPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC);//音量跟随闹钟音量
-            }
-        }
+                val res = mAudioManager?.requestAudioFocus(
+                    mAudioListener,  // Use the music stream.
+                    AudioManager.STREAM_SYSTEM,  // Request permanent focus.
+                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
+                )
 
-        val afd = CommonInit.getInstance().getApp().assets.openFd(audioName)
-        mPlayer?.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
-        mPlayer?.prepare()
-        mPlayer?.isLooping = loop
-        val mFocusLock = Any()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mListenerHandler = Handler()
-            mFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
-                .setAudioAttributes(mPlaybackAttributes!!)
-                .setAcceptsDelayedFocusGain(true)
-                .setWillPauseWhenDucked(true)
-                .setOnAudioFocusChangeListener(mAudioListener, mListenerHandler!!)
-                .build()
-
-            // requesting audio focus
-            val res = mAudioManager?.requestAudioFocus(mFocusRequest!!)
-            synchronized(mFocusLock) {
-                if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    mPlayer?.start()
+                synchronized(mFocusLock) {
+                    if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                        mPlayer?.start()
+                    }
                 }
             }
-        } else {
-            val res = mAudioManager?.requestAudioFocus(
-                mAudioListener,  // Use the music stream.
-                AudioManager.STREAM_SYSTEM,  // Request permanent focus.
-                AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
-            )
-
-            synchronized(mFocusLock) {
-                if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    mPlayer?.start()
-                }
-            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
