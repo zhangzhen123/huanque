@@ -121,7 +121,7 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
         }
         gravity = mGravity
         val params = dialog?.window?.attributes
-        params?.dimAmount = 0.1f
+        params?.dimAmount = 0.4f
         dialog?.window?.attributes = params
         setDialogSize(width = width, height = height, gravity = gravity)
     }

@@ -828,11 +828,11 @@
     <LinearLayout
         android:id="@+id/ll_rank"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_36"
+        android:layout_height="@dimen/dimen_53"
         android:layout_gravity="bottom"
-        android:layout_marginStart="@dimen/dimen_10"
-        android:layout_marginEnd="@dimen/dimen_10"
-        android:layout_marginBottom="@dimen/dimen_10"
+        android:paddingStart="@dimen/dimen_10"
+        android:paddingEnd="@dimen/dimen_10"
+        android:background="@drawable/pk_mic_rank_bg"
         android:gravity="center">
 
         <com.julun.huanque.core.widgets.live.pk.PkRankView

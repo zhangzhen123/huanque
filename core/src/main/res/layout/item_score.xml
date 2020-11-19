@@ -66,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dimen_15"
-        android:layout_marginTop="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_8"
         android:layout_toRightOf="@+id/headImage"
         android:adjustViewBounds="true"
         android:gravity="left"
@@ -75,6 +75,7 @@
         android:maxLines="2"
         android:minHeight="20dp"
         android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/headImage"
         app:layout_constraintTop_toBottomOf="@+id/nickNameText"
         tools:text="勋章列表" />
@@ -85,17 +86,18 @@
         android:layout_width="0px"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="110dp"
+        android:layout_marginEnd="110dp"
         android:ellipsize="end"
+        android:layout_marginTop="@dimen/dimen_5"
         android:includeFontPadding="false"
         android:maxLines="1"
         android:textColor="@color/black_333"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/image_text"
         app:layout_constraintLeft_toRightOf="@id/headImage"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/contributionText"
