@@ -214,6 +214,13 @@ class HomePageActivity : BaseActivity() {
         mHomePageViewModel.homeInfo()
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val userID = intent?.getLongExtra(ParamConstant.UserId, 0) ?: 0
+        mHomePageViewModel.targetUserId = userID
+        mHomePageViewModel.homeInfo()
+    }
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
         //关注
