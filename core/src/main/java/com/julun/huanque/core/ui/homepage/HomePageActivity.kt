@@ -343,9 +343,6 @@ class HomePageActivity : BaseActivity() {
                 ToastUtils.show("成为密友才能评价哦")
             }
         }
-        con_live.onClickNew {
-            //跳转直播间
-        }
 
         sdv_intim_border.onClickNew {
             val bean = mHomePageViewModel.homeInfoBean.value?.closeConfidant ?: return@onClickNew
@@ -402,8 +399,19 @@ class HomePageActivity : BaseActivity() {
 
         con_live.onClickNew {
             //跳转直播间
-            val programId = mHomePageViewModel.homeInfoBean.value?.programInfo?.programId ?: return@onClickNew
-            PlayerActivity.start(this, programId, PlayerFrom.UserHome)
+            val programId = mHomePageViewModel.homeInfoBean.value?.programInfo?.programId ?: 0
+            if (programId > 0) {
+                PlayerActivity.start(this, programId, PlayerFrom.UserHome)
+                return@onClickNew
+            }
+
+            val otherProgramId = mHomePageViewModel.homeInfoBean.value?.playProgram?.programId ?: 0
+            if (otherProgramId > 0) {
+                PlayerActivity.start(this, otherProgramId, PlayerFrom.UserHome)
+                return@onClickNew
+            }
+
+
         }
 
         con_intim.onClickNew {
