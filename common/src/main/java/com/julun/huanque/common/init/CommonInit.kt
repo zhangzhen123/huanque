@@ -21,6 +21,7 @@ import com.julun.huanque.common.R
 import com.julun.huanque.common.bean.events.HideFloatingEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.manager.ActivitiesManager
+import com.julun.huanque.common.manager.GlobalDialogManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.net.Requests
@@ -133,6 +134,7 @@ class CommonInit {
 
     fun init(application: Application) {
 //        mContext = application
+        GlobalDialogManager.init(application)
         application.registerActivityLifecycleCallbacks(object :
             Application.ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity?) {
@@ -323,6 +325,7 @@ class CommonInit {
     suspend fun initWithCoroutines(application: Application) {
         val currentTime = System.currentTimeMillis()
         logger("common initWithCoroutines start----${Thread.currentThread()} ")
+        GlobalDialogManager.init(application)
 //        mContext = application
         application.registerActivityLifecycleCallbacks(object :
             Application.ActivityLifecycleCallbacks {

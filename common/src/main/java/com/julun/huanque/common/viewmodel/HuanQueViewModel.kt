@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.julun.huanque.common.bean.beans.FateQuickMatchBean
+import com.julun.huanque.common.manager.GlobalDialogManager
 import com.julun.huanque.common.suger.logger
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -40,6 +41,7 @@ class HuanQueViewModel(application: Application) : AndroidViewModel(application)
             }, { it.printStackTrace() }, {
                 fateQuickMatchData.postValue(null)
                 fateQuickMatchTime.postValue(null)
+                GlobalDialogManager.closeDialog()
             })
     }
 
@@ -50,6 +52,7 @@ class HuanQueViewModel(application: Application) : AndroidViewModel(application)
         mPaidanDisposable?.dispose()
         fateQuickMatchData.value = null
         fateQuickMatchTime.value = null
+        GlobalDialogManager.closeDialog()
     }
 
 

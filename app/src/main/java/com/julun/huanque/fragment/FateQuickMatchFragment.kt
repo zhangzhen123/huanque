@@ -18,6 +18,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.EventListener
+import com.julun.huanque.common.manager.GlobalDialogManager
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
@@ -47,6 +48,9 @@ class FateQuickMatchFragment : BaseDialogFragment() {
     private val mFateQuickMatchViewModel: FateQuickMatchViewModel by viewModels()
     override fun getLayoutId() = R.layout.fragment_paidan
 
+    override fun order(): Int {
+        return DialogOrderNumber.PRIVACY_AGREEMENT_FRAGMENT//派单优先级比较高 设置最高优先级值
+    }
 
     override fun initViews() {
         val enable = arguments?.getBoolean(ParamConstant.ENABLE_ACTION, true) ?: true
@@ -75,12 +79,17 @@ class FateQuickMatchFragment : BaseDialogFragment() {
         iv_fate_accost.onClickNew {
             //快捷回复
             val fateBean = mHuanQueViewModel.fateQuickMatchData.value ?: return@onClickNew
-            mFateQuickMatchViewModel.getRandomWords(fateBean.userInfo.userId,fateBean.fateId)
+            mFateQuickMatchViewModel.getRandomWords(fateBean.userInfo.userId, fateBean.fateId)
         }
 
         if (enable) {
             sdv_header.onClickNew {
-                HomePageActivity.newInstance(requireActivity(), mHuanQueViewModel.fateQuickMatchData.value?.userInfo?.userId ?: return@onClickNew)
+                val act = requireActivity()
+                val userId = mHuanQueViewModel.fateQuickMatchData.value?.userInfo?.userId ?: return@onClickNew
+                if ((act.intent?.getLongExtra(ParamConstant.UserId, 0) ?: 0) != userId) {
+                    HomePageActivity.newInstance(act, userId)
+                }
+
             }
         }
 
@@ -230,7 +239,8 @@ class FateQuickMatchFragment : BaseDialogFragment() {
         setDialogSize(Gravity.TOP, 0, 222)
 
         val params = dialog?.window?.attributes
-        params?.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; //这条就是控制点击背景的时候  如果被覆盖的view有点击事件那么就会直接触发(dialog消失并且触发背景下面view的点击事件)
+        params?.flags =
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; //这条就是控制点击背景的时候  如果被覆盖的view有点击事件那么就会直接触发(dialog消失并且触发背景下面view的点击事件)
         dialog?.window?.attributes = params
     }
 

@@ -21,7 +21,6 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.*
-import com.julun.huanque.common.viewmodel.HuanQueViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.RongIMClient

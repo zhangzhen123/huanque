@@ -35,11 +35,11 @@ abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
     private var activityForeground: Boolean = false
     protected var goHome: Boolean = false //整合所有界面的返回操作 重写onBackPressed()方法
     protected val logger = ULog.getLogger(this.javaClass.name)
-    protected val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
-    private var mFragment: DialogFragment? = null
+//    protected val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
+//    private var mFragment: DialogFragment? = null
 
-    //不需要显示派单弹窗的页面列表
-    private val mNoFateActivityList = mutableListOf<String>("com.julun.huanque.agora.activity.VoiceChatActivity")
+//    //不需要显示派单弹窗的页面列表
+//    private val mNoFateActivityList = mutableListOf<String>("com.julun.huanque.agora.activity.VoiceChatActivity")
 
     private lateinit var mOrderDialogManager: OrderDialogManager
 
@@ -62,38 +62,38 @@ abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
             throw NotImplementedError("activity没有设置有效的layout")
         }
         registerSelfAsEventHandler()
-        var canShowFate = true
-        mNoFateActivityList.forEach {
-            if (it.contains(this.localClassName)) {
-                canShowFate = false
-                return@forEach
-            }
-        }
-        if (canShowFate) {
-            initHuanQueViewModel()
-        }
+//        var canShowFate = true
+//        mNoFateActivityList.forEach {
+//            if (it.contains(this.localClassName)) {
+//                canShowFate = false
+//                return@forEach
+//            }
+//        }
+//        if (canShowFate) {
+//            initHuanQueViewModel()
+//        }
     }
 
     /**
      * 初始化全部ViewModel
      */
-    private fun initHuanQueViewModel() {
-        mHuanQueViewModel.fateQuickMatchData.observe(this, Observer<FateQuickMatchBean> { it ->
-            logger.info("FateQuick Activity接收到数据 ${it}")
-            if (it != null) {
-                showPaidanFragment()
-            }
-        })
-    }
+//    private fun initHuanQueViewModel() {
+//        mHuanQueViewModel.fateQuickMatchData.observe(this, Observer<FateQuickMatchBean> { it ->
+//            logger.info("FateQuick Activity接收到数据 ${it}")
+//            if (it != null) {
+//                showPaidanFragment()
+//            }
+//        })
+//    }
 
-    /**
-     * 显示派单Fragment
-     */
-    private fun showPaidanFragment() {
-        mFragment?.dismiss()
-        mFragment = ARouter.getInstance().build(ARouterConstant.FATE_QUICK_MATCH_FRAGMENT).navigation() as? BaseDialogFragment
-        mFragment?.show(supportFragmentManager, "PaidanFragment")
-    }
+//    /**
+//     * 显示派单Fragment
+//     */
+//    private fun showPaidanFragment() {
+//        mFragment?.dismiss()
+//        mFragment = ARouter.getInstance().build(ARouterConstant.FATE_QUICK_MATCH_FRAGMENT).navigation() as? BaseDialogFragment
+//        mFragment?.show(supportFragmentManager, "PaidanFragment")
+//    }
 
     open fun setHeader() {
         //暂时不要
@@ -121,7 +121,6 @@ abstract class BaseActivity : RxAppCompatActivity(), BaseContainer {
     }
 
     override fun onDestroy() {
-//        huanqueApp.ACTIVITIES_STACK.remove(UUID)
         hideDialogs()
         unregisterSelfAsEventHandler()
         onViewDestroy()

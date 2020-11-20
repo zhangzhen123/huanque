@@ -68,9 +68,9 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
 
     protected val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
     private var moduleName = ""
-    private var mBundle: Bundle? = null
+//    private var mBundle: Bundle? = null
 
-    private var mFragment: BaseDialogFragment? = null
+//    private var mFragment: BaseDialogFragment? = null
 
     private var goHome: Boolean = false //整合所有界面的返回操作 重写onBackPressed()方法
     private lateinit var mReactRootView: ReactRootView
@@ -86,7 +86,7 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             val moduleName = intent.getStringExtra(RnConstant.MODULE_NAME)
             val initialProperties = intent.getBundleExtra(RnConstant.INITIAL_PROPERTIES)
             this.moduleName = moduleName
-            mBundle = initialProperties
+//            mBundle = initialProperties
             goHome = intent.getBooleanExtra(IntentParamKey.EXTRA_FLAG_GO_HOME.name, false)
             RnManager.curActivity = this
 
@@ -126,36 +126,36 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
             ToastUtils.show("加载rn模块出错了")
             finish()
         }
-        initHuanQueViewModel()
+//        initHuanQueViewModel()
     }
 
     /**
      * 初始化全部ViewModel
      */
-    private fun initHuanQueViewModel() {
-        mHuanQueViewModel.fateQuickMatchData.observe(this, Observer<FateQuickMatchBean> { it ->
-            if (it != null) {
-                if (moduleName == RnConstant.PERSONAL_HOMEPAGE && mBundle?.getLong("userId") == it.userInfo.userId) {
-                    showPaidanFragment(false)
-                } else {
-                    showPaidanFragment()
-                }
-            }
-        })
-    }
+//    private fun initHuanQueViewModel() {
+//        mHuanQueViewModel.fateQuickMatchData.observe(this, Observer<FateQuickMatchBean> { it ->
+//            if (it != null) {
+//                if (moduleName == RnConstant.PERSONAL_HOMEPAGE && mBundle?.getLong("userId") == it.userInfo.userId) {
+//                    showPaidanFragment(false)
+//                } else {
+//                    showPaidanFragment()
+//                }
+//            }
+//        })
+//    }
 
     /**
      * 显示派单Fragment
      */
-    private fun showPaidanFragment(enable: Boolean? = null) {
-        mFragment?.dismiss()
-        mFragment = ARouter.getInstance().build(ARouterConstant.FATE_QUICK_MATCH_FRAGMENT).apply {
-            if (enable != null) {
-                withBoolean(ParamConstant.ENABLE_ACTION, enable)
-            }
-        }.navigation() as? BaseDialogFragment
-        mFragment?.show(supportFragmentManager, "PaidanFragment")
-    }
+//    private fun showPaidanFragment(enable: Boolean? = null) {
+//        mFragment?.dismiss()
+//        mFragment = ARouter.getInstance().build(ARouterConstant.FATE_QUICK_MATCH_FRAGMENT).apply {
+//            if (enable != null) {
+//                withBoolean(ParamConstant.ENABLE_ACTION, enable)
+//            }
+//        }.navigation() as? BaseDialogFragment
+//        mFragment?.show(supportFragmentManager, "PaidanFragment")
+//    }
 
 
     override fun invokeDefaultOnBackPressed() {

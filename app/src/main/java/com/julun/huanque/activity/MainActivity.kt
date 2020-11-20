@@ -18,6 +18,7 @@ import com.julun.huanque.R
 import com.julun.huanque.agora.activity.AnonymousVoiceActivity
 import com.julun.huanque.app.update.AppChecker
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
@@ -87,6 +88,11 @@ class MainActivity : BaseActivity() {
 
     private val mFillInformationViewModel: FillInformationViewModel by viewModels()
 
+    protected val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
+
+    //不需要显示派单弹窗的页面列表
+    private val mNoFateActivityList = mutableListOf<String>("com.julun.huanque.agora.activity.VoiceChatActivity")
+
     private var firstTime = 0L
 
     //封装百度地图相关的Service
@@ -154,6 +160,21 @@ class MainActivity : BaseActivity() {
             }
 
             filterIndexData(targetIndex)
+            //todo test
+//            var time=0
+//            Observable.interval(1,30,TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe {
+//                val bean=FateQuickMatchBean(userInfo = UserInfoInRoom().apply {
+//                    time++
+//                    age=time
+//                    city="杭州"
+//                    nickname="name${time}"
+//                    userId=20000189
+//
+//                },fateId = "wdadwada",quickChat = "True",expTime = System.currentTimeMillis()+26*1000)
+//                mHuanQueViewModel.setFateData(bean)
+//                showPaiDanFragment()
+//            }
+
         }
 
 
@@ -256,6 +277,15 @@ class MainActivity : BaseActivity() {
 
     }
 
+    /**
+     * 显示派单Fragment
+     */
+    private fun showPaiDanFragment() {
+       val mPaiDanFragment =
+            ARouter.getInstance().build(ARouterConstant.FATE_QUICK_MATCH_FRAGMENT).navigation() as? BaseDialogFragment
+//        mPaiDanFragment?.show(supportFragmentManager, "PaidanFragment")
+        GlobalDialogManager.showDialog(mPaiDanFragment!!,mNoFateActivityList)
+    }
 
     /**
      * 检查定位权限
@@ -302,6 +332,8 @@ class MainActivity : BaseActivity() {
         OrderDialogManager.release()
         MessageProcessor.clearProcessors()
         VideoPlayerManager.clear()
+
+        GlobalDialogManager.closeDialog()
     }
 
 
@@ -758,6 +790,7 @@ class MainActivity : BaseActivity() {
                 }
                 VibratorUtil.Vibrate(200)
                 mHuanQueViewModel.setFateData(data)
+                showPaiDanFragment()
                 VoiceManager.playYuanFen()
 
                 val bean = mMessageViewModel.chatRoomData.value ?: ChatRoomBean()

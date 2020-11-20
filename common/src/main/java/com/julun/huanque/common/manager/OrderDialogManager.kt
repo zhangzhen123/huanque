@@ -38,6 +38,9 @@ class OrderDialogManager(val act: BaseActivity) {
         //全局的Dialog对象使用的数据对象 注 这里类型只接受Dialog或者DialogFragment
         private val mGlobalDialogOrderList = LinkedList<BaseDialogFragment>()
 
+        //有些弹窗不能在一些指定Activity页面弹出 这里记录下来每次弹出时过滤处理
+        private val mGlobalDialogNoActivityListMap = hashMapOf<BaseDialogFragment, MutableList<String>>()
+
         //记录当前有焦点的act的弹窗管理器
         private var currentManager: OrderDialogManager? = null
 
@@ -62,10 +65,15 @@ class OrderDialogManager(val act: BaseActivity) {
          */
         fun release() {
             mGlobalDialogOrderList.clear()
+            mGlobalDialogNoActivityListMap.clear()
             currentManager = null
         }
 
-        fun addGlobalOrderDialog(data: BaseDialogFragment?) {
+        /**
+         * [data]要弹的窗
+         * [noActivityList]该弹窗不能弹的页面集合
+         */
+        fun addGlobalOrderDialog(data: BaseDialogFragment?, noActivityList: MutableList<String>? = null) {
             if (data == null) return
             var index = mGlobalDialogOrderList.size
             //当前对象的排序值
@@ -87,6 +95,11 @@ class OrderDialogManager(val act: BaseActivity) {
 
             val realIndex = min(index, mGlobalDialogOrderList.size)
             mGlobalDialogOrderList.add(realIndex, data)
+
+            if(noActivityList!=null){
+                mGlobalDialogNoActivityListMap.put(data,noActivityList)
+            }
+
             currentManager?.popData()
         }
     }
@@ -214,7 +227,22 @@ class OrderDialogManager(val act: BaseActivity) {
         var tempData: BaseDialogFragment? = null
         //优先取全局弹窗
         if (mGlobalDialogOrderList.isNotEmpty()) {
-            tempData = mGlobalDialogOrderList.pop()
+            val first = mGlobalDialogOrderList.first
+            var canShow = true
+            val mNoFateActivityList = mGlobalDialogNoActivityListMap[first]
+            mNoFateActivityList?.forEach {
+                if (it.contains(act.localClassName)) {
+                    canShow = false
+                    return@forEach
+                }
+            }
+            tempData = if (!canShow) {
+                null
+            } else {
+                val dialog=mGlobalDialogOrderList.pop()
+                mGlobalDialogNoActivityListMap.remove(dialog)
+                dialog
+            }
         }
         if (tempData == null)
             if (mDialogOrderList.isNotEmpty()) {
