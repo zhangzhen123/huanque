@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
-import android.graphics.drawable.GradientDrawable
 import androidx.core.content.ContextCompat
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -19,14 +18,11 @@ import com.julun.huanque.common.suger.setImageSpan
 import com.julun.huanque.common.bean.beans.BaseTextBean
 import com.julun.huanque.common.bean.StyleParam
 import com.julun.huanque.common.bean.TplBean
-import com.julun.huanque.common.constant.MessageDisplayType
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.TplHelper
-import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.setCircleImageSpan
 import com.julun.huanque.common.utils.*
-import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.dip
 import java.lang.Exception
 
@@ -315,11 +311,10 @@ class DraweeSpanTextView @JvmOverloads constructor(
         }
     }
 
-
     /**
      * 手动组装的富文本
      */
-    fun renderBaseText(textBean: BaseTextBean) {
+    fun renderBaseText(textBean: BaseTextBean, callBack: ((DraweeSpanStringBuilder) -> Unit)? = null) {
         val builder = DraweeSpanStringBuilder(textBean.realText)
         textBean.imgParams.forEach {
             if (it.imgRes == 0) {
@@ -360,7 +355,13 @@ class DraweeSpanTextView @JvmOverloads constructor(
             builder.setSpan(span_3, it.indexStart, indexEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
+        if (callBack != null) {
+            //设置回调
+            callBack(builder)
+        }
+
         builder.setDraweeSpanChangedListener { build -> this.setDraweeSpanStringBuilder(build) }
+
         this.setDraweeSpanStringBuilder(builder)
     }
 }

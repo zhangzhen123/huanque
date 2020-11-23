@@ -40,6 +40,7 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
+import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.recharge.RechargeCenterActivity
 import com.julun.huanque.message.activity.ContactsActivity
 import com.julun.huanque.ui.safe.AccountAndSecurityActivity
@@ -281,7 +282,8 @@ class MineFragment : BaseVMFragment<MineViewModel>() {
 
     override fun initEvents(rootView: View) {
         clHeadRoot.onClickNew {
-            RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
+//            RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
+            HomePageActivity.newInstance(requireActivity(),SessionUtils.getUserId())
         }
 
         headImage.onClickNew {

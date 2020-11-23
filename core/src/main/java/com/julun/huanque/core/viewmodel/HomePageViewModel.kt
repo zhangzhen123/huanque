@@ -70,8 +70,10 @@ class HomePageViewModel : BaseViewModel() {
     val evaluateFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //评论列表
-
     var targetUserId = 0L
+
+    //我的主页标识位
+    var mineHomePage = false
 
     /**
      * 获取基础信息

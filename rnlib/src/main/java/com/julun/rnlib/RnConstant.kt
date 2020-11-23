@@ -38,6 +38,8 @@ object RnConstant {
     const val INTIMATE_LEVEL_PAGE:String="IntimateLevelPage"
     //零钱页面
     const val SmallChangePage:String="SmallChangePage"
+    //标签页面
+    const val EditMyTagPage="EditMyTagPage"
 
 
 
@@ -87,4 +89,6 @@ object RnConstant {
     const val VIDEO_PLAYER_PAGE:String="VideoPlayerPage"
     //他人主页
     const val OtherHomePage = "OtherHomePage"
+    //我的主页
+    const val MineHomePage = "MineHomePage"
 }
