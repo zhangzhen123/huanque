@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_header"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginLeft="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:roundAsCircle="true" />
+
+    <TextView
+        android:id="@+id/tv_action"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/bg_icon_private_chat"
+        android:gravity="center"
+        android:minWidth="68dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="加入"
+        android:textColor="@color/primary_color"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_circle_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:maxWidth="168dp"
+        android:singleLine="true"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_circle_introduction"
+        app:layout_constraintLeft_toRightOf="@id/sdv_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="肯定能哈哈joie而我就会" />
+
+
+    <TextView
+        android:id="@+id/tv_hot_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:drawableLeft="@mipmap/icon_circle_hot_value"
+        android:drawablePadding="1dp"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/tv_circle_name"
+        app:layout_constraintLeft_toRightOf="@id/tv_circle_name"
+        tools:text="120384" />
+
+    <TextView
+        android:id="@+id/tv_circle_introduction"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical|left"
+        android:singleLine="true"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/sdv_header"
+        app:layout_constraintRight_toLeftOf="@id/tv_action"
+        app:layout_constraintTop_toBottomOf="@id/tv_circle_name"
+        tools:text="看来大家客服呢可恢复" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

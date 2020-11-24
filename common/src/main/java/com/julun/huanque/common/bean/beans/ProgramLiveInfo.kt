@@ -810,3 +810,31 @@ data class SingleProgramInConversation(
     //标签
     var rightTopTag: String = ""
 ) : Serializable
+
+/**
+ * 我的圈子对象
+ */
+data class MyGroupInfo(
+    //我的圈子
+    var myGroup: MutableList<CircleGroup> = mutableListOf(),
+    //推荐圈子
+    var recommendGroup: MutableList<CircleGroup> = mutableListOf()
+) : Serializable
+
+/**
+ * 圈子数据
+ */
+data class CircleGroup(
+    //圈子描述
+    var groupDesc: String = "",
+    //圈子ID
+    var groupId: Long = 0,
+    //圈子名称
+    var groupName: String = "",
+    //圈子图片
+    var groupPic: String = "",
+    //圈子热度值
+    var heatValue: Long = 0L,
+    //是否已经加入（本地字段）
+    var joined: String = ""
+) : Serializable

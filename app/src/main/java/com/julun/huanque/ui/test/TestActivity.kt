@@ -35,6 +35,7 @@ import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.draweetext.AnimatedRainbowSpan
+import com.julun.huanque.core.ui.homepage.CircleActivity
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
@@ -78,7 +79,7 @@ class TestActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.activity_test
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        tv.backgroundDrawable = GlobalUtils.getBubbleDrawable(ChatBubble(bdc = "#FFDF20-#FFCB53",bgc = "#0309FF-#FE1212"),false)
+        tv.backgroundDrawable = GlobalUtils.getBubbleDrawable(ChatBubble(bdc = "#FFDF20-#FFCB53", bgc = "#0309FF-#FE1212"), false)
         viewModel.userInfo.observe(this, Observer {
             println("我是用户信息：=$it")
             ret_resp.text = "语音签名：${it.points.getOrNull(0)?.voiceContent}"
@@ -252,6 +253,14 @@ class TestActivity : BaseActivity() {
         test_goto_live.onClickNew {
             PlayerActivity.start(this, 12975, from = PlayerFrom.Social)
         }
+        btn_cycle.onClickNew {
+            //打开全部圈子
+            val intent = Intent(this, CircleActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
+        }
+
         val spannableString = DraweeSpanStringBuilder("1234567一句带彩虹屁的文本还带动效一句带彩虹色的文本还带动效 WWWWAAAA243555")
         val start = 10
         val end = 20
@@ -280,13 +289,13 @@ class TestActivity : BaseActivity() {
 //            text_rainbow.setDraweeSpanStringBuilder(builder)
 //        }
         tvColorful.onClickNew {
-            tvColorful.isColorsVertical=true
-            tvColorful.colors=intArrayOf(Color.parseColor("#FFFBEF"),Color.parseColor("#E5A441"),Color.parseColor("#FFFBEF"))
+            tvColorful.isColorsVertical = true
+            tvColorful.colors = intArrayOf(Color.parseColor("#FFFBEF"), Color.parseColor("#E5A441"), Color.parseColor("#FFFBEF"))
         }
-        tvColorful.text="${StringHelper.formatBigNum(BigInteger("1999"))}\n" +
-                "${StringHelper.formatBigNum(BigInteger("999"))}\n"+
-                "${StringHelper.formatBigNum(BigInteger("1999999"))}\n"+
-                "${StringHelper.formatBigNum(BigInteger("1999999999"))}\n"+
+        tvColorful.text = "${StringHelper.formatBigNum(BigInteger("1999"))}\n" +
+                "${StringHelper.formatBigNum(BigInteger("999"))}\n" +
+                "${StringHelper.formatBigNum(BigInteger("1999999"))}\n" +
+                "${StringHelper.formatBigNum(BigInteger("1999999999"))}\n" +
                 "${StringHelper.formatBigNum(BigInteger("1999999999999"))}\n"
     }
 
