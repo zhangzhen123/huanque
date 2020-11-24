@@ -27,3 +27,9 @@ class TaskBirdReceive(var taskCode: String)
 class TaskBirdActiveReceive(var activeCode: String)
 
 class BirdFunctionForm(var functionCode: String)
+
+
+class PostDetailForm(var postId: Long)
+
+
+class HomePostForm(var offset: Int,var postType:String?)

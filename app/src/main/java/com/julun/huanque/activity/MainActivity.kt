@@ -38,6 +38,7 @@ import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.manager.VideoPlayerManager
 import com.julun.huanque.core.ui.live.fragment.FirstRechargeReceivedFragment
+import com.julun.huanque.core.ui.main.dynamic_square.DynamicSquareFragment
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.core.ui.main.program.HomeProgramFragment
 import com.julun.huanque.core.viewmodel.TodayFateViewModel
@@ -78,6 +79,8 @@ class MainActivity : BaseActivity() {
 
     private val mMessageFragment: MessageFragment by lazy { MessageFragment.newInstance() }
     private val mMineFragment: MineFragment by lazy { MineFragment.newInstance() }
+
+    private val mDynamicSquareFragment: DynamicSquareFragment by lazy { DynamicSquareFragment.newInstance() }
 
     private val mMainViewModel: MainViewModel by viewModels()
 
@@ -281,10 +284,10 @@ class MainActivity : BaseActivity() {
      * 显示派单Fragment
      */
     private fun showPaiDanFragment() {
-       val mPaiDanFragment =
+        val mPaiDanFragment =
             ARouter.getInstance().build(ARouterConstant.FATE_QUICK_MATCH_FRAGMENT).navigation() as? BaseDialogFragment
 //        mPaiDanFragment?.show(supportFragmentManager, "PaidanFragment")
-        GlobalDialogManager.showDialog(mPaiDanFragment!!,mNoFateActivityList)
+        GlobalDialogManager.showDialog(mPaiDanFragment!!, mNoFateActivityList)
     }
 
     /**
@@ -445,6 +448,9 @@ class MainActivity : BaseActivity() {
             }
             showFragmentNew(MainPageIndexConst.MAIN_FRAGMENT_INDEX)
         }
+        view_dynamic_square.onClickNew {
+            showFragmentNew(MainPageIndexConst.DYNAMIC_SQUARE_INDEX)
+        }
         view_program.onClickNew {
             if (getCurrentFragment() == mProgramFragment) {
                 mProgramFragment.scrollToTop()
@@ -476,6 +482,9 @@ class MainActivity : BaseActivity() {
             MainPageIndexConst.MAIN_FRAGMENT_INDEX -> {
                 view_make_friends.performClick()
             }
+            MainPageIndexConst.DYNAMIC_SQUARE_INDEX -> {
+                view_dynamic_square.performClick()
+            }
             MainPageIndexConst.PROGRAM_FRAGMENT_INDEX -> {
                 view_program.performClick()
             }
@@ -492,8 +501,8 @@ class MainActivity : BaseActivity() {
      * tab上面的imageview添加动画
      */
     private fun tabIconAnimation(index: Int) {
-        val list = arrayOf(lottie_make_friends, lottie_leyuan, lottie_message, lottie_mine)
-        val textList = arrayOf(item_make_friends, item_leyuan, item_message, item_mine)
+        val list = arrayOf(lottie_make_friends, lottie_square, lottie_program, lottie_message, lottie_mine)
+        val textList = arrayOf(item_make_friends, item_square, item_program, item_message, item_mine)
         list.forEachIndexed { position, lottieAnimationView ->
             if (index == position) {
                 if (!lottieAnimationView.isAnimating) {
@@ -546,6 +555,7 @@ class MainActivity : BaseActivity() {
         return when (index) {
             MainPageIndexConst.MAIN_FRAGMENT_INDEX -> mHomeFragment
             MainPageIndexConst.PROGRAM_FRAGMENT_INDEX -> mProgramFragment
+            MainPageIndexConst.DYNAMIC_SQUARE_INDEX -> mDynamicSquareFragment
             MainPageIndexConst.MESSAGE_FRAGMENT_INDEX -> mMessageFragment
             MainPageIndexConst.MINE_FRAGMENT_INDEX -> mMineFragment
             else -> {
@@ -560,6 +570,9 @@ class MainActivity : BaseActivity() {
     private fun getCurrentFragment(): Fragment? {
         if (mHomeFragment.isVisible) {
             return mHomeFragment
+        }
+        if (mDynamicSquareFragment.isVisible) {
+            return mDynamicSquareFragment
         }
         if (mProgramFragment.isVisible) {
             return mProgramFragment

@@ -50,3 +50,7 @@ data class ProgramTab(
 data class OnlineInfo(
     var onlineId: String = ""
 )
+
+data class SquareTab(
+    var typeName: String = "",
+    var typeCode: String = "") : Serializable

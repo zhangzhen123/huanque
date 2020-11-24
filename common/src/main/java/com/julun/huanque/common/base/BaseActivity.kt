@@ -5,15 +5,11 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
-import com.julun.huanque.common.bean.beans.FateQuickMatchBean
-import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.interfaces.routerservice.AppCommonService
-import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.OrderDialogManager
-import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hideDialogs
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.permission.data.PermissionRequest

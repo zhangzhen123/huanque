@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <View
+        android:id="@+id/view_id"
         android:layout_width="@dimen/dimen_1"
         android:layout_height="@dimen/dimen_50"/>
 </LinearLayout>

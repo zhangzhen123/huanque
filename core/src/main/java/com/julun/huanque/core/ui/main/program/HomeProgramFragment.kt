@@ -395,11 +395,7 @@ class HomeProgramFragment : BaseFragment() {
             }
 
             private fun getFragment(position: Int): Fragment {
-                val fragment: Fragment = when (mTabTitles.getOrNull(position)?.typeCode) {
-
-                    HomeTabType.Follow -> MakeFriendsFragment.newInstance()
-                    else -> ProgramTabFragment.newInstance(mTabTitles[position])
-                }
+                val fragment: Fragment =  ProgramTabFragment.newInstance(mTabTitles[position])
                 mFragmentList.put(position, fragment)
                 return fragment
             }

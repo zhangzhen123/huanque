@@ -43,7 +43,7 @@
         android:layout_gravity="center_vertical|end"
         android:padding="10dp"
         android:scaleType="centerInside"
-        android:src="@mipmap/icon_conversation_setting"
+        android:src="@mipmap/icon_more_black_01"
         android:visibility="gone"
         tools:visibility="visible" />
 

@@ -39,17 +39,25 @@
         android:id="@+id/view_make_friends"
         android:layout_width="0px"
         android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="@+id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="@+id/view_bottom"
+        app:layout_constraintRight_toLeftOf="@+id/view_dynamic_square"
+        app:layout_constraintTop_toTopOf="@+id/view_bottom" />
+    <View
+        android:id="@+id/view_dynamic_square"
+        android:layout_width="0px"
+        android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
-        app:layout_constraintLeft_toLeftOf="@id/view_bottom"
+        app:layout_constraintLeft_toRightOf="@+id/view_make_friends"
         app:layout_constraintRight_toLeftOf="@+id/view_program"
-        app:layout_constraintTop_toTopOf="@id/view_bottom" />
+        app:layout_constraintTop_toTopOf="@+id/view_bottom" />
 
     <View
         android:id="@+id/view_program"
         android:layout_width="0px"
         android:layout_height="0px"
         app:layout_constraintBottom_toBottomOf="@id/view_bottom"
-        app:layout_constraintLeft_toRightOf="@id/view_make_friends"
+        app:layout_constraintLeft_toRightOf="@+id/view_dynamic_square"
         app:layout_constraintRight_toLeftOf="@+id/view_message"
         app:layout_constraintTop_toTopOf="@id/view_bottom" />
 
@@ -101,9 +109,42 @@
             android:textColor="@color/selector_home_tab_text_color"
             android:textSize="10sp" />
     </FrameLayout>
+    <FrameLayout
+        android:id="@+id/fl_square"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="top"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/view_dynamic_square"
+        app:layout_constraintLeft_toLeftOf="@+id/view_dynamic_square"
+        app:layout_constraintRight_toRightOf="@+id/view_dynamic_square">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_square"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="17dp"
+            app:lottie_fileName="json/live.json"
+            app:lottie_imageAssetsFolder="image/live"
+            app:lottie_scale="0.5" />
+        <TextView
+            android:id="@+id/item_square"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="4dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="鹊巢"
+            android:textColor="@color/selector_home_tab_text_color"
+            android:textSize="10sp" />
+
+    </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/fl_leyuan"
+        android:id="@+id/fl_program"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -114,7 +155,7 @@
         app:layout_constraintRight_toRightOf="@id/view_program">
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottie_leyuan"
+            android:id="@+id/lottie_program"
             android:layout_width="43dp"
             android:layout_height="43dp"
             android:layout_gravity="center_horizontal"
@@ -123,7 +164,7 @@
             app:lottie_imageAssetsFolder="image/live"
             app:lottie_scale="0.5" />
         <TextView
-            android:id="@+id/item_leyuan"
+            android:id="@+id/item_program"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"

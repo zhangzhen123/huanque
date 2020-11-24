@@ -46,6 +46,7 @@ enum class IntentParamKey {
     ,
     IS_JUMP_USER_CENTER //跳转到我的界面
     ,
+    POST_ID,//动态id
     CHAT_ROOM_ID //聊天室id
     ,
     WIDTH //宽度

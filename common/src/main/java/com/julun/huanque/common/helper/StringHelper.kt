@@ -706,6 +706,25 @@ object StringHelper {
     }
 
     /**
+     * 解析url后缀的字段为map 例：&width=600&height=432
+     */
+    fun parseUrlParams(paramString: String): Map<String, String> {
+        // 注意：按后台传过来的是dp处理
+
+//        val str = "animation/959133086d8b4265be3181e835c6439a.svga?playCount=1&width=600&height=432"
+        val map = hashMapOf<String, String>()
+        val split = paramString.split("?")
+        if (split.size > 1) {
+            val pairList: List<Pair<String, String>> = split[1].split('&')//此时应该是 key->value 对
+                .filter { StringHelper.isNotEmpty(it) }    //过滤掉空字符串
+                .map { it.split("=") }.filter { it.size == 2 }//直接拆分成数组，并且过滤掉有空值的属性
+                .map { it[0] to it[1] }
+            map.putAll(pairList)
+        }
+        return map
+
+    }
+    /**
      * 查询对应的广告配置
      * @param userId 用户id
      * @param str 字符串 -> 例：userId_时间戳#userId_Type#

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="热门圈子"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:drawableEnd="@mipmap/icon_forward_grey_01"
+            android:text="全部"
+            android:gravity="center"
+            android:textColor="@color/black_999"
+            android:textSize="@dimen/sp_14"
+            tools:visibility="visible" />
+
+    </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/groupList"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_142"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginBottom="@dimen/dimen_3"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <View
+            android:layout_width="@dimen/dimen_50"
+            android:layout_height="1dp"
+            android:background="@color/black_666" />
+
+        <TextView
+            android:id="@+id/hotTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:layout_marginEnd="@dimen/dimen_10"
+            android:gravity="center"
+            android:text="你可能还喜欢这些内容"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_14" />
+
+        <View
+            android:layout_width="@dimen/dimen_50"
+            android:layout_height="1dp"
+            android:background="@color/black_666" />
+
+    </LinearLayout>
+</LinearLayout>

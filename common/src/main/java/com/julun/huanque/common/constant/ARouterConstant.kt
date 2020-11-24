@@ -109,6 +109,8 @@ object ARouterConstant {
     //语音签名界面
     const val VOICE_SIGN_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/VoiceSignActivity"
 
+    //动态详情
+    const val DYNAMIC_DETAIL_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/DynamicDetailActivity"
     //邀友分享
     const val INVITE_SHARE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/InviteShareActivity"
 

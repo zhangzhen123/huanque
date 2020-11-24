@@ -26,6 +26,7 @@ import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.interfaces.PhotoOnItemClick
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
@@ -39,7 +40,7 @@ import org.jetbrains.anko.textColor
 import kotlin.math.ceil
 
 class MakeFriendsAdapter : BaseMultiItemQuickAdapter<HomeItemBean, BaseViewHolder>(null), LoadMoreModule,
-    PhotosAdapter.OnItemClick {
+    PhotoOnItemClick {
 
     var mOnItemAdapterListener: OnItemAdapterListener? = null
 

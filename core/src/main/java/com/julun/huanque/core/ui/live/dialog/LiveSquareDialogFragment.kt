@@ -3,7 +3,6 @@ package com.julun.huanque.core.ui.live.dialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,8 +22,10 @@ import com.julun.huanque.common.bean.beans.AuthorFollowBean
 import com.julun.huanque.common.bean.beans.ProgramLiveInfo
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
-import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.suger.addNoDuplicate
+import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
@@ -35,8 +36,6 @@ import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.viewmodel.LiveSquareViewModel
 import kotlinx.android.synthetic.main.fragment_live_square.*
 import kotlinx.android.synthetic.main.layout_header_live_square.view.*
-import java.math.RoundingMode
-import java.text.DecimalFormat
 
 class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
 

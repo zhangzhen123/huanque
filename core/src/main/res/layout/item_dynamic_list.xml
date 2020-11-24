@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/dimen_15"
+    android:layout_marginRight="@dimen/dimen_15">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/header_pic"
+        android:layout_width="@dimen/dimen_46"
+        android:layout_height="@dimen/dimen_46"
+        android:layout_marginTop="@dimen/dimen_22"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundAsCircle="true" />
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sd_auth_tag"
+        android:layout_width="@dimen/dimen_16"
+        android:layout_height="@dimen/dimen_16"
+        app:layout_constraintBottom_toBottomOf="@+id/header_pic"
+        app:layout_constraintEnd_toEndOf="@+id/header_pic" />
+
+    <TextView
+        android:id="@+id/tv_mkf_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toTopOf="@+id/tv_time"
+        app:layout_constraintStart_toEndOf="@+id/header_pic"
+        app:layout_constraintTop_toTopOf="@+id/header_pic"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="你的名字很长你的名字" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_16"
+        android:layout_marginStart="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_7"
+        android:gravity="center"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@+id/header_pic"
+        app:layout_constraintStart_toEndOf="@+id/header_pic"
+        app:layout_constraintTop_toBottomOf="@+id/tv_mkf_name"
+        tools:text="时间" />
+
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_16"
+        android:gravity="center"
+        android:maxLength="6"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_time"
+        app:layout_constraintStart_toEndOf="@+id/tv_time"
+        app:layout_constraintTop_toTopOf="@+id/tv_time"
+        tools:text=" · 地址" />
+
+
+    <TextView
+        android:id="@+id/tv_dyc_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="@dimen/dimen_4"
+        android:maxLines="4"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_pic"
+        tools:text="文字内容 文字内容文字内容文字内容文字内容文字内容文字内容文字内容文字内容文字内容
+文字内容文字内容文字内容文字内容文字内容文字内容文字内容文字内容文字内容
+文字内容文字内容文字内容文字内容文字内容文字内容文字内容文字内容文字内" />
+
+    <TextView
+        android:id="@+id/tv_expansion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="展开全文"
+        android:textColor="#FFCC00"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/tv_dyc_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_dyc_content" />
+
+    <TextView
+        android:id="@+id/btn_action"
+        android:layout_width="@dimen/dimen_50"
+        android:layout_height="@dimen/dimen_24"
+        android:layout_marginEnd="@dimen/dimen_5"
+        android:background="@drawable/bg_solid_btn1"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLength="15"
+        android:text="关注"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/header_pic"
+        app:layout_constraintEnd_toStartOf="@+id/iv_more_action"
+        app:layout_constraintTop_toTopOf="@+id/header_pic" />
+
+    <ImageView
+        android:id="@+id/iv_more_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_more_grey_01"
+        app:layout_constraintBottom_toBottomOf="@+id/header_pic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/header_pic" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_photos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_expansion"
+        tools:visibility="visible" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_photo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:background="@color/black_333"
+        android:visibility="gone"
+        app:actualImageScaleType="centerCrop"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_expansion"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="fitXY"
+        app:roundedCornerRadius="4dp"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="rv_photos,sdv_photo" />
+
+    <TextView
+        android:id="@+id/tv_circle_name"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_22"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:background="@drawable/bg_dynamic_circle_name"
+        android:drawableStart="@mipmap/icon_dynamic_circle_tag"
+        android:drawableEnd="@mipmap/icon_forward_black_02"
+        android:drawablePadding="@dimen/dimen_5"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingStart="@dimen/dimen_8"
+        android:paddingEnd="@dimen/dimen_8"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barrier"
+        tools:text="圈子名称"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_follow_num"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_40"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:drawableStart="@drawable/selector_zan"
+        android:drawablePadding="@dimen/dimen_5"
+        android:ellipsize="end"
+        android:gravity="start|center_vertical"
+        android:includeFontPadding="false"
+        android:minWidth="@dimen/dimen_90"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_circle_name"
+        tools:text="100" />
+
+    <TextView
+        android:id="@+id/tv_comment_num"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_40"
+        android:drawableStart="@mipmap/icon_comment_grey"
+        android:drawablePadding="@dimen/dimen_5"
+        android:ellipsize="end"
+        android:gravity="start|center_vertical"
+        android:includeFontPadding="false"
+        android:minWidth="@dimen/dimen_90"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_follow_num"
+        app:layout_constraintStart_toEndOf="@+id/tv_follow_num"
+        app:layout_constraintTop_toTopOf="@+id/tv_follow_num"
+        tools:text="100" />
+
+    <TextView
+        android:id="@+id/tv_share_num"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_40"
+        android:drawableStart="@mipmap/icon_share_grey"
+        android:drawablePadding="@dimen/dimen_5"
+        android:ellipsize="end"
+        android:gravity="start|center_vertical"
+        android:includeFontPadding="false"
+        android:minWidth="@dimen/dimen_90"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_comment_num"
+        app:layout_constraintStart_toEndOf="@+id/tv_comment_num"
+        app:layout_constraintTop_toTopOf="@+id/tv_comment_num"
+        tools:text="100" />
+
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/dimen_12"
+        android:background="#F3F5F9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_follow_num" />
+</androidx.constraintlayout.widget.ConstraintLayout>

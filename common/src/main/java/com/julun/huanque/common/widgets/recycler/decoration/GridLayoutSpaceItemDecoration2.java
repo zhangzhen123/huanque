@@ -72,7 +72,7 @@ public class GridLayoutSpaceItemDecoration2 extends RecyclerView.ItemDecoration 
 
                 outRect.left = spanIndex * space / spanCount; // column * (列间距 * (1f / 列数))
                 outRect.right = space - (spanIndex + 1) * space / spanCount; // 列间距 - (column + 1) * (列间距 * (1f /列数))
-                logger.info("childPosition=" + childPosition + " outRect.left" + outRect.left + " outRect.right" + outRect.right);
+//                logger.info("childPosition=" + childPosition + " outRect.left" + outRect.left + " outRect.right" + outRect.right);
             }
         } else {
             if (spanGroupIndex == 0) {//第一排的需要left
