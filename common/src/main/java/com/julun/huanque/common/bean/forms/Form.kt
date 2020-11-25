@@ -179,3 +179,5 @@ class UserIdForm(val userId: Long? = null) : Serializable
  * 评价Form
  */
 class EvaluateForm(var friendId: Long, var content: String) : Serializable
+
+class GroupIdForm(var groupId: Long = 0) : Serializable

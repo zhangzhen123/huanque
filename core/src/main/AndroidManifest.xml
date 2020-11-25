@@ -131,6 +131,9 @@
             android:name=".ui.dynamic.DynamicDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.homepage.CircleActivity"
+            android:screenOrientation="portrait" />
 
 
         <service android:name=".service.FloatingService" />

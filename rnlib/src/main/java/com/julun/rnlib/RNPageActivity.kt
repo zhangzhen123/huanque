@@ -30,10 +30,7 @@ import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.ui.video.VideoActivity
 import com.julun.huanque.common.ui.web.WebActivity
-import com.julun.huanque.common.utils.FileUtils
-import com.julun.huanque.common.utils.NetUtils
-import com.julun.huanque.common.utils.StatusBarUtil
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -750,6 +747,13 @@ class RNPageActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
                     } catch (e: java.lang.Exception) {
                         e.printStackTrace()
                     }
+                }
+                RnConstant.MineHomePage -> {
+                    //跳转我的主页
+                    val bundle = Bundle().apply {
+                        putLong(ParamConstant.UserId, SessionUtils.getUserId())
+                    }
+                    ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                 }
             }
 

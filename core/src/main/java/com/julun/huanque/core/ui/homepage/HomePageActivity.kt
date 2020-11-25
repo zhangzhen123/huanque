@@ -8,10 +8,11 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.TextUtils
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -33,9 +34,11 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
@@ -45,23 +48,16 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.core.R
+import com.julun.huanque.core.adapter.HomePageDynamicPicListAdapter
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
 import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
+import com.julun.huanque.core.widgets.SurfaceVideoViewOutlineProvider
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
-import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.act_home_page.*
-import kotlinx.android.synthetic.main.act_home_page.stv_medal
-import kotlinx.android.synthetic.main.act_home_page.tv_id
-import kotlinx.android.synthetic.main.act_home_page.tv_location
-import kotlinx.android.synthetic.main.act_home_page.tv_nickname
-import kotlinx.android.synthetic.main.act_home_page.tv_private_chat
-import kotlinx.android.synthetic.main.act_home_page.tv_sex
-import kotlinx.android.synthetic.main.act_home_page.tv_tag
-import kotlinx.android.synthetic.main.fragment_user_card.*
 import org.jetbrains.anko.*
 import kotlin.math.ceil
 
@@ -85,6 +81,9 @@ class HomePageActivity : BaseActivity() {
     private val mHomePageViewModel: HomePageViewModel by viewModels()
 
     private val mPicAdapter = HomePagePicListAdapter()
+
+    //动态图片Adapter
+    private val mHomePageDynamicPicListAdapter = HomePageDynamicPicListAdapter()
 
     //内容区域宽度
     private val innerWidth = ScreenUtils.getScreenWidth() - 2 * dp2px(15)
@@ -124,11 +123,13 @@ class HomePageActivity : BaseActivity() {
         view_shader.layoutParams = shaderParams
 
         initViewModel()
+        initRecyclerView()
         val params = view_top.layoutParams as? ConstraintLayout.LayoutParams
         params?.topMargin = statusHeight
         view_top.layoutParams = params
-        val userID = intent?.getLongExtra(ParamConstant.UserId, 0) ?: 0
-        mHomePageViewModel.targetUserId = userID
+        intent?.let { tent ->
+            resetView(tent)
+        }
 
         //半秒回调一次
         audioPlayerManager.setSleep(500)
@@ -210,17 +211,12 @@ class HomePageActivity : BaseActivity() {
 
 
         tv_time.setTFDinAltB()
-        initRecyclerView()
-        mHomePageViewModel.homeInfo()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            single_video_view_program?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
+            single_video_view_program?.clipToOutline = true;
+        }
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-        val userID = intent?.getLongExtra(ParamConstant.UserId, 0) ?: 0
-        mHomePageViewModel.targetUserId = userID
-        mHomePageViewModel.homeInfo()
-    }
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
         //关注
@@ -363,6 +359,12 @@ class HomePageActivity : BaseActivity() {
                 ToastUtils.show("正在语音通话，请稍后再试")
                 return@onClickNew
             }
+            val voiceBean = mHomePageViewModel.homeInfoBean.value?.voice ?: return@onClickNew
+            if (mHomePageViewModel.mineHomePage && voiceBean.voiceStatus.isEmpty()) {
+                //我的主页,语音为空，跳转编辑资料页面
+                RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+                return@onClickNew
+            }
             //播放音效
             if (audioPlayerManager.musicType == -1 || audioPlayerManager.mediaPlayer == null) {
                 //未设置音频地址
@@ -392,9 +394,9 @@ class HomePageActivity : BaseActivity() {
         sdv_vehicle.onClickNew {
             //显示座驾
             val carInfo = mHomePageViewModel.homeInfoBean.value?.carInfo ?: return@onClickNew
-            if (carInfo.dynamicUrl.isEmpty()) {
+            if (carInfo.dynamicUrl.isEmpty() && mHomePageViewModel.mineHomePage) {
                 //座驾动画为空，跳转我的座驾页面
-//                RNPageActivity.start(this, RnConstant.MY_CAR_PAGE)
+                RNPageActivity.start(this, RnConstant.MY_CAR_PAGE)
             } else {
                 //座驾动画不为空，显示动画弹窗
                 mCarDetailFragment.show(supportFragmentManager, "CarDetailFragment")
@@ -417,8 +419,6 @@ class HomePageActivity : BaseActivity() {
                 PlayerActivity.start(this, otherProgramId, PlayerFrom.UserHome)
                 return@onClickNew
             }
-
-
         }
 
         con_intim.onClickNew {
@@ -428,13 +428,22 @@ class HomePageActivity : BaseActivity() {
                 mHomePageViewModel.closeConfidantRank()
             } else {
                 //跳转私信
-                val bundle = Bundle()
-                val homeBean = mHomePageViewModel.homeInfoBean.value
-                bundle.putLong(ParamConstant.TARGET_USER_ID, mHomePageViewModel.targetUserId)
-                bundle.putString(ParamConstant.NICKNAME, homeBean?.nickname ?: "")
-                bundle.putBoolean(ParamConstant.FROM, false)
-                bundle.putString(ParamConstant.HeaderPic, homeBean?.headPic)
-                ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle).navigation()
+                if (mHomePageViewModel.mineHomePage) {
+                    //我的主页
+                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                        .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MESSAGE_FRAGMENT_INDEX)
+                        .navigation()
+                } else {
+                    //Ta人主页
+                    val bundle = Bundle()
+                    val homeBean = mHomePageViewModel.homeInfoBean.value
+                    bundle.putLong(ParamConstant.TARGET_USER_ID, mHomePageViewModel.targetUserId)
+                    bundle.putString(ParamConstant.NICKNAME, homeBean?.nickname ?: "")
+                    bundle.putBoolean(ParamConstant.FROM, false)
+                    bundle.putString(ParamConstant.HeaderPic, homeBean?.headPic)
+                    ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY).with(bundle).navigation()
+                }
+
             }
         }
         view_living.onClickNew {
@@ -452,7 +461,45 @@ class HomePageActivity : BaseActivity() {
                 startActivity(intent)
             }
         }
+        con_tag_mine.onClickNew {
+            RNPageActivity.start(this, RnConstant.EditMyTagPage)
+        }
+        view_dynamic.onClickNew {
+            val postNum = mHomePageViewModel.homeInfoBean.value?.post?.postNum ?: 0
+            if (postNum == 0L) {
+                //跳转添加动态页面
+            } else {
+                //跳转动态列表页面
+            }
+        }
+        rl_edit_info.onClickNew {
+            //跳转编辑资料页面
+            RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+        }
     }
+
+    /**
+     * 重置页面
+     */
+    private fun resetView(intent: Intent) {
+        val userID = intent.getLongExtra(ParamConstant.UserId, 0)
+        mHomePageViewModel.targetUserId = userID
+        //是否是我的主页
+        mHomePageViewModel.mineHomePage = userID == SessionUtils.getUserId()
+        mHomePageDynamicPicListAdapter.mineHomePage = mHomePageViewModel.mineHomePage
+        if (mHomePageViewModel.mineHomePage) {
+            iv_more_black.hide()
+            iv_more.hide()
+            tv_empty_evaluate.text = "当前还没有密友评价"
+        } else {
+            iv_more_black.show()
+            iv_more.show()
+            tv_empty_evaluate.text = "快去成为第一个评价Ta的人吧！"
+        }
+        mHomePageViewModel.homeInfo()
+
+    }
+
 
     /**
      * 初始化RecyclerView
@@ -465,6 +512,8 @@ class HomePageActivity : BaseActivity() {
             selectPic(position)
         }
 
+        recyclerView_dynamic_piclist.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        recyclerView_dynamic_piclist.adapter = mHomePageDynamicPicListAdapter
     }
 
     private fun initViewModel() {
@@ -643,21 +692,46 @@ class HomePageActivity : BaseActivity() {
             sdv_intim_header.hide()
         }
 //        sdv_header.loadImage(bean.headPic, 70f, 70f)
-        if (bean.voice.voiceStatus == VoiceBean.Pass) {
+        val voiceStatus = bean.voice.voiceStatus
+        if (voiceStatus == VoiceBean.Pass) {
             //审核通过 显示语音签名
             showPraise(bean.voice)
             tv_time.text = "${bean.voice.length}s"
             view_voice.show()
             tv_time.show()
             sdv_voice_state.show()
+            tv_time.leftPadding = dp2px(4f)
+            tv_time.rightPadding = 0
+            sdv_voice_state.backgroundResource = R.drawable.bg_enable
         } else {
-            //不显示语音签名
-            view_voice.hide()
-            tv_time.hide()
-            view_voice.hide()
-            view_voice_divider.hide()
-            tv_like.hide()
-            sdv_voice_state.hide()
+            if (mHomePageViewModel.mineHomePage) {
+                //我的主页
+                if (voiceStatus.isEmpty()) {
+                    //语音签名为空 显示待录制状态
+                    view_voice.show()
+                    tv_time.show()
+                    sdv_voice_state.show()
+                    ImageUtils.loadImageLocal(sdv_voice_state, R.mipmap.icon_home_page_record)
+                    sdv_voice_state.backgroundDrawable = null
+                    tv_time.text = "语音录制"
+                    view_voice_divider.hide()
+                    tv_like.hide()
+                    tv_time.leftPadding = dp2px(10f)
+                    tv_time.rightPadding = dp2px(15f)
+
+                }
+            } else {
+                //他人主页 不显示语音签名
+                view_voice.hide()
+                tv_time.hide()
+                view_voice.hide()
+                view_voice_divider.hide()
+                tv_like.hide()
+                sdv_voice_state.hide()
+                tv_time.leftPadding = dp2px(4f)
+                tv_time.rightPadding = 0
+            }
+
         }
 
         //显示座驾相关视图
@@ -778,7 +852,7 @@ class HomePageActivity : BaseActivity() {
                     weightStartIndex,
                     weightStartIndex + 1,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                );
+                )
 
                 tv_weight_height.text = weightStringSpannable
 
@@ -787,7 +861,6 @@ class HomePageActivity : BaseActivity() {
             } else {
                 tv_weight_height.text = "${bean.height}cm"
             }
-
         }
 
 
@@ -822,32 +895,74 @@ class HomePageActivity : BaseActivity() {
             }
         }
 
-        //直播相关
+        //动态相关
+        val postInfo = bean.post
+        con_live.hide()
+        recyclerView_dynamic_piclist.hide()
+        con_dynamic_add.hide()
+        view_live.hide()
+        //直播数据
         val playProgram = bean.playProgram
-        if (playProgram.programId != 0L) {
-            //主播
-            con_live.show()
-            view_live.show()
-            sdv_cover.loadImage(playProgram.programCover, 80f, 80f)
-            if (playProgram.living == BusiConstant.True) {
-                //开播中
-                tv_living.show()
-                sdv_living.show()
-                ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
-                tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
-                tv_living.text = "直播中"
+        tv_dynamic.text = "最新动态（${postInfo.postNum}）"
+        if ((mHomePageViewModel.mineHomePage && postInfo.postNum > 0L) || !mHomePageViewModel.mineHomePage) {
+            //本人发表过动态  或者   他人主页
+            val dynamicPicList = mutableListOf<Any>()
+            dynamicPicList.addAll(postInfo.lastPostPics)
+            if (dynamicPicList.isNotEmpty()) {
+                view_live.show()
+                recyclerView_dynamic_piclist.show()
+                //有图片，显示图片样式
+                if ((mHomePageViewModel.mineHomePage && playProgram.living == BusiConstant.True) || (!mHomePageViewModel.mineHomePage && playProgram.programId != 0L)) {
+                    //1，我的主页同时开播  2，他人主页同时有主播数据 显示直播样式
+                    dynamicPicList.add(playProgram)
+                }
+                dynamicPicList.add(HomePageDynamicPicListAdapter.Tag_More)
+                mHomePageDynamicPicListAdapter.setList(dynamicPicList)
             } else {
-                //未开播
-                tv_watch_count.text = "期待Ta的下一场直播"
-                tv_watch_count.textColor = GlobalUtils.getColor(R.color.black_999)
-                tv_floow_watch.hide()
-                sdv_living.hide()
-                tv_living.text = "暂未开播"
+                //没有图片样式
+                if (playProgram.programId != 0L) {
+                    //显示直播样式
+                    con_live.show()
+                    view_live.show()
+                    single_video_view_program.stop()
+                    single_video_view_program.showCover(StringHelper.getOssImgUrl(playProgram.programCover), false)
+                    if (playProgram.living == BusiConstant.True) {
+                        //开播中
+                        tv_living.show()
+                        sdv_living.show()
+                        ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
+                        tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
+                        tv_living.text = "直播中"
+                        val playInfo = playProgram.playInfo
+                        if (playInfo != null) {
+                            single_video_view_program.play(GlobalUtils.getPlayUrl(playInfo))
+                        }
+                    } else {
+                        //没有直播数据
+                        if (bean.programInfo != null) {
+                            //主播身份，并且没有开播，显示未开播样式
+                            con_live.show()
+                            view_live.show()
+                            tv_watch_count.text = "期待Ta的下一场直播"
+                            tv_watch_count.textColor = GlobalUtils.getColor(R.color.black_999)
+                            tv_floow_watch.hide()
+                            sdv_living.hide()
+                            tv_living.text = "暂未开播"
+                        } else {
+                            con_live.hide()
+                        }
+                    }
+                } else {
+                    con_live.hide()
+                }
             }
+
         } else {
-            con_live.hide()
-            view_live.hide()
+            //未发表过动态，显示引导发表样式
+            con_dynamic_add.show()
+            view_live.show()
         }
+
 
         //养鹊相关
         val playParadise = bean.playParadise
@@ -872,8 +987,17 @@ class HomePageActivity : BaseActivity() {
             ll_bird.addView(iv_arrow)
         } else {
             //无小鹊数据
-            ll_bird.hide()
-            view_bird.hide()
+            if (mHomePageViewModel.mineHomePage) {
+                //我的主页
+                ll_bird.show()
+                view_bird.show()
+                tv_fly_money.text = "快去养鹊致富吧"
+            } else {
+                //他人主页
+                ll_bird.hide()
+                view_bird.hide()
+            }
+
         }
 
         //亲密榜相关
@@ -912,36 +1036,58 @@ class HomePageActivity : BaseActivity() {
             view_intim.hide()
         }
 
-        if (playProgram.programId == 0L && playParadise.magpieList.isEmpty() && bean.sex == Sex.MALE) {
-            tv_play.hide()
-        } else {
-            tv_play.show()
-        }
-
+//        if (playProgram.programId == 0L && playParadise.magpieList.isEmpty() && bean.sex == Sex.MALE && !mHomePageViewModel.mineHomePage) {
+//            tv_play.hide()
+//        } else {
+//            tv_play.show()
+//        }
 
 
         showGuanfang(bean.iconList)
         showTags(bean.characterTag)
         showEvaluate(bean.appraiseList)
-        showMap(bean.cityList, bean.myCityList)
-
-        //显示底部视图
-        val liveStatus = bean.programInfo?.living ?: ""
-        if (liveStatus == BusiConstant.True) {
-            //开播状态
-            tv_living_bottom.show()
-            sdv_living_bottom.show()
-            ImageUtils.loadGifImageLocal(sdv_living_bottom, R.mipmap.living_home_page_bottom)
-            view_living.show()
-            view_private_chat.hide()
-            tv_private_chat.hide()
+        if (!mHomePageViewModel.mineHomePage) {
+            //他人主页  显示距离
+            showMap(bean.cityList, bean.myCityList)
         } else {
-            //未处于开播状态
-            tv_living_bottom.hide()
-            sdv_living_bottom.hide()
+            //我的主页  隐藏内容
+            tv_footprint.hide()
+            hsv.hide()
+        }
+
+        if (mHomePageViewModel.mineHomePage) {
+            rl_edit_info.show()
+            //隐藏底部
+            tv_voice.hide()
+            tv_sendgift.hide()
             view_living.hide()
-            view_private_chat.show()
-            tv_private_chat.show()
+            view_private_chat.hide()
+            view_attention_home_page.hide()
+            sdv_living_bottom.hide()
+            tv_living_bottom.hide()
+            tv_private_chat.hide()
+            tv_attention_home_page.hide()
+            tv_black_status.hide()
+        } else {
+            rl_edit_info.hide()
+            //显示底部视图
+            val liveStatus = bean.programInfo?.living ?: ""
+            if (liveStatus == BusiConstant.True) {
+                //开播状态
+                tv_living_bottom.show()
+                sdv_living_bottom.show()
+                ImageUtils.loadGifImageLocal(sdv_living_bottom, R.mipmap.living_home_page_bottom)
+                view_living.show()
+                view_private_chat.hide()
+                tv_private_chat.hide()
+            } else {
+                //未处于开播状态
+                tv_living_bottom.hide()
+                sdv_living_bottom.hide()
+                view_living.hide()
+                view_private_chat.show()
+                tv_private_chat.show()
+            }
         }
     }
 
@@ -1066,9 +1212,81 @@ class HomePageActivity : BaseActivity() {
                     list.add(image)
                 }
             }
-
+            stv_medal.movementMethod = LinkMovementMethod.getInstance();
             val textBean = ImageUtils.renderTextAndImage(list, "   ")
-            stv_medal.renderBaseText(textBean ?: return)
+            stv_medal.renderBaseText(textBean ?: return) { builder ->
+                badges.forEachIndexed { index, data ->
+                    val clickableSpan: ClickableSpan = object : ClickableSpan() {
+                        override fun onClick(textView: View) {
+                            doWithMedalAction(data)
+                        }
+
+                        override fun updateDrawState(ds: TextPaint) {
+                            super.updateDrawState(ds)
+                            ds.isUnderlineText = false
+                        }
+                    }
+
+                    builder.setSpan(
+                        clickableSpan, index + 3 * index,
+                        index + 3 * index + 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+
+
+            }
+
+        }
+    }
+
+    /**
+     * 处理勋章跳转
+     */
+    private fun doWithMedalAction(data: String) {
+        val params = GlobalUtils.uri2Map(data)
+        val touchType = params["touchType"] ?: ""
+        when (touchType) {
+            "RealHead" -> {
+                if (mHomePageViewModel.homeInfoBean.value?.headRealPeople == BusiConstant.True) {
+                    ToastUtils.show("已完成真人认证")
+                } else {
+                    MyAlertDialog(this).showAlertWithOKAndCancel(
+                        "通过人脸识别技术确认照片为真人将获得认证标识，提高交友机会哦~",
+                        MyAlertDialog.MyDialogCallback(onRight = {
+                            (ARouter.getInstance().build(ARouterConstant.REALNAME_SERVICE)
+                                .navigation() as? IRealNameService)?.checkRealHead { e ->
+                                if (e is ResponseError && e.busiCode == ErrorCodes.REAL_HEAD_ERROR) {
+                                    MyAlertDialog(this, false).showAlertWithOKAndCancel(
+                                        e.busiMessage.toString(),
+                                        title = "修改提示",
+                                        okText = "修改头像",
+                                        noText = "取消",
+                                        callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                            RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+                                        })
+                                    )
+
+                                }
+                            }
+                        }), "真人照片未认证", okText = "去认证", noText = "取消"
+                    )
+                }
+            }
+            "UserLevel" -> {
+                //财富等级页面
+                RNPageActivity.start(this, RnConstant.WEALTH_LEVEL_PAGE)
+            }
+            "RoyalLevel" -> {
+                //贵族等级页面
+                RNPageActivity.start(this, RnConstant.ROYAL_PAGE)
+            }
+            "AnchorLevel" -> {
+                //主播等级页面
+                RNPageActivity.start(this, RnConstant.ANCHOR_LEVEL_PAGE)
+            }
+            else -> {
+            }
         }
     }
 
@@ -1089,9 +1307,17 @@ class HomePageActivity : BaseActivity() {
         if (characterList.isEmpty()) {
             //没有标签数据
             linefeed_ll_tag.hide()
-            tv_tag.hide()
+
+            if (mHomePageViewModel.mineHomePage) {
+                con_tag_mine.show()
+                tv_tag.show()
+            } else {
+                con_tag_mine.hide()
+                tv_tag.hide()
+            }
         } else {
             linefeed_ll_tag.show()
+            con_tag_mine.hide()
             tv_tag.show()
             //行数
             var line = 1
@@ -1146,7 +1372,11 @@ class HomePageActivity : BaseActivity() {
             tv_empty_evaluate.hide()
         }
         //添加元素
-        appraiseList.add(AppraiseBean(0, "评价Ta +"))
+        if (!mHomePageViewModel.mineHomePage) {
+            //我的主页
+            appraiseList.add(AppraiseBean(0, "评价Ta +"))
+        }
+
         //行数
         var line = 1
         var currentWidth = 0
@@ -1516,10 +1746,23 @@ class HomePageActivity : BaseActivity() {
             }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        //重新获取数据
+        mHomePageViewModel.homeInfo()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         audioPlayerManager.destroy()
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (intent != null) {
+            resetView(intent)
+        }
+    }
 }
 

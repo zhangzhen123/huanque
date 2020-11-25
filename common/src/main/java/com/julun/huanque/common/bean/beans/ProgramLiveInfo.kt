@@ -638,8 +638,23 @@ data class HomePageInfo(
     //足迹使用的对象
     var homeCity: HomeCity = HomeCity(),
     //勋章数据
-    var iconList: MutableList<String> = mutableListOf()
+    var iconList: MutableList<String> = mutableListOf(),
+    //直播间内的动态数据
+    var post: PostInHomePage = PostInHomePage()
+) : Serializable
 
+/**
+ * 主页里面使用的动态数据
+ */
+data class PostInHomePage(
+    //动态数据
+    var postType: String = "",
+    //最近动态文本 postType = Text 显示
+    var lastPostContent: String = "",
+    //动态数量
+    var postNum: Long = 0,
+    //最近动态图片 postType = Pic 显示
+    var lastPostPics: MutableList<String> = mutableListOf()
 ) : Serializable
 
 /**
@@ -690,7 +705,9 @@ data class HomePageProgram(
     //封面
     var programCover: String = "",
     //直播间ID
-    var programId: Long = 0
+    var programId: Long = 0,
+    //播放数据
+    var playInfo: PlayInfo? = null
 ) : Serializable
 
 
@@ -809,4 +826,32 @@ data class SingleProgramInConversation(
     var heatValue: Long = 0,
     //标签
     var rightTopTag: String = ""
+) : Serializable
+
+/**
+ * 我的圈子对象
+ */
+data class MyGroupInfo(
+    //我的圈子
+    var myGroup: MutableList<CircleGroup> = mutableListOf(),
+    //推荐圈子
+    var recommendGroup: MutableList<CircleGroup> = mutableListOf()
+) : Serializable
+
+/**
+ * 圈子数据
+ */
+data class CircleGroup(
+    //圈子描述
+    var groupDesc: String = "",
+    //圈子ID
+    var groupId: Long = 0,
+    //圈子名称
+    var groupName: String = "",
+    //圈子图片
+    var groupPic: String = "",
+    //圈子热度值
+    var heatValue: Long = 0L,
+    //是否已经加入（本地字段）
+    var joined: String = ""
 ) : Serializable

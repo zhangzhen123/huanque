@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="77dp"
+    android:layout_height="74dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        android:layout_gravity="left"
+        app:actualImageScaleType="centerCrop"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:roundedCornerRadius="4dp" />
+
+    <View
+        android:id="@+id/view_more"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        android:layout_gravity="left"
+        android:background="@drawable/bg_home_page_dynamic_more"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查看更多"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/iv_more"
+        app:layout_constraintLeft_toLeftOf="@id/view_more"
+        app:layout_constraintRight_toRightOf="@id/view_more"
+        app:layout_constraintTop_toTopOf="@id/view_more"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <ImageView
+        android:id="@+id/iv_more"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="7dp"
+        android:src="@mipmap/icon_home_page_dynamic_more"
+        app:layout_constraintBottom_toBottomOf="@id/view_more"
+        app:layout_constraintLeft_toLeftOf="@id/view_more"
+        app:layout_constraintRight_toRightOf="@id/view_more"
+        app:layout_constraintTop_toBottomOf="@id/tv_more" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

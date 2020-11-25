@@ -317,41 +317,53 @@ interface SocialService {
      * 删除搭讪常用语
      */
     @POST("social/friend/chatwords/del")
-    suspend fun chatwordsDelete(@Body form: WordsIdForm) : Root<VoidResult>
+    suspend fun chatwordsDelete(@Body form: WordsIdForm): Root<VoidResult>
 
     /**
      * 快捷回复消息
      */
     @POST("social/friend/chat/sendMsg")
-    suspend fun chatWordsSendMsg(@Body form: WordsIdForm) : Root<VoidResult>
+    suspend fun chatWordsSendMsg(@Body form: WordsIdForm): Root<VoidResult>
 
     /**
      * 缘分速配统计信息
      */
     @POST("social/friend/chat/fateStat")
-    suspend fun fateStat(@Body form: EmptyForm = EmptyForm()) : Root<FateWeekInfo>
+    suspend fun fateStat(@Body form: EmptyForm = EmptyForm()): Root<FateWeekInfo>
 
     /**
      * 获取评价标签列表
      */
     @POST("social/friend/relation/evaluateTags")
-    suspend fun evaluateTags(@Body form : FriendIdForm) : Root<EvaluateTags>
+    suspend fun evaluateTags(@Body form: FriendIdForm): Root<EvaluateTags>
 
     /**
      * 密友评价
      */
     @POST("social/friend/relation/evaluate")
-    suspend fun relationEvaluate(@Body form : EvaluateForm) : Root<RootListData<AppraiseBean>>
+    suspend fun relationEvaluate(@Body form: EvaluateForm): Root<RootListData<AppraiseBean>>
 
     /**
      * 语音点赞接口
      */
     @POST("social/friend/relation/voicePraise")
-    suspend fun voicePraise(@Body form : FriendIdForm) : Root<VoidResult>
+    suspend fun voicePraise(@Body form: FriendIdForm): Root<VoidResult>
 
     /**
      * 获取亲密榜数据
      */
     @POST("user/acct/info/closeConfidantRank")
-    suspend fun closeConfidantRank(@Body form : UserIdForm) : Root<MutableList<CloseConfidantBean>>
+    suspend fun closeConfidantRank(@Body form: UserIdForm): Root<MutableList<CloseConfidantBean>>
+
+    /**
+     * 我的圈子
+     */
+    @POST("social/post/myGroup")
+    suspend fun myGroup(@Body form: EmptyForm = EmptyForm()): Root<MyGroupInfo>
+
+    /**
+     * 加入圈子
+     */
+    @POST("social/group/join")
+    suspend fun groupJoin(@Body form: GroupIdForm): Root<VoidResult>
 }
