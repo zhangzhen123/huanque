@@ -79,7 +79,7 @@ class RecommendFragment : BaseDialogFragment() {
         tv_nickname.text = info.nickname
         tv_hot.text = "${info.heatValue}"
         val border = ScreenUtils.getScreenWidth(requireContext()) - dp2px(120f)
-        sdv_cover.loadImageInPx(StringHelper.getOssImgUrl(info.coverPic), border, border)
+        single_video_view_program.loadImageInPx(StringHelper.getOssImgUrl(info.coverPic), border, border)
     }
 
 }

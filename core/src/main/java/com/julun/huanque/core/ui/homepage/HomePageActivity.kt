@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.text.*
 import android.text.method.LinkMovementMethod
@@ -53,6 +54,7 @@ import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
+import com.julun.huanque.core.widgets.SurfaceVideoViewOutlineProvider
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.act_home_page.*
@@ -121,6 +123,7 @@ class HomePageActivity : BaseActivity() {
         view_shader.layoutParams = shaderParams
 
         initViewModel()
+        initRecyclerView()
         val params = view_top.layoutParams as? ConstraintLayout.LayoutParams
         params?.topMargin = statusHeight
         view_top.layoutParams = params
@@ -208,7 +211,10 @@ class HomePageActivity : BaseActivity() {
 
 
         tv_time.setTFDinAltB()
-        initRecyclerView()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            single_video_view_program?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
+            single_video_view_program?.clipToOutline = true;
+        }
     }
 
     override fun initEvents(rootView: View) {
@@ -466,6 +472,10 @@ class HomePageActivity : BaseActivity() {
                 //跳转动态列表页面
             }
         }
+        rl_edit_info.onClickNew {
+            //跳转编辑资料页面
+            RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+        }
     }
 
     /**
@@ -476,6 +486,7 @@ class HomePageActivity : BaseActivity() {
         mHomePageViewModel.targetUserId = userID
         //是否是我的主页
         mHomePageViewModel.mineHomePage = userID == SessionUtils.getUserId()
+        mHomePageDynamicPicListAdapter.mineHomePage = mHomePageViewModel.mineHomePage
         if (mHomePageViewModel.mineHomePage) {
             iv_more_black.hide()
             iv_more.hide()
@@ -841,7 +852,7 @@ class HomePageActivity : BaseActivity() {
                     weightStartIndex,
                     weightStartIndex + 1,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                );
+                )
 
                 tv_weight_height.text = weightStringSpannable
 
@@ -850,7 +861,6 @@ class HomePageActivity : BaseActivity() {
             } else {
                 tv_weight_height.text = "${bean.height}cm"
             }
-
         }
 
 
@@ -893,17 +903,17 @@ class HomePageActivity : BaseActivity() {
         view_live.hide()
         //直播数据
         val playProgram = bean.playProgram
-        val postType = postInfo.postType
-        if (postType.isNotEmpty()) {
-            //发表过动态
+        tv_dynamic.text = "最新动态（${postInfo.postNum}）"
+        if ((mHomePageViewModel.mineHomePage && postInfo.postNum > 0L) || !mHomePageViewModel.mineHomePage) {
+            //本人发表过动态  或者   他人主页
             val dynamicPicList = mutableListOf<Any>()
             dynamicPicList.addAll(postInfo.lastPostPics)
             if (dynamicPicList.isNotEmpty()) {
                 view_live.show()
                 recyclerView_dynamic_piclist.show()
                 //有图片，显示图片样式
-                if (playProgram.living == BusiConstant.True) {
-                    //显示直播样式
+                if ((mHomePageViewModel.mineHomePage && playProgram.living == BusiConstant.True) || (!mHomePageViewModel.mineHomePage && playProgram.programId != 0L)) {
+                    //1，我的主页同时开播  2，他人主页同时有主播数据 显示直播样式
                     dynamicPicList.add(playProgram)
                 }
                 dynamicPicList.add(HomePageDynamicPicListAdapter.Tag_More)
@@ -914,7 +924,8 @@ class HomePageActivity : BaseActivity() {
                     //显示直播样式
                     con_live.show()
                     view_live.show()
-                    sdv_cover.loadImage(playProgram.programCover, 74f, 74f)
+                    single_video_view_program.stop()
+                    single_video_view_program.showCover(StringHelper.getOssImgUrl(playProgram.programCover), false)
                     if (playProgram.living == BusiConstant.True) {
                         //开播中
                         tv_living.show()
@@ -922,6 +933,10 @@ class HomePageActivity : BaseActivity() {
                         ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
                         tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
                         tv_living.text = "直播中"
+                        val playInfo = playProgram.playInfo
+                        if (playInfo != null) {
+                            single_video_view_program.play(GlobalUtils.getPlayUrl(playInfo))
+                        }
                     } else {
                         //没有直播数据
                         if (bean.programInfo != null) {
@@ -1031,12 +1046,18 @@ class HomePageActivity : BaseActivity() {
         showGuanfang(bean.iconList)
         showTags(bean.characterTag)
         showEvaluate(bean.appraiseList)
-        showMap(bean.cityList, bean.myCityList)
+        if (!mHomePageViewModel.mineHomePage) {
+            //他人主页  显示距离
+            showMap(bean.cityList, bean.myCityList)
+        } else {
+            //我的主页  隐藏内容
+            tv_footprint.hide()
+            hsv.hide()
+        }
 
         if (mHomePageViewModel.mineHomePage) {
+            rl_edit_info.show()
             //隐藏底部
-            view_shader.hide()
-            view_action.hide()
             tv_voice.hide()
             tv_sendgift.hide()
             view_living.hide()
@@ -1048,8 +1069,7 @@ class HomePageActivity : BaseActivity() {
             tv_attention_home_page.hide()
             tv_black_status.hide()
         } else {
-            view_shader.show()
-            view_action.show()
+            rl_edit_info.hide()
             //显示底部视图
             val liveStatus = bean.programInfo?.living ?: ""
             if (liveStatus == BusiConstant.True) {
@@ -1724,6 +1744,12 @@ class HomePageActivity : BaseActivity() {
                 }
 
             }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        //重新获取数据
+        mHomePageViewModel.homeInfo()
     }
 
     override fun onDestroy() {

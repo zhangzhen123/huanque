@@ -1,6 +1,8 @@
 package com.julun.huanque.core.adapter
 
+import android.os.Build
 import android.view.View
+import android.widget.TextView
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate
@@ -9,7 +11,9 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.CircleGroup
 import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.bean.beans.HomePageProgram
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.show
@@ -17,6 +21,7 @@ import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.widgets.SingleVideoView
+import com.julun.huanque.core.widgets.SurfaceVideoViewOutlineProvider
 import kotlinx.android.synthetic.main.act_home_page.*
 
 /**
@@ -25,6 +30,9 @@ import kotlinx.android.synthetic.main.act_home_page.*
  *@描述 主页动态使用的Adapter
  */
 class HomePageDynamicPicListAdapter : BaseDelegateMultiAdapter<Any, BaseViewHolder>() {
+    //是否是本人主页
+    var mineHomePage = false
+
     companion object {
         //显示更多的标记位
         const val Tag_More = "Tag_More"
@@ -61,13 +69,28 @@ class HomePageDynamicPicListAdapter : BaseDelegateMultiAdapter<Any, BaseViewHold
             if (item is HomePageProgram) {
                 //显示直播中画面
                 val singleVideoView = holder.getView<SingleVideoView>(R.id.single_video_view)
-                val sdv_living = holder.getView<SimpleDraweeView>(R.id.sdv_living)
-                singleVideoView.showCover(StringHelper.getOssImgUrl(item.programCover))
-                ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
-                val playInfo = item.playInfo
-                if (playInfo != null) {
-                    singleVideoView.play(GlobalUtils.getPlayUrl(playInfo))
+                singleVideoView.showCover(StringHelper.getOssImgUrl(item.programCover), false)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    singleVideoView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
+                    singleVideoView?.clipToOutline = true;
                 }
+                val sdv_living = holder.getView<SimpleDraweeView>(R.id.sdv_living)
+                val tv_living = holder.getView<TextView>(R.id.tv_living)
+                if (item.living == BusiConstant.True) {
+                    //开播中
+                    sdv_living.show()
+                    tv_living.text = "开播中"
+                    ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
+                    val playInfo = item.playInfo
+                    if (playInfo != null) {
+                        singleVideoView.play(GlobalUtils.getPlayUrl(playInfo))
+                    }
+                } else {
+                    sdv_living.hide()
+                    tv_living.text = "未开播"
+                }
+
+
             }
         } else if (itemType == Normal) {
             //其他样式
