@@ -362,6 +362,7 @@
                 app:layout_constraintTop_toTopOf="@id/tv_dynamic" />
 
             <ImageView
+                android:id="@+id/iv_arrow_dynamic"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_marginRight="15dp"
