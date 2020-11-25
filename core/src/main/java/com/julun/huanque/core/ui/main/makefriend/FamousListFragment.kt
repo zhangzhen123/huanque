@@ -118,7 +118,7 @@ class FamousListFragment : BaseFragment() {
             val weekBean = mViewModel.famousListData.value?.lastWeekTop ?: return@onClickNew
             if (weekBean.userId == SessionUtils.getUserId()) {
                 //跳转我的主页
-                RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
+                HomePageActivity.newInstance(requireActivity(),SessionUtils.getUserId())
             } else {
                 //跳转他人主页
                 HomePageActivity.newInstance(requireActivity(), weekBean.userId)

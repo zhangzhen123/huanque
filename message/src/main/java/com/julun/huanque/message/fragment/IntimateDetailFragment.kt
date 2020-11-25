@@ -18,6 +18,7 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.IntimateUtil
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.PrivilegeAdapter
 import com.julun.huanque.message.viewmodel.IntimateDetailViewModel
@@ -58,10 +59,14 @@ class IntimateDetailFragment : BaseDialogFragment() {
         }
 
         sdv_mine.onClickNew {
-            RNPageActivity.start(
-                requireActivity(),
-                RnConstant.MINE_HOMEPAGE
-            )
+//            RNPageActivity.start(
+//                requireActivity(),
+//                RnConstant.MINE_HOMEPAGE
+//            )
+            val bundle = Bundle().apply {
+                putLong(ParamConstant.UserId, SessionUtils.getUserId())
+            }
+            ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
         }
     }
 

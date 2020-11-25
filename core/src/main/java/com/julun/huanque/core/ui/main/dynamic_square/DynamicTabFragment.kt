@@ -22,7 +22,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.DynamicGroupListAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.ui.dynamic.DynamicDetailActivity
-import com.julun.huanque.core.ui.live.PlayerActivity
+import com.julun.huanque.core.ui.homepage.CircleActivity
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.*
 import kotlinx.android.synthetic.main.fragment_program_tab.mRefreshLayout
 import kotlinx.android.synthetic.main.fragment_program_tab.state_pager_view
@@ -96,6 +96,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         //头部相关
         headerLayout.header_layout.onClickNew {
             logger.info("打开全部圈子")
+            CircleActivity.newInstance(requireActivity(), CircleGroupTabType.Follow)
         }
         groupAdapter.onAdapterClickNew { _, _, position ->
             val item = groupAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
@@ -218,7 +219,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                             btnTex = "去推荐看看",
                             onClick = View.OnClickListener {
                                 logger.info("跳转到推荐")
-
+                                CircleActivity.newInstance(requireActivity(), CircleGroupTabType.Recom)
                             })
                     )
                 }

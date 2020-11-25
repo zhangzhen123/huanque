@@ -975,3 +975,25 @@ object BalanceNotEnoughType {
     //VOICE（语音卡的样式）
     const val Voice = "Voice"
 }
+
+/**
+ * 圈子默认选中tab
+ */
+object CircleGroupTabType {
+    //关注
+    const val Follow = "Follow"
+
+    //推荐
+    const val Recom = "Recom"
+}
+
+/**
+ * 圈子类型
+ */
+object CircleGroupType {
+    //全部圈子
+    const val Circle_All = "Circle_All"
+
+    //选择圈子
+    const val Circle_Choose = "Circle_Choose"
+}

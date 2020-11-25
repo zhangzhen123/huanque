@@ -178,15 +178,11 @@ class MakeFriendsFragment : BaseVMFragment<MakeFriendsViewModel>() {
                         logger.info("点击进入直播间--$position")
                         PlayerActivity.start(requireActivity(), programId = bean.userId, from = PlayerFrom.Home)
                     } else {
-                        if (bean.userId == SessionUtils.getUserId()) {
-                            RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
-                        } else {
 //                        RNPageActivity.start(
 //                            requireActivity(),
 //                            RnConstant.PERSONAL_HOMEPAGE,
 //                            Bundle().apply { putLong("userId", bean.userId) })
-                            HomePageActivity.newInstance(requireActivity(), bean.userId)
-                        }
+                        HomePageActivity.newInstance(requireActivity(), bean.userId)
                     }
 
                 }

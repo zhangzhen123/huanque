@@ -1503,7 +1503,7 @@ class HomePageActivity : BaseActivity() {
             val sdv_visitor_header = otherMapView.findViewById<SimpleDraweeView>(R.id.sdv_visitor_header)
             sdv_visitor_header?.loadImage("${StringHelper.getOssImgUrl(homeCityInfo.curryHeadPic)}${BusiConstant.OSS_160}", 25f, 25f)
             sdv_visitor_header?.onClickNew {
-                RNPageActivity.start(this, RnConstant.MINE_HOMEPAGE)
+                newInstance(this,SessionUtils.getUserId())
             }
 
             //设置位置和距离

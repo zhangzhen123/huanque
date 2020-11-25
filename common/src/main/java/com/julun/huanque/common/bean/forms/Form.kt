@@ -181,3 +181,8 @@ class UserIdForm(val userId: Long? = null) : Serializable
 class EvaluateForm(var friendId: Long, var content: String) : Serializable
 
 class GroupIdForm(var groupId: Long = 0) : Serializable
+
+/**
+ * 查询圈子的Form（关注还是推荐）
+ */
+class CircleGroupTypeForm(var offset: Int = 0, var postType: String = "") : Serializable

@@ -435,7 +435,7 @@ class DayListFragment(val type: String, val barHeight: Int) : BaseFragment() {
             //未开播状态，跳转主页
             if (userId == SessionUtils.getUserId()) {
                 //跳转我的主页
-                RNPageActivity.start(requireActivity(), RnConstant.MINE_HOMEPAGE)
+                HomePageActivity.newInstance(requireActivity(),SessionUtils.getUserId())
             } else {
                 //跳转他人主页
                 HomePageActivity.newInstance(requireActivity(), userId)

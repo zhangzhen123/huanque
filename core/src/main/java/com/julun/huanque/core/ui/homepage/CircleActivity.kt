@@ -1,25 +1,31 @@
 package com.julun.huanque.core.ui.homepage
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.constant.CircleGroupTabType
+import com.julun.huanque.common.constant.CircleGroupType
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
-import com.julun.huanque.core.ui.main.makefriend.MakeFriendsFragment
+import com.julun.huanque.core.viewmodel.CircleViewModel
 import kotlinx.android.synthetic.main.act_circle.*
 import kotlinx.android.synthetic.main.act_circle.magic_indicator
 import kotlinx.android.synthetic.main.act_circle.view_pager
-import kotlinx.android.synthetic.main.fragment_main.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
@@ -33,6 +39,19 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.Li
  *@描述 全部圈子页面
  */
 class CircleActivity : BaseActivity() {
+    companion object {
+        fun newInstance(act: Activity, defaultTab: String, type: String = CircleGroupType.Circle_All) {
+            val intent = Intent(act, CircleActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                intent.putExtra(ParamConstant.DefaultTab, defaultTab)
+                intent.putExtra(ParamConstant.TYPE, type)
+                act.startActivity(intent)
+            }
+        }
+    }
+
+    private val mCircleViewModel: CircleViewModel by viewModels()
+
     private var mCommonNavigator: CommonNavigator? = null
 
     //标题列表
@@ -43,9 +62,23 @@ class CircleActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.act_circle
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        header_page.textTitle.text = "全部圈子"
+        val type = intent?.getStringExtra(ParamConstant.TYPE)
+        mCircleViewModel.mType = type ?: ""
+        if (type == CircleGroupType.Circle_Choose) {
+            //全部圈子
+            header_page.textTitle.text = "全部圈子"
+        } else {
+            //选择圈子
+            header_page.textTitle.text = "发布到"
+        }
+
         initMagicIndicator()
         initViewPager()
+        val defaultTab = intent?.getStringExtra(ParamConstant.DefaultTab) ?: ""
+        if (defaultTab == CircleGroupTabType.Recom) {
+            //选中推荐模块
+            view_pager.currentItem = 1
+        }
     }
 
     override fun initEvents(rootView: View) {

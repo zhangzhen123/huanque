@@ -292,14 +292,9 @@ class FlowerFamousMonthAdapter : BaseMultiItemQuickAdapter<FamousListMultiBean, 
      */
     private fun jumpByUserId(userId: Long) {
         (context as? ComponentActivity)?.let { act ->
-            if (userId == SessionUtils.getUserId()) {
-                //跳转我的主页
-                RNPageActivity.start(act, RnConstant.MINE_HOMEPAGE)
-            } else {
-                //跳转他人主页
-                (context as? BaseActivity)?.let { act ->
-                    HomePageActivity.newInstance(act, userId)
-                }
+            //跳转他人主页
+            (context as? BaseActivity)?.let { act ->
+                HomePageActivity.newInstance(act, userId)
             }
         }
     }

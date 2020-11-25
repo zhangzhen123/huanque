@@ -36,6 +36,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
 import com.julun.huanque.core.viewmodel.CardManagerViewModel
@@ -251,10 +252,7 @@ class UserCardFragment : BaseDialogFragment() {
             val userId = mUserCardViewModel.mUserId
             if (userId == SessionUtils.getUserId()) {
                 //跳转我的主页
-                RNPageActivity.start(
-                    requireActivity(),
-                    RnConstant.MINE_HOMEPAGE
-                )
+                HomePageActivity.newInstance(requireActivity(),SessionUtils.getUserId())
             } else {
                 //跳转他人主页
                 if (mUserCardViewModel.userInfoData.value?.canInteractive != true) {

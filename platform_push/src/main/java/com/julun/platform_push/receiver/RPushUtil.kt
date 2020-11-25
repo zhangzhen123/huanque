@@ -17,6 +17,7 @@ import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.JsonUtil
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
@@ -102,7 +103,10 @@ object RPushUtil {
                     }
                 }
                 PushDataActionType.MineHomePage -> {
-                    startOpenRnPage(context, RnConstant.MINE_HOMEPAGE)
+                    val bundle = Bundle().apply {
+                        putLong(ParamConstant.UserId, SessionUtils.getUserId())
+                    }
+                    ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                 }
                 PushDataActionType.AnchorCertPage -> {
                     startOpenRnPage(context, RnConstant.ANCHOR_CERT_PAGE)

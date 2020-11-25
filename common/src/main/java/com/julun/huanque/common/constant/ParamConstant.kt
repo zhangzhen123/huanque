@@ -163,4 +163,7 @@ object ParamConstant {
 
     //价格
     const val Fee = "Fee"
+
+    //默认选中tab
+    const val DefaultTab = "DefaultTab"
 }
