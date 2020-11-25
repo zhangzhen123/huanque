@@ -32,7 +32,7 @@ class DynamicTabViewModel : BaseViewModel() {
 
 
     private var offsetHot = 0
-    fun requestProgramList(queryType: QueryType, postType: String?) {
+    fun requestPostList(queryType: QueryType, postType: String?) {
 
         viewModelScope.launch {
             if (queryType == QueryType.REFRESH) {

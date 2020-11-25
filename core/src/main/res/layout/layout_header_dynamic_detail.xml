@@ -107,7 +107,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/dimen_5"
-            android:background="@color/black_333"
             android:visibility="gone"
             app:actualImageScaleType="centerCrop"
             app:layout_constraintHorizontal_bias="0"

@@ -3,7 +3,6 @@ package com.julun.huanque.core.ui.main.dynamic_square
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,26 +12,21 @@ import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.IntentParamKey
-import com.julun.huanque.common.constant.MainPageIndexConst
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.removeDuplicate
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.DynamicGroupListAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
-import com.julun.huanque.core.manager.VideoPlayerManager
 import com.julun.huanque.core.ui.dynamic.DynamicDetailActivity
-import com.julun.huanque.core.ui.main.follow.FollowViewModel
+import com.julun.huanque.core.ui.live.PlayerActivity
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.*
-import kotlinx.android.synthetic.main.fragment_program_tab.*
 import kotlinx.android.synthetic.main.fragment_program_tab.mRefreshLayout
 import kotlinx.android.synthetic.main.fragment_program_tab.state_pager_view
 import kotlinx.android.synthetic.main.layout_header_dynamic.view.*
-import kotlin.random.Random
 
 /**
  *
@@ -55,8 +49,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         }
     }
 
-    private val followViewModel: FollowViewModel by activityViewModels()
-
     private var currentTab: SquareTab? = null
 
     private val headerLayout: View by lazy {
@@ -65,6 +57,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     private val groupAdapter: DynamicGroupListAdapter by lazy {
         DynamicGroupListAdapter()
     }
+    private val dynamicAdapter = DynamicListAdapter()
 
     override fun getLayoutId(): Int = R.layout.fragment_dynamic_tab
 
@@ -78,25 +71,21 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             logger.info(" postList.stopScroll()")
             postList.stopScroll()
             logger.info("authorAdapter loadMoreModule 加载更多")
-            mViewModel.requestProgramList(QueryType.LOAD_MORE, currentTab?.typeCode)
+            mViewModel.requestPostList(QueryType.LOAD_MORE, currentTab?.typeCode)
         }
 
         headerLayout.groupList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         headerLayout.groupList.adapter = groupAdapter
-
+        headerLayout.hide()
         dynamicAdapter.addHeaderView(headerLayout)
         dynamicAdapter.headerWithEmptyEnable = true
         postList.adapter = dynamicAdapter
 
         postList.isNestedScrollingEnabled = false
 
-        dynamicAdapter.setOnItemClickListener { _, _, position ->
-            val item = dynamicAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
-            DynamicDetailActivity.start(requireActivity(), item.postId)
-        }
+
         mRefreshLayout.setOnRefreshListener {
-            mViewModel.requestProgramList(QueryType.REFRESH, currentTab?.typeCode)
-            followViewModel.requestProgramList(QueryType.REFRESH, isNullOffset = true)
+            mViewModel.requestPostList(QueryType.REFRESH, currentTab?.typeCode)
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
 
@@ -104,6 +93,65 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
+        //头部相关
+        headerLayout.header_layout.onClickNew {
+            logger.info("打开全部圈子")
+        }
+        groupAdapter.onAdapterClickNew { _, _, position ->
+            val item = groupAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
+            //todo
+            logger.info("打开头部圈子：${item.groupName}")
+        }
+
+
+        dynamicAdapter.onAdapterClickNew { _, _, position ->
+            val item = dynamicAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
+            DynamicDetailActivity.start(requireActivity(), item.postId)
+        }
+        dynamicAdapter.mOnItemAdapterListener = object : DynamicListAdapter.OnItemAdapterListener {
+            override fun onPhotoClick(index: Int, position: Int, list: MutableList<PhotoBean>) {
+                logger.info("index=$index position=$position ")
+                val item = dynamicAdapter.getItemOrNull(index)
+                ImageActivity.start(
+                    requireActivity(),
+                    position,
+                    list.map { StringHelper.getOssImgUrl(it.url) },
+                    item?.userId
+                )
+
+            }
+
+        }
+        dynamicAdapter.onAdapterChildClickNew { _, view, position ->
+            when (view.id) {
+                R.id.btn_action -> {
+                    logger.info("关注")
+                }
+                R.id.sdv_photo -> {
+                    logger.info("大图")
+                    val item = dynamicAdapter.getItemOrNull(position) ?: return@onAdapterChildClickNew
+                    ImageActivity.start(
+                        requireActivity(),
+                        0,
+                        item.pics.map { StringHelper.getOssImgUrl(it) },
+                        item.userId
+                    )
+
+                }
+                R.id.tv_follow_num -> {
+                    logger.info("点赞")
+                }
+                R.id.tv_comment_num -> {
+                    logger.info("评论")
+                }
+                R.id.tv_share_num -> {
+                    logger.info("分享")
+                }
+                R.id.iv_more_action -> {
+                    logger.info("更多操作")
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -124,7 +172,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     }
 
     override fun lazyLoadData() {
-        mViewModel.requestProgramList(QueryType.INIT, currentTab?.typeCode)
+        mViewModel.requestPostList(QueryType.INIT, currentTab?.typeCode)
     }
 
     private fun initViewModel() {
@@ -146,19 +194,43 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         }
     }
 
-    //    private val totalList: MutableList<DynamicItemBean> = mutableListOf()
     private fun renderDynamicData(listData: HomeDynamicListInfo) {
 
         if (listData.isPull) {
             val programList = listData.postList.distinct()
-//            totalList.clear()
-//            totalList.addAll(programList)
             dynamicAdapter.setList(programList)
-            if (listData.groupList.isNotEmpty()) {
-                headerLayout.groupList.show()
+
+
+            if (currentTab?.typeCode == SquareTabType.Follow) {
+                headerLayout.show()
+                headerLayout.tvTitle.text = "我的圈子"
                 groupAdapter.setList(listData.groupList)
-            } else {
-                headerLayout.groupList.hide()
+                if (listData.groupList.isNotEmpty()) {
+                    headerLayout.header_layout.show()
+                    headerLayout.bottom_layout.hide()
+                } else {
+                    headerLayout.header_layout.hide()
+                    headerLayout.bottom_layout.show()
+                    groupAdapter.setEmptyView(
+                        MixedHelper.getEmptyView(requireContext(),
+                            msg = "还没加入圈子，快去加入有趣的圈子吧",
+                            isImageHide = true,
+                            btnTex = "去推荐看看",
+                            onClick = View.OnClickListener {
+                                logger.info("跳转到推荐")
+
+                            })
+                    )
+                }
+
+            } else if (currentTab?.typeCode == SquareTabType.RECOMMEND) {
+                if (listData.groupList.isNotEmpty()) {
+                    headerLayout.tvTitle.text = "热门圈子"
+                    headerLayout.show()
+                    groupAdapter.setList(listData.groupList)
+                } else {
+                    headerLayout.hide()
+                }
             }
 
         } else {
@@ -179,7 +251,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             dynamicAdapter.loadMoreModule.loadMoreEnd()
 
         }
-        if (dynamicAdapter.data.isEmpty()) {
+        if (currentTab?.typeCode == SquareTabType.RECOMMEND && dynamicAdapter.data.isEmpty() && listData.groupList.isEmpty()) {
             mRefreshLayout.hide()
             state_pager_view.showEmpty(emptyTxt = "没有动态，洗洗睡吧", btnTex = "前往",
                 onClick = View.OnClickListener {
@@ -187,7 +259,21 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                     ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
                         .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
                 })
+        } else if (dynamicAdapter.data.isEmpty()) {
+            state_pager_view.showSuccess()
+            mRefreshLayout.show()
+            dynamicAdapter.setEmptyView(
+                MixedHelper.getEmptyView(requireContext(),
+                    msg = "没有动态数据",
+                    isImageHide = true,
+                    btnTex = "去推荐看看",
+                    onClick = View.OnClickListener {
+                        logger.info("跳转到推荐")
+
+                    })
+            )
         } else {
+            mRefreshLayout.show()
             state_pager_view.showSuccess()
         }
     }
@@ -196,7 +282,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     fun scrollToTopAndRefresh() {
         postList.scrollToPosition(0)
         postList.postDelayed({
-            mViewModel.requestProgramList(QueryType.REFRESH, currentTab?.typeCode)
+            mViewModel.requestPostList(QueryType.REFRESH, currentTab?.typeCode)
         }, 100)
     }
 
@@ -204,7 +290,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         when (state.state) {
             NetStateType.SUCCESS -> {//showSuccess()
 //                state_pager_view.showSuccess()
-                mRefreshLayout.show()
+//                mRefreshLayout.show()
             }
             NetStateType.LOADING -> {//showLoading()
                 mRefreshLayout.hide()
@@ -212,7 +298,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             }
             NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
                 state_pager_view.showError(showBtn = true, btnClick = View.OnClickListener {
-                    mViewModel.requestProgramList(QueryType.INIT, currentTab?.typeCode)
+                    mViewModel.requestPostList(QueryType.INIT, currentTab?.typeCode)
                 })
             }
 
@@ -220,6 +306,5 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
     }
 
-    private val dynamicAdapter = DynamicListAdapter()
 
 }

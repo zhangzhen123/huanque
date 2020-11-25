@@ -7,7 +7,7 @@ data class DynamicItemBean(
     var anonymous: Boolean = false,// 是否匿名
     var auditStatus: String = "",// 审核状态 Wait 等待审核，Reject 被拒绝，Pass 审核通过
     var city: String = "",
-    var commentNum: Int = 0,
+    var commentNum: Long = 0,
     var content: String = "",
     var hasPraise: Boolean = false, // 当前访问者是否点赞
     var group: DynamicGroup? = null,
@@ -18,9 +18,9 @@ data class DynamicItemBean(
     var nickname: String = "",
     var postId: Long = 0L,
     var postTime: String = "",
-    var praiseNum: Int = 0,
+    var praiseNum: Long = 0,
     var sex: String = "",
-    var shareNum: Int = 0,
+    var shareNum: Long = 0,
     var userId: Long = 0L,
     var userType: String = "",
     var pics: MutableList<String> = mutableListOf(),

@@ -83,7 +83,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             finish()
         }
         initViewModel()
-
+        headerLayout.hide()
         commentAdapter.addHeaderView(headerLayout)
         commentAdapter.headerWithEmptyEnable = true
 
@@ -171,14 +171,16 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 
     private var isCommentMode: Boolean = false
     private fun renderData(info: DynamicDetailInfo) {
+
         if (info.post?.userId == SessionUtils.getUserId()) {
             headerPageView.textTitle.text = "我的动态"
         } else {
             headerPageView.textTitle.text = "Ta的动态"
         }
-        //todo 头部详情
+
         val posterInfo = info.post
         if (posterInfo != null) {
+            headerLayout.show()
             ImageHelper.setDefaultHeaderPic(headerLayout.header_pic, posterInfo.sex)
             headerLayout.header_pic.loadImage(posterInfo.headPic + BusiConstant.OSS_160, 46f, 46f)
             val name = if (posterInfo.nickname.length > 10) {
@@ -202,11 +204,11 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 headerLayout.tv_location.show()
             }
             headerLayout.tv_dyc_content.text = posterInfo.content
-            if(posterInfo.group==null){
+            if (posterInfo.group == null) {
                 headerLayout.tv_circle_name.hide()
-            }else{
+            } else {
                 headerLayout.tv_circle_name.show()
-                headerLayout.tv_circle_name.text=posterInfo.group!!.groupName
+                headerLayout.tv_circle_name.text = posterInfo.group!!.groupName
             }
 
             val rl = posterInfo.pics.map { PhotoBean(url = it) }.toMutableList()
@@ -231,11 +233,23 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                             if (h > DynamicListAdapter.SINGLE_PHOTO_MAX_HEIGHT) {
                                 w = w * DynamicListAdapter.SINGLE_PHOTO_MAX_HEIGHT / h
                                 h = DynamicListAdapter.SINGLE_PHOTO_MAX_HEIGHT
+                            } else if (h < DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE) {
+                                //最小不能小于最小网格
+//                            w = w * SINGLE_PHOTO_MINI_SIZE / h
+//                            h = SINGLE_PHOTO_MINI_SIZE
+                                w = DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE
+                                h = DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE
                             }
                         } else {
                             if (w > DynamicListAdapter.SINGLE_PHOTO_MAX_WIDTH) {
                                 h = DynamicListAdapter.SINGLE_PHOTO_MAX_WIDTH * h / w
                                 w = DynamicListAdapter.SINGLE_PHOTO_MAX_WIDTH
+                            } else if (h < DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE) {
+                                //最小不能小于最小网格
+//                            w = w * SINGLE_PHOTO_MINI_SIZE / h
+//                            h = SINGLE_PHOTO_MINI_SIZE
+                                w = DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE
+                                h = DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE
                             }
                         }
                         rvLp.height = h
