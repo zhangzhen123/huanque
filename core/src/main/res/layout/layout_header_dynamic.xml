@@ -51,6 +51,10 @@
         tools:visibility="visible"
         android:gravity="center">
 
+        <View
+            android:layout_width="@dimen/dimen_20"
+            android:layout_height="1dp"
+            android:background="@color/black_999" />
 
         <TextView
             android:id="@+id/hotTitle"
@@ -59,10 +63,14 @@
             android:layout_marginStart="@dimen/dimen_10"
             android:layout_marginEnd="@dimen/dimen_10"
             android:gravity="center"
-            android:text="—— 你还没有关注，可能喜欢这些内容 ——"
-            android:textColor="@color/black_333"
+            android:text="你还没有关注，可能喜欢这些内容"
+            android:textColor="@color/black_999"
             android:textSize="@dimen/sp_14" />
 
+        <View
+            android:layout_width="@dimen/dimen_20"
+            android:layout_height="1dp"
+            android:background="@color/black_999" />
 
     </LinearLayout>
 </LinearLayout>

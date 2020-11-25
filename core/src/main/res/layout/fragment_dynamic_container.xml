@@ -21,5 +21,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/magic_indicator" />
 
-
+    <ImageView
+        android:id="@+id/publish_dynamic"
+        android:layout_width="@dimen/dimen_45"
+        android:layout_height="@dimen/dimen_45"
+        android:layout_marginEnd="@dimen/dimen_40"
+        android:layout_marginBottom="@dimen/dimen_40"
+        android:src="@mipmap/icon_publish_dynamic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/view_pager" />
 </androidx.constraintlayout.widget.ConstraintLayout>

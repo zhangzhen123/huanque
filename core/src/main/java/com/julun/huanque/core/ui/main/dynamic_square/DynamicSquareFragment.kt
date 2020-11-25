@@ -15,11 +15,10 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.SquareTab
-import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
-import com.julun.rnlib.RnManager
 import com.luck.picture.lib.tools.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_dynamic_container.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
@@ -65,10 +64,10 @@ class DynamicSquareFragment : BaseFragment() {
         initViewModel()
         initViewPager()
         initMagicIndicator()
-        dynamic_container.post {
-            RnManager.createReactInstanceManager(CommonInit.getInstance().getApp())
-        }
 
+        publish_dynamic.onClickNew {
+            //todo 发布动态
+        }
 
     }
 
