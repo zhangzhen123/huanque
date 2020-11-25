@@ -901,11 +901,22 @@ class HomePageActivity : BaseActivity() {
         recyclerView_dynamic_piclist.hide()
         con_dynamic_add.hide()
         view_live.hide()
+//        tv_dynamic.show()
+//        iv_arrow_dynamic.show()
+//        view_live.show()
         //直播数据
         val playProgram = bean.playProgram
         tv_dynamic.text = "最新动态（${postInfo.postNum}）"
         if ((mHomePageViewModel.mineHomePage && postInfo.postNum > 0L) || !mHomePageViewModel.mineHomePage) {
             //本人发表过动态  或者   他人主页
+//            if (!mHomePageViewModel.mineHomePage && postInfo.postNum == 0L && playProgram.programId == 0L) {
+//                //他人主页 没有动态 没有直播信息
+//                //什么都不显示
+//                tv_dynamic.hide()
+//                iv_arrow_dynamic.hide()
+//                view_live.hide()
+//                return
+//            }
             val dynamicPicList = mutableListOf<Any>()
             dynamicPicList.addAll(postInfo.lastPostPics)
             if (dynamicPicList.isNotEmpty()) {
