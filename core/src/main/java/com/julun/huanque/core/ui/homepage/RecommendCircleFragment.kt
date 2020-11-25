@@ -77,6 +77,14 @@ class RecommendCircleFragment : BaseFragment() {
                 }
             }
         }
+        mAttentionCircleAdapter.setOnItemClickListener { adapter, view, position ->
+            val tempData = adapter.getItemOrNull(position) as? CircleGroup ?: return@setOnItemClickListener
+            if (mCircleViewModel.mType == CircleGroupType.Circle_All) {
+                //全部圈子  打开详情
+            } else if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
+                //选择圈子，返回选中的圈子数据
+            }
+        }
         mAttentionCircleAdapter.loadMoreModule.setOnLoadMoreListener {
             mAttentionCircleViewModel.getCircleGroupInfo()
         }
