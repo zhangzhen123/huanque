@@ -47,6 +47,7 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.core.R
+import com.julun.huanque.core.adapter.HomePageDynamicPicListAdapter
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
 import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
@@ -54,16 +55,7 @@ import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
-import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.act_home_page.*
-import kotlinx.android.synthetic.main.act_home_page.stv_medal
-import kotlinx.android.synthetic.main.act_home_page.tv_id
-import kotlinx.android.synthetic.main.act_home_page.tv_location
-import kotlinx.android.synthetic.main.act_home_page.tv_nickname
-import kotlinx.android.synthetic.main.act_home_page.tv_private_chat
-import kotlinx.android.synthetic.main.act_home_page.tv_sex
-import kotlinx.android.synthetic.main.act_home_page.tv_tag
-import kotlinx.android.synthetic.main.fragment_user_card.*
 import org.jetbrains.anko.*
 import kotlin.math.ceil
 
@@ -87,6 +79,9 @@ class HomePageActivity : BaseActivity() {
     private val mHomePageViewModel: HomePageViewModel by viewModels()
 
     private val mPicAdapter = HomePagePicListAdapter()
+
+    //动态图片Adapter
+    private val mHomePageDynamicPicListAdapter = HomePageDynamicPicListAdapter()
 
     //内容区域宽度
     private val innerWidth = ScreenUtils.getScreenWidth() - 2 * dp2px(15)
@@ -463,6 +458,14 @@ class HomePageActivity : BaseActivity() {
         con_tag_mine.onClickNew {
             RNPageActivity.start(this, RnConstant.EditMyTagPage)
         }
+        view_dynamic.onClickNew {
+            val postNum = mHomePageViewModel.homeInfoBean.value?.post?.postNum ?: 0
+            if (postNum == 0L) {
+                //跳转添加动态页面
+            } else {
+                //跳转动态列表页面
+            }
+        }
     }
 
     /**
@@ -476,12 +479,10 @@ class HomePageActivity : BaseActivity() {
         if (mHomePageViewModel.mineHomePage) {
             iv_more_black.hide()
             iv_more.hide()
-            tv_play.text = "我正在玩"
             tv_empty_evaluate.text = "当前还没有密友评价"
         } else {
             iv_more_black.show()
             iv_more.show()
-            tv_play.text = "Ta正在玩"
             tv_empty_evaluate.text = "快去成为第一个评价Ta的人吧！"
         }
         mHomePageViewModel.homeInfo()
@@ -500,6 +501,8 @@ class HomePageActivity : BaseActivity() {
             selectPic(position)
         }
 
+        recyclerView_dynamic_piclist.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        recyclerView_dynamic_piclist.adapter = mHomePageDynamicPicListAdapter
     }
 
     private fun initViewModel() {
@@ -882,32 +885,69 @@ class HomePageActivity : BaseActivity() {
             }
         }
 
-        //直播相关
+        //动态相关
+        val postInfo = bean.post
+        con_live.hide()
+        recyclerView_dynamic_piclist.hide()
+        con_dynamic_add.hide()
+        view_live.hide()
+        //直播数据
         val playProgram = bean.playProgram
-        if (playProgram.programId != 0L) {
-            //主播
-            con_live.show()
-            view_live.show()
-            sdv_cover.loadImage(playProgram.programCover, 80f, 80f)
-            if (playProgram.living == BusiConstant.True) {
-                //开播中
-                tv_living.show()
-                sdv_living.show()
-                ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
-                tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
-                tv_living.text = "直播中"
+        val postType = postInfo.postType
+        if (postType.isNotEmpty()) {
+            //发表过动态
+            val dynamicPicList = mutableListOf<Any>()
+            dynamicPicList.addAll(postInfo.lastPostPics)
+            if (dynamicPicList.isNotEmpty()) {
+                view_live.show()
+                recyclerView_dynamic_piclist.show()
+                //有图片，显示图片样式
+                if (playProgram.living == BusiConstant.True) {
+                    //显示直播样式
+                    dynamicPicList.add(playProgram)
+                }
+                dynamicPicList.add(HomePageDynamicPicListAdapter.Tag_More)
+                mHomePageDynamicPicListAdapter.setList(dynamicPicList)
             } else {
-                //未开播
-                tv_watch_count.text = "期待Ta的下一场直播"
-                tv_watch_count.textColor = GlobalUtils.getColor(R.color.black_999)
-                tv_floow_watch.hide()
-                sdv_living.hide()
-                tv_living.text = "暂未开播"
+                //没有图片样式
+                if (playProgram.programId != 0L) {
+                    //显示直播样式
+                    con_live.show()
+                    view_live.show()
+                    sdv_cover.loadImage(playProgram.programCover, 74f, 74f)
+                    if (playProgram.living == BusiConstant.True) {
+                        //开播中
+                        tv_living.show()
+                        sdv_living.show()
+                        ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
+                        tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
+                        tv_living.text = "直播中"
+                    } else {
+                        //没有直播数据
+                        if (bean.programInfo != null) {
+                            //主播身份，并且没有开播，显示未开播样式
+                            con_live.show()
+                            view_live.show()
+                            tv_watch_count.text = "期待Ta的下一场直播"
+                            tv_watch_count.textColor = GlobalUtils.getColor(R.color.black_999)
+                            tv_floow_watch.hide()
+                            sdv_living.hide()
+                            tv_living.text = "暂未开播"
+                        } else {
+                            con_live.hide()
+                        }
+                    }
+                } else {
+                    con_live.hide()
+                }
             }
+
         } else {
-            con_live.hide()
-            view_live.hide()
+            //未发表过动态，显示引导发表样式
+            con_dynamic_add.show()
+            view_live.show()
         }
+
 
         //养鹊相关
         val playParadise = bean.playParadise
@@ -981,12 +1021,11 @@ class HomePageActivity : BaseActivity() {
             view_intim.hide()
         }
 
-        if (playProgram.programId == 0L && playParadise.magpieList.isEmpty() && bean.sex == Sex.MALE && !mHomePageViewModel.mineHomePage) {
-            tv_play.hide()
-        } else {
-            tv_play.show()
-        }
-
+//        if (playProgram.programId == 0L && playParadise.magpieList.isEmpty() && bean.sex == Sex.MALE && !mHomePageViewModel.mineHomePage) {
+//            tv_play.hide()
+//        } else {
+//            tv_play.show()
+//        }
 
 
         showGuanfang(bean.iconList)
