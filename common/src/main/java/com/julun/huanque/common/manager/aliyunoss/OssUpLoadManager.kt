@@ -39,6 +39,7 @@ object OssUpLoadManager {
     const val VOICE_POSITION = "user/voice"// 语音文件
     const val HEAD_POSITION = "user/head"// 头像路径
     const val MESSAGE_PIC = "user/message"// im图片路径
+    const val POST_POSITION="social/post"//动态路径
 
 
     var isUploading = false

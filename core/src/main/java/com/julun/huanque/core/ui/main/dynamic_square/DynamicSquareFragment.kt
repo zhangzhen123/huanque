@@ -19,6 +19,7 @@ import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
 import com.luck.picture.lib.tools.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_dynamic_container.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
@@ -27,6 +28,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.topPadding
 
 /**
@@ -66,7 +68,7 @@ class DynamicSquareFragment : BaseFragment() {
         initMagicIndicator()
 
         publish_dynamic.onClickNew {
-            //todo 发布动态
+            requireActivity().startActivity<PublishStateActivity>()
         }
 
     }

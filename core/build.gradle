@@ -43,6 +43,7 @@ dependencies {
 
     api project(':common')
     api project(":rnlib")
+    implementation project(':maplib')
     api files('libs/alipaySdk-15.7.7-20200702160044.aar')
     api rootProject.ext.dependencies["AGORA"]
     api 'github.hellocsl:GalleryLayoutManager:1.0.6'

@@ -51,6 +51,7 @@ class HeaderPageView : FrameLayout {
 
     //向外暴露几个常用view
     val imageViewBack: ImageView by lazy { ivback }
+    val textLeft: TextView by lazy { leftText }
     val textTitle: TextView by lazy { tvTitle }
     val textOperation: TextView by lazy { tvOperation }
     val imageOperation: ImageView by lazy { ivOperation }
