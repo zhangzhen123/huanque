@@ -356,14 +356,20 @@ interface SocialService {
     suspend fun closeConfidantRank(@Body form: UserIdForm): Root<MutableList<CloseConfidantBean>>
 
     /**
-     * 我的圈子
+     * 全部圈子
      */
-    @POST("social/post/myGroup")
-    suspend fun myGroup(@Body form: EmptyForm = EmptyForm()): Root<MyGroupInfo>
+    @POST("social/group/list")
+    suspend fun groupList(@Body form: CircleGroupTypeForm): Root<MyGroupInfo>
 
     /**
      * 加入圈子
      */
     @POST("social/group/join")
     suspend fun groupJoin(@Body form: GroupIdForm): Root<VoidResult>
+
+    /**
+     * 退出圈子
+     */
+    @POST("social/group/quit")
+    suspend fun groupQuit(@Body form: GroupIdForm) : Root<VoidResult>
 }

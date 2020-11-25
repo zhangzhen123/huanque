@@ -1476,10 +1476,10 @@ class PrivateConversationActivity : BaseActivity() {
                     //跳转他人主页
                     if (tempData.senderUserId == "${SessionUtils.getUserId()}") {
                         //本人发送消息
-                        RNPageActivity.start(
-                            this,
-                            RnConstant.MINE_HOMEPAGE
-                        )
+                        val bundle = Bundle().apply {
+                            putLong(ParamConstant.UserId, SessionUtils.getUserId())
+                        }
+                        ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                     } else {
                         //对方发送消息
                         try {

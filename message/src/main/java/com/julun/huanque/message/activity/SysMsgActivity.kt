@@ -19,6 +19,7 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.FriendsAdapter
@@ -227,7 +228,10 @@ class SysMsgActivity : BaseActivity() {
             }
             MessageConstants.MineHomePage -> {
                 //跳转到我的主页
-                RNPageActivity.start(this, RnConstant.MINE_HOMEPAGE)
+                val bundle = Bundle().apply {
+                    putLong(ParamConstant.UserId, SessionUtils.getUserId())
+                }
+                ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
             }
 
             MessageConstants.ACTION_None -> {

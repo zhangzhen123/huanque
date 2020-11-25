@@ -3,9 +3,10 @@ package com.julun.huanque.core.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.beans.MyGroupInfo
+import com.julun.huanque.common.bean.forms.CircleGroupTypeForm
 import com.julun.huanque.common.bean.forms.GroupIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.CircleGroupTabType
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
@@ -24,16 +25,45 @@ class AttentionCircleViewModel : BaseViewModel() {
     //我的圈子数据
     val myGroupData: MutableLiveData<MyGroupInfo> by lazy { MutableLiveData<MyGroupInfo>() }
 
+    //加入的圈子ID
+    val joinedGroupIdData: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+
+    //退出的圈子ID
+    val quitGroupIdData: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+    var mOffset = 0
+
+    //请求的Type
+    var requestType = ""
+
     /**
      * 获取我的圈子 基础数据
      */
     fun getCircleGroupInfo() {
         viewModelScope.launch {
             request({
-                val groupData = socialService.myGroup().dataConvert()
-                groupData.myGroup.forEach {
-                    it.joined = BusiConstant.True
+                val groupData = socialService.groupList(CircleGroupTypeForm(mOffset, requestType)).dataConvert()
+                if (mOffset == 0) {
+                    //刷新操作
+                    groupData.recommendGroup.isPull = true
+                    groupData.group.isPull = true
                 }
+                val recommendGroup = groupData.recommendGroup.list
+                if (recommendGroup.isNotEmpty()) {
+                    //推荐有数据，下次请求，使用推荐的offset
+                    mOffset += recommendGroup.size
+                }
+                recommendGroup.forEach {
+                    it.type = CircleGroupTabType.Recom
+                }
+                val myGroup = groupData.group.list
+                if (recommendGroup.isEmpty()) {
+                    //推荐为空，使用关注的offset
+                    mOffset += myGroup.size
+                }
+                myGroup.forEach {
+                    it.type = CircleGroupTabType.Follow
+                }
+
                 myGroupData.value = groupData
             }, {}, needLoadState = true)
         }
@@ -47,10 +77,21 @@ class AttentionCircleViewModel : BaseViewModel() {
             request({
                 socialService.groupJoin(GroupIdForm(groupId)).dataConvert()
                 ToastUtils.show("圈子加入成功")
-                //加入成功，重新获取数据
-                getCircleGroupInfo()
+                joinedGroupIdData.value = groupId
             }, {})
         }
-
     }
+
+    /**
+     * 退出圈子
+     */
+    fun groupQuit(groupId: Long) {
+        viewModelScope.launch {
+            request({
+                socialService.groupQuit(GroupIdForm(groupId)).dataConvert()
+                quitGroupIdData.value = groupId
+            }, {})
+        }
+    }
+
 }

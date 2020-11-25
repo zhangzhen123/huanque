@@ -192,19 +192,10 @@ class MessageFragment : BaseFragment() {
                 val longId = targetId.toLong()
                 if (view.id == R.id.sdv_header) {
                     //跳转他人主页
-                    if (longId == SessionUtils.getUserId()) {
-                        //本人主页
-                        RNPageActivity.start(
-                            requireActivity(),
-                            RnConstant.MINE_HOMEPAGE
-                        )
-                    } else {
-                        //他人主页
-                        val bundle = Bundle().apply {
-                            putLong(ParamConstant.UserId, longId)
-                        }
-                        ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
+                    val bundle = Bundle().apply {
+                        putLong(ParamConstant.UserId, longId)
                     }
+                    ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

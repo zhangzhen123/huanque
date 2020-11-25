@@ -833,9 +833,9 @@ data class SingleProgramInConversation(
  */
 data class MyGroupInfo(
     //我的圈子
-    var myGroup: MutableList<CircleGroup> = mutableListOf(),
+    var group: RootListData<CircleGroup> = RootListData(),
     //推荐圈子
-    var recommendGroup: MutableList<CircleGroup> = mutableListOf()
+    var recommendGroup: RootListData<CircleGroup> = RootListData()
 ) : Serializable
 
 /**
@@ -853,5 +853,7 @@ data class CircleGroup(
     //圈子热度值
     var heatValue: Long = 0L,
     //是否已经加入（本地字段）
-    var joined: String = ""
+    var joined: String = "",
+    //类型（推荐还是关注 本地字段）
+    var type: String = ""
 ) : Serializable
