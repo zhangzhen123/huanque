@@ -28,6 +28,10 @@ public class LocalMedia implements Parcelable {
     private int width;
     private int height;
 
+
+    public String ossUrl;//记录上传成功后的图片地址
+    public boolean isFail;//新增业务字段 是否是违规
+
     public LocalMedia() {
 
     }

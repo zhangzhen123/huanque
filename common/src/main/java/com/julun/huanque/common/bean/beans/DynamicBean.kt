@@ -1,6 +1,7 @@
 package com.julun.huanque.common.bean.beans
 
 import com.julun.huanque.common.basic.RootListData
+import com.luck.picture.lib.entity.LocalMedia
 
 data class DynamicItemBean(
     var age: Int = 0,
@@ -84,7 +85,18 @@ data class DynamicComment(
 
 data class PublishDynamicResult(
     var failPicList: List<String> = listOf(),
-    var failText: String = "",
+    var failText: List<String> = listOf(),
     var message: String = "",
     var result: Boolean = false
 )
+
+/**
+ * 保存发布动态的草稿
+ */
+class PublishDynamicCache{
+    var groupName:String?=null
+    var groupId: Long? = null
+    var anonymous: String = ""
+    var content: String = ""//
+    var selectList: MutableList<LocalMedia> = mutableListOf()
+}

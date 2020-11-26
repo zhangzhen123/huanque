@@ -3,10 +3,13 @@ package com.julun.huanque.core.ui.publish_dynamic
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
@@ -26,13 +29,14 @@ import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
 import com.julun.huanque.common.base.dialog.MyAlertDialog
-import com.julun.huanque.common.bean.beans.DynamicGroup
+import com.julun.huanque.common.bean.beans.CircleGroup
+import com.julun.huanque.common.bean.beans.PublishDynamicCache
+import com.julun.huanque.common.bean.beans.PublishDynamicResult
 import com.julun.huanque.common.bean.forms.PublishStateForm
-import com.julun.huanque.common.bean.forms.SaveLocationForm
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.BooleanType
-import com.julun.huanque.common.constant.EmojiType
+import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.reportCrash
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.suger.dp2px
@@ -41,22 +45,24 @@ import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.bitmap.BitmapUtil
-import com.julun.huanque.common.utils.device.DeviceUtils
 import com.julun.huanque.common.utils.device.PhoneUtils
+import com.julun.huanque.common.utils.permission.PermissionUtils
+import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.AddPictureAdapter
+import com.julun.huanque.core.ui.homepage.CircleActivity
 import com.julun.maplib.LocationService
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
-import com.luck.picture.lib.permissions.RxPermissions
 import com.luck.picture.lib.tools.PictureFileUtils
 import kotlinx.android.synthetic.main.activity_publish_state.*
 import org.jetbrains.anko.*
+import java.io.File
 
 
 /**
@@ -75,11 +81,13 @@ class PublishStateActivity : BaseActivity() {
     companion object {
         const val MAXPICCOUNT = 4
         const val maxTextSize = 2000
+        val DRAFT_PATH = FileUtils.getCachePath(CommonInit.getInstance().getContext()) + "/pubDraft"
     }
 
     private val loadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
     private val viewModel: PublishViewModel by viewModels()
-    private var selectActionCount = 0 //记录是不是用户第一次的选择相册 第一次特殊处理
+
+    //    private var selectActionCount = 0 //记录是不是用户第一次的选择相册 第一次特殊处理
     private var selectList: MutableList<LocalMedia> = mutableListOf()
     val adapter: AddPictureAdapter by lazy {
         AddPictureAdapter(this@PublishStateActivity, onAddPicClickListener)
@@ -91,7 +99,7 @@ class PublishStateActivity : BaseActivity() {
 
     private var hideName = false
 
-    private var currentGroup: DynamicGroup? = null
+    private var currentGroup: CircleGroup? = null
 
     private lateinit var mLocationService: LocationService
 
@@ -119,7 +127,7 @@ class PublishStateActivity : BaseActivity() {
      * 检查定位权限
      */
     private fun checkLocationPermission() {
-        val rxPermissions = com.julun.huanque.common.utils.permission.rxpermission.RxPermissions(this)
+        val rxPermissions = RxPermissions(this)
         rxPermissions
             .requestEachCombined(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -288,6 +296,7 @@ class PublishStateActivity : BaseActivity() {
 
         addPicListView.layoutManager = manager
         addPicListView.addItemDecoration(GridLayoutSpaceItemDecoration(dp2px(1.5f)))
+        adapter.setList(selectList)
         addPicListView.adapter = adapter
 
 
@@ -296,7 +305,20 @@ class PublishStateActivity : BaseActivity() {
         addPicListView.isNestedScrollingEnabled = false
 
         mLocationService = LocationService(this.applicationContext)
+        //如果有缓存 提取缓存
+        val draft = StorageHelper.getPubStateCache()
+        if (draft != null) {
+            currentGroup = CircleGroup(groupName = draft.groupName ?: "", groupId = draft.groupId ?: -1L)
+            setCircleStatus()
+            hideName = draft.anonymous == BooleanType.TRUE
+            iv_hide_name.isSelected = hideName
 
+            input_text.setText(draft.content)
+            selectList.addAll(draft.selectList)
+            adapter.notifyDataSetChanged()
+            checkoutPublishEnable()
+
+        }
         iv_location.isSelected = true
         checkLocationPermission()
     }
@@ -304,7 +326,7 @@ class PublishStateActivity : BaseActivity() {
     private fun initViewModel() {
         viewModel.publisStateResult.observe(this, Observer {
             if (it.isSuccess()) {
-                publishSuccess()
+                publishSuccess(it.requireT())
             } else {
                 publishFail()
             }
@@ -315,23 +337,80 @@ class PublishStateActivity : BaseActivity() {
         header_page.textOperation.isEnabled = input_text.text.isNotEmpty() || selectList.isNotEmpty()
     }
 
+    private fun setCircleStatus() {
+        if (currentGroup != null) {
+            tv_add_circle_name.text = "${currentGroup!!.groupName}"
+            tv_add_circle_forward.hide()
+            iv_circle_delete.show()
+        } else {
+            tv_add_circle_name.text = "添加圈子"
+            tv_add_circle_forward.show()
+            iv_circle_delete.hide()
+        }
+    }
 
     override fun onBackPressed() {
         if (selectList.size > 0 || input_text.text.toString().isNotEmpty()) {
             dialog.showAlertWithOKAndCancel(
-                "退出此次编辑？", MyAlertDialog.MyDialogCallback(
+                "是否保存草稿？", MyAlertDialog.MyDialogCallback(
                     onCancel = {
+                        clearDraft()
+                        finish()
                     },
                     onRight = {
+                        saveDraft()
                         finish()
-                    }), okText = "退出", hasTitle = false
+                    }), okText = "保存", noText = "不保存", hasTitle = true
             )
         } else {
             finish()
         }
     }
 
-    private var currentContent: String = ""
+    /**
+     * 保存草稿
+     */
+    private fun saveDraft() {
+        val cache = PublishDynamicCache().apply {
+            this.content = input_text.text.toString()
+
+            this.groupName = currentGroup?.groupName
+            this.groupId = currentGroup?.groupId
+
+
+            this.anonymous = if (hideName) {
+                BooleanType.TRUE
+            } else {
+                BooleanType.FALSE
+            }
+            //对于压缩的图片 保存新路径
+            if (this@PublishStateActivity.selectList.isNotEmpty()) {
+                val fileDir = FileUtils.createFileDir(DRAFT_PATH) ?: return
+                this@PublishStateActivity.selectList.forEach {
+                    if (it.isCompressed) {
+                        val srcFile = File(it.compressPath)
+                        //已经保存到缓存目录的 就不再复制
+                        if (srcFile.exists() && srcFile.parent != DRAFT_PATH) {
+                            FileUtils.copyFileToDirectory(srcFile, fileDir)
+                            it.compressPath = DRAFT_PATH + "/" + srcFile.name
+                        }
+
+                    }
+                }
+                this.selectList = this@PublishStateActivity.selectList
+            }
+
+        }
+        StorageHelper.setPubStateCache(cache)
+    }
+
+    /**
+     * 清空草稿
+     */
+    private fun clearDraft() {
+        //todo 删除保存的草稿
+        StorageHelper.removePubStateCache()
+    }
 
     override fun initEvents(rootView: View) {
         header_page.imageViewBack.onClickNew {
@@ -355,7 +434,6 @@ class PublishStateActivity : BaseActivity() {
                 return@onClickNew
             }
             header_page.textOperation.isEnabled = false
-            currentContent = input_text.text.toString()
             startPublish()
 
         }
@@ -413,7 +491,7 @@ class PublishStateActivity : BaseActivity() {
             override fun onClick(type: String, emotion: Emotion) {
                 val currentLength = input_text.text.length
                 val emojiLength = emotion.text.length
-                if (currentLength + emojiLength > 30) {
+                if (currentLength + emojiLength > maxTextSize) {
                     Toast.makeText(this@PublishStateActivity, "输入长度超限", Toast.LENGTH_SHORT).show()
                     return
                 }
@@ -443,7 +521,12 @@ class PublishStateActivity : BaseActivity() {
             override fun showPrivilegeFragment(code: String) {
             }
         }
-
+        ll_add_circle.onClickNew {
+            startActivityForResult<CircleActivity>(
+                ActivityRequestCode.SELECT_CIRCLE,
+                ParamConstant.TYPE to CircleGroupType.Circle_Choose
+            )
+        }
 
         ll_location.onClickNew {
             if (!iv_location.isSelected) {
@@ -458,6 +541,12 @@ class PublishStateActivity : BaseActivity() {
             hideName = !hideName
             iv_hide_name.isSelected = hideName
         }
+
+        iv_circle_delete.onClickNew {
+            currentGroup = null
+            setCircleStatus()
+        }
+
 
     }
 
@@ -549,10 +638,15 @@ class PublishStateActivity : BaseActivity() {
             }
             OssUpLoadManager.uploadFiles(pathList, OssUpLoadManager.POST_POSITION) { code, list ->
                 if (code == OssUpLoadManager.CODE_SUCCESS) {
+
                     logger.info("结果的：$list")
                     if (list == null || list.isEmpty()) {
                         publishFail()
                         return@uploadFiles
+                    }
+                    //记录每个图片上传成功后的ossUrl
+                    selectList.forEachIndexed { index, localMedia ->
+                        localMedia.ossUrl = list.getOrNull(index)
                     }
                     val imgList = StringBuilder()
                     var picSize = ""
@@ -593,17 +687,50 @@ class PublishStateActivity : BaseActivity() {
 
     }
 
-    private fun publishSuccess() {
+    private fun publishSuccess(result: PublishDynamicResult) {
+        header_page.textOperation.isEnabled = true
         if (loadingDialog.isShowing) {
             loadingDialog.dismiss()
         }
-        hideSoftInput()
-        finish()
-        clearPictureCache()
-        ToastUtils.show(getString(R.string.publish_success))
-//        JuLunLibrary.getInstance().getLibrarListener()?.getActivityUtils()?.jumpAnchorPublicList(this,
-//                Bundle().apply { this.putString(BusiConstant.FromPager.FROM_KEY, BusiConstant.FromPager.ANCHOR_DYNAMIC) }
-//        )
+        if (result.result) {
+            hideSoftInput()
+            finish()
+            clearPictureCache()
+            ToastUtils.show(getString(R.string.publish_success))
+        } else {
+            //发布失败
+            ToastUtils.show2(result.message)
+            val errorList = result.failPicList
+            selectList.forEach {
+                if (result.failPicList.contains(it.ossUrl)) {
+                    it.isFail = true
+                }
+            }
+            adapter.notifyDataSetChanged()
+            //文字违规特殊显示
+            renderFailTextSpan(result.failText)
+
+        }
+
+    }
+
+    fun renderFailTextSpan(failText: List<String>) {
+        val content = input_text.text.toString()
+        val emotionSpannable: Spannable = EmojiSpanBuilder.buildEmotionSpannable(
+            this@PublishStateActivity,
+            content
+        )
+        failText.forEach { text ->
+            val start = content.indexOf(text)
+            val end = start + text.length
+            if (start != -1) {
+                val colorY = Color.parseColor("#FF3F3F")
+                val foregroundColorSpan = ForegroundColorSpan(colorY)
+                emotionSpannable.setSpan(foregroundColorSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+
+        input_text.setText(emotionSpannable)
     }
 
     private fun publishFail() {
@@ -617,14 +744,11 @@ class PublishStateActivity : BaseActivity() {
     //清除压缩和裁剪留下的缓存
     private fun clearPictureCache() {
         // 清空图片缓存，包括裁剪、压缩后的图片 注意:必须要在上传完成后调用 必须要获取权限
-        val permissions = RxPermissions(this)
-        permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe {
-            if (it) {
-                PictureFileUtils.deleteCacheDirFile(this@PublishStateActivity)
-                PictureFileUtils.deleteExternalCacheDirFile(this@PublishStateActivity)
-            }
-
+        if (PermissionUtils.checkSinglePermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            PictureFileUtils.deleteCacheDirFile(this@PublishStateActivity)
+            PictureFileUtils.deleteExternalCacheDirFile(this@PublishStateActivity)
         }
+        clearDraft()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -647,18 +771,48 @@ class PublishStateActivity : BaseActivity() {
                     //每次选择图片回来重新判断条件
                     checkoutPublishEnable()
                 }
+                ActivityRequestCode.SELECT_CIRCLE -> {
+                    currentGroup = data?.extras?.get(ActivityRequestCode.CIRCLE_DATA) as? CircleGroup
+                    logger.info("我是选择的结果=${currentGroup?.groupName}")
+                    setCircleStatus()
+                }
             }
         } else {
             //此种情况是用户没有任何选择的返回 如果此时原界面是第一次打开的情况 直接关闭
-            if (selectActionCount <= 1) {
-                finish()
-            }
+//            if (selectActionCount <= 1) {
+//                finish()
+//            }
         }
 
     }
 
-    fun goToPictureSelectPager() {
-        selectActionCount++
+    private fun checkWritePermissions() {
+        val rxPermissions = RxPermissions(this)
+        rxPermissions
+            .requestEachCombined(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            .subscribe { permission ->
+                when {
+                    permission.granted -> {
+                        logger.info("获取权限成功")
+                        goToPictureSelectPager()
+                    }
+                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+                        ToastUtils.show("权限无法获取")
+                    else -> {
+                        logger.info("获取权限被永久拒绝")
+                        val message = "无法获取到相机/存储权限，请手动到设置中开启"
+                        ToastUtils.show(message)
+                    }
+                }
+
+            }
+    }
+
+    private fun goToPictureSelectPager() {
+//        selectActionCount++
         PictureSelector.create(this@PublishStateActivity)
             .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
             .theme(R.style.picture_me_style_multi)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
@@ -695,7 +849,7 @@ class PublishStateActivity : BaseActivity() {
     private val onAddPicClickListener = object : AddPictureAdapter.OnAddPicClickListener {
         override fun onAddPicClick() {
             hideSoftInput()
-            goToPictureSelectPager()
+            checkWritePermissions()
         }
 
     }

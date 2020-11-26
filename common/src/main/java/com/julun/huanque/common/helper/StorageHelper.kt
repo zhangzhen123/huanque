@@ -1,6 +1,8 @@
 package com.julun.huanque.common.helper
 
 import com.julun.huanque.common.bean.beans.HomePageTab
+import com.julun.huanque.common.bean.beans.PublishDynamicCache
+import com.julun.huanque.common.bean.forms.PublishStateForm
 import com.julun.huanque.common.utils.DateHelper
 import com.julun.huanque.common.utils.SPUtils
 import com.julun.huanque.common.utils.SessionUtils
@@ -45,6 +47,9 @@ object StorageHelper {
 
     //是否展示首页的
     private const val SHOW_SOCIAL_TAB = "showSocialTab"
+
+    //保存发布草稿
+    private const val PUB_STATE_CACHE = "PUB_STATE_CACHE"
 
     /**
      * 保存ad
@@ -174,4 +179,20 @@ object StorageHelper {
     }
 
     fun getHideSocialTab() = SharedPreferencesUtils.getBoolean(SHOW_SOCIAL_TAB, false)
+
+
+    //保存发布草稿
+    fun setPubStateCache(tab: PublishDynamicCache) {
+        SPUtils.commitObject(PUB_STATE_CACHE, tab)
+    }
+
+    //删除
+    fun removePubStateCache() {
+        SPUtils.remove(PUB_STATE_CACHE)
+    }
+
+    fun getPubStateCache(): PublishDynamicCache? {
+        return SPUtils.getObject<PublishDynamicCache>(PUB_STATE_CACHE, PublishDynamicCache::class.java)
+    }
+
 }

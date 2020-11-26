@@ -26,3 +26,9 @@ object SquareTabType {
     const val Follow = "Follow"
     const val RECOMMEND = "Recom"
 }
+
+object ActivityRequestCode{
+    const val SELECT_CIRCLE = 345
+
+    const val CIRCLE_DATA="Circle_Data"
+}
