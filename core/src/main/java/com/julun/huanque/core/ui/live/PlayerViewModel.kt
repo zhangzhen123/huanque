@@ -7,15 +7,14 @@ import androidx.activity.ComponentActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
-import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.TplBean
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.events.SendRNEvent
-import com.julun.huanque.common.bean.events.UserInfoChangeEvent
-import com.julun.huanque.common.bean.forms.*
+import com.julun.huanque.common.bean.forms.ProgramIdForm
+import com.julun.huanque.common.bean.forms.SwitchForm
+import com.julun.huanque.common.bean.forms.UserEnterRoomForm
+import com.julun.huanque.common.bean.forms.ValidateForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.init.CommonInit
@@ -26,25 +25,25 @@ import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.net.services.SocialService
-import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.BalanceUtils
-import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.core.R
 import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.logger
+import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.ui.web.WebActivity
+import com.julun.huanque.common.utils.BalanceUtils
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.SPUtils
+import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.dialog.BirdDialogFragment
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.TimeUnit
 
 /**
@@ -398,7 +397,7 @@ class PlayerViewModel : BaseViewModel() {
     val showNoOpenFragment: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //关注状态
-    val followStatusData: MutableLiveData<ReactiveData<FollowResultBean>> by lazy { MutableLiveData<ReactiveData<FollowResultBean>>() }
+//    val followStatusData: MutableLiveData<ReactiveData<FollowResultBean>> by lazy { MutableLiveData<ReactiveData<FollowResultBean>>() }
 
     //需要申请权限的跳转类型
     var mPermissionJumpType = ""
@@ -538,41 +537,41 @@ class PlayerViewModel : BaseViewModel() {
         logger("closeAllDelayTime")
     }
 
-    /**
-     * 关注
-     */
-    fun follow(userId: Long) {
-        viewModelScope.launch {
-            request({
-                val follow = mSocialService.follow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(follow = follow.follow, userId = userId)
+//    /**
+//     * 关注
+//     */
+//    fun follow(userId: Long) {
+//        viewModelScope.launch {
+//            request({
+//                val follow = mSocialService.follow(FriendIdForm(userId)).dataConvert()
+//                val followBean = FollowResultBean(follow = follow.follow, userId = userId)
+////                followStatusData.value = followBean.convertRtData()
+//                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
+//                EventBus.getDefault()
+//                    .post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
+//            }, {
+//                followStatusData.value = it.convertError()
+//            })
+//        }
+//    }
+//
+//    /**
+//     * 取消关注
+//     */
+//    fun unFollow(userId: Long) {
+//        viewModelScope.launch {
+//            request({
+//                val follow = mSocialService.unFollow(FriendIdForm(userId)).dataConvert()
+//                val followBean = FollowResultBean(follow = FollowStatus.False, userId = userId)
 //                followStatusData.value = followBean.convertRtData()
-                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
-                EventBus.getDefault()
-                    .post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
-            }, {
-                followStatusData.value = it.convertError()
-            })
-        }
-    }
-
-    /**
-     * 取消关注
-     */
-    fun unFollow(userId: Long) {
-        viewModelScope.launch {
-            request({
-                val follow = mSocialService.unFollow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(follow = FollowStatus.False, userId = userId)
-                followStatusData.value = followBean.convertRtData()
-                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
-                EventBus.getDefault()
-                    .post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to false)))
-            }, {
-                followStatusData.value = it.convertError()
-            })
-        }
-    }
+//                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
+//                EventBus.getDefault()
+//                    .post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to false)))
+//            }, {
+//                followStatusData.value = it.convertError()
+//            })
+//        }
+//    }
 
     /**
      * 统一处理点击事件

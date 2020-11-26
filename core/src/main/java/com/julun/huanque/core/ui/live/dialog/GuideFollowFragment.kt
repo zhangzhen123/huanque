@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.constant.DialogOrderNumber
 import com.julun.huanque.common.helper.ImageHelper
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
@@ -27,7 +28,7 @@ import org.jetbrains.anko.imageResource
 class GuideFollowFragment : BaseDialogFragment() {
     //与playerActivity通信
     private val playerViewModel: PlayerViewModel by activityViewModels()
-
+    private val huanQueViewModel=HuanViewModelManager.huanQueViewModel
     companion object {
         fun newInstance(): GuideFollowFragment {
             return GuideFollowFragment()
@@ -47,7 +48,7 @@ class GuideFollowFragment : BaseDialogFragment() {
         initData()
         follow_anchor.onClickNew {
             playerViewModel.subscribeSource = "底部引导"
-            playerViewModel.follow(playerViewModel.programId)
+            huanQueViewModel.follow(playerViewModel.programId)
             dismiss()
         }
     }

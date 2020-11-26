@@ -70,11 +70,11 @@ class SocialListBean(
 /**
  * 关注结果使用的Bean
  */
-class FollowResultBean(
-    var type: String = "",
+class UserInfoChangeResult(
     var userId: Long = 0L,
     var follow: String = "",
-    var formerFollow: String = ""
+    var formerFollow: String = "",
+    var stranger: Boolean = false
 )
 
 /**

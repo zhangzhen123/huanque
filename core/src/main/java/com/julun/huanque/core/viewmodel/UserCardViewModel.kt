@@ -2,15 +2,11 @@ package com.julun.huanque.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.julun.huanque.common.bean.beans.FollowResultBean
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
-import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.UserProgramForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
-import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import kotlinx.coroutines.launch

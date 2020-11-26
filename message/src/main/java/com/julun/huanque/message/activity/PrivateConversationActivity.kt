@@ -42,9 +42,9 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.interfaces.SystemMessageClickListener
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.UserHeartManager
-import com.julun.huanque.common.manager.VoiceFloatingManager
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
@@ -52,7 +52,6 @@ import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
-import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
@@ -146,6 +145,7 @@ class PrivateConversationActivity : BaseActivity() {
     //动画使用的ViewModel
     private val mPrivateAnimationViewModel: PrivateAnimationViewModel by viewModels()
 
+    private val huanQueViewModel= HuanViewModelManager.huanQueViewModel
     private var mHelper: PanelSwitchHelper? = null
 
     private val mAdapter = MessageAdapter()
@@ -564,6 +564,17 @@ class PrivateConversationActivity : BaseActivity() {
                     RongCloudManager.updateChatBubble(it)
                 } else {
                     RongCloudManager.updateChatBubble(null)
+                }
+            }
+        })
+
+        huanQueViewModel.userInfoStatusChange.observe(this, Observer {
+            if(it!=null&&it.isSuccess()){
+                val follow=it.requireT()
+                if (follow.userId == mPrivateConversationViewModel.targetIdData.value) {
+                    //当前会话，陌生人状态变化
+                    mPrivateConversationViewModel.basicBean.value?.stranger = follow.stranger
+//            RongCloudManager.strangerChange(event.stranger)
                 }
             }
         })
@@ -2445,14 +2456,14 @@ class PrivateConversationActivity : BaseActivity() {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun strangerChange(event: UserInfoChangeEvent) {
-        if (event.userId == mPrivateConversationViewModel?.targetIdData?.value) {
-            //当前会话，陌生人状态变化
-            mPrivateConversationViewModel?.basicBean?.value?.stranger = event.stranger
-//            RongCloudManager.strangerChange(event.stranger)
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    fun strangerChange(event: UserInfoChangeEvent) {
+//        if (event.userId == mPrivateConversationViewModel?.targetIdData?.value) {
+//            //当前会话，陌生人状态变化
+//            mPrivateConversationViewModel?.basicBean?.value?.stranger = event.stranger
+////            RongCloudManager.strangerChange(event.stranger)
+//        }
+//    }
 
     /**
      * 亲密度变化消息
@@ -2492,7 +2503,8 @@ class PrivateConversationActivity : BaseActivity() {
             }
         }
         val stranger = data.stranger[targetId] ?: false
-        EventBus.getDefault().post(UserInfoChangeEvent(targetId, stranger))
+        huanQueViewModel.userInfoStatusChange.value=UserInfoChangeResult(userId = targetId,stranger = stranger).convertRtData()
+//        EventBus.getDefault().post(UserInfoChangeEvent(targetId, stranger))
     }
 
 

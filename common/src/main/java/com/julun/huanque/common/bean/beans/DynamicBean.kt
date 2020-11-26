@@ -2,6 +2,7 @@ package com.julun.huanque.common.bean.beans
 
 import com.julun.huanque.common.basic.RootListData
 import com.luck.picture.lib.entity.LocalMedia
+import java.io.Serializable
 
 data class DynamicItemBean(
     var age: Int = 0,
@@ -42,6 +43,7 @@ data class DynamicItemBean(
     }
 
 }
+
 data class DynamicGroup(
     var groupDesc: String = "",
     var groupId: Long = 0,
@@ -50,6 +52,7 @@ data class DynamicGroup(
     var hasNewPost: Boolean = false,
     var heatValue: Long = 0
 )
+
 class HomeDynamicListInfo {
     var postList: MutableList<DynamicItemBean> = mutableListOf()
     var hasMore: Boolean = false
@@ -93,10 +96,20 @@ data class PublishDynamicResult(
 /**
  * 保存发布动态的草稿
  */
-class PublishDynamicCache{
-    var groupName:String?=null
+class PublishDynamicCache {
+    var groupName: String? = null
     var groupId: Long? = null
     var anonymous: String = ""
     var content: String = ""//
     var selectList: MutableList<LocalMedia> = mutableListOf()
 }
+
+
+class DynamicListInfo<T> : RootListData<T>() {
+    var extData: DynamicListExt? = null
+}
+
+
+data class DynamicListExt(
+    var follow: Boolean = false
+) : Serializable

@@ -4,24 +4,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.beans.AnonymousBasicInfo
 import com.julun.huanque.common.bean.beans.CheckBeansData
-import com.julun.huanque.common.bean.beans.FollowResultBean
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
-import com.julun.huanque.common.bean.events.SendRNEvent
-import com.julun.huanque.common.bean.events.UserInfoChangeEvent
-import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.InviteUserIdForm
 import com.julun.huanque.common.bean.forms.NetcallIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.RNMessageConst
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
-import com.julun.huanque.common.suger.convertError
-import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -67,7 +59,7 @@ class AnonymousVoiceViewModel : BaseViewModel() {
     val voiceEndFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //关注结果
-    val followStatusData: MutableLiveData<FollowResultBean> by lazy { MutableLiveData<FollowResultBean>() }
+//    val followStatusData: MutableLiveData<UserInfoChangeResult> by lazy { MutableLiveData<UserInfoChangeResult>() }
 
     //关闭页面的标识位
     val finishFlag : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
@@ -206,20 +198,20 @@ class AnonymousVoiceViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * 关注
-     */
-    fun follow(userId: Long) {
-        viewModelScope.launch {
-            request({
-                val follow = socialService.follow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(follow = follow.follow, userId = userId)
-                followStatusData.value = followBean
-                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger))
-                EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
-            }, {
-
-            })
-        }
-    }
+//    /**
+//     * 关注
+//     */
+//    fun follow(userId: Long) {
+//        viewModelScope.launch {
+//            request({
+//                val follow = socialService.follow(FriendIdForm(userId)).dataConvert()
+//                val followBean = UserInfoChangeResult(follow = follow.follow, userId = userId)
+//                followStatusData.value = followBean
+//                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger))
+//                EventBus.getDefault().post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
+//            }, {
+//
+//            })
+//        }
+//    }
 }

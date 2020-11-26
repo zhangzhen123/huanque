@@ -5,20 +5,17 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.basic.RootListData
-import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.events.UserInfoChangeEvent
+import com.julun.huanque.common.bean.beans.SocialUserInfo
+import com.julun.huanque.common.bean.beans.UserInfoChangeResult
 import com.julun.huanque.common.bean.forms.ContactsForm
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.FollowStatus
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
-import com.julun.huanque.common.suger.convertError
-import com.julun.huanque.common.suger.dataConvert
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.suger.*
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -29,7 +26,7 @@ class ContactsFragmentViewModel : BaseViewModel() {
     private val service: SocialService by lazy { Requests.create(SocialService::class.java) }
 
     //关注状态
-    val followStatusData: MutableLiveData<FollowResultBean> by lazy { MutableLiveData<FollowResultBean>() }
+//    val followStatusData: MutableLiveData<UserInfoChangeResult> by lazy { MutableLiveData<UserInfoChangeResult>() }
 
     var mType = ""
 
@@ -67,9 +64,10 @@ class ContactsFragmentViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val follow = service.follow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(type, userId, follow.follow, formerFollow)
-                followStatusData.value = followBean
-                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger))
+                val followBean = UserInfoChangeResult(userId = userId, follow = follow.follow, formerFollow = formerFollow)
+//                followStatusData.value = followBean
+                HuanViewModelManager.huanQueViewModel.userInfoStatusChange.value = followBean.convertRtData()
+//                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger))
             }, {
             })
         }
@@ -82,9 +80,10 @@ class ContactsFragmentViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val follow = service.unFollow(FriendIdForm(userId)).dataConvert()
-                val followBean = FollowResultBean(type, userId, FollowStatus.False, formerFollow)
-                followStatusData.value = followBean
-                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger))
+                val followBean = UserInfoChangeResult(userId = userId, follow = FollowStatus.False, formerFollow = formerFollow)
+//                followStatusData.value = followBean
+                HuanViewModelManager.huanQueViewModel.userInfoStatusChange.value = followBean.convertRtData()
+//                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger))
             }, {
             })
         }

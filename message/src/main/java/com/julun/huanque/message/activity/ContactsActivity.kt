@@ -21,6 +21,7 @@ import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -59,6 +60,7 @@ class ContactsActivity : BaseActivity() {
     private var mActivityViewModel: ContactsActivityViewModel? = null
     private var mPagerAdapter: ContactFragmentAdapter? = null
 
+    val huanQueViewModel = HuanViewModelManager.huanQueViewModel
     //默认选中的tab标识
     private var mDefaultType = ""
 
@@ -128,12 +130,13 @@ class ContactsActivity : BaseActivity() {
             showOperateIcon(it)
         })
 
-        mActivityViewModel?.followChangeFlag?.observe(this, Observer {
-            if (it != null) {
+        huanQueViewModel.userInfoStatusChange.observe(this, Observer {
+            if (it != null&&it.isSuccess()) {
+                val change=it.requireT()
                 mActivityViewModel?.followNeedRefresh = true
-                val type = it.type
-                val formerFollow = it.formerFollow
-                val currentFollow = it.follow
+//                val type = it.type
+                val formerFollow = change.formerFollow
+                val currentFollow = change.follow
 //                if (type == ContactsTabType.Follow) {
                 val tabList = mActivityViewModel?.tabListData?.value ?: return@Observer
                 //关注列表,粉丝列表  操作一致

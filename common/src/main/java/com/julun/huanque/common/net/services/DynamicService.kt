@@ -1,14 +1,8 @@
 package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
-import com.julun.huanque.common.bean.beans.DynamicDetailInfo
-import com.julun.huanque.common.bean.beans.HomeDynamicListInfo
-import com.julun.huanque.common.bean.beans.PublishDynamicResult
-import com.julun.huanque.common.bean.beans.UserDetailInfo
-import com.julun.huanque.common.bean.forms.EmptyForm
-import com.julun.huanque.common.bean.forms.HomePostForm
-import com.julun.huanque.common.bean.forms.PostDetailForm
-import com.julun.huanque.common.bean.forms.PublishStateForm
+import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.*
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -35,8 +29,16 @@ interface DynamicService {
     @POST("social/post/list")
     suspend fun queryHomePost(@Body form: HomePostForm): Root<HomeDynamicListInfo>
 
+    /**
+     * 发布动态
+     */
     @POST("social/post/pubPost")
     suspend fun publishState(@Body body: PublishStateForm): Root<PublishDynamicResult>
 
 
+    /**
+     * 查询动态列表
+     */
+    @POST("social/post/userPost")
+    suspend fun queryUserPosts(@Body body: PostListsForm): Root<DynamicListInfo<DynamicItemBean>>
 }

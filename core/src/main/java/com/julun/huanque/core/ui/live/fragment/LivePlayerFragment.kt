@@ -15,12 +15,10 @@ import com.julun.huanque.common.bean.beans.MicAnchor
 import com.julun.huanque.common.bean.beans.PlayInfo
 import com.julun.huanque.common.bean.events.FloatingCloseEvent
 import com.julun.huanque.common.bean.events.VideoPlayerEvent
-import com.julun.huanque.common.constant.ClickType
-import com.julun.huanque.common.constant.PKType
-import com.julun.huanque.common.constant.ScreenType
-import com.julun.huanque.common.constant.StopAllStreamState
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.reportCrash
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -46,6 +44,7 @@ open class LivePlayerFragment : BaseFragment() {
     private val mVideoViewModel: VideoViewModel by activityViewModels()
     private val mConfigViewModel: OrientationViewModel by activityViewModels()
     private val mPlayerViewModel: PlayerViewModel by activityViewModels()
+    private val huanQueViewModel = HuanViewModelManager.huanQueViewModel
 
     //保存播放使用的View
     private val mViewList = mutableListOf<SingleVideoView>()
@@ -59,7 +58,7 @@ open class LivePlayerFragment : BaseFragment() {
 
             override fun onClickAuthorFollow(authorInfo: MicAnchor) {
                 logger.info("点击了关注主播$authorInfo")
-                mPlayerViewModel.follow(authorInfo.programId)
+                huanQueViewModel.follow(authorInfo.programId)
             }
         }
     }
@@ -211,9 +210,9 @@ open class LivePlayerFragment : BaseFragment() {
             }
         })
 
-        mPlayerViewModel.followStatusData.observe(this, Observer {
+        huanQueViewModel.userInfoStatusChange.observe(this, Observer {
             logger.info("Player 关注状态 status = $it")
-            if (it.isSuccess()) {
+            if (it.isSuccess() && it.requireT().follow == FollowStatus.True) {
                 mViewList.forEach { view ->
                     val info = view.playerInfo ?: return@forEach
                     if (view != mMainVideoView && !view.isFree && info.programId == it.requireT().userId) {

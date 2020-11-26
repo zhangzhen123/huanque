@@ -8,9 +8,13 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.julun.huanque.common.bean.events.UserInfoChangeEvent;
+import com.julun.huanque.common.basic.NetStateType;
+import com.julun.huanque.common.basic.QueryType;
+import com.julun.huanque.common.basic.ReactiveData;
+import com.julun.huanque.common.bean.beans.UserInfoChangeResult;
 import com.julun.huanque.common.bean.events.UserInfoEditEvent;
 import com.julun.huanque.common.constant.BusiConstant;
+import com.julun.huanque.common.manager.HuanViewModelManager;
 import com.julun.huanque.common.utils.GlobalUtils;
 import com.julun.huanque.common.utils.SessionUtils;
 import com.julun.huanque.common.utils.ULog;
@@ -62,7 +66,10 @@ public class AppMessageModule extends ReactContextBaseJavaModule {
                         stranger = "";
                     }
                     GlobalUtils.INSTANCE.updateStrangerData(userId, stranger.equals(BusiConstant.True));
-                    EventBus.getDefault().post(new UserInfoChangeEvent((long) userId, stranger.equals(BusiConstant.True), follow));
+//                    EventBus.getDefault().post(new UserInfoChangeEvent((long) userId, stranger.equals(BusiConstant.True), follow));
+                    UserInfoChangeResult changeResult = new UserInfoChangeResult(userId, follow, "", stranger.equals(BusiConstant.True));
+                    HuanViewModelManager.INSTANCE.getHuanQueViewModel().getUserInfoStatusChange().setValue(
+                            new ReactiveData<UserInfoChangeResult>(NetStateType.SUCCESS, changeResult, QueryType.INIT, null));
 
                     break;
                 }
@@ -94,7 +101,7 @@ public class AppMessageModule extends ReactContextBaseJavaModule {
                     if (picList != null) {
                         for (int i = 0; i < picList.size(); i++) {
                             ReadableMap obj = picList.getMap(i);
-                            if (obj!=null&&obj.hasKey("coverPic")) {
+                            if (obj != null && obj.hasKey("coverPic")) {
                                 list.add(obj.getString("coverPic"));
                             }
                         }

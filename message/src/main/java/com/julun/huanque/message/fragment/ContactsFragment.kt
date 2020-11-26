@@ -7,21 +7,16 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseVMFragment
-import com.julun.huanque.common.basic.NetState
-import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.basic.RootListData
-import com.julun.huanque.common.bean.beans.FollowResultBean
+import com.julun.huanque.common.basic.*
+import com.julun.huanque.common.bean.beans.UserInfoChangeResult
 import com.julun.huanque.common.bean.beans.SocialUserInfo
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
@@ -58,6 +53,8 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
     private val mAdapter = ContactsAdapter()
 
     private val mActivityViewModel: ContactsActivityViewModel by activityViewModels()
+
+    private val huanQueViewModel= HuanViewModelManager.huanQueViewModel
 
     override fun getLayoutId() = R.layout.fragment_contacts
 
@@ -202,19 +199,28 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
             }
         })
 
-        //用object形式，不然会报错
-        mViewModel.followStatusData.observe(this, object : Observer<FollowResultBean> {
-            override fun onChanged(it: FollowResultBean?) {
-                if (it != null) {
+//        //用object形式，不然会报错
+//        mViewModel.followStatusData.observe(this, object : Observer<UserInfoChangeResult> {
+//            override fun onChanged(it: UserInfoChangeResult?) {
+//                if (it != null) {
+//                    //关注状态变动
+//                    changeFollowData(it)
+//                    mActivityViewModel.followChangeFlag.value = it
+//                }
+//            }
+//
+//        })
+        //全局的关注 与本地独立
+        huanQueViewModel.userInfoStatusChange.observe(this, object : Observer<ReactiveData<UserInfoChangeResult>> {
+            override fun onChanged(it: ReactiveData<UserInfoChangeResult>?) {
+                if (it != null&&it.isSuccess()) {
                     //关注状态变动
-                    changeFollowData(it)
-                    mActivityViewModel.followChangeFlag.value = it
+                    changeFollowData(it.requireT())
+//                    mActivityViewModel.followChangeFlag.value = it.requireT()
                 }
             }
 
         })
-
-
     }
 
     /**
@@ -272,7 +278,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
     /**
      * 关注状态变更
      */
-    private fun changeFollowData(bean: FollowResultBean) {
+    private fun changeFollowData(bean: UserInfoChangeResult) {
         val userID = bean.userId
         var userInfo: SocialUserInfo? = null
         var changeIndex = 0

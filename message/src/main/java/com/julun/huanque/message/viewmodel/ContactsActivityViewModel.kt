@@ -3,15 +3,10 @@ package com.julun.huanque.message.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.FollowResultBean
 import com.julun.huanque.common.bean.beans.SocialListBean
-import com.julun.huanque.common.bean.beans.SocialUserInfo
 import com.julun.huanque.common.bean.beans.UserDataTab
 import com.julun.huanque.common.bean.forms.ContactsForm
-import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.ContactsTabType
-import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
@@ -35,7 +30,7 @@ class ContactsActivityViewModel : BaseViewModel() {
     val socialListData: MutableLiveData<SocialListBean> by lazy { MutableLiveData<SocialListBean>() }
 
     //关注列表 关注状态变化
-    val followChangeFlag: MutableLiveData<FollowResultBean> by lazy { MutableLiveData<FollowResultBean>() }
+//    val followChangeFlag: MutableLiveData<UserInfoChangeResult> by lazy { MutableLiveData<UserInfoChangeResult>() }
 
     //刷新关注列表
     val followRefreshFlag : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }

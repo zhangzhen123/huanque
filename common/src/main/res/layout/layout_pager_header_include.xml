@@ -59,7 +59,7 @@
         android:gravity="center"
         tools:visibility="visible"
         android:textColor="@color/selector_btn_text_color_common"
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:visibility="gone" />
 
     <View
