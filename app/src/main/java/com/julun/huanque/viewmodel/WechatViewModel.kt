@@ -6,6 +6,7 @@ import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.events.PayResultEvent
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
+import com.julun.huanque.common.bean.forms.PostShareForm
 import com.julun.huanque.common.bean.forms.ShareForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.PayResult
@@ -13,6 +14,7 @@ import com.julun.huanque.common.constant.PayType
 import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.AppService
+import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.handleResponse
 import com.julun.huanque.common.suger.logger
@@ -126,7 +128,8 @@ class WechatViewModel : BaseViewModel() {
     private fun processShareResult(errCode: Int, errStr: String? = null) {
         when (errCode) {
             BaseResp.ErrCode.ERR_OK -> {
-                if (WXApiManager.getShareObject().shareWay == "Other") {
+                val shareObject = WXApiManager.getShareObject()
+                if (shareObject.shareWay == "Other") {
                     //分享对象有异常，shareway为other
                     finish.value = true
                     return
@@ -148,19 +151,36 @@ class WechatViewModel : BaseViewModel() {
 //                        finish.value = true
 //                    })
 //                } else {
-                Requests.create(UserService::class.java).shareLog(ShareForm(WXApiManager.getShareObject()))
-                    .handleResponse(makeSubscriber<VoidResult> {
-                        logger("分享保存记录成功")
-                        finish.value = true
-                    }.ifError {
-                        if (it is ResponseError) {
-                            logger("分享保存记录失败 , ${it.busiMessage}")
-                        } else {
-                            logger("分享保存记录失败 , ${it.message}")
-                        }
-                        finish.value = true
-                    })
-
+                if (shareObject.postId != null) {
+                    //动态分享成功
+                    Requests.create(SocialService::class.java)
+                        .saveShareLog(PostShareForm(shareObject.platForm ?: "", shareObject.postId ?: 0, shareObject.commentId))
+                        .handleResponse(makeSubscriber<VoidResult> {
+                            logger("分享保存记录成功")
+                            finish.value = true
+                        }.ifError {
+                            if (it is ResponseError) {
+                                logger("分享保存记录失败 , ${it.busiMessage}")
+                            } else {
+                                logger("分享保存记录失败 , ${it.message}")
+                            }
+                            finish.value = true
+                        })
+                } else {
+                    //其他分享成功
+                    Requests.create(UserService::class.java).shareLog(ShareForm(WXApiManager.getShareObject()))
+                        .handleResponse(makeSubscriber<VoidResult> {
+                            logger("分享保存记录成功")
+                            finish.value = true
+                        }.ifError {
+                            if (it is ResponseError) {
+                                logger("分享保存记录失败 , ${it.busiMessage}")
+                            } else {
+                                logger("分享保存记录失败 , ${it.message}")
+                            }
+                            finish.value = true
+                        })
+                }
 //                huanqueService.getService(IStatistics::class.java)?.onShare(WXApiManager.getShareObject().source
 //                        ?: "",
 //                        WXApiManager.getShareObject().programId ?: "",

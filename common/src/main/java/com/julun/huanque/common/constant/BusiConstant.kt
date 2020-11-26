@@ -611,6 +611,9 @@ object MessageCustomBeanType {
 
     //亲密度变动触发的提示
     const val Initim_Attention = "Initim_Attention"
+
+    //动态分享
+    const val PostShare = "PostShare"
 }
 
 
@@ -996,4 +999,12 @@ object CircleGroupType {
 
     //选择圈子
     const val Circle_Choose = "Circle_Choose"
+}
+
+/**
+ * 分享类型
+ */
+object ShareFromType {
+    //分享评论
+    const val Dynamic = "Dynamic"
 }

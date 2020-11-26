@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.share
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -20,6 +21,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.interfaces.routerservice.LoginAndShareService
 import com.julun.huanque.common.net.NAction
@@ -46,6 +48,25 @@ import java.util.*
  *
  */
 class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
+    companion object {
+        //跳转密友页面的code
+        const val RequestCode = 0x0001
+
+        /**
+         * @param type 来源类型 （动态，评论，其他）
+         * @param postId 动态ID
+         */
+        fun newInstance(act: Activity, type: String, postId: Long? = null) {
+            val intent = Intent(act, LiveShareActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                intent.putExtra(ParamConstant.TYPE, type)
+                if (postId != null) {
+                    intent.putExtra(ParamConstant.POST_ID, postId)
+                }
+                act.startActivity(intent)
+            }
+        }
+    }
 
 
     private var currentSelectView: View? = null
@@ -59,6 +80,10 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
     //分享目标Id ，如果是直播间，则填直播间ID, 如果是邀友，则填邀友海报ID
     private var mShareKeyId = ""
     private var programInfo: MicAnchor? = null
+
+    //动态ID
+    private var mPostId = 0L
+
     private val wxService: LoginAndShareService? by lazy {
         ARouter.getInstance().build(ARouterConstant.LOGIN_SHARE_SERVICE).navigation() as? LoginAndShareService
     }
@@ -72,16 +97,26 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         overridePendingTransition(0, 0)
         StatusBarUtil.setTransparent(this)
-        programInfo = intent.getSerializableExtra(IntentParamKey.LIVE_INFO.name) as? MicAnchor
-
-        mViewModel.programInfo = programInfo
+        initViewModel()
 
         rv_share_types.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         rv_share_types.adapter = shareAdapter
         rv_share_types.addItemDecoration(HorizontalItemDecoration(dp2px(20)))
-        initViewModel()
 
-        mViewModel.queryLiveShareInfo()
+        mViewModel.type = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
+        if (mViewModel.type == ShareFromType.Dynamic) {
+            //动态分享  直接显示分享路径
+            shareAdapter.setNewInstance(mViewModel.getShareType(false, hasInner = true))
+            mPostId = intent?.getLongExtra(ParamConstant.POST_ID, 0) ?: 0L
+        } else {
+            //其他分享
+            programInfo = intent.getSerializableExtra(IntentParamKey.LIVE_INFO.name) as? MicAnchor
+
+            mViewModel.programInfo = programInfo
+
+            mViewModel.queryLiveShareInfo()
+        }
+
 
         playInAnimator()
         root_share.onTouch { _, event ->
@@ -112,7 +147,13 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         shareAdapter.onAdapterClickNew { _, _, position ->
 
             val item = shareAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
-            shareLive(item.type)
+            if (mViewModel.type == ShareFromType.Dynamic) {
+                //动态分享
+                mViewModel.queryPostShareInfo(item.type, mPostId)
+            } else {
+                //其他分享
+                shareLive(item.type)
+            }
         }
 
         shareAdapter2.onAdapterClickNew { _, _, position ->
@@ -243,7 +284,22 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
     }
 
     private fun shareLive(type: String) {
-        val shareObject = mViewModel.liveShareInfo.value?.getT() ?: return
+        var shareObject = if (mViewModel.type != ShareFromType.Dynamic) {
+            mViewModel.liveShareInfo.value?.getT() ?: return
+        } else {
+            val postShareBean = mViewModel.postShareBeanData.value ?: return
+            ShareObject().apply {
+                shareUrl = postShareBean.shareUrl
+                shareTitle = postShareBean.content
+                shareContent = postShareBean.content
+                sharePic = StringHelper.getOssImgUrl(postShareBean.pic)
+                postId = mPostId
+//                sharePic = StringHelper.getOssImgUrl("user/head/2019110608363175169.jpg?x-oss-process=image/resize,m_fixed,w_100,h_100")
+            }
+
+        }
+
+
         when (type) {
             ShareTypeEnum.FriendCircle -> {
                 //朋友圈
@@ -273,8 +329,11 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
             ShareTypeEnum.ShareImage -> {
                 mViewModel.queryLiveQrCode()
             }
-
-
+            ShareTypeEnum.Chat -> {
+                //站内消息
+                val postShareBean = mViewModel.postShareBeanData.value ?: return
+                ShareFriendsActivity.newInstance(this, postShareBean, RequestCode)
+            }
         }
 
     }
@@ -294,6 +353,12 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         mViewModel.sharePosters.observe(this, Observer {
             if (it.isSuccess()) {
                 renderViewData(it.requireT())
+            }
+        })
+        mViewModel.postShareBeanData.observe(this, Observer {
+            if (it != null) {
+                //获取到服务端的分享数据，开始分享
+                shareLive(it.shareType)
             }
         })
 
@@ -355,6 +420,11 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
     override fun showLoadState(state: NetState) {}
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RequestCode && resultCode == Activity.RESULT_OK) {
+            //密友页面返回
+            finish()
+            return
+        }
         if (data != null)
             wxService?.weiBoShareResult(data)
         finish()

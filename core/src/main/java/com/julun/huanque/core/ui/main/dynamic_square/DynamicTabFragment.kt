@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.main.dynamic_square
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,12 +18,14 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.DynamicGroupListAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.ui.dynamic.DynamicDetailActivity
 import com.julun.huanque.core.ui.homepage.CircleActivity
+import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.*
 import kotlinx.android.synthetic.main.fragment_program_tab.mRefreshLayout
 import kotlinx.android.synthetic.main.fragment_program_tab.state_pager_view
@@ -123,7 +126,8 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             }
 
         }
-        dynamicAdapter.onAdapterChildClickNew { _, view, position ->
+        dynamicAdapter.onAdapterChildClickNew { adapter, view, position ->
+            val tempData = adapter?.getItemOrNull(position) as? DynamicItemBean ?: return@onAdapterChildClickNew
             when (view.id) {
                 R.id.btn_action -> {
                     logger.info("关注")
@@ -146,7 +150,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                     logger.info("评论")
                 }
                 R.id.tv_share_num -> {
-                    logger.info("分享")
+                    LiveShareActivity.newInstance(requireActivity(), ShareFromType.Dynamic, tempData.postId)
                 }
                 R.id.iv_more_action -> {
                     logger.info("更多操作")

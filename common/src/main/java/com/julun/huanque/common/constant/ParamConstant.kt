@@ -166,4 +166,7 @@ object ParamConstant {
 
     //默认选中tab
     const val DefaultTab = "DefaultTab"
+
+    //动态分享数据
+    const val PostShareInfo = "PostShareInfo"
 }

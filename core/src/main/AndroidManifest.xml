@@ -134,6 +134,9 @@
         <activity
             android:name=".ui.homepage.CircleActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.share.ShareFriendsActivity"
+            android:screenOrientation="portrait" />
 
 
         <service android:name=".service.FloatingService" />

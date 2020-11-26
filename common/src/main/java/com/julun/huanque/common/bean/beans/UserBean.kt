@@ -46,7 +46,9 @@ class SocialUserInfo(
     //关注类型
     var follow: String = "",
     //性别
-    var sex: String = ""
+    var sex: String = "",
+    //用户类型
+    var userType: String = ""
 )
 
 /**
