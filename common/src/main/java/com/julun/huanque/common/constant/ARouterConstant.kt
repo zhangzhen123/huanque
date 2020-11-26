@@ -123,6 +123,10 @@ object ARouterConstant {
     //乐园
     const val LEYUAN_BIRD_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/LeYuanBirdActivity"
 
+    //发布动态
+    const val PUBLISH_STATE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/PublishStateActivity"
+
+
     /** 实名认证 start **/
     private const val REAL_NAME = "realname"
 

@@ -117,22 +117,32 @@
             android:theme="@style/CustomToolBarTheme" />
         <activity
             android:name=".ui.main.follow.FollowActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
         <activity
             android:name=".ui.search.SearchActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".ui.homepage.HomePageActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
         <activity
             android:name=".ui.dynamic.DynamicDetailActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
         <activity
             android:name=".ui.homepage.CircleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.publish_dynamic.PublishStateActivity"
+            android:theme="@style/CustomToolBarTheme"
+            android:windowSoftInputMode="adjustNothing" />
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.share.ShareFriendsActivity"

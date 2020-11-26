@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.util.Base64
 import android.view.View
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.IOException
 
 /**
@@ -203,5 +204,22 @@ object BitmapUtil {
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
         return originalBitmap
     }
-
+    /**
+     * 获取图片的宽高
+     */
+    fun getImageWH(path: String): Array<Int>? {
+        val file = File(path)
+        if (!file.exists()) {
+            return null
+        }
+        val options = BitmapFactory.Options()
+        //仅做解码处理，不加载到内存
+        options.inJustDecodeBounds = true
+        //解析文件
+        BitmapFactory.decodeFile(path, options)
+        //获取宽高
+        val imgWidth = options.outWidth
+        val imgHeight = options.outHeight
+        return arrayOf(imgWidth, imgHeight)
+    }
 }

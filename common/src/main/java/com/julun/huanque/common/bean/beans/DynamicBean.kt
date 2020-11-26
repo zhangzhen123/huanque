@@ -81,3 +81,10 @@ data class DynamicComment(
     var hasMore: Boolean = false,
     var secondComments: MutableList<DynamicComment> = mutableListOf()
 )
+
+data class PublishDynamicResult(
+    var failPicList: List<String> = listOf(),
+    var failText: String = "",
+    var message: String = "",
+    var result: Boolean = false
+)
