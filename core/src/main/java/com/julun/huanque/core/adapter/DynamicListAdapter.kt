@@ -18,6 +18,7 @@ import com.julun.huanque.common.interfaces.PhotoOnItemClick
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
 
@@ -42,6 +43,11 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         val SINGLE_PHOTO_MINI_SIZE = dp2px(150)
         val space = dp2px(5)
 
+        const val HOME_FOLLOW = 0
+        const val HOME_RECOM = 1
+        const val POST_LIST_OTHER = 2 //他人列表
+        const val POST_LIST_ME = 3//我的动态列表
+
         /**
          * 4个方格模式的宽度
          */
@@ -57,10 +63,15 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         RecyclerView.RecycledViewPool()
     }
 
+    var showType: Int = 0
+
+    //记录当前的用户自己
+    var curUserId: Long = SessionUtils.getUserId()
 
     init {
         mPhotoViewPool.setMaxRecycledViews(0, 20)
         addChildClickViewIds(
+            R.id.user_info_holder,
             R.id.btn_action,
             R.id.sdv_photo,
             R.id.tv_follow_num,
@@ -123,6 +134,14 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         holder.setText(R.id.tv_follow_num, StringHelper.formatNum(item.praiseNum))
         holder.setText(R.id.tv_comment_num, StringHelper.formatNum(item.commentNum))
         holder.setText(R.id.tv_share_num, StringHelper.formatNum(item.shareNum))
+        //
+        if ((showType == HOME_RECOM || showType == HOME_FOLLOW) && item.userId != curUserId) {
+            holder.setGone(R.id.btn_action, item.follow)
+        } else {
+            holder.setGone(R.id.btn_action, true)
+        }
+        holder.getView<TextView>(R.id.tv_follow_num).isActivated = item.hasPraise
+
         if (item.group == null) {
             holder.setGone(R.id.tv_circle_name, true)
         } else {
@@ -171,7 +190,7 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
                     rv.setRecycledViewPool(mPhotoViewPool)
                     rv.setHasFixedSize(true)
                     val rvLp = rv.layoutParams as ConstraintLayout.LayoutParams
-                    if (list.size >= 4) {
+                    if (list.size >= 4 || list.size == 2) {
                         rvLp.width = Width_4
                     } else {
                         rvLp.width = 0
@@ -180,7 +199,10 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
 //                        1 -> {
 //                            1
 //                        }
-                        2, 3 -> {
+                        2 -> {
+                            2
+                        }
+                        3 -> {
                             3
                         }
                         4 -> {

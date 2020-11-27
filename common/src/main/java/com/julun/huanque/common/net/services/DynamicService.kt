@@ -1,6 +1,7 @@
 package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.*
 import retrofit2.http.Body
@@ -41,4 +42,17 @@ interface DynamicService {
      */
     @POST("social/post/userPost")
     suspend fun queryUserPosts(@Body body: PostListsForm): Root<DynamicListInfo<DynamicItemBean>>
+
+    /**
+     * 动态点赞
+     */
+    @POST("social/post/postPraise")
+    suspend fun postPraise(@Body body: PostForm): Root<VoidResult>
+
+    /**
+     * 动态取消点赞
+     */
+    @POST("social/post/cancelPraisePost")
+    suspend fun cancelPraisePost(@Body body: PostForm): Root<VoidResult>
+
 }

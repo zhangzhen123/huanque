@@ -144,6 +144,11 @@
             android:theme="@style/CustomToolBarTheme"
             android:windowSoftInputMode="adjustNothing" />
 
+        <activity
+            android:name=".ui.dynamic.UserDynamicActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+
 
         <service android:name=".service.FloatingService" />
         <service android:name=".service.BadgeIntentService" />

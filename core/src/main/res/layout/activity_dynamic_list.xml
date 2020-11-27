@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.julun.huanque.common.widgets.HeaderPageView
+        android:id="@+id/headerPageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.julun.huanque.common.widgets.refreshlayout.VpSwipeRefreshLayout
+            android:id="@+id/mRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:visibility="visible"
+            android:visibility="gone">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/postList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.julun.huanque.common.widgets.refreshlayout.VpSwipeRefreshLayout>
+
+
+        <com.julun.huanque.common.widgets.statepage.StatePageView
+            android:id="@+id/state_pager_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dimen_12"
+            android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>
