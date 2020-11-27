@@ -11,18 +11,24 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.dialog.MyAlertDialog
+import com.julun.huanque.common.bean.beans.ActionMessageContent
 import com.julun.huanque.common.bean.beans.FriendBean
 import com.julun.huanque.common.bean.beans.SysMsgBean
+import com.julun.huanque.common.bean.events.LoginOutEvent
 import com.julun.huanque.common.bean.events.SystemMessageRefreshBean
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
+import com.julun.huanque.common.utils.MessageFormatUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.message.R
+import com.julun.huanque.message.adapter.CommentListAdapter
 import com.julun.huanque.message.adapter.FriendsAdapter
+import com.julun.huanque.message.adapter.PraiseListAdapter
 import com.julun.huanque.message.adapter.SysMsgAdapter
 import com.julun.huanque.message.viewmodel.SysMsgViewModel
 import com.julun.rnlib.RNPageActivity
@@ -30,6 +36,7 @@ import com.julun.rnlib.RnConstant
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
+import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.activity_sys_msg.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundResource
@@ -44,15 +51,29 @@ import org.jetbrains.anko.backgroundResource
 class SysMsgActivity : BaseActivity() {
 
     private var mViewModel: SysMsgViewModel? = null
+
+    //系统消息adapter
     private val mSysAdapter: SysMsgAdapter by lazy { SysMsgAdapter() }
+
+    //鹊友通知adapter
     private val mFriendsAdapter: FriendsAdapter by lazy { FriendsAdapter() }
 
+    //评论adapter
+    private val mCommentListAdapter: CommentListAdapter by lazy { CommentListAdapter() }
+
+    //点赞Adapter
+    private val mPraiseListAdapter: PraiseListAdapter by lazy { PraiseListAdapter() }
+
+
     private var mAdapter: BaseQuickAdapter<Message, BaseViewHolder>? = null
+
+    private var targetID = ""
 
     override fun getLayoutId(): Int = R.layout.activity_sys_msg
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val targetId = intent.getStringExtra(IntentParamKey.SYS_MSG_ID.name) ?: ""
+        targetID = targetId
 
         MixedHelper.setSwipeRefreshStyle(rlRefreshView)
         rvList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -62,12 +83,31 @@ class SysMsgActivity : BaseActivity() {
                 mAdapter = mSysAdapter
                 clMsgRootView.backgroundResource = R.color.color_gray_three
                 tvTitle.text = "系统消息"
+                tv_clear.hide()
             }
-            else -> {
+            SystemTargetId.friendNoticeSender -> {
                 //好友通知
                 mAdapter = mFriendsAdapter
                 clMsgRootView.backgroundResource = R.color.white
                 tvTitle.text = "鹊友通知"
+                tv_clear.hide()
+            }
+            SystemTargetId.praiseNoticeSender -> {
+                //点赞
+                mAdapter = mPraiseListAdapter
+                clMsgRootView.backgroundResource = R.color.white
+                tvTitle.text = "点赞"
+                tv_clear.show()
+            }
+            SystemTargetId.commentNoticeSender -> {
+                //评论消息
+                mAdapter = mCommentListAdapter
+                clMsgRootView.backgroundResource = R.color.white
+                tvTitle.text = "评论"
+                tv_clear.show()
+            }
+            else -> {
+
             }
         }
         rvList.adapter = mAdapter
@@ -97,7 +137,7 @@ class SysMsgActivity : BaseActivity() {
         }
 //        mAdapter.onAdapterClickNew { _, view, _ ->
 //        }
-        mAdapter?.onAdapterChildClickNew { _, view, _ ->
+        mAdapter?.onAdapterChildClickNew { adapter, view, position ->
             when (view?.id) {
                 R.id.llSysRootView -> {
                     val item = view.getTag(R.id.msg_bean_id) as? SysMsgBean
@@ -126,8 +166,55 @@ class SysMsgActivity : BaseActivity() {
                     }
 
                 }
+                R.id.view_header_info -> {
+                    //打开他们主页
+                    val tempData = adapter?.getItemOrNull(position) as? Message ?: return@onAdapterChildClickNew
+                    val tempContent = tempData.content as? TextMessage ?: return@onAdapterChildClickNew
+                    val customBean: ActionMessageContent? =
+                        MessageFormatUtils.parseJsonFromTextMessage(ActionMessageContent::class.java, tempContent.content ?: "")
+                    //打开他人主页
+                    val targetUserId = customBean?.context?.targetUserId ?: return@onAdapterChildClickNew
+                    try {
+                        val bundle = Bundle().apply {
+                            putLong(ParamConstant.UserId, targetUserId)
+                        }
+                        ARouter.getInstance().build(ARouterConstant.HOME_PAGE_ACTIVITY).with(bundle).navigation()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                R.id.con_post_action -> {
+                    //打开动态详情
+                    val tempData = adapter?.getItemOrNull(position) as? Message ?: return@onAdapterChildClickNew
+                    val tempContent = tempData.content as? TextMessage ?: return@onAdapterChildClickNew
+                    val customBean: ActionMessageContent? =
+                        MessageFormatUtils.parseJsonFromTextMessage(ActionMessageContent::class.java, tempContent.content ?: "")
+                    //打开他人主页
+                    val postId = customBean?.context?.postId ?: return@onAdapterChildClickNew
+                    try {
+                        val bundle = Bundle().apply {
+                            putLong(IntentParamKey.POST_ID.name, postId)
+                        }
+                        ARouter.getInstance().build(ARouterConstant.DYNAMIC_DETAIL_ACTIVITY).with(bundle).navigation()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             }
         }
+
+        tv_clear.onClickNew {
+            MyAlertDialog(this).showAlertWithOKAndCancel(
+                "确定清空所有消息？",
+                MyAlertDialog.MyDialogCallback(onRight = {
+                    //清空所有消息
+                    if (targetID.isNotEmpty()) {
+                        mViewModel?.clearMessage()
+                    }
+                }), "提示", "确定"
+            )
+        }
+
     }
 
     private fun prepareViewModel() {
@@ -260,11 +347,11 @@ class SysMsgActivity : BaseActivity() {
                 ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
                     .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
             }
-            MessageConstants.PrivateChat->{
+            MessageConstants.PrivateChat -> {
                 //跳转私信
                 try {
-                    PrivateConversationActivity.newInstance(this,sysBean.touchValue.toLong())
-                }catch (e : java.lang.Exception){
+                    PrivateConversationActivity.newInstance(this, sysBean.touchValue.toLong())
+                } catch (e: java.lang.Exception) {
                     e.printStackTrace()
                 }
             }
@@ -302,7 +389,7 @@ class SysMsgActivity : BaseActivity() {
                         queryData(true, mViewModel?.targetId ?: return@OnClickListener)
                     })
             } else {
-                commonView.showEmpty(emptyTxt = "空数据~！")
+                commonView.showEmpty(emptyTxt = "暂无消息")
             }
         } else {
             commonView.hide()

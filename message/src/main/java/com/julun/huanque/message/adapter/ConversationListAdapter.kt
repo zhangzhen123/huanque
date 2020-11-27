@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.LocalConversation
+import com.julun.huanque.common.bean.beans.ActionMessageContent
 import com.julun.huanque.common.bean.beans.FriendContent
 import com.julun.huanque.common.bean.beans.IntimateTouchBean
 import com.julun.huanque.common.bean.message.CustomMessage
@@ -21,6 +22,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.message.R
+import io.rong.imlib.model.MessageContent
 import io.rong.message.ImageMessage
 import io.rong.message.TextMessage
 import org.jetbrains.anko.backgroundColor
@@ -57,7 +59,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             e.printStackTrace()
         }
 
-        val msg = item.conversation.latestMessage
+        val msg: MessageContent? = item.conversation.latestMessage
         //头像
         val sdvHeader = helper.getView<SimpleDraweeView>(R.id.sdv_header)
         //欢遇状态
@@ -118,6 +120,18 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                 helper.setText(R.id.tv_nickname, "鹊友通知")
             }
 
+            if (targetId == SystemTargetId.commentNoticeSender) {
+                //评论消息
+                ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_comment)
+                helper.setText(R.id.tv_nickname, "评论")
+            }
+
+            if (targetId == SystemTargetId.praiseNoticeSender) {
+                //点赞消息
+                ImageUtils.loadImageLocal(sdvHeader, R.mipmap.icon_message_praise)
+                helper.setText(R.id.tv_nickname, "点赞")
+            }
+
             val info = item.strangerInfo
             if (targetId?.isNotEmpty() != true) {
                 //陌生人消息
@@ -169,6 +183,31 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                         tv_draft.hide()
                         val msgConent: FriendContent? = MessageFormatUtils.parseJsonFromTextMessage(FriendContent::class.java, msg.content ?: "")
                         MessageFormatUtils.renderImage(helper.getView(R.id.tv_content), msgConent?.context ?: return, true)
+                    }
+                    SystemTargetId.praiseNoticeSender -> {
+                        //点赞
+                        tv_draft.hide()
+                        if (item.conversation.unreadMessageCount > 0) {
+                            val msgConent: ActionMessageContent? =
+                                MessageFormatUtils.parseJsonFromTextMessage(ActionMessageContent::class.java, msg.content ?: "")
+                            helper.setText(R.id.tv_content, "${msgConent?.context?.nickname} 给你点赞")
+                        } else {
+                            helper.setText(R.id.tv_content, "评论你的都在这")
+                        }
+
+                    }
+                    SystemTargetId.commentNoticeSender -> {
+                        //评论
+                        tv_draft.hide()
+                        if (item.conversation.unreadMessageCount > 0) {
+                            //有未读消息
+                            val msgConent: ActionMessageContent? =
+                                MessageFormatUtils.parseJsonFromTextMessage(ActionMessageContent::class.java, msg.content ?: "")
+                            helper.setText(R.id.tv_content, "${msgConent?.context?.nickname}： ${msgConent?.context?.comment}")
+                        } else {
+                            helper.setText(R.id.tv_content, "赞你的都在这")
+                        }
+
                     }
                     else -> {
                         if (!showDraftView(helper, targetId)) {

@@ -90,6 +90,43 @@ data class DynamicComment(
     var firstCommentId: Long = 0
 )
 
+/**
+ * 消息列表使用的评论消息(点赞和评论消息对象)
+ */
+data class SingleActionInMessage(
+    //消息发送者Id（系统）
+    var senderId: String = "",
+    //时间
+    var createTime: Long = 0,
+    //性别
+    var sex: String = "",
+    //昵称
+    var nickname: String = "",
+    //动态Id
+    var postId: Long = 0,
+    //动态第一张图片
+    var pic: String = "",
+    //点赞用户头像
+    var headPic: String = "",
+    //真人图片
+    var authMark: String = "",
+    //动态文本内容
+    var content: String = "",
+    //点赞用户ID
+    var targetUserId: Long = 0,
+    //消息接收者用户ID
+    var userId: Long = 0,
+    //用户是否匿名
+    var userAnonymous: String = "",
+    //是否是楼主
+    var originalPoster: String = "",
+    //评论内容，有此参数证明是评论点赞
+    var comment: String = "",
+    //年龄
+    var age: Int = 0
+) : Serializable
+
+
 data class PublishDynamicResult(
     var failPicList: List<String> = listOf(),
     var failText: List<String> = listOf(),

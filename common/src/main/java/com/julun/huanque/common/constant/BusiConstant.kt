@@ -678,6 +678,12 @@ object SystemTargetId {
 
     //系统通知
     const val systemNoticeSender = "systemNoticeSender"
+
+    //点赞消息
+    const val praiseNoticeSender = "praiseNoticeSender"
+
+    //评论消息
+    const val commentNoticeSender = "commentNoticeSender"
 }
 
 //表情类型

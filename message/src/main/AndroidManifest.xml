@@ -33,6 +33,12 @@
             android:name=".activity.PicContentActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.CommentListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PraiseListActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.UsefulWordActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateHidden|stateAlwaysHidden"

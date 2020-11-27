@@ -33,6 +33,14 @@ data class FriendContent(
     var eventCode: String = ""
 ) : Serializable
 
+/**
+ * 点赞和评论消息
+ */
+data class ActionMessageContent(
+    var context: SingleActionInMessage? = null,
+    var eventCode: String = ""
+) : Serializable
+
 data class FriendBean(
     var friendHeadPic: String = "",
     var friendId: String = "",
