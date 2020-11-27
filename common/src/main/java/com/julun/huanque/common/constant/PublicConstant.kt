@@ -23,6 +23,20 @@ object DefaultHomeTab {
 
 object SquareTabType {
 
-    const val Follow = "Follow"
+    const val FOLLOW = "Follow"
     const val RECOMMEND = "Recom"
+}
+
+object ActivityRequestCode {
+    const val SELECT_CIRCLE = 345
+
+    const val CIRCLE_DATA = "Circle_Data"
+}
+
+object BottomActionCode {
+    const val DELETE = "delete"
+    const val REPORT = "report"
+    const val SHARE = "share"
+    const val BLACK = "black"
+    const val CANCEL = "cancel"
 }

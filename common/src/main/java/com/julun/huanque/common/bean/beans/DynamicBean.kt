@@ -1,6 +1,8 @@
 package com.julun.huanque.common.bean.beans
 
 import com.julun.huanque.common.basic.RootListData
+import com.luck.picture.lib.entity.LocalMedia
+import java.io.Serializable
 
 data class DynamicItemBean(
     var age: Int = 0,
@@ -23,6 +25,7 @@ data class DynamicItemBean(
     var shareNum: Long = 0,
     var userId: Long = 0L,
     var userType: String = "",
+    var follow: Boolean = false,
     var pics: MutableList<String> = mutableListOf(),
     var watermark: String = "",
     //本地字段
@@ -89,7 +92,39 @@ data class DynamicComment(
 
 data class PublishDynamicResult(
     var failPicList: List<String> = listOf(),
-    var failText: String = "",
+    var failText: List<String> = listOf(),
     var message: String = "",
     var result: Boolean = false
 )
+
+/**
+ * 保存发布动态的草稿
+ */
+class PublishDynamicCache {
+    var groupName: String? = null
+    var groupId: Long? = null
+    var anonymous: String = ""
+    var content: String = ""//
+    var selectList: MutableList<LocalMedia> = mutableListOf()
+}
+
+
+class DynamicListInfo<T> : RootListData<T>() {
+    var extData: DynamicListExt? = null
+}
+
+
+data class DynamicListExt(
+    var follow: Boolean = false
+) : Serializable
+
+/**
+ * 点赞变化 分享变化  评论变化 如果是true +1  false则-1 null不处理
+ */
+class DynamicChangeResult(
+    var postId: Long = 0L,
+    var praise: Boolean? = null,
+    var share: Boolean? = null,
+    var comment: Boolean? = null
+)
+

@@ -24,6 +24,7 @@ import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
@@ -378,6 +379,13 @@ class MessageFragment : BaseFragment() {
                 mMessageViewModel.refreshConversation(it.targetId, it.stranger)
             }
         })
+
+        HuanViewModelManager.huanQueViewModel.userInfoStatusChange.observe(this, Observer {
+            if(it!=null&&it.isSuccess()){
+                val userInfo=it.requireT()
+                mMessageViewModel.userInfoUpdate(userInfo)
+            }
+        })
     }
 
     private fun showEmptyView() {
@@ -649,11 +657,11 @@ class MessageFragment : BaseFragment() {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun userInfoChangeEvent(bean: UserInfoChangeEvent) {
-        //用户数据发生变化
-        mMessageViewModel.userInfoUpdate(bean)
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    fun userInfoChangeEvent(bean: UserInfoChangeEvent) {
+//        //用户数据发生变化
+//        mMessageViewModel.userInfoUpdate(bean)
+//    }
 
     /**
      * 刷新系统消息和鹊友消息

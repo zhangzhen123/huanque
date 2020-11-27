@@ -28,6 +28,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.HideFloatingEvent
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.VoiceManager
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
@@ -90,6 +91,8 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
     private val voiceCompositeDisposable = CompositeDisposable()
 
     private var mAnonymousVoiceViewModel: AnonymousVoiceViewModel? = null
+
+    private val mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
 
     //匹配从多少时间开始
     private var mMatchStartTime = 0L
@@ -344,9 +347,9 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
             }
         })
 
-        mAnonymousVoiceViewModel?.followStatusData?.observe(this, Observer {
-            if (it != null) {
-                if (it.userId == mAnonymousVoiceViewModel?.targetUserId) {
+        mHuanQueViewModel.userInfoStatusChange.observe(this, Observer {
+            if (it != null&&it.isSuccess()) {
+                if (it.requireT().userId == mAnonymousVoiceViewModel?.targetUserId) {
                     iv_follow.hide()
                 }
             }
@@ -433,7 +436,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         }
         iv_follow.onClickNew {
             //关注按钮
-            mAnonymousVoiceViewModel?.follow(mAnonymousVoiceViewModel?.targetUserId ?: return@onClickNew)
+            mHuanQueViewModel.follow(mAnonymousVoiceViewModel?.targetUserId ?: return@onClickNew)
         }
     }
 

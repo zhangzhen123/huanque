@@ -5,9 +5,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -16,24 +14,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
-import com.facebook.drawee.drawable.ScalingUtils
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseDialogFragment
-import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.BottomActionBean
-import com.julun.huanque.common.bean.beans.PrivateMessageBean
 import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
-import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.homepage.HomePageActivity
@@ -43,13 +37,10 @@ import com.julun.huanque.core.viewmodel.CardManagerViewModel
 import com.julun.huanque.core.viewmodel.UserCardViewModel
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
-import com.rd.utils.DensityUtils
-import kotlinx.android.synthetic.main.fragment_anchorisnotonline.*
 import kotlinx.android.synthetic.main.fragment_user_card.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.padding
 import org.jetbrains.anko.textColor
 
 /**
@@ -62,6 +53,7 @@ class UserCardFragment : BaseDialogFragment() {
     private val mUserCardViewModel: UserCardViewModel by viewModels<UserCardViewModel>()
     private val mCardManagerViewModel: CardManagerViewModel by activityViewModels()
     private val mPlayerViewModel: PlayerViewModel by activityViewModels()
+    private val huanQueViewModel = HuanViewModelManager.huanQueViewModel
 
     companion object {
         /**
@@ -172,7 +164,7 @@ class UserCardFragment : BaseDialogFragment() {
             showViewByData(it ?: return@Observer)
         })
 
-        mPlayerViewModel.followStatusData.observe(this, Observer {
+        huanQueViewModel.userInfoStatusChange.observe(this, Observer {
             if (it?.getT()?.userId != mUserCardViewModel.mUserId) {
                 //不是当前用户的关注数据
                 return@Observer
@@ -218,10 +210,10 @@ class UserCardFragment : BaseDialogFragment() {
             }
             if (mUserCardViewModel.userInfoData.value?.follow == true) {
                 //已关注,取消关注
-                mPlayerViewModel.unFollow(mUserCardViewModel.mUserId)
+                huanQueViewModel.unFollow(mUserCardViewModel.mUserId)
             } else {
                 //未关注，关注
-                mPlayerViewModel.follow(mUserCardViewModel.mUserId)
+                huanQueViewModel.follow(mUserCardViewModel.mUserId)
             }
             tv_attention.isEnabled = false
         }

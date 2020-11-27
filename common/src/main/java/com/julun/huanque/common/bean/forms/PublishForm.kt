@@ -1,5 +1,7 @@
 package com.julun.huanque.common.bean.forms
 
+import com.luck.picture.lib.entity.LocalMedia
+
 
 /**
  *
@@ -10,7 +12,7 @@ package com.julun.huanque.common.bean.forms
  *@Description: PublishForm
  *
  */
-class PublishStateForm : SessionForm() {
+open class PublishStateForm  {
     var groupId: Long? = null
     var city: String? = null
     var lng: Double? = null

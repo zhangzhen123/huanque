@@ -8,7 +8,6 @@ import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.ChatUser
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.EventMessageBean
-import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.SendMsgForm
 import com.julun.huanque.common.bean.forms.SendRoomForm
@@ -17,11 +16,13 @@ import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.database.HuanQueDatabase
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.LiveRoomService
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
@@ -37,7 +38,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.TimeUnit
-import kotlin.Exception
 
 /**
  *@创建者   dong
@@ -296,7 +296,9 @@ class PrivateConversationViewModel : BaseViewModel() {
                     if (friendUser.toString() != (userInDb?.toString() ?: "")) {
                         //数据不一致，需要保存用户数据
                         HuanQueDatabase.getInstance().chatUserDao().insert(friendUser)
-                        EventBus.getDefault().post(UserInfoChangeEvent(friendUser.userId, friendUser.stranger))
+//                        EventBus.getDefault().post(UserInfoChangeEvent(friendUser.userId, friendUser.stranger))
+                        val changeResult = UserInfoChangeResult( userId = friendUser.userId, stranger = friendUser.stranger)
+                        HuanViewModelManager.huanQueViewModel.userInfoStatusChange.value=changeResult.convertRtData()
                     }
                 }
             }, {

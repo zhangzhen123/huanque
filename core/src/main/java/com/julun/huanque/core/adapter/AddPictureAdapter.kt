@@ -10,7 +10,9 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.helper.DensityHelper.Companion.dp2px
+import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ULog
@@ -67,13 +69,14 @@ class AddPictureAdapter(
         internal var mImg: SimpleDraweeView
         internal var ll_del: LinearLayout
         internal var video_play_view: ImageView
-
+        internal var ll_failure_notice :View
 
         init {
             ll_parent = view.findViewById(R.id.add_img_parent)
             mImg = view.findViewById<View>(R.id.fiv) as SimpleDraweeView
             ll_del = view.findViewById<View>(R.id.ll_del) as LinearLayout
             video_play_view = view.findViewById<ImageView>(R.id.iv_video_play) as ImageView
+            ll_failure_notice=view.findViewById<View>(R.id.ll_failure_notice)
         }
     }
 
@@ -187,6 +190,12 @@ class AddPictureAdapter(
                     val adapterPosition = viewHolder.adapterPosition
                     mItemClickListener!!.onItemClick(adapterPosition, v)
                 }
+            }
+
+            if(media.isFail){
+                viewHolder.ll_failure_notice.show()
+            }else{
+                viewHolder.ll_failure_notice.hide()
             }
         }
     }

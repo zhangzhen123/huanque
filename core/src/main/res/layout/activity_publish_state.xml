@@ -45,6 +45,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/ll_add_circle"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_54"
                         android:layout_marginStart="@dimen/dimen_15"
@@ -83,6 +84,13 @@
                             android:text="同步到圈子，获更多赞哦"
                             android:textColor="@color/black_999"
                             android:textSize="@dimen/sp_14" />
+                        <ImageView
+                            android:id="@+id/iv_circle_delete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            tools:visibility="visible"
+                            android:src="@mipmap/icon_close_grey_01"/>
 
                     </LinearLayout>
 
@@ -100,7 +108,7 @@
                         android:maxLength="101"
                         android:minHeight="@dimen/dimen_135"
                         android:padding="@dimen/dimen_10"
-                        android:textSize="@dimen/sp_12" />
+                        android:textSize="@dimen/sp_13" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/addPicListView"

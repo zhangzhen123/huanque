@@ -25,6 +25,7 @@ import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.helper.TplHelper
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
@@ -136,6 +137,9 @@ class PlayerViewManager(val context: PlayerActivity) {
     //道具相关ViewModel
     private val propViewModel: PropViewModel by context.viewModels()
 
+
+    private val huanQueViewModel=HuanViewModelManager.huanQueViewModel
+
     //屏幕高度 包含虚拟键
     private var screenHeight = ScreenUtils.getScreenHeightHasVirtualKey()
 
@@ -231,7 +235,7 @@ class PlayerViewManager(val context: PlayerActivity) {
         })
 
 
-        viewModel.followStatusData.observe(context, Observer {
+        huanQueViewModel.userInfoStatusChange.observe(context, Observer {
             logger.info("Player 关注状态 status = $it")
             if (it != null && it.isSuccess() && it.getT()?.userId != viewModel.programId) {
                 //不是主播的关注数据

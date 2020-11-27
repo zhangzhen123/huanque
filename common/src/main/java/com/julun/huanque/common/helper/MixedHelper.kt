@@ -12,6 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.R
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.init.CommonInit
@@ -104,7 +109,7 @@ object MixedHelper {
         btnTex: String = "",
         showImage: Boolean = true,
         onClick: View.OnClickListener = View.OnClickListener { },
-        showBtn : Boolean = true
+        showBtn: Boolean = true
     ): View {
 
         val mErrorView: View = LayoutInflater.from(ctx).inflate(R.layout.layout_network_unable, null)
@@ -123,9 +128,9 @@ object MixedHelper {
         } else {
             btn.text = ctx.resources.getString(R.string.reload)
         }
-        if(!showBtn){
+        if (!showBtn) {
             btn.hide()
-        }else{
+        } else {
             btn.show()
         }
         btn.setOnClickListener(onClick)
@@ -144,7 +149,7 @@ object MixedHelper {
         isImageHide: Boolean = false,
         imgResId: Int? = null,
         btnTex: String = "",
-        onClick: View.OnClickListener ?=null
+        onClick: View.OnClickListener? = null
 
     ): View {
         val emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty_data, null)
@@ -165,9 +170,9 @@ object MixedHelper {
         } else {
             emptyView.tv_button.text = context.resources.getString(R.string.reload)
         }
-        if(onClick==null){
+        if (onClick == null) {
             emptyView.tv_button.hide()
-        }else{
+        } else {
             emptyView.tv_button.show()
             emptyView.tv_button.setOnClickListener(onClick)
         }
@@ -293,6 +298,25 @@ object MixedHelper {
         view?.let {
             (it.parent as ViewGroup?)?.removeView(it)
         }
+    }
+
+    /**
+     * 安全的刷新item方式 防止刷新的item不在屏幕上导致的报错 只适合LinearLayoutManager和GridLayoutManager
+     */
+    fun safeNotifyItem(index: Int, rv: RecyclerView, adapter: BaseQuickAdapter<*, BaseViewHolder>) {
+        val mLayoutManager = rv.layoutManager
+        if (mLayoutManager is LinearLayoutManager) {
+            val firstVisibleItemPosition: Int = mLayoutManager.findFirstVisibleItemPosition()
+            val lastVisibleItemPosition: Int = mLayoutManager.findLastVisibleItemPosition()
+            if (index != -1) {
+                val position = index + adapter.headerLayoutCount
+                if (position - firstVisibleItemPosition >= 0 && position <= lastVisibleItemPosition) {
+                    adapter.notifyItemChanged(position)
+                }
+            }
+
+        }
+
     }
 
 }

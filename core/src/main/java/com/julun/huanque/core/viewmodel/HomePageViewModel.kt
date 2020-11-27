@@ -2,16 +2,15 @@ package com.julun.huanque.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.events.SendRNEvent
-import com.julun.huanque.common.bean.events.UserInfoChangeEvent
+import com.julun.huanque.common.bean.beans.AppraiseBean
+import com.julun.huanque.common.bean.beans.CloseConfidantBean
+import com.julun.huanque.common.bean.beans.EvaluateTags
+import com.julun.huanque.common.bean.beans.HomePageInfo
 import com.julun.huanque.common.bean.forms.EvaluateForm
 import com.julun.huanque.common.bean.forms.FriendIdForm
 import com.julun.huanque.common.bean.forms.UserIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.FollowStatus
-import com.julun.huanque.common.constant.RNMessageConst
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
@@ -19,7 +18,6 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -118,53 +116,53 @@ class HomePageViewModel : BaseViewModel() {
     /**
      * 关注
      */
-    fun follow() {
-        viewModelScope.launch {
-            request({
-                val follow = socialService.follow(FriendIdForm(targetUserId)).dataConvert()
-//                val followBean = FollowResultBean(follow = follow.follow, userId = userId)
-                followStatus.value = follow.follow
-                homeInfoBean.value?.follow = follow.follow
-                ToastUtils.show(follow.toastMsg)
-                EventBus.getDefault()
-                    .post(UserInfoChangeEvent(targetUserId, follow.stranger, follow.follow))
-                EventBus.getDefault()
-                    .post(
-                        SendRNEvent(
-                            RNMessageConst.FollowUserChange,
-                            hashMapOf("userId" to targetUserId, "isFollowed" to true)
-                        )
-                    )
-            }, {
-            })
-        }
-    }
+//    fun follow() {
+//        viewModelScope.launch {
+//            request({
+//                val follow = socialService.follow(FriendIdForm(targetUserId)).dataConvert()
+////                val followBean = FollowResultBean(follow = follow.follow, userId = userId)
+//                followStatus.value = follow.follow
+//                homeInfoBean.value?.follow = follow.follow
+//                ToastUtils.show(follow.toastMsg)
+//                EventBus.getDefault()
+//                    .post(UserInfoChangeEvent(targetUserId, follow.stranger, follow.follow))
+//                EventBus.getDefault()
+//                    .post(
+//                        SendRNEvent(
+//                            RNMessageConst.FollowUserChange,
+//                            hashMapOf("userId" to targetUserId, "isFollowed" to true)
+//                        )
+//                    )
+//            }, {
+//            })
+//        }
+//    }
 
     /**
      * 取消关注
      */
-    fun unFollow() {
-        viewModelScope.launch {
-            request({
-                val follow = socialService.unFollow(FriendIdForm(targetUserId)).dataConvert()
-//                val followBean = FollowResultBean(follow = FollowStatus.False, userId = userId)
-                followStatus.value = FollowStatus.False
-                homeInfoBean.value?.follow = FollowStatus.False
-                ToastUtils.show("取消关注成功")
-                EventBus.getDefault()
-                    .post(UserInfoChangeEvent(targetUserId, follow.stranger, follow.follow))
-                EventBus.getDefault()
-                    .post(
-                        SendRNEvent(
-                            RNMessageConst.FollowUserChange,
-                            hashMapOf("userId" to targetUserId, "isFollowed" to false)
-                        )
-                    )
-            }, {
-//                followStatusData.value = it.convertError()
-            })
-        }
-    }
+//    fun unFollow() {
+//        viewModelScope.launch {
+//            request({
+//                val follow = socialService.unFollow(FriendIdForm(targetUserId)).dataConvert()
+////                val followBean = FollowResultBean(follow = FollowStatus.False, userId = userId)
+//                followStatus.value = FollowStatus.False
+//                homeInfoBean.value?.follow = FollowStatus.False
+//                ToastUtils.show("取消关注成功")
+//                EventBus.getDefault()
+//                    .post(UserInfoChangeEvent(targetUserId, follow.stranger, follow.follow))
+//                EventBus.getDefault()
+//                    .post(
+//                        SendRNEvent(
+//                            RNMessageConst.FollowUserChange,
+//                            hashMapOf("userId" to targetUserId, "isFollowed" to false)
+//                        )
+//                    )
+//            }, {
+////                followStatusData.value = it.convertError()
+//            })
+//        }
+//    }
 
     /**
      * 获取评价列表

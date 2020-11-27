@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.homepage
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -11,6 +12,7 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.CircleGroup
+import com.julun.huanque.common.constant.ActivityRequestCode
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.CircleGroupTabType
 import com.julun.huanque.common.constant.CircleGroupType
@@ -83,6 +85,11 @@ class RecommendCircleFragment : BaseFragment() {
                 //全部圈子  打开详情
             } else if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
                 //选择圈子，返回选中的圈子数据
+                val act=requireActivity()
+                val intent = act.intent
+                intent.putExtra(ActivityRequestCode.CIRCLE_DATA, tempData)
+                act.setResult(Activity.RESULT_OK,intent)
+                act.finish()
             }
         }
         mAttentionCircleAdapter.loadMoreModule.setOnLoadMoreListener {

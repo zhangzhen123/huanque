@@ -1,14 +1,5 @@
 package com.julun.huanque.message.viewmodel
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.graphics.Color
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.bean.ChatUser
@@ -16,8 +7,8 @@ import com.julun.huanque.common.bean.LocalConversation
 import com.julun.huanque.common.bean.beans.ChatRoomBean
 import com.julun.huanque.common.bean.beans.RoomUserChatExtra
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
+import com.julun.huanque.common.bean.beans.UserInfoChangeResult
 import com.julun.huanque.common.bean.events.UnreadCountEvent
-import com.julun.huanque.common.bean.events.UserInfoChangeEvent
 import com.julun.huanque.common.bean.forms.LineStatusForm
 import com.julun.huanque.common.bean.message.CustomMessage
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
@@ -26,7 +17,6 @@ import com.julun.huanque.common.constant.MessageCustomBeanType
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.constant.SystemTargetId
 import com.julun.huanque.common.database.HuanQueDatabase
-import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
@@ -35,7 +25,6 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.*
-import com.julun.huanque.message.R
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.message.ImageMessage
@@ -717,7 +706,7 @@ class MessageViewModel : BaseViewModel() {
     /**
      * 用户数据更新
      */
-    fun userInfoUpdate(bean: UserInfoChangeEvent) {
+    fun userInfoUpdate(bean: UserInfoChangeResult) {
 
         viewModelScope.launch {
             //用户ID

@@ -1,75 +1,75 @@
 package com.julun.huanque.common.base.dialog
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.WindowManager
-import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
-import com.julun.huanque.common.utils.ULog
+import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.module.LoadMoreModule
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.julun.huanque.common.R
-import com.julun.huanque.common.helper.reportCrash
-import com.julun.huanque.common.helper.DensityHelper
+import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.suger.onAdapterClickNew
+import kotlinx.android.synthetic.main.dialog_bottom_action.*
 
 /**
- * 底部弹出框
- * Created by djp on 2016/11/21.
+ * 底部弹出框 通用的底部操作
  */
-abstract class BottomDialog : AppCompatDialogFragment() {
+class BottomDialog : BaseDialogFragment() {
 
-    protected var logger = ULog.getLogger("BottomDialog")
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.BottomDialogTransparent)
-    }
-
-    open fun needWindowConfig(): Boolean {
-        return true
-    }
-
-    private fun setWindowConfig() {
-        val window = dialog?.window ?: return
-        val lp = window.attributes
-        val display = window.windowManager.defaultDisplay
-        lp.width = display.width * 1 - DensityHelper.px2dp(20f)
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
-        window.attributes = lp
-        window.setGravity(Gravity.BOTTOM)
-        window.setWindowAnimations(R.style.dialog_bottom_bottom_style)
-    }
-
-    override fun show(manager: FragmentManager, tag: String?) {
-        //每次先判断是否已经被添加
-        try {
-            //偶然发现崩溃,报出IllegalStateException: Fragment already added 异常，并没有catch
-            //检查发现如果某一时间多次show出dialogFragment就会出现，所以在show时判断没有添加或展示时才会commit，并立即生效，避免状态没有同步问题
-            val fragment = manager.findFragmentByTag(tag)
-            if (!isAdded && fragment == null) {
-                super.show(manager, tag)
-            } else {
-                logger.info("当前的已经添加 不再处理")
-            }
-            //立刻执行并同步状态
-            manager.executePendingTransactions()
-        } catch (e: Exception) {
-            reportCrash("显示BottomDialog的时候报错 ", e)
+    companion object {
+        fun newInstance(actions: ArrayList<Action>): BottomDialog {
+            val args = Bundle()
+            args.putSerializable(IntentParamKey.OPERATE.name, actions)
+            val fragment = BottomDialog()
+            fragment.arguments = args
+            return fragment
         }
+    }
+
+    var listener: OnActionListener? = null
+    private var actions: ArrayList<Action>? = null
+    fun setActions(actions: ArrayList<Action>) {
+        arguments?.putSerializable(IntentParamKey.OPERATE.name, actions)
     }
 
     override fun onStart() {
         super.onStart()
-        if (needWindowConfig())
-            setWindowConfig()
+        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = ViewGroup.LayoutParams.WRAP_CONTENT)
+//        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+    }
 
-        dialog?.setOnKeyListener(DialogInterface.OnKeyListener { dialog, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                dismiss()
-                return@OnKeyListener true
+    override fun getLayoutId(): Int {
+        return R.layout.dialog_bottom_action
+    }
+
+    override fun initViews() {
+
+        action_list.layoutManager = LinearLayoutManager(requireContext())
+        action_list.adapter = mAdapter
+        mAdapter.onAdapterClickNew { _, _, position ->
+            listener?.operate(mAdapter.getItemOrNull(position) ?: return@onAdapterClickNew)
+            dismiss()
+        }
+
+        actions = arguments?.getSerializable(IntentParamKey.OPERATE.name) as? ArrayList<Action>
+        mAdapter.setList(actions)
+    }
+
+    override fun reCoverView() {
+        actions = arguments?.getSerializable(IntentParamKey.OPERATE.name) as? ArrayList<Action>
+        mAdapter.setList(actions)
+    }
+
+    private val mAdapter =
+        object : BaseQuickAdapter<Action, BaseViewHolder>(R.layout.item_bottom_action), LoadMoreModule {
+            override fun convert(holder: BaseViewHolder, item: Action) {
+                holder.setText(R.id.tv_action, item.tag)
             }
-            false
-        })
+        }
+
+    class Action(var code: String, var tag: String)
+    interface OnActionListener {
+        fun operate(action: Action)
     }
 }

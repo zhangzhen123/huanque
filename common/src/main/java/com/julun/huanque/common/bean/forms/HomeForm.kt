@@ -33,3 +33,7 @@ class PostDetailForm(var postId: Long)
 
 
 class HomePostForm(var offset: Int,var postType:String?)
+
+class PostListsForm(var offset: Int,var userId:Long?)
+
+class PostForm(var postId:Long)

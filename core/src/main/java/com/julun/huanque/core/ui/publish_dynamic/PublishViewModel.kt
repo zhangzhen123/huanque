@@ -43,11 +43,8 @@ class PublishViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = service.publishState(form).dataConvert()
-                //todo
-//                result.comments.clear()
                 publisStateResult.value = result.convertRtData()
             }, error = {
-                it.printStackTrace()
                 publisStateResult.value = it.convertError()
             })
 

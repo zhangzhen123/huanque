@@ -817,11 +817,11 @@ class PlayerActivity : BaseActivity() {
         playerMessageViewModel.privateConversationData.value = event
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun subscribeChange(event: UserInfoChangeEvent) {
-        val followBean = FollowResultBean(follow = event.follow, userId = event.userId)
-        viewModel.followStatusData.value = followBean.convertRtData()
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    fun subscribeChange(event: UserInfoChangeEvent) {
+//        val followBean = FollowResultBean(follow = event.follow, userId = event.userId)
+//        viewModel.followStatusData.value = followBean.convertRtData()
+//    }
 
     private fun joinChatCallback(joined: Boolean?) {
         if (joined != null && joined) {

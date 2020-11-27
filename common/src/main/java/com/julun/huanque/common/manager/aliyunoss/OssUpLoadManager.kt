@@ -1,6 +1,9 @@
 package com.julun.huanque.common.manager.aliyunoss
 
 import android.content.Context
+import android.util.LruCache
+import android.util.SparseArray
+import android.view.View
 import com.alibaba.sdk.android.oss.ClientConfiguration
 import com.alibaba.sdk.android.oss.ClientException
 import com.alibaba.sdk.android.oss.OSSClient
@@ -39,13 +42,18 @@ object OssUpLoadManager {
     const val VOICE_POSITION = "user/voice"// 语音文件
     const val HEAD_POSITION = "user/head"// 头像路径
     const val MESSAGE_PIC = "user/message"// im图片路径
-    const val POST_POSITION="social/post"//动态路径
+    const val POST_POSITION = "social/post"//动态路径
 
 
     var isUploading = false
 
     const val CODE_SUCCESS = 1
     const val CODE_ERROR = 0
+
+    /**
+     * 这里新增一个缓存 专门缓存已经上传OSS成功的的文件 以提高上传有效率  因为经常业务逻辑的错误会需要重复上传相同的文件 导致浪费
+     */
+    private val ossFileCache: LruCache<String, String> = LruCache<String, String>(100)
 
     /**
      * 必须初始化
@@ -79,11 +87,20 @@ object OssUpLoadManager {
                 logger.info("当前的文件：" + f + "当前的线程：${Thread.currentThread()}")
                 val name = "$position/${StringHelper.uuid2()}.${FileUtils.getFilextension(f)}"
                 var curresult = ""
-                val success = mService.syncPutImage(name, f, null)
-                if (success) {
-                    curresult = name
+                if (ossFileCache.get(f) != null) {
+                    curresult = ossFileCache.get(f)
                     map[f] = curresult
+                    logger.info("有缓存直接使用：$f----$curresult")
+                } else {
+                    val success = mService.syncPutImage(name, f, null)
+                    if (success) {
+                        curresult = name
+                        map[f] = curresult
+                        //
+                        ossFileCache.put(f, curresult)
+                    }
                 }
+
                 curresult
             }
         }.toList().toObservable()/*.subscribeOn(Schedulers.io())*/
@@ -130,26 +147,33 @@ object OssUpLoadManager {
             logger.info("当前的文件：$f")
             val name = "$position/${StringHelper.uuid2()}.${FileUtils.getFilextension(f)}"
             var result = ""
-            val success = mService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
-                override fun onProgress(request: PutObjectRequest?, currentSize: Long, totalSize: Long) {
-                    Observable.empty<Any>().observeOn(AndroidSchedulers.mainThread()).doOnComplete {
-                        callback?.onProgress(currentSize, totalSize)
-                    }.subscribe()
+            if (ossFileCache.get(f) != null) {
+                result = ossFileCache.get(f)
+                logger.info("有缓存直接使用：$f----$result")
+            } else {
+                val success = mService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
+                    override fun onProgress(request: PutObjectRequest?, currentSize: Long, totalSize: Long) {
+                        Observable.empty<Any>().observeOn(AndroidSchedulers.mainThread()).doOnComplete {
+                            callback?.onProgress(currentSize, totalSize)
+                        }.subscribe()
+                    }
+
+                    override fun onSuccess(request: PutObjectRequest?, result: PutObjectResult?) {
+                    }
+
+                    override fun onFailure(
+                        request: PutObjectRequest?,
+                        clientException: ClientException?,
+                        serviceException: ServiceException?
+                    ) {
+
+                    }
+                })
+                if (success) {
+                    result = name
+                    ossFileCache.put(f, result)
                 }
 
-                override fun onSuccess(request: PutObjectRequest?, result: PutObjectResult?) {
-                }
-
-                override fun onFailure(
-                    request: PutObjectRequest?,
-                    clientException: ClientException?,
-                    serviceException: ServiceException?
-                ) {
-
-                }
-            })
-            if (success) {
-                result = name
             }
             result
         }.subscribe({
@@ -212,10 +236,15 @@ object OssUpLoadManager {
                             file
                         )}"
                     var curResult = ""
-                    val success = mService.syncPutImage(name, f, null)
-                    if (success) {
-                        curResult = name
-                        resultPicPath = curResult
+                    if (ossFileCache.get(f) != null) {
+                        curResult = ossFileCache.get(f)
+                    } else {
+                        val success = mService.syncPutImage(name, f, null)
+                        if (success) {
+                            curResult = name
+                            resultPicPath = curResult
+                            ossFileCache.put(f, curResult)
+                        }
                     }
                     curResult
                 }
@@ -225,30 +254,36 @@ object OssUpLoadManager {
 //                    val name = "$VIDEO_POSITION/${SessionUtils.getUserId()}/${StringHelper.uuid2()}.${FileUtils.getFilextension(file)}"
                     val name = "$position/${StringHelper.uuid2()}.${FileUtils.getFilextension(file)}"
                     var curResult = ""
-                    val success = mService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
-                        override fun onProgress(request: PutObjectRequest?, currentSize: Long, totalSize: Long) {
-                            Observable.empty<Any>().observeOn(AndroidSchedulers.mainThread()).doOnComplete {
-                                callback?.onProgress(currentSize, totalSize)
-                            }.subscribe()
-                        }
+                    if (ossFileCache.get(f) != null) {
+                        curResult = ossFileCache.get(f)
+                    } else {
+                        val success = mService.syncPutImage(name, f, object : OssCallback<PutObjectRequest, PutObjectResult> {
+                            override fun onProgress(request: PutObjectRequest?, currentSize: Long, totalSize: Long) {
+                                Observable.empty<Any>().observeOn(AndroidSchedulers.mainThread()).doOnComplete {
+                                    callback?.onProgress(currentSize, totalSize)
+                                }.subscribe()
+                            }
 
-                        override fun onSuccess(request: PutObjectRequest?, result: PutObjectResult?) {
-                        }
+                            override fun onSuccess(request: PutObjectRequest?, result: PutObjectResult?) {
+                            }
 
-                        override fun onFailure(
-                            request: PutObjectRequest?,
-                            clientException: ClientException?,
-                            serviceException: ServiceException?
-                        ) {
+                            override fun onFailure(
+                                request: PutObjectRequest?,
+                                clientException: ClientException?,
+                                serviceException: ServiceException?
+                            ) {
 //                            Observable.empty<Any>().observeOn(AndroidSchedulers.mainThread()).doOnComplete({
 //                                callback.onResult(CODE_ERROR)
 //                            }).subscribe()
+                            }
+                        })
+                        if (success) {
+                            curResult = name
+                            resultVideoPath = curResult
+                            ossFileCache.put(f, curResult)
                         }
-                    })
-                    if (success) {
-                        curResult = name
-                        resultVideoPath = curResult
                     }
+
                     curResult
                 }
             }

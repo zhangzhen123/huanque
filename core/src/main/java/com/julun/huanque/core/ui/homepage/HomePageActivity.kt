@@ -39,6 +39,7 @@ import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
@@ -79,6 +80,8 @@ class HomePageActivity : BaseActivity() {
     }
 
     private val mHomePageViewModel: HomePageViewModel by viewModels()
+
+    private val huanQueViewModel = HuanViewModelManager.huanQueViewModel
 
     private val mPicAdapter = HomePagePicListAdapter()
 
@@ -223,13 +226,15 @@ class HomePageActivity : BaseActivity() {
         view_attention_home_page.onClickNew {
             if (mHomePageViewModel.followStatus.value == BusiConstant.False) {
                 //未关注状态   关注
-                mHomePageViewModel.follow()
+//                mHomePageViewModel.follow()
+                huanQueViewModel.follow(mHomePageViewModel.targetUserId)
             } else {
                 //关注状态  取消关注
                 MyAlertDialog(this).showAlertWithOKAndCancel(
                     "确定不再关注Ta？",
                     MyAlertDialog.MyDialogCallback(onRight = {
-                        mHomePageViewModel.unFollow()
+//                        mHomePageViewModel.unFollow()
+                        huanQueViewModel.unFollow(mHomePageViewModel.targetUserId)
                     })
                 )
             }
@@ -368,7 +373,11 @@ class HomePageActivity : BaseActivity() {
             //播放音效
             if (audioPlayerManager.musicType == -1 || audioPlayerManager.mediaPlayer == null) {
                 //未设置音频地址
-                audioPlayerManager.setNetPath(StringHelper.getOssAudioUrl(mHomePageViewModel.homeInfoBean.value?.voice?.voiceUrl ?: ""))
+                audioPlayerManager.setNetPath(
+                    StringHelper.getOssAudioUrl(
+                        mHomePageViewModel.homeInfoBean.value?.voice?.voiceUrl ?: ""
+                    )
+                )
                 audioPlayerManager.start(false)
             } else {
                 //已设置音频地址
@@ -466,10 +475,14 @@ class HomePageActivity : BaseActivity() {
         }
         view_dynamic.onClickNew {
             val postNum = mHomePageViewModel.homeInfoBean.value?.post?.postNum ?: 0
-            if (postNum == 0L) {
+            if (postNum == 0L && mHomePageViewModel.targetUserId == SessionUtils.getUserId()) {
                 //跳转添加动态页面
+                ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation()
             } else {
                 //跳转动态列表页面
+                ARouter.getInstance().build(ARouterConstant.USER_DYNAMIC_ACTIVITY).with(Bundle().apply {
+                    putLong(IntentParamKey.USER_ID.name, mHomePageViewModel.targetUserId)
+                }).navigation()
             }
         }
         rl_edit_info.onClickNew {
@@ -630,6 +643,17 @@ class HomePageActivity : BaseActivity() {
             if (it != null) {
                 showEvaluate(it ?: return@Observer)
             }
+        })
+
+        huanQueViewModel.userInfoStatusChange.observe(this, Observer {
+            if (it.isSuccess()) {
+                val change = it.requireT()
+                if (change.userId == mHomePageViewModel.targetUserId) {
+                    mHomePageViewModel.followStatus.value = change.follow
+                }
+
+            }
+
         })
     }
 
@@ -1501,9 +1525,13 @@ class HomePageActivity : BaseActivity() {
             otherMapView.findViewById<SimpleDraweeView>(R.id.sdv_owner_header)
                 ?.loadImage("${StringHelper.getOssImgUrl(homeCityInfo.homeHeadPic)}${BusiConstant.OSS_160}", 35f, 35f)
             val sdv_visitor_header = otherMapView.findViewById<SimpleDraweeView>(R.id.sdv_visitor_header)
-            sdv_visitor_header?.loadImage("${StringHelper.getOssImgUrl(homeCityInfo.curryHeadPic)}${BusiConstant.OSS_160}", 25f, 25f)
+            sdv_visitor_header?.loadImage(
+                "${StringHelper.getOssImgUrl(homeCityInfo.curryHeadPic)}${BusiConstant.OSS_160}",
+                25f,
+                25f
+            )
             sdv_visitor_header?.onClickNew {
-                newInstance(this,SessionUtils.getUserId())
+                newInstance(this, SessionUtils.getUserId())
             }
 
             //设置位置和距离
@@ -1523,13 +1551,14 @@ class HomePageActivity : BaseActivity() {
                 currentCityName
             }
 
-            otherMapView.findViewById<TextView>(R.id.tv_distance)?.text = if (homeCityName.isEmpty() || currentCityName.isEmpty()) {
-                "相距?km"
-            } else if (currentCityName == homeCityName) {
-                "转角遇到Ta"
-            } else {
-                "${homeCityInfo.distance}km"
-            }
+            otherMapView.findViewById<TextView>(R.id.tv_distance)?.text =
+                if (homeCityName.isEmpty() || currentCityName.isEmpty()) {
+                    "相距?km"
+                } else if (currentCityName == homeCityName) {
+                    "转角遇到Ta"
+                } else {
+                    "${homeCityInfo.distance}km"
+                }
         }
 
     }

@@ -14,6 +14,7 @@ import com.julun.huanque.common.init.CommonInit
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.*
+import java.nio.channels.FileChannel
 import java.text.DecimalFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
@@ -32,7 +33,23 @@ object FileUtils {
     //用户归因使用，保存UUID
     const val SOURCE = "source.txt"
 
-    private val BUFF_SIZE = 2048
+    private const val BUFF_SIZE = 2048
+
+    /**
+     * The number of bytes in a kilobyte.
+     */
+    private const val ONE_KB: Long = 1024
+
+    /**
+     * The number of bytes in a megabyte.
+     */
+    private const val ONE_MB = ONE_KB * ONE_KB
+
+    /**
+     * The file copy buffer size (30 MB)
+     */
+    private const val FILE_COPY_BUFFER_SIZE: Long = ONE_MB * 30
+
 
     // 在sd卡或app缓存路径中创建要上传的图片
     fun createPhotoFile(context: Context, photoName: String): File {
@@ -123,6 +140,25 @@ object FileUtils {
         return null
     }
 
+    fun createFileDir(path: String): File? {
+        if (TextUtils.isEmpty(path)) {
+            return null
+        }
+
+        val file = File(path)
+        if (file.exists()) {
+            return file
+        }
+        try {
+            if (file.mkdirs()) {
+                return file
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
     /**
      * 返回指定文件 如果已经存在删除重新创建 保证文件是新的
      */
@@ -163,6 +199,20 @@ object FileUtils {
             }
         }
         return !path.exists() || path.delete()
+    }
+
+    /**
+     * 清空文件夹
+     */
+    fun clearDir(dir: File) {
+        if (dir.isDirectory) {
+            val files = dir.listFiles()
+            for (file in files) {
+                if (file.isFile) {
+                    file.delete()
+                }
+            }
+        }
     }
 
     //写入数据到文件
@@ -782,7 +832,7 @@ object FileUtils {
             //            return isTrue;
         } else {
             Log.v("saveBitmap brand", "" + brand)
-            createFile(fileName)?:File(fileName)
+            createFile(fileName) ?: File(fileName)
         }
         if (file.exists()) {
             file.delete()
@@ -882,5 +932,531 @@ object FileUtils {
         }
     }
 
+
+    //-----------------------------------------------------------------------
+    //文件复制相关
+    //-----------------------------------------------------------------------
+    /**
+     * Copies a file to a directory preserving the file date.
+     *
+     *
+     * This method copies the contents of the specified source file
+     * to a file of the same name in the specified destination directory.
+     * The destination directory is created if it does not exist.
+     * If the destination file exists, then this method will overwrite it.
+     *
+     *
+     * **Note:** This method tries to preserve the file's last
+     * modified date/times using [java.io.File.setLastModified], however
+     * it is not guaranteed that the operation will succeed.
+     * If the modification operation fails, no indication is provided.
+     *
+     * @param srcFile an existing file to copy, must not be `null`
+     * @param destDir the directory to place the copy in, must not be `null`
+     * @throws NullPointerException if source or destination is null
+     * @throws java.io.IOException  if source or destination is invalid
+     * @throws java.io.IOException  if an IO error occurs during copying
+     * @see .copyFile
+     */
+    @Throws(IOException::class)
+    fun copyFileToDirectory(srcFile: File, destDir: File?) {
+        copyFileToDirectory(srcFile, destDir, true)
+    }
+
+    /**
+     * Copies a file to a directory optionally preserving the file date.
+     *
+     *
+     * This method copies the contents of the specified source file
+     * to a file of the same name in the specified destination directory.
+     * The destination directory is created if it does not exist.
+     * If the destination file exists, then this method will overwrite it.
+     *
+     *
+     * **Note:** Setting `preserveFileDate` to
+     * `true` tries to preserve the file's last modified
+     * date/times using [java.io.File.setLastModified], however it is
+     * not guaranteed that the operation will succeed.
+     * If the modification operation fails, no indication is provided.
+     *
+     * @param srcFile          an existing file to copy, must not be `null`
+     * @param destDir          the directory to place the copy in, must not be `null`
+     * @param preserveFileDate true if the file date of the copy
+     * should be the same as the original
+     * @throws NullPointerException if source or destination is `null`
+     * @throws java.io.IOException  if source or destination is invalid
+     * @throws java.io.IOException  if an IO error occurs during copying
+     * @see .copyFile
+     * @since 1.3
+     */
+    @Throws(IOException::class)
+    fun copyFileToDirectory(srcFile: File, destDir: File?, preserveFileDate: Boolean) {
+        if (destDir == null) {
+            throw java.lang.NullPointerException("Destination must not be null")
+        }
+        require(!(destDir.exists() && destDir.isDirectory === false)) { "Destination '$destDir' is not a directory" }
+        val destFile = File(destDir, srcFile.name)
+        copyFile(srcFile, destFile, preserveFileDate)
+    }
+
+    /**
+     * Copies a file to a new location preserving the file date.
+     *
+     *
+     * This method copies the contents of the specified source file to the
+     * specified destination file. The directory holding the destination file is
+     * created if it does not exist. If the destination file exists, then this
+     * method will overwrite it.
+     *
+     *
+     * **Note:** This method tries to preserve the file's last
+     * modified date/times using [java.io.File.setLastModified], however
+     * it is not guaranteed that the operation will succeed.
+     * If the modification operation fails, no indication is provided.
+     *
+     * @param srcFile  an existing file to copy, must not be `null`
+     * @param destFile the new file, must not be `null`
+     * @throws NullPointerException if source or destination is `null`
+     * @throws java.io.IOException  if source or destination is invalid
+     * @throws java.io.IOException  if an IO error occurs during copying
+     * @see .copyFileToDirectory
+     */
+    @Throws(IOException::class)
+    fun copyFile(srcFile: File?, destFile: File?) {
+        copyFile(srcFile, destFile, true)
+    }
+
+    /**
+     * Copies a file to a new location.
+     *
+     *
+     * This method copies the contents of the specified source file
+     * to the specified destination file.
+     * The directory holding the destination file is created if it does not exist.
+     * If the destination file exists, then this method will overwrite it.
+     *
+     *
+     * **Note:** Setting `preserveFileDate` to
+     * `true` tries to preserve the file's last modified
+     * date/times using [java.io.File.setLastModified], however it is
+     * not guaranteed that the operation will succeed.
+     * If the modification operation fails, no indication is provided.
+     *
+     * @param srcFile          an existing file to copy, must not be `null`
+     * @param destFile         the new file, must not be `null`
+     * @param preserveFileDate true if the file date of the copy
+     * should be the same as the original
+     * @throws NullPointerException if source or destination is `null`
+     * @throws java.io.IOException  if source or destination is invalid
+     * @throws java.io.IOException  if an IO error occurs during copying
+     * @see .copyFileToDirectory
+     */
+    @Throws(IOException::class)
+    fun copyFile(
+        srcFile: File?, destFile: File?,
+        preserveFileDate: Boolean
+    ) {
+        if (srcFile == null) {
+            throw java.lang.NullPointerException("Source must not be null")
+        }
+        if (destFile == null) {
+            throw java.lang.NullPointerException("Destination must not be null")
+        }
+        if (srcFile.exists() === false) {
+            throw FileNotFoundException("Source '$srcFile' does not exist")
+        }
+        if (srcFile.isDirectory) {
+            throw IOException("Source '$srcFile' exists but is a directory")
+        }
+        if (srcFile.canonicalPath.equals(destFile.canonicalPath)) {
+            throw IOException("Source '$srcFile' and destination '$destFile' are the same")
+        }
+        val parentFile = destFile.parentFile
+        if (parentFile != null) {
+            if (!parentFile.mkdirs() && !parentFile.isDirectory) {
+                throw IOException("Destination '$parentFile' directory cannot be created")
+            }
+        }
+        if (destFile.exists() && destFile.canWrite() === false) {
+            throw IOException("Destination '$destFile' exists but is read-only")
+        }
+        doCopyFile(srcFile, destFile, preserveFileDate)
+    }
+
+
+    /**
+     * Internal copy file method.
+     *
+     * @param srcFile          the validated source file, must not be `null`
+     * @param destFile         the validated destination file, must not be `null`
+     * @param preserveFileDate whether to preserve the file date
+     * @throws java.io.IOException if an error occurs
+     */
+    @Throws(IOException::class)
+    private fun doCopyFile(srcFile: File, destFile: File, preserveFileDate: Boolean) {
+        if (destFile.exists() && destFile.isDirectory) {
+            throw IOException("Destination '$destFile' exists but is a directory")
+        }
+        var fis: FileInputStream? = null
+        var fos: FileOutputStream? = null
+        var input: FileChannel? = null
+        var output: FileChannel? = null
+        try {
+            fis = FileInputStream(srcFile)
+            fos = FileOutputStream(destFile)
+            input = fis.channel
+            output = fos.channel
+            val size: Long = input.size()
+            var pos: Long = 0
+            var count: Long = 0
+            while (pos < size) {
+                count = if (size - pos > FILE_COPY_BUFFER_SIZE) FILE_COPY_BUFFER_SIZE else size - pos
+                pos += output.transferFrom(input, pos, count)
+            }
+        } finally {
+            closeQuietly(output)
+            closeQuietly(fos)
+            closeQuietly(input)
+            closeQuietly(fis)
+        }
+        if (srcFile.length() !== destFile.length()) {
+            throw IOException(
+                "Failed to copy full contents from '" +
+                        srcFile + "' to '" + destFile + "'"
+            )
+        }
+        if (preserveFileDate) {
+            destFile.setLastModified(srcFile.lastModified())
+        }
+    }
+
+    /**
+     * Unconditionally close a `Closeable`.
+     *
+     *
+     * Equivalent to [Closeable.close], except any exceptions will be ignored.
+     * This is typically used in finally blocks.
+     *
+     *
+     * Example code:
+     * <pre>
+     * Closeable closeable = null;
+     * try {
+     * closeable = new FileReader("foo.txt");
+     * // process closeable
+     * closeable.close();
+     * } catch (Exception e) {
+     * // error handling
+     * } finally {
+     * IOUtils.closeQuietly(closeable);
+     * }
+    </pre> *
+     *
+     * @param closeable the object to close, may be null or already closed
+     * @since 2.0
+     */
+    fun closeQuietly(closeable: Closeable?) {
+        try {
+            closeable?.close()
+        } catch (ioe: IOException) {
+            // ignore
+        }
+    }
+    //-----------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------
+    /**
+     * Copies a directory to within another directory preserving the file dates.
+     *
+     *
+     * This method copies the source directory and all its contents to a
+     * directory of the same name in the specified destination directory.
+     *
+     *
+     * The destination directory is created if it does not exist.
+     * If the destination directory did exist, then this method merges
+     * the source with the destination, with the source taking precedence.
+     *
+     *
+     * **Note:** This method tries to preserve the files' last
+     * modified date/times using [java.io.File.setLastModified], however
+     * it is not guaranteed that those operations will succeed.
+     * If the modification operation fails, no indication is provided.
+     *
+     * @param srcDir  an existing directory to copy, must not be `null`
+     * @param destDir the directory to place the copy in, must not be `null`
+     * @throws NullPointerException if source or destination is `null`
+     * @throws java.io.IOException  if source or destination is invalid
+     * @throws java.io.IOException  if an IO error occurs during copying
+     * @since 1.2
+     */
+    @Throws(IOException::class)
+    fun copyDirectoryToDirectory(srcDir: File?, destDir: File?) {
+        if (srcDir == null) {
+            throw java.lang.NullPointerException("Source must not be null")
+        }
+        require(!(srcDir.exists() && srcDir.isDirectory === false)) { "Source '$destDir' is not a directory" }
+        if (destDir == null) {
+            throw java.lang.NullPointerException("Destination must not be null")
+        }
+        require(!(destDir.exists() && destDir.isDirectory === false)) { "Destination '$destDir' is not a directory" }
+        copyDirectory(srcDir, File(destDir, srcDir.name), true)
+    }
+
+    /**
+     * Copies a whole directory to a new location preserving the file dates.
+     *
+     *
+     * This method copies the specified directory and all its child
+     * directories and files to the specified destination.
+     * The destination is the new location and name of the directory.
+     *
+     *
+     * The destination directory is created if it does not exist.
+     * If the destination directory did exist, then this method merges
+     * the source with the destination, with the source taking precedence.
+     *
+     *
+     * **Note:** This method tries to preserve the files' last
+     * modified date/times using [java.io.File.setLastModified], however
+     * it is not guaranteed that those operations will succeed.
+     * If the modification operation fails, no indication is provided.
+     *
+     * @param srcDir  an existing directory to copy, must not be `null`
+     * @param destDir the new directory, must not be `null`
+     * @throws NullPointerException if source or destination is `null`
+     * @throws java.io.IOException  if source or destination is invalid
+     * @throws java.io.IOException  if an IO error occurs during copying
+     * @since 1.1
+     */
+    @Throws(IOException::class)
+    fun copyDirectory(srcDir: File?, destDir: File?) {
+        copyDirectory(srcDir, destDir, true)
+    }
+
+    /**
+     * Copies a whole directory to a new location.
+     *
+     *
+     * This method copies the contents of the specified source directory
+     * to within the specified destination directory.
+     *
+     *
+     * The destination directory is created if it does not exist.
+     * If the destination directory did exist, then this method merges
+     * the source with the destination, with the source taking precedence.
+     *
+     *
+     * **Note:** Setting `preserveFileDate` to
+     * `true` tries to preserve the files' last modified
+     * date/times using [java.io.File.setLastModified], however it is
+     * not guaranteed that those operations will succeed.
+     * If the modification operation fails, no indication is provided.
+     *
+     * @param srcDir           an existing directory to copy, must not be `null`
+     * @param destDir          the new directory, must not be `null`
+     * @param preserveFileDate true if the file date of the copy
+     * should be the same as the original
+     * @throws NullPointerException if source or destination is `null`
+     * @throws java.io.IOException  if source or destination is invalid
+     * @throws java.io.IOException  if an IO error occurs during copying
+     * @since 1.1
+     */
+    @Throws(IOException::class)
+    fun copyDirectory(
+        srcDir: File?, destDir: File?,
+        preserveFileDate: Boolean
+    ) {
+        copyDirectory(srcDir, destDir, null, preserveFileDate)
+    }
+
+    /**
+     * Copies a filtered directory to a new location preserving the file dates.
+     *
+     *
+     * This method copies the contents of the specified source directory
+     * to within the specified destination directory.
+     *
+     *
+     * The destination directory is created if it does not exist.
+     * If the destination directory did exist, then this method merges
+     * the source with the destination, with the source taking precedence.
+     *
+     *
+     * **Note:** This method tries to preserve the files' last
+     * modified date/times using [java.io.File.setLastModified], however
+     * it is not guaranteed that those operations will succeed.
+     * If the modification operation fails, no indication is provided.
+     *
+     *
+     * <h4>Example: Copy directories only</h4>
+     * <pre>
+     * // only copy the directory structure
+     * FileUtils.copyDirectory(srcDir, destDir, DirectoryFileFilter.DIRECTORY);
+    </pre> *
+     *
+     * <h4>Example: Copy directories and txt files</h4>
+     * <pre>
+     * // Create a filter for ".txt" files
+     * IOFileFilter txtSuffixFilter = FileFilterUtils.suffixFileFilter(".txt");
+     * IOFileFilter txtFiles = FileFilterUtils.andFileFilter(FileFileFilter.FILE, txtSuffixFilter);
+     *
+     * // Create a filter for either directories or ".txt" files
+     * FileFilter filter = FileFilterUtils.orFileFilter(DirectoryFileFilter.DIRECTORY, txtFiles);
+     *
+     * // Copy using the filter
+     * FileUtils.copyDirectory(srcDir, destDir, filter);
+    </pre> *
+     *
+     * @param srcDir  an existing directory to copy, must not be `null`
+     * @param destDir the new directory, must not be `null`
+     * @param filter  the filter to apply, null means copy all directories and files
+     * should be the same as the original
+     * @throws NullPointerException if source or destination is `null`
+     * @throws java.io.IOException  if source or destination is invalid
+     * @throws java.io.IOException  if an IO error occurs during copying
+     * @since 1.4
+     */
+    @Throws(IOException::class)
+    fun copyDirectory(
+        srcDir: File?, destDir: File?,
+        filter: FileFilter?
+    ) {
+        copyDirectory(srcDir, destDir, filter, true)
+    }
+
+    /**
+     * Copies a filtered directory to a new location.
+     *
+     *
+     * This method copies the contents of the specified source directory
+     * to within the specified destination directory.
+     *
+     *
+     * The destination directory is created if it does not exist.
+     * If the destination directory did exist, then this method merges
+     * the source with the destination, with the source taking precedence.
+     *
+     *
+     * **Note:** Setting `preserveFileDate` to
+     * `true` tries to preserve the files' last modified
+     * date/times using [java.io.File.setLastModified], however it is
+     * not guaranteed that those operations will succeed.
+     * If the modification operation fails, no indication is provided.
+     *
+     *
+     * <h4>Example: Copy directories only</h4>
+     * <pre>
+     * // only copy the directory structure
+     * FileUtils.copyDirectory(srcDir, destDir, DirectoryFileFilter.DIRECTORY, false);
+    </pre> *
+     *
+     * <h4>Example: Copy directories and txt files</h4>
+     * <pre>
+     * // Create a filter for ".txt" files
+     * IOFileFilter txtSuffixFilter = FileFilterUtils.suffixFileFilter(".txt");
+     * IOFileFilter txtFiles = FileFilterUtils.andFileFilter(FileFileFilter.FILE, txtSuffixFilter);
+     *
+     * // Create a filter for either directories or ".txt" files
+     * FileFilter filter = FileFilterUtils.orFileFilter(DirectoryFileFilter.DIRECTORY, txtFiles);
+     *
+     * // Copy using the filter
+     * FileUtils.copyDirectory(srcDir, destDir, filter, false);
+    </pre> *
+     *
+     * @param srcDir           an existing directory to copy, must not be `null`
+     * @param destDir          the new directory, must not be `null`
+     * @param filter           the filter to apply, null means copy all directories and files
+     * @param preserveFileDate true if the file date of the copy
+     * should be the same as the original
+     * @throws NullPointerException if source or destination is `null`
+     * @throws java.io.IOException  if source or destination is invalid
+     * @throws java.io.IOException  if an IO error occurs during copying
+     * @since 1.4
+     */
+    @Throws(IOException::class)
+    fun copyDirectory(
+        srcDir: File?, destDir: File?,
+        filter: FileFilter?, preserveFileDate: Boolean
+    ) {
+        if (srcDir == null) {
+            throw java.lang.NullPointerException("Source must not be null")
+        }
+        if (destDir == null) {
+            throw java.lang.NullPointerException("Destination must not be null")
+        }
+        if (srcDir.exists() === false) {
+            throw FileNotFoundException("Source '$srcDir' does not exist")
+        }
+        if (srcDir.isDirectory === false) {
+            throw IOException("Source '$srcDir' exists but is not a directory")
+        }
+        if (srcDir.canonicalPath.equals(destDir.canonicalPath)) {
+            throw IOException("Source '$srcDir' and destination '$destDir' are the same")
+        }
+
+        // Cater for destination being directory within the source directory (see IO-141)
+        var exclusionList: MutableList<String?>? = null
+        if (destDir.canonicalPath.startsWith(srcDir.canonicalPath)) {
+            val srcFiles = if (filter == null) srcDir.listFiles() else srcDir.listFiles(filter)
+            if (srcFiles != null && srcFiles.size > 0) {
+                exclusionList = ArrayList(srcFiles.size)
+                for (srcFile in srcFiles) {
+                    val copiedFile = File(destDir, srcFile.name)
+                    exclusionList.add(copiedFile.canonicalPath)
+                }
+            }
+        }
+        doCopyDirectory(srcDir, destDir, filter, preserveFileDate, exclusionList)
+    }
+
+    /**
+     * Internal copy directory method.
+     *
+     * @param srcDir           the validated source directory, must not be `null`
+     * @param destDir          the validated destination directory, must not be `null`
+     * @param filter           the filter to apply, null means copy all directories and files
+     * @param preserveFileDate whether to preserve the file date
+     * @param exclusionList    List of files and directories to exclude from the copy, may be null
+     * @throws java.io.IOException if an error occurs
+     * @since 1.1
+     */
+    @Throws(IOException::class)
+    private fun doCopyDirectory(
+        srcDir: File, destDir: File, filter: FileFilter?,
+        preserveFileDate: Boolean, exclusionList: List<String?>?
+    ) {
+        // recurse
+        val srcFiles = (if (filter == null) srcDir.listFiles() else srcDir.listFiles(filter))
+            ?: // null if abstract pathname does not denote a directory, or if an I/O error occurs
+            throw IOException("Failed to list contents of $srcDir")
+        if (destDir.exists()) {
+            if (destDir.isDirectory === false) {
+                throw IOException("Destination '$destDir' exists but is not a directory")
+            }
+        } else {
+            if (!destDir.mkdirs() && !destDir.isDirectory) {
+                throw IOException("Destination '$destDir' directory cannot be created")
+            }
+        }
+        if (destDir.canWrite() === false) {
+            throw IOException("Destination '$destDir' cannot be written to")
+        }
+        for (srcFile in srcFiles) {
+            val dstFile = File(destDir, srcFile.name)
+            if (exclusionList == null || !exclusionList.contains(srcFile.canonicalPath)) {
+                if (srcFile.isDirectory) {
+                    doCopyDirectory(srcFile, dstFile, filter, preserveFileDate, exclusionList)
+                } else {
+                    doCopyFile(srcFile, dstFile, preserveFileDate)
+                }
+            }
+        }
+
+        // Do this last, as the above has probably affected directory metadata
+        if (preserveFileDate) {
+            destDir.setLastModified(srcDir.lastModified())
+        }
+    }
 
 }

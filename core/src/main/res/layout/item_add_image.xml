@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/add_img_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,7 +12,31 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/dimen_7"
         app:actualImageScaleType="centerCrop"
-        app:roundedCornerRadius="4dp" />
+        app:roundedCornerRadius="10dp" />
+
+    <LinearLayout
+        android:id="@+id/ll_failure_notice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_pub_fail_pic"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/icon_failure_notice" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:text="涉嫌违规"
+            android:textColor="#FF3F3F"
+            android:textSize="@dimen/sp_14" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_del"
@@ -29,11 +54,12 @@
             android:scaleType="fitCenter"
             android:src="@mipmap/icon_close_round_01" />
     </LinearLayout>
+
     <ImageView
         android:id="@+id/iv_video_play"
-        android:src="@mipmap/icon_voice_play"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
         android:layout_width="27dp"
-        android:layout_height="30dp" />
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/icon_voice_play"
+        android:visibility="gone" />
 </RelativeLayout>
