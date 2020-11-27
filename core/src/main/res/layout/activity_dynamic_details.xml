@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,42 +8,232 @@
 
     <com.julun.huanque.common.widgets.HeaderPageView
         android:id="@+id/headerPageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="0px"
+        android:layout_height="44dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/mRefreshLayout"
+    <com.effective.android.panel.view.PanelSwitchLayout
+        android:id="@+id/panel_switch_layout"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:orientation="vertical"
+        app:animationSpeed="standard"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerPageView">
+
+        <!-- 内容区域 -->
+        <!-- linear_edit_view 指定一个 EditText 用于输入 ，必须项-->
+        <!-- linear_auto_reset_enable 指定是否 LinearContentContainer 是否能够接受 Touch 事件自动隐藏面板-->
+        <!-- linear_auto_reset_area 指定是否 LinearContentContainer 只接受某个 View 区域的 Touch 事件来自定隐藏面板-->
+        <com.julun.huanque.common.widgets.CusContentContainer
+            android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/dimen_15"
-            android:layout_marginEnd="@dimen/dimen_15">
+            android:orientation="vertical"
+            app:cus_edit_view="@id/edit_text"
+            tools:layout_height="500dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_comments"
+            <FrameLayout
+                android:layout_width="0px"
+                android:layout_height="0px"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/mRefreshLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="60dp"
+                    android:overScrollMode="never">
+
+                    <com.julun.huanque.common.widgets.EventRecyclerView
+                        android:id="@+id/rv_comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never" />
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+                <include
+                    android:id="@+id/ic_sticky_comment"
+                    layout="@layout/layout_header_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_40"
+                    android:layout_marginStart="@dimen/dimen_15"
+                    android:layout_marginEnd="@dimen/dimen_15"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_gravity="bottom"
+                    android:background="@color/white">
+
+                    <TextView
+                        android:id="@+id/tv_comment"
+                        android:layout_width="90dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="15dp"
+                        android:background="@drawable/bg_unable"
+                        android:gravity="center"
+                        android:text="我来评论…"
+                        android:textColor="@color/black_999"
+                        android:textSize="@dimen/sp_12"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_share_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_40"
+                        android:layout_marginRight="15dp"
+                        android:drawableStart="@mipmap/icon_share_grey"
+                        android:drawablePadding="@dimen/dimen_5"
+                        android:ellipsize="end"
+                        android:gravity="start|center_vertical"
+                        android:includeFontPadding="false"
+                        android:minWidth="@dimen/dimen_70"
+                        android:text="0"
+                        android:textColor="@color/black_999"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <TextView
+                        android:id="@+id/tv_follow_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_40"
+                        android:layout_marginTop="@dimen/dimen_5"
+                        android:drawableStart="@drawable/selector_zan"
+                        android:drawablePadding="@dimen/dimen_5"
+                        android:ellipsize="end"
+                        android:gravity="start|center_vertical"
+                        android:includeFontPadding="false"
+                        android:minWidth="@dimen/dimen_70"
+                        android:text="0"
+                        android:textColor="@color/col_prise"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/tv_comment_num"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_40"
+                        android:drawableStart="@mipmap/icon_comment_grey"
+                        android:drawablePadding="@dimen/dimen_5"
+                        android:ellipsize="end"
+                        android:gravity="start|center_vertical"
+                        android:includeFontPadding="false"
+                        android:minWidth="@dimen/dimen_70"
+                        android:text="0"
+                        android:textColor="@color/black_999"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/tv_share_num"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_input"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:background="#F3F4F5"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <EditText
+                    android:id="@+id/edit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="6dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_edit_text_comment"
+                    android:gravity="center_vertical|left"
+                    android:hint="我来评论..."
+                    android:minHeight="36dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:textColor="@color/black_999"
+                    android:textSize="@dimen/sp_13" />
+
+                <ImageView
+                    android:id="@+id/iv_emoji"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/sel_panel_switch"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_send"
+                    app:layout_constraintRight_toLeftOf="@id/tv_send"
+                    app:layout_constraintTop_toTopOf="@id/tv_send" />
+
+                <TextView
+                    android:id="@+id/tv_send"
+                    android:layout_width="62dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/sel_verification_code"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:text="发表"
+                    android:textColor="@color/col_verification_code"
+                    android:textSize="@dimen/sp_16"
+                    app:layout_constraintBottom_toBottomOf="@id/edit_text"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/edit_text" />
+
+
+            </LinearLayout>
+
+        </com.julun.huanque.common.widgets.CusContentContainer>
+
+        <!-- 面板区域，仅能包含PanelView-->
+        <com.effective.android.panel.view.panel.PanelContainer
+            android:id="@+id/panel_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_gray_three">
+
+            <!-- 每一项面板 -->
+            <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
+            <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
+            <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
+            <!--            <com.effective.android.panel.view.panel.PanelView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                app:panel_layout="@layout/panel_emotion_layout"-->
+            <!--                app:panel_trigger="@id/iv_emoji" />-->
+
+            <com.julun.huanque.common.widgets.emotion.PuclicChatPanelView
+                android:id="@+id/panel_emotion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                android:layout_height="match_parent"
+                app:cus_panel_trigger="@id/iv_emoji" />
 
-        <include
-            android:id="@+id/ic_sticky_comment"
-            layout="@layout/layout_header_comment"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_40"
-            android:layout_marginStart="@dimen/dimen_15"
-            android:layout_marginEnd="@dimen/dimen_15"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_56"
-            android:layout_gravity="bottom"
-            android:background="#F3F4F5">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
-</LinearLayout>
+        </com.effective.android.panel.view.panel.PanelContainer>
+    </com.effective.android.panel.view.PanelSwitchLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

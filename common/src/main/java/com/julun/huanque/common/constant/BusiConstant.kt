@@ -1008,3 +1008,14 @@ object ShareFromType {
     //分享评论
     const val Dynamic = "Dynamic"
 }
+
+/**
+ * 评论排序类型
+ */
+object CommentOrderType {
+    //时间排序
+    const val Time = "Time"
+
+    //默认
+    const val Heat = "Heat"
+}

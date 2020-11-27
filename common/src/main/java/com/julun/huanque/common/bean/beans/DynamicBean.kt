@@ -41,6 +41,7 @@ data class DynamicItemBean(
     }
 
 }
+
 data class DynamicGroup(
     var groupDesc: String = "",
     var groupId: Long = 0,
@@ -49,6 +50,7 @@ data class DynamicGroup(
     var hasNewPost: Boolean = false,
     var heatValue: Long = 0
 )
+
 class HomeDynamicListInfo {
     var postList: MutableList<DynamicItemBean> = mutableListOf()
     var hasMore: Boolean = false
@@ -63,14 +65,15 @@ class DynamicDetailInfo() {
 }
 
 data class DynamicComment(
-    var authMark: Boolean = false,
-    var commentId: Int = 0,
+    //真人标识
+    var authMark: String = "",
+    var commentId: Long = 0,
     var content: String = "",
     var createTime: String = "",
     var headPic: String = "",
     var headRealPeople: Boolean = false,
     var nickname: String = "",
-    var parentCommentId: Int = 0,
+    var parentCommentId: Long = 0,
     var praiseNum: Int = 0,
     var replyNickname: String = "",
     var userId: Long = 0,
@@ -79,7 +82,9 @@ data class DynamicComment(
     var shareNum: Int = 0,
     var commentNum: Int = 0,
     var hasMore: Boolean = false,
-    var secondComments: MutableList<DynamicComment> = mutableListOf()
+    var secondComments: MutableList<DynamicComment> = mutableListOf(),
+    //1级评论的ID  有该字段，表示为2级评论  没有该字段  表示为1级评论（本地字段）
+    var firstCommentId: Long = 0
 )
 
 data class PublishDynamicResult(

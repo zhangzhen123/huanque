@@ -4,19 +4,19 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.text.Editable
+import android.text.Spannable
+import android.text.TextWatcher
+import android.view.*
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.module.LoadMoreModule
-import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.effective.android.panel.PanelSwitchHelper
+import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -24,24 +24,33 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.DynamicComment
 import com.julun.huanque.common.bean.beans.DynamicDetailInfo
 import com.julun.huanque.common.bean.beans.PhotoBean
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.interfaces.EmojiInputListener
+import com.julun.huanque.common.interfaces.EventDispatchListener
+import com.julun.huanque.common.interfaces.EventListener
+import com.julun.huanque.common.interfaces.SecondCommentClickListener
 import com.julun.huanque.common.manager.audio_record.AudioRecordManager
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.ImageUtils
-import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.common.utils.SessionUtils
-import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
+import com.julun.huanque.common.widgets.emotion.Emotion
+import com.julun.huanque.common.widgets.emotion.PrivateChatPanelView
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
+import com.julun.huanque.core.adapter.DynamicDetailCommentFirstAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.adapter.DynamicPhotosAdapter
 import kotlinx.android.synthetic.main.activity_dynamic_details.*
+import kotlinx.android.synthetic.main.activity_dynamic_details.edit_text
+import kotlinx.android.synthetic.main.activity_dynamic_details.ll_input
+import kotlinx.android.synthetic.main.activity_dynamic_details.panel_emotion
+import kotlinx.android.synthetic.main.layout_header_comment.*
 import kotlinx.android.synthetic.main.layout_header_dynamic_detail.view.*
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.imageResource
 
 /**
  *
@@ -65,6 +74,10 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         }
     }
 
+    private val commentAdapter = DynamicDetailCommentFirstAdapter()
+
+    private var mHelper: PanelSwitchHelper? = null
+
     private val headerLayout: View by lazy {
         LayoutInflater.from(this).inflate(R.layout.layout_header_dynamic_detail, null)
     }
@@ -78,28 +91,31 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         postId = intent.getLongExtra(IntentParamKey.POST_ID.name, 0L)
+        mViewModel.mPostId = postId
         if (postId == 0L) {
             ToastUtils.show2("无效的ID")
             finish()
         }
         initViewModel()
-        headerLayout.hide()
-        commentAdapter.addHeaderView(headerLayout)
-        commentAdapter.headerWithEmptyEnable = true
-
-        //预留一个很大的底部空白
-        val foot = LayoutInflater.from(this).inflate(R.layout.view_bottom_holder, null)
-        val lp = foot.findViewById<View>(R.id.view_id).layoutParams
-        lp.height = ScreenUtils.getScreenHeight()
-        commentAdapter.addFooterView(foot)
-        commentAdapter.footerWithEmptyEnable = true
-        rv_comments.layoutManager = LinearLayoutManager(this)
-        rv_comments.adapter = commentAdapter
+        initRecyclerView()
         mRefreshLayout.setOnRefreshListener {
+            mViewModel.mOffset = 0
             mViewModel.queryDetail(postId, QueryType.REFRESH)
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
 
+        //计算RecyclerView的高度
+        val recyclerHeight = ScreenUtils.getScreenHeight() - dp2px(44 + 60)
+        val refreshParams = mRefreshLayout.layoutParams
+        refreshParams.height = recyclerHeight
+        mRefreshLayout.layoutParams = refreshParams
+
+//        val rvParams = rv_comments.layoutParams
+//        rvParams.height = recyclerHeight
+//        rv_comments.layoutParams = rvParams
+
+
+        mViewModel.queryDetail(postId, QueryType.INIT)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -146,8 +162,165 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 
             }
         })
+        tv_comment.onClickNew {
+            ll_input.show()
+            edit_text.forceLayout()
+            edit_text.performClick()
+            edit_text.hint = "评论一下"
+        }
+
+        edit_text.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (s == null) {
+                    tv_send.isEnabled = false
+                    return
+                }
+                tv_send.isEnabled = s.toString().isNotEmpty()
+                if (s.toString().length > 100) {
+                    edit_text.setText(s.toString().substring(0, 100))
+                    edit_text.setSelection(100)
+                    Toast.makeText(this@DynamicDetailActivity, "输入长度超限", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                logger.info("Message onTextChanged")
+            }
+        })
+
+        panel_emotion.onClickNew {
+            //屏蔽事件
+        }
+        panel_emotion.mListener = object : EmojiInputListener {
+            override fun onClick(type: String, emotion: Emotion) {
+                val start: Int = edit_text.selectionStart
+                val editable: Editable = edit_text.editableText
+                val emotionSpannable: Spannable = EmojiSpanBuilder.buildEmotionSpannable(
+                    this@DynamicDetailActivity,
+                    emotion.text
+                )
+                editable.insert(start, emotionSpannable)
+            }
+
+            override fun onLongClick(type: String, view: View, emotion: Emotion) {
+                //长按,显示弹窗
+                showEmojiSuspend(type, view, emotion)
+            }
+
+            override fun onActionUp() {
+                mEmojiPopupWindow?.dismiss()
+            }
+
+            override fun onClickDelete() {
+                //点击了删除事件
+                deleteInputEmoji()
+            }
+
+            override fun showPrivilegeFragment(code: String) {
+            }
+        }
+        tv_send.onClickNew {
+            //发表
+            val content = edit_text.text.toString()
+            edit_text.setText("")
+            mViewModel.comment(content)
+        }
+        panel_switch_layout.onTouch { _, _ ->
+            mHelper?.hookSystemBackByPanelSwitcher()
+            ll_input.hide()
+            false
+        }
+
+        rv_comments.mEventDispatchListener = object : EventDispatchListener {
+            override fun onDispatch(ev: MotionEvent?): Boolean {
+                if (ll_input.visibility == View.VISIBLE && ev?.action == MotionEvent.ACTION_DOWN) {
+                    mHelper?.hookSystemBackByPanelSwitcher()
+                    ll_input.hide()
+                    return false
+                }
+                return true
+            }
+
+        }
+
+        headerLayout.findViewById<View>(R.id.tvSort).onClickNew {
+            tvSort.performClick()
+        }
+        tvSort.onClickNew {
+            //时间和热度切换
+            if (mViewModel.commentType == CommentOrderType.Time) {
+                //切换到热度样式
+                mViewModel.commentType = CommentOrderType.Heat
+                mViewModel.mOffset = 0
+                tvSort.text = "时间"
+                headerLayout.findViewById<TextView>(R.id.tvSort).text = "时间"
+            } else {
+                //切换到时间样式
+                mViewModel.commentType = CommentOrderType.Time
+                mViewModel.mOffset = 0
+                tvSort.text = "热度"
+                headerLayout.findViewById<TextView>(R.id.tvSort).text = "热度"
+            }
+            mViewModel.commentList()
+        }
     }
 
+    //悬浮表情
+    private var mEmojiPopupWindow: PopupWindow? = null
+
+    /**
+     * 显示表情悬浮效果
+     */
+    private fun showEmojiSuspend(type: String, view: View, emotion: Emotion) {
+        if (mEmojiPopupWindow?.isShowing == true) {
+            return
+        }
+        val location = IntArray(2)
+        view.getLocationOnScreen(location)
+        val content = emotion.text
+        var dx = 0
+        var dy = 0
+        var rootView: View? = null
+        when (type) {
+            EmojiType.NORMAL -> {
+                rootView =
+                    LayoutInflater.from(this).inflate(R.layout.fragment_normal_emoji_suspend, null)
+                mEmojiPopupWindow = PopupWindow(rootView, dip(50), dip(66))
+                val drawable = GlobalUtils.getDrawable(R.drawable.bg_emoji_suspend)
+                mEmojiPopupWindow?.setBackgroundDrawable(drawable)
+                dx = location[0] + (view.width - dip(50)) / 2
+                dy = location[1] - dip(66) + dip(13)
+                rootView.findViewById<ImageView>(R.id.iv_emoji)?.imageResource = emotion.drawableRes
+            }
+            else -> {
+
+            }
+        }
+
+        if (rootView == null) {
+            return
+        }
+
+
+        val name = content.substring(content.indexOf("[") + 1, content.indexOf("]"))
+        rootView.findViewById<TextView>(R.id.tv_emoji)?.text = name
+
+        mEmojiPopupWindow?.isOutsideTouchable = false
+        mEmojiPopupWindow?.showAtLocation(view, Gravity.TOP or Gravity.LEFT, dx, dy)
+    }
+
+
+    // 删除光标所在前一位(不考虑切换到emoji时的光标位置，直接删除最后一位)
+    private fun deleteInputEmoji() {
+        val keyCode = KeyEvent.KEYCODE_DEL
+        val keyEventDown = KeyEvent(KeyEvent.ACTION_DOWN, keyCode)
+        val keyEventUp = KeyEvent(KeyEvent.ACTION_UP, keyCode)
+        edit_text.onKeyDown(keyCode, keyEventDown)
+        edit_text.onKeyUp(keyCode, keyEventUp)
+    }
 
     private fun initViewModel() {
         mViewModel.dynamicDetailInfo.observe(this, Observer {
@@ -158,7 +331,132 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             }
             mRefreshLayout.isRefreshing = false
         })
-        mViewModel.queryDetail(postId, QueryType.INIT)
+        mViewModel.commentSuccessData.observe(this, Observer {
+            if (it != null) {
+                //评论成功
+                val firstCommentId = it.firstCommentId
+                if (firstCommentId == 0L) {
+                    //1级评论
+                    commentAdapter.addData(0, it)
+                } else {
+                    //2级评论
+                    var notifyIndex = -1
+                    commentAdapter.data.forEachIndexed { index, adapterItem ->
+                        if (adapterItem.commentId == it.firstCommentId) {
+                            adapterItem.secondComments.add(0, it)
+                            notifyIndex = index
+                            return@forEachIndexed
+                        }
+                    }
+                    if (notifyIndex >= 0) {
+                        commentAdapter.notifyDataSetChanged()
+                    }
+                }
+                mHelper?.hookSystemBackByPanelSwitcher()
+            }
+        })
+        mViewModel.commentListResult.observe(this, Observer {
+            if (it != null) {
+                if (it.isPull) {
+                    commentAdapter.setList(it.list)
+                } else {
+                    commentAdapter.addData(it.list)
+                }
+
+                if (it.hasMore) {
+                    //有更多
+                    commentAdapter.loadMoreModule.loadMoreComplete()
+                } else {
+                    //没有更多
+                    commentAdapter.loadMoreModule.loadMoreEnd()
+                }
+
+            }
+        })
+
+        mViewModel.secondCommentListResult.observe(this, Observer {
+            if (it != null) {
+                var notifyIndex = -1
+                val commentList = it.list
+                if (commentList.isNotEmpty()) {
+                    val parentId = commentList[0].parentCommentId
+                    commentAdapter.data.forEachIndexed { index, adapterItem ->
+                        if (adapterItem.commentId == parentId) {
+                            adapterItem.secondComments.addAll(commentList)
+                            notifyIndex = index
+                            adapterItem.hasMore = it.hasMore
+                            return@forEachIndexed
+                        }
+                    }
+                    if (notifyIndex >= 0) {
+                        commentAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        })
+
+    }
+
+    private fun initRecyclerView() {
+        headerLayout.hide()
+        commentAdapter.addHeaderView(headerLayout)
+        commentAdapter.headerWithEmptyEnable = true
+        commentAdapter.mSecondCommentClickListener = object : SecondCommentClickListener {
+            override fun secondCommentClick(secondComment: DynamicComment) {
+                mViewModel.replyingComment = secondComment
+                ll_input.show()
+                edit_text.forceLayout()
+                edit_text.performClick()
+                edit_text.hint = "回复${secondComment.nickname}"
+            }
+        }
+
+        //预留一个很大的底部空白
+        val foot = LayoutInflater.from(this).inflate(R.layout.view_bottom_holder, null)
+        val lp = foot.findViewById<View>(R.id.view_id).layoutParams
+        lp.height = ScreenUtils.getScreenHeight()
+        commentAdapter.addFooterView(foot)
+
+        if (commentAdapter.data.isEmpty()) {
+            commentAdapter.setEmptyView(
+                MixedHelper.getEmptyView(
+                    this,
+                    msg = "暂无评论，快去抢沙发吧～",
+                    isImageHide = true
+                ).apply {
+                    val ll = this as LinearLayout
+                    val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(150))
+                    this.layoutParams = lp
+                }
+            )
+        }
+
+        commentAdapter.footerWithEmptyEnable = true
+        rv_comments.layoutManager = LinearLayoutManager(this)
+        rv_comments.adapter = commentAdapter
+        commentAdapter.setOnItemClickListener { adapter, view, position ->
+            //回复的是1级评论
+            val tempData = adapter.getItemOrNull(position) as? DynamicComment ?: return@setOnItemClickListener
+            mViewModel.replyingComment = tempData.apply { firstCommentId = commentId }
+            ll_input.show()
+            edit_text.forceLayout()
+            edit_text.performClick()
+            edit_text.hint = "回复${tempData.nickname}"
+        }
+        commentAdapter.setOnItemChildClickListener { adapter, view, position ->
+            val tempData = adapter.getItemOrNull(position) as? DynamicComment ?: return@setOnItemChildClickListener
+            when (view.id) {
+                R.id.ll_comment_more -> {
+                    mViewModel.secondCommentList(tempData.commentId, tempData.secondComments.size)
+                }
+                R.id.tv_share_num -> {
+                    //点击了分享
+                }
+            }
+        }
+        commentAdapter.loadMoreModule.setOnLoadMoreListener {
+            mViewModel.commentList()
+        }
     }
 
     private fun loadDataFail(isPull: Boolean) {
@@ -305,6 +603,28 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 }
             }
 
+
+            val shareContent = if (posterInfo.shareNum == 0L) {
+                "分享"
+            } else {
+                "${posterInfo.shareNum}"
+            }
+            tv_share_num.text = shareContent
+
+            val commentConetnt = if (posterInfo.commentNum == 0L) {
+                "评论"
+            } else {
+                "${posterInfo.commentNum}"
+            }
+            tv_comment_num.text = commentConetnt
+
+            val followContent = if (posterInfo.praiseNum == 0L) {
+                "点赞"
+            } else {
+                "${posterInfo.praiseNum}"
+            }
+            tv_follow_num.text = followContent
+
         } else {
             headerLayout.hide()
         }
@@ -320,26 +640,92 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         if (info.hasMore) {
             //如果下拉加载更多时 返回的列表为空 会触发死循环 这里直接设置加载完毕状态
             if (list.isEmpty()) {
-                commentAdapter.loadMoreModule.loadMoreEnd(false)
+                commentAdapter.loadMoreModule.loadMoreEnd()
             } else {
+                commentAdapter.loadMoreModule.isEnableLoadMore = true
                 commentAdapter.loadMoreModule.loadMoreComplete()
             }
         } else {
             //防止底部没有边距
             commentAdapter.loadMoreModule.loadMoreEnd()
         }
-        if (commentAdapter.data.isEmpty()) {
-            commentAdapter.setEmptyView(
-                MixedHelper.getEmptyView(
-                    this,
-                    msg = "暂无评论，快去抢沙发吧～",
-                    isImageHide = true
-                ).apply {
-                    val ll = this as LinearLayout
-                    val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(150))
-                    this.layoutParams = lp
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (mHelper == null) {
+            mHelper = PanelSwitchHelper.Builder(this).addKeyboardStateListener {
+                onKeyboardChange { visible, height ->
+                    //可选实现，监听输入法变化
                 }
-            )
+            }.addEditTextFocusChangeListener {
+                onFocusChange { _, hasFocus ->
+                    //可选实现，监听输入框焦点变化
+                    if (hasFocus) {
+//                        scrollToBottom()
+                    }
+                }
+            }
+                .addViewClickListener {
+                    onClickBefore { view ->
+                        //可选实现，监听触发器的点击
+                        if (view?.id == R.id.iv_emoji) {
+//                            scrollToBottom()
+                        }
+                    }
+                }.addPanelChangeListener {
+                    onKeyboard {
+                        //可选实现，输入法显示回调
+                        iv_emoji.isSelected = false
+//                        scrollToBottom()
+                    }
+                    onNone {
+                        //可选实现，默认状态回调
+                        iv_emoji.isSelected = false
+                        ll_input.hide()
+                        mViewModel.replyingComment = null
+                    }
+                    onPanel { view ->
+                        //可选实现，面板显示回调
+                        if (view is PrivateChatPanelView) {
+                            iv_emoji.isSelected = view.id == R.id.panel_emotion
+//                            scrollToBottom()
+                        }
+                    }
+                    onPanelSizeChange { panelView, _, _, _, width, height ->
+                        //可选实现，输入法动态调整时引起的面板高度变化动态回调
+                        if (panelView is PanelView) {
+                            when (panelView.id) {
+//                            R.id.panel_emotion -> {
+//                                val pagerView = findViewById<EmotionPagerView>(R.id.view_pager)
+//                                val viewPagerSize: Int = height - DensityHelper.dpToPx(30)
+//                                pagerView.buildEmotionViews(
+//                                    findViewById<PageIndicatorView>(R.id.pageIndicatorView),
+//                                    edit_text,
+//                                    Emotions.getEmotions(),
+//                                    width,
+//                                    viewPagerSize
+//                                )
+//                            }
+                            }
+                        }
+                    }
+                }    //可选模式，默认true，当面板实现时内容区域是否往上滑动
+//                .logTrack(true)                 //可选，默认false，是否开启log信息输出
+//                .addContentScrollMeasurer(object : ContentScrollMeasurer {
+//                    override fun getScrollDistance(defaultDistance: Int) = 0
+//
+//                    override fun getScrollViewId() = R.id.iv_background
+//                })
+//                .addContentScrollMeasurer(object : ContentScrollMeasurer {
+//                    override fun getScrollDistance(defaultDistance: Int) =
+//                        defaultDistance - unfilledHeight
+//
+//                    override fun getScrollViewId() = R.id.recyclerview
+//                })
+                .build(false)                      //可选，默认false，是否默认打开输入法
+
         }
 
     }
@@ -356,7 +742,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 //                commentAdapter.setEmptyView(MixedHelper.getEmptyView(this))
             }
             NetStateType.LOADING -> {
-                commentAdapter.setEmptyView(MixedHelper.getLoadingView(this))
+//                commentAdapter.setEmptyView(MixedHelper.getLoadingView(this))
             }
             NetStateType.ERROR -> {
                 commentAdapter.setEmptyView(
@@ -383,15 +769,6 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         }
 
     }
-
-    private val commentAdapter =
-        object : BaseQuickAdapter<DynamicComment, BaseViewHolder>(R.layout.item_dynamic_comment_list),
-            LoadMoreModule {
-            override fun convert(holder: BaseViewHolder, item: DynamicComment) {
-                logger.info("commentAdapter=${item.commentId}")
-            }
-
-        }
 
 
 }

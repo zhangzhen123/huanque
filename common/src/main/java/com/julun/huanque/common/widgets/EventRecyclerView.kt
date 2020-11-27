@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.recyclerview.widget.RecyclerView
+import com.julun.huanque.common.interfaces.EventDispatchListener
 import com.julun.huanque.common.interfaces.EventListener
 
 /**
@@ -13,12 +14,15 @@ import com.julun.huanque.common.interfaces.EventListener
  */
 class EventRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs) {
     var mEventListener: EventListener? = null
+    var mEventDispatchListener: EventDispatchListener? = null
+
     //是否接收事件
     var mTouchEnable = true
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         mEventListener?.onDispatch(ev)
-        return if (mTouchEnable) {
+        val enable = mEventDispatchListener?.onDispatch(ev) ?: true
+        return if (mTouchEnable && enable) {
             super.dispatchTouchEvent(ev)
         } else {
             false
