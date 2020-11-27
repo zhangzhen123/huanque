@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bg_stroke_btn1" android:state_activated="true" />
+    <item android:state_activated="false">
+        <shape>
+            <solid android:color="#DEDEDE" />
+            <corners android:radius="@dimen/dimen_15" />
+        </shape>
+    </item>
+</selector>

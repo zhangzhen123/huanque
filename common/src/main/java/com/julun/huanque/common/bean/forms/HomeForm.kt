@@ -32,8 +32,10 @@ class BirdFunctionForm(var functionCode: String)
 class PostDetailForm(var postId: Long)
 
 
-class HomePostForm(var offset: Int,var postType:String?)
+class HomePostForm(var offset: Int, var postType: String?)
 
-class PostListsForm(var offset: Int,var userId:Long?)
+class PostListsForm(var offset: Int, var userId: Long?)
 
-class PostForm(var postId:Long)
+class PostForm(var postId: Long)
+
+class GroupPostForm(var groupId: Long? = null, var orderType: String? = null, var offset: Int? = null)

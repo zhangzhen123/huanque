@@ -4,7 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
+import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.bean.beans.DynamicItemBean
 import com.julun.huanque.common.bean.beans.HomeDynamicListInfo
+import com.julun.huanque.common.bean.forms.GroupPostForm
 import com.julun.huanque.common.bean.forms.HomePostForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -30,7 +33,7 @@ class DynamicTabViewModel : BaseViewModel() {
     private val service: DynamicService by lazy { Requests.create(DynamicService::class.java) }
     val dataList: MutableLiveData<ReactiveData<HomeDynamicListInfo>> by lazy { MutableLiveData<ReactiveData<HomeDynamicListInfo>>() }
 
-
+    val postList: MutableLiveData<ReactiveData<RootListData<DynamicItemBean>>> by lazy { MutableLiveData<ReactiveData<RootListData<DynamicItemBean>>>() }
     private var offsetHot = 0
     fun requestPostList(queryType: QueryType, postType: String?) {
 
@@ -144,5 +147,28 @@ class DynamicTabViewModel : BaseViewModel() {
             }, needLoadState = queryType == QueryType.INIT)
         }
     }
+
+    fun requestGroupPostList(queryType: QueryType, groupId: Long?, orderType: String?) {
+
+        viewModelScope.launch {
+            if (queryType == QueryType.REFRESH) {
+                offsetHot = 0
+            }
+
+            request({
+                val result =
+                    service.groupPostList(GroupPostForm(offset = offsetHot, orderType = orderType, groupId = groupId))
+                        .dataConvert()
+                result.hasMore = false
+                //
+                offsetHot += result.list.size
+                result.isPull = queryType != QueryType.LOAD_MORE
+                postList.value = result.convertRtData()
+            }, error = {
+                postList.value = it.convertListError(queryType = queryType)
+            }, needLoadState = queryType == QueryType.INIT)
+        }
+    }
+
 
 }

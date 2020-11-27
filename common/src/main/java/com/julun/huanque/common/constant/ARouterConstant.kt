@@ -115,6 +115,10 @@ object ARouterConstant {
     //用户动态
     const val USER_DYNAMIC_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/UserDynamicActivity"
 
+    //圈子动态
+    const val CIRCLE_DYNAMIC_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/CircleDynamicActivity"
+
+
     //邀友分享
     const val INVITE_SHARE_ACTIVITY = "/$CORE$PREFIX_ACTIVITY/InviteShareActivity"
 

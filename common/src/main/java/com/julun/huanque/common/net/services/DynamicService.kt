@@ -1,6 +1,7 @@
 package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.*
@@ -54,5 +55,18 @@ interface DynamicService {
      */
     @POST("social/post/cancelPraisePost")
     suspend fun cancelPraisePost(@Body body: PostForm): Root<VoidResult>
+
+    /**
+     * 动态详情
+     */
+    @POST("social/group/detail")
+    suspend fun  groupPostDetail(@Body body: GroupPostForm): Root<DynamicGroup>
+
+    /**
+     * 查询圈子动态列表
+     */
+    @POST("social/group/postList")
+    suspend fun groupPostList(@Body body: GroupPostForm): Root<RootListData<DynamicItemBean>>
+
 
 }

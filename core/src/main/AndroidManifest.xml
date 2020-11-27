@@ -142,7 +142,7 @@
         <activity
             android:name=".ui.publish_dynamic.PublishStateActivity"
             android:theme="@style/CustomToolBarTheme"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.share.ShareFriendsActivity"
@@ -150,6 +150,10 @@
 
         <activity
             android:name=".ui.dynamic.UserDynamicActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+
+        <activity android:name=".ui.dynamic.CircleDynamicActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
 

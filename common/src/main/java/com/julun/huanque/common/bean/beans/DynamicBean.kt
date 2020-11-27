@@ -51,7 +51,9 @@ data class DynamicGroup(
     var groupName: String = "",
     var groupPic: String = "",
     var hasNewPost: Boolean = false,
-    var heatValue: Long = 0
+    var heatValue: Long = 0,
+    var join: Boolean = false,
+    var postNum: Long = 0L
 )
 
 class HomeDynamicListInfo {
