@@ -143,6 +143,10 @@
             android:name=".ui.publish_dynamic.PublishStateActivity"
             android:theme="@style/CustomToolBarTheme"
             android:windowSoftInputMode="adjustNothing" />
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.share.ShareFriendsActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.dynamic.UserDynamicActivity"

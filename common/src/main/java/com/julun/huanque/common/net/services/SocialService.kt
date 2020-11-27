@@ -371,5 +371,17 @@ interface SocialService {
      * 退出圈子
      */
     @POST("social/group/quit")
-    suspend fun groupQuit(@Body form: GroupIdForm) : Root<VoidResult>
+    suspend fun groupQuit(@Body form: GroupIdForm): Root<VoidResult>
+
+    /**
+     * 动态分享
+     */
+    @POST("social/post/share")
+    suspend fun postShare(@Body form: PostShareForm): Root<PostShareBean>
+
+    /**
+     * 动态分享成功接口
+     */
+    @POST("social/post/saveShareLog")
+    fun saveShareLog(@Body form: PostShareForm): Observable<Root<VoidResult>>
 }

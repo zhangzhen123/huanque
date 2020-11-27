@@ -186,3 +186,15 @@ class GroupIdForm(var groupId: Long = 0) : Serializable
  * 查询圈子的Form（关注还是推荐）
  */
 class CircleGroupTypeForm(var offset: Int = 0, var postType: String = "") : Serializable
+
+/**
+ * 动态分享的form
+ */
+class PostShareForm(
+    //分享方式
+    var shareType: String = "",
+    //动态Id
+    var postId: Long = 0,
+    //评论ID
+    var commentId: Long? = null
+) : Serializable

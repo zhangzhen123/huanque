@@ -109,6 +109,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
 
         //传送门视图
         const val SEND_ROOM_VIEW = "SEND_ROOM_VIEW"
+
+        //动态视图
+        const val Post_Share_View = "Post_Share_View"
     }
 
     init {
@@ -322,7 +325,6 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                             R.drawable.icon_shaizi -> {
                                 //骰子动效
                                 showShaiziAnimation(item, sdvImage, expressionAnimationBean.result, started ?: false, position)
-
                             }
                             R.drawable.icon_caiquan -> {
                                 //猜拳动效
@@ -338,6 +340,13 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                     //传送门消息
                     showMessageView(helper, SEND_ROOM_VIEW, helper.itemViewType)
                     showSendRoomView(helper, content.context)
+                }
+                MessageCustomBeanType.PostShare -> {
+                    //动态分享消息
+                    showMessageView(helper, Post_Share_View, helper.itemViewType)
+                    showPostShareView(helper, content.context)
+                    //分享不付费
+                    helper.getView<SimpleDraweeSpanTextView>(R.id.tv_quebi).hide()
                 }
                 else -> {
                 }
@@ -494,6 +503,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         val sdv_gift_pic = holder.getView<View>(R.id.sdv_gift_pic)
         val view_gift_border = holder.getView<View>(R.id.view_gift_border)
 
+        //动态分享视图
+        val con_post_share = holder.getView<View>(R.id.con_post_share)
+
         if (messageType != GIFT_VIEW) {
             view_bg_gift.hide()
             tv_gift_content.hide()
@@ -512,6 +524,12 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             sdv_mark.show()
         } else {
             sdv_mark.hide()
+        }
+
+        if (messageType == Post_Share_View) {
+            con_post_share.show()
+        } else {
+            con_post_share.hide()
         }
 
         when (messageType) {
@@ -581,6 +599,16 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 sdv_header.show()
                 con_send_room.show()
 
+                rl_content?.hide()
+                tv_content.hide()
+                tv_pic_content.hide()
+                sdv_image.hide()
+            }
+            Post_Share_View -> {
+                //动态分享视图
+                sdv_header.show()
+
+                con_send_room.hide()
                 rl_content?.hide()
                 tv_content.hide()
                 tv_pic_content.hide()
@@ -757,6 +785,34 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
                 .setText(R.id.tv_program_name, sendRoomBean.programName)
                 .setText(R.id.tv_hot, "${sendRoomBean.heatValue}")
             ImageUtils.loadImage(helper.getView(R.id.sdc_cover), sendRoomBean.coverPic, 150f, 116f)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * 显示动态分享样式
+     */
+    private fun showPostShareView(helper: BaseViewHolder, str: String) {
+        try {
+            if (str.isEmpty()) {
+                return
+            }
+            val postShareBean = JsonUtil.deserializeAsObject<PostShareBean>(str, PostShareBean::class.java)
+            val sdv_header_post = helper.getView<SimpleDraweeView>(R.id.sdv_header_post)
+            val sdv_pic_post = helper.getView<SimpleDraweeView>(R.id.sdv_pic_post)
+
+            sdv_header_post.loadImage(postShareBean.headPic,25f,25f)
+            if(postShareBean.pic.isEmpty()){
+                sdv_pic_post.hide()
+            }else{
+                sdv_pic_post.show()
+                sdv_pic_post.loadImage(postShareBean.pic,50f,50f)
+            }
+
+            helper.setText(R.id.tv_nickname_post, postShareBean.nickname)
+                .setText(R.id.tv_content_post, postShareBean.content)
 
         } catch (e: Exception) {
             e.printStackTrace()

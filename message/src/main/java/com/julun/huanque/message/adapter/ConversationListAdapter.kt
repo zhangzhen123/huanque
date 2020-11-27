@@ -1,6 +1,7 @@
 package com.julun.huanque.message.adapter
 
 import android.graphics.Color
+import android.os.Message
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -197,6 +198,10 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                         }
                         MessageCustomBeanType.SendRoom -> {
                             helper.setText(R.id.tv_content, "[传送门]")
+                        }
+                        MessageCustomBeanType.PostShare -> {
+                            //动态分享
+                            helper.setText(R.id.tv_content, "分享给你一条信息")
                         }
                         else -> {
                             helper.setText(R.id.tv_content, "")

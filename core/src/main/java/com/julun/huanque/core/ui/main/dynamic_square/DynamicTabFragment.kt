@@ -31,6 +31,7 @@ import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.ui.dynamic.DynamicDetailActivity
 import com.julun.huanque.core.ui.homepage.CircleActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
+import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.*
 import kotlinx.android.synthetic.main.fragment_program_tab.mRefreshLayout
 import kotlinx.android.synthetic.main.fragment_program_tab.state_pager_view
@@ -192,7 +193,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                     DynamicDetailActivity.start(requireActivity(), item.postId)
                 }
                 R.id.tv_share_num -> {
-                    logger.info("分享")
+                    LiveShareActivity.newInstance(requireActivity(), ShareFromType.Dynamic, item.postId)
                 }
                 R.id.iv_more_action -> {
                     logger.info("更多操作")

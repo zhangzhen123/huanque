@@ -464,22 +464,28 @@ object RongCloudManager {
      * @param conversationType 会话类型
      * @param customType 自定义对象的类型
      * @param customBean 自定义对象
+     * @param extraUser 消息携带的extra 对象
      */
     fun obtainCustomMessage(
         targetId: String,
         targetUserObj: TargetUserObj? = null,
         conversationType: Conversation.ConversationType,
         customType: String,
-        customBean: Any
+        customBean: Any,
+        extraUser: RoomUserChatExtra? = null
     ): Message {
         val messageContent = CustomMessage.obtain().apply {
             type = customType
             context = JsonUtil.serializeAsString(customBean)
         }
 
-        currentUserObj?.targetUserObj = targetUserObj
-        currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
-        messageContent.extra = JsonUtil.serializeAsString(currentUserObj)
+        if (extraUser != null) {
+            messageContent.extra = JsonUtil.serializeAsString(extraUser)
+        } else {
+            currentUserObj?.targetUserObj = targetUserObj
+            currentUserObj?.userAbcd = AppHelper.getMD5("${currentUserObj?.userId ?: ""}")
+            messageContent.extra = JsonUtil.serializeAsString(currentUserObj)
+        }
 
         return Message.obtain(targetId, conversationType, messageContent).apply { sentTime = System.currentTimeMillis() }
     }

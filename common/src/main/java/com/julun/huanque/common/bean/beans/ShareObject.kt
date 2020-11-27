@@ -70,6 +70,13 @@ open class ShareObject : Serializable {
 
     /** 分享平台 (本地传递使用)**/
     var platForm: String? = null
+
+    //动态ID(分享动态时使用)
+    var postId: Long? = null
+
+    //评论Id(分享动态时使用)
+    var commentId: Long? = null
+
 }
 
 class ShareConfig : Serializable {
@@ -119,6 +126,30 @@ data class SharePoster(
             else -> 1
         }
 }
+
+/**
+ * 动态分享对象
+ */
+data class PostShareBean(
+    //内容
+    var content: String = "",
+    //头像
+    var headPic: String = "",
+    //昵称
+    var nickname: String = "",
+    //图片
+    var pic: String = "",
+    //动态Id
+    var postId: Long = 0,
+    //二维码
+    var qrCode: String = "",
+    //分享的链接
+    var shareUrl: String = "",
+    //用户Id
+    var userId: Long = 0,
+    //分享类型(本地字段)
+    var shareType: String = ""
+) : Serializable
 
 class ShareType {
     var type: String = ""
