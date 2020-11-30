@@ -435,7 +435,13 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         ll_comment.findViewById<TextView>(R.id.tv_content).text = postShareBean.content
         ll_comment.findViewById<TextView>(R.id.tv_comment).text = postShareBean.commentContent
         ll_comment.findViewById<TextView>(R.id.tv_nickname).text = postShareBean.commentUserName
-        ll_comment.findViewById<SimpleDraweeView>(R.id.sdv_pic).loadImage(postShareBean.pic, 220f, 123f)
+        val sdv_pic = ll_comment.findViewById<SimpleDraweeView>(R.id.sdv_pic)
+        if (postShareBean.pic.isNotEmpty()) {
+            sdv_pic.loadImage(postShareBean.pic, 220f, 123f)
+        } else {
+            //显示默认图
+            sdv_pic.loadImageLocal(R.mipmap.pic_comment_place)
+        }
         val sdv_qr_code = ll_comment.findViewById<SimpleDraweeView>(R.id.sdv_qr_code)
         sdv_qr_code.setImageBitmap(postShareBean.qrBitmap ?: return)
     }

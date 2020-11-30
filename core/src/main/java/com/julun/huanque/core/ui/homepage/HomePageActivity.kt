@@ -465,9 +465,11 @@ class HomePageActivity : BaseActivity() {
         }
         ll_bird.onClickNew {
             //跳转养鹊乐园
-            val intent = Intent(this, LeYuanBirdActivity::class.java)
-            if (ForceUtils.activityMatch(intent)) {
-                startActivity(intent)
+            if (mHomePageViewModel.mineHomePage) {
+                val intent = Intent(this, LeYuanBirdActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    startActivity(intent)
+                }
             }
         }
         con_tag_mine.onClickNew {
@@ -489,6 +491,13 @@ class HomePageActivity : BaseActivity() {
             //跳转编辑资料页面
             RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
         }
+
+        view_tag.onClickNew {
+            //跳转添加标签页面
+            if (mHomePageViewModel.targetUserId == SessionUtils.getUserId()) {
+                RNPageActivity.start(this, RnConstant.EditMyTagPage)
+            }
+        }
     }
 
     /**
@@ -504,10 +513,16 @@ class HomePageActivity : BaseActivity() {
             iv_more_black.hide()
             iv_more.hide()
             tv_empty_evaluate.text = "当前还没有密友评价"
+            tv_play.text = "我正在玩"
+            tv_tag.text = "我的标签"
+            iv_tag_dynamic.show()
         } else {
             iv_more_black.show()
             iv_more.show()
             tv_empty_evaluate.text = "快去成为第一个评价Ta的人吧！"
+            tv_play.text = "Ta正在玩"
+            tv_tag.text = "Ta的标签"
+            iv_tag_dynamic.hide()
         }
         mHomePageViewModel.homeInfo()
 
@@ -1001,6 +1016,12 @@ class HomePageActivity : BaseActivity() {
 
         //养鹊相关
         val playParadise = bean.playParadise
+        val birdViewCount = ll_bird.childCount
+        if (birdViewCount > 3) {
+            (3 until birdViewCount).forEach {
+                ll_bird.removeViewAt(birdViewCount - (it - 2))
+            }
+        }
         if (playParadise.magpieList.isNotEmpty()) {
             //有小鹊数据
             ll_bird.show()
@@ -1071,11 +1092,11 @@ class HomePageActivity : BaseActivity() {
             view_intim.hide()
         }
 
-//        if (playProgram.programId == 0L && playParadise.magpieList.isEmpty() && bean.sex == Sex.MALE && !mHomePageViewModel.mineHomePage) {
-//            tv_play.hide()
-//        } else {
-//            tv_play.show()
-//        }
+        if (playParadise.magpieList.isEmpty() && bean.sex == Sex.MALE && !mHomePageViewModel.mineHomePage) {
+            tv_play.hide()
+        } else {
+            tv_play.show()
+        }
 
 
         showGuanfang(bean.iconList)
