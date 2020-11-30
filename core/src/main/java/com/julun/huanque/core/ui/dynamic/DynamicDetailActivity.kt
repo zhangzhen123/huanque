@@ -33,6 +33,7 @@ import com.julun.huanque.common.interfaces.EventDispatchListener
 import com.julun.huanque.common.interfaces.SecondCommentClickListener
 import com.julun.huanque.common.manager.audio_record.AudioRecordManager
 import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
@@ -142,7 +143,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 val viewHead: View? = linearLayoutManager.findViewByPosition(0)
                 val view: View? = linearLayoutManager.findViewByPosition(1)
 
-//                logger.info("viewHead=${viewHead?.id}  view=${view?.top} ")
+                logger.info("viewHead=${viewHead?.id}  view=${view?.top} ")
                 if (viewHead == null || view == null) {
                     if (!ic_sticky_comment.isVisible() && isUserDo) {
                         logger.info("此时需要显示粘性布局")
@@ -417,19 +418,19 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         lp.height = ScreenUtils.getScreenHeight()
         commentAdapter.addFooterView(foot)
 
-        if (commentAdapter.data.isEmpty()) {
-            commentAdapter.setEmptyView(
-                MixedHelper.getEmptyView(
-                    this,
-                    msg = "暂无评论，快去抢沙发吧～",
-                    isImageHide = true
-                ).apply {
-                    val ll = this as LinearLayout
-                    val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(150))
-                    this.layoutParams = lp
-                }
-            )
-        }
+//        if (commentAdapter.data.isEmpty()) {
+//            commentAdapter.setEmptyView(
+//                MixedHelper.getEmptyView(
+//                    this,
+//                    msg = "暂无评论，快去抢沙发吧～",
+//                    isImageHide = true
+//                ).apply {
+//                    val ll = this as LinearLayout
+//                    val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(150))
+//                    this.layoutParams = lp
+//                }
+//            )
+//        }
 
         commentAdapter.footerWithEmptyEnable = true
         rv_comments.layoutManager = LinearLayoutManager(this)
@@ -555,6 +556,15 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                         rvLp.width = w
                         sgSdv.requestLayout()
                         sgSdv.loadImageInPx(pic, w, height = h)
+                        sgSdv.onClickNew {
+                            ImageActivity.start(
+                                this,
+                                0,
+                                list.map { StringHelper.getOssImgUrl(it.url) },
+                                posterInfo.userId
+                            )
+
+                        }
                     } else {
                         headerLayout.rv_photos.show()
                         headerLayout.sdv_photo.hide()
@@ -592,8 +602,13 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                         mPhotosAdapter.setList(list)
                         mPhotosAdapter.totalList = rl
                         mPhotosAdapter.setOnItemClickListener { adapter, view, position ->
-                            //todo
                             logger.info("点击了第几个图片：$position")
+                            ImageActivity.start(
+                                this,
+                                position,
+                                list.map { StringHelper.getOssImgUrl(it.url) },
+                                posterInfo.userId
+                            )
                         }
                     }
 
@@ -741,6 +756,19 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             NetStateType.SUCCESS -> {
                 //由于上面在renderData中已经设置了空白页 这里不需要了
 //                commentAdapter.setEmptyView(MixedHelper.getEmptyView(this))
+                if (commentAdapter.data.isEmpty()) {
+                    commentAdapter.setEmptyView(
+                        MixedHelper.getEmptyView(
+                            this,
+                            msg = "暂无评论，快去抢沙发吧～",
+                            isImageHide = true
+                        ).apply {
+                            val ll = this as LinearLayout
+                            val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(150))
+                            this.layoutParams = lp
+                        }
+                    )
+                }
             }
             NetStateType.LOADING -> {
 //                commentAdapter.setEmptyView(MixedHelper.getLoadingView(this))

@@ -26,7 +26,7 @@ interface DynamicService {
     suspend fun queryPostDetail(@Body form: PostDetailForm): Root<DynamicDetailInfo>
 
     /**
-     * 查询动态详情
+     * 首页查询动态列表
      */
     @POST("social/post/list")
     suspend fun queryHomePost(@Body form: HomePostForm): Root<HomeDynamicListInfo>
