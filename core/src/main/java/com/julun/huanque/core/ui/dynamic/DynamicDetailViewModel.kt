@@ -15,6 +15,7 @@ import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 /**
  *
@@ -43,6 +44,15 @@ class DynamicDetailViewModel : BaseViewModel() {
 
     //二级评论列表
     val secondCommentListResult: MutableLiveData<RootListData<DynamicComment>> by lazy { MutableLiveData<RootListData<DynamicComment>>() }
+
+    //删除动态标识位
+    val deleteFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //动态已删除的标识位
+    val deletedData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //评论点赞结果
+    val commentPraiseResult: MutableLiveData<DynamicComment> by lazy { MutableLiveData<DynamicComment>() }
 
     //评论的排序方式（默认为热度）
     var commentType = CommentOrderType.Heat
@@ -112,5 +122,42 @@ class DynamicDetailViewModel : BaseViewModel() {
         }
     }
 
+    /**
+     * 删除评论
+     */
+    fun deletePost() {
+        viewModelScope.launch {
+            request({
+                val result = socialService.deletePost(PostForm(mPostId)).dataConvert()
+                deletedData.value = true
+            }, {})
+        }
+    }
+
+    /**
+     * 点赞评论
+     */
+    fun praiseComment(comment: DynamicComment) {
+        viewModelScope.launch {
+            service.commentPraise(CommentIdForm(comment.commentId)).dataConvert()
+            commentPraiseResult.value = comment.apply {
+                hasPraise = true
+                praiseNum += 1
+            }
+        }
+    }
+
+    /**
+     * 取消评论点赞
+     */
+    fun cancelPraiseComment(comment: DynamicComment) {
+        viewModelScope.launch {
+            service.cancelCommentPraise(CommentIdForm(comment.commentId)).dataConvert()
+            commentPraiseResult.value = comment.apply {
+                hasPraise = false
+                praiseNum = max(0, praiseNum - 1)
+            }
+        }
+    }
 
 }

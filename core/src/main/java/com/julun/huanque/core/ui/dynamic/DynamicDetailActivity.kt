@@ -18,6 +18,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseVMActivity
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
@@ -31,10 +32,12 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventDispatchListener
 import com.julun.huanque.common.interfaces.SecondCommentClickListener
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.audio_record.AudioRecordManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
+import com.julun.huanque.common.viewmodel.HuanQueViewModel
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.common.widgets.emotion.PrivateChatPanelView
@@ -52,6 +55,7 @@ import kotlinx.android.synthetic.main.layout_header_comment.*
 import kotlinx.android.synthetic.main.layout_header_dynamic_detail.view.*
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
+import kotlin.math.max
 
 /**
  *
@@ -78,6 +82,11 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
     private val commentAdapter = DynamicDetailCommentFirstAdapter()
 
     private var mHelper: PanelSwitchHelper? = null
+
+    //我的主页 操作弹窗
+    private var mActionFragment: DynamicDetailActionFragment? = null
+
+    private var mHuanQueViewModel = HuanViewModelManager.huanQueViewModel
 
     private val headerLayout: View by lazy {
         LayoutInflater.from(this).inflate(R.layout.layout_header_dynamic_detail, null)
@@ -115,8 +124,8 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 //        rvParams.height = recyclerHeight
 //        rv_comments.layoutParams = rvParams
 
-
         mViewModel.queryDetail(postId, QueryType.INIT)
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -125,7 +134,9 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             finish()
         }
         headerPageView.imageOperation.onClickNew {
-
+            //点击更多操作
+            mActionFragment = mActionFragment ?: DynamicDetailActionFragment.newInstance()
+            mActionFragment?.show(supportFragmentManager, "DynamicDetailActionFragment")
         }
 
         rv_comments.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -267,6 +278,19 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             }
             mViewModel.commentList()
         }
+
+        tv_follow_num.onClickNew {
+            //
+            val followStatus = mViewModel.dynamicInfo.value?.post?.hasPraise ?: return@onClickNew
+            if (followStatus) {
+                //取消点赞
+                mHuanQueViewModel.cancelPraise(mViewModel.mPostId)
+            } else {
+                //点赞
+                mHuanQueViewModel.praise(mViewModel.mPostId)
+            }
+
+        }
     }
 
     //悬浮表情
@@ -324,6 +348,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
     }
 
     private fun initViewModel() {
+
         mViewModel.dynamicDetailInfo.observe(this, Observer {
             if (it.isSuccess()) {
                 renderData(it.requireT())
@@ -396,6 +421,57 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             }
         })
 
+        mViewModel.deleteFlag.observe(this, Observer {
+            if (it != null) {
+                MyAlertDialog(this).showAlertWithOKAndCancel(
+                    "确定删除该动态内容？",
+                    MyAlertDialog.MyDialogCallback(onRight = {
+                        //删除动态
+                        mViewModel.deletePost()
+                    }), "提示", okText = "确定"
+                )
+            }
+        })
+        mViewModel.deletedData.observe(this, Observer {
+            if (it == true) {
+                //动态已经删除
+                ToastUtils.show("内容删除成功")
+                finish()
+            }
+        })
+
+        mViewModel.commentPraiseResult.observe(this, Observer {
+            if (it != null) {
+                commentAdapter.notifyDataSetChanged()
+            }
+        })
+
+        mHuanQueViewModel.dynamicChangeResult.observe(this, Observer {
+            if (it != null) {
+                if (mViewModel.dynamicDetailInfo.value?.isSuccess() != true) {
+                    return@Observer
+                }
+                val bean = mViewModel.dynamicInfo.value?.post ?: return@Observer
+
+                if (it.praise == true) {
+                    //点赞成功
+                    bean.hasPraise = true
+                    bean.praiseNum += 1
+                } else {
+                    //取消点赞成功
+                    bean.hasPraise = false
+                    bean.praiseNum = max(0, bean.praiseNum - 1)
+                }
+                val followContent = if (bean.praiseNum == 0L) {
+                    "点赞"
+                } else {
+                    "${bean.praiseNum}"
+                }
+                tv_follow_num.text = followContent
+                tv_follow_num.isActivated = bean.praiseNum > 0L
+            }
+        })
+
     }
 
     private fun initRecyclerView() {
@@ -409,6 +485,18 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 edit_text.forceLayout()
                 edit_text.performClick()
                 edit_text.hint = "回复${secondComment.nickname}"
+            }
+
+            override fun praise(secondComment: DynamicComment) {
+                //点赞或者取消点赞
+                if (secondComment.hasPraise) {
+                    //取消点赞
+                    mViewModel.cancelPraiseComment(secondComment)
+                } else {
+                    //点赞
+                    mViewModel.praiseComment(secondComment)
+                }
+
             }
         }
 
@@ -452,7 +540,14 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 }
                 R.id.tv_share_num -> {
                     //点击了分享
-                    LiveShareActivity.newInstance(this, ShareFromType.Share_Comment, postId,tempData.commentId)
+                    LiveShareActivity.newInstance(this, ShareFromType.Share_Comment, postId, tempData.commentId)
+                }
+                R.id.tv_praise, R.id.iv_praise -> {
+                    if (tempData.hasPraise) {
+                        mViewModel.cancelPraiseComment(tempData)
+                    } else {
+                        mViewModel.praiseComment(tempData)
+                    }
                 }
             }
         }
@@ -474,8 +569,11 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 
         if (info.post?.userId == SessionUtils.getUserId()) {
             headerPageView.textTitle.text = "我的动态"
+            headerPageView.imageOperation.show()
+            headerPageView.imageOperation.imageResource = R.mipmap.icon_more_black_01
         } else {
             headerPageView.textTitle.text = "Ta的动态"
+            headerPageView.imageOperation.hide()
         }
 
         val posterInfo = info.post
@@ -635,8 +733,10 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             tv_comment_num.text = commentConetnt
 
             val followContent = if (posterInfo.praiseNum == 0L) {
+                tv_follow_num.isActivated = false
                 "点赞"
             } else {
+                tv_follow_num.isActivated = true
                 "${posterInfo.praiseNum}"
             }
             tv_follow_num.text = followContent

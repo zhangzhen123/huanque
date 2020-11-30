@@ -68,5 +68,16 @@ interface DynamicService {
     @POST("social/group/postList")
     suspend fun groupPostList(@Body body: GroupPostForm): Root<RootListData<DynamicItemBean>>
 
+    /**
+     * 评论点赞
+     */
+    @POST("social/post/commentPraise")
+    suspend fun commentPraise(@Body body : CommentIdForm) : Root<VoidResult>
+
+    /**
+     * 评论取消点赞
+     */
+    @POST("social/post/cancelCommentPraise")
+    suspend fun cancelCommentPraise(@Body body : CommentIdForm) : Root<VoidResult>
 
 }

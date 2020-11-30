@@ -232,3 +232,11 @@ data class SecondCommentList(
     var parentCommentId: Long = 0,
     var offset: Int = 0
 ) : Serializable
+
+/**
+ * 评论ID form
+ */
+data class CommentIdForm(
+    //评论Id
+    var commentId: Long = 0
+) : Serializable

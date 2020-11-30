@@ -14,4 +14,9 @@ interface SecondCommentClickListener {
      */
     fun secondCommentClick(secondComment: DynamicComment)
 
+    /**
+     * 点赞
+     */
+    fun praise(secondComment: DynamicComment)
+
 }
