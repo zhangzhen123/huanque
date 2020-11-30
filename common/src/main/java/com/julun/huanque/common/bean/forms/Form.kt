@@ -192,7 +192,7 @@ class CircleGroupTypeForm(var offset: Int = 0, var postType: String = "") : Seri
  */
 class PostShareForm(
     //分享方式
-    var shareType: String = "",
+    var shareType: String? = null,
     //动态Id
     var postId: Long = 0,
     //评论ID

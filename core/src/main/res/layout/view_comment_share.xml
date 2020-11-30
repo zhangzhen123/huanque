@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/con_comment_share"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="250dp"
+    android:layout_height="346dp"
+    android:background="@drawable/bg_shape_white1">
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_13"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="于千万人之中遇见你所要遇见的人，于千万年之中，时间哈无涯的无涯…" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_pic"
+        android:layout_width="220dp"
+        android:layout_height="123dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_hot"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_content"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:placeholderImageScaleType="centerCrop"
+        app:roundedCornerRadius="6dp" />
+
+    <View
+        android:id="@+id/view_bottom"
+        android:layout_width="0px"
+        android:layout_height="55dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_name"
+        android:layout_width="50dp"
+        android:layout_height="22dp"
+        android:layout_marginLeft="15dp"
+        android:src="@mipmap/content_huanque"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_bottom" />
+
+    <ImageView
+        android:id="@+id/iv_content"
+        android:layout_width="110dp"
+        android:layout_height="28dp"
+        android:layout_marginLeft="9dp"
+        android:src="@mipmap/content_share_attetnion"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintLeft_toRightOf="@id/iv_name"
+        app:layout_constraintTop_toTopOf="@id/view_bottom" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_qr_code"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="@dimen/dimen_15"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_bottom"
+        app:placeholderImage="@mipmap/logo_placeholder_medium" />
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="0px"
+        android:layout_height="1dp"
+        android:background="#EDEDED"
+        app:layout_constraintBottom_toTopOf="@id/view_bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="17dp"
+        android:layout_marginBottom="7dp"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toTopOf="@id/view_divider"
+        app:layout_constraintRight_toRightOf="@id/view_divider"
+        tools:text="评论者的昵称" />
+
+    <View
+        android:layout_width="20dp"
+        android:layout_height="1dp"
+        android:background="@color/black_999"
+        app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+        app:layout_constraintRight_toLeftOf="@id/tv_nickname"
+        app:layout_constraintTop_toTopOf="@id/tv_nickname" />
+
+    <TextView
+        android:id="@+id/tv_comment"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
+        android:maxLines="2"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintBottom_toTopOf="@id/tv_nickname"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="于千万人之中遇见你所要遇见的人，于千万年之中，时间的无涯的无涯的荒野荒…" />
+
+    <TextView
+        android:id="@+id/tv_hot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="10dp"
+        android:drawableLeft="@mipmap/icon_hot_share"
+        android:drawablePadding="5dp"
+        android:text="热门评论"
+        android:textColor="#FF5757"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toTopOf="@id/tv_comment"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

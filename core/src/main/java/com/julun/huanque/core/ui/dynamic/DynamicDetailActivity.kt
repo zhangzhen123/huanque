@@ -30,7 +30,6 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventDispatchListener
-import com.julun.huanque.common.interfaces.EventListener
 import com.julun.huanque.common.interfaces.SecondCommentClickListener
 import com.julun.huanque.common.manager.audio_record.AudioRecordManager
 import com.julun.huanque.common.suger.*
@@ -43,6 +42,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.DynamicDetailCommentFirstAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.adapter.DynamicPhotosAdapter
+import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.activity_dynamic_details.*
 import kotlinx.android.synthetic.main.activity_dynamic_details.edit_text
 import kotlinx.android.synthetic.main.activity_dynamic_details.ll_input
@@ -451,6 +451,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 }
                 R.id.tv_share_num -> {
                     //点击了分享
+                    LiveShareActivity.newInstance(this, ShareFromType.Share_Comment, postId,tempData.commentId)
                 }
             }
         }

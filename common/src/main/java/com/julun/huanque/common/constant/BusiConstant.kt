@@ -1012,7 +1012,10 @@ object CircleGroupType {
  */
 object ShareFromType {
     //分享评论
-    const val Dynamic = "Dynamic"
+    const val Share_Dynamic = "Share_Dynamic"
+
+    //分享评论
+    const val Share_Comment = "Share_Comment"
 }
 
 /**

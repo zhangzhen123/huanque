@@ -169,4 +169,7 @@ object ParamConstant {
 
     //动态分享数据
     const val PostShareInfo = "PostShareInfo"
+
+    //评论ID
+    const val COMMENT_ID = "COMMENT_ID"
 }

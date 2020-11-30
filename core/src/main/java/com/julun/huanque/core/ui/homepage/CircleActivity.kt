@@ -66,10 +66,10 @@ class CircleActivity : BaseActivity() {
         mCircleViewModel.mType = type ?: ""
         if (type == CircleGroupType.Circle_Choose) {
             //全部圈子
-            header_page.textTitle.text = "全部圈子"
+            header_page.textTitle.text = "发布到"
         } else {
             //选择圈子
-            header_page.textTitle.text = "发布到"
+            header_page.textTitle.text = "全部圈子"
         }
 
         initMagicIndicator()

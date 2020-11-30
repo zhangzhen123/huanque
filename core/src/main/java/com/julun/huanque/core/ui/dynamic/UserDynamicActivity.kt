@@ -172,7 +172,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                 }
                 R.id.tv_share_num -> {
                     logger.info("分享")
-                    LiveShareActivity.newInstance(this, ShareFromType.Dynamic, item.postId)
+                    LiveShareActivity.newInstance(this, ShareFromType.Share_Dynamic, item.postId)
                 }
                 R.id.iv_more_action -> {
                     logger.info("更多操作")
