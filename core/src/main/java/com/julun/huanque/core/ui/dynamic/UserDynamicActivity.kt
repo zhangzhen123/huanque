@@ -76,11 +76,11 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
     override fun getLayoutId(): Int = R.layout.activity_dynamic_list
 
     var currentUserId: Long? = null
-
+    private var isMe: Boolean = false
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         currentUserId = intent.getLongExtra(IntentParamKey.USER_ID.name, 0L)
         initViewModel()
-        val isMe = currentUserId == SessionUtils.getUserId()
+        isMe = currentUserId == SessionUtils.getUserId()
         if (isMe) {
             headerPageView.initHeaderView(titleTxt = "我的动态")
             dynamicAdapter.showType = DynamicListAdapter.POST_LIST_ME
@@ -200,6 +200,12 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         headerPageView.textOperation.onClickNew {
             huanQueViewModel.follow(currentUserId ?: return@onClickNew)
         }
+
+        publish_dynamic.onClickNew {
+            logger.info("跳转到交友")
+            ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation()
+        }
+
     }
 
     private fun initViewModel() {
@@ -288,12 +294,12 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         }
         if (dynamicAdapter.data.isEmpty()) {
             mRefreshLayout.hide()
-            state_pager_view.showEmpty(emptyTxt = "没有动态，洗洗睡吧", btnTex = "前往",
-                onClick = View.OnClickListener {
-                    logger.info("跳转到交友")
-                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                        .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
-                })
+            if (isMe) {
+                state_pager_view.showEmpty(emptyTxt = "暂无动态，快去发一条吧~")
+            } else {
+                state_pager_view.showEmpty(emptyTxt = "暂无动态")
+            }
+
         } else {
             mRefreshLayout.show()
             state_pager_view.showSuccess()

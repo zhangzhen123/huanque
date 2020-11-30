@@ -32,10 +32,10 @@ object SquareTabType {
 
 object ActivityRequestCode {
     const val SELECT_CIRCLE = 345
-
+}
+object PublicStateCode{
     const val CIRCLE_DATA = "Circle_Data"
 }
-
 object BottomActionCode {
     const val DELETE = "delete"
     const val REPORT = "report"

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
@@ -22,15 +23,14 @@ import com.julun.huanque.common.bean.beans.CircleGroup
 import com.julun.huanque.common.bean.beans.DynamicGroup
 import com.julun.huanque.common.bean.beans.SquareTab
 import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.PublicStateCode
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.suger.dp2pxf
-import com.julun.huanque.common.suger.loadImage
-import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.main.dynamic_square.DynamicTabFragment
 import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
 import com.julun.huanque.core.viewmodel.AttentionCircleViewModel
 import kotlinx.android.synthetic.main.activity_circle_dynamic.*
@@ -61,6 +61,14 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
         }
     }
 
+    private var state: CollapsingToolbarLayoutState? = null
+
+    private enum class CollapsingToolbarLayoutState {
+        EXPANDED,
+        COLLAPSED,
+        INTERNEDIATE
+    }
+
     private val attentionCircleViewModel: AttentionCircleViewModel by viewModels()
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
@@ -84,13 +92,20 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
         initMagicIndicator()
 
         publish_dynamic.onClickNew {
-            this.startActivity<PublishStateActivity>()
+            currentGroup ?: return@onClickNew
+            this.startActivity<PublishStateActivity>(PublicStateCode.CIRCLE_DATA to CircleGroup().apply {
+                this.groupId = groupId
+                this.groupName = currentGroup!!.groupName
+            })
         }
-        view_pager.post {
-            val params: ViewGroup.LayoutParams = view_pager.layoutParams
-            params.height = ScreenUtils.getScreenHeight() - ScreenUtils.statusHeight
-            view_pager.layoutParams = params
+        iv_back.onClickNew {
+            finish()
         }
+//        view_pager.post {
+//            val params: ViewGroup.LayoutParams = view_pager.layoutParams
+//            params.height = ScreenUtils.getScreenHeight() - ScreenUtils.statusHeight
+//            view_pager.layoutParams = params
+//        }
 
         btn_action.onClickNew {
             currentGroup ?: return@onClickNew
@@ -100,6 +115,32 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
                 attentionCircleViewModel.groupJoin(currentGroupId ?: return@onClickNew)
             }
         }
+        btn_action_tb.onClickNew {
+            currentGroup ?: return@onClickNew
+            if (currentGroup!!.join) {
+                attentionCircleViewModel.groupQuit(currentGroupId ?: return@onClickNew)
+            } else {
+                attentionCircleViewModel.groupJoin(currentGroupId ?: return@onClickNew)
+            }
+        }
+        appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            logger.info("verticalOffset=$verticalOffset")
+            if (verticalOffset == 0) {
+                if (state != CollapsingToolbarLayoutState.EXPANDED) {
+                    state = CollapsingToolbarLayoutState.EXPANDED//修改状态标记为展开
+                    btn_action_tb.hide()
+                    tv_title.hide()
+                }
+            } else if (Math.abs(verticalOffset) >= appBarLayout.totalScrollRange) {
+                if (state != CollapsingToolbarLayoutState.COLLAPSED) {
+                    tv_title.show()
+                    btn_action_tb.show()
+                }
+            } else {
+                btn_action_tb.hide()
+                tv_title.hide()
+            }
+        })
 
     }
 
@@ -129,16 +170,21 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
         attentionCircleViewModel.joinedGroupIdData.observe(this, Observer {
             if (it != null) {
                 currentGroup?.join = true
-                btn_action.isActivated = false
-                btn_action.text = "退出"
+//                btn_action.isActivated = false
+//                btn_action.text = "退出"
+//                btn_action_tb.isActivated = false
+//                btn_action_tb.text = "退出"
+                setJoinBtn(true)
             }
         })
         attentionCircleViewModel.quitGroupIdData.observe(this, Observer {
             if (it != null) {
                 currentGroup?.join = false
-                btn_action.isActivated = true
-                btn_action.text = "加入"
-
+//                btn_action.isActivated = true
+//                btn_action.text = "加入"
+//                btn_action_tb.isActivated = true
+//                btn_action_tb.text = "加入"
+                setJoinBtn(false)
             }
         })
 
@@ -151,14 +197,30 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
         currentGroup = group
         headImage.loadImage(group.groupPic, 80f, 80f)
         tvCircleName.text = group.groupName
+        tv_title.text = group.groupName
         tvDynamicNum.text = "${StringHelper.formatNum(group.postNum)}  动态"
         tvDes.text = group.groupDesc
-        if (group.join) {
+        setJoinBtn(group.join)
+//        if (group.join) {
+//            btn_action.isActivated = false
+//            btn_action.text = "退出"
+//        } else {
+//            btn_action.isActivated = true
+//            btn_action.text = "加入"
+//        }
+    }
+
+    private fun setJoinBtn(join: Boolean) {
+        if (join) {
             btn_action.isActivated = false
             btn_action.text = "退出"
+            btn_action_tb.isActivated = false
+            btn_action_tb.text = "退出"
         } else {
             btn_action.isActivated = true
             btn_action.text = "加入"
+            btn_action_tb.isActivated = true
+            btn_action_tb.text = "加入"
         }
     }
 
@@ -271,7 +333,7 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
         val tempIndex = view_pager.currentItem
         val tempFragment: androidx.fragment.app.Fragment? = mPagerAdapter.getItem(tempIndex)
         tempFragment?.let {
-            if (it is DynamicGroupTabFragment) {
+            if (it is DynamicTabFragment) {
                 it.scrollToTopAndRefresh()
             }
         }
@@ -289,7 +351,7 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
             }
 
             private fun getFragment(position: Int): Fragment {
-                val fragment: Fragment = DynamicGroupTabFragment.newInstance(mTabTitles[position], currentGroupId)
+                val fragment: Fragment = DynamicTabFragment.newInstance(mTabTitles[position], currentGroupId)
                 mFragmentList.put(position, fragment)
                 return fragment
             }

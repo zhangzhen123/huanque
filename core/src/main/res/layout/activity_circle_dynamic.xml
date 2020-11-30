@@ -5,38 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--    <androidx.core.widget.NestedScrollView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:background="@color/white"-->
-    <!--        app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-
-    <!--        <LinearLayout-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:descendantFocusability="blocksDescendants"-->
-    <!--            android:orientation="vertical">-->
-
-
-    <!--        </LinearLayout>-->
-
-    <!--    </androidx.core.widget.NestedScrollView>-->
-
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/ct_layout"
             android:layout_width="match_parent"
-            android:layout_height="125dp"
-            app:expandedTitleMarginBottom="100dp"
+            android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_110"
-                android:layout_marginTop="@dimen/dimen_15">
+                android:layout_height="@dimen/dimen_125"
+                android:layout_marginTop="@dimen/head_bar_height">
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/headImage"
@@ -57,16 +41,18 @@
                     android:layout_marginStart="10dp"
                     android:ellipsize="end"
                     android:gravity="start"
+                    android:includeFontPadding="false"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@color/black_333"
                     android:textSize="14sp"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/tvDynamicNum"
                     app:layout_constraintEnd_toStartOf="@+id/btn_action"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toEndOf="@+id/headImage"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintTop_toTopOf="@+id/headImage"
+                    app:layout_constraintVertical_chainStyle="spread"
                     tools:text="圈子名称" />
 
                 <TextView
@@ -81,6 +67,7 @@
                     android:singleLine="true"
                     android:textColor="@color/black_666"
                     android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@+id/tvDes"
                     app:layout_constraintEnd_toStartOf="@+id/btn_action"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toEndOf="@+id/headImage"
@@ -96,6 +83,7 @@
                     android:layout_marginEnd="@dimen/dimen_15"
                     android:ellipsize="end"
                     android:gravity="start"
+                    android:includeFontPadding="false"
                     android:maxLines="2"
                     android:textColor="@color/black_666"
                     android:textSize="12sp"
@@ -129,6 +117,67 @@
                     app:layout_constraintBottom_toBottomOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/head_bar_height"
+                android:minHeight="@dimen/head_bar_height"
+                app:contentInsetStart="@dimen/dimen_0"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:titleTextAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/default_bg">
+
+                    <ImageView
+                        android:id="@+id/iv_back"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/dimen_15"
+                        android:scaleType="center"
+                        android:src="@mipmap/icon_back_black_01" />
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/dimen_90"
+                        android:layout_toEndOf="@id/iv_back"
+                        android:ellipsize="end"
+                        android:gravity="start|center_vertical"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black_333"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:visibility="visible"
+                        tools:text="圈子名称圈子名称圈子名称圈子名称圈子名称圈子名称圈子名称圈子名称圈子名称" />
+
+
+                    <TextView
+                        android:id="@+id/btn_action_tb"
+                        android:layout_width="@dimen/dimen_68"
+                        android:layout_height="@dimen/dimen_28"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/dimen_15"
+                        android:background="@drawable/selector_group_action"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:maxLength="15"
+                        android:text="加入"
+                        android:textColor="@color/sel_group_action"
+                        android:textSize="@dimen/sp_12" />
+
+                </RelativeLayout>
+
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

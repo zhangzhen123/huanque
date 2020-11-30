@@ -82,6 +82,7 @@ class PublishStateActivity : BaseActivity() {
         const val MAXPICCOUNT = 4
         const val maxTextSize = 2000
         val DRAFT_PATH = FileUtils.getCachePath(CommonInit.getInstance().getContext()) + "/pubDraft"
+
     }
 
     private val loadingDialog: LoadingDialog by lazy { LoadingDialog(this) }
@@ -319,6 +320,13 @@ class PublishStateActivity : BaseActivity() {
             checkoutPublishEnable()
 
         }
+        val circle = intent?.extras?.get(PublicStateCode.CIRCLE_DATA) as? CircleGroup
+        if (circle != null) {
+            currentGroup = circle
+            logger.info("我是附带的圈子=${currentGroup?.groupName}")
+            setCircleStatus()
+        }
+
         iv_location.isSelected = true
         checkLocationPermission()
     }
@@ -772,7 +780,7 @@ class PublishStateActivity : BaseActivity() {
                     checkoutPublishEnable()
                 }
                 ActivityRequestCode.SELECT_CIRCLE -> {
-                    currentGroup = data?.extras?.get(ActivityRequestCode.CIRCLE_DATA) as? CircleGroup
+                    currentGroup = data?.extras?.get(PublicStateCode.CIRCLE_DATA) as? CircleGroup
                     logger.info("我是选择的结果=${currentGroup?.groupName}")
                     setCircleStatus()
                 }

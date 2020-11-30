@@ -13,6 +13,7 @@ import com.julun.huanque.common.base.dialog.BottomDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
+import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.DynamicItemBean
 import com.julun.huanque.common.bean.beans.HomeDynamicListInfo
 import com.julun.huanque.common.bean.beans.PhotoBean
@@ -34,8 +35,6 @@ import com.julun.huanque.core.ui.homepage.CircleActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.*
-import kotlinx.android.synthetic.main.fragment_program_tab.mRefreshLayout
-import kotlinx.android.synthetic.main.fragment_program_tab.state_pager_view
 import kotlinx.android.synthetic.main.layout_header_dynamic.view.*
 
 /**
@@ -50,17 +49,19 @@ import kotlinx.android.synthetic.main.layout_header_dynamic.view.*
 class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
     companion object {
-        fun newInstance(tab: SquareTab?): DynamicTabFragment {
+        fun newInstance(tab: SquareTab?, groupId: Long? = null): DynamicTabFragment {
             return DynamicTabFragment().apply {
                 val bundle = Bundle()
                 bundle.putSerializable(IntentParamKey.TAB_TYPE.name, tab)
+                if (groupId != null)
+                    bundle.putLong(IntentParamKey.ID.name, groupId)
                 this.arguments = bundle
             }
         }
     }
 
     private var currentTab: SquareTab? = null
-
+    private var currentGroupId: Long? = null
     private val headerLayout: View by lazy {
         LayoutInflater.from(requireContext()).inflate(R.layout.layout_header_dynamic, null)
     }
@@ -95,33 +96,56 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? SquareTab
+        currentGroupId = arguments?.getLong(IntentParamKey.ID.name)
         initViewModel()
         if (currentTab?.typeCode == SquareTabType.RECOMMEND) {
             dynamicAdapter.showType = DynamicListAdapter.HOME_RECOM
         } else if (currentTab?.typeCode == SquareTabType.FOLLOW) {
             dynamicAdapter.showType = DynamicListAdapter.HOME_FOLLOW
         }
-
         postList.layoutManager = LinearLayoutManager(requireContext())
         dynamicAdapter.loadMoreModule.setOnLoadMoreListener {
             logger.info(" postList.stopScroll()")
             postList.stopScroll()
             logger.info("authorAdapter loadMoreModule 加载更多")
-            mViewModel.requestPostList(QueryType.LOAD_MORE, currentTab?.typeCode)
+//            mViewModel.requestPostList(QueryType.LOAD_MORE, currentTab?.typeCode)
+            queryData(QueryType.LOAD_MORE, currentTab?.typeCode)
+        }
+        if (currentTab?.typeCode == SquareTabType.RECOMMEND || currentTab?.typeCode == SquareTabType.FOLLOW) {
+            headerLayout.groupList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            headerLayout.groupList.adapter = groupAdapter
+            headerLayout.hide()
+            dynamicAdapter.addHeaderView(headerLayout)
+            dynamicAdapter.headerWithEmptyEnable = true
         }
 
-        headerLayout.groupList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        headerLayout.groupList.adapter = groupAdapter
-        headerLayout.hide()
-        dynamicAdapter.addHeaderView(headerLayout)
-        dynamicAdapter.headerWithEmptyEnable = true
         postList.adapter = dynamicAdapter
-        (postList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        postList.isNestedScrollingEnabled = false
 
+        (postList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+
+//        postList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            private var isUp: Boolean = false
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+//                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+//                    val positionFirst = layoutManager.findFirstVisibleItemPosition()
+//                    val positionLast = layoutManager.findLastVisibleItemPosition()
+//                    logger.info("onScrollStateChanged positionFirst=${positionFirst} positionLast=$positionLast")
+//
+//                }
+//
+//            }
+//
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//
+//            }
+//        })
 
         mRefreshLayout.setOnRefreshListener {
-            mViewModel.requestPostList(QueryType.REFRESH, currentTab?.typeCode)
+//            mViewModel.requestPostList(QueryType.REFRESH, currentTab?.typeCode)
+            queryData(QueryType.REFRESH, currentTab?.typeCode)
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
 
@@ -238,7 +262,20 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     }
 
     override fun lazyLoadData() {
-        mViewModel.requestPostList(QueryType.INIT, currentTab?.typeCode)
+//        mViewModel.requestPostList(QueryType.INIT, currentTab?.typeCode)
+        queryData(QueryType.INIT, currentTab?.typeCode)
+    }
+
+    private fun queryData(queryType: QueryType, typeCode: String?) {
+        when (typeCode) {
+            SquareTabType.FOLLOW, SquareTabType.RECOMMEND -> {
+                mViewModel.requestPostList(queryType, typeCode)
+            }
+            SquareTabType.HOT, SquareTabType.NEW -> {
+                mViewModel.requestGroupPostList(queryType, currentGroupId, typeCode)
+            }
+
+        }
     }
 
     private fun initViewModel() {
@@ -250,7 +287,14 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             }
             mRefreshLayout.isRefreshing = false
         })
-
+        mViewModel.postList.observe(this, Observer {
+            if (it.state == NetStateType.SUCCESS) {
+                renderDynamicGroupData(it.requireT())
+            } else if (it.state == NetStateType.ERROR) {
+                loadDataFail(it.isRefresh())
+            }
+            mRefreshLayout.isRefreshing = false
+        })
         huanQueViewModel.userInfoStatusChange.observe(this, Observer {
             if (it.isSuccess()) {
                 val change = it.requireT()
@@ -296,6 +340,44 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             ToastUtils.show2("刷新失败")
         } else {
             dynamicAdapter.loadMoreModule.loadMoreFail()
+        }
+    }
+
+    private fun renderDynamicGroupData(listData: RootListData<DynamicItemBean>) {
+
+        if (listData.isPull) {
+            val programList = listData.list.distinct()
+            dynamicAdapter.setList(programList)
+
+        } else {
+            val programList = listData.list.removeDuplicate(dynamicAdapter.data)
+//            totalList.addAll(programList)
+            dynamicAdapter.addData(programList)
+        }
+        if (listData.hasMore) {
+            //如果下拉加载更多时 返回的列表为空 会触发死循环 这里直接设置加载完毕状态
+            if (listData.list.isEmpty()) {
+                dynamicAdapter.loadMoreModule.loadMoreEnd(false)
+            } else {
+                dynamicAdapter.loadMoreModule.loadMoreComplete()
+            }
+
+        } else {
+            //防止底部没有边距
+            dynamicAdapter.loadMoreModule.loadMoreEnd()
+
+        }
+
+        if (dynamicAdapter.data.isEmpty()) {
+            state_pager_view.showSuccess()
+            mRefreshLayout.show()
+            dynamicAdapter.setEmptyView(
+                MixedHelper.getEmptyView(requireContext(),
+                    msg = "暂无动态，快去发布一条吧~")
+            )
+        } else {
+            mRefreshLayout.show()
+            state_pager_view.showSuccess()
         }
     }
 
@@ -358,24 +440,21 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         }
         if (currentTab?.typeCode == SquareTabType.RECOMMEND && dynamicAdapter.data.isEmpty() && listData.groupList.isEmpty()) {
             mRefreshLayout.hide()
-            state_pager_view.showEmpty(emptyTxt = "没有动态，洗洗睡吧", btnTex = "前往",
-                onClick = View.OnClickListener {
-                    logger.info("跳转到交友")
-                    ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
-                        .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
-                })
+            state_pager_view.showEmpty(emptyTxt = "暂无推荐内容")
         } else if (dynamicAdapter.data.isEmpty()) {
             state_pager_view.showSuccess()
             mRefreshLayout.show()
+            var message = ""
+            if (currentTab?.typeCode == SquareTabType.FOLLOW) {
+                message = "暂无关注内容"
+            } else if (currentTab?.typeCode == SquareTabType.RECOMMEND) {
+                message = "暂无推荐内容"
+            }
             dynamicAdapter.setEmptyView(
-                MixedHelper.getEmptyView(requireContext(),
-                    msg = "没有动态数据",
-                    isImageHide = true,
-                    btnTex = "去推荐看看",
-                    onClick = View.OnClickListener {
-                        logger.info("跳转到推荐")
-
-                    })
+                MixedHelper.getEmptyView(
+                    requireContext(),
+                    msg = message
+                )
             )
         } else {
             mRefreshLayout.show()
@@ -387,7 +466,8 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     fun scrollToTopAndRefresh() {
         postList.scrollToPosition(0)
         postList.postDelayed({
-            mViewModel.requestPostList(QueryType.REFRESH, currentTab?.typeCode)
+//            mViewModel.requestPostList(QueryType.REFRESH, currentTab?.typeCode)
+            queryData(QueryType.REFRESH, currentTab?.typeCode)
         }, 100)
     }
 
@@ -403,7 +483,8 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             }
             NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
                 state_pager_view.showError(showBtn = true, btnClick = View.OnClickListener {
-                    mViewModel.requestPostList(QueryType.INIT, currentTab?.typeCode)
+//                    mViewModel.requestPostList(QueryType.INIT, currentTab?.typeCode)
+                    queryData(QueryType.INIT, currentTab?.typeCode)
                 })
             }
 
