@@ -59,7 +59,7 @@ class PlayerMessageViewModel : BaseViewModel() {
     /**
      * 获取融云未读消息(直播间使用)
      */
-    private  var resultCallback: RongIMClient.ResultCallback<List<Conversation>>?=null
+    private var resultCallback: RongIMClient.ResultCallback<List<Conversation>>? = null
     fun queryRongPrivateCount(targetId: String = "") {
         if (blockListData.value == null) {
             //未获取到免打扰列表
@@ -71,10 +71,10 @@ class PlayerMessageViewModel : BaseViewModel() {
             realUnreadCount()
             return
         }
-        if(resultCallback!=null){
+        if (resultCallback != null) {
             RongCloudManager.removeConversationCallback(resultCallback)
         }
-        resultCallback=object : RongIMClient.ResultCallback<List<Conversation>>() {
+        resultCallback = object : RongIMClient.ResultCallback<List<Conversation>>() {
             override fun onSuccess(list: List<Conversation>?) {
                 if (list?.isNotEmpty() != true) {
                     return
@@ -83,7 +83,9 @@ class PlayerMessageViewModel : BaseViewModel() {
                 val blockList = blockListData.value ?: return
                 list.forEach {
                     val targetID = it.targetId
-                    if (targetID == null || targetID == SystemTargetId.friendNoticeSender || targetID == SystemTargetId.systemNoticeSender) {
+                    if (targetID == null || targetID == SystemTargetId.friendNoticeSender || targetID == SystemTargetId.systemNoticeSender
+                        || targetID == SystemTargetId.commentNoticeSender || targetID == SystemTargetId.praiseNoticeSender
+                    ) {
                         //不处理系统消息
                         return@forEach
                     }

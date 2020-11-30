@@ -384,4 +384,22 @@ interface SocialService {
      */
     @POST("social/post/saveShareLog")
     fun saveShareLog(@Body form: PostShareForm): Observable<Root<VoidResult>>
+
+    /**
+     * 评论动态
+     */
+    @POST("social/post/comment")
+    suspend fun postComment(@Body form: PostCommentForm) : Root<DynamicComment>
+
+    /**
+     * 1级评论更多
+     */
+    @POST("social/post/commentList")
+    suspend fun commentList(@Body form : CommentListForm) : Root<RootListData<DynamicComment>>
+
+    /**
+     * 2级评论更多
+     */
+    @POST("social/post/secondCommentList")
+    suspend fun secondCommentList(@Body form : SecondCommentList) : Root<RootListData<DynamicComment>>
 }

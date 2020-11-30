@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_header"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@mipmap/logo_placeholder_medium"
+        app:roundAsCircle="true" />
+
+    <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="48dp"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_header"
+        app:layout_constraintLeft_toRightOf="@id/sdv_header"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/sdv_header"
+        tools:text="冷风看见你微积分" />
+
+    <TextView
+        android:id="@+id/tv_praise"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/selector_zan"
+        android:drawablePadding="2dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="0"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="48dp"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintLeft_toLeftOf="@id/tv_nickname"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_nickname"
+        tools:text="啦啦啦啦啦啦啦啦啦" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black_999"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toLeftOf="@id/tv_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_content"
+        tools:text="1分钟前" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:text="回复"
+        android:textColor="@color/primary_color"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toRightOf="@id/tv_time"
+        app:layout_constraintTop_toBottomOf="@id/tv_content" />
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="1px"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="@id/tv_time"
+        app:layout_constraintTop_toBottomOf="@id/tv_time" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -205,12 +205,22 @@ class InviteShareViewModel : BaseViewModel() {
     /**
      * 获取动态分享信息
      */
-    fun queryPostShareInfo(shareType: String, postId: Long) {
+    fun queryPostShareInfo(shareType: String?, postId: Long, commentId: Long? = null) {
         viewModelScope.launch {
             request({
-                val result = socialService.postShare(PostShareForm(shareType, postId)).dataConvert()
-                result.shareType = shareType
-                postShareBeanData.value = result
+                val result = socialService.postShare(PostShareForm(shareType, postId, commentId)).dataConvert()
+                if (commentId == null) {
+                    result.shareType = shareType ?: ""
+                }
+                val bitmap = BitmapUtil.base64ToBitmap(result.qrCode.replace("data:image/png;base64,", ""))
+                result.qrBitmap = bitmap
+                postShareBeanData.value = result.apply {
+                    if (commentId == null && !pic.contains("?")) {
+                        //分享动态
+                        pic = "${pic}?x-oss-process=image/resize,m_fixed,w_100,h_100"
+                    }
+
+                }
             }, {})
         }
     }

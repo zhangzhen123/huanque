@@ -15,6 +15,7 @@
             android:id="@+id/header_pic"
             android:layout_width="@dimen/dimen_46"
             android:layout_height="@dimen/dimen_46"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="@dimen/dimen_22"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -73,8 +74,10 @@
 
         <TextView
             android:id="@+id/tv_dyc_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="@dimen/dimen_10"
             android:ellipsize="end"
             android:includeFontPadding="false"
@@ -94,7 +97,9 @@
             android:id="@+id/rv_photos"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="@dimen/dimen_5"
+            android:layout_marginRight="15dp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
@@ -128,6 +133,7 @@
             android:id="@+id/tv_circle_name"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_22"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="@dimen/dimen_10"
             android:background="@drawable/bg_dynamic_circle_name"
             android:drawableStart="@mipmap/icon_dynamic_circle_tag"
@@ -148,6 +154,7 @@
             android:id="@+id/view"
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="@dimen/dimen_12"
             android:background="#F3F5F9"
             app:layout_constraintEnd_toEndOf="parent"
@@ -157,6 +164,10 @@
 
     <include
         android:id="@+id/header_comment"
-        layout="@layout/layout_header_comment" />
+        layout="@layout/layout_header_comment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
 
 </LinearLayout>

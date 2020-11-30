@@ -192,9 +192,43 @@ class CircleGroupTypeForm(var offset: Int = 0, var postType: String = "") : Seri
  */
 class PostShareForm(
     //分享方式
-    var shareType: String = "",
+    var shareType: String? = null,
     //动态Id
     var postId: Long = 0,
     //评论ID
     var commentId: Long? = null
+) : Serializable
+
+/**
+ * 评论动态的form
+ */
+class PostCommentForm(
+    //动态ID
+    var postId: Long = 0,
+    //父评论
+    var parentCommentId: Long? = null,
+    //评论内容
+    var content: String = ""
+) : Serializable
+
+/**
+ * 获取更多评论的form
+ */
+data class CommentListForm(
+    //动态ID
+    var postId: Long = 0L,
+    var offset: Int = 0,
+    //倒叙字段
+    var order: String = ""
+) : Serializable
+
+/**
+ * 2级评论更多鹅form
+ */
+data class SecondCommentList(
+    //动态ID
+    var postId: Long = 0,
+    //父评论的ID
+    var parentCommentId: Long = 0,
+    var offset: Int = 0
 ) : Serializable

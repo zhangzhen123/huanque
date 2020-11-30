@@ -13,6 +13,31 @@
         android:layout_height="@dimen/dimen_500"
         android:scrollX="500dp" />
 
+    <!--分享动态的视图开始-->
+    <LinearLayout
+        android:id="@+id/ll_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="63dp"
+        android:layout_marginRight="63dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <include
+            android:id="@+id/view_comment"
+            layout="@layout/view_comment_share"
+            android:layout_width="match_parent"
+            android:layout_height="346dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp" />
+
+    </LinearLayout>
+
+    <!--分享动态的视图结束-->
+
+
     <LinearLayout
         android:id="@+id/share_img_container"
         android:layout_width="match_parent"
@@ -25,7 +50,7 @@
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_share_img"
@@ -41,7 +66,10 @@
                 layout="@layout/item_live_share"
                 android:layout_width="match_parent"
                 android:layout_height="339dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:visibility="visible"
+                tools:visibility="gone" />
+
         </androidx.cardview.widget.CardView>
 
 

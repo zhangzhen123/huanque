@@ -149,7 +149,8 @@ class MessageFragment : BaseFragment() {
             //            val realPosition = position - mAdapter.headerLayoutCount
             mAdapter.getItem(position)?.let { lmc ->
                 when (lmc.conversation.targetId) {
-                    SystemTargetId.systemNoticeSender, SystemTargetId.friendNoticeSender -> {
+                    SystemTargetId.systemNoticeSender, SystemTargetId.friendNoticeSender, SystemTargetId.commentNoticeSender
+                        , SystemTargetId.praiseNoticeSender -> {
                         //系统消息 or 好友通知消息
                         val intent = Intent(activity, SysMsgActivity::class.java)
                         intent.putExtra(IntentParamKey.SYS_MSG_ID.name, lmc.conversation.targetId)
@@ -208,7 +209,9 @@ class MessageFragment : BaseFragment() {
             val data = mAdapter.data
             if (ForceUtils.isIndexNotOutOfBounds(realPosition, data)) {
                 val tId = data[realPosition].conversation.targetId
-                if (tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender || tId == mAdapter.curAnchorId) {
+                if (tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender || tId == SystemTargetId.commentNoticeSender
+                    || tId == SystemTargetId.praiseNoticeSender || tId == mAdapter.curAnchorId
+                ) {
                     //系统消息和鹊友通知不显示弹窗
                     return@setOnItemLongClickListener false
                 }
@@ -218,7 +221,9 @@ class MessageFragment : BaseFragment() {
                     resources.getString(R.string.delete_conversation_or_not),
                     MyAlertDialog.MyDialogCallback(onRight = {
                         //确定删除
-                        if (tId == null || tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender) {
+                        if (tId == null || tId == SystemTargetId.friendNoticeSender || tId == SystemTargetId.systemNoticeSender || tId == SystemTargetId.commentNoticeSender
+                            || tId == SystemTargetId.praiseNoticeSender
+                        ) {
                             ToastUtils.show("该消息无法删除")
                             return@MyDialogCallback
                         }
@@ -381,8 +386,8 @@ class MessageFragment : BaseFragment() {
         })
 
         HuanViewModelManager.huanQueViewModel.userInfoStatusChange.observe(this, Observer {
-            if(it!=null&&it.isSuccess()){
-                val userInfo=it.requireT()
+            if (it != null && it.isSuccess()) {
+                val userInfo = it.requireT()
                 mMessageViewModel.userInfoUpdate(userInfo)
             }
         })

@@ -6,6 +6,7 @@ import com.julun.huanque.common.bean.events.SystemMessageRefreshBean
 import com.julun.huanque.common.bean.message.CustomSimulateMessage
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.utils.ToastUtils
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
@@ -138,6 +139,23 @@ class SysMsgViewModel : BaseViewModel() {
             })
 
 
+    }
+
+    /**
+     * 清空所有消息
+     */
+    fun clearMessage() {
+        RongIMClient.getInstance().clearMessages(Conversation.ConversationType.PRIVATE, targetId, object : RongIMClient.ResultCallback<Boolean>() {
+            override fun onSuccess(p0: Boolean?) {
+                ToastUtils.show("清除成功")
+                getHistoryMessages(targetId)
+                EventBus.getDefault().post(SystemMessageRefreshBean(targetId))
+            }
+
+            override fun onError(p0: RongIMClient.ErrorCode?) {
+            }
+
+        })
     }
 }
 

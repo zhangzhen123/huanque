@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/clMsgRootView"
     android:layout_width="match_parent"
-    android:background="#F3F4F5"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F3F4F5">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -13,9 +14,9 @@
         android:background="@color/white"
         android:gravity="center"
         android:text="系统消息"
-        android:textStyle="bold"
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/ivback"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -32,6 +33,21 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tv_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center"
+        android:text="清空"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_14"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitle"
+        tools:visibility="visible" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/rlRefreshView"
         android:layout_width="0dp"
@@ -46,9 +62,7 @@
             android:id="@+id/rvList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:paddingLeft="@dimen/dimen_15"
-            android:paddingRight="@dimen/dimen_15" />
+            android:overScrollMode="never" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.julun.huanque.common.widgets.statepage.StatePageView

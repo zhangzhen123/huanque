@@ -678,6 +678,12 @@ object SystemTargetId {
 
     //系统通知
     const val systemNoticeSender = "systemNoticeSender"
+
+    //点赞消息
+    const val praiseNoticeSender = "praiseNoticeSender"
+
+    //评论消息
+    const val commentNoticeSender = "commentNoticeSender"
 }
 
 //表情类型
@@ -1006,5 +1012,19 @@ object CircleGroupType {
  */
 object ShareFromType {
     //分享评论
-    const val Dynamic = "Dynamic"
+    const val Share_Dynamic = "Share_Dynamic"
+
+    //分享评论
+    const val Share_Comment = "Share_Comment"
+}
+
+/**
+ * 评论排序类型
+ */
+object CommentOrderType {
+    //时间排序
+    const val Time = "Time"
+
+    //默认
+    const val Heat = "Heat"
 }

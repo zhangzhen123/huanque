@@ -313,7 +313,9 @@ class MessageViewModel : BaseViewModel() {
                             if (lmc.conversation.targetId == targerId) {
                                 lmc.conversation = p0
                                 //刷新列表（重新排序）
-                                if (foldStrangerMsg && stranger != lmc.showUserInfo?.stranger && (targerId != SystemTargetId.systemNoticeSender && targerId != SystemTargetId.friendNoticeSender)) {
+                                if (foldStrangerMsg && stranger != lmc.showUserInfo?.stranger && (targerId != SystemTargetId.systemNoticeSender && targerId != SystemTargetId.friendNoticeSender
+                                            && targerId != SystemTargetId.praiseNoticeSender && targerId != SystemTargetId.commentNoticeSender)
+                                ) {
                                     //折叠消息开启,陌生人状态有变更，需要在会话列表中删除当前会话
                                     try {
                                         updataStrangerData(targerId.toLong(), stranger)
@@ -333,7 +335,9 @@ class MessageViewModel : BaseViewModel() {
                         if (foldStrangerMsg && stranger == mStranger) {
                             //开启陌生人折叠，标识相同，需要在当前会话列表中添加改会话
                             try {
-                                if (targerId != SystemTargetId.systemNoticeSender && targerId != SystemTargetId.friendNoticeSender) {
+                                if (targerId != SystemTargetId.systemNoticeSender && targerId != SystemTargetId.friendNoticeSender && targerId != SystemTargetId.praiseNoticeSender
+                                    && targerId != SystemTargetId.commentNoticeSender
+                                ) {
                                     updataStrangerData(targerId.toLong(), stranger)
                                 }
                             } catch (e: Exception) {
@@ -389,7 +393,7 @@ class MessageViewModel : BaseViewModel() {
                     //私聊消息
                     try {
                         val targetId = it.targetId
-                        if (targetId != SystemTargetId.friendNoticeSender && targetId != SystemTargetId.systemNoticeSender) {
+                        if (targetId != SystemTargetId.friendNoticeSender && targetId != SystemTargetId.systemNoticeSender && targetId != SystemTargetId.praiseNoticeSender && targetId != SystemTargetId.commentNoticeSender) {
                             idList.add(it.targetId.toLong())
                         }
                     } catch (e: Exception) {
@@ -502,6 +506,7 @@ class MessageViewModel : BaseViewModel() {
                         allList.forEach {
                             if (it.conversation.targetId == "${anchorData?.programId}" || it.showUserInfo?.stranger == false ||
                                 it.conversation.targetId == SystemTargetId.systemNoticeSender || it.conversation.targetId == SystemTargetId.friendNoticeSender
+                                || it.conversation.targetId == SystemTargetId.praiseNoticeSender || it.conversation.targetId == SystemTargetId.commentNoticeSender
                             ) {
                                 realList.add(it)
                             } else {
@@ -618,7 +623,9 @@ class MessageViewModel : BaseViewModel() {
             val conversation = it.conversation
             val condition = conversation.targetId?.isNotEmpty() != true ||
                     conversation.targetId == SystemTargetId.systemNoticeSender ||
-                    conversation.targetId == SystemTargetId.friendNoticeSender
+                    conversation.targetId == SystemTargetId.friendNoticeSender ||
+                    conversation.targetId == SystemTargetId.commentNoticeSender ||
+                    conversation.targetId == SystemTargetId.praiseNoticeSender
             if (condition) {
                 deleteList.add(it)
             }

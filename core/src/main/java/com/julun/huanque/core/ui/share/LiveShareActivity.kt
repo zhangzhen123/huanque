@@ -3,12 +3,14 @@ package com.julun.huanque.core.ui.share
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -56,12 +58,15 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
          * @param type 来源类型 （动态，评论，其他）
          * @param postId 动态ID
          */
-        fun newInstance(act: Activity, type: String, postId: Long? = null) {
+        fun newInstance(act: Activity, type: String, postId: Long? = null, commentId: Long? = null) {
             val intent = Intent(act, LiveShareActivity::class.java)
             if (ForceUtils.activityMatch(intent)) {
                 intent.putExtra(ParamConstant.TYPE, type)
                 if (postId != null) {
                     intent.putExtra(ParamConstant.POST_ID, postId)
+                    if (commentId != null) {
+                        intent.putExtra(ParamConstant.COMMENT_ID, commentId)
+                    }
                 }
                 act.startActivity(intent)
             }
@@ -84,6 +89,9 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
     //动态ID
     private var mPostId = 0L
 
+    //评论ID
+    private var mCommentId = 0L
+
     private val wxService: LoginAndShareService? by lazy {
         ARouter.getInstance().build(ARouterConstant.LOGIN_SHARE_SERVICE).navigation() as? LoginAndShareService
     }
@@ -104,10 +112,20 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         rv_share_types.addItemDecoration(HorizontalItemDecoration(dp2px(20)))
 
         mViewModel.type = intent?.getStringExtra(ParamConstant.TYPE) ?: ""
-        if (mViewModel.type == ShareFromType.Dynamic) {
+        if (mViewModel.type == ShareFromType.Share_Dynamic || mViewModel.type == ShareFromType.Share_Comment) {
             //动态分享  直接显示分享路径
-            shareAdapter.setNewInstance(mViewModel.getShareType(false, hasInner = true))
+            if (mViewModel.type == ShareFromType.Share_Dynamic) {
+                shareAdapter.setNewInstance(mViewModel.getShareType(false, hasInner = true))
+            } else {
+                shareAdapter.setNewInstance(mViewModel.getShareType(false))
+            }
+
             mPostId = intent?.getLongExtra(ParamConstant.POST_ID, 0) ?: 0L
+            mCommentId = intent?.getLongExtra(ParamConstant.COMMENT_ID, 0) ?: 0L
+            if (mViewModel.type == ShareFromType.Share_Comment) {
+                //分享评论，获取分享信息
+                mViewModel.queryPostShareInfo(null, mPostId, mCommentId)
+            }
         } else {
             //其他分享
             programInfo = intent.getSerializableExtra(IntentParamKey.LIVE_INFO.name) as? MicAnchor
@@ -147,9 +165,12 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         shareAdapter.onAdapterClickNew { _, _, position ->
 
             val item = shareAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
-            if (mViewModel.type == ShareFromType.Dynamic) {
+            if (mViewModel.type == ShareFromType.Share_Dynamic) {
                 //动态分享
                 mViewModel.queryPostShareInfo(item.type, mPostId)
+            } else if (mViewModel.type == ShareFromType.Share_Comment) {
+                //分享图片
+                saveViewToImageFile(item.type)
             } else {
                 //其他分享
                 shareLive(item.type)
@@ -169,76 +190,83 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
     }
 
     private fun saveViewToImageFile(type: String) {
+        var bitmap: Bitmap? = null
+        if (mViewModel.type == ShareFromType.Share_Comment) {
+            //分享评论
+            val con_comment_share = ll_comment.findViewById<ConstraintLayout>(R.id.view_comment)
+            bitmap = BitmapUtil.viewConversionBitmap(con_comment_share ?: return, Color.TRANSPARENT)
+        } else {
+            //其他分享
+            if (currentSelectView == null) {
+                ToastUtils.show("你还没有选择要分享的目标")
+                return
+            }
+            currentSelectView?.post {
+                bitmap = BitmapUtil.viewConversionBitmap(currentSelectView!!, Color.TRANSPARENT)
+            }
+        }
 
-
-        if (currentSelectView == null) {
-            ToastUtils.show("你还没有选择要分享的目标")
+        if (bitmap == null) {
             return
         }
 
-        currentSelectView?.post {
-
-            val bitmap = BitmapUtil.viewConversionBitmap(currentSelectView!!, Color.TRANSPARENT)
-
-            when (type) {
-                ShareTypeEnum.FriendCircle -> {
-                    //朋友圈
-                    if (wxService?.checkWeixinInstalled(this) == true) {
-                        wxService?.weiXinShare(this, ShareObject().apply {
-                            this.shareType = WeiXinShareType.WXImage
-                            this.shareWay = ShareWayEnum.WXSceneTimeline
-                            this.shareImage = bitmap
-                            //以下是应用内传递数据使用
-                            this.platForm = ShareTypeEnum.FriendCircle
-                            this.shareKeyType = mShareKeyType
-                            this.shareKeyId = mShareKeyId
-                            this.platForm = ShareTypeEnum.FriendCircle
-                        })
-                        finish()
-                    }
-                }
-                ShareTypeEnum.WeChat -> {
-                    //微信
-                    if (wxService?.checkWeixinInstalled(this) == true) {
-                        wxService?.weiXinShare(this, ShareObject().apply {
-                            this.shareType = WeiXinShareType.WXImage
-                            this.shareWay = ShareWayEnum.WXSceneSession
-                            this.shareImage = bitmap
-                            //以下是应用内传递数据使用
-                            this.platForm = ShareTypeEnum.WeChat
-                            this.shareKeyType = mShareKeyType
-                            this.shareKeyId = mShareKeyId
-                            this.platForm = ShareTypeEnum.WeChat
-                        })
-                        finish()
-                    }
-                }
-                ShareTypeEnum.Sina -> {
-                    wxService?.weiBoShare(this, ShareObject().apply {
-                        this.shareType = WeiBoShareType.WbImage
+        when (type) {
+            ShareTypeEnum.FriendCircle -> {
+                //朋友圈
+                if (wxService?.checkWeixinInstalled(this) == true) {
+                    wxService?.weiXinShare(this, ShareObject().apply {
+                        this.shareType = WeiXinShareType.WXImage
+                        this.shareWay = ShareWayEnum.WXSceneTimeline
                         this.shareImage = bitmap
                         //以下是应用内传递数据使用
-                        this.platForm = ShareTypeEnum.Sina
+                        this.platForm = ShareTypeEnum.FriendCircle
                         this.shareKeyType = mShareKeyType
                         this.shareKeyId = mShareKeyId
+                        this.platForm = ShareTypeEnum.FriendCircle
+                        this.postId = mPostId
                     })
+                    finish()
                 }
-                ShareTypeEnum.SaveImage -> {
-                    requestRWPermission {
-                        Observable.just(bitmap).observeOn(Schedulers.io()).map { b ->
-                            FileUtils.saveBitmapToDCIM(b, UUID.randomUUID().toString())
-                        }.observeOn(AndroidSchedulers.mainThread()).subscribe {
-                            if (it == true) {
-                                ToastUtils.show("保存成功")
+            }
+            ShareTypeEnum.WeChat -> {
+                //微信
+                if (wxService?.checkWeixinInstalled(this) == true) {
+                    wxService?.weiXinShare(this, ShareObject().apply {
+                        this.shareType = WeiXinShareType.WXImage
+                        this.shareWay = ShareWayEnum.WXSceneSession
+                        this.shareImage = bitmap
+                        //以下是应用内传递数据使用
+                        this.platForm = ShareTypeEnum.WeChat
+                        this.shareKeyType = mShareKeyType
+                        this.shareKeyId = mShareKeyId
+                        this.platForm = ShareTypeEnum.WeChat
+                        this.postId = mPostId
+                    })
+                    finish()
+                }
+            }
+            ShareTypeEnum.Sina -> {
+                wxService?.weiBoShare(this, ShareObject().apply {
+                    this.shareType = WeiBoShareType.WbImage
+                    this.shareImage = bitmap
+                    //以下是应用内传递数据使用
+                    this.platForm = ShareTypeEnum.Sina
+                    this.shareKeyType = mShareKeyType
+                    this.shareKeyId = mShareKeyId
+                    this.postId = mPostId
+                })
+            }
+            ShareTypeEnum.SaveImage -> {
+                requestRWPermission {
+                    Observable.just(bitmap!!).observeOn(Schedulers.io()).map { b ->
+                        FileUtils.saveBitmapToDCIM(b, UUID.randomUUID().toString())
+                    }.observeOn(AndroidSchedulers.mainThread()).subscribe {
+                        if (it == true) {
+                            ToastUtils.show("保存成功")
 
-                            }
                         }
-
-
                     }
                 }
-
-
             }
         }
 
@@ -284,9 +312,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
     }
 
     private fun shareLive(type: String) {
-        var shareObject = if (mViewModel.type != ShareFromType.Dynamic) {
-            mViewModel.liveShareInfo.value?.getT() ?: return
-        } else {
+        var shareObject = if (mViewModel.type == ShareFromType.Share_Dynamic || mViewModel.type == ShareFromType.Share_Comment) {
             val postShareBean = mViewModel.postShareBeanData.value ?: return
             ShareObject().apply {
                 shareUrl = postShareBean.shareUrl
@@ -296,6 +322,8 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                 postId = mPostId
 //                sharePic = StringHelper.getOssImgUrl("user/head/2019110608363175169.jpg?x-oss-process=image/resize,m_fixed,w_100,h_100")
             }
+        } else {
+            mViewModel.liveShareInfo.value?.getT() ?: return
 
         }
 
@@ -357,11 +385,16 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         })
         mViewModel.postShareBeanData.observe(this, Observer {
             if (it != null) {
-                //获取到服务端的分享数据，开始分享
-                shareLive(it.shareType)
+
+                if (mViewModel.type == ShareFromType.Share_Dynamic) {
+                    //分享动态,获取到服务端的分享数据，开始分享
+                    shareLive(it.shareType)
+                } else if (mViewModel.type == ShareFromType.Share_Comment) {
+                    //分享评论，显示图片
+                    showCommentByComment(it)
+                }
             }
         })
-
     }
 
     private fun renderViewData(posterInfo: SharePosterInfo) {
@@ -392,6 +425,21 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
             setShadowView()
         }
     }
+
+
+    /**
+     * 显示动态分享数据
+     */
+    private fun showCommentByComment(postShareBean: PostShareBean) {
+        ll_comment.show()
+        ll_comment.findViewById<TextView>(R.id.tv_content).text = postShareBean.content
+        ll_comment.findViewById<TextView>(R.id.tv_comment).text = postShareBean.commentContent
+        ll_comment.findViewById<TextView>(R.id.tv_nickname).text = postShareBean.commentUserName
+        ll_comment.findViewById<SimpleDraweeView>(R.id.sdv_pic).loadImage(postShareBean.pic, 220f, 123f)
+        val sdv_qr_code = ll_comment.findViewById<SimpleDraweeView>(R.id.sdv_qr_code)
+        sdv_qr_code.setImageBitmap(postShareBean.qrBitmap ?: return)
+    }
+
 
     private fun setShadowView() {
         if (currentSelect == null) {

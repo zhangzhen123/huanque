@@ -94,7 +94,10 @@ object MessageProcessor {
     private fun processPrivateMessage(msg: Message) {
         try {
             val targetId = msg.targetId
-            if ((targetId == SystemTargetId.systemNoticeSender || targetId == SystemTargetId.friendNoticeSender) && msg.content is CustomSimulateMessage) {
+            if ((targetId == SystemTargetId.systemNoticeSender || targetId == SystemTargetId.friendNoticeSender
+                        || targetId == SystemTargetId.praiseNoticeSender || targetId == SystemTargetId.commentNoticeSender)
+                && msg.content is CustomSimulateMessage
+            ) {
                 //模拟插入的系统消息或者好友通知(不做通知处理)
             } else {
                 //需要通知的私聊消息

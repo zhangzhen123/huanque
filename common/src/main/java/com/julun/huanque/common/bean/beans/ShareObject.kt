@@ -148,7 +148,16 @@ data class PostShareBean(
     //用户Id
     var userId: Long = 0,
     //分享类型(本地字段)
-    var shareType: String = ""
+    var shareType: String = "",
+
+
+//评论特色数据
+    //评论内容
+    var commentContent: String = "",
+    //发表评论的用户昵称
+    var commentUserName: String = "",
+    //二维码bitmap
+    var qrBitmap: Bitmap? = null
 ) : Serializable
 
 class ShareType {
