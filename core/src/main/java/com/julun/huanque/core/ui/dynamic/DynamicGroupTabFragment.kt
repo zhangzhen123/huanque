@@ -200,7 +200,7 @@ class DynamicGroupTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                     DynamicDetailActivity.start(requireActivity(), item.postId)
                 }
                 R.id.tv_share_num -> {
-                    LiveShareActivity.newInstance(requireActivity(), ShareFromType.Dynamic, item.postId)
+                    LiveShareActivity.newInstance(requireActivity(), ShareFromType.Share_Dynamic, item.postId)
                 }
                 R.id.iv_more_action -> {
                     logger.info("更多操作")
