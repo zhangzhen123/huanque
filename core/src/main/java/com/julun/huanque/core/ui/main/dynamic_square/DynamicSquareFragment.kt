@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.SquareTab
+import com.julun.huanque.common.constant.PublicStateCode
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
@@ -68,7 +69,7 @@ class DynamicSquareFragment : BaseFragment() {
         initMagicIndicator()
 
         publish_dynamic.onClickNew {
-            requireActivity().startActivity<PublishStateActivity>()
+            requireActivity().startActivity<PublishStateActivity>( )
         }
 
     }

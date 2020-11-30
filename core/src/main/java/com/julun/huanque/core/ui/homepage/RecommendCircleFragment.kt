@@ -12,10 +12,7 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.CircleGroup
-import com.julun.huanque.common.constant.ActivityRequestCode
-import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.CircleGroupTabType
-import com.julun.huanque.common.constant.CircleGroupType
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.AttentionCircleAdapter
@@ -87,7 +84,7 @@ class RecommendCircleFragment : BaseFragment() {
                 //选择圈子，返回选中的圈子数据
                 val act=requireActivity()
                 val intent = act.intent
-                intent.putExtra(ActivityRequestCode.CIRCLE_DATA, tempData)
+                intent.putExtra(PublicStateCode.CIRCLE_DATA, tempData)
                 act.setResult(Activity.RESULT_OK,intent)
                 act.finish()
             }

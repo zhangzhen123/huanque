@@ -18,8 +18,8 @@
             android:id="@+id/mRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:visibility="visible"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/postList"
@@ -27,6 +27,14 @@
                 android:layout_height="wrap_content" />
         </com.julun.huanque.common.widgets.refreshlayout.VpSwipeRefreshLayout>
 
+        <ImageView
+            android:id="@+id/publish_dynamic"
+            android:layout_width="@dimen/dimen_45"
+            android:layout_height="@dimen/dimen_45"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/dimen_40"
+            android:layout_marginBottom="@dimen/dimen_40"
+            android:src="@mipmap/icon_publish_dynamic" />
 
         <com.julun.huanque.common.widgets.statepage.StatePageView
             android:id="@+id/state_pager_view"
