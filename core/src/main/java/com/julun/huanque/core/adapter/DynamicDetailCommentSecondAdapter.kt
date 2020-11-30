@@ -6,6 +6,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.DynamicComment
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.setImageSpan
@@ -19,12 +20,17 @@ import java.lang.StringBuilder
  *@描述 动态详情 的二级评论
  */
 class DynamicDetailCommentSecondAdapter : BaseQuickAdapter<DynamicComment, BaseViewHolder>(R.layout.recycler_item_dynamic_detail_comment_second) {
+
+    init {
+        addChildClickViewIds(R.id.tv_praise)
+    }
+
     override fun convert(holder: BaseViewHolder, item: DynamicComment) {
         val sdv_header = holder.getView<SimpleDraweeView>(R.id.sdv_header)
         sdv_header.loadImage(item.headPic, 30f, 30f)
 
         val tv_praise = holder.getView<TextView>(R.id.tv_praise)
-        tv_praise.isSelected = item.hasPraise
+        tv_praise.isActivated = item.hasPraise
         tv_praise.text = "${item.praiseNum}"
         holder.setText(R.id.tv_content, item.content)
             .setText(R.id.tv_time, item.createTime)
@@ -32,7 +38,7 @@ class DynamicDetailCommentSecondAdapter : BaseQuickAdapter<DynamicComment, BaseV
         //处理昵称
         val replyNickname = item.replyNickname
         //是否是楼主
-        val originalPoster = item.originalPoster
+        val originalPoster = item.originalPoster == BusiConstant.True
         val nicknameContent = StringBuilder()
         nicknameContent.append(item.nickname)
         if (originalPoster) {

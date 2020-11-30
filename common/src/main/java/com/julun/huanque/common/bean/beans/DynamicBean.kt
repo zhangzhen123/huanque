@@ -83,7 +83,7 @@ data class DynamicComment(
     var replyNickname: String = "",
     var userId: Long = 0,
     var hasPraise: Boolean = false,
-    var originalPoster: Boolean = false,
+    var originalPoster: String = "",
     var shareNum: Int = 0,
     var commentNum: Int = 0,
     var hasMore: Boolean = false,
