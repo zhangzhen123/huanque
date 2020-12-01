@@ -54,6 +54,9 @@ class DynamicDetailViewModel : BaseViewModel() {
     //评论点赞结果
     val commentPraiseResult: MutableLiveData<DynamicComment> by lazy { MutableLiveData<DynamicComment>() }
 
+    //被删除的评论
+    val commentDeleted: MutableLiveData<DynamicComment> by lazy { MutableLiveData<DynamicComment>() }
+
     val commentNumData: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
 
     //动态变动的标识位
@@ -169,6 +172,22 @@ class DynamicDetailViewModel : BaseViewModel() {
                 praiseNum = max(0, praiseNum - 1)
             }
             dynamicChangeFlag = true
+        }
+    }
+
+    /**
+     * 删除评论
+     */
+    fun deleteComment(comment: DynamicComment) {
+        viewModelScope.launch {
+            request({
+                socialService.deleteComment(CommentIdForm(comment.commentId)).dataConvert()
+                commentDeleted.value = comment
+                val commentNum = (dynamicInfo.value?.post?.commentNum ?: 0) - 1
+                commentNumData.value = max(commentNum, 0)
+                dynamicInfo.value?.post?.commentNum = max(commentNum, 0)
+                dynamicChangeFlag = true
+            }, {})
         }
     }
 

@@ -1,5 +1,6 @@
 package com.julun.huanque.common.interfaces
 
+import android.view.View
 import com.julun.huanque.common.bean.beans.DynamicComment
 
 /**
@@ -13,6 +14,11 @@ interface SecondCommentClickListener {
      * @param secondComment 2级评论对象
      */
     fun secondCommentClick(secondComment: DynamicComment)
+
+    /**
+     * 二级评论的长按操作
+     */
+    fun secondLongCommentClick(view : View, secondComment: DynamicComment)
 
     /**
      * 点赞

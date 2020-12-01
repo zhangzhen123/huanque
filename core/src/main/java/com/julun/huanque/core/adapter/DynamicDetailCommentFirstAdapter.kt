@@ -24,7 +24,7 @@ import com.julun.huanque.core.R
 class DynamicDetailCommentFirstAdapter : BaseQuickAdapter<DynamicComment, BaseViewHolder>(R.layout.recycler_item_dynamic_detail_comment_first),
     LoadMoreModule {
     init {
-        addChildClickViewIds(R.id.ll_comment_more, R.id.tv_share_num,R.id.iv_praise,R.id.tv_praise)
+        addChildClickViewIds(R.id.ll_comment_more, R.id.tv_share_num, R.id.iv_praise, R.id.tv_praise)
     }
 
     //点击二级评论的监听
@@ -88,6 +88,13 @@ class DynamicDetailCommentFirstAdapter : BaseQuickAdapter<DynamicComment, BaseVi
                 val commentData = adapter.getItemOrNull(position) as? DynamicComment ?: return@setOnItemClickListener
                 commentData.firstCommentId = item.commentId
                 mSecondCommentClickListener?.secondCommentClick(commentData)
+            }
+
+            mSecondAdapter.setOnItemLongClickListener { adapter, view, position ->
+                val commentData = adapter.getItemOrNull(position) as? DynamicComment
+                commentData?.firstCommentId = item.commentId
+                mSecondCommentClickListener?.secondLongCommentClick(view, commentData ?: return@setOnItemLongClickListener true)
+                true
             }
 
             mSecondAdapter.setOnItemChildClickListener { adapter, view, position ->

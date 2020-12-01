@@ -37,7 +37,7 @@ class DynamicDetailCommentSecondAdapter : BaseQuickAdapter<DynamicComment, BaseV
 
         //处理昵称
         val replyNickname = item.replyNickname
-        //是否是楼主
+        //评论人是否是楼主
         val originalPoster = item.originalPoster == BusiConstant.True
         val nicknameContent = StringBuilder()
         nicknameContent.append(item.nickname)
@@ -49,10 +49,16 @@ class DynamicDetailCommentSecondAdapter : BaseQuickAdapter<DynamicComment, BaseV
             //有回复的对象
             nicknameContent.append(" # ").append(replyNickname)
         }
+        //被回复人是否是楼主（楼主回复自己，被回复人不显示楼主标识）
+        //是否显示被回复人的楼主
+        val showOriginal = (item.originalReply == BusiConstant.True && !originalPoster)
+        if (showOriginal) {
+            nicknameContent.append(" #")
+        }
 
         val builder = DraweeSpanStringBuilder(nicknameContent.toString())
         if (originalPoster) {
-            //渲染楼主
+            //渲染评论人楼主
             val start = item.replyNickname.length + 1
             if (start < nicknameContent.length && start >= 0) {
                 builder.setImageSpan(
@@ -62,13 +68,26 @@ class DynamicDetailCommentSecondAdapter : BaseQuickAdapter<DynamicComment, BaseV
         }
         if (replyNickname.isNotEmpty()) {
             //渲染箭头
-            val start = nicknameContent.length - replyNickname.length - 2
+            val start = if (showOriginal) {
+                nicknameContent.length - replyNickname.length - 4
+            } else {
+                nicknameContent.length - replyNickname.length - 2
+            }
             if (start < nicknameContent.length && start >= 0) {
                 builder.setImageSpan(
                     context, R.mipmap.icon_arrow_reply, start, start, dp2px(7), dp2px(9)
                 )
             }
+        }
 
+        if (showOriginal) {
+            //被回复人是否是楼主
+            val start = nicknameContent.length - 1
+            if (start < nicknameContent.length && start >= 0) {
+                builder.setImageSpan(
+                    context, R.mipmap.icon_original_poster_comment, start, start, dp2px(32), dp2px(16)
+                )
+            }
         }
         val tv_nickname = holder.getView<DraweeSpanTextView>(R.id.tv_nickname)
         tv_nickname.setDraweeSpanStringBuilder(builder)

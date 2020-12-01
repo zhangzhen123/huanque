@@ -3,6 +3,7 @@ package com.julun.huanque.core.ui.dynamic
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
 import com.julun.huanque.common.base.BaseVMActivity
@@ -22,10 +24,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.DynamicChangeResult
-import com.julun.huanque.common.bean.beans.DynamicComment
-import com.julun.huanque.common.bean.beans.DynamicDetailInfo
-import com.julun.huanque.common.bean.beans.PhotoBean
+import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
@@ -465,6 +464,30 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 tv_comment_num.text = commentConetnt
             }
         })
+        mViewModel.commentDeleted.observe(this, Observer {
+            if (it != null) {
+                if (it.firstCommentId == 0L) {
+                    //删除的是1级评论
+                    commentAdapter.remove(it)
+                } else {
+                    //删除的是2级评论
+                    var tempIndex = -1
+                    commentAdapter.data.forEachIndexed { index, dynamicComment ->
+                        if (it.firstCommentId == dynamicComment.commentId) {
+                            //找到对应的1级评论
+                            dynamicComment.secondComments.remove(it)
+                            val commentNum = max(0, dynamicComment.commentNum - 1)
+                            dynamicComment.commentNum = commentNum
+                            tempIndex = index
+                            return@forEachIndexed
+                        }
+                    }
+                    if (tempIndex >= 0) {
+                        commentAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        })
 
         mHuanQueViewModel.dynamicChangeResult.observe(this, Observer {
             if (it != null) {
@@ -517,6 +540,13 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                     //点赞
                     mViewModel.praiseComment(secondComment)
                 }
+            }
+
+            override fun secondLongCommentClick(view: View, secondComment: DynamicComment) {
+                if (mViewModel.dynamicInfo?.value?.post?.userId == SessionUtils.getUserId()) {
+                    //我的动态
+                    showActionPopupWindow(view, secondComment)
+                }
 
             }
         }
@@ -553,6 +583,17 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             edit_text.performClick()
             edit_text.hint = "回复${tempData.nickname}"
         }
+        commentAdapter.setOnItemLongClickListener { adapter, view, position ->
+            //长按操作
+            if (mViewModel.dynamicInfo?.value?.post?.userId == SessionUtils.getUserId()) {
+                val tempData = adapter.getItemOrNull(position) as? DynamicComment
+                showActionPopupWindow(view, tempData ?: return@setOnItemLongClickListener true)
+                return@setOnItemLongClickListener true
+            } else {
+                return@setOnItemLongClickListener false
+            }
+
+        }
         commentAdapter.setOnItemChildClickListener { adapter, view, position ->
             val tempData = adapter.getItemOrNull(position) as? DynamicComment ?: return@setOnItemChildClickListener
             when (view.id) {
@@ -575,6 +616,67 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         commentAdapter.loadMoreModule.setOnLoadMoreListener {
             mViewModel.commentList()
         }
+    }
+
+    //长按评论的操作PopupWindow
+    private var mLongActionPopupWindow: PopupWindow? = null
+
+    /**
+     * 显示操作PopupWindow
+     */
+    private fun showActionPopupWindow(parentView: View, comment: DynamicComment) {
+        val view = LayoutInflater.from(this).inflate(R.layout.view_dynamic_long_click, null)
+        var tempHeight = if (comment.userId == SessionUtils.getUserId()) {
+            //本人回复
+            42 * 2 + 4
+        } else {
+            //非本人回复
+            42 * 3 + 4
+        }
+        mLongActionPopupWindow = PopupWindow(view, dp2px(94), dp2px(tempHeight))
+        val drawable = GlobalUtils.getDrawable(R.mipmap.icon_dynamic_long_click)
+        mLongActionPopupWindow?.setBackgroundDrawable(drawable)
+        mLongActionPopupWindow?.isOutsideTouchable = true
+        val tv_copy = view.findViewById<View>(R.id.tv_copy)
+        val tv_del = view.findViewById<View>(R.id.tv_del)
+        val tv_report = view.findViewById<View>(R.id.tv_report)
+        if (comment.userId == SessionUtils.getUserId()) {
+            tv_report.hide()
+        } else {
+            tv_report.show()
+        }
+
+        tv_copy.onClickNew {
+            //复制
+            GlobalUtils.copyToSharePlate(this, comment.content, "内容复制成功")
+            mLongActionPopupWindow?.dismiss()
+        }
+        tv_del.onClickNew {
+            //删除
+            MyAlertDialog(this).showAlertWithOKAndCancel(
+                "确定删除这条回复吗？",
+                MyAlertDialog.MyDialogCallback(onRight = {
+                    //删除回复
+                    mViewModel.deleteComment(comment)
+                }), "提示", okText = "确定"
+            )
+            mLongActionPopupWindow?.dismiss()
+        }
+        tv_report.onClickNew {
+            //举报
+            val extra = Bundle()
+            extra.putLong(ParamConstant.TARGET_USER_ID, comment.userId)
+            ARouter.getInstance().build(ARouterConstant.REPORT_ACTIVITY).with(extra).navigation()
+        }
+//        val pTop = parentView.top + dp2px(tempHeight + 61)
+//        mLongActionPopupWindow?.showAtLocation(parentView, Gravity.TOP or Gravity.LEFT, px2dp(ScreenUtils.getScreenWidth() / 2f) - 47, pTop)
+        val locationView = parentView.findViewById<View>(R.id.tv_content)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            mLongActionPopupWindow?.showAsDropDown(locationView, 26, 5, Gravity.BOTTOM or Gravity.RIGHT)
+//        } else {
+        mLongActionPopupWindow?.showAsDropDown(locationView)
+//        }
+
     }
 
     private fun loadDataFail(isPull: Boolean) {

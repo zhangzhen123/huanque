@@ -83,7 +83,10 @@ data class DynamicComment(
     var replyNickname: String = "",
     var userId: Long = 0,
     var hasPraise: Boolean = false,
+    //评论人是否是楼主
     var originalPoster: String = "",
+    //被回复人是否是楼主
+    var originalReply: String = "",
     var shareNum: Int = 0,
     var commentNum: Int = 0,
     var hasMore: Boolean = false,

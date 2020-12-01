@@ -408,4 +408,10 @@ interface SocialService {
      */
     @POST("social/post/deletePost")
     suspend fun deletePost(@Body body: PostForm): Root<VoidResult>
+
+    /**
+     * 删除评论
+     */
+    @POST("social/post/deleteComment")
+    suspend fun deleteComment(@Body body: CommentIdForm): Root<VoidResult>
 }
