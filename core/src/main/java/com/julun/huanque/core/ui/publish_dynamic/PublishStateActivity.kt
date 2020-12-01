@@ -635,9 +635,11 @@ class PublishStateActivity : BaseActivity() {
             } else {
                 BooleanType.FALSE
             }
-            this.city = currentLocation?.city
-            this.lat = currentLocation?.latitude
-            this.lng = currentLocation?.longitude
+            if (iv_location.isSelected) {
+                this.city = currentLocation?.city
+                this.lat = currentLocation?.latitude
+                this.lng = currentLocation?.longitude
+            }
             this.groupId = currentGroup?.groupId
         }
         if (pathList.isNotEmpty()) {

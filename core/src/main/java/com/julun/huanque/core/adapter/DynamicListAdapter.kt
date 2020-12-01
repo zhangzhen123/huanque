@@ -77,7 +77,8 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
             R.id.tv_follow_num,
             R.id.tv_comment_num,
             R.id.tv_share_num,
-            R.id.iv_more_action
+            R.id.iv_more_action,
+            R.id.tv_circle_name
         )
     }
 

@@ -115,7 +115,7 @@ class IntimacyFragment : BaseDialogFragment() {
                 //我的主页
                 val userCount = list.size
                 if (userCount > 0) {
-                    tv_content.text = "恭喜你获得亲密的人，记得保持亲密哦"
+                    tv_content.text = "恭喜你获得亲密的人，继续保持哦"
                 }
                 tv_jump.text = "保持亲密"
             } else {

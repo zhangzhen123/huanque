@@ -266,6 +266,11 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         headerLayout.findViewById<View>(R.id.tvSort).onClickNew {
             tvSort.performClick()
         }
+
+        headerLayout.findViewById<View>(R.id.tv_circle_name).onClickNew {
+            CircleDynamicActivity.start(this, mViewModel?.dynamicInfo?.value?.post?.group?.groupId ?: return@onClickNew)
+        }
+
         tvSort.onClickNew {
             //时间和热度切换
             if (mViewModel.commentType == CommentOrderType.Time) {
@@ -718,7 +723,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             }
             headerLayout.tv_mkf_name.text = name
             headerLayout.tv_time.text = posterInfo.postTime
-            headerLayout.tv_location.text = posterInfo.city
+            headerLayout.tv_location.text = " · ${posterInfo.city}"
             if (posterInfo.city.isEmpty()) {
                 headerLayout.tv_location.hide()
             } else {

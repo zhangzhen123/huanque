@@ -240,6 +240,9 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                     bottomDialog?.listener = bottomDialogListener
                     bottomDialog?.show(requireActivity(), "bottomDialog")
                 }
+                R.id.tv_circle_name -> {
+                    CircleDynamicActivity.start(requireActivity(), item.group?.groupId ?: return@onAdapterChildClickNew)
+                }
             }
         }
     }
@@ -372,8 +375,10 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             state_pager_view.showSuccess()
             mRefreshLayout.show()
             dynamicAdapter.setEmptyView(
-                MixedHelper.getEmptyView(requireContext(),
-                    msg = "暂无动态，快去发布一条吧~")
+                MixedHelper.getEmptyView(
+                    requireContext(),
+                    msg = "暂无动态，快去发布一条吧~"
+                )
             )
         } else {
             mRefreshLayout.show()

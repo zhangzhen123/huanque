@@ -542,8 +542,8 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_dynamic"
                 tools:text="了看安慰发货光和热感染了任何非立刻恢复换了人服务" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_dynamic_piclist"
+            <RelativeLayout
+                android:id="@+id/rl_dynamic_piclist"
                 android:layout_width="0px"
                 android:layout_height="74dp"
                 android:layout_marginLeft="15dp"
@@ -552,7 +552,16 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_dynamic" />
+                app:layout_constraintTop_toBottomOf="@id/tv_dynamic">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_dynamic_piclist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="74dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+            </RelativeLayout>
 
 
             <androidx.constraintlayout.widget.Barrier
@@ -560,7 +569,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="con_live,tv_dynamic_content,recyclerView_dynamic_piclist,con_dynamic_add" />
+                app:constraint_referenced_ids="con_live,tv_dynamic_content,rl_dynamic_piclist,con_dynamic_add" />
 
             <View
                 android:id="@+id/view_live"

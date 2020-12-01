@@ -559,8 +559,6 @@ data class HomePageInfo(
     var authMark: String = "",
     //生日
     var birthday: String = "",
-    //主播的直播信息,如果不是主播则不返回
-    var programInfo: ProgramInfoHomePage? = null,
     //是否拉黑
     var black: String = "",
     //性格数据

@@ -45,7 +45,7 @@ class DynamicTabViewModel : BaseViewModel() {
             request({
                 val result =
                     service.queryHomePost(HomePostForm(offset = offsetHot, postType = postType)).dataConvert()
-                result.hasMore = false
+//                result.hasMore = false
                 //
                 offsetHot += result.postList.size
                 result.isPull = queryType != QueryType.LOAD_MORE

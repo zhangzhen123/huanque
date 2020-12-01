@@ -365,6 +365,9 @@ class HomePageActivity : BaseActivity() {
                 return@onClickNew
             }
             val voiceBean = mHomePageViewModel.homeInfoBean.value?.voice ?: return@onClickNew
+            if (voiceBean.voiceStatus != VoiceBean.Pass) {
+                return@onClickNew
+            }
             if (mHomePageViewModel.mineHomePage && voiceBean.voiceStatus.isEmpty()) {
                 //我的主页,语音为空，跳转编辑资料页面
                 RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
@@ -417,12 +420,6 @@ class HomePageActivity : BaseActivity() {
 
         con_live.onClickNew {
             //跳转直播间
-            val programId = mHomePageViewModel.homeInfoBean.value?.programInfo?.programId ?: 0
-            if (programId > 0) {
-                PlayerActivity.start(this, programId, PlayerFrom.UserHome)
-                return@onClickNew
-            }
-
             val otherProgramId = mHomePageViewModel.homeInfoBean.value?.playProgram?.programId ?: 0
             if (otherProgramId > 0) {
                 PlayerActivity.start(this, otherProgramId, PlayerFrom.UserHome)
@@ -457,7 +454,7 @@ class HomePageActivity : BaseActivity() {
         }
         view_living.onClickNew {
             //跳转直播间
-            val programId = mHomePageViewModel.homeInfoBean.value?.programInfo?.programId ?: return@onClickNew
+            val programId = mHomePageViewModel.homeInfoBean.value?.playProgram?.programId ?: return@onClickNew
             PlayerActivity.start(this, programId, PlayerFrom.UserHome)
         }
         tv_black_status.onClickNew {
@@ -600,7 +597,7 @@ class HomePageActivity : BaseActivity() {
         })
         mHomePageViewModel.blackStatus.observe(this, Observer {
             val bean =
-                if (it == BusiConstant.True && mHomePageViewModel.homeInfoBean.value?.programInfo?.living != BusiConstant.True) {
+                if (it == BusiConstant.True && mHomePageViewModel.homeInfoBean.value?.playProgram?.living != BusiConstant.True) {
                     //拉黑状态
                     tv_black_status.show()
                 } else {
@@ -760,7 +757,7 @@ class HomePageActivity : BaseActivity() {
         } else {
             if (mHomePageViewModel.mineHomePage) {
                 //我的主页
-                if (voiceStatus.isEmpty()) {
+                if (voiceStatus != VoiceBean.Pass) {
                     //语音签名为空 显示待录制状态
                     view_voice.show()
                     tv_time.show()
@@ -772,7 +769,6 @@ class HomePageActivity : BaseActivity() {
                     tv_like.hide()
                     tv_time.leftPadding = dp2px(10f)
                     tv_time.rightPadding = dp2px(15f)
-
                 }
             } else {
                 //他人主页 不显示语音签名
@@ -949,10 +945,10 @@ class HomePageActivity : BaseActivity() {
             }
         }
 
-        //动态相关
+        //动态相关  动态相关优先级  直播中>图片>纯文字>未发过
         val postInfo = bean.post
         con_live.hide()
-        recyclerView_dynamic_piclist.hide()
+        rl_dynamic_piclist.hide()
         con_dynamic_add.hide()
         view_live.hide()
 //        tv_dynamic.show()
@@ -960,51 +956,52 @@ class HomePageActivity : BaseActivity() {
 //        view_live.show()
         //直播数据
         val playProgram = bean.playProgram
-        tv_dynamic.text = "最新动态（${postInfo.postNum}）"
-        if ((mHomePageViewModel.mineHomePage && postInfo.postNum > 0L) || !mHomePageViewModel.mineHomePage) {
-            //本人发表过动态  或者   他人主页
-//            if (!mHomePageViewModel.mineHomePage && postInfo.postNum == 0L && playProgram.programId == 0L) {
-//                //他人主页 没有动态 没有直播信息
-//                //什么都不显示
-//                tv_dynamic.hide()
-//                iv_arrow_dynamic.hide()
-//                view_live.hide()
-//                return
-//            }
+        if (postInfo.postNum > 0) {
+            tv_dynamic.text = "最新动态（${postInfo.postNum}）"
+        } else {
+            tv_dynamic.text = "最新动态"
+        }
+        //1 先判断有没有图片
+        val postPics = postInfo.lastPostPics
+        if (postPics.isNotEmpty()) {
+            //有动态图片，显示动态图片样式
             val dynamicPicList = mutableListOf<Any>()
-            dynamicPicList.addAll(postInfo.lastPostPics)
-            if (dynamicPicList.isNotEmpty()) {
+            dynamicPicList.addAll(postPics)
+            view_live.show()
+            rl_dynamic_piclist.show()
+            if ((mHomePageViewModel.mineHomePage && playProgram.living == BusiConstant.True) || (!mHomePageViewModel.mineHomePage && playProgram.programId != 0L)) {
+                //1，我的主页同时开播  2，他人主页同时有主播数据 显示直播样式
+                dynamicPicList.add(0, playProgram)
+            }
+            dynamicPicList.add(HomePageDynamicPicListAdapter.Tag_More)
+            mHomePageDynamicPicListAdapter.setList(dynamicPicList)
+        } else {
+            //没有动态图片，显示无图片样式
+            if (playProgram.programId != 0L) {
+                //显示直播样式
+                con_live.show()
                 view_live.show()
-                recyclerView_dynamic_piclist.show()
-                //有图片，显示图片样式
-                if ((mHomePageViewModel.mineHomePage && playProgram.living == BusiConstant.True) || (!mHomePageViewModel.mineHomePage && playProgram.programId != 0L)) {
-                    //1，我的主页同时开播  2，他人主页同时有主播数据 显示直播样式
-                    dynamicPicList.add(playProgram)
-                }
-                dynamicPicList.add(HomePageDynamicPicListAdapter.Tag_More)
-                mHomePageDynamicPicListAdapter.setList(dynamicPicList)
-            } else {
-                //没有图片样式
-                if (playProgram.programId != 0L) {
-                    //显示直播样式
-                    con_live.show()
-                    view_live.show()
-                    single_video_view_program.stop()
-                    single_video_view_program.showCover(StringHelper.getOssImgUrl(playProgram.programCover), false)
-                    if (playProgram.living == BusiConstant.True) {
-                        //开播中
-                        tv_living.show()
-                        sdv_living.show()
-                        ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
-                        tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
-                        tv_living.text = "直播中"
-                        val playInfo = playProgram.playInfo
-                        if (playInfo != null) {
-                            single_video_view_program.play(GlobalUtils.getPlayUrl(playInfo))
-                        }
+                single_video_view_program.stop()
+                single_video_view_program.showCover(StringHelper.getOssImgUrl(playProgram.programCover), false)
+                if (playProgram.living == BusiConstant.True) {
+                    //开播中
+                    tv_living.show()
+                    sdv_living.show()
+                    ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
+                    tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
+                    tv_living.text = "直播中"
+                    val playInfo = playProgram.playInfo
+                    if (playInfo != null) {
+                        single_video_view_program.play(GlobalUtils.getPlayUrl(playInfo))
+                    }
+                } else {
+                    //没有直播数据
+                    //本人  未发布过动态，显示发布样式
+                    if (mHomePageViewModel.mineHomePage && postInfo.postNum <= 0) {
+                        con_dynamic_add.show()
+                        view_live.show()
                     } else {
-                        //没有直播数据
-                        if (bean.programInfo != null) {
+                        if (bean.playProgram.programId > 0L) {
                             //主播身份，并且没有开播，显示未开播样式
                             con_live.show()
                             view_live.show()
@@ -1017,16 +1014,86 @@ class HomePageActivity : BaseActivity() {
                             con_live.hide()
                         }
                     }
-                } else {
-                    con_live.hide()
+
+                }
+            } else {
+                con_live.hide()
+                if (mHomePageViewModel.mineHomePage && postInfo.postNum <= 0) {
+                    con_dynamic_add.show()
+                    view_live.show()
                 }
             }
-
-        } else {
-            //未发表过动态，显示引导发表样式
-            con_dynamic_add.show()
-            view_live.show()
         }
+//        if (playProgram.programId != 0L) {
+//            //有直播数据，显示直播中状态
+//
+//        }
+//        if ((mHomePageViewModel.mineHomePage && postInfo.postNum > 0L) || !mHomePageViewModel.mineHomePage) {
+//            //本人发表过动态  或者   他人主页
+////            if (!mHomePageViewModel.mineHomePage && postInfo.postNum == 0L && playProgram.programId == 0L) {
+////                //他人主页 没有动态 没有直播信息
+////                //什么都不显示
+////                tv_dynamic.hide()
+////                iv_arrow_dynamic.hide()
+////                view_live.hide()
+////                return
+////            }
+//            val dynamicPicList = mutableListOf<Any>()
+//            dynamicPicList.addAll(postInfo.lastPostPics)
+//            if (dynamicPicList.isNotEmpty()) {
+//                view_live.show()
+//                recyclerView_dynamic_piclist.show()
+//                //有图片，显示图片样式
+//                if ((mHomePageViewModel.mineHomePage && playProgram.living == BusiConstant.True) || (!mHomePageViewModel.mineHomePage && playProgram.programId != 0L)) {
+//                    //1，我的主页同时开播  2，他人主页同时有主播数据 显示直播样式
+//                    dynamicPicList.add(playProgram)
+//                }
+//                dynamicPicList.add(HomePageDynamicPicListAdapter.Tag_More)
+//                mHomePageDynamicPicListAdapter.setList(dynamicPicList)
+//            } else {
+//                //没有图片样式
+//                if (playProgram.programId != 0L) {
+//                    //显示直播样式
+//                    con_live.show()
+//                    view_live.show()
+//                    single_video_view_program.stop()
+//                    single_video_view_program.showCover(StringHelper.getOssImgUrl(playProgram.programCover), false)
+//                    if (playProgram.living == BusiConstant.True) {
+//                        //开播中
+//                        tv_living.show()
+//                        sdv_living.show()
+//                        ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
+//                        tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
+//                        tv_living.text = "直播中"
+//                        val playInfo = playProgram.playInfo
+//                        if (playInfo != null) {
+//                            single_video_view_program.play(GlobalUtils.getPlayUrl(playInfo))
+//                        }
+//                    } else {
+//                        //没有直播数据
+//                        if (bean.playProgram.programId != 0L) {
+//                            //主播身份，并且没有开播，显示未开播样式
+//                            con_live.show()
+//                            view_live.show()
+//                            tv_watch_count.text = "期待Ta的下一场直播"
+//                            tv_watch_count.textColor = GlobalUtils.getColor(R.color.black_999)
+//                            tv_floow_watch.hide()
+//                            sdv_living.hide()
+//                            tv_living.text = "暂未开播"
+//                        } else {
+//                            con_live.hide()
+//                        }
+//                    }
+//                } else {
+//                    con_live.hide()
+//                }
+//            }
+//
+//        } else {
+//            //未发表过动态，显示引导发表样式
+//            con_dynamic_add.show()
+//            view_live.show()
+//        }
 
 
         //养鹊相关
@@ -1142,7 +1209,7 @@ class HomePageActivity : BaseActivity() {
         } else {
             rl_edit_info.hide()
             //显示底部视图
-            val liveStatus = bean.programInfo?.living ?: ""
+            val liveStatus = bean.playProgram?.living ?: ""
             if (liveStatus == BusiConstant.True) {
                 //开播状态
                 tv_living_bottom.show()
@@ -1387,6 +1454,7 @@ class HomePageActivity : BaseActivity() {
                 tv_tag.hide()
             }
         } else {
+            linefeed_ll_tag.removeAllViews()
             linefeed_ll_tag.show()
             con_tag_mine.hide()
             tv_tag.show()

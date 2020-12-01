@@ -14,6 +14,7 @@ import com.julun.huanque.common.bean.beans.CircleGroup
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.AttentionCircleAdapter
+import com.julun.huanque.core.ui.dynamic.CircleDynamicActivity
 import com.julun.huanque.core.viewmodel.AttentionCircleViewModel
 import com.julun.huanque.core.viewmodel.CircleViewModel
 import kotlinx.android.synthetic.main.fragment_attention_circle.*
@@ -81,6 +82,7 @@ class AttentionCircleFragment : BaseFragment() {
             val tempData = adapter.getItemOrNull(position) as? CircleGroup ?: return@setOnItemClickListener
             if (mCircleViewModel.mType == CircleGroupType.Circle_All) {
                 //全部圈子  打开详情
+                CircleDynamicActivity.start(requireActivity(), tempData.groupId)
             } else if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
                 //选择圈子，返回选中的圈子数据
                 val act=requireActivity()
