@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.events.PayResultEvent
+import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.bean.forms.PostShareForm
 import com.julun.huanque.common.bean.forms.ShareForm
@@ -158,6 +159,7 @@ class WechatViewModel : BaseViewModel() {
                         .handleResponse(makeSubscriber<VoidResult> {
                             logger("分享保存记录成功")
                             finish.value = true
+                            EventBus.getDefault().post(ShareSuccessEvent(shareObject.postId ?: 0, shareObject.commentId))
                         }.ifError {
                             if (it is ResponseError) {
                                 logger("分享保存记录失败 , ${it.busiMessage}")

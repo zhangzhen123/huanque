@@ -54,6 +54,11 @@ class DynamicDetailViewModel : BaseViewModel() {
     //评论点赞结果
     val commentPraiseResult: MutableLiveData<DynamicComment> by lazy { MutableLiveData<DynamicComment>() }
 
+    val commentNumData: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+
+    //动态变动的标识位
+    var dynamicChangeFlag = false
+
     //评论的排序方式（默认为热度）
     var commentType = CommentOrderType.Heat
 
@@ -93,12 +98,17 @@ class DynamicDetailViewModel : BaseViewModel() {
                 //回复成功，清空正在回复的评论对象
                 replyingComment = null
                 ToastUtils.show("评论发表成功")
+                //评论数量+1
+                val commentNum = (dynamicInfo.value?.post?.commentNum ?: 0) + 1
+                commentNumData.value = commentNum
+                dynamicInfo.value?.post?.commentNum = commentNum
+                dynamicChangeFlag = true
             }, {})
         }
     }
 
     /**
-     * 评论 1级
+     * 评论 1级(更多评论)
      */
     fun commentList() {
         viewModelScope.launch {
@@ -112,7 +122,7 @@ class DynamicDetailViewModel : BaseViewModel() {
     }
 
     /**
-     * 更多评论（2级）
+     * 更多评论（2级）(更多评论)
      */
     fun secondCommentList(parentCommentId: Long, offset: Int) {
         viewModelScope.launch {
@@ -123,13 +133,14 @@ class DynamicDetailViewModel : BaseViewModel() {
     }
 
     /**
-     * 删除评论
+     * 删除动态
      */
     fun deletePost() {
         viewModelScope.launch {
             request({
                 val result = socialService.deletePost(PostForm(mPostId)).dataConvert()
                 deletedData.value = true
+                dynamicChangeFlag = true
             }, {})
         }
     }
@@ -157,6 +168,7 @@ class DynamicDetailViewModel : BaseViewModel() {
                 hasPraise = false
                 praiseNum = max(0, praiseNum - 1)
             }
+            dynamicChangeFlag = true
         }
     }
 

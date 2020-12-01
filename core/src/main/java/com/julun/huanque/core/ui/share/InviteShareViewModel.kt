@@ -215,7 +215,7 @@ class InviteShareViewModel : BaseViewModel() {
                 val bitmap = BitmapUtil.base64ToBitmap(result.qrCode.replace("data:image/png;base64,", ""))
                 result.qrBitmap = bitmap
                 postShareBeanData.value = result.apply {
-                    if (commentId == null && !pic.contains("?")) {
+                    if (commentId == null && pic.isNotEmpty() && !pic.contains("?")) {
                         //分享动态
                         pic = "${pic}?x-oss-process=image/resize,m_fixed,w_100,h_100"
                     }

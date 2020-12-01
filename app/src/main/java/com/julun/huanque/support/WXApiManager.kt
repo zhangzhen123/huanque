@@ -269,7 +269,7 @@ object WXApiManager {
     }
 
     private fun loadLocalImg(context: Context, msg: WXMediaMessage, scene: Int) {
-        val bitmap = BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher)
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher_small)
         msg.thumbData = BitmapUtil.bitmap2Bytes(bitmap)
         bitmap.recycle()
         sendToWX(context, msg, scene)

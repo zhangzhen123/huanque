@@ -7,12 +7,19 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import com.julun.huanque.R
+import com.julun.huanque.common.basic.ResponseError
+import com.julun.huanque.common.basic.VoidResult
+import com.julun.huanque.common.bean.beans.DynamicChangeResult
 import com.julun.huanque.common.bean.beans.ShareObject
+import com.julun.huanque.common.bean.events.ShareSuccessEvent
+import com.julun.huanque.common.bean.forms.PostShareForm
 import com.julun.huanque.common.bean.forms.ShareForm
 import com.julun.huanque.common.constant.WeiBoShareType
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.net.Requests
+import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.suger.handleResponse
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.nothing
 import com.julun.huanque.common.utils.ImageUtils
@@ -24,6 +31,7 @@ import com.sina.weibo.sdk.common.UiError
 import com.sina.weibo.sdk.openapi.IWBAPI
 import com.sina.weibo.sdk.openapi.WBAPIFactory
 import com.sina.weibo.sdk.share.WbShareCallback
+import org.greenrobot.eventbus.EventBus
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -175,7 +183,15 @@ object WeiBoApiManager {
             override fun onComplete() {
                 logger("分享成功")
                 ToastUtils.show("分享成功")
-                Requests.create(UserService::class.java).shareLog(ShareForm(currentObject ?: return)).nothing()
+                if (currentObject?.postId != null) {
+                    //分享动态或者评论
+                    Requests.create(SocialService::class.java)
+                        .saveShareLog(PostShareForm(currentObject?.platForm ?: "", currentObject?.postId ?: 0, currentObject?.commentId)).nothing()
+                    EventBus.getDefault().post(ShareSuccessEvent(currentObject?.postId ?: 0, currentObject?.commentId))
+                } else {
+                    Requests.create(UserService::class.java).shareLog(ShareForm(currentObject ?: return)).nothing()
+                }
+
             }
 
             override fun onCancel() {

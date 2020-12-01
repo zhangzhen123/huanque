@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.dynamic
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -21,11 +22,13 @@ import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.ui.homepage.HomePageActivity
+import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
 import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.activity_dynamic_details.mRefreshLayout
 import kotlinx.android.synthetic.main.activity_dynamic_list.*
@@ -295,7 +298,13 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         if (dynamicAdapter.data.isEmpty()) {
             mRefreshLayout.hide()
             if (isMe) {
-                state_pager_view.showEmpty(emptyTxt = "暂无动态，快去发一条吧~")
+                state_pager_view.showEmpty(emptyTxt = "暂无动态，快去发一条吧~", onClick = View.OnClickListener {
+                    //跳转发布页面
+                    val intent = Intent(this, PublishStateActivity::class.java)
+                    if (ForceUtils.activityMatch(intent)) {
+                        startActivity(intent)
+                    }
+                })
             } else {
                 state_pager_view.showEmpty(emptyTxt = "暂无动态")
             }

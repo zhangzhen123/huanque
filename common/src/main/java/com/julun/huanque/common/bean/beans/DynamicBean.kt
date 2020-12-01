@@ -161,9 +161,11 @@ data class DynamicListExt(
  * 点赞变化 分享变化  评论变化 如果是true +1  false则-1 null不处理
  */
 class DynamicChangeResult(
-    var postId: Long = 0L,
+    var postId: Long,
+    //是否删除
+    var hasDelete: Boolean = false,
     var praise: Boolean? = null,
-    var share: Boolean? = null,
-    var comment: Boolean? = null
+    var share: Int? = null,
+    var comment: Int? = null
 )
 

@@ -542,6 +542,21 @@ class HomePageActivity : BaseActivity() {
 
         recyclerView_dynamic_piclist.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         recyclerView_dynamic_piclist.adapter = mHomePageDynamicPicListAdapter
+        mHomePageDynamicPicListAdapter.setOnItemClickListener { adapter, view, position ->
+            if (mHomePageViewModel.mineHomePage) {
+                val singleData = adapter.getItemOrNull(position)
+                if (singleData is HomePageProgram && singleData.living == BusiConstant.True) {
+                    //跳转直播间
+                    PlayerActivity.start(this, singleData.programId, PlayerFrom.UserHome)
+                } else {
+                    //跳转我的动态
+                    //跳转动态列表页面
+                    ARouter.getInstance().build(ARouterConstant.USER_DYNAMIC_ACTIVITY).with(Bundle().apply {
+                        putLong(IntentParamKey.USER_ID.name, mHomePageViewModel.targetUserId)
+                    }).navigation()
+                }
+            }
+        }
     }
 
     private fun initViewModel() {

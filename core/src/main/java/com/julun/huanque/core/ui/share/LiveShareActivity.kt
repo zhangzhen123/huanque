@@ -195,6 +195,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
             //分享评论
             val con_comment_share = ll_comment.findViewById<ConstraintLayout>(R.id.view_comment)
             bitmap = BitmapUtil.viewConversionBitmap(con_comment_share ?: return, Color.TRANSPARENT)
+            shareImage(type, bitmap ?: return)
         } else {
             //其他分享
             if (currentSelectView == null) {
@@ -203,13 +204,17 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
             }
             currentSelectView?.post {
                 bitmap = BitmapUtil.viewConversionBitmap(currentSelectView!!, Color.TRANSPARENT)
+                shareImage(type, bitmap ?: return@post)
             }
         }
 
-        if (bitmap == null) {
-            return
-        }
 
+    }
+
+    /**
+     * 分享图片
+     */
+    private fun shareImage(type: String, bitmap: Bitmap) {
         when (type) {
             ShareTypeEnum.FriendCircle -> {
                 //朋友圈
@@ -224,6 +229,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         this.shareKeyId = mShareKeyId
                         this.platForm = ShareTypeEnum.FriendCircle
                         this.postId = mPostId
+                        this.commentId = mCommentId
                     })
                     finish()
                 }
@@ -241,6 +247,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                         this.shareKeyId = mShareKeyId
                         this.platForm = ShareTypeEnum.WeChat
                         this.postId = mPostId
+                        this.commentId = mCommentId
                     })
                     finish()
                 }
@@ -254,6 +261,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                     this.shareKeyType = mShareKeyType
                     this.shareKeyId = mShareKeyId
                     this.postId = mPostId
+                    this.commentId = mCommentId
                 })
             }
             ShareTypeEnum.SaveImage -> {
@@ -269,7 +277,6 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                 }
             }
         }
-
     }
 
     private fun requestRWPermission(action: NAction) {
@@ -318,7 +325,9 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
                 shareUrl = postShareBean.shareUrl
                 shareTitle = postShareBean.content
                 shareContent = postShareBean.content
-                sharePic = StringHelper.getOssImgUrl(postShareBean.pic)
+                if (postShareBean.pic.isNotEmpty()) {
+                    sharePic = StringHelper.getOssImgUrl(postShareBean.pic)
+                }
                 postId = mPostId
 //                sharePic = StringHelper.getOssImgUrl("user/head/2019110608363175169.jpg?x-oss-process=image/resize,m_fixed,w_100,h_100")
             }

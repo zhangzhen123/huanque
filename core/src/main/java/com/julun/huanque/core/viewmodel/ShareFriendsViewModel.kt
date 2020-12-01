@@ -9,6 +9,7 @@ import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.PostShareBean
 import com.julun.huanque.common.bean.beans.SocialListBean
 import com.julun.huanque.common.bean.beans.SocialUserInfo
+import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.bean.forms.ContactsForm
 import com.julun.huanque.common.bean.forms.PostShareForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
@@ -22,6 +23,7 @@ import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -63,6 +65,7 @@ class ShareFriendsViewModel : BaseViewModel() {
             .saveShareLog(PostShareForm(ShareTypeEnum.Chat, mPostShareBean?.postId ?: 0))
             .handleResponse(makeSubscriber<VoidResult> {
                 logger("分享保存记录成功")
+                EventBus.getDefault().post(ShareSuccessEvent(mPostShareBean?.postId ?: 0, null))
             }.ifError {
                 if (it is ResponseError) {
                     logger("分享保存记录失败 , ${it.busiMessage}")

@@ -22,9 +22,11 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
+import com.julun.huanque.common.bean.beans.DynamicChangeResult
 import com.julun.huanque.common.bean.beans.DynamicComment
 import com.julun.huanque.common.bean.beans.DynamicDetailInfo
 import com.julun.huanque.common.bean.beans.PhotoBean
+import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.MixedHelper
@@ -37,7 +39,6 @@ import com.julun.huanque.common.manager.audio_record.AudioRecordManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
-import com.julun.huanque.common.viewmodel.HuanQueViewModel
 import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.common.widgets.emotion.PrivateChatPanelView
@@ -53,6 +54,9 @@ import kotlinx.android.synthetic.main.activity_dynamic_details.ll_input
 import kotlinx.android.synthetic.main.activity_dynamic_details.panel_emotion
 import kotlinx.android.synthetic.main.layout_header_comment.*
 import kotlinx.android.synthetic.main.layout_header_dynamic_detail.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
 import kotlin.math.max
@@ -93,6 +97,8 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
     }
     var postId: Long = 0L
     override fun getLayoutId(): Int = R.layout.activity_dynamic_details
+
+    override fun isRegisterEventBus() = true
 
 
     override fun setHeader() {
@@ -289,7 +295,10 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 //点赞
                 mHuanQueViewModel.praise(mViewModel.mPostId)
             }
-
+        }
+        tv_share_num.onClickNew {
+            //分享
+            LiveShareActivity.newInstance(this, ShareFromType.Share_Dynamic, postId)
         }
     }
 
@@ -370,6 +379,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                     commentAdapter.data.forEachIndexed { index, adapterItem ->
                         if (adapterItem.commentId == it.firstCommentId) {
                             adapterItem.secondComments.add(0, it)
+                            adapterItem.commentNum += 1
                             notifyIndex = index
                             return@forEachIndexed
                         }
@@ -445,6 +455,16 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 commentAdapter.notifyDataSetChanged()
             }
         })
+        mViewModel.commentNumData.observe(this, Observer {
+            if (it != null) {
+                val commentConetnt = if (it == 0L) {
+                    "评论"
+                } else {
+                    "$it"
+                }
+                tv_comment_num.text = commentConetnt
+            }
+        })
 
         mHuanQueViewModel.dynamicChangeResult.observe(this, Observer {
             if (it != null) {
@@ -469,6 +489,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 }
                 tv_follow_num.text = followContent
                 tv_follow_num.isActivated = bean.praiseNum > 0L
+                mViewModel.dynamicChangeFlag = true
             }
         })
 
@@ -899,5 +920,59 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 
     }
 
+    override fun onViewDestroy() {
+        super.onViewDestroy()
 
+        if (mViewModel.dynamicChangeFlag) {
+            //详情有修改操作，需要通知外界更新数据
+            val changeBean = DynamicChangeResult(mViewModel.mPostId)
+            if (mViewModel.deleteFlag.value == true) {
+                changeBean.hasDelete = true
+            } else {
+                //传递最新数据
+                val postInfo = mViewModel.dynamicInfo.value?.post ?: return
+                changeBean.praise = postInfo.hasPraise
+                changeBean.share = postInfo.shareNum.toInt()
+                changeBean.comment = postInfo.commentNum.toInt()
+            }
+
+            EventBus.getDefault().post(changeBean)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun shareSuccess(bean: ShareSuccessEvent) {
+        val postId = bean.postId
+        if (postId == mViewModel.mPostId) {
+
+
+            //就是当前动态的分享
+            val commentId = bean.commentId
+            if (commentId == null) {
+                //评论ID为空，分享的是动态
+                val shareNum = (mViewModel.dynamicInfo.value?.post?.shareNum ?: 0) + 1
+                mViewModel.dynamicInfo.value?.post?.shareNum = shareNum
+
+                val shareContent = if (shareNum == 0L) {
+                    "分享"
+                } else {
+                    "${shareNum}"
+                }
+                tv_share_num.text = shareContent
+            } else {
+                //评论ID不为空，分享的是评论
+                var notifyIndex = -1
+                commentAdapter.data.forEachIndexed { index, adapterItem ->
+                    if (adapterItem.commentId == commentId) {
+                        adapterItem.shareNum = adapterItem.shareNum + 1
+                        notifyIndex = index
+                        return@forEachIndexed
+                    }
+                }
+                if (notifyIndex >= 0) {
+                    commentAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+    }
 }

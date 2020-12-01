@@ -18,7 +18,7 @@ class EventMessageBean(
 /**
  * 系统消息刷新通知
  */
-class SystemMessageRefreshBean(var targetId : String = "") : Serializable
+class SystemMessageRefreshBean(var targetId: String = "") : Serializable
 
 /**
  * 信息填写完成事件
@@ -213,3 +213,8 @@ class FloatingCloseEvent() : Serializable
  * 登录页面上层页面  finish事件
  */
 class FinishToLoginEvent() : Serializable
+
+/**
+ * 动态相关分享成功事件
+ */
+class ShareSuccessEvent(var postId: Long = 0, var commentId: Long? = null) : Serializable
