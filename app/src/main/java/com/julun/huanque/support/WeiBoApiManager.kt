@@ -11,11 +11,15 @@ import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.DynamicChangeResult
 import com.julun.huanque.common.bean.beans.ShareObject
+import com.julun.huanque.common.bean.beans.StatusResult
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.bean.forms.PostShareForm
 import com.julun.huanque.common.bean.forms.ShareForm
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.WeiBoShareType
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.net.RequestCaller
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.net.services.UserService
@@ -38,7 +42,7 @@ import java.io.IOException
 import java.util.*
 
 
-object WeiBoApiManager {
+object WeiBoApiManager : RequestCaller {
     //在微博开发平台为应用申请的App Key
     private const val APP_KEY = "1153419351"
 
@@ -186,8 +190,13 @@ object WeiBoApiManager {
                 if (currentObject?.postId != null) {
                     //分享动态或者评论
                     Requests.create(SocialService::class.java)
-                        .saveShareLog(PostShareForm(currentObject?.platForm ?: "", currentObject?.postId ?: 0, currentObject?.commentId)).nothing()
-                    EventBus.getDefault().post(ShareSuccessEvent(currentObject?.postId ?: 0, currentObject?.commentId))
+                        .saveShareLog(PostShareForm(currentObject?.platForm ?: "", currentObject?.postId ?: 0, currentObject?.commentId))
+                        .handleResponse(makeSubscriber<StatusResult>() {
+                            if (it.status == BusiConstant.True) {
+                                EventBus.getDefault().post(ShareSuccessEvent(currentObject?.postId ?: 0, currentObject?.commentId))
+                            }
+                        })
+
                 } else {
                     Requests.create(UserService::class.java).shareLog(ShareForm(currentObject ?: return)).nothing()
                 }
@@ -207,5 +216,7 @@ object WeiBoApiManager {
 
         });
     }
+
+    override fun getRequestCallerId() = StringHelper.uuid()
 
 }

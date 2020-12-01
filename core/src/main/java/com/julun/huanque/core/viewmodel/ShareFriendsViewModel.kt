@@ -9,10 +9,12 @@ import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.PostShareBean
 import com.julun.huanque.common.bean.beans.SocialListBean
 import com.julun.huanque.common.bean.beans.SocialUserInfo
+import com.julun.huanque.common.bean.beans.StatusResult
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.bean.forms.ContactsForm
 import com.julun.huanque.common.bean.forms.PostShareForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.ShareTypeEnum
 import com.julun.huanque.common.manager.SendMessageManager
 import com.julun.huanque.common.net.Requests
@@ -63,9 +65,11 @@ class ShareFriendsViewModel : BaseViewModel() {
         SendMessageManager.sendPostMessage(mPostShareBean ?: return, user)
         Requests.create(SocialService::class.java)
             .saveShareLog(PostShareForm(ShareTypeEnum.Chat, mPostShareBean?.postId ?: 0))
-            .handleResponse(makeSubscriber<VoidResult> {
+            .handleResponse(makeSubscriber<StatusResult> {
                 logger("分享保存记录成功")
-                EventBus.getDefault().post(ShareSuccessEvent(mPostShareBean?.postId ?: 0, null))
+                if (it.status == BusiConstant.True) {
+                    EventBus.getDefault().post(ShareSuccessEvent(mPostShareBean?.postId ?: 0, null))
+                }
             }.ifError {
                 if (it is ResponseError) {
                     logger("分享保存记录失败 , ${it.busiMessage}")

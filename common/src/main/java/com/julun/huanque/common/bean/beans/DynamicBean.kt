@@ -172,3 +172,10 @@ class DynamicChangeResult(
     var comment: Int? = null
 )
 
+/**
+ * 分享接口结果
+ */
+class StatusResult(
+    var status : String = ""
+) : Serializable
+

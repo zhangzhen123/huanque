@@ -4,12 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.basic.VoidResult
+import com.julun.huanque.common.bean.beans.StatusResult
 import com.julun.huanque.common.bean.events.PayResultEvent
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
 import com.julun.huanque.common.bean.forms.PostShareForm
 import com.julun.huanque.common.bean.forms.ShareForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.PayResult
 import com.julun.huanque.common.constant.PayType
 import com.julun.huanque.common.database.table.Session
@@ -156,10 +158,13 @@ class WechatViewModel : BaseViewModel() {
                     //动态分享成功
                     Requests.create(SocialService::class.java)
                         .saveShareLog(PostShareForm(shareObject.platForm ?: "", shareObject.postId ?: 0, shareObject.commentId))
-                        .handleResponse(makeSubscriber<VoidResult> {
+                        .handleResponse(makeSubscriber<StatusResult> {
                             logger("分享保存记录成功")
                             finish.value = true
-                            EventBus.getDefault().post(ShareSuccessEvent(shareObject.postId ?: 0, shareObject.commentId))
+                            if (it.status == BusiConstant.True) {
+                                //当此分享计算次数
+                                EventBus.getDefault().post(ShareSuccessEvent(shareObject.postId ?: 0, shareObject.commentId))
+                            }
                         }.ifError {
                             if (it is ResponseError) {
                                 logger("分享保存记录失败 , ${it.busiMessage}")

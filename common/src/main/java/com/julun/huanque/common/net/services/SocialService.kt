@@ -383,7 +383,7 @@ interface SocialService {
      * 动态分享成功接口
      */
     @POST("social/post/saveShareLog")
-    fun saveShareLog(@Body form: PostShareForm): Observable<Root<VoidResult>>
+    fun saveShareLog(@Body form: PostShareForm): Observable<Root<StatusResult>>
 
     /**
      * 评论动态
