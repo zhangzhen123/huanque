@@ -270,9 +270,11 @@ class HomePageActivity : BaseActivity() {
             val color: Int = when {
                 changeEnableDistance <= 0 -> {
                     tv_user_name.alpha = 0f
+                    tv_distance_2.alpha = 0f
                     iv_more.alpha = 1f
                     iv_more_black.alpha = 0f
                     iv_close.alpha = 1f
+                    tv_distance_1.alpha = 1f
                     iv_close_black.alpha = 0f
                     GlobalUtils.formatColor("#00FFFFFF")
 //                    view_top.alpha = 0f
@@ -280,19 +282,23 @@ class HomePageActivity : BaseActivity() {
                 changeEnableDistance >= mChangeDistance -> {
 //                    view_top.alpha = 1f
                     tv_user_name.alpha = 1f
+                    tv_distance_2.alpha = 1f
                     iv_more.alpha = 0f
                     iv_more_black.alpha = 1f
                     iv_close.alpha = 0f
+                    tv_distance_1.alpha = 0f
                     iv_close_black.alpha = 1f
                     GlobalUtils.formatColor("#FFFFFFFF")
                 }
                 else -> {
                     val alpha = changeEnableDistance / mChangeDistance.toFloat()
                     iv_close.alpha = (1 - alpha)
+                    tv_distance_1.alpha = (1 - alpha)
                     iv_close_black.alpha = alpha
                     iv_more.alpha = (1 - alpha)
                     iv_more_black.alpha = alpha
                     tv_user_name.alpha = alpha
+                    tv_distance_2.alpha = alpha
 
                     GlobalUtils.getColorWithAlpha(alpha, Color.WHITE)
                 }
@@ -1186,14 +1192,24 @@ class HomePageActivity : BaseActivity() {
         showGuanfang(bean.iconList)
         showTags(bean.characterTag)
         showEvaluate(bean.appraiseList)
-        if (!mHomePageViewModel.mineHomePage) {
-            //他人主页  显示距离
-            showMap(bean.cityList, bean.myCityList)
+        val homeCity = bean.homeCity
+        if (homeCity.curryCityName.isNotEmpty() && homeCity.homeCityName.isNotEmpty()) {
+            tv_distance_1.text = "距离${bean.homeCity.distance}km"
+            tv_distance_2.text = "距离${bean.homeCity.distance}km"
         } else {
-            //我的主页  隐藏内容
-            tv_footprint.hide()
-            hsv.hide()
+            tv_distance_1.text = "未知"
+            tv_distance_2.text = "未知"
         }
+
+
+//        if (!mHomePageViewModel.mineHomePage) {
+//            //他人主页  显示距离
+//            showMap(bean.cityList, bean.myCityList)
+//        } else {
+//            //我的主页  隐藏内容
+//            tv_footprint.hide()
+//            hsv.hide()
+//        }
 
         if (mHomePageViewModel.mineHomePage) {
             rl_edit_info.show()

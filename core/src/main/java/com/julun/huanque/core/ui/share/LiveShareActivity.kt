@@ -415,11 +415,12 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         val dynamicContent = postShareBean.content
         if (type == ShareTypeEnum.WeChat) {
             //分享到微信
-            return if (dynamicContent.isNotEmpty()) {
-                dynamicContent
-            } else {
-                "Ta的这个动态已经引发热烈讨论，快来站队吧~"
-            }
+//            return if (dynamicContent.isNotEmpty()) {
+//                dynamicContent
+//            } else {
+//                "Ta的这个动态已经引发热烈讨论，快来站队吧~"
+//            }
+            return "Ta的这个动态已经引发热烈讨论，快来站队吧~"
         } else if (type == ShareTypeEnum.FriendCircle) {
             //分享到朋友圈
             return if (dynamicContent.isNotEmpty()) {
