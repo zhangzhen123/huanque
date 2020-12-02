@@ -100,6 +100,12 @@ object SPParamKey {
     //激活接口调用标记位
     const val APP_START = "APP_START"
 
+    //UUID是否生成
+    const val UUID_Created = "UUID_Created"
+
+    //oaid是否生成
+    const val Oaid_Created = "Oaid_Created"
+
     //直播间关闭，悬浮窗是否显示标识位
     const val Player_Close_Floating_Show = "Player_Close_Floating_Show"
 

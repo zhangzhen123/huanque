@@ -371,7 +371,7 @@ class HomePageActivity : BaseActivity() {
                 return@onClickNew
             }
             val voiceBean = mHomePageViewModel.homeInfoBean.value?.voice ?: return@onClickNew
-            if (mHomePageViewModel.mineHomePage && voiceBean.voiceStatus.isEmpty()) {
+            if (mHomePageViewModel.mineHomePage && voiceBean.voiceStatus != VoiceBean.Pass) {
                 //我的主页,语音为空，跳转编辑资料页面
                 RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
                 return@onClickNew

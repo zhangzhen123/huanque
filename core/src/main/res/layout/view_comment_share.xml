@@ -113,6 +113,7 @@
         android:layout_marginBottom="10dp"
         android:maxLines="2"
         android:textColor="@color/black_666"
+        android:ellipsize="end"
         android:textSize="@dimen/sp_12"
         app:layout_constraintBottom_toTopOf="@id/tv_nickname"
         app:layout_constraintLeft_toLeftOf="parent"
