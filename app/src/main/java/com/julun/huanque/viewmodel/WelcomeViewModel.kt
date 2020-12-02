@@ -24,7 +24,7 @@ import java.util.*
  */
 class WelcomeViewModel : BaseViewModel() {
 
-    private val userService : UserService by lazy { Requests.create(UserService::class.java) }
+    private val userService: UserService by lazy { Requests.create(UserService::class.java) }
 
     /**
      * 初始化UUID相关
@@ -47,6 +47,7 @@ class WelcomeViewModel : BaseViewModel() {
         }
             .subscribeOn(Schedulers.io())
             .subscribe({
+                SharedPreferencesUtils.commitBoolean(SPParamKey.UUID_Created, true)
                 SharedPreferencesUtils.commitString(ParamConstant.UUID, it)
             }, { it.printStackTrace() }, {})
 
@@ -55,12 +56,12 @@ class WelcomeViewModel : BaseViewModel() {
     /**
      * 激活APP
      */
-    fun appStart(){
+    fun appStart() {
         viewModelScope.launch {
             request({
                 userService.appStart().dataConvert()
-                SPUtils.commitBoolean(SPParamKey.APP_START,true)
-            },{})
+                SPUtils.commitBoolean(SPParamKey.APP_START, true)
+            }, {})
         }
     }
 }

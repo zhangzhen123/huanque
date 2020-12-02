@@ -146,11 +146,22 @@ class WelcomeActivity : BaseActivity() {
             )
             .subscribe { permission ->
                 //申请存储权限，无论成功还是失败，直接跳转
-                if (!SPUtils.getBoolean(SPParamKey.APP_START, false) && !SharedPreferencesUtils.getBoolean(SPParamKey.Support_Oaid, false)) {
-                    //调用激活接口  oaid不支持无需等待接口返回
+                logger.info(
+                    "appStart 是否调用过接口${SPUtils.getBoolean(
+                        SPParamKey.APP_START,
+                        false
+                    )}，是否支持：${SharedPreferencesUtils.getBoolean(SPParamKey.Support_Oaid, false)}"
+                )
+                viewModel?.initUUID()
+
+                if (!SPUtils.getBoolean(SPParamKey.APP_START, false) && (SharedPreferencesUtils.getBoolean(
+                        SPParamKey.Oaid_Created,
+                        false
+                    ) || !SharedPreferencesUtils.getBoolean(SPParamKey.Support_Oaid, false))
+                ) {
+                    //调用激活接口  oaid已经获取成功或者不支持oaid无需等待接口返回
                     viewModel?.appStart()
                 }
-                viewModel?.initUUID()
                 mLogicSuccess = true
                 startActivity()
             }

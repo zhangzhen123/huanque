@@ -75,7 +75,7 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
     var mSystemMessageClickListener: SystemMessageClickListener? = null
 
     init {
-        addChildClickViewIds(R.id.sdv_image, R.id.tv_content, R.id.con_send_room, R.id.view_bg_gift)
+        addChildClickViewIds(R.id.sdv_image, R.id.tv_content, R.id.con_send_room, R.id.view_bg_gift, R.id.con_post_share)
         addChildLongClickViewIds(R.id.tv_content)
     }
 
@@ -803,16 +803,21 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             val sdv_header_post = helper.getView<SimpleDraweeView>(R.id.sdv_header_post)
             val sdv_pic_post = helper.getView<SimpleDraweeView>(R.id.sdv_pic_post)
 
-            sdv_header_post.loadImage(postShareBean.headPic,25f,25f)
-            if(postShareBean.pic.isEmpty()){
+            sdv_header_post.loadImage(postShareBean.headPic, 25f, 25f)
+            if (postShareBean.pic.isEmpty()) {
                 sdv_pic_post.hide()
-            }else{
+            } else {
                 sdv_pic_post.show()
-                sdv_pic_post.loadImage(postShareBean.pic,50f,50f)
+                sdv_pic_post.loadImage(postShareBean.pic, 50f, 50f)
+            }
+            val postContent = if (postShareBean.content.isNotEmpty()) {
+                postShareBean.content
+            } else {
+                "分享一个小可爱发的图片给你欣赏下"
             }
 
             helper.setText(R.id.tv_nickname_post, postShareBean.nickname)
-                .setText(R.id.tv_content_post, postShareBean.content)
+                .setText(R.id.tv_content_post, postContent)
 
         } catch (e: Exception) {
             e.printStackTrace()

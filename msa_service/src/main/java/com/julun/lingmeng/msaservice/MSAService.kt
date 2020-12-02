@@ -64,7 +64,8 @@ class MSAService : IMSAService, IIdentifierListener {
     override fun OnSupport(isSupport: Boolean, _supplier: IdSupplier?) {
         _supplier ?: return
         mOaid = _supplier.oaid
-        if (!SPUtils.getBoolean(SPParamKey.APP_START, false)) {
+        SharedPreferencesUtils.commitBoolean(SPParamKey.Oaid_Created, true)
+        if (!SPUtils.getBoolean(SPParamKey.APP_START, false) && SharedPreferencesUtils.getBoolean(SPParamKey.UUID_Created, false)) {
             //调用激活接口  oaid不支持无需等待接口返回
             GlobalScope.launch {
                 kotlin.runCatching {

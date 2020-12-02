@@ -403,6 +403,13 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
             } else {
                 "分享一个小可爱发的图片给你欣赏下"
             }
+        }else{
+            val dynamicContent = postShareBean.content
+            return if (dynamicContent.isNotEmpty()) {
+                "Ta的这个动态已经引发热烈讨论，快来站队吧~"
+            } else {
+                "分享一个小可爱发的图片给你欣赏下"
+            }
         }
 
         return ""
@@ -424,16 +431,16 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         } else if (type == ShareTypeEnum.FriendCircle) {
             //分享到朋友圈
             return if (dynamicContent.isNotEmpty()) {
-                "Ta的这个动态已经引发热烈讨论，快来站队吧~ ${postShareBean.shareUrl}"
+                "Ta的这个动态已经引发热烈讨论，快来站队吧~"
             } else {
-                "分享一个小可爱发的图片给你欣赏下 ${postShareBean.shareUrl}"
+                "分享一个小可爱发的图片给你欣赏下"
             }
 
         } else if (type == ShareTypeEnum.Sina) {
             return if (dynamicContent.isNotEmpty()) {
-                "Ta的这个动态已经引发热烈讨论，快来站队吧~ ${postShareBean.shareUrl}"
+                "Ta的这个动态已经引发热烈讨论，快来站队吧~"
             } else {
-                "分享一个小可爱发的图片给你欣赏下 ${postShareBean.shareUrl}"
+                "分享一个小可爱发的图片给你欣赏下"
             }
         }
 

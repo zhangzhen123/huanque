@@ -145,7 +145,7 @@ class PrivateConversationActivity : BaseActivity() {
     //动画使用的ViewModel
     private val mPrivateAnimationViewModel: PrivateAnimationViewModel by viewModels()
 
-    private val huanQueViewModel= HuanViewModelManager.huanQueViewModel
+    private val huanQueViewModel = HuanViewModelManager.huanQueViewModel
     private var mHelper: PanelSwitchHelper? = null
 
     private val mAdapter = MessageAdapter()
@@ -569,8 +569,8 @@ class PrivateConversationActivity : BaseActivity() {
         })
 
         huanQueViewModel.userInfoStatusChange.observe(this, Observer {
-            if(it!=null&&it.isSuccess()){
-                val follow=it.requireT()
+            if (it != null && it.isSuccess()) {
+                val follow = it.requireT()
                 if (follow.userId == mPrivateConversationViewModel.targetIdData.value) {
                     //当前会话，陌生人状态变化
                     mPrivateConversationViewModel.basicBean.value?.stranger = follow.stranger
@@ -1555,6 +1555,26 @@ class PrivateConversationActivity : BaseActivity() {
                         mAdapter.notifyItemChanged(position)
                     }
                 }
+                R.id.con_post_share -> {
+                    //打开动态详情
+                    try {
+                        if (content is CustomMessage && content.type == MessageCustomBeanType.PostShare) {
+                            val str = content.context
+                            if (str.isEmpty()) {
+                                return@setOnItemChildClickListener
+                            }
+                            val postShareBean = JsonUtil.deserializeAsObject<PostShareBean>(str, PostShareBean::class.java)
+                            val bundle = Bundle().apply {
+                                putLong(IntentParamKey.POST_ID.name, postShareBean.postId)
+                            }
+                            ARouter.getInstance().build(ARouterConstant.DYNAMIC_DETAIL_ACTIVITY).with(bundle).navigation()
+                        }
+
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             }
         }
 
@@ -2503,7 +2523,7 @@ class PrivateConversationActivity : BaseActivity() {
             }
         }
         val stranger = data.stranger[targetId] ?: false
-        huanQueViewModel.userInfoStatusChange.value=UserInfoChangeResult(userId = targetId,stranger = stranger).convertRtData()
+        huanQueViewModel.userInfoStatusChange.value = UserInfoChangeResult(userId = targetId, stranger = stranger).convertRtData()
 //        EventBus.getDefault().post(UserInfoChangeEvent(targetId, stranger))
     }
 
