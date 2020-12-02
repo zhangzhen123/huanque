@@ -104,7 +104,7 @@
                         android:background="@drawable/bg_dynamic_input"
                         android:focusableInTouchMode="true"
                         android:gravity="start"
-                        android:hint="享你的精彩，让Ta对你有更多的了解..."
+                        android:hint="分享你的精彩，让Ta对你有更多的了解..."
                         android:maxLength="101"
                         android:minHeight="@dimen/dimen_135"
                         android:padding="@dimen/dimen_10"

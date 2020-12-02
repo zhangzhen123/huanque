@@ -965,6 +965,7 @@ class HomePageActivity : BaseActivity() {
         val postPics = postInfo.lastPostPics
         if (postPics.isNotEmpty()) {
             //有动态图片，显示动态图片样式
+            recyclerView_dynamic_piclist.removeAllViews()
             val dynamicPicList = mutableListOf<Any>()
             dynamicPicList.addAll(postPics)
             view_live.show()

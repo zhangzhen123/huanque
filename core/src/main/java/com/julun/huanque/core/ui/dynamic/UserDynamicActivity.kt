@@ -196,6 +196,9 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                     bottomDialog?.listener = bottomDialogListener
                     bottomDialog?.show(this, "bottomDialog")
                 }
+                R.id.tv_circle_name -> {
+                    CircleDynamicActivity.start(this, item.group?.groupId ?: return@onAdapterChildClickNew)
+                }
             }
 
         }
