@@ -516,7 +516,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                     "${bean.praiseNum}"
                 }
                 tv_follow_num.text = followContent
-                tv_follow_num.isActivated = bean.praiseNum > 0L
+                tv_follow_num.isActivated = bean.hasPraise
                 mViewModel.dynamicChangeFlag = true
             }
         })
@@ -861,12 +861,11 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             tv_comment_num.text = commentConetnt
 
             val followContent = if (posterInfo.praiseNum == 0L) {
-                tv_follow_num.isActivated = false
                 "点赞"
             } else {
-                tv_follow_num.isActivated = true
                 "${posterInfo.praiseNum}"
             }
+            tv_follow_num.isActivated = posterInfo.hasPraise
             tv_follow_num.text = followContent
 
         } else {
@@ -1038,12 +1037,12 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             } else {
                 //传递最新数据
                 val postInfo = mViewModel.dynamicInfo.value?.post ?: return
-                changeBean.praise = postInfo.hasPraise
-                changeBean.share = postInfo.shareNum.toInt()
-                changeBean.comment = postInfo.commentNum.toInt()
+//                changeBean.praise = postInfo.hasPraise
+//                changeBean.share = postInfo.shareNum.toInt()
+                changeBean.comment = postInfo.commentNum.toLong()
             }
-
-            EventBus.getDefault().post(changeBean)
+            //这里只刷新评论数 附带其他参数会导致重复+1-1
+            mHuanQueViewModel.dynamicChangeResult.value=changeBean
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -16,6 +17,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.DynamicItemBean
 import com.julun.huanque.common.bean.beans.DynamicListInfo
 import com.julun.huanque.common.bean.beans.PhotoBean
+import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
@@ -34,6 +36,8 @@ import kotlinx.android.synthetic.main.activity_dynamic_details.mRefreshLayout
 import kotlinx.android.synthetic.main.activity_dynamic_list.*
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.postList
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.state_pager_view
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.backgroundResource
 
 /**
@@ -75,6 +79,9 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
     }
 
     private val dynamicAdapter = DynamicListAdapter()
+    override fun isRegisterEventBus(): Boolean {
+        return true
+    }
 
     override fun getLayoutId(): Int = R.layout.activity_dynamic_list
 
@@ -238,13 +245,19 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                 val result = dynamicAdapter.data.firstOrNull { item -> item.postId == it.postId } ?: return@Observer
                 //处理点赞刷新
                 if (it.praise != null) {
-                    result.hasPraise = it.praise!!
-                    if (it.praise == true) {
-                        result.praiseNum++
-                    } else {
-                        result.praiseNum--
+
+                    if (it.praise != result.hasPraise) {
+                        result.hasPraise = it.praise!!
+                        if (it.praise == true) {
+                            result.praiseNum++
+                        } else {
+                            result.praiseNum--
+                        }
                     }
 
+                }
+                if (it.comment != null) {
+                    result.commentNum = it.comment!!
                 }
                 val index = dynamicAdapter.data.indexOf(result)
                 logger.info("index=$index")
@@ -318,6 +331,18 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun shareSuccess(bean: ShareSuccessEvent) {
+        if (bean.commentId == null) {
+            val result = dynamicAdapter.data.firstOrNull { item -> item.postId == bean.postId } ?: return
+            result.shareNum++
+            val index = dynamicAdapter.data.indexOf(result)
+            logger.info("share index=$index")
+            lifecycleScope.launchWhenResumed {
+                MixedHelper.safeNotifyItem(index, postList, dynamicAdapter)
+            }
+        }
+    }
 
     override fun showLoadState(state: NetState) {
         when (state.state) {

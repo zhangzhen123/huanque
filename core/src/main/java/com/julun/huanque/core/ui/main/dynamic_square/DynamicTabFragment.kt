@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -18,6 +19,7 @@ import com.julun.huanque.common.bean.beans.DynamicItemBean
 import com.julun.huanque.common.bean.beans.HomeDynamicListInfo
 import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.common.bean.beans.SquareTab
+import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
@@ -36,6 +38,8 @@ import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.*
 import kotlinx.android.synthetic.main.layout_header_dynamic.view.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  *
@@ -320,13 +324,19 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 val result = dynamicAdapter.data.firstOrNull { item -> item.postId == it.postId } ?: return@Observer
                 //处理点赞刷新
                 if (it.praise != null) {
-                    result.hasPraise = it.praise!!
-                    if (it.praise == true) {
-                        result.praiseNum++
-                    } else {
-                        result.praiseNum--
+                    if (it.praise != result.hasPraise) {
+                        result.hasPraise = it.praise!!
+                        if (it.praise == true) {
+                            result.praiseNum++
+                        } else {
+                            result.praiseNum--
+                        }
                     }
 
+
+                }
+                if(it.comment!=null){
+                    result.commentNum=it.comment!!
                 }
                 val index = dynamicAdapter.data.indexOf(result)
                 logger.info("index=$index")
@@ -338,6 +348,23 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
     }
 
+    override fun isRegisterEventBus(): Boolean {
+        return true
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun shareSuccess(bean: ShareSuccessEvent) {
+        if (bean.commentId == null) {
+            val result = dynamicAdapter.data.firstOrNull { item -> item.postId == bean.postId } ?: return
+            result.shareNum++
+            val index = dynamicAdapter.data.indexOf(result)
+            logger.info("share index=$index")
+            lifecycleScope.launchWhenResumed {
+                logger.info("share safeNotifyItem=$index")
+                MixedHelper.safeNotifyItem(index, postList, dynamicAdapter)
+            }
+
+        }
+    }
     private fun loadDataFail(isPull: Boolean) {
         if (isPull) {
             ToastUtils.show2("刷新失败")

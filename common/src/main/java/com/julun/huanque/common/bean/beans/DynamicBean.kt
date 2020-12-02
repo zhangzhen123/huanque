@@ -168,8 +168,8 @@ class DynamicChangeResult(
     //是否删除
     var hasDelete: Boolean = false,
     var praise: Boolean? = null,
-    var share: Int? = null,
-    var comment: Int? = null
+//    var share: Int? = null,
+    var comment: Long? = null
 )
 
 /**
