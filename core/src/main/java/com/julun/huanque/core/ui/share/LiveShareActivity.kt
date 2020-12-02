@@ -254,14 +254,22 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
             }
             ShareTypeEnum.Sina -> {
                 wxService?.weiBoShare(this, ShareObject().apply {
-                    this.shareType = WeiBoShareType.WbImage
                     this.shareImage = bitmap
+                    this.shareType = WeiBoShareType.WbImage
                     //以下是应用内传递数据使用
                     this.platForm = ShareTypeEnum.Sina
                     this.shareKeyType = mShareKeyType
                     this.shareKeyId = mShareKeyId
                     this.postId = mPostId
                     this.commentId = mCommentId
+                    if (mViewModel.type == ShareFromType.Share_Comment) {
+                        //分享评论，怎么标题
+//                        this.shareType = WeiBoShareType.WbWeb
+                        val shareInfo = mViewModel.postShareBeanData.value?.shareUrl ?: ""
+                        this.shareContent = "Ta的这个动态已经引发热烈讨论，快来站队吧~ $shareInfo"
+                    } else {
+//                        this.shareType = WeiBoShareType.WbImage
+                    }
                 })
             }
             ShareTypeEnum.SaveImage -> {
@@ -323,10 +331,18 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
             val postShareBean = mViewModel.postShareBeanData.value ?: return
             ShareObject().apply {
                 shareUrl = postShareBean.shareUrl
-                shareTitle = postShareBean.content
-                shareContent = postShareBean.content
+//                if (mViewModel.type == ShareFromType.Share_Dynamic) {
+                //分享动态
+                shareTitle = getDynamicTitle(type, postShareBean)
+                shareContent = getDynamicContent(type, postShareBean)
+//                }
+
+//                shareContent = postShareBean.content
+                //分享到微信的文案
+
                 if (postShareBean.pic.isNotEmpty()) {
                     sharePic = StringHelper.getOssImgUrl(postShareBean.pic)
+                    bigPic = StringHelper.getOssImgUrl(postShareBean.pic)
                 }
                 postId = mPostId
 //                sharePic = StringHelper.getOssImgUrl("user/head/2019110608363175169.jpg?x-oss-process=image/resize,m_fixed,w_100,h_100")
@@ -374,6 +390,55 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         }
 
     }
+
+    /**
+     * 获取动态分享的标题
+     */
+    private fun getDynamicTitle(type: String, postShareBean: PostShareBean): String {
+        if (type == ShareTypeEnum.WeChat) {
+            //分享到微信
+            val dynamicContent = postShareBean.content
+            return if (dynamicContent.isNotEmpty()) {
+                dynamicContent
+            } else {
+                "分享一个小可爱发的图片给你欣赏下"
+            }
+        }
+
+        return ""
+    }
+
+    /**
+     * 获取动态分享的内容
+     */
+    private fun getDynamicContent(type: String, postShareBean: PostShareBean): String {
+        val dynamicContent = postShareBean.content
+        if (type == ShareTypeEnum.WeChat) {
+            //分享到微信
+            return if (dynamicContent.isNotEmpty()) {
+                dynamicContent
+            } else {
+                "Ta的这个动态已经引发热烈讨论，快来站队吧~"
+            }
+        } else if (type == ShareTypeEnum.FriendCircle) {
+            //分享到朋友圈
+            return if (dynamicContent.isNotEmpty()) {
+                "Ta的这个动态已经引发热烈讨论，快来站队吧~ ${postShareBean.shareUrl}"
+            } else {
+                "分享一个小可爱发的图片给你欣赏下 ${postShareBean.shareUrl}"
+            }
+
+        } else if (type == ShareTypeEnum.Sina) {
+            return if (dynamicContent.isNotEmpty()) {
+                "Ta的这个动态已经引发热烈讨论，快来站队吧~ ${postShareBean.shareUrl}"
+            } else {
+                "分享一个小可爱发的图片给你欣赏下 ${postShareBean.shareUrl}"
+            }
+        }
+
+        return ""
+    }
+
 
     private fun initViewModel() {
         mViewModel.shares.observe(this, Observer {
@@ -441,7 +506,12 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
      */
     private fun showCommentByComment(postShareBean: PostShareBean) {
         ll_comment.show()
-        ll_comment.findViewById<TextView>(R.id.tv_content).text = postShareBean.content
+        val dynamicContent = postShareBean.content
+        ll_comment.findViewById<TextView>(R.id.tv_content).text = if (dynamicContent.isNotEmpty()) {
+            dynamicContent
+        } else {
+            "分享一个小可爱发的图片给你欣赏下"
+        }
         ll_comment.findViewById<TextView>(R.id.tv_comment).text = postShareBean.commentContent
         ll_comment.findViewById<TextView>(R.id.tv_nickname).text = postShareBean.commentUserName
         val sdv_pic = ll_comment.findViewById<SimpleDraweeView>(R.id.sdv_pic)

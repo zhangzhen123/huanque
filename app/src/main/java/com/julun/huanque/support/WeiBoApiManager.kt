@@ -76,6 +76,9 @@ object WeiBoApiManager : RequestCaller {
                 val bitmap: Bitmap = shareObj.shareImage ?: return
                 imageObject.setImageData(bitmap)
                 message.imageObject = imageObject
+                val textMessage = TextObject()
+                textMessage.text = shareObj.shareContent
+                message.textObject = textMessage
 
             }
             WeiBoShareType.WbWeb -> {
@@ -84,7 +87,7 @@ object WeiBoApiManager : RequestCaller {
                 webObject.title = shareObj.shareTitle
                 webObject.description = shareObj.shareContent
                 val bitmap: Bitmap =
-                    BitmapFactory.decodeResource(CommonInit.getInstance().getContext().resources, R.mipmap.ic_launcher)
+                    shareObj.shareImage ?: BitmapFactory.decodeResource(CommonInit.getInstance().getContext().resources, R.mipmap.ic_launcher)
                 var os: ByteArrayOutputStream? = null
                 try {
                     os = ByteArrayOutputStream()
@@ -102,6 +105,9 @@ object WeiBoApiManager : RequestCaller {
                 webObject.actionUrl = shareObj.shareUrl
                 webObject.defaultText = shareObj.shareTitle
                 message.mediaObject = webObject
+                val textObj = TextObject()
+                textObj.text = shareObj.shareContent
+                message.textObject = textObj
                 mShareClientOnly = false
                 //单纯分享链接太单调 这里带上相关图片
                 if (shareObj.bigPic.isEmpty()) {

@@ -365,12 +365,12 @@ class HomePageActivity : BaseActivity() {
                 return@onClickNew
             }
             val voiceBean = mHomePageViewModel.homeInfoBean.value?.voice ?: return@onClickNew
-            if (voiceBean.voiceStatus != VoiceBean.Pass) {
-                return@onClickNew
-            }
             if (mHomePageViewModel.mineHomePage && voiceBean.voiceStatus.isEmpty()) {
                 //我的主页,语音为空，跳转编辑资料页面
                 RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+                return@onClickNew
+            }
+            if (voiceBean.voiceStatus != VoiceBean.Pass) {
                 return@onClickNew
             }
             //播放音效
@@ -979,12 +979,12 @@ class HomePageActivity : BaseActivity() {
             //没有动态图片，显示无图片样式
             if (playProgram.programId != 0L) {
                 //显示直播样式
-                con_live.show()
-                view_live.show()
-                single_video_view_program.stop()
-                single_video_view_program.showCover(StringHelper.getOssImgUrl(playProgram.programCover), false)
                 if (playProgram.living == BusiConstant.True) {
                     //开播中
+                    con_live.show()
+                    view_live.show()
+                    single_video_view_program.stop()
+                    single_video_view_program.showCover(StringHelper.getOssImgUrl(playProgram.programCover), false)
                     tv_living.show()
                     sdv_living.show()
                     ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
@@ -998,6 +998,7 @@ class HomePageActivity : BaseActivity() {
                     //没有直播数据
                     //本人  未发布过动态，显示发布样式
                     if (mHomePageViewModel.mineHomePage && postInfo.postNum <= 0) {
+                        con_live.hide()
                         con_dynamic_add.show()
                         view_live.show()
                     } else {

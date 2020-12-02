@@ -109,7 +109,7 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         }
 
         holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_dyc_content, item.content)
-            .setText(R.id.tv_location, item.city)
+            .setText(R.id.tv_location, " · ${item.city}")
         val tvContent = holder.getView<TextView>(R.id.tv_dyc_content)
         if (item.city.isEmpty()) {
             holder.setGone(R.id.tv_location, true)

@@ -85,10 +85,10 @@ class AttentionCircleFragment : BaseFragment() {
                 CircleDynamicActivity.start(requireActivity(), tempData.groupId)
             } else if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
                 //选择圈子，返回选中的圈子数据
-                val act=requireActivity()
+                val act = requireActivity()
                 val intent = act.intent
                 intent.putExtra(PublicStateCode.CIRCLE_DATA, tempData)
-                act.setResult(Activity.RESULT_OK,intent)
+                act.setResult(Activity.RESULT_OK, intent)
                 act.finish()
             }
         }
@@ -146,6 +146,7 @@ class AttentionCircleFragment : BaseFragment() {
                     if (group.list.isNotEmpty()) {
                         //追加关注数据
                         circleList.addAll(group.list)
+                        mAttentionCircleAdapter.addData(circleList)
                         if (!group.hasMore) {
                             //没有更多了
                             mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
@@ -153,10 +154,11 @@ class AttentionCircleFragment : BaseFragment() {
                             mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
                         }
                     }
-                    mAttentionCircleAdapter.addData(circleList)
+
                     if (recommendGroup.list.isNotEmpty()) {
                         //追加推荐数据
                         circleList.addAll(recommendGroup.list)
+                        mAttentionCircleAdapter.addData(circleList)
                         if (!recommendGroup.hasMore) {
                             //没有更多了
                             mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()

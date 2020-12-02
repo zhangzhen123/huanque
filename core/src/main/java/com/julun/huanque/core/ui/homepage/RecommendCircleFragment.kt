@@ -133,12 +133,12 @@ class RecommendCircleFragment : BaseFragment() {
                     if (recommendGroup.list.isNotEmpty()) {
                         //追加推荐数据
                         circleList.addAll(recommendGroup.list)
-                        if (!recommendGroup.hasMore) {
-                            //没有更多了
-                            mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
-                        } else {
-                            mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
-                        }
+                    }
+                    if (!recommendGroup.hasMore) {
+                        //没有更多了
+                        mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
+                    } else {
+                        mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
                     }
 
                 }
