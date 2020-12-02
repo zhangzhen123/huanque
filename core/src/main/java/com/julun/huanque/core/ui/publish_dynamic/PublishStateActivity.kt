@@ -745,7 +745,7 @@ class PublishStateActivity : BaseActivity() {
             content
         )
         failText.forEach { text ->
-            val start = content.indexOf(text)
+            val start = content.indexOf(text, ignoreCase = true)
             val end = start + text.length
             if (start != -1) {
                 val colorY = Color.parseColor("#FF3F3F")

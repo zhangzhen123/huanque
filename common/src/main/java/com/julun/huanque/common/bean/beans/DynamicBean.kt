@@ -6,7 +6,6 @@ import java.io.Serializable
 
 data class DynamicItemBean(
     var age: Int = 0,
-    var anonymous: Boolean = false,// 是否匿名
     var auditStatus: String = "",// 审核状态 Wait 等待审核，Reject 被拒绝，Pass 审核通过
     var city: String = "",
     var commentNum: Long = 0,
@@ -28,6 +27,8 @@ data class DynamicItemBean(
     var follow: Boolean = false,
     var pics: MutableList<String> = mutableListOf(),
     var watermark: String = "",
+    var userAnonymous: Boolean = false,
+    var deleteAuth:Boolean=false,
     //本地字段
     var hasEllipsis: Boolean? = null
 
@@ -61,6 +62,7 @@ class HomeDynamicListInfo {
     var hasMore: Boolean = false
     var groupList: MutableList<DynamicGroup> = mutableListOf()
     var isPull: Boolean = false
+    var recom: Boolean = false
 }
 
 class DynamicDetailInfo() {
@@ -176,6 +178,6 @@ class DynamicChangeResult(
  * 分享接口结果
  */
 class StatusResult(
-    var status : String = ""
+    var status: String = ""
 ) : Serializable
 

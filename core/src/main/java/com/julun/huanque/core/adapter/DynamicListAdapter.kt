@@ -136,7 +136,7 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         holder.setText(R.id.tv_comment_num, StringHelper.formatNum(item.commentNum))
         holder.setText(R.id.tv_share_num, StringHelper.formatNum(item.shareNum))
         //
-        if ((showType == HOME_RECOM || showType == HOME_FOLLOW) && item.userId != curUserId) {
+        if ((showType == HOME_RECOM || showType == HOME_FOLLOW) && item.userId != curUserId && !item.userAnonymous) {
             holder.setGone(R.id.btn_action, item.follow)
         } else {
             holder.setGone(R.id.btn_action, true)

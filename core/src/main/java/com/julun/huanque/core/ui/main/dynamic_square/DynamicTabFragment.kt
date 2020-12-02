@@ -83,6 +83,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 when (action.code) {
                     BottomActionCode.DELETE -> {
                         logger.info("删除动态 ${currentItem?.postId}")
+
                     }
                     BottomActionCode.REPORT -> {
                         logger.info("举报动态 ${currentItem?.postId}")
@@ -104,8 +105,10 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         initViewModel()
         if (currentTab?.typeCode == SquareTabType.RECOMMEND) {
             dynamicAdapter.showType = DynamicListAdapter.HOME_RECOM
+            groupAdapter.showType = DynamicListAdapter.HOME_RECOM
         } else if (currentTab?.typeCode == SquareTabType.FOLLOW) {
             dynamicAdapter.showType = DynamicListAdapter.HOME_FOLLOW
+            groupAdapter.showType = DynamicListAdapter.HOME_FOLLOW
         }
         postList.layoutManager = LinearLayoutManager(requireContext())
         dynamicAdapter.loadMoreModule.setOnLoadMoreListener {
@@ -193,7 +196,8 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             when (view.id) {
                 R.id.user_info_holder -> {
                     logger.info("打开个人主页")
-                    HomePageActivity.newInstance(requireActivity(), item.userId)
+                    if (!item.userAnonymous)
+                        HomePageActivity.newInstance(requireActivity(), item.userId)
                 }
                 R.id.btn_action -> {
                     logger.info("关注")
@@ -306,14 +310,16 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             if (it.isSuccess()) {
                 val change = it.requireT()
                 //处理关注状态
-                val result = dynamicAdapter.data.firstOrNull { item -> item.userId == change.userId } ?: return@Observer
-                result.follow = change.follow == FollowStatus.True
-                val index = dynamicAdapter.data.indexOf(result)
-                logger.info("index=$index")
-//                    if (index != -1)
-//                        dynamicAdapter.notifyItemChanged(index+dynamicAdapter.headerLayoutCount)
-                MixedHelper.safeNotifyItem(index, postList, dynamicAdapter)
+//                val result = dynamicAdapter.data.firstOrNull { item -> item.userId == change.userId } ?: return@Observer
+//                result.follow = change.follow == FollowStatus.True
+//                val index = dynamicAdapter.data.indexOf(result)
+//                logger.info("index=$index")
+//                MixedHelper.safeNotifyItem(index, postList, dynamicAdapter)
 
+                val result = dynamicAdapter.data.filter { item -> item.userId == change.userId }.map { bean ->
+                    bean.follow = change.follow == FollowStatus.True
+                }
+                dynamicAdapter.notifyDataSetChanged()
             }
 
         })
@@ -335,8 +341,8 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
 
                 }
-                if(it.comment!=null){
-                    result.commentNum=it.comment!!
+                if (it.comment != null) {
+                    result.commentNum = it.comment!!
                 }
                 val index = dynamicAdapter.data.indexOf(result)
                 logger.info("index=$index")
@@ -351,6 +357,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     override fun isRegisterEventBus(): Boolean {
         return true
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun shareSuccess(bean: ShareSuccessEvent) {
         if (bean.commentId == null) {
@@ -365,6 +372,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
         }
     }
+
     private fun loadDataFail(isPull: Boolean) {
         if (isPull) {
             ToastUtils.show2("刷新失败")
@@ -429,7 +437,12 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                     headerLayout.bottom_layout.hide()
                 } else {
                     headerLayout.header_layout.hide()
-                    headerLayout.bottom_layout.show()
+                    if (listData.recom) {
+                        headerLayout.bottom_layout.show()
+                    } else {
+                        headerLayout.bottom_layout.hide()
+                    }
+
                     groupAdapter.setEmptyView(
                         MixedHelper.getEmptyView(requireContext(),
                             msg = "还没加入圈子，快去加入有趣的圈子吧",

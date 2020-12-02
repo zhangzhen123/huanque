@@ -3,7 +3,6 @@ package com.julun.huanque.core.ui.dynamic
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -24,7 +23,10 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.beans.DynamicChangeResult
+import com.julun.huanque.common.bean.beans.DynamicComment
+import com.julun.huanque.common.bean.beans.DynamicDetailInfo
+import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
@@ -48,14 +50,11 @@ import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.adapter.DynamicPhotosAdapter
 import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.activity_dynamic_details.*
-import kotlinx.android.synthetic.main.activity_dynamic_details.edit_text
-import kotlinx.android.synthetic.main.activity_dynamic_details.ll_input
-import kotlinx.android.synthetic.main.activity_dynamic_details.panel_emotion
 import kotlinx.android.synthetic.main.layout_header_comment.*
 import kotlinx.android.synthetic.main.layout_header_dynamic_detail.view.*
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
 import kotlin.math.max
@@ -553,6 +552,16 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 mViewModel.dynamicChangeFlag = true
             }
         })
+        mHuanQueViewModel.userInfoStatusChange.observe(this, Observer {
+            if (it.isSuccess()) {
+                //处理关注状态
+                val curr = mViewModel.dynamicDetailInfo.value?.getT()?.post ?: return@Observer
+                if (it.requireT().follow == FollowStatus.True && it.requireT().userId == curr.userId) {
+                    headerPageView.textOperation.hide()
+                }
+            }
+
+        })
 
     }
 
@@ -706,6 +715,11 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             extra.putLong(ParamConstant.TARGET_USER_ID, comment.userId)
             ARouter.getInstance().build(ARouterConstant.REPORT_ACTIVITY).with(extra).navigation()
         }
+        headerPageView.textOperation.onClickNew Observer@{
+            val curr = mViewModel.dynamicDetailInfo.value?.getT()?.post ?: return@Observer
+            mHuanQueViewModel.follow(curr.userId)
+        }
+
 //        val pTop = parentView.top + dp2px(tempHeight + 61)
 //        mLongActionPopupWindow?.showAtLocation(parentView, Gravity.TOP or Gravity.LEFT, px2dp(ScreenUtils.getScreenWidth() / 2f) - 47, pTop)
         val locationView = parentView.findViewById<View>(R.id.tv_content)
@@ -728,7 +742,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
     private var isCommentMode: Boolean = false
     private fun renderData(info: DynamicDetailInfo) {
 
-        if (info.post?.userId == SessionUtils.getUserId()) {
+        if (info.post?.userAnonymous == true && info.post?.deleteAuth == true || info.post?.userId == SessionUtils.getUserId()) {
             headerPageView.textTitle.text = "我的动态"
             headerPageView.imageOperation.show()
             headerPageView.imageOperation.imageResource = R.mipmap.icon_more_black_01
@@ -736,7 +750,20 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             headerPageView.textTitle.text = "Ta的动态"
             headerPageView.imageOperation.hide()
         }
+        if (info.post?.follow == true) {
+            headerPageView.textOperation.hide()
+        } else {
+            if (info.post?.deleteAuth == true) {
+                headerPageView.textOperation.hide()
+            } else {
+                headerPageView.textOperation.show()
+                headerPageView.textOperation.text = "关注"
+                headerPageView.textOperation.height = dp2px(24)
+                headerPageView.textOperation.width = dp2px(52)
+                headerPageView.textOperation.backgroundResource = R.drawable.bg_solid_btn1
+            }
 
+        }
         val posterInfo = info.post
         if (posterInfo != null) {
             headerLayout.show()
