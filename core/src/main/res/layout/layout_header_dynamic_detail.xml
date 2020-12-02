@@ -82,7 +82,6 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:lineSpacingExtra="@dimen/dimen_4"
-            android:maxLines="4"
             android:textColor="@color/black_333"
             android:textSize="@dimen/sp_16"
             app:layout_constraintEnd_toEndOf="parent"

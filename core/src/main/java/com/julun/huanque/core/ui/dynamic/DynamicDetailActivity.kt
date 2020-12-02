@@ -156,26 +156,59 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val viewHead: View? = linearLayoutManager.findViewByPosition(0)
-                val view: View? = linearLayoutManager.findViewByPosition(1)
+//                val viewHead: View? = linearLayoutManager.findViewByPosition(0)
+//                val view: View? = linearLayoutManager.findViewByPosition(1)
 
-                logger.info("viewHead=${viewHead?.id}  view=${view?.top} ")
-                if (viewHead == null || view == null) {
-                    if (!ic_sticky_comment.isVisible() && isUserDo) {
-                        logger.info("此时需要显示粘性布局")
-                        ic_sticky_comment.show()
-                    }
-                    return
-                }
-                if (viewHead == commentAdapter.headerLayout) {
-                    val top = view.top
 
-                    if (top <= dp2px(40)) {
-                        ic_sticky_comment.show()
-                    } else {
+//                logger.info("viewHead={viewHead?.id}  view={view?.top} firstVisibleItemPosition=$firstVisibleItemPosition lastVisibleItemPosition=$lastVisibleItemPosition ")
+//                if (viewHead == null) {
+////                    if (!ic_sticky_comment.isVisible() && isUserDo) {
+//                        logger.info("此时需要显示粘性布局")
+//                        ic_sticky_comment.show()
+////                    }
+//                    return
+//                }
+                //                if (viewHead == commentAdapter.headerLayout&&view!=null) {
+//                    val top = view.top
+//
+//                    if (top <= dp2px(40)) {
+//                        ic_sticky_comment.show()
+//                    } else {
+//                        ic_sticky_comment.hide()
+//                    }
+//                }
+                val firstVisibleItemPosition: Int = linearLayoutManager.findFirstVisibleItemPosition()
+                val lastVisibleItemPosition: Int = linearLayoutManager.findLastVisibleItemPosition()
+                logger.info("firstVisibleItemPosition=$firstVisibleItemPosition lastVisibleItemPosition=$lastVisibleItemPosition ")
+
+                when {
+                    firstVisibleItemPosition == 0 && lastVisibleItemPosition == 0 -> {
                         ic_sticky_comment.hide()
                     }
+                    firstVisibleItemPosition == 0 -> {
+                        val view: View? = linearLayoutManager.findViewByPosition(1)
+                        if (view != null) {
+                            val top = view.top
+                            if (top <= dp2px(40)) {
+                                ic_sticky_comment.show()
+                            } else {
+                                ic_sticky_comment.hide()
+                            }
+                        }
+
+                    }
+
+                    firstVisibleItemPosition >= 1 -> {
+                        if (firstVisibleItemPosition == 1 && lastVisibleItemPosition == 1) {
+                            ic_sticky_comment.hide()//这种情况是空白页 隐藏
+                        } else {
+                            ic_sticky_comment.show()
+                            logger.info("此时需要显示粘性布局")
+                        }
+                    }
+
                 }
+
 
             }
         })
@@ -1042,7 +1075,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 changeBean.comment = postInfo.commentNum.toLong()
             }
             //这里只刷新评论数 附带其他参数会导致重复+1-1
-            mHuanQueViewModel.dynamicChangeResult.value=changeBean
+            mHuanQueViewModel.dynamicChangeResult.value = changeBean
         }
     }
 
