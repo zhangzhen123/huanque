@@ -3,7 +3,6 @@ package com.julun.huanque.core.ui.publish_dynamic
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -18,7 +17,6 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -55,7 +53,7 @@ import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.AddPictureAdapter
-import com.julun.huanque.core.ui.homepage.CircleActivity
+import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.maplib.LocationService
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig

@@ -33,7 +33,7 @@ import com.julun.huanque.core.adapter.DynamicGroupListAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.ui.dynamic.CircleDynamicActivity
 import com.julun.huanque.core.ui.dynamic.DynamicDetailActivity
-import com.julun.huanque.core.ui.homepage.CircleActivity
+import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.*
@@ -83,7 +83,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 when (action.code) {
                     BottomActionCode.DELETE -> {
                         logger.info("删除动态 ${currentItem?.postId}")
-
+                        huanQueViewModel.deletePost(currentItem?.postId?:return)
                     }
                     BottomActionCode.REPORT -> {
                         logger.info("举报动态 ${currentItem?.postId}")
@@ -167,7 +167,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         }
         groupAdapter.onAdapterClickNew { _, _, position ->
             val item = groupAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
-            //todo
             logger.info("打开头部圈子：${item.groupName}")
             CircleDynamicActivity.start(requireActivity(), item.groupId)
         }
@@ -328,6 +327,10 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         huanQueViewModel.dynamicChangeResult.observe(this, Observer {
             if (it != null) {
                 val result = dynamicAdapter.data.firstOrNull { item -> item.postId == it.postId } ?: return@Observer
+                if (it.hasDelete) {
+                    dynamicAdapter.remove(result)
+                    return@Observer
+                }
                 //处理点赞刷新
                 if (it.praise != null) {
                     if (it.praise != result.hasPraise) {
@@ -351,6 +354,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             }
 
         })
+
 
     }
 

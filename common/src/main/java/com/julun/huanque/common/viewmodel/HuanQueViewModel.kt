@@ -54,6 +54,9 @@ class HuanQueViewModel(application: Application) : BaseApplicationViewModel(appl
 
     val dynamicChangeResult: MutableLiveData<DynamicChangeResult> by lazy { MutableLiveData<DynamicChangeResult>() }
 
+    //代表某个动态已经被删除
+//    val deletedDynamic: MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+
     /**
      * 设置派单数据
      */
@@ -129,7 +132,7 @@ class HuanQueViewModel(application: Application) : BaseApplicationViewModel(appl
         viewModelScope.launch {
             request({
                 val result = dynamicService.postPraise(PostForm(postId)).dataConvert()
-                dynamicChangeResult.value = DynamicChangeResult(postId=postId,praise = true)
+                dynamicChangeResult.value = DynamicChangeResult(postId = postId, praise = true)
             }, {
                 if (it is ResponseError) {
 //                    ToastUtils.show(it.busiMessage)
@@ -142,12 +145,27 @@ class HuanQueViewModel(application: Application) : BaseApplicationViewModel(appl
         viewModelScope.launch {
             request({
                 val result = dynamicService.cancelPraisePost(PostForm(postId)).dataConvert()
-                dynamicChangeResult.value = DynamicChangeResult(postId=postId,praise = false)
+                dynamicChangeResult.value = DynamicChangeResult(postId = postId, praise = false)
             }, {
                 if (it is ResponseError) {
 //                    ToastUtils.show(it.busiMessage)
                 }
             })
+        }
+    }
+
+    /**
+     * 删除动态
+     */
+    fun deletePost(mPostId: Long) {
+        viewModelScope.launch {
+            request({
+                val result = socialService.deletePost(PostForm(mPostId)).dataConvert()
+//                deletedDynamic.value = mPostId
+                dynamicChangeResult.value = DynamicChangeResult(postId = mPostId, hasDelete = true)
+                ToastUtils.show("内容删除成功")
+//                dynamicChangeFlag = true
+            }, {})
         }
     }
 }

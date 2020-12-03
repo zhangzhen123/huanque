@@ -66,6 +66,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                 when (action.code) {
                     BottomActionCode.DELETE -> {
                         logger.info("删除动态 ${currentItem?.postId}")
+                        huanQueViewModel.deletePost(currentItem?.postId ?: return)
                     }
                     BottomActionCode.REPORT -> {
                         logger.info("举报动态 ${currentItem?.postId}")
@@ -246,6 +247,10 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         huanQueViewModel.dynamicChangeResult.observe(this, Observer {
             if (it != null) {
                 val result = dynamicAdapter.data.firstOrNull { item -> item.postId == it.postId } ?: return@Observer
+                if (it.hasDelete) {
+                    dynamicAdapter.remove(result)
+                    return@Observer
+                }
                 //处理点赞刷新
                 if (it.praise != null) {
 

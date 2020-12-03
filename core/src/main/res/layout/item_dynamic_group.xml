@@ -14,7 +14,7 @@
         android:layout_width="@dimen/dimen_80"
         android:layout_height="@dimen/dimen_60"
         app:placeholderImage="@mipmap/logo_placeholder_medium"
-        app:roundingBorderWidth="@dimen/dimen_20" />
+        app:roundedCornerRadius="@dimen/dimen_20" />
 
     <TextView
         android:id="@+id/tv_title"

@@ -1,8 +1,11 @@
 package com.julun.huanque.core.adapter
 
 
+import android.graphics.Color
+import android.text.Spannable
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -12,6 +15,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.DynamicItemBean
 import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.PhotoOnItemClick
@@ -19,8 +23,11 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.textColor
 
 /**
  *
@@ -107,10 +114,13 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         } else {
             item.nickname
         }
-
-        holder.setText(R.id.tv_mkf_name, name).setText(R.id.tv_dyc_content, item.content)
+        holder.setText(R.id.tv_mkf_name, name)
             .setText(R.id.tv_location, " · ${item.city}")
         val tvContent = holder.getView<TextView>(R.id.tv_dyc_content)
+        val emotionSpannable: Spannable = EmojiSpanBuilder.buildEmotionSpannable(
+            context, item.content
+        )
+        tvContent.text = emotionSpannable
         if (item.city.isEmpty()) {
             holder.setGone(R.id.tv_location, true)
         } else {
@@ -118,6 +128,29 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         }
         val time = holder.getView<TextView>(R.id.tv_time)
         time.text = /*TimeUtils.formatLostTime1(*/item.postTime
+        val sex = holder.getView<TextView>(R.id.tv_sex)
+        sex.text = "${item.age}"
+        when (item.sex) {//Male、Female、Unknow
+
+            Sex.FEMALE -> {
+                val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_sex_female)
+                if (drawable != null) {
+                    drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                    sex.setCompoundDrawables(drawable, null, null, null)
+                }
+                sex.textColor = Color.parseColor("#FF9BC5")
+                sex.backgroundResource = R.drawable.bg_shape_mkf_sex_female
+            }
+            else -> {
+                val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_sex_male)
+                if (drawable != null) {
+                    drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                    sex.setCompoundDrawables(drawable, null, null, null)
+                }
+                sex.textColor = Color.parseColor("#58CEFF")
+                sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
+            }
+        }
         //获取文字是否显示完全
         if (item.hasEllipsis == null) {
             tvContent.post(Runnable {
