@@ -443,14 +443,9 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 groupAdapter.setList(listData.groupList)
                 if (listData.groupList.isNotEmpty()) {
                     headerLayout.header_layout.show()
-                    headerLayout.bottom_layout.hide()
+//                    headerLayout.bottom_layout.hide()
                 } else {
                     headerLayout.header_layout.hide()
-                    if (listData.recom) {
-                        headerLayout.bottom_layout.show()
-                    } else {
-                        headerLayout.bottom_layout.hide()
-                    }
 
                     groupAdapter.setEmptyView(
                         MixedHelper.getEmptyView(requireContext(),
@@ -462,6 +457,11 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                                 CircleActivity.newInstance(requireActivity(), CircleGroupTabType.Recom)
                             })
                     )
+                }
+                if (listData.recom) {
+                    headerLayout.bottom_layout.show()
+                } else {
+                    headerLayout.bottom_layout.hide()
                 }
 
             } else if (currentTab?.typeCode == SquareTabType.RECOMMEND) {
