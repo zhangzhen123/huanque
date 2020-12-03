@@ -957,6 +957,12 @@ class MainActivity : BaseActivity() {
         FloatingManager.hideFloatingView()
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun loginSubAccount(event : LoginSubAccountEvent){
+        mMainViewModel.loginByAccount(event.userId)
+    }
+
+
 
     override fun finish() {
         FloatingManager.hideFloatingView()

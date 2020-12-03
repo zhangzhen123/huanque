@@ -240,3 +240,15 @@ data class CommentIdForm(
     //评论Id
     var commentId: Long = 0
 ) : Serializable
+
+/**
+ * 创建分身账号的form
+ */
+data class CreateAccountForm(
+    //昵称
+    var nickname: String,
+    //头像
+    var headPic: String,
+    //生日
+    var birthday: String
+) : Serializable

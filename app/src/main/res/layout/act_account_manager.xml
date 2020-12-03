@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F4F5"
+    tools:ignore="MissingDefaultResource">
+
+    <com.julun.huanque.common.widgets.HeaderPageView
+        android:id="@+id/header_page"
+        android:layout_width="0px"
+        android:layout_height="44dp"
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_page" />
+
+    <View
+        android:id="@+id/view_add"
+        android:layout_width="0px"
+        android:layout_height="64dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_view" />
+
+    <TextView
+        android:id="@+id/tv_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@mipmap/icon_account_add"
+        android:drawablePadding="10dp"
+        android:text="创建分身"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/view_add"
+        app:layout_constraintLeft_toLeftOf="@id/view_add"
+        app:layout_constraintRight_toRightOf="@id/view_add"
+        app:layout_constraintTop_toTopOf="@id/view_add" />
+
+    <TextView
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_add"
+        android:textSize="@dimen/sp_14"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/black_999"
+        android:layout_marginTop="5dp"
+        android:text="创建的分身账号将共用当前账号的手机号、微信、支付宝、实名认证等信息，无须换号绑定授权"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

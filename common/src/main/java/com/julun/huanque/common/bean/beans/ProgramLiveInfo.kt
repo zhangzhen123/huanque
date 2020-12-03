@@ -855,3 +855,28 @@ data class CircleGroup(
     //类型（推荐还是关注 本地字段）
     var type: String = ""
 ) : Serializable
+
+
+/**
+ * 分身账号的数据
+ */
+data class AccountBean(
+    //账号数量上线
+    var maxSubNum: Int = 0,
+    //账号列表
+    var subList: MutableList<SingleAccount> = mutableListOf(),
+    //不能创建账号的原因
+    var reason: String = ""
+) : Serializable
+
+/**
+ * 单个账号
+ */
+data class SingleAccount(
+    //昵称
+    var nickname: String = "",
+    //头像
+    var headPic: String = "",
+    //用户ID
+    var userId: Long = 0
+) : Serializable

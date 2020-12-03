@@ -39,6 +39,9 @@
             android:name=".activity.PraiseListActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.SubAccountMessageActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.UsefulWordActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateHidden|stateAlwaysHidden"

@@ -268,5 +268,23 @@ interface UserService {
     @POST("user/acct/info/home")
     suspend fun homeInfo(@Body form: UserIdForm): Root<HomePageInfo>
 
+    /**
+     * 分身账号列表
+     */
+    @POST("user/acct/sub/list")
+    suspend fun subList(@Body form: EmptyForm = EmptyForm()): Root<AccountBean>
+
+    /**
+     * 创建分身
+     */
+    @POST("user/acct/sub/create")
+    suspend fun subCreate(@Body form: CreateAccountForm): Root<VoidResult>
+
+    /**
+     * 分身账号登录
+     */
+    @POST("user/acct/login/subAccount")
+    suspend fun loginSubAccount(@Body body: UserIdForm): Root<Session>
+
 
 }
