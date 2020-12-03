@@ -212,7 +212,7 @@ open class LivePlayerFragment : BaseFragment() {
 
         huanQueViewModel.userInfoStatusChange.observe(this, Observer {
             logger.info("Player 关注状态 status = $it")
-            if (it.isSuccess() && it.requireT().follow == FollowStatus.True) {
+            if (it.isSuccess() && it.requireT().follow == FollowStatus.True||it.requireT().follow == FollowStatus.Mutual) {
                 mViewList.forEach { view ->
                     val info = view.playerInfo ?: return@forEach
                     if (view != mMainVideoView && !view.isFree && info.programId == it.requireT().userId) {

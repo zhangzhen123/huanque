@@ -314,7 +314,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 //                MixedHelper.safeNotifyItem(index, postList, dynamicAdapter)
 
                 val result = dynamicAdapter.data.filter { item -> item.userId == change.userId }.map { bean ->
-                    bean.follow = change.follow == FollowStatus.True
+                    bean.follow = change.follow == FollowStatus.True||change.follow == FollowStatus.Mutual
                 }
                 dynamicAdapter.notifyDataSetChanged()
             }

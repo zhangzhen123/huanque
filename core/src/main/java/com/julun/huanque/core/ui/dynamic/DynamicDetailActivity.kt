@@ -51,6 +51,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.DynamicDetailCommentFirstAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.adapter.DynamicPhotosAdapter
+import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.activity_dynamic_details.*
 import kotlinx.android.synthetic.main.layout_header_comment.*
@@ -386,6 +387,11 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             //分享
             LiveShareActivity.newInstance(this, ShareFromType.Share_Dynamic, postId)
         }
+        headerLayout.header_pic.onClickNew {
+            val info = mViewModel.dynamicInfo.value?.post?: return@onClickNew
+            if (!info.userAnonymous)
+                HomePageActivity.newInstance(this, info.userId)
+        }
     }
 
     //悬浮表情
@@ -610,7 +616,8 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             if (it.isSuccess()) {
                 //处理关注状态
                 val curr = mViewModel.dynamicDetailInfo.value?.getT()?.post ?: return@Observer
-                if (it.requireT().follow == FollowStatus.True && it.requireT().userId == curr.userId) {
+                val value = it.requireT()
+                if ((value.follow == FollowStatus.True||value.follow == FollowStatus.Mutual) && value.userId == curr.userId) {
 //                    headerPageView.textOperation.hide()
                     headerLayout.btn_action.hide()
                 }

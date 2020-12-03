@@ -53,7 +53,7 @@ class LiveSquareViewModel : BaseViewModel() {
     fun requestHotList(queryType: QueryType, programId: Long) {
 
         viewModelScope.launch {
-            if (queryType == QueryType.REFRESH) {
+            if (queryType != QueryType.LOAD_MORE) {
                 offsetHot = 0
             }
 
@@ -73,7 +73,7 @@ class LiveSquareViewModel : BaseViewModel() {
     fun requestHotListAndFollow(queryType: QueryType, programId: Long) {
 
         viewModelScope.launch {
-            if (queryType == QueryType.REFRESH) {
+            if (queryType != QueryType.LOAD_MORE) {
                 offset1 = 0
                 offsetHot = 0
             }

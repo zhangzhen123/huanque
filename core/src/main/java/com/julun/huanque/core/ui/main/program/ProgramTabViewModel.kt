@@ -35,7 +35,7 @@ class ProgramTabViewModel : BaseViewModel() {
     fun requestProgramList(queryType: QueryType,typeCode:String?) {
 
         viewModelScope.launch {
-            if (queryType == QueryType.REFRESH) {
+            if (queryType != QueryType.LOAD_MORE) {
                 offsetHot = 0
             }
 

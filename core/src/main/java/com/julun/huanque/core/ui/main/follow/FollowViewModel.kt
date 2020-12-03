@@ -32,7 +32,7 @@ class FollowViewModel : BaseViewModel() {
     fun requestProgramList(queryType: QueryType, isNullOffset: Boolean = false) {
 
         viewModelScope.launch {
-            if (queryType == QueryType.REFRESH) {
+            if (queryType != QueryType.LOAD_MORE) {
                 offset = 0
             }
 
