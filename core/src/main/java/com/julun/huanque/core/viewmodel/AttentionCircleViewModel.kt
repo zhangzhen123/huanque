@@ -2,6 +2,7 @@ package com.julun.huanque.core.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.MyGroupInfo
 import com.julun.huanque.common.bean.forms.CircleGroupTypeForm
 import com.julun.huanque.common.bean.forms.GroupIdForm
@@ -38,15 +39,18 @@ class AttentionCircleViewModel : BaseViewModel() {
     /**
      * 获取我的圈子 基础数据
      */
-    fun getCircleGroupInfo() {
+    fun getCircleGroupInfo(queryType: QueryType) {
         viewModelScope.launch {
             request({
-                val groupData = socialService.groupList(CircleGroupTypeForm(mOffset, requestType)).dataConvert()
-                if (mOffset == 0) {
-                    //刷新操作
-                    groupData.recommendGroup.isPull = true
-                    groupData.group.isPull = true
+                if(queryType!=QueryType.LOAD_MORE){
+                    mOffset=0
                 }
+                val groupData = socialService.groupList(CircleGroupTypeForm(mOffset, requestType)).dataConvert()
+//                if (mOffset == 0) {
+//                    //刷新操作
+                    groupData.recommendGroup.isPull = queryType!=QueryType.LOAD_MORE
+                    groupData.group.isPull = queryType!=QueryType.LOAD_MORE
+//                }
                 val recommendGroup = groupData.recommendGroup.list
                 if (recommendGroup.isNotEmpty()) {
                     //推荐有数据，下次请求，使用推荐的offset

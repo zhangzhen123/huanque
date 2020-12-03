@@ -38,7 +38,7 @@ class DynamicTabViewModel : BaseViewModel() {
     fun requestPostList(queryType: QueryType, postType: String?) {
 
         viewModelScope.launch {
-            if (queryType == QueryType.REFRESH) {
+            if (queryType != QueryType.LOAD_MORE) {
                 offsetHot = 0
             }
 
@@ -59,7 +59,7 @@ class DynamicTabViewModel : BaseViewModel() {
     fun requestGroupPostList(queryType: QueryType, groupId: Long?, orderType: String?) {
 
         viewModelScope.launch {
-            if (queryType == QueryType.REFRESH) {
+            if (queryType != QueryType.LOAD_MORE) {
                 offsetHot = 0
             }
 

@@ -8,10 +8,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.julun.huanque.common.base.BaseFragment
+import com.julun.huanque.common.base.BaseLazyFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.CircleGroup
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.AttentionCircleAdapter
 import com.julun.huanque.core.viewmodel.AttentionCircleViewModel
@@ -24,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_attention_circle.state_pager_view
  *@创建时间 2020/11/24 10:20
  *@描述 关注圈子Fragment
  */
-class AttentionCircleFragment : BaseFragment() {
+class AttentionCircleFragment : BaseLazyFragment() {
     companion object {
         fun newInstance() = AttentionCircleFragment()
     }
@@ -36,6 +39,8 @@ class AttentionCircleFragment : BaseFragment() {
 
     private val mCircleViewModel: CircleViewModel by activityViewModels()
 
+
+
     override fun getLayoutId() = R.layout.fragment_attention_circle
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -43,16 +48,19 @@ class AttentionCircleFragment : BaseFragment() {
         initRecyclerView()
         mAttentionCircleAdapter.hideAction = mCircleViewModel.mType == CircleGroupType.Circle_Choose
         initViewModel()
-        mAttentionCircleViewModel.requestType = CircleGroupTabType.Follow
-        mAttentionCircleViewModel.getCircleGroupInfo()
 
         swipeRefreshLayout.setOnRefreshListener {
             mAttentionCircleViewModel.requestType = CircleGroupTabType.Follow
             mAttentionCircleViewModel.mOffset = 0
-            mAttentionCircleViewModel.getCircleGroupInfo()
+            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.REFRESH)
         }
+        MixedHelper.setSwipeRefreshStyle(swipeRefreshLayout)
     }
 
+    override fun lazyLoadData() {
+        mAttentionCircleViewModel.requestType = CircleGroupTabType.Follow
+        mAttentionCircleViewModel.getCircleGroupInfo(QueryType.INIT)
+    }
     /**
      * 初始化RecyclerView
      */
@@ -92,7 +100,7 @@ class AttentionCircleFragment : BaseFragment() {
             }
         }
         mAttentionCircleAdapter.loadMoreModule.setOnLoadMoreListener {
-            mAttentionCircleViewModel.getCircleGroupInfo()
+            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.LOAD_MORE)
         }
     }
 
@@ -145,27 +153,33 @@ class AttentionCircleFragment : BaseFragment() {
                     if (group.list.isNotEmpty()) {
                         //追加关注数据
                         circleList.addAll(group.list)
-                        mAttentionCircleAdapter.addData(circleList)
-                        if (!group.hasMore) {
-                            //没有更多了
-                            mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
-                        } else {
-                            mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
-                        }
+//                        mAttentionCircleAdapter.addData(circleList)
+//                        if (!group.hasMore) {
+//                            //没有更多了
+//                            mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
+//                        } else {
+//                            mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
+//                        }
                     }
 
                     if (recommendGroup.list.isNotEmpty()) {
                         //追加推荐数据
                         circleList.addAll(recommendGroup.list)
-                        mAttentionCircleAdapter.addData(circleList)
-                        if (!recommendGroup.hasMore) {
-                            //没有更多了
-                            mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
-                        } else {
-                            mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
-                        }
+
+//                        if (!recommendGroup.hasMore) {
+//                            //没有更多了
+//                            mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
+//                        } else {
+//                            mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
+//                        }
+                    }
+                    if(recommendGroup.hasMore||group.hasMore){
+                        mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
+                    }else{
+                        mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
                     }
 
+                    mAttentionCircleAdapter.addData(circleList)
                 }
 
             }

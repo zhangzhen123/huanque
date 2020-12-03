@@ -238,7 +238,8 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         huanQueViewModel.userInfoStatusChange.observe(this, Observer {
             if (it.isSuccess()) {
                 //处理关注状态
-                if (it.requireT().follow == FollowStatus.True && it.requireT().userId == currentUserId) {
+                val value = it.requireT()
+                if ((value.follow == FollowStatus.True || value.follow == FollowStatus.Mutual) && value.userId == currentUserId) {
                     headerPageView.textOperation.hide()
                 }
             }

@@ -129,26 +129,30 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         val time = holder.getView<TextView>(R.id.tv_time)
         time.text = /*TimeUtils.formatLostTime1(*/item.postTime
         val sex = holder.getView<TextView>(R.id.tv_sex)
-        sex.text = "${item.age}"
-        when (item.sex) {//Male、Female、Unknow
+        if (item.userAnonymous) {
+            sex.hide()
+        } else {
+            sex.text = "${item.age}"
+            when (item.sex) {//Male、Female、Unknow
 
-            Sex.FEMALE -> {
-                val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_sex_female)
-                if (drawable != null) {
-                    drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-                    sex.setCompoundDrawables(drawable, null, null, null)
+                Sex.FEMALE -> {
+                    val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_sex_female)
+                    if (drawable != null) {
+                        drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                        sex.setCompoundDrawables(drawable, null, null, null)
+                    }
+                    sex.textColor = Color.parseColor("#FF9BC5")
+                    sex.backgroundResource = R.drawable.bg_shape_mkf_sex_female
                 }
-                sex.textColor = Color.parseColor("#FF9BC5")
-                sex.backgroundResource = R.drawable.bg_shape_mkf_sex_female
-            }
-            else -> {
-                val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_sex_male)
-                if (drawable != null) {
-                    drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-                    sex.setCompoundDrawables(drawable, null, null, null)
+                else -> {
+                    val drawable = ContextCompat.getDrawable(context, R.mipmap.icon_sex_male)
+                    if (drawable != null) {
+                        drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                        sex.setCompoundDrawables(drawable, null, null, null)
+                    }
+                    sex.textColor = Color.parseColor("#58CEFF")
+                    sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
                 }
-                sex.textColor = Color.parseColor("#58CEFF")
-                sex.backgroundResource = R.drawable.bg_shape_mkf_sex_male
             }
         }
         //获取文字是否显示完全

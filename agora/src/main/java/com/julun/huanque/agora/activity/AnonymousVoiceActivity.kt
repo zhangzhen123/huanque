@@ -348,9 +348,14 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         })
 
         mHuanQueViewModel.userInfoStatusChange.observe(this, Observer {
-            if (it != null&&it.isSuccess()) {
-                if (it.requireT().userId == mAnonymousVoiceViewModel?.targetUserId) {
-                    iv_follow.hide()
+            if (it != null && it.isSuccess()) {
+                val value = it.requireT()
+                if (value.userId == mAnonymousVoiceViewModel?.targetUserId) {
+                    if (value.follow == FollowStatus.True || value.follow == FollowStatus.Mutual) {
+                        iv_follow.hide()
+                    } else {
+                        iv_follow.show()
+                    }
                 }
             }
         })

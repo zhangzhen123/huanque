@@ -8,8 +8,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.julun.huanque.common.base.BaseFragment
+import com.julun.huanque.common.base.BaseLazyFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.CircleGroup
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
@@ -24,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_attention_circle.*
  *@创建时间 2020/11/24 10:20
  *@描述 关注圈子Fragment
  */
-class RecommendCircleFragment : BaseFragment() {
+class RecommendCircleFragment : BaseLazyFragment() {
     companion object {
         fun newInstance() = RecommendCircleFragment()
     }
@@ -40,14 +42,17 @@ class RecommendCircleFragment : BaseFragment() {
         initRecyclerView()
         mAttentionCircleAdapter.hideAction = mCircleViewModel.mType == CircleGroupType.Circle_Choose
         initViewModel()
-        mAttentionCircleViewModel.requestType = CircleGroupTabType.Recom
-        mAttentionCircleViewModel.getCircleGroupInfo()
-
         swipeRefreshLayout.setOnRefreshListener {
             mAttentionCircleViewModel.requestType = CircleGroupTabType.Recom
             mAttentionCircleViewModel.mOffset = 0
-            mAttentionCircleViewModel.getCircleGroupInfo()
+            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.REFRESH)
         }
+        MixedHelper.setSwipeRefreshStyle(swipeRefreshLayout)
+    }
+
+    override fun lazyLoadData() {
+        mAttentionCircleViewModel.requestType = CircleGroupTabType.Recom
+        mAttentionCircleViewModel.getCircleGroupInfo(QueryType.INIT)
     }
 
     /**
@@ -82,15 +87,15 @@ class RecommendCircleFragment : BaseFragment() {
                 CircleDynamicActivity.start(requireActivity(), tempData.groupId)
             } else if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
                 //选择圈子，返回选中的圈子数据
-                val act=requireActivity()
+                val act = requireActivity()
                 val intent = act.intent
                 intent.putExtra(PublicStateCode.CIRCLE_DATA, tempData)
-                act.setResult(Activity.RESULT_OK,intent)
+                act.setResult(Activity.RESULT_OK, intent)
                 act.finish()
             }
         }
         mAttentionCircleAdapter.loadMoreModule.setOnLoadMoreListener {
-            mAttentionCircleViewModel.getCircleGroupInfo()
+            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.LOAD_MORE)
         }
     }
 
@@ -100,15 +105,15 @@ class RecommendCircleFragment : BaseFragment() {
     private fun initViewModel() {
         mAttentionCircleViewModel.myGroupData.observe(this, Observer {
             if (it != null) {
-                val circleList = mutableListOf<Any>()
+//                val circleList = mutableListOf<Any>()
                 if (it.recommendGroup.isPull) {
                     //刷新操作,清空列表
                     mAttentionCircleAdapter.setList(null)
                     val recommendList = it.recommendGroup.list
-                    if (recommendList.isNotEmpty()) {
-                        circleList.addAll(recommendList)
-                    }
-                    mAttentionCircleAdapter.setList(circleList)
+//                    if (recommendList.isNotEmpty()) {
+//                        circleList.addAll(recommendList)
+//                    }
+                    mAttentionCircleAdapter.setList(recommendList)
                     if (recommendList.isNotEmpty()) {
                         //推荐的数据不为空，使用推荐的hasmore字段
                         if (!it.recommendGroup.hasMore) {
@@ -129,11 +134,11 @@ class RecommendCircleFragment : BaseFragment() {
                 } else {
                     //加载更多操作
                     val recommendGroup = it.recommendGroup
-                    mAttentionCircleAdapter.addData(circleList)
-                    if (recommendGroup.list.isNotEmpty()) {
-                        //追加推荐数据
-                        circleList.addAll(recommendGroup.list)
-                    }
+//                    if (recommendGroup.list.isNotEmpty()) {
+//                        //追加推荐数据
+//                        circleList.addAll(recommendGroup.list)
+//                    }
+                    mAttentionCircleAdapter.addData(recommendGroup.list)
                     if (!recommendGroup.hasMore) {
                         //没有更多了
                         mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()

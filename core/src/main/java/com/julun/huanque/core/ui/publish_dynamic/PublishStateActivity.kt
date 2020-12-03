@@ -427,7 +427,6 @@ class PublishStateActivity : BaseActivity() {
      * 清空草稿
      */
     private fun clearDraft() {
-        //todo 删除保存的草稿
         StorageHelper.removePubStateCache()
     }
 
