@@ -218,3 +218,8 @@ class FinishToLoginEvent() : Serializable
  * 动态相关分享成功事件
  */
 class ShareSuccessEvent(var postId: Long = 0, var commentId: Long? = null) : Serializable
+
+/**
+ * 登录分身账号使用
+ */
+class LoginSubAccountEvent(var userId : Long): Serializable

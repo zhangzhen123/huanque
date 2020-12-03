@@ -46,7 +46,11 @@ data class ChatRoomBean(
     //显示缘分入口
     var showFate: String = "",
     //广告列表
-    var adList: MutableList<AdInfoBean>? = null
+    var adList: MutableList<AdInfoBean>? = null,
+    //是否有分身账号
+    var hasSubAccount: String = "",
+    //是否有分身账号未读消息
+    var hasSubAccountMsg: String = ""
 ) : Serializable {
     companion object {
         //在线

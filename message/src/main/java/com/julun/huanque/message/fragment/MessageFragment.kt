@@ -337,6 +337,19 @@ class MessageFragment : BaseFragment() {
                 if (!mMessageViewModel.player) {
                     loadAd(it.adList)
                 }
+                if (it.hasSubAccount == BusiConstant.True) {
+                    //有分身账号
+                    iv_account.show()
+                    if (it.hasSubAccountMsg == BusiConstant.True) {
+                        view_account_unread.show()
+                    } else {
+                        view_account_unread.hide()
+                    }
+                } else {
+                    //无分身账号
+                    iv_account.hide()
+                    view_account_unread.hide()
+                }
             }
         })
 
@@ -507,6 +520,13 @@ class MessageFragment : BaseFragment() {
             }
         })
 
+        iv_account.onClickNew {
+            //跳转账号分身页面
+            val intent = Intent(requireActivity(), SubAccountMessageActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
+        }
 
     }
 

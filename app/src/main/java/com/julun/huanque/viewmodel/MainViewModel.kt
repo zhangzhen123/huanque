@@ -21,6 +21,7 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.*
+import com.julun.huanque.support.LoginManager
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.rong.imlib.RongIMClient
@@ -97,7 +98,7 @@ class MainViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = socialService.voiceCallInfo(NetcallIdForm(callId)).dataConvert()
-                if(result.canceled == BusiConstant.True){
+                if (result.canceled == BusiConstant.True) {
                     //语音已经取消,插入模拟消息
                     val bean = VoiceConmmunicationSimulate().apply {
                         type = VoiceResultType.CANCEL
@@ -112,23 +113,23 @@ class MainViewModel : BaseViewModel() {
                     val sId = "${result.callerInfo.userId}"
                     val tId = "${result.callerInfo.userId}"
 
-                        //本人是被叫（插入接收消息）
-                        targetUser.apply {
-                            headPic = SessionUtils.getHeaderPic()
-                            nickname = SessionUtils.getNickName()
-                            userId = SessionUtils.getUserId()
-                            sex = SessionUtils.getSex()
-                            userType = SessionUtils.getUserType()
-                        }
-                        chatExtra.apply {
-                            headPic = result.callerInfo.headPic
-                            senderId = result.callerInfo.userId
-                            nickname = result.callerInfo.nickname
-                            sex = result.callerInfo.sex
-                            targetUserObj = targetUser
-                            userAbcd = AppHelper.getMD5(sId)
-                            userType = result.callerInfo.userType
-                        }
+                    //本人是被叫（插入接收消息）
+                    targetUser.apply {
+                        headPic = SessionUtils.getHeaderPic()
+                        nickname = SessionUtils.getNickName()
+                        userId = SessionUtils.getUserId()
+                        sex = SessionUtils.getSex()
+                        userType = SessionUtils.getUserType()
+                    }
+                    chatExtra.apply {
+                        headPic = result.callerInfo.headPic
+                        senderId = result.callerInfo.userId
+                        nickname = result.callerInfo.nickname
+                        sex = result.callerInfo.sex
+                        targetUserObj = targetUser
+                        userAbcd = AppHelper.getMD5(sId)
+                        userType = result.callerInfo.userType
+                    }
 
                     chatExtra.targetUserObj?.intimateLevel = result.relationInfo.intimateLevel
                     chatExtra.targetUserObj?.stranger = GlobalUtils.getStrangerString(result.relationInfo.stranger)
@@ -148,7 +149,7 @@ class MainViewModel : BaseViewModel() {
                         bean,
                         sId == tId
                     )
-                }else{
+                } else {
                     val bundle = Bundle()
                     bundle.putString(ParamConstant.TYPE, ConmmunicationUserType.CALLED)
                     bundle.putSerializable(ParamConstant.NetCallBean, result)
@@ -376,6 +377,16 @@ class MainViewModel : BaseViewModel() {
                 val result = liveRoomService.getLivRoomBase(form).dataConvert(intArrayOf(1201, 1202))
                 baseData.value = result
             }, {})
+        }
+    }
+
+
+    /**
+     * 分身账号登录
+     */
+    fun loginByAccount(userId: Long) {
+        viewModelScope.launch {
+            LoginManager.loginBySubAccount(userId, {})
         }
     }
 

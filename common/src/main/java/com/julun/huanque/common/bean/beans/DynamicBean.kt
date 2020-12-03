@@ -176,6 +176,26 @@ class DynamicChangeResult(
  * 分享接口结果
  */
 class StatusResult(
-    var status : String = ""
+    var status: String = ""
+) : Serializable
+
+/**
+ * 分身消息数据
+ */
+class RelateAccountMsg(var msgList: MutableList<SingleAccountMsg> = mutableListOf()) : Serializable
+
+class SingleAccountMsg(
+    //显示的内容
+    var content: String = "",
+    //头像
+    var headPic: String = "",
+    //消息数量
+    var msgCnt: Int = 0,
+    //消息时间戳， 如果最近没有新消息，则时间戳为空
+    var msgTime: Long = 0,
+    //昵称
+    var nickname: String = "",
+    //用户Id
+    var userId: Long = 0
 ) : Serializable
 

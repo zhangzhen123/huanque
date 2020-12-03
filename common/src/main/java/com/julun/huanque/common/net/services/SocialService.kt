@@ -414,4 +414,10 @@ interface SocialService {
      */
     @POST("social/post/deleteComment")
     suspend fun deleteComment(@Body body: CommentIdForm): Root<VoidResult>
+
+    /**
+     * 分身账号消息数据
+     */
+    @POST("social/friend/chat/relateAccountMsg")
+    suspend fun relateAccountMsg(@Body body: EmptyForm = EmptyForm()): Root<RelateAccountMsg>
 }

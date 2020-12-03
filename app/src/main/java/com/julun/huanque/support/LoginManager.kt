@@ -6,6 +6,7 @@ import com.julun.huanque.BuildConfig
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.forms.MobileLoginForm
 import com.julun.huanque.common.bean.forms.MobileQuickForm
+import com.julun.huanque.common.bean.forms.UserIdForm
 import com.julun.huanque.common.bean.forms.WeiXinForm
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.SPParamKey
@@ -123,6 +124,30 @@ object LoginManager {
             isLogging = false
         }
     }
+
+    //分身账号登录
+    suspend fun loginBySubAccount(userId : Long,success: (Session) -> Unit){
+        if (userId == SessionUtils.getUserId()) {
+            //准备登录的账号就是当前登录的账号
+            return
+        }
+        if (isLogging) {
+            ToastUtils.show("当前正在登录中，请不要重复操作")
+            return
+        }
+        try {
+            isLogging = true
+            val result =
+                userService.loginSubAccount(UserIdForm(userId))
+                    .dataConvert()
+            loginSuccess(result, MOBILE_LOGIN,success)
+        }catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            isLogging = false
+        }
+    }
+
 
     /**
      * 手机号一键登录

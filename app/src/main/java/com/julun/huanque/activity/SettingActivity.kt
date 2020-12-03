@@ -173,6 +173,13 @@ class SettingActivity : BaseActivity() {
                 startActivity(intent)
             }
         }
+        view_account_manager.onClickNew {
+            //跳转账号管理页面
+            val intent = Intent(this, AccountManagerActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
+        }
     }
 
     /**
