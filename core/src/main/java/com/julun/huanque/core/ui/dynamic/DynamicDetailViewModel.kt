@@ -46,10 +46,10 @@ class DynamicDetailViewModel : BaseViewModel() {
     val secondCommentListResult: MutableLiveData<RootListData<DynamicComment>> by lazy { MutableLiveData<RootListData<DynamicComment>>() }
 
     //删除动态标识位
-    val deleteFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+//    val deleteFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //动态已删除的标识位
-    val deletedData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+//    val deletedData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //评论点赞结果
     val commentPraiseResult: MutableLiveData<DynamicComment> by lazy { MutableLiveData<DynamicComment>() }
@@ -135,18 +135,7 @@ class DynamicDetailViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * 删除动态
-     */
-    fun deletePost() {
-        viewModelScope.launch {
-            request({
-                val result = socialService.deletePost(PostForm(mPostId)).dataConvert()
-                deletedData.value = true
-                dynamicChangeFlag = true
-            }, {})
-        }
-    }
+
 
     /**
      * 点赞评论

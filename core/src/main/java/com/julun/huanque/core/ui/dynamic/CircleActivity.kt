@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.homepage
+package com.julun.huanque.core.ui.dynamic
 
 import android.app.Activity
 import android.content.Context

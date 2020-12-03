@@ -53,7 +53,7 @@ import com.julun.huanque.common.widgets.emotion.Emotion
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.AddPictureAdapter
-import com.julun.huanque.core.ui.homepage.CircleActivity
+import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.maplib.LocationService
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -123,6 +123,7 @@ class PublishStateActivity : BaseActivity() {
             }
         }
     }
+    private var checkLocationCount = 0
 
     /**
      * 检查定位权限
@@ -136,36 +137,43 @@ class PublishStateActivity : BaseActivity() {
             )
             .subscribe({ permission ->
                 //不管有没有给权限 都不影响百度定位 只不过不给权限会不太准确
-                startLocation()
                 when {
                     permission.granted -> {
                         logger.info("获取权限成功")
+                        startLocation()
+                        iv_location.isSelected = true
                     }
-                    permission.shouldShowRequestPermissionRationale -> // Oups permission denied
+                    permission.shouldShowRequestPermissionRationale -> {
+                        // Oups permission denied
                         logger.info("获取定位被拒绝")
+                        iv_location.isSelected = false
+                        tv_location.text = "定位"
+                    }
                     else -> {
                         logger.info("获取定位被永久拒绝")
-                        MyAlertDialog(this).showAlertWithOKAndCancel(
-                            "欢鹊不能确定你的位置，你可以在设置中开启位置信息权限。",
-                            okText = "去设置",
-                            noText = "取消",
-                            callback = MyAlertDialog.MyDialogCallback(onRight = {
-                                PhoneUtils.getPermissionSetting(packageName).let {
-                                    if (ForceUtils.activityMatch(it)) {
-                                        try {
-                                            startActivity(it)
-                                        } catch (e: Exception) {
-                                            reportCrash("跳转权限或者默认设置页失败", e)
+                        iv_location.isSelected = false
+                        tv_location.text = "定位"
+                        if (checkLocationCount > 0)
+                            MyAlertDialog(this).showAlertWithOKAndCancel(
+                                "欢鹊不能确定你的位置，你可以在设置中开启位置信息权限。",
+                                okText = "去设置",
+                                noText = "取消",
+                                callback = MyAlertDialog.MyDialogCallback(onRight = {
+                                    PhoneUtils.getPermissionSetting(packageName).let {
+                                        if (ForceUtils.activityMatch(it)) {
+                                            try {
+                                                startActivity(it)
+                                            } catch (e: Exception) {
+                                                reportCrash("跳转权限或者默认设置页失败", e)
+                                            }
                                         }
                                     }
-                                }
 
-                            })
-                        )
-
+                                })
+                            )
                     }
                 }
-
+                checkLocationCount++
             }, { it.printStackTrace() })
     }
 
@@ -284,7 +292,7 @@ class PublishStateActivity : BaseActivity() {
         header_page.textLeft.textColorResource = R.color.black_666
         header_page.textLeft.show()
         header_page.textLeft.onClickNew {
-            finish()
+            onBackPressed()
         }
 
         header_page.textOperation.backgroundResource = R.drawable.sel_btn_publish
@@ -309,8 +317,11 @@ class PublishStateActivity : BaseActivity() {
         //如果有缓存 提取缓存
         val draft = StorageHelper.getPubStateCache()
         if (draft != null) {
-            currentGroup = CircleGroup(groupName = draft.groupName ?: "", groupId = draft.groupId ?: -1L)
-            setCircleStatus()
+            if (draft.groupId != null && draft.groupName != null) {
+                currentGroup = CircleGroup(groupName = draft.groupName!!, groupId = draft.groupId!!)
+                setCircleStatus()
+            }
+
             hideName = draft.anonymous == BooleanType.TRUE
             iv_hide_name.isSelected = hideName
 
@@ -327,7 +338,7 @@ class PublishStateActivity : BaseActivity() {
             setCircleStatus()
         }
 
-        iv_location.isSelected = true
+//        iv_location.isSelected = true
         checkLocationPermission()
     }
 
@@ -541,8 +552,9 @@ class PublishStateActivity : BaseActivity() {
                 checkLocationPermission()
             } else {
                 tv_location.text = "定位"
+                iv_location.isSelected = !iv_location.isSelected
             }
-            iv_location.isSelected = !iv_location.isSelected
+
         }
 
         ll_hide_name.onClickNew {
@@ -731,7 +743,7 @@ class PublishStateActivity : BaseActivity() {
             content
         )
         failText.forEach { text ->
-            val start = content.indexOf(text)
+            val start = content.indexOf(text, ignoreCase = true)
             val end = start + text.length
             if (start != -1) {
                 val colorY = Color.parseColor("#FF3F3F")

@@ -26,8 +26,8 @@ object SquareTabType {
     const val FOLLOW = "Follow"
     const val RECOMMEND = "Recom"
 
-    const val HOT = "hot"
-    const val NEW = "new"
+    const val HOT = "Heat"
+    const val NEW = "Time"
 }
 
 object ActivityRequestCode {

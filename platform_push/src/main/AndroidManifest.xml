@@ -119,12 +119,12 @@
                 <action android:name="com.huawei.intent.action.PUSH_STATE" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.huawei.hms.support.api.push.PushReceiver">
-            <intent-filter>
-                <!-- 接收通道发来的通知栏消息，兼容老版本Push -->
-                <action android:name="com.huawei.intent.action.PUSH" />
-            </intent-filter>
-        </receiver>
+<!--        <receiver android:name="com.huawei.hms.support.api.push.PushReceiver">-->
+<!--            <intent-filter>-->
+<!--                &lt;!&ndash; 接收通道发来的通知栏消息，兼容老版本Push &ndash;&gt;-->
+<!--                <action android:name="com.huawei.intent.action.PUSH" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
         <!--        华为配置结束 -->
 
         <!--        oppo配置开始-->

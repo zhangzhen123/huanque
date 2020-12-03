@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.julun.huanque.common.base.BaseVMActivity
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.CircleGroup
@@ -110,7 +111,13 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
         btn_action.onClickNew {
             currentGroup ?: return@onClickNew
             if (currentGroup!!.join) {
-                attentionCircleViewModel.groupQuit(currentGroupId ?: return@onClickNew)
+                MyAlertDialog(this).showAlertWithOKAndCancel(
+                    "退出圈子将错过精彩内容和动态推送",
+                    MyAlertDialog.MyDialogCallback(onCancel = {
+                        attentionCircleViewModel.groupQuit(currentGroupId ?: return@MyDialogCallback)
+                    }), "提示", "继续关注", "残忍退出"
+                )
+
             } else {
                 attentionCircleViewModel.groupJoin(currentGroupId ?: return@onClickNew)
             }

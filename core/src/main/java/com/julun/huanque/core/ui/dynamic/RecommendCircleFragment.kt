@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.homepage
+package com.julun.huanque.core.ui.dynamic
 
 import android.app.Activity
 import android.os.Bundle
@@ -12,30 +12,26 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.CircleGroup
 import com.julun.huanque.common.constant.*
+import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.AttentionCircleAdapter
-import com.julun.huanque.core.ui.dynamic.CircleDynamicActivity
 import com.julun.huanque.core.viewmodel.AttentionCircleViewModel
 import com.julun.huanque.core.viewmodel.CircleViewModel
 import kotlinx.android.synthetic.main.fragment_attention_circle.*
-import kotlinx.android.synthetic.main.fragment_attention_circle.state_pager_view
 
 /**
  *@创建者   dong
  *@创建时间 2020/11/24 10:20
  *@描述 关注圈子Fragment
  */
-class AttentionCircleFragment : BaseFragment() {
+class RecommendCircleFragment : BaseFragment() {
     companion object {
-        fun newInstance() = AttentionCircleFragment()
+        fun newInstance() = RecommendCircleFragment()
     }
 
-    private var mAttentionCircleAdapter = AttentionCircleAdapter()
-
-    //关注列表的ViewModel
     private val mAttentionCircleViewModel: AttentionCircleViewModel by viewModels()
-
     private val mCircleViewModel: CircleViewModel by activityViewModels()
+    private var mAttentionCircleAdapter = AttentionCircleAdapter()
 
     override fun getLayoutId() = R.layout.fragment_attention_circle
 
@@ -44,11 +40,11 @@ class AttentionCircleFragment : BaseFragment() {
         initRecyclerView()
         mAttentionCircleAdapter.hideAction = mCircleViewModel.mType == CircleGroupType.Circle_Choose
         initViewModel()
-        mAttentionCircleViewModel.requestType = CircleGroupTabType.Follow
+        mAttentionCircleViewModel.requestType = CircleGroupTabType.Recom
         mAttentionCircleViewModel.getCircleGroupInfo()
 
         swipeRefreshLayout.setOnRefreshListener {
-            mAttentionCircleViewModel.requestType = CircleGroupTabType.Follow
+            mAttentionCircleViewModel.requestType = CircleGroupTabType.Recom
             mAttentionCircleViewModel.mOffset = 0
             mAttentionCircleViewModel.getCircleGroupInfo()
         }
@@ -60,6 +56,7 @@ class AttentionCircleFragment : BaseFragment() {
     private fun initRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = mAttentionCircleAdapter
+        mAttentionCircleAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "已加入所有圈子，快去关注列表看看"))
 
         mAttentionCircleAdapter.setOnItemChildClickListener { adapter, view, position ->
             val tempData = adapter.getItemOrNull(position)
@@ -85,10 +82,10 @@ class AttentionCircleFragment : BaseFragment() {
                 CircleDynamicActivity.start(requireActivity(), tempData.groupId)
             } else if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
                 //选择圈子，返回选中的圈子数据
-                val act = requireActivity()
+                val act=requireActivity()
                 val intent = act.intent
                 intent.putExtra(PublicStateCode.CIRCLE_DATA, tempData)
-                act.setResult(Activity.RESULT_OK, intent)
+                act.setResult(Activity.RESULT_OK,intent)
                 act.finish()
             }
         }
@@ -104,21 +101,11 @@ class AttentionCircleFragment : BaseFragment() {
         mAttentionCircleViewModel.myGroupData.observe(this, Observer {
             if (it != null) {
                 val circleList = mutableListOf<Any>()
-                if (it.group.isPull) {
+                if (it.recommendGroup.isPull) {
                     //刷新操作,清空列表
                     mAttentionCircleAdapter.setList(null)
-
-
-                    val myList = it.group.list
-                    if (myList.isEmpty()) {
-                        //我加入的圈子为空
-                        circleList.add(AttentionCircleAdapter.Circle_Mine_Attention_Empty)
-                    } else {
-                        circleList.addAll(myList)
-                    }
                     val recommendList = it.recommendGroup.list
                     if (recommendList.isNotEmpty()) {
-                        circleList.add(AttentionCircleAdapter.Title_Recommend_Circle)
                         circleList.addAll(recommendList)
                     }
                     mAttentionCircleAdapter.setList(circleList)
@@ -141,30 +128,17 @@ class AttentionCircleFragment : BaseFragment() {
                     }
                 } else {
                     //加载更多操作
-                    val group = it.group
                     val recommendGroup = it.recommendGroup
-                    if (group.list.isNotEmpty()) {
-                        //追加关注数据
-                        circleList.addAll(group.list)
-                        mAttentionCircleAdapter.addData(circleList)
-                        if (!group.hasMore) {
-                            //没有更多了
-                            mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
-                        } else {
-                            mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
-                        }
-                    }
-
+                    mAttentionCircleAdapter.addData(circleList)
                     if (recommendGroup.list.isNotEmpty()) {
                         //追加推荐数据
                         circleList.addAll(recommendGroup.list)
-                        mAttentionCircleAdapter.addData(circleList)
-                        if (!recommendGroup.hasMore) {
-                            //没有更多了
-                            mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
-                        } else {
-                            mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
-                        }
+                    }
+                    if (!recommendGroup.hasMore) {
+                        //没有更多了
+                        mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
+                    } else {
+                        mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
                     }
 
                 }

@@ -66,6 +66,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                 when (action.code) {
                     BottomActionCode.DELETE -> {
                         logger.info("删除动态 ${currentItem?.postId}")
+                        huanQueViewModel.deletePost(currentItem?.postId ?: return)
                     }
                     BottomActionCode.REPORT -> {
                         logger.info("举报动态 ${currentItem?.postId}")
@@ -151,7 +152,10 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
             when (view.id) {
                 R.id.user_info_holder -> {
                     logger.info("打开个人主页")
-                    HomePageActivity.newInstance(this, item.userId)
+                    if (!item.userAnonymous) {
+                        HomePageActivity.newInstance(this, item.userId)
+                    }
+
                 }
                 R.id.btn_action -> {
                     logger.info("关注")
@@ -243,6 +247,10 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         huanQueViewModel.dynamicChangeResult.observe(this, Observer {
             if (it != null) {
                 val result = dynamicAdapter.data.firstOrNull { item -> item.postId == it.postId } ?: return@Observer
+                if (it.hasDelete) {
+                    dynamicAdapter.remove(result)
+                    return@Observer
+                }
                 //处理点赞刷新
                 if (it.praise != null) {
 
@@ -290,17 +298,20 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
             }
 
         }
+        var isEmpty: Boolean = false
         if (listData.isPull) {
             val list = listData.list.distinct()
+            isEmpty = list.isEmpty()
             dynamicAdapter.setList(list)
         } else {
             val programList = listData.list.removeDuplicate(dynamicAdapter.data)
 //            totalList.addAll(programList)
+            isEmpty = programList.isEmpty()
             dynamicAdapter.addData(programList)
         }
         if (listData.hasMore) {
             //如果下拉加载更多时 返回的列表为空 会触发死循环 这里直接设置加载完毕状态
-            if (listData.list.isEmpty()) {
+            if (isEmpty) {
                 dynamicAdapter.loadMoreModule.loadMoreEnd(false)
             } else {
                 dynamicAdapter.loadMoreModule.loadMoreComplete()

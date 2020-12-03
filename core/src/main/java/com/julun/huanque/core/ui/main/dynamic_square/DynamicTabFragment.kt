@@ -19,6 +19,7 @@ import com.julun.huanque.common.bean.beans.DynamicItemBean
 import com.julun.huanque.common.bean.beans.HomeDynamicListInfo
 import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.common.bean.beans.SquareTab
+import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
@@ -33,7 +34,7 @@ import com.julun.huanque.core.adapter.DynamicGroupListAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.ui.dynamic.CircleDynamicActivity
 import com.julun.huanque.core.ui.dynamic.DynamicDetailActivity
-import com.julun.huanque.core.ui.homepage.CircleActivity
+import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.*
@@ -83,6 +84,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 when (action.code) {
                     BottomActionCode.DELETE -> {
                         logger.info("删除动态 ${currentItem?.postId}")
+                        huanQueViewModel.deletePost(currentItem?.postId?:return)
                     }
                     BottomActionCode.REPORT -> {
                         logger.info("举报动态 ${currentItem?.postId}")
@@ -104,15 +106,16 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         initViewModel()
         if (currentTab?.typeCode == SquareTabType.RECOMMEND) {
             dynamicAdapter.showType = DynamicListAdapter.HOME_RECOM
+            groupAdapter.showType = DynamicListAdapter.HOME_RECOM
         } else if (currentTab?.typeCode == SquareTabType.FOLLOW) {
             dynamicAdapter.showType = DynamicListAdapter.HOME_FOLLOW
+            groupAdapter.showType = DynamicListAdapter.HOME_FOLLOW
         }
         postList.layoutManager = LinearLayoutManager(requireContext())
         dynamicAdapter.loadMoreModule.setOnLoadMoreListener {
             logger.info(" postList.stopScroll()")
             postList.stopScroll()
             logger.info("authorAdapter loadMoreModule 加载更多")
-//            mViewModel.requestPostList(QueryType.LOAD_MORE, currentTab?.typeCode)
             queryData(QueryType.LOAD_MORE, currentTab?.typeCode)
         }
         if (currentTab?.typeCode == SquareTabType.RECOMMEND || currentTab?.typeCode == SquareTabType.FOLLOW) {
@@ -148,7 +151,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 //        })
 
         mRefreshLayout.setOnRefreshListener {
-//            mViewModel.requestPostList(QueryType.REFRESH, currentTab?.typeCode)
             queryData(QueryType.REFRESH, currentTab?.typeCode)
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
@@ -164,7 +166,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         }
         groupAdapter.onAdapterClickNew { _, _, position ->
             val item = groupAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
-            //todo
             logger.info("打开头部圈子：${item.groupName}")
             CircleDynamicActivity.start(requireActivity(), item.groupId)
         }
@@ -193,7 +194,8 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             when (view.id) {
                 R.id.user_info_holder -> {
                     logger.info("打开个人主页")
-                    HomePageActivity.newInstance(requireActivity(), item.userId)
+                    if (!item.userAnonymous)
+                        HomePageActivity.newInstance(requireActivity(), item.userId)
                 }
                 R.id.btn_action -> {
                     logger.info("关注")
@@ -269,7 +271,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     }
 
     override fun lazyLoadData() {
-//        mViewModel.requestPostList(QueryType.INIT, currentTab?.typeCode)
         queryData(QueryType.INIT, currentTab?.typeCode)
     }
 
@@ -306,14 +307,16 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             if (it.isSuccess()) {
                 val change = it.requireT()
                 //处理关注状态
-                val result = dynamicAdapter.data.firstOrNull { item -> item.userId == change.userId } ?: return@Observer
-                result.follow = change.follow == FollowStatus.True
-                val index = dynamicAdapter.data.indexOf(result)
-                logger.info("index=$index")
-//                    if (index != -1)
-//                        dynamicAdapter.notifyItemChanged(index+dynamicAdapter.headerLayoutCount)
-                MixedHelper.safeNotifyItem(index, postList, dynamicAdapter)
+//                val result = dynamicAdapter.data.firstOrNull { item -> item.userId == change.userId } ?: return@Observer
+//                result.follow = change.follow == FollowStatus.True
+//                val index = dynamicAdapter.data.indexOf(result)
+//                logger.info("index=$index")
+//                MixedHelper.safeNotifyItem(index, postList, dynamicAdapter)
 
+                val result = dynamicAdapter.data.filter { item -> item.userId == change.userId }.map { bean ->
+                    bean.follow = change.follow == FollowStatus.True
+                }
+                dynamicAdapter.notifyDataSetChanged()
             }
 
         })
@@ -322,6 +325,10 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         huanQueViewModel.dynamicChangeResult.observe(this, Observer {
             if (it != null) {
                 val result = dynamicAdapter.data.firstOrNull { item -> item.postId == it.postId } ?: return@Observer
+                if (it.hasDelete) {
+                    dynamicAdapter.remove(result)
+                    return@Observer
+                }
                 //处理点赞刷新
                 if (it.praise != null) {
                     if (it.praise != result.hasPraise) {
@@ -335,8 +342,8 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
 
                 }
-                if(it.comment!=null){
-                    result.commentNum=it.comment!!
+                if (it.comment != null) {
+                    result.commentNum = it.comment!!
                 }
                 val index = dynamicAdapter.data.indexOf(result)
                 logger.info("index=$index")
@@ -346,11 +353,13 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
         })
 
+
     }
 
     override fun isRegisterEventBus(): Boolean {
         return true
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun shareSuccess(bean: ShareSuccessEvent) {
         if (bean.commentId == null) {
@@ -364,6 +373,14 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             }
 
         }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveLoginCode(event: LoginEvent) {
+        logger.info("登录事件:${event.result}")
+        if (event.result) {
+            queryData(QueryType.REFRESH, currentTab?.typeCode)
+        }
+
     }
     private fun loadDataFail(isPull: Boolean) {
         if (isPull) {
@@ -429,7 +446,12 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                     headerLayout.bottom_layout.hide()
                 } else {
                     headerLayout.header_layout.hide()
-                    headerLayout.bottom_layout.show()
+                    if (listData.recom) {
+                        headerLayout.bottom_layout.show()
+                    } else {
+                        headerLayout.bottom_layout.hide()
+                    }
+
                     groupAdapter.setEmptyView(
                         MixedHelper.getEmptyView(requireContext(),
                             msg = "还没加入圈子，快去加入有趣的圈子吧",
@@ -498,7 +520,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     fun scrollToTopAndRefresh() {
         postList.scrollToPosition(0)
         postList.postDelayed({
-//            mViewModel.requestPostList(QueryType.REFRESH, currentTab?.typeCode)
             queryData(QueryType.REFRESH, currentTab?.typeCode)
         }, 100)
     }
@@ -515,7 +536,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             }
             NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
                 state_pager_view.showError(showBtn = true, btnClick = View.OnClickListener {
-//                    mViewModel.requestPostList(QueryType.INIT, currentTab?.typeCode)
                     queryData(QueryType.INIT, currentTab?.typeCode)
                 })
             }

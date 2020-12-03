@@ -136,7 +136,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
         <activity
-            android:name=".ui.homepage.CircleActivity"
+            android:name=".ui.dynamic.CircleActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
         <activity

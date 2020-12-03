@@ -47,7 +47,6 @@ class UserDynamicViewModel : BaseViewModel() {
             request({
                 val result =
                     service.queryUserPosts(PostListsForm(offset = offsetHot, userId = userId)).dataConvert()
-                result.hasMore = false
                 //
                 offsetHot += result.list.size
                 result.isPull = queryType != QueryType.LOAD_MORE
