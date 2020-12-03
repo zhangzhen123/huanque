@@ -519,6 +519,8 @@ class HomePageActivity : BaseActivity() {
             tv_play.text = "我正在玩"
             tv_tag.text = "我的标签"
             iv_tag_dynamic.show()
+            tv_distance_1.hide()
+            tv_distance_2.hide()
         } else {
             iv_more_black.show()
             iv_more.show()
@@ -526,6 +528,8 @@ class HomePageActivity : BaseActivity() {
             tv_play.text = "Ta正在玩"
             tv_tag.text = "Ta的标签"
             iv_tag_dynamic.hide()
+            tv_distance_1.show()
+            tv_distance_2.show()
         }
         mHomePageViewModel.homeInfo()
 
@@ -1192,10 +1196,10 @@ class HomePageActivity : BaseActivity() {
         showGuanfang(bean.iconList)
         showTags(bean.characterTag)
         showEvaluate(bean.appraiseList)
-        val homeCity = bean.homeCity
+        val homeCity = bean.distanceCity
         if (homeCity.curryCityName.isNotEmpty() && homeCity.homeCityName.isNotEmpty()) {
-            tv_distance_1.text = "距离${bean.homeCity.distance}km"
-            tv_distance_2.text = "距离${bean.homeCity.distance}km"
+            tv_distance_1.text = "距离${bean.distanceCity.distanceStr}"
+            tv_distance_2.text = "距离${bean.distanceCity.distanceStr}"
         } else {
             tv_distance_1.text = "未知"
             tv_distance_2.text = "未知"
@@ -1642,7 +1646,7 @@ class HomePageActivity : BaseActivity() {
             visitorParams?.rightMargin = visitorRightMargin
             iv_visitor.layoutParams = visitorParams
 
-            val homeCityInfo = mHomePageViewModel.homeInfoBean.value?.homeCity ?: return
+            val homeCityInfo = mHomePageViewModel.homeInfoBean.value?.distanceCity ?: return
             //设置头像
             otherMapView.findViewById<SimpleDraweeView>(R.id.sdv_owner_header)
                 ?.loadImage("${StringHelper.getOssImgUrl(homeCityInfo.homeHeadPic)}${BusiConstant.OSS_160}", 35f, 35f)

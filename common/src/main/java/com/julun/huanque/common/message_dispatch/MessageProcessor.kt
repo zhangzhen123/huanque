@@ -1323,6 +1323,9 @@ object MessageProcessor {
         override fun isGlobal() = true
     }
 
+    interface SubAccountMsgNoticeProcessor : EventMessageProcessor<VoidResult> {
+        override fun getEventType() = EventMessageType.SubAccountMsgNotice
+    }
 
 }
 
@@ -1706,7 +1709,10 @@ enum class EventMessageType(val klass: Class<*>) {
     FateQuickMatchChange(FateQuickMatchChangeBean::class.java),
 
     //首充结果
-    FirstChargeResult(SinglePack::class.java)
+    FirstChargeResult(SinglePack::class.java),
+
+    //分身收到消息的通知
+    SubAccountMsgNotice(VoidResult::class.java)
 //inviteUserId
     //禁言消息
 //    MuteUser(OperatorMessageBean::class.java),

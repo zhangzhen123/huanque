@@ -635,6 +635,8 @@ data class HomePageInfo(
     var playParadise: HomePagePlayParadise = HomePagePlayParadise(),
     //足迹使用的对象
     var homeCity: HomeCity = HomeCity(),
+    //距离使用的对象
+    var distanceCity: HomeCity = HomeCity(),
     //勋章数据
     var iconList: MutableList<String> = mutableListOf(),
     //直播间内的动态数据
@@ -668,7 +670,9 @@ data class HomeCity(
     //主页用户常驻地
     var homeCityName: String = "",
     //主页用户头像
-    var homeHeadPic: String = ""
+    var homeHeadPic: String = "",
+    //距离 直接显示
+    var distanceStr : String = ""
 
 ) : Serializable
 
