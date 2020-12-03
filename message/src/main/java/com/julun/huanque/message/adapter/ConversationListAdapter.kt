@@ -192,7 +192,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                                 MessageFormatUtils.parseJsonFromTextMessage(ActionMessageContent::class.java, msg.content ?: "")
                             helper.setText(R.id.tv_content, "${msgConent?.context?.nickname} 给你点赞")
                         } else {
-                            helper.setText(R.id.tv_content, "评论你的都在这")
+                            helper.setText(R.id.tv_content, "赞你的都在这")
                         }
 
                     }
@@ -205,7 +205,7 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
                                 MessageFormatUtils.parseJsonFromTextMessage(ActionMessageContent::class.java, msg.content ?: "")
                             helper.setText(R.id.tv_content, "${msgConent?.context?.nickname}： ${msgConent?.context?.comment}")
                         } else {
-                            helper.setText(R.id.tv_content, "赞你的都在这")
+                            helper.setText(R.id.tv_content, "评论你的都在这")
                         }
 
                     }

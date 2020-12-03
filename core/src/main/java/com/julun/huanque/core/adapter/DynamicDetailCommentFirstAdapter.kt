@@ -10,11 +10,14 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.DynamicComment
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.SecondCommentClickListener
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.homepage.HomePageActivity
 
 /**
  *@创建者   dong
@@ -24,7 +27,7 @@ import com.julun.huanque.core.R
 class DynamicDetailCommentFirstAdapter : BaseQuickAdapter<DynamicComment, BaseViewHolder>(R.layout.recycler_item_dynamic_detail_comment_first),
     LoadMoreModule {
     init {
-        addChildClickViewIds(R.id.ll_comment_more, R.id.tv_share_num, R.id.iv_praise, R.id.tv_praise)
+        addChildClickViewIds(R.id.ll_comment_more, R.id.tv_share_num, R.id.iv_praise, R.id.tv_praise,R.id.sdv_header)
     }
 
     //点击二级评论的监听
@@ -66,7 +69,7 @@ class DynamicDetailCommentFirstAdapter : BaseQuickAdapter<DynamicComment, BaseVi
 
         holder.setText(R.id.tv_nickname, item.nickname)
             .setText(R.id.tv_time, item.createTime)
-            .setText(R.id.tv_content, item.content)
+            .setText(R.id.tv_content, EmojiSpanBuilder.buildEmotionSpannable(context, item.content))
             .setText(R.id.tv_praise, "${item.praiseNum}")
             .setText(R.id.tv_comment_num, commentContent)
             .setText(R.id.tv_share_num, shareContent)
@@ -103,6 +106,13 @@ class DynamicDetailCommentFirstAdapter : BaseQuickAdapter<DynamicComment, BaseVi
                 if (view.id == R.id.tv_praise) {
                     //点赞
                     mSecondCommentClickListener?.praise(commentData)
+                } else if (view.id == R.id.sdv_header) {
+                    //跳转主页
+                    CommonInit.getInstance().getCurrentActivity()?.let { act ->
+                        HomePageActivity.newInstance(act,commentData.userId)
+                    }
+
+
                 }
 
             }
