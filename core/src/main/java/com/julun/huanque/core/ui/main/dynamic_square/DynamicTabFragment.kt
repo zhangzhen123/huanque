@@ -19,6 +19,7 @@ import com.julun.huanque.common.bean.beans.DynamicItemBean
 import com.julun.huanque.common.bean.beans.HomeDynamicListInfo
 import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.common.bean.beans.SquareTab
+import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
@@ -115,7 +116,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             logger.info(" postList.stopScroll()")
             postList.stopScroll()
             logger.info("authorAdapter loadMoreModule 加载更多")
-//            mViewModel.requestPostList(QueryType.LOAD_MORE, currentTab?.typeCode)
             queryData(QueryType.LOAD_MORE, currentTab?.typeCode)
         }
         if (currentTab?.typeCode == SquareTabType.RECOMMEND || currentTab?.typeCode == SquareTabType.FOLLOW) {
@@ -151,7 +151,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 //        })
 
         mRefreshLayout.setOnRefreshListener {
-//            mViewModel.requestPostList(QueryType.REFRESH, currentTab?.typeCode)
             queryData(QueryType.REFRESH, currentTab?.typeCode)
         }
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
@@ -272,7 +271,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     }
 
     override fun lazyLoadData() {
-//        mViewModel.requestPostList(QueryType.INIT, currentTab?.typeCode)
         queryData(QueryType.INIT, currentTab?.typeCode)
     }
 
@@ -376,7 +374,14 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
         }
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun receiveLoginCode(event: LoginEvent) {
+        logger.info("登录事件:${event.result}")
+        if (event.result) {
+            queryData(QueryType.REFRESH, currentTab?.typeCode)
+        }
 
+    }
     private fun loadDataFail(isPull: Boolean) {
         if (isPull) {
             ToastUtils.show2("刷新失败")
@@ -515,7 +520,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     fun scrollToTopAndRefresh() {
         postList.scrollToPosition(0)
         postList.postDelayed({
-//            mViewModel.requestPostList(QueryType.REFRESH, currentTab?.typeCode)
             queryData(QueryType.REFRESH, currentTab?.typeCode)
         }, 100)
     }
@@ -532,7 +536,6 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
             }
             NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
                 state_pager_view.showError(showBtn = true, btnClick = View.OnClickListener {
-//                    mViewModel.requestPostList(QueryType.INIT, currentTab?.typeCode)
                     queryData(QueryType.INIT, currentTab?.typeCode)
                 })
             }
