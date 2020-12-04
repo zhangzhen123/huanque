@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.constant.CircleGroupTabType
 import com.julun.huanque.common.constant.CircleGroupType
@@ -79,6 +80,12 @@ class CircleActivity : BaseActivity() {
             //选中推荐模块
             view_pager.currentItem = 1
         }
+
+        mCircleViewModel.selectRecom.observe(this, Observer {
+            if (it == true) {
+                view_pager.currentItem = 1
+            }
+        })
     }
 
     override fun initEvents(rootView: View) {

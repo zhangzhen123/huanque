@@ -70,7 +70,7 @@ class ShareFriendsActivity : BaseActivity() {
             MyAlertDialog(this).showAlertWithOKAndCancel(
                 "是否将该内容分享给Ta？",
                 MyAlertDialog.MyDialogCallback(onRight = {
-                    mViewModel.sendPostMessage(user)
+                    mViewModel.sendPostMessage(user,user.userId)
                     setResult(Activity.RESULT_OK)
                     finish()
                 }), "提示", okText = "确定"

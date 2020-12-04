@@ -1,5 +1,6 @@
 package com.julun.huanque.core.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 
 /**
@@ -9,4 +10,7 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
  */
 class CircleViewModel : BaseViewModel() {
     var mType = ""
+
+    //选择推荐的标记位
+    val selectRecom: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 }

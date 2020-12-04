@@ -76,7 +76,7 @@ class DynamicDetailViewModel : BaseViewModel() {
     fun queryDetail(postId: Long, type: QueryType) {
         viewModelScope.launch {
             request({
-                val result = service.queryPostDetail(PostDetailForm(postId)).dataConvert()
+                val result = service.queryPostDetail(PostDetailForm(postId)).dataConvert(intArrayOf(501))
                 //todo
 //                result.comments.clear()
                 dynamicInfo.value = result

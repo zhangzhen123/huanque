@@ -40,7 +40,6 @@ class AttentionCircleFragment : BaseLazyFragment() {
     private val mCircleViewModel: CircleViewModel by activityViewModels()
 
 
-
     override fun getLayoutId() = R.layout.fragment_attention_circle
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -52,15 +51,24 @@ class AttentionCircleFragment : BaseLazyFragment() {
         swipeRefreshLayout.setOnRefreshListener {
             mAttentionCircleViewModel.requestType = CircleGroupTabType.Follow
             mAttentionCircleViewModel.mOffset = 0
-            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.REFRESH,mCircleViewModel.mType)
+            if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
+                mAttentionCircleViewModel.getChooseCircle(QueryType.REFRESH)
+            } else {
+                mAttentionCircleViewModel.getCircleGroupInfo(QueryType.REFRESH)
+            }
         }
         MixedHelper.setSwipeRefreshStyle(swipeRefreshLayout)
     }
 
     override fun lazyLoadData() {
         mAttentionCircleViewModel.requestType = CircleGroupTabType.Follow
-        mAttentionCircleViewModel.getCircleGroupInfo(QueryType.INIT,mCircleViewModel.mType)
+        if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
+            mAttentionCircleViewModel.getChooseCircle(QueryType.INIT)
+        } else {
+            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.INIT)
+        }
     }
+
     /**
      * 初始化RecyclerView
      */
@@ -100,7 +108,11 @@ class AttentionCircleFragment : BaseLazyFragment() {
             }
         }
         mAttentionCircleAdapter.loadMoreModule.setOnLoadMoreListener {
-            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.LOAD_MORE,mCircleViewModel.mType)
+            if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
+                mAttentionCircleViewModel.getChooseCircle(QueryType.LOAD_MORE)
+            } else {
+                mAttentionCircleViewModel.getCircleGroupInfo(QueryType.LOAD_MORE)
+            }
         }
     }
 
@@ -113,6 +125,10 @@ class AttentionCircleFragment : BaseLazyFragment() {
                 val circleList = mutableListOf<Any>()
                 if (it.group.isPull) {
                     //刷新操作,清空列表
+                    if (mCircleViewModel.mType == CircleGroupType.Circle_Choose && it.group.list.isEmpty()) {
+                        //选择圈子 并且数据为空,选中推荐模块
+                        mCircleViewModel.selectRecom.value = true
+                    }
                     mAttentionCircleAdapter.setList(null)
 
 
@@ -173,9 +189,9 @@ class AttentionCircleFragment : BaseLazyFragment() {
 //                            mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
 //                        }
                     }
-                    if(recommendGroup.hasMore||group.hasMore){
+                    if (recommendGroup.hasMore || group.hasMore) {
                         mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
-                    }else{
+                    } else {
                         mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
                     }
 

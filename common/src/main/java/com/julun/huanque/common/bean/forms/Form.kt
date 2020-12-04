@@ -95,7 +95,7 @@ class WithdrawHistoryForm(var lastId: Long? = null)
 /**
  * 校验nickname使用
  */
-class NicknameForm(var nickname: String)
+class NicknameForm(var nickname: String, var checkNameType: String? = null)
 
 class UpdateVoiceForm(var voiceUrl: String, var length: Long)
 
@@ -196,7 +196,9 @@ class PostShareForm(
     //动态Id
     var postId: Long = 0,
     //评论ID
-    var commentId: Long? = null
+    var commentId: Long? = null,
+    //用户ID  zhjan
+    var friendId: Long? = null
 ) : Serializable
 
 /**

@@ -54,7 +54,7 @@ class CreateAccountViewModel : BaseViewModel() {
         nicknameChange = false
         viewModelScope.launch {
             request({
-                val result = userService.checkNickName(NicknameForm(chickName)).dataConvert()
+                val result = userService.checkNickName(NicknameForm(chickName, "SubAccount")).dataConvert()
                 nicknameEnable.value = true
             })
         }

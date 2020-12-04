@@ -40,18 +40,13 @@ class AttentionCircleViewModel : BaseViewModel() {
     /**
      * 获取我的圈子 基础数据
      */
-    fun getCircleGroupInfo(queryType: QueryType, circleType: String) {
+    fun getCircleGroupInfo(queryType: QueryType) {
         viewModelScope.launch {
             request({
                 if (queryType != QueryType.LOAD_MORE) {
                     mOffset = 0
                 }
-                val groupData =
-                    if (circleType == CircleGroupType.Circle_Choose) {
-                        socialService.groupChose(CircleGroupTypeForm(mOffset, requestType)).dataConvert()
-                    } else {
-                        socialService.groupList(CircleGroupTypeForm(mOffset, requestType)).dataConvert()
-                    }
+                val groupData = socialService.groupList(CircleGroupTypeForm(mOffset, requestType)).dataConvert()
 //                if (mOffset == 0) {
 //                    //刷新操作
                 groupData.recommendGroup.isPull = queryType != QueryType.LOAD_MORE
@@ -78,6 +73,34 @@ class AttentionCircleViewModel : BaseViewModel() {
             }, {}, needLoadState = true)
         }
     }
+
+    /**
+     * 获取选择圈子数据
+     */
+    fun getChooseCircle(queryType: QueryType) {
+        viewModelScope.launch {
+            request({
+                if (queryType != QueryType.LOAD_MORE) {
+                    mOffset = 0
+                }
+                val groupData = socialService.groupChose(CircleGroupTypeForm(mOffset, requestType)).dataConvert()
+//                if (mOffset == 0) {
+//                    //刷新操作
+                groupData.group.isPull = queryType != QueryType.LOAD_MORE
+                val myGroup = groupData.group.list
+                myGroup.forEach {
+                    it.type = requestType
+                }
+                if (myGroup.isNotEmpty()) {
+                    //推荐有数据，下次请求，使用推荐的offset
+                    mOffset += myGroup.size
+                }
+
+                myGroupData.value = groupData
+            },needLoadState = true)
+        }
+    }
+
 
     /**
      * 加入圈子

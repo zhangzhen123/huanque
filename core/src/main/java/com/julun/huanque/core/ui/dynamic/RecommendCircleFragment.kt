@@ -45,14 +45,22 @@ class RecommendCircleFragment : BaseLazyFragment() {
         swipeRefreshLayout.setOnRefreshListener {
             mAttentionCircleViewModel.requestType = CircleGroupTabType.Recom
             mAttentionCircleViewModel.mOffset = 0
-            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.REFRESH,mCircleViewModel.mType)
+            if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
+                mAttentionCircleViewModel.getChooseCircle(QueryType.REFRESH)
+            } else {
+                mAttentionCircleViewModel.getCircleGroupInfo(QueryType.REFRESH)
+            }
         }
         MixedHelper.setSwipeRefreshStyle(swipeRefreshLayout)
     }
 
     override fun lazyLoadData() {
         mAttentionCircleViewModel.requestType = CircleGroupTabType.Recom
-        mAttentionCircleViewModel.getCircleGroupInfo(QueryType.INIT,mCircleViewModel.mType)
+        if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
+            mAttentionCircleViewModel.getChooseCircle(QueryType.INIT)
+        } else {
+            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.INIT)
+        }
     }
 
     /**
@@ -95,7 +103,11 @@ class RecommendCircleFragment : BaseLazyFragment() {
             }
         }
         mAttentionCircleAdapter.loadMoreModule.setOnLoadMoreListener {
-            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.LOAD_MORE,mCircleViewModel.mType)
+            if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
+                mAttentionCircleViewModel.getChooseCircle(QueryType.LOAD_MORE)
+            } else {
+                mAttentionCircleViewModel.getCircleGroupInfo(QueryType.LOAD_MORE)
+            }
         }
     }
 
@@ -106,17 +118,22 @@ class RecommendCircleFragment : BaseLazyFragment() {
         mAttentionCircleViewModel.myGroupData.observe(this, Observer {
             if (it != null) {
 //                val circleList = mutableListOf<Any>()
-                if (it.recommendGroup.isPull) {
+                val recommendGroup = if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
+                    it.group
+                } else {
+                    it.recommendGroup
+                }
+                if (recommendGroup.isPull) {
                     //刷新操作,清空列表
                     mAttentionCircleAdapter.setList(null)
-                    val recommendList = it.recommendGroup.list
+                    val recommendList = recommendGroup.list
 //                    if (recommendList.isNotEmpty()) {
 //                        circleList.addAll(recommendList)
 //                    }
                     mAttentionCircleAdapter.setList(recommendList)
                     if (recommendList.isNotEmpty()) {
                         //推荐的数据不为空，使用推荐的hasmore字段
-                        if (!it.recommendGroup.hasMore) {
+                        if (!recommendGroup.hasMore) {
                             //没有更多了
                             mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
                         } else {
@@ -133,7 +150,7 @@ class RecommendCircleFragment : BaseLazyFragment() {
                     }
                 } else {
                     //加载更多操作
-                    val recommendGroup = it.recommendGroup
+
 //                    if (recommendGroup.list.isNotEmpty()) {
 //                        //追加推荐数据
 //                        circleList.addAll(recommendGroup.list)

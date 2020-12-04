@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:drawableStart="@mipmap/icon_time_sort"
         android:gravity="center"
-        android:text="时间"
+        android:text="热度"
         android:textColor="@color/black_999"
         android:textSize="@dimen/sp_14" />
 </LinearLayout>
