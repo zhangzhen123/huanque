@@ -95,7 +95,7 @@ class WithdrawHistoryForm(var lastId: Long? = null)
 /**
  * 校验nickname使用
  */
-class NicknameForm(var nickname: String)
+class NicknameForm(var nickname: String, var checkNameType: String? = null)
 
 class UpdateVoiceForm(var voiceUrl: String, var length: Long)
 

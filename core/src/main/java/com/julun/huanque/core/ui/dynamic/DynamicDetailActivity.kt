@@ -263,7 +263,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             ll_input.show()
             edit_text.forceLayout()
             edit_text.performClick()
-            edit_text.hint = "评论一下"
+            edit_text.hint = "我来评论..."
         }
 
         edit_text.addTextChangedListener(object : TextWatcher {
@@ -511,7 +511,19 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                     val parentId = commentList[0].parentCommentId
                     commentAdapter.data.forEachIndexed { index, adapterItem ->
                         if (adapterItem.commentId == parentId) {
-                            adapterItem.secondComments.addAll(commentList)
+                            //去重之后再添加
+                            val secondCommentIds = mutableListOf<Long>()
+                            adapterItem.secondComments.forEach { sc ->
+                                secondCommentIds.add(sc.commentId)
+                            }
+                            val realComment = mutableListOf<DynamicComment>()
+                            commentList.forEach { needAddComment ->
+                                if (!secondCommentIds.contains(needAddComment.commentId)) {
+                                    realComment.add(needAddComment)
+                                }
+
+                            }
+                            adapterItem.secondComments.addAll(realComment)
                             notifyIndex = index
                             adapterItem.hasMore = it.hasMore
                             return@forEachIndexed
@@ -702,7 +714,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             val tempData = adapter.getItemOrNull(position) as? DynamicComment ?: return@setOnItemChildClickListener
             when (view.id) {
                 R.id.ll_comment_more -> {
-                    mViewModel.secondCommentList(tempData.commentId, tempData.secondComments.size)
+                    mViewModel.secondCommentList(tempData.commentId, 3)
                 }
                 R.id.tv_share_num -> {
                     //点击了分享
