@@ -8,6 +8,7 @@ import com.julun.huanque.common.bean.forms.CircleGroupTypeForm
 import com.julun.huanque.common.bean.forms.GroupIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.CircleGroupTabType
+import com.julun.huanque.common.constant.CircleGroupType
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.SocialService
 import com.julun.huanque.common.suger.dataConvert
@@ -39,17 +40,22 @@ class AttentionCircleViewModel : BaseViewModel() {
     /**
      * 获取我的圈子 基础数据
      */
-    fun getCircleGroupInfo(queryType: QueryType) {
+    fun getCircleGroupInfo(queryType: QueryType, circleType: String) {
         viewModelScope.launch {
             request({
-                if(queryType!=QueryType.LOAD_MORE){
-                    mOffset=0
+                if (queryType != QueryType.LOAD_MORE) {
+                    mOffset = 0
                 }
-                val groupData = socialService.groupList(CircleGroupTypeForm(mOffset, requestType)).dataConvert()
+                val groupData =
+                    if (circleType == CircleGroupType.Circle_Choose) {
+                        socialService.groupChose(CircleGroupTypeForm(mOffset, requestType)).dataConvert()
+                    } else {
+                        socialService.groupList(CircleGroupTypeForm(mOffset, requestType)).dataConvert()
+                    }
 //                if (mOffset == 0) {
 //                    //刷新操作
-                    groupData.recommendGroup.isPull = queryType!=QueryType.LOAD_MORE
-                    groupData.group.isPull = queryType!=QueryType.LOAD_MORE
+                groupData.recommendGroup.isPull = queryType != QueryType.LOAD_MORE
+                groupData.group.isPull = queryType != QueryType.LOAD_MORE
 //                }
                 val recommendGroup = groupData.recommendGroup.list
                 if (recommendGroup.isNotEmpty()) {

@@ -14,6 +14,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.bean.beans.ActionMessageContent
 import com.julun.huanque.common.bean.beans.FriendBean
+import com.julun.huanque.common.bean.beans.PostShareBean
 import com.julun.huanque.common.bean.beans.SysMsgBean
 import com.julun.huanque.common.bean.events.LoginOutEvent
 import com.julun.huanque.common.bean.events.SystemMessageRefreshBean
@@ -22,6 +23,7 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
+import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.MessageFormatUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
@@ -351,6 +353,17 @@ class SysMsgActivity : BaseActivity() {
                 //跳转私信
                 try {
                     PrivateConversationActivity.newInstance(this, sysBean.touchValue.toLong())
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
+            }
+            MessageConstants.PostDetail -> {
+                //动态详情
+                try {
+                    val bundle = Bundle().apply {
+                        putLong(IntentParamKey.POST_ID.name, sysBean.touchValue.toLong())
+                    }
+                    ARouter.getInstance().build(ARouterConstant.DYNAMIC_DETAIL_ACTIVITY).with(bundle).navigation()
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
                 }

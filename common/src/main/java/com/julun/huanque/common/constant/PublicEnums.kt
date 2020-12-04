@@ -365,6 +365,9 @@ object MessageConstants {
     //私信
     const val PrivateChat = "PrivateChat"
 
+    //动态详情
+    const val PostDetail = "PostDetail"
+
 }
 
 /**

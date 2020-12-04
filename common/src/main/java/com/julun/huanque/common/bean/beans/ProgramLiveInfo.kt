@@ -635,6 +635,8 @@ data class HomePageInfo(
     var playParadise: HomePagePlayParadise = HomePagePlayParadise(),
     //足迹使用的对象
     var homeCity: HomeCity = HomeCity(),
+    //距离使用的对象
+    var distanceCity: HomeCity = HomeCity(),
     //勋章数据
     var iconList: MutableList<String> = mutableListOf(),
     //直播间内的动态数据
@@ -668,7 +670,9 @@ data class HomeCity(
     //主页用户常驻地
     var homeCityName: String = "",
     //主页用户头像
-    var homeHeadPic: String = ""
+    var homeHeadPic: String = "",
+    //距离 直接显示
+    var distanceStr : String = ""
 
 ) : Serializable
 
@@ -861,8 +865,8 @@ data class CircleGroup(
  * 分身账号的数据
  */
 data class AccountBean(
-    //账号数量上线
-    var maxSubNum: Int = 0,
+    //是否可以新增分身账号
+    var canAdd : String = "",
     //账号列表
     var subList: MutableList<SingleAccount> = mutableListOf(),
     //不能创建账号的原因

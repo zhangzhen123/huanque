@@ -18,6 +18,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.ChatRoomBean
 import com.julun.huanque.common.bean.beans.AdInfoBean
 import com.julun.huanque.common.bean.events.*
@@ -26,6 +27,7 @@ import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.RongCloudManager
+import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
@@ -135,6 +137,13 @@ class MessageFragment : BaseFragment() {
             msg_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         }
         mMessageViewModel.queryDataFlag.value = true
+
+        MessageProcessor.registerEventProcessor(this, object : MessageProcessor.SubAccountMsgNoticeProcessor {
+            override fun process(data: VoidResult) {
+                view_account_unread.show()
+            }
+
+        })
     }
 
     /**

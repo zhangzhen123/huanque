@@ -28,7 +28,7 @@ data class DynamicItemBean(
     var pics: MutableList<String> = mutableListOf(),
     var watermark: String = "",
     var userAnonymous: Boolean = false,
-    var deleteAuth:Boolean=false,
+    var deleteAuth: Boolean = false,
     //本地字段
     var hasEllipsis: Boolean? = null
 
@@ -85,6 +85,8 @@ data class DynamicComment(
     var replyNickname: String = "",
     var userId: Long = 0,
     var hasPraise: Boolean = false,
+    //是否具有删除权限
+    var deleteAuth: String = "",
     //评论人是否是楼主
     var originalPoster: String = "",
     //被回复人是否是楼主

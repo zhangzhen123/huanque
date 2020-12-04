@@ -1,11 +1,13 @@
 package com.julun.huanque.core.ui.dynamic
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -223,6 +225,19 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
             ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation()
         }
 
+        postList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    //停止状态，显示发布按钮
+                    showOrHidePublish(true)
+                } else {
+                    //滑动状态，隐藏发布按钮
+                    showOrHidePublish(false)
+                }
+            }
+
+        })
     }
 
     private fun initViewModel() {
@@ -277,6 +292,45 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         })
 
     }
+
+    //隐藏发布按钮动画
+    private var mHidePublishAnimation: ObjectAnimator? = null
+
+    //显示发布按钮动画
+    private var mShowPublishAnimation: ObjectAnimator? = null
+
+
+    /**
+     * 显示或者隐藏发布按钮
+     * @param show  true 显示发布按钮  false 隐藏发布按钮
+     */
+    private fun showOrHidePublish(show: Boolean) {
+
+        if (show) {
+            if (mShowPublishAnimation?.isRunning == true) {
+                //动画正在执行，什么都不操作
+                return
+            }
+            mShowPublishAnimation = ObjectAnimator.ofFloat(publish_dynamic, "translationX", publish_dynamic.translationX, 0f)
+                .apply { duration = 100 }
+            mHidePublishAnimation?.cancel()
+            mShowPublishAnimation?.cancel()
+            mShowPublishAnimation?.start()
+        } else {
+            if (mHidePublishAnimation?.isRunning == true) {
+                //动画正在执行，什么都不操作
+                return
+            }
+            mHidePublishAnimation = ObjectAnimator.ofFloat(publish_dynamic, "translationX", publish_dynamic.translationX, dp2pxf(95))
+                .apply { duration = 100 }
+
+            mHidePublishAnimation?.cancel()
+            mShowPublishAnimation?.cancel()
+            mHidePublishAnimation?.start()
+        }
+
+    }
+
 
     private fun loadDataFail(isPull: Boolean) {
         if (isPull) {
@@ -376,5 +430,10 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
 
     }
 
+    override fun onViewDestroy() {
+        super.onViewDestroy()
+        mHidePublishAnimation?.cancel()
+        mShowPublishAnimation?.cancel()
+    }
 
 }

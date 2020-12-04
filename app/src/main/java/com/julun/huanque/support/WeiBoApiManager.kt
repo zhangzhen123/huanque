@@ -105,9 +105,9 @@ object WeiBoApiManager : RequestCaller {
                 webObject.actionUrl = shareObj.shareUrl
                 webObject.defaultText = shareObj.shareTitle
                 message.mediaObject = webObject
-                val textObj = TextObject()
-                textObj.text = shareObj.shareContent
-                message.textObject = textObj
+//                val textObj = TextObject()
+//                textObj.text = shareObj.shareContent
+//                message.textObject = textObj
                 mShareClientOnly = false
                 //单纯分享链接太单调 这里带上相关图片
                 if (shareObj.bigPic.isEmpty()) {

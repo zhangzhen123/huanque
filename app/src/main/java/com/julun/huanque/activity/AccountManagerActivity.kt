@@ -11,6 +11,8 @@ import com.julun.huanque.R
 import com.julun.huanque.adapter.AccountAdapter
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.SingleAccount
+import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
@@ -54,8 +56,7 @@ class AccountManagerActivity : BaseActivity() {
         view_add.onClickNew {
             //创建分身
             val bean = mViewModel.accountBeanData.value ?: return@onClickNew
-            val maxCount = bean.maxSubNum
-            if (mAdapter.itemCount < maxCount + 1) {
+            if (bean.canAdd == BusiConstant.True) {
                 //可以创建分身,跳转创建分身页面
                 val intent = Intent(this, CreateAccountActivity::class.java)
                 if (ForceUtils.activityMatch(intent)) {
@@ -76,7 +77,11 @@ class AccountManagerActivity : BaseActivity() {
         })
         mViewModel.loginSuccessData.observe(this, Observer {
             if (it == true) {
-                mAdapter.notifyDataSetChanged()
+                val intent = Intent(this, MainActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    startActivity(intent)
+                }
+//                mAdapter.notifyDataSetChanged()
             }
         })
     }

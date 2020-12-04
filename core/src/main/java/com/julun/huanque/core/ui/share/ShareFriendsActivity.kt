@@ -64,7 +64,7 @@ class ShareFriendsActivity : BaseActivity() {
     private fun initRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = mShareContacsAdapter
-        mShareContacsAdapter.setEmptyView(MixedHelper.getEmptyView(this, "暂无密友"))
+        mShareContacsAdapter.setEmptyView(MixedHelper.getEmptyView(this, "暂无密友，试试分享到站外吧~"))
         mShareContacsAdapter.setOnItemClickListener { adapter, view, position ->
             val user = adapter.getItemOrNull(position) as? SocialUserInfo ?: return@setOnItemClickListener
             MyAlertDialog(this).showAlertWithOKAndCancel(

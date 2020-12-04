@@ -35,6 +35,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.EmojiInputListener
 import com.julun.huanque.common.interfaces.EventDispatchListener
 import com.julun.huanque.common.interfaces.SecondCommentClickListener
@@ -652,10 +653,8 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             }
 
             override fun secondLongCommentClick(view: View, secondComment: DynamicComment) {
-                if (mViewModel.dynamicInfo?.value?.post?.userId == SessionUtils.getUserId()) {
-                    //我的动态
-                    showActionPopupWindow(view, secondComment)
-                }
+                //我的动态
+                showActionPopupWindow(view, secondComment)
 
             }
         }
@@ -694,13 +693,9 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         }
         commentAdapter.setOnItemLongClickListener { adapter, view, position ->
             //长按操作
-            if (mViewModel.dynamicInfo?.value?.post?.userId == SessionUtils.getUserId()) {
-                val tempData = adapter.getItemOrNull(position) as? DynamicComment
-                showActionPopupWindow(view, tempData ?: return@setOnItemLongClickListener true)
-                return@setOnItemLongClickListener true
-            } else {
-                return@setOnItemLongClickListener false
-            }
+            val tempData = adapter.getItemOrNull(position) as? DynamicComment
+            showActionPopupWindow(view, tempData ?: return@setOnItemLongClickListener true)
+            return@setOnItemLongClickListener true
 
         }
         commentAdapter.setOnItemChildClickListener { adapter, view, position ->
@@ -720,6 +715,12 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                         mViewModel.praiseComment(tempData)
                     }
                 }
+                R.id.sdv_header -> {
+                    //跳转主页
+                    CommonInit.getInstance().getCurrentActivity()?.let { act ->
+                        HomePageActivity.newInstance(act, tempData.userId)
+                    }
+                }
             }
         }
         commentAdapter.loadMoreModule.setOnLoadMoreListener {
@@ -735,8 +736,8 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
      */
     private fun showActionPopupWindow(parentView: View, comment: DynamicComment) {
         val view = LayoutInflater.from(this).inflate(R.layout.view_dynamic_long_click, null)
-        var tempHeight = if (comment.userId == SessionUtils.getUserId()) {
-            //本人回复
+        var tempHeight = if (comment.deleteAuth != BusiConstant.True || comment.userId == SessionUtils.getUserId()) {
+            //只有2个操作按钮
             42 * 2 + 4
         } else {
             //非本人回复
@@ -753,6 +754,11 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             tv_report.hide()
         } else {
             tv_report.show()
+        }
+        if (comment.deleteAuth != BusiConstant.True) {
+            tv_del.hide()
+        } else {
+            tv_del.show()
         }
 
         tv_copy.onClickNew {

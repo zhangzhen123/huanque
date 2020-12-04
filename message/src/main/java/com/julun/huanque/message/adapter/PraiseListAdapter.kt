@@ -64,9 +64,9 @@ class PraiseListAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.rec
                 item.content
             }
             val praiseConent = if (item.comment.isEmpty()) {
-                "动态"
+                "动态你的动态"
             } else {
-                "评论"
+                "评论你的动态"
             }
 
 

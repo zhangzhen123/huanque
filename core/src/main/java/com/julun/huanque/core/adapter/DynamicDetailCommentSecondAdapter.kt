@@ -11,6 +11,7 @@ import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.setImageSpan
 import com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
+import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.core.R
 import java.lang.StringBuilder
 
@@ -22,7 +23,7 @@ import java.lang.StringBuilder
 class DynamicDetailCommentSecondAdapter : BaseQuickAdapter<DynamicComment, BaseViewHolder>(R.layout.recycler_item_dynamic_detail_comment_second) {
 
     init {
-        addChildClickViewIds(R.id.tv_praise)
+        addChildClickViewIds(R.id.tv_praise,R.id.sdv_header)
     }
 
     override fun convert(holder: BaseViewHolder, item: DynamicComment) {
@@ -32,7 +33,7 @@ class DynamicDetailCommentSecondAdapter : BaseQuickAdapter<DynamicComment, BaseV
         val tv_praise = holder.getView<TextView>(R.id.tv_praise)
         tv_praise.isActivated = item.hasPraise
         tv_praise.text = "${item.praiseNum}"
-        holder.setText(R.id.tv_content, item.content)
+        holder.setText(R.id.tv_content, EmojiSpanBuilder.buildEmotionSpannable(context, item.content))
             .setText(R.id.tv_time, item.createTime)
 
         //处理昵称

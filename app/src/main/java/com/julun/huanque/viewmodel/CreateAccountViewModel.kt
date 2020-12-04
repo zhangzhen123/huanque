@@ -13,6 +13,7 @@ import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.suger.request
 import com.julun.huanque.common.utils.SessionUtils
+import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -89,6 +90,7 @@ class CreateAccountViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 userService.subCreate(form).dataConvert()
+                ToastUtils.show("分身创建成功")
                 createAccountSuccess.value = true
             }, {})
         }
