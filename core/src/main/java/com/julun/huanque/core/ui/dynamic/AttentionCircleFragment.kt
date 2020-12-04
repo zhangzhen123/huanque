@@ -52,14 +52,14 @@ class AttentionCircleFragment : BaseLazyFragment() {
         swipeRefreshLayout.setOnRefreshListener {
             mAttentionCircleViewModel.requestType = CircleGroupTabType.Follow
             mAttentionCircleViewModel.mOffset = 0
-            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.REFRESH)
+            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.REFRESH,mCircleViewModel.mType)
         }
         MixedHelper.setSwipeRefreshStyle(swipeRefreshLayout)
     }
 
     override fun lazyLoadData() {
         mAttentionCircleViewModel.requestType = CircleGroupTabType.Follow
-        mAttentionCircleViewModel.getCircleGroupInfo(QueryType.INIT)
+        mAttentionCircleViewModel.getCircleGroupInfo(QueryType.INIT,mCircleViewModel.mType)
     }
     /**
      * 初始化RecyclerView
@@ -100,7 +100,7 @@ class AttentionCircleFragment : BaseLazyFragment() {
             }
         }
         mAttentionCircleAdapter.loadMoreModule.setOnLoadMoreListener {
-            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.LOAD_MORE)
+            mAttentionCircleViewModel.getCircleGroupInfo(QueryType.LOAD_MORE,mCircleViewModel.mType)
         }
     }
 

@@ -420,4 +420,10 @@ interface SocialService {
      */
     @POST("social/friend/chat/relateAccountMsg")
     suspend fun relateAccountMsg(@Body body: EmptyForm = EmptyForm()): Root<RelateAccountMsg>
+
+    /**
+     * 选择圈子接口
+     */
+    @POST("social/group/chose")
+    suspend fun groupChose(@Body form: CircleGroupTypeForm): Root<MyGroupInfo>
 }
