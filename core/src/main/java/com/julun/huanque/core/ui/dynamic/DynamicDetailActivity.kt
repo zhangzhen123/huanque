@@ -59,10 +59,7 @@ import kotlinx.android.synthetic.main.layout_header_comment.*
 import kotlinx.android.synthetic.main.layout_header_dynamic_detail.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.dip
-import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.textColor
+import org.jetbrains.anko.*
 import kotlin.math.max
 
 /**
@@ -348,7 +345,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         }
 
         headerLayout.findViewById<View>(R.id.tvSort).onClickNew {
-            tvSort.performClick()
+            switchPopupWindow(it ?: return@onClickNew)
         }
 
         headerLayout.findViewById<View>(R.id.tv_circle_name).onClickNew {
@@ -357,20 +354,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 
         tvSort.onClickNew {
             //时间和热度切换
-            if (mViewModel.commentType == CommentOrderType.Time) {
-                //切换到热度样式
-                mViewModel.commentType = CommentOrderType.Heat
-                mViewModel.mOffset = 0
-                tvSort.text = "时间"
-                headerLayout.findViewById<TextView>(R.id.tvSort).text = "时间"
-            } else {
-                //切换到时间样式
-                mViewModel.commentType = CommentOrderType.Time
-                mViewModel.mOffset = 0
-                tvSort.text = "热度"
-                headerLayout.findViewById<TextView>(R.id.tvSort).text = "热度"
-            }
-            mViewModel.commentList()
+            switchPopupWindow(it ?: return@onClickNew)
         }
 
         tv_follow_num.onClickNew {
@@ -394,6 +378,27 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 HomePageActivity.newInstance(this, info.userId)
         }
     }
+
+    /**
+     * 切换评论类型
+     */
+    private fun switchCommentType(type: String) {
+        if (type == CommentOrderType.Time) {
+            //切换到时间样式
+            mViewModel.commentType = CommentOrderType.Time
+            mViewModel.mOffset = 0
+            tvSort.text = "时间"
+            headerLayout.findViewById<TextView>(R.id.tvSort).text = "时间"
+        } else {
+            //切换到热度样式
+            mViewModel.commentType = CommentOrderType.Heat
+            mViewModel.mOffset = 0
+            tvSort.text = "热度"
+            headerLayout.findViewById<TextView>(R.id.tvSort).text = "热度"
+        }
+        mViewModel.commentList()
+    }
+
 
     //悬浮表情
     private var mEmojiPopupWindow: PopupWindow? = null
@@ -455,7 +460,19 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             if (it.isSuccess()) {
                 renderData(it.requireT())
             } else {
-                loadDataFail(it.isRefresh())
+//                loadDataFail(it.isRefresh())
+                val errorCode = it.error?.busiCode ?: return@Observer
+                if (errorCode == 501) {
+                    MyAlertDialog(this).showAlertWithOK(
+                        it.error?.busiMessage ?: "当前内容被删除，无法查看",
+                        MyAlertDialog.MyDialogCallback(onRight = {
+                            //删除动态
+//                        mViewModel.deletePost()
+                            finish()
+                        }), "提示", okText = "确定"
+                    )
+                }
+
             }
             mRefreshLayout.isRefreshing = false
         })
@@ -739,6 +756,56 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             mViewModel.commentList()
         }
     }
+
+    private var mSwitchPopupWindow: PopupWindow? = null
+
+    /**
+     * 显示热度和时间切换的PopupWindow
+     */
+    private fun switchPopupWindow(parentView: View) {
+        val view = LayoutInflater.from(this).inflate(R.layout.view_dynamic_switch, null)
+        if (mSwitchPopupWindow == null) {
+            mSwitchPopupWindow = PopupWindow(view, dp2px(94), dp2px(42 * 2 + 4))
+            val drawable = GlobalUtils.getDrawable(R.mipmap.icon_dynamic_long_click)
+            mSwitchPopupWindow?.setBackgroundDrawable(drawable)
+            mSwitchPopupWindow?.isOutsideTouchable = true
+            val tv_time = view.findViewById<View>(R.id.tv_time)
+            val tv_hot = view.findViewById<View>(R.id.tv_hot)
+
+            tv_time.onClickNew {
+                //时间排序
+                if (mViewModel.commentType == CommentOrderType.Time) {
+                    mSwitchPopupWindow?.dismiss()
+                    return@onClickNew
+                }
+                switchCommentType(CommentOrderType.Time)
+                mSwitchPopupWindow?.dismiss()
+            }
+            tv_hot.onClickNew {
+                //热度排序
+                if (mViewModel.commentType == CommentOrderType.Heat) {
+                    mSwitchPopupWindow?.dismiss()
+                    return@onClickNew
+                }
+                switchCommentType(CommentOrderType.Heat)
+                mSwitchPopupWindow?.dismiss()
+            }
+        }
+
+//        val tv_time = view.findViewById<View>(R.id.tv_time)
+//        val tv_hot = view.findViewById<View>(R.id.tv_hot)
+//        if (mViewModel.commentType == CommentOrderType.Time) {
+//            tv_time.backgroundColor = GlobalUtils.formatColor("#F5F5F5")
+//            tv_hot.backgroundColor = Color.WHITE
+//        } else {
+//            tv_hot.backgroundColor = GlobalUtils.formatColor("#F5F5F5")
+//            tv_time.backgroundColor = Color.WHITE
+//        }
+
+        mSwitchPopupWindow?.showAsDropDown(parentView)
+
+    }
+
 
     //长按评论的操作PopupWindow
     private var mLongActionPopupWindow: PopupWindow? = null
