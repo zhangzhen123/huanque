@@ -107,6 +107,7 @@
                         android:hint="分享你的精彩，让Ta对你有更多的了解..."
                         android:maxLength="2001"
                         android:minHeight="@dimen/dimen_135"
+                        android:maxHeight="@dimen/dimen_200"
                         android:padding="@dimen/dimen_10"
                         android:textSize="@dimen/sp_13" />
 
