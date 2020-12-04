@@ -865,8 +865,8 @@ data class CircleGroup(
  * 分身账号的数据
  */
 data class AccountBean(
-    //账号数量上线
-    var maxSubNum: Int = 0,
+    //是否可以新增分身账号
+    var canAdd : String = "",
     //账号列表
     var subList: MutableList<SingleAccount> = mutableListOf(),
     //不能创建账号的原因
