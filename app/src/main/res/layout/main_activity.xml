@@ -126,8 +126,8 @@
             android:layout_height="43dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="17dp"
-            app:lottie_fileName="json/live.json"
-            app:lottie_imageAssetsFolder="image/live"
+            app:lottie_fileName="json/leyuan.json"
+            app:lottie_imageAssetsFolder="image/leyuan"
             app:lottie_scale="0.5" />
         <TextView
             android:id="@+id/item_square"

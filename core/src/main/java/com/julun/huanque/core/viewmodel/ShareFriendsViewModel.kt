@@ -60,11 +60,11 @@ class ShareFriendsViewModel : BaseViewModel() {
     /**
      * 发送动态消息
      */
-    fun sendPostMessage(user: SocialUserInfo) {
+    fun sendPostMessage(user: SocialUserInfo, targetUserId: Long) {
         ToastUtils.show("分享成功")
         SendMessageManager.sendPostMessage(mPostShareBean ?: return, user)
         Requests.create(SocialService::class.java)
-            .saveShareLog(PostShareForm(ShareTypeEnum.Chat, mPostShareBean?.postId ?: 0))
+            .saveShareLog(PostShareForm(ShareTypeEnum.Chat, mPostShareBean?.postId ?: 0, friendId = targetUserId))
             .handleResponse(makeSubscriber<StatusResult> {
                 logger("分享保存记录成功")
                 if (it.status == BusiConstant.True) {
