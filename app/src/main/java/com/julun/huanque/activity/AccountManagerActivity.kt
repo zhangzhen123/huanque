@@ -12,6 +12,7 @@ import com.julun.huanque.adapter.AccountAdapter
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.SingleAccount
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.ParamConstant
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
@@ -76,7 +77,11 @@ class AccountManagerActivity : BaseActivity() {
         })
         mViewModel.loginSuccessData.observe(this, Observer {
             if (it == true) {
-                mAdapter.notifyDataSetChanged()
+                val intent = Intent(this, MainActivity::class.java)
+                if (ForceUtils.activityMatch(intent)) {
+                    startActivity(intent)
+                }
+//                mAdapter.notifyDataSetChanged()
             }
         })
     }

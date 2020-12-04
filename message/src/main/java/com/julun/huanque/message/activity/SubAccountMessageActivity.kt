@@ -1,16 +1,22 @@
 package com.julun.huanque.message.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.SingleAccount
 import com.julun.huanque.common.bean.beans.SingleAccountMsg
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.events.LoginSubAccountEvent
+import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.IntentParamKey
+import com.julun.huanque.common.constant.MainPageIndexConst
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.message.R
 import com.julun.huanque.message.adapter.AccountMsgAdapter
@@ -77,7 +83,11 @@ class SubAccountMessageActivity : BaseActivity() {
     fun loginEvent(event: LoginEvent) {
         if (event.result) {
             //登录成功，重新获取数据
-            mViewModel.getMsgList()
+//            mViewModel.getMsgList()
+
+            ARouter.getInstance().build(ARouterConstant.MAIN_ACTIVITY)
+                .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX)
+                .navigation()
         }
     }
 

@@ -25,6 +25,7 @@ import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
@@ -86,6 +87,10 @@ class CreateAccountActivity : BaseActivity() {
         con_root.mEventListener = object : EventListener {
             override fun onDispatch(ev: MotionEvent?) {
                 //昵称有变化再请求，没有变化 无需请求
+                if (ev?.action == MotionEvent.ACTION_DOWN) {
+                    //隐藏键盘
+                    ScreenUtils.hideSoftInput(et_nickname)
+                }
                 if (ev?.action == MotionEvent.ACTION_DOWN && mViewModel.nicknameChange) {
                     val nickname = et_nickname.text.toString()
                     if (mViewModel.nicknameChange && mViewModel.nicknameEnable.value != true && nickname.isNotEmpty()) {
