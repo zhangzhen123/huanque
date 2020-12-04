@@ -495,7 +495,7 @@ class PublishStateActivity : BaseActivity() {
                 selectionStart = input_text.selectionStart
                 selectionEnd = input_text.selectionEnd
                 if (temp != null && temp!!.length > maxTextSize) {
-                    ToastUtils.show(getString(R.string.state_out_of_range))
+                    ToastUtils.show2(getString(R.string.state_out_of_range, maxTextSize))
                     s.delete(selectionStart - 1, selectionEnd)
                     val tempSelection = selectionEnd
                     input_text.text = s
@@ -510,7 +510,7 @@ class PublishStateActivity : BaseActivity() {
                 val currentLength = input_text.text.length
                 val emojiLength = emotion.text.length
                 if (currentLength + emojiLength > maxTextSize) {
-                    Toast.makeText(this@PublishStateActivity, "输入长度超限", Toast.LENGTH_SHORT).show()
+                    ToastUtils.show2(getString(R.string.state_out_of_range, maxTextSize))
                     return
                 }
                 val start: Int = input_text.selectionStart
