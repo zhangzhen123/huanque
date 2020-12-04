@@ -221,14 +221,14 @@ class PublishStateActivity : BaseActivity() {
                         }
                     }
                 }
-                .addEditTextFocusChangeListener {
-                    onFocusChange { _, hasFocus ->
-                        //可选实现，监听输入框焦点变化
-                        if (hasFocus) {
-//                            scrollToBottom()
-                        }
-                    }
-                }
+//                .addEditTextFocusChangeListener {
+//                    onFocusChange { _, hasFocus ->
+//                        //可选实现，监听输入框焦点变化
+//                        if (hasFocus) {
+////                            scrollToBottom()
+//                        }
+//                    }
+//                }
                 .addContentScrollMeasurer(object : ContentScrollMeasurer {
                     override fun getScrollDistance(defaultDistance: Int) = 0
 
@@ -240,7 +240,7 @@ class PublishStateActivity : BaseActivity() {
                         //可选实现，输入法显示回调
                         logger.info("唤起系统输入法")
                         ll_input.show()
-                        mHelper?.toKeyboardState(true)
+//                        mHelper?.toKeyboardState(true)
 //                        liveViewManager.hideHeaderForAnimation()
 //                        iv_emoji.isSelected = false
 //                        scrollToBottom()
@@ -369,6 +369,7 @@ class PublishStateActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
+        hideSoftInput()
         if (selectList.size > 0 || input_text.text.toString().isNotEmpty()) {
             dialog.showAlertWithOKAndCancel(
                 "是否保存草稿？", MyAlertDialog.MyDialogCallback(
@@ -624,7 +625,8 @@ class PublishStateActivity : BaseActivity() {
 
     private fun hideSoftInput() {
 //        KPSwitchConflictUtil.hidePanelAndKeyboard(emojiView)
-        ScreenUtils.hideSoftInput(input_text)
+//        ScreenUtils.hideSoftInput(input_text)
+        mHelper?.resetState()
     }
 
     private fun startPublish() {

@@ -44,8 +44,8 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
 
     companion object {
         //dp
-        val SINGLE_PHOTO_MAX_WIDTH = dp2px(300)
-        val SINGLE_PHOTO_MAX_HEIGHT = dp2px(300)
+        val SINGLE_PHOTO_MAX_WIDTH = ScreenUtils.getScreenWidth() - dp2px(30)
+        val SINGLE_PHOTO_MAX_HEIGHT = ScreenUtils.getScreenWidth() - dp2px(30)
         val SINGLE_PHOTO_DEFAULT = dp2px(200)
         val SINGLE_PHOTO_MINI_SIZE = dp2px(150)
         val space = dp2px(5)
@@ -200,23 +200,29 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
                         if (h > SINGLE_PHOTO_MAX_HEIGHT) {
                             w = w * SINGLE_PHOTO_MAX_HEIGHT / h
                             h = SINGLE_PHOTO_MAX_HEIGHT
-                        } else if (h < SINGLE_PHOTO_MINI_SIZE) {
+                        } /*else if (h < SINGLE_PHOTO_MINI_SIZE) {
                             //最小不能小于最小网格
 //                            w = w * SINGLE_PHOTO_MINI_SIZE / h
 //                            h = SINGLE_PHOTO_MINI_SIZE
                             w = SINGLE_PHOTO_MINI_SIZE
                             h = SINGLE_PHOTO_MINI_SIZE
-                        }
+                        }*/
                     } else {
                         if (w > SINGLE_PHOTO_MAX_WIDTH) {
                             h = SINGLE_PHOTO_MAX_WIDTH * h / w
                             w = SINGLE_PHOTO_MAX_WIDTH
-                        } else if (w < SINGLE_PHOTO_MINI_SIZE) {
+                        }/* else if (w < SINGLE_PHOTO_MINI_SIZE) {
 //                            h = SINGLE_PHOTO_MINI_SIZE * h / w
 //                            w = SINGLE_PHOTO_MINI_SIZE
                             w = SINGLE_PHOTO_MINI_SIZE
                             h = SINGLE_PHOTO_MINI_SIZE
-                        }
+                        }*/
+                    }
+                    if (w < SINGLE_PHOTO_MINI_SIZE) {
+                        w = SINGLE_PHOTO_MINI_SIZE
+                    }
+                    if (h < SINGLE_PHOTO_MINI_SIZE) {
+                        h = SINGLE_PHOTO_MINI_SIZE
                     }
                     rvLp.height = h
                     rvLp.width = w
