@@ -79,7 +79,7 @@ class HomePageDynamicPicListAdapter : BaseDelegateMultiAdapter<Any, BaseViewHold
                 if (item.living == BusiConstant.True) {
                     //开播中
                     sdv_living.show()
-                    tv_living.text = "开播中"
+                    tv_living.text = "直播中"
                     ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
                     val playInfo = item.playInfo
                     if (playInfo != null) {
