@@ -150,11 +150,13 @@ class DynamicDetailViewModel : BaseViewModel() {
      */
     fun praiseComment(comment: DynamicComment) {
         viewModelScope.launch {
-            service.commentPraise(CommentIdForm(comment.commentId)).dataConvert()
-            commentPraiseResult.value = comment.apply {
-                hasPraise = true
-                praiseNum += 1
-            }
+            request({
+                service.commentPraise(CommentIdForm(comment.commentId)).dataConvert()
+                commentPraiseResult.value = comment.apply {
+                    hasPraise = true
+                    praiseNum += 1
+                }
+            }, {})
         }
     }
 
@@ -163,12 +165,14 @@ class DynamicDetailViewModel : BaseViewModel() {
      */
     fun cancelPraiseComment(comment: DynamicComment) {
         viewModelScope.launch {
-            service.cancelCommentPraise(CommentIdForm(comment.commentId)).dataConvert()
-            commentPraiseResult.value = comment.apply {
-                hasPraise = false
-                praiseNum = max(0, praiseNum - 1)
-            }
-            dynamicChangeFlag = true
+            request({
+                service.cancelCommentPraise(CommentIdForm(comment.commentId)).dataConvert()
+                commentPraiseResult.value = comment.apply {
+                    hasPraise = false
+                    praiseNum = max(0, praiseNum - 1)
+                }
+                dynamicChangeFlag = true
+            })
         }
     }
 
