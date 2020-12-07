@@ -160,8 +160,8 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_dyc_content"
-            app:placeholderImage="@mipmap/logo_placeholder_medium"
-            app:placeholderImageScaleType="centerInside"
+            app:placeholderImage="@drawable/logo_placeholder_bg_m"
+            app:placeholderImageScaleType="fitXY"
             app:roundedCornerRadius="4dp"
             tools:visibility="visible" />
 

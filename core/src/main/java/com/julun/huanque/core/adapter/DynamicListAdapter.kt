@@ -45,7 +45,7 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
     companion object {
         //dp
         val SINGLE_PHOTO_MAX_WIDTH = ScreenUtils.getScreenWidth() - dp2px(30)
-        val SINGLE_PHOTO_MAX_HEIGHT = ScreenUtils.getScreenWidth() - dp2px(30)
+        val SINGLE_PHOTO_MAX_HEIGHT = dp2px(300)
         val SINGLE_PHOTO_DEFAULT = dp2px(200)
         val SINGLE_PHOTO_MINI_SIZE = dp2px(150)
         val space = dp2px(5)
