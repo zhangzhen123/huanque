@@ -11,13 +11,16 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.StatisticCode
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.constant.UserChangeType
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.manager.HuanViewModelManager
+import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
@@ -173,6 +176,13 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             // 没关注直接关注，关注了打开主播信息界面
             if (!isSubscribed) {
                 playerViewModel?.subscribeSource = "直播间左上角"
+                StatisticManager.push(
+                    StatisticItem(
+                        eventType = StatisticManager.Click,
+                        eventCode = StatisticCode.Follow+ StatisticCode.LiveRoom,
+                        clickNum = 1
+                    )
+                )
                 HuanViewModelManager.huanQueViewModel.follow(programId)
             }
             subscribeAnchor.isEnabled = false

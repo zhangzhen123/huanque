@@ -22,10 +22,12 @@ import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.common.bean.beans.SquareTab
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
+import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
+import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.SessionUtils
@@ -206,6 +208,13 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 }
                 R.id.btn_action -> {
                     logger.info("关注")
+                    StatisticManager.push(
+                        StatisticItem(
+                            eventType = StatisticManager.Click,
+                            eventCode = StatisticCode.Follow+StatisticCode.Post,
+                            clickNum = 1
+                        )
+                    )
                     huanQueViewModel.follow(item.userId)
                 }
                 R.id.sdv_photo -> {

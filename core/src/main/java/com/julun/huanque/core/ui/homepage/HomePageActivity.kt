@@ -36,6 +36,7 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
@@ -43,6 +44,7 @@ import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
 import com.julun.huanque.common.manager.audio.MediaPlayFunctionListener
 import com.julun.huanque.common.manager.audio.MediaPlayInfoListener
+import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.*
@@ -227,6 +229,14 @@ class HomePageActivity : BaseActivity() {
             if (mHomePageViewModel.followStatus.value == BusiConstant.False) {
                 //未关注状态   关注
 //                mHomePageViewModel.follow()
+                StatisticManager.push(
+                    StatisticItem(
+                        eventType = StatisticManager.Click,
+                        eventCode = StatisticCode.Follow+StatisticCode.Home,
+                        clickNum = 1
+                    )
+                )
+
                 huanQueViewModel.follow(mHomePageViewModel.targetUserId)
             } else {
                 //关注状态  取消关注

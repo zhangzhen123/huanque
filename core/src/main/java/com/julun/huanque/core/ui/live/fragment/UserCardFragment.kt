@@ -20,10 +20,12 @@ import com.julun.huanque.common.bean.beans.BottomActionBean
 import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
+import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
+import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -213,6 +215,13 @@ class UserCardFragment : BaseDialogFragment() {
                 huanQueViewModel.unFollow(mUserCardViewModel.mUserId)
             } else {
                 //未关注，关注
+                StatisticManager.push(
+                    StatisticItem(
+                        eventType = StatisticManager.Click,
+                        eventCode = StatisticCode.Follow+ StatisticCode.LiveRoom,
+                        clickNum = 1
+                    )
+                )
                 huanQueViewModel.follow(mUserCardViewModel.mUserId)
             }
             tv_attention.isEnabled = false

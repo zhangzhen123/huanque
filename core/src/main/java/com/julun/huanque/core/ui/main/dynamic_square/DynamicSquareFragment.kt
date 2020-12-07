@@ -15,7 +15,10 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.SquareTab
+import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.PublicStateCode
+import com.julun.huanque.common.constant.StatisticCode
+import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
@@ -69,7 +72,14 @@ class DynamicSquareFragment : BaseFragment() {
         initMagicIndicator()
 
         publish_dynamic.onClickNew {
-            requireActivity().startActivity<PublishStateActivity>( )
+            StatisticManager.push(
+                StatisticItem(
+                    eventType = StatisticManager.Click,
+                    eventCode = StatisticCode.PubPost+StatisticCode.Home,
+                    clickNum = 1
+                )
+            )
+            requireActivity().startActivity<PublishStateActivity>()
         }
 
     }
@@ -95,6 +105,7 @@ class DynamicSquareFragment : BaseFragment() {
         viewModel.queryInfo()
 
     }
+
 
     /**
      * 初始化历史记录指示器
@@ -211,6 +222,7 @@ class DynamicSquareFragment : BaseFragment() {
         }
     }
 
+    var startShowTime: Long = 0L
     override fun onHiddenChanged(hidden: Boolean) {
         logger.info("onHiddenChanged=$hidden")
         super.onHiddenChanged(hidden)
@@ -221,6 +233,22 @@ class DynamicSquareFragment : BaseFragment() {
                 it.onParentHiddenChanged(hidden)
             }
 
+        }
+        if (!hidden) {
+            startShowTime = System.currentTimeMillis()
+        } else {
+            val current = System.currentTimeMillis()
+            val duration = current - startShowTime
+            if (duration > 10 * 1000) {
+                StatisticManager.push(
+                    StatisticItem(
+                        eventType = StatisticManager.Scan,
+                        eventCode = StatisticCode.Post,
+                        enterTime = startShowTime,
+                        leaveTime = current
+                    )
+                )
+            }
         }
     }
 

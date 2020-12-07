@@ -9,10 +9,13 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.TabBean
 import com.julun.huanque.common.bean.beans.MicOperateBean
 import com.julun.huanque.common.bean.beans.PKCreateEvent
+import com.julun.huanque.common.bean.forms.StatisticItem
+import com.julun.huanque.common.constant.StatisticCode
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.OrderDialogManager
+import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.viewmodel.ConnectMicroViewModel
@@ -197,6 +200,13 @@ class PlayerDialogManager(val context: PlayerActivity) {
                     playerViewModel.finishState.value = true
                 }, onRight = {
                     playerViewModel.finishCertain = true
+                    StatisticManager.push(
+                        StatisticItem(
+                            eventType = StatisticManager.Click,
+                            eventCode = StatisticCode.Follow+ StatisticCode.LiveRoom,
+                            clickNum = 1
+                        )
+                    )
                     huanQueViewModel.follow(playerViewModel.programId)
                     playerViewModel.finishState.value = true
                 }), "关注提醒", okText = "关注并退出", noText = "直接退出")

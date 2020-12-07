@@ -24,12 +24,14 @@ import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.events.*
 import com.julun.huanque.common.bean.forms.SaveLocationForm
+import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.*
 import com.julun.huanque.common.message_dispatch.MessageProcessor
+import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
@@ -449,6 +451,14 @@ class MainActivity : BaseActivity() {
             showFragmentNew(MainPageIndexConst.MAIN_FRAGMENT_INDEX)
         }
         view_dynamic_square.onClickNew {
+            //统计点击
+            StatisticManager.push(
+                StatisticItem(
+                    eventType = StatisticManager.Click,
+                    eventCode = StatisticCode.PostHome,
+                    clickNum = 1
+                )
+            )
             showFragmentNew(MainPageIndexConst.DYNAMIC_SQUARE_INDEX)
         }
         view_program.onClickNew {

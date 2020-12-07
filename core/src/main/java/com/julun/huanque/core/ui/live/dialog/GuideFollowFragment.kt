@@ -4,9 +4,12 @@ import android.view.WindowManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
 import com.julun.huanque.common.base.BaseDialogFragment
+import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.DialogOrderNumber
+import com.julun.huanque.common.constant.StatisticCode
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
+import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
@@ -48,6 +51,14 @@ class GuideFollowFragment : BaseDialogFragment() {
         initData()
         follow_anchor.onClickNew {
             playerViewModel.subscribeSource = "底部引导"
+            StatisticManager.push(
+                StatisticItem(
+                    eventType = StatisticManager.Click,
+                    eventCode = StatisticCode.Follow+ StatisticCode.LiveRoom,
+                    clickNum = 1
+                )
+            )
+
             huanQueViewModel.follow(playerViewModel.programId)
             dismiss()
         }

@@ -21,10 +21,12 @@ import com.julun.huanque.common.bean.beans.DynamicItemBean
 import com.julun.huanque.common.bean.beans.DynamicListInfo
 import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
+import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
+import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.ForceUtils
@@ -230,6 +232,13 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
 
         publish_dynamic.onClickNew {
             logger.info("跳转到交友")
+            StatisticManager.push(
+                StatisticItem(
+                    eventType = StatisticManager.Click,
+                    eventCode = StatisticCode.PubPost+StatisticCode.MyPost,
+                    clickNum = 1
+                )
+            )
             ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation()
         }
 
