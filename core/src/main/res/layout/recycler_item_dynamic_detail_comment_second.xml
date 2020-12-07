@@ -14,6 +14,7 @@
         app:placeholderImage="@mipmap/logo_placeholder_medium"
         app:roundAsCircle="true" />
 
+
     <com.julun.huanque.common.widgets.draweetext.DraweeSpanTextView
         android:id="@+id/tv_nickname"
         android:layout_width="0px"
@@ -22,11 +23,75 @@
         android:layout_marginRight="48dp"
         android:textColor="@color/black_666"
         android:textSize="@dimen/sp_14"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/sdv_header"
         app:layout_constraintLeft_toRightOf="@id/sdv_header"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/sdv_header"
         tools:text="冷风看见你微积分" />
+
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="54dp"
+        android:textColor="@color/black_666"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="@id/sdv_header"
+        app:layout_constraintLeft_toRightOf="@id/sdv_header"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/sdv_header">
+
+        <TextView
+            android:id="@+id/tv_owner_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/black_666"
+            android:textSize="@dimen/sp_14"
+            tools:text="临近空间" />
+
+        <ImageView
+            android:id="@+id/iv_owner_first"
+            android:layout_width="32dp"
+            android:layout_height="14dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/icon_original_poster_comment"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+
+        <ImageView
+            android:layout_width="7dp"
+            android:layout_height="9dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/icon_arrow_reply" />
+
+        <TextView
+            android:id="@+id/tv_reply_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/black_666"
+            android:textSize="@dimen/sp_14"
+            tools:text="临近空间" />
+
+        <ImageView
+            android:id="@+id/iv_owner_second"
+            android:layout_width="32dp"
+            android:layout_height="14dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/icon_original_poster_comment"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_praise"

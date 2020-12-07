@@ -469,6 +469,8 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                             //删除动态
 //                        mViewModel.deletePost()
                             finish()
+                        }, onCancel = {
+                            finish()
                         }), "提示", okText = "确定"
                     )
                 }

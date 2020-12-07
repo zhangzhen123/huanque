@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.base.dialog.BottomDialog
+import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
@@ -84,7 +85,13 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 when (action.code) {
                     BottomActionCode.DELETE -> {
                         logger.info("删除动态 ${currentItem?.postId}")
-                        huanQueViewModel.deletePost(currentItem?.postId?:return)
+                        MyAlertDialog(requireActivity()).showAlertWithOKAndCancel(
+                            "确定删除该动态内容？",
+                            MyAlertDialog.MyDialogCallback(onRight = {
+                                //删除动态
+                                huanQueViewModel.deletePost(currentItem?.postId ?: return@MyDialogCallback)
+                            }), "提示", okText = "确定"
+                        )
                     }
                     BottomActionCode.REPORT -> {
                         logger.info("举报动态 ${currentItem?.postId}")
@@ -314,7 +321,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 //                MixedHelper.safeNotifyItem(index, postList, dynamicAdapter)
 
                 val result = dynamicAdapter.data.filter { item -> item.userId == change.userId }.map { bean ->
-                    bean.follow = change.follow == FollowStatus.True||change.follow == FollowStatus.Mutual
+                    bean.follow = change.follow == FollowStatus.True || change.follow == FollowStatus.Mutual
                 }
                 dynamicAdapter.notifyDataSetChanged()
             }
@@ -374,6 +381,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
 
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun receiveLoginCode(event: LoginEvent) {
         logger.info("登录事件:${event.result}")
@@ -382,6 +390,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         }
 
     }
+
     private fun loadDataFail(isPull: Boolean) {
         if (isPull) {
             ToastUtils.show2("刷新失败")
