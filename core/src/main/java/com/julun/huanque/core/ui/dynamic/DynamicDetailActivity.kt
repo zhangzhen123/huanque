@@ -148,10 +148,10 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
 
         //计算RecyclerView的高度
-        val recyclerHeight = ScreenUtils.getScreenHeight() - dp2px(44 + 60)
-        val refreshParams = mRefreshLayout.layoutParams
-        refreshParams.height = recyclerHeight
-        mRefreshLayout.layoutParams = refreshParams
+//        val recyclerHeight = ScreenUtils.getScreenHeight() - dp2px(44 + 60)
+//        val refreshParams = mRefreshLayout.layoutParams
+//        refreshParams.height = recyclerHeight
+//        mRefreshLayout.layoutParams = refreshParams
 
 //        val rvParams = rv_comments.layoutParams
 //        rvParams.height = recyclerHeight
@@ -384,9 +384,10 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 ////            val tempView = commentAdapter.getViewByPosition(1,R.layout.recycler_item_dynamic_detail_comment_first)
 //            val headerBottom = headerLayout.bottom
 //            rv_comments.smoothScrollBy(0, totalHeight)
+            rv_comments.scrollToPosition(1)
             val layoutManager = rv_comments.layoutManager as? LinearLayoutManager
             layoutManager?.scrollToPositionWithOffset(1, dp2px(40) + 1)
-            layoutManager?.stackFromEnd = true
+//            layoutManager?.stackFromEnd = true
 
         }
     }
@@ -708,17 +709,17 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 //        lp.height = ScreenUtils.getScreenHeight()
         commentAdapter.addFooterView(foot)
 
-        commentAdapter.setEmptyView(
-            MixedHelper.getEmptyView(
-                this,
-                msg = "暂无评论，快去抢沙发吧～",
-                isImageHide = true
-            ).apply {
-                val ll = this as LinearLayout
-                val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(150))
-                this.layoutParams = lp
-            }
-        )
+//        commentAdapter.setEmptyView(
+//            MixedHelper.getEmptyView(
+//                this,
+//                msg = "暂无评论，快去抢沙发吧～",
+//                isImageHide = true
+//            ).apply {
+//                val ll = this as LinearLayout
+//                val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(150))
+//                this.layoutParams = lp
+//            }
+//        )
 
 //        if (commentAdapter.data.isEmpty()) {
 //            commentAdapter.setEmptyView(
@@ -1143,13 +1144,13 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             commentAdapter.loadMoreModule.loadMoreEnd()
         }
 
-        //重置评论类型
+//        //重置评论类型
         mViewModel.commentType = CommentOrderType.Heat
         tvSort.text = "热度"
         headerLayout.findViewById<TextView>(R.id.tvSort).text = "热度"
-        val layoutManager = rv_comments.layoutManager as? LinearLayoutManager
-        layoutManager?.scrollToPositionWithOffset(0,0)
-        layoutManager?.stackFromEnd = false
+//        val layoutManager = rv_comments.layoutManager as? LinearLayoutManager
+//        layoutManager?.scrollToPositionWithOffset(0,0)
+//        layoutManager?.stackFromEnd = false
     }
 
     override fun onStart() {
@@ -1241,7 +1242,17 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 //由于上面在renderData中已经设置了空白页 这里不需要了
 //                commentAdapter.setEmptyView(MixedHelper.getEmptyView(this))
                 if (commentAdapter.data.isEmpty()) {
-
+                    commentAdapter.setEmptyView(
+                        MixedHelper.getEmptyView(
+                            this,
+                            msg = "暂无评论，快去抢沙发吧～",
+                            isImageHide = true
+                        ).apply {
+                            val ll = this as LinearLayout
+                            val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(150))
+                            this.layoutParams = lp
+                        }
+                    )
                 }
             }
             NetStateType.LOADING -> {

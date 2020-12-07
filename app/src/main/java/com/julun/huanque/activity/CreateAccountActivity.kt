@@ -90,6 +90,7 @@ class CreateAccountActivity : BaseActivity() {
                 if (ev?.action == MotionEvent.ACTION_DOWN) {
                     //隐藏键盘
                     ScreenUtils.hideSoftInput(et_nickname)
+                    et_nickname.clearFocus()
                 }
                 if (ev?.action == MotionEvent.ACTION_DOWN && mViewModel.nicknameChange) {
                     val nickname = et_nickname.text.toString()
