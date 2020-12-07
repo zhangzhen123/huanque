@@ -239,9 +239,10 @@ class PlayerActivity : BaseActivity() {
     /**
      * 对外开放弹窗管理类 方便调用
      */
-    fun getDialogManager():PlayerDialogManager{
+    fun getDialogManager(): PlayerDialogManager {
         return liveViewManager.mDialogManager
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //直播间禁止重建 //会有各种问题
         super.onCreate(null)
@@ -748,12 +749,7 @@ class PlayerActivity : BaseActivity() {
 //                        iv_emoji.isSelected = false
                     }
                     onPanel { view ->
-                        liveViewManager.hideHeaderForAnimation()
-                        //可选实现，面板显示回调
-//                        if (view is PanelView) {
-//                            iv_emoji.isSelected = view.id == R.id.panel_emotion
-//                            scrollToBottom()
-//                        }
+//                        liveViewManager.hideHeaderForAnimation()
                     }
                     onPanelSizeChange { panelView, _, _, _, width, height ->
                         //可选实现，输入法动态调整时引起的面板高度变化动态回调
@@ -777,21 +773,6 @@ class PlayerActivity : BaseActivity() {
                 .logTrack(false)
                 .build()                     //可选，默认false，是否默认打开输入法
 //
-//            recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                    super.onScrolled(recyclerView, dx, dy)
-//                    val layoutManager = recyclerView.layoutManager
-//                    if (layoutManager is LinearLayoutManager) {
-//                        val childCount = recyclerView.childCount
-//                        if (childCount > 0) {
-//                            val lastChildView = recyclerView.getChildAt(childCount - 1)
-//                            val bottom = lastChildView.bottom
-//                            val listHeight: Int = recyclerview.height - recyclerview.paddingBottom
-//                            unfilledHeight = listHeight - bottom
-//                        }
-//                    }
-//                }
-//            })
         }
     }
 
@@ -959,7 +940,7 @@ class PlayerActivity : BaseActivity() {
      * @param connect true:basic接口返回新的Session，需要重新连接融云   false:当前保存得的session数据是可以正常使用的
      */
     private fun initLoadingLiveRoom(connect: Boolean) {
-        liveViewManager.showHeaderAndHideChatView()
+        showHeaderAndHideChatView()
         if (!isAnchor) {
 
             //用户的逻辑
@@ -1914,14 +1895,14 @@ class PlayerActivity : BaseActivity() {
     }
 
     // 返回按键，聊天视图回到原点
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        if (event.action === KeyEvent.ACTION_UP && event.keyCode === KeyEvent.KEYCODE_BACK) {
-            if (liveViewManager.showHeaderAndHideChatView()) {
-                return true
-            }
-        }
-        return super.dispatchKeyEvent(event)
-    }
+//    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+//        if (event.action == KeyEvent.ACTION_UP && event.keyCode == KeyEvent.KEYCODE_BACK) {
+//            if (showHeaderAndHideChatView()) {
+//                return true
+//            }
+//        }
+//        return super.dispatchKeyEvent(event)
+//    }
 
     override fun onPause() {
         // 隐藏键盘还原视图
@@ -1931,9 +1912,7 @@ class PlayerActivity : BaseActivity() {
 
 
     private fun showOriView() {
-        if (ll_input.isVisible()) {
-            liveViewManager.showHeaderAndHideChatView()
-        }
+        showHeaderAndHideChatView()
     }
 
     //针对不确定性支付 处理页面回来刷新支付的
@@ -2284,6 +2263,19 @@ class PlayerActivity : BaseActivity() {
 //            }
         }
         mConfigViewModel?.horizonState?.value = state
+    }
+
+    /**
+     * 显示主布局 隐藏聊天输入框
+     */
+    private fun showHeaderAndHideChatView(): Boolean {
+
+        if (ll_input.isVisible()) {
+            // emojiview显示的情况下，先隐藏整个聊天框，动画完了再显示底部actionview
+            mHelper?.hookSystemBackByPanelSwitcher()
+            return true
+        }
+        return false
     }
 
     /**

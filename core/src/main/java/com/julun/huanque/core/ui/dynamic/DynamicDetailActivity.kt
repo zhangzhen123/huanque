@@ -991,24 +991,18 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                             if (h > DynamicListAdapter.SINGLE_PHOTO_MAX_HEIGHT) {
                                 w = w * DynamicListAdapter.SINGLE_PHOTO_MAX_HEIGHT / h
                                 h = DynamicListAdapter.SINGLE_PHOTO_MAX_HEIGHT
-                            } else if (h < DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE) {
-                                //最小不能小于最小网格
-//                            w = w * SINGLE_PHOTO_MINI_SIZE / h
-//                            h = SINGLE_PHOTO_MINI_SIZE
-                                w = DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE
-                                h = DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE
                             }
                         } else {
                             if (w > DynamicListAdapter.SINGLE_PHOTO_MAX_WIDTH) {
                                 h = DynamicListAdapter.SINGLE_PHOTO_MAX_WIDTH * h / w
                                 w = DynamicListAdapter.SINGLE_PHOTO_MAX_WIDTH
-                            } else if (h < DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE) {
-                                //最小不能小于最小网格
-//                            w = w * SINGLE_PHOTO_MINI_SIZE / h
-//                            h = SINGLE_PHOTO_MINI_SIZE
-                                w = DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE
-                                h = DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE
                             }
+                        }
+                        if (w < DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE) {
+                            w = DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE
+                        }
+                        if (h < DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE) {
+                            h = DynamicListAdapter.SINGLE_PHOTO_MINI_SIZE
                         }
                         rvLp.height = h
                         rvLp.width = w

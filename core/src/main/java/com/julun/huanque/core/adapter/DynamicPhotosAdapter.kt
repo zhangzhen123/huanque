@@ -22,7 +22,7 @@ class DynamicPhotosAdapter : BaseQuickAdapter<PhotoBean, BaseViewHolder>(R.layou
 
     override fun convert(holder: BaseViewHolder, item: PhotoBean) {
         val imgView = holder.getView<SimpleDraweeView>(R.id.sdv_photo)
-        imgView.loadImage(item.url + BusiConstant.OSS_160, 85f, 85f)
+        imgView.loadImage(item.url + BusiConstant.OSS_350, 85f, 85f)
 //        imgView.hierarchy.actualImageScaleType = ScalingUtils.ScaleType.CENTER_CROP
 
         if (mOnItemClick != null) {

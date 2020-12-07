@@ -104,8 +104,6 @@
                         android:layout_marginLeft="15dp"
                         android:layout_weight="1"
                         android:background="@color/transparent"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
                         android:gravity="center_vertical|left"
                         android:hint="聊一聊吧..."
                         android:imeOptions="actionSend"

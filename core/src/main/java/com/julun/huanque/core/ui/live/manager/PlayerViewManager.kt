@@ -171,7 +171,7 @@ class PlayerViewManager(val context: PlayerActivity) {
     private val chatMessageClickCallback by lazy {
         object : MessageRecyclerView.OnChatMessageItemClickListener {
             override fun onOtherAction(action: String, extra: Any?) {
-                showHeaderAndHideChatView()
+//                showHeaderAndHideChatView()
                 when (action) {
                     MessageRecyclerView.ACTION_FOLLOW -> {
                         viewModel?.subscribeSource = "公屏引导"
@@ -195,7 +195,7 @@ class PlayerViewManager(val context: PlayerActivity) {
 
             override fun onChatMessageItemClick(user: UserInfoBean?, bean: TplBean?) {
                 //
-                showHeaderAndHideChatView()
+//                showHeaderAndHideChatView()
                 viewModel.processOnTouch(bean ?: return)
             }
         }
@@ -991,38 +991,6 @@ class PlayerViewManager(val context: PlayerActivity) {
         anim.start()
     }
 
-    /**
-     * 显示主布局 隐藏聊天输入框
-     */
-    fun showHeaderAndHideChatView(): Boolean {
-
-        val chatInputView = context.ll_input
-        val publicMessageView = context.publicMessageView
-        //如果跑道正在播放中,则再显示出来
-//        if (liveRunwayView.isMessagePlay) {
-//            liveRunwayView.show()
-//        }
-        if (chatInputView.isVisible()) {
-            // emojiview显示的情况下，先隐藏整个聊天框，动画完了再显示底部actionview
-            //todo
-//            if (chatInputView.getEmojiVisible() == View.GONE) {
-//                showHeaderForAnimation({
-//                    chatInputView.hideAndReset()
-//                    chatInputView.hide()
-//                    switchChatViewVisible(false)
-//                }, {
-//                    //                    vaBottomBar.displayedChild = BOTTOM_ACTIONVIEW_INDEX
-//                    if (!noNeedPublicView) {
-//                        publicMessageView.show()
-//                    }
-//                })
-//            } else {
-//                showHeaderForAnimation()
-//            }
-            return true
-        }
-        return false
-    }
 
     /**
      * 现在只有两种情况 界面显示输入框和不显示输入框
