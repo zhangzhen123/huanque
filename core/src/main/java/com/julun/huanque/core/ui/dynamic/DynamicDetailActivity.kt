@@ -223,7 +223,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 //                }
                 val firstVisibleItemPosition: Int = linearLayoutManager.findFirstVisibleItemPosition()
                 val lastVisibleItemPosition: Int = linearLayoutManager.findLastVisibleItemPosition()
-                logger.info("firstVisibleItemPosition=$firstVisibleItemPosition lastVisibleItemPosition=$lastVisibleItemPosition ")
+//                logger.info("firstVisibleItemPosition=$firstVisibleItemPosition lastVisibleItemPosition=$lastVisibleItemPosition ")
 
                 when {
                     firstVisibleItemPosition == 0 && lastVisibleItemPosition == 0 -> {
@@ -247,7 +247,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                             ic_sticky_comment.hide()//这种情况是空白页 隐藏
                         } else {
                             ic_sticky_comment.show()
-                            logger.info("此时需要显示粘性布局")
+//                            logger.info("此时需要显示粘性布局")
                         }
                     }
 
@@ -377,6 +377,18 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             if (!info.userAnonymous)
                 HomePageActivity.newInstance(this, info.userId)
         }
+        //定位到评论
+        tv_comment_num.onClickNew {
+//            val totalHeight = headerLayout.height - dp2px(40)
+////            val scrollY = mRefreshLayout.scrollY
+////            val tempView = commentAdapter.getViewByPosition(1,R.layout.recycler_item_dynamic_detail_comment_first)
+//            val headerBottom = headerLayout.bottom
+//            rv_comments.smoothScrollBy(0, totalHeight)
+            val layoutManager = rv_comments.layoutManager as? LinearLayoutManager
+            layoutManager?.scrollToPositionWithOffset(1, dp2px(40) + 1)
+            layoutManager?.stackFromEnd = true
+
+        }
     }
 
     /**
@@ -468,6 +480,8 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                         MyAlertDialog.MyDialogCallback(onRight = {
                             //删除动态
 //                        mViewModel.deletePost()
+                            finish()
+                        }, onCancel = {
                             finish()
                         }), "提示", okText = "确定"
                     )
@@ -691,8 +705,20 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         //预留一个很大的底部空白
         val foot = LayoutInflater.from(this).inflate(R.layout.view_bottom_holder, null)
         val lp = foot.findViewById<View>(R.id.view_id).layoutParams
-        lp.height = ScreenUtils.getScreenHeight()
+//        lp.height = ScreenUtils.getScreenHeight()
         commentAdapter.addFooterView(foot)
+
+        commentAdapter.setEmptyView(
+            MixedHelper.getEmptyView(
+                this,
+                msg = "暂无评论，快去抢沙发吧～",
+                isImageHide = true
+            ).apply {
+                val ll = this as LinearLayout
+                val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(150))
+                this.layoutParams = lp
+            }
+        )
 
 //        if (commentAdapter.data.isEmpty()) {
 //            commentAdapter.setEmptyView(
@@ -714,7 +740,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         commentAdapter.setOnItemClickListener { adapter, view, position ->
             //回复的是1级评论
             val tempData = adapter.getItemOrNull(position) as? DynamicComment ?: return@setOnItemClickListener
-            mViewModel.replyingComment = tempData.apply { firstCommentId = commentId }
+            mViewModel.replyingComment = tempData
             ll_input.show()
             edit_text.forceLayout()
             edit_text.performClick()
@@ -1117,6 +1143,13 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             commentAdapter.loadMoreModule.loadMoreEnd()
         }
 
+        //重置评论类型
+        mViewModel.commentType = CommentOrderType.Heat
+        tvSort.text = "热度"
+        headerLayout.findViewById<TextView>(R.id.tvSort).text = "热度"
+        val layoutManager = rv_comments.layoutManager as? LinearLayoutManager
+        layoutManager?.scrollToPositionWithOffset(0,0)
+        layoutManager?.stackFromEnd = false
     }
 
     override fun onStart() {
@@ -1208,17 +1241,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 //由于上面在renderData中已经设置了空白页 这里不需要了
 //                commentAdapter.setEmptyView(MixedHelper.getEmptyView(this))
                 if (commentAdapter.data.isEmpty()) {
-                    commentAdapter.setEmptyView(
-                        MixedHelper.getEmptyView(
-                            this,
-                            msg = "暂无评论，快去抢沙发吧～",
-                            isImageHide = true
-                        ).apply {
-                            val ll = this as LinearLayout
-                            val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(150))
-                            this.layoutParams = lp
-                        }
-                    )
+
                 }
             }
             NetStateType.LOADING -> {

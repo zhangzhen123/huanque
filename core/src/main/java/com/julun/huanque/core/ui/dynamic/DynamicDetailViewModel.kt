@@ -97,7 +97,16 @@ class DynamicDetailViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val result = socialService.postComment(PostCommentForm(mPostId, replyingComment?.commentId, content)).dataConvert()
-                commentSuccessData.value = result.apply { firstCommentId = replyingComment?.firstCommentId ?: 0 }
+                commentSuccessData.value = result.apply {
+                    if (replyingComment != null) {
+                        if (replyingComment?.firstCommentId != 0L) {
+                            firstCommentId = replyingComment?.firstCommentId ?: 0
+                        } else {
+                            firstCommentId = replyingComment?.commentId ?: 0
+                        }
+                    }
+
+                }
                 //回复成功，清空正在回复的评论对象
                 replyingComment = null
                 ToastUtils.show("评论发表成功")
@@ -136,7 +145,6 @@ class DynamicDetailViewModel : BaseViewModel() {
     }
 
 
-
     /**
      * 点赞评论
      */
@@ -172,7 +180,7 @@ class DynamicDetailViewModel : BaseViewModel() {
             request({
                 socialService.deleteComment(CommentIdForm(comment.commentId)).dataConvert()
                 commentDeleted.value = comment
-                val commentNum = (dynamicInfo.value?.post?.commentNum ?: 0) - 1
+                val commentNum = (dynamicInfo.value?.post?.commentNum ?: 0) - (comment.secondComments.size + 1)
                 commentNumData.value = max(commentNum, 0)
                 dynamicInfo.value?.post?.commentNum = max(commentNum, 0)
                 dynamicChangeFlag = true
