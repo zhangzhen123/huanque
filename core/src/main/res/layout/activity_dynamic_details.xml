@@ -57,6 +57,8 @@
                         android:id="@+id/rv_comments"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:focusableInTouchMode="true"
+                        android:descendantFocusability="beforeDescendants"
                         android:overScrollMode="never" />
                 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
