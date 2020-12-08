@@ -112,7 +112,11 @@ class TargetUserObj(
     //我是否是对方的陌生人
     var strangerToOther: String = "",
     //是否需要显示消息价格提示
-    var showMsgFee: String = ""
+    var showMsgFee: String = "",
+    //是否使用聊天券
+    var useChatTicket: String = "",
+    //过期显示文本
+    var expiredText: String = ""
 )
 
 /**

@@ -315,7 +315,11 @@ data class SendMsgBean(
     //语音券数量
     var voiceTicketCnt: Int = 0,
     var resultCode: String = "",
-    var newContent: String? = null
+    var newContent: String? = null,
+    //是否使用聊天券
+    var useChatTicket: String = "",
+    //过期显示文本
+    var expiredText: String = ""
 )
 
 /**

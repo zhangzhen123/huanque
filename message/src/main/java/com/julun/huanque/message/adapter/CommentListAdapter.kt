@@ -18,6 +18,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.MessageFormatUtils
 import com.julun.huanque.common.utils.TimeUtils
+import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.message.R
 import io.rong.imlib.model.Message
 import io.rong.message.TextMessage
@@ -31,8 +32,9 @@ import org.jetbrains.anko.textColor
  */
 class CommentListAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.recycler_item_comment_list), LoadMoreModule {
     init {
-        addChildClickViewIds(R.id.view_header_info,R.id.con_post_action)
+        addChildClickViewIds(R.id.view_header_info, R.id.con_post_action)
     }
+
     override fun convert(holder: BaseViewHolder, info: Message) {
         val textMessage = info.content as? TextMessage
         textMessage?.let {
@@ -62,11 +64,11 @@ class CommentListAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.re
             val postContent = if (item.content.isEmpty()) {
                 "分享图片"
             } else {
-                item.content
+                EmojiSpanBuilder.buildEmotionSpannable(context, item.content)
             }
 
             holder.setText(R.id.tv_nickname, item.nickname)
-                .setText(R.id.tv_reply_content, item.comment)
+                .setText(R.id.tv_reply_content, EmojiSpanBuilder.buildEmotionSpannable(context, item.comment))
                 .setText(R.id.tv_post_content, postContent)
                 .setText(R.id.tv_time, TimeUtils.formatMessageListTime(item.createTime))
                 .setVisible(R.id.iv_host, item.originalPoster == BusiConstant.True)
