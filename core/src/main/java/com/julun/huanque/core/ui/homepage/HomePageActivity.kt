@@ -1003,7 +1003,11 @@ class HomePageActivity : BaseActivity() {
                     tv_living.show()
                     sdv_living.show()
                     ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
-                    tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
+                    if(mHomePageViewModel.mineHomePage){
+                        tv_watch_count.text = "快与粉丝去互动吧"
+                    }else{
+                        tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
+                    }
                     tv_living.text = "直播中"
                     val playInfo = playProgram.playInfo
                     if (playInfo != null) {
@@ -1017,7 +1021,7 @@ class HomePageActivity : BaseActivity() {
                         con_dynamic_add.show()
                         view_live.show()
                     } else {
-                        if (bean.playProgram.programId > 0L) {
+                        if (!mHomePageViewModel.mineHomePage && bean.playProgram.programId > 0L) {
                             //主播身份，并且没有开播，显示未开播样式
                             con_live.show()
                             view_live.show()

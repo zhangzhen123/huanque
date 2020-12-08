@@ -194,8 +194,10 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         if (mViewModel.type == ShareFromType.Share_Comment) {
             //分享评论
             val con_comment_share = ll_comment.findViewById<ConstraintLayout>(R.id.view_comment)
-            bitmap = BitmapUtil.viewConversionBitmap(con_comment_share ?: return, Color.TRANSPARENT)
-            shareImage(type, bitmap ?: return)
+            if (con_comment_share.visibility == View.VISIBLE && con_comment_share.height > 0 && con_comment_share.width > 0) {
+                bitmap = BitmapUtil.viewConversionBitmap(con_comment_share ?: return, Color.TRANSPARENT)
+                shareImage(type, bitmap ?: return)
+            }
         } else {
             //其他分享
             if (currentSelectView == null) {
@@ -403,7 +405,7 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
             } else {
                 "分享一个小可爱发的图片给你欣赏下"
             }
-        }else{
+        } else {
             val dynamicContent = postShareBean.content
             return if (dynamicContent.isNotEmpty()) {
                 "Ta的这个动态已经引发热烈讨论，快来站队吧~"

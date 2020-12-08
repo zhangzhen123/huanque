@@ -157,7 +157,11 @@ class AttentionCircleFragment : BaseLazyFragment() {
                         //推荐的数据为空，显示推荐的hasmore字段
                         if (!it.group.hasMore) {
                             //没有更多了
-                            mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
+                            if (myList.isEmpty() && mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
+                                mAttentionCircleAdapter.loadMoreModule.loadMoreEnd(true)
+                            } else {
+                                mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()
+                            }
                         } else {
                             mAttentionCircleAdapter.loadMoreModule.loadMoreComplete()
                         }

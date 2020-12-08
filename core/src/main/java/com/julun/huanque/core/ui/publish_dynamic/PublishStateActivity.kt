@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.publish_dynamic
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
@@ -431,6 +432,7 @@ class PublishStateActivity : BaseActivity() {
         StorageHelper.removePubStateCache()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun initEvents(rootView: View) {
         header_page.imageViewBack.onClickNew {
             onBackPressed()
@@ -567,6 +569,14 @@ class PublishStateActivity : BaseActivity() {
             setCircleStatus()
         }
 
+
+        input_text.setOnTouchListener { v, event ->
+            v.parent.requestDisallowInterceptTouchEvent(true)
+            if (event.action == MotionEvent.ACTION_UP) {
+                v.parent.requestDisallowInterceptTouchEvent(false)
+            }
+            return@setOnTouchListener false
+        }
 
     }
 
