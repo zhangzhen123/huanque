@@ -105,9 +105,11 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         if (isMe) {
             headerPageView.initHeaderView(titleTxt = "我的动态")
             dynamicAdapter.showType = DynamicListAdapter.POST_LIST_ME
+            publish_dynamic.show()
         } else {
             headerPageView.initHeaderView(titleTxt = "Ta的动态")
             dynamicAdapter.showType = DynamicListAdapter.POST_LIST_OTHER
+            publish_dynamic.hide()
         }
         headerPageView.imageViewBack.onClickNew {
             finish()
@@ -123,9 +125,15 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         (postList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         dynamicAdapter.headerWithEmptyEnable = true
         postList.adapter = dynamicAdapter
-        dynamicAdapter.setEmptyView(MixedHelper.getEmptyView(this, "暂无动态，快去发一条吧~", btnTex = "去发布", onClick = View.OnClickListener {
-            ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation()
-        }))
+        dynamicAdapter.setEmptyView(
+            MixedHelper.getEmptyView(
+                this,
+                "暂无动态，快去发一条吧~",
+                btnTex = "去发布",
+                onClick = View.OnClickListener {
+                    ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation()
+                })
+        )
 
         postList.isNestedScrollingEnabled = false
 
@@ -319,7 +327,10 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
      * @param show  true 显示发布按钮  false 隐藏发布按钮
      */
     private fun showOrHidePublish(show: Boolean) {
-
+        if (!isMe) {
+            publish_dynamic.hide()
+            return
+        }
         if (show) {
             if (mShowPublishAnimation?.isRunning == true) {
                 //动画正在执行，什么都不操作
