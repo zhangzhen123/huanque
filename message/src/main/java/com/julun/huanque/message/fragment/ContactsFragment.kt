@@ -54,7 +54,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
 
     private val mActivityViewModel: ContactsActivityViewModel by activityViewModels()
 
-    private val huanQueViewModel= HuanViewModelManager.huanQueViewModel
+    private val huanQueViewModel = HuanViewModelManager.huanQueViewModel
 
     override fun getLayoutId() = R.layout.fragment_contacts
 
@@ -213,7 +213,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
         //全局的关注 与本地独立
         huanQueViewModel.userInfoStatusChange.observe(this, object : Observer<ReactiveData<UserInfoChangeResult>> {
             override fun onChanged(it: ReactiveData<UserInfoChangeResult>?) {
-                if (it != null&&it.isSuccess()) {
+                if (it != null && it.isSuccess()) {
                     //关注状态变动
                     changeFollowData(it.requireT())
 //                    mActivityViewModel.followChangeFlag.value = it.requireT()
@@ -281,7 +281,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
     private fun changeFollowData(bean: UserInfoChangeResult) {
         val userID = bean.userId
         var userInfo: SocialUserInfo? = null
-        var changeIndex = 0
+        var changeIndex = -1
         mAdapter.data.forEachIndexed { index, data ->
             if (data.userId == userID) {
                 userInfo = data
@@ -308,7 +308,9 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
 //                }
                 info.follow = bean.follow
             }
-            mAdapter.notifyItemChanged(changeIndex)
+            if (changeIndex >= 0) {
+                mAdapter.notifyDataSetChanged()
+            }
         }
 
     }
