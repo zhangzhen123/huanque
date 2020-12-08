@@ -18,6 +18,7 @@ import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.reportClick
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.message.R
@@ -145,6 +146,7 @@ class ContactsFragment : BaseVMFragment<ContactsFragmentViewModel>() {
                                 mViewModel.unFollow(type, tempData.userId, tempData.follow)
                             }
                             FollowStatus.False -> {
+                                reportClick(StatisticCode.Follow + StatisticCode.Link)
                                 //执行关注操作
                                 mViewModel.follow(type, tempData.userId, tempData.follow)
                             }

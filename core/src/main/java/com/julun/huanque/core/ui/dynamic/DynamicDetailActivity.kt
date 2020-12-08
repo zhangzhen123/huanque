@@ -350,6 +350,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         }
 
         headerLayout.findViewById<View>(R.id.tv_circle_name).onClickNew {
+            reportClick(StatisticCode.EnterGroup+StatisticCode.Post)
             CircleDynamicActivity.start(this, mViewModel?.dynamicInfo?.value?.post?.group?.groupId ?: return@onClickNew)
         }
 

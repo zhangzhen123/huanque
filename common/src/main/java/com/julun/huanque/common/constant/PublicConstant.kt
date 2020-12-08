@@ -61,5 +61,14 @@ object StatisticCode {
     const val MyPost = "MyPost"//我的动态页面点击发动态
     const val Group = "Group"//圈子详情页面点击发动态
 
+    const val Link  = "Link "//联系人
+    const val Other  = "Other "//其他页面
+
+    const val EnterGroup  = "EnterGroup#"//进入圈子
+    const val List  = "List "//
+
+
+
+
 
 }
