@@ -232,6 +232,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                     bottomDialog?.show(this, "bottomDialog")
                 }
                 R.id.tv_circle_name -> {
+                    reportClick(StatisticCode.EnterGroup+StatisticCode.Post)
                     CircleDynamicActivity.start(this, item.group?.groupId ?: return@onAdapterChildClickNew)
                 }
             }

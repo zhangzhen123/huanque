@@ -285,6 +285,8 @@ class PublishStateActivity : BaseActivity() {
 
     }
 
+    var mDraft: PublishDynamicCache? = null
+
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         initViewModel()
         header_page.initHeaderView(titleTxt = "发布动态", operateTxt = "发布")
@@ -317,6 +319,7 @@ class PublishStateActivity : BaseActivity() {
         mLocationService = LocationService(this.applicationContext)
         //如果有缓存 提取缓存
         val draft = StorageHelper.getPubStateCache()
+        mDraft = draft
         if (draft != null) {
             if (draft.groupId != null && draft.groupName != null) {
                 currentGroup = CircleGroup(groupName = draft.groupName!!, groupId = draft.groupId!!)
@@ -372,18 +375,47 @@ class PublishStateActivity : BaseActivity() {
     override fun onBackPressed() {
         hideSoftInput()
         if (selectList.size > 0 || input_text.text.toString().isNotEmpty()) {
-            dialog.showAlertWithOKAndCancel(
-                "是否保存草稿？", MyAlertDialog.MyDialogCallback(
-                    onCancel = {
-                        clearDraft()
-                        finish()
-                    },
-                    onRight = {
-                        saveDraft()
-                        finish()
-                    }), okText = "保存", noText = "不保存", hasTitle = true
-            )
+            var isSame = true
+            if (mDraft != null) {
+                if (mDraft!!.groupId != currentGroup?.groupId) {
+                    isSame = false
+                }
+                if (mDraft!!.content != input_text.text.toString()) {
+                    isSame = false
+                }
+
+                val anonymous = if (hideName) {
+                    BooleanType.TRUE
+                } else {
+                    BooleanType.FALSE
+                }
+                if (mDraft!!.anonymous != anonymous) {
+                    isSame = false
+                }
+                mDraft!!.selectList.forEach {
+                    if (!selectList.contains(it)) {
+                        isSame = false
+                    }
+                }
+            }
+            if (!isSame) {
+                dialog.showAlertWithOKAndCancel(
+                    "是否保存草稿？", MyAlertDialog.MyDialogCallback(
+                        onCancel = {
+                            clearDraft()
+                            finish()
+                        },
+                        onRight = {
+                            saveDraft()
+                            finish()
+                        }), okText = "保存", noText = "不保存", hasTitle = true
+                )
+
+            } else {
+                finish()
+            }
         } else {
+            clearDraft()
             finish()
         }
     }

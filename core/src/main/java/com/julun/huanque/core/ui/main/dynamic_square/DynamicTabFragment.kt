@@ -174,6 +174,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         groupAdapter.onAdapterClickNew { _, _, position ->
             val item = groupAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
             logger.info("打开头部圈子：${item.groupName}")
+            reportClick(StatisticCode.EnterGroup+StatisticCode.List)
             CircleDynamicActivity.start(requireActivity(), item.groupId)
         }
 
@@ -257,6 +258,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                     bottomDialog?.show(requireActivity(), "bottomDialog")
                 }
                 R.id.tv_circle_name -> {
+                    reportClick(StatisticCode.EnterGroup+StatisticCode.Post)
                     CircleDynamicActivity.start(requireActivity(), item.group?.groupId ?: return@onAdapterChildClickNew)
                 }
             }

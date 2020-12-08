@@ -441,6 +441,7 @@ class AnonymousVoiceActivity : BaseActivity(), EventHandler {
         }
         iv_follow.onClickNew {
             //关注按钮
+            reportClick(StatisticCode.Follow + StatisticCode.Other)
             mHuanQueViewModel.follow(mAnonymousVoiceViewModel?.targetUserId ?: return@onClickNew)
         }
     }

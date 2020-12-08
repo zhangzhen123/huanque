@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import java.util.Objects;
+
 /**
  * author：luck
  * project：PictureSelector
@@ -206,6 +208,19 @@ public class LocalMedia implements Parcelable {
         this.compressed = in.readByte() != 0;
         this.width = in.readInt();
         this.height = in.readInt();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LocalMedia that = (LocalMedia) o;
+        return compressPath.equals(that.compressPath);
+    }
+
+    @Override
+    public int hashCode() {
+        return compressPath.hashCode();
     }
 
     public static final Parcelable.Creator<LocalMedia> CREATOR = new Parcelable.Creator<LocalMedia>() {

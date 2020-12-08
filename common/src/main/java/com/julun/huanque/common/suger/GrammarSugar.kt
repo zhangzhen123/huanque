@@ -21,6 +21,7 @@ import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.utils.SortUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.fresco.DraweeHolderBuilder
+import kotlinx.coroutines.CoroutineExceptionHandler
 import java.io.File
 import java.io.Serializable
 import java.lang.reflect.Field
@@ -69,7 +70,11 @@ fun reportClick(eventCode: String) {
 fun reportScan(eventCode: String, enterTime: Long, leaveTime: Long) {
     StatisticManager.pushScan(eventCode, enterTime, leaveTime)
 }
-
+//这里预设一个全局的协程异常抓取处理
+val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+    ULog.i("coroutineContext=${coroutineContext}")
+    throwable.printStackTrace()
+}
 /**
  * 将一个list分割,按照每个
  */

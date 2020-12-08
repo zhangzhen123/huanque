@@ -5,6 +5,7 @@ import com.julun.huanque.common.bean.forms.StatisticForm
 import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.StatisticService
+import com.julun.huanque.common.suger.coroutineExceptionHandler
 import com.julun.huanque.common.suger.nothing
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.ULog
@@ -33,7 +34,7 @@ object StatisticManager {
 
 
     //多长时间执行一次
-    private const val DELAY = 50 * 1000L
+    private const val DELAY = 25 * 1000L
 
 
     /** 暂时有最普通的list，后面看换成队列什么的 **/
@@ -99,7 +100,8 @@ object StatisticManager {
     private fun doWork() {
         logger.info("handler post:${Thread.currentThread().name}")
         val listForm = mutableListOf<StatisticItem>()
-        queue.groupBy { it.eventCode }.forEach { pair ->
+        //点击的统计合并分组
+        queue.filter { it.eventType == Click }.groupBy { it.eventCode }.forEach { pair ->
             val form = StatisticItem()
             val first = pair.value.firstOrNull()
             var count = 0
@@ -110,16 +112,18 @@ object StatisticManager {
                 form.eventCode = first.eventCode
                 form.eventType = first.eventType
 
-                form.enterTime = first.enterTime
-                form.leaveTime = first.leaveTime
 
                 form.clickNum = count
             }
             listForm.add(form)
         }
+        //浏览的统计不合并组
+        queue.filter { it.eventType == Scan }.forEach {
+            listForm.add(it)
+        }
         queue.clear()
-        val formString = JsonUtil.serializeAsString(listForm)
-        GlobalScope.launch {
+        GlobalScope.launch(coroutineExceptionHandler) {
+            val formString = JsonUtil.serializeAsString(listForm)
             logger.info("launch:${Thread.currentThread().name}")
             val form = StatisticForm(formString)
             service.dataStat(form).nothing()
