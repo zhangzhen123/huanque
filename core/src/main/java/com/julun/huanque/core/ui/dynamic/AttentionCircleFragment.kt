@@ -135,7 +135,12 @@ class AttentionCircleFragment : BaseLazyFragment() {
                     val myList = it.group.list
                     if (myList.isEmpty()) {
                         //我加入的圈子为空
-                        circleList.add(AttentionCircleAdapter.Circle_Mine_Attention_Empty)
+//                        circleList.add(AttentionCircleAdapter.Circle_Mine_Attention_Empty)
+                        if(mCircleViewModel.mType == CircleGroupType.Circle_Choose){
+                            circleList.add("还没有加入圈子，快去推荐列表看看")
+                        }else{
+                            circleList.add("还没加入圈子，快去加入有趣的圈子吧")
+                        }
                     } else {
                         circleList.addAll(myList)
                     }

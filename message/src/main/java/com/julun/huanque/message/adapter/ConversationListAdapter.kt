@@ -169,6 +169,11 @@ class ConversationListAdapter : BaseQuickAdapter<LocalConversation, BaseViewHold
             }
         }
 
+        if (targetId == SystemTargetId.praiseNoticeSender) {
+            helper.setText(R.id.tv_content, "赞你的都在这")
+        } else if (targetId == SystemTargetId.commentNoticeSender) {
+            helper.setText(R.id.tv_content, "评论你的都在这")
+        }
 
         when (msg) {
             is TextMessage -> {

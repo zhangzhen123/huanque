@@ -76,10 +76,14 @@ import kotlin.math.max
 class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 
     companion object {
-        fun start(activity: Activity, postId: Long) {
+        /**
+         * @param locationComment 定位到评论模块
+         */
+        fun start(activity: Activity, postId: Long, locationComment: Boolean = false) {
             val intent = Intent(activity, DynamicDetailActivity::class.java)
             val bundle = Bundle()
             bundle.putLong(IntentParamKey.POST_ID.name, postId)
+            bundle.putBoolean(ParamConstant.LocationComment, locationComment)
             intent.putExtras(bundle)
             activity.startActivity(intent)
         }
@@ -124,6 +128,10 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         LayoutInflater.from(this).inflate(R.layout.layout_header_dynamic_detail, null)
     }
     var postId: Long = 0L
+
+    //是否需要定位到评论
+    var needLocationComment = false
+
     override fun getLayoutId(): Int = R.layout.activity_dynamic_details
 
     override fun isRegisterEventBus() = true
@@ -134,7 +142,8 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
     }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        postId = intent.getLongExtra(IntentParamKey.POST_ID.name, 0L)
+        postId = intent?.getLongExtra(IntentParamKey.POST_ID.name, 0L) ?: 0L
+        needLocationComment = intent?.getBooleanExtra(ParamConstant.LocationComment, false) ?: false
         mViewModel.mPostId = postId
         if (postId == 0L) {
             ToastUtils.show2("无效的ID")
@@ -661,7 +670,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 val followContent = if (bean.praiseNum == 0L) {
                     "点赞"
                 } else {
-                    "${bean.praiseNum}"
+                    StringHelper.formatNumWithTwoDecimals(bean.praiseNum)
                 }
                 tv_follow_num.text = followContent
                 tv_follow_num.isActivated = bean.hasPraise
@@ -1124,14 +1133,14 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             val shareContent = if (posterInfo.shareNum == 0L) {
                 "分享"
             } else {
-                "${posterInfo.shareNum}"
+                StringHelper.formatNumWithTwoDecimals(posterInfo.shareNum)
             }
             tv_share_num.text = shareContent
 
             val commentConetnt = if (posterInfo.commentNum == 0L) {
                 "评论"
             } else {
-                "${posterInfo.commentNum}"
+                StringHelper.formatNumWithTwoDecimals(posterInfo.commentNum)
             }
             tv_comment_num.text = commentConetnt
 
@@ -1175,6 +1184,16 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
 //        val layoutManager = rv_comments.layoutManager as? LinearLayoutManager
 //        layoutManager?.scrollToPositionWithOffset(0,0)
 //        layoutManager?.stackFromEnd = false
+        if (needLocationComment) {
+            needLocationComment = false
+            //定位到评论
+            rv_comments.post {
+                rv_comments.scrollToPosition(1)
+                val layoutManager = rv_comments.layoutManager as? LinearLayoutManager
+                layoutManager?.scrollToPositionWithOffset(1, dp2px(40) + 1)
+            }
+
+        }
     }
 
     override fun onStart() {
@@ -1258,6 +1277,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
     override fun onDestroy() {
         super.onDestroy()
         AudioRecordManager.destroy()
+        rv_comments.handler.removeCallbacksAndMessages(null)
     }
 
     override fun showLoadState(state: NetState) {
@@ -1363,4 +1383,5 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             }
         }
     }
+
 }

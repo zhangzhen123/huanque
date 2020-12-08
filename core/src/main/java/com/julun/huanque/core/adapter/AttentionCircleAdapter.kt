@@ -43,7 +43,7 @@ class AttentionCircleAdapter : BaseDelegateMultiAdapter<Any, BaseViewHolder>(), 
                     is CircleGroup -> {
                         Circle
                     }
-                    Circle_Mine_Attention_Empty -> {
+                    is String -> {
                         Circle_Mine_Attention_Empty
                     }
                     else -> {
@@ -90,6 +90,7 @@ class AttentionCircleAdapter : BaseDelegateMultiAdapter<Any, BaseViewHolder>(), 
             }
             Circle_Mine_Attention_Empty -> {
                 //我的圈子为空
+                holder.setText(R.id.tv_attetnion_content, "$item")
             }
             Title_Recommend_Circle -> {
                 //推荐圈子的标题

@@ -172,4 +172,7 @@ object ParamConstant {
 
     //评论ID
     const val COMMENT_ID = "COMMENT_ID"
+
+    //定位到评论
+    const val LocationComment = "LocationComment"
 }

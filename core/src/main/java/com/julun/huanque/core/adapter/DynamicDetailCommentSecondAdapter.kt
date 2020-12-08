@@ -9,6 +9,7 @@ import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.DynamicComment
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.setImageSpan
@@ -35,7 +36,7 @@ class DynamicDetailCommentSecondAdapter : BaseQuickAdapter<DynamicComment, BaseV
 
         val tv_praise = holder.getView<TextView>(R.id.tv_praise)
         tv_praise.isActivated = item.hasPraise
-        tv_praise.text = "${item.praiseNum}"
+        tv_praise.text = StringHelper.formatNumWithTwoDecimals(item.praiseNum.toLong())
         holder.setText(R.id.tv_content, EmojiSpanBuilder.buildEmotionSpannable(context, item.content))
             .setText(R.id.tv_time, item.createTime)
 

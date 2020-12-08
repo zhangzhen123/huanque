@@ -38,6 +38,7 @@ import com.julun.huanque.common.basic.ResponseError
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
+import com.julun.huanque.common.interfaces.WebpAnimatorListener
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.audio.AudioPlayerManager
@@ -554,18 +555,16 @@ class HomePageActivity : BaseActivity() {
         recyclerView_dynamic_piclist.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         recyclerView_dynamic_piclist.adapter = mHomePageDynamicPicListAdapter
         mHomePageDynamicPicListAdapter.setOnItemClickListener { adapter, view, position ->
-            if (mHomePageViewModel.mineHomePage) {
-                val singleData = adapter.getItemOrNull(position)
-                if (singleData is HomePageProgram && singleData.living == BusiConstant.True) {
-                    //跳转直播间
-                    PlayerActivity.start(this, singleData.programId, PlayerFrom.UserHome)
-                } else {
-                    //跳转我的动态
-                    //跳转动态列表页面
-                    ARouter.getInstance().build(ARouterConstant.USER_DYNAMIC_ACTIVITY).with(Bundle().apply {
-                        putLong(IntentParamKey.USER_ID.name, mHomePageViewModel.targetUserId)
-                    }).navigation()
-                }
+            val singleData = adapter.getItemOrNull(position)
+            if (singleData is HomePageProgram) {
+                //跳转直播间
+                PlayerActivity.start(this, singleData.programId, PlayerFrom.UserHome)
+            } else {
+                //跳转我的动态
+                //跳转动态列表页面
+                ARouter.getInstance().build(ARouterConstant.USER_DYNAMIC_ACTIVITY).with(Bundle().apply {
+                    putLong(IntentParamKey.USER_ID.name, mHomePageViewModel.targetUserId)
+                }).navigation()
             }
         }
     }
@@ -803,8 +802,34 @@ class HomePageActivity : BaseActivity() {
         sdv_vehicle.loadImage(StringHelper.getOssImgUrl(carInfo.carPic), 110f, 74f)
         if (carInfo.dynamicUrl.isEmpty()) {
             tv_vehicle.text = "${carInfo.showMsg}>"
+            sdv_vehicle.show()
+            tv_vehicle.show()
         } else {
             tv_vehicle.text = "${carInfo.carName}>"
+            sdv_card_auto.show()
+            sdv_vehicle.hide()
+            tv_vehicle.hide()
+            //显示全屏座驾
+            ImageUtils.showAnimator(sdv_card_auto, StringHelper.getOssAudioUrl(carInfo.dynamicUrl), 1, object : WebpAnimatorListener {
+                override fun onStart() {
+                    sdv_card_auto.show()
+                    sdv_vehicle.hide()
+                    tv_vehicle.hide()
+                }
+
+                override fun onError() {
+                    sdv_card_auto.hide()
+                    sdv_vehicle.show()
+                    tv_vehicle.show()
+                }
+
+                override fun onEnd() {
+                    sdv_card_auto.hide()
+                    sdv_vehicle.show()
+                    tv_vehicle.show()
+                }
+
+            })
         }
 
 
@@ -975,6 +1000,15 @@ class HomePageActivity : BaseActivity() {
         } else {
             tv_dynamic.text = "最新动态"
         }
+
+        if (postInfo.postNum == 0L && playProgram.programId == 0L) {
+            tv_dynamic.hide()
+            iv_arrow_dynamic.hide()
+        } else {
+            tv_dynamic.show()
+            iv_arrow_dynamic.show()
+        }
+
         //1 先判断有没有图片
         val postPics = postInfo.lastPostPics
         if (postPics.isNotEmpty()) {
@@ -1003,9 +1037,9 @@ class HomePageActivity : BaseActivity() {
                     tv_living.show()
                     sdv_living.show()
                     ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
-                    if(mHomePageViewModel.mineHomePage){
+                    if (mHomePageViewModel.mineHomePage) {
                         tv_watch_count.text = "快与粉丝去互动吧"
-                    }else{
+                    } else {
                         tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
                     }
                     tv_living.text = "直播中"
@@ -1028,6 +1062,7 @@ class HomePageActivity : BaseActivity() {
                             tv_watch_count.text = "期待Ta的下一场直播"
                             tv_watch_count.textColor = GlobalUtils.getColor(R.color.black_999)
                             tv_floow_watch.hide()
+                            single_video_view_program.showCover(StringHelper.getOssImgUrl(playProgram.programCover), false)
                             sdv_living.hide()
                             tv_living.text = "暂未开播"
                         } else {
@@ -1386,7 +1421,9 @@ class HomePageActivity : BaseActivity() {
                 badges.forEachIndexed { index, data ->
                     val clickableSpan: ClickableSpan = object : ClickableSpan() {
                         override fun onClick(textView: View) {
-                            doWithMedalAction(data)
+                            if (mHomePageViewModel.mineHomePage) {
+                                doWithMedalAction(data)
+                            }
                         }
 
                         override fun updateDrawState(ds: TextPaint) {

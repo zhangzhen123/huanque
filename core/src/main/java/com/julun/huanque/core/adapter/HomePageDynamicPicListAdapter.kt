@@ -74,6 +74,7 @@ class HomePageDynamicPicListAdapter : BaseDelegateMultiAdapter<Any, BaseViewHold
                     singleVideoView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
                     singleVideoView?.clipToOutline = true;
                 }
+                singleVideoView.initPlayer()
                 val sdv_living = holder.getView<SimpleDraweeView>(R.id.sdv_living)
                 val tv_living = holder.getView<TextView>(R.id.tv_living)
                 if (item.living == BusiConstant.True) {
