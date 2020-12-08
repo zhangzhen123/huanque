@@ -86,7 +86,7 @@ public class ImagePreviewActivity extends PictureBaseActivity implements View.On
         StatusBarUtil.setTransparent(this);
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) rl.getLayoutParams();
         lp.setMargins(0, StatusBarUtil.getStatusBarHeight(this), 0, 0);
-        StatusBarUtil.setColor(this, Color.parseColor("#E6000000"));
+//        StatusBarUtil.setColor(this, Color.parseColor("#E6000000"));
 
         inflater = LayoutInflater.from(this);
         tv_title = (TextView) findViewById(R.id.picture_title);

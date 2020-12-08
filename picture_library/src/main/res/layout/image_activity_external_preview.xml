@@ -12,11 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <View
+        android:id="@+id/header_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/rl_title"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/bg_preview_header" />
+
     <RelativeLayout
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="?attr/picture.ac_preview.title.bg">
+        android:layout_height="44dp">
 
         <ImageButton
             android:id="@+id/left_back"
@@ -47,8 +54,8 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:padding="13dp"
             android:gravity="center"
+            android:padding="13dp"
             android:textSize="16sp"
             android:visibility="gone" />
 
