@@ -8,13 +8,9 @@ import com.julun.huanque.common.net.services.StatisticService
 import com.julun.huanque.common.suger.nothing
 import com.julun.huanque.common.utils.JsonUtil
 import com.julun.huanque.common.utils.ULog
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
-import java.util.concurrent.ConcurrentLinkedDeque
-import java.util.concurrent.CopyOnWriteArrayList
 
 
 /**
@@ -73,6 +69,31 @@ object StatisticManager {
             isTasking = true
             handler.postDelayed(messageRunnable, DELAY)
         }
+    }
+
+    /**
+     * 封装的方法  方便点击上报调用
+     */
+    fun pushClick(eventCode: String) {
+        val event = StatisticItem(
+            eventType = Click,
+            eventCode = eventCode,
+            clickNum = 1
+        )
+        push(event)
+    }
+
+    /**
+     * 封装的方法  方便浏览上报调用
+     */
+    fun pushScan(eventCode: String, enterTime: Long, leaveTime: Long) {
+        val event = StatisticItem(
+            eventType = Scan,
+            eventCode = eventCode,
+            enterTime = enterTime,
+            leaveTime = leaveTime
+        )
+        push(event)
     }
 
     private fun doWork() {

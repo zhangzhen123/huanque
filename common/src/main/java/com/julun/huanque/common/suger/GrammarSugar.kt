@@ -17,6 +17,7 @@ import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.span.DraweeSpanStringBuilder
 import com.facebook.widget.text.span.BetterImageSpan
 import com.julun.huanque.common.helper.DensityHelper
+import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.utils.SortUtils
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.utils.fresco.DraweeHolderBuilder
@@ -57,6 +58,16 @@ fun Any.dp2pxf(value: Int): Float {
  */
 fun Any.px2dp(value: Float): Int {
     return DensityHelper.px2dp(value)
+}
+
+/**
+ * 扩展的方法  方便点击上报调用
+ */
+fun reportClick(eventCode: String) {
+    StatisticManager.pushClick(eventCode)
+}
+fun reportScan(eventCode: String, enterTime: Long, leaveTime: Long) {
+    StatisticManager.pushScan(eventCode, enterTime, leaveTime)
 }
 
 /**

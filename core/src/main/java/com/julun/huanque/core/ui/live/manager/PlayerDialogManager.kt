@@ -9,13 +9,12 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.TabBean
 import com.julun.huanque.common.bean.beans.MicOperateBean
 import com.julun.huanque.common.bean.beans.PKCreateEvent
-import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.StatisticCode
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.OrderDialogManager
-import com.julun.huanque.common.statistics.StatisticManager
+import com.julun.huanque.common.suger.reportClick
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ULog
 import com.julun.huanque.common.viewmodel.ConnectMicroViewModel
@@ -57,6 +56,7 @@ class PlayerDialogManager(val context: PlayerActivity) {
     private val mVideoViewModel: VideoViewModel by context.viewModels()
 
     private val huanQueViewModel = HuanViewModelManager.huanQueViewModel
+
     //    private var mBasePlayerViewModel: BasePlayerViewModel? = null
     //新版PK
     private val pKViewModel: PKViewModel by context.viewModels()
@@ -200,12 +200,8 @@ class PlayerDialogManager(val context: PlayerActivity) {
                     playerViewModel.finishState.value = true
                 }, onRight = {
                     playerViewModel.finishCertain = true
-                    StatisticManager.push(
-                        StatisticItem(
-                            eventType = StatisticManager.Click,
-                            eventCode = StatisticCode.Follow+ StatisticCode.LiveRoom,
-                            clickNum = 1
-                        )
+                    reportClick(
+                        eventCode = StatisticCode.Follow + StatisticCode.LiveRoom
                     )
                     huanQueViewModel.follow(playerViewModel.programId)
                     playerViewModel.finishState.value = true

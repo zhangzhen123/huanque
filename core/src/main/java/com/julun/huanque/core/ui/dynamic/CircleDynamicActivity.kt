@@ -6,7 +6,6 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.activity.viewModels
@@ -23,15 +22,12 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.CircleGroup
 import com.julun.huanque.common.bean.beans.DynamicGroup
 import com.julun.huanque.common.bean.beans.SquareTab
-import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.PublicStateCode
 import com.julun.huanque.common.constant.StatisticCode
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.dynamic_square.DynamicTabFragment
@@ -97,13 +93,7 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
 
         publish_dynamic.onClickNew {
             currentGroup ?: return@onClickNew
-            StatisticManager.push(
-                StatisticItem(
-                    eventType = StatisticManager.Click,
-                    eventCode = StatisticCode.PubPost+ StatisticCode.Group,
-                    clickNum = 1
-                )
-            )
+            reportClick(StatisticCode.PubPost + StatisticCode.Group)
             this.startActivity<PublishStateActivity>(PublicStateCode.CIRCLE_DATA to CircleGroup().apply {
                 this.groupId = groupId
                 this.groupName = currentGroup!!.groupName

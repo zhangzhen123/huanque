@@ -15,12 +15,11 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.SquareTab
-import com.julun.huanque.common.bean.forms.StatisticItem
-import com.julun.huanque.common.constant.PublicStateCode
 import com.julun.huanque.common.constant.StatisticCode
-import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.reportClick
+import com.julun.huanque.common.suger.reportScan
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
@@ -72,16 +71,12 @@ class DynamicSquareFragment : BaseFragment() {
         initMagicIndicator()
 
         publish_dynamic.onClickNew {
-            StatisticManager.push(
-                StatisticItem(
-                    eventType = StatisticManager.Click,
-                    eventCode = StatisticCode.PubPost+StatisticCode.Home,
-                    clickNum = 1
-                )
+            reportClick(
+                eventCode = StatisticCode.PubPost + StatisticCode.Home
             )
             requireActivity().startActivity<PublishStateActivity>()
         }
-
+        startShowTime = System.currentTimeMillis()
     }
 
     private fun initViewPager() {
@@ -240,13 +235,10 @@ class DynamicSquareFragment : BaseFragment() {
             val current = System.currentTimeMillis()
             val duration = current - startShowTime
             if (duration > 10 * 1000) {
-                StatisticManager.push(
-                    StatisticItem(
-                        eventType = StatisticManager.Scan,
-                        eventCode = StatisticCode.Post,
-                        enterTime = startShowTime,
-                        leaveTime = current
-                    )
+                reportScan(
+                    eventCode = StatisticCode.Post,
+                    enterTime = startShowTime,
+                    leaveTime = current
                 )
             }
         }

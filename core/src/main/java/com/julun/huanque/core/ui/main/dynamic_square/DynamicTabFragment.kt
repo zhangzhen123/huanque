@@ -22,12 +22,10 @@ import com.julun.huanque.common.bean.beans.PhotoBean
 import com.julun.huanque.common.bean.beans.SquareTab
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
-import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
-import com.julun.huanque.common.statistics.StatisticManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.ui.image.ImageActivity
 import com.julun.huanque.common.utils.SessionUtils
@@ -35,9 +33,9 @@ import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.DynamicGroupListAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
+import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.huanque.core.ui.dynamic.CircleDynamicActivity
 import com.julun.huanque.core.ui.dynamic.DynamicDetailActivity
-import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.*
@@ -208,12 +206,8 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 }
                 R.id.btn_action -> {
                     logger.info("关注")
-                    StatisticManager.push(
-                        StatisticItem(
-                            eventType = StatisticManager.Click,
-                            eventCode = StatisticCode.Follow+StatisticCode.Post,
-                            clickNum = 1
-                        )
+                    reportClick(
+                        eventCode = StatisticCode.Follow + StatisticCode.Post
                     )
                     huanQueViewModel.follow(item.userId)
                 }

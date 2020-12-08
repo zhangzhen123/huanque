@@ -50,7 +50,8 @@ object StatisticCode {
     const val PubPost = "PubPost#"//发动态
 
     const val PostHome = "PostHome"//动态首页
-    const val Follow = "Follow#"
+
+    const val Follow = "Follow#"//关注
 
 
     const val Post = "Post"//浏览鹊巢页面（浏览动态）
