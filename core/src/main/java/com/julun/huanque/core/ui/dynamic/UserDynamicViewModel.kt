@@ -1,21 +1,19 @@
 package com.julun.huanque.core.ui.dynamic
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
-import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.basic.RootListData
-import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.forms.*
+import com.julun.huanque.common.bean.beans.DynamicItemBean
+import com.julun.huanque.common.bean.beans.DynamicListInfo
+import com.julun.huanque.common.bean.forms.PostListsForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.ErrorCodes
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.DynamicService
-import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.net.services.UserService
-import com.julun.huanque.common.utils.JsonUtil
-import com.julun.huanque.common.utils.ToastUtils
-import kotlinx.coroutines.delay
+import com.julun.huanque.common.suger.convertListError
+import com.julun.huanque.common.suger.convertRtData
+import com.julun.huanque.common.suger.dataConvert
+import com.julun.huanque.common.suger.request
 import kotlinx.coroutines.launch
 
 /**

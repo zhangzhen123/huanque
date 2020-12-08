@@ -254,3 +254,21 @@ data class CreateAccountForm(
     //生日
     var birthday: String
 ) : Serializable
+
+//统计
+data class StatisticForm(
+    var data: String
+) : Serializable
+
+data class StatisticItem(
+    //事件类型：
+    //Click（点击）只记录点击次数
+    //Scan（浏览）需要记录浏览时间
+    var eventType: String="",
+    //事件代码
+    var eventCode: String="",
+    //点击次数
+    var clickNum: Int = 0,
+    var enterTime: Long? = null,
+    var leaveTime: Long? = null
+) : Serializable

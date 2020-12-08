@@ -20,14 +20,13 @@ import com.julun.huanque.common.bean.beans.BottomActionBean
 import com.julun.huanque.common.bean.beans.TIBean
 import com.julun.huanque.common.bean.beans.UserInfoInRoom
 import com.julun.huanque.common.bean.events.OpenPrivateChatRoomEvent
+import com.julun.huanque.common.bean.forms.StatisticItem
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
-import com.julun.huanque.common.suger.dp2px
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.statistics.StatisticManager
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.homepage.HomePageActivity
@@ -213,6 +212,9 @@ class UserCardFragment : BaseDialogFragment() {
                 huanQueViewModel.unFollow(mUserCardViewModel.mUserId)
             } else {
                 //未关注，关注
+                reportClick(
+                    eventCode = StatisticCode.Follow + StatisticCode.LiveRoom
+                )
                 huanQueViewModel.follow(mUserCardViewModel.mUserId)
             }
             tv_attention.isEnabled = false
@@ -244,7 +246,7 @@ class UserCardFragment : BaseDialogFragment() {
             val userId = mUserCardViewModel.mUserId
             if (userId == SessionUtils.getUserId()) {
                 //跳转我的主页
-                HomePageActivity.newInstance(requireActivity(),SessionUtils.getUserId())
+                HomePageActivity.newInstance(requireActivity(), SessionUtils.getUserId())
             } else {
                 //跳转他人主页
                 if (mUserCardViewModel.userInfoData.value?.canInteractive != true) {

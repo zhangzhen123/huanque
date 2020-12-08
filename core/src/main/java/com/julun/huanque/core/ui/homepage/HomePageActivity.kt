@@ -227,6 +227,10 @@ class HomePageActivity : BaseActivity() {
             if (mHomePageViewModel.followStatus.value == BusiConstant.False) {
                 //未关注状态   关注
 //                mHomePageViewModel.follow()
+                reportClick(
+                    StatisticCode.Follow + StatisticCode.Home
+                )
+
                 huanQueViewModel.follow(mHomePageViewModel.targetUserId)
             } else {
                 //关注状态  取消关注

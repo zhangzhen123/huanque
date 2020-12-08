@@ -15,9 +15,11 @@ import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.SquareTab
-import com.julun.huanque.common.constant.PublicStateCode
+import com.julun.huanque.common.constant.StatisticCode
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.reportClick
+import com.julun.huanque.common.suger.reportScan
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
@@ -69,9 +71,12 @@ class DynamicSquareFragment : BaseFragment() {
         initMagicIndicator()
 
         publish_dynamic.onClickNew {
-            requireActivity().startActivity<PublishStateActivity>( )
+            reportClick(
+                eventCode = StatisticCode.PubPost + StatisticCode.Home
+            )
+            requireActivity().startActivity<PublishStateActivity>()
         }
-
+        startShowTime = System.currentTimeMillis()
     }
 
     private fun initViewPager() {
@@ -95,6 +100,7 @@ class DynamicSquareFragment : BaseFragment() {
         viewModel.queryInfo()
 
     }
+
 
     /**
      * 初始化历史记录指示器
@@ -211,6 +217,7 @@ class DynamicSquareFragment : BaseFragment() {
         }
     }
 
+    var startShowTime: Long = 0L
     override fun onHiddenChanged(hidden: Boolean) {
         logger.info("onHiddenChanged=$hidden")
         super.onHiddenChanged(hidden)
@@ -221,6 +228,19 @@ class DynamicSquareFragment : BaseFragment() {
                 it.onParentHiddenChanged(hidden)
             }
 
+        }
+        if (!hidden) {
+            startShowTime = System.currentTimeMillis()
+        } else {
+            val current = System.currentTimeMillis()
+            val duration = current - startShowTime
+            if (duration > 10 * 1000) {
+                reportScan(
+                    eventCode = StatisticCode.Post,
+                    enterTime = startShowTime,
+                    leaveTime = current
+                )
+            }
         }
     }
 

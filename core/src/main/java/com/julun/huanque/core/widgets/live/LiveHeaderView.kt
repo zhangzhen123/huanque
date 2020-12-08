@@ -12,6 +12,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.constant.StatisticCode
 import com.julun.huanque.common.constant.TabTags
 import com.julun.huanque.common.constant.UserChangeType
 import com.julun.huanque.common.helper.ImageHelper
@@ -21,7 +22,6 @@ import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.common.utils.ULog
-import com.julun.huanque.common.viewmodel.HuanQueViewModel
 import com.julun.huanque.common.widgets.PhotoHeadView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerActivity
@@ -173,6 +173,7 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             // 没关注直接关注，关注了打开主播信息界面
             if (!isSubscribed) {
                 playerViewModel?.subscribeSource = "直播间左上角"
+                reportClick(StatisticCode.Follow + StatisticCode.LiveRoom)
                 HuanViewModelManager.huanQueViewModel.follow(programId)
             }
             subscribeAnchor.isEnabled = false
@@ -199,7 +200,8 @@ class LiveHeaderView @JvmOverloads constructor(context: Context, attrs: Attribut
             } else {
                 val user = userListAdapter.getItemOrNull(position)
                 user?.let {
-                    playerViewModel?.userInfoView?.value = UserInfoBean(it.userId, false, it.royalLevel, it.picId, nickname = it.nickname)
+                    playerViewModel?.userInfoView?.value =
+                        UserInfoBean(it.userId, false, it.royalLevel, it.picId, nickname = it.nickname)
                 }
 
             }

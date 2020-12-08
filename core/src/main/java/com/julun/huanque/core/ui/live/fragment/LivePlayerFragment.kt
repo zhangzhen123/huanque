@@ -21,6 +21,7 @@ import com.julun.huanque.common.helper.reportCrash
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.reportClick
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.viewmodel.VideoChangeViewModel
@@ -58,6 +59,7 @@ open class LivePlayerFragment : BaseFragment() {
 
             override fun onClickAuthorFollow(authorInfo: MicAnchor) {
                 logger.info("点击了关注主播$authorInfo")
+                reportClick(StatisticCode.Follow + StatisticCode.LiveRoom)
                 huanQueViewModel.follow(authorInfo.programId)
             }
         }
@@ -212,7 +214,7 @@ open class LivePlayerFragment : BaseFragment() {
 
         huanQueViewModel.userInfoStatusChange.observe(this, Observer {
             logger.info("Player 关注状态 status = $it")
-            if (it.isSuccess() && it.requireT().follow == FollowStatus.True||it.requireT().follow == FollowStatus.Mutual) {
+            if (it.isSuccess() && it.requireT().follow == FollowStatus.True || it.requireT().follow == FollowStatus.Mutual) {
                 mViewList.forEach { view ->
                     val info = view.playerInfo ?: return@forEach
                     if (view != mMainVideoView && !view.isFree && info.programId == it.requireT().userId) {

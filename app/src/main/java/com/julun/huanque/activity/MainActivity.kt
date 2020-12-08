@@ -32,6 +32,7 @@ import com.julun.huanque.common.manager.*
 import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.reportClick
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
@@ -449,6 +450,8 @@ class MainActivity : BaseActivity() {
             showFragmentNew(MainPageIndexConst.MAIN_FRAGMENT_INDEX)
         }
         view_dynamic_square.onClickNew {
+            //统计点击
+            reportClick(StatisticCode.PostHome)
             showFragmentNew(MainPageIndexConst.DYNAMIC_SQUARE_INDEX)
         }
         view_program.onClickNew {

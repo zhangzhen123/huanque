@@ -2,15 +2,14 @@ package com.julun.huanque.core.ui.live.dialog
 
 import android.view.WindowManager
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProviders
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.constant.DialogOrderNumber
+import com.julun.huanque.common.constant.StatisticCode
 import com.julun.huanque.common.helper.ImageHelper
 import com.julun.huanque.common.manager.HuanViewModelManager
-import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.utils.ImageUtils
+import com.julun.huanque.common.suger.reportClick
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.live.PlayerViewModel
 import kotlinx.android.synthetic.main.dialog_guide_follow.*
@@ -28,7 +27,8 @@ import org.jetbrains.anko.imageResource
 class GuideFollowFragment : BaseDialogFragment() {
     //与playerActivity通信
     private val playerViewModel: PlayerViewModel by activityViewModels()
-    private val huanQueViewModel=HuanViewModelManager.huanQueViewModel
+    private val huanQueViewModel = HuanViewModelManager.huanQueViewModel
+
     companion object {
         fun newInstance(): GuideFollowFragment {
             return GuideFollowFragment()
@@ -48,6 +48,7 @@ class GuideFollowFragment : BaseDialogFragment() {
         initData()
         follow_anchor.onClickNew {
             playerViewModel.subscribeSource = "底部引导"
+            reportClick(eventCode = StatisticCode.Follow + StatisticCode.LiveRoom)
             huanQueViewModel.follow(playerViewModel.programId)
             dismiss()
         }

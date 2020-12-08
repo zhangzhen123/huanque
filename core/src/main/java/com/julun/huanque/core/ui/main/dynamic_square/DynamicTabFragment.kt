@@ -33,9 +33,9 @@ import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.DynamicGroupListAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
+import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.huanque.core.ui.dynamic.CircleDynamicActivity
 import com.julun.huanque.core.ui.dynamic.DynamicDetailActivity
-import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.share.LiveShareActivity
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.*
@@ -206,6 +206,9 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 }
                 R.id.btn_action -> {
                     logger.info("关注")
+                    reportClick(
+                        eventCode = StatisticCode.Follow + StatisticCode.Post
+                    )
                     huanQueViewModel.follow(item.userId)
                 }
                 R.id.sdv_photo -> {

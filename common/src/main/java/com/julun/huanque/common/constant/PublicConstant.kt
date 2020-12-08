@@ -33,13 +33,33 @@ object SquareTabType {
 object ActivityRequestCode {
     const val SELECT_CIRCLE = 345
 }
-object PublicStateCode{
+
+object PublicStateCode {
     const val CIRCLE_DATA = "Circle_Data"
 }
+
 object BottomActionCode {
     const val DELETE = "delete"
     const val REPORT = "report"
     const val SHARE = "share"
     const val BLACK = "black"
     const val CANCEL = "cancel"
+}
+
+object StatisticCode {
+    const val PubPost = "PubPost#"//发动态
+
+    const val PostHome = "PostHome"//动态首页
+
+    const val Follow = "Follow#"//关注
+
+
+    const val Post = "Post"//浏览鹊巢页面（浏览动态）
+
+    const val Home = "Home"//鹊巢首页点击发动态
+    const val LiveRoom = "LiveRoom"//直播间
+    const val MyPost = "MyPost"//我的动态页面点击发动态
+    const val Group = "Group"//圈子详情页面点击发动态
+
+
 }
