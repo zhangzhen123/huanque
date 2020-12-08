@@ -751,8 +751,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
         if (item.senderUserId == "${SessionUtils.getUserId()}") {
             //本人消息，费用退回，显示
             if (replayTime > DAY || (replayTime == 0L && (System.currentTimeMillis() - item.sentTime) > DAY)) {
+//            if (replayTime > 1 || replayTime == 0L) {
                 //回复时间超过一天,或者超过24小时内没有回复(消息费用退回)
-                showFee(tv, fee, true)
+                showFee(tv, fee, true, user?.targetUserObj?.expiredText ?: "退回")
                 tv.show()
             } else {
                 tv.hide()
@@ -761,8 +762,9 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
             //他人消息,费用未退回，显示付费样式,费用退回，显示退费样式
             tv.show()
             if (replayTime > DAY || (replayTime == 0L && (System.currentTimeMillis() - item.sentTime) > DAY)) {
+//            if (replayTime > 1 || replayTime == 0L) {
                 //超时未回复(退回)
-                showFee(tv, fee, true)
+                showFee(tv, fee, true, user?.targetUserObj?.expiredText ?: "退回")
             } else {
                 showFee(tv, fee, false)
             }
@@ -828,11 +830,12 @@ class MessageAdapter : BaseDelegateMultiAdapter<Message, BaseViewHolder>(), UpFe
      * 显示收费样式
      * @param fee 费用
      * @param giveback 退回状态
+     * @param givebackContentContent 退回显示的文案
      */
-    private fun showFee(draweeView: SimpleDraweeSpanTextView, fee: Long, giveback: Boolean) {
+    private fun showFee(draweeView: SimpleDraweeSpanTextView, fee: Long, giveback: Boolean, givebackContentContent: String = "退回") {
         val str = if (giveback) {
             //费用退回
-            "超过24小时未回复，# ${fee}已退回"
+            "超过24小时未回复，# ${fee}已${givebackContentContent}"
         } else {
             //费用未退回
             "# $fee"

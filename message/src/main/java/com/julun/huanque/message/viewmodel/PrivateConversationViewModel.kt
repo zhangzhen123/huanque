@@ -297,8 +297,8 @@ class PrivateConversationViewModel : BaseViewModel() {
                         //数据不一致，需要保存用户数据
                         HuanQueDatabase.getInstance().chatUserDao().insert(friendUser)
 //                        EventBus.getDefault().post(UserInfoChangeEvent(friendUser.userId, friendUser.stranger))
-                        val changeResult = UserInfoChangeResult( userId = friendUser.userId, stranger = friendUser.stranger)
-                        HuanViewModelManager.huanQueViewModel.userInfoStatusChange.value=changeResult.convertRtData()
+                        val changeResult = UserInfoChangeResult(userId = friendUser.userId, stranger = friendUser.stranger)
+                        HuanViewModelManager.huanQueViewModel.userInfoStatusChange.value = changeResult.convertRtData()
                     }
                 }
             }, {
@@ -409,7 +409,11 @@ class PrivateConversationViewModel : BaseViewModel() {
                         RongCloudManager.send(
                             content,
                             "$targetId",
-                            targetUserObj = targetUser.apply { fee = result.consumeBeans }) { result, message ->
+                            targetUserObj = targetUser.apply {
+                                fee = result.consumeBeans
+                                useChatTicket = result.useChatTicket
+                                expiredText = result.expiredText
+                            }) { result, message ->
                             if (!result) {
                                 //发送失败
                                 localMsg?.messageId = message.messageId
@@ -430,7 +434,11 @@ class PrivateConversationViewModel : BaseViewModel() {
                     //发送特权表情消息
                     RongCloudManager.sendCustomMessage(
                         "$targetId",
-                        targetUser.apply { fee = result.consumeBeans },
+                        targetUser.apply {
+                            fee = result.consumeBeans
+                            useChatTicket = result.useChatTicket
+                            expiredText = result.expiredText
+                        },
                         Conversation.ConversationType.PRIVATE, MessageCustomBeanType.Expression_Privilege, content
                     ) { result, message ->
                         if (!result) {

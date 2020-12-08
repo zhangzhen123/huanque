@@ -132,6 +132,7 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         if (item.userAnonymous) {
             sex.hide()
         } else {
+            sex.show()
             sex.text = "${item.age}"
             when (item.sex) {//Male、Female、Unknow
 

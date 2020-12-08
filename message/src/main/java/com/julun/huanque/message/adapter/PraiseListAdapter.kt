@@ -17,6 +17,7 @@ import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.MessageFormatUtils
 import com.julun.huanque.common.utils.TimeUtils
+import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.message.R
 import io.rong.imlib.model.Message
 import io.rong.message.TextMessage
@@ -61,7 +62,7 @@ class PraiseListAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.rec
             val postContent = if (item.content.isEmpty()) {
                 "分享图片"
             } else {
-                item.content
+                EmojiSpanBuilder.buildEmotionSpannable(context, item.content)
             }
             val praiseConent = if (item.comment.isEmpty()) {
                 "动态你的动态"
