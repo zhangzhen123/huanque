@@ -42,7 +42,11 @@
         android:layout_height="@dimen/dimen_142"
         android:layout_marginTop="@dimen/dimen_5"
         android:layout_marginBottom="@dimen/dimen_3" />
-
+    <View
+        android:id="@+id/divide_line"
+        android:layout_width="match_parent"
+        android:background="#F3F5F9"
+        android:layout_height="1px"/>
     <LinearLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"

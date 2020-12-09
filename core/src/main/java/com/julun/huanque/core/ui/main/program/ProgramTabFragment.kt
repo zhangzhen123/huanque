@@ -205,7 +205,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
         var current = currentMiddle
         while (doing) {
             val itemCurrent = authorAdapter.getItemOrNull(current)
-            doing = itemCurrent?.content !is ProgramLiveInfo
+            doing = itemCurrent!=null&&itemCurrent.content !is ProgramLiveInfo
             if (!doing) {
                 break
             }

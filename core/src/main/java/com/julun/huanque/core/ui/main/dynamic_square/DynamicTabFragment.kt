@@ -488,8 +488,10 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 }
                 if (listData.recom) {
                     headerLayout.bottom_layout.show()
+                    headerLayout.divide_line.show()
                 } else {
                     headerLayout.bottom_layout.hide()
+                    headerLayout.divide_line.hide()
                 }
 
             } else if (currentTab?.typeCode == SquareTabType.RECOMMEND) {
