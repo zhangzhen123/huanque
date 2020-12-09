@@ -215,12 +215,17 @@ public class LocalMedia implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LocalMedia that = (LocalMedia) o;
-        return compressPath.equals(that.compressPath);
+        return path != null && path.equals(that.path);
     }
 
     @Override
     public int hashCode() {
-        return compressPath.hashCode();
+        if (path != null) {
+            return path.hashCode();
+        } else {
+            return 0;
+        }
+
     }
 
     public static final Parcelable.Creator<LocalMedia> CREATOR = new Parcelable.Creator<LocalMedia>() {

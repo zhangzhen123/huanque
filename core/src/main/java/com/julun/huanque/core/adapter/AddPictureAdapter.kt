@@ -130,10 +130,10 @@ class AddPictureAdapter(
         //少于8张，显示继续添加的图标
         if (getItemViewType(position) == TYPE_CAMERA) {
             if (isPublishVideo) {
-                ImageUtils.loadImageLocal(viewHolder.mImg, R.mipmap.icon_upload_image)
+                ImageUtils.loadImageLocal(viewHolder.mImg, R.mipmap.icon_upload_image_02)
             } else {
                 //以后扩展用的
-                ImageUtils.loadImageLocal(viewHolder.mImg, R.mipmap.icon_upload_image)
+                ImageUtils.loadImageLocal(viewHolder.mImg, R.mipmap.icon_upload_image_02)
             }
             viewHolder.mImg.onClickNew { mOnAddPicClickListener.onAddPicClick() }
             viewHolder.ll_del.visibility = View.INVISIBLE

@@ -98,7 +98,7 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
             currentGroup ?: return@onClickNew
             reportClick(StatisticCode.PubPost + StatisticCode.Group)
             this.startActivity<PublishStateActivity>(PublicStateCode.CIRCLE_DATA to CircleGroup().apply {
-                this.groupId = groupId
+                this.groupId = currentGroup!!.groupId
                 this.groupName = currentGroup!!.groupName
             })
         }
@@ -128,7 +128,12 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
         btn_action_tb.onClickNew {
             currentGroup ?: return@onClickNew
             if (currentGroup!!.join) {
-                attentionCircleViewModel.groupQuit(currentGroupId ?: return@onClickNew)
+                MyAlertDialog(this).showAlertWithOKAndCancel(
+                    "退出圈子将错过精彩内容和动态推送",
+                    MyAlertDialog.MyDialogCallback(onCancel = {
+                        attentionCircleViewModel.groupQuit(currentGroupId ?: return@MyDialogCallback)
+                    }), "提示", "继续关注", "残忍退出"
+                )
             } else {
                 attentionCircleViewModel.groupJoin(currentGroupId ?: return@onClickNew)
             }

@@ -32,7 +32,7 @@
             android:layout_width="@dimen/dimen_45"
             android:layout_height="@dimen/dimen_45"
             android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/dimen_40"
+            android:layout_marginEnd="@dimen/dimen_15"
             android:layout_marginBottom="@dimen/dimen_40"
             android:src="@mipmap/icon_publish_dynamic" />
 

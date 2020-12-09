@@ -174,7 +174,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         groupAdapter.onAdapterClickNew { _, _, position ->
             val item = groupAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
             logger.info("打开头部圈子：${item.groupName}")
-            reportClick(StatisticCode.EnterGroup+StatisticCode.List)
+            reportClick(StatisticCode.EnterGroup + StatisticCode.List)
             CircleDynamicActivity.start(requireActivity(), item.groupId)
         }
 
@@ -233,7 +233,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 }
                 R.id.tv_comment_num -> {
                     logger.info("评论")
-                    DynamicDetailActivity.start(requireActivity(), item.postId,true)
+                    DynamicDetailActivity.start(requireActivity(), item.postId, true)
                 }
                 R.id.tv_share_num -> {
                     LiveShareActivity.newInstance(requireActivity(), ShareFromType.Share_Dynamic, item.postId)
@@ -258,7 +258,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                     bottomDialog?.show(requireActivity(), "bottomDialog")
                 }
                 R.id.tv_circle_name -> {
-                    reportClick(StatisticCode.EnterGroup+StatisticCode.Post)
+                    reportClick(StatisticCode.EnterGroup + StatisticCode.Post)
                     CircleDynamicActivity.start(requireActivity(), item.group?.groupId ?: return@onAdapterChildClickNew)
                 }
             }
@@ -474,8 +474,10 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 }
                 if (listData.recom) {
                     headerLayout.bottom_layout.show()
+                    headerLayout.divide_line.show()
                 } else {
                     headerLayout.bottom_layout.hide()
+                    headerLayout.divide_line.hide()
                 }
 
             } else if (currentTab?.typeCode == SquareTabType.RECOMMEND) {

@@ -23,6 +23,7 @@
         android:layout_marginTop="@dimen/dimen_10"
         android:gravity="center"
         android:maxLines="1"
+        android:textStyle="bold"
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_14"
         tools:text="用户昵称" />
@@ -34,8 +35,9 @@
         android:layout_marginTop="@dimen/dimen_4"
         android:gravity="center"
         android:maxLines="1"
+        android:includeFontPadding="false"
         android:textColor="@color/black_999"
-        android:textSize="@dimen/sp_14"
+        android:textSize="@dimen/sp_12"
         tools:text="热度" />
 
 
