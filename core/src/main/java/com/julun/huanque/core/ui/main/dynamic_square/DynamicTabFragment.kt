@@ -3,6 +3,8 @@ package com.julun.huanque.core.ui.main.dynamic_square
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,9 +37,11 @@ import com.julun.huanque.core.adapter.DynamicGroupListAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.huanque.core.ui.dynamic.CircleDynamicActivity
+import com.julun.huanque.core.ui.dynamic.CircleDynamicViewModel
 import com.julun.huanque.core.ui.dynamic.DynamicDetailActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.share.LiveShareActivity
+import com.julun.huanque.core.viewmodel.ScrollStateViewModel
 import kotlinx.android.synthetic.main.fragment_dynamic_tab.*
 import kotlinx.android.synthetic.main.layout_header_dynamic.view.*
 import org.greenrobot.eventbus.Subscribe
@@ -53,6 +57,8 @@ import org.greenrobot.eventbus.ThreadMode
  *
  */
 class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
+    //圈子详情使用的ViewModel
+    private val mScrollStateViewModel: ScrollStateViewModel by activityViewModels()
 
     companion object {
         fun newInstance(tab: SquareTab?, groupId: Long? = null): DynamicTabFragment {
@@ -263,6 +269,14 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 }
             }
         }
+
+        postList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                mScrollStateViewModel.scrollState.value = newState != RecyclerView.SCROLL_STATE_IDLE
+            }
+
+        })
     }
 
     override fun onResume() {

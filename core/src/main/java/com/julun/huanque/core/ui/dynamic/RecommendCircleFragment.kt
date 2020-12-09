@@ -92,7 +92,7 @@ class RecommendCircleFragment : BaseLazyFragment() {
         mAttentionCircleAdapter.setOnItemClickListener { adapter, view, position ->
             val tempData = adapter.getItemOrNull(position) as? CircleGroup ?: return@setOnItemClickListener
             if (mCircleViewModel.mType == CircleGroupType.Circle_All) {
-                reportClick(StatisticCode.EnterGroup+StatisticCode.List)
+                reportClick(StatisticCode.EnterGroup + StatisticCode.List)
                 //全部圈子  打开详情
                 CircleDynamicActivity.start(requireActivity(), tempData.groupId)
             } else if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
@@ -108,7 +108,13 @@ class RecommendCircleFragment : BaseLazyFragment() {
             if (mCircleViewModel.mType == CircleGroupType.Circle_Choose) {
                 mAttentionCircleViewModel.getChooseCircle(QueryType.LOAD_MORE)
             } else {
-                mAttentionCircleViewModel.getCircleGroupInfo(QueryType.LOAD_MORE)
+                var joinCount = 0
+                mAttentionCircleAdapter.data.forEach {
+                    if (it is CircleGroup && it.joined == BusiConstant.True) {
+                        joinCount++
+                    }
+                }
+                mAttentionCircleViewModel.getCircleGroupInfo(QueryType.LOAD_MORE, joinCount)
             }
         }
     }
@@ -157,7 +163,23 @@ class RecommendCircleFragment : BaseLazyFragment() {
 //                        //追加推荐数据
 //                        circleList.addAll(recommendGroup.list)
 //                    }
-                    mAttentionCircleAdapter.addData(recommendGroup.list)
+                    val localData = mAttentionCircleAdapter.data
+
+                    val localIdList = mutableListOf<Long>()
+                    localData.forEach {
+                        if (it is CircleGroup) {
+                            localIdList.add(it.groupId)
+                        }
+                    }
+
+                    val realAddData = mutableListOf<CircleGroup>()
+                    recommendGroup.list.forEach {
+                        if (!localIdList.contains(it.groupId)) {
+                            realAddData.add(it)
+                        }
+                    }
+
+                    mAttentionCircleAdapter.addData(realAddData)
                     if (!recommendGroup.hasMore) {
                         //没有更多了
                         mAttentionCircleAdapter.loadMoreModule.loadMoreEnd()

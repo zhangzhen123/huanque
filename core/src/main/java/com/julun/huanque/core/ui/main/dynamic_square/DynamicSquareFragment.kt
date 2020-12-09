@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.main.dynamic_square
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
@@ -7,9 +8,11 @@ import android.util.SparseArray
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
@@ -23,8 +26,13 @@ import com.julun.huanque.common.suger.reportScan
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
+import com.julun.huanque.core.viewmodel.ScrollStateViewModel
 import com.luck.picture.lib.tools.StatusBarUtil
+import kotlinx.android.synthetic.main.activity_circle_dynamic.*
 import kotlinx.android.synthetic.main.fragment_dynamic_container.*
+import kotlinx.android.synthetic.main.fragment_dynamic_container.magic_indicator
+import kotlinx.android.synthetic.main.fragment_dynamic_container.publish_dynamic
+import kotlinx.android.synthetic.main.fragment_dynamic_container.view_pager
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
@@ -52,6 +60,8 @@ class DynamicSquareFragment : BaseFragment() {
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
     private val mTabTitles = arrayListOf<SquareTab>()
+
+    private val mScrollStateViewModel: ScrollStateViewModel by activityViewModels()
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_dynamic_container
@@ -95,6 +105,17 @@ class DynamicSquareFragment : BaseFragment() {
                 refreshTabList()
             }
 
+        })
+
+        mScrollStateViewModel.scrollState.observe(this, Observer {
+            if (it != null) {
+                if (it) {
+                    showOrHidePublish(false)
+                } else {
+                    showOrHidePublish(true)
+                }
+
+            }
         })
 
         viewModel.queryInfo()
@@ -244,6 +265,44 @@ class DynamicSquareFragment : BaseFragment() {
         }
     }
 
+    //隐藏发布按钮动画
+    private var mHidePublishAnimation: ObjectAnimator? = null
+
+    //显示发布按钮动画
+    private var mShowPublishAnimation: ObjectAnimator? = null
+
+
+    /**
+     * 显示或者隐藏发布按钮
+     * @param show  true 显示发布按钮  false 隐藏发布按钮
+     */
+    private fun showOrHidePublish(show: Boolean) {
+        if (show) {
+            if (mShowPublishAnimation?.isRunning == true) {
+                //动画正在执行，什么都不操作
+                return
+            }
+            mShowPublishAnimation = ObjectAnimator.ofFloat(publish_dynamic, "translationX", publish_dynamic.translationX, 0f)
+                .apply { duration = 100 }
+            mHidePublishAnimation?.cancel()
+            mShowPublishAnimation?.cancel()
+            mShowPublishAnimation?.start()
+        } else {
+            if (mHidePublishAnimation?.isRunning == true) {
+                //动画正在执行，什么都不操作
+                return
+            }
+            mHidePublishAnimation =
+                ObjectAnimator.ofFloat(publish_dynamic, "translationX", publish_dynamic.translationX, dp2pxf(95))
+                    .apply { duration = 100 }
+
+            mHidePublishAnimation?.cancel()
+            mShowPublishAnimation?.cancel()
+            mHidePublishAnimation?.start()
+        }
+
+    }
+
     private val mPagerAdapter: FragmentPagerAdapter by lazy {
         object : FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             override fun getItem(position: Int): Fragment {
@@ -264,6 +323,12 @@ class DynamicSquareFragment : BaseFragment() {
                 return mTabTitles[position].typeName
             }
         }
+    }
+
+    override fun onViewDestroy() {
+        super.onViewDestroy()
+        mHidePublishAnimation?.cancel()
+        mShowPublishAnimation?.cancel()
     }
 
 }

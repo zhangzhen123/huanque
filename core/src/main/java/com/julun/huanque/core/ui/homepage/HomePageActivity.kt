@@ -112,6 +112,9 @@ class HomePageActivity : BaseActivity() {
 
     private val audioPlayerManager: AudioPlayerManager by lazy { AudioPlayerManager(this) }
 
+    //是否播放过座驾动画
+    private var playedCar = false
+
     override fun getLayoutId() = R.layout.act_home_page
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -807,7 +810,8 @@ class HomePageActivity : BaseActivity() {
             tv_vehicle.show()
         } else {
             tv_vehicle.text = "${carInfo.carName}>"
-            if (!mHomePageViewModel.mineHomePage) {
+            if (!mHomePageViewModel.mineHomePage && !playedCar) {
+                playedCar = true
                 sdv_card_auto.show()
                 sdv_vehicle.hide()
                 tv_vehicle.hide()
@@ -1967,7 +1971,9 @@ class HomePageActivity : BaseActivity() {
     override fun onRestart() {
         super.onRestart()
         //重新获取数据
-        mHomePageViewModel.homeInfo()
+        if (mHomePageViewModel.mineHomePage) {
+            mHomePageViewModel.homeInfo()
+        }
     }
 
     override fun onDestroy() {
@@ -1977,6 +1983,7 @@ class HomePageActivity : BaseActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        playedCar = false
         setIntent(intent)
         if (intent != null) {
             resetView(intent)
