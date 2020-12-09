@@ -83,16 +83,25 @@ class CreateAccountViewModel : BaseViewModel() {
         }
     }
 
+    //创建接口，正在调用的标识
+    private var creating = false
+
     /**
      * 创建账号
      */
     fun subCreate(form: CreateAccountForm) {
+        if (creating) {
+            return
+        }
+        creating = true
         viewModelScope.launch {
             request({
                 userService.subCreate(form).dataConvert()
                 ToastUtils.show("分身创建成功")
                 createAccountSuccess.value = true
-            }, {})
+            }, {}, final = {
+                creating = false
+            })
         }
     }
 }

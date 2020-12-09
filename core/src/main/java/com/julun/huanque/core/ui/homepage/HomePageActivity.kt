@@ -425,7 +425,9 @@ class HomePageActivity : BaseActivity() {
                 RNPageActivity.start(this, RnConstant.MY_CAR_PAGE)
             } else {
                 //座驾动画不为空，显示动画弹窗
-                mCarDetailFragment.show(supportFragmentManager, "CarDetailFragment")
+                if (carInfo.dynamicUrl.isNotEmpty()) {
+                    mCarDetailFragment.show(supportFragmentManager, "CarDetailFragment")
+                }
             }
         }
         tv_vehicle.onClickNew {
@@ -476,11 +478,9 @@ class HomePageActivity : BaseActivity() {
         }
         ll_bird.onClickNew {
             //跳转养鹊乐园
-            if (mHomePageViewModel.mineHomePage) {
-                val intent = Intent(this, LeYuanBirdActivity::class.java)
-                if (ForceUtils.activityMatch(intent)) {
-                    startActivity(intent)
-                }
+            val intent = Intent(this, LeYuanBirdActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
             }
         }
         con_tag_mine.onClickNew {
@@ -507,6 +507,21 @@ class HomePageActivity : BaseActivity() {
             //跳转添加标签页面
             if (mHomePageViewModel.targetUserId == SessionUtils.getUserId()) {
                 RNPageActivity.start(this, RnConstant.EditMyTagPage)
+            }
+        }
+
+        view_dynamic_top.onClickNew {
+            val homeInfo = mHomePageViewModel.homeInfoBean.value
+            val playInfo = homeInfo?.playProgram
+            val postInfo = homeInfo?.post
+            if (playInfo != null && postInfo != null && playInfo.programId == SessionUtils.getUserId()
+                && playInfo.living == BusiConstant.True && postInfo.postNum == 0L
+            ) {
+                ARouter.getInstance().build(ARouterConstant.USER_DYNAMIC_ACTIVITY).with(Bundle().apply {
+                    putLong(IntentParamKey.USER_ID.name, mHomePageViewModel.targetUserId)
+                }).navigation()
+            } else {
+                view_dynamic.performClick()
             }
         }
     }
@@ -767,9 +782,12 @@ class HomePageActivity : BaseActivity() {
             view_voice.show()
             tv_time.show()
             sdv_voice_state.show()
+            view_voice_divider.show()
+            tv_like.show()
             tv_time.leftPadding = dp2px(4f)
             tv_time.rightPadding = 0
             sdv_voice_state.backgroundResource = R.drawable.bg_enable
+            ImageUtils.loadImageLocal(sdv_voice_state, R.mipmap.icon_pause_home_page)
         } else {
             if (mHomePageViewModel.mineHomePage) {
                 //我的主页

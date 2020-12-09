@@ -17,6 +17,7 @@ import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.core.R
+import com.julun.huanque.core.widgets.PlayerConstraintLayout
 import com.julun.huanque.core.widgets.SingleVideoView
 import com.julun.huanque.core.widgets.SurfaceVideoViewOutlineProvider
 import kotlinx.android.synthetic.main.act_home_page.*
@@ -72,16 +73,9 @@ class HomePageDynamicPicListAdapter : BaseDelegateMultiAdapter<Any, BaseViewHold
             if (item is HomePageProgram) {
                 //显示直播中画面
 
-                val singleVideoView = holder.getView<SingleVideoView>(R.id.single_video_view)
-                singleVideoView.show()
-                singleVideoView.showCover(StringHelper.getOssImgUrl(item.programCover), false)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    singleVideoView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
-                    singleVideoView?.clipToOutline = true;
-                }
-                if (!singleVideoView.hasPlayer()) {
-                    singleVideoView.initPlayer()
-                }
+                val player_con = holder.getView<PlayerConstraintLayout>(R.id.player_con)
+                player_con.setmHomeProgramInfo(item)
+
                 val sdv_living = holder.getView<SimpleDraweeView>(R.id.sdv_living)
                 val tv_living = holder.getView<TextView>(R.id.tv_living)
                 if (item.living == BusiConstant.True) {
@@ -89,10 +83,7 @@ class HomePageDynamicPicListAdapter : BaseDelegateMultiAdapter<Any, BaseViewHold
                     sdv_living.show()
                     tv_living.text = "直播中"
                     ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
-                    val playInfo = item.playInfo
-                    if (playInfo != null) {
-                        singleVideoView.play(GlobalUtils.getPlayUrl(playInfo))
-                    }
+
                 } else {
                     sdv_living.hide()
                     tv_living.text = "未开播"
