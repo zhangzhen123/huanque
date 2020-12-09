@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.dynamic
 
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -56,6 +57,8 @@ import org.jetbrains.anko.backgroundResource
 class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
 
     companion object {
+
+        const val PublishRequestCode = 0x9836
     }
 
     private var huanQueViewModel = HuanViewModelManager.huanQueViewModel
@@ -203,7 +206,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                 }
                 R.id.tv_comment_num -> {
                     logger.info("评论")
-                    DynamicDetailActivity.start(this, item.postId)
+                    DynamicDetailActivity.start(this, item.postId, true)
                 }
                 R.id.tv_share_num -> {
                     logger.info("分享")
@@ -245,7 +248,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
             reportClick(
                 StatisticCode.PubPost + StatisticCode.MyPost
             )
-            ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation()
+            ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation(this,PublishRequestCode)
         }
 
         postList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -461,6 +464,14 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         super.onViewDestroy()
         mHidePublishAnimation?.cancel()
         mShowPublishAnimation?.cancel()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == PublishRequestCode && resultCode == Activity.RESULT_OK){
+            //刷新
+            mViewModel.requestPostList(QueryType.REFRESH, currentUserId)
+        }
     }
 
 }

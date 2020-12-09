@@ -759,6 +759,7 @@ class PublishStateActivity : BaseActivity() {
             loadingDialog.dismiss()
         }
         if (result.result) {
+            setResult(Activity.RESULT_OK)
             hideSoftInput()
             finish()
             clearPictureCache()

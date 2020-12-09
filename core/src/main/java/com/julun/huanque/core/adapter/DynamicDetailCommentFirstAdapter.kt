@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.bean.beans.DynamicComment
 import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.interfaces.SecondCommentClickListener
 import com.julun.huanque.common.suger.hide
@@ -70,7 +71,7 @@ class DynamicDetailCommentFirstAdapter : BaseQuickAdapter<DynamicComment, BaseVi
         holder.setText(R.id.tv_nickname, item.nickname)
             .setText(R.id.tv_time, item.createTime)
             .setText(R.id.tv_content, EmojiSpanBuilder.buildEmotionSpannable(context, item.content))
-            .setText(R.id.tv_praise, "${item.praiseNum}")
+            .setText(R.id.tv_praise, StringHelper.formatNumWithTwoDecimals(item.praiseNum.toLong()))
             .setText(R.id.tv_comment_num, commentContent)
             .setText(R.id.tv_share_num, shareContent)
             .setGone(R.id.ll_comment_more, !item.hasMore)

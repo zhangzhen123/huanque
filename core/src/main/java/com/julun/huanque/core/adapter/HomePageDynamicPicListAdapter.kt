@@ -13,10 +13,7 @@ import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.bean.beans.HomePageProgram
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.helper.StringHelper
-import com.julun.huanque.common.suger.dp2pxf
-import com.julun.huanque.common.suger.hide
-import com.julun.huanque.common.suger.loadImage
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.common.utils.ImageUtils
 import com.julun.huanque.core.R
@@ -64,15 +61,26 @@ class HomePageDynamicPicListAdapter : BaseDelegateMultiAdapter<Any, BaseViewHold
 
     override fun convert(holder: BaseViewHolder, item: Any) {
         val itemType = holder.itemViewType
+//        val root = holder.itemView
+//        val params = root.layoutParams
+//        params.height = dp2px(74)
+//        params.width = dp2px(77)
+//        root.layoutParams = params
+
         if (itemType == Living) {
             //直播中样式
             if (item is HomePageProgram) {
                 //显示直播中画面
+
                 val singleVideoView = holder.getView<SingleVideoView>(R.id.single_video_view)
+                singleVideoView.show()
                 singleVideoView.showCover(StringHelper.getOssImgUrl(item.programCover), false)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     singleVideoView?.outlineProvider = SurfaceVideoViewOutlineProvider(dp2pxf(6));
                     singleVideoView?.clipToOutline = true;
+                }
+                if (!singleVideoView.hasPlayer()) {
+                    singleVideoView.initPlayer()
                 }
                 val sdv_living = holder.getView<SimpleDraweeView>(R.id.sdv_living)
                 val tv_living = holder.getView<TextView>(R.id.tv_living)

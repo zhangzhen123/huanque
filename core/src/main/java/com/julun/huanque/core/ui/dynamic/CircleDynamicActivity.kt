@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.dynamic
 
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.graphics.Typeface
@@ -34,6 +35,8 @@ import com.julun.huanque.core.ui.main.dynamic_square.DynamicTabFragment
 import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
 import com.julun.huanque.core.viewmodel.AttentionCircleViewModel
 import kotlinx.android.synthetic.main.activity_circle_dynamic.*
+import kotlinx.android.synthetic.main.activity_circle_dynamic.publish_dynamic
+import kotlinx.android.synthetic.main.activity_dynamic_list.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
@@ -333,6 +336,45 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
         }
     }
 
+
+    //隐藏发布按钮动画
+    private var mHidePublishAnimation: ObjectAnimator? = null
+
+    //显示发布按钮动画
+    private var mShowPublishAnimation: ObjectAnimator? = null
+
+
+    /**
+     * 显示或者隐藏发布按钮
+     * @param show  true 显示发布按钮  false 隐藏发布按钮
+     */
+    private fun showOrHidePublish(show: Boolean) {
+        if (show) {
+            if (mShowPublishAnimation?.isRunning == true) {
+                //动画正在执行，什么都不操作
+                return
+            }
+            mShowPublishAnimation = ObjectAnimator.ofFloat(publish_dynamic, "translationX", publish_dynamic.translationX, 0f)
+                .apply { duration = 100 }
+            mHidePublishAnimation?.cancel()
+            mShowPublishAnimation?.cancel()
+            mShowPublishAnimation?.start()
+        } else {
+            if (mHidePublishAnimation?.isRunning == true) {
+                //动画正在执行，什么都不操作
+                return
+            }
+            mHidePublishAnimation =
+                ObjectAnimator.ofFloat(publish_dynamic, "translationX", publish_dynamic.translationX, dp2pxf(95))
+                    .apply { duration = 100 }
+
+            mHidePublishAnimation?.cancel()
+            mShowPublishAnimation?.cancel()
+            mHidePublishAnimation?.start()
+        }
+
+    }
+
     /**
      * 滑动到顶部
      */
@@ -372,4 +414,9 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
     override fun showLoadState(state: NetState) {
     }
 
+    override fun onViewDestroy() {
+        super.onViewDestroy()
+        mHidePublishAnimation?.cancel()
+        mShowPublishAnimation?.cancel()
+    }
 }

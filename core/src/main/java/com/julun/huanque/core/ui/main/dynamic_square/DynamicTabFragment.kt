@@ -233,7 +233,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 }
                 R.id.tv_comment_num -> {
                     logger.info("评论")
-                    DynamicDetailActivity.start(requireActivity(), item.postId)
+                    DynamicDetailActivity.start(requireActivity(), item.postId,true)
                 }
                 R.id.tv_share_num -> {
                     LiveShareActivity.newInstance(requireActivity(), ShareFromType.Share_Dynamic, item.postId)

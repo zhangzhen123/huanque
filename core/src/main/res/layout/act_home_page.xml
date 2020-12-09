@@ -1305,6 +1305,17 @@
         app:layout_constraintTop_toTopOf="@id/view_top"
         tools:text="10km" />
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_card_auto"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="#B3000000"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.julun.huanque.common.widgets.statepage.StatePageView
         android:id="@+id/state_pager_view"
         android:layout_width="match_parent"
