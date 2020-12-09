@@ -264,6 +264,13 @@ class SingleVideoView(context: Context, attrs: AttributeSet?, var useManager: Bo
     }
 
     /**
+     * 是否有播放器对象
+     */
+    fun hasPlayer() : Boolean{
+        return mAliPlayer != null
+    }
+
+    /**
      * 初始化播放器
      */
     fun initPlayer() {

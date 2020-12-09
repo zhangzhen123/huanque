@@ -802,34 +802,41 @@ class HomePageActivity : BaseActivity() {
         sdv_vehicle.loadImage(StringHelper.getOssImgUrl(carInfo.carPic), 110f, 74f)
         if (carInfo.dynamicUrl.isEmpty()) {
             tv_vehicle.text = "${carInfo.showMsg}>"
+            sdv_card_auto.hide()
             sdv_vehicle.show()
             tv_vehicle.show()
         } else {
             tv_vehicle.text = "${carInfo.carName}>"
-            sdv_card_auto.show()
-            sdv_vehicle.hide()
-            tv_vehicle.hide()
-            //显示全屏座驾
-            ImageUtils.showAnimator(sdv_card_auto, StringHelper.getOssAudioUrl(carInfo.dynamicUrl), 1, object : WebpAnimatorListener {
-                override fun onStart() {
-                    sdv_card_auto.show()
-                    sdv_vehicle.hide()
-                    tv_vehicle.hide()
-                }
+            if (!mHomePageViewModel.mineHomePage) {
+                sdv_card_auto.show()
+                sdv_vehicle.hide()
+                tv_vehicle.hide()
+                //显示全屏座驾
+                ImageUtils.showAnimator(sdv_card_auto, StringHelper.getOssAudioUrl(carInfo.dynamicUrl), 1, object : WebpAnimatorListener {
+                    override fun onStart() {
+                        sdv_card_auto.show()
+                        sdv_vehicle.hide()
+                        tv_vehicle.hide()
+                    }
 
-                override fun onError() {
-                    sdv_card_auto.hide()
-                    sdv_vehicle.show()
-                    tv_vehicle.show()
-                }
+                    override fun onError() {
+                        sdv_card_auto.hide()
+                        sdv_vehicle.show()
+                        tv_vehicle.show()
+                    }
 
-                override fun onEnd() {
-                    sdv_card_auto.hide()
-                    sdv_vehicle.show()
-                    tv_vehicle.show()
-                }
+                    override fun onEnd() {
+                        sdv_card_auto.hide()
+                        sdv_vehicle.show()
+                        tv_vehicle.show()
+                    }
 
-            })
+                })
+            } else {
+                sdv_card_auto.hide()
+                sdv_vehicle.show()
+                tv_vehicle.show()
+            }
         }
 
 
