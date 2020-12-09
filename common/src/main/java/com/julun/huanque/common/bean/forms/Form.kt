@@ -185,7 +185,11 @@ class GroupIdForm(var groupId: Long = 0) : Serializable
 /**
  * 查询圈子的Form（关注还是推荐）
  */
-class CircleGroupTypeForm(var offset: Int = 0, var postType: String = "") : Serializable
+class CircleGroupTypeForm(
+    var offset: Int = 0, var postType: String = ""
+    //已加入的圈子数量
+    , var groupJoinNum: Int? = null
+) : Serializable
 
 /**
  * 动态分享的form
@@ -264,9 +268,9 @@ data class StatisticItem(
     //事件类型：
     //Click（点击）只记录点击次数
     //Scan（浏览）需要记录浏览时间
-    var eventType: String="",
+    var eventType: String = "",
     //事件代码
-    var eventCode: String="",
+    var eventCode: String = "",
     //点击次数
     var clickNum: Int = 0,
     var enterTime: Long? = null,

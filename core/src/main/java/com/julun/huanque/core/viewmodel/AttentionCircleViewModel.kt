@@ -7,6 +7,7 @@ import com.julun.huanque.common.bean.beans.MyGroupInfo
 import com.julun.huanque.common.bean.forms.CircleGroupTypeForm
 import com.julun.huanque.common.bean.forms.GroupIdForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.CircleGroupTabType
 import com.julun.huanque.common.constant.CircleGroupType
 import com.julun.huanque.common.net.Requests
@@ -40,13 +41,14 @@ class AttentionCircleViewModel : BaseViewModel() {
     /**
      * 获取我的圈子 基础数据
      */
-    fun getCircleGroupInfo(queryType: QueryType) {
+    fun getCircleGroupInfo(queryType: QueryType,joinNum : Int = 0) {
         viewModelScope.launch {
             request({
                 if (queryType != QueryType.LOAD_MORE) {
                     mOffset = 0
                 }
-                val groupData = socialService.groupList(CircleGroupTypeForm(mOffset, requestType)).dataConvert()
+
+                val groupData = socialService.groupList(CircleGroupTypeForm(mOffset, requestType, joinNum)).dataConvert()
 //                if (mOffset == 0) {
 //                    //刷新操作
                 groupData.recommendGroup.isPull = queryType != QueryType.LOAD_MORE
@@ -97,7 +99,7 @@ class AttentionCircleViewModel : BaseViewModel() {
                 }
 
                 myGroupData.value = groupData
-            },needLoadState = true)
+            }, needLoadState = true)
         }
     }
 

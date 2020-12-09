@@ -34,6 +34,7 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.dynamic_square.DynamicTabFragment
 import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
 import com.julun.huanque.core.viewmodel.AttentionCircleViewModel
+import com.julun.huanque.core.viewmodel.ScrollStateViewModel
 import kotlinx.android.synthetic.main.activity_circle_dynamic.*
 import kotlinx.android.synthetic.main.activity_circle_dynamic.publish_dynamic
 import kotlinx.android.synthetic.main.activity_dynamic_list.*
@@ -57,12 +58,13 @@ import org.jetbrains.anko.startActivity
 @Route(path = ARouterConstant.CIRCLE_DYNAMIC_ACTIVITY)
 class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
 
-
     companion object {
         fun start(act: Activity, groupId: Long) {
             act.startActivity<CircleDynamicActivity>(IntentParamKey.ID.name to groupId)
         }
     }
+
+    private val mScrollStateViewModel: ScrollStateViewModel by viewModels()
 
     private var state: CollapsingToolbarLayoutState? = null
 
@@ -176,6 +178,16 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
                 renderHeaderData(it.requireT())
             }
 
+        })
+        mScrollStateViewModel.scrollState.observe(this, Observer {
+            if (it != null) {
+                if (it) {
+                    showOrHidePublish(false)
+                } else {
+                    showOrHidePublish(true)
+                }
+
+            }
         })
         attentionCircleViewModel.joinedGroupIdData.observe(this, Observer {
             if (it != null) {
