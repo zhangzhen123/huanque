@@ -228,7 +228,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
                     bottomDialog?.show(this, "bottomDialog")
                 }
                 R.id.tv_circle_name -> {
-                    reportClick(StatisticCode.EnterGroup+StatisticCode.Post)
+                    reportClick(StatisticCode.EnterGroup + StatisticCode.Post)
                     CircleDynamicActivity.start(this, item.group?.groupId ?: return@onAdapterChildClickNew)
                 }
             }
@@ -244,7 +244,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
             reportClick(
                 StatisticCode.PubPost + StatisticCode.MyPost
             )
-            ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation(this,PublishRequestCode)
+            ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation(this, PublishRequestCode)
         }
 
         postList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -406,7 +406,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         if (dynamicAdapter.data.isEmpty()) {
             mRefreshLayout.hide()
             if (isMe) {
-                state_pager_view.showEmpty(emptyTxt = "暂无动态，快去发一条吧~", onClick = View.OnClickListener {
+                state_pager_view.showEmpty(emptyTxt = "暂无动态，快去发一条吧~", btnTex = "去发布", onClick = View.OnClickListener {
                     //跳转发布页面
                     val intent = Intent(this, PublishStateActivity::class.java)
                     if (ForceUtils.activityMatch(intent)) {
@@ -464,7 +464,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == PublishRequestCode && resultCode == Activity.RESULT_OK){
+        if (requestCode == PublishRequestCode && resultCode == Activity.RESULT_OK) {
             //刷新
             mViewModel.requestPostList(QueryType.REFRESH, currentUserId)
         }

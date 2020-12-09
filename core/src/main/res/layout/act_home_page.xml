@@ -339,6 +339,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_divider_num" />
 
+
             <TextView
                 android:id="@+id/tv_dynamic"
                 android:layout_width="wrap_content"
@@ -360,6 +361,16 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_dynamic" />
+
+            <View
+                android:id="@+id/view_dynamic_top"
+                android:layout_width="0px"
+                android:layout_height="0px"
+                app:layout_constraintBottom_toTopOf="@id/con_live"
+                app:layout_constraintLeft_toLeftOf="@id/tv_dynamic"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_dynamic" />
+
 
             <ImageView
                 android:id="@+id/iv_arrow_dynamic"
@@ -1309,11 +1320,11 @@
         android:id="@+id/sdv_card_auto"
         android:layout_width="0px"
         android:layout_height="0px"
+        android:background="#B3000000"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:background="#B3000000"
-        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.julun.huanque.common.widgets.statepage.StatePageView
