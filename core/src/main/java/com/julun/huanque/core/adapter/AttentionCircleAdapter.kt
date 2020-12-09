@@ -84,7 +84,7 @@ class AttentionCircleAdapter : BaseDelegateMultiAdapter<Any, BaseViewHolder>(), 
                     holder.setText(R.id.tv_circle_name, item.groupName)
                         .setText(R.id.tv_circle_introduction, item.groupDesc)
                         .setText(R.id.tv_hot_value, StringHelper.formatNum(item.heatValue))
-                        .setVisible(R.id.tv_action, !hideAction && item.type == CircleGroupTabType.Recom)
+                        .setGone(R.id.tv_action, hideAction || item.type != CircleGroupTabType.Recom)
                 }
 
             }
