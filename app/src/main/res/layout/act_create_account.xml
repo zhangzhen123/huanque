@@ -46,6 +46,7 @@
         app:layout_constraintLeft_toLeftOf="@id/tv_first"
         app:layout_constraintTop_toBottomOf="@id/tv_second"
         app:placeholderImage="@mipmap/icon_logo_avatar_grey"
+        app:placeholderImageScaleType="fitXY"
         app:roundAsCircle="true" />
 
     <ImageView
