@@ -1012,7 +1012,7 @@ class HomePageActivity : BaseActivity() {
             tv_dynamic.text = "最新动态"
         }
 
-        if (postInfo.postNum == 0L && playProgram.programId == 0L) {
+        if (postInfo.postNum == 0L && playProgram.programId == 0L && !mHomePageViewModel.mineHomePage) {
             tv_dynamic.hide()
             iv_arrow_dynamic.hide()
         } else {
@@ -1048,10 +1048,12 @@ class HomePageActivity : BaseActivity() {
                     tv_living.show()
                     sdv_living.show()
                     ImageUtils.loadGifImageLocal(sdv_living, R.mipmap.living_home_page_player)
-                    if (mHomePageViewModel.mineHomePage) {
+                    if (playProgram.programId == SessionUtils.getUserId()) {
                         tv_watch_count.text = "快与粉丝去互动吧"
+                        tv_floow_watch.hide()
                     } else {
                         tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
+                        tv_floow_watch.show()
                     }
                     tv_living.text = "直播中"
                     val playInfo = playProgram.playInfo
