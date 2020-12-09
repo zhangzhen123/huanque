@@ -170,9 +170,21 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         } else {
             holder.setGone(R.id.tv_expansion, !item.hasEllipsis!!)
         }
-        holder.setText(R.id.tv_follow_num, StringHelper.formatNumWithTwoDecimals(item.praiseNum))
-        holder.setText(R.id.tv_comment_num, StringHelper.formatNumWithTwoDecimals(item.commentNum))
-        holder.setText(R.id.tv_share_num, StringHelper.formatNumWithTwoDecimals(item.shareNum))
+        if(item.praiseNum==0L){
+            holder.setText(R.id.tv_follow_num, "点赞")
+        }else{
+            holder.setText(R.id.tv_follow_num, StringHelper.formatNumWithTwoDecimals(item.praiseNum))
+        }
+        if(item.commentNum==0L){
+            holder.setText(R.id.tv_comment_num, "评论")
+        }else{
+            holder.setText(R.id.tv_comment_num, StringHelper.formatNumWithTwoDecimals(item.commentNum))
+        }
+        if(item.shareNum==0L){
+            holder.setText(R.id.tv_share_num, "分享")
+        }else{
+            holder.setText(R.id.tv_share_num, StringHelper.formatNumWithTwoDecimals(item.shareNum))
+        }
         //
         if ((showType == HOME_RECOM || showType == HOME_FOLLOW) && item.userId != curUserId && !item.userAnonymous) {
             holder.setGone(R.id.btn_action, item.follow)

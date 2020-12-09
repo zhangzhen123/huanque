@@ -131,11 +131,7 @@ class UserDynamicActivity : BaseVMActivity<UserDynamicViewModel>() {
         dynamicAdapter.setEmptyView(
             MixedHelper.getEmptyView(
                 this,
-                "暂无动态，快去发一条吧~",
-                btnTex = "去发布",
-                onClick = View.OnClickListener {
-                    ARouter.getInstance().build(ARouterConstant.PUBLISH_STATE_ACTIVITY).navigation()
-                })
+                "暂无动态，快去发一条吧~")
         )
 
         postList.isNestedScrollingEnabled = false

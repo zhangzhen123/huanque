@@ -14,6 +14,7 @@ import com.julun.huanque.common.bean.forms.PostForm
 import com.julun.huanque.common.commonviewmodel.BaseApplicationViewModel
 import com.julun.huanque.common.constant.FollowStatus
 import com.julun.huanque.common.constant.RNMessageConst
+import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.manager.GlobalDialogManager
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.DynamicService
@@ -22,6 +23,7 @@ import com.julun.huanque.common.suger.convertError
 import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.dataConvert
 import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.utils.SessionUtils
 import com.julun.huanque.common.utils.ToastUtils
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -98,7 +100,19 @@ class HuanQueViewModel(application: Application) : BaseApplicationViewModel(appl
                 val follow = socialService.follow(FriendIdForm(userId)).dataConvert()
                 val followBean = UserInfoChangeResult(follow = follow.follow, userId = userId, stranger = follow.stranger)
                 userInfoStatusChange.value = followBean.convertRtData()
-//                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
+                when (follow.follow) {
+                    FollowStatus.Mutual -> {
+                        if (SessionUtils.getSex() == Sex.FEMALE) {
+                            ToastUtils.show("互相关注成为鹊友，对方发消息你将不能获得收益")
+                        } else {
+                            ToastUtils.show("关注成功")
+                        }
+                    }
+                    FollowStatus.True -> {
+                        ToastUtils.show("关注成功")
+                    }
+                }
+
                 EventBus.getDefault()
                     .post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to true)))
             }, {
@@ -115,8 +129,8 @@ class HuanQueViewModel(application: Application) : BaseApplicationViewModel(appl
             request({
                 val follow = socialService.unFollow(FriendIdForm(userId)).dataConvert()
                 val followBean = UserInfoChangeResult(follow = FollowStatus.False, userId = userId)
+                ToastUtils.show("取消关注成功")
                 userInfoStatusChange.value = followBean.convertRtData()
-//                EventBus.getDefault().post(UserInfoChangeEvent(userId, follow.stranger, follow.follow))
                 EventBus.getDefault()
                     .post(SendRNEvent(RNMessageConst.FollowUserChange, hashMapOf("userId" to userId, "isFollowed" to false)))
             }, {
