@@ -470,10 +470,10 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
                 headerLayout.tvTitle.text = "我的圈子"
                 groupAdapter.setList(listData.groupList)
                 if (listData.groupList.isNotEmpty()) {
-                    headerLayout.header_layout.show()
+//                    headerLayout.header_layout.show()
 //                    headerLayout.bottom_layout.hide()
                 } else {
-                    headerLayout.header_layout.hide()
+//                    headerLayout.header_layout.hide()
 
                     groupAdapter.setEmptyView(
                         MixedHelper.getEmptyView(requireContext(),

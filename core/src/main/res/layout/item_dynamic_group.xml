@@ -23,10 +23,11 @@
         android:layout_marginTop="@dimen/dimen_4"
         android:gravity="center"
         android:maxLines="1"
+        android:ellipsize="end"
         android:textStyle="bold"
         android:textColor="@color/black_333"
         android:textSize="@dimen/sp_14"
-        tools:text="用户昵称" />
+        tools:text="两性不害羞!" />
 
     <TextView
         android:id="@+id/tv_heat"

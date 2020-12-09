@@ -41,7 +41,7 @@ class DynamicGroupListAdapter : BaseQuickAdapter<DynamicGroup, BaseViewHolder>(R
         val pic = holder.getView<SimpleDraweeView>(R.id.sdv_pic)
         pic.loadImage(item.groupPic, 80f, 60f)
         val name = if (item.groupName.length > 6) {
-            "${item.groupName.substring(0, 6)}…"
+            item.groupName.substring(0, 6)
         } else {
             item.groupName
         }
