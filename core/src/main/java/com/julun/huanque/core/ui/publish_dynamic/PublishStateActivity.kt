@@ -16,7 +16,6 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -397,6 +396,8 @@ class PublishStateActivity : BaseActivity() {
                         isSame = false
                     }
                 }
+            } else {
+                isSame = false
             }
             if (!isSame) {
                 dialog.showAlertWithOKAndCancel(
