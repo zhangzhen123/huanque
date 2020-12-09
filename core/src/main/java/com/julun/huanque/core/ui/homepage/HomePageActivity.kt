@@ -514,9 +514,7 @@ class HomePageActivity : BaseActivity() {
             val homeInfo = mHomePageViewModel.homeInfoBean.value
             val playInfo = homeInfo?.playProgram
             val postInfo = homeInfo?.post
-            if (playInfo != null && postInfo != null && playInfo.programId == SessionUtils.getUserId()
-                && playInfo.living == BusiConstant.True && postInfo.postNum == 0L
-            ) {
+            if (playInfo != null && postInfo != null && playInfo.living == BusiConstant.True && postInfo.postNum == 0L) {
                 ARouter.getInstance().build(ARouterConstant.USER_DYNAMIC_ACTIVITY).with(Bundle().apply {
                     putLong(IntentParamKey.USER_ID.name, mHomePageViewModel.targetUserId)
                 }).navigation()
@@ -644,18 +642,19 @@ class HomePageActivity : BaseActivity() {
 
                         if (mHomePageViewModel.blackStatus.value == BusiConstant.True) {
                             //解除黑名单
-                            MyAlertDialog(
-                                this
-                            ).showAlertWithOKAndCancel(
-                                "将对方移除黑名单",
-                                MyAlertDialog.MyDialogCallback(onRight = {
-                                    //拉黑
-                                    if (mHomePageViewModel.blackStatus.value == BusiConstant.True) {
-                                        mHomePageViewModel?.recover()
-                                    }
-
-                                }), "移除黑名单", "确定", "取消"
-                            )
+//                            MyAlertDialog(
+//                                this
+//                            ).showAlertWithOKAndCancel(
+//                                "将对方移除黑名单",
+//                                MyAlertDialog.MyDialogCallback(onRight = {
+//                                    //拉黑
+//                                    if (mHomePageViewModel.blackStatus.value == BusiConstant.True) {
+//                                        mHomePageViewModel?.recover()
+//                                    }
+//
+//                                }), "移除黑名单", "确定", "取消"
+//                            )
+                            mHomePageViewModel?.recover()
                             return@Observer
                         } else {
                             MyAlertDialog(
@@ -998,15 +997,15 @@ class HomePageActivity : BaseActivity() {
             when (it.userDataTabType) {
                 "Follow" -> {
                     //关注
-                    tv_attetnion_number.text = "关注 ${it.count}"
+                    tv_attetnion_number.text = "关注 ${StringHelper.formatNum(it.count)}"
                 }
                 "Fan" -> {
                     //粉丝
-                    tv_fans_number.text = "粉丝 ${it.count}"
+                    tv_fans_number.text = "粉丝 ${StringHelper.formatNum(it.count)}"
                 }
                 "Visit" -> {
                     //访客
-                    tv_visitor_number.text = "访客 ${it.count}"
+                    tv_visitor_number.text = "访客 ${StringHelper.formatNum(it.count)}"
                 }
                 else -> {
                 }
@@ -1275,8 +1274,8 @@ class HomePageActivity : BaseActivity() {
             tv_distance_1.text = "距离${bean.distanceCity.distanceStr}"
             tv_distance_2.text = "距离${bean.distanceCity.distanceStr}"
         } else {
-            tv_distance_1.text = "未知"
-            tv_distance_2.text = "未知"
+            tv_distance_1.text = "距离未知"
+            tv_distance_2.text = "距离未知"
         }
 
 

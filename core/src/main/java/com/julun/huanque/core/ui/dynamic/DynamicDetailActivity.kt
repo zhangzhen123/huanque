@@ -359,7 +359,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
         }
 
         headerLayout.findViewById<View>(R.id.tv_circle_name).onClickNew {
-            reportClick(StatisticCode.EnterGroup+StatisticCode.Post)
+            reportClick(StatisticCode.EnterGroup + StatisticCode.Post)
             CircleDynamicActivity.start(this, mViewModel?.dynamicInfo?.value?.post?.group?.groupId ?: return@onClickNew)
         }
 
@@ -703,7 +703,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 ll_input.show()
                 edit_text.forceLayout()
                 edit_text.performClick()
-                edit_text.hint = "回复${secondComment.nickname}"
+                edit_text.hint = "回复：${secondComment.nickname}"
             }
 
             override fun praise(secondComment: DynamicComment) {
@@ -838,6 +838,17 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 switchCommentType(CommentOrderType.Heat)
                 mSwitchPopupWindow?.dismiss()
             }
+        }
+        val tv_time = mSwitchPopupWindow?.contentView?.findViewById<TextView>(R.id.tv_time)
+        val tv_hot = mSwitchPopupWindow?.contentView?.findViewById<TextView>(R.id.tv_hot)
+        if (mViewModel.commentType == CommentOrderType.Time) {
+            //时间排序
+            tv_time?.textColor = GlobalUtils.getColor(R.color.primary_color)
+            tv_hot?.textColor = GlobalUtils.getColor(R.color.black_333)
+        } else {
+            //热度排序
+            tv_hot?.textColor = GlobalUtils.getColor(R.color.primary_color)
+            tv_time?.textColor = GlobalUtils.getColor(R.color.black_333)
         }
 
 //        val tv_time = view.findViewById<View>(R.id.tv_time)
@@ -1148,7 +1159,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             val followContent = if (posterInfo.praiseNum == 0L) {
                 "点赞"
             } else {
-                "${posterInfo.praiseNum}"
+                StringHelper.formatNumWithTwoDecimals(posterInfo.praiseNum)
             }
             tv_follow_num.isActivated = posterInfo.hasPraise
             tv_follow_num.text = followContent
