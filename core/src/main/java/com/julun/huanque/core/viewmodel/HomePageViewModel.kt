@@ -96,6 +96,7 @@ class HomePageViewModel : BaseViewModel() {
                 socialService.black(FriendIdForm(targetUserId)).dataConvert()
                 blackStatus.value = BusiConstant.True
                 homeInfoBean.value?.black = BusiConstant.True
+                ToastUtils.show("拉黑成功")
             }, { it.printStackTrace() })
         }
     }
@@ -109,6 +110,7 @@ class HomePageViewModel : BaseViewModel() {
                 socialService.recover(FriendIdForm(targetUserId)).dataConvert()
                 blackStatus.value = BusiConstant.False
                 homeInfoBean.value?.black = BusiConstant.False
+                ToastUtils.show("取消拉黑成功")
             }, { it.printStackTrace() })
         }
     }
