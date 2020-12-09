@@ -187,10 +187,6 @@
             android:layout_height="50dp"
             android:layout_gravity="center_vertical" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#F3F5F9" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
