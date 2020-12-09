@@ -703,7 +703,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
                 ll_input.show()
                 edit_text.forceLayout()
                 edit_text.performClick()
-                edit_text.hint = "回复：${secondComment.nickname}"
+                edit_text.hint = "回复${secondComment.nickname}："
             }
 
             override fun praise(secondComment: DynamicComment) {
@@ -766,7 +766,7 @@ class DynamicDetailActivity : BaseVMActivity<DynamicDetailViewModel>() {
             ll_input.show()
             edit_text.forceLayout()
             edit_text.performClick()
-            edit_text.hint = "回复${tempData.nickname}"
+            edit_text.hint = "回复${tempData.nickname}："
         }
         commentAdapter.setOnItemLongClickListener { adapter, view, position ->
             //长按操作

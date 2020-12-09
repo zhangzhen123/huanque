@@ -961,10 +961,9 @@ class MainActivity : BaseActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun loginSubAccount(event : LoginSubAccountEvent){
+    fun loginSubAccount(event: LoginSubAccountEvent) {
         mMainViewModel.loginByAccount(event.userId)
     }
-
 
 
     override fun finish() {
@@ -1072,6 +1071,11 @@ class MainActivity : BaseActivity() {
             e.printStackTrace()
             logger.info("图片返回出错了")
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun accountSucess(bean: CreateAccountSuccess) {
+        mMessageViewModel.chatRoom()
     }
 
 }
