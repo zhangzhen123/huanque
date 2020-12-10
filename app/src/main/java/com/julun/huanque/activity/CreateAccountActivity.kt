@@ -17,6 +17,7 @@ import com.bigkoo.pickerview.view.TimePickerView
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.LoadingDialog
+import com.julun.huanque.common.bean.events.CreateAccountSuccess
 import com.julun.huanque.common.bean.forms.CreateAccountForm
 import com.julun.huanque.common.constant.Sex
 import com.julun.huanque.common.interfaces.EventListener
@@ -40,6 +41,7 @@ import kotlinx.android.synthetic.main.act_create_account.iv_clear_nickname
 import kotlinx.android.synthetic.main.act_create_account.sdv_header
 import kotlinx.android.synthetic.main.act_create_account.tv_next
 import kotlinx.android.synthetic.main.fragment_update_info.*
+import org.greenrobot.eventbus.EventBus
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -160,6 +162,7 @@ class CreateAccountActivity : BaseActivity() {
         mViewModel.createAccountSuccess.observe(this, androidx.lifecycle.Observer {
             if (it == true) {
                 setResult(Activity.RESULT_OK)
+                EventBus.getDefault().post(CreateAccountSuccess())
                 finish()
             }
         })

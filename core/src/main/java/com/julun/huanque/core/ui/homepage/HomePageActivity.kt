@@ -1070,7 +1070,11 @@ class HomePageActivity : BaseActivity() {
                         tv_floow_watch.hide()
                     } else {
                         tv_watch_count.text = "${playProgram.onlineUserNum}人围观中"
-                        tv_floow_watch.show()
+                        if(mHomePageViewModel.mineHomePage){
+                            tv_floow_watch.hide()
+                        }else{
+                            tv_floow_watch.show()
+                        }
                     }
                     tv_living.text = "直播中"
                     val playInfo = playProgram.playInfo

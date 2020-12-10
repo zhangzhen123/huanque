@@ -222,4 +222,9 @@ class ShareSuccessEvent(var postId: Long = 0, var commentId: Long? = null) : Ser
 /**
  * 登录分身账号使用
  */
-class LoginSubAccountEvent(var userId : Long): Serializable
+class LoginSubAccountEvent(var userId: Long) : Serializable
+
+/**
+ * 创建分身成功消息
+ */
+class CreateAccountSuccess() : Serializable
