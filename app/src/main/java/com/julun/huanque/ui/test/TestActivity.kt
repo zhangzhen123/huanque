@@ -72,9 +72,7 @@ class TestActivity : BaseActivity() {
         tv.backgroundDrawable = GlobalUtils.getBubbleDrawable(ChatBubble(bdc = "#FFDF20-#FFCB53", bgc = "#0309FF-#FE1212"), false)
         viewModel.userInfo.observe(this, Observer {
             println("我是用户信息：=$it")
-            ret_resp.text = "语音签名：${it.points.getOrNull(0)?.voiceContent}"
-            ret_resp1.text = "语音签名：${it.points.getOrNull(1)?.voiceContent}"
-            ret_resp2.text = "语音签名：${it.points.getOrNull(2)?.voiceContent}"
+//            ret_resp.text = "语音签名：${it.points.getOrNull(0)?.voiceContent}"
         })
         viewModel.userLevelInfo.observe(this, Observer {
             println("我是用户等级信息：=$it")
@@ -91,7 +89,14 @@ class TestActivity : BaseActivity() {
 //            viewModel.getUserLevelByRx2()
 
         }
-
+        test_toast.onClickNew {
+            ToastUtils.showNormal("我是土司1111")
+            ToastUtils.showNormal("我是土司2222")
+            ToastUtils.show("show我是土司3333")
+            ToastUtils.show("show我是土司4444")
+            ToastUtils.show2("show2我是土司3333")
+            ToastUtils.show2("show2我是土司4444")
+        }
         test_rn.onClickNew {
             logger.info("测试rn跳转")
             RNPageActivity.start(this, "HomePage");
@@ -108,15 +113,15 @@ class TestActivity : BaseActivity() {
         goto_photo.onClickNew {
             goToPictureSelectPager(1, PictureConfig.TYPE_IMAGE)
         }
-        set_push.onClickNew {
-            val userId = SessionUtils.getUserId().toString()
-            logger.info("jpush userId=$userId")
-//            val tagAliasBean = TagAliasOperatorHelper.TagAliasBean()
-//            tagAliasBean.action = TagAliasOperatorHelper.ACTION_SET
-//            tagAliasBean.isAliasAction = true
-//            tagAliasBean.alias = userId
-//            TagAliasOperatorHelper.getInstance().handleAction(tagAliasBean)
-        }
+//        set_push.onClickNew {
+//            val userId = SessionUtils.getUserId().toString()
+//            logger.info("jpush userId=$userId")
+////            val tagAliasBean = TagAliasOperatorHelper.TagAliasBean()
+////            tagAliasBean.action = TagAliasOperatorHelper.ACTION_SET
+////            tagAliasBean.isAliasAction = true
+////            tagAliasBean.alias = userId
+////            TagAliasOperatorHelper.getInstance().handleAction(tagAliasBean)
+//        }
         open_cv.onClickNew {
             PrivateConversationActivity.newInstance(this, 20000041)
         }

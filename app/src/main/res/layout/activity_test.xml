@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="#000000"
     android:orientation="horizontal">
 
@@ -23,24 +23,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="测试协程请求网络" />
-
-            <TextView
-                android:id="@+id/ret_resp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="网络结果" />
-
-            <TextView
-                android:id="@+id/ret_resp1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="网络结果" />
-
-            <TextView
-                android:id="@+id/ret_resp2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="网络结果" />
 
             <Button
                 android:id="@+id/test_rxjava"
@@ -74,12 +56,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="跳转图片选择" />
-
-            <Button
-                android:id="@+id/set_push"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="设置推送id=userId" />
 
             <Button
                 android:id="@+id/open_cv"
@@ -127,6 +103,14 @@
                 android:layout_height="40dp"
                 android:gravity="center"
                 android:text="跳转直播间" />
+
+            <Button
+                android:id="@+id/test_toast"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="测试土司" />
+
         </LinearLayout>
 
     </ScrollView>
