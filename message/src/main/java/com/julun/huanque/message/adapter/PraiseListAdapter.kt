@@ -70,7 +70,7 @@ class PraiseListAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.rec
                     EmojiSpanBuilder.buildEmotionSpannable(context, item.content)
                 }
             }
-            val praiseConent = if (item.comment.isEmpty()) {
+            val praiseConent = if (item.comment.isNotEmpty()) {
                 "点赞你的评论"
             } else {
                 "点赞你的动态"
