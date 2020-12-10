@@ -32,7 +32,7 @@ import org.jetbrains.anko.textColor
 class PraiseListAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.recycler_item_praise_list), LoadMoreModule {
 
     init {
-        addChildClickViewIds(R.id.view_header_info,R.id.con_post_action)
+        addChildClickViewIds(R.id.view_header_info, R.id.con_post_action)
     }
 
     override fun convert(holder: BaseViewHolder, info: Message) {
@@ -59,15 +59,21 @@ class PraiseListAdapter : BaseQuickAdapter<Message, BaseViewHolder>(R.layout.rec
                 sdv_post.show()
                 sdv_post.loadImage(item.pic, 50f, 50f)
             }
-            val postContent = if (item.content.isEmpty()) {
-                "分享图片"
+            val postContent = if (item.comment.isNotEmpty()) {
+                //点赞的是评论
+                EmojiSpanBuilder.buildEmotionSpannable(context, item.comment)
             } else {
-                EmojiSpanBuilder.buildEmotionSpannable(context, item.content)
+                //点赞的是动态
+                if (item.content.isEmpty()) {
+                    "分享图片"
+                } else {
+                    EmojiSpanBuilder.buildEmotionSpannable(context, item.content)
+                }
             }
             val praiseConent = if (item.comment.isEmpty()) {
-                "动态你的动态"
+                "点赞你的评论"
             } else {
-                "评论你的动态"
+                "点赞你的动态"
             }
 
 

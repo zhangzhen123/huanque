@@ -32,6 +32,7 @@ import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.bitmap.BitmapUtil
 import com.julun.huanque.common.utils.device.PhoneUtils
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
+import com.julun.huanque.common.widgets.emotion.EmojiSpanBuilder
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -518,11 +519,11 @@ class LiveShareActivity : BaseVMActivity<InviteShareViewModel>() {
         ll_comment.show()
         val dynamicContent = postShareBean.content
         ll_comment.findViewById<TextView>(R.id.tv_content).text = if (dynamicContent.isNotEmpty()) {
-            dynamicContent
+            EmojiSpanBuilder.buildEmotionSpannable(this, dynamicContent)
         } else {
             "分享一个小可爱发的图片给你欣赏下"
         }
-        ll_comment.findViewById<TextView>(R.id.tv_comment).text = postShareBean.commentContent
+        ll_comment.findViewById<TextView>(R.id.tv_comment).text = EmojiSpanBuilder.buildEmotionSpannable(this, postShareBean.commentContent)
         ll_comment.findViewById<TextView>(R.id.tv_nickname).text = postShareBean.commentUserName
         val sdv_pic = ll_comment.findViewById<SimpleDraweeView>(R.id.sdv_pic)
         if (postShareBean.pic.isNotEmpty()) {
