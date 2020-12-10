@@ -100,15 +100,10 @@ class HuanQueViewModel(application: Application) : BaseApplicationViewModel(appl
                 val follow = socialService.follow(FriendIdForm(userId)).dataConvert()
                 val followBean = UserInfoChangeResult(follow = follow.follow, userId = userId, stranger = follow.stranger)
                 userInfoStatusChange.value = followBean.convertRtData()
-                when (follow.follow) {
-                    FollowStatus.Mutual,
-                    FollowStatus.True -> {
-                        if (SessionUtils.getSex() == Sex.FEMALE) {
-                            ToastUtils.show("互相关注成为鹊友，对方发消息你将不能获得收益")
-                        } else {
-                            ToastUtils.show("关注成功")
-                        }
-                    }
+                if(follow.toastMsg.isNotEmpty()){
+                    ToastUtils.show(follow.toastMsg)
+                }else{
+                    ToastUtils.show("关注成功")
                 }
 
                 EventBus.getDefault()

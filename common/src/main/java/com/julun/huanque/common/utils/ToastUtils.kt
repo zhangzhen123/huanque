@@ -31,11 +31,22 @@ object ToastUtils {
         ToastMsg.INSTANCE.showToast(resId, Toast.LENGTH_SHORT)
     }
 
+    /**
+     * 自定义的土司 新内容会覆盖老内容 view是复用的
+     */
     fun show(text: String?) {
         ToastMsg.INSTANCE.showToast(text, Toast.LENGTH_SHORT)
     }
 
     /**
+     * 传统的土司 会自动按队列显示 每次都是创建 不会被覆盖  根据场景需要使用
+     */
+    fun showNormal(text: String?) {
+        ToastMsg.INSTANCE.showToastNormal(text, Toast.LENGTH_SHORT, Gravity.CENTER)
+    }
+
+    /**
+     * 自定义的土司 新内容会覆盖老内容 view是复用的
      * 这个toast对于重复的内容在显示期间进行过滤
      */
     fun show2(text: String?) {
@@ -129,6 +140,24 @@ object ToastUtils {
             showToastCustom(text, duration, Gravity.CENTER)
         }
 
+        fun showToastNormal(text: CharSequence?, duration: Int, gravity: Int) {
+            if (!TextUtils.isEmpty(text)) {
+                runOnMain {
+                    val view = LayoutInflater.from(mContext).inflate(R.layout.layout_toast, null)
+                    val tvContent = view!!.findViewById<View>(R.id.toastContent) as TextView
+//                    val customImage = view.findViewById<View>(R.id.customImage) as ImageView
+                    tvContent.text = text
+
+                    val toast = Toast(mContext)
+                    toast.view = view
+                    toast.duration = duration
+                    toast.setGravity(gravity, 0, 0)
+                    toast.show()
+                }
+
+            }
+        }
+
         fun showToastCustom(text: CharSequence?, duration: Int, gravity: Int) {
             if (!TextUtils.isEmpty(text)) {
                 runOnMain {
@@ -150,7 +179,7 @@ object ToastUtils {
         private var currentText: CharSequence? = null
         fun showToastCustomNew(text: CharSequence?, duration: Int, gravity: Int) {
             if (!TextUtils.isEmpty(text)) {
-                if(currentText==text){
+                if (currentText == text) {
                     logger("当前新text与正在显示的text相同不再重复显示")
                     return
                 }
@@ -173,7 +202,7 @@ object ToastUtils {
                         }
                     }
                     view?.postDelayed({
-                        currentText=null
+                        currentText = null
                     }, time)
                 }
 

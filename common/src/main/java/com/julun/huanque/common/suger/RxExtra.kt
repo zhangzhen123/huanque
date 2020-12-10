@@ -156,7 +156,7 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
 //        }
         // 其他系统定义错误代码
         else -> {
-            ToastUtils.show2(it.message.toString())
+            ToastUtils.showNormal(it.message.toString())
         }
     }
 
