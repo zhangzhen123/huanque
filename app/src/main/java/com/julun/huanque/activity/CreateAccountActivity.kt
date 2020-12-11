@@ -136,6 +136,9 @@ class CreateAccountActivity : BaseActivity() {
         tv_next.onClickNew {
             if (mViewModel.nicknameEnable.value == true) {
                 val headerPic = mViewModel.headerPicData.value ?: ""
+                if(headerPic.isEmpty()){
+                    return@onClickNew
+                }
                 val nickname = et_nickname.text.toString()
                 val birthday = getTime(mViewModel.birthdayDate ?: return@onClickNew) ?: return@onClickNew
                 mViewModel.subCreate(CreateAccountForm(nickname, headerPic, birthday))

@@ -1,7 +1,9 @@
 package com.julun.huanque.message.fragment
 
+import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.utils.RomUtils
 import com.julun.huanque.common.utils.permission.PermissionUtils
 import com.julun.huanque.message.R
 import kotlinx.android.synthetic.main.fragment_prop.*
@@ -75,10 +78,23 @@ class PropFragment : BaseDialogFragment() {
                 MyAlertDialog(act).showAlertWithOKAndCancel(
                     "悬浮窗权限被禁用，请到设置中授予欢鹊悬浮窗权限",
                     MyAlertDialog.MyDialogCallback(onRight = {
-                        val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
-                        intent.data = Uri.parse("package:${act.packageName}")
+                        try {
+                            if (RomUtils.isOppo() && Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
+                                //oppo 5.1系统  跳转安全中心
+                                val intent = Intent(Intent.ACTION_MAIN)
+                                val componentName =
+                                    ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.floatwindow.FloatWindowListActivity")
+                                intent.component = componentName
+                                startActivity(intent)
+                            } else {
+                                val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
+                                intent.data = Uri.parse("package:${act.packageName}")
 //                startActivityForResult(intent, PERMISSIONALERT_WINDOW_CODE_VOICE)
-                        startActivity(intent)
+                                startActivity(intent)
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }), "设置提醒", "去设置"
                 )
             }

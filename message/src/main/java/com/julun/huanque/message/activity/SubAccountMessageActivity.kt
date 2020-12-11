@@ -15,6 +15,7 @@ import com.julun.huanque.common.bean.events.LoginSubAccountEvent
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.MainPageIndexConst
+import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.SessionUtils
@@ -77,6 +78,7 @@ class SubAccountMessageActivity : BaseActivity() {
                 EventBus.getDefault().post(LoginSubAccountEvent(account.userId))
             }
         }
+        mAdapter.setEmptyView(MixedHelper.getEmptyView(this,"暂无数据"))
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
