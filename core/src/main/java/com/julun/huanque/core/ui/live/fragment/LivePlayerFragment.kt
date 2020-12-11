@@ -136,6 +136,8 @@ open class LivePlayerFragment : BaseFragment() {
 
         videoPlayerViewModel.addPlayerDatas.observe(this, Observer {
             if (it != null) {
+                //将移除操作放在这里执行 不再通过rmPlayerDatas移除 有些情形 比如后台回来后 有可能订阅的liveData执行顺序会有偏差 导致移除后执行
+                resetAllStream()
                 handleStreamAdded(it)
                 videoPlayerViewModel.addPlayerDatas.value = null
             }
@@ -387,6 +389,21 @@ open class LivePlayerFragment : BaseFragment() {
             } else {
                 logger.info("删除流消息${info.streamID}")
                 stopPlay(info.streamID)
+            }
+        }
+        if (mRankRootView != null) {
+            mRankRootView?.hide()
+        }
+    }
+
+    /**
+     * 将拉流全部重置 只保留主流 用于新增拉流时 清空残留的多余流
+     */
+    private fun resetAllStream() {
+        videoPlayerViewModel.curPlayerList.clear()
+        mViewList.forEach {
+            if (it.getStreamID() != mMainVideoView?.getStreamID()) {
+                it.stop(stopAll = true, needDisConnect = false)
             }
         }
         if (mRankRootView != null) {

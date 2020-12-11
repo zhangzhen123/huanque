@@ -16,7 +16,6 @@ import com.julun.huanque.common.suger.logger
 
 class VideoChangeViewModel : BaseViewModel() {
 
-//    var totalPlayerCount = 0 //统计当前的流总数 不包含主播自己
 
     //
     val addPlayerDatas: MutableLiveData<List<MicAnchor>> by lazy { MutableLiveData<List<MicAnchor>>() }
@@ -33,12 +32,12 @@ class VideoChangeViewModel : BaseViewModel() {
         playerList.forEach {
             it.streamID = "${it.programId}"
             curPlayerList.add(it)
-//                totalPlayerCount++
         }
         addPlayerDatas.value = playerList
         refreshLayout.value = true
     }
     //每次add前检测是否还存在未移除的老连麦
+    //该操作已经放在livePlayerFragment的handleStreamAdded 这样的好处是操作安全可靠 不会有传值不达以及顺序错乱的问题
     fun checkExit(){
         if(curPlayerList.isNotEmpty()){
             val list= arrayListOf<MicAnchor>()
@@ -51,9 +50,7 @@ class VideoChangeViewModel : BaseViewModel() {
         playerList.forEach {
             curPlayerList.remove(it)
             it.streamID = "${it.programId}"
-//            totalPlayerCount--
         }
-//        totalPlayerCount=0//直接置零
         rmPlayerDatas.value = playerList
         refreshLayout.value = true
     }
@@ -67,7 +64,6 @@ class VideoChangeViewModel : BaseViewModel() {
     }
 
     fun resetPlayerCount() {
-//        totalPlayerCount = 0
         curPlayerList.clear()
         addPlayerDatas.value=null
         rmPlayerDatas.value=null
