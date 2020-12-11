@@ -565,7 +565,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
     //新增播放流
     fun addVideoPlayer(playerList: List<MicAnchor>) {
-//        videoPlayerViewModel.checkExit()
+        videoPlayerViewModel.checkExit()
         playerList.forEach {
             it.isAnchor = mPlayerViewModel.isAnchor
         }
@@ -687,7 +687,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
 
         if (micList.size > 0) {
             if (pkInfo.needAddMic) {
-//                videoPlayerViewModel.checkExit()
+                videoPlayerViewModel.checkExit()
                 videoPlayerViewModel.addPlayer(micList)
             }
         }

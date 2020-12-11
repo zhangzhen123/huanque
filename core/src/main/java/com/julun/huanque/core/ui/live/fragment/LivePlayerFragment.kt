@@ -137,7 +137,7 @@ open class LivePlayerFragment : BaseFragment() {
         videoPlayerViewModel.addPlayerDatas.observe(this, Observer {
             if (it != null) {
                 //将移除操作放在这里执行 不再通过rmPlayerDatas移除 有些情形 比如后台回来后 有可能订阅的liveData执行顺序会有偏差 导致移除后执行
-                resetAllStream()
+//                resetAllStream()
                 handleStreamAdded(it)
                 videoPlayerViewModel.addPlayerDatas.value = null
             }
@@ -399,6 +399,7 @@ open class LivePlayerFragment : BaseFragment() {
     /**
      * 将拉流全部重置 只保留主流 用于新增拉流时 清空残留的多余流
      */
+    @Deprecated("有问题 不用")
     private fun resetAllStream() {
         videoPlayerViewModel.curPlayerList.clear()
         mViewList.forEach {
