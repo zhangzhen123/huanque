@@ -2,6 +2,7 @@ package com.julun.huanque.core.ui.live
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ComponentName
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
@@ -645,9 +646,22 @@ class PlayerActivity : BaseActivity() {
             MyAlertDialog(this).showAlertWithOKAndCancel(
                 "悬浮窗权限被禁用，请到设置中授予欢鹊悬浮窗权限",
                 MyAlertDialog.MyDialogCallback(onRight = {
-                    val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
-                    intent.data = Uri.parse("package:$packageName")
-                    startActivityForResult(intent, PERMISSIONALERT_WINDOW_CODE)
+                    try {
+                        if (RomUtils.isOppo() && Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
+                            //oppo 5.1系统  跳转安全中心
+                            val intent = Intent(Intent.ACTION_MAIN)
+                            val componentName =
+                                ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.floatwindow.FloatWindowListActivity")
+                            intent.component = componentName
+                            startActivity(intent)
+                        } else {
+                            val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
+                            intent.data = Uri.parse("package:$packageName")
+                            startActivityForResult(intent, PERMISSIONALERT_WINDOW_CODE)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }, onCancel = {
                     when (type) {
                         PermissionJumpType.Contacts -> {

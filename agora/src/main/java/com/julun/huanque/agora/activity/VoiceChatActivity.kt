@@ -1,10 +1,12 @@
 package com.julun.huanque.agora.activity
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -17,19 +19,15 @@ import com.julun.huanque.common.agora.AgoraManager
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.dialog.MyAlertDialog
-import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.ChatUser
-import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.beans.NetCallBalanceRemindBean
+import com.julun.huanque.common.bean.beans.NetcallBean
 import com.julun.huanque.common.bean.events.RefreshVoiceCardEvent
-import com.julun.huanque.common.bean.message.VoiceConmmunicationSimulate
 import com.julun.huanque.common.constant.*
-import com.julun.huanque.common.helper.AppHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.manager.HuanViewModelManager
-import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.VoiceFloatingManager
 import com.julun.huanque.common.manager.VoiceManager
-import com.julun.huanque.common.message_dispatch.MessageProcessor
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
@@ -40,12 +38,9 @@ import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.common.viewmodel.VoiceChatViewModel
 import com.trello.rxlifecycle4.android.ActivityEvent
 import com.trello.rxlifecycle4.kotlin.bindUntilEvent
-import io.agora.rtc.Constants
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.internal.operators.observable.ObservableTake
-import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.act_voice_chat.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.imageResource
@@ -580,10 +575,24 @@ class VoiceChatActivity : BaseActivity() {
         MyAlertDialog(this).showAlertWithOKAndCancel(
             "悬浮窗权限被禁用，请到设置中授予欢鹊悬浮窗权限",
             MyAlertDialog.MyDialogCallback(onRight = {
-                val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
-                intent.data = Uri.parse("package:$packageName")
+                try {
+                    if (RomUtils.isOppo() && Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
+                        //oppo 5.1系统  跳转安全中心
+                        val intent = Intent(Intent.ACTION_MAIN)
+                        val componentName =
+                            ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.floatwindow.FloatWindowListActivity")
+                        intent.component = componentName
+                        startActivity(intent)
+                    } else {
+                        val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION")
+                        intent.data = Uri.parse("package:$packageName")
 //                startActivityForResult(intent, PERMISSIONALERT_WINDOW_CODE_VOICE)
-                startActivity(intent)
+                        startActivity(intent)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
             }), "设置提醒", "去设置"
         )
     }
