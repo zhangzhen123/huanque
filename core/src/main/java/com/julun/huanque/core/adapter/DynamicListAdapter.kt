@@ -159,10 +159,10 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         //获取文字是否显示完全
         if (item.hasEllipsis == null) {
             tvContent.post(Runnable {
-                val ellipsisCount: Int = tvContent.getLayout().getEllipsisCount(tvContent.getLineCount() - 1)
+                val ellipsisCount: Int = tvContent.layout?.getEllipsisCount(tvContent.lineCount - 1) ?: 0
                 //是否超出范围:如果行数大于3或者而且ellipsisCount>0超出范围，会显示省略号。
                 if (item.hasEllipsis == null) {
-                    item.hasEllipsis = !(tvContent.getLineCount() <= 4 && ellipsisCount == 0)
+                    item.hasEllipsis = !(tvContent.lineCount <= 4 && ellipsisCount == 0)
                 }
                 //如果文字没有超出范围，则隐藏按钮。
                 holder.setGone(R.id.tv_expansion, !item.hasEllipsis!!)
@@ -170,19 +170,19 @@ class DynamicListAdapter : BaseQuickAdapter<DynamicItemBean, BaseViewHolder>(R.l
         } else {
             holder.setGone(R.id.tv_expansion, !item.hasEllipsis!!)
         }
-        if(item.praiseNum==0L){
+        if (item.praiseNum == 0L) {
             holder.setText(R.id.tv_follow_num, "点赞")
-        }else{
+        } else {
             holder.setText(R.id.tv_follow_num, StringHelper.formatNumWithTwoDecimals(item.praiseNum))
         }
-        if(item.commentNum==0L){
+        if (item.commentNum == 0L) {
             holder.setText(R.id.tv_comment_num, "评论")
-        }else{
+        } else {
             holder.setText(R.id.tv_comment_num, StringHelper.formatNumWithTwoDecimals(item.commentNum))
         }
-        if(item.shareNum==0L){
+        if (item.shareNum == 0L) {
             holder.setText(R.id.tv_share_num, "分享")
-        }else{
+        } else {
             holder.setText(R.id.tv_share_num, StringHelper.formatNumWithTwoDecimals(item.shareNum))
         }
         //
