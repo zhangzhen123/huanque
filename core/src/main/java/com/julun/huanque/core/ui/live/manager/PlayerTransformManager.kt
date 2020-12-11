@@ -62,7 +62,24 @@ class PlayerTransformManager(val act: PlayerActivity) {
 //    private lateinit var mZegoPublishViewModel: ZegoPublishViewModel
 
     //    private lateinit var liveFollowListViewModel: LiveFollowListViewModel
+    //使用不与生命周期绑定的订阅 防止后台时不响应导致逻辑错乱
+    private val pkStartObserver = Observer<PKInfoBean> {
+        if (it != null) {
 
+            connectMicroViewModel.inPk.value = true
+            connectMicroViewModel.inMicro.value = null
+            logger("开始pkStartObserver")
+            if (mPlayerViewModel.isLiving) {
+                addPkVideoPlayer(it)
+            } else {
+                videoPlayerViewModel.refreshLayout.value = true
+                logger("不在直播 不视频连麦 只刷新布局")
+            }
+
+            pKViewModel.openPropWindowData.value = it?.openPropWindow
+        }
+
+    }
 
     init {
         initViewModels()
@@ -143,23 +160,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
         })
 
         //当pk开始时统一处理
-        pKViewModel.pkStarting.observe(act, Observer {
-            if (it != null) {
-
-                connectMicroViewModel.inPk.value = true
-                connectMicroViewModel.inMicro.value = null
-                logger("连麦状态 6 null")
-                if (mPlayerViewModel.isLiving) {
-                    addPkVideoPlayer(it)
-                } else {
-                    videoPlayerViewModel.refreshLayout.value = true
-                    logger("不在直播 不视频连麦 只刷新布局")
-                }
-
-                pKViewModel.openPropWindowData.value = it?.openPropWindow
-            }
-
-        })
+        pKViewModel.pkStarting.observeForever(pkStartObserver)
 
         pKViewModel.remotePkData.observe(act, Observer {
             if (it != null && mPlayerViewModel.isAnchor) {
@@ -646,7 +647,7 @@ class PlayerTransformManager(val act: PlayerActivity) {
      * @param refreshView 是否需要刷新视图。PK过程当中切换CDN，不需要刷新（传值为false）
      */
     private fun addPkVideoPlayer(pkInfo: PKInfoBean, refreshView: Boolean = true) {
-
+        logger("addPkVideoPlayer=${pkInfo.detailList} pkInfo.needAddMic=${pkInfo.needAddMic}")
         val micList: ArrayList<MicAnchor> = arrayListOf()
         pkInfo.detailList?.forEach { anchor ->
             micList.add(MicAnchor().apply {
@@ -777,5 +778,8 @@ class PlayerTransformManager(val act: PlayerActivity) {
         }
     }
 
+    fun onDestroy() {
+        pKViewModel.pkStarting.removeObserver(pkStartObserver)
+    }
 
 }

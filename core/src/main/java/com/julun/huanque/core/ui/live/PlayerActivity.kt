@@ -1955,6 +1955,7 @@ class PlayerActivity : BaseActivity() {
     //当界面被销毁时关闭掉所有弹窗避免重建时弹窗恢复
     override fun onDestroy() {
         liveViewManager.destroyDialog()
+        transformManager.onDestroy()
         val baseData = viewModel.baseData.value
         if (!isBanned && SessionUtils.getSessionId()
                 .isNotEmpty() && PermissionUtils.checkFloatPermission(this) && baseData != null && baseData.playInfo != null
