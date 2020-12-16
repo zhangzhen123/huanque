@@ -232,7 +232,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
     /**
      * 该方法供父容器在显隐变化时调用
      */
-    fun onParentHiddenChanged(hidden: Boolean) {
+    override fun onParentHiddenChanged(hidden: Boolean) {
         logger.info("当前的界面开始显隐=${currentTab?.typeName} hide=$hidden")
         if (hidden) {
             if (currentPlayView != null) {
@@ -342,6 +342,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
                         .withInt(IntentParamKey.TARGET_INDEX.name, MainPageIndexConst.MAIN_FRAGMENT_INDEX).navigation()
                 })
         } else {
+            mRefreshLayout.show()
             state_pager_view.showSuccess()
         }
     }

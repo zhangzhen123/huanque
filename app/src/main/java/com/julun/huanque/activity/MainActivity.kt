@@ -40,6 +40,7 @@ import com.julun.huanque.core.manager.FloatingManager
 import com.julun.huanque.core.manager.VideoPlayerManager
 import com.julun.huanque.core.ui.live.fragment.FirstRechargeReceivedFragment
 import com.julun.huanque.core.ui.main.dynamic_square.DynamicSquareFragment
+import com.julun.huanque.core.ui.main.heartbeat.HomeHeartbeatFragment
 import com.julun.huanque.core.ui.main.home.HomeFragment
 import com.julun.huanque.core.ui.main.program.HomeProgramFragment
 import com.julun.huanque.core.viewmodel.TodayFateViewModel
@@ -73,8 +74,8 @@ import kotlin.math.min
 @Route(path = ARouterConstant.MAIN_ACTIVITY)
 class MainActivity : BaseActivity() {
 
-    private val mHomeFragment: HomeFragment by lazy { HomeFragment.newInstance() }
-
+//    private val mHomeFragment: HomeFragment by lazy { HomeFragment.newInstance() }
+    private val mHomeFragment: HomeHeartbeatFragment by lazy { HomeHeartbeatFragment.newInstance() }
     //    private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
     private val mProgramFragment: HomeProgramFragment by lazy { HomeProgramFragment.newInstance() }
 

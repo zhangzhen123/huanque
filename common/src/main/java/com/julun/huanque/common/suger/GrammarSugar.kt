@@ -67,27 +67,26 @@ fun Any.px2dp(value: Float): Int {
 fun reportClick(eventCode: String) {
     StatisticManager.pushClick(eventCode)
 }
+
 fun reportScan(eventCode: String, enterTime: Long, leaveTime: Long) {
     StatisticManager.pushScan(eventCode, enterTime, leaveTime)
 }
+
 //这里预设一个全局的协程异常抓取处理
 val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
     ULog.i("coroutineContext=${coroutineContext}")
     throwable.printStackTrace()
 }
+
 /**
- * 将一个list分割,按照每个
+ * 将一个list从0开始截取指定数目
  */
-fun <T> List<T>.sliceBySubLength(size: Int = this.size - 1): List<List<T>> {
-    val result: MutableList<List<T>> = mutableListOf()
-    val maxIndex: Int = this.size / size + if (this.size % size > 0) 1 else 0
-    for (index in 0..maxIndex - 1) {
-        var toIndex = (index + 1) * size
-        if (toIndex >= this.size) {
-            toIndex = this.size
-        }
-        val sub = this.subList(index * size, toIndex)
-        result.add(sub)
+fun <T> List<T>.sliceFromStart(subSize: Int = this.size - 1): MutableList<T> {
+    val result: MutableList<T> = mutableListOf()
+    if (this.size >= subSize) {
+        result.addAll(this.subList(0, subSize))
+    } else {
+        result.addAll(this)
     }
     return result
 }

@@ -37,6 +37,12 @@ abstract class BaseFragment : RxFragment(), BaseContainer {
         initEvents(view)
     }
 
+    /**
+     * 供父类调用
+     */
+    open fun onParentHiddenChanged(hidden: Boolean) {
+        logger.info("当前的父类界面开始显隐hide=$hidden")
+    }
     override fun onDestroy() {
         unregisterSelfAsEventHandler()
         onViewDestroy()

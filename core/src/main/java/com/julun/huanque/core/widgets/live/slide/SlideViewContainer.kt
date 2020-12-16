@@ -89,7 +89,7 @@ class SlideViewContainer @kotlin.jvm.JvmOverloads constructor(context: Context, 
     private val myHandler: Handler by lazy { Handler() }
     val myGestureListener: GestureDetector.SimpleOnGestureListener by lazy {
         object : GestureDetector.SimpleOnGestureListener() {
-            override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
 //                logger.info("onScroll:distanceX $distanceX distanceY:$distanceY")
                 if (/*isSetting || */(rightDrawer != null && rightDrawer!!.isSetting) || (outContainer != null && outContainer!!.isSetting)) {
                     return false

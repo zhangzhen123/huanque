@@ -4,6 +4,9 @@ object HomeTabType {
     const val Hot = "Hot"
     const val Dancer = "Dancer"
     const val Follow = "Follow"
+
+    const val Nearby = "Nearby"//附近
+    const val Favorite = "Favorite"//喜爱
 }
 
 object ProgramItemType {

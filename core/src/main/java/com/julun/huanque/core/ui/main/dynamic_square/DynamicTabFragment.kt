@@ -292,7 +292,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     /**
      * 该方法供父容器在显隐变化时调用
      */
-    fun onParentHiddenChanged(hidden: Boolean) {
+    override fun onParentHiddenChanged(hidden: Boolean) {
         logger.info("当前的界面开始显隐=${currentTab?.typeName} hide=$hidden")
     }
 

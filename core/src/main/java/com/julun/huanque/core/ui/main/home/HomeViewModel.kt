@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
+import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
@@ -41,7 +42,7 @@ class HomeViewModel : BaseViewModel() {
                 emit(e.convertError())
             }, final = {
                 logger("最终返回")
-            }, needLoadState = true)
+            }, needLoadState =it== QueryType.INIT)
         }
 
     }
