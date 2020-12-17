@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.bean.beans.BottomActionBean
+import com.julun.huanque.common.bean.beans.LiveBean
 import com.julun.huanque.common.bean.beans.MicAnchor
 import com.julun.huanque.common.bean.beans.PlayInfo
 import com.julun.huanque.common.bean.events.FloatingCloseEvent
@@ -64,6 +65,57 @@ open class LivePlayerFragment : BaseFragment() {
             }
         }
     }
+    private val playerDataObserver = Observer<LiveBean> {
+        if (it != null) {
+            mVideoViewModel.stopAllStreamState.value = StopAllStreamState.Nothing
+            startPlayMain(it.programPoster, it.playinfo)
+            mVideoViewModel.playerData.value = null
+        }
+    }
+
+    private val playInfoDataObserver = Observer<PlayInfo> {
+        if (it != null) {
+//                mMainVideoView?.mProgramID = mVideoViewModel?.programId ?: 0
+//                playByInfo(it, mMainVideoView ?: return@Observer)
+            startPlayMain(playInfo = it)
+            mVideoViewModel.playInfoData.value = null
+        }
+    }
+
+    private val addPlayerDataObserver = Observer<List<MicAnchor>> {
+        if (it != null) {
+            handleStreamAdded(it)
+            videoPlayerViewModel.addPlayerDatas.value = null
+        }
+    }
+
+    private val rmPlayerDataObserver = Observer<List<MicAnchor>> {
+        if (it != null) {
+//                logger.info("删除流通知：${it?.size}")
+            handleStreamDeleted(it)
+            videoPlayerViewModel.rmPlayerDatas.value = null
+
+        }
+    }
+    private val stopAllStreamStateObserver = Observer<Int> {
+        if (it > 0) {
+//                AliPlayerManager.stop()
+            //切换直播间时关闭所有类型的流
+            when (it) {
+                StopAllStreamState.StopNormal -> {
+                    stopAllStream(false, needDisConnect = false)
+                }
+                StopAllStreamState.StopAll -> {
+                    stopAllStream(true, needDisConnect = false)
+                }
+                StopAllStreamState.StopAllWithDisConnect -> {
+                    stopAllStream(true, needDisConnect = true)
+                }
+            }
+
+            mVideoViewModel.stopAllStreamState.value = StopAllStreamState.Nothing
+        }
+    }
 
     //用户使用的主播放器
     private var mMainVideoView: SingleVideoView? = null
@@ -109,79 +161,32 @@ open class LivePlayerFragment : BaseFragment() {
         // 对于新创建的界面来说没有用而且会引起错误逻辑 在这里每次新创建时把该状态值清空
         mVideoViewModel.stopAllStreamState.value = StopAllStreamState.Nothing
 
+        /**
+         * ------------------------------------------------------------------------------------------------
+         * 这些关键的增删流操作 全部使用observeForever去监听 与生命周期不挂钩  防止切换后台后 有些关键消息没有处理而导致错乱
+         */
         //这个一定要放在前面 不然会后响应 执行顺序就乱了
-        mVideoViewModel.playerData.observe(this, Observer {
-            if (it != null) {
-                mVideoViewModel.stopAllStreamState.value = StopAllStreamState.Nothing
-                startPlayMain(it.programPoster, it.playinfo)
-                mVideoViewModel.playerData.value = null
-            }
-        })
+        mVideoViewModel.playerData.observeForever(playerDataObserver)
 
-        mVideoViewModel.playInfoData.observe(this, Observer {
-            if (it != null) {
-//                mMainVideoView?.mProgramID = mVideoViewModel?.programId ?: 0
-//                playByInfo(it, mMainVideoView ?: return@Observer)
-                startPlayMain(playInfo = it)
-                mVideoViewModel.playInfoData.value = null
-            }
-        })
+        mVideoViewModel.playInfoData.observeForever(playInfoDataObserver)
 
+
+        videoPlayerViewModel.addPlayerDatas.observeForever(addPlayerDataObserver)
+
+        videoPlayerViewModel.rmPlayerDatas.observeForever(rmPlayerDataObserver)
+
+        mVideoViewModel.stopAllStreamState.observeForever(stopAllStreamStateObserver)
+
+
+        /**
+         * ------------------------------------------------------------------------------------------------
+         */
         videoPlayerViewModel.showVideoInfo.observe(this, Observer {
             if (it != null) {
                 showVideoPlayerInfo()
             }
         })
 
-
-        videoPlayerViewModel.addPlayerDatas.observe(this, Observer {
-            if (it != null) {
-                //将移除操作放在这里执行 不再通过rmPlayerDatas移除 有些情形 比如后台回来后 有可能订阅的liveData执行顺序会有偏差 导致移除后执行
-//                resetAllStream()
-                handleStreamAdded(it)
-                videoPlayerViewModel.addPlayerDatas.value = null
-            }
-        })
-
-        videoPlayerViewModel.rmPlayerDatas.observe(this, Observer {
-            if (it != null) {
-//                logger.info("删除流通知：${it?.size}")
-                handleStreamDeleted(it)
-                videoPlayerViewModel.rmPlayerDatas.value = null
-
-            }
-        })
-
-        mVideoViewModel.stopAllStreamState.observe(this, Observer {
-            if (it > 0) {
-//                AliPlayerManager.stop()
-                //切换直播间时关闭所有类型的流
-                when (it) {
-                    StopAllStreamState.StopNormal -> {
-                        stopAllStream(false, needDisConnect = false)
-                    }
-                    StopAllStreamState.StopAll -> {
-                        stopAllStream(true, needDisConnect = false)
-                    }
-                    StopAllStreamState.StopAllWithDisConnect -> {
-                        stopAllStream(true, needDisConnect = true)
-                    }
-                }
-
-                mVideoViewModel.stopAllStreamState.value = StopAllStreamState.Nothing
-            }
-        })
-
-//        mVideoViewModel?.baseData?.observe(this, Observer {
-//            if (it != null) {
-//                //显示封面
-//                mMainVideoView?.showCover(it.prePic)
-//                //播放流
-//                mMainVideoView?.mProgramID = mVideoViewModel?.programId ?: 0
-//                playByInfo(it.playInfo ?: return@Observer, mMainVideoView ?: return@Observer)
-//
-//            }
-//        })
         mConfigViewModel.screenTypeData.observe(this, Observer {
             if (it == ScreenType.HP && mConfigViewModel.horizonState.value != true && mPlayerViewModel.chatModeState.value != true) {
                 //主播处于横屏，本地处于竖屏
@@ -586,5 +591,15 @@ open class LivePlayerFragment : BaseFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         stopAllStream(false)
+        mVideoViewModel.playerData.removeObserver(playerDataObserver)
+
+        mVideoViewModel.playInfoData.removeObserver(playInfoDataObserver)
+
+
+        videoPlayerViewModel.addPlayerDatas.removeObserver(addPlayerDataObserver)
+
+        videoPlayerViewModel.rmPlayerDatas.removeObserver(rmPlayerDataObserver)
+
+        mVideoViewModel.stopAllStreamState.removeObserver(stopAllStreamStateObserver)
     }
 }
