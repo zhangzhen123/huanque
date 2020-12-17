@@ -1,7 +1,5 @@
 package com.julun.huanque.common.bean.beans
 
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
 import java.io.File
 import java.io.Serializable
 
@@ -40,17 +38,13 @@ class CheckVersionResult(
  * 首页节目栏标签
  */
 class HomePageTab:Serializable {
-    var homeCategories: List<ProgramTab> = arrayListOf()
+    var homeCategories: List<PagerTab> = arrayListOf()
     var latestHomeCategoryVersion: String = ""
 }
-data class ProgramTab(
+data class PagerTab(
     var typeName: String = "",
     var typeCode: String = "") : Serializable
 
 data class OnlineInfo(
     var onlineId: String = ""
 )
-
-data class SquareTab(
-    var typeName: String = "",
-    var typeCode: String = "") : Serializable

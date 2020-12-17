@@ -8,7 +8,6 @@ import android.util.SparseArray
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
@@ -17,7 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.bean.beans.SquareTab
+import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.constant.StatisticCode
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
@@ -28,7 +27,6 @@ import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.publish_dynamic.PublishStateActivity
 import com.julun.huanque.core.viewmodel.ScrollStateViewModel
 import com.luck.picture.lib.tools.StatusBarUtil
-import kotlinx.android.synthetic.main.activity_circle_dynamic.*
 import kotlinx.android.synthetic.main.fragment_dynamic_container.*
 import kotlinx.android.synthetic.main.fragment_dynamic_container.magic_indicator
 import kotlinx.android.synthetic.main.fragment_dynamic_container.publish_dynamic
@@ -59,7 +57,7 @@ class DynamicSquareFragment : BaseFragment() {
 
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
-    private val mTabTitles = arrayListOf<SquareTab>()
+    private val mTabTitles = arrayListOf<PagerTab>()
 
     private val mScrollStateViewModel: ScrollStateViewModel by activityViewModels()
 

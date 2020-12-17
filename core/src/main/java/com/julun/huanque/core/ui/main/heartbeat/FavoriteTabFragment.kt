@@ -1,13 +1,15 @@
 package com.julun.huanque.core.ui.main.heartbeat
 
 import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.view.GestureDetector
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
-import androidx.core.view.GestureDetectorCompat
+import androidx.core.animation.addListener
+import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,24 +21,21 @@ import com.julun.huanque.common.base.BaseVMFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
+import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.bean.beans.ProgramListInfo
 import com.julun.huanque.common.bean.beans.ProgramLiveInfo
-import com.julun.huanque.common.bean.beans.ProgramTab
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.MainPageIndexConst
-import com.julun.huanque.common.helper.MixedHelper
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.common.widgets.cardlib.utils.ReItemTouchHelper
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
 import com.julun.huanque.core.manager.VideoPlayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
-import com.julun.huanque.core.widgets.DispatchRecyclerView
-import kotlinx.android.synthetic.main.fragment_leyuan.*
-import kotlinx.android.synthetic.main.fragment_program_tab.*
+import kotlinx.android.synthetic.main.fragment_favorite_tab.*
 import kotlinx.android.synthetic.main.layout_bottom_favorite.view.*
 
 
@@ -53,7 +52,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     companion object {
         const val BANNER_POSITION = 6
-        fun newInstance(tab: ProgramTab?): FavoriteTabFragment {
+        fun newInstance(tab: PagerTab?): FavoriteTabFragment {
             return FavoriteTabFragment().apply {
                 val bundle = Bundle()
                 bundle.putSerializable(IntentParamKey.TAB_TYPE.name, tab)
@@ -62,17 +61,17 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
         }
     }
 
-    private var currentTab: ProgramTab? = null
+    private var currentTab: PagerTab? = null
 
     private val bottomLayout: View by lazy {
         LayoutInflater.from(requireContext()).inflate(R.layout.layout_bottom_favorite, null)
     }
 
-    override fun getLayoutId(): Int = R.layout.fragment_program_tab
+    override fun getLayoutId(): Int = R.layout.fragment_favorite_tab
 
     private val layoutManager: GridLayoutManager by lazy { GridLayoutManager(requireContext(), 2) }
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? ProgramTab
+        currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? PagerTab
 
         authorList.layoutManager = layoutManager
         initViewModel()
@@ -89,13 +88,18 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
         }
         authorAdapter.animationEnable = true
         authorAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.SlideInBottom)
-        authorAdapter.addFooterView(bottomLayout)
+//        authorList.itemAnimator = SlideItemAnimator()
+//        authorAdapter.addFooterView(bottomLayout)
         //todo
-        mRefreshLayout.isEnabled = false
-        mRefreshLayout.setOnRefreshListener {
-            requestData(QueryType.REFRESH, currentTab?.typeCode)
+//        mRefreshLayout.isEnabled = false
+//        mRefreshLayout.setOnRefreshListener {
+//            requestData(QueryType.REFRESH, currentTab?.typeCode)
+//        }
+
+//        MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
+        mRefreshLayout.setOnLoadMoreListener { refreshLayout ->
+            requestData(QueryType.LOAD_MORE, currentTab?.typeCode)
         }
-        MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
 
     }
 
@@ -108,39 +112,40 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     private var isUserDrag: Boolean = false
     private var lastY: Float = 0f
+
     //一次完整的触摸事件只触发一次下拉操作
     private var actionDone: Boolean = false
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
-        authorList.onTouch { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_UP -> {
-                    lastY = 0f
-                    actionDone = false
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    val dY = event.y - lastY
-//                    logger.info("dY=$dY  lastY=$lastY")
-                    if (lastY != 0f && dY < 0) {
-
-                        if (isUserDrag && !actionDone) {
-
-                            val totalItemCount = layoutManager.itemCount
-                            val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-                            if (!loading && totalItemCount <= lastVisibleItem + 1) {
-                                //todo 加载下一页
-                                logger.info("加载下一页")
-                                requestData(QueryType.LOAD_MORE, currentTab?.typeCode)
-                                actionDone = true
-                            }
-
-                        }
-                    }
-                    lastY = event.y
-                }
-            }
-            false
-        }
+//        authorList.onTouch { _, event ->
+//            when (event.action) {
+//                MotionEvent.ACTION_UP -> {
+//                    lastY = 0f
+//                    actionDone = false
+//                }
+//                MotionEvent.ACTION_MOVE -> {
+//                    val dY = event.y - lastY
+////                    logger.info("dY=$dY  lastY=$lastY")
+//                    if (lastY != 0f && dY < 0) {
+//
+//                        if (isUserDrag && !actionDone) {
+//
+//                            val totalItemCount = layoutManager.itemCount
+//                            val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+//                            if (!loading && totalItemCount <= lastVisibleItem + 1) {
+//                                //todo 加载下一页
+//                                logger.info("加载下一页")
+//                                requestData(QueryType.LOAD_MORE, currentTab?.typeCode)
+//                                actionDone = true
+//                            }
+//
+//                        }
+//                    }
+//                    lastY = event.y
+//                }
+//            }
+//            false
+//        }
 
         authorList.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
@@ -269,12 +274,14 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     private fun initViewModel() {
         mViewModel.dataList.observe(this, Observer {
+            mRefreshLayout.finishLoadMore()
             if (it.state == NetStateType.SUCCESS) {
-                renderHotData(it.requireT())
+                playEndAni(it.requireT())
             } else if (it.state == NetStateType.ERROR) {
                 loadDataFail(it.isRefresh())
             }
-            mRefreshLayout.isRefreshing = false
+
+//            mRefreshLayout.isRefreshing = false
             loading = false
         })
     }
@@ -287,7 +294,34 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
         }
     }
 
+    private fun outAnimators(view: View, index: Int): Animator {
+        val animator = ObjectAnimator.ofFloat(view, "translationY", 0f, -ScreenUtils.screenHeightFloat)
+        animator.duration = 400L
+        animator.startDelay = 200L * index
+        animator.interpolator = DecelerateInterpolator(1.3f)
+        return animator
+    }
+
+    private fun playEndAni(listData: ProgramListInfo) {
+        //todo 移除动画
+        if (authorList.childCount == 0) {
+            renderHotData(listData)
+            return
+        }
+        val animationSet: AnimatorSet = AnimatorSet()
+        val list = mutableListOf<Animator>()
+        authorList.children.forEachIndexed { index, view ->
+            list.add(outAnimators(view, index))
+        }
+        animationSet.playTogether(list)
+        animationSet.start()
+        animationSet.addListener(onEnd = {
+            renderHotData(listData)
+        })
+    }
+
     private fun renderHotData(listData: ProgramListInfo) {
+
 
         if (listData.isPull) {
             val programList = listData.programList.distinct().sliceFromStart(4)
@@ -316,6 +350,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
         }
         bottomLayout.bottom_title.show()
         setEmpty()
+
     }
 
     private fun setEmpty() {

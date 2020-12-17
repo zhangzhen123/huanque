@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+        android:id="@+id/mRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srlEnableAutoLoadMore="false"
+        app:srlEnableRefresh="false"
+        app:srlEnableOverScrollDrag="true"
+        app:srlEnableOverScrollBounce="true"
+        app:srlEnableScrollContentWhenLoaded="false"
+        app:srlEnableLoadMoreWhenContentNotFull="true"
+        app:srlEnableFooterFollowWhenLoadFinished="false"
+        app:srlDisableContentWhenLoading="true"
+        android:layout_marginLeft="@dimen/dimen_10"
+        android:layout_marginRight="@dimen/dimen_10">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/authorList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <com.scwang.smart.refresh.footer.ClassicsFooter
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_35"/>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
+
+    <com.julun.huanque.common.widgets.statepage.StatePageView
+        android:id="@+id/state_pager_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</FrameLayout>

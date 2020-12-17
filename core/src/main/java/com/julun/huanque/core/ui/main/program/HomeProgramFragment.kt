@@ -13,7 +13,6 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.util.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.activityViewModels
@@ -23,9 +22,8 @@ import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.FollowProgramInfo
-import com.julun.huanque.common.bean.beans.ProgramTab
+import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.constant.BusiConstant
-import com.julun.huanque.common.constant.HomeTabType
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.suger.dp2pxf
@@ -36,7 +34,6 @@ import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.follow.FollowActivity
 import com.julun.huanque.core.ui.main.follow.FollowViewModel
-import com.julun.huanque.core.ui.main.makefriend.MakeFriendsFragment
 import com.julun.huanque.core.ui.search.SearchActivity
 import com.julun.huanque.core.widgets.SurfaceVideoViewOutlineProvider
 import com.julun.rnlib.RnManager
@@ -70,7 +67,7 @@ class HomeProgramFragment : BaseFragment() {
 
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
-    private val mTabTitles = arrayListOf<ProgramTab>()
+    private val mTabTitles = arrayListOf<PagerTab>()
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_program_container

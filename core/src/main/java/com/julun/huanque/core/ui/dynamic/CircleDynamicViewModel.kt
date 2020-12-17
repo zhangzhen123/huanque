@@ -1,13 +1,10 @@
 package com.julun.huanque.core.ui.dynamic
 
 import androidx.lifecycle.*
-import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
-import com.julun.huanque.common.bean.beans.DynamicDetailInfo
 import com.julun.huanque.common.bean.beans.DynamicGroup
-import com.julun.huanque.common.bean.beans.SquareTab
+import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.bean.forms.GroupPostForm
-import com.julun.huanque.common.bean.forms.PostDetailForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.SquareTabType
 import com.julun.huanque.common.helper.StorageHelper
@@ -31,14 +28,14 @@ class CircleDynamicViewModel : BaseViewModel() {
 
     val dynamicDetailInfo: MutableLiveData<ReactiveData<DynamicGroup>> by lazy { MutableLiveData<ReactiveData<DynamicGroup>>() }
     //协程请求示例
-    val tabList: LiveData<ReactiveData<ArrayList<SquareTab>>> = queryState.switchMap {
+    val tabList: LiveData<ReactiveData<ArrayList<PagerTab>>> = queryState.switchMap {
         liveData {
             request({
 
                 val tabObj = StorageHelper.getProgramTabObj()
-                val tabTitles: ArrayList<SquareTab> = arrayListOf()
-                tabTitles.add(SquareTab("热门", typeCode = SquareTabType.HOT))
-                tabTitles.add(SquareTab("最新", typeCode = SquareTabType.NEW))
+                val tabTitles: ArrayList<PagerTab> = arrayListOf()
+                tabTitles.add(PagerTab("热门", typeCode = SquareTabType.HOT))
+                tabTitles.add(PagerTab("最新", typeCode = SquareTabType.NEW))
                 emit(tabTitles.convertRtData())
             }, error = { e ->
                 logger("报错了：$e")

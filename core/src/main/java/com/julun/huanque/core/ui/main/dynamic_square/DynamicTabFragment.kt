@@ -3,7 +3,6 @@ package com.julun.huanque.core.ui.main.dynamic_square
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +20,7 @@ import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.DynamicItemBean
 import com.julun.huanque.common.bean.beans.HomeDynamicListInfo
 import com.julun.huanque.common.bean.beans.PhotoBean
-import com.julun.huanque.common.bean.beans.SquareTab
+import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.bean.events.LoginEvent
 import com.julun.huanque.common.bean.events.ShareSuccessEvent
 import com.julun.huanque.common.constant.*
@@ -37,7 +36,6 @@ import com.julun.huanque.core.adapter.DynamicGroupListAdapter
 import com.julun.huanque.core.adapter.DynamicListAdapter
 import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.huanque.core.ui.dynamic.CircleDynamicActivity
-import com.julun.huanque.core.ui.dynamic.CircleDynamicViewModel
 import com.julun.huanque.core.ui.dynamic.DynamicDetailActivity
 import com.julun.huanque.core.ui.homepage.HomePageActivity
 import com.julun.huanque.core.ui.share.LiveShareActivity
@@ -61,7 +59,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     private val mScrollStateViewModel: ScrollStateViewModel by activityViewModels()
 
     companion object {
-        fun newInstance(tab: SquareTab?, groupId: Long? = null): DynamicTabFragment {
+        fun newInstance(tab: PagerTab?, groupId: Long? = null): DynamicTabFragment {
             return DynamicTabFragment().apply {
                 val bundle = Bundle()
                 bundle.putSerializable(IntentParamKey.TAB_TYPE.name, tab)
@@ -72,7 +70,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
         }
     }
 
-    private var currentTab: SquareTab? = null
+    private var currentTab: PagerTab? = null
     private var currentGroupId: Long? = null
     private val headerLayout: View by lazy {
         LayoutInflater.from(requireContext()).inflate(R.layout.layout_header_dynamic, null)
@@ -114,7 +112,7 @@ class DynamicTabFragment : BaseVMFragment<DynamicTabViewModel>() {
     override fun getLayoutId(): Int = R.layout.fragment_dynamic_tab
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? SquareTab
+        currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? PagerTab
         currentGroupId = arguments?.getLong(IntentParamKey.ID.name)
         initViewModel()
         if (currentTab?.typeCode == SquareTabType.RECOMMEND) {

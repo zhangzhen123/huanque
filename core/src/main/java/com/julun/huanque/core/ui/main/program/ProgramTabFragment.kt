@@ -18,7 +18,7 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.MultiBean
 import com.julun.huanque.common.bean.beans.ProgramListInfo
 import com.julun.huanque.common.bean.beans.ProgramLiveInfo
-import com.julun.huanque.common.bean.beans.ProgramTab
+import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.MainPageIndexConst
@@ -52,7 +52,7 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
 
     companion object {
         const val BANNER_POSITION = 6
-        fun newInstance(tab: ProgramTab?): ProgramTabFragment {
+        fun newInstance(tab: PagerTab?): ProgramTabFragment {
             return ProgramTabFragment().apply {
                 val bundle = Bundle()
                 bundle.putSerializable(IntentParamKey.TAB_TYPE.name, tab)
@@ -63,12 +63,12 @@ class ProgramTabFragment : BaseVMFragment<ProgramTabViewModel>() {
 
     private val followViewModel: FollowViewModel by activityViewModels()
 
-    private var currentTab: ProgramTab? = null
+    private var currentTab: PagerTab? = null
 
     override fun getLayoutId(): Int = R.layout.fragment_program_tab
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? ProgramTab
+        currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? PagerTab
 
         authorList.layoutManager = GridLayoutManager(requireContext(), 2)
         initViewModel()

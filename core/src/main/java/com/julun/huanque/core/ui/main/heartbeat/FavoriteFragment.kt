@@ -1,23 +1,23 @@
 package com.julun.huanque.core.ui.main.heartbeat
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.bean.beans.ProgramTab
+import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
+import com.julun.huanque.core.ui.main.tagmanager.TagManagerActivity
 import kotlinx.android.synthetic.main.fragment_favorite_container.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -43,7 +43,7 @@ class FavoriteFragment : BaseFragment() {
 
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
-    private val mTabTitles = arrayListOf<ProgramTab>()
+    private val mTabTitles = arrayListOf<PagerTab>()
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_favorite_container
@@ -61,7 +61,9 @@ class FavoriteFragment : BaseFragment() {
         initViewPager()
         initMagicIndicator()
 
-
+        tag_manager.onClickNew {
+            TagManagerActivity.start(requireActivity())
+        }
     }
 
     private fun initViewPager() {

@@ -1,5 +1,6 @@
-package com.julun.huanque.core.ui.main.heartbeat
+package com.julun.huanque.core.ui.main.tagmanager
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
@@ -7,70 +8,167 @@ import android.util.SparseArray
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.julun.huanque.common.base.BaseFragment
+import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.listener.OnItemDragListener
+import com.chad.library.adapter.base.module.DraggableModule
+import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.material.appbar.AppBarLayout
+import com.julun.huanque.common.base.BaseVMActivity
+import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
+import com.julun.huanque.common.bean.beans.CollapsingToolbarLayoutState
+import com.julun.huanque.common.bean.beans.DynamicGroup
 import com.julun.huanque.common.bean.beans.PagerTab
-import com.julun.huanque.common.init.CommonInit
+import com.julun.huanque.common.bean.beans.TagManagerBean
 import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
-import com.julun.rnlib.RnManager
-import com.luck.picture.lib.tools.StatusBarUtil
-import kotlinx.android.synthetic.main.fragment_heartbeat_container.*
+import kotlinx.android.synthetic.main.activity_favorite_tag_manager.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
-import org.jetbrains.anko.topPadding
+import org.jetbrains.anko.startActivity
+import kotlin.properties.Delegates
 
 /**
  *
  *@Anchor: zhangzhen
  *
- *@Date: 2020/12/16 9:32
+ *@Date: 2020/12/16 19:58
  *
- *@Description: HeartbeatFragment
+ *@Description: TagManagerActivity
  *
  */
-class HomeHeartbeatFragment : BaseFragment() {
+class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
 
     companion object {
-        fun newInstance() = HomeHeartbeatFragment()
+        fun start(act: Activity) {
+            act.startActivity<TagManagerActivity>()
+        }
     }
+
+
+//    private var state: CollapsingToolbarLayoutState? = null
+
 
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
     private val mTabTitles = arrayListOf<PagerTab>()
 
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_heartbeat_container
+    private var currentSelect: Int = -1
+    private var deleteMode: Boolean by Delegates.observable(false) { _, _, newValue ->
+        if (newValue) {
+            btn_action_tb.text = "完成"
+        } else {
+            btn_action_tb.text = "管理"
+        }
+        tagAdapter.notifyDataSetChanged()
+    }
+    private val tagAdapter: BaseQuickAdapter<TagManagerBean, BaseViewHolder> by lazy {
+        object : BaseQuickAdapter<TagManagerBean, BaseViewHolder>(R.layout.item_tag_manager, mViewModel.currentTagList),
+            DraggableModule {
+            override fun convert(holder: BaseViewHolder, item: TagManagerBean) {
+                val tagName = holder.getView<TextView>(R.id.tag_name)
+                val str = if (item.num == 0) {
+                    item.tagName
+                } else {
+                    "${item.tagName}(${item.num})"
+                }
+                tagName.text = str
+                tagName.isSelected = currentSelect == holder.adapterPosition
+                holder.setGone(R.id.iv_delete, !deleteMode || currentSelect == holder.adapterPosition)
+            }
+
+        }
+    }
+    private val listener: OnItemDragListener by lazy {
+
+        // 拖拽监听
+        object : OnItemDragListener {
+            override fun onItemDragStart(viewHolder: RecyclerView.ViewHolder, pos: Int) {
+                logger.info("drag start")
+                val holder = viewHolder as BaseViewHolder
+//                currentSelect = holder.adapterPosition
+//                deleteMode = true
+            }
+
+            override fun onItemDragMoving(
+                source: RecyclerView.ViewHolder,
+                from: Int,
+                target: RecyclerView.ViewHolder,
+                to: Int
+            ) {
+                logger.info("move from: " + source.adapterPosition + " to: " + target.adapterPosition)
+            }
+
+            override fun onItemDragEnd(viewHolder: RecyclerView.ViewHolder, pos: Int) {
+                logger.info("drag end")
+                val holder = viewHolder as BaseViewHolder
+                currentSelect = -1
+                tagAdapter.notifyDataSetChanged()
+                // 结束时，item背景色变化，demo这里使用了一个动画渐变，使得自然
+                logger.info("更换位置后${mViewModel.currentTagList}")
+            }
+        }
+
     }
 
-    private val viewModel: HeartbeatViewModel by viewModels()
+    override fun getLayoutId(): Int {
+        return R.layout.activity_favorite_tag_manager
+    }
+
+    private val viewModel: TagManagerViewModel by viewModels()
 
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-
         //
-        logger.info("initViews")
         //设置头部边距
-        home_container.topPadding = StatusBarUtil.getStatusBarHeight(requireContext())
         initViewModel()
         initViewPager()
         initMagicIndicator()
-        home_container.post {
-            RnManager.createReactInstanceManager(CommonInit.getInstance().getApp())
+
+        val flexBoxLayoutManager = FlexboxLayoutManager(this)
+        myTags.layoutManager = flexBoxLayoutManager
+        myTags.adapter = tagAdapter
+
+//        mAdapter.getDraggableModule().setSwipeEnabled(true);
+        tagAdapter.draggableModule.isDragEnabled = true
+        tagAdapter.draggableModule.setOnItemDragListener(listener)
+        tagAdapter.setOnItemLongClickListener { adapter, view, position ->
+            logger.info("长按")
+            currentSelect = position
+            deleteMode = true
+            tagAdapter.notifyDataSetChanged()
+            false
         }
-
-
-
+        tagAdapter.setOnItemClickListener { _, view, position ->
+            logger.info("点击item=$position")
+            if (deleteMode) {
+                tagAdapter.removeAt(position)
+                logger.info("删除后${mViewModel.currentTagList}")
+            }
+        }
+        iv_back.onClickNew {
+            onBackPressed()
+        }
+        tv_title.text = "我喜欢的标签"
+        btn_action_tb.onClickNew {
+            deleteMode = !deleteMode
+        }
     }
 
     private fun initViewPager() {
@@ -82,7 +180,7 @@ class HomeHeartbeatFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
-        viewModel.tabList.observe(viewLifecycleOwner, Observer {
+        viewModel.tabList.observe(this, Observer {
             if (it.state == NetStateType.SUCCESS) {
                 mTabTitles.clear()
                 mTabTitles.addAll(it.requireT())
@@ -90,16 +188,32 @@ class HomeHeartbeatFragment : BaseFragment() {
             }
 
         })
+        viewModel.tagChange.observe(this, Observer {
+            if (it != null) {
+                tagAdapter.notifyDataSetChanged()
+            }
 
+        })
         viewModel.queryInfo()
+    }
 
+    private fun renderHeaderData(group: DynamicGroup) {
+
+    }
+
+    override fun onBackPressed() {
+        if (deleteMode) {
+            deleteMode = false
+            return
+        }
+        super.onBackPressed()
     }
 
     /**
      * 初始化历史记录指示器
      */
     private fun initMagicIndicator() {
-        mCommonNavigator = CommonNavigator(context)
+        mCommonNavigator = CommonNavigator(this)
         mCommonNavigator.scrollPivotX = 0.65f
 //        mCommonNavigator.isAdjustMode = true
         mCommonNavigator.adapter = object : CommonNavigatorAdapter() {
@@ -197,32 +311,9 @@ class HomeHeartbeatFragment : BaseFragment() {
         }
     }
 
-    /**
-     * 滑动到顶部
-     */
-    fun scrollToTop() {
-        val tempIndex = view_pager.currentItem
-        val tempFragment: androidx.fragment.app.Fragment? = mPagerAdapter.getItem(tempIndex)
-        tempFragment?.let {
-
-        }
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        logger.info("onHiddenChanged=$hidden")
-        super.onHiddenChanged(hidden)
-        val tempIndex = view_pager.currentItem
-        val tempFragment: androidx.fragment.app.Fragment? = mPagerAdapter.getItem(tempIndex)
-        tempFragment?.let {
-            if (it is BaseFragment) {
-                it.onParentHiddenChanged(hidden)
-            }
-
-        }
-    }
 
     private val mPagerAdapter: FragmentPagerAdapter by lazy {
-        object : FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        object : FragmentPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             override fun getItem(position: Int): Fragment {
                 return mFragmentList[position] ?: getFragment(position)
             }
@@ -232,14 +323,7 @@ class HomeHeartbeatFragment : BaseFragment() {
             }
 
             private fun getFragment(position: Int): Fragment {
-                val fragment: Fragment = when (position) {
-                    0 -> NearbyFragment.newInstance()
-                    1 -> FavoriteFragment.newInstance()
-                    else -> {
-                        FavoriteFragment.newInstance()
-                    }
-                }
-
+                val fragment: Fragment = TagTabFragment.newInstance(mTabTitles[position])
                 mFragmentList.put(position, fragment)
                 return fragment
             }
@@ -250,4 +334,10 @@ class HomeHeartbeatFragment : BaseFragment() {
         }
     }
 
+    override fun showLoadState(state: NetState) {
+    }
+
+    override fun onViewDestroy() {
+        super.onViewDestroy()
+    }
 }

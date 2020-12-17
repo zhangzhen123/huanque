@@ -141,9 +141,9 @@
             android:theme="@style/CustomToolBarTheme" />
         <activity
             android:name=".ui.publish_dynamic.PublishStateActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            android:screenOrientation="portrait" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".ui.share.ShareFriendsActivity"
             android:screenOrientation="portrait" />
@@ -153,7 +153,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
 
-        <activity android:name=".ui.dynamic.CircleDynamicActivity"
+        <activity
+            android:name=".ui.dynamic.CircleDynamicActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.main.tagmanager.TagManagerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
 

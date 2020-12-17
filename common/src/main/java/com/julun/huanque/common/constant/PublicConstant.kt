@@ -75,3 +75,14 @@ object StatisticCode {
 
 
 }
+
+
+object TagTabType {
+    const val Beauty = "Beauty"
+    const val goodFigure = "goodFigure"
+    const val Style = "Style"
+    const val Sport = "Sport"
+    const val Game = "Game"
+    const val Character = "Character"
+
+}

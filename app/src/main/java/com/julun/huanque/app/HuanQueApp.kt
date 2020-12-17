@@ -64,7 +64,7 @@ open class HuanQueApp : MultiDexApplication() {
             return
         }
         if (AppHelper.isMainProcess(this)) {
-            install()
+//            install()
             HuanQueInit.getInstance().initContext(this)
             CommonInit.getInstance().initContext(this)
             //初始化SP（Opinstall需要使用）

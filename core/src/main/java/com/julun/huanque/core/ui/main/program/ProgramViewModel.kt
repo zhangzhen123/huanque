@@ -1,11 +1,10 @@
 package com.julun.huanque.core.ui.main.program
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.julun.huanque.common.basic.ReactiveData
-import com.julun.huanque.common.bean.beans.ProgramTab
+import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.HomeTabType
 import com.julun.huanque.common.helper.StorageHelper
@@ -26,17 +25,17 @@ import com.julun.huanque.common.suger.request
 class ProgramViewModel : BaseViewModel() {
 
     //协程请求示例
-    val tabList: LiveData<ReactiveData<ArrayList<ProgramTab>>> = queryState.switchMap {
+    val tabList: LiveData<ReactiveData<ArrayList<PagerTab>>> = queryState.switchMap {
         liveData {
             request({
 
                 val tabObj = StorageHelper.getProgramTabObj()
-                val tabTitles: ArrayList<ProgramTab> = arrayListOf()
+                val tabTitles: ArrayList<PagerTab> = arrayListOf()
                 if (tabObj != null && tabObj.homeCategories.isNotEmpty()) {
                     tabTitles.addAll(tabObj.homeCategories)
                 } else {
                     logger("没有取到存储的tab 使用默认值")
-                    tabTitles.add(ProgramTab("热门", typeCode = HomeTabType.Hot))
+                    tabTitles.add(PagerTab("热门", typeCode = HomeTabType.Hot))
 //                    tabTitles.add(ProgramTab("舞神", typeCode = HomeTabType.Dancer))
                 }
                 //固定在尾部加个 关注tab

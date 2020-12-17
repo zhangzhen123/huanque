@@ -21,8 +21,9 @@ import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.CircleGroup
+import com.julun.huanque.common.bean.beans.CollapsingToolbarLayoutState
 import com.julun.huanque.common.bean.beans.DynamicGroup
-import com.julun.huanque.common.bean.beans.SquareTab
+import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.constant.ARouterConstant
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.PublicStateCode
@@ -37,7 +38,6 @@ import com.julun.huanque.core.viewmodel.AttentionCircleViewModel
 import com.julun.huanque.core.viewmodel.ScrollStateViewModel
 import kotlinx.android.synthetic.main.activity_circle_dynamic.*
 import kotlinx.android.synthetic.main.activity_circle_dynamic.publish_dynamic
-import kotlinx.android.synthetic.main.activity_dynamic_list.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
@@ -68,16 +68,11 @@ class CircleDynamicActivity : BaseVMActivity<CircleDynamicViewModel>() {
 
     private var state: CollapsingToolbarLayoutState? = null
 
-    private enum class CollapsingToolbarLayoutState {
-        EXPANDED,
-        COLLAPSED,
-        INTERNEDIATE
-    }
 
     private val attentionCircleViewModel: AttentionCircleViewModel by viewModels()
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
-    private val mTabTitles = arrayListOf<SquareTab>()
+    private val mTabTitles = arrayListOf<PagerTab>()
 
     private var currentGroupId: Long? = null
     override fun getLayoutId(): Int {

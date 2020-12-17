@@ -4,11 +4,8 @@ import androidx.lifecycle.*
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
 import com.julun.huanque.common.bean.beans.ProgramListInfo
-import com.julun.huanque.common.bean.beans.ProgramTab
 import com.julun.huanque.common.bean.forms.ProgramListForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.HomeTabType
-import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.ProgramService
 import com.julun.huanque.common.suger.*
@@ -40,7 +37,8 @@ class FavoriteTabViewModel : BaseViewModel() {
             request({
                 val result =
                     programService.programList(ProgramListForm(offset = offsetHot,typeCode = typeCode)).dataConvert()
-                offsetHot += result.programList.size
+                //todo
+                offsetHot += 4
                 result.isPull = queryType != QueryType.LOAD_MORE
                 dataList.value = result.convertRtData()
             }, error = {

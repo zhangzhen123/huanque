@@ -1,15 +1,13 @@
 package com.julun.huanque.core.ui.main.heartbeat
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.basic.ReactiveData
-import com.julun.huanque.common.bean.beans.ProgramTab
+import com.julun.huanque.common.bean.beans.PagerTab
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.constant.HomeTabType
-import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.suger.convertError
 import com.julun.huanque.common.suger.convertRtData
 import com.julun.huanque.common.suger.logger
@@ -27,12 +25,12 @@ import com.julun.huanque.common.suger.request
 class HeartbeatViewModel : BaseViewModel() {
 
     //协程请求示例
-    val tabList: LiveData<ReactiveData<ArrayList<ProgramTab>>> = queryState.switchMap {
+    val tabList: LiveData<ReactiveData<ArrayList<PagerTab>>> = queryState.switchMap {
         liveData {
             request({
 
 //                val tabObj = StorageHelper.getProgramTabObj()
-                val tabTitles: ArrayList<ProgramTab> = arrayListOf()
+                val tabTitles: ArrayList<PagerTab> = arrayListOf()
 //                if (tabObj != null && tabObj.homeCategories.isNotEmpty()) {
 //                    tabTitles.addAll(tabObj.homeCategories)
 //                } else {
@@ -40,8 +38,8 @@ class HeartbeatViewModel : BaseViewModel() {
 //                    tabTitles.add(ProgramTab("热门", typeCode = HomeTabType.Hot))
 //                }
                 //固定在尾部加个 关注tab
-                tabTitles.add(ProgramTab("附近", typeCode = HomeTabType.Nearby))
-                tabTitles.add(ProgramTab("喜欢", typeCode = HomeTabType.Favorite))
+                tabTitles.add(PagerTab("附近", typeCode = HomeTabType.Nearby))
+                tabTitles.add(PagerTab("喜欢", typeCode = HomeTabType.Favorite))
 
                 emit(tabTitles.convertRtData())
             }, error = { e ->
