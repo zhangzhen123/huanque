@@ -79,6 +79,7 @@ class WelcomeActivity : BaseActivity() {
             SharedPreferencesUtils.getBoolean(SPParamKey.Welcome_privacy_Fragment, false)
         initViewModel()
         SharedPreferencesUtils.commitBoolean(SPParamKey.VOICE_ON_LINE, false)
+        SharedPreferencesUtils.commitBoolean(SPParamKey.ANONYMOUS_VOICE_ON_LINE, false)
         SharedPreferencesUtils.commitLong(SPParamKey.PROGRAM_ID_IN_FLOATING, 0)
         //移除缓存的私信气泡数据
         SPUtils.remove(SPParamKey.PRIVATE_CHAT_BUBBLE)
