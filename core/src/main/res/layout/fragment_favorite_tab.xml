@@ -26,6 +26,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <com.scwang.smart.refresh.footer.ClassicsFooter
+            app:srlTextPulling="继续上拉换一批"
+            app:srlTextRelease="继续上拉换一批"
+            app:srlFinishDuration="0"
+            app:srlClassicsSpinnerStyle="Translate"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_35"/>
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>

@@ -41,7 +41,7 @@ public class SwipeTouchLayout extends FrameLayout {
                 mDownX = event.getX();
                 mDownY = event.getY();
                 if (mSwipeTouchListener != null) {
-                    mSwipeTouchListener.onTouchDown(event);
+                    mSwipeTouchListener.onTouchDown(this,event);
                 }
 
                 return false;
@@ -91,7 +91,7 @@ public class SwipeTouchLayout extends FrameLayout {
     }
 
     public interface SwipeTouchListener {
-        void onTouchDown(MotionEvent event);
+        void onTouchDown(View v,MotionEvent event);
 
         void onTouchUp(MotionEvent event);
 

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.viewpager.widget.ViewPager
 import com.julun.huanque.common.base.BaseFragment
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.PagerTab
@@ -70,15 +71,28 @@ class HomeHeartbeatFragment : BaseFragment() {
         }
 
 
-
     }
 
     private fun initViewPager() {
         view_pager.adapter = mPagerAdapter
         //配置预加载页数
 //        view_pager.offscreenPageLimit = 2
-        view_pager.currentItem = 0
+        view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
 
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                view_pager.noScroll = position == 0
+
+            }
+
+        })
+        view_pager.currentItem = 0
     }
 
     private fun initViewModel() {
@@ -148,6 +162,7 @@ class HomeHeartbeatFragment : BaseFragment() {
         }
         magic_indicator.navigator = mCommonNavigator
         ViewPagerHelper.bind(magic_indicator, view_pager)
+
     }
 
     /**

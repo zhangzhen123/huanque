@@ -1,4 +1,4 @@
-package com.julun.huanque.common.widgets
+package com.julun.huanque.common.widgets.viewpager
 
 import android.content.Context
 import android.util.AttributeSet
@@ -11,12 +11,20 @@ import androidx.viewpager.widget.ViewPager
  *@描述 不允许滚动的ViewPager
  */
 class NoScrollViewPager(context: Context, attrs: AttributeSet?) : ViewPager(context, attrs) {
-
+    var noScroll: Boolean = true
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        return false
+        return if (noScroll) {
+            false
+        } else {
+            super.onInterceptTouchEvent(ev)
+        }
     }
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
-        return false
+        return if (noScroll) {
+            false
+        } else {
+            super.onTouchEvent(ev)
+        }
     }
 }

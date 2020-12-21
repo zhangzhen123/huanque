@@ -167,8 +167,9 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
     };
     private SwipeTouchLayout.SwipeTouchListener mSwipeTouchListener = new SwipeTouchLayout.SwipeTouchListener() {
         @Override
-        public void onTouchDown(MotionEvent event) {
-
+        public void onTouchDown(View v,MotionEvent event) {
+            RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
+            mItemTouchHelper.startSwipe(childViewHolder);
         }
 
         @Override
@@ -178,8 +179,8 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
 
         @Override
         public void onTouchMove(View v, MotionEvent event) {
-            RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
-            mItemTouchHelper.startSwipe(childViewHolder);
+//            RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
+//            mItemTouchHelper.startSwipe(childViewHolder);
         }
     };
 }

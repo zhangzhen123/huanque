@@ -45,13 +45,19 @@ class NearbyFragment : BaseLazyFragment() {
             }
 
             override fun getCardRotateDegree(): Float {
-                return 20f
+                return 10f
             }
 
+            override fun getCardTranslateDistance(): Int {
+                return 15
+            }
             override fun enableHardWare(): Boolean {
                 return false
             }
 
+            override fun getSwipeThreshold(): Float {
+                return 0.15f
+            }
             override fun getSwipeOutAnimDuration(): Int {
                 return 200
             }
@@ -124,6 +130,9 @@ class NearbyFragment : BaseLazyFragment() {
         val layoutManager = CardLayoutManager(mReItemTouchHelper, setting)
         mRecyclerView.layoutManager = layoutManager
         mRecyclerView.adapter = cardsAdapter
+        cardsAdapter.setOnItemClickListener { adapter, view, position ->
+            logger.info("点击了${position}")
+        }
     }
 
     private fun initViewModel() {
