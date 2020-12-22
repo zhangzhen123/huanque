@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PasswordView">
+        <attr name="passwordLength" format="integer" />
+        <attr name="passwordPadding" format="dimension" />
+        <attr name="borderColor" format="color" />
+        <attr name="borderWidth" format="dimension" />
+        <attr name="cursorFlashTime" format="integer" />
+        <attr name="isCursorEnable" format="boolean" />
+        <attr name="cipherEnable" format="boolean" />
+        <attr name="cursorColor" format="color" />
+        <!--文字颜色-->
+        <attr name="textColor" format="color" />
+        <!--密码错误,下划线颜色-->
+        <attr name="errorBorderColor" format="color" />
+        <!--有内容之后的下划线颜色-->
+        <attr name="fullBorderColor" format="color" />
+        <attr name="mode" format="enum">
+            <enum name="underline" value="0" />
+            <enum name="rect" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>

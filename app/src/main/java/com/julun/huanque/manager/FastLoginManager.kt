@@ -38,10 +38,11 @@ object FastLoginManager {
             mPreListener?.preLoginResult(false)
             return
         }
+        JVerificationInterface.clearPreLoginCache()
         //预取号
         JVerificationInterface.preLogin(
             CommonInit.getInstance().getContext(),
-            5000
+            3000
         ) { code, content ->
             //预取号结果
             mPreviewCode = code

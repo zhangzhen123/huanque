@@ -6,8 +6,8 @@
 
     <View
         android:id="@+id/view_weixin"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:background="@drawable/shape_round_green_60"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -18,9 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@mipmap/login_weichat"
-        android:drawablePadding="4dp"
         android:gravity="center"
-        android:text="微信登录"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@id/view_weixin"

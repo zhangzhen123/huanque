@@ -7,10 +7,12 @@ import android.animation.ValueAnimator
 import android.content.DialogInterface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Bundle
 import android.view.*
 import android.view.animation.BounceInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.facebook.drawee.drawable.ScalingUtils
@@ -58,6 +60,11 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
 
     //不需要动画
     override fun needEnterAnimation() = false
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+//    }
 
     override fun initViews() {
 

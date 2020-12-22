@@ -1,6 +1,7 @@
 package com.julun.huanque.common.manager
 
 import android.app.Application
+import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
 import com.alibaba.android.arouter.launcher.ARouter
@@ -1245,8 +1246,8 @@ object RongCloudManager {
                     UserHeartManager.stopBeat()
                     LoginStatusUtils.logout()
                     //跳转登录页面
-                    ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
-                    ActivitiesManager.INSTANCE.finishActivityExcept("com.julun.huanque.activity.LoginActivity")
+                    ARouter.getInstance().build(ARouterConstant.Welcome_Activity).navigation()
+                    ActivitiesManager.INSTANCE.finishActivityExcept("com.julun.huanque.activity.WelcomeActivity")
 
                 }
                 RongIMClient.ConnectionStatusListener.ConnectionStatus.DISCONNECTED -> {

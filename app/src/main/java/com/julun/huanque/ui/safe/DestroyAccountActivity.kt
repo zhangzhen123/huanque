@@ -5,15 +5,13 @@ import android.view.View
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.R
-import com.julun.huanque.activity.LoginActivity
-import com.julun.huanque.activity.MainActivity
+import com.julun.huanque.activity.WelcomeActivity
 import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.SharedPreferencesUtils
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.core.ui.live.PlayerActivity
@@ -80,7 +78,7 @@ class DestroyAccountActivity : BaseVMActivity<DestroyAccountModel>() {
                 LoginManager.loginOutSuccess({
                     toast("账号注销成功")
                     setResult(BusiConstant.DESTROY_ACCOUNT_RESULT_CODE)
-                    startActivity<LoginActivity>()
+                    startActivity<WelcomeActivity>()
                     finish()
                 })
 

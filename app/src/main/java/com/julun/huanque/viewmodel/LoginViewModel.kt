@@ -22,6 +22,19 @@ import org.greenrobot.eventbus.EventBus
  *@描述 登录页面使用的微信
  */
 class LoginViewModel : BaseViewModel() {
+
+    companion object {
+        //登录弹窗初始化状态
+        const val Fragment_State_Init = "Fragment_State_Init"
+
+        //登录弹窗手机号验证码页面
+        const val Fragment_State_Phone = "Fragment_State_Phone"
+
+        //输入验证码页面
+        const val Fragment_State_Code = "Fragment_State_Code"
+
+    }
+
     private val userService: UserService by lazy {
         Requests.create(
             UserService::class.java
@@ -34,14 +47,25 @@ class LoginViewModel : BaseViewModel() {
     //登录状态
     val loginStatus: LiveData<Boolean> by lazy { LoginStatusUtils.getLoginStatus() }
 
+    //当前登录弹窗的状态
+    val currentFragmentState: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
+    val finishState: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //点击微信登录的标记位
+    val weixinLoginFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //是否等待显示登录弹窗
+    var mShowLoginFragment = false
+
     /**
      * 手机号一键登录
      */
     fun fastLogin(jToken: String) {
         viewModelScope.launch {
             LoginManager.fastLogin(jToken, success = { result ->
-//                loginData.postValue(result)
-                EventBus.getDefault().post(result)
+                loginData.postValue(result)
+//                EventBus.getDefault().post(result)
             }, error = {
 //                if (it is ResponseError) {
 //                    ToastUtils.show(it.busiMessage)
@@ -55,8 +79,8 @@ class LoginViewModel : BaseViewModel() {
         viewModelScope.launch {
             LoginManager.doLoginByWinXin(code) {
                 logger("weiXinLogin处理结果的线程：${Thread.currentThread().name}")
-//                loginData.postValue(it)
-                EventBus.getDefault().post(it)
+                loginData.postValue(it)
+//                EventBus.getDefault().post(it)
             }
 
         }

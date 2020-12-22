@@ -2,6 +2,47 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gray">
+
+    <com.julun.huanque.widget.AutoScrollRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/iv_bottom"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:background="@color/white"
+        android:src="@drawable/bitmap_startup_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="190dp"
+        android:background="@drawable/bg_login_transparent"
+        app:layout_constraintBottom_toTopOf="@id/iv_bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <View
+        android:id="@+id/view_white"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:background="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/iv_bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
