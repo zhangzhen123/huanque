@@ -82,6 +82,12 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
+    <style name="TranslucentTheme" parent="@style/CustomToolBarTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
 
     <style name="AppThemeL" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->

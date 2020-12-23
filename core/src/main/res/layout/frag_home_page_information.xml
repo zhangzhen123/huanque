@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:overScrollMode="never">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp">
+
+        <View
+            android:id="@+id/view_home_town"
+            android:layout_width="0px"
+            android:layout_height="55dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/bg_home_town"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/view_stature"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_stature"
+            android:layout_width="0px"
+            android:layout_height="55dp"
+            android:layout_marginLeft="9dp"
+            android:background="@drawable/bg_home_town"
+            app:layout_constraintLeft_toRightOf="@id/view_home_town"
+            app:layout_constraintRight_toLeftOf="@+id/view_constellation"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_constellation"
+            android:layout_width="0px"
+            android:layout_height="55dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/bg_home_town"
+            app:layout_constraintLeft_toRightOf="@id/view_stature"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_job"
+            android:layout_width="0px"
+            android:layout_height="55dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="9dp"
+            android:background="@drawable/bg_home_town"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/view_school"
+            app:layout_constraintTop_toBottomOf="@id/view_home_town" />
+
+        <View
+            android:id="@+id/view_school"
+            android:layout_width="0px"
+            android:layout_height="55dp"
+            android:layout_marginLeft="9dp"
+            android:background="@drawable/bg_home_town"
+            app:layout_constraintLeft_toRightOf="@id/view_job"
+            app:layout_constraintRight_toLeftOf="@+id/view_social"
+            app:layout_constraintTop_toTopOf="@id/view_job" />
+
+        <View
+            android:id="@+id/view_social"
+            android:layout_width="0px"
+            android:layout_height="55dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/bg_home_town"
+            app:layout_constraintLeft_toRightOf="@id/view_school"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view_job" />
+
+        <TextView
+            android:id="@+id/tv_home_town_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:drawableRight="@mipmap/icon_home_town"
+            android:drawablePadding="4dp"
+            android:text="家乡"
+            android:textColor="#B2B2B2"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_home_town"
+            app:layout_constraintLeft_toLeftOf="@id/view_home_town"
+            app:layout_constraintTop_toTopOf="@id/view_home_town"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_home_town"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/view_home_town"
+            app:layout_constraintLeft_toLeftOf="@id/view_home_town"
+            app:layout_constraintRight_toRightOf="@id/view_home_town"
+            app:layout_constraintTop_toBottomOf="@id/tv_home_town_title"
+            tools:text="浙江省/杭州市" />
+
+        <TextView
+            android:id="@+id/tv_stature_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:drawableRight="@mipmap/icon_stature"
+            android:drawablePadding="4dp"
+            android:text="身材"
+            android:textColor="#B2B2B2"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_stature"
+            app:layout_constraintLeft_toLeftOf="@id/view_stature"
+            app:layout_constraintTop_toTopOf="@id/view_stature"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_stature"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/view_stature"
+            app:layout_constraintLeft_toLeftOf="@id/view_stature"
+            app:layout_constraintRight_toRightOf="@id/view_stature"
+            app:layout_constraintTop_toBottomOf="@id/tv_stature_title"
+            tools:text="175cm/50kg" />
+
+
+        <TextView
+            android:id="@+id/tv_constellation_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:drawableRight="@mipmap/icon_constellation"
+            android:drawablePadding="4dp"
+            android:text="星座"
+            android:textColor="#B2B2B2"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_constellation"
+            app:layout_constraintLeft_toLeftOf="@id/view_constellation"
+            app:layout_constraintTop_toTopOf="@id/view_constellation"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_constellation"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/view_constellation"
+            app:layout_constraintLeft_toLeftOf="@id/view_constellation"
+            app:layout_constraintRight_toRightOf="@id/view_constellation"
+            app:layout_constraintTop_toBottomOf="@id/tv_constellation_title"
+            tools:text="白羊座" />
+
+        <TextView
+            android:id="@+id/tv_job_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:drawableRight="@mipmap/icon_job"
+            android:drawablePadding="4dp"
+            android:text="职业"
+            android:textColor="#B2B2B2"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_job"
+            app:layout_constraintLeft_toLeftOf="@id/view_job"
+            app:layout_constraintTop_toTopOf="@id/view_job"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_job"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/view_job"
+            app:layout_constraintLeft_toLeftOf="@id/view_job"
+            app:layout_constraintRight_toRightOf="@id/view_job"
+            app:layout_constraintTop_toBottomOf="@id/tv_job_title"
+            tools:text="人事" />
+
+        <TextView
+            android:id="@+id/tv_school_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:drawableRight="@mipmap/icon_school"
+            android:drawablePadding="4dp"
+            android:text="学校"
+            android:textColor="#B2B2B2"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_school"
+            app:layout_constraintLeft_toLeftOf="@id/view_school"
+            app:layout_constraintTop_toTopOf="@id/view_school"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_school"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/view_school"
+            app:layout_constraintLeft_toLeftOf="@id/view_school"
+            app:layout_constraintRight_toRightOf="@id/view_school"
+            app:layout_constraintTop_toBottomOf="@id/tv_school_title"
+            tools:text="浙江大学" />
+
+        <TextView
+            android:id="@+id/tv_social_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:drawableRight="@mipmap/icon_social_wish"
+            android:drawablePadding="4dp"
+            android:text="社交意愿"
+            android:textColor="#B2B2B2"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_social"
+            app:layout_constraintLeft_toLeftOf="@id/view_social"
+            app:layout_constraintTop_toTopOf="@id/view_social"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_social"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black_333"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/view_social"
+            app:layout_constraintLeft_toLeftOf="@id/view_social"
+            app:layout_constraintRight_toRightOf="@id/view_social"
+            app:layout_constraintTop_toBottomOf="@id/tv_social_title"
+            tools:text="寻找短期关系" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_tag"
+            android:layout_width="0px"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_job">
+
+            <TextView
+                android:id="@+id/tv_tag_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:includeFontPadding="false"
+                android:text="TA拥有的标签"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/ll_tag"
+                app:layout_constraintLeft_toLeftOf="@id/ll_tag"
+                app:layout_constraintTop_toTopOf="@id/ll_tag" />
+
+            <TextView
+                android:id="@+id/tv_tag_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                tools:text="2" />
+
+            <View
+                android:layout_width="0px"
+                android:layout_height="0px"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:drawableRight="@mipmap/icon_arrow_home_page"
+                android:text="更多"
+                android:textColor="#B2B2B2"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_tag"
+            android:layout_width="0px"
+            android:layout_height="125dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_tag">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_tag"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:overScrollMode="never"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_like_tag"
+            android:layout_width="0px"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rl_tag">
+
+            <TextView
+                android:id="@+id/tv_like_tag_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:includeFontPadding="false"
+                android:text="TA喜欢的标签"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/ll_tag"
+                app:layout_constraintLeft_toLeftOf="@id/ll_tag"
+                app:layout_constraintTop_toTopOf="@id/ll_tag" />
+
+            <TextView
+                android:id="@+id/tv_like_tag_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                tools:text="2" />
+
+            <View
+                android:layout_width="0px"
+                android:layout_height="0px"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:drawableRight="@mipmap/icon_arrow_home_page"
+                android:text="更多"
+                android:textColor="#B2B2B2"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_like_tag"
+            android:layout_width="0px"
+            android:layout_height="125dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_like_tag">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_like_tag"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        </RelativeLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

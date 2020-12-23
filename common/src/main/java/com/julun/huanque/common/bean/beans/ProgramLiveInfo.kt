@@ -159,7 +159,12 @@ class AuthorFollowBean : Serializable {
 }
 
 
-class SingleGame(var gameCode: String = "", var pic: String = "", var gameUrl: String = "", var extJsonCfg: String? = null) :
+class SingleGame(
+    var gameCode: String = "",
+    var pic: String = "",
+    var gameUrl: String = "",
+    var extJsonCfg: String? = null
+) :
     Serializable
 /**
  * 直播间显示控件
@@ -640,8 +645,67 @@ data class HomePageInfo(
     //勋章数据
     var iconList: MutableList<String> = mutableListOf(),
     //直播间内的动态数据
-    var post: PostInHomePage = PostInHomePage()
+    var post: PostInHomePage = PostInHomePage(),
+    /*2.0.0新增字段*/
+    //当前用户ID
+    var currUserId: Long = 0,
+    //当前用户性别
+    var currSexType: String = "",
+    //在线状态
+    var online: HomeOnLineBean? = null,
+    //他人主页认证的标签列表
+    var authTagList: MutableList<HomeTagBean> = mutableListOf(),
+    //他人主页喜欢的标签列表
+    var likeTagList: MutableList<HomeTagBean> = mutableListOf(),
+    //社交意愿
+    var wishList: SocialWishBean? = null
 ) : Serializable
+
+/**
+ * 社交意愿对象
+ */
+data class SocialWishBean(
+    //社交意愿code
+    var wishType: String = "",
+    //社交意愿文本
+    var wishTypeText: String = ""
+) : Serializable
+
+/**
+ * 主页tag对象
+ */
+data class HomeTagBean(
+    //标签ID
+    var tagId: Long = 0,
+    //标签名称
+    var tagName: String = "",
+    //标签Icon
+    var tagIcon: String = "",
+    //标签上显示的图片
+    var tagPic: String = "",
+    //喜欢或者认证的标记
+    var mark: String = "",
+    //点赞数量
+    var praiseNum: Long = 0,
+    //审核通过照片数量
+    var picNum: Int = 0
+) : Serializable
+
+/**
+ * 主页在线状态
+ */
+data class HomeOnLineBean(
+    //在线状态
+    var onlineStatus: String = "",
+    //状态文案
+    var onlineStatusText: String = ""
+) : Serializable {
+    companion object {
+        //在线
+        const val Online = "Online"
+    }
+
+}
 
 /**
  * 主页里面使用的动态数据
@@ -661,19 +725,10 @@ data class PostInHomePage(
  * 我的足迹使用的对象
  */
 data class HomeCity(
-    //访问人的常驻地
-    var curryCityName: String = "",
-    //访问人的头像
-    var curryHeadPic: String = "",
-    //距离
-    var distance: Int = 0,
-    //主页用户常驻地
-    var homeCityName: String = "",
-    //主页用户头像
-    var homeHeadPic: String = "",
-    //距离 直接显示
-    var distanceStr : String = ""
-
+    //距离(单位米)
+    var distance: Long = 0,
+    //主页用户城市名称
+    var curryCityName: String = ""
 ) : Serializable
 
 /**
@@ -866,7 +921,7 @@ data class CircleGroup(
  */
 data class AccountBean(
     //是否可以新增分身账号
-    var canAdd : String = "",
+    var canAdd: String = "",
     //账号列表
     var subList: MutableList<SingleAccount> = mutableListOf(),
     //不能创建账号的原因

@@ -265,7 +265,7 @@ interface UserService {
     /**
      * 主页信息
      */
-    @POST("user/acct/info/home")
+    @POST("user/acct/info/homePage")
     suspend fun homeInfo(@Body form: UserIdForm): Root<HomePageInfo>
 
     /**
