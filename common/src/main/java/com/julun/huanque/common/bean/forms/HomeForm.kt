@@ -39,3 +39,12 @@ class PostListsForm(var offset: Int, var userId: Long?)
 class PostForm(var postId: Long)
 
 class GroupPostForm(var groupId: Long? = null, var orderType: String? = null, var offset: Int? = null)
+
+class NearbyForm(
+    var offset: Int,
+    var lat: Double,
+    var lng: Double,
+    var province: String = "",
+    var city: String = "",
+    var districe: String = ""
+)

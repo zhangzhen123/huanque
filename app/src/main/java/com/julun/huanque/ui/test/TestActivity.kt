@@ -379,6 +379,8 @@ class TestActivity : BaseActivity() {
                 .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
                 //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
                 .enableCrop(true)// 是否裁剪
+                .cropWH(100,100)
+                .withAspectRatio(1, 1)
                 .compress(true)// 是否压缩
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
                 //.compressSavePath(getPath())//压缩图片保存地址
@@ -408,7 +410,7 @@ class TestActivity : BaseActivity() {
                 .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                 //.cropCompressQuality(90)// 裁剪压缩质量 默认100
                 .minimumCompressSize(100)// 小于100kb的图片不压缩
-                //.cropWH()// 裁剪宽高比，设置如果大于图片本身宽高则无效
+//                .cropWH(100,100)// 裁剪宽高比，设置如果大于图片本身宽高则无效
                 //.rotateEnabled(true) // 裁剪是否可旋转图片
                 //.scaleEnabled(true)// 裁剪是否可放大缩小图片
                 //.videoQuality()// 视频录制质量 0 or 1

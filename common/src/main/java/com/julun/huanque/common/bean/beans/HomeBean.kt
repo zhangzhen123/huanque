@@ -376,3 +376,50 @@ data class OpenInstallParamsBean(
     //传递给后台参数
     var h5PID: String? = null
 ) : Serializable
+
+
+class NearbyListData<T> : RootListData<T>() {
+    var myTagList: List<UserLikeTag> = mutableListOf()
+}
+
+data class NearbyUserBean(
+    var age: Int = 0,
+    var area: String = "",
+    var coverPic: String = "",
+    var coverPicList: List<String> = listOf(),
+    var distance: Int = 0,
+    var hasRealName: String = "",
+    var lat: String = "",
+    var likeTagList: List<UserLikeTag> = listOf(),
+    var lon: String = "",
+    var nickname: String = "",
+    var sex: String = "",
+    var tagList: MutableList<UserLikeTag> = mutableListOf(),
+    var userId: Long = 0L,
+    var interactTips: String = ""
+)
+
+
+data class UserLikeTag(
+    var mark: String = "",
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = "",
+    var tagPic: String = ""
+) {
+
+    override fun hashCode(): Int {
+        return tagId.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as UserLikeTag
+
+        if (tagId != other.tagId) return false
+
+        return true
+    }
+}

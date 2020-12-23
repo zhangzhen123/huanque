@@ -2,9 +2,8 @@ package com.julun.huanque.common.net.services
 
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
-import com.julun.huanque.common.bean.beans.HomeItemBean
-import com.julun.huanque.common.bean.beans.HomeListData
-import com.julun.huanque.common.bean.beans.HomeRecomItem
+import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.NearbyForm
 import com.julun.huanque.common.bean.forms.RecomListForm
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -34,6 +33,12 @@ interface HomeService {
      */
     @POST("social/friend/home/recomList")
     suspend fun homeRecomList(@Body form: RecomListForm): Root<RootListData<HomeItemBean>>
+
+    /**
+     * 获取附近列表
+     */
+    @POST("social/friend/home/nearby")
+    suspend fun getNearBy(@Body form: NearbyForm): Root<NearbyListData<NearbyUserBean>>
 
 
 }
