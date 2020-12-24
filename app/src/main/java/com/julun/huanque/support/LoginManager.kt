@@ -9,6 +9,7 @@ import com.julun.huanque.common.bean.forms.MobileQuickForm
 import com.julun.huanque.common.bean.forms.UserIdForm
 import com.julun.huanque.common.bean.forms.WeiXinForm
 import com.julun.huanque.common.constant.ARouterConstant
+import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.helper.StorageHelper
@@ -86,7 +87,8 @@ object LoginManager {
         try {
             isLogging = true
             val deviceID = SmAntiFraud.getDeviceId() ?: ""
-            val result = userService.weiXinLogin(WeiXinForm(code, BuildConfig.WX_APP_ID, deviceID)).dataConvert()
+            val result = userService.weiXinLogin(WeiXinForm(code, BuildConfig.WX_APP_ID, deviceID))
+                .dataConvert()
             loginSuccess(result, WECHAT_LOGIN, success)
 
         } catch (e: Exception) {
@@ -106,7 +108,12 @@ object LoginManager {
     }
 
     //手机登录
-    suspend fun loginByMobile(phoneNum: String, code: String, success: (Session) -> Unit, error: NError? = null) {
+    suspend fun loginByMobile(
+        phoneNum: String,
+        code: String,
+        success: (Session) -> Unit,
+        error: NError? = null
+    ) {
         if (isLogging) {
             ToastUtils.show("当前正在登录中，请不要重复操作")
             return
@@ -114,7 +121,13 @@ object LoginManager {
         try {
             isLogging = true
             val result =
-                userService.mobileLogin(MobileLoginForm(phoneNum, code, shuMeiDeviceId = SmAntiFraud.getDeviceId() ?: ""))
+                userService.mobileLogin(
+                    MobileLoginForm(
+                        phoneNum,
+                        code,
+                        shuMeiDeviceId = SmAntiFraud.getDeviceId() ?: ""
+                    )
+                )
                     .dataConvert()
             loginSuccess(result, MOBILE_LOGIN, success)
 
@@ -126,7 +139,7 @@ object LoginManager {
     }
 
     //分身账号登录
-    suspend fun loginBySubAccount(userId : Long,success: (Session) -> Unit){
+    suspend fun loginBySubAccount(userId: Long, success: (Session) -> Unit) {
         if (userId == SessionUtils.getUserId()) {
             //准备登录的账号就是当前登录的账号
             return
@@ -140,8 +153,8 @@ object LoginManager {
             val result =
                 userService.loginSubAccount(UserIdForm(userId))
                     .dataConvert()
-            loginSuccess(result, MOBILE_LOGIN,success)
-        }catch (e: Exception) {
+            loginSuccess(result, -1, success)
+        } catch (e: Exception) {
             e.printStackTrace()
         } finally {
             isLogging = false
@@ -159,7 +172,9 @@ object LoginManager {
         }
         try {
             isLogging = true
-            val result = userService.mobileQuick(MobileQuickForm(jToken, SmAntiFraud.getDeviceId() ?: "")).dataConvert()
+            val result =
+                userService.mobileQuick(MobileQuickForm(jToken, SmAntiFraud.getDeviceId() ?: ""))
+                    .dataConvert()
             loginSuccess(result, MOBILE_FAST_LOGIN, success)
 
         } catch (e: Exception) {
@@ -196,9 +211,12 @@ object LoginManager {
         type: Int = 0,
         success: (Session) -> Unit
     ) {
+        if (type >= 0) {
+            SharedPreferencesUtils.commitInt(SPParamKey.Last_Login, type)
+        }
         SessionUtils.setSession(session)
         //如果登录的账号是注册完整的 就执行完整的登录后续操作（心跳，融云等等）
-        SPUtils.commitString(SPParamKey.AgreeUp,session.agreeUp)
+        SPUtils.commitString(SPParamKey.AgreeUp, session.agreeUp)
         StorageHelper.setDefaultHomeTab(session.defaultHomeTab)
         StorageHelper.setHideSocialTab(session.hideSocialTab)
         if (session.regComplete) {

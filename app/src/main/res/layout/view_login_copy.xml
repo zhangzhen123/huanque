@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/con_paste"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="44dp"
+    android:layout_height="37dp"
+    android:layout_gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/tv_paste"
+        android:layout_width="44dp"
+        android:layout_height="28dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_black_4"
+        android:gravity="center"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:text="粘贴"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_arrow"
+        android:layout_width="10dp"
+        android:layout_height="5dp"
+        android:src="@mipmap/icon_arrow_bottom"
+        app:layout_constraintLeft_toLeftOf="@id/tv_paste"
+        app:layout_constraintRight_toRightOf="@id/tv_paste"
+        app:layout_constraintTop_toBottomOf="@id/tv_paste" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -55,6 +55,9 @@ class LoginViewModel : BaseViewModel() {
     //点击微信登录的标记位
     val weixinLoginFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //开始粘贴
+    val pasteFlag : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //是否等待显示登录弹窗
     var mShowLoginFragment = false
 

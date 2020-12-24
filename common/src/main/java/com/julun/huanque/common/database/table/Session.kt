@@ -36,6 +36,8 @@ data class Session(
     //1.6新增登陆后返回首页默认定位的位置
     var defaultHomeTab: String = "",
     //1.8新增是否隐藏首页的交友栏
-    var hideSocialTab: Boolean = false
+    var hideSocialTab: Boolean = false,
+    //社交意愿是否完善
+    var wishComplete: String = ""
 
 )

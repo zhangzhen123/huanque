@@ -25,6 +25,9 @@ class SelectSexViewModel : BaseViewModel() {
     //用户数据
     val infoBean: MutableLiveData<UpdateSexBean> by lazy { MutableLiveData<UpdateSexBean>() }
 
+    //性别数据
+    val sexData: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
     /**
      * 设置性别
      */
@@ -47,6 +50,10 @@ class SelectSexViewModel : BaseViewModel() {
                 if (result.imToken.isNotEmpty()) {
                     SessionUtils.setRongImToken(result.imToken)
                 }
+                if (result.birthday.isNotEmpty()) {
+                    SessionUtils.setBirthday(result.birthday)
+                }
+
                 LoginManager.loginSuccessComplete()
             }, {})
         }

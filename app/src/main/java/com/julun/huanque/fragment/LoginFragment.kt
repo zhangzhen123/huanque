@@ -3,12 +3,16 @@ package com.julun.huanque.fragment
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
-import androidx.annotation.NonNull
+import android.view.inputmethod.InputMethodManager
+import android.widget.PopupWindow
+import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -16,34 +20,32 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.julun.huanque.R
-import com.julun.huanque.activity.MainActivity
-import com.julun.huanque.activity.PhoneNumLoginActivity
-import com.julun.huanque.activity.SelectSexActivity
 import com.julun.huanque.common.constant.Agreement
-import com.julun.huanque.common.helper.DensityHelper
+import com.julun.huanque.common.constant.CommentOrderType
+import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.web.WebActivity
-import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.common.utils.VerificationUtils
-import com.julun.huanque.support.WXApiManager
+import com.julun.huanque.common.utils.*
+import com.julun.huanque.support.LoginManager
 import com.julun.huanque.viewmodel.LoginViewModel
 import com.julun.huanque.viewmodel.PhoneNumLoginViewModel
 import com.julun.huanque.widget.PasswordView
-import com.trello.rxlifecycle4.android.FragmentEvent
-import com.trello.rxlifecycle4.kotlin.bind
 import com.trello.rxlifecycle4.kotlin.bindToLifecycle
-import com.trello.rxlifecycle4.kotlin.bindUntilEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.android.synthetic.main.act_phone_num.*
 import kotlinx.android.synthetic.main.frag_login.*
-import org.jetbrains.anko.padding
+import kotlinx.android.synthetic.main.frag_login.phone_num
+import kotlinx.android.synthetic.main.frag_login.phone_num_clear
+import kotlinx.android.synthetic.main.frag_login.register_rule
+import kotlinx.android.synthetic.main.frag_login.tv_register_privacy
 import org.jetbrains.anko.sdk23.listeners.textChangedListener
+import org.jetbrains.anko.textColor
 import java.util.concurrent.TimeUnit
 
 /**
@@ -84,6 +86,14 @@ class LoginFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+        phone_num.post {
+            val num = StorageHelper.getPhoneNumCache()
+            if (num.isNotEmpty()) {
+                phone_num.setText(num)
+                phone_num.setSelection(phone_num.text.length)
+            }
+        }
+
     }
 
 //    override fun getLayoutId() = R.layout.frag_login
@@ -92,6 +102,16 @@ class LoginFragment : BottomSheetDialogFragment() {
 
     //    override
     fun initViews() {
+        val lastLogin = SharedPreferencesUtils.getInt(SPParamKey.Last_Login, -1)
+        iv_last_login_wx.hide()
+        iv_last_login_phone.hide()
+
+        if (lastLogin == LoginManager.MOBILE_FAST_LOGIN || lastLogin == LoginManager.MOBILE_LOGIN) {
+            iv_last_login_phone.show()
+        }
+        if (lastLogin == LoginManager.WECHAT_LOGIN) {
+            iv_last_login_wx.show()
+        }
         view_weixin.onClickNew {
             mLoginViewModel.weixinLoginFlag.value = true
 //            val intent = Intent(requireActivity(), TestAnimationActivity::class.java)
@@ -173,6 +193,10 @@ class LoginFragment : BottomSheetDialogFragment() {
             }
 
         })
+        password_view.setOnLongClickListener {
+            switchPopupWindow(password_view)
+            return@setOnLongClickListener true
+        }
     }
 
     override fun onStart() {
@@ -213,34 +237,8 @@ class LoginFragment : BottomSheetDialogFragment() {
             }
 
         }
-//        setDialogSize1()
     }
 
-    /**
-     * 宽度显示比例
-     */
-    protected fun setDialogSize1(
-        gravity: Int = Gravity.BOTTOM,
-        width: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
-        height: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
-        padding: Int = 0
-    ) {
-        val window = dialog?.window ?: return
-        val params = window.attributes
-        window.decorView.padding = DensityHelper.dp2px(padding)
-        params.gravity = gravity
-        if (width > 0) {
-            params.width = DensityHelper.dp2px(width)
-        } else if (ViewGroup.LayoutParams.WRAP_CONTENT == width || ViewGroup.LayoutParams.MATCH_PARENT == width) {
-            params.width = width
-        }
-        if (height > 0) {
-            params.height = DensityHelper.dp2px(height)
-        } else if (ViewGroup.LayoutParams.WRAP_CONTENT == height || ViewGroup.LayoutParams.MATCH_PARENT == height) {
-            params.height = height
-        }
-        window.attributes = params
-    }
 
     /**
      * 初始化ViewModel
@@ -251,6 +249,7 @@ class LoginFragment : BottomSheetDialogFragment() {
                 LoginViewModel.Fragment_State_Phone -> {
                     //输入手机号状态
                     showInfoAnimation()
+//                    ScreenUtils.showSoftInput(phone_num)
                 }
                 LoginViewModel.Fragment_State_Code -> {
                     //输入验证码页面
@@ -263,6 +262,14 @@ class LoginFragment : BottomSheetDialogFragment() {
 
         })
 
+        mLoginViewModel.pasteFlag.observe(this, Observer {
+            if (it == true) {
+                //粘贴操作
+                paste()
+                mLoginViewModel.pasteFlag.value = null
+            }
+        })
+
         mPhoneNumLoginViewModel.codeReponse.observe(this, Observer {
             if (it == true) {
                 //验证码发送成功
@@ -273,6 +280,7 @@ class LoginFragment : BottomSheetDialogFragment() {
         mPhoneNumLoginViewModel.codeSendSuccess.observe(this, Observer {
             if (it == true) {
                 mLoginViewModel.currentFragmentState.value = LoginViewModel.Fragment_State_Code
+                mPhoneNumLoginViewModel.codeSendSuccess.value = null
             }
         })
 
@@ -282,11 +290,13 @@ class LoginFragment : BottomSheetDialogFragment() {
             if (it != null && it) {
                 //极验通过  开始倒计时
                 startTick()
+                mPhoneNumLoginViewModel?.tickState?.value = null
             }
         })
 
         mPhoneNumLoginViewModel.codeErrorFlag.observe(this, Observer {
             if (it == true) {
+                mPhoneNumLoginViewModel.codeErrorFlag.value = null
                 //验证码错误
                 password_view.error = true
                 Observable.timer(2, TimeUnit.SECONDS)
@@ -299,6 +309,35 @@ class LoginFragment : BottomSheetDialogFragment() {
             }
         })
 
+    }
+
+    //粘贴
+    private fun paste() {
+        // 获取系统剪贴板
+        val clipboard =
+            requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+
+        // 获取剪贴板的剪贴数据集
+        val clipData = clipboard?.primaryClip ?: return
+        val numList = mutableListOf<String>("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
+        if (clipData.itemCount > 0) {
+            // 从数据集中获取（粘贴）第一条文本数据
+            val text = clipData.getItemAt(0).text?.toString() ?: return
+            text.forEach {
+                if (!numList.contains("$it")) {
+                    //非数字
+                    ToastUtils.show("复制的文本中应该全部为数字")
+                    return
+                }
+            }
+            if (text.length > 4) {
+                ToastUtils.show("复制的数字超过4位")
+                return
+            }
+            text.forEach {
+                password_view.add("$it")
+            }
+        }
     }
 
     //倒计时使用
@@ -412,6 +451,38 @@ class LoginFragment : BottomSheetDialogFragment() {
     }
 
 
+    //复制PopupWindow
+    private var mCopyPopupWindow: PopupWindow? = null
+
+    /**
+     * 显示热度和时间切换的PopupWindow
+     */
+    private fun switchPopupWindow(parentView: View) {
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.view_login_copy, null)
+        val pWidht = (ScreenUtils.getScreenWidth() - dp2px(75)) / 4
+        mCopyPopupWindow = PopupWindow(view, pWidht, dp2px(37))
+        val drawable = ColorDrawable(Color.TRANSPARENT)
+        mCopyPopupWindow?.setBackgroundDrawable(drawable)
+        mCopyPopupWindow?.isOutsideTouchable = true
+        view.findViewById<View>(R.id.con_paste).onClickNew {
+            //粘贴
+            mLoginViewModel.pasteFlag.value = true
+            mCopyPopupWindow?.dismiss()
+        }
+        //获取自身的长宽高
+        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        val popupHeight = view.measuredHeight;
+        val popupWidth = view.measuredWidth;
+        mCopyPopupWindow?.showAsDropDown(
+            parentView,
+            0,
+            -(popupHeight + parentView.height - dp2px(17))
+        )
+//        mCopyPopupWindow?.showAtLocation(parentView, Gravity.LEFT or Gravity.TOP, 0, 0)
+//        mCopyPopupWindow?.show
+
+    }
+
     /**
      * 验证手机号
      */
@@ -439,11 +510,26 @@ class LoginFragment : BottomSheetDialogFragment() {
         mLoginViewModel.finishState.value = true
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        Observable.timer(500, TimeUnit.MILLISECONDS)
+            .bindToLifecycle(con)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                phone_num.requestFocus()
+                ScreenUtils.showSoftInput(phone_num)
+
+            }, {})
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         mShowCodeSet.cancel()
         mShowInfoSet.cancel()
         mBottomSheetBehavior?.removeBottomSheetCallback(mBottomSheetBehaviorCallback)
+        //隐藏键盘
+        closeKeyBoard()
     }
 
 }

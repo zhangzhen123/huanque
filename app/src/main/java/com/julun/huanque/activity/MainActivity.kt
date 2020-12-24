@@ -272,8 +272,8 @@ class MainActivity : BaseActivity() {
 
         mMessageViewModel.chatRoom()
 
-        val birthday = intent.getStringExtra(ParamConstant.Birthday)
-        if (birthday?.isNotEmpty() == true) {
+        val birthday = SessionUtils.getBirthday()
+        if (birthday.isNotEmpty()) {
             val mUpdateInfoFragment = UpdateInfoFragment.newInstance(birthday)
             addOrderDialog(mUpdateInfoFragment)
         }

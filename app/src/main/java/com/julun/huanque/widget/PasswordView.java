@@ -300,7 +300,7 @@ public class PasswordView extends View {
     /**
      * 增加
      */
-    private String add(String c) {
+    public String add(String c) {
         String addText = null;
         if (cursorPosition < passwordLength) {
             addText = c;
@@ -448,10 +448,11 @@ public class PasswordView extends View {
              */
             requestFocus();
             inputManager.showSoftInput(this, InputMethodManager.SHOW_FORCED);
-            return true;
+//            return true;
         }
         return super.onTouchEvent(event);
     }
+
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {

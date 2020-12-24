@@ -54,9 +54,6 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
     companion object {
         fun newInstance(birthday: String): UpdateInfoFragment {
             val fragment = UpdateInfoFragment()
-            val bundle = Bundle()
-            bundle.putString(ParamConstant.Birthday, birthday)
-            fragment.arguments = bundle
             return fragment
         }
     }
@@ -91,7 +88,8 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
 //            }
 //        }
 
-        mBirthday = arguments?.getString(ParamConstant.Birthday, "") ?: ""
+        mBirthday = SessionUtils.getBirthday()
+        SessionUtils.setBirthday("")
         tv_bir.text = mBirthday
 
         mViewModel.nicknameChange = false

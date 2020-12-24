@@ -18,8 +18,8 @@
 
     <View
         android:id="@+id/view_weixin"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginLeft="37dp"
         android:layout_marginRight="37dp"
         android:layout_marginBottom="60dp"
@@ -42,6 +42,18 @@
         app:layout_constraintRight_toRightOf="@id/view_weixin"
         app:layout_constraintTop_toTopOf="@id/view_weixin" />
 
+    <ImageView
+        android:id="@+id/iv_last_login_wx"
+        android:layout_width="40dp"
+        android:layout_height="17dp"
+        android:layout_marginLeft="20dp"
+        android:src="@mipmap/icon_last_login"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/view_weixin"
+        app:layout_constraintLeft_toLeftOf="@id/view_weixin"
+        app:layout_constraintTop_toTopOf="@id/view_weixin"
+        tools:visibility="visible" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/con_information"
@@ -51,7 +63,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/tv_phone_code"
@@ -67,6 +79,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_last_login_phone"
+            android:layout_width="40dp"
+            android:layout_height="17dp"
+            android:layout_marginRight="45dp"
+            android:src="@mipmap/icon_last_login"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/tv_phone_code"
+            app:layout_constraintRight_toRightOf="@id/tv_phone_code"
+            app:layout_constraintTop_toTopOf="@id/tv_phone_code"
+            tools:visibility="visible" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/con_phone_number"
@@ -138,6 +162,16 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <View
+            android:layout_width="0px"
+            android:layout_height="1dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="#F6F6F6"
+            app:layout_constraintBottom_toBottomOf="@id/con_phone_number"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
 
         <ImageView
             android:id="@+id/iv_title"
@@ -161,7 +195,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <TextView
             android:id="@+id/tv_resend"

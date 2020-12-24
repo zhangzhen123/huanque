@@ -132,6 +132,8 @@ object SPParamKey {
 
     //盲盒是否显示的标记位
     const val Blind_Box_Show = "Blind_Box_Show"
+    //上一次登录方式
+    const val Last_Login = "Last_Login"
 }
 
 /**

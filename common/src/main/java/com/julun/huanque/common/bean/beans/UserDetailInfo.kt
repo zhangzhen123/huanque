@@ -64,8 +64,10 @@ data class UpdateSexBean(
     //生日
     var birthday: String = "",
     //邀请码
-    var invitationCode: String = ""
-)
+    var invitationCode: String = "",
+    //标签数据
+    var tagInfo: LoginTagInfo = LoginTagInfo()
+) : Serializable
 
 data class VoiceSignPointBean(
     var points: List<SignPoint> = listOf()

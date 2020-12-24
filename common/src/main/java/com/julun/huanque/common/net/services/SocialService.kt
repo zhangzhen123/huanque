@@ -426,4 +426,13 @@ interface SocialService {
      */
     @POST("social/group/chose")
     suspend fun groupChose(@Body form: CircleGroupTypeForm): Root<MyGroupInfo>
+
+    /**
+     * 保存标签数据
+     */
+    @POST("social/user/tag/initLike")
+    suspend fun initLikeTag(@Body form: TagIdsForm): Root<VoidResult>
+
+    @POST("social/user/tag/socialType")
+    suspend fun socialType(@Body body: EmptyForm = EmptyForm()): Root<LoginTagInfo>
 }

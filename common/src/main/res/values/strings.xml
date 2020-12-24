@@ -528,8 +528,8 @@
     <string name="juveniles_protect_attention">为维护良好互联网环境，呵护未成年人健康成长。%1$s禁止未成年人登录使用，如果您是监护人，请设置家长密码。
 \n\n
 设置家长密码后，每次打开app需要验证密码。</string>
-    <string name="register_rule_02">《服务协议》</string>
-    <string name="register_rule_01_fragment">登录即视为同意</string>
+    <string name="register_rule_02">《注册协议》</string>
+    <string name="register_rule_01_fragment">未注册手机登录自动注册。同意</string>
 
     <!-- 欢鹊公约 -->
     <string name="html_spec">rules/mgrSpec.html</string>

@@ -34,9 +34,7 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.LoginPicBean
 import com.julun.huanque.common.bean.beans.OpenInstallParamsBean
 import com.julun.huanque.common.bean.events.WeiXinCodeEvent
-import com.julun.huanque.common.constant.ARouterConstant
-import com.julun.huanque.common.constant.Agreement
-import com.julun.huanque.common.constant.SPParamKey
+import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.ChannelCodeHelper
 import com.julun.huanque.common.helper.DensityHelper
 import com.julun.huanque.common.interfaces.LocalPreLoginListener
@@ -44,11 +42,14 @@ import com.julun.huanque.common.manager.ActivitiesManager
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.*
 import com.julun.huanque.common.utils.permission.rxpermission.RxPermissions
 import com.julun.huanque.fragment.LoginFragment
 import com.julun.huanque.fragment.PersonalInformationProtectionFragment
 import com.julun.huanque.manager.FastLoginManager
+import com.julun.huanque.support.LoginManager
 import com.julun.huanque.support.WXApiManager
 import com.julun.huanque.viewmodel.LoginViewModel
 import com.julun.huanque.viewmodel.PersonalInformationProtectionViewModel
@@ -328,8 +329,13 @@ class WelcomeActivity : BaseActivity() {
             RongCloudManager.connectRongCloudServerWithComplete(isFirstConnect = true)
 //            UserHeartManager.startOnline()
             //登录成功并且数据已经填写完成
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            if (SessionUtils.getWishComplete() == BusiConstant.False) {
+                val intent = Intent(this, SelectTagActivity::class.java)
+                startActivity(intent)
+            } else {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
             finishFlag = true
         } else {
             if (!mPreLoginSuccess) {
@@ -435,7 +441,7 @@ class WelcomeActivity : BaseActivity() {
         uiConfigBuilder.setNavHidden(true)
 
         //设置手机号码
-        uiConfigBuilder.setNumberFieldOffsetBottomY(151)
+        uiConfigBuilder.setNumberFieldOffsetBottomY(160)
             .setNumberColor(GlobalUtils.getColor(R.color.white))
             .setNumberSize(16)
         //设置slogan
@@ -448,7 +454,7 @@ class WelcomeActivity : BaseActivity() {
 
 
         //设置登录按钮
-        val phoneNumWidthPx = widthPx - DensityHelper.dp2px(38) * 2
+        val phoneNumWidthPx = widthPx - DensityHelper.dp2px(30) * 2
         val viewWidth = DensityHelper.px2dp(phoneNumWidthPx.toFloat())
 //        uiConfigBuilder.setLogBtnText(GlobalUtils.getString(R.string.owner_phone_number_fast_login))
         uiConfigBuilder.setLogBtnText("")
@@ -475,15 +481,14 @@ class WelcomeActivity : BaseActivity() {
             GlobalUtils.getColor(R.color.black_666)
         )
         uiConfigBuilder.setPrivacyText(
-            "同意", "、", "和"
+            "未注册手机登录自动注册。同意", "、", "和"
             , "并授权获取本机号码"
         )
         uiConfigBuilder.setPrivacyCheckboxHidden(true)
         uiConfigBuilder.setPrivacyTextCenterGravity(true)
         uiConfigBuilder.setPrivacyWithBookTitleMark(true)
         uiConfigBuilder.setPrivacyTextWidth(viewWidth)
-        uiConfigBuilder.setPrivacyTextCenterGravity(false)
-        //        uiConfigBuilder.setPrivacyOffsetX(52-15);
+        uiConfigBuilder.setPrivacyOffsetX(30);
         uiConfigBuilder.setPrivacyTextSize(10)
         uiConfigBuilder.setPrivacyOffsetY(10)
 
@@ -523,7 +528,7 @@ class WelcomeActivity : BaseActivity() {
         )
         layoutParamPhoneLogin.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
         layoutParamPhoneLogin.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE)
-        layoutParamPhoneLogin.setMargins(0, 0, 0, DensityHelper.dp2px(120))
+        layoutParamPhoneLogin.setMargins(0, 0, 0, DensityHelper.dp2px(130))
         val tvPhoneLogin = TextView(this)
         tvPhoneLogin.layoutParams = layoutParamPhoneLogin
         tvPhoneLogin.text = "其他手机号码登录"
@@ -539,14 +544,23 @@ class WelcomeActivity : BaseActivity() {
             }
         }
 
+        val lastLogin = SharedPreferencesUtils.getInt(SPParamKey.Last_Login, -1)
+
         //微信登录
         val view_WX = LayoutInflater.from(this).inflate(R.layout.view_weixin, null)
-        val tempWidth = dp2px(40)
-        val layoutParamWXLogin = RelativeLayout.LayoutParams(tempWidth, tempWidth)
+        val tempWidth = dp2px(60)
+        val layoutParamWXLogin =
+            RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, tempWidth)
         layoutParamWXLogin.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
         layoutParamWXLogin.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE)
         layoutParamWXLogin.setMargins(0, 0, 0, DensityHelper.dp2px(60))
         view_WX.layoutParams = layoutParamWXLogin
+        val iv_last_login_wx = view_WX.findViewById<View>(R.id.iv_last_login_wx)
+        if (lastLogin == LoginManager.WECHAT_LOGIN) {
+            iv_last_login_wx.show()
+        } else {
+            iv_last_login_wx.hide()
+        }
         uiConfigBuilder.addCustomView(view_WX, false) { _, _ ->
             mLoginViewModel.weixinLoginFlag.postValue(true)
 //            view_weixin.performClick()
@@ -567,10 +581,26 @@ class WelcomeActivity : BaseActivity() {
         //关闭按钮不显示
 //        uiConfigBuilder.addCustomView(closeButton, true, null)
 
+        //手机号上次登录视图
+        val phoneLastLoginView = ImageView(this)
+
+        val mPhoneLastLogin =
+            RelativeLayout.LayoutParams(DensityHelper.dp2px(40), DensityHelper.dp2px(17))
+        mPhoneLastLogin.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE)
+        mPhoneLastLogin.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+        mPhoneLastLogin.setMargins(0, 0, dp2px(75), DensityHelper.dp2px(200))
+//        mLayoutParams1.setMargins(DensityHelper.dp2px(10), DensityHelper.dp2px(10), 0, 0)
+        phoneLastLoginView.layoutParams = mPhoneLastLogin
+        phoneLastLoginView.setImageResource(R.mipmap.icon_last_login)
+        if (lastLogin == LoginManager.MOBILE_FAST_LOGIN || lastLogin == LoginManager.MOBILE_LOGIN) {
+            uiConfigBuilder.addCustomView(phoneLastLoginView, false, null)
+        }
+
         //设置web导航栏
         uiConfigBuilder.setPrivacyNavColor(Color.WHITE)
         uiConfigBuilder.setPrivacyNavTitleTextColor(GlobalUtils.getColor(R.color.black_333))
         uiConfigBuilder.setPrivacyNavTitleTextSize(18)
+
 
 //        val closeView = ImageView(this)
 //        val mLayoutParams2 = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -654,6 +684,7 @@ class WelcomeActivity : BaseActivity() {
                     SelectSexActivity.newInstance(this)
                 }
             }
+            ScreenUtils.hideSoftInput(this)
             finish()
         }
         mLoginViewModel.mShowLoginFragment = false

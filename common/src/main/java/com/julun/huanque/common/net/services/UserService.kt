@@ -286,5 +286,11 @@ interface UserService {
     @POST("user/acct/login/subAccount")
     suspend fun loginSubAccount(@Body body: UserIdForm): Root<Session>
 
+    /**
+     * 保存社交意愿
+     */
+    @POST("user/acct/data/wish")
+    suspend fun socialWish(@Body body : SocialWishIdForm) : Root<VoidResult>
+
 
 }
