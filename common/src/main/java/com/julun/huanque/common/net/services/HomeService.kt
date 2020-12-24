@@ -3,6 +3,7 @@ package com.julun.huanque.common.net.services
 import com.julun.huanque.common.basic.Root
 import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.LikeForm
 import com.julun.huanque.common.bean.forms.NearbyForm
 import com.julun.huanque.common.bean.forms.RecomListForm
 import retrofit2.http.Body
@@ -40,5 +41,9 @@ interface HomeService {
     @POST("social/friend/home/nearby")
     suspend fun getNearBy(@Body form: NearbyForm): Root<NearbyListData<NearbyUserBean>>
 
-
+    /**
+     * 获取喜欢列表
+     */
+    @POST("social/friend/home/likeList")
+    suspend fun getLikeList(@Body form: LikeForm): Root<FavoriteListData<FavoriteUserBean>>
 }

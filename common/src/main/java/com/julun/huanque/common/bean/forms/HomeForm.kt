@@ -48,3 +48,9 @@ class NearbyForm(
     var city: String = "",
     var districe: String = ""
 )
+
+class LikeForm(
+    var offset: Int,
+    var tagId: Int? = null
+)
+

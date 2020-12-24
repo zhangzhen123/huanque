@@ -81,14 +81,23 @@ val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, th
 }
 
 /**
- * 将一个list从0开始截取指定数目
+ * 将一个list从0开始截取指定数目[subSize]
+ * [removeSource]是否截取后删除截取的数据
  */
-fun <T> List<T>.sliceFromStart(subSize: Int = this.size - 1): MutableList<T> {
+fun <T> MutableList<T>.sliceFromStart(subSize: Int = this.size - 1, removeSource: Boolean = false): MutableList<T> {
     val result: MutableList<T> = mutableListOf()
     if (this.size >= subSize) {
-        result.addAll(this.subList(0, subSize))
+        val subLIst = this.subList(0, subSize)
+        result.addAll(subLIst)
+
+        if (removeSource) {
+            this.removeAll(subLIst)
+        }
     } else {
         result.addAll(this)
+        if (removeSource) {
+            this.clear()
+        }
     }
     return result
 }

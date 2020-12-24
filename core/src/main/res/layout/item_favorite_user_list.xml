@@ -1,33 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="8dp">
+    android:layout_height="match_parent"
+    app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/card_img"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="h,1:1.5"
+            android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/user_name"
+        <View
+            android:id="@+id/shadow_view"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_height="100dp"
+            android:background="@drawable/bg_shape_card_shadow"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_top_right_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginEnd="@dimen/dimen_13"
+            android:background="@drawable/bg_shape_card_tag_02"
+            android:gravity="start|center_vertical"
+            android:paddingStart="@dimen/dimen_7"
+            android:paddingEnd="@dimen/dimen_7"
+            android:textColor="#CCFFFFFF"
+            android:textSize="@dimen/sp_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="5分钟前对你心动" />
+
+        <LinearLayout
+            android:id="@+id/ll_top_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_18"
+            android:layout_marginStart="@dimen/dimen_8"
+            android:layout_marginTop="@dimen/dimen_5"
+            android:background="@drawable/bg_shape_card_tag_03"
             android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="16sp"
+            android:paddingStart="@dimen/dimen_6"
+            android:paddingEnd="@dimen/dimen_6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/sdv_tag"
+                android:layout_width="@dimen/dimen_16"
+                android:layout_height="@dimen/dimen_16"
+                app:actualImageScaleType="centerCrop"
+                app:placeholderImage="@mipmap/logo_placeholder_small" />
+
+            <TextView
+                android:id="@+id/tv_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_3"
+                android:layout_marginEnd="@dimen/dimen_3"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_10"
+                tools:text="测试" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_22"
+            android:layout_marginStart="@dimen/dimen_8"
+            android:layout_marginBottom="@dimen/dimen_6"
+            android:gravity="bottom"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/tv_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimen_3"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/colorAccent_lib"
+                android:textSize="@dimen/sp_16"
+                tools:text="shit" />
+
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_1"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_10"
+                tools:text="地区" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_8"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            app:layout_constraintBottom_toTopOf="@+id/ll_bottom"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="年龄" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_pics"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_18"
+            android:layout_marginEnd="@dimen/dimen_8"
+            android:layout_marginBottom="@dimen/dimen_8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

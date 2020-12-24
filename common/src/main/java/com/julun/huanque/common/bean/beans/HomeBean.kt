@@ -406,7 +406,7 @@ data class UserLikeTag(
     var tagId: Int = 0,
     var tagName: String = "",
     var tagPic: String = ""
-) {
+) :Serializable{
 
     override fun hashCode(): Int {
         return tagId.hashCode()
@@ -422,4 +422,24 @@ data class UserLikeTag(
 
         return true
     }
+}
+data class FavoriteUserBean(
+    var age: Int = 0,
+    var area: String = "",
+    var coverPic: String = "",
+    var coverPicList: List<String> = listOf(),
+    var distance: Int = 0,
+    var hasRealName: String = "",
+    var nickname: String = "",
+    var picCnt: Int = 0,
+    var sex: String = "",
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = "",
+    var userId: Int = 0,
+    var interactTips: String = ""
+)
+
+class FavoriteListData<T> : RootListData<T>() {
+    var tagList: MutableList<UserLikeTag> = mutableListOf()
 }
