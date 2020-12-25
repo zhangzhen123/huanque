@@ -290,3 +290,44 @@ data class NewUserGiftBean(
     //播放地址
     var videoUrl: String = ""
 ) : Serializable
+
+
+data class ManagerTagTabBean(
+    var childList: List<ManagerTagBean> = listOf(),
+    var like: String = "",
+    var likeCnt: Int = 0,
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = "",
+    var tagPic: String = ""
+) : Serializable
+
+data class ManagerTagBean(
+    var like: Boolean = false,
+    var likeCnt: Int = 0,
+    var parentTagId: Int = 0,
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = "",
+    var tagPic: String = ""
+):Serializable{
+    override fun hashCode(): Int {
+        return tagId.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ManagerTagBean
+
+        if (tagId != other.tagId) return false
+
+        return true
+    }
+}
+
+data class ManagerListData(
+    var manageList: MutableList<ManagerTagBean> = mutableListOf(),
+    var tagList: List<ManagerTagTabBean> = listOf()
+)

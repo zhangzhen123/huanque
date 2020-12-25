@@ -35,6 +35,7 @@ object SquareTabType {
 
 object ActivityRequestCode {
     const val SELECT_CIRCLE = 345
+    const val MANAGER_TAG_RESULT_CODE = 346 //标签管理result_code
 }
 
 object PublicStateCode {
@@ -85,4 +86,8 @@ object TagTabType {
     const val Game = "Game"
     const val Character = "Character"
 
+}
+
+object ManagerTagCode {
+    const val TAG_LIST = "tag_list"
 }

@@ -28,6 +28,7 @@ import com.julun.huanque.common.widgets.draweetext.AnimatedRainbowSpan
 import com.julun.huanque.core.ui.dynamic.CircleActivity
 import com.julun.huanque.core.ui.live.PlayerActivity
 import com.julun.huanque.core.ui.live.dialog.CardManagerDialogFragment
+import com.julun.huanque.core.ui.main.tagmanager.TagManagerActivity
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.message.activity.PrivateConversationActivity
 import com.julun.huanque.message.fragment.ChatSendGiftFragment
@@ -213,7 +214,8 @@ class TestActivity : BaseActivity() {
         }
 
         btn_usercard.onClickNew {
-            //用户卡片
+            //标签管理
+            TagManagerActivity.start(this)
         }
 
         btn_manager.onClickNew {

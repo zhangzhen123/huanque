@@ -1,6 +1,8 @@
 package com.julun.huanque.core.ui.main.heartbeat
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
@@ -9,23 +11,23 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.julun.huanque.common.base.BaseFragment
+import androidx.viewpager.widget.ViewPager
 import com.julun.huanque.common.base.BaseLazyFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.PagerTab
-import com.julun.huanque.common.bean.beans.UserLikeTag
-import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.bean.beans.ManagerTagBean
+import com.julun.huanque.common.constant.ActivityRequestCode
+import com.julun.huanque.common.constant.ManagerTagCode
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
 import com.julun.huanque.core.R
 import com.julun.huanque.core.ui.main.tagmanager.TagManagerActivity
 import kotlinx.android.synthetic.main.fragment_favorite_container.*
+import kotlinx.android.synthetic.main.fragment_favorite_container.magic_indicator
 import kotlinx.android.synthetic.main.fragment_favorite_container.state_pager_view
-import kotlinx.android.synthetic.main.fragment_favorite_tab.*
+import kotlinx.android.synthetic.main.fragment_favorite_container.view_pager
+import kotlinx.android.synthetic.main.fragment_heartbeat_container.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
@@ -75,8 +77,9 @@ class FavoriteFragment : BaseLazyFragment() {
 
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
-    private val mTabTitles = arrayListOf<UserLikeTag>()
+    private val mTabTitles = arrayListOf<ManagerTagBean>()
 
+    private var currentTag: ManagerTagBean? = null
     override fun getLayoutId(): Int {
         return R.layout.fragment_favorite_container
     }
@@ -94,7 +97,7 @@ class FavoriteFragment : BaseLazyFragment() {
         initMagicIndicator()
 
         tag_manager.onClickNew {
-            TagManagerActivity.start(requireActivity())
+            TagManagerActivity.start(this)
         }
     }
 
@@ -103,6 +106,21 @@ class FavoriteFragment : BaseLazyFragment() {
         //配置预加载页数
 //        view_pager.offscreenPageLimit = 2
         view_pager.currentItem = 0
+        view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                currentTag = mTabTitles.getOrNull(position)
+
+            }
+
+        })
 
     }
 
@@ -118,6 +136,21 @@ class FavoriteFragment : BaseLazyFragment() {
         })
         viewModel.loadState.observe(this, observer)
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                ActivityRequestCode.MANAGER_TAG_RESULT_CODE -> {
+                    val list = data?.extras?.get(ManagerTagCode.TAG_LIST) as? ArrayList<ManagerTagBean> ?: return
+                    logger.info("我是选择的结果=${list}")
+                    mTabTitles.clear()
+                    mTabTitles.addAll(list)
+                    refreshTabList(currentTag?.tagId)
+                }
+            }
+        }
     }
 
     /**
@@ -228,19 +261,6 @@ class FavoriteFragment : BaseLazyFragment() {
         }
     }
 
-    /**
-     * 滑动到顶部
-     */
-    fun scrollToTop() {
-        val tempIndex = view_pager.currentItem
-        val tempFragment: androidx.fragment.app.Fragment? = mPagerAdapter.getItem(tempIndex)
-        tempFragment?.let {
-            if (it is FavoriteTabFragment) {
-                it.scrollToTopAndRefresh()
-            }
-
-        }
-    }
 
     override fun lazyLoadData() {
         viewModel.queryInfo()

@@ -27,7 +27,7 @@ import com.julun.huanque.common.base.BaseLazyFragment
 import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.HomePagePicBean
 import com.julun.huanque.common.bean.beans.NearbyUserBean
-import com.julun.huanque.common.bean.beans.UserLikeTag
+import com.julun.huanque.common.bean.beans.ManagerTagBean
 import com.julun.huanque.common.constant.BooleanType
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.NoDoubleClickListener
@@ -66,7 +66,7 @@ class NearbyFragment : BaseLazyFragment() {
     }
     private lateinit var mReItemTouchHelper: ReItemTouchHelper
     private val list = mutableListOf<NearbyUserBean>()
-    private val myTagList = mutableListOf<UserLikeTag>()
+    private val myTagList = mutableListOf<ManagerTagBean>()
     override fun lazyLoadData() {
         checkPermission()
     }
@@ -307,9 +307,9 @@ class NearbyFragment : BaseLazyFragment() {
             logger.info("开始做标签显隐动画 rd1=${rd1.id} rd2=${rd2.id}")
 
             val tags = item.tagList
-            val first: UserLikeTag? = tags.getOrNull(currentAniIndex)
+            val first: ManagerTagBean? = tags.getOrNull(currentAniIndex)
             currentAniIndex++
-            val second: UserLikeTag? = tags.getOrNull(currentAniIndex)
+            val second: ManagerTagBean? = tags.getOrNull(currentAniIndex)
             currentAniIndex++
 
             if (first == null && second == null) {
@@ -408,7 +408,7 @@ class NearbyFragment : BaseLazyFragment() {
                 if (item.likeTagList.isEmpty()) {
                     holder.setText(R.id.tv_bottom_tips, "TA还没有喜欢的标签，邀请TA填写吧>")
                 } else {
-                    val sameList = mutableListOf<UserLikeTag>()
+                    val sameList = mutableListOf<ManagerTagBean>()
                     item.likeTagList.forEach {
                         if (myTagList.contains(it)) {
                             sameList.add(it)

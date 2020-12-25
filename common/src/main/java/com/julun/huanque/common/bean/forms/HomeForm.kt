@@ -54,3 +54,9 @@ class LikeForm(
     var tagId: Int? = null
 )
 
+class TagForm(
+    var tagId: Int
+)class TagListForm(
+    var tagIds: String
+)
+

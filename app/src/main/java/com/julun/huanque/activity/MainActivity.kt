@@ -74,8 +74,9 @@ import kotlin.math.min
 @Route(path = ARouterConstant.MAIN_ACTIVITY)
 class MainActivity : BaseActivity() {
 
-//    private val mHomeFragment: HomeFragment by lazy { HomeFragment.newInstance() }
+    //    private val mHomeFragment: HomeFragment by lazy { HomeFragment.newInstance() }
     private val mHomeFragment: HomeHeartbeatFragment by lazy { HomeHeartbeatFragment.newInstance() }
+
     //    private val mLeYuanFragment: LeYuanFragment by lazy { LeYuanFragment.newInstance() }
     private val mProgramFragment: HomeProgramFragment by lazy { HomeProgramFragment.newInstance() }
 
@@ -131,6 +132,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         //防止重建的缓存自动恢复
         super.onCreate(null)
+        ActivitiesManager.INSTANCE.finishActivityExcept("com.julun.huanque.activity.MainActivity")
     }
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -321,7 +323,7 @@ class MainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        ActivitiesManager.INSTANCE.finishActivityExcept("com.julun.huanque.activity.MainActivity")
+//        ActivitiesManager.INSTANCE.finishActivityExcept("com.julun.huanque.activity.MainActivity")
     }
 
     override fun onStop() {
@@ -659,6 +661,7 @@ class MainActivity : BaseActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        ActivitiesManager.INSTANCE.finishActivityExcept("com.julun.huanque.activity.MainActivity")
         val targetIndex = intent?.getIntExtra(IntentParamKey.TARGET_INDEX.name, -1)
         if (targetIndex != null && targetIndex != -1) {
             filterIndexData(targetIndex)

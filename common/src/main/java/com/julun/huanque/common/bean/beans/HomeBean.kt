@@ -379,7 +379,7 @@ data class OpenInstallParamsBean(
 
 
 class NearbyListData<T> : RootListData<T>() {
-    var myTagList: List<UserLikeTag> = mutableListOf()
+    var myTagList: List<ManagerTagBean> = mutableListOf()
 }
 
 data class NearbyUserBean(
@@ -390,39 +390,15 @@ data class NearbyUserBean(
     var distance: Int = 0,
     var hasRealName: String = "",
     var lat: String = "",
-    var likeTagList: List<UserLikeTag> = listOf(),
+    var likeTagList: List<ManagerTagBean> = listOf(),
     var lon: String = "",
     var nickname: String = "",
     var sex: String = "",
-    var tagList: MutableList<UserLikeTag> = mutableListOf(),
+    var tagList: MutableList<ManagerTagBean> = mutableListOf(),
     var userId: Long = 0L,
     var interactTips: String = ""
 )
 
-
-data class UserLikeTag(
-    var mark: String = "",
-    var tagIcon: String = "",
-    var tagId: Int = 0,
-    var tagName: String = "",
-    var tagPic: String = ""
-) :Serializable{
-
-    override fun hashCode(): Int {
-        return tagId.hashCode()
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as UserLikeTag
-
-        if (tagId != other.tagId) return false
-
-        return true
-    }
-}
 data class FavoriteUserBean(
     var age: Int = 0,
     var area: String = "",
@@ -441,5 +417,6 @@ data class FavoriteUserBean(
 )
 
 class FavoriteListData<T> : RootListData<T>() {
-    var tagList: MutableList<UserLikeTag> = mutableListOf()
+    var tagList: MutableList<ManagerTagBean> = mutableListOf()
 }
+

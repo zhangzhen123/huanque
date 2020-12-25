@@ -4,17 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.julun.huanque.common.widgets.refreshlayout.VpSwipeRefreshLayout
-        android:id="@+id/mRefreshLayout"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/postList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.julun.huanque.common.widgets.refreshlayout.VpSwipeRefreshLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/postList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_15"
+        android:layout_marginEnd="@dimen/dimen_15" />
 
 
     <com.julun.huanque.common.widgets.statepage.StatePageView

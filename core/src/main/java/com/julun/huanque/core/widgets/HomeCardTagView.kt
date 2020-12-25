@@ -14,7 +14,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.animation.addListener
 import androidx.core.view.isVisible
-import com.julun.huanque.common.bean.beans.UserLikeTag
+import com.julun.huanque.common.bean.beans.ManagerTagBean
 import com.julun.huanque.common.constant.BusiConstant
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -72,7 +72,7 @@ class HomeCardTagView : LinearLayout {
 
     private var aniSet: AnimatorSet? = null
     private var currentData: Any? = null
-    fun startSetDataAndAni(data: UserLikeTag) {
+    fun startSetDataAndAni(data: ManagerTagBean) {
         currentData = data
 //        this.show()
         //todo 设置内容

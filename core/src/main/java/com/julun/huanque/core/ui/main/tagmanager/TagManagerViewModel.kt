@@ -1,24 +1,19 @@
 package com.julun.huanque.core.ui.main.tagmanager
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.*
 import com.julun.huanque.common.basic.ReactiveData
-import com.julun.huanque.common.basic.RootListData
-import com.julun.huanque.common.bean.beans.DynamicItemBean
-import com.julun.huanque.common.bean.beans.PagerTab
-import com.julun.huanque.common.bean.beans.TagManagerBean
+import com.julun.huanque.common.basic.VoidResult
+import com.julun.huanque.common.bean.beans.ManagerTagBean
+import com.julun.huanque.common.bean.beans.ManagerTagTabBean
+import com.julun.huanque.common.bean.forms.TagForm
+import com.julun.huanque.common.bean.forms.TagListForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
-import com.julun.huanque.common.constant.SquareTabType
-import com.julun.huanque.common.constant.TagTabType
-import com.julun.huanque.common.helper.StorageHelper
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.net.services.ProgramService
-import com.julun.huanque.common.suger.convertError
-import com.julun.huanque.common.suger.convertRtData
-import com.julun.huanque.common.suger.logger
-import com.julun.huanque.common.suger.request
+import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.suger.*
+import com.julun.huanque.common.utils.ToastUtils
+import kotlinx.coroutines.launch
+import java.lang.StringBuilder
 
 
 /**
@@ -32,37 +27,27 @@ import com.julun.huanque.common.suger.request
  */
 class TagManagerViewModel : BaseViewModel() {
 
-    private val programService: ProgramService by lazy { Requests.create(ProgramService::class.java) }
+    private val service: UserService by lazy { Requests.create(UserService::class.java) }
 
     val tagChange: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-    val currentTagList = mutableListOf<TagManagerBean>()
-    val tabList: LiveData<ReactiveData<ArrayList<PagerTab>>> = queryState.switchMap {
+    val currentTagList = arrayListOf<ManagerTagBean>()
+
+    val tagChangeStatus: MutableLiveData<ReactiveData<ManagerTagBean>> by lazy { MutableLiveData<ReactiveData<ManagerTagBean>>() }
+
+
+    val tagGroupRemove: MutableLiveData<ReactiveData<ManagerTagBean>> by lazy { MutableLiveData<ReactiveData<ManagerTagBean>>() }
+
+    val saveTagList: MutableLiveData<ReactiveData<VoidResult>> by lazy { MutableLiveData<ReactiveData<VoidResult>>() }
+
+    //    val managerTabList: MutableLiveData<List<ManagerTagBean>> by lazy { MutableLiveData<List<ManagerTagBean>>() }
+    val tabList: LiveData<ReactiveData<List<ManagerTagTabBean>>> = queryState.switchMap {
         liveData {
             request({
-                //todo
 
-                currentTagList.addAll(
-                    mutableListOf(
-                        TagManagerBean("颜值", 10, SquareTabType.FOLLOW),
-                        TagManagerBean("好身材", 5, TagTabType.goodFigure),
-                        TagManagerBean("运动", 88, TagTabType.Sport),
-                        TagManagerBean("风格", 0, TagTabType.Style),
-                        TagManagerBean("游戏", 0, TagTabType.Game),
-                        TagManagerBean("推荐"),
-                        TagManagerBean("测试"),
-                        TagManagerBean("测试")
-                    )
-                )
+                val result = service.manageList().dataConvert()
+                emit(result.tagList.convertRtData())
+                currentTagList.addAll(result.manageList)
                 tagChange.value = true
-                val tabTitles: ArrayList<PagerTab> = arrayListOf()
-                tabTitles.add(PagerTab("颜值", typeCode = SquareTabType.FOLLOW))
-                tabTitles.add(PagerTab("推荐", typeCode = SquareTabType.RECOMMEND))
-                tabTitles.add(PagerTab("颜值", typeCode = TagTabType.Beauty))
-                tabTitles.add(PagerTab("好身材", typeCode = TagTabType.goodFigure))
-                tabTitles.add(PagerTab("运动", typeCode = TagTabType.Sport))
-                tabTitles.add(PagerTab("风格", typeCode = TagTabType.Style))
-                tabTitles.add(PagerTab("游戏", typeCode = TagTabType.Game))
-                emit(tabTitles.convertRtData())
             }, error = { e ->
                 logger("报错了：$e")
                 emit(e.convertError())
@@ -73,27 +58,81 @@ class TagManagerViewModel : BaseViewModel() {
 
     }
 
-    fun addTag(itemBean: TagManagerBean) {
-        var isExist=false
+    fun tagLike(tag: ManagerTagBean, parentTag: ManagerTagTabBean) {
+        viewModelScope.launch {
+
+            request({
+                val result = service.tagLike(TagForm(tag.tagId)).dataConvert()
+                tag.like = true
+                tagChangeStatus.value = tag.convertRtData()
+                //这里创建一个用于发送标签管理的对象
+                val tagBean = ManagerTagBean(
+                    tagId = parentTag.tagId,
+                    likeCnt = 1,
+                    tagName = parentTag.tagName,
+                    tagIcon = parentTag.tagIcon,
+                    tagPic = parentTag.tagPic
+                )
+                addTag(tagBean)
+
+            }, error = {
+                tagChangeStatus.value = it.convertError()
+            })
+        }
+
+    }
+
+    fun tagCancelLike(tag: ManagerTagBean, parentTag: ManagerTagTabBean) {
+        viewModelScope.launch {
+
+            request({
+                val result = service.tagCancelLike(TagForm(tag.tagId)).dataConvert()
+                tag.like = false
+                tagChangeStatus.value = tag.convertRtData()
+                //这里创建一个用于发送标签管理的对象
+                val tagBean = ManagerTagBean(
+                    tagId = parentTag.tagId,
+                    likeCnt = 1,
+                    tagName = parentTag.tagName,
+                    tagIcon = parentTag.tagIcon,
+                    tagPic = parentTag.tagPic
+                )
+                removeTag(tagBean)
+
+            }, error = {
+                tagChangeStatus.value = it.convertError()
+            })
+        }
+
+    }
+
+
+    /**
+     *这里的ManagerTagBean代表一级标签 子级的标签不会传到这里
+     */
+    fun addTag(itemBean: ManagerTagBean) {
+        tagHasChange=true
+        var isExist = false
         currentTagList.forEach {
-            if (it.type == itemBean.type) {
-                it.num = it.num + itemBean.num
-                isExist=true
+            if (it.tagId == itemBean.tagId) {
+                it.likeCnt = it.likeCnt + itemBean.likeCnt
+                isExist = true
             }
         }
-        if(!isExist){
-            currentTagList.add(0,itemBean)
+        if (!isExist) {
+            currentTagList.add(itemBean)
         }
         tagChange.value = true
     }
 
-    fun removeTag(itemBean: TagManagerBean) {
+    fun removeTag(itemBean: ManagerTagBean) {
+        tagHasChange=true
         val iterator = currentTagList.iterator()
         while (iterator.hasNext()) {
             val item = iterator.next()
-            if (item.type == itemBean.type) {
-                item.num = item.num - itemBean.num
-                if (item.num <= 0) {
+            if (item.tagId == itemBean.tagId) {
+                item.likeCnt = item.likeCnt - itemBean.likeCnt
+                if (item.likeCnt <= 0) {
                     iterator.remove()
                 }
             }
@@ -101,15 +140,53 @@ class TagManagerViewModel : BaseViewModel() {
         tagChange.value = true
     }
 
-    fun removeTypeTag(type: String) {
-        val iterator = currentTagList.iterator()
-        while (iterator.hasNext()) {
-            val item = iterator.next()
-            if (item.type == type) {
-                iterator.remove()
-            }
+
+    fun tagCancelGroupLike(tag: ManagerTagBean) {
+        tagHasChange=true
+        viewModelScope.launch {
+
+            request({
+                val result = service.tagCancelLike(TagForm(tag.tagId)).dataConvert()
+                tag.like = false
+                tagGroupRemove.value = tag.convertRtData()
+                removeTag(tag)
+
+            }, error = {
+                tagGroupRemove.value = it.convertError()
+            })
         }
-        tagChange.value = true
+
     }
 
+    //标记是否有标签顺序变动
+    var tagHasChange = false
+
+    /**
+     * 保存标签的顺序
+     */
+    fun saveTagList() {
+        if (!tagHasChange) {
+            tagHasChange = false
+            return
+        }
+        viewModelScope.launch {
+
+            request({
+                val tagsBuilder = StringBuilder()
+                currentTagList.forEachIndexed { index, managerTagBean ->
+                    if (index == currentTagList.size - 1) {
+                        tagsBuilder.append("${managerTagBean.tagId}")
+                    } else {
+                        tagsBuilder.append("${managerTagBean.tagId},")
+                    }
+                }
+                val tags = tagsBuilder.toString()
+                val result = service.saveTagManage(TagListForm(tags)).dataConvert()
+                saveTagList.value = result.convertRtData()
+            }, error = {
+                saveTagList.value = it.convertError()
+            })
+        }
+
+    }
 }

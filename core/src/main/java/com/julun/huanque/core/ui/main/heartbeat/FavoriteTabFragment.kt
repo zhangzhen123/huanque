@@ -56,7 +56,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     companion object {
         const val BANNER_POSITION = 6
-        fun newInstance(tab: UserLikeTag?): FavoriteTabFragment {
+        fun newInstance(tab: ManagerTagBean?): FavoriteTabFragment {
             return FavoriteTabFragment().apply {
                 val bundle = Bundle()
                 bundle.putSerializable(IntentParamKey.TAB_TYPE.name, tab)
@@ -67,7 +67,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     private val favoriteViewModel: FavoriteViewModel by activityViewModels()
 
-    private var currentTab: UserLikeTag? = null
+    private var currentTab: ManagerTagBean? = null
 
     private val bottomLayout: View by lazy {
         LayoutInflater.from(requireContext()).inflate(R.layout.layout_bottom_favorite, null)
@@ -77,7 +77,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     private val layoutManager: GridLayoutManager by lazy { GridLayoutManager(requireContext(), 2) }
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? UserLikeTag
+        currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? ManagerTagBean
 
         authorList.layoutManager = layoutManager
         initViewModel()

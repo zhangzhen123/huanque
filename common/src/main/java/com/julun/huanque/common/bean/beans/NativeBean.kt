@@ -5,10 +5,3 @@ enum class CollapsingToolbarLayoutState {
     COLLAPSED,
     INTERNEDIATE
 }
-
-class TagManagerBean(var tagName: String = "", var num: Int = 0,var type:String="") {
-
-    override fun toString(): String {
-        return "TagManagerBean(tagName='$tagName', num=$num, type='$type')"
-    }
-}
