@@ -558,50 +558,50 @@ data class ProgramInfoHomePage(
 data class HomePageInfo(
     //年龄
     var age: Int = 0,
-    //评价列表
-    var appraiseList: MutableList<AppraiseBean> = mutableListOf(),
     //真人标识
     var authMark: String = "",
+    //他人主页认证的标签列表
+    var authTagList: MutableList<HomeTagBean> = mutableListOf(),
     //生日
     var birthday: String = "",
+    //是否可以互动
+    var canInteractive: String = "",
     //是否拉黑
     var black: String = "",
-    //性格数据
-    var characterTag: CharacterTag = CharacterTag(),
-    //城市列表
-    var cityList: MutableList<CityBean> = mutableListOf(),
     //星座
     var constellation: String = "",
-    //当前城市
+    //当前登录用户性别
+    var currSexType: String = "",
+    //当前用户ID
+    var currUserId: Long = 0,
+//当前城市
     var currentCity: String = "",
+    //距离使用的对象
+    var distanceCity: HomeCity = HomeCity(),
     //是否关注
     var follow: String = "",
     //头像
     var headPic: String = "",
+    //我的签名
+    var mySign: String = "",
     //是否是真人
     var headRealPeople: String = "",
-    //身高
-    var height: Int = 0,
     //是否是密友
     var intimate: String = "",
-    //职业ID
-    var jobId: Int = 0,
-    //职业名称
-    var jobName: String = "",
-    //我的性格列表(相同点判断)
-    var myCharacterTag: MutableList<String> = mutableListOf(),
-    //我的城市列表
-    var myCityList: MutableList<CityBean> = mutableListOf(),
-    //我的签名
-    var mySign: String = "签名不足以表达我自己，找我私聊吧~",
+//他人主页喜欢的标签列表
+    var likeTagList: MutableList<HomeTagBean> = mutableListOf(),
     //昵称
     var nickname: String = "",
-    //勋章列表
-    var officeMedal: MutableList<String> = mutableListOf(),
-    //乐园是否开启
-    var paradiseSwitch: String = "",
+    //在线状态
+    var online: HomeOnLineBean? = null,
+    //资料完成度 百分比
+    var perfection: Int = 0,
     //封面列表
     var picList: MutableList<String> = mutableListOf(),
+    //动态数量
+    var postNum: Int = 0,
+    //收礼数据
+    var receiveGifts: MutableList<ChatGift> = mutableListOf(),
     //贵族等级
     var royalLevel: Int = 0,
     //性别
@@ -612,14 +612,37 @@ data class HomePageInfo(
     var userLevel: Int = 0,
     //用户类型
     var userType: String = "",
+
+    //社交意愿
+    var wishList: MutableList<SocialWishBean> = mutableListOf(),
+    //家乡ID
+    var homeTownId: Long = 0,
+    //家乡省会
+    var homeTownProvince: String = "",
+    //家乡城市
+    var homeTownCity: String = "",
+    //职业Id
+    var professionId: Long = 0,
+    //职业名称
+    var professionName: String = "",
+    //学历
+    var education: String = "",
+    //学校ID
+    var schoolId: Int = 0,
+    //学校名称
+    var school: String = "",
+
+
+    //身高
+    var height: Int = 0,
+
     //语音签名对象
     var voice: VoiceBean = VoiceBean(),
     //体重
     var weight: Int = 0,
     //密友评价是否还有更多
     var hasMore: String = "",
-    //资料完成度 百分比
-    var perfection: Int = 0,
+
     //主播等级
     var anchorLevel: Int = 0,
     //贵族等级图标
@@ -630,35 +653,19 @@ data class HomePageInfo(
     var closeConfidant: IntimBeanFriendBean = IntimBeanFriendBean(),
     //亲密榜数据
     var closeConfidantRank: CloseConfidantRankBean = CloseConfidantRankBean(),
-    //座驾数据
-    var carInfo: HomePageCarInfo = HomePageCarInfo(),
-    //tab相关数据
-    var userDataTabList: MutableList<UserDataTab> = mutableListOf(),
     //播放数据
     var playProgram: HomePageProgram = HomePageProgram(),
     //养鹊相关数据
     var playParadise: HomePagePlayParadise = HomePagePlayParadise(),
     //足迹使用的对象
     var homeCity: HomeCity = HomeCity(),
-    //距离使用的对象
-    var distanceCity: HomeCity = HomeCity(),
+
     //勋章数据
     var iconList: MutableList<String> = mutableListOf(),
     //直播间内的动态数据
-    var post: PostInHomePage = PostInHomePage(),
+    var post: PostInHomePage = PostInHomePage()
     /*2.0.0新增字段*/
-    //当前用户ID
-    var currUserId: Long = 0,
-    //当前用户性别
-    var currSexType: String = "",
-    //在线状态
-    var online: HomeOnLineBean? = null,
-    //他人主页认证的标签列表
-    var authTagList: MutableList<HomeTagBean> = mutableListOf(),
-    //他人主页喜欢的标签列表
-    var likeTagList: MutableList<HomeTagBean> = mutableListOf(),
-    //社交意愿
-    var wishList: SocialWishBean? = null
+
 ) : Serializable
 
 /**

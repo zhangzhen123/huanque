@@ -50,7 +50,7 @@ class PhoneNumLoginViewModel : BaseViewModel() {
     val codeReponse: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //验证码发送成功的标识位
-    val codeSendSuccess : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    val codeSendSuccess: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     //登录数据
     val loginData: MutableLiveData<Session> by lazy { MutableLiveData<Session>() }
@@ -60,6 +60,9 @@ class PhoneNumLoginViewModel : BaseViewModel() {
 
     //验证码错误标识
     val codeErrorFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //手机号错误标识
+    val phoneNumError: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     private val gt3Config: GT3ConfigBean by lazy {
         val gt3ConfigBean = GT3ConfigBean()
@@ -317,8 +320,12 @@ class PhoneNumLoginViewModel : BaseViewModel() {
             }, {
                 codeReponse.value = true
                 if (it is ResponseError) {
-                    when (it.busiCode) {
-                        5015, 5011, 5012, 5010, 1106, 503 -> ToastUtils.show(it.busiMessage)
+//                    when (it.busiCode) {
+//                        5015, 5011, 5012, 5010, 1106, 503, 1112 -> ToastUtils.show(it.busiMessage)
+//                    }
+                    if (it.busiCode == 1112) {
+                        //手机号码不正确
+                        phoneNumError.value = true
                     }
                 }
             })

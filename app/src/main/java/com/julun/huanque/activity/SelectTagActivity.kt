@@ -54,10 +54,11 @@ class SelectTagActivity : BaseActivity() {
         })
         mViewModel.currentSelectIndex.observe(this, Observer {
             if (it != null) {
-                if (it == mViewModel.totalTypeTabCount - 1) {
-                    tv_next.text = "完成"
+                val totalTabCount = mViewModel.totalTypeTabCount
+                if (it == totalTabCount - 1) {
+                    tv_next.text = "完成（$totalTabCount/$totalTabCount）"
                 } else {
-                    tv_next.text = "下一步(${it + 1}/${mViewModel.totalTypeTabCount})"
+                    tv_next.text = "下一步(${it + 1}/${totalTabCount})"
                 }
 
                 val data = mTagAdapter.data

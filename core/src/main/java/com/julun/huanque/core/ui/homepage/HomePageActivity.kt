@@ -4,33 +4,16 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
-import android.os.Build
 import android.os.Bundle
-import android.text.*
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
-import android.util.SparseArray
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.widget.NestedScrollView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,7 +26,9 @@ import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.dialog.MyAlertDialog
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.beans.HomePageInfo
+import com.julun.huanque.common.bean.beans.HomePagePicBean
+import com.julun.huanque.common.bean.beans.VoiceBean
 import com.julun.huanque.common.constant.*
 import com.julun.huanque.common.helper.StringHelper
 import com.julun.huanque.common.interfaces.routerservice.IRealNameService
@@ -59,13 +44,10 @@ import com.julun.huanque.common.widgets.bgabanner.BGABanner
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageAdapter
-import com.julun.huanque.core.adapter.HomePageDynamicPicListAdapter
 import com.julun.huanque.core.adapter.HomePagePicListAdapter
 import com.julun.huanque.core.manager.AliPlayerManager
 import com.julun.huanque.core.ui.live.PlayerActivity
-import com.julun.huanque.core.ui.main.bird.LeYuanBirdActivity
 import com.julun.huanque.core.viewmodel.HomePageViewModel
-import com.julun.huanque.core.widgets.SurfaceVideoViewOutlineProvider
 import com.julun.rnlib.RNPageActivity
 import com.julun.rnlib.RnConstant
 import kotlinx.android.synthetic.main.act_home_page.*
@@ -75,8 +57,11 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
-import org.jetbrains.anko.*
-import kotlin.math.ceil
+import org.jetbrains.anko.backgroundDrawable
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.leftPadding
+import org.jetbrains.anko.rightPadding
+import java.text.DecimalFormat
 
 /**
  *@创建者   dong
@@ -549,9 +534,12 @@ class HomePageActivity : BaseActivity() {
             if (it != null) {
                 showViewByData(it)
             }
-            val holderParams = view_holder.layoutParams
-            holderParams.height = con_header.height - 1
-            view_holder.layoutParams = holderParams
+
+            con_header.post {
+                val holderParams = view_holder.layoutParams
+                holderParams.height = con_header.height - 1
+                view_holder.layoutParams = holderParams
+            }
         })
 
 
@@ -692,6 +680,7 @@ class HomePageActivity : BaseActivity() {
         }
         showBanner(picList)
         mPicAdapter.setList(picList)
+        sdv_real.loadImage(bean.authMark, 18f, 18f)
 
         val voiceStatus = bean.voice.voiceStatus
         if (voiceStatus == VoiceBean.Pass) {
@@ -733,7 +722,40 @@ class HomePageActivity : BaseActivity() {
         tv_nickname.text = bean.nickname
 
 
+        if (bean.mySign.isEmpty()) {
+            tv_sign_home.hide()
+        } else {
+            tv_sign_home.show()
+        }
         tv_sign_home.text = bean.mySign
+        val postNum = bean.postNum
+        val postStr =
+            if (postNum > 0) {
+                "动态 $postNum"
+            } else {
+                "动态"
+            }
+
+        if (ForceUtils.isIndexNotOutOfBounds(1, mTabTitles)) {
+            mTabTitles.removeAt(1)
+            mTabTitles.add(postStr)
+            mCommonNavigator.adapter?.notifyDataSetChanged()
+        }
+        val distance = bean.distanceCity.distance
+        if (distance >= 1000) {
+            val df = DecimalFormat("#.00")
+            tv_distance.text = "${df.format(distance / 1000)}km"
+        } else {
+            tv_distance.text = "${distance}m"
+        }
+
+        val sexName = if (bean.sex == Sex.MALE) {
+            "男"
+        } else {
+            "女"
+        }
+        tv_age.text = "${bean.age}岁 ${sexName}"
+
 
         if (mHomePageViewModel.mineHomePage) {
             rl_edit_info.show()

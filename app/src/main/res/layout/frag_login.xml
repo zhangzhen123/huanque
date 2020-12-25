@@ -133,9 +133,9 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:gravity="center_vertical"
-                android:hint="请输入手机号"
+                android:hint="请输入您的手机号"
                 android:inputType="phone"
-                android:maxLength="11"
+                android:maxLength="13"
                 android:maxLines="1"
                 android:padding="@dimen/dimen_4"
                 android:textColor="@color/black_333"
@@ -260,6 +260,19 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_fast_login"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginBottom="230dp"
+        android:gravity="center"
+        android:text="使用本机号码一键登录"
+        android:textColor="@color/primary_color"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 
     <TextView

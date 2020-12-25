@@ -143,7 +143,7 @@
     <string name="phone_login">手机快捷登录</string>
 
     <string name="code_error">验证码错误或已失效</string>
-    <string name="phone_error">请输入正确的手机号</string>
+    <string name="phone_error">手机号码不正确</string>
     <string name="send_code_success">验证码已发送</string>
 
     <string name="register_and">和</string>

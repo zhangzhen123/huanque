@@ -17,7 +17,7 @@ object FastLoginManager {
     private var mPreviewCode = 0
     fun getPreviewCode() = mPreviewCode
 
-    var mPreListener : LocalPreLoginListener? = null
+    var mPreListener: LocalPreLoginListener? = null
 
     /**
      *预取号

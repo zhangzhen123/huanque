@@ -42,7 +42,8 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/con_header"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
 
                     <com.julun.huanque.common.widgets.bgabanner.BGABanner
                         android:id="@+id/bga_banner"
@@ -196,6 +197,16 @@
                         app:layout_constraintTop_toTopOf="@id/tv_nickname"
                         app:placeholderImage="@mipmap/logo_placeholder_medium" />
 
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/sdv_super"
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="15dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/bga_banner"
+                        app:placeholderImage="@mipmap/logo_placeholder_medium" />
+
                     <LinearLayout
                         android:id="@+id/ll_distance"
                         android:layout_width="wrap_content"
@@ -241,14 +252,21 @@
                         app:layout_constraintTop_toBottomOf="@id/ll_distance"
                         tools:text="可靠的金额能" />
 
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/barrier_sign"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="tv_sign_home,sdv_super" />
+
 
                     <View
                         android:id="@+id/view_line_bottom"
                         android:layout_width="1px"
                         android:layout_height="1px"
-                        android:layout_marginTop="80dp"
+                        android:layout_marginTop="20dp"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_sign_home" />
+                        app:layout_constraintTop_toBottomOf="@id/barrier_sign" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -257,7 +275,8 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:alpha="0"></androidx.appcompat.widget.Toolbar>
+                    android:alpha="0"
+                    android:background="@color/white"></androidx.appcompat.widget.Toolbar>
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -279,14 +298,14 @@
 
     </com.julun.huanque.core.widgets.CustomCoordinatorLayout>
 
-<!--    <View-->
-<!--        android:id="@+id/view_shader"-->
-<!--        android:layout_width="0px"-->
-<!--        android:layout_height="10dp"-->
-<!--        android:background="@drawable/bg_home_page_top_shader"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintRight_toRightOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <!--    <View-->
+    <!--        android:id="@+id/view_shader"-->
+    <!--        android:layout_width="0px"-->
+    <!--        android:layout_height="10dp"-->
+    <!--        android:background="@drawable/bg_home_page_top_shader"-->
+    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--        app:layout_constraintRight_toRightOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 
     <View

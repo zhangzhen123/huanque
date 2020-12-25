@@ -3,18 +3,14 @@ package com.julun.huanque.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.julun.huanque.common.basic.ResponseError
-import com.julun.huanque.common.bean.events.FastLoginEvent
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.database.table.Session
 import com.julun.huanque.common.net.Requests
+import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.LoginStatusUtils
-import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.support.LoginManager
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 
 /**
  *@创建者   dong
@@ -57,9 +53,6 @@ class LoginViewModel : BaseViewModel() {
 
     //开始粘贴
     val pasteFlag : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
-
-    //是否等待显示登录弹窗
-    var mShowLoginFragment = false
 
     /**
      * 手机号一键登录

@@ -73,8 +73,6 @@ import java.util.concurrent.TimeUnit
 @Route(path = ARouterConstant.Welcome_Activity)
 class WelcomeActivity : BaseActivity() {
     private val mLoginViewModel: LoginViewModel by viewModels()
-    private val mPhoneNumLoginViewModel: PhoneNumLoginViewModel by viewModels()
-
     //是否同意过隐私弹窗
     private var mShowFragment = false
 
@@ -93,8 +91,10 @@ class WelcomeActivity : BaseActivity() {
     //登录成功标识
     private val CODE_LOGIN_SUCCESS = 6000
 
-    private val mLoginFragment = LoginFragment()
+//    private val mLoginFragment = LoginFragment()
 
+    //是否显示过登录弹窗
+    private var mShowedLoginView = false
 
     //是否是首次进入
     private var first = true
@@ -219,12 +219,6 @@ class WelcomeActivity : BaseActivity() {
                 dismissLoginDialog()
             }
         })
-
-        mPhoneNumLoginViewModel.loginData.observe(this, Observer {
-            if (it != null) {
-                dismissLoginDialog()
-            }
-        })
         doOpenInstall(mOpenInstallBean ?: return)
     }
 
@@ -232,9 +226,9 @@ class WelcomeActivity : BaseActivity() {
      * 跳转首页
      */
     private fun dismissLoginDialog() {
-        if (mLoginFragment.isResumed) {
-            mLoginFragment.dismiss()
-        }
+//        if (mLoginFragment.isResumed) {
+//            mLoginFragment.dismiss()
+//        }
         JVerificationInterface.dismissLoginAuthActivity()
     }
 
@@ -534,13 +528,16 @@ class WelcomeActivity : BaseActivity() {
         tvPhoneLogin.text = "其他手机号码登录"
         tvPhoneLogin.textColor = GlobalUtils.getColor(R.color.primary_color)
         tvPhoneLogin.textSize = 14f
-        uiConfigBuilder.addCustomView(tvPhoneLogin, true) { _, _ ->
+        uiConfigBuilder.addCustomView(tvPhoneLogin, false) { _, _ ->
             //todo手机号登录
 //            startActivity(Intent(this, PhoneNumLoginActivity::class.java))
-            mLoginViewModel.mShowLoginFragment = true
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-                mLoginViewModel.currentFragmentState.value = LoginViewModel.Fragment_State_Phone
-                mLoginFragment.show(supportFragmentManager, "LoginFragment")
+//                mLoginViewModel.currentFragmentState.value = LoginViewModel.Fragment_State_Phone
+//                mLoginFragment.show(supportFragmentManager, "LoginFragment")
+                val intent = Intent(this,LoginActivity2::class.java)
+                if(ForceUtils.activityMatch(intent)){
+                    startActivity(intent)
+                }
             }
         }
 
@@ -592,7 +589,7 @@ class WelcomeActivity : BaseActivity() {
 //        mLayoutParams1.setMargins(DensityHelper.dp2px(10), DensityHelper.dp2px(10), 0, 0)
         phoneLastLoginView.layoutParams = mPhoneLastLogin
         phoneLastLoginView.setImageResource(R.mipmap.icon_last_login)
-        if (lastLogin == LoginManager.MOBILE_FAST_LOGIN || lastLogin == LoginManager.MOBILE_LOGIN) {
+        if (lastLogin == LoginManager.MOBILE_FAST_LOGIN) {
             uiConfigBuilder.addCustomView(phoneLastLoginView, false, null)
         }
 
@@ -651,9 +648,14 @@ class WelcomeActivity : BaseActivity() {
                     if (enableFast && FastLoginManager.getPreviewCode() == FastLoginManager.CODE_PRELOGIN_SUCCESS) {
                         loginAuth()
                     } else {
-                        mLoginViewModel.mShowLoginFragment = true
-                        mLoginFragment.show(supportFragmentManager, "LoginFragment")
+//                        mLoginViewModel.mShowLoginFragment = true
+//                        mLoginFragment.show(supportFragmentManager, "LoginFragment")
+                        val intent = Intent(this@WelcomeActivity,LoginActivity2::class.java)
+                        if(ForceUtils.activityMatch(intent)){
+                            startActivity(intent)
+                        }
                     }
+                    mShowedLoginView = true
                 }
             }
 
@@ -675,7 +677,7 @@ class WelcomeActivity : BaseActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (!mLoginViewModel.mShowLoginFragment && hasFocus && !first) {
+        if (mShowedLoginView && hasFocus && !first) {
             val sessionId = SessionUtils.getSessionId()
             if (sessionId.isNotEmpty()) {
                 if (SessionUtils.getRegComplete()) {
@@ -687,7 +689,6 @@ class WelcomeActivity : BaseActivity() {
             ScreenUtils.hideSoftInput(this)
             finish()
         }
-        mLoginViewModel.mShowLoginFragment = false
         first = false
 //        logger.info("2 hasFocus = $hasFocus,first = $first,mShowLoginFragment = $mShowLoginFragment")
     }

@@ -87,9 +87,27 @@ class HomePageInformationFragment : BaseFragment() {
 
     private fun showViewByData(bean: HomePageInfo) {
         //家乡
-        tv_home_town
+        val homeTownStr = StringBuilder()
+        if (bean.homeTownProvince.isNotEmpty()) {
+            homeTownStr.append(bean.homeTownProvince)
+        }
+        if (homeTownStr.isNotEmpty()) {
+            homeTownStr.append("/")
+        }
+        homeTownStr.append(bean.homeTownCity)
+        when {
+            homeTownStr.length > 6 -> {
+                tv_home_town.text = "${homeTownStr.substring(0, 6)}..."
+            }
+            homeTownStr.isNotEmpty() -> {
+                tv_home_town.text = homeTownStr.toString()
+            }
+            else -> {
+                tv_home_town.text = "-"
+            }
+        }
 
-        //身高和体重
+        //身材
         val weight = bean.weight
         val height = bean.height
         val whBuilder = StringBuilder()
@@ -102,12 +120,30 @@ class HomePageInformationFragment : BaseFragment() {
             }
             whBuilder.append("${weight}kg")
         }
-        tv_stature.text = whBuilder.toString()
+        if (whBuilder.isNotEmpty()) {
+            tv_stature.text = whBuilder.toString()
+        } else {
+            tv_stature.text = "-"
+        }
 
-        tv_constellation.text = bean.constellation
-        tv_job.text = bean.jobName
+        //星座
+        if (bean.constellation.isEmpty()) {
+            tv_constellation.text = "-"
+        } else {
+            tv_constellation.text = bean.constellation
+        }
+        //职业
+        if (bean.professionName.isEmpty()) {
+            tv_job.text = "-"
+        } else {
+            tv_job.text = bean.professionName
+        }
         //毕业院校
-//        tv_school.text = bean
+        if (bean.school.isEmpty()) {
+            tv_school.text = "-"
+        } else {
+            tv_school.text = bean.school
+        }
         //社交意愿
         tv_social
 

@@ -1,11 +1,11 @@
-package com.julun.huanque.fragment
+package com.julun.huanque.activity
 
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -16,13 +16,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.PopupWindow
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.fragment.app.activityViewModels
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import cn.jiguang.verifysdk.api.JVerificationInterface
 import com.julun.huanque.R
+import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.constant.Agreement
 import com.julun.huanque.common.constant.SPParamKey
 import com.julun.huanque.common.helper.StorageHelper
@@ -31,10 +29,8 @@ import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.ui.web.WebActivity
-import com.julun.huanque.common.utils.ScreenUtils
-import com.julun.huanque.common.utils.SharedPreferencesUtils
-import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.common.utils.VerificationUtils
+import com.julun.huanque.common.utils.*
+import com.julun.huanque.manager.FastLoginManager
 import com.julun.huanque.support.LoginManager
 import com.julun.huanque.viewmodel.LoginViewModel
 import com.julun.huanque.viewmodel.PhoneNumLoginViewModel
@@ -44,47 +40,33 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.frag_login.*
-import org.jetbrains.anko.sdk23.listeners.textChangedListener
 import java.util.concurrent.TimeUnit
+
 
 /**
  *@创建者   dong
- *@创建时间 2020/12/18 9:33
- *@描述 登录弹窗
+ *@创建时间 2020/12/25 13:27
+ *@描述 2.0.0版本的登录页面
  */
-class LoginFragment : BottomSheetDialogFragment() {
-
-    private val mLoginViewModel: LoginViewModel by activityViewModels()
-    private val mPhoneNumLoginViewModel: PhoneNumLoginViewModel by activityViewModels()
+class LoginActivity2 : BaseActivity() {
+    private val mLoginViewModel: LoginViewModel by viewModels()
+    private val mPhoneNumLoginViewModel: PhoneNumLoginViewModel by viewModels()
 
     //是否正在倒计时
     private var mIsCountting: Boolean = false
 
-    private var mBottomSheetBehavior: BottomSheetBehavior<View>? = null
+    override fun getLayoutId() = R.layout.frag_login
 
-    private val mBottomSheetBehaviorCallback: BottomSheetCallback = object : BottomSheetCallback() {
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+    override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        val lp = window.attributes
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT
+        window.attributes = lp
 
-        }
-
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                mBottomSheetBehavior?.setState(BottomSheetBehavior.STATE_COLLAPSED)
-            }
-        }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.frag_login, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initViews()
+        window.decorView.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        StatusBarUtil.setColor(this, GlobalUtils.formatColor("#00FFFFFF"))
+        initViewModel()
         phone_num.post {
             val num = StorageHelper.getPhoneNumCache()
             if (num.isNotEmpty()) {
@@ -93,34 +75,36 @@ class LoginFragment : BottomSheetDialogFragment() {
             }
         }
 
-    }
-
-//    override fun getLayoutId() = R.layout.frag_login
-//
-//    override fun needEnterAnimation() = false
-
-    //    override
-    fun initViews() {
         val lastLogin = SharedPreferencesUtils.getInt(SPParamKey.Last_Login, -1)
         iv_last_login_wx.hide()
         iv_last_login_phone.hide()
 
-        if (lastLogin == LoginManager.MOBILE_FAST_LOGIN || lastLogin == LoginManager.MOBILE_LOGIN) {
+        if (lastLogin == LoginManager.MOBILE_LOGIN) {
             iv_last_login_phone.show()
         }
         if (lastLogin == LoginManager.WECHAT_LOGIN) {
             iv_last_login_wx.show()
         }
+
+        if (JVerificationInterface.checkVerifyEnable(this) && FastLoginManager.getPreviewCode() == FastLoginManager.CODE_PRELOGIN_SUCCESS) {
+            tv_fast_login.show()
+        } else {
+            tv_fast_login.hide()
+        }
+    }
+
+    override fun initEvents(rootView: View) {
+        super.initEvents(rootView)
         view_weixin.onClickNew {
             mLoginViewModel.weixinLoginFlag.value = true
 //            val intent = Intent(requireActivity(), TestAnimationActivity::class.java)
 //            startActivity(intent)
         }
         register_rule.onClickNew {
-            WebActivity.startWeb(requireActivity(), Agreement.UserAgreement)
+            WebActivity.startWeb(this, Agreement.UserAgreement)
         }
         tv_register_privacy.onClickNew {
-            WebActivity.startWeb(requireActivity(), Agreement.PrivacyAgreement)
+            WebActivity.startWeb(this, Agreement.PrivacyAgreement)
         }
 //        tv_phone_num.onClickNew {
 ////            startActivity(Intent(requireActivity(), PhoneNumLoginActivity::class.java))
@@ -228,47 +212,10 @@ class LoginFragment : BottomSheetDialogFragment() {
             switchPopupWindow(password_view)
             return@setOnLongClickListener true
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        initViewModel()
-        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-        dialog?.setCanceledOnTouchOutside(false)
-        val params = dialog?.window?.attributes
-//        params?.flags =
-//            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; //这条就是控制点击背景的时候  如果被覆盖的view有点击事件那么就会直接触发(dialog消失并且触发背景下面view的点击事件)
-//        setDialogSize(
-//            Gravity.BOTTOM,
-//            ViewGroup.LayoutParams.MATCH_PARENT,
-//            ViewGroup.LayoutParams.MATCH_PARENT
-//        )
-        setWindowConfig()
-    }
-
-    private fun setWindowConfig() {
-//        this.customDialogSize(Gravity.BOTTOM, 0, height = 450)
-        //不需要半透明遮罩层
-        val win = dialog?.window ?: return
-//        win.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        win.setWindowAnimations(R.style.dialog_bottom_bottom_style)
-        view?.post {
-            val parent = view?.parent;
-            if (parent is View) {
-                val params = parent.layoutParams as? CoordinatorLayout.LayoutParams
-                params?.width = ViewGroup.LayoutParams.MATCH_PARENT
-                val behavior = params?.behavior;
-                mBottomSheetBehavior = behavior as? BottomSheetBehavior
-                mBottomSheetBehavior?.addBottomSheetCallback(mBottomSheetBehaviorCallback);
-                mBottomSheetBehavior?.peekHeight = dp2px(850f)
-
-                parent.setBackgroundColor(Color.TRANSPARENT);
-            }
-
+        tv_fast_login.onClickNew {
+            finish()
         }
     }
-
 
     /**
      * 初始化ViewModel
@@ -297,6 +244,18 @@ class LoginFragment : BottomSheetDialogFragment() {
                 //粘贴操作
                 paste()
                 mLoginViewModel.pasteFlag.value = null
+            }
+        })
+
+        mLoginViewModel.loginData.observe(this, Observer {
+            if (it != null) {
+                loginSuccess()
+            }
+        })
+
+        mPhoneNumLoginViewModel.loginData.observe(this, Observer {
+            if (it != null) {
+                loginSuccess()
             }
         })
 
@@ -348,11 +307,22 @@ class LoginFragment : BottomSheetDialogFragment() {
 
     }
 
+    /**
+     * 登录成功
+     */
+    private fun loginSuccess() {
+        if (SessionUtils.getRegComplete()) {
+            startActivity(Intent(this, MainActivity::class.java))
+        } else {
+            SelectSexActivity.newInstance(this)
+        }
+    }
+
+
     //粘贴
     private fun paste() {
         // 获取系统剪贴板
-        val clipboard =
-            requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
 
         // 获取剪贴板的剪贴数据集
         val clipData = clipboard?.primaryClip ?: return
@@ -410,7 +380,6 @@ class LoginFragment : BottomSheetDialogFragment() {
                 disposable!!.dispose()
         }
     }
-
 
     private var mShowCodeSet: AnimatorSet = AnimatorSet()
 
@@ -496,7 +465,7 @@ class LoginFragment : BottomSheetDialogFragment() {
      * 显示热度和时间切换的PopupWindow
      */
     private fun switchPopupWindow(parentView: View) {
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.view_login_copy, null)
+        val view = LayoutInflater.from(this).inflate(R.layout.view_login_copy, null)
         val pWidht = (ScreenUtils.getScreenWidth() - dp2px(75)) / 4
         mCopyPopupWindow = PopupWindow(view, pWidht, dp2px(37))
         val drawable = ColorDrawable(Color.TRANSPARENT)
@@ -508,9 +477,9 @@ class LoginFragment : BottomSheetDialogFragment() {
             mCopyPopupWindow?.dismiss()
         }
         //获取自身的长宽高
-        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        val popupHeight = view.measuredHeight;
-        val popupWidth = view.measuredWidth;
+        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val popupHeight = view.measuredHeight
+        val popupWidth = view.measuredWidth
         mCopyPopupWindow?.showAsDropDown(
             parentView,
             0,
@@ -546,12 +515,6 @@ class LoginFragment : BottomSheetDialogFragment() {
         password_view.clearFocus()
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        mLoginViewModel.finishState.value = true
-    }
-
-
     override fun onResume() {
         super.onResume()
         Observable.timer(500, TimeUnit.MILLISECONDS)
@@ -564,11 +527,10 @@ class LoginFragment : BottomSheetDialogFragment() {
             }, {})
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onViewDestroy() {
+        super.onViewDestroy()
         mShowCodeSet.cancel()
         mShowInfoSet.cancel()
-        mBottomSheetBehavior?.removeBottomSheetCallback(mBottomSheetBehaviorCallback)
         //隐藏键盘
         closeKeyBoard()
     }
