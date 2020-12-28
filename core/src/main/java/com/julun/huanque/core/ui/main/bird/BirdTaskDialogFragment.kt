@@ -54,14 +54,12 @@ class BirdTaskDialogFragment(private val leYuanViewModel: LeYuanViewModel?) : Ba
         return R.layout.fragment_bird_tasks
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun configDialog() {
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
-//        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
-
     private var isInLivePage = false
     override fun initViews() {
+
         isInLivePage = requireActivity() is PlayerActivity
         initViewModel()
         tasksList.layoutManager = LinearLayoutManager(requireContext())

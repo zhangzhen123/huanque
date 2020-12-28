@@ -38,11 +38,11 @@ class GuideFollowFragment : BaseDialogFragment() {
     override fun getLayoutId(): Int = R.layout.dialog_guide_follow
     override fun order() = DialogOrderNumber.LOCAL_DIALOG
 
-    override fun onStart() {
-        super.onStart()
+
+    override fun configDialog() {
+        setDialogSize()
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
-
     override fun initViews() {
 
         initData()

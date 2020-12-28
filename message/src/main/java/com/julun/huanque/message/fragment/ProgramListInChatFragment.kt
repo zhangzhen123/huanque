@@ -71,11 +71,14 @@ class ProgramListInChatFragment : BaseDialogFragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun configDialog() {
         //不需要半透明遮罩层
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         setDialogSize(Gravity.END, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 0)
+    }
+    override fun onStart() {
+        super.onStart()
+
         initViewModel()
     }
 

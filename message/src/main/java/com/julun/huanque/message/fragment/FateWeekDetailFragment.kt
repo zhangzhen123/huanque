@@ -34,13 +34,14 @@ class FateWeekDetailFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
-        //不需要半透明遮罩层
-        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-
         initViewModel()
     }
 
+    override fun configDialog() {
+        setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
+        //不需要半透明遮罩层
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+    }
     private fun initViewModel() {
         mYuanFenViewModel.fateWeekInfoBean.observe(this, Observer {
             if (it != null) {

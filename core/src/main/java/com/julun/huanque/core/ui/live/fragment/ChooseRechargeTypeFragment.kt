@@ -20,6 +20,7 @@ class ChooseRechargeTypeFragment : BaseDialogFragment() {
     override fun getLayoutId() = R.layout.fragment_choose_recharge_type
 
     override fun initViews() {
+
         iv_close.onClickNew {
             dismiss()
         }
@@ -37,10 +38,13 @@ class ChooseRechargeTypeFragment : BaseDialogFragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun configDialog() {
         setDialogSize(Gravity.BOTTOM, 0, 149)
         //不需要半透明遮罩层
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
+//    override fun onStart() {
+//        super.onStart()
+//
+//    }
 }

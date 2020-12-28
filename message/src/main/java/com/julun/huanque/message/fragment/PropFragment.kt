@@ -106,7 +106,10 @@ class PropFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
         tv_count.text = "剩余：${arguments?.getInt(TICKET_COUNT) ?: 0}张"
+    }
+
+    override fun configDialog() {
+        setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 }

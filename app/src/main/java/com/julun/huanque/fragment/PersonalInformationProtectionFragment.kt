@@ -10,6 +10,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
@@ -145,7 +146,7 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
 
     override fun needEnterAnimation() = false
     private fun setWindowConfig() {
-        this.setDialogSize(Gravity.CENTER, 35)
+        this.setDialogSize(Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT,padding = 35)
 //        //不需要半透明遮罩层
 ////        win.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         if (mType != WelcomeActivity) {
@@ -159,7 +160,7 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
 //    }
     override fun onStart() {
         super.onStart()
-        setWindowConfig()
+
         dialog?.setCancelable(false)
         dialog?.setCanceledOnTouchOutside(false)
 
@@ -168,7 +169,9 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
         }
     }
 
-
+    override fun configDialog() {
+        setWindowConfig()
+    }
     /**
      * 修改文案颜色并添加点击跳转
      * @param sb

@@ -60,16 +60,15 @@ class CardManagerDialogFragment : BaseDialogFragment() {
 
     override fun getLayoutId(): Int = R.layout.dialog_card_manager
 
-    override fun onStart() {
-        super.onStart()
+    override fun configDialog() {
         val window = dialog?.window ?: return
         val params = window?.attributes
         params?.dimAmount = 0.1f
         window?.attributes = params
         setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
-
     override fun initViews() {
+
         rvList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         rvList.adapter = adapter
         prepareViewModel()

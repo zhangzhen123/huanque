@@ -46,6 +46,8 @@ class EmojiSuspendDialogFragment : BaseDialogFragment() {
         mLocation = arguments?.getIntArray(ParamConstant.LOCATION)
     }
 
+    override fun configDialog() {
+    }
     @SuppressLint("RtlHardcoded")
     override fun onStart() {
         super.onStart()

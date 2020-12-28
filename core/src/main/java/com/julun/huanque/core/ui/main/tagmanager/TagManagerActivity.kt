@@ -6,7 +6,9 @@ import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.SparseArray
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
@@ -20,7 +22,9 @@ import com.chad.library.adapter.base.listener.OnItemDragListener
 import com.chad.library.adapter.base.module.DraggableModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.BaseVMActivity
+import com.julun.huanque.common.base.dialog.CustomDialogFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.ManagerTagBean
@@ -28,11 +32,14 @@ import com.julun.huanque.common.bean.beans.ManagerTagTabBean
 import com.julun.huanque.common.constant.ActivityRequestCode
 import com.julun.huanque.common.constant.ManagerTagCode
 import com.julun.huanque.common.suger.dp2pxf
+import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ToastUtils
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.activity_favorite_tag_manager.*
+import kotlinx.android.synthetic.main.activity_favorite_tag_manager.tv_title
+import kotlinx.android.synthetic.main.dialog_tag_cancel_ensure.view.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
@@ -41,6 +48,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTit
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.startActivityForResult
+import org.jetbrains.anko.textColor
+import org.jetbrains.anko.textColorResource
 import kotlin.properties.Delegates
 
 /**
@@ -71,6 +80,7 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
 //    private var state: CollapsingToolbarLayoutState? = null
 
 
+    private var deleteEnsureDialog: BaseDialogFragment? = null
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
     private val mTabTitles = arrayListOf<ManagerTagTabBean>()
@@ -79,9 +89,11 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
     private var deleteMode: Boolean by Delegates.observable(false) { _, _, newValue ->
         if (newValue) {
             btn_action_tb.backgroundResource = R.drawable.bg_solid_btn1
+            btn_action_tb.textColorResource=R.color.white
             btn_action_tb.text = "完成"
         } else {
             btn_action_tb.backgroundResource = 0
+            btn_action_tb.textColorResource=R.color.black_333
             btn_action_tb.text = "管理"
         }
         tagAdapter.notifyDataSetChanged()
@@ -175,16 +187,59 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
             logger.info("点击item=$position")
             val item = tagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             if (deleteMode) {
-                mViewModel.tagCancelGroupLike(item)
+//                mViewModel.tagCancelGroupLike(item)
+                //todo
+//                deleteEnsureDialog = deleteEnsureDialog ?: object : BaseDialogFragment() {
+//                    override fun getLayoutId(): Int {
+//                        return R.layout.dialog_tag_cancel_ensure
+//                    }
+//
+//                    override fun initViews() {
+//                        sdv_tag_pic.loadImage(item.tagPic, 120f, 120f)
+//                        tv_content.text = "取消喜欢后，将取消【${item.tagName}】下的${item.likeCnt}个标签"
+//                        tv_btn_ok.onClickNew {
+//                            mViewModel.tagCancelGroupLike(item)
+//                            dismiss()
+//                        }
+//                        tv_btn_cancel.onClickNew {
+//                            dismiss()
+//                        }
+//                    }
+//
+//                }
+                deleteEnsureDialog =
+                    deleteEnsureDialog ?: CustomDialogFragment(
+                        builder = CustomDialogFragment.FDBuilder(
+                            layoutId = {
+                                return@FDBuilder R.layout.dialog_tag_cancel_ensure
+                            },
+                            onStart = { dialog ->
+                                dialog.setDialogSize(
+                                    gravity = Gravity.CENTER,
+                                    height = ViewGroup.LayoutParams.WRAP_CONTENT,
+                                    padding = 20
+                                )
+                            },
+                            initViews = { dialog, rootView ->
+                                rootView.sdv_tag_pic.loadImage(item.tagPic, 120f, 120f)
+                                rootView.tv_content.text = "取消喜欢后，将取消【${item.tagName}】下的${item.likeCnt}个标签"
+                                rootView.tv_btn_ok.onClickNew {
+                                    mViewModel.tagCancelGroupLike(item)
+                                    dialog.dismiss()
+                                }
+                                rootView.tv_btn_cancel.onClickNew {
+                                    dialog.dismiss()
+                                }
+                            })
+                    )
+                deleteEnsureDialog?.show(supportFragmentManager, "deleteEnsureDialog")
 
-//                tagAdapter.removeAt(position)
-//                logger.info("删除后${mViewModel.currentTagList}")
             }
         }
         iv_back.onClickNew {
             onBackPressed()
         }
-        tv_title.text = "我喜欢的标签"
+        tv_title.text = "标签管理"
         btn_action_tb.onClickNew {
             if (deleteMode) {
                 mViewModel.saveTagList()

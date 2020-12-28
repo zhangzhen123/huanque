@@ -1,6 +1,7 @@
 package com.julun.huanque.core.ui.live.dialog
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
@@ -31,17 +32,20 @@ class BirdDialogFragment : BaseDialogFragment() {
 //            width = ViewGroup.LayoutParams.MATCH_PARENT,
 //            height = ViewGroup.LayoutParams.MATCH_PARENT
 //        )
+    }
+
+    override fun configDialog() {
         val window = dialog?.window ?: return
         val params = window.attributes
         params.width = ViewGroup.LayoutParams.MATCH_PARENT
         params.height = ViewGroup.LayoutParams.MATCH_PARENT
+        params.gravity=Gravity.BOTTOM
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
 //            params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
 //        }
         window.attributes = params
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
-
     override fun initViews() {
 
         initViewModel()

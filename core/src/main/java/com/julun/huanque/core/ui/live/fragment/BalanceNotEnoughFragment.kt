@@ -3,6 +3,7 @@ package com.julun.huanque.core.ui.live.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.common.base.BaseDialogFragment
@@ -101,8 +102,7 @@ class BalanceNotEnoughFragment : BaseDialogFragment() {
         dialog?.window?.setWindowAnimations(R.style.dialog_bottom_enter_style)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun configDialog() {
         setDialogSize(Gravity.CENTER, 25)
     }
 }

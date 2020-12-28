@@ -65,8 +65,8 @@ class OnlineDialogFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480, gravity = Gravity.BOTTOM)
-        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+//        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480, gravity = Gravity.BOTTOM)
+//        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     override fun onDestroyView() {
@@ -74,7 +74,12 @@ class OnlineDialogFragment : BaseDialogFragment() {
         super.onDestroyView()
     }
 
+    override fun configDialog() {
+        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480, gravity = Gravity.BOTTOM)
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+    }
     override fun initViews() {
+
         prepareViewModel()
         mTabs = arguments?.getSerializable(IntentParamKey.LIST.name) as? ArrayList<TabBean> ?: arrayListOf()
 

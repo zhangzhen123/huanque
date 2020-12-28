@@ -95,7 +95,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/dimen_90"
                         android:layout_toEndOf="@id/iv_back"
                         android:ellipsize="end"
                         android:gravity="center"

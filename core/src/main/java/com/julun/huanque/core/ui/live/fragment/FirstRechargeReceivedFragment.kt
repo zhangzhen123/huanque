@@ -3,6 +3,7 @@ package com.julun.huanque.core.ui.live.fragment
 import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.julun.huanque.common.base.BaseDialogFragment
@@ -81,11 +82,14 @@ class FirstRechargeReceivedFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.CENTER, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog?.setCancelable(false)
         dialog?.setCanceledOnTouchOutside(false)
         dialog?.setOnKeyListener { _, keyCode, _ ->
             keyCode == KeyEvent.KEYCODE_BACK
         }
+    }
+
+    override fun configDialog() {
+        setDialogSize(Gravity.CENTER, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 }

@@ -1,7 +1,10 @@
 package com.julun.huanque.core.ui.main.tagmanager
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -136,11 +139,19 @@ class TagTabFragment : BaseLazyFragment() {
     private fun initViewModel() {
         tagManagerViewModel.tagChangeStatus.observe(this, Observer {
             if (it.isSuccess()) {
+                if(it.isNew()&&it.requireT().like){
+                    ToastUtils.showToastCustom(R.layout.layout_toast_tag, action = { view, t ->
+                        val tv = view.findViewById<TextView>(R.id.toastContent)
+                        t.duration = Toast.LENGTH_SHORT
+                        t.setGravity(Gravity.CENTER, 0, 0)
+                        tv.text = "已喜欢"
+                    })
+                }
+
                 val index = mAdapter.data.indexOf(it.requireT())
                 if (index != -1) {
                     mAdapter.notifyItemChanged(index)
                 }
-
             } else if (it.state == NetStateType.ERROR) {
 //                if (it.isNew()) {
 //                    ToastUtils.show("网络异常")

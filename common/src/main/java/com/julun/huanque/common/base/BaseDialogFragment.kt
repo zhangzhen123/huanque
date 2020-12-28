@@ -163,9 +163,14 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
     }
 
     /**
+     * 配置弹窗参数 由于基本上每个弹窗都要配置宽高和位置 这里写个接口方法  还有就是控制它的执行时机在[setWindowAnimations]之前 以让默认动画生效
+     */
+    abstract fun configDialog()
+
+    /**
      * 宽度显示比例
      */
-    protected fun setDialogSize(
+    fun setDialogSize(
         gravity: Int = Gravity.BOTTOM,
         width: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
         height: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -191,7 +196,7 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
     /**
      * 宽度显示比例
      */
-    protected fun setDialogSize(
+    fun setDialogSize(
         gravity: Int = Gravity.BOTTOM,
         marginWidth: Int,
         height: Int = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -210,7 +215,24 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
 
     // 滑出动画，默认从底部滑入，底部滑出
     open fun setWindowAnimations() {
-        dialog?.window?.setWindowAnimations(R.style.dialog_bottom_bottom_style)
+        val window = dialog?.window ?: return
+        val params = window.attributes
+
+        when (params.gravity) {
+            Gravity.CENTER -> {
+                window.setWindowAnimations(R.style.dialog_center_open_ani)
+            }
+            Gravity.TOP -> {
+                window.setWindowAnimations(R.style.dialog_top_top_style)
+            }
+            Gravity.BOTTOM -> {
+                window.setWindowAnimations(R.style.dialog_bottom_bottom_style)
+            }
+            else -> {
+                window.setWindowAnimations(R.style.dialog_bottom_bottom_style)
+            }
+        }
+
     }
 
     open fun needEnterAnimation(): Boolean {
@@ -226,6 +248,7 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
     }
 
     override fun onStart() {
+        configDialog()
         if (needEnterAnimation())
             setWindowAnimations()
         super.onStart()
@@ -312,5 +335,4 @@ abstract class BaseDialogFragment : RxAppCompatDialogFragment() {
      * 注意 刷新操作由各自具体处理 因为分复用不复用弹窗  如果统一去刷新 对于不复用又不在显示的弹窗是一种浪费操作
      */
     open fun refreshDialog() {}
-
 }

@@ -38,7 +38,11 @@ class IntimacyFragment : BaseDialogFragment() {
     private val mRuleFragment: IntimacyRuleFragment by lazy { IntimacyRuleFragment() }
     override fun getLayoutId() = R.layout.fragment_intimacy
 
+    override fun configDialog() {
+        setDialogSize(Gravity.BOTTOM,  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
     override fun initViews() {
+
         initRecyclerView()
         tv_jump.onClickNew {
             if (mHomePageViewModel.mineHomePage) {
@@ -86,7 +90,6 @@ class IntimacyFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
         initViewModel()
     }
 

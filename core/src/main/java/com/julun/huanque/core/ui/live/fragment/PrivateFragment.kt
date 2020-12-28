@@ -38,10 +38,12 @@ class PrivateFragment : BaseDialogFragment() {
 
     }
 
+    override fun configDialog() {
+        setDialogSize(Gravity.BOTTOM, ViewGroup.LayoutParams.MATCH_PARENT, 480)
+    }
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.BOTTOM, ViewGroup.LayoutParams.MATCH_PARENT, 480)
         showFragment()
     }
 

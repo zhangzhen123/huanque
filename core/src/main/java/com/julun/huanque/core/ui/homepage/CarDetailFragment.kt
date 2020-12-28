@@ -28,6 +28,7 @@ class CarDetailFragment : BaseDialogFragment() {
     override fun needEnterAnimation() = false
 
     override fun initViews() {
+
         iv_close.onClickNew {
             dismiss()
         }
@@ -36,9 +37,11 @@ class CarDetailFragment : BaseDialogFragment() {
         }
     }
 
+    override fun configDialog() {
+        setDialogSize(Gravity.CENTER,  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+    }
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.CENTER, 0, ViewGroup.LayoutParams.MATCH_PARENT)
         initViewModel()
     }
 

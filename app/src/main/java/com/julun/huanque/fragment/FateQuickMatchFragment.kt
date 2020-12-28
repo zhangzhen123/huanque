@@ -3,9 +3,7 @@ package com.julun.huanque.fragment
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.WindowManager
+import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -234,10 +232,8 @@ class FateQuickMatchFragment : BaseDialogFragment() {
         tv_time.text = "缘分来了（${time}s）"
     }
 
-    override fun onStart() {
-        super.onStart()
-        setDialogSize(Gravity.TOP, 0, 222)
-
+    override fun configDialog() {
+        setDialogSize(Gravity.TOP, ViewGroup.LayoutParams.MATCH_PARENT, 222)
         val params = dialog?.window?.attributes
         params?.flags =
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; //这条就是控制点击背景的时候  如果被覆盖的view有点击事件那么就会直接触发(dialog消失并且触发背景下面view的点击事件)

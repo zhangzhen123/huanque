@@ -18,13 +18,13 @@ class IntimacyRuleFragment : BaseDialogFragment() {
     override fun needEnterAnimation() = false
 
     override fun initViews() {
+ 
         tv_know.onClickNew {
             dismiss()
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        setDialogSize(Gravity.CENTER, 52, ViewGroup.LayoutParams.WRAP_CONTENT)
+    override fun configDialog() {
+        setDialogSize(Gravity.CENTER,  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,52)
     }
 }

@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.julun.huanque.common.R
 import com.julun.huanque.common.helper.DensityHelper.Companion.dp2px
+import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.net.NAction
 import com.julun.huanque.common.suger.logger
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -71,6 +72,15 @@ object ToastUtils {
 
     fun showCustom(text: String?, duration: Int, gravity: Int) {
         ToastMsg.INSTANCE.showToastCustom(text, duration, gravity)
+    }
+
+    fun showToastCustom(layout: Int, action: (view: View, t: Toast) -> Unit) {
+        val context = CommonInit.getInstance().getContext()
+        val view = LayoutInflater.from(context).inflate(layout, null) ?: return
+        val toast = Toast(context)
+        action(view, toast)
+        toast.view = view
+        toast.show()
     }
 
     enum class ToastMsg {

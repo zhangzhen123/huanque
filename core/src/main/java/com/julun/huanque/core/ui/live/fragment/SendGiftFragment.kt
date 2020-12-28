@@ -147,13 +147,11 @@ class SendGiftFragment : BaseDialogFragment() {
         return R.layout.dialog_gift
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun configDialog() {
         this.setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.MATCH_PARENT)
         //不需要半透明遮罩层
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
-
 
     override fun initViews() {
 

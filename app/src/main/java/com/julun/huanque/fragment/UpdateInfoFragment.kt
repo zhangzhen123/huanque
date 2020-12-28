@@ -7,10 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.MotionEvent
-import android.view.ViewGroup
+import android.view.*
 import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -246,11 +243,13 @@ class UpdateInfoFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.CENTER, 30)
         dialog?.setCanceledOnTouchOutside(false)
         dialog?.setOnKeyListener(this)
     }
 
+    override fun configDialog() {
+        setDialogSize(Gravity.CENTER,  width = ViewGroup.LayoutParams.MATCH_PARENT,padding = 30)
+    }
     /**
      * 判断下一步是否可用
      */

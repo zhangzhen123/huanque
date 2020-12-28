@@ -20,8 +20,8 @@ class PrivateChargeDialogFragment : BaseDialogFragment() {
 
     override fun getLayoutId(): Int = R.layout.dialog_private_charge
 
-    override fun onStart() {
-        super.onStart()
+
+    override fun configDialog() {
         val window = dialog?.window ?: return
         val params = window.attributes
         params.dimAmount = 0.1f
@@ -31,7 +31,6 @@ class PrivateChargeDialogFragment : BaseDialogFragment() {
             height = ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
-
     override fun initViews() {
         btnCharge.onClickNew {
             mViewModel?.updateSetting(privateMsgFee = 30)

@@ -27,6 +27,7 @@ class RecommendFragment : BaseDialogFragment() {
     override fun getLayoutId() = R.layout.fragment_recommend
 
     override fun initViews() {
+
         iv_close.onClickNew {
             dismiss()
         }
@@ -38,10 +39,12 @@ class RecommendFragment : BaseDialogFragment() {
 
     }
 
+    override fun configDialog() {
+        setDialogSize(Gravity.CENTER, 30, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
     override fun onStart() {
         super.onStart()
         mAnchorNoLiveViewModel.countDownNumber.value = null
-        setDialogSize(Gravity.CENTER, 30, ViewGroup.LayoutParams.WRAP_CONTENT)
         initViewModel()
     }
 

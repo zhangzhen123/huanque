@@ -11,9 +11,7 @@ import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
 import com.julun.huanque.common.net.services.UserService
 import com.julun.huanque.common.suger.*
-import com.julun.huanque.common.utils.ToastUtils
 import kotlinx.coroutines.launch
-import java.lang.StringBuilder
 
 
 /**
@@ -29,9 +27,15 @@ class TagManagerViewModel : BaseViewModel() {
 
     private val service: UserService by lazy { Requests.create(UserService::class.java) }
 
+    /**
+     * 标记又没tag变动
+     */
     val tagChange: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
     val currentTagList = arrayListOf<ManagerTagBean>()
 
+    /**
+     * 喜欢或者取消的回调
+     */
     val tagChangeStatus: MutableLiveData<ReactiveData<ManagerTagBean>> by lazy { MutableLiveData<ReactiveData<ManagerTagBean>>() }
 
 
@@ -74,7 +78,6 @@ class TagManagerViewModel : BaseViewModel() {
                     tagPic = parentTag.tagPic
                 )
                 addTag(tagBean)
-
             }, error = {
                 tagChangeStatus.value = it.convertError()
             })
@@ -111,7 +114,7 @@ class TagManagerViewModel : BaseViewModel() {
      *这里的ManagerTagBean代表一级标签 子级的标签不会传到这里
      */
     fun addTag(itemBean: ManagerTagBean) {
-        tagHasChange=true
+        tagHasChange = true
         var isExist = false
         currentTagList.forEach {
             if (it.tagId == itemBean.tagId) {
@@ -126,7 +129,7 @@ class TagManagerViewModel : BaseViewModel() {
     }
 
     fun removeTag(itemBean: ManagerTagBean) {
-        tagHasChange=true
+        tagHasChange = true
         val iterator = currentTagList.iterator()
         while (iterator.hasNext()) {
             val item = iterator.next()
@@ -142,7 +145,7 @@ class TagManagerViewModel : BaseViewModel() {
 
 
     fun tagCancelGroupLike(tag: ManagerTagBean) {
-        tagHasChange=true
+        tagHasChange = true
         viewModelScope.launch {
 
             request({
