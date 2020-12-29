@@ -158,9 +158,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
         <activity
-            android:name=".ui.main.tagmanager.TagManagerActivity"
+            android:name=".ui.main.tag_manager.TagManagerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
+
+        <activity android:name=".ui.main.tag_manager.TagPicsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme"/>
 
 
         <service android:name=".service.FloatingService" />

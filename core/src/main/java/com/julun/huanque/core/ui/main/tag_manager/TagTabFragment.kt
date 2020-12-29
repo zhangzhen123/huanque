@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.main.tagmanager
+package com.julun.huanque.core.ui.main.tag_manager
 
 import android.os.Bundle
 import android.view.Gravity
@@ -14,8 +14,6 @@ import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.julun.huanque.common.base.BaseLazyFragment
-import com.julun.huanque.common.base.BaseVMFragment
-import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.IntentParamKey
@@ -94,8 +92,9 @@ class TagTabFragment : BaseLazyFragment() {
         super.initEvents(rootView)
 
         mAdapter.onAdapterClickNew { _, _, position ->
-            //todo
+            val item=mAdapter.getItemOrNull(position)?:return@onAdapterClickNew
             logger.info("跳转到标签详情")
+            TagPicsActivity.start(requireActivity(),item)
 
 
         }

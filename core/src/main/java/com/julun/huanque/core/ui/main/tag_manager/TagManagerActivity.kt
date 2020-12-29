@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.main.tagmanager
+package com.julun.huanque.core.ui.main.tag_manager
 
 import android.app.Activity
 import android.content.Context
@@ -48,8 +48,6 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTit
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.textColor
-import org.jetbrains.anko.textColorResource
 import kotlin.properties.Delegates
 
 /**
@@ -89,12 +87,12 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
     private var deleteMode: Boolean by Delegates.observable(false) { _, _, newValue ->
         if (newValue) {
             btn_action_tb.backgroundResource = R.drawable.bg_solid_btn1
-            btn_action_tb.textColorResource=R.color.white
             btn_action_tb.text = "完成"
+            btn_action_tb.isActivated = true
         } else {
             btn_action_tb.backgroundResource = 0
-            btn_action_tb.textColorResource=R.color.black_333
             btn_action_tb.text = "管理"
+            btn_action_tb.isActivated = false
         }
         tagAdapter.notifyDataSetChanged()
     }
@@ -147,11 +145,10 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
 
             override fun onItemDragEnd(viewHolder: RecyclerView.ViewHolder, pos: Int) {
                 mViewModel.tagHasChange = true
-                logger.info("drag end")
+                mViewModel.tagSequenceHasChange = true
                 val holder = viewHolder as BaseViewHolder
                 currentSelect = -1
                 tagAdapter.notifyDataSetChanged()
-                // 结束时，item背景色变化，demo这里使用了一个动画渐变，使得自然
                 logger.info("更换位置后${mViewModel.currentTagList}")
             }
         }
@@ -291,8 +288,11 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
 
     override fun finish() {
         val intent = this.intent
-        intent.putExtra(ManagerTagCode.TAG_LIST, mViewModel.currentTagList)
-        setResult(Activity.RESULT_OK, intent)
+
+        if(mViewModel.tagHasChange){
+            intent.putExtra(ManagerTagCode.TAG_LIST, mViewModel.currentTagList)
+            setResult(Activity.RESULT_OK, intent)
+        }
         super.finish()
     }
 

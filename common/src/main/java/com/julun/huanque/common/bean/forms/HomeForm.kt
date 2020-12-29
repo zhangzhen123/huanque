@@ -56,7 +56,16 @@ class LikeForm(
 
 class TagForm(
     var tagId: Int
-)class TagListForm(
+)
+
+class TagListForm(
     var tagIds: String
 )
+
+class TagDetailForm(
+    var tagId: Int,
+    var friendId: Long? = null,
+    var offset: Int = 0
+)
+
 

@@ -311,5 +311,11 @@ interface UserService {
     @POST("social/user/tag/saveManage")
     suspend fun saveTagManage(@Body body: TagListForm): Root<VoidResult>
 
+    /**
+     * 标签详情页图片
+     */
+    @POST("social/user/tag/likeDetail")
+    suspend fun tagDetail(@Body body: TagDetailForm): Root<TagDetailBean<TagPicBean>>
+
 
 }

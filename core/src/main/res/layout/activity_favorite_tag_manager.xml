@@ -109,8 +109,8 @@
 
                     <TextView
                         android:id="@+id/btn_action_tb"
-                        android:layout_width="@dimen/dimen_68"
-                        android:layout_height="@dimen/dimen_28"
+                        android:layout_width="@dimen/dimen_40"
+                        android:layout_height="@dimen/dimen_22"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/dimen_15"

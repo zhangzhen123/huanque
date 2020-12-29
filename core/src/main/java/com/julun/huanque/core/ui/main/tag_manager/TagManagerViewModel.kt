@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.main.tagmanager
+package com.julun.huanque.core.ui.main.tag_manager
 
 import androidx.lifecycle.*
 import com.julun.huanque.common.basic.ReactiveData
@@ -161,15 +161,17 @@ class TagManagerViewModel : BaseViewModel() {
 
     }
 
-    //标记是否有标签顺序变动
+    //标签总体有没有变动 用于关闭返回时是否通知数据更新
     var tagHasChange = false
+
+    //标记是否有标签顺序变动 用于保存顺序
+    var tagSequenceHasChange = false
 
     /**
      * 保存标签的顺序
      */
     fun saveTagList() {
-        if (!tagHasChange) {
-            tagHasChange = false
+        if (!tagSequenceHasChange) {
             return
         }
         viewModelScope.launch {
@@ -186,6 +188,7 @@ class TagManagerViewModel : BaseViewModel() {
                 val tags = tagsBuilder.toString()
                 val result = service.saveTagManage(TagListForm(tags)).dataConvert()
                 saveTagList.value = result.convertRtData()
+                tagSequenceHasChange = false
             }, error = {
                 saveTagList.value = it.convertError()
             })

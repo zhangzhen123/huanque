@@ -1,5 +1,6 @@
 package com.julun.huanque.common.bean.beans
 
+import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.ChatUser
 import java.io.Serializable
 
@@ -310,7 +311,7 @@ data class ManagerTagBean(
     var tagId: Int = 0,
     var tagName: String = "",
     var tagPic: String = ""
-):Serializable{
+) : Serializable {
     override fun hashCode(): Int {
         return tagId.hashCode()
     }
@@ -330,4 +331,24 @@ data class ManagerTagBean(
 data class ManagerListData(
     var manageList: MutableList<ManagerTagBean> = mutableListOf(),
     var tagList: List<ManagerTagTabBean> = listOf()
+)
+
+data class TagDetailBean<T>(
+    var authNum: Int = 0,
+    var authPage: RootListData<T> = RootListData<T>(),
+    var like: Boolean = false,
+    var tagDesc: String = "",
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = "",
+    var tagPic: String = ""
+)
+
+
+data class TagPicBean(
+    var applyPic: String = "",
+    var tagId: Int = 0,
+    var targetPic: Boolean = false,
+    var userId: Int = 0,
+    var picNum: Int = 0
 )

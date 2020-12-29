@@ -90,4 +90,5 @@ object TagTabType {
 
 object ManagerTagCode {
     const val TAG_LIST = "tag_list"
+    const val TAG_INFO= "tag_info"
 }

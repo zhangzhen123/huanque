@@ -22,12 +22,11 @@ import com.julun.huanque.common.constant.ActivityRequestCode
 import com.julun.huanque.common.constant.ManagerTagCode
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.core.R
-import com.julun.huanque.core.ui.main.tagmanager.TagManagerActivity
+import com.julun.huanque.core.ui.main.tag_manager.TagManagerActivity
 import kotlinx.android.synthetic.main.fragment_favorite_container.*
 import kotlinx.android.synthetic.main.fragment_favorite_container.magic_indicator
 import kotlinx.android.synthetic.main.fragment_favorite_container.state_pager_view
 import kotlinx.android.synthetic.main.fragment_favorite_container.view_pager
-import kotlinx.android.synthetic.main.fragment_heartbeat_container.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
@@ -145,7 +144,9 @@ class FavoriteFragment : BaseLazyFragment() {
                 ActivityRequestCode.MANAGER_TAG_RESULT_CODE -> {
                     val list = data?.extras?.get(ManagerTagCode.TAG_LIST) as? ArrayList<ManagerTagBean> ?: return
                     logger.info("我是选择的结果=${list}")
+                    val first=mTabTitles.first()
                     mTabTitles.clear()
+                    mTabTitles.add(first)
                     mTabTitles.addAll(list)
                     refreshTabList(currentTag?.tagId)
                 }
