@@ -435,4 +435,10 @@ interface SocialService {
 
     @POST("social/user/tag/socialType")
     suspend fun socialType(@Body body: EmptyForm = EmptyForm()): Root<LoginTagInfo>
+
+    /**
+     * 家乡数据
+     */
+    @POST("user/acct/card/homeTown")
+    suspend fun homeTown(@Body body: FriendIdForm): Root<HomeTownInfo>
 }

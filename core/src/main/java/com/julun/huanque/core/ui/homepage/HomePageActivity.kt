@@ -227,27 +227,6 @@ class HomePageActivity : BaseActivity() {
 
     override fun initEvents(rootView: View) {
         super.initEvents(rootView)
-        //关注
-        view_attention_home_page.onClickNew {
-            if (mHomePageViewModel.followStatus.value == BusiConstant.False) {
-                //未关注状态   关注
-//                mHomePageViewModel.follow()
-                reportClick(
-                    StatisticCode.Follow + StatisticCode.Home
-                )
-
-                huanQueViewModel.follow(mHomePageViewModel.targetUserId)
-            } else {
-                //关注状态  取消关注
-                MyAlertDialog(this).showAlertWithOKAndCancel(
-                    "确定不再关注Ta？",
-                    MyAlertDialog.MyDialogCallback(onRight = {
-//                        mHomePageViewModel.unFollow()
-                        huanQueViewModel.unFollow(mHomePageViewModel.targetUserId)
-                    })
-                )
-            }
-        }
 
 
         iv_more.onClickNew {
@@ -309,26 +288,6 @@ class HomePageActivity : BaseActivity() {
         //播放音效
         view_voice.onClickNew { }
 
-        //拨打电话
-        tv_voice.onClickNew {
-            checkAudioPermission()
-        }
-
-        tv_sendgift.onClickNew {
-            //送礼
-            val userId = mHomePageViewModel.targetUserId
-            val bundle = Bundle()
-            bundle.putLong(ParamConstant.TARGET_USER_ID, userId)
-            val basicBean = mHomePageViewModel.homeInfoBean.value
-            if (basicBean != null) {
-                bundle.putString(ParamConstant.NICKNAME, basicBean.nickname)
-                bundle.putString(ParamConstant.HeaderPic, basicBean.headPic)
-            }
-            bundle.putString(ParamConstant.OPERATION, OperationType.OPEN_GIFT)
-            ARouter.getInstance().build(ARouterConstant.PRIVATE_CONVERSATION_ACTIVITY)
-                .with(bundle)
-                .navigation(this)
-        }
 
         view_private_chat.onClickNew {
             //私信页面
@@ -382,12 +341,12 @@ class HomePageActivity : BaseActivity() {
             tv_time.performClick()
         }
 
-        view_living.onClickNew {
-            //跳转直播间
-            val programId =
-                mHomePageViewModel.homeInfoBean.value?.playProgram?.programId ?: return@onClickNew
-            PlayerActivity.start(this, programId, PlayerFrom.UserHome)
-        }
+//        view_living.onClickNew {
+//            //跳转直播间
+//            val programId =
+//                mHomePageViewModel.homeInfoBean.value?.playProgram?.programId ?: return@onClickNew
+//            PlayerActivity.start(this, programId, PlayerFrom.UserHome)
+//        }
         tv_black_status.onClickNew {
             //屏蔽事件
         }
@@ -550,9 +509,6 @@ class HomePageActivity : BaseActivity() {
             }
         })
 
-        mHomePageViewModel.followStatus.observe(this, Observer {
-            showAttentionState(it ?: return@Observer)
-        })
         mHomePageViewModel.blackStatus.observe(this, Observer {
             val bean =
                 if (it == BusiConstant.True && mHomePageViewModel.homeInfoBean.value?.playProgram?.living != BusiConstant.True) {
@@ -640,32 +596,6 @@ class HomePageActivity : BaseActivity() {
             }
 
         })
-    }
-
-    /**
-     * 显示关注状态
-     */
-    private fun showAttentionState(status: String) {
-        when (status) {
-            FollowStatus.False -> {
-                //未关注
-                tv_attention_home_page.isSelected = true
-                view_attention_home_page.isSelected = true
-                tv_attention_home_page.text = "关注"
-            }
-            FollowStatus.True -> {
-                //已关注
-                tv_attention_home_page.isSelected = false
-                view_attention_home_page.isSelected = false
-                tv_attention_home_page.text = "已关注"
-            }
-            FollowStatus.Mutual -> {
-                //互相关注
-                tv_attention_home_page.isSelected = false
-                view_attention_home_page.isSelected = false
-                tv_attention_home_page.text = "相互关注"
-            }
-        }
     }
 
     /**
@@ -760,36 +690,18 @@ class HomePageActivity : BaseActivity() {
         if (mHomePageViewModel.mineHomePage) {
             rl_edit_info.show()
             //隐藏底部
-            tv_voice.hide()
-            tv_sendgift.hide()
-            view_living.hide()
             view_private_chat.hide()
-            view_attention_home_page.hide()
-            sdv_living_bottom.hide()
-            tv_living_bottom.hide()
             tv_private_chat.hide()
-            tv_attention_home_page.hide()
             tv_black_status.hide()
+            tv_home_heart.hide()
+            view_heart.hide()
         } else {
             rl_edit_info.hide()
             //显示底部视图
-            val liveStatus = bean.playProgram?.living ?: ""
-            if (liveStatus == BusiConstant.True) {
-                //开播状态
-                tv_living_bottom.show()
-                sdv_living_bottom.show()
-                ImageUtils.loadGifImageLocal(sdv_living_bottom, R.mipmap.living_home_page_bottom)
-                view_living.show()
-                view_private_chat.hide()
-                tv_private_chat.hide()
-            } else {
-                //未处于开播状态
-                tv_living_bottom.hide()
-                sdv_living_bottom.hide()
-                view_living.hide()
-                view_private_chat.show()
-                tv_private_chat.show()
-            }
+            view_private_chat.show()
+            tv_private_chat.show()
+            tv_home_heart.show()
+            view_heart.show()
         }
     }
 

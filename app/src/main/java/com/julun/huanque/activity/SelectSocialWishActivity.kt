@@ -64,7 +64,7 @@ class SelectSocialWishActivity : BaseActivity() {
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.adapter = mAdapter
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
-            if (view.id == R.id.tv_social) {
+            if (view.id == R.id.view_social) {
                 //点击了文本,跳转首页
                 val type =
                     mAdapter.getItemOrNull(position)?.wishType ?: return@setOnItemChildClickListener

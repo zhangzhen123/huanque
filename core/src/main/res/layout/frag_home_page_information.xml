@@ -94,8 +94,9 @@
         <TextView
             android:id="@+id/tv_home_town"
             android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:singleLine="true"
             android:textColor="@color/black_333"
@@ -126,8 +127,9 @@
         <TextView
             android:id="@+id/tv_stature"
             android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:singleLine="true"
             android:textColor="@color/black_333"
@@ -159,8 +161,9 @@
         <TextView
             android:id="@+id/tv_constellation"
             android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:singleLine="true"
             android:textColor="@color/black_333"
@@ -191,8 +194,9 @@
         <TextView
             android:id="@+id/tv_job"
             android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:singleLine="true"
             android:textColor="@color/black_333"
@@ -223,8 +227,9 @@
         <TextView
             android:id="@+id/tv_school"
             android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:singleLine="true"
             android:textColor="@color/black_333"
@@ -247,26 +252,39 @@
             android:textColor="#B2B2B2"
             android:textSize="@dimen/sp_12"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/tv_social"
+            app:layout_constraintBottom_toTopOf="@+id/vf_social"
             app:layout_constraintLeft_toLeftOf="@id/view_social"
             app:layout_constraintTop_toTopOf="@id/view_social"
             app:layout_constraintVertical_chainStyle="packed" />
 
-        <TextView
-            android:id="@+id/tv_social"
+        <!--        <TextView-->
+        <!--            android:layout_width="0px"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="3dp"-->
+        <!--            android:paddingLeft="10dp"-->
+        <!--            android:singleLine="true"-->
+        <!--            android:textColor="@color/black_333"-->
+        <!--            android:textSize="@dimen/sp_12"-->
+        <!--            android:textStyle="bold"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@id/view_social"-->
+        <!--            app:layout_constraintLeft_toLeftOf="@id/view_social"-->
+        <!--            app:layout_constraintRight_toRightOf="@id/view_social"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/tv_social_title"-->
+        <!--            tools:text="寻找短期关系" />-->
+
+        <ViewFlipper
+            android:id="@+id/vf_social"
             android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="2dp"
+            android:flipInterval="3000"
+            android:inAnimation="@anim/lm_anim_come_in"
+            android:outAnimation="@anim/lm_anim_get_out"
             android:paddingLeft="10dp"
-            android:singleLine="true"
-            android:textColor="@color/black_333"
-            android:textSize="@dimen/sp_12"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/view_social"
             app:layout_constraintLeft_toLeftOf="@id/view_social"
             app:layout_constraintRight_toRightOf="@id/view_social"
-            app:layout_constraintTop_toBottomOf="@id/tv_social_title"
-            tools:text="寻找短期关系" />
+            app:layout_constraintTop_toBottomOf="@id/tv_social_title" />
 
 
         <LinearLayout
@@ -310,6 +328,7 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/tv_more_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
@@ -382,6 +401,7 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/tv_more_like_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
@@ -410,6 +430,24 @@
                 app:layout_constraintRight_toRightOf="parent" />
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_user_id"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/bg_home_id"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="@dimen/sp_10"
+            android:textColor="#B2B2B2"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rl_like_tag"
+            tools:text="欢鹊 7683663" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

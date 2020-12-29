@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.panel_view_public_chat.view.iv_delete
  *@创建时间 2020/7/31 18:00
  *@描述 直播间使用的表情输入框
  */
-class PuclicChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView, ConstraintLayout(context, attrs) {
+class PuclicChatPanelView(context: Context, attrs: AttributeSet?) : IPanelView, ConstraintLayout(context, attrs) {
     private var triggerViewId = 0
     private var isToggle = true
     //普通表情的Adapter

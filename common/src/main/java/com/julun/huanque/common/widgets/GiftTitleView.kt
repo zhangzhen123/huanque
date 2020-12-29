@@ -17,7 +17,7 @@ import com.julun.huanque.common.suger.show
  *@创建时间 2020/2/6 9:39
  *@描述 礼物面板使用的标题View。（TextView+红点）
  */
-class GiftTitleView(context: Context?, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+class GiftTitleView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
     //显示文案
     private var mTv: TextView? = null
     //红点
@@ -25,7 +25,7 @@ class GiftTitleView(context: Context?, attrs: AttributeSet?) : ConstraintLayout(
     //指示线
     private var mViewLine: View? = null
 
-    constructor(context: Context?) : this(context, null)
+    constructor(context: Context) : this(context, null)
 
     init {
         context?.let { con ->

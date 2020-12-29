@@ -568,8 +568,8 @@ data class HomePageInfo(
     var canInteractive: String = "",
     //是否拉黑
     var black: String = "",
-    //星座
-    var constellation: String = "",
+    //星座数据
+    var constellationInfo: ConstellationInfo = ConstellationInfo(),
     //当前登录用户性别
     var currSexType: String = "",
     //当前用户ID
@@ -612,7 +612,8 @@ data class HomePageInfo(
     var userLevel: Int = 0,
     //用户类型
     var userType: String = "",
-
+    //身材数据
+    var figure: FigureBean = FigureBean(),
     //社交意愿
     var wishList: MutableList<SocialWishBean> = mutableListOf(),
     //家乡ID
@@ -621,51 +622,127 @@ data class HomePageInfo(
     var homeTownProvince: String = "",
     //家乡城市
     var homeTownCity: String = "",
-    //职业Id
-    var professionId: Long = 0,
-    //职业名称
-    var professionName: String = "",
-    //学历
-    var education: String = "",
-    //学校ID
-    var schoolId: Int = 0,
-    //学校名称
-    var school: String = "",
-
-
-    //身高
-    var height: Int = 0,
+    //职业相关
+    var profession: ProfessionInfo = ProfessionInfo(),
+    //学校数据
+    var schoolInfo: SchoolInfo = SchoolInfo(),
 
     //语音签名对象
     var voice: VoiceBean = VoiceBean(),
-    //体重
-    var weight: Int = 0,
-    //密友评价是否还有更多
-    var hasMore: String = "",
 
     //主播等级
     var anchorLevel: Int = 0,
     //贵族等级图标
     var royalPic: String = "",
-    //是否显示亲密知己
-    var showCloseConfidant: String = "",
-    //亲密知己对象
-    var closeConfidant: IntimBeanFriendBean = IntimBeanFriendBean(),
-    //亲密榜数据
-    var closeConfidantRank: CloseConfidantRankBean = CloseConfidantRankBean(),
     //播放数据
     var playProgram: HomePageProgram = HomePageProgram(),
-    //养鹊相关数据
-    var playParadise: HomePagePlayParadise = HomePagePlayParadise(),
-    //足迹使用的对象
-    var homeCity: HomeCity = HomeCity(),
-
-    //勋章数据
-    var iconList: MutableList<String> = mutableListOf(),
     //直播间内的动态数据
     var post: PostInHomePage = PostInHomePage()
     /*2.0.0新增字段*/
 
+) : Serializable
+
+/**
+ * 家乡数据
+ */
+data class HomeTownInfo(
+    //家乡省份名称 没有省份 只显示城市（直辖市）
+    var homeTownProvince: String = "",
+    //家乡城市名称
+    var homeTownCity: String = "",
+    //家乡介绍
+    var introduce: String = "",
+    //人文数据
+    var cultureList: MutableList<SingleCulture> = mutableListOf()
+) : Serializable
+
+/**
+ * 单个人文列表对象
+ */
+data class SingleCulture(
+    //人文类型
+    var cultureType: String = "",
+    //人文类型文案
+    var cultureTypeText: String = "",
+    //人文类型数量
+    var num: Int = 0,
+    //人文列表数据
+    var cultureConfigList: MutableList<SingleCultureConfig> = mutableListOf()
+) : Serializable
+
+/**
+ * 单个人文对象
+ */
+data class SingleCultureConfig(
+    //城市ID
+    var cityId: Long = 0,
+    //城市名称
+    var name: String = "",
+    //封面
+    var coverPic: String = "",
+    //去过或者吃过标记
+    var mark: String = ""
+) : Serializable
+
+
+/**
+ * 职业数据
+ */
+data class ProfessionInfo(
+    //职业ID
+    var professionId: Int = 0,
+    //行业
+    var professionTypeText: String = "",
+    //职业名称
+    var professionName: String = "",
+    //年收入
+    var incomeText: String = "",
+    //职业特性
+    var myFeatureList: String = ""
+) : Serializable
+
+/**
+ * 学校数据
+ */
+data class SchoolInfo(
+    //学历
+    var education: String = "",
+    //学历code
+    var educationCode: String = "",
+    //学校名称
+    var school: String = "",
+    //入学年份
+    var startYear: String = ""
+) : Serializable
+
+/**
+ * 身材数据
+ */
+data class FigureBean(
+    //身高
+    var height: Int = 0,
+    //体重
+    var weight: Int = 0,
+    //身材
+    var figure: String = "",
+    //建议
+    var suggest: String = ""
+) : Serializable
+
+/**
+ * 星座数据
+ */
+data class ConstellationInfo(
+    //星座名称
+    var constellationName: String = "",
+    //星座图片
+    var constellationPic: String = "",
+    //适配文案日期
+    var hitText: String = "",
+    //最佳配对
+    var pairConstellation: String = "",
+    //星座描述
+    var constellationDesc: String = ""
 ) : Serializable
 
 /**

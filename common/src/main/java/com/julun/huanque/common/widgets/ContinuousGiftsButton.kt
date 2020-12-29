@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.view_continuous_gifts.view.*
  * @version 1.0
  * @createDate 2019/03/08
  */
-class ContinuousGiftsButton(context: Context?, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+class ContinuousGiftsButton(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
 
 //    private lateinit var mViewmodel: ContinuousGiftViewModel
 //    private var mFrom: NewSendGiftForm? = null

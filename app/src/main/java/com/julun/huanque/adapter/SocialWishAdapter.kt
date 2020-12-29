@@ -12,9 +12,9 @@ import com.julun.huanque.common.bean.beans.SocialWishBean
  */
 class SocialWishAdapter : BaseQuickAdapter<SocialWishBean,BaseViewHolder>(R.layout.recycler_item_social_wish) {
     init {
-        addChildClickViewIds(R.id.tv_social)
+        addChildClickViewIds(R.id.view_social)
     }
     override fun convert(holder: BaseViewHolder, item: SocialWishBean) {
-        holder.setText(R.id.tv_social,item.wishTypeText)
+        holder.setText(R.id.view_social,item.wishTypeText)
     }
 }

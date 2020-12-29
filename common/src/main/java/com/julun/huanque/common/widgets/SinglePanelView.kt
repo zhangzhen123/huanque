@@ -33,9 +33,9 @@ import kotlinx.android.synthetic.main.panel_view_private_chat.view.*
  *@描述
  * @param type 表情类型
  */
-class SinglePanelView(val type: String, context: Context?, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+class SinglePanelView(val type: String, context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
 
-    constructor(type: String, context: Context?) : this(type, context, null)
+    constructor(type: String, context: Context) : this(type, context, null)
 
     private var mNeedLevel = 0
 

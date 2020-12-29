@@ -17,7 +17,7 @@ import com.julun.huanque.common.utils.GlobalUtils
  *@创建时间 2020/12/9 16:39
  *@描述 需要添加播放的ConstraintLayout
  */
-class PlayerConstraintLayout(context: Context?, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+class PlayerConstraintLayout(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
     //播放数据
     private var mHomeProgramInfo: HomePageProgram? = null
 
