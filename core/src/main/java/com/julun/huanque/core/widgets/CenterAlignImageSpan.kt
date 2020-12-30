@@ -1,6 +1,5 @@
 package com.julun.huanque.core.widgets
 
-import androidx.constraintlayout.solver.widgets.WidgetContainer.getBounds
 import android.R.attr.bottom
 import android.graphics.Paint.FontMetricsInt
 import android.graphics.drawable.Drawable

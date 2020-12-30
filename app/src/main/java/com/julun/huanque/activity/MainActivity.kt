@@ -140,7 +140,10 @@ class MainActivity : BaseActivity() {
         if (SessionUtils.getIsRegUser() && SessionUtils.getSessionId().isNotEmpty()) {
             AppChecker.startCheck(true)
         } else {
-            ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+            val intent = Intent(this,WelcomeActivity::class.java)
+            if(ForceUtils.activityMatch(intent)){
+                startActivity(intent)
+            }
         }
         judgeUpdateInfoFragment(intent)
         doWithChannel()
@@ -271,8 +274,8 @@ class MainActivity : BaseActivity() {
 
         mMessageViewModel.chatRoom()
 
-        val birthday = intent.getStringExtra(ParamConstant.Birthday)
-        if (birthday?.isNotEmpty() == true) {
+        val birthday = SessionUtils.getBirthday()
+        if (birthday.isNotEmpty()) {
             val mUpdateInfoFragment = UpdateInfoFragment.newInstance(birthday)
             addOrderDialog(mUpdateInfoFragment)
         }
@@ -887,7 +890,10 @@ class MainActivity : BaseActivity() {
         ToastUtils.show(message)
         finish()
         //跳转登录页面
-        ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+        val intent = Intent(this,WelcomeActivity::class.java)
+        if(ForceUtils.activityMatch(intent)){
+            startActivity(intent)
+        }
 //        MyAlertDialog(this@MainActivity, false).showAlertWithOK(
 //            message = message,
 //            okText = "知道了", callback = MyAlertDialog.MyDialogCallback(onRight = {
@@ -955,7 +961,11 @@ class MainActivity : BaseActivity() {
         LoginManager.doLoginOut({
             finish()
             //退出登录成功
-            ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+//            ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+            val intent = Intent(this,WelcomeActivity::class.java)
+            if(ForceUtils.activityMatch(intent)){
+                startActivity(intent)
+            }
         })
     }
 

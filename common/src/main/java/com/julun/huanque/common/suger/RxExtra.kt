@@ -38,9 +38,10 @@ private const val REQUEST_RETURN_TYPE_DEF_ERROR = -200
 const val OTHER_DEF_ERROR = -100//其他错误各种报错异常
 
 //给各个 接口添加扩展方法
-private fun <T> Observable<Root<T>>.afterRequest(intArray: IntArray? = null): Observable<T> = this.map {
-    return@map mapper(it, intArray)
-}
+private fun <T> Observable<Root<T>>.afterRequest(intArray: IntArray? = null): Observable<T> =
+    this.map {
+        return@map mapper(it, intArray)
+    }
 
 private fun <T> Flowable<Root<T>>.afterRequest(intArray: IntArray? = null): Flowable<T> = this.map {
     return@map mapper(it, intArray)
@@ -123,7 +124,7 @@ fun <T> mapper(it: Root<T>, intArray: IntArray? = null): T {
             UserHeartManager.stopBeat()
             LoginStatusUtils.logout()
             //跳转登录页面
-            ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+            ARouter.getInstance().build(ARouterConstant.Welcome_Activity).navigation()
             ActivitiesManager.INSTANCE.finishActivityExcept("com.julun.huanque.activity.LoginActivity")
         }
 
@@ -187,22 +188,26 @@ fun <T> Observable<Root<T>>.nothing() {
 
 //添加处理函数
 fun <T> Observable<Root<T>>.handleResponse(observableSubscriber: CancelableObservableSubscriber<T>) {
-    this.afterRequest(observableSubscriber.specifiedCodes).compose(RunOnMainSchedulerTransformer<T>())
+    this.afterRequest(observableSubscriber.specifiedCodes)
+        .compose(RunOnMainSchedulerTransformer<T>())
         .subscribe(observableSubscriber)
 }
 
 fun <T> Maybe<Root<T>>.handleResponse(observableSubscriber: CancelableObservableSubscriber<T>) {
-    this.afterRequest(observableSubscriber.specifiedCodes).compose(RunOnMainSchedulerTransformer<T>())
+    this.afterRequest(observableSubscriber.specifiedCodes)
+        .compose(RunOnMainSchedulerTransformer<T>())
         .subscribe(observableSubscriber)
 }
 
 fun <T> Single<Root<T>>.handleResponse(observableSubscriber: CancelableObservableSubscriber<T>) {
-    this.afterRequest(observableSubscriber.specifiedCodes).compose(RunOnMainSchedulerTransformer<T>())
+    this.afterRequest(observableSubscriber.specifiedCodes)
+        .compose(RunOnMainSchedulerTransformer<T>())
         .subscribe(observableSubscriber)
 }
 
 fun <T> Flowable<Root<T>>.handleResponse(observableSubscriber: CancelableObservableSubscriber<T>) {
-    this.afterRequest(observableSubscriber.specifiedCodes).compose(RunOnMainSchedulerTransformer<T>())
+    this.afterRequest(observableSubscriber.specifiedCodes)
+        .compose(RunOnMainSchedulerTransformer<T>())
         .subscribe(observableSubscriber)
 }
 
@@ -243,7 +248,8 @@ fun <T> Observable<Root<T>>.handleWithResponse(
     errorHandler: Function1<Throwable, Unit> = {}, specifiedCodes: IntArray = intArrayOf()
 ) {
 
-    val afterRequest: Observable<T> = this.afterRequest(specifiedCodes).compose(RunOnMainSchedulerTransformer<T>())
+    val afterRequest: Observable<T> =
+        this.afterRequest(specifiedCodes).compose(RunOnMainSchedulerTransformer<T>())
 
     afterRequest.subscribe(successHandler, errorHandler)
 

@@ -27,7 +27,7 @@ import org.jetbrains.anko.backgroundColorResource
  *@描述 PK 开始动画
  * 2人PK开场动画
  */
-class Pk2StartAnimationView(context: Context?, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+class Pk2StartAnimationView(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
     init {
         if (context != null) {
             LayoutInflater.from(context).inflate(R.layout.view_pk2_start, this)

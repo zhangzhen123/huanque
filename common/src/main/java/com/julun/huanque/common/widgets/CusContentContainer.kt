@@ -23,7 +23,7 @@ import com.julun.huanque.common.utils.ULog
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-class CusContentContainer @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+class CusContentContainer @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     ConstraintLayout(context, attrs, defStyleAttr), IContentContainer {
     @IdRes
     private var editTextId = 0

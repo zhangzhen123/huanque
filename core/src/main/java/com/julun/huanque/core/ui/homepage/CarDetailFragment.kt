@@ -48,7 +48,7 @@ class CarDetailFragment : BaseDialogFragment() {
     private fun initViewModel() {
         mHomePageViewModel.homeInfoBean.observe(this, Observer {
             if (it != null) {
-                showCarInfo(it.carInfo)
+//                showCarInfo(it.carInfo)
             }
         })
     }

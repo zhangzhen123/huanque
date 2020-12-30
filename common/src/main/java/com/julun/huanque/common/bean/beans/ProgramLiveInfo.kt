@@ -159,7 +159,12 @@ class AuthorFollowBean : Serializable {
 }
 
 
-class SingleGame(var gameCode: String = "", var pic: String = "", var gameUrl: String = "", var extJsonCfg: String? = null) :
+class SingleGame(
+    var gameCode: String = "",
+    var pic: String = "",
+    var gameUrl: String = "",
+    var extJsonCfg: String? = null
+) :
     Serializable
 /**
  * 直播间显示控件
@@ -553,50 +558,54 @@ data class ProgramInfoHomePage(
 data class HomePageInfo(
     //年龄
     var age: Int = 0,
-    //评价列表
-    var appraiseList: MutableList<AppraiseBean> = mutableListOf(),
     //真人标识
     var authMark: String = "",
+    //他人主页认证的标签列表
+    var authTagList: MutableList<HomeTagBean> = mutableListOf(),
+    //我认证的标签
+    var myAuthTag: MineTagBean = MineTagBean(),
     //生日
     var birthday: String = "",
+    //是否可以互动
+    var canInteractive: String = "",
     //是否拉黑
     var black: String = "",
-    //性格数据
-    var characterTag: CharacterTag = CharacterTag(),
-    //城市列表
-    var cityList: MutableList<CityBean> = mutableListOf(),
-    //星座
-    var constellation: String = "",
-    //当前城市
+    //星座数据
+    var constellationInfo: ConstellationInfo = ConstellationInfo(),
+    //当前登录用户性别
+    var currSexType: String = "",
+    //当前用户ID
+    var currUserId: Long = 0,
+//当前城市
     var currentCity: String = "",
+    //距离使用的对象
+    var distanceCity: HomeCity = HomeCity(),
     //是否关注
     var follow: String = "",
     //头像
     var headPic: String = "",
+    //我的签名
+    var mySign: String = "",
     //是否是真人
     var headRealPeople: String = "",
-    //身高
-    var height: Int = 0,
     //是否是密友
     var intimate: String = "",
-    //职业ID
-    var jobId: Int = 0,
-    //职业名称
-    var jobName: String = "",
-    //我的性格列表(相同点判断)
-    var myCharacterTag: MutableList<String> = mutableListOf(),
-    //我的城市列表
-    var myCityList: MutableList<CityBean> = mutableListOf(),
-    //我的签名
-    var mySign: String = "签名不足以表达我自己，找我私聊吧~",
+    //他人主页喜欢的标签列表
+    var likeTagList: MutableList<HomeTagBean> = mutableListOf(),
+    //我喜欢的标签
+    var myLikeTag: MineTagBean = MineTagBean(),
     //昵称
     var nickname: String = "",
-    //勋章列表
-    var officeMedal: MutableList<String> = mutableListOf(),
-    //乐园是否开启
-    var paradiseSwitch: String = "",
+    //在线状态
+    var online: HomeOnLineBean? = null,
+    //资料完成度 百分比
+    var perfection: Int = 0,
     //封面列表
     var picList: MutableList<String> = mutableListOf(),
+    //动态数量
+    var postNum: Int = 0,
+    //收礼数据
+    var receiveGifts: MutableList<ChatGift> = mutableListOf(),
     //贵族等级
     var royalLevel: Int = 0,
     //性别
@@ -607,41 +616,206 @@ data class HomePageInfo(
     var userLevel: Int = 0,
     //用户类型
     var userType: String = "",
+    //身材数据
+    var figure: FigureBean = FigureBean(),
+    //社交意愿
+    var wishList: MutableList<SocialWishBean> = mutableListOf(),
+    //家乡ID
+    var homeTownId: Long = 0,
+    //家乡省会
+    var homeTownProvince: String = "",
+    //家乡城市
+    var homeTownCity: String = "",
+    //职业相关
+    var profession: ProfessionInfo = ProfessionInfo(),
+    //学校数据
+    var schoolInfo: SchoolInfo = SchoolInfo(),
+
     //语音签名对象
     var voice: VoiceBean = VoiceBean(),
-    //体重
-    var weight: Int = 0,
-    //密友评价是否还有更多
-    var hasMore: String = "",
-    //资料完成度 百分比
-    var perfection: Int = 0,
+
     //主播等级
     var anchorLevel: Int = 0,
     //贵族等级图标
     var royalPic: String = "",
-    //是否显示亲密知己
-    var showCloseConfidant: String = "",
-    //亲密知己对象
-    var closeConfidant: IntimBeanFriendBean = IntimBeanFriendBean(),
-    //亲密榜数据
-    var closeConfidantRank: CloseConfidantRankBean = CloseConfidantRankBean(),
-    //座驾数据
-    var carInfo: HomePageCarInfo = HomePageCarInfo(),
-    //tab相关数据
-    var userDataTabList: MutableList<UserDataTab> = mutableListOf(),
     //播放数据
     var playProgram: HomePageProgram = HomePageProgram(),
-    //养鹊相关数据
-    var playParadise: HomePagePlayParadise = HomePagePlayParadise(),
-    //足迹使用的对象
-    var homeCity: HomeCity = HomeCity(),
-    //距离使用的对象
-    var distanceCity: HomeCity = HomeCity(),
-    //勋章数据
-    var iconList: MutableList<String> = mutableListOf(),
     //直播间内的动态数据
     var post: PostInHomePage = PostInHomePage()
+    /*2.0.0新增字段*/
+
 ) : Serializable
+
+/**
+ * 我的标签数据
+ */
+data class MineTagBean(
+    //标签列表
+    var showTagList: MutableList<HomeTagBean> = mutableListOf(),
+    //分类标签列表
+    var typeTagList: MutableList<SingleTypeTag> = mutableListOf(),
+    //我 认证/喜欢 的标签数量
+    var markTagNum: Int = 0
+) : Serializable
+
+/**
+ * 单个分类标签
+ */
+data class SingleTypeTag(
+    //tab标签名称
+    var tabTagName: String = "",
+    //分组标签列表
+    var groupTagList: MutableList<HomeTagBean> = mutableListOf()
+) : Serializable
+
+/**
+ * 家乡数据
+ */
+data class HomeTownInfo(
+    //家乡省份名称 没有省份 只显示城市（直辖市）
+    var homeTownProvince: String = "",
+    //家乡城市名称
+    var homeTownCity: String = "",
+    //家乡介绍
+    var introduce: String = "",
+    //人文数据
+    var cultureList: MutableList<SingleCulture> = mutableListOf()
+) : Serializable
+
+/**
+ * 单个人文列表对象
+ */
+data class SingleCulture(
+    //人文类型
+    var cultureType: String = "",
+    //人文类型文案
+    var cultureTypeText: String = "",
+    //人文类型数量
+    var num: Int = 0,
+    //人文列表数据
+    var cultureConfigList: MutableList<SingleCultureConfig> = mutableListOf()
+) : Serializable
+
+/**
+ * 单个人文对象
+ */
+data class SingleCultureConfig(
+    //城市ID
+    var cityId: Long = 0,
+    //城市名称
+    var name: String = "",
+    //封面
+    var coverPic: String = "",
+    //去过或者吃过标记
+    var mark: String = ""
+) : Serializable
+
+
+/**
+ * 职业数据
+ */
+data class ProfessionInfo(
+    //职业ID
+    var professionId: Int = 0,
+    //行业
+    var professionTypeText: String = "",
+    //职业名称
+    var professionName: String = "",
+    //年收入
+    var incomeText: String = "",
+    //职业特性
+    var myFeatureList: String = ""
+) : Serializable
+
+/**
+ * 学校数据
+ */
+data class SchoolInfo(
+    //学历
+    var education: String = "",
+    //学历code
+    var educationCode: String = "",
+    //学校名称
+    var school: String = "",
+    //入学年份
+    var startYear: String = ""
+) : Serializable
+
+/**
+ * 身材数据
+ */
+data class FigureBean(
+    //身高
+    var height: Int = 0,
+    //体重
+    var weight: Int = 0,
+    //身材
+    var figure: String = "",
+    //建议
+    var suggest: String = ""
+) : Serializable
+
+/**
+ * 星座数据
+ */
+data class ConstellationInfo(
+    //星座名称
+    var constellationName: String = "",
+    //星座图片
+    var constellationPic: String = "",
+    //适配文案日期
+    var hitText: String = "",
+    //最佳配对
+    var pairConstellation: String = "",
+    //星座描述
+    var constellationDesc: String = ""
+) : Serializable
+
+/**
+ * 社交意愿对象
+ */
+data class SocialWishBean(
+    //社交意愿code
+    var wishType: String = "",
+    //社交意愿文本
+    var wishTypeText: String = ""
+) : Serializable
+
+/**
+ * 主页tag对象
+ */
+data class HomeTagBean(
+    //标签ID
+    var tagId: Long = 0,
+    //标签名称
+    var tagName: String = "",
+    //标签Icon
+    var tagIcon: String = "",
+    //标签上显示的图片
+    var tagPic: String = "",
+    //喜欢或者认证的标记
+    var mark: String = "",
+    //点赞数量
+    var praiseNum: Long = 0,
+    //审核通过照片数量
+    var picNum: Int = 0
+) : Serializable
+
+/**
+ * 主页在线状态
+ */
+data class HomeOnLineBean(
+    //在线状态
+    var onlineStatus: String = "",
+    //状态文案
+    var onlineStatusText: String = ""
+) : Serializable {
+    companion object {
+        //在线
+        const val Online = "Online"
+    }
+
+}
 
 /**
  * 主页里面使用的动态数据
@@ -661,19 +835,10 @@ data class PostInHomePage(
  * 我的足迹使用的对象
  */
 data class HomeCity(
-    //访问人的常驻地
-    var curryCityName: String = "",
-    //访问人的头像
-    var curryHeadPic: String = "",
-    //距离
-    var distance: Int = 0,
-    //主页用户常驻地
-    var homeCityName: String = "",
-    //主页用户头像
-    var homeHeadPic: String = "",
-    //距离 直接显示
-    var distanceStr : String = ""
-
+    //距离(单位米)
+    var distance: Long = 0,
+    //主页用户城市名称
+    var curryCityName: String = ""
 ) : Serializable
 
 /**
@@ -866,7 +1031,7 @@ data class CircleGroup(
  */
 data class AccountBean(
     //是否可以新增分身账号
-    var canAdd : String = "",
+    var canAdd: String = "",
     //账号列表
     var subList: MutableList<SingleAccount> = mutableListOf(),
     //不能创建账号的原因
@@ -883,4 +1048,12 @@ data class SingleAccount(
     var headPic: String = "",
     //用户ID
     var userId: Long = 0
+) : Serializable
+
+/**
+ * 更新用户信息之后的返回
+ */
+data class UserProcessBean(
+    //资料完成度
+    var perfection: Int = 0
 ) : Serializable

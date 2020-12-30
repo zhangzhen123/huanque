@@ -185,25 +185,25 @@ class HomePageViewModel : BaseViewModel() {
      */
     fun evaluteateFriend(list: MutableList<String>) {
 
-        viewModelScope.launch {
-            request({
-                val contentStringBuilder = StringBuilder()
-                list.forEach {
-                    if (contentStringBuilder.isNotEmpty()) {
-                        contentStringBuilder.append(",")
-                    }
-                    contentStringBuilder.append(it)
-                }
-                val result = socialService.relationEvaluate(EvaluateForm(targetUserId, contentStringBuilder.toString())).dataConvert()
-                evaluateFlag.value = true
-                val list = result.list
-                appraiseListData.value = list
-                if (list != null) {
-                    homeInfoBean.value?.appraiseList = list
-                }
-                ToastUtils.show("添加评论成功")
-            }, {})
-        }
+//        viewModelScope.launch {
+//            request({
+//                val contentStringBuilder = StringBuilder()
+//                list.forEach {
+//                    if (contentStringBuilder.isNotEmpty()) {
+//                        contentStringBuilder.append(",")
+//                    }
+//                    contentStringBuilder.append(it)
+//                }
+//                val result = socialService.relationEvaluate(EvaluateForm(targetUserId, contentStringBuilder.toString())).dataConvert()
+//                evaluateFlag.value = true
+//                val list = result.list
+//                appraiseListData.value = list
+//                if (list != null) {
+//                    homeInfoBean.value?.appraiseList = list
+//                }
+//                ToastUtils.show("添加评论成功")
+//            }, {})
+//        }
 
     }
 

@@ -11,7 +11,7 @@ import com.julun.huanque.common.interfaces.EventListener
  *@创建时间 2020/7/20 15:59
  *@描述
  */
-class EventConstraintLayout(context: Context?, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
+class EventConstraintLayout(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
     var mEventListener: EventListener? = null
 
     //是否接收事件

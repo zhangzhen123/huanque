@@ -135,9 +135,9 @@
         android:paddingLeft="10dp"
         android:src="@mipmap/icon_close_round_01"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/et_nickname"
-        app:layout_constraintRight_toRightOf="@id/et_nickname"
-        app:layout_constraintTop_toTopOf="@id/et_nickname" />
+        app:layout_constraintBottom_toBottomOf="@id/et_sign"
+        app:layout_constraintRight_toRightOf="@id/et_sign"
+        app:layout_constraintTop_toTopOf="@id/et_sign" />
 
 
     <TextView
@@ -157,7 +157,7 @@
         android:textSize="@dimen/sp_16"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_nickname" />
+        app:layout_constraintTop_toBottomOf="@id/et_sign" />
 
     <TextView
         android:id="@+id/tv_next"

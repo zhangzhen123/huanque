@@ -15,7 +15,12 @@ class FriendIdForm(var friendId: Long)
 
 class TargetIdForm(var targetUserId: Long)
 
-class SendChatGiftForm(var friendId: Long, var chatGiftId: Int, var count: Int, var fateId: String? = null)
+class SendChatGiftForm(
+    var friendId: Long,
+    var chatGiftId: Int,
+    var count: Int,
+    var fateId: String? = null
+)
 
 /**
  * 创建语音通话的form
@@ -275,4 +280,30 @@ data class StatisticItem(
     var clickNum: Int = 0,
     var enterTime: Long? = null,
     var leaveTime: Long? = null
+) : Serializable
+
+/**
+ * 标签form
+ */
+data class TagIdsForm(var tagIds: String = "") : Serializable
+
+/**
+ * 社交意愿form
+ */
+data class SocialWishIdForm(var wishCodes: String = "") : Serializable
+
+/**
+ * 更新用户信息的form
+ */
+data class UpdateUserInfoForm(
+    //用户昵称
+    var nickname: String? = null,
+    //生日
+    var birthday: String? = null,
+    //签名
+    var mySign: String? = null,
+    //身高
+    var height: Int? = null,
+    //体重
+    var weight: Int? = null
 ) : Serializable

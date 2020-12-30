@@ -49,7 +49,7 @@ import org.jetbrains.anko.view
  *@创建时间 2020/7/16 15:29
  *@描述 表情面板
  */
-class PrivateChatPanelView(context: Context?, attrs: AttributeSet?) : IPanelView, ConstraintLayout(context, attrs) {
+class PrivateChatPanelView(context: Context, attrs: AttributeSet?) : IPanelView, ConstraintLayout(context, attrs) {
 
     private var triggerViewId = 0
     private var isToggle = true

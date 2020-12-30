@@ -15,7 +15,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
 import com.julun.huanque.R
-import com.julun.huanque.activity.LoginActivity
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.events.FinishToLoginEvent
 import com.julun.huanque.common.constant.*
@@ -24,7 +23,6 @@ import com.julun.huanque.common.manager.UserHeartManager
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.ui.web.WebActivity
 import com.julun.huanque.common.utils.*
-import com.julun.huanque.support.LoginManager
 import com.julun.huanque.viewmodel.PersonalInformationProtectionViewModel
 import io.rong.imlib.RongIMClient
 import kotlinx.android.synthetic.main.fragment_personal_information_protection.*
@@ -126,7 +124,11 @@ class PersonalInformationProtectionFragment : BaseDialogFragment() {
                     UserHeartManager.stopBeat()
                     LoginStatusUtils.logout()
                     //跳转登录页面
-                    ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+//                    ARouter.getInstance().build(ARouterConstant.LOGIN_ACTIVITY).navigation()
+                    val intent = Intent(requireActivity(), com.julun.huanque.activity.WelcomeActivity::class.java)
+                    if(ForceUtils.activityMatch(intent)){
+                        startActivity(intent)
+                    }
                 }
             }
             dismiss()

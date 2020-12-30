@@ -129,7 +129,7 @@
             android:name=".ui.homepage.HomePageActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomToolBarTheme" />
+            android:theme="@style/TranslucentTheme" />
         <activity
             android:name=".ui.dynamic.DynamicDetailActivity"
             android:launchMode="singleTop"
@@ -137,6 +137,18 @@
             android:theme="@style/CustomToolBarTheme" />
         <activity
             android:name=".ui.dynamic.CircleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.homepage.EditInfoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.homepage.UpdateNicknameActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.homepage.UpdateSignActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
         <activity

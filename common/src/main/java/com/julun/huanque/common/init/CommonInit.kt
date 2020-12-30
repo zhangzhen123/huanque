@@ -3,12 +3,14 @@ package com.julun.huanque.common.init
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.facebook.cache.common.CacheErrorLogger
@@ -25,6 +27,7 @@ import com.julun.huanque.common.manager.GlobalDialogManager
 import com.julun.huanque.common.manager.RongCloudManager
 import com.julun.huanque.common.manager.aliyunoss.OssUpLoadManager
 import com.julun.huanque.common.net.Requests
+import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.logger
 import com.julun.huanque.common.utils.*
@@ -351,6 +354,17 @@ class CommonInit {
                     if (viewContent.contains("一键登录")) {
                         return
                     }
+                    mFastLoginContentView?.backgroundColor = Color.TRANSPARENT
+                    val firstRLChild = mFastLoginContentView?.getChildAt(0)
+                    firstRLChild?.backgroundColor = Color.TRANSPARENT
+                    (firstRLChild as? RelativeLayout)?.let { fv ->
+                        val bottomView = View(fv.context).apply { backgroundColor = Color.WHITE }
+                        val bottomParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(275))
+                        bottomParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+                        fv.addView(bottomView, 0, bottomParams)
+
+                    }
+
                     val realContent = "$viewContent 一键登录"
                     phoneView.text = realContent
                     phoneView.backgroundResource = R.drawable.bg_phone_number_fast_login

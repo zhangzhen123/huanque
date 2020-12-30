@@ -31,7 +31,7 @@ object SessionUtils {
     private const val REG_COMPLETE = "REG_COMPLETE"
 
     //融云聊天token
-    private const val  RONG_IM_TOKEN: String = "RONG_IM_TOKEN"
+    private const val RONG_IM_TOKEN: String = "RONG_IM_TOKEN"
 
     //是否注册用户
     private const val REG_USER = "REG_USER"
@@ -41,6 +41,12 @@ object SessionUtils {
 
     //邀请码
     private const val INVITE_CODE = "INVITE_CODE"
+
+    //生日
+    private const val BIRTHDAY = "BIRTHDAY"
+
+    //社交意愿
+    private const val WISH_COMPLETE = "WISH_COMPLETE"
 
 
     //是否验证过session
@@ -61,6 +67,7 @@ object SessionUtils {
         setRongImToken(session.imToken)
         setIsRegUser(session.regUser)
         setSex(session.sex)
+        setWishComplete(session.wishComplete)
     }
 
     fun getSession(): Session {
@@ -76,6 +83,7 @@ object SessionUtils {
             this.imToken = getRongImToken()
             this.regUser = getIsRegUser()
             this.sex = getSex()
+            this.wishComplete = getWishComplete()
         }
     }
 
@@ -196,7 +204,22 @@ object SessionUtils {
         SharedPreferencesUtils.commitString(INVITE_CODE, code)
     }
 
-    fun getInviteCode() = SharedPreferencesUtils.getString(INVITE_CODE,"")
+    fun getInviteCode() = SharedPreferencesUtils.getString(INVITE_CODE, "")
+
+    //生日
+    fun setBirthday(birthday: String) {
+        SharedPreferencesUtils.commitString(BIRTHDAY, birthday)
+    }
+
+
+    fun getBirthday() = SharedPreferencesUtils.getString(BIRTHDAY, "")
+
+    //社交意愿是否完成
+    fun setWishComplete(wishComplete: String) {
+        SharedPreferencesUtils.commitString(WISH_COMPLETE, wishComplete)
+    }
+
+    fun getWishComplete() = SharedPreferencesUtils.getString(WISH_COMPLETE, "")
 
 
 }

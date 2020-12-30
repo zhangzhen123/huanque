@@ -17,7 +17,7 @@ object FastLoginManager {
     private var mPreviewCode = 0
     fun getPreviewCode() = mPreviewCode
 
-    var mPreListener : LocalPreLoginListener? = null
+    var mPreListener: LocalPreLoginListener? = null
 
     /**
      *预取号
@@ -38,10 +38,11 @@ object FastLoginManager {
             mPreListener?.preLoginResult(false)
             return
         }
+        JVerificationInterface.clearPreLoginCache()
         //预取号
         JVerificationInterface.preLogin(
             CommonInit.getInstance().getContext(),
-            5000
+            3000
         ) { code, content ->
             //预取号结果
             mPreviewCode = code

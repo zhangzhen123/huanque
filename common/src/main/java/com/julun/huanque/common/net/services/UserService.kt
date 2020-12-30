@@ -265,7 +265,7 @@ interface UserService {
     /**
      * 主页信息
      */
-    @POST("user/acct/info/home")
+    @POST("user/acct/info/homePage")
     suspend fun homeInfo(@Body form: UserIdForm): Root<HomePageInfo>
 
     /**
@@ -285,6 +285,24 @@ interface UserService {
      */
     @POST("user/acct/login/subAccount")
     suspend fun loginSubAccount(@Body body: UserIdForm): Root<Session>
+
+    /**
+     * 保存社交意愿
+     */
+    @POST("user/acct/data/wish")
+    suspend fun socialWish(@Body body: SocialWishIdForm): Root<VoidResult>
+
+    /**
+     * 编辑资料页面，基础信息
+     */
+    @POST("user/acct/info/editBasic")
+    suspend fun editBasic(@Body form: EmptyForm = EmptyForm()): Root<HomePageInfo>
+
+    /**
+     * 更新用户数据
+     */
+    @POST("user/acct/data/update")
+    suspend fun UpdateUserInfo(@Body form: UpdateUserInfoForm): Root<UserProcessBean>
 
 
 }

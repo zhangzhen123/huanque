@@ -49,11 +49,20 @@ class PhoneNumLoginViewModel : BaseViewModel() {
     //验证码按钮是否无响应标识
     val codeReponse: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
+    //验证码发送成功的标识位
+    val codeSendSuccess: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     //登录数据
     val loginData: MutableLiveData<Session> by lazy { MutableLiveData<Session>() }
 
     //登录状态
     val loginStatus: LiveData<Boolean> by lazy { LoginStatusUtils.getLoginStatus() }
+
+    //验证码错误标识
+    val codeErrorFlag: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
+    //手机号错误标识
+    val phoneNumError: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     private val gt3Config: GT3ConfigBean by lazy {
         val gt3ConfigBean = GT3ConfigBean()
@@ -133,6 +142,7 @@ class PhoneNumLoginViewModel : BaseViewModel() {
         override fun onSuccess(result: String) {
             Log.e(TAG, "GT3BaseListener-->onSuccess-->$result")
             codeReponse.postValue(true)
+            codeSendSuccess.postValue(true)
         }
 
         /**
@@ -216,6 +226,7 @@ class PhoneNumLoginViewModel : BaseViewModel() {
                                     //极验  验证通过  开始倒计时
                                     gt3GeetestUtils?.dismissGeetestDialog()
                                     tickState.value = true
+                                    codeSendSuccess.postValue(true)
 //                                    gt3GeetestUtils.dialog.setOnDismissListener {
 //                                        tickState.value = true
 //                                    }
@@ -278,9 +289,11 @@ class PhoneNumLoginViewModel : BaseViewModel() {
             LoginManager.loginByMobile(phoneNum, code, success = { result ->
                 loginData.postValue(result)
             }, error = {
-//                if (it is ResponseError) {
-//                    ToastUtils.show(it.busiMessage)
-//                }
+                if (it is ResponseError && it.busiCode == 1108) {
+                    //1108 验证码错误标识
+//                    ToastUtils.show("验证码输入错误")
+                    codeErrorFlag.value = true
+                }
             })
         }
 
@@ -301,13 +314,18 @@ class PhoneNumLoginViewModel : BaseViewModel() {
                         //请求验证码正常返回   开始倒计时
                         codeReponse.value = true
                         tickState.value = true
+                        codeSendSuccess.value = true
                     }
                 }
             }, {
                 codeReponse.value = true
                 if (it is ResponseError) {
-                    when (it.busiCode) {
-                        5015, 5011, 5012, 5010, 1106, 503 -> ToastUtils.show(it.busiMessage)
+//                    when (it.busiCode) {
+//                        5015, 5011, 5012, 5010, 1106, 503, 1112 -> ToastUtils.show(it.busiMessage)
+//                    }
+                    if (it.busiCode == 1112) {
+                        //手机号码不正确
+                        phoneNumError.value = true
                     }
                 }
             })

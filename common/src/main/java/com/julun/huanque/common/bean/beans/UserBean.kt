@@ -232,7 +232,11 @@ class NetcallBean(
 /**
  * 关注返回的实体
  */
-class FollowBean(var follow: String = "", var stranger: Boolean = false, var toastMsg: String = "") : Serializable
+class FollowBean(
+    var follow: String = "",
+    var stranger: Boolean = false,
+    var toastMsg: String = ""
+) : Serializable
 
 data class AliAuthInfo(
     var authInfo: String = ""
@@ -378,3 +382,44 @@ data class TagUserPic(
     var tagId: Int = 0
 )
 
+
+
+/**
+ * 选择性别之后返回的 标签和交友意愿数据
+ */
+data class LoginTagInfo(
+    //交友意愿数据
+    var socialWishList: MutableList<SocialWishBean> = mutableListOf(),
+    //注册的标签数据
+    var tagTypeList: MutableList<LoginTagTabBean> = mutableListOf()
+) : Serializable
+
+/**
+ * 注册  标签大列表的数据
+ */
+data class LoginTagTabBean(
+    //大类的code
+    var tagType: String = "",
+    //标签数据
+    var tagList: MutableList<LoginTagBean> = mutableListOf(),
+    //标签名称
+    var tagTypeText: String = "",
+    //是否选中（本地字段）
+    var selected: Boolean = false
+) : Serializable
+
+/**
+ * 注册  标签数据
+ */
+data class LoginTagBean(
+    //标签ID
+    var tagId: Long = 0,
+    //标签名称
+    var tagName: String = "",
+    //标签图标
+    var tagIcon: String = "",
+    //标签图片
+    var tagPic: String = "",
+    //是否选中
+    var selected: Boolean = false
+) : Serializable
