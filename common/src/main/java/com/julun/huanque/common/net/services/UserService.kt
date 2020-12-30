@@ -287,35 +287,4 @@ interface UserService {
     suspend fun loginSubAccount(@Body body: UserIdForm): Root<Session>
 
 
-    /**
-     * 管理标签数据拉取
-     */
-    @POST("social/user/tag/manageList")
-    suspend fun manageList(@Body body: EmptyForm = EmptyForm()): Root<ManagerListData>
-
-    /**
-     * 管理标签标记喜欢
-     */
-    @POST("social/user/tag/like")
-    suspend fun tagLike(@Body body: TagForm): Root<VoidResult>
-
-    /**
-     * 管理标签标记取消喜欢
-     */
-    @POST("social/user/tag/cancelLike")
-    suspend fun tagCancelLike(@Body body: TagForm): Root<VoidResult>
-
-    /**
-     * 保存标签顺序
-     */
-    @POST("social/user/tag/saveManage")
-    suspend fun saveTagManage(@Body body: TagListForm): Root<VoidResult>
-
-    /**
-     * 标签详情页图片
-     */
-    @POST("social/user/tag/likeDetail")
-    suspend fun tagDetail(@Body body: TagDetailForm): Root<TagDetailBean<TagPicBean>>
-
-
 }

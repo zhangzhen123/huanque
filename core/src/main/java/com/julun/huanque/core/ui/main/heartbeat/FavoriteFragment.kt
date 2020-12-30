@@ -20,9 +20,12 @@ import com.julun.huanque.common.basic.QueryType
 import com.julun.huanque.common.bean.beans.ManagerTagBean
 import com.julun.huanque.common.constant.ActivityRequestCode
 import com.julun.huanque.common.constant.ManagerTagCode
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.onClickNew
+import com.julun.huanque.common.suger.removeDuplicate
+import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.core.R
-import com.julun.huanque.core.ui.main.tag_manager.TagManagerActivity
+import com.julun.huanque.core.ui.tag_manager.TagManagerActivity
 import kotlinx.android.synthetic.main.fragment_favorite_container.*
 import kotlinx.android.synthetic.main.fragment_favorite_container.magic_indicator
 import kotlinx.android.synthetic.main.fragment_favorite_container.state_pager_view
@@ -50,6 +53,9 @@ class FavoriteFragment : BaseLazyFragment() {
         fun newInstance() = FavoriteFragment()
     }
 
+    private val viewModel: FavoriteViewModel by activityViewModels()
+    private val tagManagerViewModel: TagManagerViewModel = HuanViewModelManager.tagManagerViewModel
+
     private val observer by lazy {
         Observer<NetState> { state ->
             if (state != null) {
@@ -75,15 +81,13 @@ class FavoriteFragment : BaseLazyFragment() {
     }
 
     private lateinit var mCommonNavigator: CommonNavigator
-    private var mFragmentList = SparseArray<Fragment>()
+    private var mFragmentMap = HashMap<Int, Fragment>()
     private val mTabTitles = arrayListOf<ManagerTagBean>()
 
     private var currentTag: ManagerTagBean? = null
     override fun getLayoutId(): Int {
         return R.layout.fragment_favorite_container
     }
-
-    private val viewModel: FavoriteViewModel by activityViewModels()
 
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -130,27 +134,39 @@ class FavoriteFragment : BaseLazyFragment() {
                 mTabTitles.clear()
                 mTabTitles.addAll(it.requireT().tagList)
                 refreshTabList()
+                //首次加载时给currentTagList赋值
+                tagManagerViewModel.currentTagList.addAll(it.requireT().tagList.filter { item -> item.tagId != -1 })
             }
 
         })
         viewModel.loadState.observe(this, observer)
 
+        tagManagerViewModel.tagChange.observe(this, Observer {
+            val list = tagManagerViewModel.currentTagList
+            logger.info("我是选择的结果=${list}")
+            list.removeDuplicate()
+            val first = mTabTitles.first()
+            mTabTitles.clear()
+            mTabTitles.add(first)
+            mTabTitles.addAll(list)
+            refreshTabList(currentTag?.tagId)
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                ActivityRequestCode.MANAGER_TAG_RESULT_CODE -> {
-                    val list = data?.extras?.get(ManagerTagCode.TAG_LIST) as? ArrayList<ManagerTagBean> ?: return
-                    logger.info("我是选择的结果=${list}")
-                    val first=mTabTitles.first()
-                    mTabTitles.clear()
-                    mTabTitles.add(first)
-                    mTabTitles.addAll(list)
-                    refreshTabList(currentTag?.tagId)
-                }
-            }
+//            when (requestCode) {
+//                ActivityRequestCode.MANAGER_TAG_RESULT_CODE -> {
+//                    val list = data?.extras?.get(ManagerTagCode.TAG_LIST) as? ArrayList<ManagerTagBean> ?: return
+//                    logger.info("我是选择的结果=${list}")
+//                    val first = mTabTitles.first()
+//                    mTabTitles.clear()
+//                    mTabTitles.add(first)
+//                    mTabTitles.addAll(list)
+//                    refreshTabList(currentTag?.tagId)
+//                }
+//            }
         }
     }
 
@@ -283,7 +299,7 @@ class FavoriteFragment : BaseLazyFragment() {
     private val mPagerAdapter: FragmentPagerAdapter by lazy {
         object : FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             override fun getItem(position: Int): Fragment {
-                return mFragmentList[position] ?: getFragment(position)
+                return mFragmentMap[mTabTitles[position].tagId] ?: getFragment(position)
             }
 
             override fun getCount(): Int {
@@ -292,7 +308,7 @@ class FavoriteFragment : BaseLazyFragment() {
 
             private fun getFragment(position: Int): Fragment {
                 val fragment: Fragment = FavoriteTabFragment.newInstance(mTabTitles[position])
-                mFragmentList.put(position, fragment)
+                mFragmentMap.put(mTabTitles[position].tagId, fragment)
                 return fragment
             }
 

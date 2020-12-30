@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.main.tag_manager
+package com.julun.huanque.core.ui.tag_manager
 
 import android.os.Bundle
 import android.view.Gravity
@@ -18,8 +18,10 @@ import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.helper.MixedHelper
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.fragment_favorite_tag_tab.*
@@ -45,7 +47,7 @@ class TagTabFragment : BaseLazyFragment() {
         }
     }
 
-    private val tagManagerViewModel: TagManagerViewModel by activityViewModels()
+    private val tagManagerViewModel: TagManagerViewModel = HuanViewModelManager.tagManagerViewModel
 
     private var currentTab: ManagerTagTabBean? = null
 
@@ -92,21 +94,21 @@ class TagTabFragment : BaseLazyFragment() {
         super.initEvents(rootView)
 
         mAdapter.onAdapterClickNew { _, _, position ->
-            val item=mAdapter.getItemOrNull(position)?:return@onAdapterClickNew
+            val item = mAdapter.getItemOrNull(position) ?: return@onAdapterClickNew
             logger.info("跳转到标签详情")
-            TagPicsActivity.start(requireActivity(),item)
+            TagPicsActivity.start(requireActivity(), item)
 
 
         }
-        mAdapter.onAdapterChildClickNew { adapter, view, position ->
+        mAdapter.onAdapterChildClickNew { _, view, position ->
             when (view.id) {
                 R.id.iv_tag_like -> {
                     val item = mAdapter.getItemOrNull(position) ?: return@onAdapterChildClickNew
                     val parentTag = currentTab ?: return@onAdapterChildClickNew
                     if (!item.like) {
-                        tagManagerViewModel.tagLike(item, parentTag)
+                        tagManagerViewModel.tagLike(item/*, parentTag*/)
                     } else {
-                        tagManagerViewModel.tagCancelLike(item, parentTag)
+                        tagManagerViewModel.tagCancelLike(item/*, parentTag*/)
                     }
                 }
             }
@@ -138,7 +140,7 @@ class TagTabFragment : BaseLazyFragment() {
     private fun initViewModel() {
         tagManagerViewModel.tagChangeStatus.observe(this, Observer {
             if (it.isSuccess()) {
-                if(it.isNew()&&it.requireT().like){
+                if (it.isNew() && it.requireT().like) {
                     ToastUtils.showToastCustom(R.layout.layout_toast_tag, action = { view, t ->
                         val tv = view.findViewById<TextView>(R.id.toastContent)
                         t.duration = Toast.LENGTH_SHORT

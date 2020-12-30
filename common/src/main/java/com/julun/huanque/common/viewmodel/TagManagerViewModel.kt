@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.main.tag_manager
+package com.julun.huanque.common.viewmodel
 
 import androidx.lifecycle.*
 import com.julun.huanque.common.basic.ReactiveData
@@ -9,7 +9,7 @@ import com.julun.huanque.common.bean.forms.TagForm
 import com.julun.huanque.common.bean.forms.TagListForm
 import com.julun.huanque.common.commonviewmodel.BaseViewModel
 import com.julun.huanque.common.net.Requests
-import com.julun.huanque.common.net.services.UserService
+import com.julun.huanque.common.net.services.TagService
 import com.julun.huanque.common.suger.*
 import kotlinx.coroutines.launch
 
@@ -18,19 +18,20 @@ import kotlinx.coroutines.launch
  *
  *@Anchor: zhangzhen
  *
- *@Date 2019/7/16 19:29
+ *@Date: 2020/12/30 16:33
  *
- *@Description 关注列表
+ *@Description: TagManagerViewModel 由于标签的改动很多地方都有 这里做成全局单一对象
  *
  */
 class TagManagerViewModel : BaseViewModel() {
 
-    private val service: UserService by lazy { Requests.create(UserService::class.java) }
+    private val service: TagService by lazy { Requests.create(TagService::class.java) }
 
     /**
      * 标记又没tag变动
      */
     val tagChange: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+
     val currentTagList = arrayListOf<ManagerTagBean>()
 
     /**
@@ -50,6 +51,7 @@ class TagManagerViewModel : BaseViewModel() {
 
                 val result = service.manageList().dataConvert()
                 emit(result.tagList.convertRtData())
+                currentTagList.clear()
                 currentTagList.addAll(result.manageList)
                 tagChange.value = true
             }, error = { e ->
@@ -62,7 +64,7 @@ class TagManagerViewModel : BaseViewModel() {
 
     }
 
-    fun tagLike(tag: ManagerTagBean, parentTag: ManagerTagTabBean) {
+    fun tagLike(tag: ManagerTagBean/*, parentTag: ManagerTagTabBean*/) {
         viewModelScope.launch {
 
             request({
@@ -71,11 +73,11 @@ class TagManagerViewModel : BaseViewModel() {
                 tagChangeStatus.value = tag.convertRtData()
                 //这里创建一个用于发送标签管理的对象
                 val tagBean = ManagerTagBean(
-                    tagId = parentTag.tagId,
+                    tagId = result.parentTagId,
                     likeCnt = 1,
-                    tagName = parentTag.tagName,
-                    tagIcon = parentTag.tagIcon,
-                    tagPic = parentTag.tagPic
+                    tagName = result.parentTagName
+//                    tagIcon = parentTag.tagIcon,
+//                    tagPic = parentTag.tagPic
                 )
                 addTag(tagBean)
             }, error = {
@@ -85,7 +87,7 @@ class TagManagerViewModel : BaseViewModel() {
 
     }
 
-    fun tagCancelLike(tag: ManagerTagBean, parentTag: ManagerTagTabBean) {
+    fun tagCancelLike(tag: ManagerTagBean/*, parentTag: ManagerTagTabBean*/) {
         viewModelScope.launch {
 
             request({
@@ -94,11 +96,11 @@ class TagManagerViewModel : BaseViewModel() {
                 tagChangeStatus.value = tag.convertRtData()
                 //这里创建一个用于发送标签管理的对象
                 val tagBean = ManagerTagBean(
-                    tagId = parentTag.tagId,
+                    tagId = result.parentTagId,
                     likeCnt = 1,
-                    tagName = parentTag.tagName,
-                    tagIcon = parentTag.tagIcon,
-                    tagPic = parentTag.tagPic
+                    tagName = result.parentTagName
+//                    tagIcon = parentTag.tagIcon,
+//                    tagPic = parentTag.tagPic
                 )
                 removeTag(tagBean)
 
@@ -114,6 +116,10 @@ class TagManagerViewModel : BaseViewModel() {
      *这里的ManagerTagBean代表一级标签 子级的标签不会传到这里
      */
     fun addTag(itemBean: ManagerTagBean) {
+        if (currentTagList.isEmpty()) {
+            logger("当前的全局标签列表数据为空！！")
+            return
+        }
         tagHasChange = true
         var isExist = false
         currentTagList.forEach {
@@ -129,6 +135,10 @@ class TagManagerViewModel : BaseViewModel() {
     }
 
     fun removeTag(itemBean: ManagerTagBean) {
+        if (currentTagList.isEmpty()) {
+            logger("当前的全局标签列表数据为空！！")
+            return
+        }
         tagHasChange = true
         val iterator = currentTagList.iterator()
         while (iterator.hasNext()) {

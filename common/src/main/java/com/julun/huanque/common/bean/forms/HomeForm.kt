@@ -68,4 +68,10 @@ class TagDetailForm(
     var offset: Int = 0
 )
 
+class TagUserForm(
+    var tagId: Int,
+    var friendId: Long
+)
+
+
 

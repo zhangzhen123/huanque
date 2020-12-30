@@ -328,14 +328,20 @@ data class ManagerTagBean(
     }
 }
 
+data class ManagerParentTagBean(
+    var parentTagIcon: String = "",
+    var parentTagId: Int = 0,
+    var parentTagName: String = ""
+)
+
 data class ManagerListData(
     var manageList: MutableList<ManagerTagBean> = mutableListOf(),
     var tagList: List<ManagerTagTabBean> = listOf()
 )
 
-data class TagDetailBean<T>(
+data class TagDetailBean(
     var authNum: Int = 0,
-    var authPage: RootListData<T> = RootListData<T>(),
+    var authPage: RootListData<TagPicBean> = RootListData(),
     var like: Boolean = false,
     var tagDesc: String = "",
     var tagIcon: String = "",
@@ -349,6 +355,26 @@ data class TagPicBean(
     var applyPic: String = "",
     var tagId: Int = 0,
     var targetPic: Boolean = false,
-    var userId: Int = 0,
+    var userId: Long = 0L,
     var picNum: Int = 0
+):Serializable
+
+data class TagUserPicListBean(
+    var authPicList: List<TagUserPic> = listOf(),
+    var friendSex: String = "",
+    var like: Boolean = false,
+    var praise: Boolean = false,
+    var praiseNum: Int = 0,
+    var tagDesc: String = "",
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = ""
 )
+
+data class TagUserPic(
+    var applyPic: String = "",
+    var auditStatus: String = "",
+    var logId: Int = 0,
+    var tagId: Int = 0
+)
+

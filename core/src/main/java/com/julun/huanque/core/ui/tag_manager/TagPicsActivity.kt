@@ -1,4 +1,4 @@
-package com.julun.huanque.core.ui.main.tag_manager
+package com.julun.huanque.core.ui.tag_manager
 
 import android.app.Activity
 import android.os.Bundle
@@ -85,6 +85,9 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
 
         currentTag = intent.getSerializableExtra(ManagerTagCode.TAG_INFO) as? ManagerTagBean
         currentLikeUserId = intent.getLongExtra(IntentParamKey.USER_ID.name, 0L)
+        if (currentLikeUserId == 0L) {
+            currentLikeUserId = null
+        }
         headerPageView.imageViewBack.onClickNew {
             finish()
         }
@@ -107,7 +110,7 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
             val item = picListAdapter.getItemOrNull(position)
             if (item != null) {
                 logger.info("查看大图")
-
+                TagUserPicsActivity.start(this, item.tagId, item.userId)
             }
         }
 
@@ -137,14 +140,14 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
 
     private fun loadDataFail(isPull: Boolean) {
         if (isPull) {
-            ToastUtils.show2("刷新失败")
+            ToastUtils.show2("加载失败")
         } else {
             picListAdapter.loadMoreModule.loadMoreFail()
         }
     }
 
 
-    private fun renderData(listData: TagDetailBean<TagPicBean>) {
+    private fun renderData(listData: TagDetailBean) {
 
         val list = listData.authPage.list
 
@@ -199,8 +202,7 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
 
     private fun queryData(type: QueryType) {
         val tag = currentTag ?: return
-        currentLikeUserId ?: return
-        mViewModel.requestTagList(type, tag.tagId, currentLikeUserId!!)
+        mViewModel.requestTagList(type, tag.tagId, currentLikeUserId)
     }
 
     override fun showLoadState(state: NetState) {
@@ -209,11 +211,13 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
             NetStateType.SUCCESS -> {
                 //由于上面在renderData中已经设置了空白页 这里不需要了
 //                picListAdapter.setEmptyView(MixedHelper.getEmptyView(this))
+                ct_head_layout.show()
             }
             NetStateType.LOADING -> {
                 picListAdapter.setEmptyView(MixedHelper.getLoadingView(this))
             }
             NetStateType.ERROR -> {
+                ct_head_layout.hide()
                 picListAdapter.setEmptyView(
                     MixedHelper.getErrorView(
                         ctx = this,

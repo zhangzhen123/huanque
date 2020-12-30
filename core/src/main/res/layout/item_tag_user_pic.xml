@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?><!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/card_view"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    app:cardCornerRadius="10dp">-->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/card_img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dimen_35"
+        android:layout_marginEnd="@dimen/dimen_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundedCornerRadius="@dimen/dimen_10"
+        app:roundingBorderColor="@color/white"
+        app:roundingBorderWidth="@dimen/dimen_1" />
+
+    <TextView
+        android:id="@+id/tv_index"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_20"
+        android:layout_marginEnd="@dimen/dimen_15"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:background="@drawable/bg_shape_card_tag_text"
+        android:gravity="center"
+        android:paddingStart="@dimen/dimen_7"
+        android:paddingEnd="@dimen/dimen_7"
+        android:textColor="#CCFFFFFF"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintBottom_toBottomOf="@+id/card_img"
+        app:layout_constraintEnd_toEndOf="@+id/card_img"
+        tools:text="10/20" />
+
+    <LinearLayout
+        android:id="@+id/ll_top_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_18"
+        android:layout_marginStart="@dimen/dimen_11"
+        android:layout_marginTop="@dimen/dimen_11"
+        android:background="@drawable/bg_shape_card_tag_03"
+        android:gravity="center"
+        android:paddingStart="@dimen/dimen_6"
+        android:paddingEnd="@dimen/dimen_6"
+        app:layout_constraintStart_toStartOf="@+id/card_img"
+        app:layout_constraintTop_toTopOf="@+id/card_img">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_tag"
+            android:layout_width="@dimen/dimen_16"
+            android:layout_height="@dimen/dimen_16"
+            app:actualImageScaleType="centerCrop"
+            app:placeholderImage="@mipmap/logo_placeholder_small" />
+
+        <TextView
+            android:id="@+id/tv_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_3"
+            android:layout_marginEnd="@dimen/dimen_3"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            tools:text="测试" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--</androidx.cardview.widget.CardView>-->
