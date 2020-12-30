@@ -140,6 +140,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
         <activity
+            android:name=".ui.homepage.EditInfoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.homepage.UpdateNicknameActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name=".ui.homepage.UpdateSignActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
             android:name=".ui.publish_dynamic.PublishStateActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme"

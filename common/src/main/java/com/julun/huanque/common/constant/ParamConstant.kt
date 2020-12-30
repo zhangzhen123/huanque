@@ -33,6 +33,9 @@ object ParamConstant {
     //昵称
     const val NICKNAME = "NICKNAME"
 
+    //个性签名
+    const val SIGN = "SIGN"
+
     //欢遇标识
     const val MEET_STATUS = "MEET_STATUS"
 

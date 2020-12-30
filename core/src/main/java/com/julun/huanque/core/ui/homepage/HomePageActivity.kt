@@ -352,10 +352,12 @@ class HomePageActivity : BaseActivity() {
         }
         rl_edit_info.onClickNew {
             //跳转编辑资料页面
-            RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+//            RNPageActivity.start(this, RnConstant.EDIT_MINE_HOMEPAGE)
+            val intent = Intent(this, EditInfoActivity::class.java)
+            if (ForceUtils.activityMatch(intent)) {
+                startActivity(intent)
+            }
         }
-
-
     }
 
 

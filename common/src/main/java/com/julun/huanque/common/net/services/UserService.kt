@@ -290,7 +290,19 @@ interface UserService {
      * 保存社交意愿
      */
     @POST("user/acct/data/wish")
-    suspend fun socialWish(@Body body : SocialWishIdForm) : Root<VoidResult>
+    suspend fun socialWish(@Body body: SocialWishIdForm): Root<VoidResult>
+
+    /**
+     * 编辑资料页面，基础信息
+     */
+    @POST("user/acct/info/editBasic")
+    suspend fun editBasic(@Body form: EmptyForm = EmptyForm()): Root<HomePageInfo>
+
+    /**
+     * 更新用户数据
+     */
+    @POST("user/acct/data/update")
+    suspend fun UpdateUserInfo(@Body form: UpdateUserInfoForm): Root<UserProcessBean>
 
 
 }

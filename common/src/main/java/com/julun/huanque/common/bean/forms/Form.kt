@@ -290,4 +290,20 @@ data class TagIdsForm(var tagIds: String = "") : Serializable
 /**
  * 社交意愿form
  */
-data class SocialWishIdForm(var wishCodes : String = "") : Serializable
+data class SocialWishIdForm(var wishCodes: String = "") : Serializable
+
+/**
+ * 更新用户信息的form
+ */
+data class UpdateUserInfoForm(
+    //用户昵称
+    var nickname: String? = null,
+    //生日
+    var birthday: String? = null,
+    //签名
+    var mySign: String? = null,
+    //身高
+    var height: Int? = null,
+    //体重
+    var weight: Int? = null
+) : Serializable

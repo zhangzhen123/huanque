@@ -562,6 +562,8 @@ data class HomePageInfo(
     var authMark: String = "",
     //他人主页认证的标签列表
     var authTagList: MutableList<HomeTagBean> = mutableListOf(),
+    //我认证的标签
+    var myAuthTag: MineTagBean = MineTagBean(),
     //生日
     var birthday: String = "",
     //是否可以互动
@@ -588,8 +590,10 @@ data class HomePageInfo(
     var headRealPeople: String = "",
     //是否是密友
     var intimate: String = "",
-//他人主页喜欢的标签列表
+    //他人主页喜欢的标签列表
     var likeTagList: MutableList<HomeTagBean> = mutableListOf(),
+    //我喜欢的标签
+    var myLikeTag: MineTagBean = MineTagBean(),
     //昵称
     var nickname: String = "",
     //在线状态
@@ -640,6 +644,28 @@ data class HomePageInfo(
     var post: PostInHomePage = PostInHomePage()
     /*2.0.0新增字段*/
 
+) : Serializable
+
+/**
+ * 我的标签数据
+ */
+data class MineTagBean(
+    //标签列表
+    var showTagList: MutableList<HomeTagBean> = mutableListOf(),
+    //分类标签列表
+    var typeTagList: MutableList<SingleTypeTag> = mutableListOf(),
+    //我 认证/喜欢 的标签数量
+    var markTagNum: Int = 0
+) : Serializable
+
+/**
+ * 单个分类标签
+ */
+data class SingleTypeTag(
+    //tab标签名称
+    var tabTagName: String = "",
+    //分组标签列表
+    var groupTagList: MutableList<HomeTagBean> = mutableListOf()
 ) : Serializable
 
 /**
@@ -1022,4 +1048,12 @@ data class SingleAccount(
     var headPic: String = "",
     //用户ID
     var userId: Long = 0
+) : Serializable
+
+/**
+ * 更新用户信息之后的返回
+ */
+data class UserProcessBean(
+    //资料完成度
+    var perfection: Int = 0
 ) : Serializable
