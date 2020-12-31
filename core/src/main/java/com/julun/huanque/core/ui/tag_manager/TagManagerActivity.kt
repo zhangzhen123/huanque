@@ -188,25 +188,6 @@ class TagManagerActivity : BaseActivity() {
             val item = tagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             if (deleteMode) {
 //                viewModel.tagCancelGroupLike(item)
-                //todo
-//                deleteEnsureDialog = deleteEnsureDialog ?: object : BaseDialogFragment() {
-//                    override fun getLayoutId(): Int {
-//                        return R.layout.dialog_tag_cancel_ensure
-//                    }
-//
-//                    override fun initViews() {
-//                        sdv_tag_pic.loadImage(item.tagPic, 120f, 120f)
-//                        tv_content.text = "取消喜欢后，将取消【${item.tagName}】下的${item.likeCnt}个标签"
-//                        tv_btn_ok.onClickNew {
-//                            viewModel.tagCancelGroupLike(item)
-//                            dismiss()
-//                        }
-//                        tv_btn_cancel.onClickNew {
-//                            dismiss()
-//                        }
-//                    }
-//
-//                }
                 deleteEnsureDialog =
                     deleteEnsureDialog ?: CustomDialogFragment(
                         builder = CustomDialogFragment.FDBuilder(

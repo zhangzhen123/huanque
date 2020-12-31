@@ -44,6 +44,7 @@ import com.julun.huanque.common.widgets.cardlib.utils.ReItemTouchHelper
 import com.julun.huanque.common.widgets.recycler.decoration.HorizontalItemDecoration
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.NearbyPicListAdapter
+import com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity
 import com.julun.huanque.core.widgets.HomeCardTagView
 import com.julun.maplib.LocationService
 import io.reactivex.rxjava3.core.Observable
@@ -177,6 +178,18 @@ class NearbyFragment : BaseLazyFragment() {
         mRecyclerView.adapter = cardsAdapter
         cardsAdapter.setOnItemChildClickListener { adapter, view, position ->
             logger.info("setOnItemChildClickListener 点击了${position}")
+            val item=cardsAdapter.getItemOrNull(position)?:return@setOnItemChildClickListener
+            when (view.id) {
+                R.id.ani_tag_01, R.id.ani_tag_02, R.id.ani_tag_03, R.id.ani_tag_04 -> {
+                    val v=view as HomeCardTagView
+                    val data=v.getCurrentData()
+
+                    if(data!=null){
+                        TagUserPicsActivity.start(requireActivity(),data.tagId,item.userId)
+                    }
+
+                }
+            }
         }
 
 
@@ -291,6 +304,7 @@ class NearbyFragment : BaseLazyFragment() {
 
 
     }
+
     private fun startPlayAni() {
         mRecyclerView.postDelayed({
             //获取到当前最上方的item
@@ -352,7 +366,6 @@ class NearbyFragment : BaseLazyFragment() {
     }
 
 
-
     private var lastDoTime: Long = 0
     private fun stopAni() {
         val currentTime = Calendar.getInstance().timeInMillis
@@ -372,7 +385,7 @@ class NearbyFragment : BaseLazyFragment() {
     private val cardsAdapter: BaseQuickAdapter<NearbyUserBean, BaseViewHolder> by lazy {
         object : BaseQuickAdapter<NearbyUserBean, BaseViewHolder>(R.layout.item_user_swip_card, list) {
             init {
-                addChildClickViewIds(R.id.card_img)
+                addChildClickViewIds(R.id.card_img, R.id.ani_tag_01, R.id.ani_tag_02, R.id.ani_tag_03, R.id.ani_tag_04)
             }
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

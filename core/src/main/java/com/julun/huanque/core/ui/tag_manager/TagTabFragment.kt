@@ -148,11 +148,16 @@ class TagTabFragment : BaseLazyFragment() {
                         tv.text = "已喜欢"
                     })
                 }
-
-                val index = mAdapter.data.indexOf(it.requireT())
-                if (index != -1) {
-                    mAdapter.notifyItemChanged(index)
+                val tag = it.requireT()
+                if (tag.tagId != currentTab?.tagId) {
+                    return@Observer
                 }
+                val result = mAdapter.data.firstOrNull { item -> item.tagId == tag.tagId } ?: return@Observer
+                result.like = tag.like
+                val index = mAdapter.data.indexOf(result)
+                logger.info("index=$index")
+                MixedHelper.safeNotifyItem(index, postList, mAdapter)
+
             } else if (it.state == NetStateType.ERROR) {
 //                if (it.isNew()) {
 //                    ToastUtils.show("网络异常")

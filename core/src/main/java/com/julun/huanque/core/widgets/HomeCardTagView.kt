@@ -71,11 +71,14 @@ class HomeCardTagView : LinearLayout {
     }
 
     private var aniSet: AnimatorSet? = null
-    private var currentData: Any? = null
+    private var _currentData: ManagerTagBean? = null
+    fun getCurrentData(): ManagerTagBean? {
+        return _currentData
+    }
+
     fun startSetDataAndAni(data: ManagerTagBean) {
-        currentData = data
+        _currentData = data
 //        this.show()
-        //todo 设置内容
         tv_tag.text = data.tagName
         sdv_tag.loadImage(data.tagIcon, 18f, 18f)
         logger.info("当前的动画值：$data")
