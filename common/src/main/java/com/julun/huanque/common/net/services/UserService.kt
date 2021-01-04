@@ -304,5 +304,11 @@ interface UserService {
     @POST("user/acct/data/update")
     suspend fun UpdateUserInfo(@Body form: UpdateUserInfoForm): Root<UserProcessBean>
 
+    /**
+     * 家乡初始化
+     */
+    @POST("user/acct/data/initHomeTown")
+    suspend fun initHomeTown(@Body form : HomeTownVersionForm) : Root<EditHomeTownBean>
+
 
 }

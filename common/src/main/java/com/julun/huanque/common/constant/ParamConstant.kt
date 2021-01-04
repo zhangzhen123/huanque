@@ -178,4 +178,7 @@ object ParamConstant {
 
     //定位到评论
     const val LocationComment = "LocationComment"
+
+    //家乡名称
+    const val Home_Town_Name = "Home_Town_Name"
 }

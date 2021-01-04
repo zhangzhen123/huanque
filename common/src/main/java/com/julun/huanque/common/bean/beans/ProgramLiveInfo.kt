@@ -690,8 +690,10 @@ data class SingleCulture(
     var cultureType: String = "",
     //人文类型文案
     var cultureTypeText: String = "",
-    //人文类型数量
+    //人文类型数量（总数零）
     var num: Int = 0,
+    //选择的数量
+    var totalMarkNum: Int = 0,
     //人文列表数据
     var cultureConfigList: MutableList<SingleCultureConfig> = mutableListOf()
 ) : Serializable
@@ -700,6 +702,8 @@ data class SingleCulture(
  * 单个人文对象
  */
 data class SingleCultureConfig(
+    //人文记录ID（编辑 使用）
+    var logId: Long = 0,
     //城市ID
     var cityId: Long = 0,
     //城市名称
@@ -1056,4 +1060,22 @@ data class SingleAccount(
 data class UserProcessBean(
     //资料完成度
     var perfection: Int = 0
+) : Serializable
+
+/**
+ * 编辑页面  家乡数据
+ */
+data class EditHomeTownBean(
+    //家乡Id
+    var homeTownId: Int = 1,
+    //城市配置合集  需客户端自行存储本地 如果城市配置版本没有变化，此字段不返回
+    var cityConfigList: Any = Any(),
+    //当前城市版本号
+    var version: Int = 0,
+    //人文数据
+    var cultureList: MutableList<SingleCulture> = mutableListOf(),
+    //家乡省会
+    var homeTownProvince: String = "",
+    //家乡城市
+    var homeTownCity: String = ""
 ) : Serializable

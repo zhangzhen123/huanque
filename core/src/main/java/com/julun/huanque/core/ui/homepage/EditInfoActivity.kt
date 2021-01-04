@@ -12,11 +12,13 @@ import com.julun.huanque.common.bean.beans.HomeTagBean
 import com.julun.huanque.common.bean.beans.UserProcessBean
 import com.julun.huanque.common.bean.beans.VoiceBean
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
+import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
 import com.julun.huanque.common.utils.ForceUtils
 import com.julun.huanque.common.utils.GlobalUtils
+import com.julun.huanque.common.utils.ScreenUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageTagAdapter
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
@@ -32,7 +34,6 @@ import kotlinx.android.synthetic.main.act_edit_info.tv_more_tag
 import kotlinx.android.synthetic.main.act_edit_info.tv_school
 import kotlinx.android.synthetic.main.act_edit_info.tv_tag_count
 import kotlinx.android.synthetic.main.act_edit_info.tv_user_id
-import kotlinx.android.synthetic.main.frag_home_page_information.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
@@ -46,6 +47,9 @@ import java.lang.StringBuilder
  */
 class EditInfoActivity : BaseActivity() {
     private val mEditInfoViewModel: EditInfoViewModel by viewModels()
+
+    //进度条的总宽度
+    private val TOTAL_PROGRESS_WIDTH = ScreenUtils.getScreenWidth() - dp2px(141f)
 
     //标签adapter
     private val mTagAdapter = HomePageTagAdapter()
@@ -77,7 +81,6 @@ class EditInfoActivity : BaseActivity() {
         }
         tv_nickname_title.onClickNew {
             //昵称
-
             UpdateNicknameActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.nickname ?: "")
         }
         tv_sign_title.onClickNew {
@@ -89,6 +92,24 @@ class EditInfoActivity : BaseActivity() {
                 mEditInfoViewModel.needFresh = true
                 startActivity(intent)
             }
+        }
+        iv_close_progress.onClickNew {
+            //隐藏资料完成度布局
+            con_progress.hide()
+        }
+
+        tv_home_town_title.onClickNew {
+            //选择家乡
+            val info = mEditInfoViewModel.basicInfo.value ?: return@onClickNew
+            val homeTownStr = StringBuilder()
+            if (info.homeTownProvince.isNotEmpty()) {
+                homeTownStr.append(info.homeTownProvince)
+            }
+            if (homeTownStr.isNotEmpty()) {
+                homeTownStr.append("/")
+            }
+            homeTownStr.append(info.homeTownCity)
+            HomeTownActivity.newInstance(this, homeTownStr.toString())
         }
     }
 
@@ -105,6 +126,8 @@ class EditInfoActivity : BaseActivity() {
      * 显示数据
      */
     private fun showViewByData(info: HomePageInfo) {
+        updateProgress(info.perfection)
+
         val normalColor = GlobalUtils.getColor(R.color.black_333)
         val greyColor = GlobalUtils.getColor(R.color.black_999)
         tv_nickname.text = info.nickname
@@ -229,6 +252,21 @@ class EditInfoActivity : BaseActivity() {
 
         tv_user_id.text = "欢鹊ID ${info.userId}"
     }
+
+    /**
+     * 设置进度条宽度
+     */
+    private fun updateProgress(progress: Int) {
+        view_progress_placeholder
+        progressBar.progress = progress
+        val placeViewWidtth = TOTAL_PROGRESS_WIDTH * progress / 100
+        val placeParams = view_progress_placeholder.layoutParams
+        placeParams.width = placeViewWidtth
+        view_progress_placeholder.layoutParams = placeParams
+        tv_progress.text = "${progress}%"
+        tv_progress.postInvalidate()
+    }
+
 
     /**
      * 初始化RecyclerView

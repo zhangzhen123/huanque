@@ -307,3 +307,11 @@ data class UpdateUserInfoForm(
     //体重
     var weight: Int? = null
 ) : Serializable
+
+/**
+ * 家乡版本form
+ */
+data class HomeTownVersionForm(
+    //省市 版本号
+    var version: Int? = null
+) : Serializable
