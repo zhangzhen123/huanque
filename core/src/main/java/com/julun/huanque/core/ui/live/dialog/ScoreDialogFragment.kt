@@ -56,11 +56,10 @@ class ScoreDialogFragment : BaseDialogFragment() {
     private var fragmentList = ArrayList<androidx.fragment.app.Fragment>()
 
     override fun getLayoutId(): Int = R.layout.dialog_score
-    override fun onStart() {
-        super.onStart()
+
+    override fun configDialog() {
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
     }
-
     override fun initViews() {
 
         initViewModel()

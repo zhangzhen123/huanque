@@ -174,9 +174,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
         <activity
-            android:name=".ui.main.tagmanager.TagManagerActivity"
+            android:name="com.julun.huanque.core.ui.tag_manager.TagManagerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
+
+        <activity android:name="com.julun.huanque.core.ui.tag_manager.TagPicsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme"/>
+        <activity android:name="com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity"
+            android:theme="@style/ShareTheme"/>
 
 
         <service android:name=".service.FloatingService" />

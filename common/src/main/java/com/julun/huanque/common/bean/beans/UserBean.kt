@@ -1,5 +1,6 @@
 package com.julun.huanque.common.bean.beans
 
+import com.julun.huanque.common.basic.RootListData
 import com.julun.huanque.common.bean.ChatUser
 import java.io.Serializable
 
@@ -294,6 +295,94 @@ data class NewUserGiftBean(
     //播放地址
     var videoUrl: String = ""
 ) : Serializable
+
+
+data class ManagerTagTabBean(
+    var childList: List<ManagerTagBean> = listOf(),
+    var like: String = "",
+    var likeCnt: Int = 0,
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = "",
+    var tagPic: String = ""
+) : Serializable
+
+data class ManagerTagBean(
+    var like: Boolean = false,
+    var likeCnt: Int = 0,
+    var parentTagId: Int = 0,
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = "",
+    var tagPic: String = ""
+) : Serializable {
+    override fun hashCode(): Int {
+        return tagId.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ManagerTagBean
+
+        if (tagId != other.tagId) return false
+
+        return true
+    }
+}
+
+data class ManagerParentTagBean(
+    var parentTagIcon: String = "",
+    var parentTagId: Int = 0,
+    var parentTagName: String = ""
+)
+
+data class ManagerListData(
+    var manageList: MutableList<ManagerTagBean> = mutableListOf(),
+    var tagList: List<ManagerTagTabBean> = listOf()
+)
+
+data class TagDetailBean(
+    var authNum: Int = 0,
+    var authPage: RootListData<TagPicBean> = RootListData(),
+    var like: Boolean = false,
+    var tagDesc: String = "",
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = "",
+    var tagPic: String = ""
+)
+
+
+data class TagPicBean(
+    var applyPic: String = "",
+    var tagId: Int = 0,
+    var targetPic: Boolean = false,
+    var userId: Long = 0L,
+    var picNum: Int = 0
+):Serializable
+
+data class TagUserPicListBean(
+    var authPicList: List<TagUserPic> = listOf(),
+    var friendSex: String = "",
+    var like: Boolean = false,
+    var praise: Boolean = false,
+    var praiseNum: Int = 0,
+    var tagDesc: String = "",
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = ""
+)
+
+data class TagUserPic(
+    var applyPic: String = "",
+    var auditStatus: String = "",
+    var logId: Int = 0,
+    var tagId: Int = 0
+)
+
+
 
 /**
  * 选择性别之后返回的 标签和交友意愿数据

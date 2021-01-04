@@ -35,13 +35,11 @@ class BirdShopDialogFragment(private val leYuanViewModel: LeYuanViewModel) : Bas
         return R.layout.fragment_bird_shop
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun configDialog() {
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
-//        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
-
     override fun initViews() {
+
         initViewModel()
         birdsList.layoutManager = GridLayoutManager(requireContext(), 3)
         birdsList.adapter = birdAdapter

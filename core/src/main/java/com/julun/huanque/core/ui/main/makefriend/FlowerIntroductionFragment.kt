@@ -21,8 +21,8 @@ class FlowerIntroductionFragment : BaseDialogFragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+
+    override fun configDialog() {
         setDialogSize(Gravity.CENTER, 53, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 }

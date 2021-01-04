@@ -2,6 +2,7 @@ package com.julun.huanque.common.manager
 
 import com.julun.huanque.common.init.CommonInit
 import com.julun.huanque.common.viewmodel.HuanQueViewModel
+import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.common.viewmodel.VoiceChatViewModel
 
 /**
@@ -18,4 +19,7 @@ object HuanViewModelManager {
 
     //免打扰列表
     var blockList = mutableListOf<String>()
+
+    //标签管理列表
+    val tagManagerViewModel: TagManagerViewModel = TagManagerViewModel()
 }

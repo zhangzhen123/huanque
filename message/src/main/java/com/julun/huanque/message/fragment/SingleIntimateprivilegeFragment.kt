@@ -57,11 +57,9 @@ class SingleIntimateprivilegeFragment : BaseDialogFragment() {
     }
 
 
-    override fun onStart() {
-        super.onStart()
+    override fun configDialog() {
         setDialogSize(Gravity.CENTER, 35, 379)
     }
-
 
     override fun needEnterAnimation() = false
 }

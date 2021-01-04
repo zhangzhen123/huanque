@@ -36,11 +36,14 @@ class BirdGotMoneyDialogFragment : BaseDialogFragment() {
     override fun setWindowAnimations() {
         dialog?.window?.setWindowAnimations(R.style.dialog_center_open_ani)
     }
-    override fun onStart() {
-        super.onStart()
-        setDialogSize(gravity = Gravity.CENTER, marginWidth = 45, height = ViewGroup.LayoutParams.WRAP_CONTENT)
-    }
+//    override fun onStart() {
+//        super.onStart()
+////        setDialogSize(gravity = Gravity.CENTER, marginWidth = 45, height = ViewGroup.LayoutParams.WRAP_CONTENT)
+//    }
 
+    override fun configDialog(){
+        setDialogSize(gravity = Gravity.CENTER, height = ViewGroup.LayoutParams.WRAP_CONTENT,padding  = 45)
+    }
     fun setMoney(money: String) {
         arguments?.putString("money", money)
     }

@@ -22,6 +22,7 @@ class HomePageActionFragment : BaseDialogFragment() {
     override fun getLayoutId() = R.layout.fragment_home_page
 
     override fun initViews() {
+  
         tv_report.onClickNew {
             mHomePageActionViewModel.actionData.value = HomePageViewModel.ACTION_REPORT
             dismiss()
@@ -33,10 +34,13 @@ class HomePageActionFragment : BaseDialogFragment() {
         }
     }
 
+    override fun configDialog() {
+        setDialogSize(Gravity.BOTTOM,  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
     override fun onStart() {
         super.onStart()
         initViewModel()
-        setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
+ 
     }
 
     /**

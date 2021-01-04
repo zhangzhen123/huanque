@@ -376,3 +376,47 @@ data class OpenInstallParamsBean(
     //传递给后台参数
     var h5PID: String? = null
 ) : Serializable
+
+
+class NearbyListData<T> : RootListData<T>() {
+    var myTagList: List<ManagerTagBean> = mutableListOf()
+}
+
+data class NearbyUserBean(
+    var age: Int = 0,
+    var area: String = "",
+    var coverPic: String = "",
+    var coverPicList: List<String> = listOf(),
+    var distance: Int = 0,
+    var hasRealName: String = "",
+    var lat: String = "",
+    var likeTagList: List<ManagerTagBean> = listOf(),
+    var lon: String = "",
+    var nickname: String = "",
+    var sex: String = "",
+    var tagList: MutableList<ManagerTagBean> = mutableListOf(),
+    var userId: Long = 0L,
+    var interactTips: String = ""
+)
+
+data class FavoriteUserBean(
+    var age: Int = 0,
+    var area: String = "",
+    var coverPic: String = "",
+    var coverPicList: List<String> = listOf(),
+    var distance: Int = 0,
+    var hasRealName: String = "",
+    var nickname: String = "",
+    var picCnt: Int = 0,
+    var sex: String = "",
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = "",
+    var userId: Int = 0,
+    var interactTips: String = ""
+)
+
+class FavoriteListData<T> : RootListData<T>() {
+    var tagList: MutableList<ManagerTagBean> = mutableListOf()
+}
+

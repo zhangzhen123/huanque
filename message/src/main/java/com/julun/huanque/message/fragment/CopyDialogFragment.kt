@@ -46,7 +46,8 @@ class CopyDialogFragment : BaseDialogFragment() {
     }
 
     override fun needEnterAnimation() = false
-
+    override fun configDialog() {
+    }
     override fun onStart() {
         super.onStart()
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)

@@ -110,6 +110,10 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
+
+    }
+
+    override fun configDialog() {
         var width = WindowManager.LayoutParams.MATCH_PARENT
         var height = WindowManager.LayoutParams.MATCH_PARENT
         var gravity = Gravity.BOTTOM
@@ -125,7 +129,6 @@ class WebDialogFragment(@NonNull url: String) : BaseDialogFragment() {
         dialog?.window?.attributes = params
         setDialogSize(width = width, height = height, gravity = gravity)
     }
-
     override fun getLayoutId(): Int = R.layout.dialog_web
 
     override fun initViews() {

@@ -322,7 +322,8 @@ class GiftExplainFragment : BaseDialogFragment() {
         dismiss()
     }
 
-
+    override fun configDialog() {
+    }
     override fun onStart() {
         super.onStart()
         initViewModel()

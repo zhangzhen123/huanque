@@ -125,12 +125,15 @@ class PrivateAnimationFragment : BaseDialogFragment(), DialogInterface.OnKeyList
     override fun onStart() {
         super.onStart()
         dialog?.setOnKeyListener(this)
+
+    }
+
+    override fun configDialog() {
         setDialogSize(Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 //        updateParams()
         //不需要半透明遮罩层
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
-
     /**
      * 播放动画
      */

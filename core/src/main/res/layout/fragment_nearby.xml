@@ -10,44 +10,9 @@
         android:layout_height="0dp"
         android:overScrollMode="never"
         android:layout_marginBottom="@dimen/dimen_1"
-        app:layout_constraintBottom_toTopOf="@+id/view_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/view_bottom"
-        android:layout_width="0px"
-        android:layout_height="31dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_bottom_tips"
-        android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="15dp"
-        android:gravity="start|center_vertical"
-        android:text="你有TA喜欢的 XX、XX等X个标签"
-        android:textColor="@color/black_666"
-        android:textSize="@dimen/sp_14"
-        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
-        app:layout_constraintLeft_toLeftOf="@id/view_bottom"
-        app:layout_constraintRight_toLeftOf="@+id/tv_user_like"
-        app:layout_constraintTop_toTopOf="@id/view_bottom" />
-
-    <TextView
-        android:id="@+id/tv_user_like"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/bg_solid_grey_btn1"
-        android:padding="@dimen/dimen_2"
-        android:text="Ta还喜欢什么"
-        android:textColor="@color/black_999"
-        android:textSize="@dimen/sp_13"
-        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
-        app:layout_constraintRight_toRightOf="@id/view_bottom"
-        app:layout_constraintTop_toTopOf="@id/view_bottom" />
 
     <com.julun.huanque.common.widgets.statepage.StatePageView
         android:id="@+id/statePage"

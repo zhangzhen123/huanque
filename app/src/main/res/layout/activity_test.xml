@@ -154,7 +154,7 @@
                 android:id="@+id/btn_usercard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="用户卡片" />
+                android:text="标签管理" />
 
             <Button
                 android:id="@+id/btn_manager"

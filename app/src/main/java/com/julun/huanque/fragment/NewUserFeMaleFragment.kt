@@ -1,7 +1,10 @@
 package com.julun.huanque.fragment
 
+import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.julun.huanque.R
@@ -73,11 +76,14 @@ class NewUserFeMaleFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDialogSize(Gravity.CENTER, 0)
         dialog?.setCancelable(false)
         dialog?.setCanceledOnTouchOutside(false)
         dialog?.setOnKeyListener { _, keyCode, _ ->
             keyCode == KeyEvent.KEYCODE_BACK
         }
+    }
+
+    override fun configDialog() {
+        setDialogSize(Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT)
     }
 }

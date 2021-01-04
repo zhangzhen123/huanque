@@ -33,18 +33,14 @@ class BottomDialog : BaseDialogFragment() {
         arguments?.putSerializable(IntentParamKey.OPERATE.name, actions)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun configDialog() {
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = ViewGroup.LayoutParams.WRAP_CONTENT)
-//        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
-
     override fun getLayoutId(): Int {
         return R.layout.dialog_bottom_action
     }
 
     override fun initViews() {
-
         action_list.layoutManager = LinearLayoutManager(requireContext())
         action_list.adapter = mAdapter
         mAdapter.onAdapterClickNew { _, _, position ->

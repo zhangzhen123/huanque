@@ -62,13 +62,16 @@ class ChatSendGiftFragment : BaseVMDialogFragment<ChatSendGiftViewModel>() {
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT)
+
         mPrivateConversationViewModel.sendGiftShowFlag.value = true
         //获取余额
         BalanceUtils.queryLatestBalance()
     }
 
+    override fun configDialog() {
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT)
+    }
     override fun reCoverView() {
         initViewModel()
     }

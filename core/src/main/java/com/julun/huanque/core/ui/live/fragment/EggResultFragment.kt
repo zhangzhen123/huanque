@@ -96,11 +96,14 @@ class EggResultFragment : BaseDialogFragment() {
         recyclerView_prize.adapter = mAdapter
     }
 
-    override fun onStart() {
-        super.onStart()
+//    override fun onStart() {
+//        super.onStart()
+//
+//    }
+
+    override fun configDialog() {
         setDialogSize()
     }
-
     override fun setWindowAnimations() {
         dialog?.window?.setWindowAnimations(R.style.dialog_game_result_style)
     }

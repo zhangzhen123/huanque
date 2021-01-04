@@ -49,6 +49,8 @@ class ImageDialogFragment : BaseDialogFragment() {
         window.attributes = params
     }
 
+    override fun configDialog() {
+    }
     override fun initViews() {
         prepare()
         ivClose.onClickNew {

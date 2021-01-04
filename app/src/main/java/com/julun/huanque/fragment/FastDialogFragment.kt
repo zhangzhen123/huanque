@@ -18,15 +18,19 @@ class FastDialogFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
     override fun needEnterAnimation() = false
 
     override fun initViews() {
+
+    }
+
+    override fun configDialog(){
+        setDialogSize(Gravity.CENTER, 30, 30)
+//        updateParams()
+        //不需要半透明遮罩层
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     override fun onStart() {
         super.onStart()
         dialog?.setOnKeyListener(this)
-        setDialogSize(Gravity.CENTER, 30, 30)
-//        updateParams()
-        //不需要半透明遮罩层
-        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     override fun onKey(dialog: DialogInterface?, keyCode: Int, event: KeyEvent?): Boolean {

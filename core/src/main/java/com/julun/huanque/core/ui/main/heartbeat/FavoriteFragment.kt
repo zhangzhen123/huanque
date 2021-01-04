@@ -1,30 +1,42 @@
 package com.julun.huanque.core.ui.main.heartbeat
 
+import android.app.Activity
 import android.content.Context
-import android.graphics.Typeface
+import android.content.Intent
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.julun.huanque.common.base.BaseFragment
+import androidx.viewpager.widget.ViewPager
+import com.julun.huanque.common.base.BaseLazyFragment
+import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.bean.beans.PagerTab
-import com.julun.huanque.common.suger.dp2px
+import com.julun.huanque.common.basic.QueryType
+import com.julun.huanque.common.bean.beans.ManagerTagBean
+import com.julun.huanque.common.constant.ActivityRequestCode
+import com.julun.huanque.common.constant.ManagerTagCode
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
+import com.julun.huanque.common.suger.removeDuplicate
+import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.core.R
-import com.julun.huanque.core.ui.main.tagmanager.TagManagerActivity
+import com.julun.huanque.core.ui.tag_manager.TagManagerActivity
 import kotlinx.android.synthetic.main.fragment_favorite_container.*
+import kotlinx.android.synthetic.main.fragment_favorite_container.magic_indicator
+import kotlinx.android.synthetic.main.fragment_favorite_container.state_pager_view
+import kotlinx.android.synthetic.main.fragment_favorite_container.view_pager
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.WrapPagerIndicator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.CommonPagerTitleView
+import org.jetbrains.anko.backgroundResource
 
 /**
  *
@@ -35,21 +47,47 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.Wr
  *@Description: HomeFavoriteFragment
  *
  */
-class FavoriteFragment : BaseFragment() {
+class FavoriteFragment : BaseLazyFragment() {
 
     companion object {
         fun newInstance() = FavoriteFragment()
     }
 
-    private lateinit var mCommonNavigator: CommonNavigator
-    private var mFragmentList = SparseArray<Fragment>()
-    private val mTabTitles = arrayListOf<PagerTab>()
+    private val viewModel: FavoriteViewModel by activityViewModels()
+    private val tagManagerViewModel: TagManagerViewModel = HuanViewModelManager.tagManagerViewModel
 
+    private val observer by lazy {
+        Observer<NetState> { state ->
+            if (state != null) {
+                when (state.state) {
+                    NetStateType.SUCCESS -> {//showSuccess()
+                        state_pager_view.showSuccess()
+                    }
+                    NetStateType.LOADING -> {//showLoading()
+                        state_pager_view.showLoading()
+                    }
+                    NetStateType.ERROR, NetStateType.NETWORK_ERROR -> {
+                        state_pager_view.showError(showBtn = true, btnClick = View.OnClickListener {
+                            viewModel.queryInfo(QueryType.INIT)
+                        })
+                    }
+
+                }
+
+            }
+
+
+        }
+    }
+
+    private lateinit var mCommonNavigator: CommonNavigator
+    private var mFragmentMap = HashMap<Int, Fragment>()
+    private val mTabTitles = arrayListOf<ManagerTagBean>()
+
+    private var currentTag: ManagerTagBean? = null
     override fun getLayoutId(): Int {
         return R.layout.fragment_favorite_container
     }
-
-    private val viewModel: FavoriteViewModel by viewModels()
 
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -62,7 +100,7 @@ class FavoriteFragment : BaseFragment() {
         initMagicIndicator()
 
         tag_manager.onClickNew {
-            TagManagerActivity.start(requireActivity())
+            TagManagerActivity.start(this)
         }
     }
 
@@ -71,21 +109,65 @@ class FavoriteFragment : BaseFragment() {
         //配置预加载页数
 //        view_pager.offscreenPageLimit = 2
         view_pager.currentItem = 0
+        view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
 
-    }
+            }
 
-    private fun initViewModel() {
-        viewModel.tabList.observe(viewLifecycleOwner, Observer {
-            if (it.state == NetStateType.SUCCESS) {
-                mTabTitles.clear()
-                mTabTitles.addAll(it.requireT())
-                refreshTabList()
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                currentTag = mTabTitles.getOrNull(position)
+
             }
 
         })
 
-        viewModel.queryInfo()
+    }
 
+    private fun initViewModel() {
+
+        viewModel.firstListData.observe(viewLifecycleOwner, Observer {
+            if (it.state == NetStateType.SUCCESS) {
+                mTabTitles.clear()
+                mTabTitles.addAll(it.requireT().tagList)
+                refreshTabList()
+                //首次加载时给currentTagList赋值
+                tagManagerViewModel.currentTagList.addAll(it.requireT().tagList.filter { item -> item.tagId != -1 })
+            }
+
+        })
+        viewModel.loadState.observe(this, observer)
+
+        tagManagerViewModel.tagChange.observe(this, Observer {
+            val list = tagManagerViewModel.currentTagList
+            logger.info("我是选择的结果=${list}")
+            list.removeDuplicate()
+            val first = mTabTitles.first()
+            mTabTitles.clear()
+            mTabTitles.add(first)
+            mTabTitles.addAll(list)
+            refreshTabList(currentTag?.tagId)
+        })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+//            when (requestCode) {
+//                ActivityRequestCode.MANAGER_TAG_RESULT_CODE -> {
+//                    val list = data?.extras?.get(ManagerTagCode.TAG_LIST) as? ArrayList<ManagerTagBean> ?: return
+//                    logger.info("我是选择的结果=${list}")
+//                    val first = mTabTitles.first()
+//                    mTabTitles.clear()
+//                    mTabTitles.add(first)
+//                    mTabTitles.addAll(list)
+//                    refreshTabList(currentTag?.tagId)
+//                }
+//            }
+        }
     }
 
     /**
@@ -102,31 +184,47 @@ class FavoriteFragment : BaseFragment() {
 
             override fun getTitleView(context: Context, index: Int): IPagerTitleView {
                 logger.info("getTitleView：$index")
-                val simplePagerTitleView: ScaleTransitionPagerTitleView = ScaleTransitionPagerTitleView(context)
-                simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                simplePagerTitleView.minScale = 0.583f
-                simplePagerTitleView.text = mTabTitles[index].typeName
-                simplePagerTitleView.textSize = 18f
-                simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_666)
-                simplePagerTitleView.selectedColor = ContextCompat.getColor(context, R.color.black_333)
+                val simplePagerTitleView = CommonPagerTitleView(context)
+                simplePagerTitleView.setContentView(R.layout.view_home_tab_title)
+                val tabTitle = simplePagerTitleView.findViewById<TextView>(R.id.tvTabTitle)
+                simplePagerTitleView.onPagerTitleChangeListener = object : CommonPagerTitleView.OnPagerTitleChangeListener {
+                    override fun onDeselected(index: Int, totalCount: Int) {
+//                            tabTitle.typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
+                        logger.info("onDeselected:$index")
+                        tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_666))
+                        tabTitle.backgroundResource = R.drawable.bg_favorite_tab_normal
+                    }
+
+                    override fun onSelected(index: Int, totalCount: Int) {
+                        logger.info("onSelected:$index")
+                        tabTitle.setTextColor(ContextCompat.getColor(context, R.color.white))
+                        tabTitle.backgroundResource = R.drawable.bg_favorite_tab_select
+                    }
+
+                    override fun onLeave(index: Int, totalCount: Int, leavePercent: Float, leftToRight: Boolean) {
+                    }
+
+                    override fun onEnter(index: Int, totalCount: Int, enterPercent: Float, leftToRight: Boolean) {
+                    }
+                }
+                tabTitle.text = mTabTitles[index].tagName
                 simplePagerTitleView.setOnClickListener { view_pager.currentItem = index }
                 if (view_pager.currentItem == index) {
-                    simplePagerTitleView.setTextColor(ContextCompat.getColor(context, R.color.black_333))
-                    simplePagerTitleView.scaleX = 1.0f
-                    simplePagerTitleView.scaleY = 1.0f
+                    tabTitle.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    tabTitle.backgroundResource = R.drawable.bg_favorite_tab_select
                 } else {
-                    simplePagerTitleView.setTextColor(ContextCompat.getColor(context, R.color.black_666))
-                    simplePagerTitleView.scaleX = 0.583f
-                    simplePagerTitleView.scaleY = 0.583f
+                    tabTitle.setTextColor(ContextCompat.getColor(context, R.color.black_666))
+                    tabTitle.backgroundResource = R.drawable.bg_favorite_tab_normal
                 }
                 return simplePagerTitleView
             }
 
             override fun getIndicator(context: Context): IPagerIndicator? {
-                val indicator = WrapPagerIndicator(context)
-                indicator.verticalPadding = dp2px(2)
-                indicator.fillColor = ContextCompat.getColor(context, R.color.black_999)
-                return indicator
+//                val indicator = WrapPagerIndicator(context)
+//                indicator.verticalPadding = dp2px(2)
+//                indicator.fillColor = ContextCompat.getColor(context, R.color.colorAccent_lib)
+//                return indicator
+                return null
             }
         }
         magic_indicator.navigator = mCommonNavigator
@@ -136,7 +234,7 @@ class FavoriteFragment : BaseFragment() {
     /**
      * 刷新tab数据 并且切换到指定tab
      */
-    private fun refreshTabList(currentTab: String? = null) {
+    private fun refreshTabList(currentTagId: Int? = null) {
         if (mTabTitles.isNotEmpty()) {
 //            if (mTabTitles.size > 4) {
 //                mCommonNavigator.isAdjustMode = false
@@ -152,8 +250,8 @@ class FavoriteFragment : BaseFragment() {
 //            }
 
 
-            if (!currentTab.isNullOrEmpty()) {
-                switchToTab(currentTab)
+            if (currentTagId != null && currentTagId != 0) {
+                switchToTab(currentTagId)
             }
         } else {
 //            showErrorView(false)
@@ -163,11 +261,11 @@ class FavoriteFragment : BaseFragment() {
     /**
      *  手动切换到指定tab位置
      */
-    private fun switchToTab(currentTabCode: String) {
+    private fun switchToTab(currentTagId: Int) {
         var position = 0
         run breaking@{
             mTabTitles.forEachIndexed { index, newProgramTab ->
-                if (currentTabCode == newProgramTab.typeCode) {
+                if (currentTagId == newProgramTab.tagId) {
                     position = index
                     return@breaking
                 }
@@ -180,18 +278,9 @@ class FavoriteFragment : BaseFragment() {
         }
     }
 
-    /**
-     * 滑动到顶部
-     */
-    fun scrollToTop() {
-        val tempIndex = view_pager.currentItem
-        val tempFragment: androidx.fragment.app.Fragment? = mPagerAdapter.getItem(tempIndex)
-        tempFragment?.let {
-            if (it is FavoriteTabFragment) {
-                it.scrollToTopAndRefresh()
-            }
 
-        }
+    override fun lazyLoadData() {
+        viewModel.queryInfo()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -210,7 +299,7 @@ class FavoriteFragment : BaseFragment() {
     private val mPagerAdapter: FragmentPagerAdapter by lazy {
         object : FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             override fun getItem(position: Int): Fragment {
-                return mFragmentList[position] ?: getFragment(position)
+                return mFragmentMap[mTabTitles[position].tagId] ?: getFragment(position)
             }
 
             override fun getCount(): Int {
@@ -219,12 +308,12 @@ class FavoriteFragment : BaseFragment() {
 
             private fun getFragment(position: Int): Fragment {
                 val fragment: Fragment = FavoriteTabFragment.newInstance(mTabTitles[position])
-                mFragmentList.put(position, fragment)
+                mFragmentMap.put(mTabTitles[position].tagId, fragment)
                 return fragment
             }
 
             override fun getPageTitle(position: Int): CharSequence {
-                return mTabTitles[position].typeName
+                return mTabTitles[position].tagName
             }
         }
     }

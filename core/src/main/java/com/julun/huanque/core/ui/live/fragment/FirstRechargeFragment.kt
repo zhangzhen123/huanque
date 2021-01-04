@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -290,12 +291,15 @@ class FirstRechargeFragment : BaseDialogFragment() {
     override fun onStart() {
         super.onStart()
         initViewModel()
-        setDialogSize(Gravity.CENTER, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog?.setCancelable(false)
         dialog?.setCanceledOnTouchOutside(false)
         dialog?.setOnKeyListener { _, keyCode, _ ->
             keyCode == KeyEvent.KEYCODE_BACK
         }
+    }
+
+    override fun configDialog() {
+        setDialogSize(Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     // 后台创建订单

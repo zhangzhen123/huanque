@@ -38,8 +38,7 @@ class WordsActionFragment : BaseDialogFragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun configDialog() {
         setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 }

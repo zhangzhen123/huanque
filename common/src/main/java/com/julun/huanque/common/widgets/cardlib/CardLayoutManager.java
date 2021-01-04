@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
+import com.julun.huanque.common.utils.ULog;
 import com.julun.huanque.common.widgets.cardlib.utils.ReItemTouchHelper;
 
 
@@ -168,8 +169,8 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
     private SwipeTouchLayout.SwipeTouchListener mSwipeTouchListener = new SwipeTouchLayout.SwipeTouchListener() {
         @Override
         public void onTouchDown(View v,MotionEvent event) {
-            RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
-            mItemTouchHelper.startSwipe(childViewHolder);
+//            RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
+//            mItemTouchHelper.startSwipe(childViewHolder);
         }
 
         @Override
@@ -179,8 +180,9 @@ public class CardLayoutManager extends RecyclerView.LayoutManager {
 
         @Override
         public void onTouchMove(View v, MotionEvent event) {
-//            RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
-//            mItemTouchHelper.startSwipe(childViewHolder);
+            ULog.Companion.i("onTouchMove="+event.getX());
+            RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(v);
+            mItemTouchHelper.startSwipe(childViewHolder);
         }
     };
 }

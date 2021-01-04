@@ -34,11 +34,14 @@ class ConfirmSexFragment : BaseDialogFragment(), DialogInterface.OnKeyListener {
         }
     }
 
+    override fun configDialog() {
+        setDialogSize(Gravity.CENTER, 20, 384)
+    }
+
     override fun onStart() {
         super.onStart()
         dialog?.setCanceledOnTouchOutside(false)
         dialog?.setOnKeyListener(this)
-        setDialogSize(Gravity.CENTER, 20, 384)
         initViewModel()
     }
 

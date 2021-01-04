@@ -58,12 +58,11 @@ class TodayFateDialogFragment : BaseDialogFragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onStart() {
-        super.onStart()
-        setDialogSize(gravity = Gravity.CENTER, marginWidth = 28, height = ViewGroup.LayoutParams.WRAP_CONTENT)
+    override fun configDialog() {
+        setDialogSize(gravity = Gravity.CENTER, height = ViewGroup.LayoutParams.WRAP_CONTENT,padding =  28)
     }
-
     override fun initViews() {
+
         girlList.layoutManager = GridLayoutManager(requireContext(), 2)
         initViewModel()
         girlList.adapter = matchesAdapter

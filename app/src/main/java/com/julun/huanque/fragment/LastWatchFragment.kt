@@ -2,6 +2,8 @@ package com.julun.huanque.fragment
 
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
 import com.julun.huanque.R
 import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.bean.beans.UserEnterRoomRespBase
@@ -60,12 +62,9 @@ class LastWatchFragment : BaseDialogFragment() {
         }
     }
 
-
-    override fun onStart() {
-        super.onStart()
-        setDialogSize(Gravity.CENTER, 35, 333)
+    override fun configDialog() {
+        setDialogSize(Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT, 333,35)
     }
-
     override fun order(): Int {
         return 900
     }

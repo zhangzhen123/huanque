@@ -44,11 +44,11 @@ class BirdDescriptionDialogFragment(private val leYuanViewModel: LeYuanViewModel
         return R.layout.fragment_bird_description
     }
 
-    override fun onStart() {
-        super.onStart()
-        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
-//        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-    }
+//    override fun onStart() {
+//        super.onStart()
+//        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
+////        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+//    }
 
     override fun initViews() {
         initViewModel()
@@ -59,6 +59,9 @@ class BirdDescriptionDialogFragment(private val leYuanViewModel: LeYuanViewModel
         }
     }
 
+    override fun configDialog() {
+        setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 480)
+    }
     override fun reCoverView() {
         initViewModel()
     }

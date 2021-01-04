@@ -1,5 +1,6 @@
 package com.julun.huanque.core.ui.live.dialog
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,11 +48,9 @@ class LiveSquareDialogFragment : BaseVMDialogFragment<LiveSquareViewModel>() {
         LayoutInflater.from(requireContext()).inflate(R.layout.layout_header_live_square, null)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun configDialog() {
         setDialogSize(width = ViewGroup.LayoutParams.MATCH_PARENT, height = 520)
     }
-
     override fun initViews() {
 
         headerLayout.followList.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)

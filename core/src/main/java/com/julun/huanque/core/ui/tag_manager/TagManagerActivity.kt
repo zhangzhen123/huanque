@@ -1,15 +1,17 @@
-package com.julun.huanque.core.ui.main.tagmanager
+package com.julun.huanque.core.ui.tag_manager
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.SparseArray
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
@@ -20,28 +22,35 @@ import com.chad.library.adapter.base.listener.OnItemDragListener
 import com.chad.library.adapter.base.module.DraggableModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.android.material.appbar.AppBarLayout
+import com.julun.huanque.common.base.BaseActivity
+import com.julun.huanque.common.base.BaseDialogFragment
 import com.julun.huanque.common.base.BaseVMActivity
+import com.julun.huanque.common.base.dialog.CustomDialogFragment
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.bean.beans.CollapsingToolbarLayoutState
-import com.julun.huanque.common.bean.beans.DynamicGroup
-import com.julun.huanque.common.bean.beans.PagerTab
-import com.julun.huanque.common.bean.beans.TagManagerBean
+import com.julun.huanque.common.bean.beans.ManagerTagBean
+import com.julun.huanque.common.bean.beans.ManagerTagTabBean
+import com.julun.huanque.common.constant.ActivityRequestCode
+import com.julun.huanque.common.constant.ManagerTagCode
+import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.dp2pxf
-import com.julun.huanque.common.suger.hide
+import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
-import com.julun.huanque.common.suger.show
+import com.julun.huanque.common.utils.ToastUtils
+import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.activity_favorite_tag_manager.*
+import kotlinx.android.synthetic.main.activity_favorite_tag_manager.tv_title
+import kotlinx.android.synthetic.main.dialog_tag_cancel_ensure.view.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.startActivityForResult
 import kotlin.properties.Delegates
 
 /**
@@ -53,43 +62,65 @@ import kotlin.properties.Delegates
  *@Description: TagManagerActivity
  *
  */
-class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
+class TagManagerActivity : BaseActivity() {
 
     companion object {
         fun start(act: Activity) {
-            act.startActivity<TagManagerActivity>()
+            act.startActivityForResult<TagManagerActivity>(requestCode = ActivityRequestCode.MANAGER_TAG_RESULT_CODE)
+        }
+
+        fun start(fragment: Fragment) {
+            fragment.startActivityForResult(
+                Intent(fragment.activity, TagManagerActivity::class.java),
+                ActivityRequestCode.MANAGER_TAG_RESULT_CODE
+            )
         }
     }
 
 
 //    private var state: CollapsingToolbarLayoutState? = null
+    private var viewModel=HuanViewModelManager.tagManagerViewModel
 
-
+    private var deleteEnsureDialog: BaseDialogFragment? = null
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
-    private val mTabTitles = arrayListOf<PagerTab>()
+    private val mTabTitles = arrayListOf<ManagerTagTabBean>()
 
     private var currentSelect: Int = -1
     private var deleteMode: Boolean by Delegates.observable(false) { _, _, newValue ->
         if (newValue) {
+            btn_action_tb.backgroundResource = R.drawable.bg_solid_btn1
             btn_action_tb.text = "完成"
+            btn_action_tb.isActivated = true
         } else {
+            btn_action_tb.backgroundResource = 0
             btn_action_tb.text = "管理"
+            btn_action_tb.isActivated = false
         }
         tagAdapter.notifyDataSetChanged()
     }
-    private val tagAdapter: BaseQuickAdapter<TagManagerBean, BaseViewHolder> by lazy {
-        object : BaseQuickAdapter<TagManagerBean, BaseViewHolder>(R.layout.item_tag_manager, mViewModel.currentTagList),
+    private val tagAdapter: BaseQuickAdapter<ManagerTagBean, BaseViewHolder> by lazy {
+        object : BaseQuickAdapter<ManagerTagBean, BaseViewHolder>(R.layout.item_tag_manager, viewModel.currentTagList),
             DraggableModule {
-            override fun convert(holder: BaseViewHolder, item: TagManagerBean) {
+            override fun convert(holder: BaseViewHolder, item: ManagerTagBean) {
                 val tagName = holder.getView<TextView>(R.id.tag_name)
-                val str = if (item.num == 0) {
+                val ctLayout = holder.getView<View>(R.id.ct_layout)
+                val str = if (item.likeCnt == 0) {
                     item.tagName
                 } else {
-                    "${item.tagName}(${item.num})"
+                    "${item.tagName} ${item.likeCnt}"
                 }
                 tagName.text = str
                 tagName.isSelected = currentSelect == holder.adapterPosition
+                if (currentSelect == holder.adapterPosition) {
+                    ctLayout.scaleX = 1.2f
+                    ctLayout.scaleY = 1.2f
+                } else {
+                    ctLayout.scaleX = 1f
+                    ctLayout.scaleY = 1f
+
+                }
+
                 holder.setGone(R.id.iv_delete, !deleteMode || currentSelect == holder.adapterPosition)
             }
 
@@ -116,12 +147,12 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
             }
 
             override fun onItemDragEnd(viewHolder: RecyclerView.ViewHolder, pos: Int) {
-                logger.info("drag end")
+                viewModel.tagHasChange = true
+                viewModel.tagSequenceHasChange = true
                 val holder = viewHolder as BaseViewHolder
                 currentSelect = -1
                 tagAdapter.notifyDataSetChanged()
-                // 结束时，item背景色变化，demo这里使用了一个动画渐变，使得自然
-                logger.info("更换位置后${mViewModel.currentTagList}")
+                logger.info("更换位置后${viewModel.currentTagList}")
             }
         }
 
@@ -130,8 +161,6 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
     override fun getLayoutId(): Int {
         return R.layout.activity_favorite_tag_manager
     }
-
-    private val viewModel: TagManagerViewModel by viewModels()
 
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
@@ -144,7 +173,6 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
         val flexBoxLayoutManager = FlexboxLayoutManager(this)
         myTags.layoutManager = flexBoxLayoutManager
         myTags.adapter = tagAdapter
-
 //        mAdapter.getDraggableModule().setSwipeEnabled(true);
         tagAdapter.draggableModule.isDragEnabled = true
         tagAdapter.draggableModule.setOnItemDragListener(listener)
@@ -157,16 +185,65 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
         }
         tagAdapter.setOnItemClickListener { _, view, position ->
             logger.info("点击item=$position")
+            val item = tagAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
             if (deleteMode) {
-                tagAdapter.removeAt(position)
-                logger.info("删除后${mViewModel.currentTagList}")
+//                viewModel.tagCancelGroupLike(item)
+                //todo
+//                deleteEnsureDialog = deleteEnsureDialog ?: object : BaseDialogFragment() {
+//                    override fun getLayoutId(): Int {
+//                        return R.layout.dialog_tag_cancel_ensure
+//                    }
+//
+//                    override fun initViews() {
+//                        sdv_tag_pic.loadImage(item.tagPic, 120f, 120f)
+//                        tv_content.text = "取消喜欢后，将取消【${item.tagName}】下的${item.likeCnt}个标签"
+//                        tv_btn_ok.onClickNew {
+//                            viewModel.tagCancelGroupLike(item)
+//                            dismiss()
+//                        }
+//                        tv_btn_cancel.onClickNew {
+//                            dismiss()
+//                        }
+//                    }
+//
+//                }
+                deleteEnsureDialog =
+                    deleteEnsureDialog ?: CustomDialogFragment(
+                        builder = CustomDialogFragment.FDBuilder(
+                            layoutId = {
+                                return@FDBuilder R.layout.dialog_tag_cancel_ensure
+                            },
+                            onStart = { dialog ->
+                                dialog.setDialogSize(
+                                    gravity = Gravity.CENTER,
+                                    height = ViewGroup.LayoutParams.WRAP_CONTENT,
+                                    padding = 20
+                                )
+                            },
+                            initViews = { dialog, rootView ->
+                                rootView.sdv_tag_pic.loadImage(item.tagPic, 120f, 120f)
+                                rootView.tv_content.text = "取消喜欢后，将取消【${item.tagName}】下的${item.likeCnt}个标签"
+                                rootView.tv_btn_ok.onClickNew {
+                                    viewModel.tagCancelGroupLike(item)
+                                    dialog.dismiss()
+                                }
+                                rootView.tv_btn_cancel.onClickNew {
+                                    dialog.dismiss()
+                                }
+                            })
+                    )
+                deleteEnsureDialog?.show(supportFragmentManager, "deleteEnsureDialog")
+
             }
         }
         iv_back.onClickNew {
             onBackPressed()
         }
-        tv_title.text = "我喜欢的标签"
+        tv_title.text = "标签管理"
         btn_action_tb.onClickNew {
+            if (deleteMode) {
+                viewModel.saveTagList()
+            }
             deleteMode = !deleteMode
         }
     }
@@ -194,11 +271,13 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
             }
 
         })
+        viewModel.saveTagList.observe(this, Observer {
+            if (it != null && it.isSuccess()) {
+                ToastUtils.show("标签保存成功")
+            }
+
+        })
         viewModel.queryInfo()
-    }
-
-    private fun renderHeaderData(group: DynamicGroup) {
-
     }
 
     override fun onBackPressed() {
@@ -206,7 +285,18 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
             deleteMode = false
             return
         }
+
         super.onBackPressed()
+    }
+
+    override fun finish() {
+        val intent = this.intent
+
+        if(viewModel.tagHasChange){
+//            intent.putExtra(ManagerTagCode.TAG_LIST, viewModel.currentTagList)
+//            setResult(Activity.RESULT_OK, intent)
+        }
+        super.finish()
     }
 
     /**
@@ -227,19 +317,19 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
                 val simplePagerTitleView: ScaleTransitionPagerTitleView = ScaleTransitionPagerTitleView(context)
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                 simplePagerTitleView.minScale = 0.583f
-                simplePagerTitleView.text = mTabTitles[index].typeName
-                simplePagerTitleView.textSize = 24f
-                simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_666)
+                simplePagerTitleView.text = mTabTitles[index].tagName
+                simplePagerTitleView.textSize = 20f
+                simplePagerTitleView.normalColor = ContextCompat.getColor(context, R.color.black_333)
                 simplePagerTitleView.selectedColor = ContextCompat.getColor(context, R.color.black_333)
                 simplePagerTitleView.setOnClickListener { view_pager.currentItem = index }
                 if (view_pager.currentItem == index) {
-                    simplePagerTitleView.setTextColor(ContextCompat.getColor(context, R.color.black_333))
+//                    simplePagerTitleView.setTextColor(ContextCompat.getColor(context, R.color.black_333))
                     simplePagerTitleView.scaleX = 1.0f
                     simplePagerTitleView.scaleY = 1.0f
                 } else {
-                    simplePagerTitleView.setTextColor(ContextCompat.getColor(context, R.color.black_666))
-                    simplePagerTitleView.scaleX = 0.583f
-                    simplePagerTitleView.scaleY = 0.583f
+//                    simplePagerTitleView.setTextColor(ContextCompat.getColor(context, R.color.black_666))
+                    simplePagerTitleView.scaleX = 0.7f
+                    simplePagerTitleView.scaleY = 0.7f
                 }
                 return simplePagerTitleView
             }
@@ -267,7 +357,7 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
     /**
      * 刷新tab数据 并且切换到指定tab
      */
-    private fun refreshTabList(currentTab: String? = null) {
+    private fun refreshTabList(currentTab: Int? = null) {
         if (mTabTitles.isNotEmpty()) {
 //            if (mTabTitles.size > 4) {
 //                mCommonNavigator.isAdjustMode = false
@@ -275,15 +365,8 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
             mPagerAdapter.notifyDataSetChanged()
             view_pager.offscreenPageLimit = mTabTitles.size
             mCommonNavigator.notifyDataSetChanged()
-//            if(mTabTitles.size>1){
-//                magic_indicator.show()
-//                mCommonNavigator.notifyDataSetChanged()
-//            }else{
-//                magic_indicator.hide()
-//            }
 
-
-            if (!currentTab.isNullOrEmpty()) {
+            if (currentTab != null) {
                 switchToTab(currentTab)
             }
         } else {
@@ -294,11 +377,11 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
     /**
      *  手动切换到指定tab位置
      */
-    private fun switchToTab(currentTabCode: String) {
+    private fun switchToTab(currentTabCode: Int) {
         var position = 0
         run breaking@{
             mTabTitles.forEachIndexed { index, newProgramTab ->
-                if (currentTabCode == newProgramTab.typeCode) {
+                if (currentTabCode == newProgramTab.tagId) {
                     position = index
                     return@breaking
                 }
@@ -329,13 +412,11 @@ class TagManagerActivity : BaseVMActivity<TagManagerViewModel>() {
             }
 
             override fun getPageTitle(position: Int): CharSequence {
-                return mTabTitles[position].typeName
+                return mTabTitles[position].tagName
             }
         }
     }
 
-    override fun showLoadState(state: NetState) {
-    }
 
     override fun onViewDestroy() {
         super.onViewDestroy()

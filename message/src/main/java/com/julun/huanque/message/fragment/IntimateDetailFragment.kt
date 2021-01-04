@@ -84,10 +84,13 @@ class IntimateDetailFragment : BaseDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setWindowConfig()
+
         initViewModel()
     }
 
+    override fun configDialog() {
+        setWindowConfig()
+    }
     /**
      * 初始化ViewModel
      */

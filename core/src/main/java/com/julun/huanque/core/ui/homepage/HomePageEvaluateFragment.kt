@@ -43,11 +43,15 @@ class HomePageEvaluateFragment : BaseDialogFragment() {
     override fun getLayoutId() = R.layout.fragment_home_page_evaluate
 
     override fun initViews() {
+
         initRecyclerView()
         initEvents()
         tv_done.isSelected = true
     }
 
+    override fun configDialog() {
+        setDialogSize(Gravity.BOTTOM,  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
     /**
      * 初始化监听
      */
@@ -94,7 +98,6 @@ class HomePageEvaluateFragment : BaseDialogFragment() {
         mHomePageViewModel.evaluateContent.value = null
         mRecomEvaluateAdapter.setList(null)
         initViewModel()
-        setDialogSize(Gravity.BOTTOM, 0, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     private fun initViewModel() {

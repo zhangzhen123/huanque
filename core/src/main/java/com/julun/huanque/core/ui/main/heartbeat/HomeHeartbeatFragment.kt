@@ -37,7 +37,7 @@ import org.jetbrains.anko.topPadding
  *
  *@Date: 2020/12/16 9:32
  *
- *@Description: HeartbeatFragment
+ *@Description: HeartbeatFragment 心动页面
  *
  */
 class HomeHeartbeatFragment : BaseFragment() {

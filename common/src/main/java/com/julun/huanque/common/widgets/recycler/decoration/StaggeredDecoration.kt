@@ -6,8 +6,8 @@ import android.view.View
 import com.julun.huanque.common.helper.DensityHelper
 
 
-class StaggeredDecoration : androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
-    val space = DensityHelper.dp2px(11)
+class StaggeredDecoration(val space: Int) : androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
+
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         if (outRect == null || view == null || parent == null) {
             return
