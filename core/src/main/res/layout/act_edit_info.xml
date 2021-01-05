@@ -77,8 +77,8 @@
 
                 <View
                     android:id="@+id/view_progress_placeholder"
-                    android:layout_width="100px"
-                    android:layout_height="1px"
+                    android:layout_width="10px"
+                    android:layout_height="10px"
                     app:layout_constraintBottom_toBottomOf="@id/progressBar"
                     app:layout_constraintLeft_toLeftOf="@id/progressBar"
                     app:layout_constraintTop_toTopOf="@id/progressBar" />
@@ -93,7 +93,7 @@
                     android:textColor="#831400"
                     android:textSize="@dimen/sp_09"
                     app:layout_constraintBottom_toBottomOf="@id/view_progress_placeholder"
-                    app:layout_constraintLeft_toLeftOf="@id/view_progress_placeholder"
+                    app:layout_constraintLeft_toRightOf="@id/view_progress_placeholder"
                     app:layout_constraintRight_toRightOf="@id/view_progress_placeholder"
                     app:layout_constraintTop_toTopOf="@id/view_progress_placeholder"
                     tools:text="20%" />

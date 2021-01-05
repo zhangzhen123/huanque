@@ -39,6 +39,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.textColor
 import java.lang.StringBuilder
+import kotlin.math.max
 
 /**
  *@创建者   dong
@@ -102,13 +103,13 @@ class EditInfoActivity : BaseActivity() {
             //选择家乡
             val info = mEditInfoViewModel.basicInfo.value ?: return@onClickNew
             val homeTownStr = StringBuilder()
-            if (info.homeTownProvince.isNotEmpty()) {
-                homeTownStr.append(info.homeTownProvince)
+            if (info.homeTown.homeTownProvince.isNotEmpty()) {
+                homeTownStr.append(info.homeTown.homeTownProvince)
             }
             if (homeTownStr.isNotEmpty()) {
                 homeTownStr.append("/")
             }
-            homeTownStr.append(info.homeTownCity)
+            homeTownStr.append(info.homeTown.homeTownCity)
             HomeTownActivity.newInstance(this, homeTownStr.toString())
         }
     }
@@ -174,13 +175,13 @@ class EditInfoActivity : BaseActivity() {
 
         //基本资料
         val homeTownStr = StringBuilder()
-        if (info.homeTownProvince.isNotEmpty()) {
-            homeTownStr.append(info.homeTownProvince)
+        if (info.homeTown.homeTownProvince.isNotEmpty()) {
+            homeTownStr.append(info.homeTown.homeTownProvince)
         }
         if (homeTownStr.isNotEmpty()) {
             homeTownStr.append("/")
         }
-        homeTownStr.append(info.homeTownCity)
+        homeTownStr.append(info.homeTown.homeTownCity)
         tv_home_town.text = homeTownStr.toString()
 
         //年龄和星座
@@ -261,7 +262,7 @@ class EditInfoActivity : BaseActivity() {
         progressBar.progress = progress
         val placeViewWidtth = TOTAL_PROGRESS_WIDTH * progress / 100
         val placeParams = view_progress_placeholder.layoutParams
-        placeParams.width = placeViewWidtth
+        placeParams.width = max(placeViewWidtth, 1)
         view_progress_placeholder.layoutParams = placeParams
         tv_progress.text = "${progress}%"
         tv_progress.postInvalidate()
@@ -307,10 +308,25 @@ class EditInfoActivity : BaseActivity() {
             tv_sign.textColor = GlobalUtils.getColor(R.color.black_333)
             mEditInfoViewModel.basicInfo.value?.mySign = sign
         }
+        val cityName = info.cityName
+        val provinceName = info.provinceName
+        if (cityName?.isNotEmpty() == true && provinceName?.isNotEmpty() == true) {
+            //城市名称
+            mEditInfoViewModel.basicInfo.value?.homeTown?.homeTownProvince = provinceName
+            mEditInfoViewModel.basicInfo.value?.homeTown?.homeTownCity = cityName
+            //更新文案
+            val homeTownStr = StringBuilder()
+            homeTownStr.append(info.provinceName)
+            homeTownStr.append("/")
+            homeTownStr.append(info.cityName)
+            tv_home_town.text = homeTownStr.toString()
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun userProcesshange(bean: UserProcessBean) {
+        mEditInfoViewModel.basicInfo.value?.perfection = bean.perfection
+        updateProgress(bean.perfection)
     }
 
 }

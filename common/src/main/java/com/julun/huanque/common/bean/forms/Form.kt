@@ -305,7 +305,11 @@ data class UpdateUserInfoForm(
     //身高
     var height: Int? = null,
     //体重
-    var weight: Int? = null
+    var weight: Int? = null,
+    //省名称
+    var provinceName: String? = null,
+    //市名称
+    var cityName: String? = null
 ) : Serializable
 
 /**
@@ -314,4 +318,22 @@ data class UpdateUserInfoForm(
 data class HomeTownVersionForm(
     //省市 版本号
     var version: Int? = null
+) : Serializable
+
+/**
+ * 城市ID form
+ */
+data class CityIdForm(
+    //城市ID
+    var cityId: Int = 0
+) : Serializable
+
+/**
+ * 人文数据更新form
+ */
+data class CultureUpdateForm(
+    //城市ID
+    var cityId: Int = 0,
+    //人文 Id
+    var cultureIds: String = ""
 ) : Serializable

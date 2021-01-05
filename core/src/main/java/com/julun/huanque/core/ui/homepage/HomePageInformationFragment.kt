@@ -165,13 +165,13 @@ class HomePageInformationFragment : BaseFragment() {
     private fun showViewByData(bean: HomePageInfo) {
         //家乡
         val homeTownStr = StringBuilder()
-        if (bean.homeTownProvince.isNotEmpty()) {
-            homeTownStr.append(bean.homeTownProvince)
+        if (bean.homeTown.homeTownProvince.isNotEmpty()) {
+            homeTownStr.append(bean.homeTown.homeTownProvince)
         }
         if (homeTownStr.isNotEmpty()) {
             homeTownStr.append("/")
         }
-        homeTownStr.append(bean.homeTownCity)
+        homeTownStr.append(bean.homeTown.homeTownCity)
         when {
             homeTownStr.length > 6 -> {
                 tv_home_town.text = "${homeTownStr.substring(0, 6)}..."

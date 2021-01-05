@@ -308,7 +308,19 @@ interface UserService {
      * 家乡初始化
      */
     @POST("user/acct/data/initHomeTown")
-    suspend fun initHomeTown(@Body form : HomeTownVersionForm) : Root<EditHomeTownBean>
+    suspend fun initHomeTown(@Body form: HomeTownVersionForm): Root<EditHomeTownBean>
+
+    /**
+     * 获取城市人文
+     */
+    @POST("user/acct/data/getCityCulture")
+    suspend fun getCityCulture(@Body from: CityIdForm): Root<EditHomeTownBean>
+
+    /**
+     * 保存城市  吃过的美食，去过的景点
+     */
+    @POST("user/acct/data/saveHomeTown")
+    suspend fun saveHomeTown(@Body form: CultureUpdateForm): Root<UserProcessBean>
 
 
 }

@@ -5,6 +5,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.alibaba.fastjson.annotation.JSONField
 import com.chad.library.adapter.base.entity.MultiItemEntity
+import com.contrarywind.interfaces.IPickerViewData
 import com.julun.huanque.common.basic.RootListData
 import java.io.Serializable
 
@@ -576,8 +577,8 @@ data class HomePageInfo(
     var currSexType: String = "",
     //当前用户ID
     var currUserId: Long = 0,
-//当前城市
-    var currentCity: String = "",
+    //家乡数据
+    var homeTown: HomTownBean = HomTownBean(),
     //距离使用的对象
     var distanceCity: HomeCity = HomeCity(),
     //是否关注
@@ -620,12 +621,6 @@ data class HomePageInfo(
     var figure: FigureBean = FigureBean(),
     //社交意愿
     var wishList: MutableList<SocialWishBean> = mutableListOf(),
-    //家乡ID
-    var homeTownId: Long = 0,
-    //家乡省会
-    var homeTownProvince: String = "",
-    //家乡城市
-    var homeTownCity: String = "",
     //职业相关
     var profession: ProfessionInfo = ProfessionInfo(),
     //学校数据
@@ -644,6 +639,19 @@ data class HomePageInfo(
     var post: PostInHomePage = PostInHomePage()
     /*2.0.0新增字段*/
 
+) : Serializable
+
+
+/**
+ * 编辑资料页面 家乡数据
+ */
+data class HomTownBean(
+    //城市数据
+    var homeTownCity: String = "",
+    //家乡ID
+    var homeTownId: Int = 0,
+    //省份数据
+    var homeTownProvince: String = ""
 ) : Serializable
 
 /**
@@ -1069,7 +1077,7 @@ data class EditHomeTownBean(
     //家乡Id
     var homeTownId: Int = 1,
     //城市配置合集  需客户端自行存储本地 如果城市配置版本没有变化，此字段不返回
-    var cityConfigList: Any = Any(),
+    var cityConfigList: MutableList<EditCityBean> = mutableListOf(),
     //当前城市版本号
     var version: Int = 0,
     //人文数据
@@ -1079,3 +1087,33 @@ data class EditHomeTownBean(
     //家乡城市
     var homeTownCity: String = ""
 ) : Serializable
+
+/**
+ * 城市对象
+ */
+data class EditCityBean(
+    //城市名称
+    var city: String = "",
+    //城市名称
+    var cityId: Int = 0,
+    //排序值
+    var cityOrderNum: Int = 0,
+    //城市拼音
+    var cityPinyin: String = "",
+    //城市类型
+    var cityType: String = "",
+    //国家名称
+    var country: String = "",
+    //纬度
+    var lat: String = "",
+    //经度
+    var lng: String = "",
+    //省份名称
+    var province: String = "",
+    //省份排序值
+    var provinceOrderNum: Int = 0
+) : Serializable, IPickerViewData {
+    override fun getPickerViewText(): String {
+        return city
+    }
+}
