@@ -16,29 +16,15 @@ import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.suger.show
-import com.julun.huanque.common.utils.ForceUtils
-import com.julun.huanque.common.utils.GlobalUtils
-import com.julun.huanque.common.utils.ScreenUtils
+import com.julun.huanque.common.utils.*
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageTagAdapter
 import com.julun.huanque.core.ui.record_voice.VoiceSignActivity
 import com.julun.huanque.core.viewmodel.EditInfoViewModel
 import kotlinx.android.synthetic.main.act_edit_info.*
-import kotlinx.android.synthetic.main.act_edit_info.recycler_view_like_tag
-import kotlinx.android.synthetic.main.act_edit_info.recycler_view_tag
-import kotlinx.android.synthetic.main.act_edit_info.tv_home_town
-import kotlinx.android.synthetic.main.act_edit_info.tv_job
-import kotlinx.android.synthetic.main.act_edit_info.tv_like_tag_count
-import kotlinx.android.synthetic.main.act_edit_info.tv_more_like_tag
-import kotlinx.android.synthetic.main.act_edit_info.tv_more_tag
-import kotlinx.android.synthetic.main.act_edit_info.tv_school
-import kotlinx.android.synthetic.main.act_edit_info.tv_tag_count
-import kotlinx.android.synthetic.main.act_edit_info.tv_user_id
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.textColor
-import java.lang.StringBuilder
 import kotlin.math.max
 
 /**
@@ -58,11 +44,14 @@ class EditInfoActivity : BaseActivity() {
     //我喜欢的标签adapter
     private val mLikeTagAdapter = HomePageTagAdapter()
 
+    private var mBarHeiht = 0
+
     override fun isRegisterEventBus() = true
 
     override fun getLayoutId() = R.layout.act_edit_info
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
+        mBarHeiht = StatusBarUtil.getStatusBarHeight(this)
         header_page.textTitle.text = "编辑资料"
         header_page.textOperation.show()
         header_page.textOperation.text = "保存"
@@ -111,6 +100,11 @@ class EditInfoActivity : BaseActivity() {
             }
             homeTownStr.append(info.homeTown.homeTownCity)
             HomeTownActivity.newInstance(this, homeTownStr.toString())
+        }
+        tv_age_constellation_title.onClickNew {
+            //年龄  星座
+            val basicInfo = mEditInfoViewModel.basicInfo.value ?: return@onClickNew
+            UpdateBirthdayActivity.newInstance(this, basicInfo.birthday)
         }
     }
 
@@ -321,6 +315,25 @@ class EditInfoActivity : BaseActivity() {
             homeTownStr.append(info.cityName)
             tv_home_town.text = homeTownStr.toString()
         }
+        val birthday = info.birthday
+        if (birthday != null) {
+            val birthDate = TimeUtils.string2Date("yyyy-MM-dd", birthday) ?: return
+            val age = TimeUtils.getAgeByDate(birthDate)
+            val constellationName = ConstellationUtils.getConstellation(birthDate).name
+            if (constellationName.isNotEmpty()) {
+                mEditInfoViewModel.basicInfo.value?.let {
+                    it.birthday = birthday
+                    it.age = age
+                    it.constellationInfo.constellationName = constellationName
+                }
+                val ageConstell = StringBuilder()
+                ageConstell.append(age)
+                ageConstell.append("/")
+                ageConstell.append(constellationName)
+                tv_age_constellation.text = ageConstell.toString()
+            }
+
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -328,5 +341,4 @@ class EditInfoActivity : BaseActivity() {
         mEditInfoViewModel.basicInfo.value?.perfection = bean.perfection
         updateProgress(bean.perfection)
     }
-
 }

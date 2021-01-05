@@ -337,3 +337,8 @@ data class CultureUpdateForm(
     //人文 Id
     var cultureIds: String = ""
 ) : Serializable
+
+/**
+ * 星座form
+ */
+data class ConstellationForm(var constellationType: String? = null) : Serializable

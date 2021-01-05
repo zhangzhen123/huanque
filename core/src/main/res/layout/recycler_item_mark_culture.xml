@@ -21,11 +21,12 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="即可将你好" />
     
-    <View
+    <ImageView
         android:layout_width="14dp"
         android:layout_height="14dp"
         android:background="@color/black_333"
         android:translationX="-3dp"
+        android:src="@mipmap/icon_tag_delete"
         app:layout_constraintBottom_toTopOf="@id/tv_content"
         app:layout_constraintLeft_toRightOf="@id/tv_content"
         app:layout_constraintRight_toRightOf="@id/tv_content"

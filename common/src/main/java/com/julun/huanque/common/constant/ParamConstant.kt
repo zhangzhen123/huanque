@@ -181,4 +181,10 @@ object ParamConstant {
 
     //家乡名称
     const val Home_Town_Name = "Home_Town_Name"
+
+    //年龄
+    const val Age = "Age"
+
+    //星座名称
+    const val ConstellationName = "constellationName"
 }

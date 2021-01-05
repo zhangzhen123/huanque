@@ -40,7 +40,7 @@ class UpdateSignViewModel : BaseViewModel() {
         viewModelScope.launch {
             request({
                 val form = UpdateUserInfoForm(mySign = sign)
-                perfectionData.value = userService.UpdateUserInfo(form).dataConvert()
+                perfectionData.value = userService.updateUserInfo(form).dataConvert()
                 //通知外界，基础数据有变化
                 EventBus.getDefault().post(form)
                 mOriginalSign = sign

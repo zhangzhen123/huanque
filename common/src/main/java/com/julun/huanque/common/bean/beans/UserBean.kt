@@ -361,7 +361,7 @@ data class TagPicBean(
     var targetPic: Boolean = false,
     var userId: Long = 0L,
     var picNum: Int = 0
-):Serializable
+) : Serializable
 
 data class TagUserPicListBean(
     var authPicList: List<TagUserPic> = listOf(),
@@ -381,7 +381,6 @@ data class TagUserPic(
     var logId: Int = 0,
     var tagId: Int = 0
 )
-
 
 
 /**
@@ -423,3 +422,8 @@ data class LoginTagBean(
     //是否选中
     var selected: Boolean = false
 ) : Serializable
+
+/**
+ * 星座对象
+ */
+data class ConstellationBean(var type: String = "", var name: String = "") : Serializable

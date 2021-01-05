@@ -302,7 +302,7 @@ interface UserService {
      * 更新用户数据
      */
     @POST("user/acct/data/update")
-    suspend fun UpdateUserInfo(@Body form: UpdateUserInfoForm): Root<UserProcessBean>
+    suspend fun updateUserInfo(@Body form: UpdateUserInfoForm): Root<UserProcessBean>
 
     /**
      * 家乡初始化
@@ -322,5 +322,10 @@ interface UserService {
     @POST("user/acct/data/saveHomeTown")
     suspend fun saveHomeTown(@Body form: CultureUpdateForm): Root<UserProcessBean>
 
+    /**
+     * 星座详情
+     */
+    @POST("user/acct/card/constellation")
+    suspend fun constellation(@Body form: ConstellationForm): Root<ConstellationInfo>
 
 }

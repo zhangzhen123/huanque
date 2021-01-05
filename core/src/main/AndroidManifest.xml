@@ -140,6 +140,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
         <activity
+            android:name=".ui.homepage.UpdateBirthdayActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
             android:name=".ui.homepage.EditInfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
@@ -178,11 +182,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
 
-        <activity android:name="com.julun.huanque.core.ui.tag_manager.TagPicsActivity"
+        <activity
+            android:name="com.julun.huanque.core.ui.tag_manager.TagPicsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomToolBarTheme"/>
-        <activity android:name="com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity"
-            android:theme="@style/ShareTheme"/>
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
+            android:name="com.julun.huanque.core.ui.tag_manager.TagUserPicsActivity"
+            android:theme="@style/ShareTheme" />
 
 
         <service android:name=".service.FloatingService" />
