@@ -20,9 +20,9 @@ import com.julun.huanque.common.bean.beans.TagUserPic
 import com.julun.huanque.common.bean.beans.TagUserPicListBean
 import com.julun.huanque.common.constant.IntentParamKey
 import com.julun.huanque.common.constant.ManagerTagCode
-import com.julun.huanque.common.layoutmanager.stacklayout.StackAlign
-import com.julun.huanque.common.layoutmanager.stacklayout.StackLayoutConfig
-import com.julun.huanque.common.layoutmanager.stacklayout.StackLayoutManager
+import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackAlign
+import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackLayoutConfig
+import com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackLayoutManager
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.*
 import com.julun.huanque.common.utils.ToastUtils

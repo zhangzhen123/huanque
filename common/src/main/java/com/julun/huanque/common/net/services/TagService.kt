@@ -2,6 +2,7 @@ package com.julun.huanque.common.net.services
 
 import com.alibaba.fastjson.JSONObject
 import com.julun.huanque.common.basic.Root
+import com.julun.huanque.common.basic.VoidForm
 import com.julun.huanque.common.basic.VoidResult
 import com.julun.huanque.common.bean.beans.*
 import com.julun.huanque.common.bean.forms.*
@@ -63,10 +64,23 @@ interface TagService {
      */
     @POST("social/user/tag/praise")
     suspend fun tagPraise(@Body body: TagUserForm): Root<VoidResult>
+
     /**
      * 标签用户图片列表
      */
     @POST("social/user/tag/cancelPraise")
     suspend fun tagCancelPraise(@Body body: TagUserForm): Root<VoidResult>
+
+    /**
+     * 查询筛选配置
+     */
+    @POST("social/friend/home/searchConfig")
+    suspend fun searchConfig(@Body body: VoidForm = VoidForm()): Root<FilterTagBean>
+
+    /**
+     * 保持筛选配置
+     */
+    @POST("social/friend/home/saveSearchConfig")
+    suspend fun saveSearchConfig(@Body body: SaveSearchConfigForm): Root<VoidResult>
 
 }

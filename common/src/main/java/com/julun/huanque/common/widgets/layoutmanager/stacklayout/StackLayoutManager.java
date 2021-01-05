@@ -1,4 +1,4 @@
-package com.julun.huanque.common.layoutmanager.stacklayout;
+package com.julun.huanque.common.widgets.layoutmanager.stacklayout;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
-import static com.julun.huanque.common.layoutmanager.stacklayout.StackAlign.*;
+import static com.julun.huanque.common.widgets.layoutmanager.stacklayout.StackAlign.*;
 
 
 /**

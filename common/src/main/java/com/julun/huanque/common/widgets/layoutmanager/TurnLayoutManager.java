@@ -1,4 +1,4 @@
-package com.julun.huanque.common.widgets;
+package com.julun.huanque.common.widgets.layoutmanager;
 
 import android.content.Context;
 import android.graphics.Point;

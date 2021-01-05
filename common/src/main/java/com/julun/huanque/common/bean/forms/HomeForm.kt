@@ -74,4 +74,13 @@ class TagUserForm(
 )
 
 
+class SaveSearchConfigForm(
+    var sexType: String,
+    var minAge: Int, var maxAge: Int,
+    var distance: Long,
+    var wishes: String,
+    var tagIds: String
+)
+
+
 

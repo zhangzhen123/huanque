@@ -66,7 +66,7 @@ class TagUserPicsViewModel : BaseViewModel() {
         viewModelScope.launch {
 
             request({
-                val result = service.tagPraise(TagUserForm(tagId, friendId)).dataConvert()
+                val result = service.tagCancelPraise(TagUserForm(tagId, friendId)).dataConvert()
                 tagPraise.value = false.convertRtData()
             }, error = {
                 tagPraise.value = it.convertError()

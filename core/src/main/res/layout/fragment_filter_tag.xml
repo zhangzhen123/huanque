@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_shape_top_white1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_16"
+        android:gravity="center"
+        android:text="筛选"
+        android:textColor="@color/black_333"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="420dp"
+        android:layout_marginTop="@dimen/dimen_46"
+        android:layout_marginBottom="@dimen/dimen_50">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_15"
+            android:layout_marginEnd="@dimen/dimen_15"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/shape_tag_filter_dot"
+                android:drawablePadding="@dimen/dimen_5"
+                android:gravity="start"
+                android:text="性别"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_40"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_male"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="@dimen/dimen_15"
+                    android:layout_weight="1"
+                    android:background="@drawable/sel_bg_tag_filter_btn"
+                    android:gravity="center"
+                    android:text="男生"
+                    android:textColor="@color/selector_text_color"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_female"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:background="@drawable/sel_bg_tag_filter_btn"
+                    android:gravity="center"
+                    android:text="女生"
+                    android:textColor="@color/selector_text_color"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_30">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/shape_tag_filter_dot"
+                    android:drawablePadding="@dimen/dimen_5"
+                    android:gravity="start"
+                    android:text="距离"
+                    android:textColor="@color/black_333"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:drawablePadding="@dimen/dimen_5"
+                    android:textColor="@color/black_333"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    tools:text="12km" />
+
+            </FrameLayout>
+
+            <com.jaygoo.widget.RangeSeekBar
+                android:id="@+id/sb_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:rsb_gravity="center"
+                app:rsb_max="100"
+                app:rsb_mode="single"
+                app:rsb_progress_color="@color/colorAccent_lib"
+                app:rsb_progress_default_color="#DEDEDE"
+                app:rsb_thumb_drawable="@drawable/thumb_yellow_alpha"
+                app:rsb_thumb_height="20dp"
+                app:rsb_thumb_scale_ratio="1.2"
+                app:rsb_thumb_width="20dp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_30">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/shape_tag_filter_dot"
+                    android:drawablePadding="@dimen/dimen_5"
+                    android:gravity="start"
+                    android:text="年龄"
+                    android:textColor="@color/black_333"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:drawablePadding="@dimen/dimen_5"
+                    tools:text="18-50"
+                    android:textColor="@color/black_333"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold" />
+
+            </FrameLayout>
+
+            <com.jaygoo.widget.RangeSeekBar
+                android:id="@+id/sb_range_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:rsb_gravity="center"
+                app:rsb_max="100"
+                app:rsb_mode="range"
+                app:rsb_progress_color="@color/colorAccent_lib"
+                app:rsb_progress_default_color="#DEDEDE"
+                app:rsb_thumb_drawable="@drawable/thumb_yellow_alpha"
+                app:rsb_thumb_height="20dp"
+                app:rsb_thumb_scale_ratio="1.2"
+                app:rsb_thumb_width="20dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/shape_tag_filter_dot"
+                android:drawablePadding="@dimen/dimen_5"
+                android:gravity="start"
+                android:text="寻求关系"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_social_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:overScrollMode="never" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_20"
+                android:drawableStart="@drawable/shape_tag_filter_dot"
+                android:drawablePadding="@dimen/dimen_5"
+                android:gravity="start"
+                android:text="标签"
+                android:textColor="@color/black_333"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:overScrollMode="never" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_30" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/ensure_filter"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_50"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/dimen_50"
+        android:layout_marginEnd="@dimen/dimen_50"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:background="@drawable/bg_solid_btn3"
+        android:gravity="center"
+        android:text="确认筛选"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold" />
+
+    <com.julun.huanque.common.widgets.statepage.StatePageView
+        android:id="@+id/state_pager_view"
+        android:layout_width="match_parent"
+        android:layout_height="506dp"
+        android:layout_marginTop="@dimen/dimen_46"
+        android:visibility="gone" />
+
+</FrameLayout>
+

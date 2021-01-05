@@ -361,7 +361,7 @@ data class TagPicBean(
     var targetPic: Boolean = false,
     var userId: Long = 0L,
     var picNum: Int = 0
-):Serializable
+) : Serializable
 
 data class TagUserPicListBean(
     var authPicList: List<TagUserPic> = listOf(),
@@ -381,7 +381,6 @@ data class TagUserPic(
     var logId: Int = 0,
     var tagId: Int = 0
 )
-
 
 
 /**
@@ -423,3 +422,39 @@ data class LoginTagBean(
     //是否选中
     var selected: Boolean = false
 ) : Serializable
+
+data class FilterTagBean(
+    var distance: Long = 0,
+    var sexType: String = "",
+    var typeMap: TypeMap = TypeMap(),
+    var minAge: Int = 0,
+    var maxAge: Int = 0,
+    var wishList: List<FilterWish> = listOf()
+)
+
+data class TypeMap(
+    var Female: List<FilterGroupTag> = listOf(),
+    var Male: List<FilterGroupTag> = listOf()
+)
+
+data class FilterWish(
+    var selected: Boolean = false,
+    var wishType: String = "",
+    var wishTypeExplain: String = "",
+    var wishTypeText: String = ""
+)
+
+data class FilterGroupTag(
+    var tagList: MutableList<FilterTag> = mutableListOf(),
+    var tagType: String = "",
+    var tagTypeText: String = "",
+    var isFold: Boolean = false//是否展开
+)
+
+
+data class FilterTag(
+    var mark: Boolean = false,
+    var tagIcon: String = "",
+    var tagId: Int = 0,
+    var tagName: String = ""
+)

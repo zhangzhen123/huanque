@@ -1,4 +1,4 @@
-package com.julun.huanque.common.layoutmanager.stacklayout;
+package com.julun.huanque.common.widgets.layoutmanager.stacklayout;
 
 /**
  * Created by CJJ on 2017/10/16.
