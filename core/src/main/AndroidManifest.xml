@@ -148,6 +148,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />
         <activity
+            android:name=".ui.homepage.SchoolActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"
+            android:theme="@style/CustomToolBarTheme" />
+        <activity
             android:name=".ui.homepage.UpdateNicknameActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomToolBarTheme" />

@@ -199,20 +199,5 @@ class UpdateBirthdayActivity : BaseActivity() {
         params.leftMargin = 0
         params.rightMargin = 0
         pvTime?.dialogContainerLayout?.layoutParams = params
-//        val mDialog: Dialog = pvTime?.dialog ?: return
-//        val dialogWindow = mDialog.window ?: return
-//        dialogWindow.setWindowAnimations(R.style.picker_view_slide_right_anim) //修改动画样式
-//        dialogWindow.setGravity(Gravity.BOTTOM) //改成Bottom,底部显示
-//        dialogWindow.setDimAmount(0.3f)
-    }
-
-    override fun onBackPressed() {
-        logger.info("UpdateBirthday onBackPressed")
-        super.onBackPressed()
-    }
-
-    override fun finish() {
-        logger.info("UpdateBirthday finish")
-        super.finish()
     }
 }

@@ -328,4 +328,21 @@ interface UserService {
     @POST("user/acct/card/constellation")
     suspend fun constellation(@Body form: ConstellationForm): Root<ConstellationInfo>
 
+    /**
+     * 学校初始化接口
+     */
+    @POST("user/acct/data/initSchool")
+    suspend fun initSchool(@Body form: EmptyForm = EmptyForm()): Root<SchoolBean>
+
+    /**
+     * 模糊搜索学校
+     */
+    @POST("user/acct/data/getSchool")
+    suspend fun getSchool(@Body form: SchoolForm): Root<QuerySchoolBean>
+
+    /**
+     * 保存学校数据
+     */
+    @POST("user/acct/data/saveSchool")
+    suspend fun saveSchool(@Body form: SaveSchoolForm): Root<UserProcessBean>
 }

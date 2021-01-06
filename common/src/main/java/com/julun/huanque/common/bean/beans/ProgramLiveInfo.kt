@@ -1117,3 +1117,50 @@ data class EditCityBean(
         return city
     }
 }
+
+/**
+ * 学校接口
+ */
+data class SchoolBean(
+    //学校
+    var school: String = "",
+    //学历code
+    var education: String = "",
+    //入学年份
+    var startYear: String = "",
+    //学历数据
+    var configList: MutableList<EducationBean> = mutableListOf(),
+    //学历名称（本地字段）
+    var educationText: String = ""
+) : Serializable
+
+/**
+ * 学历对象
+ */
+data class EducationBean(
+    //学历code
+    var educationCode: String = "",
+    //学历名称
+    var educationText: String = ""
+) : Serializable, IPickerViewData {
+    override fun getPickerViewText(): String {
+        return educationText
+    }
+}
+
+/**
+ * 搜索学校的结果
+ */
+data class QuerySchoolBean(
+    var schoolList: MutableList<SingleSchool> = mutableListOf()
+) : Serializable
+
+/**
+ * 单个学校
+ */
+data class SingleSchool(
+    //学校ID
+    var schoolId: Int = 0,
+    //学校名称
+    var schoolName: String = ""
+) : Serializable

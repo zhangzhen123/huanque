@@ -7,10 +7,8 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.julun.huanque.common.base.BaseActivity
-import com.julun.huanque.common.bean.beans.HomePageInfo
-import com.julun.huanque.common.bean.beans.HomeTagBean
-import com.julun.huanque.common.bean.beans.UserProcessBean
-import com.julun.huanque.common.bean.beans.VoiceBean
+import com.julun.huanque.common.bean.beans.*
+import com.julun.huanque.common.bean.forms.SaveSchoolForm
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -105,6 +103,11 @@ class EditInfoActivity : BaseActivity() {
             //年龄  星座
             val basicInfo = mEditInfoViewModel.basicInfo.value ?: return@onClickNew
             UpdateBirthdayActivity.newInstance(this, basicInfo.birthday)
+        }
+
+        tv_school_title.onClickNew {
+            //学校
+            SchoolActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.schoolInfo ?: return@onClickNew)
         }
     }
 
@@ -341,4 +344,24 @@ class EditInfoActivity : BaseActivity() {
         mEditInfoViewModel.basicInfo.value?.perfection = bean.perfection
         updateProgress(bean.perfection)
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun schoolChange(bean: SchoolInfo) {
+        tv_school.text = bean.school
+        mEditInfoViewModel.basicInfo.value?.schoolInfo?.let {
+            if (bean.startYear.isNotEmpty()) {
+                it.startYear = bean.startYear
+            }
+            if (bean.educationCode.isNotEmpty()) {
+                it.educationCode = bean.educationCode
+            }
+            if (bean.education.isNotEmpty()) {
+                it.education = bean.education
+            }
+            if (bean.school.isNotEmpty()) {
+                it.school = bean.school
+            }
+        }
+    }
+
 }

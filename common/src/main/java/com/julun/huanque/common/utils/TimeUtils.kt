@@ -18,6 +18,7 @@ object TimeUtils {
     val TIME_FORMAT_YEAR_1 = "yyyy-MM-dd HH:mm"
     val TIME_FORMAT_YEAR_2 = "yyyy-MM-dd"
     val TIME_FORMAT_YEAR_3 = "yyyy年MM月dd日 HH:mm"
+    val TIME_FORMAT_YEAR_4 = "yyyy"
 
 
     val TIMEFORMAT1: String = "HH:mm:ss"

@@ -342,3 +342,20 @@ data class CultureUpdateForm(
  * 星座form
  */
 data class ConstellationForm(var constellationType: String? = null) : Serializable
+
+/**
+ * 学校模糊搜索对象
+ */
+data class SchoolForm(var school: String = "") : Serializable
+
+/**
+ * 保存学校form
+ */
+data class SaveSchoolForm(
+    //学历
+    var education: String? = null,
+    //学校ID
+    var schoolId: Int? = null,
+    //入学年份
+    var startYear: String? = null
+) : Serializable
