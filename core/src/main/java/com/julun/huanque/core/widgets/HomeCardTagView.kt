@@ -14,8 +14,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.animation.addListener
 import androidx.core.view.isVisible
-import com.julun.huanque.common.bean.beans.ManagerTagBean
-import com.julun.huanque.common.constant.BusiConstant
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
 import com.julun.huanque.common.suger.loadImage
@@ -71,12 +70,12 @@ class HomeCardTagView : LinearLayout {
     }
 
     private var aniSet: AnimatorSet? = null
-    private var _currentData: ManagerTagBean? = null
-    fun getCurrentData(): ManagerTagBean? {
+    private var _currentData: UserTagBean? = null
+    fun getCurrentData(): UserTagBean? {
         return _currentData
     }
 
-    fun startSetDataAndAni(data: ManagerTagBean) {
+    fun startSetDataAndAni(data: UserTagBean) {
         _currentData = data
 //        this.show()
         tv_tag.text = data.tagName

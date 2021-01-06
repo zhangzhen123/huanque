@@ -15,7 +15,7 @@ import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.ManagerTagBean
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.TagUserPic
 import com.julun.huanque.common.bean.beans.TagUserPicListBean
 import com.julun.huanque.common.constant.IntentParamKey
@@ -99,7 +99,7 @@ class TagUserPicsActivity : BaseVMActivity<TagUserPicsViewModel>() {
             //todo
             cTagUserPicListBean ?: return@onClickNew
             tagManagerViewModel.tagLike(
-                ManagerTagBean(
+                UserTagBean(
                     tagId = cTagUserPicListBean!!.tagId,
                     tagIcon = cTagUserPicListBean!!.tagIcon
                 )

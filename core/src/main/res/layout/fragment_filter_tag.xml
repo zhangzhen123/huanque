@@ -6,6 +6,13 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_shape_top_white1">
 
+    <View
+        android:layout_width="@dimen/dimen_81"
+        android:layout_height="@dimen/dimen_4"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_6"
+        android:background="@drawable/bg_bottom_dialog_line" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -141,10 +148,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
                     android:drawablePadding="@dimen/dimen_5"
-                    tools:text="18-50"
                     android:textColor="@color/black_333"
                     android:textSize="@dimen/sp_12"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="18-50" />
 
             </FrameLayout>
 

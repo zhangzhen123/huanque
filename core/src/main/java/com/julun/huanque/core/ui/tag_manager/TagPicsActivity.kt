@@ -18,7 +18,7 @@ import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
 import com.julun.huanque.common.basic.QueryType
-import com.julun.huanque.common.bean.beans.ManagerTagBean
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.TagDetailBean
 import com.julun.huanque.common.bean.beans.TagPicBean
 import com.julun.huanque.common.constant.IntentParamKey
@@ -48,7 +48,7 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
 
 
     companion object {
-        fun start(act: Activity, tag: ManagerTagBean, likeUserId: Long? = null) {
+        fun start(act: Activity, tag: UserTagBean, likeUserId: Long? = null) {
             act.startActivity<TagPicsActivity>(ManagerTagCode.TAG_INFO to tag, IntentParamKey.USER_ID.name to likeUserId)
         }
 
@@ -85,11 +85,11 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
         }
     }
 
-    private var currentTag: ManagerTagBean? = null
+    private var currentTag: UserTagBean? = null
     private var currentLikeUserId: Long? = null
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
 
-        currentTag = intent.getSerializableExtra(ManagerTagCode.TAG_INFO) as? ManagerTagBean
+        currentTag = intent.getSerializableExtra(ManagerTagCode.TAG_INFO) as? UserTagBean
         currentLikeUserId = intent.getLongExtra(IntentParamKey.USER_ID.name, 0L)
         if (currentLikeUserId == 0L) {
             currentLikeUserId = null
@@ -135,9 +135,9 @@ class TagPicsActivity : BaseVMActivity<TagPicsViewModel>() {
     private fun switchLike() {
         val detail = mViewModel.tagDetail.value?.getT() ?: return
         if (detail.like) {
-            tagManagerViewModel.tagCancelLike(ManagerTagBean(tagId = detail.tagId, tagName = detail.tagName))
+            tagManagerViewModel.tagCancelLike(UserTagBean(tagId = detail.tagId, tagName = detail.tagName))
         } else {
-            tagManagerViewModel.tagLike(ManagerTagBean(tagId = detail.tagId, tagName = detail.tagName))
+            tagManagerViewModel.tagLike(UserTagBean(tagId = detail.tagId, tagName = detail.tagName))
         }
 
     }

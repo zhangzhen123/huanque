@@ -10,6 +10,7 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
@@ -21,6 +22,7 @@ import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
+import com.julun.huanque.core.viewmodel.MainConnectViewModel
 import com.julun.rnlib.RnManager
 import com.luck.picture.lib.tools.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_heartbeat_container.*
@@ -46,6 +48,8 @@ class HomeHeartbeatFragment : BaseFragment() {
     companion object {
         fun newInstance() = HomeHeartbeatFragment()
     }
+
+    private val mMainConnectViewModel: MainConnectViewModel by activityViewModels()
 
     private lateinit var mCommonNavigator: CommonNavigator
     private var mFragmentList = SparseArray<Fragment>()
@@ -109,7 +113,12 @@ class HomeHeartbeatFragment : BaseFragment() {
             }
 
         })
-
+        mMainConnectViewModel.heartBeatSwitch.observe(viewLifecycleOwner, Observer {
+            if(it!=null){
+                switchToTab(it)
+                mMainConnectViewModel.heartBeatSwitch.value=null
+            }
+        })
         viewModel.queryInfo()
 
     }

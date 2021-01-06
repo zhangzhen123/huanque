@@ -56,7 +56,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     companion object {
         const val BANNER_POSITION = 6
-        fun newInstance(tab: ManagerTagBean?): FavoriteTabFragment {
+        fun newInstance(tab: UserTagBean?): FavoriteTabFragment {
             return FavoriteTabFragment().apply {
                 val bundle = Bundle()
                 bundle.putSerializable(IntentParamKey.TAB_TYPE.name, tab)
@@ -67,7 +67,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     private val favoriteViewModel: FavoriteViewModel by activityViewModels()
 
-    private var currentTab: ManagerTagBean? = null
+    private var currentTab: UserTagBean? = null
 
     private val bottomLayout: View by lazy {
         LayoutInflater.from(requireContext()).inflate(R.layout.layout_bottom_favorite, null)
@@ -77,7 +77,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     private val layoutManager: GridLayoutManager by lazy { GridLayoutManager(requireContext(), 2) }
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
-        currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? ManagerTagBean
+        currentTab = arguments?.getSerializable(IntentParamKey.TAB_TYPE.name) as? UserTagBean
 
         authorList.layoutManager = layoutManager
         initViewModel()
@@ -92,9 +92,9 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 //            logger.info("跳转直播间${item.programId}")
 //            PlayerActivity.start(requireActivity(), programId = item.programId, prePic = item.coverPic)
         }
+        authorList.itemAnimator = null
         authorAdapter.animationEnable = true
         authorAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.SlideInBottom)
-//        authorList.itemAnimator = SlideItemAnimator()
 //        authorAdapter.addFooterView(bottomLayout)
         //todo
 //        mRefreshLayout.isEnabled = false
@@ -103,6 +103,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 //        }
 
 //        MixedHelper.setSwipeRefreshStyle(mRefreshLayout)
+        mRefreshLayout.setReboundDuration(80)
         mRefreshLayout.setOnLoadMoreListener { refreshLayout ->
             requestData(QueryType.LOAD_MORE, currentTab?.tagId)
         }
@@ -286,7 +287,7 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
             }
         }
         mViewModel.dataList.observe(this, Observer {
-            mRefreshLayout.finishLoadMore()
+            mRefreshLayout.finishLoadMore(50)
             if (it.state == NetStateType.SUCCESS) {
                 playEndAni(it.requireT())
             } else if (it.state == NetStateType.ERROR) {
@@ -319,14 +320,13 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
 
     private fun outAnimators(view: View, index: Int): Animator {
         val animator = ObjectAnimator.ofFloat(view, "translationY", 0f, -ScreenUtils.screenHeightFloat)
-        animator.duration = 400L
-        animator.startDelay = 200L * index
+        animator.duration = 250L
+        animator.startDelay = 60L * index
         animator.interpolator = DecelerateInterpolator(1.3f)
         return animator
     }
 
     private fun playEndAni(listData: MutableList<FavoriteUserBean>) {
-        //todo 移除动画
         if (authorList.childCount == 0) {
             renderHotData(listData)
             return
@@ -521,7 +521,8 @@ class FavoriteTabFragment : BaseVMFragment<FavoriteTabViewModel>() {
             }
 
             override fun startAnim(anim: Animator, index: Int) {
-                anim.startDelay = index * 100L
+                anim.duration = 250L
+                anim.startDelay = index * 80L
                 anim.start()
             }
         }

@@ -5,7 +5,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -51,14 +50,14 @@ class TagTabFragment : BaseLazyFragment() {
 
     private var currentTab: ManagerTagTabBean? = null
 
-    private val mAdapter: BaseQuickAdapter<ManagerTagBean, BaseViewHolder> by lazy {
-        object : BaseQuickAdapter<ManagerTagBean, BaseViewHolder>(R.layout.item_favorite_tag_list), LoadMoreModule {
+    private val mAdapter: BaseQuickAdapter<UserTagBean, BaseViewHolder> by lazy {
+        object : BaseQuickAdapter<UserTagBean, BaseViewHolder>(R.layout.item_favorite_tag_list), LoadMoreModule {
 
             init {
                 addChildClickViewIds(R.id.iv_tag_like)
             }
 
-            override fun convert(holder: BaseViewHolder, item: ManagerTagBean) {
+            override fun convert(holder: BaseViewHolder, item: UserTagBean) {
                 val sdv = holder.getView<SimpleDraweeView>(R.id.card_img)
                 val sdvTag = holder.getView<SimpleDraweeView>(R.id.sdv_tag)
                 sdv.loadImage(item.tagPic, 82f, 110f)

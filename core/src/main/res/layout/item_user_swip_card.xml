@@ -190,20 +190,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_margin="50dp"
             android:alpha="0"
-            android:src="@mipmap/icon_home_page_like_normal" />
+            android:src="@mipmap/icon_card_like" />
 
         <ImageView
             android:id="@+id/iv_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_margin="@dimen/dimen_50"
             android:alpha="0"
-            android:src="@mipmap/icon_home_page_like_sel" />
+            android:src="@mipmap/icon_card_unlike" />
     </androidx.cardview.widget.CardView>
 </com.julun.huanque.common.widgets.cardlib.SwipeTouchLayout>

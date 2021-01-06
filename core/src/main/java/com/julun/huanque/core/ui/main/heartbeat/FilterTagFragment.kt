@@ -1,12 +1,15 @@
 package com.julun.huanque.core.ui.main.heartbeat
 
+import android.animation.Animator
 import android.view.View
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.listener.OnItemClickListener
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -27,6 +30,7 @@ import com.julun.huanque.common.suger.sliceFromStart
 import com.julun.huanque.common.widgets.recycler.decoration.GridLayoutSpaceItemDecoration2
 import com.julun.huanque.common.widgets.recycler.decoration.VerticalItemDecoration
 import com.julun.huanque.core.R
+import com.julun.huanque.core.viewmodel.MainConnectViewModel
 import kotlinx.android.synthetic.main.fragment_filter_tag.*
 import java.lang.StringBuilder
 
@@ -47,6 +51,9 @@ class FilterTagFragment : BaseBottomSheetFragment() {
     }
 
     val viewModel: FilterTagViewModel by viewModels()
+
+    val connectViewModel: MainConnectViewModel by activityViewModels()
+
     private val observer by lazy {
         Observer<NetState> { state ->
             if (state != null) {
@@ -75,6 +82,7 @@ class FilterTagFragment : BaseBottomSheetFragment() {
 
         initViewModel()
         rv_social_type.adapter = socialsAdapter
+        rv_social_type.itemAnimator = null
         rv_social_type.layoutManager = GridLayoutManager(requireContext(), 2)
         rv_social_type.addItemDecoration(GridLayoutSpaceItemDecoration2(dp2px(15)))
         rv_social_type.setHasFixedSize(true)
@@ -85,6 +93,7 @@ class FilterTagFragment : BaseBottomSheetFragment() {
         rv_tags.addItemDecoration(VerticalItemDecoration(dp2px(30)))
         rv_tags.setHasFixedSize(true)
         rv_tags.isNestedScrollingEnabled = false
+        (rv_tags.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
         socialsAdapter.setOnItemClickListener { _, view, position ->
             val item = socialsAdapter.getItemOrNull(position) ?: return@setOnItemClickListener
@@ -251,6 +260,13 @@ class FilterTagFragment : BaseBottomSheetFragment() {
             }
 
         })
+        viewModel.saveResult.observe(viewLifecycleOwner, Observer {
+            if (it.isSuccess()) {
+                connectViewModel.refreshNearby.value=true
+                dismiss()
+            }
+
+        })
         viewModel.loadState.observe(this, observer)
     }
 
@@ -352,7 +368,10 @@ class FilterTagFragment : BaseBottomSheetFragment() {
             }
 
             override fun convert(holder: BaseViewHolder, item: FilterGroupTag) {
-                holder.setText(R.id.tv_group_tag, "${item.tagTypeText}")
+                holder.setText(
+                    R.id.tv_group_tag,
+                    "${item.tagTypeText} ${item.tagList.filter { it.mark }.size}/${item.tagList.size}"
+                )
                 val rv = holder.getView<RecyclerView>(R.id.rv_child_tag)
                 rv.layoutManager = GridLayoutManager(context, 4)
                 if (rv.itemDecorationCount <= 0) {
@@ -360,6 +379,7 @@ class FilterTagFragment : BaseBottomSheetFragment() {
                 }
                 val fAdapter = rv.adapter as? FilterTagAdapter ?: FilterTagAdapter()
                 rv.adapter = fAdapter
+                rv.itemAnimator = null
                 if (item.isFold) {
                     holder.setImageResource(R.id.iv_arrow, R.drawable.arrow_down)
                     fAdapter.setList(item.tagList.sliceFromStart(4, false))
@@ -367,11 +387,21 @@ class FilterTagFragment : BaseBottomSheetFragment() {
                     holder.setImageResource(R.id.iv_arrow, R.drawable.arrow_up)
                     fAdapter.setList(item.tagList)
                 }
-                fAdapter.setOnItemClickListener(tagListener)
+                fAdapter.setOnItemClickListener { _, view, position ->
+                    val tagItem = fAdapter.getItemOrNull(position)
+                    if (tagItem != null) {
+                        tagItem.mark = !tagItem.mark
+                        fAdapter.notifyItemChanged(position)
+                    }
+                    holder.setText(
+                        R.id.tv_group_tag,
+                        "${item.tagTypeText} ${item.tagList.filter { it.mark }.size}/${item.tagList.size}"
+                    )
+                }
+
             }
-
         }
+
+
     }
-
-
 }

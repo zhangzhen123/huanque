@@ -3,7 +3,6 @@ package com.julun.huanque.common.bean.beans
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.julun.huanque.common.basic.RootListData
 import java.io.Serializable
-import java.util.logging.Level
 
 class HomeItemBean(var showType: Int, var content: Any) : MultiItemEntity {
     companion object {
@@ -379,7 +378,8 @@ data class OpenInstallParamsBean(
 
 
 class NearbyListData<T> : RootListData<T>() {
-    var myTagList: List<ManagerTagBean> = mutableListOf()
+    var myTagList: List<UserTagBean> = mutableListOf()
+    var remainTimes:Int=1
 }
 
 data class NearbyUserBean(
@@ -390,11 +390,11 @@ data class NearbyUserBean(
     var distance: Int = 0,
     var hasRealName: String = "",
     var lat: String = "",
-    var likeTagList: List<ManagerTagBean> = listOf(),
+    var likeTagList: List<UserTagBean> = listOf(),
     var lon: String = "",
     var nickname: String = "",
     var sex: String = "",
-    var tagList: MutableList<ManagerTagBean> = mutableListOf(),
+    var tagList: MutableList<UserTagBean> = mutableListOf(),
     var userId: Long = 0L,
     var interactTips: String = ""
 )
@@ -417,6 +417,6 @@ data class FavoriteUserBean(
 )
 
 class FavoriteListData<T> : RootListData<T>() {
-    var tagList: MutableList<ManagerTagBean> = mutableListOf()
+    var tagList: MutableList<UserTagBean> = mutableListOf()
 }
 

@@ -298,7 +298,7 @@ data class NewUserGiftBean(
 
 
 data class ManagerTagTabBean(
-    var childList: List<ManagerTagBean> = listOf(),
+    var childList: List<UserTagBean> = listOf(),
     var like: String = "",
     var likeCnt: Int = 0,
     var tagIcon: String = "",
@@ -307,7 +307,7 @@ data class ManagerTagTabBean(
     var tagPic: String = ""
 ) : Serializable
 
-data class ManagerTagBean(
+data class UserTagBean(
     var like: Boolean = false,
     var likeCnt: Int = 0,
     var parentTagId: Int = 0,
@@ -324,7 +324,7 @@ data class ManagerTagBean(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ManagerTagBean
+        other as UserTagBean
 
         if (tagId != other.tagId) return false
 
@@ -339,7 +339,7 @@ data class ManagerParentTagBean(
 )
 
 data class ManagerListData(
-    var manageList: MutableList<ManagerTagBean> = mutableListOf(),
+    var manageList: MutableList<UserTagBean> = mutableListOf(),
     var tagList: List<ManagerTagTabBean> = listOf()
 )
 

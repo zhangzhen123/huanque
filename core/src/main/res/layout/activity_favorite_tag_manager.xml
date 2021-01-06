@@ -120,7 +120,7 @@
                         android:maxLength="15"
                         android:text="管理"
                         android:textStyle="bold"
-                        android:textColor="@color/sel_group_action"
+                        android:textColor="@color/sel_tag_manager_action"
                         android:textSize="@dimen/sp_12" />
 
                 </RelativeLayout>

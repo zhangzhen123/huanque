@@ -24,20 +24,16 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.base.BaseDialogFragment
-import com.julun.huanque.common.base.BaseVMActivity
 import com.julun.huanque.common.base.dialog.CustomDialogFragment
-import com.julun.huanque.common.basic.NetState
 import com.julun.huanque.common.basic.NetStateType
-import com.julun.huanque.common.bean.beans.ManagerTagBean
+import com.julun.huanque.common.bean.beans.UserTagBean
 import com.julun.huanque.common.bean.beans.ManagerTagTabBean
 import com.julun.huanque.common.constant.ActivityRequestCode
-import com.julun.huanque.common.constant.ManagerTagCode
 import com.julun.huanque.common.manager.HuanViewModelManager
 import com.julun.huanque.common.suger.dp2pxf
 import com.julun.huanque.common.suger.loadImage
 import com.julun.huanque.common.suger.onClickNew
 import com.julun.huanque.common.utils.ToastUtils
-import com.julun.huanque.common.viewmodel.TagManagerViewModel
 import com.julun.huanque.common.widgets.indicator.ScaleTransitionPagerTitleView
 import com.julun.huanque.core.R
 import kotlinx.android.synthetic.main.activity_favorite_tag_manager.*
@@ -99,10 +95,10 @@ class TagManagerActivity : BaseActivity() {
         }
         tagAdapter.notifyDataSetChanged()
     }
-    private val tagAdapter: BaseQuickAdapter<ManagerTagBean, BaseViewHolder> by lazy {
-        object : BaseQuickAdapter<ManagerTagBean, BaseViewHolder>(R.layout.item_tag_manager, viewModel.currentTagList),
+    private val tagAdapter: BaseQuickAdapter<UserTagBean, BaseViewHolder> by lazy {
+        object : BaseQuickAdapter<UserTagBean, BaseViewHolder>(R.layout.item_tag_manager, viewModel.currentTagList),
             DraggableModule {
-            override fun convert(holder: BaseViewHolder, item: ManagerTagBean) {
+            override fun convert(holder: BaseViewHolder, item: UserTagBean) {
                 val tagName = holder.getView<TextView>(R.id.tag_name)
                 val ctLayout = holder.getView<View>(R.id.ct_layout)
                 val str = if (item.likeCnt == 0) {
