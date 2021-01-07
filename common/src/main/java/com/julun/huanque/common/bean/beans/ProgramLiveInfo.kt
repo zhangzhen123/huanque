@@ -7,6 +7,7 @@ import com.alibaba.fastjson.annotation.JSONField
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.contrarywind.interfaces.IPickerViewData
 import com.julun.huanque.common.basic.RootListData
+import com.julun.huanque.common.constant.BusiConstant
 import java.io.Serializable
 
 /**
@@ -1164,3 +1165,75 @@ data class SingleSchool(
     //学校名称
     var schoolName: String = ""
 ) : Serializable
+
+/**
+ * 编辑使用的职业对象
+ */
+data class EditProfessionBean(
+    //我的年收入code
+    var incomeCode: String = "",
+    //我的职业特性
+    var myFeatureList: MutableList<SingleProfessionFeatureConfig> = mutableListOf(),
+    //职业ID
+    var professionId: Int = 0,
+    //年收入配置表
+    var incomeConfigList: MutableList<SingleIncome> = mutableListOf(),
+    //职业特性配置表
+    var featureConfigList: MutableList<SingleProfessionFeatureConfig> = mutableListOf(),
+    //职业配置表
+    var professionConfigList: MutableList<SingleProfessionConfig> = mutableListOf(),
+    //职业特性选取数量最大值
+    var maxFeature: Int = 0
+) : Serializable
+
+/**
+ * 单个收入说明
+ */
+data class SingleIncome(
+    //年收入code
+    var incomeCode: String = "",
+    //年收入文案
+    var incomeText: String = ""
+) : Serializable
+
+/**
+ * 单个职业特性
+ */
+data class SingleProfessionFeatureConfig(
+    //职业特性code
+    var professionFeatureCode: String = "",
+    //职业特性文案
+    var professionFeatureText: String = "",
+    //是否标记（本地字段）
+    var mark: String = ""
+) : Serializable
+
+/**
+ * 单个职业配置
+ */
+data class SingleProfessionConfig(
+    //行业type
+    var professionType: String = "",
+//行业文案
+    var professionTypeText: String = "",
+    //职业列表
+    var professionList: MutableList<SingleProfession> = mutableListOf()
+) : Serializable, IPickerViewData {
+    override fun getPickerViewText(): String {
+        return professionTypeText
+    }
+}
+
+/**
+ * 单个职业
+ */
+data class SingleProfession(
+    // 职业ID
+    var professionId: Int = 0,
+    //职业名称
+    var professionName: String = ""
+) : Serializable, IPickerViewData {
+    override fun getPickerViewText(): String {
+        return professionName
+    }
+}

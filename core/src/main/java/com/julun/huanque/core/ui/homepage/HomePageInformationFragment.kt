@@ -17,12 +17,9 @@ import com.julun.huanque.common.utils.GlobalUtils
 import com.julun.huanque.core.R
 import com.julun.huanque.core.adapter.HomePageTagAdapter
 import com.julun.huanque.core.viewmodel.HomePageViewModel
-import kotlinx.android.synthetic.main.act_home_page.*
 import kotlinx.android.synthetic.main.frag_home_page_information.*
-import kotlinx.android.synthetic.main.fragment_program_container.*
 import org.jetbrains.anko.textColor
 import java.lang.StringBuilder
-import java.time.format.TextStyle
 
 /**
  *@创建者   dong
@@ -174,13 +171,13 @@ class HomePageInformationFragment : BaseFragment() {
         homeTownStr.append(bean.homeTown.homeTownCity)
         when {
             homeTownStr.length > 6 -> {
-                tv_home_town.text = "${homeTownStr.substring(0, 6)}..."
+                tv_profression.text = "${homeTownStr.substring(0, 6)}..."
             }
             homeTownStr.isNotEmpty() -> {
-                tv_home_town.text = homeTownStr.toString()
+                tv_profression.text = homeTownStr.toString()
             }
             else -> {
-                tv_home_town.text = "-"
+                tv_profression.text = "-"
             }
         }
 

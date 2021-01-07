@@ -8,7 +8,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.julun.huanque.common.base.BaseActivity
 import com.julun.huanque.common.bean.beans.*
-import com.julun.huanque.common.bean.forms.SaveSchoolForm
 import com.julun.huanque.common.bean.forms.UpdateUserInfoForm
 import com.julun.huanque.common.suger.dp2px
 import com.julun.huanque.common.suger.hide
@@ -86,7 +85,7 @@ class EditInfoActivity : BaseActivity() {
             con_progress.hide()
         }
 
-        tv_home_town_title.onClickNew {
+        tv_profression_title.onClickNew {
             //选择家乡
             val info = mEditInfoViewModel.basicInfo.value ?: return@onClickNew
             val homeTownStr = StringBuilder()
@@ -108,6 +107,9 @@ class EditInfoActivity : BaseActivity() {
         tv_school_title.onClickNew {
             //学校
             SchoolActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.schoolInfo ?: return@onClickNew)
+        }
+        tv_job_title.onClickNew {
+            ProfessionActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.profession ?: return@onClickNew)
         }
     }
 
@@ -179,7 +181,7 @@ class EditInfoActivity : BaseActivity() {
             homeTownStr.append("/")
         }
         homeTownStr.append(info.homeTown.homeTownCity)
-        tv_home_town.text = homeTownStr.toString()
+        tv_profression.text = homeTownStr.toString()
 
         //年龄和星座
         val ageConstell = StringBuilder()
@@ -204,7 +206,8 @@ class EditInfoActivity : BaseActivity() {
         tv_figure.text = whBuilder.toString()
 
         tv_school.text = info.schoolInfo.school
-        tv_job.text = info.profession.professionName
+
+        tv_job.text = "${info.profession.professionTypeText}/${info.profession.professionName}"
 
         val wishList = info.wishList
         val wishStr = StringBuilder()
@@ -316,7 +319,7 @@ class EditInfoActivity : BaseActivity() {
             homeTownStr.append(info.provinceName)
             homeTownStr.append("/")
             homeTownStr.append(info.cityName)
-            tv_home_town.text = homeTownStr.toString()
+            tv_profression.text = homeTownStr.toString()
         }
         val birthday = info.birthday
         if (birthday != null) {
@@ -363,5 +366,21 @@ class EditInfoActivity : BaseActivity() {
             }
         }
     }
+
+    /**
+     * 职业数据有变动
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun professChange(info: ProfessionInfo) {
+        val profession = mEditInfoViewModel.basicInfo.value?.profession ?: return
+        if (info.professionId != profession.professionId) {
+            //只更新 职业ID，职业名称，行业名称3个字段(其余字段未使用)
+            profession.professionId = info.professionId
+            profession.professionTypeText = info.professionTypeText
+            profession.professionName = info.professionName
+            tv_job.text = "${profession.professionTypeText}/${profession.professionName}"
+        }
+    }
+
 
 }

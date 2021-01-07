@@ -345,4 +345,16 @@ interface UserService {
      */
     @POST("user/acct/data/saveSchool")
     suspend fun saveSchool(@Body form: SaveSchoolForm): Root<UserProcessBean>
+
+    /**
+     * 初始化职业数据
+     */
+    @POST("user/acct/data/initProfession")
+    suspend fun initProfession(@Body form: EmptyForm = EmptyForm()): Root<EditProfessionBean>
+
+    /**
+     * 保存职业数据
+     */
+    @POST("user/acct/data/saveProfession")
+    suspend fun saveProfession(@Body form: SaveProfessionForm): Root<UserProcessBean>
 }

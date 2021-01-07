@@ -359,3 +359,14 @@ data class SaveSchoolForm(
     //入学年份
     var startYear: String? = null
 ) : Serializable
+
+/**
+ * 保存职业form
+ */
+data class SaveProfessionForm(
+    //职业ID （如果单独保存或者修改 收入或者职业特性时，记得带上当前职业ID，否则会按照默认来处理）
+    var professionId: Int? = null,
+    var income: String? = null,
+    //职业特性code 多个逗号隔开
+    var professionFeatureCodes: String? = null
+) : Serializable

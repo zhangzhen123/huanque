@@ -79,7 +79,7 @@ class HomeTownActivity : BaseActivity() {
 
     override fun initViews(rootView: View, savedInstanceState: Bundle?) {
         val cityName = intent?.getStringExtra(ParamConstant.Home_Town_Name) ?: ""
-        tv_home_town.text = cityName
+        tv_profression.text = cityName
         header_page.textTitle.text = "家乡"
         initViewModel()
         initRecyclerView()
@@ -92,7 +92,7 @@ class HomeTownActivity : BaseActivity() {
             finish()
         }
 
-        tv_home_town_title.onClickNew {
+        tv_profression_title.onClickNew {
             if (pvOptions == null) {
                 initOptionPicker()
             }
@@ -111,13 +111,13 @@ class HomeTownActivity : BaseActivity() {
             mHomeTownEditViewModel.placeCultureData.value = placeData
         }
 
-        view_eat_food.onClickNew {
+        view_income.onClickNew {
             //美食
             mHomeTownEditViewModel.markFragmentType = HomeTownEditViewModel.Food
             mCultureMarkFragment.show(supportFragmentManager, "CultureMarkFragment")
         }
 
-        view_view_watch.onClickNew {
+        view_profess_feature.onClickNew {
             //景点
             mHomeTownEditViewModel.markFragmentType = HomeTownEditViewModel.Place
             mCultureMarkFragment.show(supportFragmentManager, "CultureMarkFragment")
@@ -279,14 +279,14 @@ class HomeTownActivity : BaseActivity() {
         homeTownStr.append(cityName)
         mHomeTownEditViewModel.provinceName = provinceName
         mHomeTownEditViewModel.cityName = cityName
-        tv_home_town.text = homeTownStr.toString()
+        tv_profression.text = homeTownStr.toString()
     }
 
     /**
      * 显示美食布局
      */
     private fun showFoodView(foodBean: SingleCulture) {
-        tv_eat_food.text = foodBean.cultureTypeText
+        tv_income.text = foodBean.cultureTypeText
         showTotalFoodNum(foodBean.cultureConfigList, tv_eat_food_num)
         val foodNoMarkList = mutableListOf<SingleCultureConfig>()
 
