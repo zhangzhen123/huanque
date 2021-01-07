@@ -49,7 +49,7 @@ class ProfessionMarkFragment : BaseBottomSheetFragment() {
             mAdapter.removeAt(position)
             updateTitle()
         }
-        mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "快去添加在家乡吃过的美食吧～", imgResId = R.mipmap.icon_edit_empty_food))
+        mAdapter.setEmptyView(MixedHelper.getEmptyView(requireContext(), "快去添加职业特性吧～", imgResId = R.mipmap.icon_edit_empty_food))
     }
 
     override fun onStart() {

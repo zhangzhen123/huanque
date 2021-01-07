@@ -41,6 +41,9 @@ class EditInfoActivity : BaseActivity() {
     //我喜欢的标签adapter
     private val mLikeTagAdapter = HomePageTagAdapter()
 
+    //社交意愿弹窗
+    private val mEditSocialWishFragment: EditSocialWishFragment by lazy { EditSocialWishFragment() }
+
     private var mBarHeiht = 0
 
     override fun isRegisterEventBus() = true
@@ -111,6 +114,10 @@ class EditInfoActivity : BaseActivity() {
         tv_job_title.onClickNew {
             ProfessionActivity.newInstance(this, mEditInfoViewModel.basicInfo.value?.profession ?: return@onClickNew)
         }
+        tv_social_wish_title.onClickNew {
+            //社交意愿
+            mEditSocialWishFragment.show(supportFragmentManager, "EditSocialWishFragment")
+        }
     }
 
     /**
@@ -119,6 +126,11 @@ class EditInfoActivity : BaseActivity() {
     private fun initViewModel() {
         mEditInfoViewModel.basicInfo.observe(this, Observer {
             showViewByData(it ?: return@Observer)
+        })
+        mEditInfoViewModel.wishData.observe(this, Observer {
+            if (it != null) {
+                showWishContent(it)
+            }
         })
     }
 
@@ -209,19 +221,6 @@ class EditInfoActivity : BaseActivity() {
 
         tv_job.text = "${info.profession.professionTypeText}/${info.profession.professionName}"
 
-        val wishList = info.wishList
-        val wishStr = StringBuilder()
-        wishList.forEach {
-            if (wishStr.isNotEmpty()) {
-                wishStr.append("/")
-            }
-            wishStr.append(it.wishTypeText)
-        }
-        if (wishStr.length <= 20) {
-            tv_social_wish.text = wishStr.toString()
-        } else {
-            tv_social_wish.text = wishStr.substring(0, 20).plus("...")
-        }
 
         val tagList = info.myAuthTag.showTagList
         tv_tag_count.text = "${info.myAuthTag.markTagNum}"
@@ -252,6 +251,24 @@ class EditInfoActivity : BaseActivity() {
         mLikeTagAdapter.setList(realLikeTagList)
 
         tv_user_id.text = "欢鹊ID ${info.userId}"
+    }
+
+    /**
+     * 显示社交意愿数据
+     */
+    private fun showWishContent(wishList: MutableList<SocialWishBean>) {
+        val wishStr = StringBuilder()
+        wishList.forEach {
+            if (wishStr.isNotEmpty()) {
+                wishStr.append("/")
+            }
+            wishStr.append(it.wishTypeText)
+        }
+        if (wishStr.length <= 20) {
+            tv_social_wish.text = wishStr.toString()
+        } else {
+            tv_social_wish.text = wishStr.substring(0, 20).plus("...")
+        }
     }
 
     /**

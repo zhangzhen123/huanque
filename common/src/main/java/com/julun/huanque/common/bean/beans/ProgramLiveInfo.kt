@@ -622,6 +622,8 @@ data class HomePageInfo(
     var figure: FigureBean = FigureBean(),
     //社交意愿
     var wishList: MutableList<SocialWishBean> = mutableListOf(),
+    //所有的社交意愿
+    var wishConfigList: MutableList<SocialWishBean> = mutableListOf(),
     //职业相关
     var profession: ProfessionInfo = ProfessionInfo(),
     //学校数据
@@ -791,7 +793,9 @@ data class SocialWishBean(
     //社交意愿code
     var wishType: String = "",
     //社交意愿文本
-    var wishTypeText: String = ""
+    var wishTypeText: String = "",
+    //是否选中（本地字段）
+    var selected: String = ""
 ) : Serializable
 
 /**
